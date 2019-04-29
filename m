@@ -2,123 +2,104 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C6B6E69F
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Apr 2019 17:35:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDF3CE746
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Apr 2019 18:07:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728506AbfD2Pf5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Apr 2019 11:35:57 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:39727 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728501AbfD2Pf5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Apr 2019 11:35:57 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 44t7z96kGcz9vD31;
-        Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Q5o3w0VV; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id kbO7e4z3Oado; Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 44t7z95Zr4z9vD30;
-        Mon, 29 Apr 2019 17:35:49 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1556552149; bh=XXe83/pZb9AFMZAVXoUoxnryoMR8eaO+qKHpnqnFOB8=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Q5o3w0VVtDkuaQJ720CrXVg1D1EEff1tyfslomh/gdc4+yk1/Dkug0ZmjOpliak9E
-         SNq24Cb/75QU4Vbo8GkPeMa5ZqrlcCuuxHVxWzptG/UbSIeVfGgHzF9GoK962b/vuv
-         2GQOk16RVxWf7DSmpu538h1my8dNOApiD0oga2ow=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id EDA2C8B8B4;
-        Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id P3bLUxeO-Wfq; Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
-Received: from PO15451 (po15451.idsi0.si.c-s.fr [172.25.231.6])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id AEE718B8B3;
-        Mon, 29 Apr 2019 17:35:54 +0200 (CEST)
-Subject: Re: [RESEND PATCH v3 09/11] powerpc/mm/radix: mark
- __radix__flush_tlb_range_psize() as __always_inline
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>
-Cc:     linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>, linuxppc-dev@lists.ozlabs.org,
-        x86@kernel.org, linux-mips@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        linux-mtd@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Mathieu Malaterre <malat@debian.org>
-References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
- <20190423034959.13525-10-yamada.masahiro@socionext.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <40b48947-b80e-7971-376d-52b594e26d17@c-s.fr>
-Date:   Mon, 29 Apr 2019 17:35:53 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728632AbfD2QHM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Apr 2019 12:07:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53344 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728573AbfD2QHL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 29 Apr 2019 12:07:11 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3TFvCB9055234
+        for <linux-s390@vger.kernel.org>; Mon, 29 Apr 2019 12:07:10 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s617y931x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 29 Apr 2019 12:07:10 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Mon, 29 Apr 2019 17:07:08 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 29 Apr 2019 17:07:05 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3TG748N57737266
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 16:07:04 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 120E711C04A;
+        Mon, 29 Apr 2019 16:07:04 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 933ED11C050;
+        Mon, 29 Apr 2019 16:07:03 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.116])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 29 Apr 2019 16:07:03 +0000 (GMT)
+Date:   Mon, 29 Apr 2019 18:07:02 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v7 2/4] vfio: ap: register IOMMU VFIO notifier
+In-Reply-To: <1556283688-556-3-git-send-email-pmorel@linux.ibm.com>
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+        <1556283688-556-3-git-send-email-pmorel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190423034959.13525-10-yamada.masahiro@socionext.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19042916-0016-0000-0000-000002768F2E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042916-0017-0000-0000-000032D3164B
+Message-Id: <20190429180702.641c9110.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=781 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904290110
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, 26 Apr 2019 15:01:26 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
+> @@ -858,7 +887,17 @@ static int vfio_ap_mdev_open(struct mdev_device *mdev)
+>  		return ret;
+>  	}
+>  
+> -	return 0;
+> +	matrix_mdev->iommu_notifier.notifier_call = vfio_ap_mdev_iommu_notifier;
+> +	events = VFIO_IOMMU_NOTIFY_DMA_UNMAP;
+> +	ret = vfio_register_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+> +				     &events, &matrix_mdev->iommu_notifier);
+> +	if (!ret)
+> +		return ret;
+> +
+> +	vfio_unregister_notifier(mdev_dev(mdev), VFIO_GROUP_NOTIFY,
+> +				 &matrix_mdev->group_notifier);
+> +	module_put(THIS_MODULE);
 
-Le 23/04/2019 à 05:49, Masahiro Yamada a écrit :
-> This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
-> place. We need to eliminate potential issues beforehand.
+Can you please explain this module_put() here? I don't see anything in
+the cover letter.
 
-How did you identify the functions requiring __always_inline as this one 
-? Just by 'test and see if it fails', or did you have some script or so ?
+Regards,
+Halil
 
-Here the problem is that one of the parameters of the function are used 
-as "immediate" constraint for the inline assembly, therefore requiring 
-the function to always be inline.
+> +	return ret;
+>  }
 
-I guess this should be explained in the commit log and I'm wondering how 
-you ensure that you did identify all functions like this.
-
-Christophe
-
-> 
-> If it is enabled for powerpc, the following error is reported:
-> 
-> arch/powerpc/mm/tlb-radix.c: In function '__radix__flush_tlb_range_psize':
-> arch/powerpc/mm/tlb-radix.c:104:2: error: asm operand 3 probably doesn't match constraints [-Werror]
->    asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
->    ^~~
-> arch/powerpc/mm/tlb-radix.c:104:2: error: impossible constraint in 'asm'
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
-> 
-> Changes in v3: None
-> Changes in v2:
->    - split into a separate patch
-> 
->   arch/powerpc/mm/tlb-radix.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/mm/tlb-radix.c b/arch/powerpc/mm/tlb-radix.c
-> index 6a23b9ebd2a1..a2b2848f0ae3 100644
-> --- a/arch/powerpc/mm/tlb-radix.c
-> +++ b/arch/powerpc/mm/tlb-radix.c
-> @@ -928,7 +928,7 @@ void radix__tlb_flush(struct mmu_gather *tlb)
->   	tlb->need_flush_all = 0;
->   }
->   
-> -static inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
-> +static __always_inline void __radix__flush_tlb_range_psize(struct mm_struct *mm,
->   				unsigned long start, unsigned long end,
->   				int psize, bool also_pwc)
->   {
-> 
