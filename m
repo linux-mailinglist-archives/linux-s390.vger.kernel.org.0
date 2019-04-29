@@ -2,168 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F16F3DB5C
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Apr 2019 07:04:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 932FBDBB4
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Apr 2019 07:55:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726106AbfD2FEh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Apr 2019 01:04:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59392 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725468AbfD2FEg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Apr 2019 01:04:36 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 77A4D81F0F;
-        Mon, 29 Apr 2019 05:04:34 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-135.pek2.redhat.com [10.72.12.135])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3A98F1001DF6;
-        Mon, 29 Apr 2019 05:04:14 +0000 (UTC)
-Date:   Mon, 29 Apr 2019 13:04:10 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Pingfan Liu <kernelfans@gmail.com>
-Cc:     Matthias Brugger <mbrugger@suse.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org,
-        Julien Thierry <julien.thierry@arm.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-s390@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        David Hildenbrand <david@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>,
-        Borislav Petkov <bp@alien8.de>, Stefan Agner <stefan@agner.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Tony Luck <tony.luck@intel.com>,
-        Baoquan He <bhe@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Greg Hackmann <ghackmann@android.com>,
-        kexec@lists.infradead.org
-Subject: Re: [PATCHv2] kernel/crash: make parse_crashkernel()'s return value
- more indicant
-Message-ID: <20190429050410.GA7982@dhcp-128-65.nay.redhat.com>
-References: <1556087581-14513-1-git-send-email-kernelfans@gmail.com>
- <10dc5468-6cd9-85c7-ba66-1dfa5aa922b7@suse.com>
- <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
- <20190428083710.GA11981@dhcp-128-65.nay.redhat.com>
- <CAFgQCTvQezGM7xgY2Q1RSUiQ7wLdxtUAeztrO3AqDfjx8f2kdg@mail.gmail.com>
- <CAFgQCTszGixzH5ZrwOzjbp7W91Wxo3XvA+EeEx0ErVVcYMr0FA@mail.gmail.com>
+        id S1726979AbfD2Fza (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Apr 2019 01:55:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53792 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727016AbfD2Fz3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 29 Apr 2019 01:55:29 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3T5srfD005879
+        for <linux-s390@vger.kernel.org>; Mon, 29 Apr 2019 01:55:28 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s5rkn520n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 29 Apr 2019 01:55:28 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Mon, 29 Apr 2019 06:55:25 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 29 Apr 2019 06:55:23 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3T5tM5N63176736
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Apr 2019 05:55:22 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 161B44C046;
+        Mon, 29 Apr 2019 05:55:22 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C33C24C044;
+        Mon, 29 Apr 2019 05:55:21 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 29 Apr 2019 05:55:21 +0000 (GMT)
+Date:   Mon, 29 Apr 2019 07:55:20 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     Jessica Yu <jeyu@kernel.org>, linux-next@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Cathy Avery <cavery@redhat.com>
+Subject: Re: [-next] system hangs likely due to "modules: Only return -EEXIST
+ for modules that have finished loading"
+References: <20190426130736.GB8646@osiris>
+ <d4d75ad1-e193-c230-1edc-a93db2b068d7@redhat.com>
+ <20190426150741.GD8646@osiris>
+ <20190426160956.GA3827@linux-8ccs>
+ <2e047a7e-bf08-be8c-bdd0-429464fa133d@redhat.com>
+ <52c293e9-ddfa-426a-a8f1-2106e250e78d@redhat.com>
+ <f74996cb-3e0a-ab23-00b9-85ac782583d1@redhat.com>
+ <20190427102440.GA28889@osiris>
+ <6a69074a-e913-3b67-feef-9b62a7400f8a@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAFgQCTszGixzH5ZrwOzjbp7W91Wxo3XvA+EeEx0ErVVcYMr0FA@mail.gmail.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 29 Apr 2019 05:04:35 +0000 (UTC)
+In-Reply-To: <6a69074a-e913-3b67-feef-9b62a7400f8a@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19042905-0008-0000-0000-000002E15202
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19042905-0009-0000-0000-0000224DB46F
+Message-Id: <20190429055520.GA3665@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=911 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904290045
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 04/29/19 at 12:48pm, Pingfan Liu wrote:
-> On Mon, Apr 29, 2019 at 11:04 AM Pingfan Liu <kernelfans@gmail.com> wrote:
-> >
-> > On Sun, Apr 28, 2019 at 4:37 PM Dave Young <dyoung@redhat.com> wrote:
-> > >
-> > > On 04/25/19 at 04:20pm, Pingfan Liu wrote:
-> > > > On Wed, Apr 24, 2019 at 4:31 PM Matthias Brugger <mbrugger@suse.com> wrote:
-> > > > >
-> > > > >
-> > > > [...]
-> > > > > > @@ -139,6 +141,8 @@ static int __init parse_crashkernel_simple(char *cmdline,
-> > > > > >               pr_warn("crashkernel: unrecognized char: %c\n", *cur);
-> > > > > >               return -EINVAL;
-> > > > > >       }
-> > > > > > +     if (*crash_size == 0)
-> > > > > > +             return -EINVAL;
-> > > > >
-> > > > > This covers the case where I pass an argument like "crashkernel=0M" ?
-> > > > > Can't we fix that by using kstrtoull() in memparse and check if the return value
-> > > > > is < 0? In that case we could return without updating the retptr and we will be
-> > > > > fine.
-> > > > >
-> > > > It seems that kstrtoull() treats 0M as invalid parameter, while
-> > > > simple_strtoull() does not.
-> > > >
-> > > > If changed like your suggestion, then all the callers of memparse()
-> > > > will treats 0M as invalid parameter. This affects many components
-> > > > besides kexec.  Not sure this can be done or not.
-> > >
-> > > simple_strtoull is obsolete, move to kstrtoull is the right way.
-> > >
-> > > $ git grep memparse|wc
-> > >     158     950   10479
-> > >
-> > > Except some documentation/tools etc there are still a log of callers
-> > > which directly use the return value as the ull number without error
-> > > checking.
-> > >
-> > > So it would be good to mark memparse as obsolete as well in
-> > > lib/cmdline.c, and introduce a new function eg. kmemparse() to use
-> > > kstrtoull,  and return a real error code, and save the size in an
-> > > argument like &size.  Then update X86 crashkernel code to use it.
-> > >
-> > Thank for your good suggestion.
-> >
-> Go through the v5.0 kernel code, I think it will be a huge job.
+On Sat, Apr 27, 2019 at 06:42:51AM -0400, Prarit Bhargava wrote:
+> On 4/27/19 6:24 AM, Heiko Carstens wrote:
 > 
-> The difference between unsigned long long simple_strtoull(const char
-> *cp, char **endp, unsigned int base) and int _kstrtoull(const char *s,
-> unsigned int base, unsigned long long *res) is bigger than expected,
-> especially the output parameter @res. Many references to
-> memparse(const char *ptr, char **retptr) rely on @retptr to work. A
-> typical example from arch/x86/kernel/e820.c
->         mem_size = memparse(p, &p);
->         if (p == oldp)
->                 return -EINVAL;
-> 
->         userdef = 1;
->         if (*p == '@') {  <----------- here
->                 start_at = memparse(p+1, &p);
->                 e820__range_add(start_at, mem_size, E820_TYPE_RAM);
->         } else if (*p == '#') {
->                 start_at = memparse(p+1, &p);
->                 e820__range_add(start_at, mem_size, E820_TYPE_ACPI);
->         } else if (*p == '$') {
->                 start_at = memparse(p+1, &p);
->                 e820__range_add(start_at, mem_size, E820_TYPE_RESERVED);
->         }
-> 
-> So we need to resolve the prototype of kstrtoull() firstly, and maybe
-> kstrtouint() etc too. All of them have lots of references in kernel.
-> 
-> Any idea about this?
+> > 
+> > diff --git a/kernel/module.c b/kernel/module.c
+> > index 410eeb7e4f1d..48748cfec991 100644
+> > --- a/kernel/module.c
+> > +++ b/kernel/module.c
+> > @@ -3585,6 +3585,7 @@ again:
+> >  					       finished_loading(mod->name));
+> >  			if (err)
+> >  				goto out_unlocked;
+> > +			cond_resched();
+> Heiko, I'm testing on 2-cpu systems which appear to show the problem ~10% of the
+> time.  On another system I backed out my original patch to set a baseline, and
+> noticed that occasionally the time to boot the system doubles from ~4 seconds to
+> 9 seconds.  Is this something you're also concerned with?
 
+This _could_ be an issue, since I see the problem much more likely to
+happen on systems with many devices (where many means only something
+like 10 block devices). As far as I can tell it looks like
+systemd/udevd tries to modprobe at the s390-trng module for each(!)
+device.
+I have no idea why it is doing that... however given that (failed)
+module handling now sometimes takes more time, this might become a
+real issue on system with several 1000s of block devices, which is a
+realistic scenario at least on s390.
 
-Not only this place, a lot of other places, I think no hurry to fix them
-all at one time.
-
-As we talked just do it according to previous reply,  mark memparse as
-obsolete, and create a new function to use kstrtoull, and make it used
-in crashkernel code first.
-
-Thanks
-Dave
