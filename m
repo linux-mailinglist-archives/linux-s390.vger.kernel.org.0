@@ -2,153 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF8BCE818
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Apr 2019 18:50:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C818EEDD4
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Apr 2019 02:31:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfD2QuM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Apr 2019 12:50:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50398 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728698AbfD2QuM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Apr 2019 12:50:12 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3TGgNHg014867
-        for <linux-s390@vger.kernel.org>; Mon, 29 Apr 2019 12:50:11 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s62u7p718-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 29 Apr 2019 12:50:11 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Mon, 29 Apr 2019 17:50:08 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 29 Apr 2019 17:50:05 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3TGo4rD38994060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Apr 2019 16:50:04 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27AF011C052;
-        Mon, 29 Apr 2019 16:50:04 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AAE7611C04A;
-        Mon, 29 Apr 2019 16:50:03 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.116])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 29 Apr 2019 16:50:03 +0000 (GMT)
-Date:   Mon, 29 Apr 2019 18:50:02 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-In-Reply-To: <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
-        <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1729800AbfD3AbI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Apr 2019 20:31:08 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:44557 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729319AbfD3Aah (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 29 Apr 2019 20:30:37 -0400
+Received: by mail-ed1-f68.google.com with SMTP id b8so1665304edm.11
+        for <linux-s390@vger.kernel.org>; Mon, 29 Apr 2019 17:30:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tmHyoZA3s8+eH8irHXDQwuHohJUycE2ziw5RpU+dlOU=;
+        b=MOPfSeYvgFTPgmXOyqu5vdYm5hkSdQbjS+ZqEcO2RU+mAi+5MAMZoFxX3IpBDPLPQS
+         +6cxB/pSPBzbPChynLlIkPp4j946qOnm4Ye/TMQhOEbAMuMfpeVVBcoKcz4+RJW8yx6/
+         Ved8pdw06sn2gpyLII0BLDY6t7Sg8N2naFdo6CAqbtTC39FR3o1Tc1kBC5kIorVz+Ak4
+         ako09dGNcEJDViNxWaT8wPfz1pEdUxqyVHmDsDi6DvZ163SxxHJc0/irfHhaluAhRXut
+         fRdoOWoA4QNK2yK1oJ5SHB/z+IS3njGTe+Ft9ivlpb8yi+AAVdDoaUQ0ZqtYNO7vRck8
+         qUcQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=tmHyoZA3s8+eH8irHXDQwuHohJUycE2ziw5RpU+dlOU=;
+        b=lQNOQuvJwnz5K3Gw585QWGdQkMtjAosCJ45N1xG/f8+xVp2EcwZBbFFMdLC88y3cM7
+         pzjTpr3BHAb3UZ6yITfKBr+hk3WbrMoadxeKkDTy1mgeQHe3PNNsOCA8jAJc1Jd1jYuA
+         jCLlVvpKnZ1IArfeQYDcZRm0m76hrSM8JgGlnIgHnzWZGcWQqH2HCblOLjzyR/DOG1Cx
+         hiqLFbWrLQU0sSe9Ot0RMCDvjn7573Rowy141dSZrH1yhh8726/i//RQUVmDPEKPoAZO
+         ojXVMB0zGWVxOA5bcG/w470fe7M6epH8WAXdzIKMCEiFJuTbyfs9Dc7uVeTOSEE0wBcj
+         jb1w==
+X-Gm-Message-State: APjAAAVi2T753LsA+2pu3diDX0ggtXsGf7Oy7VOaWTrw6chavZ5QtBOu
+        LUwa3R2kqpfx2bb/6k5wN9ZhRA==
+X-Google-Smtp-Source: APXvYqxnysyX/Gy2Mv+d0SzufhcdmkrISFZgci8tZfFs0rMtqN5Lk2YDEgY4FPz5PnrMa8o5ipagUg==
+X-Received: by 2002:aa7:c88a:: with SMTP id p10mr41403077eds.145.1556584235673;
+        Mon, 29 Apr 2019 17:30:35 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8084:a0:bc00:7d76:7b66:68:3b5f])
+        by smtp.gmail.com with ESMTPSA id a9sm9424163edt.93.2019.04.29.17.30.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 29 Apr 2019 17:30:35 -0700 (PDT)
+From:   Tom Murphy <tmurphy@arista.com>
+To:     iommu@lists.linux-foundation.org
+Cc:     murphyt7@tcd.ie, Tom Murphy <tmurphy@arista.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: [PATCH v2 0/4] iommu/amd: Convert the AMD iommu driver to the dma-iommu api
+Date:   Tue, 30 Apr 2019 01:29:47 +0100
+Message-Id: <20190430002952.18909-1-tmurphy@arista.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19042916-4275-0000-0000-0000032F9E92
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19042916-4276-0000-0000-0000383EF4DA
-Message-Id: <20190429185002.6041eecc.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-29_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=876 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904290114
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 26 Apr 2019 15:01:27 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+Convert the AMD iommu driver to the dma-iommu api. Remove the iova
+handling and reserve region code from the AMD iommu driver.
 
-> +static struct ap_queue_status vfio_ap_setirq(struct vfio_ap_queue *q)
-> +{
-> +	struct ap_qirq_ctrl aqic_gisa = {};
-> +	struct ap_queue_status status = {};
-> +	struct kvm_s390_gisa *gisa;
-> +	struct kvm *kvm;
-> +	unsigned long h_nib, h_pfn;
-> +	int ret;
-> +
-> +	q->a_pfn = q->a_nib >> PAGE_SHIFT;
-> +	ret = vfio_pin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1,
-> +			     IOMMU_READ | IOMMU_WRITE, &h_pfn);
-> +	switch (ret) {
-> +	case 1:
-> +		break;
-> +	case -EINVAL:
-> +	case -E2BIG:
-> +		status.response_code = AP_RESPONSE_INVALID_ADDRESS;
-> +		/* Fallthrough */
-> +	default:
-> +		return status;
+Change-log:
+v2:
+-Rebase on top of this series:
+ http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-iommu-ops.3
+-Add a gfp_t parameter to the iommu_ops::map function.
+-Made use of the reserve region code inside the dma-iommu api
 
-Can we actually hit the default label? AFICT you would return an
-all-zero status, i.e. status.response_code == 0 'Normal completion'.
+Tom Murphy (4):
+  iommu: Add gfp parameter to iommu_ops::map
+  iommu/dma-iommu: Handle deferred devices
+  iommu/dma-iommu: Use the dev->coherent_dma_mask
+  iommu/amd: Convert the AMD iommu driver to the dma-iommu api
 
-> +	}
-> +
-> +	kvm = q->matrix_mdev->kvm;
-> +	gisa = kvm->arch.gisa_int.origin;
-> +
-> +	h_nib = (h_pfn << PAGE_SHIFT) | (q->a_nib & ~PAGE_MASK);
-> +	aqic_gisa.gisc = q->a_isc;
-> +	aqic_gisa.isc = kvm_s390_gisc_register(kvm, q->a_isc);
-> +	aqic_gisa.ir = 1;
-> +	aqic_gisa.gisa = gisa->next_alert >> 4;
+ drivers/iommu/Kconfig          |   1 +
+ drivers/iommu/amd_iommu.c      | 694 ++++-----------------------------
+ drivers/iommu/arm-smmu-v3.c    |   2 +-
+ drivers/iommu/arm-smmu.c       |   2 +-
+ drivers/iommu/dma-iommu.c      |  52 ++-
+ drivers/iommu/exynos-iommu.c   |   2 +-
+ drivers/iommu/intel-iommu.c    |   2 +-
+ drivers/iommu/iommu.c          |  43 +-
+ drivers/iommu/ipmmu-vmsa.c     |   2 +-
+ drivers/iommu/msm_iommu.c      |   2 +-
+ drivers/iommu/mtk_iommu.c      |   2 +-
+ drivers/iommu/mtk_iommu_v1.c   |   2 +-
+ drivers/iommu/omap-iommu.c     |   2 +-
+ drivers/iommu/qcom_iommu.c     |   2 +-
+ drivers/iommu/rockchip-iommu.c |   2 +-
+ drivers/iommu/s390-iommu.c     |   2 +-
+ drivers/iommu/tegra-gart.c     |   2 +-
+ drivers/iommu/tegra-smmu.c     |   2 +-
+ include/linux/iommu.h          |  21 +-
+ 19 files changed, 187 insertions(+), 652 deletions(-)
 
-Why gisa->next_alert? Isn't this supposed to get set to gisa origin
-(without some bits on the left)?
-
-> +
-> +	status = ap_aqic(q->apqn, aqic_gisa, (void *)h_nib);
-> +	switch (status.response_code) {
-> +	case AP_RESPONSE_NORMAL:
-> +		/* See if we did clear older IRQ configuration */
-> +		if (q->p_pfn)
-> +			vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev),
-> +					 &q->p_pfn, 1);
-> +		if (q->p_isc != VFIO_AP_ISC_INVALID)
-> +			kvm_s390_gisc_unregister(kvm, q->p_isc);
-> +		q->p_pfn = q->a_pfn;
-> +		q->p_isc = q->a_isc;
-> +		break;
-> +	case AP_RESPONSE_OTHERWISE_CHANGED:
-> +		/* We could not modify IRQ setings: clear new configuration */
-> +		vfio_unpin_pages(mdev_dev(q->matrix_mdev->mdev), &q->a_pfn, 1);
-> +		kvm_s390_gisc_unregister(kvm, q->a_isc);
-
-Hm, see below. Wouldn't you want to set a_isc to VFIO_AP_ISC_INVALID?
-
-> +		break;
-> +	default:	/* Fall Through */
-
-Is it 'break' or is it 'Fall Through'?
-
-> +		pr_warn("%s: apqn %04x: response: %02x\n", __func__, q->apqn,
-> +			status.response_code);
-> +		vfio_ap_free_irq_data(q);
-> +		break;
-> +	}
-> +
-> +	return status;
-> +}
+-- 
+2.17.1
 
