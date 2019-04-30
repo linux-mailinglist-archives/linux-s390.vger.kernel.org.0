@@ -2,131 +2,227 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B03BEFA11
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Apr 2019 15:27:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D008FAB3
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Apr 2019 15:42:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbfD3N0W (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Apr 2019 09:26:22 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42240 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728806AbfD3N0R (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 30 Apr 2019 09:26:17 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UDIkI9103394
-        for <linux-s390@vger.kernel.org>; Tue, 30 Apr 2019 09:26:16 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6pa2txyd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 30 Apr 2019 09:26:14 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 30 Apr 2019 14:26:12 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 14:26:08 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UDQ7Lh45940956
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 13:26:07 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B13052050;
-        Tue, 30 Apr 2019 13:26:07 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.116])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7C5575204F;
-        Tue, 30 Apr 2019 13:26:06 +0000 (GMT)
-Date:   Tue, 30 Apr 2019 15:26:05 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-In-Reply-To: <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
-        <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1727188AbfD3NmK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Apr 2019 09:42:10 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47728 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726053AbfD3NmJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:42:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DB55680D;
+        Tue, 30 Apr 2019 06:42:08 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C54823F5AF;
+        Tue, 30 Apr 2019 06:42:04 -0700 (PDT)
+Subject: Re: [PATCH v2 2/4] iommu/dma-iommu: Handle deferred devices
+To:     Tom Murphy <tmurphy@arista.com>, iommu@lists.linux-foundation.org
+Cc:     murphyt7@tcd.ie, Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+References: <20190430002952.18909-1-tmurphy@arista.com>
+ <20190430002952.18909-3-tmurphy@arista.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <2750fa37-a59c-3074-6545-b19046ce3699@arm.com>
+Date:   Tue, 30 Apr 2019 14:42:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190430002952.18909-3-tmurphy@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19043013-0028-0000-0000-00000368E2DA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043013-0029-0000-0000-00002428482B
-Message-Id: <20190430152605.3bb21f31.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=826 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300086
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 26 Apr 2019 15:01:27 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On 30/04/2019 01:29, Tom Murphy wrote:
+> Handle devices which defer their attach to the iommu in the dma-iommu api
 
-> +/**
-> + * vfio_ap_clrirq: Disable Interruption for a APQN
-> + *
-> + * @dev: the device associated with the ap_queue
-> + * @q:   the vfio_ap_queue holding AQIC parameters
-> + *
-> + * Issue the host side PQAP/AQIC
-> + * On success: unpin the NIB saved in *q and unregister from GIB
-> + * interface
-> + *
-> + * Return the ap_queue_status returned by the ap_aqic()
-> + */
-> +static struct ap_queue_status vfio_ap_clrirq(struct vfio_ap_queue *q)
+I've just spent a while trying to understand what this is about...
+
+AFAICS it's a kdump thing where the regular default domain attachment 
+may lead to ongoing DMA traffic from the crashed kernel raising a fault 
+storm, so we put off the "real" attach of a given device until we know 
+it's been reset and brought into a sane state, but the only way to 
+reliably detect that is to wait until the kdump kernel driver starts 
+making new DMA mappings. Is that about right?
+
+(I note that for SMMUv3 we now handle that situation with the slightly 
+more heavy-handed approach of just turning off reporting and letting the 
+'rogue' devices fault silently, but I appreciate that not all IOMMUs may 
+have that option)
+
+> Signed-off-by: Tom Murphy <tmurphy@arista.com>
+> ---
+>   drivers/iommu/dma-iommu.c | 30 ++++++++++++++++++++++++++++++
+>   1 file changed, 30 insertions(+)
+> 
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index 7a96c2c8f56b..c18f74ad1e8b 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -322,6 +322,17 @@ static int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
+>   	return iova_reserve_iommu_regions(dev, domain);
+>   }
+>   
+> +static int handle_deferred_device(struct device *dev)
 > +{
-> +	struct ap_qirq_ctrl aqic_gisa = {};
-> +	struct ap_queue_status status;
-> +	int checks = 10;
+> +	struct iommu_domain *domain = iommu_get_domain_for_dev(dev);
+
+We don't want iommu_get_domain_for_dev() in fast-paths, as the 
+contention on the group refcount has proven to have a surprisingly high 
+overhead on some large systems. That's what iommu_get_dma_domain() 
+solves, but ideally, can this be wrapped in is_kdump_kernel() such as to 
+have no impact at all on the general case?
+
+> +	const struct iommu_ops *ops = domain->ops;
 > +
-> +	status = ap_aqic(q->apqn, aqic_gisa, NULL);
-> +	if (!status.response_code) {
-> +		while (status.irq_enabled && checks--) {
-> +			msleep(20);
-
-Hm, that seems like a lot of time to me. And I suppose we are holding the
-kvm lock: e.g. no other instruction can be interpreted by kvm in the
-meantime.
-
-> +			status = ap_tapq(q->apqn, NULL);
-> +		}
-> +		if (checks >= 0)
-> +			vfio_ap_free_irq_data(q);
-
-Actually we don't have to wait for the async part to do it's magic
-(indicated by the status.irq_enabled --> !status.irq_enabled transition)
-in the instruction handler. We have to wait so we can unpin the NIB but
-that could be done async (e.g. workqueue).
-
-BTW do you have any measurements here? How many msleep(20) do we
-experience for one clear on average?
-
-If linux is not using clear (you told so offline, and I also remember
-something similar), we can probably get away with something like this,
-and do it properly (from performance standpoint) later.
-
-Regards,
-Halil
-
-> +		else
-> +			WARN_ONCE("%s: failed disabling IRQ", __func__);
-> +	}
+> +	if (ops->is_attach_deferred && ops->is_attach_deferred(domain, dev))
+> +		return iommu_attach_device(domain, dev);
 > +
-> +	return status;
+> +	return 0;
 > +}
+> +
+>   /**
+>    * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
+>    *                    page flags.
+> @@ -835,6 +846,8 @@ static dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
+>   	bool coherent = dev_is_dma_coherent(dev);
+>   	dma_addr_t dma_handle;
+>   
+> +	handle_deferred_device(dev);
+> +
+>   	dma_handle =__iommu_dma_map(dev, phys, size,
+>   			dma_info_to_prot(dir, coherent, attrs),
+>   			iommu_get_dma_domain(dev));
+> @@ -849,6 +862,8 @@ static void iommu_dma_unmap_page(struct device *dev, dma_addr_t dma_handle,
+>   {
+>   	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+>   
+> +	handle_deferred_device(dev);
 
+You don't need this - it's completely bogus to make an unmap call 
+without having already called the corresponding map function, so we can 
+assume it's already been dealt with.
+
+> +
+>   	if (!dev_is_dma_coherent(dev) && !(attrs & DMA_ATTR_SKIP_CPU_SYNC)) {
+>   		phys_addr_t phys = iommu_iova_to_phys(domain, dma_handle);
+>   
+> @@ -873,6 +888,8 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
+>   	unsigned int cur_len = 0, max_len = dma_get_max_seg_size(dev);
+>   	int i, count = 0;
+>   
+> +	handle_deferred_device(dev);
+
+Hmm, this should be in iommu_dma_map_sg() - that's the guy that needs a 
+valid domain, and it's impossible to get to __finalise_sg() without 
+having been through there anyway.
+
+> +
+>   	for_each_sg(sg, s, nents, i) {
+>   		/* Restore this segment's original unaligned fields first */
+>   		unsigned int s_iova_off = sg_dma_address(s);
+> @@ -1022,6 +1039,8 @@ static void iommu_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
+>   	struct scatterlist *tmp;
+>   	int i;
+>   
+> +	handle_deferred_device(dev);
+
+Again, not necessary.
+
+> +
+>   	if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC) == 0)
+>   		iommu_dma_sync_sg_for_cpu(dev, sg, nents, dir);
+>   
+> @@ -1042,6 +1061,8 @@ static void iommu_dma_unmap_sg(struct device *dev, struct scatterlist *sg,
+>   static dma_addr_t iommu_dma_map_resource(struct device *dev, phys_addr_t phys,
+>   		size_t size, enum dma_data_direction dir, unsigned long attrs)
+>   {
+> +	handle_deferred_device(dev);
+
+Ditto.
+
+> +
+>   	return __iommu_dma_map(dev, phys, size,
+>   			dma_info_to_prot(dir, false, attrs) | IOMMU_MMIO,
+>   			iommu_get_dma_domain(dev));
+> @@ -1050,12 +1071,15 @@ static dma_addr_t iommu_dma_map_resource(struct device *dev, phys_addr_t phys,
+>   static void iommu_dma_unmap_resource(struct device *dev, dma_addr_t handle,
+>   		size_t size, enum dma_data_direction dir, unsigned long attrs)
+>   {
+> +	handle_deferred_device(dev);
+
+Ditto.
+
+> +
+>   	__iommu_dma_unmap(iommu_get_dma_domain(dev), handle, size);
+>   }
+>   
+>   static void *iommu_dma_alloc(struct device *dev, size_t size,
+>   		dma_addr_t *dma_handle, gfp_t gfp, unsigned long attrs)
+>   {
+> +	handle_deferred_device(dev);
+>   	gfp |= __GFP_ZERO;
+>   
+>   #ifdef CONFIG_DMA_DIRECT_REMAP
+> @@ -1076,6 +1100,8 @@ static void iommu_dma_free(struct device *dev, size_t size, void *cpu_addr,
+>   {
+>   	struct page *page;
+>   
+> +	handle_deferred_device(dev);
+
+Similarly, you can't free anything that hasn't already come from a 
+successful call to iommu_dma_alloc()...
+
+> +
+>   	/*
+>   	 * cpu_addr can be one of 4 things depending on how it was allocated:
+>   	 *
+> @@ -1115,6 +1141,8 @@ static int iommu_dma_mmap(struct device *dev, struct vm_area_struct *vma,
+>   	unsigned long pfn;
+>   	int ret;
+>   
+> +	handle_deferred_device(dev);
+
+...nor can you mmap() it...
+
+> +
+>   	vma->vm_page_prot = arch_dma_mmap_pgprot(dev, vma->vm_page_prot, attrs);
+>   
+>   	if (dma_mmap_from_dev_coherent(dev, vma, cpu_addr, size, &ret))
+> @@ -1143,6 +1171,8 @@ static int iommu_dma_get_sgtable(struct device *dev, struct sg_table *sgt,
+>   	struct page *page;
+>   	int ret;
+>   
+> +	handle_deferred_device(dev);
+
+...nor attempt to export it.
+
+Robin.
+
+> +
+>   #ifdef CONFIG_DMA_DIRECT_REMAP
+>   	if (is_vmalloc_addr(cpu_addr)) {
+>   		if (!(attrs & DMA_ATTR_FORCE_CONTIGUOUS))
+> 
