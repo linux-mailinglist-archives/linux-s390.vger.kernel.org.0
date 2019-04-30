@@ -2,81 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B5896F823
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Apr 2019 14:06:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B03BEFA11
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Apr 2019 15:27:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728837AbfD3MFC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Apr 2019 08:05:02 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45888 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728465AbfD3MFB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 30 Apr 2019 08:05:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 82D9680D;
-        Tue, 30 Apr 2019 05:05:00 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CB4A83F5C1;
-        Tue, 30 Apr 2019 05:04:56 -0700 (PDT)
-Subject: Re: [PATCH v2 3/4] iommu/dma-iommu: Use the dev->coherent_dma_mask
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Tom Murphy <tmurphy@arista.com>, iommu@lists.linux-foundation.org,
-        Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will.deacon@arm.com>,
-        David Brown <david.brown@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Andy Gross <andy.gross@linaro.org>,
-        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        murphyt7@tcd.ie, David Woodhouse <dwmw2@infradead.org>
-References: <20190430002952.18909-1-tmurphy@arista.com>
- <20190430002952.18909-4-tmurphy@arista.com>
- <20190430111222.GA3191@infradead.org>
- <da835ce2-f73e-3035-e1d7-d3028cc1a838@arm.com>
- <20190430113253.GA23210@infradead.org>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <96ebb6fc-a889-fa94-09ba-65d505b85724@arm.com>
-Date:   Tue, 30 Apr 2019 13:04:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728771AbfD3N0W (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Apr 2019 09:26:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42240 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728806AbfD3N0R (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 30 Apr 2019 09:26:17 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UDIkI9103394
+        for <linux-s390@vger.kernel.org>; Tue, 30 Apr 2019 09:26:16 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6pa2txyd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 30 Apr 2019 09:26:14 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 30 Apr 2019 14:26:12 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 30 Apr 2019 14:26:08 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UDQ7Lh45940956
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 30 Apr 2019 13:26:07 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0B13052050;
+        Tue, 30 Apr 2019 13:26:07 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.116])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7C5575204F;
+        Tue, 30 Apr 2019 13:26:06 +0000 (GMT)
+Date:   Tue, 30 Apr 2019 15:26:05 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+In-Reply-To: <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+        <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190430113253.GA23210@infradead.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19043013-0028-0000-0000-00000368E2DA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19043013-0029-0000-0000-00002428482B
+Message-Id: <20190430152605.3bb21f31.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=826 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904300086
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 30/04/2019 12:32, Christoph Hellwig wrote:
-> On Tue, Apr 30, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
->>> Hmm, I don't think we need the DMA mask for the MSI mapping, this
->>> should probably always use a 64-bit mask.
->>
->> If that were true then we wouldn't need DMA masks for regular mappings
->> either. If we have to map the MSI doorbell at all, then we certainly have to
->> place it at an IOVA that the relevant device is actually capable of
->> addressing.
-> 
-> Well, as shown by the patch below we don't even look at the DMA mask
-> for the MSI page - we just allocate from bottom to top.
+On Fri, 26 Apr 2019 15:01:27 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-In the trivial cookie for unmanaged domains, yes, but in that case the 
-responsibility is on VFIO to provide a suitable (i.e. sub-32-bit) 
-address range for that cookie in the first place. In the managed case, 
-allocation uses the streaming mask via iommu_dma_get_msi_page() calling 
-__iommu_dma_map(). Admittedly the mask can then get overlooked when 
-reusing an existing mapping, which strictly could pose a problem if you 
-have multiple devices with incompatible masks in the same group (and 
-such that the PCI stuff doesn't already mitigate it), but that's such an 
-obscure corner case that I'm reticent to introduce the complication to 
-handle it until it's actually proven necessary.
+> +/**
+> + * vfio_ap_clrirq: Disable Interruption for a APQN
+> + *
+> + * @dev: the device associated with the ap_queue
+> + * @q:   the vfio_ap_queue holding AQIC parameters
+> + *
+> + * Issue the host side PQAP/AQIC
+> + * On success: unpin the NIB saved in *q and unregister from GIB
+> + * interface
+> + *
+> + * Return the ap_queue_status returned by the ap_aqic()
+> + */
+> +static struct ap_queue_status vfio_ap_clrirq(struct vfio_ap_queue *q)
+> +{
+> +	struct ap_qirq_ctrl aqic_gisa = {};
+> +	struct ap_queue_status status;
+> +	int checks = 10;
+> +
+> +	status = ap_aqic(q->apqn, aqic_gisa, NULL);
+> +	if (!status.response_code) {
+> +		while (status.irq_enabled && checks--) {
+> +			msleep(20);
 
-Robin.
+Hm, that seems like a lot of time to me. And I suppose we are holding the
+kvm lock: e.g. no other instruction can be interpreted by kvm in the
+meantime.
+
+> +			status = ap_tapq(q->apqn, NULL);
+> +		}
+> +		if (checks >= 0)
+> +			vfio_ap_free_irq_data(q);
+
+Actually we don't have to wait for the async part to do it's magic
+(indicated by the status.irq_enabled --> !status.irq_enabled transition)
+in the instruction handler. We have to wait so we can unpin the NIB but
+that could be done async (e.g. workqueue).
+
+BTW do you have any measurements here? How many msleep(20) do we
+experience for one clear on average?
+
+If linux is not using clear (you told so offline, and I also remember
+something similar), we can probably get away with something like this,
+and do it properly (from performance standpoint) later.
+
+Regards,
+Halil
+
+> +		else
+> +			WARN_ONCE("%s: failed disabling IRQ", __func__);
+> +	}
+> +
+> +	return status;
+> +}
+
