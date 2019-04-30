@@ -2,122 +2,173 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB490F4EB
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Apr 2019 13:01:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 769DDF52B
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Apr 2019 13:12:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727444AbfD3LBH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Apr 2019 07:01:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56188 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726294AbfD3LBG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 30 Apr 2019 07:01:06 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3UAv3Xg094618
-        for <linux-s390@vger.kernel.org>; Tue, 30 Apr 2019 07:01:05 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s6k4hdca3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 30 Apr 2019 07:01:04 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 30 Apr 2019 12:01:01 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Apr 2019 12:00:58 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3UB0uuh39911646
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Apr 2019 11:00:56 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 882ED11C06C;
-        Tue, 30 Apr 2019 11:00:56 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0333111C054;
-        Tue, 30 Apr 2019 11:00:56 +0000 (GMT)
-Received: from [9.152.222.31] (unknown [9.152.222.31])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Apr 2019 11:00:55 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
- <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
- <20190429185002.6041eecc.pasic@linux.ibm.com>
- <14453f04-f13f-f63c-fd8a-d9d8834182e0@linux.ibm.com>
- <efa8840b-35b1-2823-697f-ab56d4898854@linux.ibm.com>
- <20190430113718.426392f0.pasic@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 30 Apr 2019 13:00:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727138AbfD3LM3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Apr 2019 07:12:29 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:48492 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726646AbfD3LM3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 Apr 2019 07:12:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=3b8GPUegqQUF4wDq195k1NdogdhAOi+jHdkKbAeMNXk=; b=F3/ToI/cGQpIQDelBBhQYnWX+
+        j/xuGx+L1kIm2FSTo7U3U03O465noF7Ch5TSDDM86npY3ruQIM9sll9MuG7K/+YYh8X4jSIhuLeEO
+        pAXjK4deVUdabsxwofOwGjKigeBSNURJk0377mkTSV6sVoLDBF57Hl+SF3+fJXOjUb/H6BizwrgKI
+        /GLoWLA+/q2gzGn8tXJsI2rhxWV6/isd0OZwI6N500QaWB+T5QtXI2RDHsnpPv9LQ4/VC5sWfoTRZ
+        NfaA0c3rbTb0/Oh0cAJfITFvaLZF0KhntbFaqWGerxOD1HdKGVcG8oK5fvZgQWW3V1qxC1Q7Iv6Sz
+        H2jNgcYYw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hLQgR-0005Dn-0q; Tue, 30 Apr 2019 11:12:23 +0000
+Date:   Tue, 30 Apr 2019 04:12:22 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <tmurphy@arista.com>
+Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        David Brown <david.brown@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, murphyt7@tcd.ie,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH v2 3/4] iommu/dma-iommu: Use the dev->coherent_dma_mask
+Message-ID: <20190430111222.GA3191@infradead.org>
+References: <20190430002952.18909-1-tmurphy@arista.com>
+ <20190430002952.18909-4-tmurphy@arista.com>
 MIME-Version: 1.0
-In-Reply-To: <20190430113718.426392f0.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19043011-0020-0000-0000-00000337D102
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19043011-0021-0000-0000-0000218A4F4D
-Message-Id: <e000d0b8-c5fa-bdc1-10f3-2bebae7ccdfe@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-30_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=840 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904300072
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190430002952.18909-4-tmurphy@arista.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 30/04/2019 11:37, Halil Pasic wrote:
-> On Tue, 30 Apr 2019 10:32:52 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->>>>> +    aqic_gisa.gisa = gisa->next_alert >> 4;
->>>>
->>>> Why gisa->next_alert? Isn't this supposed to get set to gisa origin
->>>> (without some bits on the left)?
-> 
-> s/left/right/
-> 
->>>
->>> Someone already asked this question.
-> 
-> It must have been in some previous iteration... Can you give me a
-> pointer?
-> 
->>> The answer is: look at the ap_qirq_ctrl structure, you will see that the
->>> gisa field is 27 bits wide.
-> 
-> My question was not about the width, but about gisa->next_alert being
-> used.
-> 
-> Regards,
-> Halil
-> 
+>  static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+> -		size_t size, int prot, struct iommu_domain *domain)
+> +		size_t size, int prot, struct iommu_domain *domain,
+> +		dma_addr_t dma_limit)
 
-Ah, OK, I understand.
-it is inherited from the time I allocated the GISA myself, before the 
-Mimu GISA/GIB patches.
+Can we just call this dma_mask?
 
-So now indeed I must use the GISA origin for the case next_alert is used 
-by GIB alert queue.
+>  static void iommu_dma_unmap_resource(struct device *dev, dma_addr_t handle,
+> @@ -1250,7 +1251,8 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+>  	if (!msi_page)
+>  		return NULL;
+>  
+> -	iova = __iommu_dma_map(dev, msi_addr, size, prot, domain);
+> +	iova = __iommu_dma_map(dev, msi_addr, size, prot, domain,
+> +			dma_get_mask(dev));
 
+Hmm, I don't think we need the DMA mask for the MSI mapping, this
+should probably always use a 64-bit mask.  Or we could just untangle
+it from the DMA mapping fast path entire, something like:
 
+---
+From 0debafc85174ca830f2e371ff8e8f7465bde3ad8 Mon Sep 17 00:00:00 2001
+From: Christoph Hellwig <hch@lst.de>
+Date: Tue, 30 Apr 2019 07:06:23 -0400
+Subject: iommu/dma: opencode __iommu_dma_map in iommu_dma_get_msi_page
+
+The MSI page mapping really is a little different from the normal DMA
+mappings and doesn't need to look at the DMA mask.  Just open code
+it instead of trying to squeeze the behavior into the DMA path helpers.
+
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+---
+ drivers/iommu/dma-iommu.c | 27 +++++++--------------------
+ 1 file changed, 7 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 58c35bab7626..2ac0df0879d7 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -358,11 +358,6 @@ static dma_addr_t iommu_dma_alloc_iova(struct iommu_domain *domain,
+ 	struct iova_domain *iovad = &cookie->iovad;
+ 	unsigned long shift, iova_len, iova = 0;
+ 
+-	if (cookie->type == IOMMU_DMA_MSI_COOKIE) {
+-		cookie->msi_iova += size;
+-		return cookie->msi_iova - size;
+-	}
+-
+ 	shift = iova_shift(iovad);
+ 	iova_len = size >> shift;
+ 	/*
+@@ -397,10 +392,7 @@ static void iommu_dma_free_iova(struct iommu_dma_cookie *cookie,
+ {
+ 	struct iova_domain *iovad = &cookie->iovad;
+ 
+-	/* The MSI case is only ever cleaning up its most recent allocation */
+-	if (cookie->type == IOMMU_DMA_MSI_COOKIE)
+-		cookie->msi_iova -= size;
+-	else if (cookie->fq_domain)	/* non-strict mode */
++	if (cookie->fq_domain)	/* non-strict mode */
+ 		queue_iova(iovad, iova_pfn(iovad, iova),
+ 				size >> iova_shift(iovad), 0);
+ 	else
+@@ -430,14 +422,10 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+ {
+ 	struct iommu_domain *domain = iommu_get_dma_domain(dev);
+ 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+-	size_t iova_off = 0;
++	size_t iova_off = iova_offset(&cookie->iovad, phys);
+ 	dma_addr_t iova;
+ 
+-	if (cookie->type == IOMMU_DMA_IOVA_COOKIE) {
+-		iova_off = iova_offset(&cookie->iovad, phys);
+-		size = iova_align(&cookie->iovad, size + iova_off);
+-	}
+-
++	size = iova_align(&cookie->iovad, size + iova_off);
+ 	iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
+ 	if (!iova)
+ 		return DMA_MAPPING_ERROR;
+@@ -1121,7 +1109,6 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+ {
+ 	struct iommu_dma_cookie *cookie = domain->iova_cookie;
+ 	struct iommu_dma_msi_page *msi_page;
+-	dma_addr_t iova;
+ 	int prot = IOMMU_WRITE | IOMMU_NOEXEC | IOMMU_MMIO;
+ 	size_t size = cookie_msi_granule(cookie);
+ 
+@@ -1134,16 +1121,16 @@ static struct iommu_dma_msi_page *iommu_dma_get_msi_page(struct device *dev,
+ 	if (!msi_page)
+ 		return NULL;
+ 
+-	iova = __iommu_dma_map(dev, msi_addr, size, prot);
+-	if (iova == DMA_MAPPING_ERROR)
++	if (iommu_map(domain, cookie->msi_iova, msi_addr, size, prot))
+ 		goto out_free_page;
+ 
+ 	INIT_LIST_HEAD(&msi_page->list);
+ 	msi_page->phys = msi_addr;
+-	msi_page->iova = iova;
++	msi_page->iova = cookie->msi_iova;
+ 	list_add(&msi_page->list, &cookie->msi_page_list);
+-	return msi_page;
+ 
++	cookie->msi_iova += size;
++	return msi_page;
+ out_free_page:
+ 	kfree(msi_page);
+ 	return NULL;
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+2.20.1
 
