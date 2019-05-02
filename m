@@ -2,131 +2,170 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FCD11134F
-	for <lists+linux-s390@lfdr.de>; Thu,  2 May 2019 08:22:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC565114A3
+	for <lists+linux-s390@lfdr.de>; Thu,  2 May 2019 09:57:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726209AbfEBGWT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 May 2019 02:22:19 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:55119 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725764AbfEBGWS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 May 2019 02:22:18 -0400
-Received: by mail-it1-f196.google.com with SMTP id a190so1381374ite.4;
-        Wed, 01 May 2019 23:22:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=k56mmNJm2c37muwGSNyw5prel5SUd23hcD0vEkYllYY=;
-        b=OUxx+AAHpV80+7jWx8f1+E7itJj9D1rgHeIv5/3VMm7TKAnaU1bHWCA0kR/Uu4B/N0
-         YiDM2kOhNwjBsVDh7yPbvcSscs4wrg/XbXz1H/w3lDdnJU4TQ9QwedxsTFe/Bbjt18D3
-         JRn/qzW0ooD8Rl7s9nAI0qgl8XU1Fhb9EsRc0VNWcSWwmT5yQ/Ep3gbO5ZmDWB/2TOjs
-         56aGZ16FpdQ10TxCUNbdRMfiLjvkeIGo1brUr0GBhS/X+j6ZJRXFbl8XXTiVI/tpSorx
-         HgJ21xXoiQgpOYV/KzFy4OYZm4ZtO8AhUMxPfwPWagYl7mDnLgavitYf7mYuADYjNy/N
-         5KRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=k56mmNJm2c37muwGSNyw5prel5SUd23hcD0vEkYllYY=;
-        b=MIyo4SDSGi/WvE33ca1hznAocUQEWoDqMwzG+5wsQ8x40U+aElZTVV6cC1Cay8TR+M
-         KI654MWkZ+5cI6RqMrG+Fq+ijr0oCojrjuLS0dpAbm2IDNcKuG9jFI2I+ue5JVnChLwO
-         tF/tdKd5JmbtCLlErt2pO87fridJB/nnsFlLngNnYFi+fn084SQYS+K8xx6ur+tiKdlM
-         3j3klGWMGeanQkoCtACPslOEvMj4G9tKlM9s/4LcW4uco0583l+ldyM/HjsKxet/i4+3
-         vnZeub/YcYzhfV/b7z9ZKnk6B2BWAGdpsF2bWqrrs9w2MbbNAwK9oKxCkxQDuimTJ87C
-         5cLw==
-X-Gm-Message-State: APjAAAVC7lf9nWQ7pU6RjkY1B7DsjoFlcku1nJgZzzMxboY5YwajECx/
-        hZAeysXcmv0Kj+IDOSlrwExVawlnhycTOLvuTg==
-X-Google-Smtp-Source: APXvYqx2USGvNZCoaLJnd+1UamBCWbf1OMfqf8foQXGwbUGpu68tSJhvorSVm2AnXEjYEs1kPbB4DdJnuY+hXU3VFhQ=
-X-Received: by 2002:a05:660c:38e:: with SMTP id x14mr1138760itj.146.1556778137619;
- Wed, 01 May 2019 23:22:17 -0700 (PDT)
+        id S1725944AbfEBH5k (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 May 2019 03:57:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35258 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725795AbfEBH5j (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 May 2019 03:57:39 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x427vYxH145860
+        for <linux-s390@vger.kernel.org>; Thu, 2 May 2019 03:57:38 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s7t49ddw5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 02 May 2019 03:57:38 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 2 May 2019 08:57:35 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 2 May 2019 08:57:33 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x427vW5a52428928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 2 May 2019 07:57:32 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0574A4040;
+        Thu,  2 May 2019 07:57:31 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 56C2FA4051;
+        Thu,  2 May 2019 07:57:31 +0000 (GMT)
+Received: from [9.145.190.191] (unknown [9.145.190.191])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  2 May 2019 07:57:31 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v7 3/4] s390: ap: implement PAPQ AQIC interception in
+ kernel
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1556283688-556-1-git-send-email-pmorel@linux.ibm.com>
+ <1556283688-556-4-git-send-email-pmorel@linux.ibm.com>
+ <20190430152605.3bb21f31.pasic@linux.ibm.com>
+ <622a9ab0-579d-17f4-6fa1-74d73da13b19@linux.ibm.com>
+Date:   Thu, 2 May 2019 09:57:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1556087581-14513-1-git-send-email-kernelfans@gmail.com>
- <10dc5468-6cd9-85c7-ba66-1dfa5aa922b7@suse.com> <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
-In-Reply-To: <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Thu, 2 May 2019 14:22:06 +0800
-Message-ID: <CAFgQCTtQm7SuBRfXik6B065Aa+uQ=Mx6i+Y1q+NJU1GEiUgH4g@mail.gmail.com>
-Subject: Re: [PATCHv2] kernel/crash: make parse_crashkernel()'s return value
- more indicant
-To:     Matthias Brugger <mbrugger@suse.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Rich Felker <dalias@libc.org>,
-        linux-ia64@vger.kernel.org,
-        Julien Thierry <julien.thierry@arm.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-s390@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        David Hildenbrand <david@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dave Young <dyoung@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>,
-        Borislav Petkov <bp@alien8.de>, Stefan Agner <stefan@agner.ch>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Tony Luck <tony.luck@intel.com>,
-        Baoquan He <bhe@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Greg Hackmann <ghackmann@android.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <622a9ab0-579d-17f4-6fa1-74d73da13b19@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050207-4275-0000-0000-0000033087E4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050207-4276-0000-0000-0000383FE5F4
+Message-Id: <42185132-dfc4-c997-3d69-31e43d25e525@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=658 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905020061
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 25, 2019 at 4:20 PM Pingfan Liu <kernelfans@gmail.com> wrote:
->
-> On Wed, Apr 24, 2019 at 4:31 PM Matthias Brugger <mbrugger@suse.com> wrote:
-> >
-> >
-> [...]
-> > > @@ -139,6 +141,8 @@ static int __init parse_crashkernel_simple(char *cmdline,
-> > >               pr_warn("crashkernel: unrecognized char: %c\n", *cur);
-> > >               return -EINVAL;
-> > >       }
-> > > +     if (*crash_size == 0)
-> > > +             return -EINVAL;
-> >
-> > This covers the case where I pass an argument like "crashkernel=0M" ?
-> > Can't we fix that by using kstrtoull() in memparse and check if the return value
-> > is < 0? In that case we could return without updating the retptr and we will be
-> > fine.
-After a series of work, I suddenly realized that it can not be done
-like this way. "0M" causes kstrtoull() to return -EINVAL, but this is
-caused by "M", not "0". If passing "0" to kstrtoull(), it will return
-0 on success.
+On 30/04/2019 16:09, Pierre Morel wrote:
+> On 30/04/2019 15:26, Halil Pasic wrote:
+>> On Fri, 26 Apr 2019 15:01:27 +0200
+>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>
+>>> +/**
+>>> + * vfio_ap_clrirq: Disable Interruption for a APQN
+>>> + *
+>>> + * @dev: the device associated with the ap_queue
+>>> + * @q:   the vfio_ap_queue holding AQIC parameters
+>>> + *
+>>> + * Issue the host side PQAP/AQIC
+>>> + * On success: unpin the NIB saved in *q and unregister from GIB
+>>> + * interface
+>>> + *
+>>> + * Return the ap_queue_status returned by the ap_aqic()
+>>> + */
+>>> +static struct ap_queue_status vfio_ap_clrirq(struct vfio_ap_queue *q)
+>>> +{
+>>> +    struct ap_qirq_ctrl aqic_gisa = {};
+>>> +    struct ap_queue_status status;
+>>> +    int checks = 10;
+>>> +
+>>> +    status = ap_aqic(q->apqn, aqic_gisa, NULL);
+>>> +    if (!status.response_code) {
+>>> +        while (status.irq_enabled && checks--) {
+>>> +            msleep(20);
+>>
+>> Hm, that seems like a lot of time to me. And I suppose we are holding the
+>> kvm lock: e.g. no other instruction can be interpreted by kvm in the
+>> meantime.
+>>
+>>> +            status = ap_tapq(q->apqn, NULL);
+>>> +        }
+>>> +        if (checks >= 0)
+>>> +            vfio_ap_free_irq_data(q);
+>>
+>> Actually we don't have to wait for the async part to do it's magic
+>> (indicated by the status.irq_enabled --> !status.irq_enabled transition)
+>> in the instruction handler. We have to wait so we can unpin the NIB but
+>> that could be done async (e.g. workqueue).
+>>
+>> BTW do you have any measurements here? How many msleep(20) do we
+>> experience for one clear on average?
+> 
+> No idea but it is probably linked to the queue state and usage history.
+> I can use a lower sleep time and increment the retry count.
+> 
+>>
+>> If linux is not using clear (you told so offline, and I also remember
+>> something similar), we can probably get away with something like this,
+>> and do it properly (from performance standpoint) later.
+> 
+> In the Linux AP code it is only used once, in the explicit
+> ap_queue_enable_interruption() function.
 
-> >
-> It seems that kstrtoull() treats 0M as invalid parameter, while
-> simple_strtoull() does not.
->
-My careless going through the code. And I tested with a valid value
-"256M" using kstrtoull(), it also returned -EINVAL.
+My answer is not clear: ap_aqic() is used only once, during the bus 
+probe, in the all code to enable interrupt and is never used to disable 
+interrupt.
 
-So I think there is no way to distinguish 0 from a positive value
-inside this basic math function.
-Do I miss anything?
+Interrupt disabling is only done by using ap_zapq() or ap_rapq() which 
+can not be intercepted.
 
-Thanks and regards,
-Pingfan
+
+> 
+> Yes, thanks, I will keep it as is, may be just play with msleep()time 
+> and retry count.
+> 
+> Regards,
+> Pierre
+> 
+>>
+>> Regards,
+>> Halil
+>>
+>>> +        else
+>>> +            WARN_ONCE("%s: failed disabling IRQ", __func__);
+>>> +    }
+>>> +
+>>> +    return status;
+>>> +}
+>>
+> 
+> 
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
