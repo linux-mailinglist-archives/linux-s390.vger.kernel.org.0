@@ -2,94 +2,72 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D6841211A
-	for <lists+linux-s390@lfdr.de>; Thu,  2 May 2019 19:34:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D3A40124F3
+	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 01:15:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726414AbfEBReo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 May 2019 13:34:44 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46304 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726443AbfEBReX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 May 2019 13:34:23 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42HMvH4023019
-        for <linux-s390@vger.kernel.org>; Thu, 2 May 2019 13:34:22 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s83w1b1w2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 02 May 2019 13:34:22 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 2 May 2019 18:34:20 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 18:34:17 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42HYFMk57409566
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 17:34:15 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1C374C046;
-        Thu,  2 May 2019 17:34:15 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 20B824C040;
-        Thu,  2 May 2019 17:34:15 +0000 (GMT)
-Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.190.191])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 May 2019 17:34:15 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: [PATCH v8 4/4] s390: ap: kvm: Enable PQAP/AQIC facility for the guest
-Date:   Thu,  2 May 2019 19:34:11 +0200
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1556818451-1806-1-git-send-email-pmorel@linux.ibm.com>
-References: <1556818451-1806-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050217-0012-0000-0000-00000317A4AA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050217-0013-0000-0000-0000215014DD
-Message-Id: <1556818451-1806-5-git-send-email-pmorel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=813 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905020112
+        id S1726320AbfEBXPr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 May 2019 19:15:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50848 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726053AbfEBXPr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 May 2019 19:15:47 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x1JkGI4CQYrmvxuM8WIiLxnMqgmcALyQZwo7P71BME0=; b=aMGrAGbRVDdw1l/sw+gckS+sI
+        yDZRI+3C+9JVbYF5x2TNO2v6ZU46vYBCxSlqgSFAyRpfREdxjyopf5mVIOuO+jPgRBsXJd2WNYSnF
+        /I8A7c2f4ZPKJ2BAsrHVAa3XgZa1Qf5UknK5MzQ/VET/Ij0UeqKBGlYDO7wlzooU0qq4VGVtOuSH8
+        FfL6+e4qqO0V8zFTtborrXEeCSKP8gI1CQxx/4VKLrA/KtJTKs3viL4v8Jq+vuEbUwPtPTqSnacch
+        i7OH8Qeq65dZyi5x87J8wju+DihRuYLLXhCq55dy1ya/+objw3Kmmh7K6U5nQGlGqynqD2RbtFQiK
+        OqNefzOAw==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hMKvW-0006KY-Ob; Thu, 02 May 2019 23:15:42 +0000
+Date:   Thu, 2 May 2019 16:15:42 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Hillf Danton <dhillf@gmail.com>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Paul Mundt <lethal@linux-sh.org>, Stas Sergeev <stsp@list.ru>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, linux-sh@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Khalid Aziz <khalid.aziz@oracle.com>,
+        Nitin Gupta <nitin.m.gupta@oracle.com>,
+        sparclinux@vger.kernel.org
+Subject: Re: Linux 5.1-rc5
+Message-ID: <20190502231542.GA9336@infradead.org>
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+ <20190415051919.GA31481@infradead.org>
+ <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-AP Queue Interruption Control (AQIC) facility gives
-the guest the possibility to control interruption for
-the Cryptographic Adjunct Processor queues.
+On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
+> I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
+> largely irrelevant, partly since even theoretically this whole issue
+> needs a _lot_ of memory.
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
----
- arch/s390/tools/gen_facilities.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
-index 61ce5b5..aed14fc 100644
---- a/arch/s390/tools/gen_facilities.c
-+++ b/arch/s390/tools/gen_facilities.c
-@@ -114,6 +114,7 @@ static struct facility_def facility_defs[] = {
- 		.bits = (int[]){
- 			12, /* AP Query Configuration Information */
- 			15, /* AP Facilities Test */
-+			65, /* AP Queue Interruption Control */
- 			156, /* etoken facility */
- 			-1  /* END */
- 		}
--- 
-2.7.4
-
+Adding the relevant people - while the might be irrelevant, at least
+mips and sparc have some giant memory systems.  And I'd really like
+to see the arch-specific GUP implementations to go away for other
+reasons, as we have a few issues to sort out with GUP usage now
+(we just had discussions at LSF/MM), and the less implementations we
+have to deal with the better.
