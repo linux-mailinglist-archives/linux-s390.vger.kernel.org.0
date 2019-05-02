@@ -2,139 +2,287 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5F4AD11C45
-	for <lists+linux-s390@lfdr.de>; Thu,  2 May 2019 17:11:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 42BD211F10
+	for <lists+linux-s390@lfdr.de>; Thu,  2 May 2019 17:46:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726406AbfEBPLE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 May 2019 11:11:04 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51692 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726349AbfEBPLE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 May 2019 11:11:04 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42F7YNK125215
-        for <linux-s390@vger.kernel.org>; Thu, 2 May 2019 11:11:03 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s81yqarrj-1
+        id S1726914AbfEBPpo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 May 2019 11:45:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49792 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727573AbfEBPZg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 May 2019 11:25:36 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x42F7gtX026671
+        for <linux-s390@vger.kernel.org>; Thu, 2 May 2019 11:25:34 -0400
+Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2s81j3w717-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 02 May 2019 11:11:02 -0400
+        for <linux-s390@vger.kernel.org>; Thu, 02 May 2019 11:25:34 -0400
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Thu, 2 May 2019 16:11:00 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <walling@linux.ibm.com>;
+        Thu, 2 May 2019 16:25:33 +0100
+Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
+        by e36.co.us.ibm.com (192.168.1.136) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 2 May 2019 16:10:57 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FAuLs21954804
+        Thu, 2 May 2019 16:25:30 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x42FPTc951904686
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 2 May 2019 15:10:57 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C94CFA4053;
-        Thu,  2 May 2019 15:10:56 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7F9A0A4051;
-        Thu,  2 May 2019 15:10:56 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.152.212.60])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  2 May 2019 15:10:56 +0000 (GMT)
-Date:   Thu, 2 May 2019 17:10:55 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-In-Reply-To: <20190502143110.GC17577@kroah.com>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
-        <20190415051919.GA31481@infradead.org>
-        <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
-        <20190502122128.GA2670@kroah.com>
-        <20190502161758.26972bb2@mschwideX1>
-        <20190502143110.GC17577@kroah.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Thu, 2 May 2019 15:25:29 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 32D59C6055;
+        Thu,  2 May 2019 15:25:29 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9CABEC605A;
+        Thu,  2 May 2019 15:25:28 +0000 (GMT)
+Received: from [9.56.58.88] (unknown [9.56.58.88])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  2 May 2019 15:25:28 +0000 (GMT)
+Subject: Re: [PATCH v4 2/2] s390/kvm: diagnose 318 handling
+To:     David Hildenbrand <david@redhat.com>, cohuck@redhat.com,
+        pbonzini@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <1556751063-21835-1-git-send-email-walling@linux.ibm.com>
+ <1556751063-21835-3-git-send-email-walling@linux.ibm.com>
+ <783ecdb4-3bc2-4bf3-55cb-9a902467aadd@redhat.com>
+From:   Collin Walling <walling@linux.ibm.com>
+Date:   Thu, 2 May 2019 11:25:28 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <783ecdb4-3bc2-4bf3-55cb-9a902467aadd@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19050215-0020-0000-0000-0000033897C2
+x-cbid: 19050215-0020-0000-0000-00000EE013AD
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011035; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01197552; UDB=6.00628118; IPR=6.00978408;
+ MB=3.00026697; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-02 15:25:32
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050215-0021-0000-0000-0000218B205B
-Message-Id: <20190502171055.132f023c@mschwideX1>
+x-cbparentid: 19050215-0021-0000-0000-000065A674A1
+Message-Id: <1988b4c3-e123-47dd-2008-15d8bec0171d@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-02_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=931 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905020102
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 2 May 2019 16:31:10 +0200
-Greg KH <gregkh@linuxfoundation.org> wrote:
-
-> On Thu, May 02, 2019 at 04:17:58PM +0200, Martin Schwidefsky wrote:
-> > On Thu, 2 May 2019 14:21:28 +0200
-> > Greg KH <gregkh@linuxfoundation.org> wrote:
-> >   
-> > > On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:  
-> > > > On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:    
-> > > > >
-> > > > > Can we please have the page refcount overflow fixes out on the list
-> > > > > for review, even if it is after the fact?    
-> > > > 
-> > > > They were actually on a list for review long before the fact, but it
-> > > > was the security mailing list. The issue actually got discussed back
-> > > > in January along with early versions of the patches, but then we
-> > > > dropped the ball because it just wasn't on anybody's radar and it got
-> > > > resurrected late March. Willy wrote a rather bigger patch-series, and
-> > > > review of that is what then resulted in those commits. So they may
-> > > > look recent, but that's just because the original patches got
-> > > > seriously edited down and rewritten.
-> > > > 
-> > > > That said, powerpc and s390 should at least look at maybe adding a
-> > > > check for the page ref in their gup paths too. Powerpc has the special
-> > > > gup_hugepte() case, and s390 has its own version of gup entirely. I
-> > > > was actually hoping the s390 guys would look at using the generic gup
-> > > > code.
-> > > > 
-> > > > I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
-> > > > largely irrelevant, partly since even theoretically this whole issue
-> > > > needs a _lot_ of memory.
-> > > > 
-> > > > Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
-> > > > (page ref overflow)"). You may or may not really care.    
-> > > 
-> > > I've now queued these patches up for the next round of stable releases,
-> > > as some people seem to care about these.
-> > > 
-> > > I didn't see any follow-on patches for s390 or ppc64 hit the tree for
-> > > these changes, am I just missing them and should also queue up a few
-> > > more to handle this issue on those platforms?  
-> > 
-> > I fixed that with a different approach. The following two patches are
-> > queued for the next merge window:
-> > 
-> > d1874a0c2805 "s390/mm: make the pxd_offset functions more robust"
-> > 1a42010cdc26 "s390/mm: convert to the generic get_user_pages_fast code"
-> > 
-> > With these two s390 now uses the generic gup code in mm/gup.c  
+On 5/2/19 8:59 AM, David Hildenbrand wrote:
+> On 02.05.19 00:51, Collin Walling wrote:
+>> DIAGNOSE 0x318 (diag318) is a privileged s390x instruction that must
+>> be intercepted by SIE and handled via KVM. Let's introduce some
+>> functions to communicate between userspace and KVM via ioctls. These
+>> will be used to get/set the diag318 related information (also known
+>> as the "Control Program Code" or "CPC"), as well as check the system
+>> if KVM supports handling this instruction.
+>>
+>> This information can help with diagnosing the OS the VM is running
+>> in (Linux, z/VM, etc) if the OS calls this instruction.
+>>
+>> The get/set functions are introduced primarily for VM migration and
+>> reset, though no harm could be done to the system if a userspace
+>> program decides to alter this data (this is highly discouraged).
+>>
+>> The Control Program Name Code (CPNC) is stored in the SIE block and
+>> a copy is retained in each VCPU. The Control Program Version Code
+>> (CPVC) retains a copy in each VCPU as well.
+>>
+>> At this time, the CPVC is not reported as its format is yet to be
+>> defined.
+>>
+>> Note that the CPNC is set in the SIE block iff the host hardware
+>> supports it.
 > 
-> Nice!  Do you want me to queue those up for the stable backports once
-> they hit a public -rc release?
+> For vSIE and SIE you only configure the CPNC. Is that sufficient?
+> Shouldn't diag318 allow the guest to set both? (especially regarding vSIE)
+> 
 
-Yes please!
+The SIE block only stores the CPNC. The CPVC is not designed to be
+stored in the SIE block, so we store it in guest memory only.
 
--- 
-blue skies,
-   Martin.
+> [...]
+>>
+>> diff --git a/Documentation/virtual/kvm/devices/vm.txt b/Documentation/virtual/kvm/devices/vm.txt
+>> index 95ca68d..9a8d934 100644
+>> --- a/Documentation/virtual/kvm/devices/vm.txt
+>> +++ b/Documentation/virtual/kvm/devices/vm.txt
+>> @@ -267,3 +267,17 @@ Parameters: address of a buffer in user space to store the data (u64) to;
+>>   	    if it is enabled
+>>   Returns:    -EFAULT if the given address is not accessible from kernel space
+>>   	    0 in case of success.
+>> +
+>> +6. GROUP: KVM_S390_VM_MISC
+>> +Architectures: s390
+>> +
+>> +6.1. KVM_S390_VM_MISC_CPC (r/w)
+>> +
+>> +Allows userspace to access the "Control Program Code" which consists of a
+>> +1-byte "Control Program Name Code" and a 7-byte "Control Program Version Code".
+>> +This information is initialized during IPL and must be preserved during
+>> +migration.
+> 
+> Your implementation does not match this description. User space can only
+> get/set the cpnc effectively for the HW to see it, not the CPVC, no?
+> 
 
-"Reality continues to ruin my life." - Calvin.
+We retrieve the entire CPNC + CPVC. User space (i.e. QEMU) can retrieve
+this 64-bit value and save / load it during live guest migration.
+
+I figured it would be best to set / get this entire value now, so that
+we don't need to add extra handling for the version code later when its
+format is properly decided.
+
+> Shouldn't you transparently forward that data to the SCB for vSIE/SIE,
+> because we really don't care what the target format will be?
+> 
+
+Sorry, I'm not fully understanding what you mean by "we really don't
+care what the target format will be?"
+
+Do you mean to shadow the CPNC without checking if diag318 is supported?
+I imagine that would be harmless.
+
+>> +
+>> +Parameters: address of a buffer in user space to store the data (u64) to
+>> +Returns:    -EFAULT if the given address is not accessible from kernel space
+>> +	     0 in case of success.
+> 
+> [...]
+>>   
+>>   #define KVM_HVA_ERR_BAD		(-1UL)
+>> diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
+>> index 16511d9..3d3d2a5 100644
+>> --- a/arch/s390/include/uapi/asm/kvm.h
+>> +++ b/arch/s390/include/uapi/asm/kvm.h
+>> @@ -74,6 +74,7 @@ struct kvm_s390_io_adapter_req {
+>>   #define KVM_S390_VM_CRYPTO		2
+>>   #define KVM_S390_VM_CPU_MODEL		3
+>>   #define KVM_S390_VM_MIGRATION		4
+>> +#define KVM_S390_VM_MISC		5
+>>   
+>>   /* kvm attributes for mem_ctrl */
+>>   #define KVM_S390_VM_MEM_ENABLE_CMMA	0
+>> @@ -168,6 +169,9 @@ struct kvm_s390_vm_cpu_subfunc {
+>>   #define KVM_S390_VM_MIGRATION_START	1
+>>   #define KVM_S390_VM_MIGRATION_STATUS	2
+>>   
+>> +/* kvm attributes for KVM_S390_VM_MISC */
+>> +#define KVM_S390_VM_MISC_CPC		0
+>> +
+>>   /* for KVM_GET_REGS and KVM_SET_REGS */
+>>   struct kvm_regs {
+>>   	/* general purpose regs for s390 */
+>> diff --git a/arch/s390/kvm/diag.c b/arch/s390/kvm/diag.c
+>> index 45634b3d..9762e6a 100644
+>> --- a/arch/s390/kvm/diag.c
+>> +++ b/arch/s390/kvm/diag.c
+>> @@ -235,6 +235,21 @@ static int __diag_virtio_hypercall(struct kvm_vcpu *vcpu)
+>>   	return ret < 0 ? ret : 0;
+>>   }
+>>   
+>> +static int __diag_set_control_prog_name(struct kvm_vcpu *vcpu)
+> 
+> Can we name that "__diag_set_cpc" ?
+> 
+> "control_prog_name" is certainly not 100% correct.
+> 
+
+Sure
+
+>> +{
+>> +	unsigned int reg = (vcpu->arch.sie_block->ipa & 0xf0) >> 4;
+>> +	u64 cpc = vcpu->run->s.regs.gprs[reg];
+>> +
+>> +	vcpu->stat.diagnose_318++;
+>> +	kvm_s390_set_cpc(vcpu->kvm, cpc);
+>> +
+>> +	VCPU_EVENT(vcpu, 3, "diag 0x318 cpnc: 0x%x cpvc: 0x%llx",
+>> +		   vcpu->kvm->arch.diag318_info.cpnc,
+>> +		   (u64)vcpu->kvm->arch.diag318_info.cpvc);
+>> +
+>> +	return 0;
+>> +}
+> 
+> 
+> [...]
+>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>> index 4638303..910af18 100644
+>> --- a/arch/s390/kvm/kvm-s390.c
+>> +++ b/arch/s390/kvm/kvm-s390.c
+>> @@ -156,6 +156,7 @@ struct kvm_stats_debugfs_item debugfs_entries[] = {
+>>   	{ "instruction_diag_9c", VCPU_STAT(diagnose_9c) },
+>>   	{ "instruction_diag_258", VCPU_STAT(diagnose_258) },
+>>   	{ "instruction_diag_308", VCPU_STAT(diagnose_308) },
+>> +	{ "instruction_diag_318", VCPU_STAT(diagnose_318) },
+>>   	{ "instruction_diag_500", VCPU_STAT(diagnose_500) },
+>>   	{ "instruction_diag_other", VCPU_STAT(diagnose_other) },
+>>   	{ NULL }
+>> @@ -1190,6 +1191,70 @@ static int kvm_s390_get_tod(struct kvm *kvm, struct kvm_device_attr *attr)
+>>   	return ret;
+>>   }
+>>   
+>> +void kvm_s390_set_cpc(struct kvm *kvm, u64 cpc)
+>> +{
+>> +	struct kvm_vcpu *vcpu;
+>> +	int i;
+>> +
+>> +	mutex_lock(&kvm->lock);
+>> +	kvm->arch.diag318_info.val = cpc;
+>> +
+>> +	VM_EVENT(kvm, 3, "SET: CPNC: 0x%x CPVC: 0x%llx",
+>> +		 kvm->arch.diag318_info.cpnc, (u64)kvm->arch.diag318_info.cpvc);
+>> +
+>> +	if (sclp.has_diag318) {
+>> +		kvm_for_each_vcpu(i, vcpu, kvm) {
+>> +			vcpu->arch.sie_block->cpnc = kvm->arch.diag318_info.cpnc;
+>> +		}
+>> +	}
+> 
+> Do we care about races here between guest VCPUs reading it via the SCB
+> (HW) and us changing the value? My gut feeling is that it can be tolerated.
+>  >> +	mutex_unlock(&kvm->lock);
+>> +}
+>> +
+>> +static int kvm_s390_set_misc(struct kvm *kvm, struct kvm_device_attr *attr)
+>> +{
+>> +	int ret;
+>> +	u64 cpc;
+>> +
+>> +	switch (attr->attr) {
+>> +	case KVM_S390_VM_MISC_CPC:
+>> +		ret = -EFAULT;
+>> +		if (get_user(cpc, (u64 __user *)attr->addr))
+>> +			break;
+>> +		kvm_s390_set_cpc(kvm, cpc);
+>> +		ret = 0;
+>> +		break;
+>> +	default:
+>> +		ret = -ENXIO;
+>> +		break;
+>> +	}
+>> +	return ret;
+>> +}
+>> +
+>> +static int kvm_s390_get_cpc(struct kvm *kvm, struct kvm_device_attr *attr)
+>> +{
+>> +	if (put_user(kvm->arch.diag318_info.val, (u64 __user *)attr->addr))
+>> +		return -EFAULT;
+> 
+> Another possible race with setting code. Should be at least take the
+> kvm->lock here? Otherwise, also looks like this can be tolerated.
+> 
+
+I'm 99% sure both can be tolerated. I can't really think of a scenario
+where not taking the lock in either get / set would cause any concerns.
+
+Thanks for the review!
 
