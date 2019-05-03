@@ -2,114 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 902BB12C10
-	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 13:12:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 20E9112DC0
+	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 14:38:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727107AbfECLL7 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Fri, 3 May 2019 07:11:59 -0400
-Received: from relay11.mail.gandi.net ([217.70.178.231]:50555 "EHLO
-        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726396AbfECLL6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 May 2019 07:11:58 -0400
-Received: from xps13 (aaubervilliers-681-1-29-145.w90-88.abo.wanadoo.fr [90.88.149.145])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 9D4FF100005;
-        Fri,  3 May 2019 11:11:53 +0000 (UTC)
-Date:   Fri, 3 May 2019 13:11:52 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-arch <linux-arch@vger.kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Arnd Bergmann <arnd@arndb.de>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Mathieu Malaterre <malat@debian.org>, X86 ML <x86@kernel.org>,
+        id S1727617AbfECMiD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 May 2019 08:38:03 -0400
+Received: from ms.lwn.net ([45.79.88.28]:48010 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726897AbfECMiD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 3 May 2019 08:38:03 -0400
+Received: from localhost.localdomain (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 240847DE;
+        Fri,  3 May 2019 12:37:59 +0000 (UTC)
+Date:   Fri, 3 May 2019 06:37:56 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jon Masters <jcm@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-mtd <linux-mtd@lists.infradead.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [RESEND PATCH v3 05/11] mtd: rawnand: vf610_nfc: add
- initializer to avoid -Wmaybe-uninitialized
-Message-ID: <20190503131152.57b4ce25@xps13>
-In-Reply-To: <CAK7LNAQH8v8_HG6-cytT4qe05W9iiYwEP1mud4zG2NxxYcFptQ@mail.gmail.com>
-References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
-        <20190423034959.13525-6-yamada.masahiro@socionext.com>
-        <20190502161346.07c15187@xps13>
-        <CAK7LNAQH8v8_HG6-cytT4qe05W9iiYwEP1mud4zG2NxxYcFptQ@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        linux-s390@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Steven Price <steven.price@arm.com>,
+        Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH] Documentation: Add ARM64 to kernel-parameters.rst
+Message-ID: <20190503063756.09c74f6e@lwn.net>
+In-Reply-To: <20190413035621.tohihjksatqushwf@treble>
+References: <cover.1555085500.git.jpoimboe@redhat.com>
+        <24039e1370ed57e8075730c0b88c505afd9e0ab7.1555085500.git.jpoimboe@redhat.com>
+        <25174c3c-0e39-0562-7d02-bb7d51cd2b43@infradead.org>
+        <20190413035621.tohihjksatqushwf@treble>
+Organization: LWN.net
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Masahiro,
+On Fri, 12 Apr 2019 22:56:21 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Fri, 3 May
-2019 19:36:35 +0900:
+> Add ARM64 to the legend of architectures.  It's already used in several
+> places in kernel-parameters.txt.
+> 
+> Suggested-by: Randy Dunlap <rdunlap@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 
-> Hi Miquel,
-> 
-> On Thu, May 2, 2019 at 11:14 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> >
-> > Hi Masahiro,
-> >
-> > Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 23 Apr
-> > 2019 12:49:53 +0900:
-> >  
-> > > This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
-> > > place. We need to eliminate potential issues beforehand.
-> > >
-> > > Kbuild test robot has never reported -Wmaybe-uninitialized warning
-> > > for this probably because vf610_nfc_run() is inlined by the x86
-> > > compiler's inlining heuristic.
-> > >
-> > > If CONFIG_OPTIMIZE_INLINING is enabled for a different architecture
-> > > and vf610_nfc_run() is not inlined, the following warning is reported:
-> > >
-> > > drivers/mtd/nand/raw/vf610_nfc.c: In function ‘vf610_nfc_cmd’:
-> > > drivers/mtd/nand/raw/vf610_nfc.c:455:3: warning: ‘offset’ may be used uninitialized in this function [-Wmaybe-uninitialized]
-> > >    vf610_nfc_rd_from_sram(instr->ctx.data.buf.in + offset,
-> > >    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >             nfc->regs + NFC_MAIN_AREA(0) + offset,
-> > >             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-> > >             trfr_sz, !nfc->data_access);
-> > >             ~~~~~~~~~~~~~~~~~~~~~~~~~~~  
-> >
-> > IMHO this patch has no dependencies with this series.  
-> 
-> 
-> This patch is the prerequisite for 11/11.
-> https://lore.kernel.org/patchwork/patch/1064959/
-> 
-> 
-> Without the correct patch order,
-> the kbuild test robot reports the warning.
-> 
-> 
-> > Would you mind sending it alone with the proper Fixes tag?  
-> 
-> 
-> I do not think Fixes is necessary.
-
-IMHO it is. Even if today the warning does not spawn, there is a
-real C error which might already be an issue.
-
-> 
-> Nobody has noticed this potential issue before.
-> Without 11/11, probably we cannot reproduce this warning.
-> 
-> 
-> BTW, this series has been for a while in linux-next.
-
-Missed that. Ok, nevermind.
-
+It looks like nobody has picked this up...so I've applied it.
 
 Thanks,
-Miquèl
+
+jon
