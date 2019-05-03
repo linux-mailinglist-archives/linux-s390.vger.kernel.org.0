@@ -2,99 +2,159 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3ED812B28
-	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 12:03:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CCC6512B95
+	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 12:37:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbfECKDU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 May 2019 06:03:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50796 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725777AbfECKDU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 3 May 2019 06:03:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D3219AEDB;
-        Fri,  3 May 2019 10:03:17 +0000 (UTC)
-Subject: Re: [PATCH 00/10] s390: virtio: support protected virtualization
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Thomas Huth <thuth@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com>
- <20190503115511.17a1f6d1.cohuck@redhat.com>
-From:   Juergen Gross <jgross@suse.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <1eb4b501-b22a-bba6-d4f9-68a278f6bd64@suse.com>
-Date:   Fri, 3 May 2019 12:03:16 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727539AbfECKhP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 May 2019 06:37:15 -0400
+Received: from conssluserg-03.nifty.com ([210.131.2.82]:53170 "EHLO
+        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727436AbfECKhP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 May 2019 06:37:15 -0400
+Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43]) (authenticated)
+        by conssluserg-03.nifty.com with ESMTP id x43AbBq2016654;
+        Fri, 3 May 2019 19:37:12 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com x43AbBq2016654
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1556879832;
+        bh=nx8pRpSymsndYyxiLURa2CmLp1S0V3DIvOeXzS6J2dI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Z9DJFCMs9SiG0ydN+PixilbR52yYIyY2zfsPB4K9H9YDIZeaiO0+73EV37BI4dbKT
+         RIwY8tmNwZeXEt9//bhIvkYWIhfW2IkzzH771aRBvscTu9GEHoQzcpjJ2/mceswuyA
+         UoYtEVm+7rpwbX9TsIqHs2aB8WSYzGo289mkk2MluGxo+kQWlVOI55hY8Uc1/aDk5X
+         VYekSVunoIfpqxu37gsIlPVBJYa9z5MOVA54gyFomljDwfKI1uhys53T6nwrTJ2nVq
+         QylcF8PTyIHK9LgKR9vf+WBxHVRuogdZ50YluV2ZhEOzEo2Cd+9/7v8nhX6EqBk386
+         v5ePSyPvmuTQQ==
+X-Nifty-SrcIP: [209.85.217.43]
+Received: by mail-vs1-f43.google.com with SMTP id z145so3291977vsc.0;
+        Fri, 03 May 2019 03:37:12 -0700 (PDT)
+X-Gm-Message-State: APjAAAUcb1r14WV2VMX5meLM6hz5ZlDcxSX13qDP/jbuq8f9E19kt8PS
+        6+vaO35sWVd8P44+AacBfclE9BU2bj5eVDYJjBs=
+X-Google-Smtp-Source: APXvYqwW2Xu7GuqfKtmc5UNaxfQ7dLxglJaqeji2MUglK/C6WjCbAXsTf0Y6inBC5zIGxhOWML+vIGWkcTtVvMWlajs=
+X-Received: by 2002:a67:ee98:: with SMTP id n24mr4943708vsp.155.1556879831230;
+ Fri, 03 May 2019 03:37:11 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190503115511.17a1f6d1.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: de-DE
-Content-Transfer-Encoding: 7bit
+References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
+ <20190423034959.13525-6-yamada.masahiro@socionext.com> <20190502161346.07c15187@xps13>
+In-Reply-To: <20190502161346.07c15187@xps13>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 3 May 2019 19:36:35 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQH8v8_HG6-cytT4qe05W9iiYwEP1mud4zG2NxxYcFptQ@mail.gmail.com>
+Message-ID: <CAK7LNAQH8v8_HG6-cytT4qe05W9iiYwEP1mud4zG2NxxYcFptQ@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 05/11] mtd: rawnand: vf610_nfc: add initializer
+ to avoid -Wmaybe-uninitialized
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     linux-arch <linux-arch@vger.kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Arnd Bergmann <arnd@arndb.de>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Mathieu Malaterre <malat@debian.org>, X86 ML <x86@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 03/05/2019 11:55, Cornelia Huck wrote:
-> On Fri, 26 Apr 2019 20:32:35 +0200
-> Halil Pasic <pasic@linux.ibm.com> wrote:
-> 
->> Enhanced virtualization protection technology may require the use of
->> bounce buffers for I/O. While support for this was built into the virtio
->> core, virtio-ccw wasn't changed accordingly.
->>
->> Some background on technology (not part of this series) and the
->> terminology used.
->>
->> * Protected Virtualization (PV):
+Hi Miquel,
 
-Uuh, you are aware that "PV" in virtualization environment is used as
-"Para-Virtualization" (e.g. in Xen) today? I believe you are risking a
-major mis-understanding here.
+On Thu, May 2, 2019 at 11:14 PM Miquel Raynal <miquel.raynal@bootlin.com> w=
+rote:
+>
+> Hi Masahiro,
+>
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote on Tue, 23 Apr
+> 2019 12:49:53 +0900:
+>
+> > This prepares to move CONFIG_OPTIMIZE_INLINING from x86 to a common
+> > place. We need to eliminate potential issues beforehand.
+> >
+> > Kbuild test robot has never reported -Wmaybe-uninitialized warning
+> > for this probably because vf610_nfc_run() is inlined by the x86
+> > compiler's inlining heuristic.
+> >
+> > If CONFIG_OPTIMIZE_INLINING is enabled for a different architecture
+> > and vf610_nfc_run() is not inlined, the following warning is reported:
+> >
+> > drivers/mtd/nand/raw/vf610_nfc.c: In function =E2=80=98vf610_nfc_cmd=E2=
+=80=99:
+> > drivers/mtd/nand/raw/vf610_nfc.c:455:3: warning: =E2=80=98offset=E2=80=
+=99 may be used uninitialized in this function [-Wmaybe-uninitialized]
+> >    vf610_nfc_rd_from_sram(instr->ctx.data.buf.in + offset,
+> >    ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >             nfc->regs + NFC_MAIN_AREA(0) + offset,
+> >             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >             trfr_sz, !nfc->data_access);
+> >             ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>
+> IMHO this patch has no dependencies with this series.
 
 
-Juergen
+This patch is the prerequisite for 11/11.
+https://lore.kernel.org/patchwork/patch/1064959/
+
+
+Without the correct patch order,
+the kbuild test robot reports the warning.
+
+
+> Would you mind sending it alone with the proper Fixes tag?
+
+
+I do not think Fixes is necessary.
+
+Nobody has noticed this potential issue before.
+Without 11/11, probably we cannot reproduce this warning.
+
+
+BTW, this series has been for a while in linux-next.
+
+
+>
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> > Changes in v3: None
+> > Changes in v2:
+> >   - split into a separate patch
+> >
+> >  drivers/mtd/nand/raw/vf610_nfc.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/mtd/nand/raw/vf610_nfc.c b/drivers/mtd/nand/raw/vf=
+610_nfc.c
+> > index a662ca1970e5..19792d725ec2 100644
+> > --- a/drivers/mtd/nand/raw/vf610_nfc.c
+> > +++ b/drivers/mtd/nand/raw/vf610_nfc.c
+> > @@ -364,7 +364,7 @@ static int vf610_nfc_cmd(struct nand_chip *chip,
+> >  {
+> >       const struct nand_op_instr *instr;
+> >       struct vf610_nfc *nfc =3D chip_to_nfc(chip);
+> > -     int op_id =3D -1, trfr_sz =3D 0, offset;
+> > +     int op_id =3D -1, trfr_sz =3D 0, offset =3D 0;
+> >       u32 col =3D 0, row =3D 0, cmd1 =3D 0, cmd2 =3D 0, code =3D 0;
+> >       bool force8bit =3D false;
+> >
+>
+> Thanks,
+> Miqu=C3=A8l
+>
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+
+
+--
+Best Regards
+
+Masahiro Yamada
