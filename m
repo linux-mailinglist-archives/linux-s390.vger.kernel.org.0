@@ -2,77 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE6E812F3A
-	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 15:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8637D12F44
+	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 15:33:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfECNcL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 May 2019 09:32:11 -0400
-Received: from ozlabs.org ([203.11.71.1]:48915 "EHLO ozlabs.org"
+        id S1727018AbfECNdS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 May 2019 09:33:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53626 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfECNcL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 3 May 2019 09:32:11 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726289AbfECNdS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 3 May 2019 09:33:18 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wY2Z5SZTz9sDn;
-        Fri,  3 May 2019 23:32:06 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
+        by mx1.redhat.com (Postfix) with ESMTPS id 488633086222;
+        Fri,  3 May 2019 13:33:18 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 42DD6600C7;
+        Fri,  3 May 2019 13:33:13 +0000 (UTC)
+Date:   Fri, 3 May 2019 15:33:10 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-In-Reply-To: <20190502122128.GA2670@kroah.com>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com> <20190415051919.GA31481@infradead.org> <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com> <20190502122128.GA2670@kroah.com>
-Date:   Fri, 03 May 2019 23:31:48 +1000
-Message-ID: <87ef5fy88r.fsf@concordia.ellerman.id.au>
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: Re: [PATCH 00/10] s390: virtio: support protected virtualization
+Message-ID: <20190503153310.04d4b85c.cohuck@redhat.com>
+In-Reply-To: <20190503115511.17a1f6d1.cohuck@redhat.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190503115511.17a1f6d1.cohuck@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Fri, 03 May 2019 13:33:18 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Greg KH <gregkh@linuxfoundation.org> writes:
-> On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
->> On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:
->> >
->> > Can we please have the page refcount overflow fixes out on the list
->> > for review, even if it is after the fact?
->> 
->> They were actually on a list for review long before the fact, but it
->> was the security mailing list. The issue actually got discussed back
->> in January along with early versions of the patches, but then we
->> dropped the ball because it just wasn't on anybody's radar and it got
->> resurrected late March. Willy wrote a rather bigger patch-series, and
->> review of that is what then resulted in those commits. So they may
->> look recent, but that's just because the original patches got
->> seriously edited down and rewritten.
->> 
->> That said, powerpc and s390 should at least look at maybe adding a
->> check for the page ref in their gup paths too. Powerpc has the special
->> gup_hugepte() case, and s390 has its own version of gup entirely. I
->> was actually hoping the s390 guys would look at using the generic gup
->> code.
->> 
->> I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
->> largely irrelevant, partly since even theoretically this whole issue
->> needs a _lot_ of memory.
->> 
->> Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
->> (page ref overflow)"). You may or may not really care.
->
-> I've now queued these patches up for the next round of stable releases,
-> as some people seem to care about these.
->
-> I didn't see any follow-on patches for s390 or ppc64 hit the tree for
-> these changes, am I just missing them and should also queue up a few
-> more to handle this issue on those platforms?
+On Fri, 3 May 2019 11:55:11 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-No you haven't missed them for powerpc. It's on my list.
+> On Fri, 26 Apr 2019 20:32:35 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+> 
 
-cheers
+> > What needs to be done
+> > =====================
+> > 
+> > Thus what needs to be done to bring virtio-ccw up to speed with respect
+> > to protected virtualization is:
+> > * use some 'new' common virtio stuff
+> 
+> Doing this makes sense regardless of the protected virtualization use
+> case, and I think we should go ahead and merge those patches for 5.2.
+> 
+> > * make sure that virtio-ccw specific stuff uses shared memory when
+> >   talking to the hypervisor (except control/communication blocks like ORB,
+> >   these are handled by the ultravisor)
+> 
+> TBH, I'm still a bit hazy on what needs to use shared memory and what
+> doesn't.
+> 
+> > * make sure the DMA API does what is necessary to talk through shared
+> >   memory if we are a protected virtualization guest.
+> > * make sure the common IO layer plays along as well (airqs, sense).
+
+I've skimmed some more over the rest of the patches; but I think this
+needs review by someone else.
+
+For example, I'm not sure what the semantics of using the main css
+device as the dma device are, as I'm not sufficiently familiar with the
+intricacies of the dma infrastructure. Combine this with a lack of
+documentation of the hardware architecture, and I think that others can
+provide much better feedback on this than I am able to.
