@@ -2,92 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 86D7212F75
-	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 15:47:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9699E12F93
+	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 15:50:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfECNrp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 May 2019 09:47:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35190 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726789AbfECNrp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 May 2019 09:47:45 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43DlYHd010405
-        for <linux-s390@vger.kernel.org>; Fri, 3 May 2019 09:47:44 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2s8n1xn2v4-1
+        id S1727584AbfECNt7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 May 2019 09:49:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41860 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727577AbfECNt7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 May 2019 09:49:59 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43Dlq78125475
+        for <linux-s390@vger.kernel.org>; Fri, 3 May 2019 09:49:58 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2s8mtqng5q-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 03 May 2019 09:47:40 -0400
+        for <linux-s390@vger.kernel.org>; Fri, 03 May 2019 09:49:52 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Fri, 3 May 2019 14:47:26 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
+        Fri, 3 May 2019 14:49:16 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 May 2019 14:47:22 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43DlLHG23330858
+        Fri, 3 May 2019 14:49:15 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43DnDsJ46006520
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 May 2019 13:47:21 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27CA642045;
-        Fri,  3 May 2019 13:47:21 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9B8E742041;
-        Fri,  3 May 2019 13:47:20 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  3 May 2019 13:47:20 +0000 (GMT)
-Date:   Fri, 3 May 2019 15:47:19 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] s390: remove ARCH_SELECT_MEMORY_MODEL
-References: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
- <1556740577-4140-3-git-send-email-rppt@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556740577-4140-3-git-send-email-rppt@linux.ibm.com>
+        Fri, 3 May 2019 13:49:13 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B64A54C058;
+        Fri,  3 May 2019 13:49:13 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2CFB4C04A;
+        Fri,  3 May 2019 13:49:13 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri,  3 May 2019 13:49:13 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id 5066620F638; Fri,  3 May 2019 15:49:13 +0200 (CEST)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>, Farhan Ali <alifm@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Eric Farman <farman@linux.ibm.com>
+Subject: [PATCH v1 0/7] s390: vfio-ccw fixes
+Date:   Fri,  3 May 2019 15:49:05 +0200
+X-Mailer: git-send-email 2.16.4
 X-TM-AS-GCONF: 00
-x-cbid: 19050313-0012-0000-0000-00000317F2E3
+x-cbid: 19050313-0008-0000-0000-000002E2EE9D
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050313-0013-0000-0000-0000215065E1
-Message-Id: <20190503134719.GB5602@osiris>
+x-cbparentid: 19050313-0009-0000-0000-0000224F60C7
+Message-Id: <20190503134912.39756-1-farman@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=858 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=564 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1905030087
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, May 01, 2019 at 10:56:16PM +0300, Mike Rapoport wrote:
-> The only reason s390 has ARCH_SELECT_MEMORY_MODEL option in
-> arch/s390/Kconfig is an ancient compile error with allnoconfig which was
-> fixed by commit 97195d6b411f ("[S390] fix sparsemem related compile error
-> with allnoconfig on s390") by adding the ARCH_SELECT_MEMORY_MODEL option.
-> 
-> Since then a lot have changed and now allnoconfig builds just fine without
-> ARCH_SELECT_MEMORY_MODEL, so it can be removed.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/s390/Kconfig | 3 ---
->  1 file changed, 3 deletions(-)
+The attached are a few fixes to the vfio-ccw kernel code for potential
+errors or architecture anomalies.  Under normal usage, and even most
+abnormal usage, they don't expose any problems to a well-behaved guest
+and its devices.  But, they are deficiencies just the same and could
+cause some weird behavior if they ever popped up in real life.
 
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+I have tried to arrange these patches in a "solves a noticeable problem
+with existing workloads" to "solves a theoretical problem with
+hypothetical workloads" order.  This way, the bigger ones at the end
+can be discussed without impeding the smaller and more impactful ones
+at the start.
+
+They are based on today's master, not Conny's vfio-ccw tree even though
+there are some good fixes pending there.  I've run this series both with
+and without that code, but couldn't decide which base would provide an
+easier time applying patches.  "I think" they should apply fine to both,
+but I apologize in advance if I guessed wrong!  :)
+
+Eric Farman (7):
+  s390/cio: Update SCSW if it points to the end of the chain
+  s390/cio: Set vfio-ccw FSM state before ioeventfd
+  s390/cio: Split pfn_array_alloc_pin into pieces
+  s390/cio: Initialize the host addresses in pfn_array
+  s390/cio: Allow zero-length CCWs in vfio-ccw
+  s390/cio: Don't pin vfio pages for empty transfers
+  s390/cio: Remove vfio-ccw checks of command codes
+
+ drivers/s390/cio/vfio_ccw_cp.c  | 163 ++++++++++++++++++++++++++++------------
+ drivers/s390/cio/vfio_ccw_drv.c |   6 +-
+ 2 files changed, 116 insertions(+), 53 deletions(-)
+
+-- 
+2.16.4
 
