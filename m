@@ -2,83 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94CD712E9C
-	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 15:00:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE6E812F3A
+	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 15:32:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727640AbfECNAf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 May 2019 09:00:35 -0400
-Received: from foss.arm.com ([217.140.101.70]:33328 "EHLO foss.arm.com"
+        id S1726463AbfECNcL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 May 2019 09:32:11 -0400
+Received: from ozlabs.org ([203.11.71.1]:48915 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726289AbfECNAf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 3 May 2019 09:00:35 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E1FE374;
-        Fri,  3 May 2019 06:00:34 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B62A23F220;
-        Fri,  3 May 2019 06:00:29 -0700 (PDT)
-Date:   Fri, 3 May 2019 14:00:27 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     Jonathan Corbet <corbet@lwn.net>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        id S1726289AbfECNcL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 3 May 2019 09:32:11 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44wY2Z5SZTz9sDn;
+        Fri,  3 May 2019 23:32:06 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Greg KH <gregkh@linuxfoundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
         linuxppc-dev@lists.ozlabs.org,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Steven Price <steven.price@arm.com>,
-        Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH] Documentation: Add ARM64 to kernel-parameters.rst
-Message-ID: <20190503130027.GD32046@fuggles.cambridge.arm.com>
-References: <cover.1555085500.git.jpoimboe@redhat.com>
- <24039e1370ed57e8075730c0b88c505afd9e0ab7.1555085500.git.jpoimboe@redhat.com>
- <25174c3c-0e39-0562-7d02-bb7d51cd2b43@infradead.org>
- <20190413035621.tohihjksatqushwf@treble>
- <20190503063756.09c74f6e@lwn.net>
- <20190503123940.GC32046@fuggles.cambridge.arm.com>
- <20190503064719.45d79af9@lwn.net>
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: Linux 5.1-rc5
+In-Reply-To: <20190502122128.GA2670@kroah.com>
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com> <20190415051919.GA31481@infradead.org> <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com> <20190502122128.GA2670@kroah.com>
+Date:   Fri, 03 May 2019 23:31:48 +1000
+Message-ID: <87ef5fy88r.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190503064719.45d79af9@lwn.net>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, May 03, 2019 at 06:47:19AM -0600, Jonathan Corbet wrote:
-> On Fri, 3 May 2019 13:39:40 +0100
-> Will Deacon <will.deacon@arm.com> wrote:
-> 
-> > > It looks like nobody has picked this up...so I've applied it.  
-> > 
-> > It's queued and tagged in the arm64 tree, which should also be in next!
-> 
-> Just looked again, I still don't see it there.  Josh's mitigations= change
-> is there, but not this one.  In any case, I've unapplied it, so it's all
-> yours.
+Greg KH <gregkh@linuxfoundation.org> writes:
+> On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:
+>> On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:
+>> >
+>> > Can we please have the page refcount overflow fixes out on the list
+>> > for review, even if it is after the fact?
+>> 
+>> They were actually on a list for review long before the fact, but it
+>> was the security mailing list. The issue actually got discussed back
+>> in January along with early versions of the patches, but then we
+>> dropped the ball because it just wasn't on anybody's radar and it got
+>> resurrected late March. Willy wrote a rather bigger patch-series, and
+>> review of that is what then resulted in those commits. So they may
+>> look recent, but that's just because the original patches got
+>> seriously edited down and rewritten.
+>> 
+>> That said, powerpc and s390 should at least look at maybe adding a
+>> check for the page ref in their gup paths too. Powerpc has the special
+>> gup_hugepte() case, and s390 has its own version of gup entirely. I
+>> was actually hoping the s390 guys would look at using the generic gup
+>> code.
+>> 
+>> I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
+>> largely irrelevant, partly since even theoretically this whole issue
+>> needs a _lot_ of memory.
+>> 
+>> Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
+>> (page ref overflow)"). You may or may not really care.
+>
+> I've now queued these patches up for the next round of stable releases,
+> as some people seem to care about these.
+>
+> I didn't see any follow-on patches for s390 or ppc64 hit the tree for
+> these changes, am I just missing them and should also queue up a few
+> more to handle this issue on those platforms?
 
-Weird... I see it in -next as 4ad499c94264:
+No you haven't missed them for powerpc. It's on my list.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=4ad499c94264a2ee05aacc518b9bde658318e510
-
-Will
+cheers
