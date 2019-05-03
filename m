@@ -2,96 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B880F13091
-	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 16:39:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2AEBC1344B
+	for <lists+linux-s390@lfdr.de>; Fri,  3 May 2019 22:04:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfECOjs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 May 2019 10:39:48 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51636 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725809AbfECOjs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 May 2019 10:39:48 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x43EcBUM145914
-        for <linux-s390@vger.kernel.org>; Fri, 3 May 2019 10:39:47 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2s8q2jhfqc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 03 May 2019 10:39:47 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Fri, 3 May 2019 15:39:45 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 May 2019 15:39:43 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x43Edf8a54919214
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 May 2019 14:39:41 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0007A404D;
-        Fri,  3 May 2019 14:39:41 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C40DA405D;
-        Fri,  3 May 2019 14:39:41 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri,  3 May 2019 14:39:41 +0000 (GMT)
-Date:   Fri, 3 May 2019 16:39:40 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        id S1727001AbfECUEw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 May 2019 16:04:52 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:40779 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726760AbfECUEw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 May 2019 16:04:52 -0400
+Received: by mail-qt1-f196.google.com with SMTP id k24so4371489qtq.7
+        for <linux-s390@vger.kernel.org>; Fri, 03 May 2019 13:04:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=9X9Yn//uNc4nUt79TMtyqufL6vACayUvlMnGmpMumpM=;
+        b=NVD9ntURWNJBpfmM4d4+mp1IiHt05+WV/LjSB2Q/S6ejSLW+QJbZJSm9sP28Y25p31
+         2vn0IzEhaNNjvf3XUAt4/eYCIw1AKDyLw85DxfcD0N6ya+w36B3jCAn4WupyQb49x7ye
+         aOk9U+N6BxVPBSBAxD8hdbJN6zrfUobVVmLFqtjvHkDnAdazxxrjsSkSQQQaTVkeA+cK
+         YU7Z9LSH3KTN4pQ8pidqlQj+9kAWwW1E8rkfOTp8bK5tBdAZ5OI5HfquJtZiLFi2gzkW
+         CX3owSqXdMesXGaJMebiPOD90An0yaVzsJwsjZMwibrB5mOqWzWr8YZZlq4iFIh5XMpr
+         3+aw==
+X-Gm-Message-State: APjAAAVJ/fOD58L1jbg+5BrxnOjvzl/sb41WCaVHJJuVfbPkexy30QpB
+        JCwwaNtRoE3ydfQ7XZgOutqGmAfHH8Q=
+X-Google-Smtp-Source: APXvYqxJqgC9JI6r+i5mLL7IPh0JnKywe0jyA2dWegR16gGx/T8GcVix3ycZOigW7QFKPasTYegZZA==
+X-Received: by 2002:a0c:d928:: with SMTP id p37mr9920668qvj.45.1556913891689;
+        Fri, 03 May 2019 13:04:51 -0700 (PDT)
+Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
+        by smtp.gmail.com with ESMTPSA id e131sm1882716qkb.80.2019.05.03.13.04.50
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Fri, 03 May 2019 13:04:50 -0700 (PDT)
+Date:   Fri, 3 May 2019 16:04:48 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] s390: vdso: drop unnecessary cc-ldoption
-References: <20190423210058.249510-1-ndesaulniers@google.com>
- <CAKwvOd=aR_GsJkaMTtV83UAAyqkZGuToD+3Zbq5sv=U_bogXmg@mail.gmail.com>
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: Re: [PATCH 01/10] virtio/s390: use vring_create_virtqueue
+Message-ID: <20190503160421-mutt-send-email-mst@kernel.org>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+ <20190426183245.37939-2-pasic@linux.ibm.com>
+ <20190503111724.70c6ec37.cohuck@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKwvOd=aR_GsJkaMTtV83UAAyqkZGuToD+3Zbq5sv=U_bogXmg@mail.gmail.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050314-0020-0000-0000-00000338F262
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050314-0021-0000-0000-0000218B7FA3
-Message-Id: <20190503143940.GH5602@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-03_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=948 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905030093
+In-Reply-To: <20190503111724.70c6ec37.cohuck@redhat.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Apr 30, 2019 at 01:25:09PM -0700, Nick Desaulniers wrote:
-> On Tue, Apr 23, 2019 at 2:01 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
-> >
-> > Towards the goal of removing cc-ldoption, it seems that --hash-style=
-> > was added to binutils 2.17.50.0.2 in 2006. The minimal required version
-> > of binutils for the kernel according to
-> > Documentation/process/changes.rst is 2.20.
-> >
-> > Link: https://gcc.gnu.org/ml/gcc/2007-01/msg01141.html
-> > Cc: clang-built-linux@googlegroups.com
-> > Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+On Fri, May 03, 2019 at 11:17:24AM +0200, Cornelia Huck wrote:
+> On Fri, 26 Apr 2019 20:32:36 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+> 
+> > The commit 2a2d1382fe9d ("virtio: Add improved queue allocation API")
+> > establishes a new way of allocating virtqueues (as a part of the effort
+> > that taught DMA to virtio rings).
+> > 
+> > In the future we will want virtio-ccw to use the DMA API as well.
+> > 
+> > Let us switch from the legacy method of allocating virtqueues to
+> > vring_create_virtqueue() as the first step into that direction.
+> > 
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
 > > ---
-> >  arch/s390/kernel/vdso32/Makefile | 2 +-
-> >  arch/s390/kernel/vdso64/Makefile | 2 +-
-> >  2 files changed, 2 insertions(+), 2 deletions(-)
-...
-> bumping for review
+> >  drivers/s390/virtio/virtio_ccw.c | 30 +++++++++++-------------------
+> >  1 file changed, 11 insertions(+), 19 deletions(-)
+> 
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> 
+> I'd vote for merging this patch right away for 5.2.
 
-Sorry for the delay! Applied now, thanks.
+So which tree is this going through? mine?
 
+-- 
+MST
