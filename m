@@ -2,65 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21BD1137D5
-	for <lists+linux-s390@lfdr.de>; Sat,  4 May 2019 08:42:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 999F013851
+	for <lists+linux-s390@lfdr.de>; Sat,  4 May 2019 10:44:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfEDGmK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 4 May 2019 02:42:10 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7150 "EHLO huawei.com"
+        id S1726347AbfEDIor (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 4 May 2019 04:44:47 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7153 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725808AbfEDGmK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 4 May 2019 02:42:10 -0400
-Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 086F3EAAFBB6FF155F08;
-        Sat,  4 May 2019 14:42:07 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
- 14.3.439.0; Sat, 4 May 2019 14:41:59 +0800
-From:   Wei Yongjun <weiyongjun1@huawei.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>
-CC:     Wei Yongjun <weiyongjun1@huawei.com>, <linux-s390@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH -next] KVM: s390: fix typo in parameter description
-Date:   Sat, 4 May 2019 06:51:45 +0000
-Message-ID: <20190504065145.53665-1-weiyongjun1@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        id S1726178AbfEDIor (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 4 May 2019 04:44:47 -0400
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id EAB0F5D52CC2EA261151;
+        Sat,  4 May 2019 16:44:44 +0800 (CST)
+Received: from [127.0.0.1] (10.177.23.164) by DGGEMS413-HUB.china.huawei.com
+ (10.3.19.213) with Microsoft SMTP Server id 14.3.439.0; Sat, 4 May 2019
+ 16:44:39 +0800
+Subject: Re: [PATCH v6 0/1] iommu: enhance IOMMU dma mode build options
+To:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+References: <20190418135701.24668-1-thunder.leizhen@huawei.com>
+CC:     Hanjun Guo <guohanjun@huawei.com>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <5CCD50E7.3070505@huawei.com>
+Date:   Sat, 4 May 2019 16:44:23 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type:   text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-X-Originating-IP: [10.175.113.25]
+In-Reply-To: <20190418135701.24668-1-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.23.164]
 X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Fix typo in parameter description.
-
-Fixes: 8b905d28ee17 ("KVM: s390: provide kvm_arch_no_poll function")
-Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
----
- arch/s390/kvm/kvm-s390.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 8d6d75db8de6..ac6163c334d6 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -181,7 +181,7 @@ MODULE_PARM_DESC(hpage, "1m huge page backing support");
- /* maximum percentage of steal time for polling.  >100 is treated like 100 */
- static u8 halt_poll_max_steal = 10;
- module_param(halt_poll_max_steal, byte, 0644);
--MODULE_PARM_DESC(hpage, "Maximum percentage of steal time to allow polling");
-+MODULE_PARM_DESC(halt_poll_max_steal, "Maximum percentage of steal time to allow polling");
- 
- /*
-  * For now we handle at most 16 double words as this is what the s390 base
+Hi all,
+  Can anybody review or comment?
 
 
+On 2019/4/18 21:57, Zhen Lei wrote:
+> v5 --> v6:
+> 1. give up adding boot option iommu.dma_mode
+> 
+> v4 --> v5:
+> As Hanjun and Thomas Gleixner's suggestion:
+> 1. Keep the old ARCH specific boot options no change.
+> 2. Keep build option CONFIG_IOMMU_DEFAULT_PASSTHROUGH no change.
+> 
+> v4:
+> As Robin Murphy's suggestion:
+> "It's also not necessarily obvious to the user how this interacts with
+> IOMMU_DEFAULT_PASSTHROUGH, so if we really do go down this route, maybe it
+> would be better to refactor the whole lot into a single selection of something
+> like IOMMU_DEFAULT_MODE anyway."
+> 
+> In this version, I tried to normalize the IOMMU dma mode boot options for all
+> ARCHs. When IOMMU is enabled, there are 3 dma modes: paasthrough(bypass),
+> lazy(mapping but defer the IOTLB invalidation), strict. But currently each
+> ARCHs defined their private boot options, different with each other. For
+> example, to enable/disable "passthrough", ARM64 use iommu.passthrough=1/0,
+> X86 use iommu=pt/nopt, PPC/POWERNV use iommu=nobypass.
+> 
+> Zhen Lei (1):
+>   iommu: enhance IOMMU dma mode build options
+> 
+>  arch/ia64/kernel/pci-dma.c                |  2 +-
+>  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
+>  arch/s390/pci/pci_dma.c                   |  2 +-
+>  arch/x86/kernel/pci-dma.c                 |  7 ++---
+>  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
+>  drivers/iommu/amd_iommu_init.c            |  3 ++-
+>  drivers/iommu/intel-iommu.c               |  2 +-
+>  drivers/iommu/iommu.c                     |  3 ++-
+>  8 files changed, 48 insertions(+), 18 deletions(-)
+> 
+
+-- 
+Thanks!
+BestRegards
 
