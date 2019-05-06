@@ -2,136 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFEC1151C4
-	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 18:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 305631532D
+	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 19:56:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726561AbfEFQgx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 May 2019 12:36:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37800 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726063AbfEFQgx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 May 2019 12:36:53 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46GXOTP096765
-        for <linux-s390@vger.kernel.org>; Mon, 6 May 2019 12:36:52 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sarb60qah-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 06 May 2019 12:36:52 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
-        Mon, 6 May 2019 17:36:51 +0100
-Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 May 2019 17:36:49 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46Gameu8192356
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 May 2019 16:36:48 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A747C605B;
-        Mon,  6 May 2019 16:36:48 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 305BBC6062;
-        Mon,  6 May 2019 16:36:47 +0000 (GMT)
-Received: from [9.85.230.129] (unknown [9.85.230.129])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon,  6 May 2019 16:36:46 +0000 (GMT)
-Subject: Re: [PATCH 2/7] s390/cio: Set vfio-ccw FSM state before ioeventfd
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <20190503134912.39756-1-farman@linux.ibm.com>
- <20190503134912.39756-3-farman@linux.ibm.com>
- <20190506165158.5da82576.cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Date:   Mon, 6 May 2019 12:36:46 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726063AbfEFR4b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 May 2019 13:56:31 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:39548 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfEFR41 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 May 2019 13:56:27 -0400
+Received: by mail-wm1-f68.google.com with SMTP id n25so16235300wmk.4
+        for <linux-s390@vger.kernel.org>; Mon, 06 May 2019 10:56:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XgcBPgF1G8mWsEvrlCrTStioPWUfDuKosdmWCCS6E5E=;
+        b=VTcOSw6DyJHMGc0Los3OPWsCksrdPWPyD8vO7tfd4hoUYxYcfmFRvdg6+xhXohcDI4
+         iaPbQJh8VcU547wAZs36ZseUPhEx2n6IGa7dslufaoh80Vv9iPal8eujdbqhX47dUUCf
+         rd0f8NtzfQWEGvOpMeRmdX8JSJP8cWcKcVhIbhptYXMtK+CkC+jkyMF1+0K9zUfHIWKS
+         SJl54+i/RAyvIlSJFHmzstzMCaSBfFTRYRQj0rviMBg1ovVLt3DHD9KLbmEDFh5DQkUB
+         K/4VUUv6V6l3X4JgKl9DsDvUKdy2qvZJaDBJBTVgKEAth7AkIIbN3tSX8f+DjWvOa5Un
+         ZWlQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XgcBPgF1G8mWsEvrlCrTStioPWUfDuKosdmWCCS6E5E=;
+        b=YGM/WFQKYR+QbfgaETIRp3oVtLxaVAaBA6WIwx75I9Wg5Bs3tgSrZmYRWi/34iSexs
+         ji2WxXgst0nEoCAFK6duvEqMn+kDJslEJ+Z7uXNGe9eTFtYsb1ZEleN6GdSJXw43QwVa
+         BqymvMFP95thq1+UChTAOoLghEfrc7Zv58BhFMb+68fm6XVJet9Pc1PMDCFiaSoAFwLG
+         7FnsvY8OFs/YD9BCi/6R8tMgZJ3oBB5Fr1f2yYA0S9/b0HUSGdS1I7HFvRkpKQls/BhB
+         ekDGc6c9rhbMv8TQQ8k3MuiSV/j/HizPk7gwWawRPLtW9uIiPWoNcHiovys5uyH4r0br
+         xD9Q==
+X-Gm-Message-State: APjAAAX+9/ilm1fZl+NMMXOo5HT0nDJtsV4iMN0ZtllfVBCxBct3iqWn
+        Zc8Bw05uWuhTucx1a5RBN91VOcDp7L6umDTUvCXwmA==
+X-Google-Smtp-Source: APXvYqy6O9Hx4Xu6PpK27h5ZvwKOZrtRiCBaX5D6FeKqa43xpsoBRLSUcAf7GCThq5ov8PH4U8Kpn29YDNsu9mBVmhc=
+X-Received: by 2002:a1c:2e88:: with SMTP id u130mr10259976wmu.54.1557165384862;
+ Mon, 06 May 2019 10:56:24 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190506165158.5da82576.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050616-0016-0000-0000-000009ADBC0E
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011060; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01199476; UDB=6.00629281; IPR=6.00980352;
- MB=3.00026758; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-06 16:36:50
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050616-0017-0000-0000-0000431B1DBD
-Message-Id: <39a1efa5-5298-97b9-21fa-e9ed70a2b892@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060141
+References: <20190430002952.18909-1-tmurphy@arista.com> <20190430002952.18909-4-tmurphy@arista.com>
+ <20190430111222.GA3191@infradead.org> <da835ce2-f73e-3035-e1d7-d3028cc1a838@arm.com>
+ <20190430113253.GA23210@infradead.org> <96ebb6fc-a889-fa94-09ba-65d505b85724@arm.com>
+In-Reply-To: <96ebb6fc-a889-fa94-09ba-65d505b85724@arm.com>
+From:   Tom Murphy <tmurphy@arista.com>
+Date:   Mon, 6 May 2019 18:56:13 +0100
+Message-ID: <CAPL0++61WytVhs63tvt+hdpZKXGinrkYx=4nDtNx1UoNTRWWjw@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] iommu/dma-iommu: Use the dev->coherent_dma_mask
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        David Brown <david.brown@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tom Murphy <murphyt7@tcd.ie>,
+        David Woodhouse <dwmw2@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Just to make this clear, I won't apply Christoph's patch (the one in
+this email thread) and instead the only change I will make is to
+rename dma_limit to dma_mask.
 
-
-On 5/6/19 10:51 AM, Cornelia Huck wrote:
-> On Fri,  3 May 2019 15:49:07 +0200
-> Eric Farman <farman@linux.ibm.com> wrote:
-> 
->> Otherwise, the guest can believe it's okay to start another I/O
->> and bump into the non-idle state.  This results in a cc=3
->> (or cc=2 with the pending async CSCH/HSCH code [1]) to the guest,
-> 
-> I think you can now refer to cc=2, as the csch/hsch is on its way in :)
-
-Woohoo!  :)
-
-> 
->> which is unfortunate since everything is otherwise working normally.
->>
->> [1] https://patchwork.kernel.org/comment/22588563/
->>
->> Signed-off-by: Eric Farman <farman@linux.ibm.com>
->>
->> ---
->>
->> I think this might've been part of Pierre's FSM cleanup?
-> 
-> Not sure if I saw this before, but there have been quite a number of
-> patches going around...
-
-I guess I should have said his original cleanup from last year.  I 
-didn't find it, but it also seems familiar to me.
-
-> 
->> ---
->>   drivers/s390/cio/vfio_ccw_drv.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
->> index 0b3b9de45c60..ddd21b6149fd 100644
->> --- a/drivers/s390/cio/vfio_ccw_drv.c
->> +++ b/drivers/s390/cio/vfio_ccw_drv.c
->> @@ -86,11 +86,11 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
->>   	}
->>   	memcpy(private->io_region->irb_area, irb, sizeof(*irb));
->>   
->> -	if (private->io_trigger)
->> -		eventfd_signal(private->io_trigger, 1);
->> -
->>   	if (private->mdev && is_final)
->>   		private->state = VFIO_CCW_STATE_IDLE;
->> +
->> +	if (private->io_trigger)
->> +		eventfd_signal(private->io_trigger, 1);
->>   }
->>   
->>   /*
-> 
-
+On Tue, Apr 30, 2019 at 1:05 PM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> On 30/04/2019 12:32, Christoph Hellwig wrote:
+> > On Tue, Apr 30, 2019 at 12:27:02PM +0100, Robin Murphy wrote:
+> >>> Hmm, I don't think we need the DMA mask for the MSI mapping, this
+> >>> should probably always use a 64-bit mask.
+> >>
+> >> If that were true then we wouldn't need DMA masks for regular mappings
+> >> either. If we have to map the MSI doorbell at all, then we certainly have to
+> >> place it at an IOVA that the relevant device is actually capable of
+> >> addressing.
+> >
+> > Well, as shown by the patch below we don't even look at the DMA mask
+> > for the MSI page - we just allocate from bottom to top.
+>
+> In the trivial cookie for unmanaged domains, yes, but in that case the
+> responsibility is on VFIO to provide a suitable (i.e. sub-32-bit)
+> address range for that cookie in the first place. In the managed case,
+> allocation uses the streaming mask via iommu_dma_get_msi_page() calling
+> __iommu_dma_map(). Admittedly the mask can then get overlooked when
+> reusing an existing mapping, which strictly could pose a problem if you
+> have multiple devices with incompatible masks in the same group (and
+> such that the PCI stuff doesn't already mitigate it), but that's such an
+> obscure corner case that I'm reticent to introduce the complication to
+> handle it until it's actually proven necessary.
+>
+> Robin.
