@@ -2,89 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B87B14D85
-	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 16:53:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA02114FF5
+	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 17:21:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727117AbfEFOwH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 May 2019 10:52:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33634 "EHLO mx1.redhat.com"
+        id S1726491AbfEFPVB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 May 2019 11:21:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45478 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbfEFOwE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 6 May 2019 10:52:04 -0400
+        id S1726340AbfEFPVB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 6 May 2019 11:21:01 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0BB8D3082E57;
-        Mon,  6 May 2019 14:52:04 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6959281DFA;
+        Mon,  6 May 2019 15:21:01 +0000 (UTC)
 Received: from gondolin (unknown [10.40.205.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 12B665DA96;
-        Mon,  6 May 2019 14:52:01 +0000 (UTC)
-Date:   Mon, 6 May 2019 16:51:58 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A8EC15DA9A;
+        Mon,  6 May 2019 15:20:59 +0000 (UTC)
+Date:   Mon, 6 May 2019 17:20:54 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Eric Farman <farman@linux.ibm.com>
 Cc:     Farhan Ali <alifm@linux.ibm.com>,
         Halil Pasic <pasic@linux.ibm.com>,
         Pierre Morel <pmorel@linux.ibm.com>,
         linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 2/7] s390/cio: Set vfio-ccw FSM state before ioeventfd
-Message-ID: <20190506165158.5da82576.cohuck@redhat.com>
-In-Reply-To: <20190503134912.39756-3-farman@linux.ibm.com>
+Subject: Re: [PATCH 6/7] s390/cio: Don't pin vfio pages for empty transfers
+Message-ID: <20190506172054.612fd557.cohuck@redhat.com>
+In-Reply-To: <20190503134912.39756-7-farman@linux.ibm.com>
 References: <20190503134912.39756-1-farman@linux.ibm.com>
-        <20190503134912.39756-3-farman@linux.ibm.com>
+        <20190503134912.39756-7-farman@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 06 May 2019 14:52:04 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 06 May 2019 15:21:01 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri,  3 May 2019 15:49:07 +0200
+On Fri,  3 May 2019 15:49:11 +0200
 Eric Farman <farman@linux.ibm.com> wrote:
 
-> Otherwise, the guest can believe it's okay to start another I/O
-> and bump into the non-idle state.  This results in a cc=3
-> (or cc=2 with the pending async CSCH/HSCH code [1]) to the guest,
-
-I think you can now refer to cc=2, as the csch/hsch is on its way in :)
-
-> which is unfortunate since everything is otherwise working normally.
+> If a CCW has a count of zero, then no data will be transferred and
+> pinning/unpinning memory is unnecessary.
 > 
-> [1] https://patchwork.kernel.org/comment/22588563/
+> In addition to that, the skip flag of a CCW offers the possibility of
+> data not being transferred, but is only meaningful for certain commands.
+> Specifically, it is only applicable for a read, read backward, sense, or
+> sense ID CCW and will be ignored for any other command code
+> (SA22-7832-11 page 15-64, and figure 15-30 on page 15-75).
+
+This made me look at QEMU, and it seems that we cheerfully ignore that
+flag so far in our ccw interpretation code :/
+
+> 
+> (A sense ID is xE4, while a sense is x04 with possible modifiers in the
+> upper four bits.  So we will cover the whole "family" of sense CCWs.)
+> 
+> For all those scenarios, since there is no requirement for the target
+> address to be valid, we should skip the call to vfio_pin_pages() and
+> rely on the IDAL address we have allocated/built for the channel
+> program.  The fact that the individual IDAWs within the IDAL are
+> invalid is fine, since they aren't actually checked in these cases.
+> 
+> Set pa_nr to zero, when skipping the pfn_array_pin() call, since it is
+> defined as the number of pages pinned.  This will cause the vfio unpin
+> logic to return -EINVAL, but since the return code is not checked it
+> will not harm our cleanup path.
+
+We could also try to skip the unpinning, but this works as well.
+
+> 
+> As we do this, since the pfn_array_pin() routine returns the number of
+> pages pinned, and we might not be doing that, the logic for converting
+> a CCW from direct-addressed to IDAL needs to ensure there is room for
+> one IDAW in the IDAL being built since a zero-length IDAL isn't great.
 > 
 > Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> 
 > ---
-> 
-> I think this might've been part of Pierre's FSM cleanup?
+>  drivers/s390/cio/vfio_ccw_cp.c | 61 +++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 55 insertions(+), 6 deletions(-)
 
-Not sure if I saw this before, but there have been quite a number of
-patches going around...
-
-> ---
->  drivers/s390/cio/vfio_ccw_drv.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> index 0b3b9de45c60..ddd21b6149fd 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -86,11 +86,11 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
->  	}
->  	memcpy(private->io_region->irb_area, irb, sizeof(*irb));
->  
-> -	if (private->io_trigger)
-> -		eventfd_signal(private->io_trigger, 1);
-> -
->  	if (private->mdev && is_final)
->  		private->state = VFIO_CCW_STATE_IDLE;
-> +
-> +	if (private->io_trigger)
-> +		eventfd_signal(private->io_trigger, 1);
->  }
->  
->  /*
-
+Looks good to me.
