@@ -2,124 +2,365 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13774147B8
-	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 11:40:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 46FCF14871
+	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 12:43:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725855AbfEFJkQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 May 2019 05:40:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43160 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726016AbfEFJkQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 6 May 2019 05:40:16 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8A0C43087939;
-        Mon,  6 May 2019 09:40:15 +0000 (UTC)
-Received: from [10.36.116.76] (ovpn-116-76.ams2.redhat.com [10.36.116.76])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B5581611C0;
-        Mon,  6 May 2019 09:40:12 +0000 (UTC)
-Subject: Re: [PATCH -next] KVM: s390: fix typo in parameter description
-To:     Wei Yongjun <weiyongjun1@huawei.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, kernel-janitors@vger.kernel.org
-References: <20190504065145.53665-1-weiyongjun1@huawei.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <5a720ed2-0cd3-bae6-2a4d-e3e228f2d576@redhat.com>
-Date:   Mon, 6 May 2019 11:40:12 +0200
+        id S1725886AbfEFKnA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 May 2019 06:43:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36750 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725856AbfEFKnA (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 May 2019 06:43:00 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46AgbWP041106
+        for <linux-s390@vger.kernel.org>; Mon, 6 May 2019 06:42:58 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sag5900sc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 06 May 2019 06:42:57 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 6 May 2019 11:42:55 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 6 May 2019 11:42:53 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46AgqTI47251618
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 6 May 2019 10:42:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2B0375204F;
+        Mon,  6 May 2019 10:42:52 +0000 (GMT)
+Received: from [9.145.46.119] (unknown [9.145.46.119])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 68CB552051;
+        Mon,  6 May 2019 10:42:51 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 5/7] s390: vfio-ap: allow hot plug/unplug of AP
+ resources using mdev device
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-6-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Mon, 6 May 2019 12:42:51 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190504065145.53665-1-weiyongjun1@huawei.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1556918073-13171-6-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 06 May 2019 09:40:15 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050610-0012-0000-0000-00000318C64E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050610-0013-0000-0000-000021513EC5
+Message-Id: <d97cf90c-3750-bea0-2f9f-bae81f61e288@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060094
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 04.05.19 08:51, Wei Yongjun wrote:
-> Fix typo in parameter description.
+On 03/05/2019 23:14, Tony Krowiak wrote:
+> Let's allow AP resources to be assigned to or unassigned from an AP matrix
+> mdev device while it is in use by a guest. If a guest is using the mdev
+> device while assignment is taking place, the guest will be granted access
+> to the resource as long as the guest will not be given access to an AP
+> queue device that is not bound to the vfio_ap device driver. If a guest is
+> using the mdev device while unassignment is taking place, access to the
+> resource will be taken from the guest.
 > 
-> Fixes: 8b905d28ee17 ("KVM: s390: provide kvm_arch_no_poll function")
-> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 > ---
->  arch/s390/kvm/kvm-s390.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>   drivers/s390/crypto/vfio_ap_ops.c | 116 ++++++++++++++++++++++++++++----------
+>   1 file changed, 86 insertions(+), 30 deletions(-)
 > 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 8d6d75db8de6..ac6163c334d6 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -181,7 +181,7 @@ MODULE_PARM_DESC(hpage, "1m huge page backing support");
->  /* maximum percentage of steal time for polling.  >100 is treated like 100 */
->  static u8 halt_poll_max_steal = 10;
->  module_param(halt_poll_max_steal, byte, 0644);
-> -MODULE_PARM_DESC(hpage, "Maximum percentage of steal time to allow polling");
-> +MODULE_PARM_DESC(halt_poll_max_steal, "Maximum percentage of steal time to allow polling");
->  
->  /*
->   * For now we handle at most 16 double words as this is what the s390 base
-> 
-> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index ea24caf17a16..ede45184eb67 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -226,6 +226,8 @@ static struct device *vfio_ap_get_queue_dev(unsigned long apid,
+>   				  &apqn, match_apqn);
+>   }
+>   
+> +
+> +
+
+two white lines
+
+>   static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+>   {
+>   	int ret;
+> @@ -237,6 +239,26 @@ static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+>   	return vfio_ap_mdev_verify_no_sharing(apm, aqm);
+>   }
+>   
+> +static bool vfio_ap_queues_on_drv(unsigned long *apm, unsigned long *aqm)
+> +{
+> +	unsigned long apid, apqi, apqn;
+> +	struct device *dev;
+> +
+> +	for_each_set_bit_inv(apid, apm, AP_DEVICES) {
+> +		for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
+> +			apqn = AP_MKQID(apid, apqi);
+
+You do not use apqn in the function.
+
+> +
+> +			dev = vfio_ap_get_queue_dev(apid, apqi);
+> +			if (!dev)
+> +				return false;
+> +
+> +			put_device(dev);
+> +		}
+> +	}
+> +
+> +	return true;
+> +}
+> +
+>   /**
+>    * assign_adapter_store
+>    *
+> @@ -247,7 +269,10 @@ static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the APID from @buf and sets the corresponding bit in the mediated
+> - * matrix device's APM.
+> + * matrix device's APM. If a guest is using the mediated matrix device and each
+> + * new APQN formed as a result of the assignment identifies an AP queue device
+> + * that is bound to the vfio_ap device driver, the guest will be granted access
+> + * to the adapter with the specified APID.
+>    *
+>    * Returns the number of bytes processed if the APID is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -279,10 +304,6 @@ static ssize_t assign_adapter_store(struct device *dev,
+>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   
+> -	/* If the guest is running, disallow assignment of adapter */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &apid);
+>   	if (ret)
+>   		return ret;
+> @@ -300,6 +321,14 @@ static ssize_t assign_adapter_store(struct device *dev,
+>   		return ret;
+>   	}
+>   	set_bit_inv(apid, matrix_mdev->matrix.apm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (vfio_ap_queues_on_drv(apm,
+> +					  matrix_mdev->shadow_crycb->aqm)) {
+> +			set_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -315,7 +344,9 @@ static DEVICE_ATTR_WO(assign_adapter);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the APID from @buf and clears the corresponding bit in the mediated
+> - * matrix device's APM.
+> + * matrix device's APM. If a guest is using the mediated matrix device and has
+> + * access to the AP adapter with the specified APID, access to the adapter will
+> + * be taken from the guest.
+>    *
+>    * Returns the number of bytes processed if the APID is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -332,10 +363,6 @@ static ssize_t unassign_adapter_store(struct device *dev,
+>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   
+> -	/* If the guest is running, disallow un-assignment of adapter */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &apid);
+>   	if (ret)
+>   		return ret;
+> @@ -345,6 +372,13 @@ static ssize_t unassign_adapter_store(struct device *dev,
+>   
+>   	mutex_lock(&matrix_dev->lock);
+>   	clear_bit_inv((unsigned long)apid, matrix_mdev->matrix.apm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (test_bit_inv(apid, matrix_mdev->shadow_crycb->apm)) {
+> +			clear_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -361,7 +395,10 @@ static DEVICE_ATTR_WO(unassign_adapter);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the APQI from @buf and sets the corresponding bit in the mediated
+> - * matrix device's AQM.
+> + * matrix device's AQM. If a guest is using the mediated matrix device and each
+> + * new APQN formed as a result of the assignment identifies an AP queue device
+> + * that is bound to the vfio_ap device driver, the guest will be given access
+> + * to the AP queue(s) with the specified APQI.
+>    *
+>    * Returns the number of bytes processed if the APQI is valid; otherwise returns
+>    * one of the following errors:
+> @@ -394,10 +431,6 @@ static ssize_t assign_domain_store(struct device *dev,
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   	unsigned long max_apqi = matrix_mdev->matrix.aqm_max;
+>   
+> -	/* If the guest is running, disallow assignment of domain */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &apqi);
+>   	if (ret)
+>   		return ret;
+> @@ -414,6 +447,14 @@ static ssize_t assign_domain_store(struct device *dev,
+>   		return ret;
+>   	}
+>   	set_bit_inv(apqi, matrix_mdev->matrix.aqm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (vfio_ap_queues_on_drv(matrix_mdev->shadow_crycb->apm,
+> +					  aqm)) {
+> +			set_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -431,7 +472,9 @@ static DEVICE_ATTR_WO(assign_domain);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the APQI from @buf and clears the corresponding bit in the
+> - * mediated matrix device's AQM.
+> + * mediated matrix device's AQM. If a guest is using the mediated matrix device
+> + * and has access to queue(s) with the specified domain APQI, access to
+> + * the queue(s) will be taken away from the guest.
+>    *
+>    * Returns the number of bytes processed if the APQI is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -447,10 +490,6 @@ static ssize_t unassign_domain_store(struct device *dev,
+>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   
+> -	/* If the guest is running, disallow un-assignment of domain */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &apqi);
+>   	if (ret)
+>   		return ret;
+> @@ -460,6 +499,13 @@ static ssize_t unassign_domain_store(struct device *dev,
+>   
+>   	mutex_lock(&matrix_dev->lock);
+>   	clear_bit_inv((unsigned long)apqi, matrix_mdev->matrix.aqm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (test_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm)) {
+> +			clear_bit_inv(apqi, matrix_mdev->shadow_crycb->aqm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -475,7 +521,9 @@ static DEVICE_ATTR_WO(unassign_domain);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the domain ID from @buf and sets the corresponding bit in the mediated
+> - * matrix device's ADM.
+> + * matrix device's ADM. If a guest is using the mediated matrix device and the
+> + * guest does not have access to the control domain with the specified ID, the
+> + * guest will be granted access to it.
+>    *
+>    * Returns the number of bytes processed if the domain ID is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -491,10 +539,6 @@ static ssize_t assign_control_domain_store(struct device *dev,
+>   	struct mdev_device *mdev = mdev_from_dev(dev);
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   
+> -	/* If the guest is running, disallow assignment of control domain */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &id);
+>   	if (ret)
+>   		return ret;
+> @@ -504,6 +548,13 @@ static ssize_t assign_control_domain_store(struct device *dev,
+>   
+>   	mutex_lock(&matrix_dev->lock);
+>   	set_bit_inv(id, matrix_mdev->matrix.adm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (!test_bit_inv(id, matrix_mdev->shadow_crycb->adm)) {
+> +			set_bit_inv(id, matrix_mdev->shadow_crycb->adm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
+> @@ -519,7 +570,9 @@ static DEVICE_ATTR_WO(assign_control_domain);
+>    * @count:	the number of bytes in @buf
+>    *
+>    * Parses the domain ID from @buf and clears the corresponding bit in the
+> - * mediated matrix device's ADM.
+> + * mediated matrix device's ADM. If a guest is using the mediated matrix device
+> + * and has access to control domain with the specified domain ID, access to
+> + * the control domain will be taken from the guest.
+>    *
+>    * Returns the number of bytes processed if the domain ID is valid; otherwise,
+>    * returns one of the following errors:
+> @@ -536,10 +589,6 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>   	unsigned long max_domid =  matrix_mdev->matrix.adm_max;
+>   
+> -	/* If the guest is running, disallow un-assignment of control domain */
+> -	if (matrix_mdev->kvm)
+> -		return -EBUSY;
+> -
+>   	ret = kstrtoul(buf, 0, &domid);
+>   	if (ret)
+>   		return ret;
+> @@ -548,6 +597,13 @@ static ssize_t unassign_control_domain_store(struct device *dev,
+>   
+>   	mutex_lock(&matrix_dev->lock);
+>   	clear_bit_inv(domid, matrix_mdev->matrix.adm);
+> +
+> +	if (matrix_mdev->shadow_crycb) {
+> +		if (test_bit_inv(domid, matrix_mdev->shadow_crycb->adm)) {
+> +			clear_bit_inv(domid, matrix_mdev->shadow_crycb->adm);
+> +			vfio_ap_mdev_update_crycb(matrix_mdev);
+> +		}
+> +	}
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+>   	return count;
 > 
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+beside the two NITs, look good to me.
+Still need to test.
+
+
 
 -- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
-Thanks,
-
-David / dhildenb
