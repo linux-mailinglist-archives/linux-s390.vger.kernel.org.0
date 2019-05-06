@@ -2,158 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B23414A9E
-	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 15:11:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E7B5514D08
+	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 16:48:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726287AbfEFNLY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 May 2019 09:11:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49070 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726303AbfEFNLY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 May 2019 09:11:24 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46D91bl125212
-        for <linux-s390@vger.kernel.org>; Mon, 6 May 2019 09:11:23 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sanjb03h1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 06 May 2019 09:11:23 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Mon, 6 May 2019 14:11:19 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 May 2019 14:11:13 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46DBCX252035588
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 May 2019 13:11:12 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CB43A4055;
-        Mon,  6 May 2019 13:11:12 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C523CA405E;
-        Mon,  6 May 2019 13:11:11 +0000 (GMT)
-Received: from morel-ThinkPad-W530.numericable.fr (unknown [9.145.46.119])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  6 May 2019 13:11:11 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     cohuck@redhat.com
-Cc:     pasic@linux.vnet.ibm.com, farman@linux.ibm.com,
-        alifm@linux.ibm.com, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH v1 2/2] vfio-ccw: rework sch_event
-Date:   Mon,  6 May 2019 15:11:10 +0200
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557148270-19901-1-git-send-email-pmorel@linux.ibm.com>
-References: <1557148270-19901-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19050613-4275-0000-0000-00000331E776
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050613-4276-0000-0000-000038414EB5
-Message-Id: <1557148270-19901-3-git-send-email-pmorel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=5 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=565 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060114
+        id S1729028AbfEFOrR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 May 2019 10:47:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48846 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728883AbfEFOrQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 6 May 2019 10:47:16 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C299681DFA;
+        Mon,  6 May 2019 14:47:15 +0000 (UTC)
+Received: from gondolin (unknown [10.40.205.81])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 078B210021B2;
+        Mon,  6 May 2019 14:47:13 +0000 (UTC)
+Date:   Mon, 6 May 2019 16:47:10 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH 1/7] s390/cio: Update SCSW if it points to the end of
+ the chain
+Message-ID: <20190506164710.5fe0b6c8.cohuck@redhat.com>
+In-Reply-To: <20190503134912.39756-2-farman@linux.ibm.com>
+References: <20190503134912.39756-1-farman@linux.ibm.com>
+        <20190503134912.39756-2-farman@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 06 May 2019 14:47:15 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Set the mediated device as non operational when the
-subchannel went non operational.
-Otherwise keep the current state.
+On Fri,  3 May 2019 15:49:06 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
-Since we removed the last use of VFIO_CCW_STATE_STANDBY
-remove this state from the state machine.
+> Per the POPs [1], when processing an interrupt the SCSW.CPA field of an
+> IRB generally points to 8 bytes after the last CCW that was executed
+> (there are exceptions, but this is the most common behavior).
+> 
+> In the case of an error, this points us to the first un-executed CCW
+> in the chain.  But in the case of normal I/O, the address points beyond
+> the end of the chain.  While the guest generally only cares about this
+> when possibly restarting a channel program after error recovery, we
+> should convert the address even in the good scenario so that we provide
+> a consistent, valid, response upon I/O completion.
+> 
+> [1] Figure 16-6 in SA22-7832-11.  The footnotes in that table also state
+> that this is true even if the resulting address is invalid or protected,
+> but moving to the end of the guest chain should not be a surprise.
+> 
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> ---
+>  drivers/s390/cio/vfio_ccw_cp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+> index 384b3987eeb4..f86da78eaeaa 100644
+> --- a/drivers/s390/cio/vfio_ccw_cp.c
+> +++ b/drivers/s390/cio/vfio_ccw_cp.c
+> @@ -870,7 +870,7 @@ void cp_update_scsw(struct channel_program *cp, union scsw *scsw)
+>  	 */
+>  	list_for_each_entry(chain, &cp->ccwchain_list, next) {
+>  		ccw_head = (u32)(u64)chain->ch_ccw;
+> -		if (is_cpa_within_range(cpa, ccw_head, chain->ch_len)) {
+> +		if (is_cpa_within_range(cpa, ccw_head, chain->ch_len + 1)) {
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
----
- drivers/s390/cio/vfio_ccw_drv.c     | 11 +----------
- drivers/s390/cio/vfio_ccw_fsm.c     |  7 +------
- drivers/s390/cio/vfio_ccw_ops.c     |  2 +-
- drivers/s390/cio/vfio_ccw_private.h |  1 -
- 4 files changed, 3 insertions(+), 18 deletions(-)
+Maybe add a comment
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index a95b6c7..2f6140d5 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -210,17 +210,8 @@ static int vfio_ccw_sch_event(struct subchannel *sch, int process)
- 	if (work_pending(&sch->todo_work))
- 		goto out_unlock;
- 
--	if (cio_update_schib(sch)) {
-+	if (cio_update_schib(sch))
- 		vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_NOT_OPER);
--		rc = 0;
--		goto out_unlock;
--	}
--
--	private = dev_get_drvdata(&sch->dev);
--	if (private->state == VFIO_CCW_STATE_NOT_OPER) {
--		private->state = private->mdev ? VFIO_CCW_STATE_IDLE :
--				 VFIO_CCW_STATE_STANDBY;
--	}
- 	rc = 0;
- 
- out_unlock:
-diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
-index 49d9d3d..a6524ca 100644
---- a/drivers/s390/cio/vfio_ccw_fsm.c
-+++ b/drivers/s390/cio/vfio_ccw_fsm.c
-@@ -88,6 +88,7 @@ static int fsm_do_halt(struct vfio_ccw_private *private)
- 
- 	/* Issue "Halt Subchannel" */
- 	ccode = hsch(sch->schid);
-+	pr_warn("ccode = hsch(sch->schid);\n");
- 
- 	switch (ccode) {
- 	case 0:
-@@ -326,12 +327,6 @@ fsm_func_t *vfio_ccw_jumptable[NR_VFIO_CCW_STATES][NR_VFIO_CCW_EVENTS] = {
- 		[VFIO_CCW_EVENT_ASYNC_REQ]	= fsm_async_error,
- 		[VFIO_CCW_EVENT_INTERRUPT]	= fsm_disabled_irq,
- 	},
--	[VFIO_CCW_STATE_STANDBY] = {
--		[VFIO_CCW_EVENT_NOT_OPER]	= fsm_notoper,
--		[VFIO_CCW_EVENT_IO_REQ]		= fsm_io_error,
--		[VFIO_CCW_EVENT_ASYNC_REQ]	= fsm_async_error,
--		[VFIO_CCW_EVENT_INTERRUPT]	= fsm_irq,
--	},
- 	[VFIO_CCW_STATE_IDLE] = {
- 		[VFIO_CCW_EVENT_NOT_OPER]	= fsm_notoper,
- 		[VFIO_CCW_EVENT_IO_REQ]		= fsm_io_request,
-diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-index 497419c..35445ca 100644
---- a/drivers/s390/cio/vfio_ccw_ops.c
-+++ b/drivers/s390/cio/vfio_ccw_ops.c
-@@ -162,7 +162,7 @@ static int vfio_ccw_mdev_open(struct mdev_device *mdev)
- 	if (cio_enable_subchannel(sch, (u32)(unsigned long)sch))
- 		goto error;
- 
--	private->state = VFIO_CCW_STATE_STANDBY;
-+	private->state = VFIO_CCW_STATE_IDLE;
- 	spin_unlock_irq(sch->lock);
- 	return 0;
- 
-diff --git a/drivers/s390/cio/vfio_ccw_private.h b/drivers/s390/cio/vfio_ccw_private.h
-index f1092c3..ece6a75 100644
---- a/drivers/s390/cio/vfio_ccw_private.h
-+++ b/drivers/s390/cio/vfio_ccw_private.h
-@@ -105,7 +105,6 @@ extern int vfio_ccw_sch_quiesce(struct subchannel *sch);
-  */
- enum vfio_ccw_state {
- 	VFIO_CCW_STATE_NOT_OPER,
--	VFIO_CCW_STATE_STANDBY,
- 	VFIO_CCW_STATE_IDLE,
- 	VFIO_CCW_STATE_CP_PROCESSING,
- 	VFIO_CCW_STATE_CP_PENDING,
--- 
-2.7.4
+/* On successful execution, cpa points just beyond the end of the chain. */
+
+or so, to avoid head-scratching and PoP-reading in the future?
+
+>  			/*
+>  			 * (cpa - ccw_head) is the offset value of the host
+>  			 * physical ccw to its chain head.
 
