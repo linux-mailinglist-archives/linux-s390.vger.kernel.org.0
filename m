@@ -2,273 +2,421 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 782B71489D
-	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 12:55:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 868441493F
+	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 14:00:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726280AbfEFKz5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 May 2019 06:55:57 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44768 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725886AbfEFKz5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 May 2019 06:55:57 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46AqFdd059455
-        for <linux-s390@vger.kernel.org>; Mon, 6 May 2019 06:55:56 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sahndmjb2-1
+        id S1725856AbfEFMAX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 May 2019 08:00:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40256 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725827AbfEFMAW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 May 2019 08:00:22 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x46BvniQ095084
+        for <linux-s390@vger.kernel.org>; Mon, 6 May 2019 08:00:19 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sah6trfgb-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 06 May 2019 06:55:55 -0400
+        for <linux-s390@vger.kernel.org>; Mon, 06 May 2019 08:00:18 -0400
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Mon, 6 May 2019 11:55:53 +0100
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Mon, 6 May 2019 13:00:15 +0100
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 May 2019 11:55:52 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46Atorg40173808
+        Mon, 6 May 2019 13:00:12 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x46C0B0e51183842
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 May 2019 10:55:50 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78C3852052;
-        Mon,  6 May 2019 10:55:50 +0000 (GMT)
-Received: from [9.145.46.119] (unknown [9.145.46.119])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BCF415204E;
-        Mon,  6 May 2019 10:55:49 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v2 6/7] s390: vfio-ap: handle bind and unbind of AP queue
- device
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
- <1556918073-13171-7-git-send-email-akrowiak@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Mon, 6 May 2019 12:55:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 6 May 2019 12:00:12 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C4F794C066;
+        Mon,  6 May 2019 12:00:10 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8194F4C05E;
+        Mon,  6 May 2019 12:00:10 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.152.212.60])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  6 May 2019 12:00:10 +0000 (GMT)
+Date:   Mon, 6 May 2019 14:00:09 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [GIT PULL] s390 patches for the 5.2 merge window
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <1556918073-13171-7-git-send-email-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19050610-0028-0000-0000-0000036ACAA2
+x-cbid: 19050612-0020-0000-0000-00000339CA79
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050610-0029-0000-0000-0000242A3EF6
-Message-Id: <acf4e2fe-7b91-718c-f1f7-f4678eda52e0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_07:,,
+x-cbparentid: 19050612-0021-0000-0000-0000218C5EE2
+Message-Id: <20190506140009.05dbc545@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060096
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 03/05/2019 23:14, Tony Krowiak wrote:
-> There is nothing preventing a root user from inadvertently unbinding an
-> AP queue device that is in use by a guest from the vfio_ap device driver
-> and binding it to a zcrypt driver. This can result in a queue being
-> accessible from both the host and a guest.
-> 
-> This patch introduces safeguards that prevent sharing of an AP queue
-> between the host when a queue device is unbound from the vfio_ap device
-> driver. In addition, this patch restores guest access to AP queue devices
-> bound to the vfio_ap driver if the queue's APQN is assigned to an mdev
-> device in use by a guest.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->   drivers/s390/crypto/vfio_ap_drv.c     |  12 +++-
->   drivers/s390/crypto/vfio_ap_ops.c     | 100 +++++++++++++++++++++++++++++++++-
->   drivers/s390/crypto/vfio_ap_private.h |   2 +
->   3 files changed, 111 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-> index e9824c35c34f..c215978daf39 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -42,12 +42,22 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
->   
->   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
->   {
-> +	struct ap_queue *queue = to_ap_queue(&apdev->device);
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	vfio_ap_mdev_probe_queue(queue);
-> +	mutex_unlock(&matrix_dev->lock);
-> +
->   	return 0;
->   }
->   
->   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
->   {
-> -	/* Nothing to do yet */
-> +	struct ap_queue *queue = to_ap_queue(&apdev->device);
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	vfio_ap_mdev_remove_queue(queue);
-> +	mutex_unlock(&matrix_dev->lock);
->   }
->   
->   static void vfio_ap_matrix_dev_release(struct device *dev)
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index ede45184eb67..40324951bd37 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -226,8 +226,6 @@ static struct device *vfio_ap_get_queue_dev(unsigned long apid,
->   				  &apqn, match_apqn);
->   }
->   
-> -
-> -
->   static int vfio_ap_mdev_validate_masks(unsigned long *apm, unsigned long *aqm)
->   {
->   	int ret;
-> @@ -259,6 +257,27 @@ static bool vfio_ap_queues_on_drv(unsigned long *apm, unsigned long *aqm)
->   	return true;
->   }
->   
-> +static bool vfio_ap_card_on_drv(struct ap_queue *queue, unsigned long *aqm)
-> +{
-> +	unsigned long apid, apqi;
-> +	struct device *dev;
-> +
-> +	apid = AP_QID_CARD(queue->qid);
-> +
-> +	for_each_set_bit_inv(apqi, aqm, AP_DOMAINS) {
-> +		if (queue->qid == AP_MKQID(apid, apqi))
-> +			continue;
-> +
-> +		dev = vfio_ap_get_queue_dev(apid, apqi);
-> +		if (!dev)
-> +			return false;
-> +
-> +		put_device(dev);
-> +	}
-> +
-> +	return true;
-> +}
-> +
->   /**
->    * assign_adapter_store
->    *
-> @@ -1017,3 +1036,80 @@ void vfio_ap_mdev_unregister(void)
->   {
->   	mdev_unregister_device(&matrix_dev->device);
->   }
-> +
-> +static struct ap_matrix_mdev *vfio_ap_mdev_find_matrix_mdev(unsigned long apid,
-> +							    unsigned long apqi)
-> +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
-> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm))
-> +			return matrix_mdev;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +void vfio_ap_mdev_probe_queue(struct ap_queue *queue)
-> +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +	unsigned long *shadow_apm, *shadow_aqm;
-> +	unsigned long apid = AP_QID_CARD(queue->qid);
-> +	unsigned long apqi = AP_QID_QUEUE(queue->qid);
-> +
-> +	/*
-> +	 * Find the mdev device to which the APQN of the queue device being
-> +	 * probed is assigned
-> +	 */
-> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
-> +
-> +	/* Check whether we found an mdev device and it is in use by a guest */
-> +	if (matrix_mdev && matrix_mdev->kvm) {
-> +		shadow_apm = matrix_mdev->shadow_crycb->apm;
-> +		shadow_aqm = matrix_mdev->shadow_crycb->aqm;
-> +		/*
-> +		 * If the guest already has access to the adapter card
-> +		 * referenced by APID or does not have access to the queues
-> +		 * referenced by APQI, there is nothing to do here.
-> +		 */
-> +		if (test_bit_inv(apid, shadow_apm) ||
-> +		    !test_bit_inv(apqi, shadow_aqm))
-> +			return;
-> +
-> +		/*
-> +		 * If each APQN with the APID of the queue being probed and an
-> +		 * APQI in the shadow CRYCB references a queue device that is
-> +		 * bound to the vfio_ap driver, then plug the adapter into the
-> +		 * guest.
-> +		 */
-> +		if (vfio_ap_card_on_drv(queue, shadow_aqm)) {
-> +			set_bit_inv(apid, shadow_apm);
-> +			vfio_ap_mdev_update_crycb(matrix_mdev);
-> +		}
-> +	}
-> +}
-> +
-> +void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
-> +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +	unsigned long apid = AP_QID_CARD(queue->qid);
-> +	unsigned long apqi = AP_QID_QUEUE(queue->qid);
-> +
-> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
-> +
-> +	/*
-> +	 * If the queue is assigned to the mdev device and the mdev device
-> +	 * is in use by a guest, unplug the adapter referred to by the APID
-> +	 * of the APQN of the queue being removed.
-> +	 */
-> +	if (matrix_mdev && matrix_mdev->kvm) {
-> +		if (!test_bit_inv(apid, matrix_mdev->shadow_crycb->apm))
-> +			return;
-> +
-> +		clear_bit_inv(apid, matrix_mdev->shadow_crycb->apm);
-> +		vfio_ap_mdev_update_crycb(matrix_mdev);
-> +	}
-> +
-> +	vfio_ap_mdev_reset_queue(apid, apqi);
-> +}
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index e8457aa61976..6b1f7df5b979 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.h
-> @@ -87,5 +87,7 @@ struct ap_matrix_mdev {
->   
->   extern int vfio_ap_mdev_register(void);
->   extern void vfio_ap_mdev_unregister(void);
-> +void vfio_ap_mdev_remove_queue(struct ap_queue *queue);
-> +void vfio_ap_mdev_probe_queue(struct ap_queue *queue);
->   
->   #endif /* _VFIO_AP_PRIVATE_H_ */
-> 
+The following changes since commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f:
 
+  s390/dasd: Fix capacity calculation for large volumes (2019-03-29 07:23:44 +0100)
 
-AFAIU the apmask/aqmask of the AP_BUS are replacing bind/unbind for the 
-admin. Don't they?
-Then why not suppress bind/unbind for ap_queues?
+are available in the git repository at:
 
-Otherwise, it seems to me to handle correctly the disappearance of a 
-card, which is the only thing that can happen from out of the firmware 
-queue change requires configuration change and re-IPL.
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux s390-5.2-1
 
-Even still need testing, LGTM
+for you to fetch changes up to ce968f6012f632bbe071839d229db77c45fc38d1:
 
+  s390/vdso: drop unnecessary cc-ldoption (2019-05-03 17:17:58 +0200)
 
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+----------------------------------------------------------------
+s390 updates for the 5.2 merge window
+
+ - Support for kernel address space layout randomization
+
+ - Add support for kernel image signature verification
+
+ - Convert s390 to the generic get_user_pages_fast code
+
+ - Convert s390 to the stack unwind API analog to x86
+
+ - Add support for CPU directed interrupts for PCI devices
+
+ - Provide support for MIO instructions to the PCI base layer, this
+   will allow the use of direct PCI mappings in user space code
+
+ - Add the basic KVM guest ultravisor interface for protected VMs
+
+ - Add AT_HWCAP bits for several new hardware capabilities
+
+ - Update the CPU measurement facility counter definitions to SVN 6
+
+ - Arnds cleanup patches for his quest to get LLVM compiles working
+
+ - A vfio-ccw update with bug fixes and support for halt and clear
+
+ - Improvements for the hardware TRNG code
+
+ - Another round of cleanup for the QDIO layer
+
+ - Numerous cleanups and bug fixes
+
+----------------------------------------------------------------
+Arnd Bergmann (12):
+      s390: cio: fix cio_irb declaration
+      s390: remove -fno-strength-reduce flag
+      s390: don't build vdso32 with clang
+      s390: syscall_wrapper: avoid clang warning
+      s390: make __load_psw_mask work with clang
+      s390: make chkbss work with clang
+      s390: avoid __builtin_return_address(n) on clang
+      s390: zcrypt: initialize variables before_use
+      s390: only build for new CPUs with clang
+      s390: boot, purgatory: pass $(CLANG_FLAGS) where needed
+      s390: drop CONFIG_VIRT_TO_BUS
+      s390: fix clang -Wpointer-sign warnigns in boot code
+
+Cornelia Huck (6):
+      vfio-ccw: make it safe to access channel programs
+      vfio-ccw: rework ssch state handling
+      vfio-ccw: protect the I/O region
+      vfio-ccw: add capabilities chain
+      s390/cio: export hsch to modules
+      vfio-ccw: add handling for async channel instructions
+
+Farhan Ali (3):
+      vfio-ccw: Do not call flush_workqueue while holding the spinlock
+      vfio-ccw: Release any channel program when releasing/removing vfio-ccw mdev
+      vfio-ccw: Prevent quiesce function going into an infinite loop
+
+Gerald Schaefer (8):
+      s390: introduce .boot.preserved.data section
+      s390/kernel: build a relocatable kernel
+      s390/kernel: convert SYSCALL and PGM_CHECK handlers to .quad
+      s390/kprobes: use static buffer for insn_page
+      s390/sclp: do not use static sccbs
+      s390/kernel: introduce .dma sections
+      s390/kernel: add support for kernel address space layout randomization (KASLR)
+      locking/lockdep: check for freed initmem in static_obj()
+
+Harald Freudenberger (2):
+      s390/crypto: rework generate_entropy function for pseudo random dd
+      s390/crypto: use TRNG for seeding/reseeding
+
+Joe Perches (1):
+      s390: Convert IS_ENABLED uses to __is_defined
+
+Julian Wiedmann (8):
+      s390/qdio: clean up pci_out_supported()
+      s390/qdio: clean up qdio_check_outbound_after_thinint()
+      s390/qdio: fix output of DSCI value in debug file
+      s390/qdio: pass up count of ready-to-process SBALs
+      s390/qdio: simplify SBAL range calculation
+      s390/qdio: eliminate queue's last_move cursor
+      s390/qdio: limit direct access to first_to_check cursor
+      s390/qdio: consolidate index tracking for queue scan
+
+Martin Schwidefsky (21):
+      s390/rseq: use trap4 for RSEQ_SIG
+      s390: fine-tune stack switch helper
+      s390/mm: make the pxd_offset functions more robust
+      s390/mm: convert to the generic get_user_pages_fast code
+      s390/mm: fix pxd_bad with folded page tables
+      Merge tag 'vfio-ccw-20190425' of https://git.kernel.org/.../kvms390/vfio-ccw into features
+      s390: report new CPU capabilities
+      s390/ipl: make ipl_info less confusing
+      s390/ipl: provide uapi header for list directed IPL
+      s390/ipl: add definitions for the IPL report block
+      s390/ipl: read IPL report at early boot
+      s390/ipl: add helper functions to create an IPL report
+      s390/boot: pad bzImage to 4K
+      s390: add missing ENDPROC statements to assembler functions
+      s390/nospec: rename assembler generated expoline thunks
+      s390: use proper expoline sections for .dma code
+      s390/bug: add entry size to the __bug_table section
+      s390/opcodes: add missing instructions to the disassembler
+      s390/unwind: introduce stack unwind API
+      s390/ftrace: use HAVE_FUNCTION_GRAPH_RET_ADDR_PTR
+      s390: simplify disabled_wait
+
+Nick Desaulniers (1):
+      s390/vdso: drop unnecessary cc-ldoption
+
+Philipp Rudo (12):
+      s390/zcore: Rename ipl_block to mitigate name collision
+      s390/kexec_file: Fix potential segment overlap in ELF loader
+      s390/kexec_file: Fix detection of text segment in ELF loader
+      s390/purgatory: Reduce purgatory size
+      s390/purgatory: Omit use of bin2c
+      s390/kexec_file: Simplify parmarea access
+      s390/kexec_file: Unify loader code
+      s390/kexec_file: Load new kernel to absolute 0
+      s390/kexec_file: Signature verification prototype
+      s390/kexec_file: Create ipl report and pass to next kernel
+      s390/kexec_file: Disable kexec_load when IPLed secure
+      s390/ipl: Provide has_secure sysfs attribute
+
+Sebastian Ott (16):
+      s390/pci: mark command line parser data __initdata
+      s390/pci: remove unused define
+      s390/pci: move everything irq related to pci_irq.c
+      s390/sclp: detect DIRQ facility
+      s390/airq: recognize directed interrupts
+      s390/pci: clarify interrupt vector usage
+      s390/airq: provide cacheline aligned ivs
+      s390/pci: provide support for CPU directed interrupts
+      s390: show statistics for MSI IRQs
+      s390/pci: gather statistics for floating vs directed irqs
+      s390/pci: add parameter to force floating irqs
+      s390/pci: move io address mapping code to pci_insn.c
+      s390/ism: move oddities of device IO to wrapper function
+      s390/pci: provide support for MIO instructions
+      s390/pci: add parameter to disable usage of MIO instructions
+      s390: enable processes for mio instructions
+
+Thomas Huth (1):
+      s390/mm: silence compiler warning when compiling without CONFIG_PGSTE
+
+Thomas Richter (1):
+      s390/cpum_cf: Add support for CPU-MF SVN 6
+
+Thomas-Mich Richter (1):
+      s390/cpum_cf_diag: Add support for CPU-MF SVN 6
+
+Vasily Gorbik (6):
+      s390: move ipl block to .boot.preserved.data section
+      s390: introduce .boot.preserved.data section compile time validation
+      s390/uv: introduce guest side ultravisor code
+      s390/protvirt: add memory sharing for diag 308 set/store
+      s390/protvirt: block kernel command line alteration
+      s390/kasan: fix strncpy_from_user kasan checks
+
+ Documentation/admin-guide/kernel-parameters.txt   |   2 +
+ arch/s390/Kconfig                                 |  56 ++-
+ arch/s390/Makefile                                |  10 +-
+ arch/s390/boot/Makefile                           |  31 +-
+ arch/s390/boot/als.c                              |   2 +-
+ arch/s390/boot/boot.h                             |   5 +
+ arch/s390/boot/compressed/decompressor.h          |   5 +
+ arch/s390/boot/compressed/vmlinux.lds.S           |  22 +
+ arch/s390/boot/head.S                             |  48 ++-
+ arch/s390/boot/ipl_parm.c                         |  54 ++-
+ arch/s390/boot/ipl_report.c                       | 165 ++++++++
+ arch/s390/boot/kaslr.c                            | 144 +++++++
+ arch/s390/boot/machine_kexec_reloc.c              |   2 +
+ arch/s390/boot/startup.c                          | 121 +++++-
+ arch/s390/boot/text_dma.S                         | 184 ++++++++
+ arch/s390/boot/uv.c                               |  24 ++
+ arch/s390/configs/debug_defconfig                 |   1 +
+ arch/s390/configs/performance_defconfig           |   1 +
+ arch/s390/crypto/crc32be-vx.S                     |   1 +
+ arch/s390/crypto/crc32le-vx.S                     |   6 +-
+ arch/s390/crypto/prng.c                           | 135 ++++--
+ arch/s390/defconfig                               |   1 +
+ arch/s390/hypfs/hypfs_diag0c.c                    |  18 +-
+ arch/s390/include/asm/airq.h                      |  12 +-
+ arch/s390/include/asm/bitops.h                    |  12 +-
+ arch/s390/include/asm/boot_data.h                 |  11 +-
+ arch/s390/include/asm/bug.h                       |  24 +-
+ arch/s390/include/asm/diag.h                      |  13 +
+ arch/s390/include/asm/ebcdic.h                    |   2 +-
+ arch/s390/include/asm/elf.h                       |   4 +
+ arch/s390/include/asm/extable.h                   |   5 +
+ arch/s390/include/asm/ftrace.h                    |   7 +
+ arch/s390/include/asm/io.h                        |  17 +-
+ arch/s390/include/asm/ipl.h                       | 132 +++---
+ arch/s390/include/asm/irq.h                       |   9 +-
+ arch/s390/include/asm/kexec.h                     |  26 +-
+ arch/s390/include/asm/linkage.h                   |   7 +
+ arch/s390/include/asm/lowcore.h                   |   2 +-
+ arch/s390/include/asm/nospec-insn.h               |  10 +-
+ arch/s390/include/asm/pci.h                       |  12 +
+ arch/s390/include/asm/pci_clp.h                   |  20 +-
+ arch/s390/include/asm/pci_insn.h                  |  97 ++++-
+ arch/s390/include/asm/pci_io.h                    |  49 +--
+ arch/s390/include/asm/pgtable.h                   | 112 +++--
+ arch/s390/include/asm/processor.h                 |  82 +---
+ arch/s390/include/asm/sclp.h                      |   3 +
+ arch/s390/include/asm/sections.h                  |  22 +
+ arch/s390/include/asm/setup.h                     |  21 +-
+ arch/s390/include/asm/stacktrace.h                | 114 +++++
+ arch/s390/include/asm/syscall.h                   |   9 +-
+ arch/s390/include/asm/syscall_wrapper.h           |   4 +-
+ arch/s390/include/asm/uaccess.h                   |   2 +
+ arch/s390/include/asm/unwind.h                    | 101 +++++
+ arch/s390/include/asm/uv.h                        | 132 ++++++
+ arch/s390/include/asm/vmlinux.lds.h               |  13 +
+ arch/s390/include/uapi/asm/ipl.h                  | 154 +++++++
+ arch/s390/kernel/Makefile                         |   7 +-
+ arch/s390/kernel/asm-offsets.c                    |   1 +
+ arch/s390/kernel/base.S                           |  71 +---
+ arch/s390/kernel/diag.c                           |  67 +--
+ arch/s390/kernel/dumpstack.c                      | 167 +++++---
+ arch/s390/kernel/early.c                          |   9 +-
+ arch/s390/kernel/early_nobss.c                    |   2 +-
+ arch/s390/kernel/entry.S                          |  42 +-
+ arch/s390/kernel/entry.h                          |   2 +-
+ arch/s390/kernel/ftrace.c                         |   9 +-
+ arch/s390/kernel/head64.S                         |  26 --
+ arch/s390/kernel/ima_arch.c                       |  14 +
+ arch/s390/kernel/ipl.c                            | 370 +++++++++++-----
+ arch/s390/kernel/ipl_vmparm.c                     |   8 +-
+ arch/s390/kernel/irq.c                            |  49 ++-
+ arch/s390/kernel/kexec_elf.c                      |  63 ++-
+ arch/s390/kernel/kexec_image.c                    |  49 +--
+ arch/s390/kernel/kprobes.c                        |  37 +-
+ arch/s390/kernel/machine_kexec.c                  |   8 +-
+ arch/s390/kernel/machine_kexec_file.c             | 268 ++++++++----
+ arch/s390/kernel/machine_kexec_reloc.c            |  53 +++
+ arch/s390/kernel/mcount.S                         |  12 +-
+ arch/s390/kernel/nmi.c                            |   2 +-
+ arch/s390/kernel/nospec-branch.c                  |   6 +-
+ arch/s390/kernel/nospec-sysfs.c                   |   2 +-
+ arch/s390/kernel/perf_cpum_cf.c                   |  15 +-
+ arch/s390/kernel/perf_cpum_cf_diag.c              |   9 +-
+ arch/s390/kernel/perf_cpum_cf_events.c            | 107 +++--
+ arch/s390/kernel/perf_event.c                     |  16 +-
+ arch/s390/kernel/pgm_check.S                      |   2 +-
+ arch/s390/kernel/process.c                        |   1 +
+ arch/s390/kernel/processor.c                      |   3 +-
+ arch/s390/kernel/reipl.S                          |   1 +
+ arch/s390/kernel/relocate_kernel.S                |   4 +
+ arch/s390/kernel/setup.c                          |  71 +++-
+ arch/s390/kernel/smp.c                            |   3 +-
+ arch/s390/kernel/stacktrace.c                     |  69 ++-
+ arch/s390/kernel/swsusp.S                         |  17 +-
+ arch/s390/kernel/traps.c                          |   3 +-
+ arch/s390/kernel/unwind_bc.c                      | 155 +++++++
+ arch/s390/kernel/vdso.c                           |  10 +-
+ arch/s390/kernel/vdso32/Makefile                  |   2 +-
+ arch/s390/kernel/vdso64/Makefile                  |   2 +-
+ arch/s390/kernel/vmlinux.lds.S                    |  19 +
+ arch/s390/kvm/interrupt.c                         |   2 +-
+ arch/s390/lib/mem.S                               |   1 +
+ arch/s390/mm/Makefile                             |   2 +-
+ arch/s390/mm/fault.c                              |  14 +-
+ arch/s390/mm/gup.c                                | 300 -------------
+ arch/s390/mm/init.c                               |   3 +
+ arch/s390/mm/maccess.c                            |   1 +
+ arch/s390/mm/pgtable.c                            |   2 +
+ arch/s390/mm/vmem.c                               |   2 +
+ arch/s390/net/bpf_jit_comp.c                      |   6 +-
+ arch/s390/oprofile/init.c                         |  22 +-
+ arch/s390/pci/Makefile                            |   2 +-
+ arch/s390/pci/pci.c                               | 366 ++++++----------
+ arch/s390/pci/pci_clp.c                           |  25 +-
+ arch/s390/pci/pci_insn.c                          | 169 +++++++-
+ arch/s390/pci/pci_irq.c                           | 486 ++++++++++++++++++++++
+ arch/s390/purgatory/Makefile                      |  20 +-
+ arch/s390/purgatory/kexec-purgatory.S             |  14 +
+ arch/s390/purgatory/purgatory.lds.S               |  54 +++
+ arch/s390/scripts/Makefile.chkbss                 |   3 +-
+ arch/s390/tools/opcodes.txt                       |  11 +
+ drivers/s390/char/sclp.c                          |  14 +-
+ drivers/s390/char/sclp.h                          |  10 +-
+ drivers/s390/char/sclp_early.c                    |   5 +-
+ drivers/s390/char/sclp_early_core.c               |  20 +-
+ drivers/s390/char/sclp_sdias.c                    |  74 ++--
+ drivers/s390/char/zcore.c                         |  22 +-
+ drivers/s390/cio/Makefile                         |   3 +-
+ drivers/s390/cio/airq.c                           |  41 +-
+ drivers/s390/cio/cio.c                            |   2 +-
+ drivers/s390/cio/cio.h                            |   4 +-
+ drivers/s390/cio/ioasm.c                          |   1 +
+ drivers/s390/cio/qdio.h                           |   6 +-
+ drivers/s390/cio/qdio_debug.c                     |   9 +-
+ drivers/s390/cio/qdio_main.c                      | 211 +++++-----
+ drivers/s390/cio/qdio_setup.c                     |   2 +-
+ drivers/s390/cio/qdio_thinint.c                   |   4 +-
+ drivers/s390/cio/vfio_ccw_async.c                 |  88 ++++
+ drivers/s390/cio/vfio_ccw_cp.c                    |  21 +-
+ drivers/s390/cio/vfio_ccw_cp.h                    |   2 +
+ drivers/s390/cio/vfio_ccw_drv.c                   |  81 ++--
+ drivers/s390/cio/vfio_ccw_fsm.c                   | 143 ++++++-
+ drivers/s390/cio/vfio_ccw_ops.c                   | 227 ++++++++--
+ drivers/s390/cio/vfio_ccw_private.h               |  48 ++-
+ drivers/s390/crypto/ap_bus.c                      |   4 +-
+ drivers/s390/crypto/zcrypt_api.c                  |   4 +
+ drivers/s390/net/ism.h                            |  29 +-
+ drivers/s390/net/ism_drv.c                        |  20 +-
+ drivers/s390/virtio/virtio_ccw.c                  |   2 +-
+ include/asm-generic/sections.h                    |  14 +
+ include/linux/ima.h                               |   2 +-
+ include/uapi/linux/vfio.h                         |   4 +
+ include/uapi/linux/vfio_ccw.h                     |  12 +
+ kernel/locking/lockdep.c                          |   3 +
+ kernel/panic.c                                    |   7 +-
+ security/integrity/Kconfig                        |  11 +-
+ security/integrity/Makefile                       |   8 +-
+ security/integrity/platform_certs/load_ipl_s390.c |  36 ++
+ tools/testing/selftests/rseq/rseq-s390.h          |   9 +-
+ 159 files changed, 4904 insertions(+), 1935 deletions(-)
+ create mode 100644 arch/s390/boot/ipl_report.c
+ create mode 100644 arch/s390/boot/kaslr.c
+ create mode 100644 arch/s390/boot/machine_kexec_reloc.c
+ create mode 100644 arch/s390/boot/text_dma.S
+ create mode 100644 arch/s390/boot/uv.c
+ create mode 100644 arch/s390/include/asm/stacktrace.h
+ create mode 100644 arch/s390/include/asm/unwind.h
+ create mode 100644 arch/s390/include/asm/uv.h
+ create mode 100644 arch/s390/include/uapi/asm/ipl.h
+ create mode 100644 arch/s390/kernel/ima_arch.c
+ create mode 100644 arch/s390/kernel/machine_kexec_reloc.c
+ create mode 100644 arch/s390/kernel/unwind_bc.c
+ delete mode 100644 arch/s390/mm/gup.c
+ create mode 100644 arch/s390/pci/pci_irq.c
+ create mode 100644 arch/s390/purgatory/kexec-purgatory.S
+ create mode 100644 arch/s390/purgatory/purgatory.lds.S
+ create mode 100644 drivers/s390/cio/vfio_ccw_async.c
+ create mode 100644 security/integrity/platform_certs/load_ipl_s390.c
 
