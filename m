@@ -2,161 +2,189 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC13F14474
-	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 08:26:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2829614484
+	for <lists+linux-s390@lfdr.de>; Mon,  6 May 2019 08:41:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725773AbfEFG0y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 May 2019 02:26:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53972 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725710AbfEFG0y (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 May 2019 02:26:54 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x466PQxk038451
-        for <linux-s390@vger.kernel.org>; Mon, 6 May 2019 02:26:53 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sabpu7mwa-1
+        id S1725840AbfEFGlN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 May 2019 02:41:13 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36506 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725813AbfEFGlN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 May 2019 02:41:13 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x466bR4c051928
+        for <linux-s390@vger.kernel.org>; Mon, 6 May 2019 02:41:12 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2saejwthvx-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 06 May 2019 02:26:52 -0400
+        for <linux-s390@vger.kernel.org>; Mon, 06 May 2019 02:41:12 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 6 May 2019 07:26:51 +0100
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 6 May 2019 07:41:10 +0100
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 May 2019 07:26:48 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x466QlsH46792710
+        Mon, 6 May 2019 07:41:07 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x466f6CU51445868
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 May 2019 06:26:47 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 518B9A405B;
-        Mon,  6 May 2019 06:26:47 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D0D2EA405C;
-        Mon,  6 May 2019 06:26:46 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.79.53])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  6 May 2019 06:26:46 +0000 (GMT)
-Subject: Re: [PATCH -next] KVM: s390: fix typo in parameter description
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-References: <20190504065145.53665-1-weiyongjun1@huawei.com>
- <20190505131947.6124d607.cohuck@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Mon, 6 May 2019 08:26:46 +0200
+        Mon, 6 May 2019 06:41:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E228952065;
+        Mon,  6 May 2019 06:41:05 +0000 (GMT)
+Received: from [9.145.46.119] (unknown [9.145.46.119])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4AA8D5205A;
+        Mon,  6 May 2019 06:41:05 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 1/7] s390: vfio-ap: wait for queue empty on queue reset
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Mon, 6 May 2019 08:41:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190505131947.6124d607.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19050606-0008-0000-0000-000002E3AEEA
+x-cbid: 19050606-0012-0000-0000-00000318B306
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050606-0009-0000-0000-0000225025B2
-Message-Id: <6c224205-9126-b7f7-1f66-ef42ce22fdc7@de.ibm.com>
+x-cbparentid: 19050606-0013-0000-0000-000021512AA5
+Message-Id: <0bdb1655-4c4e-1982-a842-9dfc7c02a576@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-06_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905060054
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905060056
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Paolo, Radim,
+On 03/05/2019 23:14, Tony Krowiak wrote:
+> Refactors the AP queue reset function to wait until the queue is empty
+> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
+> required by the AP architecture.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/vfio_ap_ops.c | 35 ++++++++++++++++++++++++++++++++---
+>   1 file changed, 32 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 900b9cf20ca5..b88a2a2ba075 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -271,6 +271,32 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>   	return 0;
+>   }
+>   
+> +static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
+> +{
+> +	struct ap_queue_status status;
+> +	ap_qid_t qid = AP_MKQID(apid, apqi);
+> +	int retry = 5;
+> +
+> +	do {
+> +		status = ap_tapq(qid, NULL);
+> +		switch (status.response_code) {
+> +		case AP_RESPONSE_NORMAL:
+> +			if (status.queue_empty)
+> +				return;
+> +			msleep(20);
 
-can you pick this up directly?
+NIT: 	Fall through ?
+
+> +			break;
+> +		case AP_RESPONSE_RESET_IN_PROGRESS:
+> +		case AP_RESPONSE_BUSY:
+> +			msleep(20);
+> +			break;
+> +		default:
+> +			pr_warn("%s: tapq err %02x: %04lx.%02lx may not be empty\n",
+> +				__func__, status.response_code, apid, apqi);
+
+I do not thing the warning sentence is appropriate:
+The only possible errors here are if the AP is not available due to AP 
+checkstop, deconfigured AP or invalid APQN.
 
 
-On 05.05.19 13:19, Cornelia Huck wrote:
-> On Sat, 4 May 2019 06:51:45 +0000
-> Wei Yongjun <weiyongjun1@huawei.com> wrote:
+> +			return;
+> +		}
+> +	} while (--retry);
+> +}
+> +
+>   /**
+>    * assign_adapter_store
+>    *
+> @@ -790,15 +816,18 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>   	return NOTIFY_OK;
+>   }
+>   
+> -static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> -				    unsigned int retry)
+> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+>   {
+>   	struct ap_queue_status status;
+> +	int retry = 5;
+>   
+>   	do {
+>   		status = ap_zapq(AP_MKQID(apid, apqi));
+>   		switch (status.response_code) {
+>   		case AP_RESPONSE_NORMAL:
+> +			vfio_ap_mdev_wait_for_qempty(apid, apqi);
+> +			return 0;
+> +		case AP_RESPONSE_DECONFIGURED:
+
+Since you modify the switch, you can return for all the following cases:
+AP_RESPONSE_DECONFIGURE
+..._CHECKSTOP
+..._INVALID_APQN
+
+
+And you should wait for qempty on AP_RESET_IN_PROGRESS along with 
+AP_RESPONSE_NORMAL
+
+>   			return 0;
+>   		case AP_RESPONSE_RESET_IN_PROGRESS:
+>   		case AP_RESPONSE_BUSY:
+
+While at modifying this function, the AP_RESPONSE_BUSY is not a valid 
+code for ZAPQ, you can remove this.
+
+> @@ -824,7 +853,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>   			     matrix_mdev->matrix.apm_max + 1) {
+>   		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>   				     matrix_mdev->matrix.aqm_max + 1) {
+> -			ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+> +			ret = vfio_ap_mdev_reset_queue(apid, apqi);
+
+IMHO, since you are at changing this call, passing the apqn as parameter 
+would be a good simplification.
+
+
+
+>   			/*
+>   			 * Regardless whether a queue turns out to be busy, or
+>   			 * is not operational, we need to continue resetting
+
+Depends on why the reset failed, but this is out of scope.
+
 > 
->> Fix typo in parameter description.
->>
->> Fixes: 8b905d28ee17 ("KVM: s390: provide kvm_arch_no_poll function")
->> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
->> ---
->>  arch/s390/kvm/kvm-s390.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->> index 8d6d75db8de6..ac6163c334d6 100644
->> --- a/arch/s390/kvm/kvm-s390.c
->> +++ b/arch/s390/kvm/kvm-s390.c
->> @@ -181,7 +181,7 @@ MODULE_PARM_DESC(hpage, "1m huge page backing support");
->>  /* maximum percentage of steal time for polling.  >100 is treated like 100 */
->>  static u8 halt_poll_max_steal = 10;
->>  module_param(halt_poll_max_steal, byte, 0644);
->> -MODULE_PARM_DESC(hpage, "Maximum percentage of steal time to allow polling");
->> +MODULE_PARM_DESC(halt_poll_max_steal, "Maximum percentage of steal time to allow polling");
->>  
->>  /*
->>   * For now we handle at most 16 double words as this is what the s390 base
->>
->>
->>
-> 
-> Whoops.
-> 
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> 
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
