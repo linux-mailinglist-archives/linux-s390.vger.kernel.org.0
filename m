@@ -2,186 +2,247 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 063E51653D
-	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2019 15:58:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCB5116650
+	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2019 17:12:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726295AbfEGN6X (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 May 2019 09:58:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60218 "EHLO
+        id S1726460AbfEGPMb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 May 2019 11:12:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40070 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726249AbfEGN6W (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 May 2019 09:58:22 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47DrTdA007746
-        for <linux-s390@vger.kernel.org>; Tue, 7 May 2019 09:58:21 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sb92mq36p-1
+        by vger.kernel.org with ESMTP id S1726521AbfEGPMb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 May 2019 11:12:31 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47F3AG1027279
+        for <linux-s390@vger.kernel.org>; Tue, 7 May 2019 11:12:30 -0400
+Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sbayams5w-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 07 May 2019 09:58:20 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 07 May 2019 11:12:30 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 7 May 2019 14:58:17 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Tue, 7 May 2019 16:12:29 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 May 2019 14:58:14 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47DwDXk49414372
+        Tue, 7 May 2019 16:12:26 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47FCNwl23527566
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 May 2019 13:58:13 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 58A4DAE045;
-        Tue,  7 May 2019 13:58:13 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C22D6AE078;
-        Tue,  7 May 2019 13:58:12 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.96.164])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 May 2019 13:58:12 +0000 (GMT)
-Subject: Re: [PATCH 01/10] virtio/s390: use vring_create_virtqueue
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com>
- <20190426183245.37939-2-pasic@linux.ibm.com>
- <20190503111724.70c6ec37.cohuck@redhat.com>
- <20190503160421-mutt-send-email-mst@kernel.org>
- <20190504160340.29f17b98.pasic@linux.ibm.com>
- <20190505131523.159bec7c.cohuck@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Tue, 7 May 2019 15:58:12 +0200
+        Tue, 7 May 2019 15:12:23 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8348B2065;
+        Tue,  7 May 2019 15:12:23 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BE17B2067;
+        Tue,  7 May 2019 15:12:23 +0000 (GMT)
+Received: from [9.85.152.217] (unknown [9.85.152.217])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  7 May 2019 15:12:22 +0000 (GMT)
+Subject: Re: [PATCH v2 1/7] s390: vfio-ap: wait for queue empty on queue reset
+To:     pmorel@linux.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1556918073-13171-1-git-send-email-akrowiak@linux.ibm.com>
+ <1556918073-13171-2-git-send-email-akrowiak@linux.ibm.com>
+ <0bdb1655-4c4e-1982-a842-9dfc7c02a576@linux.ibm.com>
+ <ecc5d1d5-a1ea-64ed-2af0-b2a6ca00d748@linux.ibm.com>
+ <23915628-a517-1749-a0c0-e73e6e20f911@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Tue, 7 May 2019 11:12:22 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190505131523.159bec7c.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <23915628-a517-1749-a0c0-e73e6e20f911@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19050713-0008-0000-0000-000002E42F17
+x-cbid: 19050715-2213-0000-0000-0000038A1A4B
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011066; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01199921; UDB=6.00629552; IPR=6.00980804;
+ MB=3.00026770; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-07 15:12:28
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050713-0009-0000-0000-00002250AC5C
-Message-Id: <ed6cbf63-f2ff-f259-ccb0-3b9ba60f2b35@de.ibm.com>
+x-cbparentid: 19050715-2214-0000-0000-00005E5771DF
+Message-Id: <2549bc2f-4e5a-cc24-b976-f771a7243cc8@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905070090
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070098
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 05.05.19 13:15, Cornelia Huck wrote:
-> On Sat, 4 May 2019 16:03:40 +0200
-> Halil Pasic <pasic@linux.ibm.com> wrote:
-> 
->> On Fri, 3 May 2019 16:04:48 -0400
->> "Michael S. Tsirkin" <mst@redhat.com> wrote:
->>
->>> On Fri, May 03, 2019 at 11:17:24AM +0200, Cornelia Huck wrote:  
->>>> On Fri, 26 Apr 2019 20:32:36 +0200
->>>> Halil Pasic <pasic@linux.ibm.com> wrote:
->>>>   
->>>>> The commit 2a2d1382fe9d ("virtio: Add improved queue allocation API")
->>>>> establishes a new way of allocating virtqueues (as a part of the effort
->>>>> that taught DMA to virtio rings).
->>>>>
->>>>> In the future we will want virtio-ccw to use the DMA API as well.
->>>>>
->>>>> Let us switch from the legacy method of allocating virtqueues to
->>>>> vring_create_virtqueue() as the first step into that direction.
->>>>>
->>>>> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
->>>>> ---
->>>>>  drivers/s390/virtio/virtio_ccw.c | 30 +++++++++++-------------------
->>>>>  1 file changed, 11 insertions(+), 19 deletions(-)  
+On 5/7/19 4:10 AM, Pierre Morel wrote:
+> On 06/05/2019 21:37, Tony Krowiak wrote:
+>> On 5/6/19 2:41 AM, Pierre Morel wrote:
+>>> On 03/05/2019 23:14, Tony Krowiak wrote:
+>>>> Refactors the AP queue reset function to wait until the queue is empty
+>>>> after the PQAP(ZAPQ) instruction is executed to zero out the queue as
+>>>> required by the AP architecture.
 >>>>
->>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>>>> ---
+>>>>   drivers/s390/crypto/vfio_ap_ops.c | 35 
+>>>> ++++++++++++++++++++++++++++++++---
+>>>>   1 file changed, 32 insertions(+), 3 deletions(-)
 >>>>
->>>> I'd vote for merging this patch right away for 5.2.  
+>>>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c 
+>>>> b/drivers/s390/crypto/vfio_ap_ops.c
+>>>> index 900b9cf20ca5..b88a2a2ba075 100644
+>>>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>>>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>>>> @@ -271,6 +271,32 @@ static int 
+>>>> vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>>>>       return 0;
+>>>>   }
+>>>> +static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, 
+>>>> unsigned long apqi)
+>>>> +{
+>>>> +    struct ap_queue_status status;
+>>>> +    ap_qid_t qid = AP_MKQID(apid, apqi);
+>>>> +    int retry = 5;
+>>>> +
+>>>> +    do {
+>>>> +        status = ap_tapq(qid, NULL);
+>>>> +        switch (status.response_code) {
+>>>> +        case AP_RESPONSE_NORMAL:
+>>>> +            if (status.queue_empty)
+>>>> +                return;
+>>>> +            msleep(20);
 >>>
->>> So which tree is this going through? mine?
->>>   
+>>> NIT:     Fall through ?
 >>
->> Christian, what do you think? If the whole series is supposed to go in
->> in one go (which I hope it is), via Martin's tree could be the simplest
->> route IMHO.
+>> Yes
+>>
+>>>
+>>>> +            break;
+>>>> +        case AP_RESPONSE_RESET_IN_PROGRESS:
+>>>> +        case AP_RESPONSE_BUSY:
+>>>> +            msleep(20);
+>>>> +            break;
+>>>> +        default:
+>>>> +            pr_warn("%s: tapq err %02x: %04lx.%02lx may not be 
+>>>> empty\n",
+>>>> +                __func__, status.response_code, apid, apqi);
+>>>
+>>> I do not thing the warning sentence is appropriate:
+>>> The only possible errors here are if the AP is not available due to 
+>>> AP checkstop, deconfigured AP or invalid APQN.
+>>
+>> Right you are! I'll work on a new message.
+>>
+>>>
+>>>
+>>>> +            return;
+>>>> +        }
+>>>> +    } while (--retry);
+>>>> +}
+>>>> +
+>>>>   /**
+>>>>    * assign_adapter_store
+>>>>    *
+>>>> @@ -790,15 +816,18 @@ static int vfio_ap_mdev_group_notifier(struct 
+>>>> notifier_block *nb,
+>>>>       return NOTIFY_OK;
+>>>>   }
+>>>> -static int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int 
+>>>> apqi,
+>>>> -                    unsigned int retry)
+>>>> +int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi)
+>>>>   {
+>>>>       struct ap_queue_status status;
+>>>> +    int retry = 5;
+>>>>       do {
+>>>>           status = ap_zapq(AP_MKQID(apid, apqi));
+>>>>           switch (status.response_code) {
+>>>>           case AP_RESPONSE_NORMAL:
+>>>> +            vfio_ap_mdev_wait_for_qempty(apid, apqi);
+>>>> +            return 0;
+>>>> +        case AP_RESPONSE_DECONFIGURED:
+>>>
+>>> Since you modify the switch, you can return for all the following cases:
+>>> AP_RESPONSE_DECONFIGURE
+>>> ..._CHECKSTOP
+>>> ..._INVALID_APQN
+>>>
+>>>
+>>> And you should wait for qempty on AP_RESET_IN_PROGRESS along with 
+>>> AP_RESPONSE_NORMAL
+>>
+>> If a queue reset is in progress, we retry the zapq. Are you saying we
+>> should wait for qempty then reissue the zapq?
 > 
 > 
-> The first three patches are virtio(-ccw) only and the those are the ones
-> that I think are ready to go.
-> 
-> I'm not feeling comfortable going forward with the remainder as it
-> stands now; waiting for some other folks to give feedback. (They are
-> touching/interacting with code parts I'm not so familiar with, and lack
-> of documentation, while not the developers' fault, does not make it
-> easier.)
-> 
-> Michael, would you like to pick up 1-3 for your tree directly? That
-> looks like the easiest way.
+> Yes, I fear that if we reissue the zapq while RESET is in progress we 
+> could fall in a loop depending on the reset hardware time and the 
+> software retry .
 
-Agreed. Michael please pick 1-3.
-We will continue to review 4- first and then see which tree is best.
+I already did this in the forthcoming v4 series.
+
+> 
+>>
+>>>
+>>>>               return 0;
+>>>>           case AP_RESPONSE_RESET_IN_PROGRESS:
+>>>>           case AP_RESPONSE_BUSY:
+>>>
+>>> While at modifying this function, the AP_RESPONSE_BUSY is not a valid 
+>>> code for ZAPQ, you can remove this.
+>>
+>> Okay
+>>
+>>>
+>>>> @@ -824,7 +853,7 @@ static int vfio_ap_mdev_reset_queues(struct 
+>>>> mdev_device *mdev)
+>>>>                    matrix_mdev->matrix.apm_max + 1) {
+>>>>           for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+>>>>                        matrix_mdev->matrix.aqm_max + 1) {
+>>>> -            ret = vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>>>> +            ret = vfio_ap_mdev_reset_queue(apid, apqi);
+>>>
+>>> IMHO, since you are at changing this call, passing the apqn as 
+>>> parameter would be a good simplification.
+>>
+>> Okay.
+> 
+> Sorry, I should have add: NIT.
+> 
+>>
+>>>
+>>>
+>>>
+>>>>               /*
+>>>>                * Regardless whether a queue turns out to be busy, or
+>>>>                * is not operational, we need to continue resetting
+>>>
+>>> Depends on why the reset failed, but this is out of scope.
+>>
+>> I'm not sure what you mean by out of scope here, but you do make a valid
+>> point. If the response code for the zapq is AP_RESPONSE_DECONFIGURED,
+>> there is probably no sense in continuing to reset queues for that
+>> particular adapter. I'll consider a change here.
+> 
+> Yes, this was the point, but I consider this as a enhancement, trying a 
+> reset on bad queues AFAIK do no arm.
+
+I included the enhancement in the forthcoming v4 series.
+
+> 
+>>
+>>>
+>>>>
+>>>
+>>>
+>>
+> 
+> 
 
