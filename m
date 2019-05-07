@@ -2,55 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9585D15777
-	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2019 03:55:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8633115CFA
+	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2019 08:08:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726834AbfEGBzR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 May 2019 21:55:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58574 "EHLO mail.kernel.org"
+        id S1726648AbfEGGIq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 May 2019 02:08:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfEGBzF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 6 May 2019 21:55:05 -0400
-Subject: Re: [GIT PULL] s390 patches for the 5.2 merge window
+        id S1726579AbfEGFcu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 7 May 2019 01:32:50 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D53EE2087F;
+        Tue,  7 May 2019 05:32:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1557194104;
-        bh=J0XSLb9bZQ2z65RsxlBsvSBjyBFEVvAj9sTVz2T+fmg=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=vo+3Mih6zp/EzhIxvy+ZvsedGNym+DEdqowWF9T+odRr07H+mBdPuAvSMi8trsF6b
-         XvHLRPPEwxzv/epEs5Vx/0EMA+xkkRxFWnvpM3gtNC6gaKQ6ofhK9fyteAEZkVwpTW
-         itw1Rx7LI+l42HM6G2sVqf7wlYFqJQ9N2gb23etM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190506140009.05dbc545@mschwideX1>
-References: <20190506140009.05dbc545@mschwideX1>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190506140009.05dbc545@mschwideX1>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
- s390-5.2-1
-X-PR-Tracked-Commit-Id: ce968f6012f632bbe071839d229db77c45fc38d1
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 14be4c61c205dcb0a72251c1e2790814181bd9ba
-Message-Id: <155719410489.3542.2351643606761014033.pr-tracker-bot@kernel.org>
-Date:   Tue, 07 May 2019 01:55:04 +0000
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
+        s=default; t=1557207169;
+        bh=wbEAVvMA4Vg5qETHunFBfuUNCOAxZC1YaJjR0olzspM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=QHExyHy8H8vQCcGbw5TA5imRVlz9ptIxuQdYXPuxVTXrHVVonDXTP13d6f//0EGXJ
+         2ai1r5v8lcHgI474m/f25f0fVc3182j3OW+AAFTSychcLAzgNlAIUiAgaSl5EnrcA+
+         +eKt3UkcCeUuUSHaBUvgi4cL+Dc4AHf5p2oTYkKM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.0 10/99] s390/dasd: Fix capacity calculation for large volumes
+Date:   Tue,  7 May 2019 01:31:04 -0400
+Message-Id: <20190507053235.29900-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190507053235.29900-1-sashal@kernel.org>
+References: <20190507053235.29900-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Mon, 6 May 2019 14:00:09 +0200:
+From: Peter Oberparleiter <oberpar@linux.ibm.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux s390-5.2-1
+[ Upstream commit 2cc9637ce825f3a9f51f8f78af7474e9e85bfa5f ]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/14be4c61c205dcb0a72251c1e2790814181bd9ba
+The DASD driver incorrectly limits the maximum number of blocks of ECKD
+DASD volumes to 32 bit numbers. Volumes with a capacity greater than
+2^32-1 blocks are incorrectly recognized as smaller volumes.
 
-Thank you!
+This results in the following volume capacity limits depending on the
+formatted block size:
 
+  BLKSIZE  MAX_GB   MAX_CYL
+      512    2047   5843492
+     1024    4095   8676701
+     2048    8191  13634816
+     4096   16383  23860929
+
+The same problem occurs when a volume with more than 17895697 cylinders
+is accessed in raw-track-access mode.
+
+Fix this problem by adding an explicit type cast when calculating the
+maximum number of blocks.
+
+Signed-off-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/block/dasd_eckd.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
+index 6e294b4d3635..f89f9d02e788 100644
+--- a/drivers/s390/block/dasd_eckd.c
++++ b/drivers/s390/block/dasd_eckd.c
+@@ -2004,14 +2004,14 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
+ 	blk_per_trk = recs_per_track(&private->rdc_data, 0, block->bp_block);
+ 
+ raw:
+-	block->blocks = (private->real_cyl *
++	block->blocks = ((unsigned long) private->real_cyl *
+ 			  private->rdc_data.trk_per_cyl *
+ 			  blk_per_trk);
+ 
+ 	dev_info(&device->cdev->dev,
+-		 "DASD with %d KB/block, %d KB total size, %d KB/track, "
++		 "DASD with %u KB/block, %lu KB total size, %u KB/track, "
+ 		 "%s\n", (block->bp_block >> 10),
+-		 ((private->real_cyl *
++		 (((unsigned long) private->real_cyl *
+ 		   private->rdc_data.trk_per_cyl *
+ 		   blk_per_trk * (block->bp_block >> 9)) >> 1),
+ 		 ((blk_per_trk * block->bp_block) >> 10),
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
