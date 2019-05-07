@@ -2,223 +2,186 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7F9E15FCE
-	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2019 10:52:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 063E51653D
+	for <lists+linux-s390@lfdr.de>; Tue,  7 May 2019 15:58:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725780AbfEGIwN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 May 2019 04:52:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33226 "EHLO
+        id S1726295AbfEGN6X (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 May 2019 09:58:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60218 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726449AbfEGIwN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 May 2019 04:52:13 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x478nudG090097
-        for <linux-s390@vger.kernel.org>; Tue, 7 May 2019 04:52:12 -0400
+        by vger.kernel.org with ESMTP id S1726249AbfEGN6W (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 May 2019 09:58:22 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x47DrTdA007746
+        for <linux-s390@vger.kernel.org>; Tue, 7 May 2019 09:58:21 -0400
 Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sb6b2hg63-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sb92mq36p-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 07 May 2019 04:52:11 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 07 May 2019 09:58:20 -0400
 Received: from localhost
         by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 7 May 2019 09:52:09 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 7 May 2019 14:58:17 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
         by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 May 2019 09:52:07 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x478q5Ca36110340
+        Tue, 7 May 2019 14:58:14 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x47DwDXk49414372
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 May 2019 08:52:05 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8695A4068;
-        Tue,  7 May 2019 08:52:05 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E5D7A4060;
-        Tue,  7 May 2019 08:52:05 +0000 (GMT)
-Received: from [9.152.222.136] (unknown [9.152.222.136])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 May 2019 08:52:05 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH 7/7] s390/cio: Remove vfio-ccw checks of command codes
-To:     Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Farhan Ali <alifm@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20190503134912.39756-1-farman@linux.ibm.com>
- <20190503134912.39756-8-farman@linux.ibm.com>
- <8625f759-0a2d-09af-c8b5-5b312d854ba1@linux.ibm.com>
- <7c897993-d146-bf8e-48ad-11a914a04716@linux.ibm.com>
- <bba6c0a8-2346-cd99-b8ad-f316daac010b@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 7 May 2019 10:52:05 +0200
+        Tue, 7 May 2019 13:58:13 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58A4DAE045;
+        Tue,  7 May 2019 13:58:13 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C22D6AE078;
+        Tue,  7 May 2019 13:58:12 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.96.164])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 May 2019 13:58:12 +0000 (GMT)
+Subject: Re: [PATCH 01/10] virtio/s390: use vring_create_virtqueue
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+ <20190426183245.37939-2-pasic@linux.ibm.com>
+ <20190503111724.70c6ec37.cohuck@redhat.com>
+ <20190503160421-mutt-send-email-mst@kernel.org>
+ <20190504160340.29f17b98.pasic@linux.ibm.com>
+ <20190505131523.159bec7c.cohuck@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Tue, 7 May 2019 15:58:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <bba6c0a8-2346-cd99-b8ad-f316daac010b@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190505131523.159bec7c.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19050708-0008-0000-0000-000002E413D4
+x-cbid: 19050713-0008-0000-0000-000002E42F17
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050708-0009-0000-0000-000022508F7D
-Message-Id: <7ac9fb43-8d7a-9e04-8cba-fa4c63dfc413@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_05:,,
+x-cbparentid: 19050713-0009-0000-0000-00002250AC5C
+Message-Id: <ed6cbf63-f2ff-f259-ccb0-3b9ba60f2b35@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-07_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905070058
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905070090
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 06/05/2019 22:47, Eric Farman wrote:
+
+
+On 05.05.19 13:15, Cornelia Huck wrote:
+> On Sat, 4 May 2019 16:03:40 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
 > 
-> 
-> On 5/6/19 11:39 AM, Eric Farman wrote:
+>> On Fri, 3 May 2019 16:04:48 -0400
+>> "Michael S. Tsirkin" <mst@redhat.com> wrote:
 >>
->>
->> On 5/6/19 8:56 AM, Pierre Morel wrote:
->>> On 03/05/2019 15:49, Eric Farman wrote:
->>>> If the CCW being processed is a No-Operation, then by definition no
->>>> data is being transferred.  Let's fold those checks into the normal
->>>> CCW processors, rather than skipping out early.
+>>> On Fri, May 03, 2019 at 11:17:24AM +0200, Cornelia Huck wrote:  
+>>>> On Fri, 26 Apr 2019 20:32:36 +0200
+>>>> Halil Pasic <pasic@linux.ibm.com> wrote:
+>>>>   
+>>>>> The commit 2a2d1382fe9d ("virtio: Add improved queue allocation API")
+>>>>> establishes a new way of allocating virtqueues (as a part of the effort
+>>>>> that taught DMA to virtio rings).
+>>>>>
+>>>>> In the future we will want virtio-ccw to use the DMA API as well.
+>>>>>
+>>>>> Let us switch from the legacy method of allocating virtqueues to
+>>>>> vring_create_virtqueue() as the first step into that direction.
+>>>>>
+>>>>> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+>>>>> ---
+>>>>>  drivers/s390/virtio/virtio_ccw.c | 30 +++++++++++-------------------
+>>>>>  1 file changed, 11 insertions(+), 19 deletions(-)  
 >>>>
->>>> Likewise, if the CCW being processed is a "test" (an invented
->>>> definition to simply mean it ends in a zero), let's permit that to go
->>>> through to the hardware.  There's nothing inherently unique about
->>>> those command codes versus one that ends in an eight [1], or any other
->>>> otherwise valid command codes that are undefined for the device type
->>>> in question.
+>>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 >>>>
->>>> [1] POPS states that a x08 is a TIC CCW, and that having any high-order
->>>> bits enabled is invalid for format-1 CCWs.  For format-0 CCWs, the
->>>> high-order bits are ignored.
->>>>
->>>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
->>>> ---
->>>>   drivers/s390/cio/vfio_ccw_cp.c | 11 +++++------
->>>>   1 file changed, 5 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/drivers/s390/cio/vfio_ccw_cp.c 
->>>> b/drivers/s390/cio/vfio_ccw_cp.c
->>>> index 36d76b821209..c0a52025bf06 100644
->>>> --- a/drivers/s390/cio/vfio_ccw_cp.c
->>>> +++ b/drivers/s390/cio/vfio_ccw_cp.c
->>>> @@ -289,8 +289,6 @@ static long copy_ccw_from_iova(struct 
->>>> channel_program *cp,
->>>>   #define ccw_is_read_backward(_ccw) (((_ccw)->cmd_code & 0x0F) == 
->>>> 0x0C)
->>>>   #define ccw_is_sense(_ccw) (((_ccw)->cmd_code & 0x0F) == 
->>>> CCW_CMD_BASIC_SENSE)
->>>> -#define ccw_is_test(_ccw) (((_ccw)->cmd_code & 0x0F) == 0)
->>>> -
->>>>   #define ccw_is_noop(_ccw) ((_ccw)->cmd_code == CCW_CMD_NOOP)
->>>>   #define ccw_is_tic(_ccw) ((_ccw)->cmd_code == CCW_CMD_TIC)
->>>> @@ -314,6 +312,10 @@ static inline int ccw_does_data_transfer(struct 
->>>> ccw1 *ccw)
->>>>       if (ccw->count == 0)
->>>>           return 0;
->>>> +    /* If the command is a NOP, then no data will be transferred */
->>>> +    if (ccw_is_noop(ccw))
->>>> +        return 0;
->>>> +
->>>>       /* If the skip flag is off, then data will be transferred */
->>>>       if (!ccw_is_skip(ccw))
->>>>           return 1;
->>>> @@ -398,7 +400,7 @@ static void ccwchain_cda_free(struct ccwchain 
->>>> *chain, int idx)
->>>>   {
->>>>       struct ccw1 *ccw = chain->ch_ccw + idx;
->>>> -    if (ccw_is_test(ccw) || ccw_is_noop(ccw) || ccw_is_tic(ccw))
->>>> +    if (ccw_is_tic(ccw))
+>>>> I'd vote for merging this patch right away for 5.2.  
 >>>
->>>
->>> AFAIR, we introduced this code to protect against noop and test with 
->>> a non zero CDA.
->>> This could go away only if there is somewhere the guaranty that noop 
->>> have always a null CDA (same for test).
+>>> So which tree is this going through? mine?
+>>>   
 >>
->> What was generating either the null or "test" command codes?  I can 
->> provide plenty of examples for both these command codes and how they 
->> look coming out of vfio-ccw now.
+>> Christian, what do you think? If the whole series is supposed to go in
+>> in one go (which I hope it is), via Martin's tree could be the simplest
+>> route IMHO.
 > 
-> I've sent both x00 and x03 (NOP) CCWs with zero and non-zero CDAs to 
-> hardware without this patch.  I don't see anything particuarly 
-> surpising, so I'm not sure what the original code was attempting to 
-> protect.
 > 
-> Maybe, since you question this in ccwchain_cda_free(), you're referring 
-> to commit 408358b50dea ("s390: vfio-ccw: Do not attempt to free no-op, 
-> test and tic cda."), which fixed up our attempt to clean things up that 
-> weren't allocated on the transmit side?  With this series, that is 
-> reverted, but the cda is indeed set to something that needs to be free'd 
-> (see below).  So maybe I should at least mention that commit here.
+> The first three patches are virtio(-ccw) only and the those are the ones
+> that I think are ready to go.
 > 
-> Regardless, while the I/Os work/fail as I expect, the cda addresses 
-> themselves are wrong in much the same way I describe in patch 4.  Yes, 
-> without this patch we don't convert them to an IDAL so certain program 
-> checks aren't applicable.  But the addresses that we end up sending to 
-> the hardware are nonsensical, though potentially valid, locations.
+> I'm not feeling comfortable going forward with the remainder as it
+> stands now; waiting for some other folks to give feedback. (They are
+> touching/interacting with code parts I'm not so familiar with, and lack
+> of documentation, while not the developers' fault, does not make it
+> easier.)
 > 
+> Michael, would you like to pick up 1-3 for your tree directly? That
+> looks like the easiest way.
 
-I am not comfortable with this.
-with NOOP no data transfer take place and the role of VFIO is to take 
-care about data transfer.
-So in my logic better do nothing and send the original CCW to the hardware.
-
->>
->> The noop check is moved up into the "does data transfer" routine, to 
->> determine whether the pages should be pinned or not.  Regardless of 
->> whether or not the input CDA is null, we'll end up with a CCW pointing 
->> to a valid IDAL of invalid addresses.
->>
->> The "test" command codes always struck me as funky, because x18 and 
->> xF8 and everything in between that ends in x8 is architecturally 
->> invalid too, but we don't check for them like we do for things that 
->> end in x0. And there's a TON of other opcodes that are invalid for 
->> today's ECKD devices, or perhaps were valid for older DASD but have 
->> since been deprecated, or are only valid for non-DASD device types.  
->> We have no logic to permit them, either.  If those CCWs had a non-zero 
->> CDA, we either pin it successfully and let the targeted device sort it 
->> out or an error occurs and we fail at that point.  (QEMU will see a 
->> "wirte" region error of -EINVAL because of vfio_pin_pages())
-
-The test command is AFAIU even more sensible that the NOOP command and 
-in my opinion should never be modified since it is highly device 
-dependent and do not induce data transfer anyway.
-
-We even do not know how the CDA field may be used by the device.
-May be I am a little dramatic with this.
-Just to say that I would feel more comfortable if the test command reach 
-the device unchanged.
-
->>
->>>
->>>
->>>
->>>>           return;
->>>>       kfree((void *)(u64)ccw->cda);
->>>> @@ -723,9 +725,6 @@ static int ccwchain_fetch_one(struct ccwchain 
->>>> *chain,
->>>>   {
->>>>       struct ccw1 *ccw = chain->ch_ccw + idx;
->>>> -    if (ccw_is_test(ccw) || ccw_is_noop(ccw))
->>>> -        return 0;
->>>> -
->>>>       if (ccw_is_tic(ccw))
->>>>           return ccwchain_fetch_tic(chain, idx, cp);
->>>>
->>>
->>>
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+Agreed. Michael please pick 1-3.
+We will continue to review 4- first and then see which tree is best.
 
