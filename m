@@ -2,211 +2,152 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B33A317DB7
-	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2019 18:08:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A74B518094
+	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2019 21:38:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfEHQIB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 May 2019 12:08:01 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36716 "EHLO
+        id S1727489AbfEHTir (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 May 2019 15:38:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51602 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727785AbfEHQIA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 May 2019 12:08:00 -0400
+        by vger.kernel.org with ESMTP id S1727842AbfEHTiq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 May 2019 15:38:46 -0400
 Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48G3PF5041178
-        for <linux-s390@vger.kernel.org>; Wed, 8 May 2019 12:07:59 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sc1ts9tyc-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48JWO6F004181
+        for <linux-s390@vger.kernel.org>; Wed, 8 May 2019 15:38:45 -0400
+Received: from e33.co.us.ibm.com (e33.co.us.ibm.com [32.97.110.151])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sc50cs799-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 08 May 2019 12:07:59 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 08 May 2019 15:38:45 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Wed, 8 May 2019 17:07:55 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e33.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
+        Wed, 8 May 2019 20:38:44 +0100
+Received: from b03cxnp08027.gho.boulder.ibm.com (9.17.130.19)
+        by e33.co.us.ibm.com (192.168.1.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 May 2019 17:07:53 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48G7pRH60686470
+        Wed, 8 May 2019 20:38:41 +0100
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48JceZu65077384
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 May 2019 16:07:51 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B940542045;
-        Wed,  8 May 2019 16:07:51 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CBA542047;
-        Wed,  8 May 2019 16:07:51 +0000 (GMT)
-Received: from [9.145.42.10] (unknown [9.145.42.10])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 May 2019 16:07:51 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v8 1/4] s390: ap: kvm: add PQAP interception for AQIC
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
-        david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
-References: <1556818451-1806-1-git-send-email-pmorel@linux.ibm.com>
- <1556818451-1806-2-git-send-email-pmorel@linux.ibm.com>
- <ab120d0f-2eb4-a95c-503b-edf6de283519@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Wed, 8 May 2019 18:07:50 +0200
+        Wed, 8 May 2019 19:38:40 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D5EA6A04D;
+        Wed,  8 May 2019 19:38:40 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 294896A04F;
+        Wed,  8 May 2019 19:38:38 +0000 (GMT)
+Received: from [9.85.183.31] (unknown [9.85.183.31])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed,  8 May 2019 19:38:38 +0000 (GMT)
+Subject: Re: [PATCH 7/7] s390/cio: Remove vfio-ccw checks of command codes
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20190503134912.39756-1-farman@linux.ibm.com>
+ <20190503134912.39756-8-farman@linux.ibm.com>
+ <8625f759-0a2d-09af-c8b5-5b312d854ba1@linux.ibm.com>
+ <7c897993-d146-bf8e-48ad-11a914a04716@linux.ibm.com>
+ <bba6c0a8-2346-cd99-b8ad-f316daac010b@linux.ibm.com>
+ <7ac9fb43-8d7a-9e04-8cba-fa4c63dfc413@linux.ibm.com>
+ <1f2e4272-8570-f93f-9d67-a43dcb00fc55@linux.ibm.com>
+ <5c2b74a9-e1d9-cd63-1284-6544fa4376d9@linux.ibm.com>
+ <20190508120648.6c40231d.cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Date:   Wed, 8 May 2019 15:38:37 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <ab120d0f-2eb4-a95c-503b-edf6de283519@linux.ibm.com>
+In-Reply-To: <20190508120648.6c40231d.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19050816-4275-0000-0000-00000332B1EC
+x-cbid: 19050819-0036-0000-0000-00000AB6CA7F
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011072; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01200486; UDB=6.00629893; IPR=6.00981372;
+ MB=3.00026797; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-08 19:38:42
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050816-4276-0000-0000-0000384221BF
-Message-Id: <b946b5ee-26d6-08fa-c0de-1d8c841b3a03@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_08:,,
+x-cbparentid: 19050819-0037-0000-0000-00004BB5930B
+Message-Id: <abb996d4-4f3d-f10d-7ced-e27ca72a92f0@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_11:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905080099
+ mlxlogscore=888 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905080119
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 08/05/2019 17:48, Tony Krowiak wrote:
-> On 5/2/19 1:34 PM, Pierre Morel wrote:
->> We prepare the interception of the PQAP/AQIC instruction for
->> the case the AQIC facility is enabled in the guest.
->>
->> First of all we do not want to change existing behavior when
->> intercepting AP instructions without the SIE allowing the guest
->> to use AP instructions.
->>
->> In this patch we only handle the AQIC interception allowed by
->> facility 65 which will be enabled when the complete interception
->> infrastructure will be present.
->>
->> We add a callback inside the KVM arch structure for s390 for
->> a VFIO driver to handle a specific response to the PQAP
->> instruction with the AQIC command and only this command.
->>
->> But we want to be able to return a correct answer to the guest
->> even there is no VFIO AP driver in the kernel.
->> Therefor, we inject the correct exceptions from inside KVM for the
->> case the callback is not initialized, which happens when the vfio_ap
->> driver is not loaded.
->>
->> We do consider the responsability of the driver to always initialize
->> the PQAP callback if it defines queues by initializing the CRYCB for
->> a guest.
->> If the callback has been setup we call it.
->> If not we setup an answer considering that no queue is available
->> for the guest when no callback has been setup.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   arch/s390/include/asm/kvm_host.h      |  7 +++
->>   arch/s390/kvm/priv.c                  | 86 
->> +++++++++++++++++++++++++++++++++++
->>   drivers/s390/crypto/vfio_ap_private.h |  2 +
->>   3 files changed, 95 insertions(+)
->>
->> diff --git a/arch/s390/include/asm/kvm_host.h 
->> b/arch/s390/include/asm/kvm_host.h
->> index 9fff9ab..af10a11 100644
->> --- a/arch/s390/include/asm/kvm_host.h
->> +++ b/arch/s390/include/asm/kvm_host.h
->> @@ -18,6 +18,7 @@
->>   #include <linux/kvm_host.h>
->>   #include <linux/kvm.h>
->>   #include <linux/seqlock.h>
->> +#include <linux/module.h>
->>   #include <asm/debug.h>
->>   #include <asm/cpu.h>
->>   #include <asm/fpu/api.h>
->> @@ -722,8 +723,14 @@ struct kvm_s390_cpu_model {
->>       unsigned short ibc;
->>   };
->> +struct kvm_s390_module_hook {
->> +    int (*hook)(struct kvm_vcpu *vcpu);
->> +    struct module *owner;
->> +};
->> +
->>   struct kvm_s390_crypto {
->>       struct kvm_s390_crypto_cb *crycb;
->> +    struct kvm_s390_module_hook *pqap_hook;
->>       __u32 crycbd;
->>       __u8 aes_kw;
->>       __u8 dea_kw;
->> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
->> index 8679bd7..a9be84f 100644
->> --- a/arch/s390/kvm/priv.c
->> +++ b/arch/s390/kvm/priv.c
->> @@ -27,6 +27,7 @@
->>   #include <asm/io.h>
->>   #include <asm/ptrace.h>
->>   #include <asm/sclp.h>
->> +#include <asm/ap.h>
->>   #include "gaccess.h"
->>   #include "kvm-s390.h"
->>   #include "trace.h"
->> @@ -592,6 +593,89 @@ static int handle_io_inst(struct kvm_vcpu *vcpu)
->>       }
->>   }
->> +/*
->> + * handle_pqap: Handling pqap interception
->> + * @vcpu: the vcpu having issue the pqap instruction
->> + *
->> + * We now support PQAP/AQIC instructions and we need to correctly
->> + * answer the guest even if no dedicated driver's hook is available.
->> + *
->> + * The intercepting code calls a dedicated callback for this instruction
->> + * if a driver did register one in the CRYPTO satellite of the
->> + * SIE block.
->> + *
->> + * If no callback is available, the queues are not available, return 
->> this
->> + * response code to the caller and set CC to 3.
->> + * Else return the response code returned by the callback.
->> + */
->> +static int handle_pqap(struct kvm_vcpu *vcpu)
->> +{
->> +    struct ap_queue_status status = {};
->> +    unsigned long reg0;
->> +    int ret;
->> +    uint8_t fc;
->> +
->> +    /* Verify that the AP instruction are available */
->> +    if (!ap_instructions_available())
->> +        return -EOPNOTSUPP;
->> +    /* Verify that the guest is allowed to use AP instructions */
->> +    if (!(vcpu->arch.sie_block->eca & ECA_APIE))
->> +        return -EOPNOTSUPP;
->> +    /*
->> +     * The only possibly intercepted functions when AP instructions are
->> +     * available for the guest are AQIC and TAPQ with the t bit set
->> +     * since we do not set IC.3 (FIII) we currently will only intercept
->> +     * the AQIC function code.
->> +     */
->> +    reg0 = vcpu->run->s.regs.gprs[0];
->> +    fc = reg0 >> 24;
-> 
-> Should you also mask off bits 0-32 in case they might not be zeroes?
 
-Yes I will.
+
+On 5/8/19 6:06 AM, Cornelia Huck wrote:
+> On Wed, 8 May 2019 11:22:07 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+>> The TEST command is used to retrieve the status of the I/O-device
+>> __path__ and do not go up to the device.
+>> I did not find clearly that it does not start a data transfer but I
+>> really do not think it does.
+>> May be we should ask people from hardware.
+>> I only found that test I/O (a specific test command) do not initiate an
+>> operation.
+> 
+> FWIW, I'm not sure about what we should do with the test command in any
+> case.
+> 
+> Currently, I see it defined as a proper command in the rather ancient
+> "Common I/O Device Commands" (I don't know of any newer public
+> version), 
+
+Nor I.  I had to rummage around a few dumpsters to find a copy of this 
+one, even.
+
+> which states that it retrieves the status on the parallel
+> interface _only_ (and generates a command reject on the serial
+> interface). IIRC, the parallel interface has been phased out quite some
+> time ago.
+
+The current POPs, towards the bottom left side of page 13-3, has this 
+statement:
+
+---
+The term “serial-I/O interface” is used to refer the ESCON I/O 
+interface, the FICON I/O interface, and the FICON-converted I/O 
+interface. The term “parallel-I/O interface” is used to refer to the IBM 
+System/360 and System/370 I/O interface.
+---
+
+So, yes it was phased out some time ago.  :)
 
 > 
-> Other than this, r-b
+> The current PoP, in contrast, defines this as an _invalid_ command
+> (generating a channel program check).
+
+Ditto the ESA/390 POPs (SA22-7201-08).
+
+> 
+> So, while the test command originally was designed to never initiate a
+> data transfer, we now have an invalid command in its place, and we
+> don't know if something else might change in the future (for transfer
+> mode, a test-like command is already defined in the PoP).
+
+Indeed, the ccw_is_test() check would need to be reworked if we ever 
+want to support transport mode anyway.  :shudder:
+
+> 
+> So, the safest course would probably be to handle the ->cda portion and
+> send the command down. We'll get a check condition on current hardware,
+> but it should be safe if something changes in the future.
+> 
+> Of course, asking some hardware folks is not a bad idea, either :)
 > 
 
-Thanks,
-
-Pierre
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+I'll shoot a quick note (and cc Pierre) just for the sake of sanity, but 
+I'm still convinced this patch is fine as-is.  :)
 
