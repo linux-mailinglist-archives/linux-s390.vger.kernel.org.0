@@ -2,160 +2,257 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EF3D17626
-	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2019 12:43:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 24AC917A2D
+	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2019 15:15:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727175AbfEHKne (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 May 2019 06:43:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54802 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfEHKne (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 8 May 2019 06:43:34 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 645F1C060200;
-        Wed,  8 May 2019 10:43:33 +0000 (UTC)
-Received: from gondolin (ovpn-204-161.brq.redhat.com [10.40.204.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B3FD7600D4;
-        Wed,  8 May 2019 10:43:31 +0000 (UTC)
-Date:   Wed, 8 May 2019 12:43:27 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 3/7] s390/cio: Split pfn_array_alloc_pin into pieces
-Message-ID: <20190508124327.5c496c8a.cohuck@redhat.com>
-In-Reply-To: <20190503134912.39756-4-farman@linux.ibm.com>
-References: <20190503134912.39756-1-farman@linux.ibm.com>
-        <20190503134912.39756-4-farman@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1727589AbfEHNPv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 May 2019 09:15:51 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49284 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727453AbfEHNPu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 May 2019 09:15:50 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48DD6gj024001
+        for <linux-s390@vger.kernel.org>; Wed, 8 May 2019 09:15:49 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sbx73nc3e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 08 May 2019 09:15:48 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Wed, 8 May 2019 14:15:46 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 May 2019 14:15:43 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48DFgrD50856020
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 May 2019 13:15:42 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 11FFC4C050;
+        Wed,  8 May 2019 13:15:42 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6BEA34C04A;
+        Wed,  8 May 2019 13:15:41 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.155])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 May 2019 13:15:41 +0000 (GMT)
+Date:   Wed, 8 May 2019 15:15:40 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: Re: [PATCH 04/10] s390/mm: force swiotlb for protected
+ virtualization
+In-Reply-To: <20190426183245.37939-5-pasic@linux.ibm.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-5-pasic@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 08 May 2019 10:43:33 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19050813-0020-0000-0000-0000033A8C41
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050813-0021-0000-0000-0000218D2D3F
+Message-Id: <20190508151540.14ba1d90@p-imbrenda.boeblingen.de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905080084
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri,  3 May 2019 15:49:08 +0200
-Eric Farman <farman@linux.ibm.com> wrote:
+On Fri, 26 Apr 2019 20:32:39 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> The pfn_array_alloc_pin routine is doing too much.  Today, it does the
-> alloc of the pfn_array struct and its member arrays, builds the iova
-> address lists out of a contiguous piece of guest memory, and asks vfio
-> to pin the resulting pages.
+> On s390, protected virtualization guests have to use bounced I/O
+> buffers.  That requires some plumbing.
 > 
-> Let's effectively revert a significant portion of commit 5c1cfb1c3948
-> ("vfio: ccw: refactor and improve pfn_array_alloc_pin()") such that we
-> break pfn_array_alloc_pin() into its component pieces, and have one
-> routine that allocates/populates the pfn_array structs, and another
-> that actually pins the memory.  In the future, we will be able to
-> handle scenarios where pinning memory isn't actually appropriate.
+> Let us make sure, any device that uses DMA API with direct ops
+> correctly is spared from the problems, that a hypervisor attempting
+> I/O to a non-shared page would bring.
 > 
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
 > ---
->  drivers/s390/cio/vfio_ccw_cp.c | 72 +++++++++++++++++++++++++++---------------
->  1 file changed, 47 insertions(+), 25 deletions(-)
+>  arch/s390/Kconfig                   |  4 +++
+>  arch/s390/include/asm/mem_encrypt.h | 18 +++++++++++++
+>  arch/s390/mm/init.c                 | 50
+> +++++++++++++++++++++++++++++++++++++ 3 files changed, 72
+> insertions(+) create mode 100644 arch/s390/include/asm/mem_encrypt.h
 > 
-> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-> index f86da78eaeaa..b70306c06150 100644
-> --- a/drivers/s390/cio/vfio_ccw_cp.c
-> +++ b/drivers/s390/cio/vfio_ccw_cp.c
-> @@ -50,28 +50,25 @@ struct ccwchain {
->  };
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 1c3fcf19c3af..5500d05d4d53 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -1,4 +1,7 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> +config ARCH_HAS_MEM_ENCRYPT
+> +        def_bool y
+> +
+>  config MMU
+>  	def_bool y
 >  
->  /*
-> - * pfn_array_alloc_pin() - alloc memory for PFNs, then pin user pages in memory
-> + * pfn_array_alloc() - alloc memory for PFNs
->   * @pa: pfn_array on which to perform the operation
-> - * @mdev: the mediated device to perform pin/unpin operations
->   * @iova: target guest physical address
->   * @len: number of bytes that should be pinned from @iova
->   *
-> - * Attempt to allocate memory for PFNs, and pin user pages in memory.
-> + * Attempt to allocate memory for PFN.
+> @@ -191,6 +194,7 @@ config S390
+>  	select ARCH_HAS_SCALED_CPUTIME
+>  	select VIRT_TO_BUS
+>  	select HAVE_NMI
+> +	select SWIOTLB
+>  
+>  
+>  config SCHED_OMIT_FRAME_POINTER
+> diff --git a/arch/s390/include/asm/mem_encrypt.h
+> b/arch/s390/include/asm/mem_encrypt.h new file mode 100644
+> index 000000000000..0898c09a888c
+> --- /dev/null
+> +++ b/arch/s390/include/asm/mem_encrypt.h
+> @@ -0,0 +1,18 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef S390_MEM_ENCRYPT_H__
+> +#define S390_MEM_ENCRYPT_H__
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#define sme_me_mask	0ULL
 
-s/PFN/PFNs/
+This is rather ugly, but I understand why it's there
 
->   *
->   * Usage of pfn_array:
->   * We expect (pa_nr == 0) and (pa_iova_pfn == NULL), any field in
->   * this structure will be filled in by this function.
->   *
->   * Returns:
-> - *   Number of pages pinned on success.
-> - *   If @pa->pa_nr is not 0, or @pa->pa_iova_pfn is not NULL initially,
-> - *   returns -EINVAL.
-> - *   If no pages were pinned, returns -errno.
-> + *         0 if PFNs are allocated
-> + *   -EINVAL if pa->pa_nr is not initially zero, or pa->pa_iova_pfn is not NULL
-> + *   -ENOMEM if alloc failed
->   */
-> -static int pfn_array_alloc_pin(struct pfn_array *pa, struct device *mdev,
-> -			       u64 iova, unsigned int len)
-> +static int pfn_array_alloc(struct pfn_array *pa, u64 iova, unsigned int len)
->  {
-> -	int i, ret = 0;
+> +
+> +static inline bool sme_active(void) { return false; }
+> +extern bool sev_active(void);
+> +
+> +int set_memory_encrypted(unsigned long addr, int numpages);
+> +int set_memory_decrypted(unsigned long addr, int numpages);
+> +
+> +#endif	/* __ASSEMBLY__ */
+> +
+> +#endif	/* S390_MEM_ENCRYPT_H__ */
+> +
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 3e82f66d5c61..7e3cbd15dcfa 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/mman.h>
+>  #include <linux/mm.h>
+>  #include <linux/swap.h>
+> +#include <linux/swiotlb.h>
+>  #include <linux/smp.h>
+>  #include <linux/init.h>
+>  #include <linux/pagemap.h>
+> @@ -29,6 +30,7 @@
+>  #include <linux/export.h>
+>  #include <linux/cma.h>
+>  #include <linux/gfp.h>
+> +#include <linux/dma-mapping.h>
+>  #include <asm/processor.h>
+>  #include <linux/uaccess.h>
+>  #include <asm/pgtable.h>
+> @@ -42,6 +44,8 @@
+>  #include <asm/sclp.h>
+>  #include <asm/set_memory.h>
+>  #include <asm/kasan.h>
+> +#include <asm/dma-mapping.h>
+> +#include <asm/uv.h>
+>  
+>  pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>  
+> @@ -126,6 +130,50 @@ void mark_rodata_ro(void)
+>  	pr_info("Write protected read-only-after-init data: %luk\n",
+> size >> 10); }
+>  
+> +int set_memory_encrypted(unsigned long addr, int numpages)
+> +{
 > +	int i;
->  
->  	if (!len)
->  		return 0;
-> @@ -97,23 +94,33 @@ static int pfn_array_alloc_pin(struct pfn_array *pa, struct device *mdev,
->  	for (i = 1; i < pa->pa_nr; i++)
->  		pa->pa_iova_pfn[i] = pa->pa_iova_pfn[i - 1] + 1;
->  
+> +
+> +	/* make all pages shared, (swiotlb, dma_free) */
+
+this is a copypaste typo, I think? (should be UNshared?)
+also, it doesn't make ALL pages unshared, but only those specified in
+the parameters
+
+with this fixed:
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+
+> +	for (i = 0; i < numpages; ++i) {
+> +		uv_remove_shared(addr);
+> +		addr += PAGE_SIZE;
+> +	}
 > +	return 0;
 > +}
+> +EXPORT_SYMBOL_GPL(set_memory_encrypted);
 > +
-> +/*
-> + * pfn_array_pin() - Pin user pages in memory
-> + * @pa: pfn_array on which to perform the operation
-> + * @mdev: the mediated device to perform pin operations
-> + *
-> + * Returns:
-> + *   Number of pages pinned on success.
-> + *   If fewer pages than requested were pinned, returns -EINVAL
-> + *   If no pages were pinned, returns -errno.
-
-I don't really like the 'returns -errno' :) It's actually the return
-code of vfio_pin_pages(), and that might include -EINVAL as well.
-
-So, what about mentioning in the function description that
-pfn_array_pin() only succeeds if it coult pin all pages, and simply
-stating that it returns a negative error value on failure?
-
-> + */
-> +static int pfn_array_pin(struct pfn_array *pa, struct device *mdev)
+> +int set_memory_decrypted(unsigned long addr, int numpages)
 > +{
-> +	int ret = 0;
-> +
->  	ret = vfio_pin_pages(mdev, pa->pa_iova_pfn, pa->pa_nr,
->  			     IOMMU_READ | IOMMU_WRITE, pa->pa_pfn);
->  
-> -	if (ret < 0) {
-> -		goto err_out;
-> -	} else if (ret > 0 && ret != pa->pa_nr) {
-> +	if (ret > 0 && ret != pa->pa_nr) {
->  		vfio_unpin_pages(mdev, pa->pa_iova_pfn, ret);
->  		ret = -EINVAL;
-> -		goto err_out;
->  	}
->  
-> -	return ret;
-> -
-> -err_out:
-> -	pa->pa_nr = 0;
-> -	kfree(pa->pa_iova_pfn);
-> -	pa->pa_iova_pfn = NULL;
-> +	if (ret < 0)
-> +		pa->pa_iova = 0;
->  
->  	return ret;
->  }
+> +	int i;
+> +	/* make all pages shared (swiotlb, dma_alloca) */
 
-(...)
+same here with ALL
+
+> +	for (i = 0; i < numpages; ++i) {
+> +		uv_set_shared(addr);
+> +		addr += PAGE_SIZE;
+> +	}
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(set_memory_decrypted);
+> +
+> +/* are we a protected virtualization guest? */
+> +bool sev_active(void)
+
+this is also ugly. the correct solution would be probably to refactor
+everything, including all the AMD SEV code.... let's not go there
+
+> +{
+> +	return is_prot_virt_guest();
+> +}
+> +EXPORT_SYMBOL_GPL(sev_active);
+> +
+> +/* protected virtualization */
+> +static void pv_init(void)
+> +{
+> +	if (!sev_active())
+
+can't you just use is_prot_virt_guest here?
+
+> +		return;
+> +
+> +	/* make sure bounce buffers are shared */
+> +	swiotlb_init(1);
+> +	swiotlb_update_mem_attributes();
+> +	swiotlb_force = SWIOTLB_FORCE;
+> +}
+> +
+>  void __init mem_init(void)
+>  {
+>  	cpumask_set_cpu(0, &init_mm.context.cpu_attach_mask);
+> @@ -134,6 +182,8 @@ void __init mem_init(void)
+>  	set_max_mapnr(max_low_pfn);
+>          high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
+>  
+> +	pv_init();
+> +
+>  	/* Setup guest page hinting */
+>  	cmma_init();
+>  
+
