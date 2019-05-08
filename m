@@ -2,110 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1ACC117AF9
-	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2019 15:46:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DB0017B0C
+	for <lists+linux-s390@lfdr.de>; Wed,  8 May 2019 15:50:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726690AbfEHNqw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 May 2019 09:46:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59682 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725910AbfEHNqw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 May 2019 09:46:52 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x48DM2wH073929
-        for <linux-s390@vger.kernel.org>; Wed, 8 May 2019 09:46:50 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sbxscnfhr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 08 May 2019 09:46:50 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <sebott@linux.ibm.com>;
-        Wed, 8 May 2019 14:46:47 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 May 2019 14:46:44 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x48DkhgB34144498
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 May 2019 13:46:43 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 199D0AE055;
-        Wed,  8 May 2019 13:46:43 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8E1C4AE051;
-        Wed,  8 May 2019 13:46:42 +0000 (GMT)
-Received: from dyn-9-152-212-30.boeblingen.de.ibm.com (unknown [9.152.212.30])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  8 May 2019 13:46:42 +0000 (GMT)
-Date:   Wed, 8 May 2019 15:46:42 +0200 (CEST)
-From:   Sebastian Ott <sebott@linux.ibm.com>
-X-X-Sender: sebott@schleppi
-To:     Halil Pasic <pasic@linux.ibm.com>
-cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>
-Subject: Re: [PATCH 06/10] s390/cio: add basic protected virtualization
- support
-In-Reply-To: <20190426183245.37939-7-pasic@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com> <20190426183245.37939-7-pasic@linux.ibm.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
- =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
- =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
- =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
- =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
- =?ISO-8859-15?Q?94=22?=
+        id S1727340AbfEHNui (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 May 2019 09:50:38 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:36096 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727423AbfEHNuh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 May 2019 09:50:37 -0400
+Received: by mail-oi1-f195.google.com with SMTP id l203so15191912oia.3
+        for <linux-s390@vger.kernel.org>; Wed, 08 May 2019 06:50:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2EurxZMr2RolSsa7vNYJaos3juIlj/g/eKIBE0b5hok=;
+        b=GgArHWlWkQXoHwkDnK52AErLjHNxY5Gtmfi45DghAvzYSBWNm6e7PeK3JgF31tT39u
+         Q8JR+JNhhGsG4Y7l9oZGDgiuq1Vd5RwpB/qtfTMetqQ89+0JLpGSnC6dCfhpwx19hpSY
+         dW71jKTymLLEW0H/kPBh86F7O8Pl6ugXsxDoo7RkHtzfBaDJhKBBOLKKOiQUz6mX4dfy
+         /qJ/gwBQBKlIHCytwcPCDVmTqECvadxzkRYOgECHpEhiJhC26ncnwbpfGzSI5baBNh4g
+         EXfGGgHq+v/FJ3xWAj5JIAmNaj4uBs1RsRNGNVmeAZDVHZ7DoyszSVQnNrDKMABq0UGH
+         +EKw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2EurxZMr2RolSsa7vNYJaos3juIlj/g/eKIBE0b5hok=;
+        b=P7g2NcFyyi/sZmwww6RSnbBr4PtLUOlhYmUm0qnVPqjujA+x02Xd+uMga36M5RXVgT
+         E+Iw74oaXmFPSjTRUtsdkeXYJiHkllWn/nEfAXcEzhMazh+2u/TOtKLZSDfxELit/Nwh
+         f8bAV/RBC+E6xMfDZynJFvNc6JZiSDpJFP704H4LwBqUYcg6l+WoxfXwAyA2dXOP+1Zk
+         y2/9qdUQC+Q+5zliP/GiOyOp+gaL2oNn5tSsWDqLuxg5RyKsaJDgKa8sz3ISYBnDIyAq
+         WNZkrazJpC+hqfTR0OfonUQzShX6e5Y3gCTQSZGF6NUR5QrhkCt91dCdlMWVlsv/w3C7
+         eIQw==
+X-Gm-Message-State: APjAAAXKNy/L7RslA5Ob6eQMm1s8ElJIQJ6Try1KzB+4/MK8zOhqvVaY
+        /m+aIUHkjiWONwIR+hF47f4Fx35FfasdbausMFV+jg==
+X-Google-Smtp-Source: APXvYqyeIjtF65mpJyGOqNS4h3BV3LQvlNHfYva0fI5IeZSoAKQb2exqaAUh3L7sY+Pt68OUPCAnfn3ZcLOt3M41mPQ=
+X-Received: by 2002:aca:4208:: with SMTP id p8mr2432775oia.105.1557323437130;
+ Wed, 08 May 2019 06:50:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-x-cbid: 19050813-0008-0000-0000-000002E48C64
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050813-0009-0000-0000-000022510DCF
-Message-Id: <alpine.LFD.2.21.1905081522300.1773@schleppi>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-08_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=785 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905080086
+References: <20190507183804.5512-1-david@redhat.com> <20190507183804.5512-8-david@redhat.com>
+ <CAPcyv4h2PgzQZrD0UU=4Qz_yH2C_hiYQyqV9U7CCkjpmHZ5xjQ@mail.gmail.com> <1d369ae4-7183-b455-646a-65bbbe697281@redhat.com>
+In-Reply-To: <1d369ae4-7183-b455-646a-65bbbe697281@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 8 May 2019 06:50:25 -0700
+Message-ID: <CAPcyv4jtS6G_ZqLCdO4gOjS9K2cuX=ywFHemhSb46aQvS8pa8A@mail.gmail.com>
+Subject: Re: [PATCH v2 7/8] mm/memory_hotplug: Make unregister_memory_block_under_nodes()
+ never fail
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Oscar Salvador <osalvador@suse.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, May 8, 2019 at 12:22 AM David Hildenbrand <david@redhat.com> wrote:
+>
+>
+> >>  drivers/base/node.c  | 18 +++++-------------
+> >>  include/linux/node.h |  5 ++---
+> >>  2 files changed, 7 insertions(+), 16 deletions(-)
+> >>
+> >> diff --git a/drivers/base/node.c b/drivers/base/node.c
+> >> index 04fdfa99b8bc..9be88fd05147 100644
+> >> --- a/drivers/base/node.c
+> >> +++ b/drivers/base/node.c
+> >> @@ -803,20 +803,14 @@ int register_mem_sect_under_node(struct memory_block *mem_blk, void *arg)
+> >>
+> >>  /*
+> >>   * Unregister memory block device under all nodes that it spans.
+> >> + * Has to be called with mem_sysfs_mutex held (due to unlinked_nodes).
+> >
+> > Given this comment can bitrot relative to the implementation lets
+> > instead add an explicit:
+> >
+> >     lockdep_assert_held(&mem_sysfs_mutex);
+>
+> That would require to make the mutex non-static. Is that what you
+> suggest, or any other alternative?
 
-On Fri, 26 Apr 2019, Halil Pasic wrote:
->  static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
->  {
-[..]
-> +	cdev->private = kzalloc(sizeof(struct ccw_device_private),
-> +				GFP_KERNEL | GFP_DMA);
-
-Do we still need GFP_DMA here (since we now have cdev->private->dma_area)?
-
-> @@ -1062,6 +1082,14 @@ static int io_subchannel_probe(struct subchannel *sch)
->  	if (!io_priv)
->  		goto out_schedule;
->  
-> +	io_priv->dma_area = dma_alloc_coherent(&sch->dev,
-> +				sizeof(*io_priv->dma_area),
-> +				&io_priv->dma_area_dma, GFP_KERNEL);
-
-This needs GFP_DMA.
-You use a genpool for ccw_private->dma and not for iopriv->dma - looks
-kinda inconsistent.
-
+If the concern is other code paths taking the lock when they shouldn't
+then you could make a public "lockdep_assert_mem_sysfs_held()" to do
+the same, but I otherwise think the benefit of inline lock validation
+is worth the price of adding a new non-static symbol.
