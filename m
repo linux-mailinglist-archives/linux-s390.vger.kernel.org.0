@@ -2,62 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D786A1881E
-	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 12:03:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E149B1882F
+	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 12:11:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725869AbfEIKDY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 May 2019 06:03:24 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38424 "EHLO mx1.redhat.com"
+        id S1726438AbfEIKLO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 May 2019 06:11:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49516 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725826AbfEIKDY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 9 May 2019 06:03:24 -0400
+        id S1725847AbfEIKLO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 9 May 2019 06:11:14 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 36AEF88E48;
-        Thu,  9 May 2019 10:03:24 +0000 (UTC)
-Received: from localhost (ovpn-8-31.pek2.redhat.com [10.72.8.31])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2128E1001E64;
-        Thu,  9 May 2019 10:03:20 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, Ming Lei <ming.lei@redhat.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org
-Subject: [PATCH] s390/dasd: fix build warning in dasd_eckd_build_cp_raw
-Date:   Thu,  9 May 2019 18:03:14 +0800
-Message-Id: <20190509100314.19152-1-ming.lei@redhat.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 0F1E77DCC1;
+        Thu,  9 May 2019 10:11:14 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F1B6B1001E64;
+        Thu,  9 May 2019 10:11:08 +0000 (UTC)
+Date:   Thu, 9 May 2019 12:11:06 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 05/10] s390/cio: introduce DMA pools to cio
+Message-ID: <20190509121106.48aa04db.cohuck@redhat.com>
+In-Reply-To: <20190508232210.5a555caa.pasic@linux.ibm.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-6-pasic@linux.ibm.com>
+        <alpine.LFD.2.21.1905081447280.1773@schleppi>
+        <20190508232210.5a555caa.pasic@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Thu, 09 May 2019 10:03:24 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Thu, 09 May 2019 10:11:14 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Commit 72deb455b5ec619f ("block: remove CONFIG_LBDAF") changes
-sector_t to u64 unconditionaly, so apply '%llu' for print
-sector_t variable.
+On Wed, 8 May 2019 23:22:10 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-Fixes: 72deb455b5ec619f ("block: remove CONFIG_LBDAF")
-Cc: Christoph Hellwig <hch@lst.de>
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- drivers/s390/block/dasd_eckd.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On Wed, 8 May 2019 15:18:10 +0200 (CEST)
+> Sebastian Ott <sebott@linux.ibm.com> wrote:
 
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index f89f9d02e788..c09039eea707 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -3827,7 +3827,7 @@ static struct dasd_ccw_req *dasd_eckd_build_cp_raw(struct dasd_device *startdev,
- 	if ((start_padding_sectors || end_padding_sectors) &&
- 	    (rq_data_dir(req) == WRITE)) {
- 		DBF_DEV_EVENT(DBF_ERR, basedev,
--			      "raw write not track aligned (%lu,%lu) req %p",
-+			      "raw write not track aligned (%llu,%llu) req %p",
- 			      start_padding_sectors, end_padding_sectors, req);
- 		return ERR_PTR(-EINVAL);
- 	}
--- 
-2.9.5
+> > > @@ -1063,6 +1163,7 @@ static int __init css_bus_init(void)
+> > >  		unregister_reboot_notifier(&css_reboot_notifier);
+> > >  		goto out_unregister;
+> > >  	}
+> > > +	cio_dma_pool_init();    
+> > 
+> > This is too late for early devices (ccw console!).  
+> 
+> You have already raised concern about this last time (thanks). I think,
+> I've addressed this issue: tje cio_dma_pool is only used by the airq
+> stuff. I don't think the ccw console needs it. Please have an other look
+> at patch #6, and explain your concern in more detail if it persists.
 
+What about changing the naming/adding comments here, so that (1) folks
+aren't confused by the same thing in the future and (2) folks don't try
+to use that pool for something needed for the early ccw consoles?
