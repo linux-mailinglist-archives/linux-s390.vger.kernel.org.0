@@ -2,122 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AABC218AB2
-	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 15:30:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9552A18ADE
+	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 15:38:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726054AbfEINaU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 May 2019 09:30:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40910 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726546AbfEINaT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 May 2019 09:30:19 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49DONha030476
-        for <linux-s390@vger.kernel.org>; Thu, 9 May 2019 09:30:18 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2scmr81ggb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 09 May 2019 09:30:17 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 9 May 2019 14:30:15 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 May 2019 14:30:11 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49DU9wK33882182
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 May 2019 13:30:09 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8827E4204D;
-        Thu,  9 May 2019 13:30:09 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 98F5242054;
-        Thu,  9 May 2019 13:30:08 +0000 (GMT)
-Received: from [9.145.47.201] (unknown [9.145.47.201])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 May 2019 13:30:08 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH 09/10] virtio/s390: use DMA memory for ccw I/O and classic
- notifiers
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        id S1726526AbfEINic (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 May 2019 09:38:32 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46980 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726195AbfEINic (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 9 May 2019 09:38:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 95C3EABAC;
+        Thu,  9 May 2019 13:38:30 +0000 (UTC)
+Date:   Thu, 9 May 2019 15:38:29 +0200
+From:   Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch@vger.kernel.org,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>,
+        Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        linuxppc-dev@lists.ozlabs.org,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com>
- <20190426183245.37939-10-pasic@linux.ibm.com>
- <a873909a-9846-d6d3-f03e-e86d53fd9c75@linux.ibm.com>
-Date:   Thu, 9 May 2019 15:30:08 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        "Tobin C . Harding" <me@tobin.cc>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing
+ addresses
+Message-ID: <20190509153829.06319d0c@kitsune.suse.cz>
+In-Reply-To: <20190509121923.8339-1-pmladek@suse.com>
+References: <20190509121923.8339-1-pmladek@suse.com>
+Organization: SUSE Linux
+X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.31; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <a873909a-9846-d6d3-f03e-e86d53fd9c75@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050913-0016-0000-0000-00000279F49B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050913-0017-0000-0000-000032D6A9C4
-Message-Id: <db036887-c238-9795-5f47-cfeb475074e4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905090081
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 08/05/2019 16:46, Pierre Morel wrote:
-> On 26/04/2019 20:32, Halil Pasic wrote:
->> Before virtio-ccw could get away with not using DMA API for the pieces of
->> memory it does ccw I/O with. With protected virtualization this has to
->> change, since the hypervisor needs to read and sometimes also write these
->> pieces of memory.
->>
->> The hypervisor is supposed to poke the classic notifiers, if these are
->> used, out of band with regards to ccw I/O. So these need to be allocated
->> as DMA memory (which is shared memory for protected virtualization
->> guests).
->>
->> Let us factor out everything from struct virtio_ccw_device that needs to
->> be DMA memory in a satellite that is allocated as such.
->>
-...
->> +                       sizeof(indicators(vcdev)));
-> 
-> should be sizeof(long) ?
-> 
-> This is a recurrent error, but it is not an issue because the size of
-> the indicators is unsigned long as the size of the pointer.
-> 
-> Regards,
-> Pierre
-> 
+On Thu,  9 May 2019 14:19:23 +0200
+Petr Mladek <pmladek@suse.com> wrote:
 
-Here too, with the problem of the indicator size handled:
-Reviewed-by: Pierre Morel<pmorel@linux.ibm.com>
+> The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
+> invalid pointers") broke boot on several architectures. The common
+> pattern is that probe_kernel_read() is not working during early
+> boot because userspace access framework is not ready.
+> 
+> The check is only the best effort. Let's not rush with it during
+> the early boot.
+> 
+> Details:
+> 
+> 1. Report on Power:
+> 
+> Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
+> CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
+> 
+> The problem is the combination of some new code called via printk(),
+> check_pointer() which calls probe_kernel_read(). That then calls
+> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
+> (before we've patched features).
 
+There is early_mmu_has_feature for this case. mmu_has_feature does not
+work before patching so parts of kernel that can run before patching
+must use the early_ variant which actually runs code reading the
+feature bitmap to determine the answer.
 
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+Thanks
 
+Michal
