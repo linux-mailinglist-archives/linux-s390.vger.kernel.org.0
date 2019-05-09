@@ -2,76 +2,195 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC01418B41
-	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 16:10:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D6F6C18BD1
+	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 16:32:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726087AbfEIOKg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 May 2019 10:10:36 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:55461 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726411AbfEIOKg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 May 2019 10:10:36 -0400
-Received: by mail-it1-f193.google.com with SMTP id q132so3747334itc.5
-        for <linux-s390@vger.kernel.org>; Thu, 09 May 2019 07:10:35 -0700 (PDT)
+        id S1726795AbfEIOb4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 May 2019 10:31:56 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41969 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726704AbfEIOb4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 May 2019 10:31:56 -0400
+Received: by mail-ed1-f66.google.com with SMTP id m4so2221541edd.8;
+        Thu, 09 May 2019 07:31:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2MvD8DryLIpLwVzTpnmpOzWgcT82OOPN0LI9RI8QX0s=;
-        b=grrJQz5juTNtlPRDDmOfM+aeVXtfqHebWe8z32utvg+8/3PPqjenzAmcaE58Fxom24
-         iscPBei9O7ViuAgOmi8QyvMYf1dGFOpGoTMLmfRFTOHtSIGLTZhCyV8QwjMwxqqcPuV/
-         //EsN337NeeBtIO3Of2tkADIxF49Cucc5y5OZkUNX7J667VaIC+tmbJBcfEGTli2sfVc
-         3bIcyaS0FUvrsLpSXRv1rZhI7dlMO3VVzA9JO6fWnkWjOJRWMif2cTbr4/+LZaOuFxSq
-         4bFtEOu7cYinZD7vWGXIUZsDVLQbjI4G17W6nShdd5Rh75e1uAjp4OgxYme02IG0g9I4
-         hdGA==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=28M3/Gt0muyIKgyfcpD9ysscEUSK1ZnFipvrQH7okoo=;
+        b=qOlNtK752XXn4kkfsFMWyY7kRPfrZUsTtqBPdR/hrsY1mJM2tbu2nhsutSmVVSM1WW
+         nXRASbDxRAmYKoGMORG1Srq+QfFSesIFDMzjzchm3j4kE/sLGsIywSyqVlu3Yz91d/8r
+         FlEQUB4qvWSHM4vKfCBekEvL6H1BeRT6mMgSjN/ZfvQ7xjppTiRrhRzhd0DiONdD3rHG
+         8+F+D+pkIWAxOZxeIGT+39UvOnSIMPWvX3z65R9GJNUd8yqfL58nMe8pY6Q7GvVCzYIM
+         6GCvJUep1xdo/Z8mF1dvC94zMfD6T5hlTY7VkMhVkudMpY654rvkzmeZxmnK6kPTSOvF
+         yY0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2MvD8DryLIpLwVzTpnmpOzWgcT82OOPN0LI9RI8QX0s=;
-        b=pdYs5yEnp8w38A43kpAoyXYyKJ7a5fSLcTM1BsGPJte2XnBgNF6RzbhIAuplfPESvg
-         959TytxbBztba4GyfvnA0hBJhULmMkAXrcp7rmbkVhVNwYKsxErxlMvB0JtssHju+Wa8
-         4FBL51dSy/KgQN+sZsZ1eNsNcWMb7NrxZfiTa5T972EpcQkuqL4Z6bCXfqij45F4FCh2
-         +TUduyV38+v5OYcYHOak1sDTze8M9jRESB0QLpEzTjEdYxmvoxsGXmv1jgG2Sc5n1Ncg
-         n6F4/WEnsCVCm85Q4eCA6JobpkyUVCgsA1h930kMlJ/D0Bp43f4KjwN8odl5r8dFPmjA
-         5yVw==
-X-Gm-Message-State: APjAAAWVUJD1H+t51JI4+rg4/nqxoH2SUptwKetvflgFbm3KtwanGhmt
-        QDA4d/X+ODR94anr+3BgJ+8KIGHeHwKnrw==
-X-Google-Smtp-Source: APXvYqw7M1dZQzp6R3dXST4qEq3rSCHFv5ZyprN64n1607YrgbcjC+SHHfxkkDvp8FUJT/oKSuSeCQ==
-X-Received: by 2002:a24:8602:: with SMTP id u2mr3526731itd.101.1557411035140;
-        Thu, 09 May 2019 07:10:35 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id j8sm939892itk.0.2019.05.09.07.10.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 09 May 2019 07:10:33 -0700 (PDT)
-Subject: Re: [PATCH] s390/dasd: fix build warning in dasd_eckd_build_cp_raw
-To:     Ming Lei <ming.lei@redhat.com>
-Cc:     linux-block@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
-        linux-s390@vger.kernel.org
-References: <20190509100314.19152-1-ming.lei@redhat.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <37bda439-1c86-0fb7-31c5-cf6be6625546@kernel.dk>
-Date:   Thu, 9 May 2019 08:10:32 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=28M3/Gt0muyIKgyfcpD9ysscEUSK1ZnFipvrQH7okoo=;
+        b=jed3anqXrvbj4ZZvMcgvnz2hOSjNy3GlKDIkndxem5pg6xUhbMGp3DiRnlt/60D/Fk
+         Nlbqyk3kvsw5x5NNqNL02gvzh9nW04qPjtRpZ+jO7Dgzq6mbG3ThT1PPv8X3oj9vvk/W
+         OMK93AhtoT7mXqO/l3WoH01bVYsfoeY9NBwtKv86IT2pYmybAp30GHGvAwi6pSNWU6oY
+         GXzSbR3Hc8CCDpT34neVeyM2AMAQhpVLcuo6A40bfsVXQGMfTMVUO6XYUYUFSZy2lEmp
+         qigou5nhe2KQQCZQjwm79BXY9V9JeBEf+x11vniURnLwIltSOAp45KB2wogDLdka78WF
+         rGcA==
+X-Gm-Message-State: APjAAAWhrKkU7a4KxYYR7kMJH3IGts2oxo9gKjXZjrkhOiYntjm9cdEt
+        yhy0jtvkuEDm1nuMcMbNUVQ=
+X-Google-Smtp-Source: APXvYqzkJhS5L8NnWGrt01x6w71u7E8s0GHuJykWEj8KfZGhfTtKpBAzu9nFzSqSe/2NArkKjIgUMw==
+X-Received: by 2002:a50:be48:: with SMTP id b8mr4401819edi.284.1557412313899;
+        Thu, 09 May 2019 07:31:53 -0700 (PDT)
+Received: from localhost ([185.92.221.13])
+        by smtp.gmail.com with ESMTPSA id d11sm623679eda.45.2019.05.09.07.31.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 09 May 2019 07:31:52 -0700 (PDT)
+Date:   Thu, 9 May 2019 14:31:51 +0000
+From:   Wei Yang <richard.weiyang@gmail.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Banman <andrew.banman@hpe.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH v2 4/8] mm/memory_hotplug: Create memory block devices
+ after arch_add_memory()
+Message-ID: <20190509143151.zexjmwu3ikkmye7i@master>
+Reply-To: Wei Yang <richard.weiyang@gmail.com>
+References: <20190507183804.5512-1-david@redhat.com>
+ <20190507183804.5512-5-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509100314.19152-1-ming.lei@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190507183804.5512-5-david@redhat.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 5/9/19 4:03 AM, Ming Lei wrote:
-> Commit 72deb455b5ec619f ("block: remove CONFIG_LBDAF") changes
-> sector_t to u64 unconditionaly, so apply '%llu' for print
-> sector_t variable.
+On Tue, May 07, 2019 at 08:38:00PM +0200, David Hildenbrand wrote:
+>Only memory to be added to the buddy and to be onlined/offlined by
+>user space using memory block devices needs (and should have!) memory
+>block devices.
+>
+>Factor out creation of memory block devices Create all devices after
+>arch_add_memory() succeeded. We can later drop the want_memblock parameter,
+>because it is now effectively stale.
+>
+>Only after memory block devices have been added, memory can be onlined
+>by user space. This implies, that memory is not visible to user space at
+>all before arch_add_memory() succeeded.
+>
+>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>Cc: David Hildenbrand <david@redhat.com>
+>Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Ingo Molnar <mingo@kernel.org>
+>Cc: Andrew Banman <andrew.banman@hpe.com>
+>Cc: Oscar Salvador <osalvador@suse.de>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>Cc: Qian Cai <cai@lca.pw>
+>Cc: Wei Yang <richard.weiyang@gmail.com>
+>Cc: Arun KS <arunks@codeaurora.org>
+>Cc: Mathieu Malaterre <malat@debian.org>
+>Signed-off-by: David Hildenbrand <david@redhat.com>
+>---
+> drivers/base/memory.c  | 70 ++++++++++++++++++++++++++----------------
+> include/linux/memory.h |  2 +-
+> mm/memory_hotplug.c    | 15 ++++-----
+> 3 files changed, 53 insertions(+), 34 deletions(-)
+>
+>diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>index 6e0cb4fda179..862c202a18ca 100644
+>--- a/drivers/base/memory.c
+>+++ b/drivers/base/memory.c
+>@@ -701,44 +701,62 @@ static int add_memory_block(int base_section_nr)
+> 	return 0;
+> }
+> 
+>+static void unregister_memory(struct memory_block *memory)
+>+{
+>+	BUG_ON(memory->dev.bus != &memory_subsys);
+>+
+>+	/* drop the ref. we got via find_memory_block() */
+>+	put_device(&memory->dev);
+>+	device_unregister(&memory->dev);
+>+}
+>+
+> /*
+>- * need an interface for the VM to add new memory regions,
+>- * but without onlining it.
+>+ * Create memory block devices for the given memory area. Start and size
+>+ * have to be aligned to memory block granularity. Memory block devices
+>+ * will be initialized as offline.
+>  */
+>-int hotplug_memory_register(int nid, struct mem_section *section)
+>+int hotplug_memory_register(unsigned long start, unsigned long size)
 
-Applied, thanks Ming.
+One trivial suggestion about the function name.
+
+For memory_block device, sometimes we use the full name
+
+    find_memory_block
+    init_memory_block
+    add_memory_block
+
+But sometimes we use *nick* name
+
+    hotplug_memory_register
+    register_memory
+    unregister_memory
+
+This is a little bit confusion.
+
+Can we use one name convention here? 
+
+[...]
+
+> /*
+>@@ -1106,6 +1100,13 @@ int __ref add_memory_resource(int nid, struct resource *res)
+> 	if (ret < 0)
+> 		goto error;
+> 
+>+	/* create memory block devices after memory was added */
+>+	ret = hotplug_memory_register(start, size);
+>+	if (ret) {
+>+		arch_remove_memory(nid, start, size, NULL);
+
+Functionally, it works I think.
+
+But arch_remove_memory() would remove pages from zone. At this point, we just
+allocate section/mmap for pages, the zones are empty and pages are not
+connected to zone.
+
+Function  zone = page_zone(page); always gets zone #0, since pages->flags is 0
+at  this point. This is not exact.
+
+Would we add some comment to mention this? Or we need to clean up
+arch_remove_memory() to take out __remove_zone()?
+
+
+>+		goto error;
+>+	}
+>+
+> 	if (new_node) {
+> 		/* If sysfs file of new node can't be created, cpu on the node
+> 		 * can't be hot-added. There is no rollback way now.
+>-- 
+>2.20.1
 
 -- 
-Jens Axboe
-
+Wei Yang
+Help you, Help me
