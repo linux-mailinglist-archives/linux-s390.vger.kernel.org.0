@@ -2,100 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C23418880
-	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 12:47:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6B2F18921
+	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 13:37:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726187AbfEIKrG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 May 2019 06:47:06 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57014 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725963AbfEIKrG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 May 2019 06:47:06 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49ASXId009144
-        for <linux-s390@vger.kernel.org>; Thu, 9 May 2019 06:47:05 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2scfhy153u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 09 May 2019 06:47:05 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Thu, 9 May 2019 11:47:03 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 May 2019 11:47:00 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49Al0RH5570676
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 May 2019 10:47:00 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8EB811C04A;
-        Thu,  9 May 2019 10:46:59 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A9DD011C04C;
-        Thu,  9 May 2019 10:46:59 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.21])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  9 May 2019 10:46:59 +0000 (GMT)
-Date:   Thu, 9 May 2019 12:46:58 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Early printk breakage due to 3e5903eb9cff ("vsprintf: Prevent crash
- when dereferencing invalid pointers")
+        id S1726727AbfEILhK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 May 2019 07:37:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51254 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725963AbfEILhJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 9 May 2019 07:37:09 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C1043C0586DD;
+        Thu,  9 May 2019 11:37:08 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DD5F9643D8;
+        Thu,  9 May 2019 11:37:03 +0000 (UTC)
+Date:   Thu, 9 May 2019 13:37:01 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: Re: [PATCH 07/10] s390/airq: use DMA memory for adapter interrupts
+Message-ID: <20190509133701.3e93299b.cohuck@redhat.com>
+In-Reply-To: <20190426183245.37939-8-pasic@linux.ibm.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-8-pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19050910-0028-0000-0000-0000036BE55F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050910-0029-0000-0000-0000242B6630
-Message-Id: <20190509104658.GB5758@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=301 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905090065
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Thu, 09 May 2019 11:37:09 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Petr,
+On Fri, 26 Apr 2019 20:32:42 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-I just realized that early printks, or more specific vsnprintf invocations,
-are broken on s390 due to
+> Protected virtualization guests have to use shared pages for airq
+> notifier bit vectors, because hypervisor needs to write these bits.
+> 
+> Let us make sure we allocate DMA memory for the notifier bit vectors.
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/airq.h |  2 ++
+>  drivers/s390/cio/airq.c      | 18 ++++++++++++++----
+>  2 files changed, 16 insertions(+), 4 deletions(-)
 
-3e5903eb9cff ("vsprintf: Prevent crash when dereferencing invalid pointers").
+As an aside, there are some other devices that use adapter interrupts
+as well (pci, ap, qdio). How does that interact with their needs? Do
+they continue to work on non-protected virt guests (kvm or z/VM), and
+can they be accommodated if support for them on protected guests is
+added in the future?
 
-E.g. the early boot output now looks like this where the first
-(efault) should be the linux_banner:
+(For some of the indicator bit handling, I suspect millicode takes care
+of it anyway, but at least for pci, there's some hypervisor action to
+be aware of.)
 
-[    0.099985] (efault)
-[    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
-[    0.100066] setup: The maximum memory size is 8192MB
-[    0.100070] cma: Reserved 4 MiB at (efault)
-[    0.100100] numa: NUMA mode: (efault)
-
-The reason for this, is that your code assumes that
-probe_kernel_address() works very early. This however is not true on
-at least s390. Uaccess on KERNEL_DS works only after page tables have
-been setup on s390, which happens with setup_arch()->paging_init().
-
-Any probe_kernel_address() invocation before that will return -EFAULT.
-
-So how should we fix this? We could e.g. again add an arch specific
-version of probe_kernel_read() for s390, which would be more or less a
-copy of the generic variant, just that it would do something different
-if page tables aren't setup yet.
-
-Or... any other idea?
-
-Cc'ing linux-arch, just in case other architectures are also affected.
-
+Also, as another aside, has this been tested with a regular guest under
+tcg as well? If not, can you provide a branch for quick verification
+somewhere?
