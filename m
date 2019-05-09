@@ -2,197 +2,177 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19B8418A04
-	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 14:50:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C820818A58
+	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 15:10:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726558AbfEIMuQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 May 2019 08:50:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59008 "EHLO mx1.redhat.com"
+        id S1726054AbfEINKV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 May 2019 09:10:21 -0400
+Received: from mga02.intel.com ([134.134.136.20]:37976 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfEIMuQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 9 May 2019 08:50:16 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A047EF74A3;
-        Thu,  9 May 2019 12:50:15 +0000 (UTC)
-Received: from [10.36.117.56] (ovpn-117-56.ams2.redhat.com [10.36.117.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D03855783;
-        Thu,  9 May 2019 12:50:11 +0000 (UTC)
-Subject: Re: [PATCH v2 4/8] mm/memory_hotplug: Create memory block devices
- after arch_add_memory()
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-References: <20190507183804.5512-1-david@redhat.com>
- <20190507183804.5512-5-david@redhat.com>
- <20190509124302.at7jltfrycj7sxbd@master>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <85a81b34-4f8d-9649-939a-f722528e37ee@redhat.com>
-Date:   Thu, 9 May 2019 14:50:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726583AbfEINKV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 9 May 2019 09:10:21 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 09 May 2019 06:05:18 -0700
+X-ExtLoop1: 1
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by orsmga005.jf.intel.com with ESMTP; 09 May 2019 06:05:13 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hOijY-0006lB-3R; Thu, 09 May 2019 16:05:12 +0300
+Date:   Thu, 9 May 2019 16:05:12 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Petr Mladek <pmladek@suse.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+Message-ID: <20190509130512.GS9224@smile.fi.intel.com>
+References: <20190509121923.8339-1-pmladek@suse.com>
 MIME-Version: 1.0
-In-Reply-To: <20190509124302.at7jltfrycj7sxbd@master>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Thu, 09 May 2019 12:50:15 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190509121923.8339-1-pmladek@suse.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 09.05.19 14:43, Wei Yang wrote:
-> On Tue, May 07, 2019 at 08:38:00PM +0200, David Hildenbrand wrote:
->> Only memory to be added to the buddy and to be onlined/offlined by
->> user space using memory block devices needs (and should have!) memory
->> block devices.
->>
->> Factor out creation of memory block devices Create all devices after
->> arch_add_memory() succeeded. We can later drop the want_memblock parameter,
->> because it is now effectively stale.
->>
->> Only after memory block devices have been added, memory can be onlined
->> by user space. This implies, that memory is not visible to user space at
->> all before arch_add_memory() succeeded.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Andrew Banman <andrew.banman@hpe.com>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->> Cc: Qian Cai <cai@lca.pw>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Arun KS <arunks@codeaurora.org>
->> Cc: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->> drivers/base/memory.c  | 70 ++++++++++++++++++++++++++----------------
->> include/linux/memory.h |  2 +-
->> mm/memory_hotplug.c    | 15 ++++-----
->> 3 files changed, 53 insertions(+), 34 deletions(-)
->>
->> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->> index 6e0cb4fda179..862c202a18ca 100644
->> --- a/drivers/base/memory.c
->> +++ b/drivers/base/memory.c
->> @@ -701,44 +701,62 @@ static int add_memory_block(int base_section_nr)
->> 	return 0;
->> }
->>
->> +static void unregister_memory(struct memory_block *memory)
->> +{
->> +	BUG_ON(memory->dev.bus != &memory_subsys);
->> +
->> +	/* drop the ref. we got via find_memory_block() */
->> +	put_device(&memory->dev);
->> +	device_unregister(&memory->dev);
->> +}
->> +
->> /*
->> - * need an interface for the VM to add new memory regions,
->> - * but without onlining it.
->> + * Create memory block devices for the given memory area. Start and size
->> + * have to be aligned to memory block granularity. Memory block devices
->> + * will be initialized as offline.
->>  */
->> -int hotplug_memory_register(int nid, struct mem_section *section)
->> +int hotplug_memory_register(unsigned long start, unsigned long size)
->> {
->> -	int ret = 0;
->> +	unsigned long block_nr_pages = memory_block_size_bytes() >> PAGE_SHIFT;
->> +	unsigned long start_pfn = PFN_DOWN(start);
->> +	unsigned long end_pfn = start_pfn + (size >> PAGE_SHIFT);
->> +	unsigned long pfn;
->> 	struct memory_block *mem;
->> +	int ret = 0;
->>
->> -	mutex_lock(&mem_sysfs_mutex);
->> +	BUG_ON(!IS_ALIGNED(start, memory_block_size_bytes()));
->> +	BUG_ON(!IS_ALIGNED(size, memory_block_size_bytes()));
+On Thu, May 09, 2019 at 02:19:23PM +0200, Petr Mladek wrote:
+> The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
+> invalid pointers") broke boot on several architectures. The common
+> pattern is that probe_kernel_read() is not working during early
+> boot because userspace access framework is not ready.
 > 
-> After this change, the call flow looks like this:
+> The check is only the best effort. Let's not rush with it during
+> the early boot.
 > 
-> add_memory_resource
->     check_hotplug_memory_range
->     hotplug_memory_register
+> Details:
 > 
-> Since in check_hotplug_memory_range() has checked the boundary, do we need to
-> check here again?
+> 1. Report on Power:
+> 
+> Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
+> CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
+> 
+> The problem is the combination of some new code called via printk(),
+> check_pointer() which calls probe_kernel_read(). That then calls
+> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
+> (before we've patched features). With the JUMP_LABEL debug enabled that
+> causes us to call printk() & dump_stack() and we end up recursing and
+> overflowing the stack.
+> 
+> Because it happens so early you don't get any output, just an apparently
+> dead system.
+> 
+> The stack trace (which you don't see) is something like:
+> 
+>   ...
+>   dump_stack+0xdc
+>   probe_kernel_read+0x1a4
+>   check_pointer+0x58
+>   string+0x3c
+>   vsnprintf+0x1bc
+>   vscnprintf+0x20
+>   printk_safe_log_store+0x7c
+>   printk+0x40
+>   dump_stack_print_info+0xbc
+>   dump_stack+0x8
+>   probe_kernel_read+0x1a4
+>   probe_kernel_read+0x19c
+>   check_pointer+0x58
+>   string+0x3c
+>   vsnprintf+0x1bc
+>   vscnprintf+0x20
+>   vprintk_store+0x6c
+>   vprintk_emit+0xec
+>   vprintk_func+0xd4
+>   printk+0x40
+>   cpufeatures_process_feature+0xc8
+>   scan_cpufeatures_subnodes+0x380
+>   of_scan_flat_dt_subnodes+0xb4
+>   dt_cpu_ftrs_scan_callback+0x158
+>   of_scan_flat_dt+0xf0
+>   dt_cpu_ftrs_scan+0x3c
+>   early_init_devtree+0x360
+>   early_setup+0x9c
+> 
+> 2. Report on s390:
+> 
+> vsnprintf invocations, are broken on s390. For example, the early boot
+> output now looks like this where the first (efault) should be
+> the linux_banner:
+> 
+> [    0.099985] (efault)
+> [    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
+> [    0.100066] setup: The maximum memory size is 8192MB
+> [    0.100070] cma: Reserved 4 MiB at (efault)
+> [    0.100100] numa: NUMA mode: (efault)
+> 
+> The reason for this, is that the code assumes that
+> probe_kernel_address() works very early. This however is not true on
+> at least s390. Uaccess on KERNEL_DS works only after page tables have
+> been setup on s390, which happens with setup_arch()->paging_init().
+> 
+> Any probe_kernel_address() invocation before that will return -EFAULT.
 > 
 
-I prefer to check for such requirements explicitly in applicable places,
-especially if they are placed in different files. Makes code easier to
-get. WARN_ON_ONCE will indicate that this has to be assured by the caller.
+It's seems as a good enough fix.
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thanks!
+Though in all cases would be nice to distinguish error pointers as well.
+Something like
+
+if (IS_ERR(ptr))
+	return err_pointer_str(ptr);
+
+in check_pointer_msg().
+
+> Fixes: 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing invalid pointers")
+> Signed-off-by: Petr Mladek <pmladek@suse.com>
+> ---
+>  lib/vsprintf.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+> index 7b0a6140bfad..8b43a883be6b 100644
+> --- a/lib/vsprintf.c
+> +++ b/lib/vsprintf.c
+> @@ -640,8 +640,13 @@ static const char *check_pointer_msg(const void *ptr)
+>  	if (!ptr)
+>  		return "(null)";
+>  
+> -	if (probe_kernel_address(ptr, byte))
+> -		return "(efault)";
+> +	/* User space address handling is not ready during early boot. */
+> +	if (system_state <= SYSTEM_BOOTING) {
+> +		if ((unsigned long)ptr < PAGE_SIZE)
+> +			return "(efault)";
+> +	} else {
+> +		if (probe_kernel_address(ptr, byte))
+> +			return "(efault)";
+>  
+>  	return NULL;
+>  }
+> -- 
+> 2.16.4
+> 
 
 -- 
+With Best Regards,
+Andy Shevchenko
 
-Thanks,
 
-David / dhildenb
