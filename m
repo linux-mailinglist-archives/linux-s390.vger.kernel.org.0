@@ -2,161 +2,147 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66B5018961
-	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 14:01:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8BCD51898D
+	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 14:19:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfEIMBP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 May 2019 08:01:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33994 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725963AbfEIMBP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 May 2019 08:01:15 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49BrJcD131560
-        for <linux-s390@vger.kernel.org>; Thu, 9 May 2019 08:01:14 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2scjd14428-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 09 May 2019 08:01:14 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 9 May 2019 13:01:08 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 May 2019 13:01:05 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49C13rc25886830
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 May 2019 12:01:03 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5BAC542054;
-        Thu,  9 May 2019 12:01:03 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 029C14203F;
-        Thu,  9 May 2019 12:01:02 +0000 (GMT)
-Received: from [9.145.47.201] (unknown [9.145.47.201])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 May 2019 12:01:01 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH 08/10] virtio/s390: add indirection to indicators access
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        id S1726469AbfEIMTs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 May 2019 08:19:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39556 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726426AbfEIMTs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 9 May 2019 08:19:48 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3B68EAC38;
+        Thu,  9 May 2019 12:19:46 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>
-Cc:     virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com>
- <20190426183245.37939-9-pasic@linux.ibm.com>
- <716d47ca-016f-e8f4-6d78-7746a7d9f6ba@linux.ibm.com>
-Date:   Thu, 9 May 2019 14:01:01 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <716d47ca-016f-e8f4-6d78-7746a7d9f6ba@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19050912-0016-0000-0000-00000279ECB4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19050912-0017-0000-0000-000032D6A135
-Message-Id: <a4bf1976-8037-63bb-2cf6-c389edbd2e89@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905090073
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH] vsprintf: Do not break early boot with probing addresses
+Date:   Thu,  9 May 2019 14:19:23 +0200
+Message-Id: <20190509121923.8339-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 08/05/2019 16:31, Pierre Morel wrote:
-> On 26/04/2019 20:32, Halil Pasic wrote:
->> This will come in handy soon when we pull out the indicators from
->> virtio_ccw_device to a memory area that is shared with the hypervisor
->> (in particular for protected virtualization guests).
->>
->> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
->> ---
->>   drivers/s390/virtio/virtio_ccw.c | 40 
->> +++++++++++++++++++++++++---------------
->>   1 file changed, 25 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/s390/virtio/virtio_ccw.c 
->> b/drivers/s390/virtio/virtio_ccw.c
->> index bb7a92316fc8..1f3e7d56924f 100644
->> --- a/drivers/s390/virtio/virtio_ccw.c
->> +++ b/drivers/s390/virtio/virtio_ccw.c
->> @@ -68,6 +68,16 @@ struct virtio_ccw_device {
->>       void *airq_info;
->>   };
->> +static inline unsigned long *indicators(struct virtio_ccw_device *vcdev)
->> +{
->> +    return &vcdev->indicators;
->> +}
->> +
->> +static inline unsigned long *indicators2(struct virtio_ccw_device 
->> *vcdev)
->> +{
->> +    return &vcdev->indicators2;
->> +}
->> +
->>   struct vq_info_block_legacy {
->>       __u64 queue;
->>       __u32 align;
->> @@ -337,17 +347,17 @@ static void virtio_ccw_drop_indicator(struct 
->> virtio_ccw_device *vcdev,
->>           ccw->cda = (__u32)(unsigned long) thinint_area;
->>       } else {
->>           /* payload is the address of the indicators */
->> -        indicatorp = kmalloc(sizeof(&vcdev->indicators),
->> +        indicatorp = kmalloc(sizeof(indicators(vcdev)),
->>                        GFP_DMA | GFP_KERNEL);
->>           if (!indicatorp)
->>               return;
->>           *indicatorp = 0;
->>           ccw->cmd_code = CCW_CMD_SET_IND;
->> -        ccw->count = sizeof(&vcdev->indicators);
->> +        ccw->count = sizeof(indicators(vcdev));
-> 
-> This looks strange to me. Was already weird before.
-> Lucky we are indicators are long...
-> may be just sizeof(long)
+The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
+invalid pointers") broke boot on several architectures. The common
+pattern is that probe_kernel_read() is not working during early
+boot because userspace access framework is not ready.
 
+The check is only the best effort. Let's not rush with it during
+the early boot.
 
-AFAIK the size of the indicators (AIV/AIS) is not restricted by the 
-architecture.
-However we never use more than 64 bits, do we ever have an adapter 
-having more than 64 different interrupts?
+Details:
 
-May be we can state than we use a maximal number of AISB of 64 and 
-therefor use indicators with a size of unsigned long, or __u64 or 
-whatever is appropriate. Please clear this.
+1. Report on Power:
 
-With this cleared:
-Reviewed-by: Pierre Morel<pmorel@linux.ibm.com>
+Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
+CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
 
+The problem is the combination of some new code called via printk(),
+check_pointer() which calls probe_kernel_read(). That then calls
+allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
+(before we've patched features). With the JUMP_LABEL debug enabled that
+causes us to call printk() & dump_stack() and we end up recursing and
+overflowing the stack.
 
-Regards,
-Pierre
+Because it happens so early you don't get any output, just an apparently
+dead system.
 
+The stack trace (which you don't see) is something like:
 
+  ...
+  dump_stack+0xdc
+  probe_kernel_read+0x1a4
+  check_pointer+0x58
+  string+0x3c
+  vsnprintf+0x1bc
+  vscnprintf+0x20
+  printk_safe_log_store+0x7c
+  printk+0x40
+  dump_stack_print_info+0xbc
+  dump_stack+0x8
+  probe_kernel_read+0x1a4
+  probe_kernel_read+0x19c
+  check_pointer+0x58
+  string+0x3c
+  vsnprintf+0x1bc
+  vscnprintf+0x20
+  vprintk_store+0x6c
+  vprintk_emit+0xec
+  vprintk_func+0xd4
+  printk+0x40
+  cpufeatures_process_feature+0xc8
+  scan_cpufeatures_subnodes+0x380
+  of_scan_flat_dt_subnodes+0xb4
+  dt_cpu_ftrs_scan_callback+0x158
+  of_scan_flat_dt+0xf0
+  dt_cpu_ftrs_scan+0x3c
+  early_init_devtree+0x360
+  early_setup+0x9c
+
+2. Report on s390:
+
+vsnprintf invocations, are broken on s390. For example, the early boot
+output now looks like this where the first (efault) should be
+the linux_banner:
+
+[    0.099985] (efault)
+[    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
+[    0.100066] setup: The maximum memory size is 8192MB
+[    0.100070] cma: Reserved 4 MiB at (efault)
+[    0.100100] numa: NUMA mode: (efault)
+
+The reason for this, is that the code assumes that
+probe_kernel_address() works very early. This however is not true on
+at least s390. Uaccess on KERNEL_DS works only after page tables have
+been setup on s390, which happens with setup_arch()->paging_init().
+
+Any probe_kernel_address() invocation before that will return -EFAULT.
+
+Fixes: 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing invalid pointers")
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ lib/vsprintf.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 7b0a6140bfad..8b43a883be6b 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -640,8 +640,13 @@ static const char *check_pointer_msg(const void *ptr)
+ 	if (!ptr)
+ 		return "(null)";
+ 
+-	if (probe_kernel_address(ptr, byte))
+-		return "(efault)";
++	/* User space address handling is not ready during early boot. */
++	if (system_state <= SYSTEM_BOOTING) {
++		if ((unsigned long)ptr < PAGE_SIZE)
++			return "(efault)";
++	} else {
++		if (probe_kernel_address(ptr, byte))
++			return "(efault)";
+ 
+ 	return NULL;
+ }
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+2.16.4
 
