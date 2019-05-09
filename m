@@ -2,172 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFD5118A62
-	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 15:14:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AABC218AB2
+	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 15:30:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726546AbfEINOC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 May 2019 09:14:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56338 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfEINOB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 9 May 2019 09:14:01 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFEF52089E;
-        Thu,  9 May 2019 13:13:58 +0000 (UTC)
-Date:   Thu, 9 May 2019 09:13:57 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing
- addresses
-Message-ID: <20190509091357.0af3fcd7@gandalf.local.home>
-In-Reply-To: <20190509121923.8339-1-pmladek@suse.com>
-References: <20190509121923.8339-1-pmladek@suse.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        id S1726054AbfEINaU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 May 2019 09:30:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40910 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726546AbfEINaT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 May 2019 09:30:19 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49DONha030476
+        for <linux-s390@vger.kernel.org>; Thu, 9 May 2019 09:30:18 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2scmr81ggb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 09 May 2019 09:30:17 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 9 May 2019 14:30:15 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 May 2019 14:30:11 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49DU9wK33882182
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 May 2019 13:30:09 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8827E4204D;
+        Thu,  9 May 2019 13:30:09 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98F5242054;
+        Thu,  9 May 2019 13:30:08 +0000 (GMT)
+Received: from [9.145.47.201] (unknown [9.145.47.201])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  9 May 2019 13:30:08 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH 09/10] virtio/s390: use DMA memory for ccw I/O and classic
+ notifiers
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>
+Cc:     virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+ <20190426183245.37939-10-pasic@linux.ibm.com>
+ <a873909a-9846-d6d3-f03e-e86d53fd9c75@linux.ibm.com>
+Date:   Thu, 9 May 2019 15:30:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <a873909a-9846-d6d3-f03e-e86d53fd9c75@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050913-0016-0000-0000-00000279F49B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050913-0017-0000-0000-000032D6A9C4
+Message-Id: <db036887-c238-9795-5f47-cfeb475074e4@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905090081
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu,  9 May 2019 14:19:23 +0200
-Petr Mladek <pmladek@suse.com> wrote:
+On 08/05/2019 16:46, Pierre Morel wrote:
+> On 26/04/2019 20:32, Halil Pasic wrote:
+>> Before virtio-ccw could get away with not using DMA API for the pieces of
+>> memory it does ccw I/O with. With protected virtualization this has to
+>> change, since the hypervisor needs to read and sometimes also write these
+>> pieces of memory.
+>>
+>> The hypervisor is supposed to poke the classic notifiers, if these are
+>> used, out of band with regards to ccw I/O. So these need to be allocated
+>> as DMA memory (which is shared memory for protected virtualization
+>> guests).
+>>
+>> Let us factor out everything from struct virtio_ccw_device that needs to
+>> be DMA memory in a satellite that is allocated as such.
+>>
+...
+>> +                       sizeof(indicators(vcdev)));
+> 
+> should be sizeof(long) ?
+> 
+> This is a recurrent error, but it is not an issue because the size of
+> the indicators is unsigned long as the size of the pointer.
+> 
+> Regards,
+> Pierre
+> 
 
-> The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
-> invalid pointers") broke boot on several architectures. The common
-> pattern is that probe_kernel_read() is not working during early
-> boot because userspace access framework is not ready.
-> 
-> The check is only the best effort. Let's not rush with it during
-> the early boot.
-> 
-> Details:
-> 
-> 1. Report on Power:
-> 
-> Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
-> CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
-> 
-> The problem is the combination of some new code called via printk(),
-> check_pointer() which calls probe_kernel_read(). That then calls
-> allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
-> (before we've patched features). With the JUMP_LABEL debug enabled that
-> causes us to call printk() & dump_stack() and we end up recursing and
-> overflowing the stack.
-> 
-> Because it happens so early you don't get any output, just an apparently
-> dead system.
-> 
-> The stack trace (which you don't see) is something like:
-> 
->   ...
->   dump_stack+0xdc
->   probe_kernel_read+0x1a4
->   check_pointer+0x58
->   string+0x3c
->   vsnprintf+0x1bc
->   vscnprintf+0x20
->   printk_safe_log_store+0x7c
->   printk+0x40
->   dump_stack_print_info+0xbc
->   dump_stack+0x8
->   probe_kernel_read+0x1a4
->   probe_kernel_read+0x19c
->   check_pointer+0x58
->   string+0x3c
->   vsnprintf+0x1bc
->   vscnprintf+0x20
->   vprintk_store+0x6c
->   vprintk_emit+0xec
->   vprintk_func+0xd4
->   printk+0x40
->   cpufeatures_process_feature+0xc8
->   scan_cpufeatures_subnodes+0x380
->   of_scan_flat_dt_subnodes+0xb4
->   dt_cpu_ftrs_scan_callback+0x158
->   of_scan_flat_dt+0xf0
->   dt_cpu_ftrs_scan+0x3c
->   early_init_devtree+0x360
->   early_setup+0x9c
-> 
-> 2. Report on s390:
-> 
-> vsnprintf invocations, are broken on s390. For example, the early boot
-> output now looks like this where the first (efault) should be
-> the linux_banner:
-> 
-> [    0.099985] (efault)
-> [    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
-> [    0.100066] setup: The maximum memory size is 8192MB
-> [    0.100070] cma: Reserved 4 MiB at (efault)
-> [    0.100100] numa: NUMA mode: (efault)
-> 
-> The reason for this, is that the code assumes that
-> probe_kernel_address() works very early. This however is not true on
-> at least s390. Uaccess on KERNEL_DS works only after page tables have
-> been setup on s390, which happens with setup_arch()->paging_init().
-> 
-> Any probe_kernel_address() invocation before that will return -EFAULT.
-
-Hmm, this sounds to me that probe_kernel_address() is broken for these
-architectures. Perhaps the system_state check should be in
-probe_kernel_address() for those architectures?
+Here too, with the problem of the indicator size handled:
+Reviewed-by: Pierre Morel<pmorel@linux.ibm.com>
 
 
-> 
-> Fixes: 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing invalid pointers")
-> Signed-off-by: Petr Mladek <pmladek@suse.com>
-> ---
->  lib/vsprintf.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/lib/vsprintf.c b/lib/vsprintf.c
-> index 7b0a6140bfad..8b43a883be6b 100644
-> --- a/lib/vsprintf.c
-> +++ b/lib/vsprintf.c
-> @@ -640,8 +640,13 @@ static const char *check_pointer_msg(const void *ptr)
->  	if (!ptr)
->  		return "(null)";
->  
-> -	if (probe_kernel_address(ptr, byte))
-> -		return "(efault)";
-
-Either that, or we add a macro to those architectures and add:
-
-#ifdef ARCH_NO_EARLY_PROBE_KERNEL_ADDRESS
-
-> +	/* User space address handling is not ready during early boot. */
-> +	if (system_state <= SYSTEM_BOOTING) {
-> +		if ((unsigned long)ptr < PAGE_SIZE)
-> +			return "(efault)";
-> +	} else {
-
-#endif
-
-Why add an unnecessary branch for archs this is not a problem for?
-
--- Steve
-
-> +		if (probe_kernel_address(ptr, byte))
-> +			return "(efault)";
->  
->  	return NULL;
->  }
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
