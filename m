@@ -2,225 +2,261 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 04DBB18C8C
-	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 16:59:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B339518FDB
+	for <lists+linux-s390@lfdr.de>; Thu,  9 May 2019 20:05:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726721AbfEIO7C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 May 2019 10:59:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34444 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726234AbfEIO7C (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 9 May 2019 10:59:02 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 610A53086200;
-        Thu,  9 May 2019 14:59:01 +0000 (UTC)
-Received: from [10.36.117.56] (ovpn-117-56.ams2.redhat.com [10.36.117.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 077175D717;
-        Thu,  9 May 2019 14:58:56 +0000 (UTC)
-Subject: Re: [PATCH v2 4/8] mm/memory_hotplug: Create memory block devices
- after arch_add_memory()
-To:     Wei Yang <richard.weiyang@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>
-References: <20190507183804.5512-1-david@redhat.com>
- <20190507183804.5512-5-david@redhat.com>
- <20190509143151.zexjmwu3ikkmye7i@master>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <28071389-372c-14eb-1209-02464726b4f0@redhat.com>
-Date:   Thu, 9 May 2019 16:58:56 +0200
+        id S1726683AbfEISF3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 May 2019 14:05:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38348 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726708AbfEISF3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 May 2019 14:05:29 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x49Hwsmw139970
+        for <linux-s390@vger.kernel.org>; Thu, 9 May 2019 14:05:28 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2scpatfu0h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 09 May 2019 14:05:28 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jjherne@linux.ibm.com>;
+        Thu, 9 May 2019 19:05:26 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 May 2019 19:05:24 +0100
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x49I5L1X34144330
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 May 2019 18:05:21 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 80CF228066;
+        Thu,  9 May 2019 18:05:21 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2287428060;
+        Thu,  9 May 2019 18:05:21 +0000 (GMT)
+Received: from [9.60.75.213] (unknown [9.60.75.213])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  9 May 2019 18:05:21 +0000 (GMT)
+Reply-To: jjherne@linux.ibm.com
+Subject: Re: [PATCH 04/10] s390/mm: force swiotlb for protected virtualization
+To:     Halil Pasic <pasic@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, "Cornelia Huck ," <cohuck@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>
+References: <20190426183245.37939-5-pasic@linux.ibm.com>
+ <ad23f5e7-dc78-04af-c892-47bbc65134c6@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin ," <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        "Thomas Huth ," <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        "Vasily Gorbik ," <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+From:   "Jason J. Herne" <jjherne@linux.ibm.com>
+Organization: IBM
+Date:   Thu, 9 May 2019 14:05:20 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190509143151.zexjmwu3ikkmye7i@master>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <ad23f5e7-dc78-04af-c892-47bbc65134c6@linux.ibm.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 09 May 2019 14:59:01 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19050918-0060-0000-0000-0000033E0CE0
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011078; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01200929; UDB=6.00630161; IPR=6.00981820;
+ MB=3.00026815; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-09 18:05:26
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19050918-0061-0000-0000-000049494241
+Message-Id: <4c7a990a-7f11-17f3-2024-18acaf7ceb06@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905090103
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 09.05.19 16:31, Wei Yang wrote:
-> On Tue, May 07, 2019 at 08:38:00PM +0200, David Hildenbrand wrote:
->> Only memory to be added to the buddy and to be onlined/offlined by
->> user space using memory block devices needs (and should have!) memory
->> block devices.
->>
->> Factor out creation of memory block devices Create all devices after
->> arch_add_memory() succeeded. We can later drop the want_memblock parameter,
->> because it is now effectively stale.
->>
->> Only after memory block devices have been added, memory can be onlined
->> by user space. This implies, that memory is not visible to user space at
->> all before arch_add_memory() succeeded.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Andrew Banman <andrew.banman@hpe.com>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->> Cc: Qian Cai <cai@lca.pw>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Arun KS <arunks@codeaurora.org>
->> Cc: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->> drivers/base/memory.c  | 70 ++++++++++++++++++++++++++----------------
->> include/linux/memory.h |  2 +-
->> mm/memory_hotplug.c    | 15 ++++-----
->> 3 files changed, 53 insertions(+), 34 deletions(-)
->>
->> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->> index 6e0cb4fda179..862c202a18ca 100644
->> --- a/drivers/base/memory.c
->> +++ b/drivers/base/memory.c
->> @@ -701,44 +701,62 @@ static int add_memory_block(int base_section_nr)
->> 	return 0;
->> }
->>
->> +static void unregister_memory(struct memory_block *memory)
->> +{
->> +	BUG_ON(memory->dev.bus != &memory_subsys);
->> +
->> +	/* drop the ref. we got via find_memory_block() */
->> +	put_device(&memory->dev);
->> +	device_unregister(&memory->dev);
->> +}
->> +
->> /*
->> - * need an interface for the VM to add new memory regions,
->> - * but without onlining it.
->> + * Create memory block devices for the given memory area. Start and size
->> + * have to be aligned to memory block granularity. Memory block devices
->> + * will be initialized as offline.
->>  */
->> -int hotplug_memory_register(int nid, struct mem_section *section)
->> +int hotplug_memory_register(unsigned long start, unsigned long size)
+> Subject: [PATCH 04/10] s390/mm: force swiotlb for protected virtualization
+> Date: Fri, 26 Apr 2019 20:32:39 +0200
+> From: Halil Pasic <pasic@linux.ibm.com>
+> To: kvm@vger.kernel.org, linux-s390@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>, 
+> Martin Schwidefsky <schwidefsky@de.ibm.com>, Sebastian Ott <sebott@linux.ibm.com>
+> CC: Halil Pasic <pasic@linux.ibm.com>, virtualization@lists.linux-foundation.org, Michael 
+> S. Tsirkin <mst@redhat.com>, Christoph Hellwig <hch@infradead.org>, Thomas Huth 
+> <thuth@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Viktor Mihajlovski 
+> <mihajlov@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Janosch Frank 
+> <frankja@linux.ibm.com>, Claudio Imbrenda <imbrenda@linux.ibm.com>, Farhan Ali 
+> <alifm@linux.ibm.com>, Eric Farman <farman@linux.ibm.com>
 > 
-> One trivial suggestion about the function name.
+> On s390, protected virtualization guests have to use bounced I/O
+> buffers.  That requires some plumbing.
 > 
-> For memory_block device, sometimes we use the full name
+> Let us make sure, any device that uses DMA API with direct ops correctly
+> is spared from the problems, that a hypervisor attempting I/O to a
+> non-shared page would bring.
 > 
->     find_memory_block
->     init_memory_block
->     add_memory_block
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> ---
+>   arch/s390/Kconfig                   |  4 +++
+>   arch/s390/include/asm/mem_encrypt.h | 18 +++++++++++++
+>   arch/s390/mm/init.c                 | 50 +++++++++++++++++++++++++++++++++++++
+>   3 files changed, 72 insertions(+)
+>   create mode 100644 arch/s390/include/asm/mem_encrypt.h
 > 
-> But sometimes we use *nick* name
-> 
->     hotplug_memory_register
->     register_memory
->     unregister_memory
-> 
-> This is a little bit confusion.
-> 
-> Can we use one name convention here?
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 1c3fcf19c3af..5500d05d4d53 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -1,4 +1,7 @@
+>   # SPDX-License-Identifier: GPL-2.0
+> +config ARCH_HAS_MEM_ENCRYPT
+> +        def_bool y
+> +
+>   config MMU
+>       def_bool y
+>   @@ -191,6 +194,7 @@ config S390
+>       select ARCH_HAS_SCALED_CPUTIME
+>       select VIRT_TO_BUS
+>       select HAVE_NMI
+> +    select SWIOTLB
+>     config SCHED_OMIT_FRAME_POINTER
+> diff --git a/arch/s390/include/asm/mem_encrypt.h b/arch/s390/include/asm/mem_encrypt.h
+> new file mode 100644
+> index 000000000000..0898c09a888c
+> --- /dev/null
+> +++ b/arch/s390/include/asm/mem_encrypt.h
+> @@ -0,0 +1,18 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef S390_MEM_ENCRYPT_H__
+> +#define S390_MEM_ENCRYPT_H__
+> +
+> +#ifndef __ASSEMBLY__
+> +
+> +#define sme_me_mask    0ULL
+> +
+> +static inline bool sme_active(void) { return false; }
+> +extern bool sev_active(void);
+> +
 
-We can just go for
+I noticed this patch always returns false for sme_active. Is it safe to assume that 
+whatever fixups are required on x86 to deal with sme do not apply to s390?
 
-crate_memory_blocks() and free_memory_blocks(). Or do
-you have better suggestions?
+> +int set_memory_encrypted(unsigned long addr, int numpages);
+> +int set_memory_decrypted(unsigned long addr, int numpages);
+> +
+> +#endif    /* __ASSEMBLY__ */
+> +
+> +#endif    /* S390_MEM_ENCRYPT_H__ */
+> +
+> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+> index 3e82f66d5c61..7e3cbd15dcfa 100644
+> --- a/arch/s390/mm/init.c
+> +++ b/arch/s390/mm/init.c
+> @@ -18,6 +18,7 @@
+>   #include <linux/mman.h>
+>   #include <linux/mm.h>
+>   #include <linux/swap.h>
+> +#include <linux/swiotlb.h>
+>   #include <linux/smp.h>
+>   #include <linux/init.h>
+>   #include <linux/pagemap.h>
+> @@ -29,6 +30,7 @@
+>   #include <linux/export.h>
+>   #include <linux/cma.h>
+>   #include <linux/gfp.h>
+> +#include <linux/dma-mapping.h>
+>   #include <asm/processor.h>
+>   #include <linux/uaccess.h>
+>   #include <asm/pgtable.h>
+> @@ -42,6 +44,8 @@
+>   #include <asm/sclp.h>
+>   #include <asm/set_memory.h>
+>   #include <asm/kasan.h>
+> +#include <asm/dma-mapping.h>
+> +#include <asm/uv.h>
+>    pgd_t swapper_pg_dir[PTRS_PER_PGD] __section(.bss..swapper_pg_dir);
+>   @@ -126,6 +130,50 @@ void mark_rodata_ro(void)
+>       pr_info("Write protected read-only-after-init data: %luk\n", size >> 10);
+>   }
+>   +int set_memory_encrypted(unsigned long addr, int numpages)
+> +{
+> +    int i;
+> +
+> +    /* make all pages shared, (swiotlb, dma_free) */
 
-(I would actually even prefer "memory_block_devices", because memory
-blocks have different meanins)
+This comment should be "make all pages unshared"?
 
-> 
-> [...]
-> 
->> /*
->> @@ -1106,6 +1100,13 @@ int __ref add_memory_resource(int nid, struct resource *res)
->> 	if (ret < 0)
->> 		goto error;
->>
->> +	/* create memory block devices after memory was added */
->> +	ret = hotplug_memory_register(start, size);
->> +	if (ret) {
->> +		arch_remove_memory(nid, start, size, NULL);
-> 
-> Functionally, it works I think.
-> 
-> But arch_remove_memory() would remove pages from zone. At this point, we just
-> allocate section/mmap for pages, the zones are empty and pages are not
-> connected to zone.
-> 
-> Function  zone = page_zone(page); always gets zone #0, since pages->flags is 0
-> at  this point. This is not exact.
-> 
-> Would we add some comment to mention this? Or we need to clean up
-> arch_remove_memory() to take out __remove_zone()?
+> +    for (i = 0; i < numpages; ++i) {
+> +        uv_remove_shared(addr);
+> +        addr += PAGE_SIZE;
+> +    }
+> +    return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(set_memory_encrypted);
+> +
+> +int set_memory_decrypted(unsigned long addr, int numpages)
+> +{
+> +    int i;
+> +    /* make all pages shared (swiotlb, dma_alloca) */
+> +    for (i = 0; i < numpages; ++i) {
+> +        uv_set_shared(addr);
+> +        addr += PAGE_SIZE;
+> +    }
+> +    return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(set_memory_decrypted);
 
-That is precisely what is on my list next (see cover letter).This is
-already broken when memory that was never onlined is removed again.
-So I am planning to fix that independently.
+The addr arguments for the above functions appear to be referring to virtual addresses. 
+Would vaddr be a better name?
 
+> +
+> +/* are we a protected virtualization guest? */
+> +bool sev_active(void)
+> +{
+> +    return is_prot_virt_guest();
+> +}
+> +EXPORT_SYMBOL_GPL(sev_active);
+> +
+> +/* protected virtualization */
+> +static void pv_init(void)
+> +{
+> +    if (!sev_active())
+> +        return;
+> +
+> +    /* make sure bounce buffers are shared */
+> +    swiotlb_init(1);
+> +    swiotlb_update_mem_attributes();
+> +    swiotlb_force = SWIOTLB_FORCE;
+> +}
+> +
+>   void __init mem_init(void)
+>   {
+>       cpumask_set_cpu(0, &init_mm.context.cpu_attach_mask);
+> @@ -134,6 +182,8 @@ void __init mem_init(void)
+>       set_max_mapnr(max_low_pfn);
+>           high_memory = (void *) __va(max_low_pfn * PAGE_SIZE);
+>   +    pv_init();
+> +
+>       /* Setup guest page hinting */
+>       cmma_init();
+>   -- 2.16.4
+> 
+> 
 
 -- 
+-- Jason J. Herne (jjherne@linux.ibm.com)
 
-Thanks,
-
-David / dhildenb
