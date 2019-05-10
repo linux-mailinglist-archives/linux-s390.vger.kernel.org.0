@@ -2,213 +2,161 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F245E19971
-	for <lists+linux-s390@lfdr.de>; Fri, 10 May 2019 10:23:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE692199D0
+	for <lists+linux-s390@lfdr.de>; Fri, 10 May 2019 10:42:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727116AbfEJIXP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 May 2019 04:23:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54364 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727111AbfEJIXP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 May 2019 04:23:15 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4A8N3mo120363
-        for <linux-s390@vger.kernel.org>; Fri, 10 May 2019 04:23:14 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sd4xma0wt-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 10 May 2019 04:23:10 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 10 May 2019 09:22:44 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 10 May 2019 09:22:40 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4A8McNk58851378
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 May 2019 08:22:38 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1D2DAE051;
-        Fri, 10 May 2019 08:22:38 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3AA27AE045;
-        Fri, 10 May 2019 08:22:38 +0000 (GMT)
-Received: from morel-ThinkPad-W530.boeblingen.de.ibm.com (unknown [9.145.187.238])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 10 May 2019 08:22:38 +0000 (GMT)
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     sebott@linux.vnet.ibm.com
-Cc:     gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
-        borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Subject: [PATCH 4/4] vfio: vfio_iommu_type1: implement VFIO_IOMMU_INFO_CAPABILITIES
-Date:   Fri, 10 May 2019 10:22:35 +0200
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
-References: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19051008-0016-0000-0000-0000027A405B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051008-0017-0000-0000-000032D6F9DC
-Message-Id: <1557476555-20256-5-git-send-email-pmorel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=950 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905100059
+        id S1727071AbfEJImU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 May 2019 04:42:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:47044 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727053AbfEJImU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 10 May 2019 04:42:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D6C62AF24;
+        Fri, 10 May 2019 08:42:17 +0000 (UTC)
+From:   Petr Mladek <pmladek@suse.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Petr Mladek <pmladek@suse.com>
+Subject: [PATCH] vsprintf: Do not break early boot with probing addresses
+Date:   Fri, 10 May 2019 10:42:13 +0200
+Message-Id: <20190510084213.22149-1-pmladek@suse.com>
+X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20190510081635.GA4533@jagdpanzerIV>
+References: <20190510081635.GA4533@jagdpanzerIV>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-We implement a capability intercafe for VFIO_IOMMU_GET_INFO and add the
-first capability: VFIO_IOMMU_INFO_CAPABILITIES.
+The commit 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing
+invalid pointers") broke boot on several architectures. The common
+pattern is that probe_kernel_read() is not working during early
+boot because userspace access framework is not ready.
 
-When calling the ioctl, the user must specify
-VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and must check
-in the answer if capabilities are supported.
-Older kernel will not check nor set the VFIO_IOMMU_INFO_CAPABILITIES in
-the flags of vfio_iommu_type1_info.
+It is a generic problem. We have to avoid any complex external
+functions in vsprintf() code, especially in the common path.
+They might break printk() easily and are hard to debug.
 
-The iommu get_attr callback will be called to retrieve the specific
-attributes and fill the capabilities, VFIO_IOMMU_INFO_CAP_QFN for the
-PCI query function attributes and VFIO_IOMMU_INFO_CAP_QGRP for the
-PCI query function group.
+Replace probe_kernel_read() with some simple checks for obvious
+problems.
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+Details:
+
+1. Report on Power:
+
+Kernel crashes very early during boot with with CONFIG_PPC_KUAP and
+CONFIG_JUMP_LABEL_FEATURE_CHECK_DEBUG
+
+The problem is the combination of some new code called via printk(),
+check_pointer() which calls probe_kernel_read(). That then calls
+allow_user_access() (PPC_KUAP) and that uses mmu_has_feature() too early
+(before we've patched features). With the JUMP_LABEL debug enabled that
+causes us to call printk() & dump_stack() and we end up recursing and
+overflowing the stack.
+
+Because it happens so early you don't get any output, just an apparently
+dead system.
+
+The stack trace (which you don't see) is something like:
+
+  ...
+  dump_stack+0xdc
+  probe_kernel_read+0x1a4
+  check_pointer+0x58
+  string+0x3c
+  vsnprintf+0x1bc
+  vscnprintf+0x20
+  printk_safe_log_store+0x7c
+  printk+0x40
+  dump_stack_print_info+0xbc
+  dump_stack+0x8
+  probe_kernel_read+0x1a4
+  probe_kernel_read+0x19c
+  check_pointer+0x58
+  string+0x3c
+  vsnprintf+0x1bc
+  vscnprintf+0x20
+  vprintk_store+0x6c
+  vprintk_emit+0xec
+  vprintk_func+0xd4
+  printk+0x40
+  cpufeatures_process_feature+0xc8
+  scan_cpufeatures_subnodes+0x380
+  of_scan_flat_dt_subnodes+0xb4
+  dt_cpu_ftrs_scan_callback+0x158
+  of_scan_flat_dt+0xf0
+  dt_cpu_ftrs_scan+0x3c
+  early_init_devtree+0x360
+  early_setup+0x9c
+
+2. Report on s390:
+
+vsnprintf invocations, are broken on s390. For example, the early boot
+output now looks like this where the first (efault) should be
+the linux_banner:
+
+[    0.099985] (efault)
+[    0.099985] setup: Linux is running as a z/VM guest operating system in 64-bit mode
+[    0.100066] setup: The maximum memory size is 8192MB
+[    0.100070] cma: Reserved 4 MiB at (efault)
+[    0.100100] numa: NUMA mode: (efault)
+
+The reason for this, is that the code assumes that
+probe_kernel_address() works very early. This however is not true on
+at least s390. Uaccess on KERNEL_DS works only after page tables have
+been setup on s390, which happens with setup_arch()->paging_init().
+
+Any probe_kernel_address() invocation before that will return -EFAULT.
+
+Fixes: 3e5903eb9cff70730 ("vsprintf: Prevent crash when dereferencing invalid pointers")
+Signed-off-by: Petr Mladek <pmladek@suse.com>
 ---
- drivers/vfio/vfio_iommu_type1.c | 95 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 94 insertions(+), 1 deletion(-)
+ lib/vsprintf.c | 11 ++++-------
+ 1 file changed, 4 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/vfio/vfio_iommu_type1.c b/drivers/vfio/vfio_iommu_type1.c
-index d0f731c..f7f8120 100644
---- a/drivers/vfio/vfio_iommu_type1.c
-+++ b/drivers/vfio/vfio_iommu_type1.c
-@@ -1658,6 +1658,70 @@ static int vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
- 	return ret;
+diff --git a/lib/vsprintf.c b/lib/vsprintf.c
+index 7b0a6140bfad..2f003cfe340e 100644
+--- a/lib/vsprintf.c
++++ b/lib/vsprintf.c
+@@ -628,19 +628,16 @@ static char *error_string(char *buf, char *end, const char *s,
  }
  
-+int vfio_iommu_type1_caps(struct vfio_iommu *iommu, struct vfio_info_cap *caps,
-+			  size_t size)
-+{
-+	struct vfio_domain *d;
-+	struct vfio_iommu_type1_info_block *info_fn;
-+	struct vfio_iommu_type1_info_block *info_grp;
-+	unsigned long total_size, fn_size, grp_size;
-+	int ret;
-+
-+	d = list_first_entry(&iommu->domain_list, struct vfio_domain, next);
-+	if (!d)
-+		return -ENODEV;
-+	/* The size of these capabilities are device dependent */
-+	fn_size = iommu_domain_get_attr(d->domain,
-+					DOMAIN_ATTR_ZPCI_FN_SIZE, NULL);
-+	if (fn_size < 0)
-+		return fn_size;
-+	fn_size +=  sizeof(struct vfio_info_cap_header);
-+	total_size = fn_size;
-+
-+	grp_size = iommu_domain_get_attr(d->domain,
-+					 DOMAIN_ATTR_ZPCI_GRP_SIZE, NULL);
-+	if (grp_size < 0)
-+		return grp_size;
-+	grp_size +=  sizeof(struct vfio_info_cap_header);
-+	total_size += grp_size;
-+
-+	/* Tell caller to call us with a greater buffer */
-+	if (total_size > size) {
-+		caps->size = total_size;
-+		return 0;
-+	}
-+
-+	info_fn = kzalloc(fn_size, GFP_KERNEL);
-+	if (!info_fn)
-+		return -ENOMEM;
-+	ret = iommu_domain_get_attr(d->domain,
-+				    DOMAIN_ATTR_ZPCI_FN, &info_fn->data);
-+	if (ret < 0)
-+		return ret;
-+
-+	info_fn->header.id = VFIO_IOMMU_INFO_CAP_QFN;
-+
-+	ret = vfio_info_add_capability(caps, &info_fn->header, fn_size);
-+	if (ret)
-+		goto err_fn;
-+
-+	info_grp = kzalloc(grp_size, GFP_KERNEL);
-+	if (!info_grp)
-+		goto err_fn;
-+	ret = iommu_domain_get_attr(d->domain,
-+				    DOMAIN_ATTR_ZPCI_GRP, &info_grp->data);
-+	if (ret < 0)
-+		goto err_grp;
-+	info_grp->header.id = VFIO_IOMMU_INFO_CAP_QGRP;
-+	ret = vfio_info_add_capability(caps, &info_grp->header, grp_size);
-+
-+err_grp:
-+	kfree(info_grp);
-+err_fn:
-+	kfree(info_fn);
-+	return ret;
-+}
-+
- static long vfio_iommu_type1_ioctl(void *iommu_data,
- 				   unsigned int cmd, unsigned long arg)
+ /*
+- * This is not a fool-proof test. 99% of the time that this will fault is
+- * due to a bad pointer, not one that crosses into bad memory. Just test
+- * the address to make sure it doesn't fault due to a poorly added printk
+- * during debugging.
++ * Do not call any complex external code here. Nested printk()/vsprintf()
++ * might cause infinite loops. Failures might break printk() and would
++ * be hard to debug.
+  */
+ static const char *check_pointer_msg(const void *ptr)
  {
-@@ -1679,6 +1743,8 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
- 		}
- 	} else if (cmd == VFIO_IOMMU_GET_INFO) {
- 		struct vfio_iommu_type1_info info;
-+		struct vfio_info_cap caps = { .buf = NULL, .size = 0 };
-+		int ret;
+-	char byte;
+-
+ 	if (!ptr)
+ 		return "(null)";
  
- 		minsz = offsetofend(struct vfio_iommu_type1_info, iova_pgsizes);
+-	if (probe_kernel_address(ptr, byte))
++	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
+ 		return "(efault)";
  
-@@ -1688,7 +1754,34 @@ static long vfio_iommu_type1_ioctl(void *iommu_data,
- 		if (info.argsz < minsz)
- 			return -EINVAL;
- 
--		info.flags = VFIO_IOMMU_INFO_PGSIZES;
-+		if (info.flags & VFIO_IOMMU_INFO_CAPABILITIES) {
-+			minsz = offsetofend(struct vfio_iommu_type1_info,
-+					    cap_offset);
-+			if (info.argsz < minsz)
-+				return -EINVAL;
-+			ret = vfio_iommu_type1_caps(iommu, &caps,
-+						    info.argsz - sizeof(info));
-+			if (ret)
-+				return ret;
-+		}
-+		if (caps.size) {
-+			if (info.argsz < sizeof(info) + caps.size) {
-+				info.argsz = sizeof(info) + caps.size;
-+				info.cap_offset = 0;
-+			} else {
-+				if (copy_to_user((void __user *)arg +
-+						 sizeof(info), caps.buf,
-+						 caps.size)) {
-+					kfree(caps.buf);
-+					return -EFAULT;
-+				}
-+
-+				info.cap_offset = sizeof(info);
-+			}
-+			kfree(caps.buf);
-+		}
-+
-+		info.flags |= VFIO_IOMMU_INFO_PGSIZES;
- 
- 		info.iova_pgsizes = vfio_pgsize_bitmap(iommu);
- 
+ 	return NULL;
 -- 
-2.7.4
+2.16.4
 
