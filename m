@@ -2,145 +2,247 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3826219F15
-	for <lists+linux-s390@lfdr.de>; Fri, 10 May 2019 16:24:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6A5019F7C
+	for <lists+linux-s390@lfdr.de>; Fri, 10 May 2019 16:45:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfEJOYl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 May 2019 10:24:41 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33772 "EHLO
+        id S1727144AbfEJOpZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 May 2019 10:45:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33906 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727807AbfEJOYl (ORCPT
+        by vger.kernel.org with ESMTP id S1727194AbfEJOpZ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 May 2019 10:24:41 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AE4RrY014987
-        for <linux-s390@vger.kernel.org>; Fri, 10 May 2019 10:24:39 -0400
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sd87wqdmp-1
+        Fri, 10 May 2019 10:45:25 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4AEh6cM020531
+        for <linux-s390@vger.kernel.org>; Fri, 10 May 2019 10:45:24 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sda044c4y-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 10 May 2019 10:24:37 -0400
+        for <linux-s390@vger.kernel.org>; Fri, 10 May 2019 10:45:24 -0400
 Received: from localhost
-        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
-        Fri, 10 May 2019 15:24:36 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Fri, 10 May 2019 15:45:21 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 10 May 2019 15:24:35 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4AEOXFZ8388950
+        Fri, 10 May 2019 15:45:18 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4AEjHIQ56688666
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 May 2019 14:24:33 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4BD6A7805C;
-        Fri, 10 May 2019 14:24:33 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8DF6B7805E;
-        Fri, 10 May 2019 14:24:32 +0000 (GMT)
-Received: from [9.85.170.175] (unknown [9.85.170.175])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Fri, 10 May 2019 14:24:32 +0000 (GMT)
-Subject: Re: [PATCH 7/7] s390/cio: Remove vfio-ccw checks of command codes
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20190503134912.39756-1-farman@linux.ibm.com>
- <20190503134912.39756-8-farman@linux.ibm.com>
- <8625f759-0a2d-09af-c8b5-5b312d854ba1@linux.ibm.com>
- <7c897993-d146-bf8e-48ad-11a914a04716@linux.ibm.com>
- <bba6c0a8-2346-cd99-b8ad-f316daac010b@linux.ibm.com>
- <7ac9fb43-8d7a-9e04-8cba-fa4c63dfc413@linux.ibm.com>
- <1f2e4272-8570-f93f-9d67-a43dcb00fc55@linux.ibm.com>
- <5c2b74a9-e1d9-cd63-1284-6544fa4376d9@linux.ibm.com>
- <20190510134718.3f727571.cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Date:   Fri, 10 May 2019 10:24:31 -0400
+        Fri, 10 May 2019 14:45:17 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0692A40F2;
+        Fri, 10 May 2019 14:45:16 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 38372A40C1;
+        Fri, 10 May 2019 14:45:16 +0000 (GMT)
+Received: from [9.145.187.238] (unknown [9.145.187.238])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 10 May 2019 14:45:16 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH 1/4] s390: pci: Exporting access to CLP PCI function and
+ PCI group
+To:     Robin Murphy <robin.murphy@arm.com>, sebott@linux.vnet.ibm.com
+Cc:     linux-s390@vger.kernel.org, pasic@linux.vnet.ibm.com,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, walling@linux.ibm.com,
+        linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
+        iommu@lists.linux-foundation.org, schwidefsky@de.ibm.com,
+        gerald.schaefer@de.ibm.com
+References: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
+ <1557476555-20256-2-git-send-email-pmorel@linux.ibm.com>
+ <a06ffd83-5fde-8c6e-b25b-bd4163d4cd5f@arm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Fri, 10 May 2019 16:45:15 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190510134718.3f727571.cohuck@redhat.com>
+In-Reply-To: <a06ffd83-5fde-8c6e-b25b-bd4163d4cd5f@arm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19051014-0012-0000-0000-00001734B572
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011081; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01201330; UDB=6.00630404; IPR=6.00982225;
- MB=3.00026828; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-10 14:24:36
+x-cbid: 19051014-0016-0000-0000-0000027A60B1
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051014-0013-0000-0000-000057364BB4
-Message-Id: <85fe257b-721a-f900-32fa-011845f242ed@linux.ibm.com>
+x-cbparentid: 19051014-0017-0000-0000-000032D71C91
+Message-Id: <289bdf82-75ba-4ba4-9362-dd8fc721cfc8@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-09_02:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905100098
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905100102
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 5/10/19 7:47 AM, Cornelia Huck wrote:
-> On Wed, 8 May 2019 11:22:07 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> For the NOOP its clearly stated that it does not start a data transfer.
->> If we pin the CDA, it could then eventually be the cause of errors if
->> the address indicated by the CDA is not accessible.
+On 10/05/2019 12:21, Robin Murphy wrote:
+> On 10/05/2019 09:22, Pierre Morel wrote:
+>> For the generic implementation of VFIO PCI we need to retrieve
+>> the hardware configuration for the PCI functions and the
+>> PCI function groups.
 >>
->> The NOOP is a particular CONTROL operation for which no data is transfered.
->> Other CONTROL operation may start a data transfer.
+>> We modify the internal function using CLP Query PCI function and
+>> CLP query PCI function group so that they can be called from
+>> outside the S390 architecture PCI code and prefix the two
+>> functions with "zdev" to make clear that they can be called
+>> knowing only the associated zdevice.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+>> ---
+>>   arch/s390/include/asm/pci.h |  3 ++
+>>   arch/s390/pci/pci_clp.c     | 72 
+>> ++++++++++++++++++++++++---------------------
+>>   2 files changed, 41 insertions(+), 34 deletions(-)
+>>
+>> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+>> index 305befd..e66b246 100644
+>> --- a/arch/s390/include/asm/pci.h
+>> +++ b/arch/s390/include/asm/pci.h
+>> @@ -261,4 +261,7 @@ cpumask_of_pcibus(const struct pci_bus *bus)
+>>   #endif /* CONFIG_NUMA */
+>> +int zdev_query_pci_fngrp(struct zpci_dev *zdev,
+>> +             struct clp_req_rsp_query_pci_grp *rrb);
+>> +int zdev_query_pci_fn(struct zpci_dev *zdev, struct 
+>> clp_req_rsp_query_pci *rrb);
+>>   #endif
+>> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+>> index 3a36b07..4ae5d77 100644
+>> --- a/arch/s390/pci/pci_clp.c
+>> +++ b/arch/s390/pci/pci_clp.c
+>> @@ -113,32 +113,18 @@ static void clp_store_query_pci_fngrp(struct 
+>> zpci_dev *zdev,
+>>       }
+>>   }
+>> -static int clp_query_pci_fngrp(struct zpci_dev *zdev, u8 pfgid)
+>> +int zdev_query_pci_fngrp(struct zpci_dev *zdev,
+>> +             struct clp_req_rsp_query_pci_grp *rrb)
+>>   {
+>> -    struct clp_req_rsp_query_pci_grp *rrb;
+>> -    int rc;
+>> -
+>> -    rrb = clp_alloc_block(GFP_KERNEL);
+>> -    if (!rrb)
+>> -        return -ENOMEM;
+>> -
+>>       memset(rrb, 0, sizeof(*rrb));
+>>       rrb->request.hdr.len = sizeof(rrb->request);
+>>       rrb->request.hdr.cmd = CLP_QUERY_PCI_FNGRP;
+>>       rrb->response.hdr.len = sizeof(rrb->response);
+>> -    rrb->request.pfgid = pfgid;
+>> +    rrb->request.pfgid = zdev->pfgid;
+>> -    rc = clp_req(rrb, CLP_LPS_PCI);
+>> -    if (!rc && rrb->response.hdr.rsp == CLP_RC_OK)
+>> -        clp_store_query_pci_fngrp(zdev, &rrb->response);
+>> -    else {
+>> -        zpci_err("Q PCI FGRP:\n");
+>> -        zpci_err_clp(rrb->response.hdr.rsp, rc);
+>> -        rc = -EIO;
+>> -    }
+>> -    clp_free_block(rrb);
+>> -    return rc;
+>> +    return clp_req(rrb, CLP_LPS_PCI);
+>>   }
+>> +EXPORT_SYMBOL(zdev_query_pci_fngrp);
 > 
-> I've just looked at the documentation again.
+> AFAICS it's only the IOMMU driver itself which needs to call these. That 
+> can't be built as a module, so you shouldn't need explicit exports - the 
+> header declaration is enough.
 > 
-> The Olde Common I/O Device Commands document indicates that a NOOP
-> simply causes channel end/device end.
-> 
-> The PoP seems to indicate that the cda is always checked (i.e. does it
-> point to a valid memory area?), but I'm not sure whether the area that
-> is pointed to is checked for accessibility etc. as well, even if the
-> command does not transfer any data.
-> 
-> Has somebody tried to find out what happens on Real Hardware(tm) if you
-> send a command that is not supposed to transfer any data where the cda
-> points to a valid, but not accessible area?
+> Robin.
 
-Hrm...  The CDA itself?  I don't think so.  Since every CCW is converted 
-to an IDAL in vfio-ccw, we guarantee that it's pointing to something 
-valid at that point.
+This is right and seeing the pointer type only zPCI and s390iommu can 
+make use of it.
+If nobody has another point of view I will remove the export on the
+next iteration.
 
-So, I hacked ccwchain_fetch_direct() to NOT set the IDAL flag in a NOP 
-CCW, and to leave the CDA alone.  This means it will still contain the 
-guest address, which is risky but hey it's a test system.  :)  (I 
-offline'd a bunch of host memory too, to make sure I had some 
-unavailable addresses.)
-
-In my traces, the non-IDA NOP CCWs were issued to the host with and 
-without the skip flag, with zero and non-zero counts, and with zero and 
-non-zero CDAs.  All of them work just fine, including the ones who's 
-addresses fall into the offline space.  Even the combination of no skip, 
-non-zero count, and zero cda.
-
-I modified that hack to do the same for a known invalid control opcode, 
-and it seemed to be okay too.  We got an (expected) invalid command 
-before we noticed any problem with the provided address.
-
+Thanks,
+Pierre
 
 > 
-> In general, I think doing the translation (and probably already hitting
-> errors there) is better than sending down a guest address.
+>>   static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>>                     struct clp_rsp_query_pci *response)
+>> @@ -174,32 +160,50 @@ static int clp_store_query_pci_fn(struct 
+>> zpci_dev *zdev,
+>>       return 0;
+>>   }
+>> -static int clp_query_pci_fn(struct zpci_dev *zdev, u32 fh)
+>> +int zdev_query_pci_fn(struct zpci_dev *zdev, struct 
+>> clp_req_rsp_query_pci *rrb)
+>> +{
+>> +
+>> +    memset(rrb, 0, sizeof(*rrb));
+>> +    rrb->request.hdr.len = sizeof(rrb->request);
+>> +    rrb->request.hdr.cmd = CLP_QUERY_PCI_FN;
+>> +    rrb->response.hdr.len = sizeof(rrb->response);
+>> +    rrb->request.fh = zdev->fh;
+>> +
+>> +    return clp_req(rrb, CLP_LPS_PCI);
+>> +}
+>> +EXPORT_SYMBOL(zdev_query_pci_fn);
+>> +
+>> +static int clp_query_pci(struct zpci_dev *zdev)
+>>   {
+>>       struct clp_req_rsp_query_pci *rrb;
+>> +    struct clp_req_rsp_query_pci_grp *grrb;
+>>       int rc;
+>>       rrb = clp_alloc_block(GFP_KERNEL);
+>>       if (!rrb)
+>>           return -ENOMEM;
+>> -    memset(rrb, 0, sizeof(*rrb));
+>> -    rrb->request.hdr.len = sizeof(rrb->request);
+>> -    rrb->request.hdr.cmd = CLP_QUERY_PCI_FN;
+>> -    rrb->response.hdr.len = sizeof(rrb->response);
+>> -    rrb->request.fh = fh;
+>> -
+>> -    rc = clp_req(rrb, CLP_LPS_PCI);
+>> -    if (!rc && rrb->response.hdr.rsp == CLP_RC_OK) {
+>> -        rc = clp_store_query_pci_fn(zdev, &rrb->response);
+>> -        if (rc)
+>> -            goto out;
+>> -        rc = clp_query_pci_fngrp(zdev, rrb->response.pfgid);
+>> -    } else {
+>> +    rc = zdev_query_pci_fn(zdev, rrb);
+>> +    if (rc || rrb->response.hdr.rsp != CLP_RC_OK) {
+>>           zpci_err("Q PCI FN:\n");
+>>           zpci_err_clp(rrb->response.hdr.rsp, rc);
+>>           rc = -EIO;
+>> +        goto out;
+>>       }
+>> +    rc = clp_store_query_pci_fn(zdev, &rrb->response);
+>> +    if (rc)
+>> +        goto out;
+>> +
+>> +    grrb = (struct clp_req_rsp_query_pci_grp *)rrb;
+>> +    rc = zdev_query_pci_fngrp(zdev, grrb);
+>> +    if (rc || grrb->response.hdr.rsp != CLP_RC_OK) {
+>> +        zpci_err("Q PCI FGRP:\n");
+>> +        zpci_err_clp(grrb->response.hdr.rsp, rc);
+>> +        rc = -EIO;
+>> +        goto out;
+>> +    }
+>> +    clp_store_query_pci_fngrp(zdev, &grrb->response);
+>> +
+>>   out:
+>>       clp_free_block(rrb);
+>>       return rc;
+>> @@ -219,7 +223,7 @@ int clp_add_pci_device(u32 fid, u32 fh, int 
+>> configured)
+>>       zdev->fid = fid;
+>>       /* Query function properties and update zdev */
+>> -    rc = clp_query_pci_fn(zdev, fh);
+>> +    rc = clp_query_pci(zdev);
+>>       if (rc)
+>>           goto error;
+>>
 > 
 
-I mostly agree, but I have one test program that generates invalid GUEST 
-addresses with its NOP CCWs, since it doesn't seem to care about whether 
-they're valid or not.  So any attempt to pin them will end badly, which 
-is why I call that opcode out in ccw_does_data_transfer(), and just send 
-invalid IDAWs with it.
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
