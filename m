@@ -2,197 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0C6A19B7A
-	for <lists+linux-s390@lfdr.de>; Fri, 10 May 2019 12:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D46019CE3
+	for <lists+linux-s390@lfdr.de>; Fri, 10 May 2019 13:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbfEJKVi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 May 2019 06:21:38 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42628 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727425AbfEJKVi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 May 2019 06:21:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C7E7CA78;
-        Fri, 10 May 2019 03:21:37 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AFC863F738;
-        Fri, 10 May 2019 03:21:35 -0700 (PDT)
-Subject: Re: [PATCH 1/4] s390: pci: Exporting access to CLP PCI function and
- PCI group
-To:     Pierre Morel <pmorel@linux.ibm.com>, sebott@linux.vnet.ibm.com
-Cc:     linux-s390@vger.kernel.org, pasic@linux.vnet.ibm.com,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, walling@linux.ibm.com,
-        linux-kernel@vger.kernel.org, borntraeger@de.ibm.com,
-        iommu@lists.linux-foundation.org, schwidefsky@de.ibm.com,
-        gerald.schaefer@de.ibm.com
-References: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
- <1557476555-20256-2-git-send-email-pmorel@linux.ibm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <a06ffd83-5fde-8c6e-b25b-bd4163d4cd5f@arm.com>
-Date:   Fri, 10 May 2019 11:21:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727067AbfEJLrX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 May 2019 07:47:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33472 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727079AbfEJLrW (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 10 May 2019 07:47:22 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 70D46C04D30D;
+        Fri, 10 May 2019 11:47:22 +0000 (UTC)
+Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C16B5D9D5;
+        Fri, 10 May 2019 11:47:21 +0000 (UTC)
+Date:   Fri, 10 May 2019 13:47:18 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH 7/7] s390/cio: Remove vfio-ccw checks of command codes
+Message-ID: <20190510134718.3f727571.cohuck@redhat.com>
+In-Reply-To: <5c2b74a9-e1d9-cd63-1284-6544fa4376d9@linux.ibm.com>
+References: <20190503134912.39756-1-farman@linux.ibm.com>
+        <20190503134912.39756-8-farman@linux.ibm.com>
+        <8625f759-0a2d-09af-c8b5-5b312d854ba1@linux.ibm.com>
+        <7c897993-d146-bf8e-48ad-11a914a04716@linux.ibm.com>
+        <bba6c0a8-2346-cd99-b8ad-f316daac010b@linux.ibm.com>
+        <7ac9fb43-8d7a-9e04-8cba-fa4c63dfc413@linux.ibm.com>
+        <1f2e4272-8570-f93f-9d67-a43dcb00fc55@linux.ibm.com>
+        <5c2b74a9-e1d9-cd63-1284-6544fa4376d9@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <1557476555-20256-2-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 10 May 2019 11:47:22 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/05/2019 09:22, Pierre Morel wrote:
-> For the generic implementation of VFIO PCI we need to retrieve
-> the hardware configuration for the PCI functions and the
-> PCI function groups.
-> 
-> We modify the internal function using CLP Query PCI function and
-> CLP query PCI function group so that they can be called from
-> outside the S390 architecture PCI code and prefix the two
-> functions with "zdev" to make clear that they can be called
-> knowing only the associated zdevice.
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-> ---
->   arch/s390/include/asm/pci.h |  3 ++
->   arch/s390/pci/pci_clp.c     | 72 ++++++++++++++++++++++++---------------------
->   2 files changed, 41 insertions(+), 34 deletions(-)
-> 
-> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> index 305befd..e66b246 100644
-> --- a/arch/s390/include/asm/pci.h
-> +++ b/arch/s390/include/asm/pci.h
-> @@ -261,4 +261,7 @@ cpumask_of_pcibus(const struct pci_bus *bus)
->   
->   #endif /* CONFIG_NUMA */
->   
-> +int zdev_query_pci_fngrp(struct zpci_dev *zdev,
-> +			 struct clp_req_rsp_query_pci_grp *rrb);
-> +int zdev_query_pci_fn(struct zpci_dev *zdev, struct clp_req_rsp_query_pci *rrb);
->   #endif
-> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-> index 3a36b07..4ae5d77 100644
-> --- a/arch/s390/pci/pci_clp.c
-> +++ b/arch/s390/pci/pci_clp.c
-> @@ -113,32 +113,18 @@ static void clp_store_query_pci_fngrp(struct zpci_dev *zdev,
->   	}
->   }
->   
-> -static int clp_query_pci_fngrp(struct zpci_dev *zdev, u8 pfgid)
-> +int zdev_query_pci_fngrp(struct zpci_dev *zdev,
-> +			 struct clp_req_rsp_query_pci_grp *rrb)
->   {
-> -	struct clp_req_rsp_query_pci_grp *rrb;
-> -	int rc;
-> -
-> -	rrb = clp_alloc_block(GFP_KERNEL);
-> -	if (!rrb)
-> -		return -ENOMEM;
-> -
->   	memset(rrb, 0, sizeof(*rrb));
->   	rrb->request.hdr.len = sizeof(rrb->request);
->   	rrb->request.hdr.cmd = CLP_QUERY_PCI_FNGRP;
->   	rrb->response.hdr.len = sizeof(rrb->response);
-> -	rrb->request.pfgid = pfgid;
-> +	rrb->request.pfgid = zdev->pfgid;
->   
-> -	rc = clp_req(rrb, CLP_LPS_PCI);
-> -	if (!rc && rrb->response.hdr.rsp == CLP_RC_OK)
-> -		clp_store_query_pci_fngrp(zdev, &rrb->response);
-> -	else {
-> -		zpci_err("Q PCI FGRP:\n");
-> -		zpci_err_clp(rrb->response.hdr.rsp, rc);
-> -		rc = -EIO;
-> -	}
-> -	clp_free_block(rrb);
-> -	return rc;
-> +	return clp_req(rrb, CLP_LPS_PCI);
->   }
-> +EXPORT_SYMBOL(zdev_query_pci_fngrp);
+On Wed, 8 May 2019 11:22:07 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-AFAICS it's only the IOMMU driver itself which needs to call these. That 
-can't be built as a module, so you shouldn't need explicit exports - the 
-header declaration is enough.
-
-Robin.
-
->   static int clp_store_query_pci_fn(struct zpci_dev *zdev,
->   				  struct clp_rsp_query_pci *response)
-> @@ -174,32 +160,50 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
->   	return 0;
->   }
->   
-> -static int clp_query_pci_fn(struct zpci_dev *zdev, u32 fh)
-> +int zdev_query_pci_fn(struct zpci_dev *zdev, struct clp_req_rsp_query_pci *rrb)
-> +{
-> +
-> +	memset(rrb, 0, sizeof(*rrb));
-> +	rrb->request.hdr.len = sizeof(rrb->request);
-> +	rrb->request.hdr.cmd = CLP_QUERY_PCI_FN;
-> +	rrb->response.hdr.len = sizeof(rrb->response);
-> +	rrb->request.fh = zdev->fh;
-> +
-> +	return clp_req(rrb, CLP_LPS_PCI);
-> +}
-> +EXPORT_SYMBOL(zdev_query_pci_fn);
-> +
-> +static int clp_query_pci(struct zpci_dev *zdev)
->   {
->   	struct clp_req_rsp_query_pci *rrb;
-> +	struct clp_req_rsp_query_pci_grp *grrb;
->   	int rc;
->   
->   	rrb = clp_alloc_block(GFP_KERNEL);
->   	if (!rrb)
->   		return -ENOMEM;
->   
-> -	memset(rrb, 0, sizeof(*rrb));
-> -	rrb->request.hdr.len = sizeof(rrb->request);
-> -	rrb->request.hdr.cmd = CLP_QUERY_PCI_FN;
-> -	rrb->response.hdr.len = sizeof(rrb->response);
-> -	rrb->request.fh = fh;
-> -
-> -	rc = clp_req(rrb, CLP_LPS_PCI);
-> -	if (!rc && rrb->response.hdr.rsp == CLP_RC_OK) {
-> -		rc = clp_store_query_pci_fn(zdev, &rrb->response);
-> -		if (rc)
-> -			goto out;
-> -		rc = clp_query_pci_fngrp(zdev, rrb->response.pfgid);
-> -	} else {
-> +	rc = zdev_query_pci_fn(zdev, rrb);
-> +	if (rc || rrb->response.hdr.rsp != CLP_RC_OK) {
->   		zpci_err("Q PCI FN:\n");
->   		zpci_err_clp(rrb->response.hdr.rsp, rc);
->   		rc = -EIO;
-> +		goto out;
->   	}
-> +	rc = clp_store_query_pci_fn(zdev, &rrb->response);
-> +	if (rc)
-> +		goto out;
-> +
-> +	grrb = (struct clp_req_rsp_query_pci_grp *)rrb;
-> +	rc = zdev_query_pci_fngrp(zdev, grrb);
-> +	if (rc || grrb->response.hdr.rsp != CLP_RC_OK) {
-> +		zpci_err("Q PCI FGRP:\n");
-> +		zpci_err_clp(grrb->response.hdr.rsp, rc);
-> +		rc = -EIO;
-> +		goto out;
-> +	}
-> +	clp_store_query_pci_fngrp(zdev, &grrb->response);
-> +
->   out:
->   	clp_free_block(rrb);
->   	return rc;
-> @@ -219,7 +223,7 @@ int clp_add_pci_device(u32 fid, u32 fh, int configured)
->   	zdev->fid = fid;
->   
->   	/* Query function properties and update zdev */
-> -	rc = clp_query_pci_fn(zdev, fh);
-> +	rc = clp_query_pci(zdev);
->   	if (rc)
->   		goto error;
->   
+> For the NOOP its clearly stated that it does not start a data transfer.
+> If we pin the CDA, it could then eventually be the cause of errors if 
+> the address indicated by the CDA is not accessible.
 > 
+> The NOOP is a particular CONTROL operation for which no data is transfered.
+> Other CONTROL operation may start a data transfer.
+
+I've just looked at the documentation again.
+
+The Olde Common I/O Device Commands document indicates that a NOOP
+simply causes channel end/device end.
+
+The PoP seems to indicate that the cda is always checked (i.e. does it
+point to a valid memory area?), but I'm not sure whether the area that
+is pointed to is checked for accessibility etc. as well, even if the
+command does not transfer any data.
+
+Has somebody tried to find out what happens on Real Hardware(tm) if you
+send a command that is not supposed to transfer any data where the cda
+points to a valid, but not accessible area?
+
+In general, I think doing the translation (and probably already hitting
+errors there) is better than sending down a guest address.
