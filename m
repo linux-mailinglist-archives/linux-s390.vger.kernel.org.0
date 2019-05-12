@@ -2,112 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3BE3D1A263
-	for <lists+linux-s390@lfdr.de>; Fri, 10 May 2019 19:35:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 38D851AD16
+	for <lists+linux-s390@lfdr.de>; Sun, 12 May 2019 18:47:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfEJRfl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 May 2019 13:35:41 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:52813 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727670AbfEJRfk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 May 2019 13:35:40 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 450y6M3jtnz9v0v1;
-        Fri, 10 May 2019 19:35:39 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=kZKWCqAu; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id FMwJ20pNBoD4; Fri, 10 May 2019 19:35:39 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 450y6M2STLz9v0v0;
-        Fri, 10 May 2019 19:35:39 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1557509739; bh=ETIfNWdjheDxK6ulmt7rGhw92PhKDX8Ycxhn3WkzwA4=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=kZKWCqAuMvyQxiML6fLhAw5/0pfXItFjQa/WP8HryQoMo2SaXCx5RD90E1v1VJeD7
-         XtJInDqwjmZhGYl7KxtOiD84soq4bEeRxlsUH+Vmjaj/OOkkPD4puHedQLGBQsGrhT
-         4k2ym7p54S2XNtZMmeViLG0TrwciZq81wTIhMXy8=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4A2788B95A;
-        Fri, 10 May 2019 19:35:39 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id DBYHnOZ0LvOs; Fri, 10 May 2019 19:35:39 +0200 (CEST)
-Received: from [192.168.232.53] (unknown [192.168.232.53])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 777778B940;
-        Fri, 10 May 2019 19:35:38 +0200 (CEST)
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        Petr Mladek <pmladek@suse.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-References: <20190510081635.GA4533@jagdpanzerIV>
- <20190510084213.22149-1-pmladek@suse.com>
- <20190510122401.21a598f6@gandalf.local.home>
-From:   christophe leroy <christophe.leroy@c-s.fr>
-Message-ID: <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
-Date:   Fri, 10 May 2019 19:35:29 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726553AbfELQro (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 12 May 2019 12:47:44 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:41941 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726529AbfELQro (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 12 May 2019 12:47:44 -0400
+Received: by mail-qt1-f193.google.com with SMTP id y22so8758301qtn.8
+        for <linux-s390@vger.kernel.org>; Sun, 12 May 2019 09:47:43 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=7o3LEQCQPDtmFSsmSC3vipKIcty8VWe+hgkqS93xaSo=;
+        b=Tj6LxJ2mBua7trrIB2zb7RATGfj9VCL6y+9LyQyRa/aD+xrIiA8QrjWGc3m7JlP/zF
+         gbIj8bDFsA8rYaQKDUj4e5xcROQB9XjfzSBHcZOi5/jkGDXX7GSJWaKzq/JGxik9AKsJ
+         WfgchvEBclhdxFdV4kFkURh7nnNLqCbQHNVkDFbOr1W9/YC5aRqrfHPwjOxnbD5bn57y
+         JIRw0kVfTXzNEX/dRs17wiy0S4Szq4+QHc3JzQv5HVcYpjDpJhcX65agk8HEbg7rl+10
+         6GYm0pp0XMpMBWD5uJHLo11QLCvd+CUj+PUWsYLUdCyd+cxsBmGOkpveiRddPTW+llco
+         Gk6Q==
+X-Gm-Message-State: APjAAAXhbiGP3hjgaeQrqTfCXTZIxSYTPskotioeZL+gbmBEAFvyNyzr
+        VyZNMhVvUrRMW2uZ5wCeLptWiw==
+X-Google-Smtp-Source: APXvYqyv5kOot3ZFPGxLHODMB/9bBhskS0nJjpF7PYJWBTsondGf/CRT2l9A/oiQkR/k1B/FZNlcsg==
+X-Received: by 2002:aed:3aaa:: with SMTP id o39mr19851952qte.100.1557679663489;
+        Sun, 12 May 2019 09:47:43 -0700 (PDT)
+Received: from redhat.com (pool-173-76-105-71.bstnma.fios.verizon.net. [173.76.105.71])
+        by smtp.gmail.com with ESMTPSA id e3sm6940655qkn.93.2019.05.12.09.47.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Sun, 12 May 2019 09:47:42 -0700 (PDT)
+Date:   Sun, 12 May 2019 12:47:39 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: Re: [PATCH 01/10] virtio/s390: use vring_create_virtqueue
+Message-ID: <20190512124730-mutt-send-email-mst@kernel.org>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+ <20190426183245.37939-2-pasic@linux.ibm.com>
+ <20190503111724.70c6ec37.cohuck@redhat.com>
+ <20190503160421-mutt-send-email-mst@kernel.org>
+ <20190504160340.29f17b98.pasic@linux.ibm.com>
+ <20190505131523.159bec7c.cohuck@redhat.com>
+ <ed6cbf63-f2ff-f259-ccb0-3b9ba60f2b35@de.ibm.com>
+ <20190510160744.00285367.cohuck@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190510122401.21a598f6@gandalf.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Avast (VPS 190510-2, 10/05/2019), Outbound message
-X-Antivirus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510160744.00285367.cohuck@redhat.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-Le 10/05/2019 à 18:24, Steven Rostedt a écrit :
-> On Fri, 10 May 2019 10:42:13 +0200
-> Petr Mladek <pmladek@suse.com> wrote:
+On Fri, May 10, 2019 at 04:07:44PM +0200, Cornelia Huck wrote:
+> On Tue, 7 May 2019 15:58:12 +0200
+> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 > 
->>   static const char *check_pointer_msg(const void *ptr)
->>   {
->> -	char byte;
->> -
->>   	if (!ptr)
->>   		return "(null)";
->>   
->> -	if (probe_kernel_address(ptr, byte))
->> +	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
->>   		return "(efault)";
->>   
+> > On 05.05.19 13:15, Cornelia Huck wrote:
+> > > On Sat, 4 May 2019 16:03:40 +0200
+> > > Halil Pasic <pasic@linux.ibm.com> wrote:
+> > >   
+> > >> On Fri, 3 May 2019 16:04:48 -0400
+> > >> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> > >>  
+> > >>> On Fri, May 03, 2019 at 11:17:24AM +0200, Cornelia Huck wrote:    
+> > >>>> On Fri, 26 Apr 2019 20:32:36 +0200
+> > >>>> Halil Pasic <pasic@linux.ibm.com> wrote:
+> > >>>>     
+> > >>>>> The commit 2a2d1382fe9d ("virtio: Add improved queue allocation API")
+> > >>>>> establishes a new way of allocating virtqueues (as a part of the effort
+> > >>>>> that taught DMA to virtio rings).
+> > >>>>>
+> > >>>>> In the future we will want virtio-ccw to use the DMA API as well.
+> > >>>>>
+> > >>>>> Let us switch from the legacy method of allocating virtqueues to
+> > >>>>> vring_create_virtqueue() as the first step into that direction.
+> > >>>>>
+> > >>>>> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > >>>>> ---
+> > >>>>>  drivers/s390/virtio/virtio_ccw.c | 30 +++++++++++-------------------
+> > >>>>>  1 file changed, 11 insertions(+), 19 deletions(-)    
+> > >>>>
+> > >>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> > >>>>
+> > >>>> I'd vote for merging this patch right away for 5.2.    
+> > >>>
+> > >>> So which tree is this going through? mine?
+> > >>>     
+> > >>
+> > >> Christian, what do you think? If the whole series is supposed to go in
+> > >> in one go (which I hope it is), via Martin's tree could be the simplest
+> > >> route IMHO.  
+> > > 
+> > > 
+> > > The first three patches are virtio(-ccw) only and the those are the ones
+> > > that I think are ready to go.
+> > > 
+> > > I'm not feeling comfortable going forward with the remainder as it
+> > > stands now; waiting for some other folks to give feedback. (They are
+> > > touching/interacting with code parts I'm not so familiar with, and lack
+> > > of documentation, while not the developers' fault, does not make it
+> > > easier.)
+> > > 
+> > > Michael, would you like to pick up 1-3 for your tree directly? That
+> > > looks like the easiest way.  
+> > 
+> > Agreed. Michael please pick 1-3.
+> > We will continue to review 4- first and then see which tree is best.
 > 
+> Michael, please let me know if you'll pick directly or whether I should
+> post a series.
 > 
-> 	< PAGE_SIZE ?
-> 
-> do you mean: < TASK_SIZE ?
+> [Given that the patches are from one virtio-ccw maintainer and reviewed
+> by the other, picking directly would eliminate an unnecessary
+> indirection :)]
 
-I guess not.
-
-Usually, < PAGE_SIZE means NULL pointer dereference (via the member of a 
-struct)
-
-Christophe
-
----
-L'absence de virus dans ce courrier électronique a été vérifiée par le logiciel antivirus Avast.
-https://www.avast.com/antivirus
-
+picked them
