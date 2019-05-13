@@ -2,71 +2,63 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B18311B7E3
-	for <lists+linux-s390@lfdr.de>; Mon, 13 May 2019 16:15:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB48F1BBE0
+	for <lists+linux-s390@lfdr.de>; Mon, 13 May 2019 19:26:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726274AbfEMOPy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 13 May 2019 10:15:54 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45072 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729340AbfEMOPy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 13 May 2019 10:15:54 -0400
-Received: from oasis.local.home (unknown [12.174.139.122])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4136C20862;
-        Mon, 13 May 2019 14:15:52 +0000 (UTC)
-Date:   Mon, 13 May 2019 10:15:50 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Petr Mladek <pmladek@suse.com>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        'christophe leroy' <christophe.leroy@c-s.fr>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
+        id S1731646AbfEMR0z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 May 2019 13:26:55 -0400
+Received: from utopia.booyaka.com ([74.50.51.50]:50198 "EHLO
+        utopia.booyaka.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731633AbfEMR0z (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 13 May 2019 13:26:55 -0400
+Received: (qmail 5770 invoked by uid 1019); 13 May 2019 17:20:13 -0000
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 13 May 2019 17:20:13 -0000
+Date:   Mon, 13 May 2019 17:20:13 +0000 (UTC)
+From:   Paul Walmsley <paul@pwsan.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing
- addresses
-Message-ID: <20190513101550.736fb5f6@oasis.local.home>
-In-Reply-To: <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
-References: <20190510081635.GA4533@jagdpanzerIV>
-        <20190510084213.22149-1-pmladek@suse.com>
-        <20190510122401.21a598f6@gandalf.local.home>
-        <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
-        <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
-        <20190513091320.GK9224@smile.fi.intel.com>
-        <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        linux-s390@vger.kernel.org, Albert Ou <aou@eecs.berkeley.edu>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        linux-riscv@lists.infradead.org, Vincent Chen <deanbo422@gmail.com>
+Subject: Re: [PATCH] s390: move arch/s390/defconfig to
+ arch/s390/configs/defconfig
+In-Reply-To: <20190513021116.12191-1-yamada.masahiro@socionext.com>
+Message-ID: <alpine.DEB.2.21.999.1905131719430.5613@utopia.booyaka.com>
+References: <20190513021116.12191-1-yamada.masahiro@socionext.com>
+User-Agent: Alpine 2.21.999 (DEB 260 2018-02-26)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 13 May 2019 14:42:20 +0200
-Petr Mladek <pmladek@suse.com> wrote:
+On Mon, 13 May 2019, Masahiro Yamada wrote:
 
-> > The "(null)" is good enough by itself and already an established
-> > practice..  
+> As of Linux 5.1, alpha and s390 are the last architectures that
+> have defconfig in arch/*/ instead of arch/*/configs/.
 > 
-> (efault) made more sense with the probe_kernel_read() that
-> checked wide range of addresses. Well, I still think that
-> it makes sense to distinguish a pure NULL. And it still
-> used also for IS_ERR_VALUE().
+>   $ find arch -name defconfig | sort
+>   arch/alpha/defconfig
+>   arch/arm64/configs/defconfig
+>   arch/csky/configs/defconfig
+>   arch/nds32/configs/defconfig
+>   arch/riscv/configs/defconfig
+>   arch/s390/defconfig
+> 
+> The arch/$(ARCH)/defconfig is the hard-coded default in Kconfig,
+> and I want to deprecate it after evacuating the remaining defconfig
+> into the standard location, arch/*/configs/.
+> 
+> Define KBUILD_DEFCONFIG like other architectures, and move defconfig
+> into the configs/ subdirectory.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Why not just "(fault)"? That is self descriptive enough.
+Reviewed-by: Paul Walmsley <paul@pwsan.com>
 
--- Steve
+- Paul
