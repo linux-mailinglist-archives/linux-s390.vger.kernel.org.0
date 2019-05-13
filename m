@@ -2,95 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49D581B290
-	for <lists+linux-s390@lfdr.de>; Mon, 13 May 2019 11:14:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FB471B30C
+	for <lists+linux-s390@lfdr.de>; Mon, 13 May 2019 11:41:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728621AbfEMJN2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 13 May 2019 05:13:28 -0400
-Received: from mga07.intel.com ([134.134.136.100]:34770 "EHLO mga07.intel.com"
+        id S1728636AbfEMJlp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 May 2019 05:41:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54020 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728616AbfEMJN1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 13 May 2019 05:13:27 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 13 May 2019 02:13:26 -0700
-X-ExtLoop1: 1
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by orsmga007.jf.intel.com with ESMTP; 13 May 2019 02:13:21 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hQ71M-0007f0-23; Mon, 13 May 2019 12:13:20 +0300
-Date:   Mon, 13 May 2019 12:13:20 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     David Laight <David.Laight@ACULAB.COM>
-Cc:     'christophe leroy' <christophe.leroy@c-s.fr>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Petr Mladek <pmladek@suse.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190513091320.GK9224@smile.fi.intel.com>
-References: <20190510081635.GA4533@jagdpanzerIV>
- <20190510084213.22149-1-pmladek@suse.com>
- <20190510122401.21a598f6@gandalf.local.home>
- <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
- <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
+        id S1726274AbfEMJlp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 13 May 2019 05:41:45 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 64DBE81F07;
+        Mon, 13 May 2019 09:41:44 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C9641001DDE;
+        Mon, 13 May 2019 09:41:39 +0000 (UTC)
+Date:   Mon, 13 May 2019 11:41:36 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: Re: [PATCH 06/10] s390/cio: add basic protected virtualization
+ support
+Message-ID: <20190513114136.783c851c.cohuck@redhat.com>
+In-Reply-To: <20190426183245.37939-7-pasic@linux.ibm.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-7-pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 13 May 2019 09:41:44 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 13, 2019 at 08:52:41AM +0000, David Laight wrote:
-> From: christophe leroy
-> > Sent: 10 May 2019 18:35
-> > Le 10/05/2019 à 18:24, Steven Rostedt a écrit :
-> > > On Fri, 10 May 2019 10:42:13 +0200
-> > > Petr Mladek <pmladek@suse.com> wrote:
+On Fri, 26 Apr 2019 20:32:41 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> > >> -	if (probe_kernel_address(ptr, byte))
-> > >> +	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
-> > >>   		return "(efault)";
+> As virtio-ccw devices are channel devices, we need to use the dma area
+> for any communication with the hypervisor.
 > 
-> "efault" looks a bit like a spellling mistake for "default".
+> This patch addresses the most basic stuff (mostly what is required for
+> virtio-ccw), and does take care of QDIO or any devices.
 
-It's a special, thus it's in parenthesis, though somebody can be
-misguided.
+"does not take care of QDIO", surely? (Also, what does "any devices"
+mean? Do you mean "every arbitrary device", perhaps?)
 
-> > Usually, < PAGE_SIZE means NULL pointer dereference (via the member of a
-> > struct)
 > 
-> Maybe the caller should pass in a short buffer so that you can return
-> "(err-%d)"
-> or "(null+%#x)" ?
+> An interesting side effect is that virtio structures are now going to
+> get allocated in 31 bit addressable storage.
 
-In both cases it should be limited to the size of pointer (8 or 16
-characters). Something like "(e:%4d)" would work for error codes.
+Hm...
 
-The "(null)" is good enough by itself and already an established
-practice..
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/ccwdev.h   |  4 +++
+>  drivers/s390/cio/ccwreq.c        |  8 ++---
+>  drivers/s390/cio/device.c        | 65 +++++++++++++++++++++++++++++++++-------
+>  drivers/s390/cio/device_fsm.c    | 40 ++++++++++++-------------
+>  drivers/s390/cio/device_id.c     | 18 +++++------
+>  drivers/s390/cio/device_ops.c    | 21 +++++++++++--
+>  drivers/s390/cio/device_pgid.c   | 20 ++++++-------
+>  drivers/s390/cio/device_status.c | 24 +++++++--------
+>  drivers/s390/cio/io_sch.h        | 21 +++++++++----
+>  drivers/s390/virtio/virtio_ccw.c | 10 -------
+>  10 files changed, 148 insertions(+), 83 deletions(-)
 
--- 
-With Best Regards,
-Andy Shevchenko
+(...)
 
+> diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> index 6d989c360f38..bb7a92316fc8 100644
+> --- a/drivers/s390/virtio/virtio_ccw.c
+> +++ b/drivers/s390/virtio/virtio_ccw.c
+> @@ -66,7 +66,6 @@ struct virtio_ccw_device {
+>  	bool device_lost;
+>  	unsigned int config_ready;
+>  	void *airq_info;
+> -	u64 dma_mask;
+>  };
+>  
+>  struct vq_info_block_legacy {
+> @@ -1255,16 +1254,7 @@ static int virtio_ccw_online(struct ccw_device *cdev)
+>  		ret = -ENOMEM;
+>  		goto out_free;
+>  	}
+> -
+>  	vcdev->vdev.dev.parent = &cdev->dev;
+> -	cdev->dev.dma_mask = &vcdev->dma_mask;
+> -	/* we are fine with common virtio infrastructure using 64 bit DMA */
+> -	ret = dma_set_mask_and_coherent(&cdev->dev, DMA_BIT_MASK(64));
+> -	if (ret) {
+> -		dev_warn(&cdev->dev, "Failed to enable 64-bit DMA.\n");
+> -		goto out_free;
+> -	}
+
+This means that vring structures now need to fit into 31 bits as well,
+I think? Is there any way to reserve the 31 bit restriction for channel
+subsystem structures and keep vring in the full 64 bit range? (Or am I
+fundamentally misunderstanding something?)
+
+> -
+>  	vcdev->config_block = kzalloc(sizeof(*vcdev->config_block),
+>  				   GFP_DMA | GFP_KERNEL);
+>  	if (!vcdev->config_block) {
 
