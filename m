@@ -2,81 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F4B91B5BA
-	for <lists+linux-s390@lfdr.de>; Mon, 13 May 2019 14:20:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1E4F1B5C5
+	for <lists+linux-s390@lfdr.de>; Mon, 13 May 2019 14:24:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729813AbfEMMUS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 13 May 2019 08:20:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38078 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727414AbfEMMUS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 13 May 2019 08:20:18 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5530E309266B;
-        Mon, 13 May 2019 12:20:18 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 37D7563F76;
-        Mon, 13 May 2019 12:20:13 +0000 (UTC)
-Date:   Mon, 13 May 2019 14:20:10 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>
-Subject: Re: [PATCH 10/10] virtio/s390: make airq summary indicators DMA
-Message-ID: <20190513142010.36c8478f.cohuck@redhat.com>
-In-Reply-To: <20190426183245.37939-11-pasic@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com>
-        <20190426183245.37939-11-pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1729166AbfEMMY3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 May 2019 08:24:29 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33716 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727414AbfEMMY2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 13 May 2019 08:24:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3605CAEFC;
+        Mon, 13 May 2019 12:24:27 +0000 (UTC)
+Date:   Mon, 13 May 2019 14:24:24 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org, Russell Currey <ruscur@russell.cc>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-arch@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+Message-ID: <20190513122424.ynaox4v77uhgmvn6@pathway.suse.cz>
+References: <20190510081635.GA4533@jagdpanzerIV>
+ <20190510084213.22149-1-pmladek@suse.com>
+ <20190510122401.21a598f6@gandalf.local.home>
+ <20190510183258.1f6c4153@mschwideX1>
+ <20190510124058.0d44b441@gandalf.local.home>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 13 May 2019 12:20:18 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190510124058.0d44b441@gandalf.local.home>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 26 Apr 2019 20:32:45 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
-
-> Hypervisor needs to interact with the summary indicators, so these
-> need to be DMA memory as well (at least for protected virtualization
-> guests).
+On Fri 2019-05-10 12:40:58, Steven Rostedt wrote:
+> On Fri, 10 May 2019 18:32:58 +0200
+> Martin Schwidefsky <schwidefsky@de.ibm.com> wrote:
 > 
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> ---
->  drivers/s390/virtio/virtio_ccw.c | 24 +++++++++++++++++-------
->  1 file changed, 17 insertions(+), 7 deletions(-)
+> > On Fri, 10 May 2019 12:24:01 -0400
+> > Steven Rostedt <rostedt@goodmis.org> wrote:
+> > 
+> > > On Fri, 10 May 2019 10:42:13 +0200
+> > > Petr Mladek <pmladek@suse.com> wrote:
+> > >   
+> > > >  static const char *check_pointer_msg(const void *ptr)
+> > > >  {
+> > > > -	char byte;
+> > > > -
+> > > >  	if (!ptr)
+> > > >  		return "(null)";
+> > > >  
+> > > > -	if (probe_kernel_address(ptr, byte))
+> > > > +	if ((unsigned long)ptr < PAGE_SIZE || IS_ERR_VALUE(ptr))
+> > > >  		return "(efault)";
+> > > >      
+> > > 
+> > > 
+> > > 	< PAGE_SIZE ?
+> > > 
+> > > do you mean: < TASK_SIZE ?  
+> > 
+> > The check with < TASK_SIZE would break on s390. The 'ptr' is
+> > in the kernel address space, *not* in the user address space.
+> > Remember s390 has two separate address spaces for kernel/user
+> > the check < TASK_SIZE only makes sense with a __user pointer.
+> > 
+> 
+> So we allow this to read user addresses? Can't that cause a fault?
 
-(...)
+I did some quick check and did not found anywhere a user pointer
+being dereferenced via vsprintf().
 
-> @@ -237,7 +243,8 @@ static void virtio_airq_handler(struct airq_struct *airq)
->  	read_unlock(&info->lock);
->  }
->  
-> -static struct airq_info *new_airq_info(void)
-> +/* call with airq_areas_lock held */
+In each case, %s did the check (ptr < PAGE_SIZE) even before this
+patchset. The other checks are in %p format modifiers that are
+used to print various kernel structures.
 
-Hm, where is airq_areas_lock defined? If it was introduced in one of
-the previous patches, I have missed it.
+Finally, it accesses the pointer directly. I am not completely sure
+but I think that it would not work that easily with an address
+from the user address space.
 
-> +static struct airq_info *new_airq_info(int index)
->  {
->  	struct airq_info *info;
->  	int rc;
+Best Regards,
+Petr
