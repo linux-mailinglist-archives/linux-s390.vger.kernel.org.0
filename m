@@ -2,72 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7062F1C353
-	for <lists+linux-s390@lfdr.de>; Tue, 14 May 2019 08:39:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D871F1C4EA
+	for <lists+linux-s390@lfdr.de>; Tue, 14 May 2019 10:28:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726007AbfENGjx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 May 2019 02:39:53 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:36332 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725866AbfENGjw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 14 May 2019 02:39:52 -0400
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 425E271A0A9898DCDD33;
-        Tue, 14 May 2019 14:39:49 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 14 May 2019
- 14:39:39 +0800
-From:   YueHaibing <yuehaibing@huawei.com>
-To:     <davem@davemloft.net>, <ubraun@linux.ibm.com>,
-        <kgraul@linux.ibm.com>, <hwippel@linux.ibm.com>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] net/smc: Fix error path in smc_init
-Date:   Tue, 14 May 2019 14:39:21 +0800
-Message-ID: <20190514063921.41088-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        id S1726525AbfENI20 convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 14 May 2019 04:28:26 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:48901 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726554AbfENI2Z (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 14 May 2019 04:28:25 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-28-QSu0seGsPgOZSvrndg-J7w-1; Tue, 14 May 2019 09:28:22 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
+ (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue,
+ 14 May 2019 09:28:22 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Tue, 14 May 2019 09:28:22 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Sergey Senozhatsky' <sergey.senozhatsky.work@gmail.com>,
+        Petr Mladek <pmladek@suse.com>
+CC:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        'christophe leroy' <christophe.leroy@c-s.fr>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        "Linus Torvalds" <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        Russell Currey <ruscur@russell.cc>,
+        "Stephen Rothwell" <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: RE: [PATCH] vsprintf: Do not break early boot with probing addresses
+Thread-Topic: [PATCH] vsprintf: Do not break early boot with probing addresses
+Thread-Index: AQHVB1bC/iTC8Q7sI0elwkZY5/gFJaZowlxwgAEika2AAGmPsA==
+Date:   Tue, 14 May 2019 08:28:21 +0000
+Message-ID: <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
+References: <20190510081635.GA4533@jagdpanzerIV>
+ <20190510084213.22149-1-pmladek@suse.com>
+ <20190510122401.21a598f6@gandalf.local.home>
+ <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
+ <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
+ <20190513091320.GK9224@smile.fi.intel.com>
+ <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
+ <20190514020730.GA651@jagdpanzerIV>
+In-Reply-To: <20190514020730.GA651@jagdpanzerIV>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+X-MC-Unique: QSu0seGsPgOZSvrndg-J7w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-If register_pernet_subsys success in smc_init,
-we should cleanup it in case any other error.
+> And I like Steven's "(fault)" idea.
+> How about this:
+> 
+> 	if ptr < PAGE_SIZE		-> "(null)"
+> 	if IS_ERR_VALUE(ptr)		-> "(fault)"
+> 
+> 	-ss
 
-Fixes: 64e28b52c7a6 (net/smc: add pnet table namespace support")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- net/smc/af_smc.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Or:
+	if (ptr < PAGE_SIZE)
+		return ptr ? "(null+)" : "(null)";
+	if IS_ERR_VALUE(ptr)
+		return "(errno)"
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 6f869ef..7d3207f 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -2019,7 +2019,7 @@ static int __init smc_init(void)
- 
- 	rc = smc_pnet_init();
- 	if (rc)
--		return rc;
-+		goto out_pernet_subsys;
- 
- 	rc = smc_llc_init();
- 	if (rc) {
-@@ -2070,6 +2070,9 @@ static int __init smc_init(void)
- 	proto_unregister(&smc_proto);
- out_pnet:
- 	smc_pnet_exit();
-+out_pernet_subsys:
-+	unregister_pernet_subsys(&smc_net_ops);
-+
- 	return rc;
- }
- 
--- 
-1.8.3.1
+	David
 
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
