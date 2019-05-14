@@ -2,90 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ED3AB1D005
-	for <lists+linux-s390@lfdr.de>; Tue, 14 May 2019 21:35:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34DF71E5B4
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 01:43:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726036AbfENTfG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 May 2019 15:35:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44000 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfENTfG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 14 May 2019 15:35:06 -0400
-Received: from oasis.local.home (50-204-120-225-static.hfc.comcastbusiness.net [50.204.120.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA36E2086A;
-        Tue, 14 May 2019 19:35:04 +0000 (UTC)
-Date:   Tue, 14 May 2019 15:35:03 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     David Laight <David.Laight@aculab.com>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        christophe leroy <christophe.leroy@c-s.fr>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        Russell Currey <ruscur@russell.cc>,
-        Stephen Rothwell <sfr@ozlabs.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing
- addresses
-Message-ID: <20190514153503.6b7faaa7@oasis.local.home>
-In-Reply-To: <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
-References: <20190510081635.GA4533@jagdpanzerIV>
-        <20190510084213.22149-1-pmladek@suse.com>
-        <20190510122401.21a598f6@gandalf.local.home>
-        <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
-        <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
-        <20190513091320.GK9224@smile.fi.intel.com>
-        <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
-        <20190514020730.GA651@jagdpanzerIV>
-        <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
-        <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
-        <20190514143751.48e81e05@oasis.local.home>
-        <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726752AbfENXm7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 May 2019 19:42:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38140 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726740AbfENXm6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 14 May 2019 19:42:58 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4ENMFLS022014
+        for <linux-s390@vger.kernel.org>; Tue, 14 May 2019 19:42:58 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sg3srge2g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 14 May 2019 19:42:57 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
+        Wed, 15 May 2019 00:42:55 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 May 2019 00:42:53 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4ENgpt049676516
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 May 2019 23:42:51 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 84ED7A4054;
+        Tue, 14 May 2019 23:42:51 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 73A4AA405F;
+        Tue, 14 May 2019 23:42:51 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 14 May 2019 23:42:51 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id 2AEE5E05B9; Wed, 15 May 2019 01:42:51 +0200 (CEST)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>, Farhan Ali <alifm@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Eric Farman <farman@linux.ibm.com>
+Subject: [PATCH v2 0/7] s390: vfio-ccw fixes
+Date:   Wed, 15 May 2019 01:42:41 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19051423-0028-0000-0000-0000036DBABA
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051423-0029-0000-0000-0000242D4E68
+Message-Id: <20190514234248.36203-1-farman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-14_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=935 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905140153
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 14 May 2019 21:13:06 +0200
-Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+The attached are a few fixes to the vfio-ccw kernel code for potential
+errors or architecture anomalies.  Under normal usage, and even most
+abnormal usage, they don't expose any problems to a well-behaved guest
+and its devices.  But, they are deficiencies just the same and could
+cause some weird behavior if they ever popped up in real life.
 
-> > > Do we care about the value? "(-E%u)"?  
-> >
-> > That too could be confusing. What would (-E22) be considered by a user
-> > doing an sprintf() on some string. I know that would confuse me, or I
-> > would think that it was what the %pX displayed, and wonder why it
-> > displayed it that way. Whereas "(fault)" is quite obvious for any %p
-> > use case.  
-> 
-> I would immediately understand there's a missing IS_ERR() check in a
-> function that can return  -EINVAL, without having to add a new printk()
-> to find out what kind of bogus value has been received, and without
-> having to reboot, and trying to reproduce...
+I have tried to arrange these patches in a "solves a noticeable problem
+with existing workloads" to "solves a theoretical problem with
+hypothetical workloads" order.  This way, the bigger ones at the end
+can be discussed without impeding the smaller and more impactful ones
+at the start.
 
-Hi Geert,
+Per the conversations on patch 7, the last several patches remain
+unchanged.  They continue to buid an IDAL for each CCW, and only pin
+guest pages and assign the resulting addresses to IDAWs if they are
+expected to cause a data transfer.  This will avoid sending an
+unmodified guest address, which may be invalid but anyway is not mapped
+to the same host address, in the IDAL sent to the channel subsystem and
+any unexpected behavior that may result.
 
-I have to ask. Has there actually been a case that you used a %pX and
-it faulted, and you had to go back to find what the value of the
-failure was?
+They are based on 5.1.0, not Conny's vfio-ccw tree even though there are
+some good fixes pending for 5.2 there.  I've run this series both with
+and without that code, but couldn't decide which base would provide an
+easier time applying patches.  "I think" they should apply fine to both,
+but I apologize in advance if I guessed wrong!  :)
 
-IMO, sprintf() should not be a tool to do this, because then people
-will not add their IS_ERR() and just let sprintf() do the job for them.
-I don't think that would be wise to allow.
 
--- Steve
+Changelog:
+ v1 -> v2:
+  - Patch 1:
+     - [Cornelia] Added a code comment about why we update the SCSW when
+       we've gone past the end of the chain for normal, successful, I/O
+  - Patch 2:
+     - [Cornelia] Cleaned up the cc info in the commit message
+     - [Pierre] Added r-b
+  - Patch 3:
+     - [Cornelia] Update the return code information in prologue of
+       pfn_array_pin(), and then only call vfio_unpin_pages() if we
+       pinned anything, rather than silently creating an error
+       (this last bit was mentioned on patch 6, but applied here)
+     - [Eric] Clean up the error exit in pfn_array_pin()
+  - Patch 4-7 unchanged
+
+Eric Farman (7):
+  s390/cio: Update SCSW if it points to the end of the chain
+  s390/cio: Set vfio-ccw FSM state before ioeventfd
+  s390/cio: Split pfn_array_alloc_pin into pieces
+  s390/cio: Initialize the host addresses in pfn_array
+  s390/cio: Allow zero-length CCWs in vfio-ccw
+  s390/cio: Don't pin vfio pages for empty transfers
+  s390/cio: Remove vfio-ccw checks of command codes
+
+ drivers/s390/cio/vfio_ccw_cp.c  | 159 +++++++++++++++++++++++---------
+ drivers/s390/cio/vfio_ccw_drv.c |   6 +-
+ 2 files changed, 119 insertions(+), 46 deletions(-)
+
+-- 
+2.17.1
+
