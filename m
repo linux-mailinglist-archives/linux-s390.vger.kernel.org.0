@@ -2,115 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CB451F6A2
-	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 16:36:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A55E1F6B4
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 16:39:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726424AbfEOOgc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 May 2019 10:36:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48608 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726753AbfEOOgc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 May 2019 10:36:32 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FEa2RR122150
-        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 10:36:30 -0400
-Received: from e36.co.us.ibm.com (e36.co.us.ibm.com [32.97.110.154])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgmm7g495-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 10:36:30 -0400
-Received: from localhost
-        by e36.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
-        Wed, 15 May 2019 15:36:28 +0100
-Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
-        by e36.co.us.ibm.com (192.168.1.136) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 May 2019 15:36:27 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FEaPSJ66781336
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 14:36:25 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A23CEC605B;
-        Wed, 15 May 2019 14:36:25 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1AC46C605A;
-        Wed, 15 May 2019 14:36:25 +0000 (GMT)
-Received: from [9.56.58.102] (unknown [9.56.58.102])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 15 May 2019 14:36:24 +0000 (GMT)
-Subject: Re: [PATCH v2 2/7] s390/cio: Set vfio-ccw FSM state before ioeventfd
-To:     Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <20190514234248.36203-1-farman@linux.ibm.com>
- <20190514234248.36203-3-farman@linux.ibm.com>
-From:   Farhan Ali <alifm@linux.ibm.com>
-Date:   Wed, 15 May 2019 10:36:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        id S1727422AbfEOOj1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 May 2019 10:39:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57012 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726452AbfEOOj1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 May 2019 10:39:27 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0BF1451471;
+        Wed, 15 May 2019 14:39:11 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7F2A15D706;
+        Wed, 15 May 2019 14:39:01 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 15 May 2019 16:39:08 +0200 (CEST)
+Date:   Wed, 15 May 2019 16:38:58 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, dhowells@redhat.com, akpm@linux-foundation.org,
+        cyphar@cyphar.com, ebiederm@xmission.com,
+        elena.reshetova@intel.com, keescook@chromium.org,
+        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/2] pid: add pidfd_open()
+Message-ID: <20190515143857.GB18892@redhat.com>
+References: <20190515100400.3450-1-christian@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <20190514234248.36203-3-farman@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051514-0020-0000-0000-00000EE92B92
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011102; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01203702; UDB=6.00631846; IPR=6.00984629;
- MB=3.00026905; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-15 14:36:28
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051514-0021-0000-0000-000065D599C6
-Message-Id: <0b35722f-1f02-7369-cdd1-b7470144aea4@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905150090
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515100400.3450-1-christian@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 15 May 2019 14:39:26 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 05/14/2019 07:42 PM, Eric Farman wrote:
-> Otherwise, the guest can believe it's okay to start another I/O
-> and bump into the non-idle state.  This results in a cc=2 (with
-> the asynchronous CSCH/HSCH code) returned to the guest, which is
-> unfortunate since everything is otherwise working normally.
-> 
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->   drivers/s390/cio/vfio_ccw_drv.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> index 0b3b9de45c60..ddd21b6149fd 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -86,11 +86,11 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
->   	}
->   	memcpy(private->io_region->irb_area, irb, sizeof(*irb));
->   
-> -	if (private->io_trigger)
-> -		eventfd_signal(private->io_trigger, 1);
-> -
->   	if (private->mdev && is_final)
->   		private->state = VFIO_CCW_STATE_IDLE;
+On 05/15, Christian Brauner wrote:
+>
+> +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+> +{
+> +	int fd, ret;
+> +	struct pid *p;
+> +	struct task_struct *tsk;
 > +
-> +	if (private->io_trigger)
-> +		eventfd_signal(private->io_trigger, 1);
->   }
->   
->   /*
-> 
-Reviewed-by: Farhan Ali <alifm@linux.ibm.com>
+> +	if (flags)
+> +		return -EINVAL;
+> +
+> +	if (pid <= 0)
+> +		return -EINVAL;
+> +
+> +	p = find_get_pid(pid);
+> +	if (!p)
+> +		return -ESRCH;
+> +
+> +	rcu_read_lock();
+> +	tsk = pid_task(p, PIDTYPE_PID);
+
+You do not need find_get_pid() before rcu_lock and put_pid() at the end.
+You can just do find_vpid() under rcu_read_lock().
+
+> +	if (!tsk)
+> +		ret = -ESRCH;
+> +	else if (unlikely(!thread_group_leader(tsk)))
+> +		ret = -EINVAL;
+
+it seems that you can do a single check
+
+	tsk = pid_task(p, PIDTYPE_TGID);
+	if (!tsk)
+		ret = -ESRCH;
+
+this even looks more correct if we race with exec changing the leader.
+
+Oleg.
 
