@@ -2,53 +2,48 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC20F1E838
-	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 08:21:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CEAF51E8EE
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 09:23:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725912AbfEOGVR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 May 2019 02:21:17 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34063 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfEOGVQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 May 2019 02:21:16 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w7so820478plz.1;
-        Tue, 14 May 2019 23:21:16 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=vpr9qeWej7/xdaLzfL7kzDfFrVNMEMZWeQ2yDGuvcWA=;
-        b=o375KU68c6cq1L9rhDvFqMLy/36KzkumU5eyglTJpzMIPwAslM+THguYtGV24yszrB
-         AfYo9WtSVI4YPeApa2se9off1OySDBkrKN7buQLJmfCNI/aUK7RfjMnE/bGxwyACd7HW
-         g43h4W/w7cF1ebM7p3GlKDoMC/No0MM/60V7FFaBW4jE3VheGcBQfsSDliKPbh80RMYI
-         dOTUBqDXrX4eE2LtTtSOQAHYRUCrNB5AZxKgRYAE1MmJfuYWQBqZx6l5sqSUhtrZ1gg1
-         924TKUokkcN8xRTqUfEE68pHktdBzMgi/pqoWUNqh/12ErYeobF1s95PpggCN9DKAtsk
-         f1rQ==
+        id S1725902AbfEOHXT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 May 2019 03:23:19 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:36417 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725871AbfEOHXS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 May 2019 03:23:18 -0400
+Received: by mail-ua1-f68.google.com with SMTP id 94so87935uam.3;
+        Wed, 15 May 2019 00:23:18 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=vpr9qeWej7/xdaLzfL7kzDfFrVNMEMZWeQ2yDGuvcWA=;
-        b=f8nL02xSEYVSbcj6sJKVmwUBPhGsE4ITx1ly+NWa0OYFUyFGyYGRWfoL5YNj46+0hT
-         qRCZeAFD2MHkWsLxZ2I1gEVzKQ7fqPfopCQTAai3Nqib5FzIBrzfCxg6G/bF1dhbykPU
-         bZweLAuWJcjxVg64qxDgTt/TvGYD+yjRycN3FzffI3chGVYwd0ZqNyIj+/OIIUQnF+mP
-         gt3e0y1+9uF4SQdgeSYK2E7HOXm/OD/4b1UKfo7nhC5hCZIu9hfmZhmC3U/t5iCjwZjd
-         c60dyfnbzfONgwCXTrzS7zz+3CnEdGQ9x2kb8/E1VS/eKEsJFHVvw8m4La8dJrReiMA2
-         IZyQ==
-X-Gm-Message-State: APjAAAUoi/Lg/x/VT3FgLL1CnuH/RZJSrZcEWbYnKKJSmVCM3DJOnyO4
-        mPzG4XMVCNU2/diw0kZFz3I=
-X-Google-Smtp-Source: APXvYqzRJKRDGGgSFBUw3D9wrq2bEKNWyL8HrksRCPNPrE+2T1MlywAkkHnSpqiXENFfwknkCI68dQ==
-X-Received: by 2002:a17:902:6bc8:: with SMTP id m8mr41177371plt.227.1557901275995;
-        Tue, 14 May 2019 23:21:15 -0700 (PDT)
-Received: from localhost ([110.70.52.120])
-        by smtp.gmail.com with ESMTPSA id f4sm1300687pfn.118.2019.05.14.23.21.14
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 14 May 2019 23:21:14 -0700 (PDT)
-Date:   Wed, 15 May 2019 15:21:11 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Geert Uytterhoeven <geert@linux-m68k.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        David Laight <David.Laight@aculab.com>,
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=D6y3Txro2Y80xJMXPF/WXXyGFbfglpcuRYylKAaykOs=;
+        b=G4d5TbL2zXDn5f9I+chOsiGhFl10gM57db35uOamciP3gknJPcKVAPQ91SGx5xumQ9
+         tvb51SUNSptNd5quVQ29U/dlzr49oSMN2kg61B+NDMqNh118Anjl577d7R4f9IV2G5Rm
+         WWalbCsPJzu6IixyqHD8SxelZOfrxdanwBT9E1K8rJrZfzMPQXiw+QlDQLFFV5HzWztC
+         FinsSG8D1crlV7wGLP63W3JJgBtGI+uAIwWbrYHxSxGKqbBfMRfkIW5OpXpXeEDoekkb
+         YUbKyC3AYzdUDWVwXRtGr2bimNvLIrpD0Y9/bb6Asejx5QcuZ0cDYynoosigb4ODS4nT
+         DJHA==
+X-Gm-Message-State: APjAAAWZsGZ6LjNx1HBrEMY9eAuDJxvGx3efvWJrJaCXgkWAskar6KMB
+        fK+OLxwNDPKg36z491yliv+KRlWAlzinHoI0xyhl+w==
+X-Google-Smtp-Source: APXvYqwXjd7ZJQ8Ru9EPguJi1io4zPagRBwnSJVZX+f303p0r2QyE6ajAOtJrnYR8sRf8L5ySdKBcnfwbQtAINpBUKc=
+X-Received: by 2002:ab0:6419:: with SMTP id x25mr19591138uao.86.1557904997683;
+ Wed, 15 May 2019 00:23:17 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190510081635.GA4533@jagdpanzerIV> <20190510084213.22149-1-pmladek@suse.com>
+ <20190510122401.21a598f6@gandalf.local.home> <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
+ <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com> <20190513091320.GK9224@smile.fi.intel.com>
+ <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz> <20190514020730.GA651@jagdpanzerIV>
+ <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com> <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
+ <20190514143751.48e81e05@oasis.local.home> <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
+ <20190514153503.6b7faaa7@oasis.local.home>
+In-Reply-To: <20190514153503.6b7faaa7@oasis.local.home>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Wed, 15 May 2019 09:23:05 +0200
+Message-ID: <CAMuHMdUFEwxwQUWg0HNUiz75hP6S7TVGSx7fWXnsQ_3qsVfotQ@mail.gmail.com>
+Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     David Laight <David.Laight@aculab.com>,
         Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
         Petr Mladek <pmladek@suse.com>,
         Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
@@ -66,35 +61,49 @@ Cc:     Steven Rostedt <rostedt@goodmis.org>,
         "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
         "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
         Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH] vsprintf: Do not break early boot with probing addresses
-Message-ID: <20190515062111.GA30030@jagdpanzerIV>
-References: <20190510122401.21a598f6@gandalf.local.home>
- <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
- <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
- <20190513091320.GK9224@smile.fi.intel.com>
- <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
- <20190514020730.GA651@jagdpanzerIV>
- <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
- <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
- <20190514143751.48e81e05@oasis.local.home>
- <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUhy3uB+G23uXh__F2Y_Jsam5uS1Q5jJC95kWAOEM8WRA@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On (05/14/19 21:13), Geert Uytterhoeven wrote:
-> I would immediately understand there's a missing IS_ERR() check in a
-> function that can return  -EINVAL, without having to add a new printk()
-> to find out what kind of bogus value has been received, and without
-> having to reboot, and trying to reproduce...
+Hi Steve,
 
-But chances are that missing IS_ERR() will crash the kernel sooner
-or later (in general case), if not in sprintf() then somewhere else.
+On Tue, May 14, 2019 at 9:35 PM Steven Rostedt <rostedt@goodmis.org> wrote:
+> On Tue, 14 May 2019 21:13:06 +0200
+> Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > > > Do we care about the value? "(-E%u)"?
+> > >
+> > > That too could be confusing. What would (-E22) be considered by a user
+> > > doing an sprintf() on some string. I know that would confuse me, or I
+> > > would think that it was what the %pX displayed, and wonder why it
+> > > displayed it that way. Whereas "(fault)" is quite obvious for any %p
+> > > use case.
+> >
+> > I would immediately understand there's a missing IS_ERR() check in a
+> > function that can return  -EINVAL, without having to add a new printk()
+> > to find out what kind of bogus value has been received, and without
+> > having to reboot, and trying to reproduce...
+>
+> I have to ask. Has there actually been a case that you used a %pX and
+> it faulted, and you had to go back to find what the value of the
+> failure was?
 
-	-ss
+If it faulted, the bad pointer value is obvious from the backtrace.
+If the code avoids the fault by verifying the pointer and returning
+"(efault)" instead, the bad pointer value is lost.
+
+Or am I missing something?
+
+Thanks!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
