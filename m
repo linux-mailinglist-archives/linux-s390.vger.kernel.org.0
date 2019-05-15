@@ -2,103 +2,145 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF6A91F5EE
-	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 15:50:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 737F51F692
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 16:29:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726381AbfEONuZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 May 2019 09:50:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51328 "EHLO mx1.redhat.com"
+        id S1728035AbfEOO3R (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 May 2019 10:29:17 -0400
+Received: from ou.quest-ce.net ([195.154.187.82]:38486 "EHLO ou.quest-ce.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725953AbfEONuY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 May 2019 09:50:24 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A892F7DCD7;
-        Wed, 15 May 2019 13:50:24 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76E275D9E5;
-        Wed, 15 May 2019 13:50:19 +0000 (UTC)
-Date:   Wed, 15 May 2019 15:50:17 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Michael Mueller <mimu@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>
-Subject: Re: [PATCH 10/10] virtio/s390: make airq summary indicators DMA
-Message-ID: <20190515155017.0d3e2543.cohuck@redhat.com>
-In-Reply-To: <3a8353e2-97e3-778e-ab2e-ef285ac7027d@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com>
-        <20190426183245.37939-11-pasic@linux.ibm.com>
-        <20190513142010.36c8478f.cohuck@redhat.com>
-        <3a8353e2-97e3-778e-ab2e-ef285ac7027d@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726911AbfEOO3Q (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 May 2019 10:29:16 -0400
+X-Greylist: delayed 1655 seconds by postgrey-1.27 at vger.kernel.org; Wed, 15 May 2019 10:29:13 EDT
+Received: from [2a01:e35:39f2:1220:2452:dd6c:fe2f:be2c] (helo=opteyam2)
+        by ou.quest-ce.net with esmtpsa (TLS1.1:RSA_AES_256_CBC_SHA1:256)
+        (Exim 4.80)
+        (envelope-from <ydroneaud@opteya.com>)
+        id 1hQuSD-0003J6-UX; Wed, 15 May 2019 16:00:22 +0200
+Message-ID: <4c5ae46657e1931a832def5645db61eb0bf1accd.camel@opteya.com>
+From:   Yann Droneaud <ydroneaud@opteya.com>
+To:     Christian Brauner <christian@brauner.io>, jannh@google.com,
+        oleg@redhat.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, dhowells@redhat.com
+Cc:     akpm@linux-foundation.org, cyphar@cyphar.com,
+        ebiederm@xmission.com, elena.reshetova@intel.com,
+        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
+        tglx@linutronix.de, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org
+Date:   Wed, 15 May 2019 16:00:20 +0200
+In-Reply-To: <20190515100400.3450-1-christian@brauner.io>
+References: <20190515100400.3450-1-christian@brauner.io>
+Organization: OPTEYA
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.2 (3.32.2-1.fc30) 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 15 May 2019 13:50:24 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2a01:e35:39f2:1220:2452:dd6c:fe2f:be2c
+X-SA-Exim-Mail-From: ydroneaud@opteya.com
+X-Spam-Checker-Version: SpamAssassin 3.3.2 (2011-06-06) on ou.quest-ce.net
+X-Spam-Level: 
+X-Spam-Status: No, score=-2.9 required=5.0 tests=ALL_TRUSTED,BAYES_00
+        autolearn=ham version=3.3.2
+Subject: Re: [PATCH 1/2] pid: add pidfd_open()
+X-SA-Exim-Version: 4.2.1 (built Mon, 26 Dec 2011 16:24:06 +0000)
+X-SA-Exim-Scanned: Yes (on ou.quest-ce.net)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 15 May 2019 15:43:23 +0200
-Michael Mueller <mimu@linux.ibm.com> wrote:
+Hi,
 
-> On 13.05.19 14:20, Cornelia Huck wrote:
-> > On Fri, 26 Apr 2019 20:32:45 +0200
-> > Halil Pasic <pasic@linux.ibm.com> wrote:
-> >   
-> >> Hypervisor needs to interact with the summary indicators, so these
-> >> need to be DMA memory as well (at least for protected virtualization
-> >> guests).
-> >>
-> >> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> >> ---
-> >>   drivers/s390/virtio/virtio_ccw.c | 24 +++++++++++++++++-------
-> >>   1 file changed, 17 insertions(+), 7 deletions(-)  
-> > 
-> > (...)
-> >   
-> >> @@ -237,7 +243,8 @@ static void virtio_airq_handler(struct airq_struct *airq)
-> >>   	read_unlock(&info->lock);
-> >>   }
-> >>   
-> >> -static struct airq_info *new_airq_info(void)
-> >> +/* call with drivers/s390/virtio/virtio_ccw.cheld */  
-> > 
-> > Hm, where is airq_areas_lock defined? If it was introduced in one of
-> > the previous patches, I have missed it.  
+Le mercredi 15 mai 2019 à 12:03 +0200, Christian Brauner a écrit :
 > 
-> There is no airq_areas_lock defined currently. My assumption is that
-> this will be used in context with the likely race condition this
-> part of the patch is talking about.
-> 
-> @@ -273,8 +281,9 @@ static unsigned long get_airq_indicator(struct 
-> virtqueue *vqs[], int nvqs,
->   	unsigned long bit, flags;
-> 
->   	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
-> +		/* TODO: this seems to be racy */
->   		if (!airq_areas[i])
-> -			airq_areas[i] = new_airq_info();
-> +			airq_areas[i] = new_airq_info(i);
-> 
-> 
-> As this shall be handled by a separate patch I will drop the comment
-> in regard to airq_areas_lock from this patch as well for v2.
+> diff --git a/kernel/pid.c b/kernel/pid.c
+> index 20881598bdfa..237d18d6ecb8 100644
+> --- a/kernel/pid.c
+> +++ b/kernel/pid.c
+> @@ -451,6 +452,53 @@ struct pid *find_ge_pid(int nr, struct
+> pid_namespace *ns)
+>  	return idr_get_next(&ns->idr, &nr);
+>  }
+>  
+> +/**
+> + * pidfd_open() - Open new pid file descriptor.
+> + *
+> + * @pid:   pid for which to retrieve a pidfd
+> + * @flags: flags to pass
+> + *
+> + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
+> + * the process identified by @pid. Currently, the process identified by
+> + * @pid must be a thread-group leader. This restriction currently exists
+> + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
+> + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
+> + * leaders).
+> + *
 
-Ok, that makes sense.
+Would it be possible to create file descriptor with "restricted"
+operation ?
+
+- O_RDONLY: waiting for process completion allowed (for example)
+- O_WRONLY: sending process signal allowed
+
+For example, a process could send over a Unix socket a process a pidfd,
+allowing this to only wait for completion, but not sending signal ?
+
+I see the permission check is not done in pidfd_open(), so what prevent
+a user from sending a signal to another user owned process ?
+
+If it's in pidfd_send_signal(), then, passing the socket through
+SCM_RIGHT won't be useful if the target process is not owned by the
+same user, or root.
+
+> + * Return: On success, a cloexec pidfd is returned.
+> + *         On error, a negative errno number will be returned.
+> + */
+> +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+> +{
+> +	int fd, ret;
+> +	struct pid *p;
+> +	struct task_struct *tsk;
+> +
+> +	if (flags)
+> +		return -EINVAL;
+> +
+> +	if (pid <= 0)
+> +		return -EINVAL;
+> +
+> +	p = find_get_pid(pid);
+> +	if (!p)
+> +		return -ESRCH;
+> +
+> +	rcu_read_lock();
+> +	tsk = pid_task(p, PIDTYPE_PID);
+> +	if (!tsk)
+> +		ret = -ESRCH;
+> +	else if (unlikely(!thread_group_leader(tsk)))
+> +		ret = -EINVAL;
+> +	else
+> +		ret = 0;
+> +	rcu_read_unlock();
+> +
+> +	fd = ret ?: pidfd_create(p);
+> +	put_pid(p);
+> +	return fd;
+> +}
+> +
+>  void __init pid_idr_init(void)
+>  {
+>  	/* Verify no one has done anything silly: */
+
+Regards.
+
+-- 
+Yann Droneaud
+OPTEYA
+
+
