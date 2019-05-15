@@ -2,144 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2D6181F719
-	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 17:04:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A7F41F755
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 17:19:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726870AbfEOPEq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 May 2019 11:04:46 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53702 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726583AbfEOPEp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 May 2019 11:04:45 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FF3ZLw079488;
-        Wed, 15 May 2019 11:04:35 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgmm7hpwn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 May 2019 11:04:35 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4F98b3K009289;
-        Wed, 15 May 2019 09:08:58 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma01dal.us.ibm.com with ESMTP id 2sdp14x68t-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 May 2019 09:08:58 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FF4XTT38994162
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 15:04:33 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 93BE2B206B;
-        Wed, 15 May 2019 15:04:33 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 745B2B2065;
-        Wed, 15 May 2019 15:04:33 +0000 (GMT)
-Received: from [9.60.85.4] (unknown [9.60.85.4])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 15 May 2019 15:04:33 +0000 (GMT)
-Subject: Re: [PATCH v2 5/7] s390/cio: Allow zero-length CCWs in vfio-ccw
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <20190514234248.36203-1-farman@linux.ibm.com>
- <20190514234248.36203-6-farman@linux.ibm.com>
- <20190515142339.12065a1d.cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <f309cad9-9265-e276-8d57-8b6387f6fed7@linux.ibm.com>
-Date:   Wed, 15 May 2019 11:04:33 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1728030AbfEOPTX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 May 2019 11:19:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:26961 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726581AbfEOPTW (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 May 2019 11:19:22 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1942D301A3E1;
+        Wed, 15 May 2019 15:19:22 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
+        by smtp.corp.redhat.com (Postfix) with SMTP id AC9925D9C0;
+        Wed, 15 May 2019 15:19:16 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Wed, 15 May 2019 17:19:19 +0200 (CEST)
+Date:   Wed, 15 May 2019 17:19:13 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     jannh@google.com, viro@zeniv.linux.org.uk,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        arnd@arndb.de, dhowells@redhat.com, akpm@linux-foundation.org,
+        cyphar@cyphar.com, ebiederm@xmission.com,
+        elena.reshetova@intel.com, keescook@chromium.org,
+        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
+Subject: Re: [PATCH 1/2] pid: add pidfd_open()
+Message-ID: <20190515151912.GE18892@redhat.com>
+References: <20190515100400.3450-1-christian@brauner.io>
+ <20190515143857.GB18892@redhat.com>
+ <20190515144927.f2yxyi6w6lhn3xx7@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <20190515142339.12065a1d.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=753 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905150093
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190515144927.f2yxyi6w6lhn3xx7@brauner.io>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 15 May 2019 15:19:22 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 05/15, Christian Brauner wrote:
+>
+> On Wed, May 15, 2019 at 04:38:58PM +0200, Oleg Nesterov wrote:
+> >
+> > it seems that you can do a single check
+> >
+> > 	tsk = pid_task(p, PIDTYPE_TGID);
+> > 	if (!tsk)
+> > 		ret = -ESRCH;
+> >
+> > this even looks more correct if we race with exec changing the leader.
+>
+> The logic here being that you can only reach the thread_group leader
+> from struct pid if PIDTYPE_PID == PIDTYPE_TGID for this struct pid?
+
+Not exactly... it is not that PIDTYPE_PID == PIDTYPE_TGID for this pid,
+struct pid has no "type" or something like this.
+
+The logic is that pid->tasks[PIDTYPE_XXX] is the list of task which use
+this pid as "XXX" type.
+
+For example, clone(CLONE_THREAD) creates a pid which has a single non-
+empty list, pid->tasks[PIDTYPE_PID]. This pid can't be used as TGID or
+SID.
+
+So if pid_task(PIDTYPE_TGID) returns non-NULL we know that this pid was
+used for a group-leader, see copy_process() which does
+
+	if (thread_group_leader(p))
+		attach_pid(p, PIDTYPE_TGID);
 
 
-On 5/15/19 8:23 AM, Cornelia Huck wrote:
-> On Wed, 15 May 2019 01:42:46 +0200
-> Eric Farman <farman@linux.ibm.com> wrote:
-> 
->> It is possible that a guest might issue a CCW with a length of zero,
->> and will expect a particular response.  Consider this chain:
->>
->>     Address   Format-1 CCW
->>     --------  -----------------
->>   0 33110EC0  346022CC 33177468
->>   1 33110EC8  CF200000 3318300C
->>
->> CCW[0] moves a little more than two pages, but also has the
->> Suppress Length Indication (SLI) bit set to handle the expectation
->> that considerably less data will be moved.  CCW[1] also has the SLI
->> bit set, and has a length of zero.  Once vfio-ccw does its magic,
->> the kernel issues a start subchannel on behalf of the guest with this:
->>
->>     Address   Format-1 CCW
->>     --------  -----------------
->>   0 021EDED0  346422CC 021F0000
->>   1 021EDED8  CF240000 3318300C
->>
->> Both CCWs were converted to an IDAL and have the corresponding flags
->> set (which is by design), but only the address of the first data
->> address is converted to something the host is aware of.  The second
->> CCW still has the address used by the guest, which happens to be (A)
->> (probably) an invalid address for the host, and (B) an invalid IDAW
->> address (doubleword boundary, etc.).
->>
->> While the I/O fails, it doesn't fail correctly.  In this example, we
->> would receive a program check for an invalid IDAW address, instead of
->> a unit check for an invalid command.
->>
->> To fix this, revert commit 4cebc5d6a6ff ("vfio: ccw: validate the
->> count field of a ccw before pinning") and allow the individual fetch
->> routines to process them like anything else.  We'll make a slight
->> adjustment to our allocation of the pfn_array (for direct CCWs) or
->> IDAL (for IDAL CCWs) memory, so that we have room for at least one
->> address even though no data will be transferred.
->>
->> Note that this doesn't provide us with a channel program that will
->> fail in the expected way.  Since our length is zero, vfio_pin_pages()
+If we race with exec which changes the leader pid_task(TGID) can return
+the old leader. We do not care, but this means that we should not check
+thread_group_leader().
 
-s/is/was/
+Oleg.
 
->> returns -EINVAL and cp_prefetch() will thus fail.  This will be fixed
->> in the next patch.
-> 
-> So, this failed before, and still fails, just differently? 
-
-Probably.  If the guest gave us a valid address, the pin might actually 
-work now whereas before it would fail because the length was zero.  If 
-the address were also invalid,
-
- >IOW, this
-> has no effect on bisectability?
-
-I think so, but I suppose that either (A) patch 5 and 6 could be 
-squashed together, or (B) I could move the "set pa_nr to zero" (or more 
-accurately, set it to ccw->count) pieces from patch 6 into this patch, 
-so that the vfio_pin_pages() call occurs like it does today.
-
-> 
->>
->> Signed-off-by: Eric Farman <farman@linux.ibm.com>
->> ---
->>   drivers/s390/cio/vfio_ccw_cp.c | 26 ++++++++------------------
->>   1 file changed, 8 insertions(+), 18 deletions(-)
-> 
