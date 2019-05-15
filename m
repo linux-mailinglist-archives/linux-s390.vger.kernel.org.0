@@ -2,109 +2,199 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0184B1F4B0
-	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 14:45:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE7891F4BD
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 14:46:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726804AbfEOMpe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 May 2019 08:45:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43963 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726533AbfEOMpe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 May 2019 08:45:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B1582C057F40;
-        Wed, 15 May 2019 12:45:33 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CE3160BE5;
-        Wed, 15 May 2019 12:45:32 +0000 (UTC)
-Date:   Wed, 15 May 2019 14:45:30 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v2 0/7] s390: vfio-ccw fixes
-Message-ID: <20190515144530.5603097b.cohuck@redhat.com>
-In-Reply-To: <20190514234248.36203-1-farman@linux.ibm.com>
-References: <20190514234248.36203-1-farman@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726928AbfEOMq4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 May 2019 08:46:56 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41921 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726667AbfEOMqz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 May 2019 08:46:55 -0400
+Received: by mail-pl1-f194.google.com with SMTP id f12so1291094plt.8
+        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 05:46:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=b3HyjACi/MsUUs/bdvxi48Ab6BnFJ6ZhEKEib98a4qc=;
+        b=Xql7xL76UlYG2HgQrNw2rS48dkmsc4mtYUzCNuPcx9exYI1ZmEu7lZqz2wZCRpSq5N
+         P/62eA1WGojofeojjMEVVfykGFGMoC0h24yl2IGMP+MMD6n/+9xLNayyFAwmk67CqnR1
+         m8FLpulEhu3q1K43A5KpMSgYNY/9ZQFxlv1sLLC+Y4jO+Ip0fUJakXQ0r3SGBP8eKC6y
+         8c8qARg+kB1bO3KBeiRnMVlAPDwWif2wtpKXbjbo5qVDDAOu6rngr7KYzRQuR7hO5Gmh
+         lcl5CLLB06Ib9xN7L7Nu/HtKO3R428g2WTFCp36Qq7GME8YG4fu4z4pF+aWoLIZ6h2KQ
+         NZMw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=b3HyjACi/MsUUs/bdvxi48Ab6BnFJ6ZhEKEib98a4qc=;
+        b=hE35GmXIiF4tu+y9CWwm9P/0PzwoYLifVdWMbvx2S2cHOyq+WWed2hT5f30xdRT4r3
+         tRlyGDz6UY/2pStl1twOWYHgcTqkJ+2YXBspijJiO7fo00D9cwueBgz6mUHtEHfo3XRd
+         8HiSwsB7gk36Yp5CI/jYRcvmIBwV970Ds6bYP/Se7JrJm98yddpWgeW3s0O6IBujZLkr
+         8iGQg1aEITVFxIVdY0V0WlR5IxX7+aa/A1VuOwVF4L6tvTGK71ECeNBNqaQ52VMpfbdz
+         kCWFsETpwnIpg47tFBHm+aLzCQie44Lk+lMwFDOx0lcW6yxsD0dLO6NIK4lpDDvUMj9V
+         U/mQ==
+X-Gm-Message-State: APjAAAW6u9xlKvUCgNZbr7yzQH9uWdkrcocPTuzoX2xTs82D66J8hKyP
+        98W7yc36mLU96c+yXI9ht4HD7/WNH43G9BB/zNBwEg==
+X-Google-Smtp-Source: APXvYqwTSlq+glzh8dvBA9RnhTgkzA0FJBG+kmyFPUzc3vgEhgrnY6HSdtm+CvmJk20OFdPWunOILeeGu3jijFHRxb0=
+X-Received: by 2002:a17:902:4181:: with SMTP id f1mr22625568pld.22.1557924414679;
+ Wed, 15 May 2019 05:46:54 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 15 May 2019 12:45:33 +0000 (UTC)
+References: <20190506185207.31069-1-tmurphy@arista.com> <20190506185207.31069-3-tmurphy@arista.com>
+ <20190507064000.GB5173@infradead.org>
+In-Reply-To: <20190507064000.GB5173@infradead.org>
+From:   Tom Murphy <tmurphy@arista.com>
+Date:   Wed, 15 May 2019 13:46:43 +0100
+Message-ID: <CAPL0++5AUyVHexpsE86PfXxmQgDHfxjSSoAAGXM5c7Mdix=OZQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/4] iommu/dma-iommu: Handle deferred devices
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, Tom Murphy <murphyt7@tcd.ie>,
+        Joerg Roedel <joro@8bytes.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 15 May 2019 01:42:41 +0200
-Eric Farman <farman@linux.ibm.com> wrote:
+like this?
 
-> The attached are a few fixes to the vfio-ccw kernel code for potential
-> errors or architecture anomalies.  Under normal usage, and even most
-> abnormal usage, they don't expose any problems to a well-behaved guest
-> and its devices.  But, they are deficiencies just the same and could
-> cause some weird behavior if they ever popped up in real life.
-> 
-> I have tried to arrange these patches in a "solves a noticeable problem
-> with existing workloads" to "solves a theoretical problem with
-> hypothetical workloads" order.  This way, the bigger ones at the end
-> can be discussed without impeding the smaller and more impactful ones
-> at the start.
-> 
-> Per the conversations on patch 7, the last several patches remain
-> unchanged.  They continue to buid an IDAL for each CCW, and only pin
-> guest pages and assign the resulting addresses to IDAWs if they are
-> expected to cause a data transfer.  This will avoid sending an
-> unmodified guest address, which may be invalid but anyway is not mapped
-> to the same host address, in the IDAL sent to the channel subsystem and
-> any unexpected behavior that may result.
-> 
-> They are based on 5.1.0, not Conny's vfio-ccw tree even though there are
-> some good fixes pending for 5.2 there.  I've run this series both with
-> and without that code, but couldn't decide which base would provide an
-> easier time applying patches.  "I think" they should apply fine to both,
-> but I apologize in advance if I guessed wrong!  :)
+In that case we need to add a call to iommu_dma_alloc_remap.
 
-They also should apply on current master, no? My 5.2 branch should be
-all merged by now :)
+From 862aeebb601008cf863e3aff4ff8ed7cefebeefa Mon Sep 17 00:00:00 2001
+From: Tom Murphy <tmurphy@tmurphy-419tom-0.sjc.aristanetworks.com>
+Date: Wed, 15 May 2019 05:43:25 -0700
+Subject: [PATCH] iommu/dma-iommu: Handle deferred devices
 
-Nothing really jumped out at me; I'm happy to queue the patches if I
-get some more feedback.
+Handle devices which defer their attach to the iommu in the dma-iommu api
 
-> 
-> 
-> Changelog:
->  v1 -> v2:
->   - Patch 1:
->      - [Cornelia] Added a code comment about why we update the SCSW when
->        we've gone past the end of the chain for normal, successful, I/O
->   - Patch 2:
->      - [Cornelia] Cleaned up the cc info in the commit message
->      - [Pierre] Added r-b
->   - Patch 3:
->      - [Cornelia] Update the return code information in prologue of
->        pfn_array_pin(), and then only call vfio_unpin_pages() if we
->        pinned anything, rather than silently creating an error
->        (this last bit was mentioned on patch 6, but applied here)
->      - [Eric] Clean up the error exit in pfn_array_pin()
->   - Patch 4-7 unchanged
-> 
-> Eric Farman (7):
->   s390/cio: Update SCSW if it points to the end of the chain
->   s390/cio: Set vfio-ccw FSM state before ioeventfd
->   s390/cio: Split pfn_array_alloc_pin into pieces
->   s390/cio: Initialize the host addresses in pfn_array
->   s390/cio: Allow zero-length CCWs in vfio-ccw
->   s390/cio: Don't pin vfio pages for empty transfers
->   s390/cio: Remove vfio-ccw checks of command codes
-> 
->  drivers/s390/cio/vfio_ccw_cp.c  | 159 +++++++++++++++++++++++---------
->  drivers/s390/cio/vfio_ccw_drv.c |   6 +-
->  2 files changed, 119 insertions(+), 46 deletions(-)
-> 
+Signed-off-by: Tom Murphy <tmurphy@arista.com>
+---
+ drivers/iommu/dma-iommu.c | 27 ++++++++++++++++++++++++++-
+ 1 file changed, 26 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+index 7f313cfa9..a48ae906d 100644
+--- a/drivers/iommu/dma-iommu.c
++++ b/drivers/iommu/dma-iommu.c
+@@ -22,6 +22,7 @@
+ #include <linux/pci.h>
+ #include <linux/scatterlist.h>
+ #include <linux/vmalloc.h>
++#include <linux/crash_dump.h>
+
+ struct iommu_dma_msi_page {
+     struct list_head    list;
+@@ -323,6 +324,21 @@ static int iommu_dma_init_domain(struct
+iommu_domain *domain, dma_addr_t base,
+     return iova_reserve_iommu_regions(dev, domain);
+ }
+
++static int handle_deferred_device(struct device *dev,
++        struct iommu_domain *domain)
++{
++    const struct iommu_ops *ops = domain->ops;
++
++    if (!is_kdump_kernel())
++        return 0;
++
++    if (unlikely(ops->is_attach_deferred &&
++            ops->is_attach_deferred(domain, dev)))
++        return iommu_attach_device(domain, dev);
++
++    return 0;
++}
++
+ /**
+  * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
+  *                    page flags.
+@@ -432,6 +448,9 @@ static dma_addr_t __iommu_dma_map(struct device
+*dev, phys_addr_t phys,
+     size_t iova_off = 0;
+     dma_addr_t iova;
+
++    if (unlikely(handle_deferred_device(dev, domain)))
++        return DMA_MAPPING_ERROR;
++
+     if (cookie->type == IOMMU_DMA_IOVA_COOKIE) {
+         iova_off = iova_offset(&cookie->iovad, phys);
+         size = iova_align(&cookie->iovad, size + iova_off);
+@@ -609,6 +628,9 @@ static void *iommu_dma_alloc_remap(struct device
+*dev, size_t size,
+     dma_addr_t iova;
+     void *vaddr;
+
++    if (unlikely(handle_deferred_device(dev, domain)))
++        return DMA_MAPPING_ERROR;
++
+     *dma_handle = DMA_MAPPING_ERROR;
+
+     min_size = alloc_sizes & -alloc_sizes;
+@@ -836,7 +858,7 @@ static dma_addr_t iommu_dma_map_page(struct device
+*dev, struct page *page,
+     bool coherent = dev_is_dma_coherent(dev);
+     dma_addr_t dma_handle;
+
+-    dma_handle =__iommu_dma_map(dev, phys, size,
++    dma_handle = __iommu_dma_map(dev, phys, size,
+             dma_info_to_prot(dir, coherent, attrs),
+             iommu_get_dma_domain(dev));
+     if (!coherent && !(attrs & DMA_ATTR_SKIP_CPU_SYNC) &&
+@@ -954,6 +976,9 @@ static int iommu_dma_map_sg(struct device *dev,
+struct scatterlist *sg,
+     unsigned long mask = dma_get_seg_boundary(dev);
+     int i;
+
++    if (unlikely(handle_deferred_device(dev, domain)))
++        return 0;
++
+     if (!(attrs & DMA_ATTR_SKIP_CPU_SYNC))
+         iommu_dma_sync_sg_for_device(dev, sg, nents, dir);
+
+-- 
+2.20.0
+
+On Tue, May 7, 2019 at 7:40 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Mon, May 06, 2019 at 07:52:04PM +0100, Tom Murphy wrote:
+> > +static int handle_deferred_device(struct device *dev)
+> > +{
+> > +     struct iommu_domain *domain;
+> > +     const struct iommu_ops *ops;
+> > +
+> > +     if (!is_kdump_kernel())
+> > +             return 0;
+> > +
+> > +     domain = iommu_get_domain_for_dev(dev);
+>
+> > -     dma_handle =__iommu_dma_map(dev, phys, size,
+> > +     if (unlikely(handle_deferred_device(dev)))
+> > +             return DMA_MAPPING_ERROR;
+> > +
+> > +     dma_handle = __iommu_dma_map(dev, phys, size,
+>
+> __iommu_dma_map already looks up the domain, and as far as I can
+> tell all callers need the handle_deferred_device call.  Should we
+> just move it to there and pass the domain from the caller?
+>
+> Also shouldn't the iommu_attach_device call inside
+> handle_deferred_device also get an unlikely marker?
