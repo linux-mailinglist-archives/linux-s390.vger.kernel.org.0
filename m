@@ -2,180 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DE8B1F658
-	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 16:16:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65E9D1F699
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 16:30:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728264AbfEOOQk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 May 2019 10:16:40 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:43388 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728225AbfEOOQk (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 May 2019 10:16:40 -0400
-Received: by mail-ed1-f67.google.com with SMTP id w33so13587edb.10
-        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 07:16:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=5teuJo4XSRrnL6XxnC+QODipuz2WCzByYGo45sEdpQE=;
-        b=gAJyzptkeah2CnPVHf8ki6Ey+Aje7kt4hiLFQY/UoXftAeb5KMt9kDcge1dL70700f
-         v4lzCF24qKMgoDDJqK48PCIsuOAEIEWh56QloYL0Zx1Ytcl8wEHGZj2FHlHTDjeh1xHN
-         qgtG9Lh2tYpVWiUdw1UsD0iGHta3lP4Ta8QIkzIE14Ud+jGfSqHpCDEAvWIr2Z7unvQT
-         7zkggOJrHmZj/c4eERJMnDK2ju7392d0B+Atitgv36pLJz4hMjFGB1lnPt+6SoqUGyah
-         IPYOEdYPIgWXRHQq6puWtz6SFEJeqqmkoJuWNHfimIVIYgR96+2ydELKuFEvw/jF51Hq
-         +B1g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=5teuJo4XSRrnL6XxnC+QODipuz2WCzByYGo45sEdpQE=;
-        b=OB8duUTmyKI4NB+JJI+8DzSrq+bdaAlsxOWkpLiNXT5Gk+lq7n3JGQkDaf4yjXe+yx
-         ON1Lrt58fgGq1ipLHfYTxZw2qfHC0/d63FWlgXcaE6qqcxBcfkwraoj4MoJbzGiqA82m
-         +lQiEaKY2SK53jeTxC0Bz7OCL75LKfILNBD5WYAPyDXNGxJbjB5CFSBbW49RpAd+A0S4
-         hnT3hmCFiv0Swmm1CFZR8X6Sl+C5Tc0UfEDsweRS19ymC3RM0EpmOVovrYAocVHMcGbB
-         x1vKre/S4p+y2AHIIOzczR4w8xMRJL5QzGo5Fa2Txn0ifRnc/F2y6YZE5VxrykfQz4OC
-         vQmg==
-X-Gm-Message-State: APjAAAV+OrOtO/CcjOWRYMPKuE+7392MpLsNKQAN+MtURmgaHesDjQAq
-        27qIzAhU5hZ6MjID5DIVKrobiA==
-X-Google-Smtp-Source: APXvYqz/5w9Bko49z66nfUW8rJGtWbKGmV1irTYSDrNlaxrZSh+Ve4PPN0bCyixGXoTczpolwiOJ2g==
-X-Received: by 2002:a50:8bbb:: with SMTP id m56mr44288042edm.230.1557929797459;
-        Wed, 15 May 2019 07:16:37 -0700 (PDT)
-Received: from brauner.io ([178.19.218.101])
-        by smtp.gmail.com with ESMTPSA id h13sm493114ejs.3.2019.05.15.07.16.35
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 15 May 2019 07:16:36 -0700 (PDT)
-Date:   Wed, 15 May 2019 16:16:35 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Yann Droneaud <ydroneaud@opteya.com>
-Cc:     jannh@google.com, oleg@redhat.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, dhowells@redhat.com, akpm@linux-foundation.org,
-        cyphar@cyphar.com, ebiederm@xmission.com,
-        elena.reshetova@intel.com, keescook@chromium.org,
-        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH 1/2] pid: add pidfd_open()
-Message-ID: <20190515141634.lrc5ynllcmjr64mn@brauner.io>
-References: <20190515100400.3450-1-christian@brauner.io>
- <4c5ae46657e1931a832def5645db61eb0bf1accd.camel@opteya.com>
+        id S1727356AbfEOOas (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 May 2019 10:30:48 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34274 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727112AbfEOOas (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 May 2019 10:30:48 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FENFDe093398
+        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 10:30:47 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sgjv0exsm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 10:30:46 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
+        Wed, 15 May 2019 15:30:40 +0100
+Received: from b03cxnp07028.gho.boulder.ibm.com (9.17.130.15)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 May 2019 15:30:38 +0100
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FEUaDH8716672
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 May 2019 14:30:36 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B45B2C6063;
+        Wed, 15 May 2019 14:30:36 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51FABC6066;
+        Wed, 15 May 2019 14:30:36 +0000 (GMT)
+Received: from [9.56.58.102] (unknown [9.56.58.102])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 15 May 2019 14:30:36 +0000 (GMT)
+Subject: Re: [PATCH v2 1/7] s390/cio: Update SCSW if it points to the end of
+ the chain
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+References: <20190514234248.36203-1-farman@linux.ibm.com>
+ <20190514234248.36203-2-farman@linux.ibm.com>
+From:   Farhan Ali <alifm@linux.ibm.com>
+Date:   Wed, 15 May 2019 10:30:35 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <4c5ae46657e1931a832def5645db61eb0bf1accd.camel@opteya.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190514234248.36203-2-farman@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051514-0004-0000-0000-0000150F0896
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011102; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000285; SDB=6.01203701; UDB=6.00631845; IPR=6.00984627;
+ MB=3.00026905; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-15 14:30:39
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051514-0005-0000-0000-00008BAC336C
+Message-Id: <978ed329-cc81-b08f-8d59-ae92350abc17@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905150089
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, May 15, 2019 at 04:00:20PM +0200, Yann Droneaud wrote:
-> Hi,
-> 
-> Le mercredi 15 mai 2019 à 12:03 +0200, Christian Brauner a écrit :
-> > 
-> > diff --git a/kernel/pid.c b/kernel/pid.c
-> > index 20881598bdfa..237d18d6ecb8 100644
-> > --- a/kernel/pid.c
-> > +++ b/kernel/pid.c
-> > @@ -451,6 +452,53 @@ struct pid *find_ge_pid(int nr, struct
-> > pid_namespace *ns)
-> >  	return idr_get_next(&ns->idr, &nr);
-> >  }
-> >  
-> > +/**
-> > + * pidfd_open() - Open new pid file descriptor.
-> > + *
-> > + * @pid:   pid for which to retrieve a pidfd
-> > + * @flags: flags to pass
-> > + *
-> > + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
-> > + * the process identified by @pid. Currently, the process identified by
-> > + * @pid must be a thread-group leader. This restriction currently exists
-> > + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
-> > + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
-> > + * leaders).
-> > + *
-> 
-> Would it be possible to create file descriptor with "restricted"
-> operation ?
-> 
-> - O_RDONLY: waiting for process completion allowed (for example)
-> - O_WRONLY: sending process signal allowed
 
-Yes, something like this is likely going to be possible in the future.
-We had discussion around this. But mapping this to O_RDONLY and O_WRONLY
-is not the right model. It makes more sense to have specialized flags
-that restrict actions.
 
+On 05/14/2019 07:42 PM, Eric Farman wrote:
+> Per the POPs [1], when processing an interrupt the SCSW.CPA field of an
+> IRB generally points to 8 bytes after the last CCW that was executed
+> (there are exceptions, but this is the most common behavior).
 > 
-> For example, a process could send over a Unix socket a process a pidfd,
-> allowing this to only wait for completion, but not sending signal ?
+> In the case of an error, this points us to the first un-executed CCW
+> in the chain.  But in the case of normal I/O, the address points beyond
+> the end of the chain.  While the guest generally only cares about this
+> when possibly restarting a channel program after error recovery, we
+> should convert the address even in the good scenario so that we provide
+> a consistent, valid, response upon I/O completion.
 > 
-> I see the permission check is not done in pidfd_open(), so what prevent
-> a user from sending a signal to another user owned process ?
+> [1] Figure 16-6 in SA22-7832-11.  The footnotes in that table also state
+> that this is true even if the resulting address is invalid or protected,
+> but moving to the end of the guest chain should not be a surprise.
+> 
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> ---
+>   drivers/s390/cio/vfio_ccw_cp.c | 6 +++++-
+>   1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+> index 384b3987eeb4..41f48b8790bc 100644
+> --- a/drivers/s390/cio/vfio_ccw_cp.c
+> +++ b/drivers/s390/cio/vfio_ccw_cp.c
+> @@ -870,7 +870,11 @@ void cp_update_scsw(struct channel_program *cp, union scsw *scsw)
+>   	 */
+>   	list_for_each_entry(chain, &cp->ccwchain_list, next) {
+>   		ccw_head = (u32)(u64)chain->ch_ccw;
+> -		if (is_cpa_within_range(cpa, ccw_head, chain->ch_len)) {
+> +		/*
+> +		 * On successful execution, cpa points just beyond the end
+> +		 * of the chain.
+> +		 */
+> +		if (is_cpa_within_range(cpa, ccw_head, chain->ch_len + 1)) {
+>   			/*
+>   			 * (cpa - ccw_head) is the offset value of the host
+>   			 * physical ccw to its chain head.
+> 
 
-That's supposed to be possible. You can do the same right now already
-with pids. Tools like LMK need this probably very much.
-Permission checking for signals is done at send time right now.
-And if you can't signal via a pid you can't signal via a pidfd as
-they're both subject to the same permissions checks.
+Reviewed-by: Farhan Ali <alifm@linux.ibm.com>
 
-> 
-> If it's in pidfd_send_signal(), then, passing the socket through
-> SCM_RIGHT won't be useful if the target process is not owned by the
-> same user, or root.
-> 
-> > + * Return: On success, a cloexec pidfd is returned.
-> > + *         On error, a negative errno number will be returned.
-> > + */
-> > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
-> > +{
-> > +	int fd, ret;
-> > +	struct pid *p;
-> > +	struct task_struct *tsk;
-> > +
-> > +	if (flags)
-> > +		return -EINVAL;
-> > +
-> > +	if (pid <= 0)
-> > +		return -EINVAL;
-> > +
-> > +	p = find_get_pid(pid);
-> > +	if (!p)
-> > +		return -ESRCH;
-> > +
-> > +	rcu_read_lock();
-> > +	tsk = pid_task(p, PIDTYPE_PID);
-> > +	if (!tsk)
-> > +		ret = -ESRCH;
-> > +	else if (unlikely(!thread_group_leader(tsk)))
-> > +		ret = -EINVAL;
-> > +	else
-> > +		ret = 0;
-> > +	rcu_read_unlock();
-> > +
-> > +	fd = ret ?: pidfd_create(p);
-> > +	put_pid(p);
-> > +	return fd;
-> > +}
-> > +
-> >  void __init pid_idr_init(void)
-> >  {
-> >  	/* Verify no one has done anything silly: */
-> 
-> Regards.
-> 
-> -- 
-> Yann Droneaud
-> OPTEYA
-> 
-> 
