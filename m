@@ -2,133 +2,152 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABF581EA5E
-	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 10:46:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 336D41EA8D
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 11:00:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726122AbfEOIqI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 May 2019 04:46:08 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57548 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725871AbfEOIqH (ORCPT
+        id S1725871AbfEOJAb convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Wed, 15 May 2019 05:00:31 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:41225 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725977AbfEOJA2 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 May 2019 04:46:07 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4F8jpaC040500
-        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 04:46:06 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sgdayxv5v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 04:46:06 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Wed, 15 May 2019 09:46:03 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 May 2019 09:45:59 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4F8jwVB56557678
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 08:45:58 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8998A4055;
-        Wed, 15 May 2019 08:45:58 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6876CA4040;
-        Wed, 15 May 2019 08:45:58 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.152.212.60])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 15 May 2019 08:45:58 +0000 (GMT)
-Date:   Wed, 15 May 2019 10:45:57 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org, Greentime Hu <green.hu@gmail.com>,
-        linux-kernel@vger.kernel.org, Guo Ren <guoren@kernel.org>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        linux-riscv@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>
-Subject: Re: [PATCH] s390: move arch/s390/defconfig to
- arch/s390/configs/defconfig
-In-Reply-To: <20190513021116.12191-1-yamada.masahiro@socionext.com>
-References: <20190513021116.12191-1-yamada.masahiro@socionext.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Wed, 15 May 2019 05:00:28 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-151-LzCPBcH1MgOVKjpg1pcjcg-1; Wed, 15 May 2019 10:00:24 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 15 May 2019 10:00:23 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 15 May 2019 10:00:23 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Petr Mladek' <pmladek@suse.com>,
+        Steven Rostedt <rostedt@goodmis.org>
+CC:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        christophe leroy <christophe.leroy@c-s.fr>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Tobin C . Harding" <me@tobin.cc>, Michal Hocko <mhocko@suse.cz>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "Russell Currey" <ruscur@russell.cc>,
+        Stephen Rothwell <sfr@ozlabs.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>
+Subject: RE: [PATCH] vsprintf: Do not break early boot with probing addresses
+Thread-Topic: [PATCH] vsprintf: Do not break early boot with probing addresses
+Thread-Index: AQHVB1bC/iTC8Q7sI0elwkZY5/gFJaZowlxwgAEika2AAGmPsIABhHoSgAAVWGA=
+Date:   Wed, 15 May 2019 09:00:23 +0000
+Message-ID: <0a816ea272a0405f89d8ca7178604531@AcuMS.aculab.com>
+References: <20190510084213.22149-1-pmladek@suse.com>
+ <20190510122401.21a598f6@gandalf.local.home>
+ <daf4dfd1-7f4f-8b92-6866-437c3a2be28b@c-s.fr>
+ <096d6c9c17b3484484d9d9d3f3aa3a7c@AcuMS.aculab.com>
+ <20190513091320.GK9224@smile.fi.intel.com>
+ <20190513124220.wty2qbnz4wo52h3x@pathway.suse.cz>
+ <20190514020730.GA651@jagdpanzerIV>
+ <45348cf615fe40d383c1a25688d4a88f@AcuMS.aculab.com>
+ <CAMuHMdXaMObq9h2Sb49PW1-HUysPeaWXB7wJmKFz=xLmSoUDZg@mail.gmail.com>
+ <20190514143751.48e81e05@oasis.local.home>
+ <20190515073542.y6ru2nfagtcrpdl7@pathway.suse.cz>
+In-Reply-To: <20190515073542.y6ru2nfagtcrpdl7@pathway.suse.cz>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051508-0020-0000-0000-0000033CDC18
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051508-0021-0000-0000-0000218F9C91
-Message-Id: <20190515104557.1d5a389f@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905150057
+X-MC-Unique: LzCPBcH1MgOVKjpg1pcjcg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 13 May 2019 11:11:16 +0900
-Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+From: Petr Mladek
+> Sent: 15 May 2019 08:36
+> On Tue 2019-05-14 14:37:51, Steven Rostedt wrote:
+> >
+> > [ Purple is a nice shade on the bike shed. ;-) ]
+> >
+> > On Tue, 14 May 2019 11:02:17 +0200
+> > Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >
+> > > On Tue, May 14, 2019 at 10:29 AM David Laight <David.Laight@aculab.com> wrote:
+> > > > > And I like Steven's "(fault)" idea.
+> > > > > How about this:
+> > > > >
+> > > > >       if ptr < PAGE_SIZE              -> "(null)"
+> > > > >       if IS_ERR_VALUE(ptr)            -> "(fault)"
+> > > > >
+> > > > >       -ss
+> > > >
+> > > > Or:
+> > > >         if (ptr < PAGE_SIZE)
+> > > >                 return ptr ? "(null+)" : "(null)";
+> >
+> > Hmm, that is useful.
+> >
+> > > >         if IS_ERR_VALUE(ptr)
+> > > >                 return "(errno)"
+> >
+> > I still prefer "(fault)" as is pretty much all I would expect from a
+> > pointer dereference, even if it is just bad parsing of, say, a parsing
+> > an MAC address. "fault" is generic enough. "errno" will be confusing,
+> > because that's normally a variable not a output.
+> >
+> > >
+> > > Do we care about the value? "(-E%u)"?
+> >
+> > That too could be confusing. What would (-E22) be considered by a user
+> > doing an sprintf() on some string. I know that would confuse me, or I
+> > would think that it was what the %pX displayed, and wonder why it
+> > displayed it that way. Whereas "(fault)" is quite obvious for any %p
+> > use case.
+> 
+> This discussion clearly shows that it is hard to make anyone happy.
+> 
+> I considered switching to "(fault)" because there seems to be more
+> people in favor of this.
+> 
+> But there is used also "(einval)" when an unsupported pointer
+> modifier is passed. The idea is to show error codes that people
+> are familiar with.
+> 
+> It might have been better to use the uppercase "(EFAULT)" and
+> "(EINVAL)" to make it more obvious. But I wanted to follow
+> the existing style with the lowercase "(null)".
 
-> As of Linux 5.1, alpha and s390 are the last architectures that
-> have defconfig in arch/*/ instead of arch/*/configs/.
-> 
->   $ find arch -name defconfig | sort
->   arch/alpha/defconfig
->   arch/arm64/configs/defconfig
->   arch/csky/configs/defconfig
->   arch/nds32/configs/defconfig
->   arch/riscv/configs/defconfig
->   arch/s390/defconfig
-> 
-> The arch/$(ARCH)/defconfig is the hard-coded default in Kconfig,
-> and I want to deprecate it after evacuating the remaining defconfig
-> into the standard location, arch/*/configs/.
-> 
-> Define KBUILD_DEFCONFIG like other architectures, and move defconfig
-> into the configs/ subdirectory.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Printing 'fault' when the code was (trying to) validate the
+address was ok.
+When the only check is for an -errno value it seems wrong as
+most invalid addresses will actually fault (and panic).
 
-I have added this patch to my linux/s390 tree and will push it upstream
-soon. Thanks!
+The reason modern printf generate "(null)" is that it is far too
+easy for a diagnostic print to fail to test a pointer.
+It also makes it easier when 'throwing in' printf while debugging
+to add a single trace that will work regardless of whether a
+call had succeeded or not.
 
-> ---
-> 
->  arch/s390/Makefile                | 2 ++
->  arch/s390/{ => configs}/defconfig | 0
->  2 files changed, 2 insertions(+)
->  rename arch/s390/{ => configs}/defconfig (100%)
-> 
-> diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-> index df1d6a150f30..de8521fc9de5 100644
-> --- a/arch/s390/Makefile
-> +++ b/arch/s390/Makefile
-> @@ -10,6 +10,8 @@
->  # Copyright (C) 1994 by Linus Torvalds
->  #
-> 
-> +KBUILD_DEFCONFIG := defconfig
-> +
->  LD_BFD		:= elf64-s390
->  KBUILD_LDFLAGS	:= -m elf64_s390
->  KBUILD_AFLAGS_MODULE += -fPIC
-> diff --git a/arch/s390/defconfig b/arch/s390/configs/defconfig
-> similarity index 100%
-> rename from arch/s390/defconfig
-> rename to arch/s390/configs/defconfig
+With the Linux kernel putting errno values into pointers it
+seems likely that most invalid pointers in printf will actaully
+be error values.
+Printing the value will be helpful during debugging - as a
+trace can be put after a call and show the parameters and result.
 
+	David
 
--- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
