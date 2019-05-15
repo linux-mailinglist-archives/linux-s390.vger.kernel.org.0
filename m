@@ -2,170 +2,240 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8FA2E1FB60
-	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 22:08:26 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5487E1FBC1
+	for <lists+linux-s390@lfdr.de>; Wed, 15 May 2019 22:52:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfEOUI0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 May 2019 16:08:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48116 "EHLO
+        id S1727297AbfEOUwm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 May 2019 16:52:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53180 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726124AbfEOUI0 (ORCPT
+        by vger.kernel.org with ESMTP id S1727280AbfEOUwm (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 May 2019 16:08:26 -0400
+        Wed, 15 May 2019 16:52:42 -0400
 Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FK35Aq028891
-        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 16:08:24 -0400
-Received: from e31.co.us.ibm.com (e31.co.us.ibm.com [32.97.110.149])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sgp9v11m7-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4FKgH6V121354
+        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 16:52:40 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sgsu2gve5-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 16:08:24 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 15 May 2019 16:52:40 -0400
 Received: from localhost
-        by e31.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
-        Wed, 15 May 2019 21:08:23 +0100
-Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
-        by e31.co.us.ibm.com (192.168.1.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Wed, 15 May 2019 21:52:38 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 May 2019 21:08:21 +0100
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FK8JNJ8585496
+        Wed, 15 May 2019 21:52:35 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4FKqYUb42860690
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 May 2019 20:08:19 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BF095C6055;
-        Wed, 15 May 2019 20:08:19 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 540C5C605B;
-        Wed, 15 May 2019 20:08:19 +0000 (GMT)
-Received: from [9.56.58.102] (unknown [9.56.58.102])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 15 May 2019 20:08:19 +0000 (GMT)
-Subject: Re: [PATCH v2 5/7] s390/cio: Allow zero-length CCWs in vfio-ccw
-To:     Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <20190514234248.36203-1-farman@linux.ibm.com>
- <20190514234248.36203-6-farman@linux.ibm.com>
- <20190515142339.12065a1d.cohuck@redhat.com>
- <f309cad9-9265-e276-8d57-8b6387f6fed7@linux.ibm.com>
-From:   Farhan Ali <alifm@linux.ibm.com>
-Date:   Wed, 15 May 2019 16:08:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        Wed, 15 May 2019 20:52:34 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 27CA84C058;
+        Wed, 15 May 2019 20:52:34 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 602F04C04E;
+        Wed, 15 May 2019 20:52:33 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.21.52])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 May 2019 20:52:33 +0000 (GMT)
+Date:   Wed, 15 May 2019 22:51:58 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: Re: [PATCH 06/10] s390/cio: add basic protected virtualization
+ support
+In-Reply-To: <20190513114136.783c851c.cohuck@redhat.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-7-pasic@linux.ibm.com>
+        <20190513114136.783c851c.cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <f309cad9-9265-e276-8d57-8b6387f6fed7@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19051520-8235-0000-0000-00000E971E19
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011102; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000285; SDB=6.01203813; UDB=6.00631912; IPR=6.00984739;
- MB=3.00026907; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-15 20:08:22
+x-cbid: 19051520-0008-0000-0000-000002E7156C
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051520-8236-0000-0000-00004593B4CE
-Message-Id: <39c7904f-7f9b-473d-201d-8d6aae4c490b@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_14:,,
+x-cbparentid: 19051520-0009-0000-0000-00002253B66C
+Message-Id: <20190515225158.301af387.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-15_15:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=827 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905150121
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905150126
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, 13 May 2019 11:41:36 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
+> On Fri, 26 Apr 2019 20:32:41 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+> 
+> > As virtio-ccw devices are channel devices, we need to use the dma area
+> > for any communication with the hypervisor.
+> > 
+> > This patch addresses the most basic stuff (mostly what is required for
+> > virtio-ccw), and does take care of QDIO or any devices.
+> 
+> "does not take care of QDIO", surely? 
 
-On 05/15/2019 11:04 AM, Eric Farman wrote:
-> 
-> 
-> On 5/15/19 8:23 AM, Cornelia Huck wrote:
->> On Wed, 15 May 2019 01:42:46 +0200
->> Eric Farman <farman@linux.ibm.com> wrote:
->>
->>> It is possible that a guest might issue a CCW with a length of zero,
->>> and will expect a particular response.  Consider this chain:
->>>
->>>     Address   Format-1 CCW
->>>     --------  -----------------
->>>   0 33110EC0  346022CC 33177468
->>>   1 33110EC8  CF200000 3318300C
->>>
->>> CCW[0] moves a little more than two pages, but also has the
->>> Suppress Length Indication (SLI) bit set to handle the expectation
->>> that considerably less data will be moved.  CCW[1] also has the SLI
->>> bit set, and has a length of zero.  Once vfio-ccw does its magic,
->>> the kernel issues a start subchannel on behalf of the guest with this:
->>>
->>>     Address   Format-1 CCW
->>>     --------  -----------------
->>>   0 021EDED0  346422CC 021F0000
->>>   1 021EDED8  CF240000 3318300C
->>>
->>> Both CCWs were converted to an IDAL and have the corresponding flags
->>> set (which is by design), but only the address of the first data
->>> address is converted to something the host is aware of.  The second
->>> CCW still has the address used by the guest, which happens to be (A)
->>> (probably) an invalid address for the host, and (B) an invalid IDAW
->>> address (doubleword boundary, etc.).
->>>
->>> While the I/O fails, it doesn't fail correctly.  In this example, we
->>> would receive a program check for an invalid IDAW address, instead of
->>> a unit check for an invalid command.
->>>
->>> To fix this, revert commit 4cebc5d6a6ff ("vfio: ccw: validate the
->>> count field of a ccw before pinning") and allow the individual fetch
->>> routines to process them like anything else.  We'll make a slight
->>> adjustment to our allocation of the pfn_array (for direct CCWs) or
->>> IDAL (for IDAL CCWs) memory, so that we have room for at least one
->>> address even though no data will be transferred.
->>>
->>> Note that this doesn't provide us with a channel program that will
->>> fail in the expected way.  Since our length is zero, vfio_pin_pages()
-> 
-> s/is/was/
-> 
->>> returns -EINVAL and cp_prefetch() will thus fail.  This will be fixed
->>> in the next patch.
->>
->> So, this failed before, and still fails, just differently? 
-> 
-> Probably.  If the guest gave us a valid address, the pin might actually 
-> work now whereas before it would fail because the length was zero.  If 
-> the address were also invalid,
-> 
->  >IOW, this
->> has no effect on bisectability?
-> 
-> I think so, but I suppose that either (A) patch 5 and 6 could be 
-> squashed together, or (B) I could move the "set pa_nr to zero" (or more 
-> accurately, set it to ccw->count) pieces from patch 6 into this patch, 
-> so that the vfio_pin_pages() call occurs like it does today.
-> 
->>
+I did not bother making the QDIO library code use dma memory for
+anything that is conceptually dma memory. AFAIK QDIO is out of scope for
+prot virt for now. If one were to do some emulated qdio with prot virt
+guests, one wound need to make a bunch of things shared.
 
-While going through patch 5, I was confused as to why we need to pin 
-pages if we are only trying to translate the addresses and no data 
-transfer will take place with count==0. Well, you answer that in patch 6 :)
+> (Also, what does "any devices"
+> mean? Do you mean "every arbitrary device", perhaps?)
 
-So maybe it might be better to move parts of patch 6 to 5 or squash 
-them, or maybe reverse the order.
+What I mean is: this patch takes care of the core stuff, but any
+particular device is likely to have to do more -- that is it ain't all
+the cio devices support prot virt with this patch. For example
+virtio-ccw needs to make sure that the ccws constituting the channel
+programs, as well as the data pointed by the ccws is shared. If one
+would want to make vfio-ccw DASD pass-through work under prot virt, one
+would need to make sure, that everything that needs to be shared is
+shared (data buffers, channel programs).
 
-Thanks
-Farhan
+Does is clarify things?
 
+> 
+> > 
+> > An interesting side effect is that virtio structures are now going to
+> > get allocated in 31 bit addressable storage.
+> 
+> Hm...
+> 
+> > 
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > ---
+> >  arch/s390/include/asm/ccwdev.h   |  4 +++
+> >  drivers/s390/cio/ccwreq.c        |  8 ++---
+> >  drivers/s390/cio/device.c        | 65 +++++++++++++++++++++++++++++++++-------
+> >  drivers/s390/cio/device_fsm.c    | 40 ++++++++++++-------------
+> >  drivers/s390/cio/device_id.c     | 18 +++++------
+> >  drivers/s390/cio/device_ops.c    | 21 +++++++++++--
+> >  drivers/s390/cio/device_pgid.c   | 20 ++++++-------
+> >  drivers/s390/cio/device_status.c | 24 +++++++--------
+> >  drivers/s390/cio/io_sch.h        | 21 +++++++++----
+> >  drivers/s390/virtio/virtio_ccw.c | 10 -------
+> >  10 files changed, 148 insertions(+), 83 deletions(-)
+> 
+> (...)
+> 
+> > diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+> > index 6d989c360f38..bb7a92316fc8 100644
+> > --- a/drivers/s390/virtio/virtio_ccw.c
+> > +++ b/drivers/s390/virtio/virtio_ccw.c
+> > @@ -66,7 +66,6 @@ struct virtio_ccw_device {
+> >  	bool device_lost;
+> >  	unsigned int config_ready;
+> >  	void *airq_info;
+> > -	u64 dma_mask;
+> >  };
+> >  
+> >  struct vq_info_block_legacy {
+> > @@ -1255,16 +1254,7 @@ static int virtio_ccw_online(struct ccw_device *cdev)
+> >  		ret = -ENOMEM;
+> >  		goto out_free;
+> >  	}
+> > -
+> >  	vcdev->vdev.dev.parent = &cdev->dev;
+> > -	cdev->dev.dma_mask = &vcdev->dma_mask;
+> > -	/* we are fine with common virtio infrastructure using 64 bit DMA */
+> > -	ret = dma_set_mask_and_coherent(&cdev->dev, DMA_BIT_MASK(64));
+> > -	if (ret) {
+> > -		dev_warn(&cdev->dev, "Failed to enable 64-bit DMA.\n");
+> > -		goto out_free;
+> > -	}
+> 
+> This means that vring structures now need to fit into 31 bits as well,
+> I think?
 
->>>
->>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
->>> ---
->>>   drivers/s390/cio/vfio_ccw_cp.c | 26 ++++++++------------------
->>>   1 file changed, 8 insertions(+), 18 deletions(-)
->>
+Nod.
+
+> Is there any way to reserve the 31 bit restriction for channel
+> subsystem structures and keep vring in the full 64 bit range? (Or am I
+> fundamentally misunderstanding something?)
+> 
+
+At the root of this problem is that the DMA API basically says devices
+may have addressing limitations expressed by the dma_mask, while our
+addressing limitations are not coming from the device but from the IO
+arch: e.g. orb.cpa and ccw.cda are 31 bit addresses. In our case it
+depends on how and for what is the device going to use the memory (e.g.
+buffers addressed by MIDA vs IDA vs direct).
+
+Virtio uses the DMA properties of the parent, that is in our case the
+struct device embedded in struct ccw_device.
+
+The previous version (RFC) used to allocate all the cio DMA stuff from
+this global cio_dma_pool using the css0.dev for the DMA API
+interactions. And we set *css0.dev.dma_mask == DMA_BIT_MASK(31) so
+e.g. the allocated ccws are 31 bit addressable.
+
+But I was asked to change this so that when I allocate DMA memory for a
+channel program of particular ccw device, a struct device of that ccw
+device is used as the first argument of dma_alloc_coherent().
+
+Considering
+
+void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t *dma_handle,
+                gfp_t flag, unsigned long attrs)
+{
+        const struct dma_map_ops *ops = get_dma_ops(dev);
+        void *cpu_addr;
+
+        WARN_ON_ONCE(dev && !dev->coherent_dma_mask);
+
+        if (dma_alloc_from_dev_coherent(dev, size, dma_handle, &cpu_addr))
+                return cpu_addr;
+
+        /* let the implementation decide on the zone to allocate from: */
+        flag &= ~(__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM);
+
+that is the GFP flags dropped that implies that we really want
+cdev->dev restricted to 31 bit addressable memory because we can't tell
+(with the current common DMA code) hey but this piece of DMA mem you
+are abot to allocate for me must be 31 bit addressable (using GFP_DMA
+as we usually do).
+
+So, as described in the commit message, the vring stuff being forced
+into ZONE_DMA is an unfortunate consequence of this all.
+
+A side note: making the subchannel device 'own' the DMA stuff of a ccw
+device (something that was discussed in the RFC thread) is tricky
+because the ccw device may outlive the subchannel (all that orphan
+stuff).
+
+So the answer is: it is technically possible (e.g. see RFC) but it comes
+at a price, and I see no obviously brilliant solution.
+
+Regards,
+Halil
+
+> > -
+> >  	vcdev->config_block = kzalloc(sizeof(*vcdev->config_block),
+> >  				   GFP_DMA | GFP_KERNEL);
+> >  	if (!vcdev->config_block) {
 > 
 
