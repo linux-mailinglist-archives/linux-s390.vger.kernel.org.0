@@ -2,169 +2,273 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8C28206AE
-	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 14:08:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CEBF2079D
+	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 15:08:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727307AbfEPMIJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 May 2019 08:08:09 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53258 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726878AbfEPMII (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 May 2019 08:08:08 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2BEF73B718;
-        Thu, 16 May 2019 12:08:08 +0000 (UTC)
-Received: from [10.36.117.217] (ovpn-117-217.ams2.redhat.com [10.36.117.217])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F82D5D6A9;
-        Thu, 16 May 2019 12:08:04 +0000 (UTC)
-Subject: Re: [RFC PATCH 2/4] KVM: selftests: Align memory region addresses to
- 1M on s390x
-To:     Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20190516111253.4494-1-thuth@redhat.com>
- <20190516111253.4494-3-thuth@redhat.com>
- <d9c383ef-6f4b-4f51-b627-7565a67005d3@redhat.com>
- <395e1b02-09b7-9420-33e1-a3abb36282f0@redhat.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <d6f7e093-0b8d-c121-ffe5-9f54bc2a1119@redhat.com>
-Date:   Thu, 16 May 2019 14:08:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726726AbfEPNIV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 May 2019 09:08:21 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42416 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726692AbfEPNIU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 May 2019 09:08:20 -0400
+Received: by mail-ed1-f66.google.com with SMTP id l25so5170273eda.9
+        for <linux-s390@vger.kernel.org>; Thu, 16 May 2019 06:08:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jBAUBEgS9CTwipSrc6xzDmW1RVItxpv28CPVuXdSXxE=;
+        b=GRxeUQMCXOVh37t5Sw740ly8qtZPRUCCCuv9QrOvbPCErQEesLGEm7EKrXAe0Q9KJ8
+         Z2g505Ms1qmYsjpb12060y9byTSC8XMgPPOX3qoYUm7Wuo3GhPqSLBaepdYgRwIARNNw
+         f1qSmJlbONGpkHQJTh3piORC/JZieb0S9j9mqhLIuQMSaQYY9Fp7KshgDzX51htGan8m
+         Sxk2kN6la3ME1D8bVbdzuQqjT/ou0n6uk27GXJB7sFHnw9j78I+U5Nev2p4rx/U1wEC7
+         4Ntaz4NKM/S52nOQZW29Gzd4zoFa1reEayvlgt/ir0RYr/yiXPYA0rELPDQMlq2mdu1F
+         tVNw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jBAUBEgS9CTwipSrc6xzDmW1RVItxpv28CPVuXdSXxE=;
+        b=U1IBnW4X5sRgeVCPphgxMoQbKHqVuG5V8pk4XEGGDdrtken70RlfDOO6j2AeNtif/X
+         CgZ+QGG7v5sjfNd6ymG464Ss0W/cy5J2aC3hAwhbIdymL44pHRetJPvhU1Ip6r3xRC2O
+         Byi41kAhemYMJ+rh7hqL0/7BOQPJvhl78rY+EDQBKwpx68Vb9K0ABDhp7Htl7JR7N1vl
+         usH7xuhqIV8M7HTPWxFReSNBl0BsV2fyBEftZtVw5ApvNMgDBpR+Ta35L9FzcQwUYZGF
+         G4ynSCHjwmddlRoc6+de0pHVcpvHvTeQ2CdSjy1YkcDLf1WDQqy7WbrWYwYpW0cC2GDS
+         QaIw==
+X-Gm-Message-State: APjAAAWhlcYSQ21x+f5qm0GGf4S/T4i0J+FifxPOOUdDZOViLZCupEab
+        uqPNlTLHBuz00AQu79YSCpHXWQ==
+X-Google-Smtp-Source: APXvYqw6MgzOGs4eZ9bDhdi4eCkaorExR9i5a/NKq40xlcfMO66JmZJGeYkhHm/1LjUeLbq94zzeIA==
+X-Received: by 2002:a50:89bb:: with SMTP id g56mr49862849edg.124.1558012098308;
+        Thu, 16 May 2019 06:08:18 -0700 (PDT)
+Received: from brauner.io ([193.96.224.243])
+        by smtp.gmail.com with ESMTPSA id p17sm1815197edr.94.2019.05.16.06.08.15
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 16 May 2019 06:08:17 -0700 (PDT)
+Date:   Thu, 16 May 2019 15:08:15 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        elena.reshetova@intel.com, Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch@vger.kernel.org,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+Subject: Re: [PATCH 1/2] pid: add pidfd_open()
+Message-ID: <20190516130813.i66ujfzftbgpqhnh@brauner.io>
+References: <20190515100400.3450-1-christian@brauner.io>
+ <CAKOZuesPF+ftwqsNDMBy1LpwJgWTNuQm9-E=C90sSTBYEEsDww@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <395e1b02-09b7-9420-33e1-a3abb36282f0@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 16 May 2019 12:08:08 +0000 (UTC)
+Content-Disposition: inline
+In-Reply-To: <CAKOZuesPF+ftwqsNDMBy1LpwJgWTNuQm9-E=C90sSTBYEEsDww@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 16.05.19 13:59, Thomas Huth wrote:
-> On 16/05/2019 13.30, David Hildenbrand wrote:
->> On 16.05.19 13:12, Thomas Huth wrote:
->>> On s390x, there is a constraint that memory regions have to be aligned
->>> to 1M (or running the VM will fail). Introduce a new "alignment" variable
->>> in the vm_userspace_mem_region_add() function which now can be used for
->>> both, huge page and s390x alignment requirements.
->>>
->>> Signed-off-by: Thomas Huth <thuth@redhat.com>
->>> ---
->>>  tools/testing/selftests/kvm/lib/kvm_util.c | 21 +++++++++++++++++-----
->>>  1 file changed, 16 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
->>> index 8d63ccb93e10..64a0da6efe3d 100644
->>> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
->>> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
->>> @@ -559,6 +559,7 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
->>>  	unsigned long pmem_size = 0;
->>>  	struct userspace_mem_region *region;
->>>  	size_t huge_page_size = KVM_UTIL_PGS_PER_HUGEPG * vm->page_size;
->>> +	size_t alignment;
->>>  
->>>  	TEST_ASSERT((guest_paddr % vm->page_size) == 0, "Guest physical "
->>>  		"address not on a page boundary.\n"
->>> @@ -608,9 +609,20 @@ void vm_userspace_mem_region_add(struct kvm_vm *vm,
->>>  	TEST_ASSERT(region != NULL, "Insufficient Memory");
->>>  	region->mmap_size = npages * vm->page_size;
->>>  
->>> -	/* Enough memory to align up to a huge page. */
->>> +#ifdef __s390x__
->>> +	/* On s390x, the host address must be aligned to 1M (due to PGSTEs) */
->>> +	alignment = 0x100000;
->>
->> This corresponds to huge_page_size, maybe you can exploit this fact here.
->>
->> Something like
->>
->> alignment = 1;
->>
->> /* On s390x, the host address must always be aligned to the THP size */
->> #ifndef __s390x__
->> if (src_type == VM_MEM_SRC_ANONYMOUS_THP)
->> #endif
->> 	alignment = huge_page_size;
->>
->> Maybe in a nicer fashion. Not sure.
+On Wed, May 15, 2019 at 10:45:06AM -0700, Daniel Colascione wrote:
+> On Wed, May 15, 2019 at 3:04 AM Christian Brauner <christian@brauner.io> wrote:
+> >
+> > This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
+> > pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
+> > process that is created via traditional fork()/clone() calls that is only
+> > referenced by a PID:
 > 
-> Hmm, but if I've got your explanation on IRC right, it's rather a
-> coincidence that the huge page size matches the alignment requirements
-> for KVM memslots, isn't it? So I think the code would look rather
-> confusing if I'd try to shorten it this way...?
+> Thanks for doing this work. I'm really looking forward to this new
+> approach to process management.
 
-Well, it's not really a coincidence. We have to share page tables
-between the gmap and the user space process. One huge page corresponds
-to the pages covered by a page table. So the page table "size" dictates
-the alignment of both things.
-
-But this is just nit picking here, do it the way you prefer, just wanted
-to point it out :)
+Thanks! Glad to hear!
 
 > 
->  Thomas
+> > int pidfd = pidfd_open(1234, 0);
+> > ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
+> >
+> > With the introduction of pidfds through CLONE_PIDFD it is possible to
+> > created pidfds at process creation time.
+> > However, a lot of processes get created with traditional PID-based calls
+> > such as fork() or clone() (without CLONE_PIDFD). For these processes a
+> > caller can currently not create a pollable pidfd. This is a huge problem
+> > for Android's low memory killer (LMK) and service managers such as systemd.
+> > Both are examples of tools that want to make use of pidfds to get reliable
+> > notification of process exit for non-parents (pidfd polling) and race-free
+> > signal sending (pidfd_send_signal()). They intend to switch to this API for
+> > process supervision/management as soon as possible. Having no way to get
+> > pollable pidfds from PID-only processes is one of the biggest blockers for
+> > them in adopting this api. With pidfd_open() making it possible to retrieve
+> > pidfd for PID-based processes we enable them to adopt this api.
+> >
+> > In line with Arnd's recent changes to consolidate syscall numbers across
+> > architectures, I have added the pidfd_open() syscall to all architectures
+> > at the same time.
 > 
+> I'm glad it's easier now.
+> 
+> >  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+> >  arch/arm64/include/asm/unistd32.h           |  2 +
+> >  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+> >  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+> >  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+> >  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+> >  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+> >  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+> >  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+> >  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+> >  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+> >  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+> >  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+> >  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+> 
+> It'd be nice to arrange the system call tables so that we need to
+> change only one file when adding a new system call.
+> 
+> [Snip system call wiring]
+> 
+> > --- a/include/linux/pid.h
+> > +++ b/include/linux/pid.h
+> > @@ -67,6 +67,7 @@ struct pid
+> >  extern struct pid init_struct_pid;
+> >
+> >  extern const struct file_operations pidfd_fops;
+> > +extern int pidfd_create(struct pid *pid);
+> >
+> >  static inline struct pid *get_pid(struct pid *pid)
+> >  {
+> > diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+> > index e2870fe1be5b..989055e0b501 100644
+> > --- a/include/linux/syscalls.h
+> > +++ b/include/linux/syscalls.h
+> > @@ -929,6 +929,7 @@ asmlinkage long sys_clock_adjtime32(clockid_t which_clock,
+> >                                 struct old_timex32 __user *tx);
+> >  asmlinkage long sys_syncfs(int fd);
+> >  asmlinkage long sys_setns(int fd, int nstype);
+> > +asmlinkage long sys_pidfd_open(pid_t pid, unsigned int flags);
+> >  asmlinkage long sys_sendmmsg(int fd, struct mmsghdr __user *msg,
+> >                              unsigned int vlen, unsigned flags);
+> >  asmlinkage long sys_process_vm_readv(pid_t pid,
+> > diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
+> > index dee7292e1df6..94a257a93d20 100644
+> > --- a/include/uapi/asm-generic/unistd.h
+> > +++ b/include/uapi/asm-generic/unistd.h
+> > @@ -832,9 +832,11 @@ __SYSCALL(__NR_io_uring_setup, sys_io_uring_setup)
+> >  __SYSCALL(__NR_io_uring_enter, sys_io_uring_enter)
+> >  #define __NR_io_uring_register 427
+> >  __SYSCALL(__NR_io_uring_register, sys_io_uring_register)
+> > +#define __NR_pidfd_open 428
+> > +__SYSCALL(__NR_pidfd_open, sys_pidfd_open)
+> >
+> >  #undef __NR_syscalls
+> > -#define __NR_syscalls 428
+> > +#define __NR_syscalls 429
+> >
+> >  /*
+> >   * 32 bit systems traditionally used different
+> > diff --git a/kernel/fork.c b/kernel/fork.c
+> > index 737db1828437..980cc1d2b8d4 100644
+> > --- a/kernel/fork.c
+> > +++ b/kernel/fork.c
+> > @@ -1714,7 +1714,7 @@ const struct file_operations pidfd_fops = {
+> >   * Return: On success, a cloexec pidfd is returned.
+> >   *         On error, a negative errno number will be returned.
+> >   */
+> > -static int pidfd_create(struct pid *pid)
+> > +int pidfd_create(struct pid *pid)
+> >  {
+> >         int fd;
+> >
+> > diff --git a/kernel/pid.c b/kernel/pid.c
+> > index 20881598bdfa..237d18d6ecb8 100644
+> > --- a/kernel/pid.c
+> > +++ b/kernel/pid.c
+> > @@ -38,6 +38,7 @@
+> >  #include <linux/syscalls.h>
+> >  #include <linux/proc_ns.h>
+> >  #include <linux/proc_fs.h>
+> > +#include <linux/sched/signal.h>
+> >  #include <linux/sched/task.h>
+> >  #include <linux/idr.h>
+> >
+> > @@ -451,6 +452,53 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
+> >         return idr_get_next(&ns->idr, &nr);
+> >  }
+> >
+> > +/**
+> > + * pidfd_open() - Open new pid file descriptor.
+> > + *
+> > + * @pid:   pid for which to retrieve a pidfd
+> > + * @flags: flags to pass
+> > + *
+> > + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
+> > + * the process identified by @pid. Currently, the process identified by
+> > + * @pid must be a thread-group leader. This restriction currently exists
+> > + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
+> > + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
+> > + * leaders).
+> > + *
+> > + * Return: On success, a cloexec pidfd is returned.
+> > + *         On error, a negative errno number will be returned.
+> > + */
+> > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
+> > +{
+> > +       int fd, ret;
+> > +       struct pid *p;
+> > +       struct task_struct *tsk;
+> > +
+> > +       if (flags)
+> > +               return -EINVAL;
+> 
+> If we support blocking operations on pidfds, we'll want to be able to
+> put them in non-blocking mode. Does it make sense to accept and ignore
+> O_NONBLOCK here now?
 
+Hm, is there a race condition you see that would prevent you from using
+fcntl()? If you're ok with using fcntl() I would argue we should hold on
+tight to every bit we have for flags.
 
--- 
+> 
+> > +       if (pid <= 0)
+> > +               return -EINVAL;
+> 
+> WDYT of defining pid == 0 to mean "open myself"?
 
-Thanks,
+I'm torn. It be a nice shortcut of course but pid being 0 is usually an
+indicator for child processes. So unless the getpid() before
+pidfd_open() is an issue I'd say let's leave it as is. If you really
+want the shortcut might -1 be better?
 
-David / dhildenb
+> 
+> > +       p = find_get_pid(pid);
+> > +       if (!p)
+> > +               return -ESRCH;
+> > +
+> > +       rcu_read_lock();
+> > +       tsk = pid_task(p, PIDTYPE_PID);
+> > +       if (!tsk)
+> > +               ret = -ESRCH;
+> > +       else if (unlikely(!thread_group_leader(tsk)))
+> > +               ret = -EINVAL;
+> > +       else
+> > +               ret = 0;
+> > +       rcu_read_unlock();
+> > +
+> > +       fd = ret ?: pidfd_create(p);
+> > +       put_pid(p);
+> > +       return fd;
+> > +}
