@@ -2,119 +2,144 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9FE6E201EA
-	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 11:01:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 68C6320309
+	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 11:59:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbfEPJAD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 May 2019 05:00:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45594 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726448AbfEPJAD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 May 2019 05:00:03 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G8pxgx024999
-        for <linux-s390@vger.kernel.org>; Thu, 16 May 2019 05:00:02 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sh42r24qk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 16 May 2019 05:00:01 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 16 May 2019 10:00:00 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 May 2019 09:59:58 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G8xvWp38404298
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 08:59:57 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 29A5D42041;
-        Thu, 16 May 2019 08:59:57 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D40314203F;
-        Thu, 16 May 2019 08:59:56 +0000 (GMT)
-Received: from [9.152.222.58] (unknown [9.152.222.58])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 16 May 2019 08:59:56 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v1 0/2] New state handling for VFIO CCW
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     pasic@linux.vnet.ibm.com, farman@linux.ibm.com,
-        alifm@linux.ibm.com, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <1557148270-19901-1-git-send-email-pmorel@linux.ibm.com>
- <20190508115341.2be6b108.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Thu, 16 May 2019 10:59:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726537AbfEPJ7u convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Thu, 16 May 2019 05:59:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55866 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726374AbfEPJ7u (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 May 2019 05:59:50 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B200B308FB9D;
+        Thu, 16 May 2019 09:59:49 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 778B96A257;
+        Thu, 16 May 2019 09:59:48 +0000 (UTC)
+Date:   Thu, 16 May 2019 11:59:46 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Farhan Ali <alifm@linux.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v2 5/7] s390/cio: Allow zero-length CCWs in vfio-ccw
+Message-ID: <20190516115946.11d18510.cohuck@redhat.com>
+In-Reply-To: <39c7904f-7f9b-473d-201d-8d6aae4c490b@linux.ibm.com>
+References: <20190514234248.36203-1-farman@linux.ibm.com>
+        <20190514234248.36203-6-farman@linux.ibm.com>
+        <20190515142339.12065a1d.cohuck@redhat.com>
+        <f309cad9-9265-e276-8d57-8b6387f6fed7@linux.ibm.com>
+        <39c7904f-7f9b-473d-201d-8d6aae4c490b@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20190508115341.2be6b108.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051609-4275-0000-0000-000003355AB2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051608-4276-0000-0000-00003844E186
-Message-Id: <118f3dc7-d950-75ac-527d-2eb65dce9a99@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905160061
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 16 May 2019 09:59:49 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 08/05/2019 11:53, Cornelia Huck wrote:
-> On Mon,  6 May 2019 15:11:08 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> Hi,
->>
->> I did not integrate all my patches for state handling like I had
->> before but just two patches which seems interresting to me:
->>
->> - The first one allows the device ti be used only when a guest
->>    is currently using it.
->>    Otherwise the device is in NOT_OPER state
->>   
->> - The second rework the sch_event callback: AFAIU we can not
->>    consider that the event moves the device in IDLE state.
->>    I think we better let it as it is currently.
-> 
-> I agree with the direction of this patch series.
-> 
->>
->> Regards,
->> Pierre
->>
->> Pierre Morel (2):
->>    vfio-ccw: Set subchannel state STANDBY on open
->>    vfio-ccw: rework sch_event
->>
->>   drivers/s390/cio/vfio_ccw_drv.c     | 21 ++-------------------
->>   drivers/s390/cio/vfio_ccw_fsm.c     |  7 +------
->>   drivers/s390/cio/vfio_ccw_ops.c     | 36 ++++++++++++++++++------------------
->>   drivers/s390/cio/vfio_ccw_private.h |  1 -
->>   4 files changed, 21 insertions(+), 44 deletions(-)
->>
-> 
-Thanks,
-I will post a v2 with the corrections seen by you and Farhan,
+On Wed, 15 May 2019 16:08:18 -0400
+Farhan Ali <alifm@linux.ibm.com> wrote:
 
-Regards,
-Pierre	
+> On 05/15/2019 11:04 AM, Eric Farman wrote:
+> > 
+> > 
+> > On 5/15/19 8:23 AM, Cornelia Huck wrote:  
+> >> On Wed, 15 May 2019 01:42:46 +0200
+> >> Eric Farman <farman@linux.ibm.com> wrote:
+> >>  
+> >>> It is possible that a guest might issue a CCW with a length of zero,
+> >>> and will expect a particular response.  Consider this chain:
+> >>>
+> >>>     Address   Format-1 CCW
+> >>>     --------  -----------------
+> >>>   0 33110EC0  346022CC 33177468
+> >>>   1 33110EC8  CF200000 3318300C
+> >>>
+> >>> CCW[0] moves a little more than two pages, but also has the
+> >>> Suppress Length Indication (SLI) bit set to handle the expectation
+> >>> that considerably less data will be moved.  CCW[1] also has the SLI
+> >>> bit set, and has a length of zero.  Once vfio-ccw does its magic,
+> >>> the kernel issues a start subchannel on behalf of the guest with this:
+> >>>
+> >>>     Address   Format-1 CCW
+> >>>     --------  -----------------
+> >>>   0 021EDED0  346422CC 021F0000
+> >>>   1 021EDED8  CF240000 3318300C
+> >>>
+> >>> Both CCWs were converted to an IDAL and have the corresponding flags
+> >>> set (which is by design), but only the address of the first data
+> >>> address is converted to something the host is aware of.  The second
+> >>> CCW still has the address used by the guest, which happens to be (A)
+> >>> (probably) an invalid address for the host, and (B) an invalid IDAW
+> >>> address (doubleword boundary, etc.).
+> >>>
+> >>> While the I/O fails, it doesn't fail correctly.  In this example, we
+> >>> would receive a program check for an invalid IDAW address, instead of
+> >>> a unit check for an invalid command.
+> >>>
+> >>> To fix this, revert commit 4cebc5d6a6ff ("vfio: ccw: validate the
+> >>> count field of a ccw before pinning") and allow the individual fetch
+> >>> routines to process them like anything else.  We'll make a slight
+> >>> adjustment to our allocation of the pfn_array (for direct CCWs) or
+> >>> IDAL (for IDAL CCWs) memory, so that we have room for at least one
+> >>> address even though no data will be transferred.
+> >>>
+> >>> Note that this doesn't provide us with a channel program that will
+> >>> fail in the expected way.  Since our length is zero, vfio_pin_pages()  
+> > 
+> > s/is/was/
+> >   
+> >>> returns -EINVAL and cp_prefetch() will thus fail.  This will be fixed
+> >>> in the next patch.  
+> >>
+> >> So, this failed before, and still fails, just differently?   
+> > 
+> > Probably.  If the guest gave us a valid address, the pin might actually 
+> > work now whereas before it would fail because the length was zero.  If 
+> > the address were also invalid,
+> >   
+> >  >IOW, this
+> >> has no effect on bisectability?  
+> > 
+> > I think so, but I suppose that either (A) patch 5 and 6 could be 
+> > squashed together, or (B) I could move the "set pa_nr to zero" (or more 
+> > accurately, set it to ccw->count) pieces from patch 6 into this patch, 
+> > so that the vfio_pin_pages() call occurs like it does today.
+> >   
+> >>  
+> 
+> While going through patch 5, I was confused as to why we need to pin 
+> pages if we are only trying to translate the addresses and no data 
+> transfer will take place with count==0. Well, you answer that in patch 6 :)
+> 
+> So maybe it might be better to move parts of patch 6 to 5 or squash 
+> them, or maybe reverse the order.
 
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+I think this will get a bit unwieldy of squashed, so what about simply
+moving code from 6 to 5? I think people are confused enough by the two
+patches to make a change look like a good idea.
+
+(I can queue patches 1-4 to get them out of the way :)
+
+> 
+> Thanks
+> Farhan
+> 
+> 
+> >>>
+> >>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> >>> ---
+> >>>   drivers/s390/cio/vfio_ccw_cp.c | 26 ++++++++------------------
+> >>>   1 file changed, 8 insertions(+), 18 deletions(-)  
+> >>  
+> >   
+> 
 
