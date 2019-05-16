@@ -2,110 +2,374 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 861D31FEC3
-	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 07:19:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D09E1FF6A
+	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 08:13:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726336AbfEPFTd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 May 2019 01:19:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47590 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725975AbfEPFTc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 May 2019 01:19:32 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G5HeOl158332
-        for <linux-s390@vger.kernel.org>; Thu, 16 May 2019 01:19:31 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sh15pgxeh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 16 May 2019 01:19:31 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Thu, 16 May 2019 06:19:29 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 May 2019 06:19:25 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G5JOew57802782
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 May 2019 05:19:24 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7A8A911C06E;
-        Thu, 16 May 2019 05:19:24 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 81D8911C05B;
-        Thu, 16 May 2019 05:19:23 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.112])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 16 May 2019 05:19:23 +0000 (GMT)
-Date:   Thu, 16 May 2019 08:19:21 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1726680AbfEPGN5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 May 2019 02:13:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54360 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726447AbfEPGN5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 May 2019 02:13:57 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A91A4C057F2F;
+        Thu, 16 May 2019 06:13:56 +0000 (UTC)
+Received: from gondolin (ovpn-204-119.brq.redhat.com [10.40.204.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 150BF60BE5;
+        Thu, 16 May 2019 06:13:46 +0000 (UTC)
+Date:   Thu, 16 May 2019 08:13:43 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] remove ARCH_SELECT_MEMORY_MODEL where it has no
- effect
-References: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 05/10] s390/cio: introduce DMA pools to cio
+Message-ID: <20190516081343.0d22db55.cohuck@redhat.com>
+In-Reply-To: <20190515191257.31bdc583.pasic@linux.ibm.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-6-pasic@linux.ibm.com>
+        <alpine.LFD.2.21.1905081447280.1773@schleppi>
+        <20190508232210.5a555caa.pasic@linux.ibm.com>
+        <20190509121106.48aa04db.cohuck@redhat.com>
+        <20190510001112.479b2fd7.pasic@linux.ibm.com>
+        <20190510161013.7e697337.cohuck@redhat.com>
+        <20190512202256.5517592d.pasic@linux.ibm.com>
+        <20190513152924.1e8e8f5a.cohuck@redhat.com>
+        <20190515191257.31bdc583.pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1556740577-4140-1-git-send-email-rppt@linux.ibm.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19051605-4275-0000-0000-000003354B30
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051605-4276-0000-0000-00003844D161
-Message-Id: <20190516051921.GC21366@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=690 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905160037
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 16 May 2019 06:13:56 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Andrew,
+On Wed, 15 May 2019 19:12:57 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-Can this go via the -mm tree?
+> On Mon, 13 May 2019 15:29:24 +0200
+> Cornelia Huck <cohuck@redhat.com> wrote:
+> 
+> > On Sun, 12 May 2019 20:22:56 +0200
+> > Halil Pasic <pasic@linux.ibm.com> wrote:
+> >   
+> > > On Fri, 10 May 2019 16:10:13 +0200
+> > > Cornelia Huck <cohuck@redhat.com> wrote:
+> > >   
+> > > > On Fri, 10 May 2019 00:11:12 +0200
+> > > > Halil Pasic <pasic@linux.ibm.com> wrote:
+> > > >     
+> > > > > On Thu, 9 May 2019 12:11:06 +0200
+> > > > > Cornelia Huck <cohuck@redhat.com> wrote:
+> > > > >     
+> > > > > > On Wed, 8 May 2019 23:22:10 +0200
+> > > > > > Halil Pasic <pasic@linux.ibm.com> wrote:
+> > > > > >       
+> > > > > > > On Wed, 8 May 2019 15:18:10 +0200 (CEST)
+> > > > > > > Sebastian Ott <sebott@linux.ibm.com> wrote:      
+> > > > > >       
+> > > > > > > > > @@ -1063,6 +1163,7 @@ static int __init css_bus_init(void)
+> > > > > > > > >  		unregister_reboot_notifier(&css_reboot_notifier);
+> > > > > > > > >  		goto out_unregister;
+> > > > > > > > >  	}
+> > > > > > > > > +	cio_dma_pool_init();          
+> > > > > > > > 
+> > > > > > > > This is too late for early devices (ccw console!).        
+> > > > > > > 
+> > > > > > > You have already raised concern about this last time (thanks). I think,
+> > > > > > > I've addressed this issue: the cio_dma_pool is only used by the airq
+> > > > > > > stuff. I don't think the ccw console needs it. Please have an other look
+> > > > > > > at patch #6, and explain your concern in more detail if it persists.      
+> > > > > > 
+> > > > > > What about changing the naming/adding comments here, so that (1) folks
+> > > > > > aren't confused by the same thing in the future and (2) folks don't try
+> > > > > > to use that pool for something needed for the early ccw consoles?
+> > > > > >       
+> > > > > 
+> > > > > I'm all for clarity! Suggestions for better names?    
+> > > > 
+> > > > css_aiv_dma_pool, maybe? Or is there other cross-device stuff that may
+> > > > need it?
+> > > >     
+> > > 
+> > > Ouch! I was considering to use cio_dma_zalloc() for the adapter
+> > > interruption vectors but I ended up between the two chairs in the end.
+> > > So with this series there are no uses for cio_dma pool.
+> > > 
+> > > I don't feel strongly about this going one way the other.
+> > > 
+> > > Against getting rid of the cio_dma_pool and sticking with the speaks
+> > > dma_alloc_coherent() that we waste a DMA page per vector, which is a
+> > > non obvious side effect.  
+> > 
+> > That would basically mean one DMA page per virtio-ccw device, right?  
+> 
+> Not quite: virtio-ccw shares airq vectors among multiple devices. We
+> alloc 64 bytes a time and use that as long as we don't run out of bits.
+>  
+> > For single queue devices, this seems like quite a bit of overhead.
+> >  
+> 
+> Nod.
+>  
+> > Are we expecting many devices in use per guest?  
+> 
+> This is affect linux in general, not only guest 2 stuff (i.e. we
+> also waste in vanilla lpar mode). And zpci seems to do at least one
+> airq_iv_create() per pci function.
 
-On Wed, May 01, 2019 at 10:56:14PM +0300, Mike Rapoport wrote:
-> Hi,
-> 
-> For several architectures the ARCH_SELECT_MEMORY_MODEL has no real effect
-> because the dependencies for the memory model are always evaluated to a
-> single value.
-> 
-> Remove the ARCH_SELECT_MEMORY_MODEL from the Kconfigs for these
-> architectures.
-> 
-> Mike Rapoport (3):
->   arm: remove ARCH_SELECT_MEMORY_MODEL
->   s390: remove ARCH_SELECT_MEMORY_MODEL
->   sparc: remove ARCH_SELECT_MEMORY_MODEL
-> 
->  arch/arm/Kconfig   | 3 ---
->  arch/s390/Kconfig  | 3 ---
->  arch/sparc/Kconfig | 3 ---
->  3 files changed, 9 deletions(-)
-> 
-> -- 
-> 2.7.4
-> 
+Hm, I thought that guests with virtio-ccw devices were the most heavy
+user of this.
 
--- 
-Sincerely yours,
-Mike.
+On LPAR (which would be the environment where I'd expect lots of
+devices), how many users of this infrastructure do we typically have?
+DASD do not use adapter interrupts, and QDIO devices (qeth/zfcp) use
+their own indicator handling (that pre-dates this infrastructure) IIRC,
+which basically only leaves the PCI functions you mention above.
+
+> 
+> >   
+> > > 
+> > > What speaks against cio_dma_pool is that it is slightly more code, and
+> > > this currently can not be used for very early stuff, which I don't
+> > > think is relevant.   
+> > 
+> > Unless properly documented, it feels like something you can easily trip
+> > over, however.
+> > 
+> > I assume that the "very early stuff" is basically only ccw consoles.
+> > Not sure if we can use virtio-serial as an early ccw console -- IIRC
+> > that was only about 3215/3270? While QEMU guests are able to use a 3270
+> > console, this is experimental and I would not count that as a use case.
+> > Anyway, 3215/3270 don't use adapter interrupts, and probably not
+> > anything cross-device, either; so unless early virtio-serial is a
+> > thing, this restriction is fine if properly documented.
+> >   
+> 
+> Mimu can you dig into this a bit?
+> 
+> We could also aim for getting rid of this limitation. One idea would be
+> some sort of lazy initialization (i.e. triggered by first usage).
+> Another idea would be simply doing the initialization earlier.
+> Unfortunately I'm not all that familiar with the early stuff. Is there
+> some doc you can recommend?
+
+I'd probably look at the code for that.
+
+> 
+> Anyway before investing much more into this, I think we should have a
+> fair idea which option do we prefer...
+
+Agreed.
+
+> 
+> > > What also used to speak against it is that
+> > > allocations asking for more than a page would just fail, but I addressed
+> > > that in the patch I've hacked up on top of the series, and I'm going to
+> > > paste below. While at it I addressed some other issues as well.  
+> > 
+> > Hm, which "other issues"?
+> >   
+> 
+> The kfree() I've forgotten to get rid of, and this 'document does not
+> work early' (pun intended) business.
+
+Ok.
+
+> 
+> > > 
+> > > I've also got code that deals with AIRQ_IV_CACHELINE by turning the
+> > > kmem_cache into a dma_pool.  
+> > 
+> > Isn't that percolating to other airq users again? Or maybe I just don't
+> > understand what you're proposing here...  
+> 
+> Absolutely.
+> 
+> >   
+> > > 
+> > > Cornelia, Sebastian which approach do you prefer:
+> > > 1) get rid of cio_dma_pool and AIRQ_IV_CACHELINE, and waste a page per
+> > > vector, or
+> > > 2) go with the approach taken by the patch below?  
+> > 
+> > I'm not sure that I properly understand this (yeah, you probably
+> > guessed); so I'm not sure I can make a good call here.
+> >   
+> 
+> I hope you, I managed to clarify some of the questions. Please keep
+> asking if stuff remains unclear. I'm not a great communicator, but a
+> quite tenacious one.
+> 
+> I hope Sebastian will chime in as well.
+
+Yes, waiting for his comments as well :)
+
+> 
+> > > 
+> > > 
+> > > Regards,
+> > > Halil
+> > > -----------------------8<---------------------------------------------
+> > > From: Halil Pasic <pasic@linux.ibm.com>
+> > > Date: Sun, 12 May 2019 18:08:05 +0200
+> > > Subject: [PATCH] WIP: use cio dma pool for airqs
+> > > 
+> > > Let's not waste a DMA page per adapter interrupt bit vector.
+> > > ---
+> > > Lightly tested...
+> > > ---
+> > >  arch/s390/include/asm/airq.h |  1 -
+> > >  drivers/s390/cio/airq.c      | 10 +++-------
+> > >  drivers/s390/cio/css.c       | 18 +++++++++++++++---
+> > >  3 files changed, 18 insertions(+), 11 deletions(-)
+> > > 
+> > > diff --git a/arch/s390/include/asm/airq.h b/arch/s390/include/asm/airq.h
+> > > index 1492d48..981a3eb 100644
+> > > --- a/arch/s390/include/asm/airq.h
+> > > +++ b/arch/s390/include/asm/airq.h
+> > > @@ -30,7 +30,6 @@ void unregister_adapter_interrupt(struct airq_struct *airq);
+> > >  /* Adapter interrupt bit vector */
+> > >  struct airq_iv {
+> > >  	unsigned long *vector;	/* Adapter interrupt bit vector */
+> > > -	dma_addr_t vector_dma; /* Adapter interrupt bit vector dma */
+> > >  	unsigned long *avail;	/* Allocation bit mask for the bit vector */
+> > >  	unsigned long *bitlock;	/* Lock bit mask for the bit vector */
+> > >  	unsigned long *ptr;	/* Pointer associated with each bit */
+> > > diff --git a/drivers/s390/cio/airq.c b/drivers/s390/cio/airq.c
+> > > index 7a5c0a0..f11f437 100644
+> > > --- a/drivers/s390/cio/airq.c
+> > > +++ b/drivers/s390/cio/airq.c
+> > > @@ -136,8 +136,7 @@ struct airq_iv *airq_iv_create(unsigned long bits, unsigned long flags)
+> > >  		goto out;
+> > >  	iv->bits = bits;
+> > >  	size = iv_size(bits);
+> > > -	iv->vector = dma_alloc_coherent(cio_get_dma_css_dev(), size,
+> > > -						 &iv->vector_dma, GFP_KERNEL);
+> > > +	iv->vector = cio_dma_zalloc(size);
+> > >  	if (!iv->vector)
+> > >  		goto out_free;
+> > >  	if (flags & AIRQ_IV_ALLOC) {
+> > > @@ -172,8 +171,7 @@ struct airq_iv *airq_iv_create(unsigned long bits, unsigned long flags)
+> > >  	kfree(iv->ptr);
+> > >  	kfree(iv->bitlock);
+> > >  	kfree(iv->avail);
+> > > -	dma_free_coherent(cio_get_dma_css_dev(), size, iv->vector,
+> > > -			  iv->vector_dma);
+> > > +	cio_dma_free(iv->vector, size);
+> > >  	kfree(iv);
+> > >  out:
+> > >  	return NULL;
+> > > @@ -189,9 +187,7 @@ void airq_iv_release(struct airq_iv *iv)
+> > >  	kfree(iv->data);
+> > >  	kfree(iv->ptr);
+> > >  	kfree(iv->bitlock);
+> > > -	kfree(iv->vector);
+> > > -	dma_free_coherent(cio_get_dma_css_dev(), iv_size(iv->bits),
+> > > -			  iv->vector, iv->vector_dma);
+> > > +	cio_dma_free(iv->vector, iv_size(iv->bits));
+> > >  	kfree(iv->avail);
+> > >  	kfree(iv);
+> > >  }
+> > > diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+> > > index 7087cc3..88d9c92 100644
+> > > --- a/drivers/s390/cio/css.c
+> > > +++ b/drivers/s390/cio/css.c
+> > > @@ -1063,7 +1063,10 @@ struct gen_pool *cio_gp_dma_create(struct device *dma_dev, int nr_pages)
+> > >  static void __gp_dma_free_dma(struct gen_pool *pool,
+> > >  			      struct gen_pool_chunk *chunk, void *data)
+> > >  {
+> > > -	dma_free_coherent((struct device *) data, PAGE_SIZE,
+> > > +
+> > > +	size_t chunk_size = chunk->end_addr - chunk->start_addr + 1;
+> > > +
+> > > +	dma_free_coherent((struct device *) data, chunk_size,
+> > >  			 (void *) chunk->start_addr,
+> > >  			 (dma_addr_t) chunk->phys_addr);
+> > >  }
+> > > @@ -1088,13 +1091,15 @@ void *cio_gp_dma_zalloc(struct gen_pool *gp_dma, struct device *dma_dev,
+> > >  {
+> > >  	dma_addr_t dma_addr;
+> > >  	unsigned long addr = gen_pool_alloc(gp_dma, size);
+> > > +	size_t chunk_size;
+> > >  
+> > >  	if (!addr) {
+> > > +		chunk_size = round_up(size, PAGE_SIZE);  
+> > 
+> > Doesn't that mean that we still go up to chunks of at least PAGE_SIZE?
+> > Or can vectors now share the same chunk?  
+> 
+> Exactly! We put the allocated dma mem into the genpool. So if the next
+> request can be served from what is already in the genpool we don't end
+> up in this fallback path where we grow the pool. 
+
+Ok, that makes sense.
+
+> 
+> >   
+> > >  		addr = (unsigned long) dma_alloc_coherent(dma_dev,
+> > > -					PAGE_SIZE, &dma_addr, CIO_DMA_GFP);
+> > > +					 chunk_size, &dma_addr, CIO_DMA_GFP);
+> > >  		if (!addr)
+> > >  			return NULL;
+> > > -		gen_pool_add_virt(gp_dma, addr, dma_addr, PAGE_SIZE, -1);
+> > > +		gen_pool_add_virt(gp_dma, addr, dma_addr, chunk_size, -1);
+> > >  		addr = gen_pool_alloc(gp_dma, size);  
+> 
+> BTW I think it would be good to recover from this alloc failing due to a
+> race (qute unlikely with small allocations thogh...).
+
+The callers hopefully check the result?
+
+> 
+> > >  	}
+> > >  	return (void *) addr;
+> > > @@ -1108,6 +1113,13 @@ void cio_gp_dma_free(struct gen_pool *gp_dma, void *cpu_addr, size_t size)
+> > >  	gen_pool_free(gp_dma, (unsigned long) cpu_addr, size);
+> > >  }
+> > >  
+> > > +/**
+> > > + * Allocate dma memory from the css global pool. Intended for memory not
+> > > + * specific to any single device within the css.
+> > > + *
+> > > + * Caution: Not suitable for early stuff like console.  
+> > 
+> > Maybe add "Do not use prior to <point in startup>"?
+> >   
+> 
+> I'm not awfully familiar with the well known 'points in startup'. Can
+> you recommend me some documentation on this topic?
+
+The code O:-) Anyway, that's where I'd start reading; there might be
+good stuff under Documentation/ that I've never looked at...
+
+> 
+> 
+> Regards,
+> Halil
+> 
+> > > + *
+> > > + */
+> > >  void *cio_dma_zalloc(size_t size)
+> > >  {
+> > >  	return cio_gp_dma_zalloc(cio_dma_pool, cio_get_dma_css_dev(), size);  
+> >   
+> 
 
