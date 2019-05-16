@@ -2,190 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6FFED1FFEF
-	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 09:05:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9FE6E201EA
+	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 11:01:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726454AbfEPHE4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 May 2019 03:04:56 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:37480 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfEPHE4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 May 2019 03:04:56 -0400
-Received: by mail-vs1-f66.google.com with SMTP id o5so1641602vsq.4;
-        Thu, 16 May 2019 00:04:54 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=q015/QHSXrok6Bw3iqMxHNHZLCbCNdwdW05xVaqSbFA=;
-        b=Adg2mPG3Opp+lMa037EF7O/Z1k8qcMAVRXY/0GcL5pmFYE4HfMGm08a0FIZgCUx/R5
-         8p0gqUgNp1uXo83fe0Bvp+XcCTJ+f7CL1DZYA2871cudz2eKINib1AMy7ZoH4O7XEKgj
-         cnNYXnnpGXoaqesWVesiJuB/7AHR53r8ohgG/JJ/ZMkfJIR5oz/YDxTaOzbw7Aw4LCsY
-         ZmwoXeDMXEW37JXu8THg6noFDcbR2CDSRP5KUVn8hL6jA/sla/eKVoOuHWyBaaTqr/8R
-         h7u4TlCjVHWXOuKyLSRRIxdidBroJHs9SBWaj3y9u/Pp1RyZDPvuu2afgGjJUVpnb30v
-         240Q==
-X-Gm-Message-State: APjAAAU2EBzwMfTpnl15FnXKz03Rx4nSwgbdczpkO7u/F24d7+uOXEH1
-        N/QHtB3e9hA76qWno7WlR3DpuxUzPyAbzoIo8O8=
-X-Google-Smtp-Source: APXvYqw6dkP3FpbWRddQ96QVJAiiTPvgI18vgQaVewrbrBgFk7NwzmrgB/94Q+BFkCvWo9DPpaDiVAnXWQvZ+5swDfg=
-X-Received: by 2002:a67:f303:: with SMTP id p3mr11428563vsf.166.1557990294356;
- Thu, 16 May 2019 00:04:54 -0700 (PDT)
+        id S1726977AbfEPJAD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 May 2019 05:00:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45594 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726448AbfEPJAD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 May 2019 05:00:03 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4G8pxgx024999
+        for <linux-s390@vger.kernel.org>; Thu, 16 May 2019 05:00:02 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sh42r24qk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 16 May 2019 05:00:01 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 16 May 2019 10:00:00 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 May 2019 09:59:58 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4G8xvWp38404298
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 May 2019 08:59:57 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 29A5D42041;
+        Thu, 16 May 2019 08:59:57 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D40314203F;
+        Thu, 16 May 2019 08:59:56 +0000 (GMT)
+Received: from [9.152.222.58] (unknown [9.152.222.58])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 16 May 2019 08:59:56 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v1 0/2] New state handling for VFIO CCW
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     pasic@linux.vnet.ibm.com, farman@linux.ibm.com,
+        alifm@linux.ibm.com, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <1557148270-19901-1-git-send-email-pmorel@linux.ibm.com>
+ <20190508115341.2be6b108.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Thu, 16 May 2019 10:59:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190515090722.696531131@linuxfoundation.org> <20190515090731.364702401@linuxfoundation.org>
-In-Reply-To: <20190515090731.364702401@linuxfoundation.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Thu, 16 May 2019 09:04:41 +0200
-Message-ID: <CAMuHMdVFaQLbH7F=Ard5MzUzG1FTfwLH=7xz=LpA3YaZyj2+Zg@mail.gmail.com>
-Subject: Re: [PATCH 4.4 247/266] cpu/speculation: Add mitigations= cmdline option
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ben Hutchings <ben@decadent.org.uk>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Steven Price <steven.price@arm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jon Masters <jcm@redhat.com>, Waiman Long <longman@redhat.com>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Jiri Kosina <jikos@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Phil Auld <pauld@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        stable <stable@vger.kernel.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190508115341.2be6b108.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051609-4275-0000-0000-000003355AB2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051608-4276-0000-0000-00003844E186
+Message-Id: <118f3dc7-d950-75ac-527d-2eb65dce9a99@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-16_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905160061
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Greg, Ben,
+On 08/05/2019 11:53, Cornelia Huck wrote:
+> On Mon,  6 May 2019 15:11:08 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+>> Hi,
+>>
+>> I did not integrate all my patches for state handling like I had
+>> before but just two patches which seems interresting to me:
+>>
+>> - The first one allows the device ti be used only when a guest
+>>    is currently using it.
+>>    Otherwise the device is in NOT_OPER state
+>>   
+>> - The second rework the sch_event callback: AFAIU we can not
+>>    consider that the event moves the device in IDLE state.
+>>    I think we better let it as it is currently.
+> 
+> I agree with the direction of this patch series.
+> 
+>>
+>> Regards,
+>> Pierre
+>>
+>> Pierre Morel (2):
+>>    vfio-ccw: Set subchannel state STANDBY on open
+>>    vfio-ccw: rework sch_event
+>>
+>>   drivers/s390/cio/vfio_ccw_drv.c     | 21 ++-------------------
+>>   drivers/s390/cio/vfio_ccw_fsm.c     |  7 +------
+>>   drivers/s390/cio/vfio_ccw_ops.c     | 36 ++++++++++++++++++------------------
+>>   drivers/s390/cio/vfio_ccw_private.h |  1 -
+>>   4 files changed, 21 insertions(+), 44 deletions(-)
+>>
+> 
+Thanks,
+I will post a v2 with the corrections seen by you and Farhan,
 
-On Wed, May 15, 2019 at 1:12 PM Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
-> From: Josh Poimboeuf <jpoimboe@redhat.com>
->
-> commit 98af8452945c55652de68536afdde3b520fec429 upstream.
->
-> Keeping track of the number of mitigations for all the CPU speculation
-> bugs has become overwhelming for many users.  It's getting more and more
-> complicated to decide which mitigations are needed for a given
-> architecture.  Complicating matters is the fact that each arch tends to
-> have its own custom way to mitigate the same vulnerability.
->
-> Most users fall into a few basic categories:
->
-> a) they want all mitigations off;
->
-> b) they want all reasonable mitigations on, with SMT enabled even if
->    it's vulnerable; or
->
-> c) they want all reasonable mitigations on, with SMT disabled if
->    vulnerable.
->
-> Define a set of curated, arch-independent options, each of which is an
-> aggregation of existing options:
->
-> - mitigations=off: Disable all mitigations.
->
-> - mitigations=auto: [default] Enable all the default mitigations, but
->   leave SMT enabled, even if it's vulnerable.
->
-> - mitigations=auto,nosmt: Enable all the default mitigations, disabling
->   SMT if needed by a mitigation.
->
-> Currently, these options are placeholders which don't actually do
-> anything.  They will be fleshed out in upcoming patches.
->
-> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-
-> [bwh: Backported to 4.4:
->  - Drop the auto,nosmt option which we can't support
-
-This doesn't really stand out. I.e. I completely missed it, and started
-wondering why "auto,nosmt" was not documented in
-kernel-parameters.txt below...
-
-> --- a/Documentation/kernel-parameters.txt
-> +++ b/Documentation/kernel-parameters.txt
-> @@ -2173,6 +2173,25 @@ bytes respectively. Such letter suffixes
->                         in the "bleeding edge" mini2440 support kernel at
->                         http://repo.or.cz/w/linux-2.6/mini2440.git
->
-> +       mitigations=
-> +                       Control optional mitigations for CPU vulnerabilities.
-> +                       This is a set of curated, arch-independent options, each
-> +                       of which is an aggregation of existing arch-specific
-> +                       options.
-> +
-> +                       off
-> +                               Disable all optional CPU mitigations.  This
-> +                               improves system performance, but it may also
-> +                               expose users to several CPU vulnerabilities.
-> +
-> +                       auto (default)
-> +                               Mitigate all CPU vulnerabilities, but leave SMT
-> +                               enabled, even if it's vulnerable.  This is for
-> +                               users who don't want to be surprised by SMT
-> +                               getting disabled across kernel upgrades, or who
-> +                               have other ways of avoiding SMT-based attacks.
-> +                               This is the default behavior.
-> +
->         mminit_loglevel=
->                         [KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
->                         parameter allows control of the logging verbosity for
-
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -842,3 +842,16 @@ void init_cpu_online(const struct cpumas
->  {
->         cpumask_copy(to_cpumask(cpu_online_bits), src);
->  }
-> +
-> +enum cpu_mitigations cpu_mitigations = CPU_MITIGATIONS_AUTO;
-> +
-> +static int __init mitigations_parse_cmdline(char *arg)
-> +{
-> +       if (!strcmp(arg, "off"))
-> +               cpu_mitigations = CPU_MITIGATIONS_OFF;
-> +       else if (!strcmp(arg, "auto"))
-> +               cpu_mitigations = CPU_MITIGATIONS_AUTO;
-
-Perhaps
-
-    else
-            pr_crit("mitigations=%s is not supported\n", arg);
-
-?
-
-Actually that makes sense on mainline, too.
-Cooking a patch...
-
-> +
-> +       return 0;
-> +}
-> +early_param("mitigations", mitigations_parse_cmdline);
-
-Gr{oetje,eeting}s,
-
-                        Geert
+Regards,
+Pierre	
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
