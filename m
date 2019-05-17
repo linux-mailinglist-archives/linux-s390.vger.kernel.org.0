@@ -2,97 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61055215A0
-	for <lists+linux-s390@lfdr.de>; Fri, 17 May 2019 10:47:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 84EFB215EB
+	for <lists+linux-s390@lfdr.de>; Fri, 17 May 2019 11:06:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726685AbfEQIrt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 17 May 2019 04:47:49 -0400
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:35174 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728068AbfEQIrp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 17 May 2019 04:47:45 -0400
-Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id x4H8lfpY011895;
-        Fri, 17 May 2019 17:47:42 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4H8lfpY011895
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558082862;
-        bh=WnpLsGsAmml7Dms1w83QAyOBiQmZaG3wlsmHMldsj2A=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Mm8c/h7MoQAjKtaXJFbsIiwDOhCleo62G2yN0ENEumdsR3x9bkTim8ZUAsmvNKYGb
-         YjzTHjmOZ5eEoT6dxf96KaN4cwDoBx0EA7QLggY+Uc4rEkV/+egiiQChRb8v7K7mME
-         103BM4I9xO6+LhP0loRJJ7E5IYURnrnnwstvc9exSd9DuvfxeeZUFgfNa/hXC9jT9h
-         iWv5o81UBz3vJxNzCokSyHdEDhZEGmx6/CuEyUH1kiKR5e3N8X4kvsR9JG6ORi5XxH
-         MAJIfA9u79h3mxvKDN5Gc3QnyESVoO1lY8MDBQKEmGZvEcHCGaMDmj4lbJqEnkghsG
-         O4PFPPHrMLNGg==
-X-Nifty-SrcIP: [209.85.222.48]
-Received: by mail-ua1-f48.google.com with SMTP id u4so2383169uau.10;
-        Fri, 17 May 2019 01:47:41 -0700 (PDT)
-X-Gm-Message-State: APjAAAWJ+ByAKllsN7h+g/gKhpy3B6yDoAGymOIkoizqVF7ggfBGCPSN
-        PCxal3wWG45u8hFqahH4soFuFubrfsx/WrGWd/k=
-X-Google-Smtp-Source: APXvYqyVijenelCKJTr3dR3tNdWYeFjirxBi3vBWfk+iMvtHCpXVw8zXnJei85wZq4UZx3PsZban60vlcYzKC/KrM/g=
-X-Received: by 2002:a9f:3381:: with SMTP id p1mr2948947uab.40.1558082860964;
- Fri, 17 May 2019 01:47:40 -0700 (PDT)
+        id S1727338AbfEQJGj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 17 May 2019 05:06:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46780 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728422AbfEQJGj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 17 May 2019 05:06:39 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 0604B83F42;
+        Fri, 17 May 2019 09:06:39 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C64D45C26A;
+        Fri, 17 May 2019 09:06:37 +0000 (UTC)
+Date:   Fri, 17 May 2019 11:06:35 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH v3 1/3] s390/cio: Don't pin vfio pages for empty
+ transfers
+Message-ID: <20190517110635.5204a9e8.cohuck@redhat.com>
+In-Reply-To: <20190516161403.79053-2-farman@linux.ibm.com>
+References: <20190516161403.79053-1-farman@linux.ibm.com>
+        <20190516161403.79053-2-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20190517065424.24453-1-yamada.masahiro@socionext.com> <20190517090735.6906c2fa@mschwideX1>
-In-Reply-To: <20190517090735.6906c2fa@mschwideX1>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Fri, 17 May 2019 17:47:05 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQkcSdb=ky2Mb0A48tUpnkXfZmC1B+JwPjkhdGM+EZJdQ@mail.gmail.com>
-Message-ID: <CAK7LNAQkcSdb=ky2Mb0A48tUpnkXfZmC1B+JwPjkhdGM+EZJdQ@mail.gmail.com>
-Subject: Re: [PATCH] s390: mark __cpacf_check_opcode() and cpacf_query_func()
- as __always_inline
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Laura Abbott <labbott@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Fri, 17 May 2019 09:06:39 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, May 17, 2019 at 5:09 PM Martin Schwidefsky
-<schwidefsky@de.ibm.com> wrote:
->
-> On Fri, 17 May 2019 15:54:24 +0900
-> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
->
-> > Commit e60fb8bf68d4 ("s390/cpacf: mark scpacf_query() as __always_inline")
-> > was not enough to make sure to meet the 'i' (immediate) constraint for the
-> > asm operands.
-> >
-> > With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
-> > with gcc 9.1.1:
-> >
-> >   In file included from arch/s390/crypto/prng.c:29:
-> >   ./arch/s390/include/asm/cpacf.h: In function 'cpacf_query_func':
-> >   ./arch/s390/include/asm/cpacf.h:170:2: warning: asm operand 3 probably doesn't match constraints
-> >     170 |  asm volatile(
-> >         |  ^~~
-> >   ./arch/s390/include/asm/cpacf.h:170:2: error: impossible constraint in 'asm'
-> >
-> > Add more __always_inline to force inlining.
-> >
-> > Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-> > Reported-by: Laura Abbott <labbott@redhat.com>
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
->
-> Added to our internal tree and I will add it to s390/linux soon. Thanks.
->
-> Do you have a Kconfig patch in the works to enable OPTIMIZE_INLINING?
-> Otherwise we could just add it.
+On Thu, 16 May 2019 18:14:01 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
-No.
-It is up to you.
+> The skip flag of a CCW offers the possibility of data not being
+> transferred, but is only meaningful for certain commands.
+> Specifically, it is only applicable for a read, read backward, sense,
+> or sense ID CCW and will be ignored for any other command code
+> (SA22-7832-11 page 15-64, and figure 15-30 on page 15-75).
+> 
+> (A sense ID is xE4, while a sense is x04 with possible modifiers in the
+> upper four bits.  So we will cover the whole "family" of sense CCWs.)
+> 
+> For those scenarios, since there is no requirement for the target
+> address to be valid, we should skip the call to vfio_pin_pages() and
+> rely on the IDAL address we have allocated/built for the channel
+> program.  The fact that the individual IDAWs within the IDAL are
+> invalid is fine, since they aren't actually checked in these cases.
+> 
+> Set pa_nr to zero when skipping the pfn_array_pin() call, since it is
+> defined as the number of pages pinned and is used to determine
+> whether to call vfio_unpin_pages() upon cleanup.
+> 
+> As we do this, since the pfn_array_pin() routine returns the number of
+> pages pinned, and we might not be doing that, the logic for converting
+> a CCW from direct-addressed to IDAL needs to ensure there is room for
+> one IDAW in the IDAL being built since a zero-length IDAL isn't great.
 
+I have now read this sentence several times and that this and that
+confuses me :) What are we doing, and what is the thing that we might
+not be doing?
 
-Thanks.
-
-
--- 
-Best Regards
-Masahiro Yamada
+> 
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> ---
+>  drivers/s390/cio/vfio_ccw_cp.c | 55 ++++++++++++++++++++++++++++++----
+>  1 file changed, 50 insertions(+), 5 deletions(-)
