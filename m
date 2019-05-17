@@ -2,100 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3B3220EF3
-	for <lists+linux-s390@lfdr.de>; Thu, 16 May 2019 20:54:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6CEAF212C8
+	for <lists+linux-s390@lfdr.de>; Fri, 17 May 2019 06:19:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfEPSyl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 May 2019 14:54:41 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36456 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726529AbfEPSyl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 May 2019 14:54:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CDB3E308FBB4;
-        Thu, 16 May 2019 18:54:35 +0000 (UTC)
-Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F293A5D985;
-        Thu, 16 May 2019 18:54:34 +0000 (UTC)
-Date:   Thu, 16 May 2019 12:54:34 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, sebott@linux.vnet.ibm.com,
-        gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-Subject: Re: [PATCH 2/4] vfio: vfio_iommu_type1: Define
- VFIO_IOMMU_INFO_CAPABILITIES
-Message-ID: <20190516125434.7dbc4b3c@x1.home>
-In-Reply-To: <f396492c-5815-7fd2-0e78-7681e6380591@de.ibm.com>
-References: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
-        <1557476555-20256-3-git-send-email-pmorel@linux.ibm.com>
-        <f396492c-5815-7fd2-0e78-7681e6380591@de.ibm.com>
-Organization: Red Hat
+        id S1726772AbfEQETY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 17 May 2019 00:19:24 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:47280 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725929AbfEQETY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 17 May 2019 00:19:24 -0400
+Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x4H4J8rk020004;
+        Fri, 17 May 2019 13:19:09 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x4H4J8rk020004
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558066749;
+        bh=J7yAUK19cep0kEYDzk4DJ/4J6NgS5gQ7gjFkMhf0nf0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=c0LtECK4wG0ntD78HJSVal1PgIaDPnG3TYgZdKUwPQb1na1TUOyc7O8nFlNd6CaCm
+         AXsspHBBBxyBH+xc+yKwpj4hyYVIlPFcjcW/vHsJL5fSi5Q2gSwjjErNYCHX7DoDJk
+         uzHnaxZfaH6FQsso8f00WBIqbL0o02CmwbkFxF8m6vBwnpe79+CLRENPKmsLOuBRZS
+         H1BuxVeZipFZOyAH3A/7goUgdI8wKHrHt3j0pC8tQP/JX2YVrYwXhbMxIntV2ieT5M
+         FSH/2b85VtqV4XO16MdlVD3fBZ0eNwSQDAHODI3YrVqSmTCnoT21JK380X6v99doLI
+         2TTH2dRT0iNEA==
+X-Nifty-SrcIP: [209.85.222.47]
+Received: by mail-ua1-f47.google.com with SMTP id 49so2202636uas.0;
+        Thu, 16 May 2019 21:19:08 -0700 (PDT)
+X-Gm-Message-State: APjAAAWydtx2tRS6jJKO5xqCPv+Vt3FwVdD9ASPinktF8SumIpi9HPS3
+        i2bpdlZOxCPwGHcr4Eofl46WJIVzZ/yje7rdJvc=
+X-Google-Smtp-Source: APXvYqw2YDleh3v/xnLGvb0ytg007xtjBjm7KsoOOxcHJpN/6dfsgAIRhFvSJ0T46JhQEFnSRL0PruWBvw6llY+KDwI=
+X-Received: by 2002:ab0:3058:: with SMTP id x24mr23094567ual.95.1558066747792;
+ Thu, 16 May 2019 21:19:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 16 May 2019 18:54:40 +0000 (UTC)
+References: <20190423034959.13525-1-yamada.masahiro@socionext.com>
+ <20190423034959.13525-11-yamada.masahiro@socionext.com> <ca74c830-fe1b-7bff-8dfd-353fca57b647@redhat.com>
+In-Reply-To: <ca74c830-fe1b-7bff-8dfd-353fca57b647@redhat.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 17 May 2019 13:18:31 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASjc8rmJvv5kgk6Mxo3mcB4EgB4XJG_8JY47ZQbrsSSXg@mail.gmail.com>
+Message-ID: <CAK7LNASjc8rmJvv5kgk6Mxo3mcB4EgB4XJG_8JY47ZQbrsSSXg@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 10/11] powerpc/mm/radix: mark as __tlbie_pid()
+ and friends as__always_inline
+To:     Laura Abbott <labbott@redhat.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Mathieu Malaterre <malat@debian.org>, X86 ML <x86@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-mips@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-mtd <linux-mtd@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 16 May 2019 16:57:42 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+Hi Laura,
 
-> Alex, 
-> 
-> patch 1 and 3 are s390 specific, 2 and 4 are vfio common code.
-> Are you ok with the common code changes? If yes, would you prefer to have this
-> via the s390 tree (Martin) or your tree?
 
-Hi Christian,
+On Fri, May 17, 2019 at 7:55 AM Laura Abbott <labbott@redhat.com> wrote:
 
-The vfio code still needs work imo, and I'm not sure it isn't somewhat
-abusive of the iommu attribute interface as well.  I don't necessarily
-have a problem with it ultimately going through the s390 tree, but
-let's see what comes in the next revision.  Thanks,
+> What gcc version was this tested with?
 
-Alex
+I use kernel.org toolchains
+https://mirrors.edge.kernel.org/pub/tools/crosstool/
 
-> On 10.05.19 10:22, Pierre Morel wrote:
-> > To use the VFIO_IOMMU_GET_INFO to retrieve IOMMU specific information,
-> > we define a new flag VFIO_IOMMU_INFO_CAPABILITIES in the
-> > vfio_iommu_type1_info structure and the associated capability
-> > information block.
-> > 
-> > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> > ---
-> >  include/uapi/linux/vfio.h | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> > 
-> > diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> > index 8f10748..8f68e0f 100644
-> > --- a/include/uapi/linux/vfio.h
-> > +++ b/include/uapi/linux/vfio.h
-> > @@ -715,6 +715,16 @@ struct vfio_iommu_type1_info {
-> >  	__u32	flags;
-> >  #define VFIO_IOMMU_INFO_PGSIZES (1 << 0)	/* supported page sizes info */
-> >  	__u64	iova_pgsizes;		/* Bitmap of supported page sizes */
-> > +#define VFIO_IOMMU_INFO_CAPABILITIES (1 << 1)  /* support capabilities info */
-> > +	__u64   cap_offset;     /* Offset within info struct of first cap */
-> > +};
-> > +
-> > +#define VFIO_IOMMU_INFO_CAP_QFN		1
-> > +#define VFIO_IOMMU_INFO_CAP_QGRP	2
-> > +
-> > +struct vfio_iommu_type1_info_block {
-> > +	struct vfio_info_cap_header header;
-> > +	__u32 data[];
-> >  };
-> >  
-> >  #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
-> >   
-> 
+It is GCC 8.1
 
+
+> We're still seeing errors on
+> Fedora rawhide with gcc 9.1.1 on a version (8c05f3b965da14e7790711026b32cc10a4c06213)
+> that should have this fix in it:
+>
+> BUILDSTDERR: arch/powerpc/mm/book3s64/radix_tlb.c: In function '_tlbiel_pid':
+> BUILDSTDERR: arch/powerpc/mm/book3s64/radix_tlb.c:104:2: warning: asm operand 3 probably doesn't match constraints
+> BUILDSTDERR:   104 |  asm volatile(PPC_TLBIEL(%0, %4, %3, %2, %1)
+> BUILDSTDERR:       |  ^~~
+> BUILDSTDERR: arch/powerpc/mm/book3s64/radix_tlb.c:104:2: error: impossible constraint in 'asm'
+> BUILDSTDERR: make[3]: *** [scripts/Makefile.build:279: arch/powerpc/mm/book3s64/radix_tlb.o] Error 1
+> BUILDSTDERR: make[2]: *** [scripts/Makefile.build:489: arch/powerpc/mm/book3s64] Error 2
+> BUILDSTDERR: make[1]: *** [scripts/Makefile.build:489: arch/powerpc/mm] Error 2
+
+Thanks for the report.
+
+Does this work for you?
+
+
+diff --git a/arch/powerpc/mm/book3s64/radix_tlb.c
+b/arch/powerpc/mm/book3s64/radix_tlb.c
+index 4d841369399f..9a6befdd5e74 100644
+--- a/arch/powerpc/mm/book3s64/radix_tlb.c
++++ b/arch/powerpc/mm/book3s64/radix_tlb.c
+
+@@ -239,7 +239,7 @@ static inline void fixup_tlbie_lpid(unsigned long lpid)
+ /*
+  * We use 128 set in radix mode and 256 set in hpt mode.
+  */
+-static inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
++static __always_inline void _tlbiel_pid(unsigned long pid, unsigned long ric)
+ {
+        int set;
+
+
+
+
+--
+Best Regards
+Masahiro Yamada
