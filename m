@@ -2,53 +2,48 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DEACB213EC
-	for <lists+linux-s390@lfdr.de>; Fri, 17 May 2019 08:59:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 47DBE213F9
+	for <lists+linux-s390@lfdr.de>; Fri, 17 May 2019 09:06:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfEQG74 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 17 May 2019 02:59:56 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42502 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727674AbfEQG74 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 17 May 2019 02:59:56 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 13so3200520pfw.9;
-        Thu, 16 May 2019 23:59:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=acOBVSJe/b9a1J3px6iLY0/PUzqcYk644yoY0pO+fWc=;
-        b=r4fYzjKyyva15V5BJgQyBUWunPQ6iE3RrmKaRS0nJqt4r0z5+xRT221roa7vGpJJJK
-         4yu10nSaIOGCBD4V9jAhebSoCUQOn9hI4PsqoBN3WlN7wj2gizty6A1ZuAl22108dMFt
-         IXLnRBZ6TyXjNF4IiaYMdg4EwuzBKX9lCfV4+8+YzimfO2ZCtBfBfJGnQERypAuhU6yL
-         BsLpBjoX3+entTCYxXFFd30pWOt0sQqlrldKxvGstP8vpmyambOIqORidM1JfXx29cpu
-         YsmX0YDhCP5jmTLeCOIM1ixTstQJPkXKqo9SRwU7c7EwCcb8wwxpBSbgoufbVt9JBoic
-         tlcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=acOBVSJe/b9a1J3px6iLY0/PUzqcYk644yoY0pO+fWc=;
-        b=QBX/WspPLNEBpwHzKhq1zT4amfIERgcfr8kRS2hENH45cmJ1yWIVbfz+SFZw5NN2sT
-         OPipdpttGR8QguM+VtADIt6+7vQwZryMinbMk//Zpxa5zA+mySDE0nP22v8DdYPyVb/Y
-         56INEdfvtMU4iDiw7EyJ/zbcOz7A2T6cgFWw8J9AD2hVSPaTZPfvwY/j2Bepej3NsMTj
-         sDDYQ94znJjtLBiDprRwuNexy/q578DF/z5aSaJw1vMDDDuHcBS9zZ0yd72NOvutZQPY
-         YTGgXuZceLjDVtZubztSXQ3iNr4MsN/AExg2fchpcowaXWuW8SUAQNb1rocqj/PTz442
-         qhmg==
-X-Gm-Message-State: APjAAAWFC4KqDuQzXTkaF4K/QA4L9p6kRIHLpyw/a8oHGxoAU/AvHg05
-        yUP0YAwNBWdr1c7pw1wH2/E=
-X-Google-Smtp-Source: APXvYqwVsYMDzmbtlH7JvkVY3DQu3VRAiUxen2R5hvO3et1uXbQGqPujCoICePAFj3Sc5WcxJCveJA==
-X-Received: by 2002:aa7:8e0d:: with SMTP id c13mr60354955pfr.193.1558076395817;
-        Thu, 16 May 2019 23:59:55 -0700 (PDT)
-Received: from localhost ([175.223.38.122])
-        by smtp.gmail.com with ESMTPSA id u6sm9339104pfm.10.2019.05.16.23.59.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 16 May 2019 23:59:55 -0700 (PDT)
-Date:   Fri, 17 May 2019 15:59:51 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+        id S1727507AbfEQHGi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 17 May 2019 03:06:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60856 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727145AbfEQHGi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 17 May 2019 03:06:38 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4H6xrhp031793
+        for <linux-s390@vger.kernel.org>; Fri, 17 May 2019 03:06:37 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2shp8vmu4u-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 17 May 2019 03:06:36 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Fri, 17 May 2019 08:06:33 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 17 May 2019 08:06:30 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4H76TJm48955522
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 17 May 2019 07:06:29 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E94A3A4067;
+        Fri, 17 May 2019 07:06:28 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 86C3AA4054;
+        Fri, 17 May 2019 07:06:28 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.145.144.159])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 17 May 2019 07:06:28 +0000 (GMT)
+Date:   Fri, 17 May 2019 09:06:26 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
         linux-s390@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         Claudio Imbrenda <imbrenda@linux.vnet.ibm.com>,
         linux-kernel@vger.kernel.org,
@@ -58,20 +53,78 @@ Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Philipp Rudo <prudo@linux.ibm.com>
 Subject: Re: [PATCH] s390: add unreachable() to dump_fault_info() to fix
  -Wmaybe-uninitialized
-Message-ID: <20190517065951.GA11550@jagdpanzerIV>
-References: <20190517064922.22743-1-yamada.masahiro@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <20190517064922.22743-1-yamada.masahiro@socionext.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+References: <20190517064922.22743-1-yamada.masahiro@socionext.com>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051707-0028-0000-0000-0000036EA350
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051707-0029-0000-0000-0000242E40EB
+Message-Id: <20190517090626.3c707d77@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905170047
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On (05/17/19 15:49), Masahiro Yamada wrote:
-[..]
+On Fri, 17 May 2019 15:49:22 +0900
+Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+
+> When CONFIG_OPTIMIZE_INLINING is enabled for s390, I see this warning:
+> 
+> arch/s390/mm/fault.c:127:15: warning: 'asce' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>   switch (asce & _ASCE_TYPE_MASK) {
+> arch/s390/mm/fault.c:177:16: note: 'asce' was declared here
+>   unsigned long asce;
+>                 ^~~~
+> 
+> If get_fault_type() is not inlined, the compiler cannot deduce that
+> all the possible paths in the 'switch' statement are covered.
+> 
+> Of course, we could mark get_fault_type() as __always_inline to get
+> back the original behavior, but I do not think it sensible to force
+> inlining just for the purpose of suppressing the warning. Since this
+> is just a matter of warning, I want to keep as much room for compiler
+> optimization as possible.
+> 
+> I added unreachable() to teach the compiler that the 'default' label
+> is unreachable.
+> 
+> I got rid of the 'inline' marker. Even without the 'inline' hint,
+> the compiler inlines functions based on its inlining heuristic.
+> 
+> Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+
+Added to our internal tree and I will add it to s390/linux soon. Thanks.
+
+> ---
+> 
+>  arch/s390/mm/fault.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+> index c220399ae196..91ce03fd0c84 100644
+> --- a/arch/s390/mm/fault.c
+> +++ b/arch/s390/mm/fault.c
+> @@ -85,7 +85,7 @@ static inline int notify_page_fault(struct pt_regs *regs)
+>   * Find out which address space caused the exception.
+>   * Access register mode is impossible, ignore space == 3.
+>   */
+> -static inline enum fault_type get_fault_type(struct pt_regs *regs)
+> +static enum fault_type get_fault_type(struct pt_regs *regs)
+>  {
+>  	unsigned long trans_exc_code;
+> 
 > @@ -211,6 +211,8 @@ static void dump_fault_info(struct pt_regs *regs)
 >  		asce = S390_lowcore.kernel_asce;
 >  		pr_cont("kernel ");
@@ -82,50 +135,10 @@ On (05/17/19 15:49), Masahiro Yamada wrote:
 >  	pr_cont("ASCE.\n");
 >  	dump_pagetable(asce, regs->int_parm_long & __FAIL_ADDR_MASK);
 
-Or have default fault type and asce?
 
-Just an idea.
+-- 
+blue skies,
+   Martin.
 
----
+"Reality continues to ruin my life." - Calvin.
 
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index c220399ae196..876d71c31894 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -174,7 +174,8 @@ static void dump_pagetable(unsigned long asce, unsigned long address)
- 
- static void dump_fault_info(struct pt_regs *regs)
- {
--	unsigned long asce;
-+	unsigned long asce = S390_lowcore.kernel_asce;
-+	char *type = "kernel ";
- 
- 	pr_alert("Failing address: %016lx TEID: %016lx\n",
- 		 regs->int_parm_long & __FAIL_ADDR_MASK, regs->int_parm_long);
-@@ -197,22 +198,18 @@ static void dump_fault_info(struct pt_regs *regs)
- 	switch (get_fault_type(regs)) {
- 	case USER_FAULT:
- 		asce = S390_lowcore.user_asce;
--		pr_cont("user ");
-+		type = "user ";
- 		break;
- 	case VDSO_FAULT:
- 		asce = S390_lowcore.vdso_asce;
--		pr_cont("vdso ");
-+		type = "vdso ";
- 		break;
- 	case GMAP_FAULT:
- 		asce = ((struct gmap *) S390_lowcore.gmap)->asce;
--		pr_cont("gmap ");
--		break;
--	case KERNEL_FAULT:
--		asce = S390_lowcore.kernel_asce;
--		pr_cont("kernel ");
-+		type = "gmap ";
- 		break;
- 	}
--	pr_cont("ASCE.\n");
-+	pr_cont("%s ASCE.\n", type);
- 	dump_pagetable(asce, regs->int_parm_long & __FAIL_ADDR_MASK);
- }
- 
