@@ -2,139 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 444B12153B
-	for <lists+linux-s390@lfdr.de>; Fri, 17 May 2019 10:18:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61055215A0
+	for <lists+linux-s390@lfdr.de>; Fri, 17 May 2019 10:47:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728136AbfEQISn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 17 May 2019 04:18:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33352 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728375AbfEQISm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 17 May 2019 04:18:42 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4H8GkIR002320
-        for <linux-s390@vger.kernel.org>; Fri, 17 May 2019 04:18:41 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2shpuaesc1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 17 May 2019 04:18:40 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 17 May 2019 09:18:38 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 17 May 2019 09:18:35 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4H8IYlF28573942
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 May 2019 08:18:34 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 23B9DAE068;
-        Fri, 17 May 2019 08:18:34 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8153EAE05F;
-        Fri, 17 May 2019 08:18:33 +0000 (GMT)
-Received: from [9.145.153.112] (unknown [9.145.153.112])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 17 May 2019 08:18:33 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH 2/4] vfio: vfio_iommu_type1: Define
- VFIO_IOMMU_INFO_CAPABILITIES
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
-References: <1557476555-20256-1-git-send-email-pmorel@linux.ibm.com>
- <1557476555-20256-3-git-send-email-pmorel@linux.ibm.com>
- <20190516123100.529f06be@x1.home>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Fri, 17 May 2019 10:18:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726685AbfEQIrt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 17 May 2019 04:47:49 -0400
+Received: from conssluserg-02.nifty.com ([210.131.2.81]:35174 "EHLO
+        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728068AbfEQIrp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 17 May 2019 04:47:45 -0400
+Received: from mail-ua1-f48.google.com (mail-ua1-f48.google.com [209.85.222.48]) (authenticated)
+        by conssluserg-02.nifty.com with ESMTP id x4H8lfpY011895;
+        Fri, 17 May 2019 17:47:42 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com x4H8lfpY011895
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1558082862;
+        bh=WnpLsGsAmml7Dms1w83QAyOBiQmZaG3wlsmHMldsj2A=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=Mm8c/h7MoQAjKtaXJFbsIiwDOhCleo62G2yN0ENEumdsR3x9bkTim8ZUAsmvNKYGb
+         YjzTHjmOZ5eEoT6dxf96KaN4cwDoBx0EA7QLggY+Uc4rEkV/+egiiQChRb8v7K7mME
+         103BM4I9xO6+LhP0loRJJ7E5IYURnrnnwstvc9exSd9DuvfxeeZUFgfNa/hXC9jT9h
+         iWv5o81UBz3vJxNzCokSyHdEDhZEGmx6/CuEyUH1kiKR5e3N8X4kvsR9JG6ORi5XxH
+         MAJIfA9u79h3mxvKDN5Gc3QnyESVoO1lY8MDBQKEmGZvEcHCGaMDmj4lbJqEnkghsG
+         O4PFPPHrMLNGg==
+X-Nifty-SrcIP: [209.85.222.48]
+Received: by mail-ua1-f48.google.com with SMTP id u4so2383169uau.10;
+        Fri, 17 May 2019 01:47:41 -0700 (PDT)
+X-Gm-Message-State: APjAAAWJ+ByAKllsN7h+g/gKhpy3B6yDoAGymOIkoizqVF7ggfBGCPSN
+        PCxal3wWG45u8hFqahH4soFuFubrfsx/WrGWd/k=
+X-Google-Smtp-Source: APXvYqyVijenelCKJTr3dR3tNdWYeFjirxBi3vBWfk+iMvtHCpXVw8zXnJei85wZq4UZx3PsZban60vlcYzKC/KrM/g=
+X-Received: by 2002:a9f:3381:: with SMTP id p1mr2948947uab.40.1558082860964;
+ Fri, 17 May 2019 01:47:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190516123100.529f06be@x1.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19051708-0028-0000-0000-0000036EA8E8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19051708-0029-0000-0000-0000242E46EB
-Message-Id: <ce6c7c44-b406-00d1-cf40-0dae6a6ed563@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-17_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905170056
+References: <20190517065424.24453-1-yamada.masahiro@socionext.com> <20190517090735.6906c2fa@mschwideX1>
+In-Reply-To: <20190517090735.6906c2fa@mschwideX1>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri, 17 May 2019 17:47:05 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQkcSdb=ky2Mb0A48tUpnkXfZmC1B+JwPjkhdGM+EZJdQ@mail.gmail.com>
+Message-ID: <CAK7LNAQkcSdb=ky2Mb0A48tUpnkXfZmC1B+JwPjkhdGM+EZJdQ@mail.gmail.com>
+Subject: Re: [PATCH] s390: mark __cpacf_check_opcode() and cpacf_query_func()
+ as __always_inline
+To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Laura Abbott <labbott@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 16/05/2019 20:31, Alex Williamson wrote:
-> On Fri, 10 May 2019 10:22:33 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> To use the VFIO_IOMMU_GET_INFO to retrieve IOMMU specific information,
->> we define a new flag VFIO_IOMMU_INFO_CAPABILITIES in the
->> vfio_iommu_type1_info structure and the associated capability
->> information block.
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> ---
->>   include/uapi/linux/vfio.h | 10 ++++++++++
->>   1 file changed, 10 insertions(+)
->>
->> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
->> index 8f10748..8f68e0f 100644
->> --- a/include/uapi/linux/vfio.h
->> +++ b/include/uapi/linux/vfio.h
->> @@ -715,6 +715,16 @@ struct vfio_iommu_type1_info {
->>   	__u32	flags;
->>   #define VFIO_IOMMU_INFO_PGSIZES (1 << 0)	/* supported page sizes info */
->>   	__u64	iova_pgsizes;		/* Bitmap of supported page sizes */
->> +#define VFIO_IOMMU_INFO_CAPABILITIES (1 << 1)  /* support capabilities info */
->> +	__u64   cap_offset;     /* Offset within info struct of first cap */
->> +};
->> +
->> +#define VFIO_IOMMU_INFO_CAP_QFN		1
->> +#define VFIO_IOMMU_INFO_CAP_QGRP	2
-> 
-> Descriptions?
-> 
->> +
->> +struct vfio_iommu_type1_info_block {
->> +	struct vfio_info_cap_header header;
->> +	__u32 data[];
->>   };
->>   
->>   #define VFIO_IOMMU_GET_INFO _IO(VFIO_TYPE, VFIO_BASE + 12)
-> 
-> This is just a blob of data, what's the API?  How do we revision it?
-> How does the user know how to interpret it?  Dumping kernel internal
-> structures out to userspace like this is not acceptable, define a user
-> API. Thanks,
-> 
-> Alex
-> 
+On Fri, May 17, 2019 at 5:09 PM Martin Schwidefsky
+<schwidefsky@de.ibm.com> wrote:
+>
+> On Fri, 17 May 2019 15:54:24 +0900
+> Masahiro Yamada <yamada.masahiro@socionext.com> wrote:
+>
+> > Commit e60fb8bf68d4 ("s390/cpacf: mark scpacf_query() as __always_inline")
+> > was not enough to make sure to meet the 'i' (immediate) constraint for the
+> > asm operands.
+> >
+> > With CONFIG_OPTIMIZE_INLINING enabled, Laura Abbott reported error
+> > with gcc 9.1.1:
+> >
+> >   In file included from arch/s390/crypto/prng.c:29:
+> >   ./arch/s390/include/asm/cpacf.h: In function 'cpacf_query_func':
+> >   ./arch/s390/include/asm/cpacf.h:170:2: warning: asm operand 3 probably doesn't match constraints
+> >     170 |  asm volatile(
+> >         |  ^~~
+> >   ./arch/s390/include/asm/cpacf.h:170:2: error: impossible constraint in 'asm'
+> >
+> > Add more __always_inline to force inlining.
+> >
+> > Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+> > Reported-by: Laura Abbott <labbott@redhat.com>
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>
+> Added to our internal tree and I will add it to s390/linux soon. Thanks.
+>
+> Do you have a Kconfig patch in the works to enable OPTIMIZE_INLINING?
+> Otherwise we could just add it.
 
-Thanks Alex for the comments.
-I will add the decription and the user API for the next iteration.
-
-Regards,
-Pierre
+No.
+It is up to you.
 
 
+Thanks.
 
 
 -- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
-
+Best Regards
+Masahiro Yamada
