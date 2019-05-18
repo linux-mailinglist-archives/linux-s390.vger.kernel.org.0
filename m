@@ -2,174 +2,220 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2491822305
-	for <lists+linux-s390@lfdr.de>; Sat, 18 May 2019 12:05:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1450D22467
+	for <lists+linux-s390@lfdr.de>; Sat, 18 May 2019 20:11:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729661AbfERKFI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 18 May 2019 06:05:08 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43764 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729722AbfERKFH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 18 May 2019 06:05:07 -0400
-Received: by mail-ed1-f68.google.com with SMTP id w33so14687559edb.10
-        for <linux-s390@vger.kernel.org>; Sat, 18 May 2019 03:05:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=kuxvODYNXQX1UADGYTekrXKJHl9GqTdixhHyMJoLFkg=;
-        b=MzXf8JwF72gJj2Pq8n12P+UywZxc2BVXTvpiVUKrEniJVb1LIFP3IbcOliQYISdvq7
-         CigvtYVzwi+8s8BzhGA7JzeYEAEgELRKSJUGXkBeKo3jIoY+k+AIz1NIGNQ3IbqWFvd/
-         pZcoiBfjP1G87UNeXXgpYPrDlzF+SvvAxTS1B9J01RvJsEbVREubCnWtrpwlE+W8uhC8
-         abJb2p1WNSljrqCFAQH7at9A4yXrlhg+5ZrhECybT+pFDJTv4XLPhvmKoEIQriQEdsEE
-         2qeWRYeIhjWVjN8Omnws0ZotrB2BKKuxhO4+QGekj7Ec6VajrUKLl5oRB10tcR/KFGxb
-         SomA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kuxvODYNXQX1UADGYTekrXKJHl9GqTdixhHyMJoLFkg=;
-        b=DIRscOFumObx/EML2+IH35rcy3eXt+Ip/frgKUHwpfpOaDJY5d2jDWbp/0zQ0m3hNT
-         DdRXf+hwW6kDUYSaUlBhS5gAkKf40a6YRbu4iun6O1hE/AaFN9DvnDvtuvMnDDnWwPsR
-         5WD57pv1JrgQqyCjqd/2bDx2nA4xY2YWmkUBJqPtniWoic+ARGCwV/6xJQr+g+Vh0G0n
-         q+cq/lnkqor1s6NqhSqpRBrcgsQ/j8rhYRt3CuyWRZau7YKwOyumrHfvZ0SE/OcX1S+y
-         1T8Qgt2oZIBERgba3ZP05oMjigcsIPfo4nMlZ2KQ887iwqt8O1ewmtReIu30izGK+0Zp
-         Lohw==
-X-Gm-Message-State: APjAAAUbCs3A5KHEWNZvXN/8XcCWEZzNvBVx6EID5ylC9jD69hKMIENE
-        8ZXf4KeoDVHQsJZsQ7gB6AjDog==
-X-Google-Smtp-Source: APXvYqyJ8cSwup5T+wLOXgE4G1RIJN3Q14FiCUfotn6HCvE35vO+QFm+mQrHo4U4TisKcq8ZEYMBDQ==
-X-Received: by 2002:a50:b82d:: with SMTP id j42mr63022736ede.186.1558173905455;
-        Sat, 18 May 2019 03:05:05 -0700 (PDT)
-Received: from brauner.io ([46.183.103.8])
-        by smtp.gmail.com with ESMTPSA id y30sm3741910edc.83.2019.05.18.03.04.59
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Sat, 18 May 2019 03:05:04 -0700 (PDT)
-Date:   Sat, 18 May 2019 12:04:46 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     jannh@google.com, oleg@redhat.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de, akpm@linux-foundation.org, cyphar@cyphar.com,
-        dhowells@redhat.com, ebiederm@xmission.com,
-        elena.reshetova@intel.com, keescook@chromium.org,
-        luto@amacapital.net, luto@kernel.org, tglx@linutronix.de,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.orgg, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-api@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        dancol@google.com, serge@hallyn.com, surenb@google.com,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        kernel-team@android.com
-Subject: Re: [PATCH v1 1/2] pid: add pidfd_open()
-Message-ID: <20190518100435.c5bqpcnra53dsr6p@brauner.io>
-References: <20190516135944.7205-1-christian@brauner.io>
- <20190516224949.GA15401@localhost>
+        id S1729809AbfERSLK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 18 May 2019 14:11:10 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48104 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729453AbfERSLK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 18 May 2019 14:11:10 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4II7bGZ106764
+        for <linux-s390@vger.kernel.org>; Sat, 18 May 2019 14:11:08 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sjjemq2qd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Sat, 18 May 2019 14:11:08 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Sat, 18 May 2019 19:11:07 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 18 May 2019 19:11:04 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4IIB2L146989462
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 18 May 2019 18:11:02 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A30A14C04E;
+        Sat, 18 May 2019 18:11:02 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D55364C046;
+        Sat, 18 May 2019 18:11:01 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.62.129])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat, 18 May 2019 18:11:01 +0000 (GMT)
+Date:   Sat, 18 May 2019 20:11:00 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: Re: [PATCH 06/10] s390/cio: add basic protected virtualization
+ support
+In-Reply-To: <20190516082928.1371696b.cohuck@redhat.com>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-7-pasic@linux.ibm.com>
+        <20190513114136.783c851c.cohuck@redhat.com>
+        <20190515225158.301af387.pasic@linux.ibm.com>
+        <20190516082928.1371696b.cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190516224949.GA15401@localhost>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19051818-0028-0000-0000-0000036F18EB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19051818-0029-0000-0000-0000242EBA85
+Message-Id: <20190518201100.0fd07d7f.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-18_15:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905180131
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, May 18, 2019 at 05:48:03AM -0400, Joel Fernandes wrote:
-> Hi Christian,
-> 
-> For next revision, could you also CC surenb@google.com as well? He is also
-> working on the low memory killer. And also suggest CC to
-> kernel-team@android.com. And mentioned some comments below, thanks.
+On Thu, 16 May 2019 08:29:28 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-Yip, totally. Just added them both to my Cc list. :)
-(I saw you added Suren manually. I added the Android kernel team now too.)
-
+> On Wed, 15 May 2019 22:51:58 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
 > 
-> On Thu, May 16, 2019 at 03:59:42PM +0200, Christian Brauner wrote:
-> [snip]  
-> > diff --git a/kernel/pid.c b/kernel/pid.c
-> > index 20881598bdfa..4afca3d6dcb8 100644
-> > --- a/kernel/pid.c
-> > +++ b/kernel/pid.c
-> > @@ -38,6 +38,7 @@
-> >  #include <linux/syscalls.h>
-> >  #include <linux/proc_ns.h>
-> >  #include <linux/proc_fs.h>
-> > +#include <linux/sched/signal.h>
-> >  #include <linux/sched/task.h>
-> >  #include <linux/idr.h>
-> >  
-> > @@ -451,6 +452,55 @@ struct pid *find_ge_pid(int nr, struct pid_namespace *ns)
-> >  	return idr_get_next(&ns->idr, &nr);
-> >  }
-> >  
-> > +/**
-> > + * pidfd_open() - Open new pid file descriptor.
-> > + *
-> > + * @pid:   pid for which to retrieve a pidfd
-> > + * @flags: flags to pass
-> > + *
-> > + * This creates a new pid file descriptor with the O_CLOEXEC flag set for
-> > + * the process identified by @pid. Currently, the process identified by
-> > + * @pid must be a thread-group leader. This restriction currently exists
-> > + * for all aspects of pidfds including pidfd creation (CLONE_PIDFD cannot
-> > + * be used with CLONE_THREAD) and pidfd polling (only supports thread group
-> > + * leaders).
-> > + *
-> > + * Return: On success, a cloexec pidfd is returned.
-> > + *         On error, a negative errno number will be returned.
-> > + */
-> > +SYSCALL_DEFINE2(pidfd_open, pid_t, pid, unsigned int, flags)
-> > +{
-> > +	int fd, ret;
-> > +	struct pid *p;
-> > +	struct task_struct *tsk;
-> > +
-> > +	if (flags)
-> > +		return -EINVAL;
-> > +
-> > +	if (pid <= 0)
-> > +		return -EINVAL;
-> > +
-> > +	p = find_get_pid(pid);
-> > +	if (!p)
-> > +		return -ESRCH;
-> > +
-> > +	ret = 0;
-> > +	rcu_read_lock();
-> > +	/*
-> > +	 * If this returns non-NULL the pid was used as a thread-group
-> > +	 * leader. Note, we race with exec here: If it changes the
-> > +	 * thread-group leader we might return the old leader.
-> > +	 */
-> > +	tsk = pid_task(p, PIDTYPE_TGID);
+> > On Mon, 13 May 2019 11:41:36 +0200
+> > Cornelia Huck <cohuck@redhat.com> wrote:
+> > 
+> > > On Fri, 26 Apr 2019 20:32:41 +0200
+> > > Halil Pasic <pasic@linux.ibm.com> wrote:
+> > >   
+> > > > As virtio-ccw devices are channel devices, we need to use the dma area
+> > > > for any communication with the hypervisor.
+> > > > 
+> > > > This patch addresses the most basic stuff (mostly what is required for
+> > > > virtio-ccw), and does take care of QDIO or any devices.  
+> > > 
+> > > "does not take care of QDIO", surely?   
+> > 
+> > I did not bother making the QDIO library code use dma memory for
+> > anything that is conceptually dma memory. AFAIK QDIO is out of scope for
+> > prot virt for now. If one were to do some emulated qdio with prot virt
+> > guests, one wound need to make a bunch of things shared.
 > 
-> Just trying to understand the comment here. The issue is that we might either
-> return the new leader, or the old leader depending on the overlap with
-> concurrent de_thread right? In either case, we don't care though.
+> And unless you wanted to support protected virt under z/VM as well, it
+> would be wasted effort :)
 > 
-> I suggest to remove the "Note..." part of the comment since it doesn't seem the
-> race is relevant here unless we are doing something else with tsk in the
-> function, but if you want to keep it that's also fine. Comment text should
-> probably should be 'return the new leader' though.
 
-Nah, I actually removed the comment already independently (cf. see [1]).
+:)
 
-[1]: https://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git/commit/?h=pidfd_open&id=dcfc98c2d957bf3ac14b06414cb2cf4c673fc297
+> > 
+> > > (Also, what does "any devices"
+> > > mean? Do you mean "every arbitrary device", perhaps?)  
+> > 
+> > What I mean is: this patch takes care of the core stuff, but any
+> > particular device is likely to have to do more -- that is it ain't all
+> > the cio devices support prot virt with this patch. For example
+> > virtio-ccw needs to make sure that the ccws constituting the channel
+> > programs, as well as the data pointed by the ccws is shared. If one
+> > would want to make vfio-ccw DASD pass-through work under prot virt, one
+> > would need to make sure, that everything that needs to be shared is
+> > shared (data buffers, channel programs).
+> > 
+> > Does is clarify things?
 > 
-> > +	if (!tsk)
-> > +		ret = -ESRCH;
+> That's what I thought, but the sentence was confusing :) What about
 > 
-> Perhaps -EINVAL?  AFAICS, this can only happen if a CLONE_THREAD pid was
-> passed as argument to pidfd_open which is invalid. But let me know what you
-> had in mind..
+> "This patch addresses the most basic stuff (mostly what is required to
+> support virtio-ccw devices). It handles neither QDIO devices, nor
+> arbitrary non-virtio-ccw devices." ?
+>
 
-Hm, from the kernel's perspective ESRCH is correct but I guess EINVAL is
-nicer for userspace. So I don't have objections to using EINVAL. My
-first version did too I think.
+Don't like the second sentence. How about "It handles neither QDIO
+in the common code, nor any device type specific stuff (like channel
+programs constructed by the DADS driver)."
 
-Thanks!
-Christian
+My problem is that this patch is about the common infrastructure code,
+and virtio-ccw specific stuff is handled by subsequent patches of this
+series.
+
+[..]
+
+> > > Is there any way to reserve the 31 bit restriction for channel
+> > > subsystem structures and keep vring in the full 64 bit range? (Or
+> > > am I fundamentally misunderstanding something?)
+> > >   
+> > 
+> > At the root of this problem is that the DMA API basically says
+> > devices may have addressing limitations expressed by the dma_mask,
+> > while our addressing limitations are not coming from the device but
+> > from the IO arch: e.g. orb.cpa and ccw.cda are 31 bit addresses. In
+> > our case it depends on how and for what is the device going to use
+> > the memory (e.g. buffers addressed by MIDA vs IDA vs direct).
+> > 
+> > Virtio uses the DMA properties of the parent, that is in our case the
+> > struct device embedded in struct ccw_device.
+> > 
+> > The previous version (RFC) used to allocate all the cio DMA stuff
+> > from this global cio_dma_pool using the css0.dev for the DMA API
+> > interactions. And we set *css0.dev.dma_mask == DMA_BIT_MASK(31) so
+> > e.g. the allocated ccws are 31 bit addressable.
+> > 
+> > But I was asked to change this so that when I allocate DMA memory
+> > for a channel program of particular ccw device, a struct device of
+> > that ccw device is used as the first argument of
+> > dma_alloc_coherent().
+> > 
+> > Considering
+> > 
+> > void *dma_alloc_attrs(struct device *dev, size_t size, dma_addr_t
+> > *dma_handle, gfp_t flag, unsigned long attrs)
+> > {
+> >         const struct dma_map_ops *ops = get_dma_ops(dev);
+> >         void *cpu_addr;
+> > 
+> >         WARN_ON_ONCE(dev && !dev->coherent_dma_mask);
+> > 
+> >         if (dma_alloc_from_dev_coherent(dev, size, dma_handle,
+> > &cpu_addr)) return cpu_addr;
+> > 
+> >         /* let the implementation decide on the zone to allocate
+> > from: */ flag &= ~(__GFP_DMA | __GFP_DMA32 | __GFP_HIGHMEM);
+> > 
+> > that is the GFP flags dropped that implies that we really want
+> > cdev->dev restricted to 31 bit addressable memory because we can't
+> > tell (with the current common DMA code) hey but this piece of DMA
+> > mem you are abot to allocate for me must be 31 bit addressable
+> > (using GFP_DMA as we usually do).
+> > 
+> > So, as described in the commit message, the vring stuff being forced
+> > into ZONE_DMA is an unfortunate consequence of this all.
+> 
+> Yeah. I hope 31 bits are enough for that as well.
+> 
+> > 
+> > A side note: making the subchannel device 'own' the DMA stuff of a
+> > ccw device (something that was discussed in the RFC thread) is tricky
+> > because the ccw device may outlive the subchannel (all that orphan
+> > stuff).
+> 
+> Yes, that's... eww. Not really a problem for virtio-ccw devices (which
+> do not support the disconnected state), but can we make DMA and the
+> subchannel moving play nice with each other at all?
+> 
+
+I don't quite understand the question. This series does not have any
+problems with that AFAIU. Can you please clarify?
+
+Regards,
+Halil
+
