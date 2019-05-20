@@ -2,181 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3FF9239F7
-	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 16:28:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3AC1723A42
+	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 16:37:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730690AbfETO1z convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Mon, 20 May 2019 10:27:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59316 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730687AbfETO1z (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 May 2019 10:27:55 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0D034308793B;
-        Mon, 20 May 2019 14:27:49 +0000 (UTC)
-Received: from gondolin (ovpn-204-110.brq.redhat.com [10.40.204.110])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DF5817A88;
-        Mon, 20 May 2019 14:27:40 +0000 (UTC)
-Date:   Mon, 20 May 2019 16:27:37 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
- VFIO_IOMMU_INFO_CAPABILITIES
-Message-ID: <20190520162737.7560ad7c.cohuck@redhat.com>
-In-Reply-To: <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
-References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
-        <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
-        <20190517104143.240082b5@x1.home>
-        <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
-        <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S2391664AbfETOhY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 May 2019 10:37:24 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:36052 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731837AbfETOhX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 20 May 2019 10:37:23 -0400
+Received: by mail-qk1-f193.google.com with SMTP id c14so8968045qke.3;
+        Mon, 20 May 2019 07:37:21 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z/2L5o2AoOKLKFPcdkjNIAmz2G/5ZFe52UTQRqPzuYk=;
+        b=DV3jVCYnKcYK5l9o1u8iwTMUtREqHQ8NhUc5CrfrrjoCQyudywF7NVNcUATvxJPQc0
+         IfxQfRVKad2p/2KrIzd5K5z4vfqvgq+KNkSPZzF46vHUhjQjY+0WTN2uTZdTZ4xYBun7
+         uSXsEWZSgRAZ6bKcsh23qjLoqSH5pXuH2attLD/4dIE+LUuumtb4I5m9wlAC52y7akhH
+         HFwNd4K0EGWfMTO1nTL/6gQ3NciBUxM5BpzS7zDC7Oplp553GkihCRWSZSBLT0WHTf3h
+         rOBxfVAI8YIE72CYVHD52TC2gYcHcjouW+wjRIBaW1QUw5lkO6mvzOBR4UJqvOf+dIsV
+         sDDw==
+X-Gm-Message-State: APjAAAXMKWh+uCHSSDCF1f5hhuWeW4jIGQo8ihVjltulq3A2Eafk5rXu
+        zpN9EO1bcMJVO9LZEY87ekKh4QwFFBPDXb+I9s0=
+X-Google-Smtp-Source: APXvYqw/K0JoPhQjbioFloDoxv8hPwsc8PzdGxaBHlE2BolGJGFffF+O1yZKUKyE5ZdibkGoaW8RhPzIvapSmk2bhfM=
+X-Received: by 2002:a05:620a:5ed:: with SMTP id z13mr21969541qkg.84.1558363041328;
+ Mon, 20 May 2019 07:37:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Mon, 20 May 2019 14:27:54 +0000 (UTC)
+References: <20190520134605.29116-1-christian@brauner.io>
+In-Reply-To: <20190520134605.29116-1-christian@brauner.io>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 20 May 2019 16:37:03 +0200
+Message-ID: <CAK8P3a1cZZ6SQe5mGjhga=MgTvCGF6OKyjvosR8J6z6EpH+rVA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] pid: add pidfd_open()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>, cyphar@cyphar.com,
+        David Howells <dhowells@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Suren Baghdasaryan <surenb@google.com>,
+        Android Kernel Team <kernel-team@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 20 May 2019 13:19:23 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+On Mon, May 20, 2019 at 3:46 PM Christian Brauner <christian@brauner.io> wrote:
+>
+> In line with Arnd's recent changes to consolidate syscall numbers across
+> architectures, I have added the pidfd_open() syscall to all architectures
+> at the same time.
 
-> On 17/05/2019 20:04, Pierre Morel wrote:
-> > On 17/05/2019 18:41, Alex Williamson wrote:  
-> >> On Fri, 17 May 2019 18:16:50 +0200
-> >> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >>  
-> >>> We implement the capability interface for VFIO_IOMMU_GET_INFO.
-> >>>
-> >>> When calling the ioctl, the user must specify
-> >>> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
-> >>> must check in the answer if capabilities are supported.
-> >>>
-> >>> The iommu get_attr callback will be used to retrieve the specific
-> >>> attributes and fill the capabilities.
-> >>>
-> >>> Currently two Z-PCI specific capabilities will be queried and
-> >>> filled by the underlying Z specific s390_iommu:
-> >>> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
-> >>> and
-> >>> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
-> >>>
-> >>> Other architectures may add new capabilities in the same way
-> >>> after enhancing the architecture specific IOMMU driver.
-> >>>
-> >>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >>> ---
-> >>>   drivers/vfio/vfio_iommu_type1.c | 122 
-> >>> +++++++++++++++++++++++++++++++++++++++-
-> >>>   1 file changed, 121 insertions(+), 1 deletion(-)
-> >>>
-> >>> diff --git a/drivers/vfio/vfio_iommu_type1.c 
-> >>> b/drivers/vfio/vfio_iommu_type1.c
-> >>> index d0f731c..9435647 100644
-> >>> --- a/drivers/vfio/vfio_iommu_type1.c
-> >>> +++ b/drivers/vfio/vfio_iommu_type1.c
-> >>> @@ -1658,6 +1658,97 @@ static int 
-> >>> vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
-> >>>       return ret;
-> >>>   }
-> >>> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
-> >>> +                    struct vfio_info_cap *caps, size_t size)
-> >>> +{
-> >>> +    struct vfio_iommu_type1_info_pcifn *info_fn;
-> >>> +    int ret;
-> >>> +
-> >>> +    info_fn = kzalloc(size, GFP_KERNEL);
-> >>> +    if (!info_fn)
-> >>> +        return -ENOMEM;
-> >>> +
-> >>> +    ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
-> >>> +                    &info_fn->response);  
-> >>
-> >> What ensures that the 'struct clp_rsp_query_pci' returned from this
-> >> get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
-> >> Why does the latter contains so many reserved fields (beyond simply
-> >> alignment) for a user API?  What fields of these structures are
-> >> actually useful to userspace?  Should any fields not be exposed to the
-> >> user?  Aren't BAR sizes redundant to what's available through the vfio
-> >> PCI API?  I'm afraid that simply redefining an internal structure as
-> >> the API leaves a lot to be desired too.  Thanks,
-> >>
-> >> Alex
-> >>  
-> > Hi Alex,
-> > 
-> > I simply used the structure returned by the firmware to be sure to be 
-> > consistent with future evolutions and facilitate the copy from CLP and 
-> > to userland.
-> > 
-> > If you prefer, and I understand that this is the case, I can define a 
-> > specific VFIO_IOMMU structure with only the fields relevant to the user, 
-> > leaving future enhancement of the user's interface being implemented in 
-> > another kernel patch when the time has come.
-> > 
-> > In fact, the struct will have all defined fields I used but not the BAR 
-> > size and address (at least for now because there are special cases we do 
-> > not support yet with bars).
-> > All the reserved fields can go away.
-> > 
-> > Is it more conform to your idea?
-> > 
-> > Also I have 2 interfaces:
-> > 
-> > s390_iommu.get_attr <-I1-> VFIO_IOMMU <-I2-> userland
-> > 
-> > Do you prefer:
-> > - 2 different structures, no CLP raw structure
-> > - the CLP raw structure for I1 and a VFIO specific structure for I2  
+Thanks! I've checked that the ones you have added are all
+done correctly. However, double-checking that you got all of them,
+I noticed that you missed mips-o32 and mips-n64. With those added:
 
-<entering from the sideline>
-
-IIUC, get_attr extracts various data points via clp, and we then make
-it available to userspace. The clp interface needs to be abstracted
-away at some point... one question from me: Is there a chance that
-someone else may want to make use of the userspace interface (extra
-information about a function)? If yes, I'd expect the get_attr to
-obtain some kind of portable information already (basically your third
-option, below).
-
-> 
-> Hi Alex,
-> 
-> I am back again on this.
-> This solution here above seems to me the best one but in this way I must 
-> include S390 specific include inside the iommu_type1, which is AFAIU not 
-> a good thing.
-> It seems that the powerpc architecture use a solution with a dedicated 
-> VFIO_IOMMU, the vfio_iommu_spar_tce.
-> 
-> Wouldn't it be a solution for s390 too, to use the vfio_iommu_type1 as a 
-> basis to have a s390 dedicated solution.
-> Then it becomes easier to have on one side the s390_iommu interface, 
-> S390 specific, and on the other side a VFIO interface without a blind 
-> copy of the firmware values.
-
-If nobody else would want this exact interface, it might be a solution.
-It would still be better not to encode clp data explicitly in the
-userspace interface.
-
-> 
-> Do you think it is a viable solution?
-> 
-> Thanks,
-> Pierre
-> 
-> 
-> 
-> > - the same VFIO structure for both I1 and I2
+Acked-by: Arnd Bergmann <arnd@arndb.de>
