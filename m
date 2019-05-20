@@ -2,117 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1C8BF23137
-	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 12:21:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3054D2315C
+	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 12:31:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730684AbfETKV4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 May 2019 06:21:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60124 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730632AbfETKV4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 May 2019 06:21:56 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D7FBF20276;
-        Mon, 20 May 2019 10:21:55 +0000 (UTC)
-Received: from gondolin (ovpn-204-110.brq.redhat.com [10.40.204.110])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F99A5C221;
-        Mon, 20 May 2019 10:21:46 +0000 (UTC)
-Date:   Mon, 20 May 2019 12:21:43 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
+        id S1730382AbfETKbE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 May 2019 06:31:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55838 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731334AbfETKbE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 May 2019 06:31:04 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KANt2f050847
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 06:31:03 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2skrxb4amg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 06:31:02 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 20 May 2019 11:31:01 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 11:30:56 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KAUtVN34537680
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 10:30:55 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C177EA4040;
+        Mon, 20 May 2019 10:30:55 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AEEEEA4053;
+        Mon, 20 May 2019 10:30:55 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 20 May 2019 10:30:55 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 677F4E0211; Mon, 20 May 2019 12:30:55 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>
-Subject: Re: [PATCH 06/10] s390/cio: add basic protected virtualization
- support
-Message-ID: <20190520122143.259ff8df.cohuck@redhat.com>
-In-Reply-To: <20190518201100.0fd07d7f.pasic@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com>
-        <20190426183245.37939-7-pasic@linux.ibm.com>
-        <20190513114136.783c851c.cohuck@redhat.com>
-        <20190515225158.301af387.pasic@linux.ibm.com>
-        <20190516082928.1371696b.cohuck@redhat.com>
-        <20190518201100.0fd07d7f.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Wei Yongjun <weiyongjun1@huawei.com>
+Subject: [GIT PULL 0/2] KVM: s390: Fixes for 5.2-rc2
+Date:   Mon, 20 May 2019 12:30:53 +0200
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 20 May 2019 10:21:56 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052010-0028-0000-0000-0000036F8CE8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052010-0029-0000-0000-0000242F31C9
+Message-Id: <20190520103055.246818-1-borntraeger@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=872 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200075
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, 18 May 2019 20:11:00 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> On Thu, 16 May 2019 08:29:28 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > On Wed, 15 May 2019 22:51:58 +0200
-> > Halil Pasic <pasic@linux.ibm.com> wrote:
+Paolo, Radim,
 
-> Don't like the second sentence. How about "It handles neither QDIO
-> in the common code, nor any device type specific stuff (like channel
-> programs constructed by the DADS driver)."
+two small changes for rc2 via kvm/master. One is a fix for typo that
+was merged during this merge window, the other is a CPU consumption 
+improvement for halt polling on s390.
 
-Sounds good to me (with s/DADS/DASD/ :)
+The following changes since commit a188339ca5a396acc588e5851ed7e19f66b0ebd9:
 
-> > > A side note: making the subchannel device 'own' the DMA stuff of a
-> > > ccw device (something that was discussed in the RFC thread) is tricky
-> > > because the ccw device may outlive the subchannel (all that orphan
-> > > stuff).  
-> > 
-> > Yes, that's... eww. Not really a problem for virtio-ccw devices (which
-> > do not support the disconnected state), but can we make DMA and the
-> > subchannel moving play nice with each other at all?
-> >   
-> 
-> I don't quite understand the question. This series does not have any
-> problems with that AFAIU. Can you please clarify?
+  Linux 5.2-rc1 (2019-05-19 15:47:09 -0700)
 
-Wait, weren't you saying that there actually is a problem?
+are available in the Git repository at:
 
-We seem to have the following situation:
-- the device per se is represented by the ccw device
-- the subchannel is the means of communication, and dma is tied to the
-  (I/O ?) subchannel
-- the machine check handling code may move a ccw device to a different
-  subchannel, or even to a fake subchannel (orphanage handling)
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.2-1
 
-The moving won't happen with virtio-ccw devices (as they do not support
-the disconnected state, which is a prereq for being moved around), but
-at a glance, this looks like it is worth some more thought.
+for you to fetch changes up to 6e9b622d1c3628fae65217465a148b157a361c2a:
 
-- Are all (I/O) subchannels using e.g. the same dma size? (TBH, that
-  question sounds a bit silly: that should be a property belonging to
-  the ccw device, shouldn't it?)
-- What dma properties does the fake subchannel have? (Probably none, as
-  its only purpose is to serve as a parent for otherwise parentless
-  disconnected ccw devices, and is therefore not involved in any I/O.)
-- There needs to be some kind of handling in the machine check code, I
-  guess? We would probably need a different allocation if we end up at
-  a different subchannel?
+  KVM: s390: change default halt poll time to 50us (2019-05-20 09:40:39 +0200)
 
-I think we can assume that the dma size is at most 31 bits (since that
-is what the common I/O layer needs); but can we also assume that it
-will always be at least 31 bits?
+----------------------------------------------------------------
+KVM: s390: Fixes for s390
 
-My take on this is that we should be sure that we're not digging
-ourselves a hole that will be hard to get out of again should we want to
-support non-virtio-ccw in the future, not that the current
-implementation is necessarily broken.
+- Fix typo in module paramter description
+- Change default poll timer to improve cpu consumption
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      KVM: s390: change default halt poll time to 50us
+
+Wei Yongjun (1):
+      KVM: s390: fix typo in parameter description
+
+ arch/s390/include/asm/kvm_host.h | 2 +-
+ arch/s390/kvm/kvm-s390.c         | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
+
