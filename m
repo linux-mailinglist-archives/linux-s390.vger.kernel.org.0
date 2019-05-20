@@ -2,113 +2,212 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0ECF6231FC
-	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 13:09:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FD8B23225
+	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 13:19:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732370AbfETLJe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 May 2019 07:09:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59558 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732368AbfETLJe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 May 2019 07:09:34 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B95A920675;
-        Mon, 20 May 2019 11:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558350573;
-        bh=xdE8V/8ROdDMJBxU1DJwKw3mMX0oiKOiXtH4jn4mbsA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=wOVNCDxENKYO0q/G1lnr6pHS2TvfvKKbdZY26Wc07DPYhlcHtBlWtMBI1Z/GNHH+M
-         TM70+y+emNI8iJvcY/HDv5rWhNudKkRclkpSM1nrD+Q3sHnrdMUEFtaQlz5fn2IZkr
-         bLp4RG9Emu+UfROJ7RmYE8u++Kbk5/voPKSJx1Uo=
-Date:   Mon, 20 May 2019 13:09:30 +0200
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-Message-ID: <20190520110930.GC20211@kroah.com>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
- <20190415051919.GA31481@infradead.org>
- <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
- <20190502122128.GA2670@kroah.com>
- <20190502161758.26972bb2@mschwideX1>
- <20190502143110.GC17577@kroah.com>
- <20190502171055.132f023c@mschwideX1>
+        id S1732362AbfETLTg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 May 2019 07:19:36 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54980 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725601AbfETLTe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 May 2019 07:19:34 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KBHNFF066491
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 07:19:32 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sks8nndt0-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 07:19:32 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 20 May 2019 12:19:30 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 12:19:26 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KBJOY747841290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 11:19:24 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 99C60AE051;
+        Mon, 20 May 2019 11:19:24 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F2E9EAE045;
+        Mon, 20 May 2019 11:19:23 +0000 (GMT)
+Received: from [9.145.24.80] (unknown [9.145.24.80])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 11:19:23 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
+ VFIO_IOMMU_INFO_CAPABILITIES
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
+        walling@linux.ibm.com, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
+ <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
+ <20190517104143.240082b5@x1.home>
+ <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
+Date:   Mon, 20 May 2019 13:19:23 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190502171055.132f023c@mschwideX1>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052011-0020-0000-0000-0000033E8C6A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052011-0021-0000-0000-0000219162BD
+Message-Id: <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=929 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200080
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, May 02, 2019 at 05:10:55PM +0200, Martin Schwidefsky wrote:
-> On Thu, 2 May 2019 16:31:10 +0200
-> Greg KH <gregkh@linuxfoundation.org> wrote:
+On 17/05/2019 20:04, Pierre Morel wrote:
+> On 17/05/2019 18:41, Alex Williamson wrote:
+>> On Fri, 17 May 2019 18:16:50 +0200
+>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>
+>>> We implement the capability interface for VFIO_IOMMU_GET_INFO.
+>>>
+>>> When calling the ioctl, the user must specify
+>>> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
+>>> must check in the answer if capabilities are supported.
+>>>
+>>> The iommu get_attr callback will be used to retrieve the specific
+>>> attributes and fill the capabilities.
+>>>
+>>> Currently two Z-PCI specific capabilities will be queried and
+>>> filled by the underlying Z specific s390_iommu:
+>>> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
+>>> and
+>>> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
+>>>
+>>> Other architectures may add new capabilities in the same way
+>>> after enhancing the architecture specific IOMMU driver.
+>>>
+>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>> ---
+>>>   drivers/vfio/vfio_iommu_type1.c | 122 
+>>> +++++++++++++++++++++++++++++++++++++++-
+>>>   1 file changed, 121 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/vfio/vfio_iommu_type1.c 
+>>> b/drivers/vfio/vfio_iommu_type1.c
+>>> index d0f731c..9435647 100644
+>>> --- a/drivers/vfio/vfio_iommu_type1.c
+>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>>> @@ -1658,6 +1658,97 @@ static int 
+>>> vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
+>>>       return ret;
+>>>   }
+>>> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
+>>> +                    struct vfio_info_cap *caps, size_t size)
+>>> +{
+>>> +    struct vfio_iommu_type1_info_pcifn *info_fn;
+>>> +    int ret;
+>>> +
+>>> +    info_fn = kzalloc(size, GFP_KERNEL);
+>>> +    if (!info_fn)
+>>> +        return -ENOMEM;
+>>> +
+>>> +    ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
+>>> +                    &info_fn->response);
+>>
+>> What ensures that the 'struct clp_rsp_query_pci' returned from this
+>> get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
+>> Why does the latter contains so many reserved fields (beyond simply
+>> alignment) for a user API?  What fields of these structures are
+>> actually useful to userspace?  Should any fields not be exposed to the
+>> user?  Aren't BAR sizes redundant to what's available through the vfio
+>> PCI API?  I'm afraid that simply redefining an internal structure as
+>> the API leaves a lot to be desired too.  Thanks,
+>>
+>> Alex
+>>
+> Hi Alex,
 > 
-> > On Thu, May 02, 2019 at 04:17:58PM +0200, Martin Schwidefsky wrote:
-> > > On Thu, 2 May 2019 14:21:28 +0200
-> > > Greg KH <gregkh@linuxfoundation.org> wrote:
-> > >   
-> > > > On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:  
-> > > > > On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:    
-> > > > > >
-> > > > > > Can we please have the page refcount overflow fixes out on the list
-> > > > > > for review, even if it is after the fact?    
-> > > > > 
-> > > > > They were actually on a list for review long before the fact, but it
-> > > > > was the security mailing list. The issue actually got discussed back
-> > > > > in January along with early versions of the patches, but then we
-> > > > > dropped the ball because it just wasn't on anybody's radar and it got
-> > > > > resurrected late March. Willy wrote a rather bigger patch-series, and
-> > > > > review of that is what then resulted in those commits. So they may
-> > > > > look recent, but that's just because the original patches got
-> > > > > seriously edited down and rewritten.
-> > > > > 
-> > > > > That said, powerpc and s390 should at least look at maybe adding a
-> > > > > check for the page ref in their gup paths too. Powerpc has the special
-> > > > > gup_hugepte() case, and s390 has its own version of gup entirely. I
-> > > > > was actually hoping the s390 guys would look at using the generic gup
-> > > > > code.
-> > > > > 
-> > > > > I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
-> > > > > largely irrelevant, partly since even theoretically this whole issue
-> > > > > needs a _lot_ of memory.
-> > > > > 
-> > > > > Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
-> > > > > (page ref overflow)"). You may or may not really care.    
-> > > > 
-> > > > I've now queued these patches up for the next round of stable releases,
-> > > > as some people seem to care about these.
-> > > > 
-> > > > I didn't see any follow-on patches for s390 or ppc64 hit the tree for
-> > > > these changes, am I just missing them and should also queue up a few
-> > > > more to handle this issue on those platforms?  
-> > > 
-> > > I fixed that with a different approach. The following two patches are
-> > > queued for the next merge window:
-> > > 
-> > > d1874a0c2805 "s390/mm: make the pxd_offset functions more robust"
-> > > 1a42010cdc26 "s390/mm: convert to the generic get_user_pages_fast code"
-> > > 
-> > > With these two s390 now uses the generic gup code in mm/gup.c  
-> > 
-> > Nice!  Do you want me to queue those up for the stable backports once
-> > they hit a public -rc release?
+> I simply used the structure returned by the firmware to be sure to be 
+> consistent with future evolutions and facilitate the copy from CLP and 
+> to userland.
 > 
-> Yes please!
+> If you prefer, and I understand that this is the case, I can define a 
+> specific VFIO_IOMMU structure with only the fields relevant to the user, 
+> leaving future enhancement of the user's interface being implemented in 
+> another kernel patch when the time has come.
+> 
+> In fact, the struct will have all defined fields I used but not the BAR 
+> size and address (at least for now because there are special cases we do 
+> not support yet with bars).
+> All the reserved fields can go away.
+> 
+> Is it more conform to your idea?
+> 
+> Also I have 2 interfaces:
+> 
+> s390_iommu.get_attr <-I1-> VFIO_IOMMU <-I2-> userland
+> 
+> Do you prefer:
+> - 2 different structures, no CLP raw structure
+> - the CLP raw structure for I1 and a VFIO specific structure for I2
 
-Now queued up to 5.0 and 5.1, but did not apply to 4.19 or older :(
+Hi Alex,
 
-thanks,
+I am back again on this.
+This solution here above seems to me the best one but in this way I must 
+include S390 specific include inside the iommu_type1, which is AFAIU not 
+a good thing.
+It seems that the powerpc architecture use a solution with a dedicated 
+VFIO_IOMMU, the vfio_iommu_spar_tce.
 
-greg k-h
+Wouldn't it be a solution for s390 too, to use the vfio_iommu_type1 as a 
+basis to have a s390 dedicated solution.
+Then it becomes easier to have on one side the s390_iommu interface, 
+S390 specific, and on the other side a VFIO interface without a blind 
+copy of the firmware values.
+
+Do you think it is a viable solution?
+
+Thanks,
+Pierre
+
+
+
+> - the same VFIO structure for both I1 and I2
+> 
+> Thank you if you could give me a direction for this.
+> 
+> Thanks for the comments, and thanks a lot to have answered so quickly.
+> 
+> Pierre
+> 
+> 
+> 
+> 
+> 
+> 
+> 
+
+
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
+
