@@ -2,447 +2,240 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84F6023CB4
-	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 17:57:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BDB0F23D7B
+	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 18:31:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392395AbfETP4n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 May 2019 11:56:43 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54002 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2392394AbfETP4l (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 20 May 2019 11:56:41 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 198so13847908wme.3
-        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 08:56:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=N8T3aL28oy4lTIwynzNCFzfhApKXr6vicH7lBpgxJHA=;
-        b=esLKW/omJMddteonMci2qfVi7LlXy4K6bSIyPjIrjIbQCDx72GwYK6/qiGKmIrznEV
-         sT5yZN02Ad2DEvdP9Y9+ApfnACL61hZTQpdEwDrPbisYqVx4JVrs2OELFytGLOr2cPyO
-         kfbiVk3xTtvCtxi4B9fr7qcnv/ksxeJLFIxx7wwiMV8wEiVauRlOX8RmSV7yR6Pm2v1z
-         2OfW39JpCI4G57jLGrbjM/Wyktov1GgbVOvWrg5+us9x1WDIyCWF5cvvpfCkCL7y0mHq
-         vTNOdgO7vNrA+D4Ax4ihmtYzuUrq0q8zX4YN3sKRhvB8lsKuFITjDYC/fQe+D6bSEqmf
-         xUSw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=N8T3aL28oy4lTIwynzNCFzfhApKXr6vicH7lBpgxJHA=;
-        b=BAhbpV1RQpw5Tx58SBhNuhZUA4XofFVst9Ipc/lqkDcn2e6v7sRpzi90iK8OSU30r0
-         ZFYqm9L/kgZfTaUeixRK4oOlyYTMa7HKQq4u6vensu95IPexpUVKEqsxXI86wS8EgfYC
-         QuteJCbC57iqrD50j/jy0JQCJQ3WJxFystjUU+3+odVg7BYvHTktM0YTzUeiJpkZ5I7F
-         WZJcKyudVtOVp54+sKAuuGnYbyz8FXtwNiLSDb3QnLoby/vFFH94UgnCIUw65aS2stF+
-         EYnmgB6l1X3X4f1lIXhEaBrDDXY3TM1CIKqYaY6rH4Ej2WIS1+dShrd4D/46QukyQlFM
-         QU/A==
-X-Gm-Message-State: APjAAAWXI1PJXCD6OKMeVF/6jCP+sl7jLZVCs2LyXIHKx0A09ZBvPIdR
-        mBMdEGCnjNDO+9y29KvOS6NtJQ==
-X-Google-Smtp-Source: APXvYqz4rIn/BcJdLcMGcq/WCKnCmkKesTw5BAVGHwnjk1ukV2M1PfYiLIg/1h5LFtCcLROOvSgbsg==
-X-Received: by 2002:a05:600c:110a:: with SMTP id b10mr12368594wma.125.1558367798584;
-        Mon, 20 May 2019 08:56:38 -0700 (PDT)
-Received: from localhost.localdomain ([212.91.227.56])
-        by smtp.gmail.com with ESMTPSA id t19sm12577789wmi.42.2019.05.20.08.56.36
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 08:56:37 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     jannh@google.com, oleg@redhat.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de
-Cc:     akpm@linux-foundation.org, cyphar@cyphar.com, dhowells@redhat.com,
-        ebiederm@xmission.com, elena.reshetova@intel.com,
-        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
-        tglx@linutronix.de, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, joel@joelfernandes.org,
-        dancol@google.com, serge@hallyn.com, surenb@google.com,
-        kernel-team@android.com, Christian Brauner <christian@brauner.io>,
-        "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Subject: [PATCH v3 2/2] tests: add pidfd_open() tests
-Date:   Mon, 20 May 2019 17:56:30 +0200
-Message-Id: <20190520155630.21684-2-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190520155630.21684-1-christian@brauner.io>
-References: <20190520155630.21684-1-christian@brauner.io>
+        id S2392599AbfETQbW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 May 2019 12:31:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34440 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389828AbfETQbS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 May 2019 12:31:18 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KGQwpc027912
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 12:31:17 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2skx6p4tew-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 12:31:17 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 20 May 2019 17:31:13 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 17:31:11 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KGV9e150528352
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 16:31:09 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6A68DA4051;
+        Mon, 20 May 2019 16:31:09 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B172CA407B;
+        Mon, 20 May 2019 16:31:08 +0000 (GMT)
+Received: from [9.145.24.80] (unknown [9.145.24.80])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 16:31:08 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
+ VFIO_IOMMU_INFO_CAPABILITIES
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Alex Williamson <alex.williamson@redhat.com>,
+        sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
+        walling@linux.ibm.com, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
+ <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
+ <20190517104143.240082b5@x1.home>
+ <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
+ <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
+ <20190520162737.7560ad7c.cohuck@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Mon, 20 May 2019 18:31:08 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190520162737.7560ad7c.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052016-0020-0000-0000-0000033EA611
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052016-0021-0000-0000-000021917F18
+Message-Id: <23f6a739-be4f-7eda-2227-2994fdc2325a@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This adds testing for the new pidfd_open() syscalls. Specifically, we test:
-- that no invalid flags can be passed to pidfd_open()
-- that no invalid pid can be passed to pidfd_open()
-- that a pidfd can be retrieved with pidfd_open()
-- that the retrieved pidfd references the correct pid
+On 20/05/2019 16:27, Cornelia Huck wrote:
+> On Mon, 20 May 2019 13:19:23 +0200
+> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> 
+>> On 17/05/2019 20:04, Pierre Morel wrote:
+>>> On 17/05/2019 18:41, Alex Williamson wrote:
+>>>> On Fri, 17 May 2019 18:16:50 +0200
+>>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+>>>>   
+>>>>> We implement the capability interface for VFIO_IOMMU_GET_INFO.
+>>>>>
+>>>>> When calling the ioctl, the user must specify
+>>>>> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
+>>>>> must check in the answer if capabilities are supported.
+>>>>>
+>>>>> The iommu get_attr callback will be used to retrieve the specific
+>>>>> attributes and fill the capabilities.
+>>>>>
+>>>>> Currently two Z-PCI specific capabilities will be queried and
+>>>>> filled by the underlying Z specific s390_iommu:
+>>>>> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
+>>>>> and
+>>>>> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
+>>>>>
+>>>>> Other architectures may add new capabilities in the same way
+>>>>> after enhancing the architecture specific IOMMU driver.
+>>>>>
+>>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>>>> ---
+>>>>>    drivers/vfio/vfio_iommu_type1.c | 122
+>>>>> +++++++++++++++++++++++++++++++++++++++-
+>>>>>    1 file changed, 121 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c
+>>>>> b/drivers/vfio/vfio_iommu_type1.c
+>>>>> index d0f731c..9435647 100644
+>>>>> --- a/drivers/vfio/vfio_iommu_type1.c
+>>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+>>>>> @@ -1658,6 +1658,97 @@ static int
+>>>>> vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
+>>>>>        return ret;
+>>>>>    }
+>>>>> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
+>>>>> +                    struct vfio_info_cap *caps, size_t size)
+>>>>> +{
+>>>>> +    struct vfio_iommu_type1_info_pcifn *info_fn;
+>>>>> +    int ret;
+>>>>> +
+>>>>> +    info_fn = kzalloc(size, GFP_KERNEL);
+>>>>> +    if (!info_fn)
+>>>>> +        return -ENOMEM;
+>>>>> +
+>>>>> +    ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
+>>>>> +                    &info_fn->response);
+>>>>
+>>>> What ensures that the 'struct clp_rsp_query_pci' returned from this
+>>>> get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
+>>>> Why does the latter contains so many reserved fields (beyond simply
+>>>> alignment) for a user API?  What fields of these structures are
+>>>> actually useful to userspace?  Should any fields not be exposed to the
+>>>> user?  Aren't BAR sizes redundant to what's available through the vfio
+>>>> PCI API?  I'm afraid that simply redefining an internal structure as
+>>>> the API leaves a lot to be desired too.  Thanks,
+>>>>
+>>>> Alex
+>>>>   
+>>> Hi Alex,
+>>>
+>>> I simply used the structure returned by the firmware to be sure to be
+>>> consistent with future evolutions and facilitate the copy from CLP and
+>>> to userland.
+>>>
+>>> If you prefer, and I understand that this is the case, I can define a
+>>> specific VFIO_IOMMU structure with only the fields relevant to the user,
+>>> leaving future enhancement of the user's interface being implemented in
+>>> another kernel patch when the time has come.
+>>>
+>>> In fact, the struct will have all defined fields I used but not the BAR
+>>> size and address (at least for now because there are special cases we do
+>>> not support yet with bars).
+>>> All the reserved fields can go away.
+>>>
+>>> Is it more conform to your idea?
+>>>
+>>> Also I have 2 interfaces:
+>>>
+>>> s390_iommu.get_attr <-I1-> VFIO_IOMMU <-I2-> userland
+>>>
+>>> Do you prefer:
+>>> - 2 different structures, no CLP raw structure
+>>> - the CLP raw structure for I1 and a VFIO specific structure for I2
+> 
+> <entering from the sideline>
+> 
+> IIUC, get_attr extracts various data points via clp, and we then make
+> it available to userspace. The clp interface needs to be abstracted
+> away at some point... one question from me: Is there a chance that
+> someone else may want to make use of the userspace interface (extra
+> information about a function)? If yes, I'd expect the get_attr to
+> obtain some kind of portable information already (basically your third
+> option, below).
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jann Horn <jannh@google.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc: Andy Lutomirsky <luto@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: linux-api@vger.kernel.org
----
-v1: unchanged
-v2:
-- Christian Brauner <christian@brauner.io>:
-  - set number of planned tests via ksft_set_plan()
-v3: unchanged
----
- tools/testing/selftests/pidfd/.gitignore      |   1 +
- tools/testing/selftests/pidfd/Makefile        |   2 +-
- tools/testing/selftests/pidfd/pidfd.h         |  57 ++++++
- .../testing/selftests/pidfd/pidfd_open_test.c | 169 ++++++++++++++++++
- tools/testing/selftests/pidfd/pidfd_test.c    |  41 +----
- 5 files changed, 229 insertions(+), 41 deletions(-)
- create mode 100644 tools/testing/selftests/pidfd/pidfd.h
- create mode 100644 tools/testing/selftests/pidfd/pidfd_open_test.c
+Yes, seems the most reasonable.
+In this case I need to share the structure definition between:
+userspace through vfio.h
+vfio_iommu (this is obvious)
+s390_iommu
 
-diff --git a/tools/testing/selftests/pidfd/.gitignore b/tools/testing/selftests/pidfd/.gitignore
-index 822a1e63d045..16d84d117bc0 100644
---- a/tools/testing/selftests/pidfd/.gitignore
-+++ b/tools/testing/selftests/pidfd/.gitignore
-@@ -1 +1,2 @@
-+pidfd_open_test
- pidfd_test
-diff --git a/tools/testing/selftests/pidfd/Makefile b/tools/testing/selftests/pidfd/Makefile
-index deaf8073bc06..b36c0be70848 100644
---- a/tools/testing/selftests/pidfd/Makefile
-+++ b/tools/testing/selftests/pidfd/Makefile
-@@ -1,6 +1,6 @@
- CFLAGS += -g -I../../../../usr/include/
- 
--TEST_GEN_PROGS := pidfd_test
-+TEST_GEN_PROGS := pidfd_test pidfd_open_test
- 
- include ../lib.mk
- 
-diff --git a/tools/testing/selftests/pidfd/pidfd.h b/tools/testing/selftests/pidfd/pidfd.h
-new file mode 100644
-index 000000000000..8452e910463f
---- /dev/null
-+++ b/tools/testing/selftests/pidfd/pidfd.h
-@@ -0,0 +1,57 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+
-+#ifndef __PIDFD_H
-+#define __PIDFD_H
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <sys/mount.h>
-+
-+#include "../kselftest.h"
-+
-+/*
-+ * The kernel reserves 300 pids via RESERVED_PIDS in kernel/pid.c
-+ * That means, when it wraps around any pid < 300 will be skipped.
-+ * So we need to use a pid > 300 in order to test recycling.
-+ */
-+#define PID_RECYCLE 1000
-+
-+/*
-+ * Define a few custom error codes for the child process to clearly indicate
-+ * what is happening. This way we can tell the difference between a system
-+ * error, a test error, etc.
-+ */
-+#define PIDFD_PASS 0
-+#define PIDFD_FAIL 1
-+#define PIDFD_ERROR 2
-+#define PIDFD_SKIP 3
-+#define PIDFD_XFAIL 4
-+
-+int wait_for_pid(pid_t pid)
-+{
-+	int status, ret;
-+
-+again:
-+	ret = waitpid(pid, &status, 0);
-+	if (ret == -1) {
-+		if (errno == EINTR)
-+			goto again;
-+
-+		return -1;
-+	}
-+
-+	if (!WIFEXITED(status))
-+		return -1;
-+
-+	return WEXITSTATUS(status);
-+}
-+
-+
-+#endif /* __PIDFD_H */
-diff --git a/tools/testing/selftests/pidfd/pidfd_open_test.c b/tools/testing/selftests/pidfd/pidfd_open_test.c
-new file mode 100644
-index 000000000000..0377133dd6dc
---- /dev/null
-+++ b/tools/testing/selftests/pidfd/pidfd_open_test.c
-@@ -0,0 +1,169 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <inttypes.h>
-+#include <limits.h>
-+#include <linux/types.h>
-+#include <linux/wait.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdbool.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <syscall.h>
-+#include <sys/mount.h>
-+#include <sys/prctl.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+#include "pidfd.h"
-+#include "../kselftest.h"
-+
-+static inline int sys_pidfd_open(pid_t pid, unsigned int flags)
-+{
-+	return syscall(__NR_pidfd_open, pid, flags);
-+}
-+
-+static int safe_int(const char *numstr, int *converted)
-+{
-+	char *err = NULL;
-+	long sli;
-+
-+	errno = 0;
-+	sli = strtol(numstr, &err, 0);
-+	if (errno == ERANGE && (sli == LONG_MAX || sli == LONG_MIN))
-+		return -ERANGE;
-+
-+	if (errno != 0 && sli == 0)
-+		return -EINVAL;
-+
-+	if (err == numstr || *err != '\0')
-+		return -EINVAL;
-+
-+	if (sli > INT_MAX || sli < INT_MIN)
-+		return -ERANGE;
-+
-+	*converted = (int)sli;
-+	return 0;
-+}
-+
-+static int char_left_gc(const char *buffer, size_t len)
-+{
-+	size_t i;
-+
-+	for (i = 0; i < len; i++) {
-+		if (buffer[i] == ' ' ||
-+		    buffer[i] == '\t')
-+			continue;
-+
-+		return i;
-+	}
-+
-+	return 0;
-+}
-+
-+static int char_right_gc(const char *buffer, size_t len)
-+{
-+	int i;
-+
-+	for (i = len - 1; i >= 0; i--) {
-+		if (buffer[i] == ' '  ||
-+		    buffer[i] == '\t' ||
-+		    buffer[i] == '\n' ||
-+		    buffer[i] == '\0')
-+			continue;
-+
-+		return i + 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static char *trim_whitespace_in_place(char *buffer)
-+{
-+	buffer += char_left_gc(buffer, strlen(buffer));
-+	buffer[char_right_gc(buffer, strlen(buffer))] = '\0';
-+	return buffer;
-+}
-+
-+static pid_t get_pid_from_fdinfo_file(int pidfd, const char *key, size_t keylen)
-+{
-+	int ret;
-+	char path[512];
-+	FILE *f;
-+	size_t n = 0;
-+	pid_t result = -1;
-+	char *line = NULL;
-+
-+	snprintf(path, sizeof(path), "/proc/self/fdinfo/%d", pidfd);
-+
-+	f = fopen(path, "re");
-+	if (!f)
-+		return -1;
-+
-+	while (getline(&line, &n, f) != -1) {
-+		char *numstr;
-+
-+		if (strncmp(line, key, keylen))
-+			continue;
-+
-+		numstr = trim_whitespace_in_place(line + 4);
-+		ret = safe_int(numstr, &result);
-+		if (ret < 0)
-+			goto out;
-+
-+		break;
-+	}
-+
-+out:
-+	free(line);
-+	fclose(f);
-+	return result;
-+}
-+
-+int main(int argc, char **argv)
-+{
-+	int pidfd = -1, ret = 1;
-+	pid_t pid;
-+
-+	ksft_set_plan(3);
-+
-+	pidfd = sys_pidfd_open(-1, 0);
-+	if (pidfd >= 0) {
-+		ksft_print_msg(
-+			"%s - succeeded to open pidfd for invalid pid -1\n",
-+			strerror(errno));
-+		goto on_error;
-+	}
-+	ksft_test_result_pass("do not allow invalid pid test: passed\n");
-+
-+	pidfd = sys_pidfd_open(getpid(), 1);
-+	if (pidfd >= 0) {
-+		ksft_print_msg(
-+			"%s - succeeded to open pidfd with invalid flag value specified\n",
-+			strerror(errno));
-+		goto on_error;
-+	}
-+	ksft_test_result_pass("do not allow invalid flag test: passed\n");
-+
-+	pidfd = sys_pidfd_open(getpid(), 0);
-+	if (pidfd < 0) {
-+		ksft_print_msg("%s - failed to open pidfd\n", strerror(errno));
-+		goto on_error;
-+	}
-+	ksft_test_result_pass("open a new pidfd test: passed\n");
-+
-+	pid = get_pid_from_fdinfo_file(pidfd, "Pid:", sizeof("Pid:") - 1);
-+	ksft_print_msg("pidfd %d refers to process with pid %d\n", pidfd, pid);
-+
-+	ret = 0;
-+
-+on_error:
-+	if (pidfd >= 0)
-+		close(pidfd);
-+
-+	return !ret ? ksft_exit_pass() : ksft_exit_fail();
-+}
-diff --git a/tools/testing/selftests/pidfd/pidfd_test.c b/tools/testing/selftests/pidfd/pidfd_test.c
-index 5bae1792e3d6..a03387052aa7 100644
---- a/tools/testing/selftests/pidfd/pidfd_test.c
-+++ b/tools/testing/selftests/pidfd/pidfd_test.c
-@@ -14,6 +14,7 @@
- #include <sys/wait.h>
- #include <unistd.h>
- 
-+#include "pidfd.h"
- #include "../kselftest.h"
- 
- static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
-@@ -62,28 +63,6 @@ static int test_pidfd_send_signal_simple_success(void)
- 	return 0;
- }
- 
--static int wait_for_pid(pid_t pid)
--{
--	int status, ret;
--
--again:
--	ret = waitpid(pid, &status, 0);
--	if (ret == -1) {
--		if (errno == EINTR)
--			goto again;
--
--		return -1;
--	}
--
--	if (ret != pid)
--		goto again;
--
--	if (!WIFEXITED(status))
--		return -1;
--
--	return WEXITSTATUS(status);
--}
--
- static int test_pidfd_send_signal_exited_fail(void)
- {
- 	int pidfd, ret, saved_errno;
-@@ -128,13 +107,6 @@ static int test_pidfd_send_signal_exited_fail(void)
- 	return 0;
- }
- 
--/*
-- * The kernel reserves 300 pids via RESERVED_PIDS in kernel/pid.c
-- * That means, when it wraps around any pid < 300 will be skipped.
-- * So we need to use a pid > 300 in order to test recycling.
-- */
--#define PID_RECYCLE 1000
--
- /*
-  * Maximum number of cycles we allow. This is equivalent to PID_MAX_DEFAULT.
-  * If users set a higher limit or we have cycled PIDFD_MAX_DEFAULT number of
-@@ -143,17 +115,6 @@ static int test_pidfd_send_signal_exited_fail(void)
-  */
- #define PIDFD_MAX_DEFAULT 0x8000
- 
--/*
-- * Define a few custom error codes for the child process to clearly indicate
-- * what is happening. This way we can tell the difference between a system
-- * error, a test error, etc.
-- */
--#define PIDFD_PASS 0
--#define PIDFD_FAIL 1
--#define PIDFD_ERROR 2
--#define PIDFD_SKIP 3
--#define PIDFD_XFAIL 4
--
- static int test_pidfd_send_signal_recycled_pid_fail(void)
- {
- 	int i, ret;
+It is this third include which made me doubt.
+But when you re formulate it it looks the more reasonable because there 
+are much less changes.
+
+Thanks for the help, I start this way, still wait one day or two to see 
+if any comment against this solution comes and send the update.
+
+Thanks,
+Pierre
+
+> 
+>>
+>> Hi Alex,
+>>
+>> I am back again on this.
+>> This solution here above seems to me the best one but in this way I must
+>> include S390 specific include inside the iommu_type1, which is AFAIU not
+>> a good thing.
+>> It seems that the powerpc architecture use a solution with a dedicated
+>> VFIO_IOMMU, the vfio_iommu_spar_tce.
+>>
+>> Wouldn't it be a solution for s390 too, to use the vfio_iommu_type1 as a
+>> basis to have a s390 dedicated solution.
+>> Then it becomes easier to have on one side the s390_iommu interface,
+>> S390 specific, and on the other side a VFIO interface without a blind
+>> copy of the firmware values.
+> 
+> If nobody else would want this exact interface, it might be a solution.
+> It would still be better not to encode clp data explicitly in the
+> userspace interface.
+> 
+>>
+>> Do you think it is a viable solution?
+>>
+>> Thanks,
+>> Pierre
+>>
+>>
+>>
+>>> - the same VFIO structure for both I1 and I2
+> 
+
+
 -- 
-2.21.0
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
