@@ -2,200 +2,168 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C7F924038
-	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 20:24:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D838424228
+	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 22:35:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725938AbfETSYG convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Mon, 20 May 2019 14:24:06 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60066 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725776AbfETSYG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 May 2019 14:24:06 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6F8473082140;
-        Mon, 20 May 2019 18:23:57 +0000 (UTC)
-Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D50D600C6;
-        Mon, 20 May 2019 18:23:53 +0000 (UTC)
-Date:   Mon, 20 May 2019 12:23:52 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, sebott@linux.vnet.ibm.com,
-        gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
-        borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
- VFIO_IOMMU_INFO_CAPABILITIES
-Message-ID: <20190520122352.73082e52@x1.home>
-In-Reply-To: <23f6a739-be4f-7eda-2227-2994fdc2325a@linux.ibm.com>
-References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
-        <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
-        <20190517104143.240082b5@x1.home>
-        <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
-        <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
-        <20190520162737.7560ad7c.cohuck@redhat.com>
-        <23f6a739-be4f-7eda-2227-2994fdc2325a@linux.ibm.com>
-Organization: Red Hat
+        id S1726151AbfETUfG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 May 2019 16:35:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59840 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725601AbfETUfF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 May 2019 16:35:05 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4KKVmqY105098
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 16:35:04 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sm0wrwa3d-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 16:35:04 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
+        Mon, 20 May 2019 21:35:03 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 May 2019 21:35:01 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4KKZ0Kv14549014
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 20 May 2019 20:35:00 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B925AAE064;
+        Mon, 20 May 2019 20:35:00 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA004AE060;
+        Mon, 20 May 2019 20:35:00 +0000 (GMT)
+Received: from [9.56.58.54] (unknown [9.56.58.54])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 20:35:00 +0000 (GMT)
+Subject: Re: [PATCH v3 1/3] s390/cio: Don't pin vfio pages for empty transfers
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+References: <20190516161403.79053-1-farman@linux.ibm.com>
+ <20190516161403.79053-2-farman@linux.ibm.com>
+From:   Farhan Ali <alifm@linux.ibm.com>
+Date:   Mon, 20 May 2019 16:35:00 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 20 May 2019 18:24:05 +0000 (UTC)
+In-Reply-To: <20190516161403.79053-2-farman@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052020-0072-0000-0000-000004308A35
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011132; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01206185; UDB=6.00633351; IPR=6.00987144;
+ MB=3.00026974; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-20 20:35:03
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052020-0073-0000-0000-00004C4BD507
+Message-Id: <619e473b-372f-6e6d-20e8-63f50225c599@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200128
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 20 May 2019 18:31:08 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> On 20/05/2019 16:27, Cornelia Huck wrote:
-> > On Mon, 20 May 2019 13:19:23 +0200
-> > Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >   
-> >> On 17/05/2019 20:04, Pierre Morel wrote:  
-> >>> On 17/05/2019 18:41, Alex Williamson wrote:  
-> >>>> On Fri, 17 May 2019 18:16:50 +0200
-> >>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> >>>>     
-> >>>>> We implement the capability interface for VFIO_IOMMU_GET_INFO.
-> >>>>>
-> >>>>> When calling the ioctl, the user must specify
-> >>>>> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
-> >>>>> must check in the answer if capabilities are supported.
-> >>>>>
-> >>>>> The iommu get_attr callback will be used to retrieve the specific
-> >>>>> attributes and fill the capabilities.
-> >>>>>
-> >>>>> Currently two Z-PCI specific capabilities will be queried and
-> >>>>> filled by the underlying Z specific s390_iommu:
-> >>>>> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
-> >>>>> and
-> >>>>> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
-> >>>>>
-> >>>>> Other architectures may add new capabilities in the same way
-> >>>>> after enhancing the architecture specific IOMMU driver.
-> >>>>>
-> >>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> >>>>> ---
-> >>>>>    drivers/vfio/vfio_iommu_type1.c | 122
-> >>>>> +++++++++++++++++++++++++++++++++++++++-
-> >>>>>    1 file changed, 121 insertions(+), 1 deletion(-)
-> >>>>>
-> >>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c
-> >>>>> b/drivers/vfio/vfio_iommu_type1.c
-> >>>>> index d0f731c..9435647 100644
-> >>>>> --- a/drivers/vfio/vfio_iommu_type1.c
-> >>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
-> >>>>> @@ -1658,6 +1658,97 @@ static int
-> >>>>> vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
-> >>>>>        return ret;
-> >>>>>    }
-> >>>>> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
-> >>>>> +                    struct vfio_info_cap *caps, size_t size)
-> >>>>> +{
-> >>>>> +    struct vfio_iommu_type1_info_pcifn *info_fn;
-> >>>>> +    int ret;
-> >>>>> +
-> >>>>> +    info_fn = kzalloc(size, GFP_KERNEL);
-> >>>>> +    if (!info_fn)
-> >>>>> +        return -ENOMEM;
-> >>>>> +
-> >>>>> +    ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
-> >>>>> +                    &info_fn->response);  
-> >>>>
-> >>>> What ensures that the 'struct clp_rsp_query_pci' returned from this
-> >>>> get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
-> >>>> Why does the latter contains so many reserved fields (beyond simply
-> >>>> alignment) for a user API?  What fields of these structures are
-> >>>> actually useful to userspace?  Should any fields not be exposed to the
-> >>>> user?  Aren't BAR sizes redundant to what's available through the vfio
-> >>>> PCI API?  I'm afraid that simply redefining an internal structure as
-> >>>> the API leaves a lot to be desired too.  Thanks,
-> >>>>
-> >>>> Alex
-> >>>>     
-> >>> Hi Alex,
-> >>>
-> >>> I simply used the structure returned by the firmware to be sure to be
-> >>> consistent with future evolutions and facilitate the copy from CLP and
-> >>> to userland.
-> >>>
-> >>> If you prefer, and I understand that this is the case, I can define a
-> >>> specific VFIO_IOMMU structure with only the fields relevant to the user,
-> >>> leaving future enhancement of the user's interface being implemented in
-> >>> another kernel patch when the time has come.
 
-TBH, I had no idea that CLP is an s390 firmware interface and this is
-just dumping that to userspace.  The cover letter says:
-
-  Using the PCI VFIO interface allows userland, a.k.a. QEMU, to
-  retrieve ZPCI specific information without knowing Z specific
-  identifiers like the function ID or the function handle of the zPCI
-  function hidden behind the PCI interface.
-
-But what does this allow userland to do and what specific pieces of
-information do they need?  We do have a case already where Intel
-graphics devices have a table (OpRegion) living in host system memory
-that we expose via a vfio region, so it wouldn't be unprecedented to do
-something like this, but as Connie suggests, if we knew what was being
-consumed here and why, maybe we could generalize it into something
-useful for others.
-
-> >>> In fact, the struct will have all defined fields I used but not the BAR
-> >>> size and address (at least for now because there are special cases we do
-> >>> not support yet with bars).
-> >>> All the reserved fields can go away.
-> >>>
-> >>> Is it more conform to your idea?
-> >>>
-> >>> Also I have 2 interfaces:
-> >>>
-> >>> s390_iommu.get_attr <-I1-> VFIO_IOMMU <-I2-> userland
-> >>>
-> >>> Do you prefer:
-> >>> - 2 different structures, no CLP raw structure
-> >>> - the CLP raw structure for I1 and a VFIO specific structure for I2  
-> > 
-> > <entering from the sideline>
-> > 
-> > IIUC, get_attr extracts various data points via clp, and we then make
-> > it available to userspace. The clp interface needs to be abstracted
-> > away at some point... one question from me: Is there a chance that
-> > someone else may want to make use of the userspace interface (extra
-> > information about a function)? If yes, I'd expect the get_attr to
-> > obtain some kind of portable information already (basically your third
-> > option, below).
-
-I agree, but I also suspect we're pretty deep into s390
-eccentricities.  An ioctl on the IOMMU container to get information
-about a PCI function (singular) really seems like it can only exist on
-a system where the actual PCI hardware is already being virtualized to
-the host system.  I don't think this excludes us from the conversation
-about what we're actually trying to expose and what it enables in
-userspace though.
- 
-> Yes, seems the most reasonable.
-> In this case I need to share the structure definition between:
-> userspace through vfio.h
-> vfio_iommu (this is obvious)
-> s390_iommu
+On 05/16/2019 12:14 PM, Eric Farman wrote:
+> The skip flag of a CCW offers the possibility of data not being
+> transferred, but is only meaningful for certain commands.
+> Specifically, it is only applicable for a read, read backward, sense,
+> or sense ID CCW and will be ignored for any other command code
+> (SA22-7832-11 page 15-64, and figure 15-30 on page 15-75).
 > 
-> It is this third include which made me doubt.
-> But when you re formulate it it looks the more reasonable because there 
-> are much less changes.
+> (A sense ID is xE4, while a sense is x04 with possible modifiers in the
+> upper four bits.  So we will cover the whole "family" of sense CCWs.)
+> 
+> For those scenarios, since there is no requirement for the target
+> address to be valid, we should skip the call to vfio_pin_pages() and
+> rely on the IDAL address we have allocated/built for the channel
+> program.  The fact that the individual IDAWs within the IDAL are
+> invalid is fine, since they aren't actually checked in these cases.
+> 
+> Set pa_nr to zero when skipping the pfn_array_pin() call, since it is
+> defined as the number of pages pinned and is used to determine
+> whether to call vfio_unpin_pages() upon cleanup.
+> 
+> As we do this, since the pfn_array_pin() routine returns the number of
+> pages pinned, and we might not be doing that, the logic for converting
+> a CCW from direct-addressed to IDAL needs to ensure there is room for
+> one IDAW in the IDAL being built since a zero-length IDAL isn't great.
+> 
+> Signed-off-by: Eric Farman<farman@linux.ibm.com>
+> ---
+>   drivers/s390/cio/vfio_ccw_cp.c | 55 ++++++++++++++++++++++++++++++----
+>   1 file changed, 50 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+> index 086faf2dacd3..0467838aed23 100644
+> --- a/drivers/s390/cio/vfio_ccw_cp.c
+> +++ b/drivers/s390/cio/vfio_ccw_cp.c
+> @@ -294,6 +294,10 @@ static long copy_ccw_from_iova(struct channel_program *cp,
+>   /*
+>    * Helpers to operate ccwchain.
+>    */
+> +#define ccw_is_read(_ccw) (((_ccw)->cmd_code & 0x03) == 0x02)
+> +#define ccw_is_read_backward(_ccw) (((_ccw)->cmd_code & 0x0F) == 0x0C)
+> +#define ccw_is_sense(_ccw) (((_ccw)->cmd_code & 0x0F) == CCW_CMD_BASIC_SENSE)
+> +
+>   #define ccw_is_test(_ccw) (((_ccw)->cmd_code & 0x0F) == 0)
+>   
+>   #define ccw_is_noop(_ccw) ((_ccw)->cmd_code == CCW_CMD_NOOP)
+> @@ -301,10 +305,39 @@ static long copy_ccw_from_iova(struct channel_program *cp,
+>   #define ccw_is_tic(_ccw) ((_ccw)->cmd_code == CCW_CMD_TIC)
+>   
+>   #define ccw_is_idal(_ccw) ((_ccw)->flags & CCW_FLAG_IDA)
+> -
+> +#define ccw_is_skip(_ccw) ((_ccw)->flags & CCW_FLAG_SKIP)
+>   
+>   #define ccw_is_chain(_ccw) ((_ccw)->flags & (CCW_FLAG_CC | CCW_FLAG_DC))
+>   
+> +/*
+> + * ccw_does_data_transfer()
+> + *
+> + * Determine whether a CCW will move any data, such that the guest pages
+> + * would need to be pinned before performing the I/O.
+> + *
+> + * Returns 1 if yes, 0 if no.
+> + */
+> +static inline int ccw_does_data_transfer(struct ccw1 *ccw)
+> +{
+> +	/* If the skip flag is off, then data will be transferred */
+> +	if (!ccw_is_skip(ccw))
+> +		return 1;
+> +
+> +	/*
+> +	 * If the skip flag is on, it is only meaningful if the command
+> +	 * code is a read, read backward, sense, or sense ID.  In those
+> +	 * cases, no data will be transferred.
+> +	 */
+> +	if (ccw_is_read(ccw) || ccw_is_read_backward(ccw))
+> +		return 0;
+> +
+> +	if (ccw_is_sense(ccw))
+> +		return 0;
 
-It depends on what we settle on for get_attr.  If there are discrete
-features that vfio_iommu_type1 can query and assemble into the
-userspace response, the s390_iommu doesn't need to know the resulting
-structure.  Even if it's just a CLP structure from the get_attr, why
-would s390_iommu be responsible for formatting that into a user
-structure vs vfio_iommu?  I don't think we want get_attr passing vfio
-specific structures.  Thanks,
+Just out of curiosity, is there a reason we are checking ccw_is_sense in 
+a separate if statement?
 
-Alex
+> +
+> +	/* The skip flag is on, but it is ignored for this command code. */
+> +	return 1;
+> +}
+
