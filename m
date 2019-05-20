@@ -2,65 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 208BC2317F
-	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 12:40:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ECF6231FC
+	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 13:09:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726146AbfETKkp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 May 2019 06:40:45 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:46121 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730320AbfETKkp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 20 May 2019 06:40:45 -0400
-Received: by mail-wr1-f66.google.com with SMTP id r7so13960175wrr.13
-        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 03:40:44 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Npi8Ht/enySYexRXn6PiDHIk8ELqfdJW0KR70Q1Ujmo=;
-        b=QjLO975BfZvw0hX/x/ApisHEZNOkau+JR2y9KRtu7fzhLo0LGeibyN8kAcoVaDKjm3
-         tMRjSR/onSpyEi+v7K7K4LPAY1KeSDdsqoRf+fSSJMMIB0SpmwvwMIkVK+AnxtYrIUnf
-         H2b46/TQjUjXMrYjOge+odKOPcijS5i0vr9NhUSuquL9wFs0dkVvc+FyViJr/I6bkFOP
-         j9XOkJhE1vY6JcP6Zs5l2HGWGyGVypob62V0N16HBx1PrONdwnJjb4f+dgJd4NuT4roO
-         ELRGP+tzlnibUlmUDZ+lEqUY0XEU74Tk6JS0ed9BYnH0UejIlV3GB3PFRTFThfXBp22j
-         /q+A==
-X-Gm-Message-State: APjAAAXpp7EL2aRvhVKZOdD2fm6qfSnlGYt119AIly65L8kiq2gu4vYa
-        RnpyY8dIpwXGRHTVGt4CEOAOfQ==
-X-Google-Smtp-Source: APXvYqytptBgJ8n/W1J3wxlBrGAipoGMB+/e14oasouVR8LMFTtdelW2vg3Uok5icD+/rOXy6iqABw==
-X-Received: by 2002:adf:e2c7:: with SMTP id d7mr8989845wrj.272.1558348843578;
-        Mon, 20 May 2019 03:40:43 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:ac04:eef9:b257:b844? ([2001:b07:6468:f312:ac04:eef9:b257:b844])
-        by smtp.gmail.com with ESMTPSA id s10sm14464267wrt.66.2019.05.20.03.40.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 20 May 2019 03:40:43 -0700 (PDT)
-Subject: Re: [GIT PULL 0/2] KVM: s390: Fixes for 5.2-rc2
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Wei Yongjun <weiyongjun1@huawei.com>
-References: <20190520103055.246818-1-borntraeger@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b6f4acd8-df71-78f5-bb1a-bbc2dc1f4a5e@redhat.com>
-Date:   Mon, 20 May 2019 12:40:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1732370AbfETLJe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 May 2019 07:09:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59558 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732368AbfETLJe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 May 2019 07:09:34 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B95A920675;
+        Mon, 20 May 2019 11:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558350573;
+        bh=xdE8V/8ROdDMJBxU1DJwKw3mMX0oiKOiXtH4jn4mbsA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=wOVNCDxENKYO0q/G1lnr6pHS2TvfvKKbdZY26Wc07DPYhlcHtBlWtMBI1Z/GNHH+M
+         TM70+y+emNI8iJvcY/HDv5rWhNudKkRclkpSM1nrD+Q3sHnrdMUEFtaQlz5fn2IZkr
+         bLp4RG9Emu+UfROJ7RmYE8u++Kbk5/voPKSJx1Uo=
+Date:   Mon, 20 May 2019 13:09:30 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: Linux 5.1-rc5
+Message-ID: <20190520110930.GC20211@kroah.com>
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+ <20190415051919.GA31481@infradead.org>
+ <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+ <20190502122128.GA2670@kroah.com>
+ <20190502161758.26972bb2@mschwideX1>
+ <20190502143110.GC17577@kroah.com>
+ <20190502171055.132f023c@mschwideX1>
 MIME-Version: 1.0
-In-Reply-To: <20190520103055.246818-1-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190502171055.132f023c@mschwideX1>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 20/05/19 12:30, Christian Borntraeger wrote:
->   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.2-1
+On Thu, May 02, 2019 at 05:10:55PM +0200, Martin Schwidefsky wrote:
+> On Thu, 2 May 2019 16:31:10 +0200
+> Greg KH <gregkh@linuxfoundation.org> wrote:
+> 
+> > On Thu, May 02, 2019 at 04:17:58PM +0200, Martin Schwidefsky wrote:
+> > > On Thu, 2 May 2019 14:21:28 +0200
+> > > Greg KH <gregkh@linuxfoundation.org> wrote:
+> > >   
+> > > > On Mon, Apr 15, 2019 at 09:17:10AM -0700, Linus Torvalds wrote:  
+> > > > > On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:    
+> > > > > >
+> > > > > > Can we please have the page refcount overflow fixes out on the list
+> > > > > > for review, even if it is after the fact?    
+> > > > > 
+> > > > > They were actually on a list for review long before the fact, but it
+> > > > > was the security mailing list. The issue actually got discussed back
+> > > > > in January along with early versions of the patches, but then we
+> > > > > dropped the ball because it just wasn't on anybody's radar and it got
+> > > > > resurrected late March. Willy wrote a rather bigger patch-series, and
+> > > > > review of that is what then resulted in those commits. So they may
+> > > > > look recent, but that's just because the original patches got
+> > > > > seriously edited down and rewritten.
+> > > > > 
+> > > > > That said, powerpc and s390 should at least look at maybe adding a
+> > > > > check for the page ref in their gup paths too. Powerpc has the special
+> > > > > gup_hugepte() case, and s390 has its own version of gup entirely. I
+> > > > > was actually hoping the s390 guys would look at using the generic gup
+> > > > > code.
+> > > > > 
+> > > > > I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
+> > > > > largely irrelevant, partly since even theoretically this whole issue
+> > > > > needs a _lot_ of memory.
+> > > > > 
+> > > > > Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
+> > > > > (page ref overflow)"). You may or may not really care.    
+> > > > 
+> > > > I've now queued these patches up for the next round of stable releases,
+> > > > as some people seem to care about these.
+> > > > 
+> > > > I didn't see any follow-on patches for s390 or ppc64 hit the tree for
+> > > > these changes, am I just missing them and should also queue up a few
+> > > > more to handle this issue on those platforms?  
+> > > 
+> > > I fixed that with a different approach. The following two patches are
+> > > queued for the next merge window:
+> > > 
+> > > d1874a0c2805 "s390/mm: make the pxd_offset functions more robust"
+> > > 1a42010cdc26 "s390/mm: convert to the generic get_user_pages_fast code"
+> > > 
+> > > With these two s390 now uses the generic gup code in mm/gup.c  
+> > 
+> > Nice!  Do you want me to queue those up for the stable backports once
+> > they hit a public -rc release?
+> 
+> Yes please!
 
-Pulled, thanks.
+Now queued up to 5.0 and 5.1, but did not apply to 4.19 or older :(
 
-Paolo
+thanks,
+
+greg k-h
