@@ -2,59 +2,57 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D86E222CB3
-	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 09:13:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9313822D4F
+	for <lists+linux-s390@lfdr.de>; Mon, 20 May 2019 09:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726316AbfETHMv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 May 2019 03:12:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44636 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729935AbfETHMv (ORCPT
+        id S1730486AbfETHly (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 May 2019 03:41:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60200 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726436AbfETHlx (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 May 2019 03:12:51 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K7CJLt083689
-        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 03:12:50 -0400
+        Mon, 20 May 2019 03:41:53 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4K7XuH7116993
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 03:41:52 -0400
 Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2skncqd6ta-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2skp2xcvus-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 03:12:50 -0400
+        for <linux-s390@vger.kernel.org>; Mon, 20 May 2019 03:41:52 -0400
 Received: from localhost
         by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 20 May 2019 08:12:47 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        Mon, 20 May 2019 08:41:50 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
         by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 May 2019 08:12:44 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4K7ChQ751970288
+        Mon, 20 May 2019 08:41:47 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4K7fko942336376
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 May 2019 07:12:43 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3D5F84C050;
-        Mon, 20 May 2019 07:12:43 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C6F454C044;
-        Mon, 20 May 2019 07:12:42 +0000 (GMT)
+        Mon, 20 May 2019 07:41:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2A174203F;
+        Mon, 20 May 2019 07:41:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3E52C42041;
+        Mon, 20 May 2019 07:41:46 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.224.226])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 May 2019 07:12:42 +0000 (GMT)
-Subject: Re: [RFC PATCH 1/4] KVM: selftests: Guard struct kvm_vcpu_events with
- __KVM_HAVE_VCPU_EVENTS
-To:     Thomas Huth <thuth@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 20 May 2019 07:41:46 +0000 (GMT)
+Subject: Re: [PATCH -next] KVM: s390: fix typo in parameter description
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Wei Yongjun <weiyongjun1@huawei.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
         David Hildenbrand <david@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20190516111253.4494-1-thuth@redhat.com>
- <20190516111253.4494-2-thuth@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+References: <20190504065145.53665-1-weiyongjun1@huawei.com>
+ <1fdd0337-6d73-99aa-2dea-25f5d10c8107@de.ibm.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -99,84 +97,64 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
  oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
  syiRa+UVlsKmx1hsEg==
-Date:   Mon, 20 May 2019 09:12:42 +0200
+Date:   Mon, 20 May 2019 09:41:46 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190516111253.4494-2-thuth@redhat.com>
+In-Reply-To: <1fdd0337-6d73-99aa-2dea-25f5d10c8107@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19052007-0028-0000-0000-0000036F7E1D
+x-cbid: 19052007-0028-0000-0000-0000036F7FFE
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052007-0029-0000-0000-0000242F2236
-Message-Id: <e8a57340-6f8d-90b8-ad73-c39c19f5c9a4@de.ibm.com>
+x-cbparentid: 19052007-0029-0000-0000-0000242F242F
+Message-Id: <a6d67ef5-2db8-5373-04ae-d54f5bdb79db@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-20_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905200053
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905200055
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-On 16.05.19 13:12, Thomas Huth wrote:
-> The struct kvm_vcpu_events code is only available on certain architectures
-> (arm, arm64 and x86). To be able to compile kvm_util.c also for other
-> architectures, we've got to fence the code with __KVM_HAVE_VCPU_EVENTS.
+On 06.05.19 09:52, Christian Borntraeger wrote:
 > 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-
-According to the MAINTAINERS patches, you want me to pick these patches. Correct?
-
-
-> ---
->  tools/testing/selftests/kvm/include/kvm_util.h | 2 ++
->  tools/testing/selftests/kvm/lib/kvm_util.c     | 2 ++
->  2 files changed, 4 insertions(+)
 > 
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index 07b71ad9734a..1e46ab205038 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -114,10 +114,12 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
->  		    struct kvm_sregs *sregs);
->  int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
->  		    struct kvm_sregs *sregs);
-> +#ifdef __KVM_HAVE_VCPU_EVENTS
->  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
->  		     struct kvm_vcpu_events *events);
->  void vcpu_events_set(struct kvm_vm *vm, uint32_t vcpuid,
->  		     struct kvm_vcpu_events *events);
-> +#endif
->  
->  const char *exit_reason_str(unsigned int exit_reason);
->  
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index 4ca96b228e46..8d63ccb93e10 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -1224,6 +1224,7 @@ void vcpu_regs_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_regs *regs)
->  		ret, errno);
->  }
->  
-> +#ifdef __KVM_HAVE_VCPU_EVENTS
->  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
->  		     struct kvm_vcpu_events *events)
->  {
-> @@ -1249,6 +1250,7 @@ void vcpu_events_set(struct kvm_vm *vm, uint32_t vcpuid,
->  	TEST_ASSERT(ret == 0, "KVM_SET_VCPU_EVENTS, failed, rc: %i errno: %i",
->  		ret, errno);
->  }
-> +#endif
->  
->  /*
->   * VM VCPU System Regs Get
+> On 04.05.19 08:51, Wei Yongjun wrote:
+>> Fix typo in parameter description.
+>>
+>> Fixes: 8b905d28ee17 ("KVM: s390: provide kvm_arch_no_poll function")
+>> Signed-off-by: Wei Yongjun <weiyongjun1@huawei.com>
 > 
+> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+Since I have another fix pending, I now picked this up myself and
+this will be in my next pull request for 5.2-rc2.
+
+> 
+>> ---
+>>  arch/s390/kvm/kvm-s390.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>> index 8d6d75db8de6..ac6163c334d6 100644
+>> --- a/arch/s390/kvm/kvm-s390.c
+>> +++ b/arch/s390/kvm/kvm-s390.c
+>> @@ -181,7 +181,7 @@ MODULE_PARM_DESC(hpage, "1m huge page backing support");
+>>  /* maximum percentage of steal time for polling.  >100 is treated like 100 */
+>>  static u8 halt_poll_max_steal = 10;
+>>  module_param(halt_poll_max_steal, byte, 0644);
+>> -MODULE_PARM_DESC(hpage, "Maximum percentage of steal time to allow polling");
+>> +MODULE_PARM_DESC(halt_poll_max_steal, "Maximum percentage of steal time to allow polling");
+>>  
+>>  /*
+>>   * For now we handle at most 16 double words as this is what the s390 base
+>>
+>>
+>>
 
