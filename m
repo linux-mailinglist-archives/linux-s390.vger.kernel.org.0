@@ -2,234 +2,266 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00D4C24F21
-	for <lists+linux-s390@lfdr.de>; Tue, 21 May 2019 14:46:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8691224F7B
+	for <lists+linux-s390@lfdr.de>; Tue, 21 May 2019 14:59:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728045AbfEUMqU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 May 2019 08:46:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46988 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728006AbfEUMqT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 May 2019 08:46:19 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4LCh0CE014642
-        for <linux-s390@vger.kernel.org>; Tue, 21 May 2019 08:46:17 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2smfjvw9we-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 21 May 2019 08:46:17 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 21 May 2019 13:46:13 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 May 2019 13:46:08 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4LCk70438469882
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 May 2019 12:46:07 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F052AA4055;
-        Tue, 21 May 2019 12:46:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 66FBEA405B;
-        Tue, 21 May 2019 12:46:06 +0000 (GMT)
-Received: from [9.152.222.56] (unknown [9.152.222.56])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 May 2019 12:46:06 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
- VFIO_IOMMU_INFO_CAPABILITIES
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Alex Williamson <alex.williamson@redhat.com>,
-        sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        robin.murphy@arm.com
-References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
- <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
- <20190517104143.240082b5@x1.home>
- <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
- <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
- <20190520162737.7560ad7c.cohuck@redhat.com>
- <23f6a739-be4f-7eda-2227-2994fdc2325a@linux.ibm.com>
- <20190520122352.73082e52@x1.home>
- <9dc0a8de-b850-df21-e3b7-21b7c2a373a3@linux.ibm.com>
- <20190521131120.0b2afb37.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 21 May 2019 14:46:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1727941AbfEUM7f (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 May 2019 08:59:35 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:7667 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726995AbfEUM7f (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 21 May 2019 08:59:35 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 91EAB237052C217B51B8;
+        Tue, 21 May 2019 20:59:32 +0800 (CST)
+Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 May 2019
+ 20:59:23 +0800
+Subject: Re: [PATCH v7 1/1] iommu: enhance IOMMU dma mode build options
+To:     Zhen Lei <thunder.leizhen@huawei.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        "Will Deacon" <will.deacon@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
+References: <20190520135947.14960-1-thunder.leizhen@huawei.com>
+ <20190520135947.14960-2-thunder.leizhen@huawei.com>
+CC:     Hanjun Guo <guohanjun@huawei.com>, Linuxarm <linuxarm@huawei.com>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <1a12ce97-2e21-0b28-b852-31f21626c378@huawei.com>
+Date:   Tue, 21 May 2019 13:59:06 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.3.0
 MIME-Version: 1.0
-In-Reply-To: <20190521131120.0b2afb37.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052112-0016-0000-0000-0000027DF974
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052112-0017-0000-0000-000032DAE368
-Message-Id: <6216c287-c741-0600-d5b7-cbdaf2214661@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-21_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=915 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905210080
+In-Reply-To: <20190520135947.14960-2-thunder.leizhen@huawei.com>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.227.238]
+X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 21/05/2019 13:11, Cornelia Huck wrote:
-> On Tue, 21 May 2019 11:14:38 +0200
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> 1) A short description, of zPCI functions and groups
->>
->> IN Z, PCI cards, leave behind an adapter between subchannels and PCI.
->> We access PCI cards through 2 ways:
->> - dedicated PCI instructions (pci_load/pci_store/pci/store_block)
->> - DMA
-> 
-> Quick question: What about the new pci instructions? Anything that
-> needs to be considered there?
+On 20/05/2019 14:59, Zhen Lei wrote:
+> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
+> opportunity to set {lazy|strict} mode as default at build time. Then put
+> the three config options in an choice, make people can only choose one of
+> the three at a time.
+>
+> The default IOMMU dma modes on each ARCHs have no change.
+>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-No and yes.
+Apart from more minor comments, FWIW:
 
-No because they should be used when pci_{load,stor,store_block} are 
-interpreted AFAIU.
-And currently we only use interception.
+Reviewed-by: John Garry <john.garry@huawei.com>
 
-Yes, because, the CLP part, use to setup the translations IIUC, (do not 
-ask me for details now), will need to be re-issued by the kernel after 
-some modifications and this will also need a way from QEMU S390 PCI down 
-to the ZPCI driver.
-Way that I try to setup with this patch.
+> ---
+>  arch/ia64/kernel/pci-dma.c                |  2 +-
+>  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
+>  arch/s390/pci/pci_dma.c                   |  2 +-
+>  arch/x86/kernel/pci-dma.c                 |  7 ++---
+>  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
+>  drivers/iommu/amd_iommu_init.c            |  3 ++-
+>  drivers/iommu/intel-iommu.c               |  2 +-
+>  drivers/iommu/iommu.c                     |  3 ++-
+>  8 files changed, 48 insertions(+), 18 deletions(-)
+>
+> diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
+> index fe988c49f01ce6a..655511dbf3c3b34 100644
+> --- a/arch/ia64/kernel/pci-dma.c
+> +++ b/arch/ia64/kernel/pci-dma.c
+> @@ -22,7 +22,7 @@
+>  int force_iommu __read_mostly;
+>  #endif
+>
+> -int iommu_pass_through;
+> +int iommu_pass_through = IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
 
-So answer is not now but we should keep in mind that we will 
-definitively need a way down to the zpci low level in the host.
+As commented privately, I could never see this set for ia64, and it 
+seems to exist just to keep the linker happy. Anyway, I am not sure if 
+ever suitable to be set.
 
-> 
->> We receive events through
->> - Adapter interrupts
-> 
-> Note for the non-s390 folks: These are (I/O) interrupts that are not
-> tied to a specific device. MSI-X is mapped to this.
-> 
->> - CHSC events
-> 
-> Another note for the non-s390 folks: This is a notification mechanism
-> that is using machine check interrupts; more information is retrieved
-> via a special instruction (chsc).
-> 
+>
+>  static int __init pci_iommu_init(void)
+>  {
+> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
+> index 3ead4c237ed0ec9..383e082a9bb985c 100644
+> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
+> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
+> @@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
+>  	va_end(args);
+>  }
+>
+> -static bool pnv_iommu_bypass_disabled __read_mostly;
+> +static bool pnv_iommu_bypass_disabled __read_mostly =
+> +			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
+>  static bool pci_reset_phbs __read_mostly;
+>
+>  static int __init iommu_setup(char *str)
+> diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
+> index 9e52d1527f71495..784ad1e0acecfb1 100644
+> --- a/arch/s390/pci/pci_dma.c
+> +++ b/arch/s390/pci/pci_dma.c
+> @@ -17,7 +17,7 @@
+>
+>  static struct kmem_cache *dma_region_table_cache;
+>  static struct kmem_cache *dma_page_table_cache;
+> -static int s390_iommu_strict;
+> +static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+>
+>  static int zpci_refresh_global(struct zpci_dev *zdev)
+>  {
+> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
+> index d460998ae828514..fb2bab42a0a3173 100644
+> --- a/arch/x86/kernel/pci-dma.c
+> +++ b/arch/x86/kernel/pci-dma.c
+> @@ -43,11 +43,8 @@
+>   * It is also possible to disable by default in kernel config, and enable with
+>   * iommu=nopt at boot time.
+>   */
+> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
+> -int iommu_pass_through __read_mostly = 1;
+> -#else
+> -int iommu_pass_through __read_mostly;
+> -#endif
+> +int iommu_pass_through __read_mostly =
+> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
+>
+>  extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
+>
+> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
+> index 6f07f3b21816c64..8a1f1793cde76b4 100644
+> --- a/drivers/iommu/Kconfig
+> +++ b/drivers/iommu/Kconfig
+> @@ -74,17 +74,47 @@ config IOMMU_DEBUGFS
+>  	  debug/iommu directory, and then populate a subdirectory with
+>  	  entries as required.
+>
+> -config IOMMU_DEFAULT_PASSTHROUGH
+> -	bool "IOMMU passthrough by default"
+> +choice
+> +	prompt "IOMMU default DMA mode"
+>  	depends on IOMMU_API
+> -        help
+> -	  Enable passthrough by default, removing the need to pass in
+> -	  iommu.passthrough=on or iommu=pt through command line. If this
+> -	  is enabled, you can still disable with iommu.passthrough=off
+> -	  or iommu=nopt depending on the architecture.
+> +	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
+> +	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
+> +	default IOMMU_DEFAULT_STRICT
+> +	help
+> +	  This option allows IOMMU DMA mode to be chose at build time, to
 
-thanks, it is yes better to explain better :)
+I'd say /s/allows IOMMU/allows an IOMMU/, /s/chose/chosen/
 
->>
->> The adapter propose an IOMMU to protect the DMA
->> and the interrupt handling goes through a MSIX like interface handled by
->> the adapter.
->>
->> The architecture specific PCI do the interface between the standard PCI
->> level and the zPCI function (PCI + DMA/IOMMU/Interrupt)
->>
->> To handle the communication through the "zPCI way" the CLP interface
->> provides instructions to retrieve informations from the adapters.
->>
->> There are different group of functions having same functionalities.
->>
->> clp_list give us a list from zPCI functions
->> clp_query_pci_function returns informations specific to a function
->> clp_query_group returns information on a function group
->>
->>
->> 2) Why do we need it in the guest
->>
->> We need to provide the guest with information on the adapters and zPCI
->> functions returned by the clp_query instruction so that the guest's
->> driver gets the right information on how the way to the zPCI function
->> has been built in the host.
->>
->>
->> When a guest issues the CLP instructions we intercept the clp command in
->> QEMU and we need to feed the response with the right values for the guest.
->> The "right" values are not the raw CLP response values:
->>
->> - some identifier must be virtualized, like UID and FID,
->>
->> - some values must match what the host received from the CLP response,
->> like the size of the transmited blocks, the DMA Address Space Mask,
->> number of interrupt, MSIA
->>
->> - some other must match what the host handled with the adapter and
->> function, the start and end of DMA,
->>
->> - some what the host IOMMU driver supports (frame size),
->>
->>
->>
->> 3) We have three different way to get This information:
->>
->> The PCI Linux interface is a standard PCI interface and some Z specific
->> information is available in sysfs.
->> Not all the information needed to be returned inside the CLP response is
->> available.
->> So we can not use the sysfs interface to get all the information.
->>
->> There is a CLP ioctl interface but this interface is not secure in that
->> it returns the information for all adapters in the system.
->>
->> The VFIO interface offers the advantage to point to a single PCI
->> function, so more secure than the clp ioctl interface.
->> Coupled with the s390_iommu we get access to the zPCI CLP instruction
->> and to the values handled by the zPCI driver.
->>
->>
->> 4) Until now we used to fill the CLP response to the guest inside QEMU
->> with fixed values corresponding to the only PCI card we supported.
->> To support new cards we need to get the right values from the kernel out.
-> 
-> IIRC, the current code fills in values that make sense for one specific
-> type of card only, right?
+> +	  override the default DMA mode of each ARCHs, removing the need to
 
-yes, right
+ARCHs should be singular
 
-> We also use the same values for emulated
-> cards (virtio); I assume that they are not completely weird for that
-> case...
-> 
+> +	  pass in kernel parameters through command line. You can still use
+> +	  ARCHs specific boot options to override this option again.
+> +
+> +config IOMMU_DEFAULT_PASSTHROUGH
+> +	bool "passthrough"
+> +	help
+> +	  In this mode, the DMA access through IOMMU without any addresses
+> +	  translation. That means, the wrong or illegal DMA access can not
+> +	  be caught, no error information will be reported.
+>
+>  	  If unsure, say N here.
+>
+> +config IOMMU_DEFAULT_LAZY
+> +	bool "lazy"
+> +	help
+> +	  Support lazy mode, where for every IOMMU DMA unmap operation, the
+> +	  flush operation of IOTLB and the free operation of IOVA are deferred.
+> +	  They are only guaranteed to be done before the related IOVA will be
+> +	  reused.
+> +
+> +config IOMMU_DEFAULT_STRICT
+> +	bool "strict"
+> +	help
+> +	  For every IOMMU DMA unmap operation, the flush operation of IOTLB and
+> +	  the free operation of IOVA are guaranteed to be done in the unmap
+> +	  function.
+> +
+> +	  This mode is safer than the two above, but it maybe slower in some
+> +	  high performace scenarios.
+> +
+> +endchoice
+> +
+>  config OF_IOMMU
+>         def_bool y
+>         depends on OF && IOMMU_API
+> diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
+> index ff40ba758cf365e..16c02b08adb4cb2 100644
+> --- a/drivers/iommu/amd_iommu_init.c
+> +++ b/drivers/iommu/amd_iommu_init.c
+> @@ -166,7 +166,8 @@ struct ivmd_header {
+>  					   to handle */
+>  LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
+>  					   we find in ACPI */
+> -bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
+> +bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+> +					/* if true, flush on every unmap */
+>
+>  LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
+>  					   system */
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 28cb713d728ceef..0c3cc716210f35a 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -362,7 +362,7 @@ static int domain_detach_iommu(struct dmar_domain *domain,
+>
+>  static int dmar_map_gfx = 1;
+>  static int dmar_forcedac;
+> -static int intel_iommu_strict;
+> +static int intel_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+>  static int intel_iommu_superpage = 1;
+>  static int intel_iommu_sm;
+>  static int iommu_identity_mapping;
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 109de67d5d727c2..0ec5952ac60e2a3 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -43,7 +43,8 @@
+>  #else
+>  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
+>  #endif
+> -static bool iommu_dma_strict __read_mostly = true;
+> +static bool iommu_dma_strict __read_mostly =
+> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
+>
+>  struct iommu_group {
+>  	struct kobject kobj;
+> --
+> 1.8.3
+>
+>
+>
+> .
+>
 
-No they are not.
-
-For emulated cards, all is done inside QEMU, we do not need kernel 
-access, the emulated cards get a specific emulation function and group 
-assigned with pre-defined values.
-
-I sent a QEMU patch related to this.
-Even the kernel interface will change with the changes in the kernel 
-patch, the emulation should continue in this way.
-
-Regards,
-Pierre
-
-
-
-
-
-
-
-
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
 
