@@ -2,266 +2,165 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8691224F7B
-	for <lists+linux-s390@lfdr.de>; Tue, 21 May 2019 14:59:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 79AAF24FB6
+	for <lists+linux-s390@lfdr.de>; Tue, 21 May 2019 15:05:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfEUM7f (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 May 2019 08:59:35 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:7667 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726995AbfEUM7f (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 May 2019 08:59:35 -0400
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 91EAB237052C217B51B8;
-        Tue, 21 May 2019 20:59:32 +0800 (CST)
-Received: from [127.0.0.1] (10.202.227.238) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Tue, 21 May 2019
- 20:59:23 +0800
-Subject: Re: [PATCH v7 1/1] iommu: enhance IOMMU dma mode build options
-To:     Zhen Lei <thunder.leizhen@huawei.com>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        "Will Deacon" <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>
-References: <20190520135947.14960-1-thunder.leizhen@huawei.com>
- <20190520135947.14960-2-thunder.leizhen@huawei.com>
-CC:     Hanjun Guo <guohanjun@huawei.com>, Linuxarm <linuxarm@huawei.com>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <1a12ce97-2e21-0b28-b852-31f21626c378@huawei.com>
-Date:   Tue, 21 May 2019 13:59:06 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.3.0
+        id S1728273AbfEUNEp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 May 2019 09:04:45 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:39788 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728179AbfEUNEo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 May 2019 09:04:44 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w8so18545545wrl.6
+        for <linux-s390@vger.kernel.org>; Tue, 21 May 2019 06:04:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=UoeHu3yoNUcPPl9PKQVlxSlKB7SL3/RQXELHWxMzhXU=;
+        b=XJSG1EyPYqVFv06qjxl82rQK6DnXz+zzZ5SuDKstpUJiXRNS8tQ5JU13/0R23pzYo8
+         CBflOikG7l96+4gPyOlywhufFiPRmoYNDl41896XQ/0MJatuwnRejMHB6TDC98rsUSsk
+         2AmSYFgAwYwyiIa3Uw0OG4PN7UgonE+wdbkLG/dhBH8kdQoOGpBbAw+wyKcjrVvNwBmM
+         VMKMZI30ibz9pqFsG/Cn36t1s2Pm2QH0dtNNkeKYHL7aO5r+71RV9j9Ohu/+y3mncQUm
+         NMgjzNYEt1ik5sf8wphXNVOj5VnbG86Jclu6wpcMm3hVcqUXQ13o2yCTql/kibMeVk3R
+         6GZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UoeHu3yoNUcPPl9PKQVlxSlKB7SL3/RQXELHWxMzhXU=;
+        b=ODPwnj269SfTks4jt3mQJ9BL71c+suH7/m8qN8ASHgmZuPjrMchILJ2DHjsJ/+xjO/
+         UzYry7eLwAFitc0gO55RkJEst9wVRwJkigbODODo4dvYx/ugl6aU1dR4kjbRalTWG1cn
+         7TH9A1LmHpKZL9/75zZ/zTl2EmLVCMN1jFKraGAf2Qyv+nuQzh9TKzD8R1yIAqKlIQr2
+         FA0oTBU3kvpCnDt9cA+oekfROqEssIB1bufzK22eIVkFlRDlkvYNUGg7Zo5yQP8Hu0Ah
+         34qIxOxMA7Wi4Rcq7dvD0+fMvgl4xy5bTJvWBPoN87g/EBi4rL9ZIcLScEtqUJZcmRFn
+         hJlQ==
+X-Gm-Message-State: APjAAAXcxj1V0ixx4WG68hClPV/xZRUkhGlplNmD5yfyXtJaqItpqoVu
+        Lg6IHIP8RMHztjDrQmQ1lApmvw==
+X-Google-Smtp-Source: APXvYqxG2D4TpRJtgA1by9C5SwilBq6kPP4Jw28l+Fw52p05f/l2TsKOiCci80kJtWr6XsY8G818bQ==
+X-Received: by 2002:a5d:6b12:: with SMTP id v18mr34420146wrw.306.1558443882738;
+        Tue, 21 May 2019 06:04:42 -0700 (PDT)
+Received: from brauner.io (p548C9938.dip0.t-ipconnect.de. [84.140.153.56])
+        by smtp.gmail.com with ESMTPSA id x64sm5789182wmg.17.2019.05.21.06.04.41
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 21 May 2019 06:04:42 -0700 (PDT)
+Date:   Tue, 21 May 2019 15:04:39 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Florian Weimer <fweimer@redhat.com>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
+        torvalds@linux-foundation.org, arnd@arndb.de, shuah@kernel.org,
+        dhowells@redhat.com, tkjos@android.com, ldv@altlinux.org,
+        miklos@szeredi.hu, linux-alpha@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH 1/2] open: add close_range()
+Message-ID: <20190521130438.q3u4wvve7p6md6cm@brauner.io>
+References: <20190521113448.20654-1-christian@brauner.io>
+ <87tvdoau12.fsf@oldenburg2.str.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190520135947.14960-2-thunder.leizhen@huawei.com>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.238]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <87tvdoau12.fsf@oldenburg2.str.redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 20/05/2019 14:59, Zhen Lei wrote:
-> First, add build option IOMMU_DEFAULT_{LAZY|STRICT}, so that we have the
-> opportunity to set {lazy|strict} mode as default at build time. Then put
-> the three config options in an choice, make people can only choose one of
-> the three at a time.
->
-> The default IOMMU dma modes on each ARCHs have no change.
->
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+On Tue, May 21, 2019 at 02:09:29PM +0200, Florian Weimer wrote:
+> * Christian Brauner:
+> 
+> > +/**
+> > + * __close_range() - Close all file descriptors in a given range.
+> > + *
+> > + * @fd:     starting file descriptor to close
+> > + * @max_fd: last file descriptor to close
+> > + *
+> > + * This closes a range of file descriptors. All file descriptors
+> > + * from @fd up to and including @max_fd are closed.
+> > + */
+> > +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
+> > +{
+> > +	unsigned int cur_max;
+> > +
+> > +	if (fd > max_fd)
+> > +		return -EINVAL;
+> > +
+> > +	rcu_read_lock();
+> > +	cur_max = files_fdtable(files)->max_fds;
+> > +	rcu_read_unlock();
+> > +
+> > +	/* cap to last valid index into fdtable */
+> > +	if (max_fd >= cur_max)
+> > +		max_fd = cur_max - 1;
+> > +
+> > +	while (fd <= max_fd)
+> > +		__close_fd(files, fd++);
+> > +
+> > +	return 0;
+> > +}
+> 
+> This seems rather drastic.  How long does this block in kernel mode?
+> Maybe it's okay as long as the maximum possible value for cur_max stays
+> around 4 million or so.
 
-Apart from more minor comments, FWIW:
+That's probably valid concern when you reach very high numbers though I
+wonder how relevant this is in practice.
+Also, you would only be blocking yourself I imagine, i.e. you can't DOS
+another task with this unless your multi-threaded.
 
-Reviewed-by: John Garry <john.garry@huawei.com>
+> 
+> Solaris has an fdwalk function:
+> 
+>   <https://docs.oracle.com/cd/E88353_01/html/E37843/closefrom-3c.html>
+> 
+> So a different way to implement this would expose a nextfd system call
 
-> ---
->  arch/ia64/kernel/pci-dma.c                |  2 +-
->  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
->  arch/s390/pci/pci_dma.c                   |  2 +-
->  arch/x86/kernel/pci-dma.c                 |  7 ++---
->  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
->  drivers/iommu/amd_iommu_init.c            |  3 ++-
->  drivers/iommu/intel-iommu.c               |  2 +-
->  drivers/iommu/iommu.c                     |  3 ++-
->  8 files changed, 48 insertions(+), 18 deletions(-)
->
-> diff --git a/arch/ia64/kernel/pci-dma.c b/arch/ia64/kernel/pci-dma.c
-> index fe988c49f01ce6a..655511dbf3c3b34 100644
-> --- a/arch/ia64/kernel/pci-dma.c
-> +++ b/arch/ia64/kernel/pci-dma.c
-> @@ -22,7 +22,7 @@
->  int force_iommu __read_mostly;
->  #endif
->
-> -int iommu_pass_through;
-> +int iommu_pass_through = IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
+Meh. If nextfd() then I would like it to be able to:
+- get the nextfd(fd) >= fd
+- get highest open fd e.g. nextfd(-1)
 
-As commented privately, I could never see this set for ia64, and it 
-seems to exist just to keep the linker happy. Anyway, I am not sure if 
-ever suitable to be set.
+But then I wonder if nextfd() needs to be a syscall and isn't just
+either:
+fcntl(fd, F_GET_NEXT)?
+or
+prctl(PR_GET_NEXT)?
 
->
->  static int __init pci_iommu_init(void)
->  {
-> diff --git a/arch/powerpc/platforms/powernv/pci-ioda.c b/arch/powerpc/platforms/powernv/pci-ioda.c
-> index 3ead4c237ed0ec9..383e082a9bb985c 100644
-> --- a/arch/powerpc/platforms/powernv/pci-ioda.c
-> +++ b/arch/powerpc/platforms/powernv/pci-ioda.c
-> @@ -85,7 +85,8 @@ void pe_level_printk(const struct pnv_ioda_pe *pe, const char *level,
->  	va_end(args);
->  }
->
-> -static bool pnv_iommu_bypass_disabled __read_mostly;
-> +static bool pnv_iommu_bypass_disabled __read_mostly =
-> +			!IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->  static bool pci_reset_phbs __read_mostly;
->
->  static int __init iommu_setup(char *str)
-> diff --git a/arch/s390/pci/pci_dma.c b/arch/s390/pci/pci_dma.c
-> index 9e52d1527f71495..784ad1e0acecfb1 100644
-> --- a/arch/s390/pci/pci_dma.c
-> +++ b/arch/s390/pci/pci_dma.c
-> @@ -17,7 +17,7 @@
->
->  static struct kmem_cache *dma_region_table_cache;
->  static struct kmem_cache *dma_page_table_cache;
-> -static int s390_iommu_strict;
-> +static int s390_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->
->  static int zpci_refresh_global(struct zpci_dev *zdev)
->  {
-> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
-> index d460998ae828514..fb2bab42a0a3173 100644
-> --- a/arch/x86/kernel/pci-dma.c
-> +++ b/arch/x86/kernel/pci-dma.c
-> @@ -43,11 +43,8 @@
->   * It is also possible to disable by default in kernel config, and enable with
->   * iommu=nopt at boot time.
->   */
-> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
-> -int iommu_pass_through __read_mostly = 1;
-> -#else
-> -int iommu_pass_through __read_mostly;
-> -#endif
-> +int iommu_pass_through __read_mostly =
-> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
->
->  extern struct iommu_table_entry __iommu_table[], __iommu_table_end[];
->
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 6f07f3b21816c64..8a1f1793cde76b4 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -74,17 +74,47 @@ config IOMMU_DEBUGFS
->  	  debug/iommu directory, and then populate a subdirectory with
->  	  entries as required.
->
-> -config IOMMU_DEFAULT_PASSTHROUGH
-> -	bool "IOMMU passthrough by default"
-> +choice
-> +	prompt "IOMMU default DMA mode"
->  	depends on IOMMU_API
-> -        help
-> -	  Enable passthrough by default, removing the need to pass in
-> -	  iommu.passthrough=on or iommu=pt through command line. If this
-> -	  is enabled, you can still disable with iommu.passthrough=off
-> -	  or iommu=nopt depending on the architecture.
-> +	default IOMMU_DEFAULT_PASSTHROUGH if (PPC_POWERNV && PCI)
-> +	default IOMMU_DEFAULT_LAZY if (AMD_IOMMU || INTEL_IOMMU || S390_IOMMU)
-> +	default IOMMU_DEFAULT_STRICT
-> +	help
-> +	  This option allows IOMMU DMA mode to be chose at build time, to
+Technically, one could also do:
 
-I'd say /s/allows IOMMU/allows an IOMMU/, /s/chose/chosen/
+fd_range(unsigned fd, unsigend end_fd, unsigned flags);
 
-> +	  override the default DMA mode of each ARCHs, removing the need to
+fd_range(3, 50, FD_RANGE_CLOSE);
 
-ARCHs should be singular
+/* return highest fd within the range [3, 50] */
+fd_range(3, 50, FD_RANGE_NEXT);
 
-> +	  pass in kernel parameters through command line. You can still use
-> +	  ARCHs specific boot options to override this option again.
-> +
-> +config IOMMU_DEFAULT_PASSTHROUGH
-> +	bool "passthrough"
-> +	help
-> +	  In this mode, the DMA access through IOMMU without any addresses
-> +	  translation. That means, the wrong or illegal DMA access can not
-> +	  be caught, no error information will be reported.
->
->  	  If unsure, say N here.
->
-> +config IOMMU_DEFAULT_LAZY
-> +	bool "lazy"
-> +	help
-> +	  Support lazy mode, where for every IOMMU DMA unmap operation, the
-> +	  flush operation of IOTLB and the free operation of IOVA are deferred.
-> +	  They are only guaranteed to be done before the related IOVA will be
-> +	  reused.
-> +
-> +config IOMMU_DEFAULT_STRICT
-> +	bool "strict"
-> +	help
-> +	  For every IOMMU DMA unmap operation, the flush operation of IOTLB and
-> +	  the free operation of IOVA are guaranteed to be done in the unmap
-> +	  function.
-> +
-> +	  This mode is safer than the two above, but it maybe slower in some
-> +	  high performace scenarios.
-> +
-> +endchoice
-> +
->  config OF_IOMMU
->         def_bool y
->         depends on OF && IOMMU_API
-> diff --git a/drivers/iommu/amd_iommu_init.c b/drivers/iommu/amd_iommu_init.c
-> index ff40ba758cf365e..16c02b08adb4cb2 100644
-> --- a/drivers/iommu/amd_iommu_init.c
-> +++ b/drivers/iommu/amd_iommu_init.c
-> @@ -166,7 +166,8 @@ struct ivmd_header {
->  					   to handle */
->  LIST_HEAD(amd_iommu_unity_map);		/* a list of required unity mappings
->  					   we find in ACPI */
-> -bool amd_iommu_unmap_flush;		/* if true, flush on every unmap */
-> +bool amd_iommu_unmap_flush = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
-> +					/* if true, flush on every unmap */
->
->  LIST_HEAD(amd_iommu_list);		/* list of all AMD IOMMUs in the
->  					   system */
-> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
-> index 28cb713d728ceef..0c3cc716210f35a 100644
-> --- a/drivers/iommu/intel-iommu.c
-> +++ b/drivers/iommu/intel-iommu.c
-> @@ -362,7 +362,7 @@ static int domain_detach_iommu(struct dmar_domain *domain,
->
->  static int dmar_map_gfx = 1;
->  static int dmar_forcedac;
-> -static int intel_iommu_strict;
-> +static int intel_iommu_strict = IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->  static int intel_iommu_superpage = 1;
->  static int intel_iommu_sm;
->  static int iommu_identity_mapping;
-> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-> index 109de67d5d727c2..0ec5952ac60e2a3 100644
-> --- a/drivers/iommu/iommu.c
-> +++ b/drivers/iommu/iommu.c
-> @@ -43,7 +43,8 @@
->  #else
->  static unsigned int iommu_def_domain_type = IOMMU_DOMAIN_DMA;
->  #endif
-> -static bool iommu_dma_strict __read_mostly = true;
-> +static bool iommu_dma_strict __read_mostly =
-> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_STRICT);
->
->  struct iommu_group {
->  	struct kobject kobj;
-> --
-> 1.8.3
->
->
->
-> .
->
+/* return highest fd */
+fd_range(3, UINT_MAX, FD_RANGE_NEXT);
 
+This syscall could also reasonably be extended.
 
+> to userspace, so that we can use that to implement both fdwalk and
+> closefrom.  But maybe fdwalk is just too obscure, given the existence of
+> /proc.
+
+Yeah we probably don't need fdwalk.
+
+> 
+> I'll happily implement closefrom on top of close_range in glibc (plus
+> fallback for older kernels based on /proc—with an abort in case that
+> doesn't work because the RLIMIT_NOFILE hack is unreliable
+> unfortunately).
+> 
+> Thanks,
+> Florian
