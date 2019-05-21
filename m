@@ -2,131 +2,248 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 804E325230
-	for <lists+linux-s390@lfdr.de>; Tue, 21 May 2019 16:32:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F0F7E25327
+	for <lists+linux-s390@lfdr.de>; Tue, 21 May 2019 16:59:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728584AbfEUOck (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 May 2019 10:32:40 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:36497 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728606AbfEUOck (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 May 2019 10:32:40 -0400
-Received: by mail-pl1-f196.google.com with SMTP id d21so8555759plr.3
-        for <linux-s390@vger.kernel.org>; Tue, 21 May 2019 07:32:39 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=CyEpPRrV9RS3Zg004GbU3opzLF2psDEeRox6G2Dzgi4=;
-        b=R7tC9jV5a+mxQO62x+PWvbdzprD7UnwlstIi1E921IR8MQwvIjqpWXEjFq96wgtFnG
-         fTY3nrMJ7vCArpwoCVItDxzdQ40Qirw2JBMtmG9CODfWHtTXbOzlgqZAKYfvraG5V/E/
-         frjGG7jnSr228cVlsj/AYjMiDaehudskW3T4AmnYaTekKHbr2YRWH9MAzfQSuPvXNkig
-         nGR3hP9fBOFFBpPON8OQVuBm2SSMmqqE80W+7bGmI4VUShRRrCVcCUx8VLhizIP/+v8d
-         eMhf2YFuLCOUzRqivSwvxO5aWPP4xWsn3q69TEqczL5TXIDQcUFBiSLNtQvcQ37Ukm91
-         n7lQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CyEpPRrV9RS3Zg004GbU3opzLF2psDEeRox6G2Dzgi4=;
-        b=PcdeZvwk5ELPFQ9a5QiTkL7sNpLtO+3vAjF/qPWY53BIu67yxNzqbtR/L6RK37kfTr
-         6JAtQkqwIzpURrooUwK4Gu/qaQuFsh4YZ2Gom5ShyA4j6Mxg1208MhsvKE+1RWTNkc3E
-         zi3X2jRY5drIQ6tqJAAKgk3uwhKc9Z3/vdTXmHxKegWLR8oYW2INdBDV+fvTiCABsGJy
-         ibPe8bhFMlBJZTgFkCMHWPxxRShB8sdvHCCjXcZt08WsSY9cyMtQINu5pIDZFymXcdo0
-         whF7nwDvz87HRZb5Pw/WvL9z8RwSra0reeMw8BvW2DitvPjIRk0lNRpToQwiUaWOajfa
-         ltrA==
-X-Gm-Message-State: APjAAAWM+py/F4RsYnQJOOt++YQGNmMAqEHQRVILg2NxWPTk4vkbgJaj
-        fqn6L9Ej7CpHSAEL3KuYmM9KUA==
-X-Google-Smtp-Source: APXvYqzfSnHKDaWx/UeH1zZV9VxL0yBVD2SxGAqwuR5ORrqMhe2WMo1TCAFF94hkLIeOM4eQM6MVkw==
-X-Received: by 2002:a17:902:ba88:: with SMTP id k8mr9263163pls.16.1558449159148;
-        Tue, 21 May 2019 07:32:39 -0700 (PDT)
-Received: from brauner.io ([208.54.39.182])
-        by smtp.gmail.com with ESMTPSA id q5sm25819914pfb.51.2019.05.21.07.32.25
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 21 May 2019 07:32:38 -0700 (PDT)
-Date:   Tue, 21 May 2019 16:32:22 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     jannh@google.com, oleg@redhat.com, viro@zeniv.linux.org.uk,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        arnd@arndb.de
-Cc:     akpm@linux-foundation.org, cyphar@cyphar.com, dhowells@redhat.com,
-        ebiederm@xmission.com, elena.reshetova@intel.com,
-        keescook@chromium.org, luto@amacapital.net, luto@kernel.org,
-        tglx@linutronix.de, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, joel@joelfernandes.org,
-        dancol@google.com, serge@hallyn.com, surenb@google.com,
-        kernel-team@android.com
-Subject: Re: [PATCH v3 1/2] pid: add pidfd_open()
-Message-ID: <20190521143220.crb2zyvdov3fl4g7@brauner.io>
-References: <20190520155630.21684-1-christian@brauner.io>
+        id S1728053AbfEUO7i convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 21 May 2019 10:59:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57750 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728505AbfEUO7i (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 21 May 2019 10:59:38 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 96625C057F3E;
+        Tue, 21 May 2019 14:59:34 +0000 (UTC)
+Received: from x1.home (ovpn-117-92.phx2.redhat.com [10.3.117.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 63B7C19C71;
+        Tue, 21 May 2019 14:59:31 +0000 (UTC)
+Date:   Tue, 21 May 2019 08:59:30 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, sebott@linux.vnet.ibm.com,
+        gerald.schaefer@de.ibm.com, pasic@linux.vnet.ibm.com,
+        borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+Subject: Re: [PATCH v2 4/4] vfio: vfio_iommu_type1: implement
+ VFIO_IOMMU_INFO_CAPABILITIES
+Message-ID: <20190521085930.4d91842c@x1.home>
+In-Reply-To: <9dc0a8de-b850-df21-e3b7-21b7c2a373a3@linux.ibm.com>
+References: <1558109810-18683-1-git-send-email-pmorel@linux.ibm.com>
+        <1558109810-18683-5-git-send-email-pmorel@linux.ibm.com>
+        <20190517104143.240082b5@x1.home>
+        <92b6ad4e-9a49-636b-9225-acca0bec4bb7@linux.ibm.com>
+        <ed193353-56f0-14b5-f1fb-1835d0a6c603@linux.ibm.com>
+        <20190520162737.7560ad7c.cohuck@redhat.com>
+        <23f6a739-be4f-7eda-2227-2994fdc2325a@linux.ibm.com>
+        <20190520122352.73082e52@x1.home>
+        <9dc0a8de-b850-df21-e3b7-21b7c2a373a3@linux.ibm.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190520155630.21684-1-christian@brauner.io>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 21 May 2019 14:59:37 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 20, 2019 at 05:56:29PM +0200, Christian Brauner wrote:
-> This adds the pidfd_open() syscall. It allows a caller to retrieve pollable
-> pidfds for a process which did not get created via CLONE_PIDFD, i.e. for a
-> process that is created via traditional fork()/clone() calls that is only
-> referenced by a PID:
+On Tue, 21 May 2019 11:14:38 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> On 20/05/2019 20:23, Alex Williamson wrote:
+> > On Mon, 20 May 2019 18:31:08 +0200
+> > Pierre Morel <pmorel@linux.ibm.com> wrote:
+> >   
+> >> On 20/05/2019 16:27, Cornelia Huck wrote:  
+> >>> On Mon, 20 May 2019 13:19:23 +0200
+> >>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> >>>      
+> >>>> On 17/05/2019 20:04, Pierre Morel wrote:  
+> >>>>> On 17/05/2019 18:41, Alex Williamson wrote:  
+> >>>>>> On Fri, 17 May 2019 18:16:50 +0200
+> >>>>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
+> >>>>>>        
+> >>>>>>> We implement the capability interface for VFIO_IOMMU_GET_INFO.
+> >>>>>>>
+> >>>>>>> When calling the ioctl, the user must specify
+> >>>>>>> VFIO_IOMMU_INFO_CAPABILITIES to retrieve the capabilities and
+> >>>>>>> must check in the answer if capabilities are supported.
+> >>>>>>>
+> >>>>>>> The iommu get_attr callback will be used to retrieve the specific
+> >>>>>>> attributes and fill the capabilities.
+> >>>>>>>
+> >>>>>>> Currently two Z-PCI specific capabilities will be queried and
+> >>>>>>> filled by the underlying Z specific s390_iommu:
+> >>>>>>> VFIO_IOMMU_INFO_CAP_QFN for the PCI query function attributes
+> >>>>>>> and
+> >>>>>>> VFIO_IOMMU_INFO_CAP_QGRP for the PCI query function group.
+> >>>>>>>
+> >>>>>>> Other architectures may add new capabilities in the same way
+> >>>>>>> after enhancing the architecture specific IOMMU driver.
+> >>>>>>>
+> >>>>>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >>>>>>> ---
+> >>>>>>>     drivers/vfio/vfio_iommu_type1.c | 122
+> >>>>>>> +++++++++++++++++++++++++++++++++++++++-
+> >>>>>>>     1 file changed, 121 insertions(+), 1 deletion(-)
+> >>>>>>>
+> >>>>>>> diff --git a/drivers/vfio/vfio_iommu_type1.c
+> >>>>>>> b/drivers/vfio/vfio_iommu_type1.c
+> >>>>>>> index d0f731c..9435647 100644
+> >>>>>>> --- a/drivers/vfio/vfio_iommu_type1.c
+> >>>>>>> +++ b/drivers/vfio/vfio_iommu_type1.c
+> >>>>>>> @@ -1658,6 +1658,97 @@ static int
+> >>>>>>> vfio_domains_have_iommu_cache(struct vfio_iommu *iommu)
+> >>>>>>>         return ret;
+> >>>>>>>     }
+> >>>>>>> +static int vfio_iommu_type1_zpci_fn(struct iommu_domain *domain,
+> >>>>>>> +                    struct vfio_info_cap *caps, size_t size)
+> >>>>>>> +{
+> >>>>>>> +    struct vfio_iommu_type1_info_pcifn *info_fn;
+> >>>>>>> +    int ret;
+> >>>>>>> +
+> >>>>>>> +    info_fn = kzalloc(size, GFP_KERNEL);
+> >>>>>>> +    if (!info_fn)
+> >>>>>>> +        return -ENOMEM;
+> >>>>>>> +
+> >>>>>>> +    ret = iommu_domain_get_attr(domain, DOMAIN_ATTR_ZPCI_FN,
+> >>>>>>> +                    &info_fn->response);  
+> >>>>>>
+> >>>>>> What ensures that the 'struct clp_rsp_query_pci' returned from this
+> >>>>>> get_attr remains consistent with a 'struct vfio_iommu_pci_function'?
+> >>>>>> Why does the latter contains so many reserved fields (beyond simply
+> >>>>>> alignment) for a user API?  What fields of these structures are
+> >>>>>> actually useful to userspace?  Should any fields not be exposed to the
+> >>>>>> user?  Aren't BAR sizes redundant to what's available through the vfio
+> >>>>>> PCI API?  I'm afraid that simply redefining an internal structure as
+> >>>>>> the API leaves a lot to be desired too.  Thanks,
+> >>>>>>
+> >>>>>> Alex
+> >>>>>>        
+> >>>>> Hi Alex,
+> >>>>>
+> >>>>> I simply used the structure returned by the firmware to be sure to be
+> >>>>> consistent with future evolutions and facilitate the copy from CLP and
+> >>>>> to userland.
+> >>>>>
+> >>>>> If you prefer, and I understand that this is the case, I can define a
+> >>>>> specific VFIO_IOMMU structure with only the fields relevant to the user,
+> >>>>> leaving future enhancement of the user's interface being implemented in
+> >>>>> another kernel patch when the time has come.  
+> > 
+> > TBH, I had no idea that CLP is an s390 firmware interface and this is
+> > just dumping that to userspace.  The cover letter says:
+> > 
+> >    Using the PCI VFIO interface allows userland, a.k.a. QEMU, to
+> >    retrieve ZPCI specific information without knowing Z specific
+> >    identifiers like the function ID or the function handle of the zPCI
+> >    function hidden behind the PCI interface.
+> > 
+> > But what does this allow userland to do and what specific pieces of
+> > information do they need?  We do have a case already where Intel
+> > graphics devices have a table (OpRegion) living in host system memory
+> > that we expose via a vfio region, so it wouldn't be unprecedented to do
+> > something like this, but as Connie suggests, if we knew what was being
+> > consumed here and why, maybe we could generalize it into something
+> > useful for others.  
 > 
-> int pidfd = pidfd_open(1234, 0);
-> ret = pidfd_send_signal(pidfd, SIGSTOP, NULL, 0);
+> OK, sorry I try to explain better.
 > 
-> With the introduction of pidfds through CLONE_PIDFD it is possible to
-> created pidfds at process creation time.
-> However, a lot of processes get created with traditional PID-based calls
-> such as fork() or clone() (without CLONE_PIDFD). For these processes a
-> caller can currently not create a pollable pidfd. This is a problem for
-> Android's low memory killer (LMK) and service managers such as systemd.
-> Both are examples of tools that want to make use of pidfds to get reliable
-> notification of process exit for non-parents (pidfd polling) and race-free
-> signal sending (pidfd_send_signal()). They intend to switch to this API for
-> process supervision/management as soon as possible. Having no way to get
-> pollable pidfds from PID-only processes is one of the biggest blockers for
-> them in adopting this api. With pidfd_open() making it possible to retrieve
-> pidfds for PID-based processes we enable them to adopt this api.
+> 1) A short description, of zPCI functions and groups
 > 
-> In line with Arnd's recent changes to consolidate syscall numbers across
-> architectures, I have added the pidfd_open() syscall to all architectures
-> at the same time.
+> IN Z, PCI cards, leave behind an adapter between subchannels and PCI.
+> We access PCI cards through 2 ways:
+> - dedicated PCI instructions (pci_load/pci_store/pci/store_block)
+> - DMA
+> We receive events through
+> - Adapter interrupts
+> - CHSC events
 > 
-> Signed-off-by: Christian Brauner <christian@brauner.io>
-> Reviewed-by: Oleg Nesterov <oleg@redhat.com>
+> The adapter propose an IOMMU to protect the DMA
+> and the interrupt handling goes through a MSIX like interface handled by 
+> the adapter.
+> 
+> The architecture specific PCI do the interface between the standard PCI 
+> level and the zPCI function (PCI + DMA/IOMMU/Interrupt)
+> 
+> To handle the communication through the "zPCI way" the CLP interface 
+> provides instructions to retrieve informations from the adapters.
+> 
+> There are different group of functions having same functionalities.
+> 
+> clp_list give us a list from zPCI functions
+> clp_query_pci_function returns informations specific to a function
+> clp_query_group returns information on a function group
+> 
+> 
+> 2) Why do we need it in the guest
+> 
+> We need to provide the guest with information on the adapters and zPCI 
+> functions returned by the clp_query instruction so that the guest's 
+> driver gets the right information on how the way to the zPCI function 
+> has been built in the host.
+> 
+> 
+> When a guest issues the CLP instructions we intercept the clp command in 
+> QEMU and we need to feed the response with the right values for the guest.
+> The "right" values are not the raw CLP response values:
+> 
+> - some identifier must be virtualized, like UID and FID,
+> 
+> - some values must match what the host received from the CLP response, 
+> like the size of the transmited blocks, the DMA Address Space Mask, 
+> number of interrupt, MSIA
+> 
+> - some other must match what the host handled with the adapter and 
+> function, the start and end of DMA,
+> 
+> - some what the host IOMMU driver supports (frame size),
 
-This now also carries a Reviewed-by from David.
+This seems very reminiscent of virtualizing PCI config space... so why
+is this being proposed as a VFIO IOMMU ioctl extension?  These are all
+function level characteristics, right?  Should this be a capability on
+the VFIO device, or perhaps a region like we used for the Intel
+OpRegion (though the structure size seems more akin to a capability
+here)?  As I mentioned in my previous reply, tying this into the IOMMU
+interface seemed to rely on (I assume) an one-to-one-to-one mapping of
+PCI function to IOMMU group to IOMMU domain, but that doesn't still
+doesn't necessarily lend itself to using the IOMMU for device level
+information.  If there is IOMMU info, perhaps it needs to be split, ie.
+expose a frame size via domain_get_attr, expose device level features
+via a device capability, let QEMU assemble these into something
+coherent to emulate the clp interface.
 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-> Cc: Kees Cook <keescook@chromium.org>
-> Cc: Joel Fernandes (Google) <joel@joelfernandes.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jann Horn <jannh@google.com>
-> Cc: David Howells <dhowells@redhat.com>
-> Cc: Andy Lutomirsky <luto@kernel.org>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Aleksa Sarai <cyphar@cyphar.com>
-> Cc: Linus Torvalds <torvalds@linux-foundation.org>
-> Cc: Al Viro <viro@zeniv.linux.org.uk>
-> Cc: linux-api@vger.kernel.org
+> 3) We have three different way to get This information:
+> 
+> The PCI Linux interface is a standard PCI interface and some Z specific 
+> information is available in sysfs.
+> Not all the information needed to be returned inside the CLP response is 
+> available.
+> So we can not use the sysfs interface to get all the information.
+> 
+> There is a CLP ioctl interface but this interface is not secure in that 
+> it returns the information for all adapters in the system.
+> 
+> The VFIO interface offers the advantage to point to a single PCI 
+> function, so more secure than the clp ioctl interface.
+> Coupled with the s390_iommu we get access to the zPCI CLP instruction 
+> and to the values handled by the zPCI driver.
+> 
+> 
+> 4) Until now we used to fill the CLP response to the guest inside QEMU 
+> with fixed values corresponding to the only PCI card we supported.
+> To support new cards we need to get the right values from the kernel out.
 
-I've moved pidfd_open() into my for-next branch together with Joel's
-pidfd polling changes. Everything is based on v5.2-rc1.
+If it's already emulated, I much prefer figuring out how to expose the
+right pieces of information via an appropriate interface to virtualize
+fields that are actually necessary rather than simply providing an
+interface to dump the clp info straight to userspace and pipe it to the
+VM.  Thanks,
 
-The chosen syscall number for now is 434. David is going to send out
-another pile of mount api related syscalls. I'll coordinate with him
-accordingly prior to the 5.3 merge window.
-
-Thanks!
-Christian
+Alex
