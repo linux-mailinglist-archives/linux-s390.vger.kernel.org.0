@@ -2,35 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3696326F23
-	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 21:55:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AC7D026F35
+	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 21:55:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730397AbfEVTZQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 May 2019 15:25:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46596 "EHLO mail.kernel.org"
+        id S1730937AbfEVTzG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 May 2019 15:55:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46826 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730810AbfEVTZQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 May 2019 15:25:16 -0400
+        id S1730865AbfEVTZa (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 May 2019 15:25:30 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A768B217D7;
-        Wed, 22 May 2019 19:25:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B98C62173C;
+        Wed, 22 May 2019 19:25:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553115;
-        bh=t5xRMUEEpDNJ3nOdGBJbwH704jBjmeeKEfBphf6hj0E=;
+        s=default; t=1558553129;
+        bh=Fy9BgBVc74QAoCS/z7JOP+vBjrHz1G376Mmq3tq1ww8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VDqUdNghRm9vB9aVt+hx5OFXLLWY2QpFTIOtzMmNjUWw6vNRuRKfo2GtOy8tWIeXM
-         KmKOGa2kX/F51RqgTdQUtJkVn2bqu4Ll8uQBlPkySaju0/IFT4r42n2aHoyqBi8o8V
-         3W+CLngczgh8sDohvSeWvs29qyWHApZvnsphynOI=
+        b=Y83znSoCYrXFs8bMwLO7y7O3msUyEfeYX9gJGjr2eHvdybf3reCgbDosw4bNkrUkE
+         xEIqEw1nmrn3cxWJfF6v1a1XvfUyDwdkSsN3rcp/+bQ+UJ+kn4BY5R88SIqvYCpl7n
+         ATmEQk9Nrojrjxy5SSw9/rk74rbo/5RoS/7Nh/ss=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Philipp Rudo <prudo@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.0 056/317] s390/kexec_file: Fix detection of text segment in ELF loader
-Date:   Wed, 22 May 2019 15:19:17 -0400
-Message-Id: <20190522192338.23715-56-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.0 063/317] s390: qeth: address type mismatch warning
+Date:   Wed, 22 May 2019 15:19:24 -0400
+Message-Id: <20190522192338.23715-63-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190522192338.23715-1-sashal@kernel.org>
 References: <20190522192338.23715-1-sashal@kernel.org>
@@ -43,53 +45,62 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Philipp Rudo <prudo@linux.ibm.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-[ Upstream commit 729829d775c9a5217abc784b2f16087d79c4eec8 ]
+[ Upstream commit 46b83629dede262315aa82179d105581f11763b6 ]
 
-To register data for the next kernel (command line, oldmem_base, etc.) the
-current kernel needs to find the ELF segment that contains head.S. This is
-currently done by checking ifor 'phdr->p_paddr == 0'. This works fine for
-the current kernel build but in theory the first few pages could be
-skipped. Make the detection more robust by checking if the entry point lies
-within the segment.
+clang produces a harmless warning for each use for the qeth_adp_supported
+macro:
 
-Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+drivers/s390/net/qeth_l2_main.c:559:31: warning: implicit conversion from enumeration type 'enum qeth_ipa_setadp_cmd' to
+      different enumeration type 'enum qeth_ipa_funcs' [-Wenum-conversion]
+        if (qeth_adp_supported(card, IPA_SETADP_SET_PROMISC_MODE))
+            ~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~
+drivers/s390/net/qeth_core.h:179:41: note: expanded from macro 'qeth_adp_supported'
+        qeth_is_ipa_supported(&c->options.adp, f)
+        ~~~~~~~~~~~~~~~~~~~~~                  ^
+
+Add a version of this macro that uses the correct types, and
+remove the unused qeth_adp_enabled() macro that has the same
+problem.
+
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/kexec_elf.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ drivers/s390/net/qeth_core.h | 10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/kexec_elf.c b/arch/s390/kernel/kexec_elf.c
-index 5a286b012043b..602e7cc26d118 100644
---- a/arch/s390/kernel/kexec_elf.c
-+++ b/arch/s390/kernel/kexec_elf.c
-@@ -19,10 +19,15 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
- 	struct kexec_buf buf;
- 	const Elf_Ehdr *ehdr;
- 	const Elf_Phdr *phdr;
-+	Elf_Addr entry;
- 	int i, ret;
+diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+index 122059ecad848..614bb0f34e8e2 100644
+--- a/drivers/s390/net/qeth_core.h
++++ b/drivers/s390/net/qeth_core.h
+@@ -215,6 +215,12 @@ struct qeth_vnicc_info {
+ 	bool rx_bcast_enabled;
+ };
  
- 	ehdr = (Elf_Ehdr *)kernel;
- 	buf.image = image;
-+	if (image->type == KEXEC_TYPE_CRASH)
-+		entry = STARTUP_KDUMP_OFFSET;
-+	else
-+		entry = ehdr->e_entry;
++static inline int qeth_is_adp_supported(struct qeth_ipa_info *ipa,
++		enum qeth_ipa_setadp_cmd func)
++{
++	return (ipa->supported_funcs & func);
++}
++
+ static inline int qeth_is_ipa_supported(struct qeth_ipa_info *ipa,
+ 		enum qeth_ipa_funcs func)
+ {
+@@ -228,9 +234,7 @@ static inline int qeth_is_ipa_enabled(struct qeth_ipa_info *ipa,
+ }
  
- 	phdr = (void *)ehdr + ehdr->e_phoff;
- 	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
-@@ -35,7 +40,7 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
- 		buf.mem = ALIGN(phdr->p_paddr, phdr->p_align);
- 		buf.memsz = phdr->p_memsz;
- 
--		if (phdr->p_paddr == 0) {
-+		if (entry - phdr->p_paddr < phdr->p_memsz) {
- 			data->kernel_buf = buf.buffer;
- 			data->memsz += STARTUP_NORMAL_OFFSET;
- 
+ #define qeth_adp_supported(c, f) \
+-	qeth_is_ipa_supported(&c->options.adp, f)
+-#define qeth_adp_enabled(c, f) \
+-	qeth_is_ipa_enabled(&c->options.adp, f)
++	qeth_is_adp_supported(&c->options.adp, f)
+ #define qeth_is_supported(c, f) \
+ 	qeth_is_ipa_supported(&c->options.ipa4, f)
+ #define qeth_is_enabled(c, f) \
 -- 
 2.20.1
 
