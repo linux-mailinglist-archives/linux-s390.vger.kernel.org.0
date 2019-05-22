@@ -2,107 +2,274 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B1B30263B3
-	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 14:21:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 006AA2665A
+	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 16:55:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729171AbfEVMVH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 May 2019 08:21:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53032 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728971AbfEVMVG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 May 2019 08:21:06 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MCI69q088329;
-        Wed, 22 May 2019 08:20:47 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sn67b098v-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 May 2019 08:20:47 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4M7ivYP010118;
-        Wed, 22 May 2019 07:50:48 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma01dal.us.ibm.com with ESMTP id 2smks6sht6-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 May 2019 07:50:48 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4MCKiA07668004
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 12:20:44 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC0406E050;
-        Wed, 22 May 2019 12:20:44 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 227B86E04C;
-        Wed, 22 May 2019 12:20:44 +0000 (GMT)
-Received: from [9.85.136.32] (unknown [9.85.136.32])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 22 May 2019 12:20:43 +0000 (GMT)
-Subject: Re: [PATCH v3 0/3] s390: vfio-ccw fixes
-To:     Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <20190516161403.79053-1-farman@linux.ibm.com>
-From:   Farhan Ali <alifm@linux.ibm.com>
-Message-ID: <0769d5bc-cf0b-3a66-7d35-381490a115b5@linux.ibm.com>
-Date:   Wed, 22 May 2019 08:20:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        id S1729588AbfEVOzV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 May 2019 10:55:21 -0400
+Received: from foss.arm.com ([217.140.101.70]:53030 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728450AbfEVOzU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 May 2019 10:55:20 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A86980D;
+        Wed, 22 May 2019 07:55:20 -0700 (PDT)
+Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0E7403F718;
+        Wed, 22 May 2019 07:55:17 -0700 (PDT)
+Subject: Re: [PATCH v3 3/3] kselftest: Extend vDSO selftest to clock_getres
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20190522110722.28094-1-vincenzo.frascino@arm.com>
+ <20190522110722.28094-4-vincenzo.frascino@arm.com>
+ <3a6d9b99-0026-6743-9e73-4880f3cd6b1c@c-s.fr>
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+Message-ID: <84a39582-7acb-fa00-682f-dc126fdfa266@arm.com>
+Date:   Wed, 22 May 2019 15:55:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190516161403.79053-1-farman@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <3a6d9b99-0026-6743-9e73-4880f3cd6b1c@c-s.fr>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905220090
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Christophe,
+
+thank you for your review.
+
+On 22/05/2019 12:50, Christophe Leroy wrote:
+> 
+> 
+> Le 22/05/2019 à 13:07, Vincenzo Frascino a écrit :
+>> The current version of the multiarch vDSO selftest verifies only
+>> gettimeofday.
+>>
+>> Extend the vDSO selftest to clock_getres, to verify that the
+>> syscall and the vDSO library function return the same information.
+>>
+>> The extension has been used to verify the hrtimer_resoltion fix.
+>>
+>> Cc: Shuah Khan <shuah@kernel.org>
+>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>> ---
+>>
+>> Note: This patch is independent from the others in this series, hence it
+>> can be merged singularly by the kselftest maintainers.
+>>
+>>   tools/testing/selftests/vDSO/Makefile         |   2 +
+>>   .../selftests/vDSO/vdso_clock_getres.c        | 137 ++++++++++++++++++
+>>   2 files changed, 139 insertions(+)
+>>   create mode 100644 tools/testing/selftests/vDSO/vdso_clock_getres.c
+>>
+>> diff --git a/tools/testing/selftests/vDSO/Makefile b/tools/testing/selftests/vDSO/Makefile
+>> index 9e03d61f52fd..d5c5bfdf1ac1 100644
+>> --- a/tools/testing/selftests/vDSO/Makefile
+>> +++ b/tools/testing/selftests/vDSO/Makefile
+>> @@ -5,6 +5,7 @@ uname_M := $(shell uname -m 2>/dev/null || echo not)
+>>   ARCH ?= $(shell echo $(uname_M) | sed -e s/i.86/x86/ -e s/x86_64/x86/)
+>>   
+>>   TEST_GEN_PROGS := $(OUTPUT)/vdso_test
+>> +TEST_GEN_PROGS += $(OUTPUT)/vdso_clock_getres
+>>   ifeq ($(ARCH),x86)
+>>   TEST_GEN_PROGS += $(OUTPUT)/vdso_standalone_test_x86
+>>   endif
+>> @@ -18,6 +19,7 @@ endif
+>>   
+>>   all: $(TEST_GEN_PROGS)
+>>   $(OUTPUT)/vdso_test: parse_vdso.c vdso_test.c
+>> +$(OUTPUT)/vdso_clock_getres: vdso_clock_getres.c
+>>   $(OUTPUT)/vdso_standalone_test_x86: vdso_standalone_test_x86.c parse_vdso.c
+>>   	$(CC) $(CFLAGS) $(CFLAGS_vdso_standalone_test_x86) \
+>>   		vdso_standalone_test_x86.c parse_vdso.c \
+>> diff --git a/tools/testing/selftests/vDSO/vdso_clock_getres.c b/tools/testing/selftests/vDSO/vdso_clock_getres.c
+>> new file mode 100644
+>> index 000000000000..341a9bc34ffc
+>> --- /dev/null
+>> +++ b/tools/testing/selftests/vDSO/vdso_clock_getres.c
+>> @@ -0,0 +1,137 @@
+>> +// SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note
+>> +/*
+>> + * vdso_clock_getres.c: Sample code to test clock_getres.
+>> + * Copyright (c) 2019 Arm Ltd.
+>> + *
+>> + * Compile with:
+>> + * gcc -std=gnu99 vdso_clock_getres.c
+>> + *
+>> + * Tested on ARM, ARM64, MIPS32, x86 (32-bit and 64-bit),
+>> + * Power (32-bit and 64-bit), S390x (32-bit and 64-bit).
+>> + * Might work on other architectures.
+>> + */
+>> +
+>> +#define _GNU_SOURCE
+>> +#include <elf.h>
+>> +#include <err.h>
+>> +#include <fcntl.h>
+>> +#include <stdint.h>
+>> +#include <stdio.h>
+>> +#include <stdlib.h>
+>> +#include <time.h>
+>> +#include <sys/auxv.h>
+>> +#include <sys/mman.h>
+>> +#include <sys/time.h>
+>> +#include <unistd.h>
+>> +#include <sys/syscall.h>
+>> +
+>> +#include "../kselftest.h"
+>> +
+>> +static long syscall_clock_getres(clockid_t _clkid, struct timespec *_ts)
+>> +{
+>> +	long ret;
+>> +
+>> +	ret = syscall(SYS_clock_getres, _clkid, _ts);
+>> +
+>> +	return ret;
+>> +}
+>> +
+>> +const char *vdso_clock_name[12] = {
+>> +	"CLOCK_REALTIME",
+>> +	"CLOCK_MONOTONIC",
+>> +	"CLOCK_PROCESS_CPUTIME_ID",
+>> +	"CLOCK_THREAD_CPUTIME_ID",
+>> +	"CLOCK_MONOTONIC_RAW",
+>> +	"CLOCK_REALTIME_COARSE",
+>> +	"CLOCK_MONOTONIC_COARSE",
+>> +	"CLOCK_BOOTTIME",
+>> +	"CLOCK_REALTIME_ALARM",
+>> +	"CLOCK_BOOTTIME_ALARM",
+>> +	"CLOCK_SGI_CYCLE",
+>> +	"CLOCK_TAI",
+>> +};
+>> +
+>> +/*
+>> + * This function calls clock_getres in vdso and by system call
+>> + * with different values for clock_id.
+>> + *
+>> + * Example of output:
+>> + *
+>> + * clock_id: CLOCK_REALTIME [PASS]
+>> + * clock_id: CLOCK_BOOTTIME [PASS]
+>> + * clock_id: CLOCK_TAI [PASS]
+>> + * clock_id: CLOCK_REALTIME_COARSE [PASS]
+>> + * clock_id: CLOCK_MONOTONIC [PASS]
+>> + * clock_id: CLOCK_MONOTONIC_RAW [PASS]
+>> + * clock_id: CLOCK_MONOTONIC_COARSE [PASS]
+>> + */
+>> +static inline int vdso_test_clock(unsigned int clock_id)
+>> +{
+>> +	struct timespec x, y;
+>> +
+>> +	printf("clock_id: %s", vdso_clock_name[clock_id]);
+>> +	clock_getres(clock_id, &x);
+>> +	syscall_clock_getres(clock_id, &y);
+>> +
+>> +	if ((x.tv_sec != y.tv_sec) || (x.tv_sec != y.tv_sec)) {
+>> +		printf(" [FAIL]\n");
+>> +		return KSFT_FAIL;
+>> +	}
+>> +
+>> +	printf(" [PASS]\n");
+>> +	return 0;
+>> +}
+>> +
+>> +int main(int argc, char **argv)
+>> +{
+>> +	int ret;
+>> +
+>> +#if _POSIX_TIMERS > 0
+>> +
+>> +#ifdef CLOCK_REALTIME
+> 
+> Why do you need that #ifdef and all the ones below ?
+> 
+> CLOCK_REALTIME (and others) is defined in include/uapi/linux/time.h, so 
+> it should be there when you build the test, shouldn't it ?
+> 
+
+In implementing this test I followed what the man page for clock_gettime(2)
+defines in terms of availability of the timers. Since I do not know how old are
+the userspace headers, I think it is a good idea checking that the clocks are
+defined before trying to use them.
+
+>> +	ret = vdso_test_clock(CLOCK_REALTIME);
+>> +	if (ret)
+>> +		goto out;
+> 
+> Why that goto ? Nothing is done at out, so a 'return ret' would be 
+> better I think.
+>
+
+Agree, thanks for pointing this out. Will fix in v4.
 
 
-On 05/16/2019 12:14 PM, Eric Farman wrote:
-> Here are the remaining patches in my fixes series, to handle the more
-> involved scenario of channel programs that do not move any actual data
-> to/from the device.  They were reordered per feedback from v2, which
-> means they received minor massaging because of overlapping code and
-> some cleanup to the commit messages.
-> 
-> They are based on Conny's vfio-ccw tree.  :)
-> 
-> Changelog:
->   v2 -> v3:
->    - Patches 1-4:
->       - [Farhan] Added r-b
->       - [Cornelia] Queued to vfio-ccw, dropped from this version
->    - Patches 5/6:
->       - [Cornelia/Farhan] Swapped the order of these patches, minor
->         rework on the placement of bytes/idaw_nr variables and the
->         commit messages that resulted.
->   v2: https://patchwork.kernel.org/cover/10944075/
->   v1: https://patchwork.kernel.org/cover/10928799/
-> 
-> Eric Farman (3):
->    s390/cio: Don't pin vfio pages for empty transfers
->    s390/cio: Allow zero-length CCWs in vfio-ccw
->    s390/cio: Remove vfio-ccw checks of command codes
-> 
->   drivers/s390/cio/vfio_ccw_cp.c | 92 ++++++++++++++++++++++++----------
->   1 file changed, 65 insertions(+), 27 deletions(-)
+> And do we really want to stop at first failure ? Wouldn't it be better 
+> to run all the tests regardless ?
 > 
 
+The test is supposed to fail if one of the sub-tests fails, hence once the first
+fails doesn't seem convenient running the others, because we already know the
+result.
 
-Acked-by: Farhan Ali <alifm@linux.ibm.com> for the series.
+> Christophe
+> 
+>> +#endif
+>> +
+>> +#ifdef CLOCK_BOOTTIME
+>> +	ret = vdso_test_clock(CLOCK_BOOTTIME);
+>> +	if (ret)
+>> +		goto out;
+>> +#endif
+>> +
+>> +#ifdef CLOCK_TAI
+>> +	ret = vdso_test_clock(CLOCK_TAI);
+>> +	if (ret)
+>> +		goto out;
+>> +#endif
+>> +
+>> +#ifdef CLOCK_REALTIME_COARSE
+>> +	ret = vdso_test_clock(CLOCK_REALTIME_COARSE);
+>> +	if (ret)
+>> +		goto out;
+>> +#endif
+>> +
+>> +#ifdef CLOCK_MONOTONIC
+>> +	ret = vdso_test_clock(CLOCK_MONOTONIC);
+>> +	if (ret)
+>> +		goto out;
+>> +#endif
+>> +
+>> +#ifdef CLOCK_MONOTONIC_RAW
+>> +	ret = vdso_test_clock(CLOCK_MONOTONIC_RAW);
+>> +	if (ret)
+>> +		goto out;
+>> +#endif
+>> +
+>> +#ifdef CLOCK_MONOTONIC_COARSE
+>> +	ret = vdso_test_clock(CLOCK_MONOTONIC_COARSE);
+>> +	if (ret)
+>> +		goto out;
+>> +#endif
+>> +
+>> +#endif
+>> +
+>> +out:
+>> +	return ret;
+>> +}
+>>
 
-Thanks
-Farhan
+-- 
+Regards,
+Vincenzo
