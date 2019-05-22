@@ -2,168 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5225626369
-	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 14:07:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1B30263B3
+	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 14:21:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727464AbfEVMHP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 May 2019 08:07:15 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42100 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727975AbfEVMHP (ORCPT
+        id S1729171AbfEVMVH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 May 2019 08:21:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53032 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728971AbfEVMVG (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 May 2019 08:07:15 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MC3trb068582
-        for <linux-s390@vger.kernel.org>; Wed, 22 May 2019 08:07:14 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sn638g75w-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 22 May 2019 08:07:14 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <sebott@linux.ibm.com>;
-        Wed, 22 May 2019 13:07:12 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 May 2019 13:07:08 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4MC76kQ9502890
+        Wed, 22 May 2019 08:21:06 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MCI69q088329;
+        Wed, 22 May 2019 08:20:47 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sn67b098v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 May 2019 08:20:47 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x4M7ivYP010118;
+        Wed, 22 May 2019 07:50:48 GMT
+Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
+        by ppma01dal.us.ibm.com with ESMTP id 2smks6sht6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 22 May 2019 07:50:48 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4MCKiA07668004
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 May 2019 12:07:06 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 99155A405F;
-        Wed, 22 May 2019 12:07:06 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1A120A4055;
-        Wed, 22 May 2019 12:07:06 +0000 (GMT)
-Received: from dyn-9-152-212-204.boeblingen.de.ibm.com (unknown [9.152.212.204])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 22 May 2019 12:07:06 +0000 (GMT)
-Date:   Wed, 22 May 2019 14:07:05 +0200 (CEST)
-From:   Sebastian Ott <sebott@linux.ibm.com>
-X-X-Sender: sebott@schleppi
-To:     Halil Pasic <pasic@linux.ibm.com>
-cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 05/10] s390/cio: introduce DMA pools to cio
-In-Reply-To: <20190520141312.4e3a2d36.pasic@linux.ibm.com>
-References: <20190426183245.37939-1-pasic@linux.ibm.com> <20190426183245.37939-6-pasic@linux.ibm.com> <alpine.LFD.2.21.1905081447280.1773@schleppi> <20190508232210.5a555caa.pasic@linux.ibm.com> <20190509121106.48aa04db.cohuck@redhat.com>
- <20190510001112.479b2fd7.pasic@linux.ibm.com> <20190510161013.7e697337.cohuck@redhat.com> <20190512202256.5517592d.pasic@linux.ibm.com> <alpine.LFD.2.21.1905161517570.1767@schleppi> <20190520141312.4e3a2d36.pasic@linux.ibm.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
- =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
- =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
- =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
- =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
- =?ISO-8859-15?Q?94=22?=
+        Wed, 22 May 2019 12:20:44 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BC0406E050;
+        Wed, 22 May 2019 12:20:44 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 227B86E04C;
+        Wed, 22 May 2019 12:20:44 +0000 (GMT)
+Received: from [9.85.136.32] (unknown [9.85.136.32])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 22 May 2019 12:20:43 +0000 (GMT)
+Subject: Re: [PATCH v3 0/3] s390: vfio-ccw fixes
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+References: <20190516161403.79053-1-farman@linux.ibm.com>
+From:   Farhan Ali <alifm@linux.ibm.com>
+Message-ID: <0769d5bc-cf0b-3a66-7d35-381490a115b5@linux.ibm.com>
+Date:   Wed, 22 May 2019 08:20:43 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190516161403.79053-1-farman@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19052212-0016-0000-0000-0000027E4FF1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052212-0017-0000-0000-000032DB415F
-Message-Id: <alpine.LFD.2.21.1905221344180.1782@schleppi>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_05:,,
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_06:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905220089
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905220090
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 20 May 2019, Halil Pasic wrote:
-> On Thu, 16 May 2019 15:59:22 +0200 (CEST)
-> Sebastian Ott <sebott@linux.ibm.com> wrote:
-> > We only have a couple of users for airq_iv:
-> > 
-> > virtio_ccw.c: 2K bits
-> 
-> You mean a single allocation is 2k bits (VIRTIO_IV_BITS = 256 * 8)? My
-> understanding is that the upper bound is more like:
-> MAX_AIRQ_AREAS * VIRTIO_IV_BITS = 20 * 256 * 8 = 40960 bits.
-> 
-> In practice it is most likely just 2k.
-> 
-> > 
-> > pci with floating IRQs: <= 2K (for the per-function bit vectors)
-> >                         1..4K (for the summary bit vector)
-> >
-> 
-> As far as I can tell with virtio_pci arch_setup_msi_irqs() gets called
-> once per device and allocates a small number of bits (2 and 3 in my
-> test, it may depend on #virtqueues, but I did not check).
-> 
-> So for an upper bound we would have to multiply with the upper bound of
-> pci devices/functions. What is the upper bound on the number of
-> functions?
-> 
-> > pci with CPU directed IRQs: 2K (for the per-CPU bit vectors)
-> >                             1..nr_cpu (for the summary bit vector)
-> > 
-> 
-> I guess this is the same.
-> 
-> > 
-> > The options are:
-> > * page allocations for everything
-> 
-> Worst case we need 20 + #max_pci_dev pages. At the moment we allocate
-> from ZONE_DMA (!) and waste a lot.
-> 
-> > * dma_pool for AIRQ_IV_CACHELINE ,gen_pool for others
-> 
-> I prefer this. Explanation follows.
-> 
-> > * dma_pool for everything
-> > 
-> 
-> Less waste by factor factor 16.
-> 
-> > I think we should do option 3 and use a dma_pool with cachesize
-> > alignment for everything (as a prerequisite we have to limit
-> > config PCI_NR_FUNCTIONS to 2K - but that is not a real constraint).
-> 
-> I prefer option 3 because it is conceptually the smallest change, and
-                  ^
-                  2
-> provides the behavior which is closest to the current one.
-
-I can see that this is the smallest change on top of the current
-implementation. I'm good with doing that and looking for further
-simplification/unification later.
 
 
-> Commit  414cbd1e3d14 "s390/airq: provide cacheline aligned
-> ivs" (Sebastian Ott, 2019-02-27) could have been smaller had you implemented
-> 'kmem_cache for everything' (and I would have had just to replace kmem_cache with
-> dma_cache to achieve option 3). For some reason you decided to keep the
-> iv->vector = kzalloc(size, GFP_KERNEL) code-path and make the client code request
-> iv->vector = kmem_cache_zalloc(airq_iv_cache, GFP_KERNEL) explicitly, using a flag
-> which you only decided to use for directed pci irqs AFAICT.
+On 05/16/2019 12:14 PM, Eric Farman wrote:
+> Here are the remaining patches in my fixes series, to handle the more
+> involved scenario of channel programs that do not move any actual data
+> to/from the device.  They were reordered per feedback from v2, which
+> means they received minor massaging because of overlapping code and
+> some cleanup to the commit messages.
 > 
-> My understanding of these decisions, and especially of the rationale
-> behind commit 414cbd1e3d14 is limited.
+> They are based on Conny's vfio-ccw tree.  :)
+> 
+> Changelog:
+>   v2 -> v3:
+>    - Patches 1-4:
+>       - [Farhan] Added r-b
+>       - [Cornelia] Queued to vfio-ccw, dropped from this version
+>    - Patches 5/6:
+>       - [Cornelia/Farhan] Swapped the order of these patches, minor
+>         rework on the placement of bytes/idaw_nr variables and the
+>         commit messages that resulted.
+>   v2: https://patchwork.kernel.org/cover/10944075/
+>   v1: https://patchwork.kernel.org/cover/10928799/
+> 
+> Eric Farman (3):
+>    s390/cio: Don't pin vfio pages for empty transfers
+>    s390/cio: Allow zero-length CCWs in vfio-ccw
+>    s390/cio: Remove vfio-ccw checks of command codes
+> 
+>   drivers/s390/cio/vfio_ccw_cp.c | 92 ++++++++++++++++++++++++----------
+>   1 file changed, 65 insertions(+), 27 deletions(-)
+> 
 
-I introduced per cpu interrupt vectors and wanted to prevent 2 CPUs from
-sharing data from the same cacheline. No other user of the airq stuff had
-this need. If I had been aware of the additional complexity we would add
-on top of that maybe I would have made a different decision.
 
+Acked-by: Farhan Ali <alifm@linux.ibm.com> for the series.
+
+Thanks
+Farhan
