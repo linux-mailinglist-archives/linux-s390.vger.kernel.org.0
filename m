@@ -2,74 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4EE8225FBA
-	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 10:44:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3C82262B6
+	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 13:07:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfEVIoV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 May 2019 04:44:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47566 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727946AbfEVIoV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 May 2019 04:44:21 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0DCDC3082E42;
-        Wed, 22 May 2019 08:44:21 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (ovpn-204-233.brq.redhat.com [10.40.204.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 33C00600C6;
-        Wed, 22 May 2019 08:44:14 +0000 (UTC)
-Date:   Wed, 22 May 2019 10:44:09 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        id S1728111AbfEVLHl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 May 2019 07:07:41 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:48104 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727464AbfEVLHl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 May 2019 07:07:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B4B69341;
+        Wed, 22 May 2019 04:07:40 -0700 (PDT)
+Received: from e119884-lin.cambridge.arm.com (e119884-lin.cambridge.arm.com [10.1.196.72])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7BE073F575;
+        Wed, 22 May 2019 04:07:38 -0700 (PDT)
+From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
+To:     linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [RFC PATCH 0/4] KVM selftests for s390x
-Message-ID: <20190522084409.qz5hs7lqj65qg6x5@kamzik.brq.redhat.com>
-References: <20190516111253.4494-1-thuth@redhat.com>
- <b412e591-3983-ebef-510b-43f9b7be4147@redhat.com>
- <9423ba89-b10e-5e6e-3cc8-8088f3088233@redhat.com>
- <4d94124e-00f6-aa65-3a4a-bd8910480329@redhat.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 0/3] Fix vDSO clock_getres()
+Date:   Wed, 22 May 2019 12:07:19 +0100
+Message-Id: <20190522110722.28094-1-vincenzo.frascino@arm.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4d94124e-00f6-aa65-3a4a-bd8910480329@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 22 May 2019 08:44:21 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 20, 2019 at 01:43:06PM +0200, Paolo Bonzini wrote:
-> On 20/05/19 13:30, Thomas Huth wrote:
-> >> No objections at all, though it would be like to have ucall plumbed in
-> >> from the beginning.
-> > I'm still looking at the ucall interface ... what I don't quite get yet
-> > is the question why the ucall_type there is selectable during runtime?
-> > 
-> > Are there plans to have test that could either use UCALL_PIO or
-> > UCALL_MMIO? If not, what about moving ucall_init() and ucall() to
-> > architecture specific code in tools/testing/selftests/kvm/lib/aarch64/
-> > and tools/testing/selftests/kvm/lib/x86_64 instead, and to remove the
-> > ucall_type stuff again (so that x86 is hard-wired to PIO and aarch64
-> > is hard-wired to MMIO)? ... then I could add a DIAG-based ucall
-> > on s390x more easily, I think.
-> 
-> Yes, that would work.  I think Andrew wanted the flexibility to use MMIO
-> on x86, but it's not really necessary to have it.
+clock_getres in the vDSO library has to preserve the same behaviour
+of posix_get_hrtimer_res().
 
-If the flexibility isn't necessary, then I agree that it'll be nicer to
-put the ucall_init() in arch setup code, avoiding the need to remember
-it in each unit test.
+In particular, posix_get_hrtimer_res() does:
+    sec = 0;
+    ns = hrtimer_resolution;
+and hrtimer_resolution depends on the enablement of the high
+resolution timers that can happen either at compile or at run time.
 
-Thanks,
-drew
+A possible fix is to change the vdso implementation of clock_getres,
+keeping a copy of hrtimer_resolution in vdso data and using that
+directly [1].
+
+This patchset implements the proposed fix for arm64, powerpc, s390,
+nds32 and adds a test to verify that the syscall and the vdso library
+implementation of clock_getres return the same values.
+
+Even if these patches are unified by the same topic, there is no
+dependency between them, hence they can be merged singularly by each
+arch maintainer.
+
+Note: arm64 and nds32 respective fixes have been merged in 5.2-rc1,
+hence they have been removed from this series.
+
+[1] https://marc.info/?l=linux-arm-kernel&m=155110381930196&w=2
+
+Changes:
+--------
+v3:
+  - Rebased on 5.2-rc1.
+  - Addressed review comments.
+v2:
+  - Rebased on 5.1-rc5.
+  - Addressed review comments.
+
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Shuah Khan <shuah@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+
+Vincenzo Frascino (3):
+  powerpc: Fix vDSO clock_getres()
+  s390: Fix vDSO clock_getres()
+  kselftest: Extend vDSO selftest to clock_getres
+
+ arch/powerpc/include/asm/vdso_datapage.h      |   2 +
+ arch/powerpc/kernel/asm-offsets.c             |   2 +-
+ arch/powerpc/kernel/time.c                    |   1 +
+ arch/powerpc/kernel/vdso32/gettimeofday.S     |   7 +-
+ arch/powerpc/kernel/vdso64/gettimeofday.S     |   7 +-
+ arch/s390/include/asm/vdso.h                  |   1 +
+ arch/s390/kernel/asm-offsets.c                |   2 +-
+ arch/s390/kernel/time.c                       |   1 +
+ arch/s390/kernel/vdso32/clock_getres.S        |  12 +-
+ arch/s390/kernel/vdso64/clock_getres.S        |  10 +-
+ tools/testing/selftests/vDSO/Makefile         |   2 +
+ .../selftests/vDSO/vdso_clock_getres.c        | 137 ++++++++++++++++++
+ 12 files changed, 168 insertions(+), 16 deletions(-)
+ create mode 100644 tools/testing/selftests/vDSO/vdso_clock_getres.c
+
+-- 
+2.21.0
+
