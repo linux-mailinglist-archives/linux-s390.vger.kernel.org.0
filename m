@@ -2,137 +2,183 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7BBA26CF9
-	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 21:39:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B348227213
+	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 00:12:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733099AbfEVTiT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 May 2019 15:38:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53094 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733032AbfEVT3y (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 May 2019 15:29:54 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5240A20879;
-        Wed, 22 May 2019 19:29:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1558553394;
-        bh=2dpJVVjUM81EBe6QhbWbjJ73RcoPBXUoDjYWQjKmyxU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uo2cmpaFr91xiw+M06UMdj9xnYo7MSCdjKuw/T1nhwN4VhlGsUIkQps6u5WU30aYg
-         han3XuJl1qM4NUpb97RdLhBp1DI1GGxrIYwJwEhQKTZ+cgmwZ86uDvoNA50HfCkiK/
-         17CCOoKjoK2v3pwjiv/giYL/Izc4qwrb1F5g4DzU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        id S1727705AbfEVWM5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 May 2019 18:12:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46176 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726070AbfEVWM4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 May 2019 18:12:56 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4MMC6Cr005424
+        for <linux-s390@vger.kernel.org>; Wed, 22 May 2019 18:12:55 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sneqtrk8x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 22 May 2019 18:12:54 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Wed, 22 May 2019 23:12:53 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 May 2019 23:12:51 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4MMCn4540632524
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 May 2019 22:12:49 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 24EBCA4062;
+        Wed, 22 May 2019 22:12:49 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4DF54A4054;
+        Wed, 22 May 2019 22:12:48 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.34.240])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 May 2019 22:12:48 +0000 (GMT)
+Date:   Thu, 23 May 2019 00:12:46 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Sebastian Ott <sebott@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
         Eric Farman <farman@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 049/167] vfio-ccw: Release any channel program when releasing/removing vfio-ccw mdev
-Date:   Wed, 22 May 2019 15:26:44 -0400
-Message-Id: <20190522192842.25858-49-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190522192842.25858-1-sashal@kernel.org>
-References: <20190522192842.25858-1-sashal@kernel.org>
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 05/10] s390/cio: introduce DMA pools to cio
+In-Reply-To: <alpine.LFD.2.21.1905221344180.1782@schleppi>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-6-pasic@linux.ibm.com>
+        <alpine.LFD.2.21.1905081447280.1773@schleppi>
+        <20190508232210.5a555caa.pasic@linux.ibm.com>
+        <20190509121106.48aa04db.cohuck@redhat.com>
+        <20190510001112.479b2fd7.pasic@linux.ibm.com>
+        <20190510161013.7e697337.cohuck@redhat.com>
+        <20190512202256.5517592d.pasic@linux.ibm.com>
+        <alpine.LFD.2.21.1905161517570.1767@schleppi>
+        <20190520141312.4e3a2d36.pasic@linux.ibm.com>
+        <alpine.LFD.2.21.1905221344180.1782@schleppi>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052222-0016-0000-0000-0000027E7824
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052222-0017-0000-0000-000032DB6C00
+Message-Id: <20190523001246.449154aa.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-22_13:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905220154
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Farhan Ali <alifm@linux.ibm.com>
+On Wed, 22 May 2019 14:07:05 +0200 (CEST)
+Sebastian Ott <sebott@linux.ibm.com> wrote:
 
-[ Upstream commit b49bdc8602b7c9c7a977758bee4125683f73e59f ]
+> On Mon, 20 May 2019, Halil Pasic wrote:
+> > On Thu, 16 May 2019 15:59:22 +0200 (CEST)
+> > Sebastian Ott <sebott@linux.ibm.com> wrote:
+> > > We only have a couple of users for airq_iv:
+> > > 
+> > > virtio_ccw.c: 2K bits
+> > 
+> > You mean a single allocation is 2k bits (VIRTIO_IV_BITS = 256 * 8)? My
+> > understanding is that the upper bound is more like:
+> > MAX_AIRQ_AREAS * VIRTIO_IV_BITS = 20 * 256 * 8 = 40960 bits.
+> > 
+> > In practice it is most likely just 2k.
+> > 
+> > > 
+> > > pci with floating IRQs: <= 2K (for the per-function bit vectors)
+> > >                         1..4K (for the summary bit vector)
+> > >
+> > 
+> > As far as I can tell with virtio_pci arch_setup_msi_irqs() gets called
+> > once per device and allocates a small number of bits (2 and 3 in my
+> > test, it may depend on #virtqueues, but I did not check).
+> > 
+> > So for an upper bound we would have to multiply with the upper bound of
+> > pci devices/functions. What is the upper bound on the number of
+> > functions?
+> > 
+> > > pci with CPU directed IRQs: 2K (for the per-CPU bit vectors)
+> > >                             1..nr_cpu (for the summary bit vector)
+> > > 
+> > 
+> > I guess this is the same.
+> > 
+> > > 
+> > > The options are:
+> > > * page allocations for everything
+> > 
+> > Worst case we need 20 + #max_pci_dev pages. At the moment we allocate
+> > from ZONE_DMA (!) and waste a lot.
+> > 
+> > > * dma_pool for AIRQ_IV_CACHELINE ,gen_pool for others
+> > 
+> > I prefer this. Explanation follows.
+> > 
+> > > * dma_pool for everything
+> > > 
+> > 
+> > Less waste by factor factor 16.
+> > 
+> > > I think we should do option 3 and use a dma_pool with cachesize
+> > > alignment for everything (as a prerequisite we have to limit
+> > > config PCI_NR_FUNCTIONS to 2K - but that is not a real constraint).
+> > 
+> > I prefer option 3 because it is conceptually the smallest change, and
+>                   ^
+>                   2
+> > provides the behavior which is closest to the current one.
+> 
+> I can see that this is the smallest change on top of the current
+> implementation. I'm good with doing that and looking for further
+> simplification/unification later.
+> 
 
-When releasing the vfio-ccw mdev, we currently do not release
-any existing channel program and its pinned pages. This can
-lead to the following warning:
+Nod. I will go with that for v2.
 
-[1038876.561565] WARNING: CPU: 2 PID: 144727 at drivers/vfio/vfio_iommu_type1.c:1494 vfio_sanity_check_pfn_list+0x40/0x70 [vfio_iommu_type1]
+> 
+> > Commit  414cbd1e3d14 "s390/airq: provide cacheline aligned
+> > ivs" (Sebastian Ott, 2019-02-27) could have been smaller had you implemented
+> > 'kmem_cache for everything' (and I would have had just to replace kmem_cache with
+> > dma_cache to achieve option 3). For some reason you decided to keep the
+> > iv->vector = kzalloc(size, GFP_KERNEL) code-path and make the client code request
+> > iv->vector = kmem_cache_zalloc(airq_iv_cache, GFP_KERNEL) explicitly, using a flag
+> > which you only decided to use for directed pci irqs AFAICT.
+> > 
+> > My understanding of these decisions, and especially of the rationale
+> > behind commit 414cbd1e3d14 is limited.
+> 
+> I introduced per cpu interrupt vectors and wanted to prevent 2 CPUs from
+> sharing data from the same cacheline. No other user of the airq stuff had
+> this need. If I had been aware of the additional complexity we would add
+> on top of that maybe I would have made a different decision.
 
-....
+I understand. Thanks for the explanation!
 
-1038876.561921] Call Trace:
-[1038876.561935] ([<00000009897fb870>] 0x9897fb870)
-[1038876.561949]  [<000003ff8013bf62>] vfio_iommu_type1_detach_group+0xda/0x2f0 [vfio_iommu_type1]
-[1038876.561965]  [<000003ff8007b634>] __vfio_group_unset_container+0x64/0x190 [vfio]
-[1038876.561978]  [<000003ff8007b87e>] vfio_group_put_external_user+0x26/0x38 [vfio]
-[1038876.562024]  [<000003ff806fc608>] kvm_vfio_group_put_external_user+0x40/0x60 [kvm]
-[1038876.562045]  [<000003ff806fcb9e>] kvm_vfio_destroy+0x5e/0xd0 [kvm]
-[1038876.562065]  [<000003ff806f63fc>] kvm_put_kvm+0x2a4/0x3d0 [kvm]
-[1038876.562083]  [<000003ff806f655e>] kvm_vm_release+0x36/0x48 [kvm]
-[1038876.562098]  [<00000000003c2dc4>] __fput+0x144/0x228
-[1038876.562113]  [<000000000016ee82>] task_work_run+0x8a/0xd8
-[1038876.562125]  [<000000000014c7a8>] do_exit+0x5d8/0xd90
-[1038876.562140]  [<000000000014d084>] do_group_exit+0xc4/0xc8
-[1038876.562155]  [<000000000015c046>] get_signal+0x9ae/0xa68
-[1038876.562169]  [<0000000000108d66>] do_signal+0x66/0x768
-[1038876.562185]  [<0000000000b9e37e>] system_call+0x1ea/0x2d8
-[1038876.562195] 2 locks held by qemu-system-s39/144727:
-[1038876.562205]  #0: 00000000537abaf9 (&container->group_lock){++++}, at: __vfio_group_unset_container+0x3c/0x190 [vfio]
-[1038876.562230]  #1: 00000000670008b5 (&iommu->lock){+.+.}, at: vfio_iommu_type1_detach_group+0x36/0x2f0 [vfio_iommu_type1]
-[1038876.562250] Last Breaking-Event-Address:
-[1038876.562262]  [<000003ff8013aa24>] vfio_sanity_check_pfn_list+0x3c/0x70 [vfio_iommu_type1]
-[1038876.562272] irq event stamp: 4236481
-[1038876.562287] hardirqs last  enabled at (4236489): [<00000000001cee7a>] console_unlock+0x6d2/0x740
-[1038876.562299] hardirqs last disabled at (4236496): [<00000000001ce87e>] console_unlock+0xd6/0x740
-[1038876.562311] softirqs last  enabled at (4234162): [<0000000000b9fa1e>] __do_softirq+0x556/0x598
-[1038876.562325] softirqs last disabled at (4234153): [<000000000014e4cc>] irq_exit+0xac/0x108
-[1038876.562337] ---[ end trace 6c96d467b1c3ca06 ]---
-
-Similarly we do not free the channel program when we are removing
-the vfio-ccw device. Let's fix this by resetting the device and freeing
-the channel program and pinned pages in the release path. For the remove
-path we can just quiesce the device, since in the remove path the mediated
-device is going away for good and so we don't need to do a full reset.
-
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-Message-Id: <ae9f20dc8873f2027f7b3c5d2aaa0bdfe06850b8.1554756534.git.alifm@linux.ibm.com>
-Acked-by: Eric Farman <farman@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/cio/vfio_ccw_ops.c | 11 ++++++++++-
- 1 file changed, 10 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-index 41eeb57d68a3d..560013c8d2a48 100644
---- a/drivers/s390/cio/vfio_ccw_ops.c
-+++ b/drivers/s390/cio/vfio_ccw_ops.c
-@@ -130,11 +130,12 @@ static int vfio_ccw_mdev_remove(struct mdev_device *mdev)
- 
- 	if ((private->state != VFIO_CCW_STATE_NOT_OPER) &&
- 	    (private->state != VFIO_CCW_STATE_STANDBY)) {
--		if (!vfio_ccw_mdev_reset(mdev))
-+		if (!vfio_ccw_sch_quiesce(private->sch))
- 			private->state = VFIO_CCW_STATE_STANDBY;
- 		/* The state will be NOT_OPER on error. */
- 	}
- 
-+	cp_free(&private->cp);
- 	private->mdev = NULL;
- 	atomic_inc(&private->avail);
- 
-@@ -158,6 +159,14 @@ static void vfio_ccw_mdev_release(struct mdev_device *mdev)
- 	struct vfio_ccw_private *private =
- 		dev_get_drvdata(mdev_parent_dev(mdev));
- 
-+	if ((private->state != VFIO_CCW_STATE_NOT_OPER) &&
-+	    (private->state != VFIO_CCW_STATE_STANDBY)) {
-+		if (!vfio_ccw_mdev_reset(mdev))
-+			private->state = VFIO_CCW_STATE_STANDBY;
-+		/* The state will be NOT_OPER on error. */
-+	}
-+
-+	cp_free(&private->cp);
- 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
- 				 &private->nb);
- }
--- 
-2.20.1
+Regards,
+Halil
 
