@@ -2,148 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 31FC1268B4
-	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 18:58:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C76C226FE4
+	for <lists+linux-s390@lfdr.de>; Wed, 22 May 2019 22:00:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbfEVQ6T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 May 2019 12:58:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:42698 "EHLO mx1.redhat.com"
+        id S1730769AbfEVTXI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 May 2019 15:23:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44006 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729641AbfEVQ6S (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 May 2019 12:58:18 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1730760AbfEVTXI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 May 2019 15:23:08 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 494B93053878;
-        Wed, 22 May 2019 16:57:52 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.159])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 69B5560BE5;
-        Wed, 22 May 2019 16:57:40 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 22 May 2019 18:57:50 +0200 (CEST)
-Date:   Wed, 22 May 2019 18:57:37 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        torvalds@linux-foundation.org, fweimer@redhat.com,
-        jannh@google.com, tglx@linutronix.de, arnd@arndb.de,
-        shuah@kernel.org, dhowells@redhat.com, tkjos@android.com,
-        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v1 1/2] open: add close_range()
-Message-ID: <20190522165737.GC4915@redhat.com>
-References: <20190522155259.11174-1-christian@brauner.io>
+        by mail.kernel.org (Postfix) with ESMTPSA id CFDF220675;
+        Wed, 22 May 2019 19:23:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1558552987;
+        bh=t5xRMUEEpDNJ3nOdGBJbwH704jBjmeeKEfBphf6hj0E=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=n2HxLgM4G/OMB8O8GlZOfhcK6mgrOyrVKM2U5lgsKywlGuUldPX8n5mbhZDTCH7ap
+         pMP8N7Zcxje3PdkOTss3NxWiTrvpV0hqsyA5kXv/LtZ6iF965sX7j8+6bbIVyphPBd
+         IwIHf6hlIlu9u/eB0RPjKnL5fuyEHa2JC3SduBsc=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Philipp Rudo <prudo@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.1 064/375] s390/kexec_file: Fix detection of text segment in ELF loader
+Date:   Wed, 22 May 2019 15:16:04 -0400
+Message-Id: <20190522192115.22666-64-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190522192115.22666-1-sashal@kernel.org>
+References: <20190522192115.22666-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190522155259.11174-1-christian@brauner.io>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 22 May 2019 16:58:18 +0000 (UTC)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 05/22, Christian Brauner wrote:
->
-> +static struct file *pick_file(struct files_struct *files, unsigned fd)
->  {
-> -	struct file *file;
-> +	struct file *file = NULL;
->  	struct fdtable *fdt;
->  
->  	spin_lock(&files->file_lock);
-> @@ -632,15 +629,65 @@ int __close_fd(struct files_struct *files, unsigned fd)
->  		goto out_unlock;
->  	rcu_assign_pointer(fdt->fd[fd], NULL);
->  	__put_unused_fd(files, fd);
-> -	spin_unlock(&files->file_lock);
-> -	return filp_close(file, files);
->  
->  out_unlock:
->  	spin_unlock(&files->file_lock);
-> -	return -EBADF;
-> +	return file;
+From: Philipp Rudo <prudo@linux.ibm.com>
 
-...
+[ Upstream commit 729829d775c9a5217abc784b2f16087d79c4eec8 ]
 
-> +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> +{
-> +	unsigned int cur_max;
-> +
-> +	if (fd > max_fd)
-> +		return -EINVAL;
-> +
-> +	rcu_read_lock();
-> +	cur_max = files_fdtable(files)->max_fds;
-> +	rcu_read_unlock();
-> +
-> +	/* cap to last valid index into fdtable */
-> +	if (max_fd >= cur_max)
-> +		max_fd = cur_max - 1;
-> +
-> +	while (fd <= max_fd) {
-> +		struct file *file;
-> +
-> +		file = pick_file(files, fd++);
+To register data for the next kernel (command line, oldmem_base, etc.) the
+current kernel needs to find the ELF segment that contains head.S. This is
+currently done by checking ifor 'phdr->p_paddr == 0'. This works fine for
+the current kernel build but in theory the first few pages could be
+skipped. Make the detection more robust by checking if the entry point lies
+within the segment.
 
-Well, how about something like
+Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/kexec_elf.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-	static unsigned int find_next_opened_fd(struct fdtable *fdt, unsigned start)
-	{
-		unsigned int maxfd = fdt->max_fds;
-		unsigned int maxbit = maxfd / BITS_PER_LONG;
-		unsigned int bitbit = start / BITS_PER_LONG;
-
-		bitbit = find_next_bit(fdt->full_fds_bits, maxbit, bitbit) * BITS_PER_LONG;
-		if (bitbit > maxfd)
-			return maxfd;
-		if (bitbit > start)
-			start = bitbit;
-		return find_next_bit(fdt->open_fds, maxfd, start);
-	}
-
-	unsigned close_next_fd(struct files_struct *files, unsigned start, unsigned maxfd)
-	{
-		unsigned fd;
-		struct file *file;
-		struct fdtable *fdt;
-	
-		spin_lock(&files->file_lock);
-		fdt = files_fdtable(files);
-		fd = find_next_opened_fd(fdt, start);
-		if (fd >= fdt->max_fds || fd > maxfd) {
-			fd = -1;
-			goto out;
-		}
-
-		file = fdt->fd[fd];
-		rcu_assign_pointer(fdt->fd[fd], NULL);
-		__put_unused_fd(files, fd);
-	out:
-		spin_unlock(&files->file_lock);
-
-		if (fd == -1u)
-			return fd;
-
-		filp_close(file, files);
-		return fd + 1;
-	}
-
-?
-
-Then close_range() can do
-
-	while (fd < max_fd)
-		fd = close_next_fd(fd, maxfd);
-
-Oleg.
+diff --git a/arch/s390/kernel/kexec_elf.c b/arch/s390/kernel/kexec_elf.c
+index 5a286b012043b..602e7cc26d118 100644
+--- a/arch/s390/kernel/kexec_elf.c
++++ b/arch/s390/kernel/kexec_elf.c
+@@ -19,10 +19,15 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
+ 	struct kexec_buf buf;
+ 	const Elf_Ehdr *ehdr;
+ 	const Elf_Phdr *phdr;
++	Elf_Addr entry;
+ 	int i, ret;
+ 
+ 	ehdr = (Elf_Ehdr *)kernel;
+ 	buf.image = image;
++	if (image->type == KEXEC_TYPE_CRASH)
++		entry = STARTUP_KDUMP_OFFSET;
++	else
++		entry = ehdr->e_entry;
+ 
+ 	phdr = (void *)ehdr + ehdr->e_phoff;
+ 	for (i = 0; i < ehdr->e_phnum; i++, phdr++) {
+@@ -35,7 +40,7 @@ static int kexec_file_add_elf_kernel(struct kimage *image,
+ 		buf.mem = ALIGN(phdr->p_paddr, phdr->p_align);
+ 		buf.memsz = phdr->p_memsz;
+ 
+-		if (phdr->p_paddr == 0) {
++		if (entry - phdr->p_paddr < phdr->p_memsz) {
+ 			data->kernel_buf = buf.buffer;
+ 			data->memsz += STARTUP_NORMAL_OFFSET;
+ 
+-- 
+2.20.1
 
