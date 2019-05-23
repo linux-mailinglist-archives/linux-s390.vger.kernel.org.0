@@ -2,108 +2,224 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6178D280D7
-	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 17:18:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0848C2815B
+	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 17:36:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730957AbfEWPSH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 May 2019 11:18:07 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50014 "EHLO
+        id S1730924AbfEWPgU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 May 2019 11:36:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57486 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730756AbfEWPSG (ORCPT
+        by vger.kernel.org with ESMTP id S1730866AbfEWPgU (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 May 2019 11:18:06 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NFHpf2034880
-        for <linux-s390@vger.kernel.org>; Thu, 23 May 2019 11:18:05 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2snvuv44bf-1
+        Thu, 23 May 2019 11:36:20 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NFXlj9040265
+        for <linux-s390@vger.kernel.org>; Thu, 23 May 2019 11:36:19 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2snvvbd02y-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 23 May 2019 11:18:05 -0400
+        for <linux-s390@vger.kernel.org>; Thu, 23 May 2019 11:36:18 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Thu, 23 May 2019 16:18:03 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Thu, 23 May 2019 16:36:18 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 May 2019 16:18:00 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4NFHwbW38731930
+        Thu, 23 May 2019 16:36:15 +0100
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4NFaD3440239452
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 May 2019 15:17:58 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5FCEC11C052;
-        Thu, 23 May 2019 15:17:58 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9159611C04A;
-        Thu, 23 May 2019 15:17:57 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.30.80])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 May 2019 15:17:57 +0000 (GMT)
-Date:   Thu, 23 May 2019 17:17:56 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Sebastian Ott <sebott@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 05/10] s390/cio: introduce DMA pools to cio
-In-Reply-To: <alpine.LFD.2.21.1905081447280.1773@schleppi>
-References: <20190426183245.37939-1-pasic@linux.ibm.com>
-        <20190426183245.37939-6-pasic@linux.ibm.com>
-        <alpine.LFD.2.21.1905081447280.1773@schleppi>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Thu, 23 May 2019 15:36:13 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5CF8A2805A;
+        Thu, 23 May 2019 15:36:13 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C3D2D28059;
+        Thu, 23 May 2019 15:36:12 +0000 (GMT)
+Received: from [9.85.195.246] (unknown [9.85.195.246])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 23 May 2019 15:36:12 +0000 (GMT)
+Subject: Re: [PATCH v9 0/4] vfio: ap: AP Queue Interrupt Control
+To:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com
+Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, frankja@linux.ibm.com, pasic@linux.ibm.com,
+        david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Thu, 23 May 2019 11:36:12 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19052315-0008-0000-0000-000002E9B290
+x-cbid: 19052315-0052-0000-0000-000003C6077C
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011149; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01207499; UDB=6.00634153; IPR=6.00988479;
+ MB=3.00027020; MTD=3.00000008; XFM=3.00000015; UTC=2019-05-23 15:36:17
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052315-0009-0000-0000-0000225671DA
-Message-Id: <20190523171756.4d30233a.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_12:,,
+x-cbparentid: 19052315-0053-0000-0000-00006104218B
+Message-Id: <5b46f988-fa79-4d84-c81f-144daa0c4426@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_13:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=893 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905230104
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 8 May 2019 15:18:10 +0200 (CEST)
-Sebastian Ott <sebott@linux.ibm.com> wrote:
-
-> > @@ -224,6 +228,9 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
-> >  	INIT_WORK(&sch->todo_work, css_sch_todo);
-> >  	sch->dev.release = &css_subchannel_release;
-> >  	device_initialize(&sch->dev);
-> > +	sch->dma_mask = css_dev_dma_mask;
-> > +	sch->dev.dma_mask = &sch->dma_mask;
-> > +	sch->dev.coherent_dma_mask = sch->dma_mask;  
+On 5/21/19 11:34 AM, Pierre Morel wrote:
+> This patch series implements PQAP/AQIC interception in KVM.
 > 
-> Could we do:
-> 	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
-> 	sch->dev.coherent_dma_mask = css_dev_dma_mask;
-> ?
+> 1) Data to handle GISA interrupt for AQIC
+> 
+> To implement this we need to add a new structure, vfio_ap_queue,
+> to be able to retrieve the mediated device associated with a queue
+> and specific values needed to register/unregister the interrupt
+> structures:
+>    - APQN: to be able to issue the commands and search for queue
+>      structures
+>    - saved NIB : to keep track of the pin page for unpining it
+>    - saved ISC : to unregister with the GIB interface
+>    - matrix_mdev: to retrieve the associate matrix, the mediated device
+>      and KVM
+> 
+> Specific handling bei keeping old values when re-registering is
+> needed because the guest could unregister interrupt in a invisble
+> manner bei issuing an un-interceptible RESET command.
+> 
+> Reset commands issued directly by the guest and indirectly when
+> removing the guest unpin the memory and deregister the ISC.
+> 
+> The vfio_ap_queue is associated to the ap_device during the probe
+> of the device and dissociated during the remove of the ap_device.
+> 
+> The vfio_ap_queue is associated to the matrix mediated device during
+> each interception of the AQIC command, so it does not need to be
+> dissociated until the guest is terminated.
+> 
+> The life of the vfio_ap_queue will be protected by the matrix_dev lock
+> to guaranty that no change can occur to the CRYCB or that devices can
+> not be removed when a vfio_ap_queue is in use.
+> 
+> 2) KVM destroy race conditions
+> 
+> To make sure that KVM do not vanish and GISA is still available
+> when the VFIO_AP driver is in used we take a reference to KVM
+> during the opening of the mediated device and release it on
+> releasing the mediated device.
+> 
+> 3) Interception of PQAP
+> 
+> The driver registers a hook structure to KVM providing:
+> - a pointer to a function implementing PQAP(AQIC) handling
+> - the reference to the module owner of the hook
+> 
+> On interception by KVM we do not change the behavior, returning
+>   -EOPNOTSUPP to the user in the case AP instructions are not
+> supported by the host or by the guest.
+> Otherwise we verify the exceptions cases before trying to call
+> the vfio_ap hook.
+> 
+> In the case we do not find a hook we assume that the CRYCB has not
+> been setup for the guest and is empty.
+> 
+> 4) Enabling and disabling the IRQ
+> 
+> When enabling the IRQ care is taken to unping the saved NIB.
+> When disabling IRQ care is taken to wait until the IRQ bit
+> of the queue status is cleared before unpining the NIB.
+> 
+> On RESET and before unpinning the NIB and unregistering the ISC
+> the IRQ is disabled using PQAP/AQIC even when a PQAP/APZQ have
+> been done.
+> 
+> 5) Removing the AP device
+> 
+> Removing the AP device without having unassign it is clearly
+> discourage by the documentation.
+> The patch series does not check if the queue is used by a
+> guest. It only de-register the IRQ, unregister ISC and unpin
+> the NIB, then free the vfio_ap_queue.
+> 
+> 6) Associated QEMU patch
+> 
+> There is a QEMU patch which is needed to enable the PQAP/AQIC
+> facility in the guest.
+> 
+> Posted in qemu-devel@nongnu.org as:
+> Message-Id: <1550146494-21085-1-git-send-email-pmorel@linux.ibm.com>
+> 
+> 7) Compatibility with Dynamic configuration patches
+> 
+> Tony, I did not rebase this series above the dynamic configuration
+> patches because:
+> - This series do the work it needs to do without having to take
+>    care on the dynamic configuration.
+> - It is guarantied that interrupt will be shut off after removing
+>    the APQueue device
+> - The dynamic configuration series is not converging.
 
-Looks like a good idea to me. We will do it for all 3 (sch, ccw and
-css). Thanks!
+Would you consider the following?
 
-Regards,
-Halil
+* Take dynconfig patch "s390: vfio-ap: wait for queue empty on queue
+   reset" and include it in your series. This patch modifies the
+   reset function to wait for queue empty.
+
+* In dynconfig patch "s390: vfio-ap: handle bind and unbind of AP queue
+   device" the following functions are introduced:
+
+      void vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+      void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
+
+   The vfio_ap_mdev_probe_queue function is called from the vfio_ap
+   driver probe callback. You could embed the code you've introduced in
+   the probe callback there. Of course, you would need to return int
+   from the function for the -ENOMEM error.
+
+   The vfio_ap_mdev_remove_queue function is called from the vfio_ap
+   driver remove callback. You could embed the code you've introduced in
+   the remove callback there.
+
+* Move your vfio_ap_irq_disable function to vfio_ap_ops.c and make it a
+   static function.
+
+* Leave the vfio_ap_mdev_reset_queue function as a static function in
+   vfio_ap_ops.c
+
+If you do the things above, then I can base the dynconfig series on
+the IRQ series without much of a merge issue. What say you?
+
+Note: I've included review comments for patch 3/4 to match the
+       suggestions above.
+
+> 
+> However Tony, the choice is your's, I won't be able to help
+> in a near future.
+> 
+> 
+> Pierre Morel (4):
+>    s390: ap: kvm: add PQAP interception for AQIC
+>    vfio: ap: register IOMMU VFIO notifier
+>    s390: ap: implement PAPQ AQIC interception in kernel
+>    s390: ap: kvm: Enable PQAP/AQIC facility for the guest
+> 
+>   arch/s390/include/asm/kvm_host.h      |   7 +
+>   arch/s390/kvm/priv.c                  |  86 ++++++++
+>   arch/s390/tools/gen_facilities.c      |   1 +
+>   drivers/s390/crypto/vfio_ap_drv.c     |  34 ++-
+>   drivers/s390/crypto/vfio_ap_ops.c     | 379 +++++++++++++++++++++++++++++++++-
+>   drivers/s390/crypto/vfio_ap_private.h |  15 ++
+>   6 files changed, 514 insertions(+), 8 deletions(-)
+> 
 
