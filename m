@@ -2,99 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 358B0283C4
-	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 18:34:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EA3D28413
+	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 18:44:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731364AbfEWQey (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 May 2019 12:34:54 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46596 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731037AbfEWQex (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 23 May 2019 12:34:53 -0400
-Received: by mail-io1-f66.google.com with SMTP id q21so5339979iog.13
-        for <linux-s390@vger.kernel.org>; Thu, 23 May 2019 09:34:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Iz31yxamDJ4SLEgYHA+H3kjkT5XCb4Zp6/gfezC2Qt0=;
-        b=br9pbADirR+994GWUgAiKh+WIakMAmwjJW/UntS6Vn0UL+m+lo1dO/FTn+atO0TVUF
-         WdA8FOmw4uGU2Bt+yb06vyTwDWlE5VoB/+44IeS//dPUmBtjE65Z0H9wy+5UAvWjM+bU
-         m+bJeRTuOymmNkxLknco9nJkzLY7TqLdw6esosEZQQvPH6sHVcKReo2wvVHJQn0pMBUf
-         OX51ptx8FqYA5dBO+dTICUUbyHUOH7QuXKfV6eA1u0UfOiAAh+Mf72MaHLSqmppeHekG
-         sh6nJDFdLtpjiUyCOrk9t/mGk5+b5qcprSS2UKQvflivDDj11xTdb5tgLHk7Hl+UCr+t
-         3OUA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Iz31yxamDJ4SLEgYHA+H3kjkT5XCb4Zp6/gfezC2Qt0=;
-        b=JNnzyZhi6mD5vPBveyYOvrOZ8lWW6dkFHSGmkzbJqnrzZ+crFMGfl3rFSP7aNJ7W2a
-         8aPt3NAF3krGYkkKXfrpa5JgjG3DDFS9CVIHRFTyGBQcMoDeGwRJ1sCU5vv+Zg1BbTTt
-         iSBkSIvbg+G7/xJEA6v7eSIyjrWJjg2Byspua3RE0RjwglJ4vWj3gWnOl8ITYl6l95mi
-         5mA/ug3OsSc2KeiUCd7PEjMEOem6J8J0FFXDQaek33gXJJ/CP8SJufIUOWpsoPPwHDQ/
-         PYVJi0GIC5yn5pMDHpovrMN/pV0Lx0VTkHQnF2r+3zTw9VNfAdKnqWhrea1aHmfFCLSV
-         wdPA==
-X-Gm-Message-State: APjAAAWmqMlXYrmqIDM0cURKtuowTel2wgjTFHwMZgwxHdHg5EN5DKja
-        4teufYE02JQPgCy3YFVMq3/kjw==
-X-Google-Smtp-Source: APXvYqxbigL0wIoR0wevysC4IvW0XTy55FvFJYU3fuOueOdFBp/HEFetU0vD2YZ0NHaH83jARAO6OQ==
-X-Received: by 2002:a5e:8e4d:: with SMTP id r13mr57452598ioo.300.1558629293065;
-        Thu, 23 May 2019 09:34:53 -0700 (PDT)
-Received: from brauner.io ([172.56.12.187])
-        by smtp.gmail.com with ESMTPSA id i25sm8797750ioi.42.2019.05.23.09.34.43
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 09:34:52 -0700 (PDT)
-Date:   Thu, 23 May 2019 18:34:41 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        torvalds@linux-foundation.org, fweimer@redhat.com,
-        jannh@google.com, tglx@linutronix.de, arnd@arndb.de,
-        shuah@kernel.org, dhowells@redhat.com, tkjos@android.com,
-        ldv@altlinux.org, miklos@szeredi.hu, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        x86@kernel.org
-Subject: Re: [PATCH v2 1/2] open: add close_range()
-Message-ID: <20190523163439.56ucetlt6duvnhdj@brauner.io>
-References: <20190523154747.15162-1-christian@brauner.io>
- <20190523154747.15162-2-christian@brauner.io>
- <20190523162004.GC23070@redhat.com>
+        id S1731073AbfEWQnR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 May 2019 12:43:17 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38758 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731045AbfEWQnR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 23 May 2019 12:43:17 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1326F3003A4B;
+        Thu, 23 May 2019 16:43:17 +0000 (UTC)
+Received: from thuth.com (ovpn-116-94.ams2.redhat.com [10.36.116.94])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 96EF56090E;
+        Thu, 23 May 2019 16:43:12 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Andrew Jones <drjones@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v1 0/9] KVM selftests for s390x
+Date:   Thu, 23 May 2019 18:43:00 +0200
+Message-Id: <20190523164309.13345-1-thuth@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190523162004.GC23070@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 23 May 2019 16:43:17 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:20:05PM +0200, Oleg Nesterov wrote:
-> On 05/23, Christian Brauner wrote:
-> >
-> > +int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> > +{
-> > +	unsigned int cur_max;
-> > +
-> > +	if (fd > max_fd)
-> > +		return -EINVAL;
-> > +
-> > +	rcu_read_lock();
-> > +	cur_max = files_fdtable(files)->max_fds;
-> > +	rcu_read_unlock();
-> > +
-> > +	/* cap to last valid index into fdtable */
-> > +	max_fd = max(max_fd, (cur_max - 1));
->                  ^^^
-> 
-> Hmm. min() ?
+This patch series enables the KVM selftests for s390x. As a first
+test, the sync_regs from x86 has been adapted to s390x, and after
+a fix for KVM_CAP_MAX_VCPU_ID on s390x, the kvm_create_max_vcpus
+is now enabled here, too.
 
-Yes, thanks! Massive brainf*rt on my end, sorry.
+Please note that the ucall() interface is not used yet - since
+s390x neither has PIO nor MMIO, this needs some more work first
+before it becomes usable (we likely should use a DIAG hypercall
+here, which is what the sync_reg test is currently using, too...
+I started working on that topic, but did not finish that work
+yet, so I decided to not include it yet).
 
-Christian
+RFC -> v1:
+ - Rebase, needed to add the first patch for vcpu_nested_state_get/set
+ - Added patch to introduce VM_MODE_DEFAULT macro
+ - Improved/cleaned up the code in processor.c
+ - Added patch to fix KVM_CAP_MAX_VCPU_ID on s390x
+ - Added patch to enable the kvm_create_max_vcpus on s390x and aarch64
+
+Andrew Jones (1):
+  kvm: selftests: aarch64: fix default vm mode
+
+Thomas Huth (8):
+  KVM: selftests: Wrap vcpu_nested_state_get/set functions with x86
+    guard
+  KVM: selftests: Guard struct kvm_vcpu_events with
+    __KVM_HAVE_VCPU_EVENTS
+  KVM: selftests: Introduce a VM_MODE_DEFAULT macro for the default bits
+  KVM: selftests: Align memory region addresses to 1M on s390x
+  KVM: selftests: Add processor code for s390x
+  KVM: selftests: Add the sync_regs test for s390x
+  KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
+  KVM: selftests: Move kvm_create_max_vcpus test to generic code
+
+ MAINTAINERS                                   |   2 +
+ arch/mips/kvm/mips.c                          |   3 +
+ arch/powerpc/kvm/powerpc.c                    |   3 +
+ arch/s390/kvm/kvm-s390.c                      |   1 +
+ arch/x86/kvm/x86.c                            |   3 +
+ tools/testing/selftests/kvm/Makefile          |   7 +-
+ .../testing/selftests/kvm/include/kvm_util.h  |  10 +
+ .../selftests/kvm/include/s390x/processor.h   |  22 ++
+ .../kvm/{x86_64 => }/kvm_create_max_vcpus.c   |   3 +-
+ .../selftests/kvm/lib/aarch64/processor.c     |   2 +-
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  25 +-
+ .../selftests/kvm/lib/s390x/processor.c       | 286 ++++++++++++++++++
+ .../selftests/kvm/lib/x86_64/processor.c      |   2 +-
+ .../selftests/kvm/s390x/sync_regs_test.c      | 151 +++++++++
+ virt/kvm/arm/arm.c                            |   3 +
+ virt/kvm/kvm_main.c                           |   2 -
+ 16 files changed, 514 insertions(+), 11 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/include/s390x/processor.h
+ rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
+ create mode 100644 tools/testing/selftests/kvm/lib/s390x/processor.c
+ create mode 100644 tools/testing/selftests/kvm/s390x/sync_regs_test.c
+
+-- 
+2.21.0
+
