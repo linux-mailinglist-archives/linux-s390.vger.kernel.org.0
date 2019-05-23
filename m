@@ -2,128 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 493922836F
-	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 18:24:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CFB742839B
+	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 18:29:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731111AbfEWQYp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 May 2019 12:24:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55442 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731061AbfEWQYp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 May 2019 12:24:45 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3CD53308FBA9;
-        Thu, 23 May 2019 16:24:40 +0000 (UTC)
-Received: from gondolin (dhcp-192-213.str.redhat.com [10.33.192.213])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BF0B364027;
-        Thu, 23 May 2019 16:24:35 +0000 (UTC)
-Date:   Thu, 23 May 2019 18:24:33 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
-        walling@linux.ibm.com, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org, joro@8bytes.org,
-        linux-kernel@vger.kernel.org, alex.williamson@redhat.com,
-        kvm@vger.kernel.org, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com
-Subject: Re: [PATCH v3 2/3] vfio: zpci: defining the VFIO headers
-Message-ID: <20190523182433.567b8408.cohuck@redhat.com>
-In-Reply-To: <1558614326-24711-3-git-send-email-pmorel@linux.ibm.com>
-References: <1558614326-24711-1-git-send-email-pmorel@linux.ibm.com>
-        <1558614326-24711-3-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1731089AbfEWQ3t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 May 2019 12:29:49 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:46413 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731061AbfEWQ3s (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 23 May 2019 12:29:48 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-124-k_tmI2M6OK6o6fWSJ4SZFw-1; Thu, 23 May 2019 17:29:45 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Thu, 23 May 2019 17:29:44 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Thu, 23 May 2019 17:29:44 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Konstantin Khlebnikov' <khlebnikov@yandex-team.ru>,
+        Christian Brauner <christian@brauner.io>,
+        "viro@zeniv.linux.org.uk" <viro@zeniv.linux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linux-api@vger.kernel.org" <linux-api@vger.kernel.org>,
+        "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "fweimer@redhat.com" <fweimer@redhat.com>
+CC:     "jannh@google.com" <jannh@google.com>,
+        "oleg@redhat.com" <oleg@redhat.com>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "shuah@kernel.org" <shuah@kernel.org>,
+        "dhowells@redhat.com" <dhowells@redhat.com>,
+        "tkjos@android.com" <tkjos@android.com>,
+        "ldv@altlinux.org" <ldv@altlinux.org>,
+        "miklos@szeredi.hu" <miklos@szeredi.hu>,
+        "linux-alpha@vger.kernel.org" <linux-alpha@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linux-m68k@lists.linux-m68k.org" <linux-m68k@lists.linux-m68k.org>,
+        "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>,
+        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "linux-xtensa@linux-xtensa.org" <linux-xtensa@linux-xtensa.org>,
+        "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>,
+        "linux-kselftest@vger.kernel.org" <linux-kselftest@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: RE: [PATCH v1 1/2] open: add close_range()
+Thread-Topic: [PATCH v1 1/2] open: add close_range()
+Thread-Index: AQHVEYO6ZYKDwRYmH0ewnJkZ6B6UzqZ45dMA
+Date:   Thu, 23 May 2019 16:29:44 +0000
+Message-ID: <5e57c26cb7044b69acd3846ac474b5d5@AcuMS.aculab.com>
+References: <20190522155259.11174-1-christian@brauner.io>
+ <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
+In-Reply-To: <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Thu, 23 May 2019 16:24:45 +0000 (UTC)
+X-MC-Unique: k_tmI2M6OK6o6fWSJ4SZFw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 23 May 2019 14:25:25 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
-
-> We define a new device region in vfio.h to be able to
-> get the ZPCI CLP information by reading this region from
-> userland.
-> 
-> We create a new file, vfio_zdev.h to define the structure
-> of the new region we defined in vfio.h
-> 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  include/uapi/linux/vfio.h      |  4 ++++
->  include/uapi/linux/vfio_zdev.h | 34 ++++++++++++++++++++++++++++++++++
->  2 files changed, 38 insertions(+)
->  create mode 100644 include/uapi/linux/vfio_zdev.h
-> 
-> diff --git a/include/uapi/linux/vfio.h b/include/uapi/linux/vfio.h
-> index 8f10748..56595b8 100644
-> --- a/include/uapi/linux/vfio.h
-> +++ b/include/uapi/linux/vfio.h
-> @@ -306,6 +306,10 @@ struct vfio_region_info_cap_type {
->  #define VFIO_REGION_TYPE_GFX                    (1)
->  #define VFIO_REGION_SUBTYPE_GFX_EDID            (1)
->  
-> +/* IBM Subtypes */
-> +#define VFIO_REGION_TYPE_IBM_ZDEV		(1)
-> +#define VFIO_REGION_SUBTYPE_ZDEV_CLP		(1)
-
-I'm afraid that confuses me a bit. You want to add the region to every
-vfio-pci device when we're running under s390, right? So this does not
-depend on the device type of the actual device (which may or may not be
-from IBM), but only on the architecture?
-
-(Generally speaking, I think using regions for this makes sense,
-though.)
-
-> +
->  /**
->   * struct vfio_region_gfx_edid - EDID region layout.
->   *
-> diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
-> new file mode 100644
-> index 0000000..84b1a82
-> --- /dev/null
-> +++ b/include/uapi/linux/vfio_zdev.h
-> @@ -0,0 +1,34 @@
-> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
-> +/*
-> + * Region definition for ZPCI devices
-> + *
-> + * Copyright IBM Corp. 2019
-> + *
-> + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
-> + */
-> +
-> +#ifndef _VFIO_ZDEV_H_
-> +#define _VFIO_ZDEV_H_
-> +
-> +#include <linux/types.h>
-> +
-> +/**
-> + * struct vfio_region_zpci_info - ZPCI information.
-> + *
-> + */
-> +struct vfio_region_zpci_info {
-> +	__u64 dasm;
-> +	__u64 start_dma;
-> +	__u64 end_dma;
-> +	__u64 msi_addr;
-> +	__u64 flags;
-> +	__u16 pchid;
-> +	__u16 mui;
-> +	__u16 noi;
-> +	__u8 gid;
-> +	__u8 version;
-> +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
-> +	__u8 util_str[CLP_UTIL_STR_LEN];
-> +} __packed;
-> +
-> +#endif
+RnJvbTogIEtvbnN0YW50aW4gS2hsZWJuaWtvdg0KPiBTZW50OiAyMyBNYXkgMjAxOSAxNzoyMg0K
+Li4uLg0KPiAgPiBJbiBhZGRpdGlvbiwgdGhlIHN5c2NhbGwgd2lsbCBhbHNvIHdvcmsgZm9yIHRh
+c2tzIHRoYXQgZG8gbm90IGhhdmUgcHJvY2ZzDQo+ICA+IG1vdW50ZWQgYW5kIG9uIGtlcm5lbHMg
+dGhhdCBkbyBub3QgaGF2ZSBwcm9jZnMgc3VwcG9ydCBjb21waWxlZCBpbi4gSW4gc3VjaA0KPiAg
+PiBzaXR1YXRpb25zIHRoZSBvbmx5IHdheSB0byBtYWtlIHN1cmUgdGhhdCBhbGwgZmlsZSBkZXNj
+cmlwdG9ycyBhcmUgY2xvc2VkDQo+ICA+IGlzIHRvIGNhbGwgY2xvc2UoKSBvbiBlYWNoIGZpbGUg
+ZGVzY3JpcHRvciB1cCB0byBVSU5UX01BWCBvciBSTElNSVRfTk9GSUxFLA0KPiAgPiBPUEVOX01B
+WCB0cmlja2VyeSAoY2YuIGNvbW1lbnQgWzhdIG9uIFJ1c3QpLg0KDQpDb2RlIHVzaW5nIFJMSU1J
+VF9OT0ZJTEUgaXMgYnJva2VuLg0KSXQgaXMgZWFzeSB0byByZWR1Y2UgdGhlIGhhcmQgbGltaXQg
+YmVsb3cgdGhhdCBvZiBhbiBvcGVuIGZkLg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRy
+ZXNzIExha2VzaWRlLCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1L
+MSAxUFQsIFVLDQpSZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
 
