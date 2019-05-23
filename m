@@ -2,154 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF29027FDD
-	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 16:37:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6178D280D7
+	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 17:18:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730888AbfEWOhi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 May 2019 10:37:38 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38276 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730829AbfEWOhh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 23 May 2019 10:37:37 -0400
-Received: by mail-it1-f195.google.com with SMTP id i63so8854378ita.3
-        for <linux-s390@vger.kernel.org>; Thu, 23 May 2019 07:37:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=DahHECUK2AF1J12XBLs2bKF9FH9rjTuzkU7KMfzCZKg=;
-        b=YbCZESmbvCwAQCtgJ5vNBW4fzZ0rmez/RQRMkvQ2gBf8m2vQZ7pZbh6Bnf/yhxyKVI
-         53LigfqSgxhhyV3cJwQAxeBYmchcYj4+L6sb6hM6ANhJ3YzqD5nVaV8VUWyXmRfwM0Js
-         s0qbXNd2fPwKrwA6FMsqrbW+O3oe4jc4dfMVogKbtgea8qKxT3IcnEz6YQoGlNR0pY3m
-         WBeNhDCmn5OB53HQT4TWeQ+Gay0cWaoJ8RQtor16rRwite01Brwb3BNAlCJ/+wg1v28J
-         HJ9HsyrSvI8gu0Uy/czVhZ9L/NkkHH+hj2hN0LXZm7YA7qWQlzwpnrEcctNdcL7rOP5V
-         pe4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=DahHECUK2AF1J12XBLs2bKF9FH9rjTuzkU7KMfzCZKg=;
-        b=bmJlpp4gMbjFRZDenVlAA13u0MNdHBnvtlJ3uIrjuvtkIIFnitNvJ8/srJ0dYWNgkO
-         UwfB/t3Pw0cgHjgDLapUPytwtKsgKTBbNgnDaXmBaae78o3ftLNC66Y8ncVRxO/+agV+
-         yAN1CDkoEEwhEWyDBHGNS1P5DNYl6V7PQzkxX8Bc+uSbZKxGE1j9mY55RV3uUm+sPM9w
-         ZpyTSaiWbmCMCrsmt3IgwXo/6r/cCSd0NtDTSe7lPheBs0fESuvIBvSSonQhMFl9ee1O
-         32sNnEPrhOyIbhbTriNNAjtGkDXXT/pYe9exv3/VW03VtS1PP00uZHmcWL/3YyEB1qYd
-         fyjQ==
-X-Gm-Message-State: APjAAAWMP4VNaAE+tJvhcPSKuxkdMBrmehj25PoOb+aYFMkHyA2fJU2P
-        aSFdZ5r/G3rlQqmNKdhAYiGp+Q==
-X-Google-Smtp-Source: APXvYqxCsu1nKhbS62harFEpfvgZRg7+s7a4b8LII1alkH5yuzE7xzETotobVwglIakCJJls3jgHwg==
-X-Received: by 2002:a02:9381:: with SMTP id z1mr24471487jah.130.1558622256966;
-        Thu, 23 May 2019 07:37:36 -0700 (PDT)
-Received: from brauner.io ([172.56.12.187])
-        by smtp.gmail.com with ESMTPSA id l186sm4603784itb.5.2019.05.23.07.37.29
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Thu, 23 May 2019 07:37:36 -0700 (PDT)
-Date:   Thu, 23 May 2019 16:37:26 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Jann Horn <jannh@google.com>
-Cc:     Oleg Nesterov <oleg@redhat.com>, Al Viro <viro@zeniv.linux.org.uk>,
-        kernel list <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Florian Weimer <fweimer@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, Shuah Khan <shuah@kernel.org>,
-        David Howells <dhowells@redhat.com>,
-        Todd Kjos <tkjos@android.com>,
-        "Dmitry V. Levin" <ldv@altlinux.org>,
-        Miklos Szeredi <miklos@szeredi.hu>,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v1 1/2] open: add close_range()
-Message-ID: <20190523143725.y67czx4jxsy6yqrj@brauner.io>
-References: <20190522155259.11174-1-christian@brauner.io>
- <20190522165737.GC4915@redhat.com>
- <20190523115118.pmscbd6kaqy37dym@brauner.io>
- <CAG48ez0Uq2GQnQsuPkNrDdJVku_6GPeZ_5F_-5J3iy2CULr0_Q@mail.gmail.com>
+        id S1730957AbfEWPSH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 May 2019 11:18:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50014 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730756AbfEWPSG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 23 May 2019 11:18:06 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4NFHpf2034880
+        for <linux-s390@vger.kernel.org>; Thu, 23 May 2019 11:18:05 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2snvuv44bf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 23 May 2019 11:18:05 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 23 May 2019 16:18:03 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 23 May 2019 16:18:00 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4NFHwbW38731930
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 23 May 2019 15:17:58 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FCEC11C052;
+        Thu, 23 May 2019 15:17:58 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9159611C04A;
+        Thu, 23 May 2019 15:17:57 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.30.80])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 23 May 2019 15:17:57 +0000 (GMT)
+Date:   Thu, 23 May 2019 17:17:56 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Sebastian Ott <sebott@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 05/10] s390/cio: introduce DMA pools to cio
+In-Reply-To: <alpine.LFD.2.21.1905081447280.1773@schleppi>
+References: <20190426183245.37939-1-pasic@linux.ibm.com>
+        <20190426183245.37939-6-pasic@linux.ibm.com>
+        <alpine.LFD.2.21.1905081447280.1773@schleppi>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CAG48ez0Uq2GQnQsuPkNrDdJVku_6GPeZ_5F_-5J3iy2CULr0_Q@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052315-0008-0000-0000-000002E9B290
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052315-0009-0000-0000-0000225671DA
+Message-Id: <20190523171756.4d30233a.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-23_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=893 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905230104
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, May 23, 2019 at 04:32:14PM +0200, Jann Horn wrote:
-> On Thu, May 23, 2019 at 1:51 PM Christian Brauner <christian@brauner.io> wrote:
-> [...]
-> > I kept it dumb and was about to reply that your solution introduces more
-> > code when it seemed we wanted to keep this very simple for now.
-> > But then I saw that find_next_opened_fd() already exists as
-> > find_next_fd(). So it's actually not bad compared to what I sent in v1.
-> > So - with some small tweaks (need to test it and all now) - how do we
-> > feel about?:
-> [...]
-> > static int __close_next_open_fd(struct files_struct *files, unsigned *curfd, unsigned maxfd)
-> > {
-> >         struct file *file = NULL;
-> >         unsigned fd;
-> >         struct fdtable *fdt;
-> >
-> >         spin_lock(&files->file_lock);
-> >         fdt = files_fdtable(files);
-> >         fd = find_next_fd(fdt, *curfd);
-> 
-> find_next_fd() finds free fds, not used ones.
-> 
-> >         if (fd >= fdt->max_fds || fd > maxfd)
-> >                 goto out_unlock;
-> >
-> >         file = fdt->fd[fd];
-> >         rcu_assign_pointer(fdt->fd[fd], NULL);
-> >         __put_unused_fd(files, fd);
-> 
-> You can't do __put_unused_fd() if the old pointer in fdt->fd[fd] was
-> NULL - because that means that the fd has been reserved by another
-> thread that is about to put a file pointer in there, and if you
-> release the fd here, that messes up the refcounting (or hits the
-> BUG_ON() in __fd_install()).
-> 
-> > out_unlock:
-> >         spin_unlock(&files->file_lock);
-> >
-> >         if (!file)
-> >                 return -EBADF;
-> >
-> >         *curfd = fd;
-> >         filp_close(file, files);
-> >         return 0;
-> > }
-> >
-> > int __close_range(struct files_struct *files, unsigned fd, unsigned max_fd)
-> > {
-> >         if (fd > max_fd)
-> >                 return -EINVAL;
-> >
-> >         while (fd <= max_fd) {
-> 
-> Note that with a pattern like this, you have to be careful about what
-> happens if someone gives you max_fd==0xffffffff - then this condition
-> is always true and the loop can not terminate this way.
-> 
-> >                 if (__close_next_fd(files, &fd, maxfd))
-> >                         break;
-> 
-> (obviously it can still terminate this way)
+On Wed, 8 May 2019 15:18:10 +0200 (CEST)
+Sebastian Ott <sebott@linux.ibm.com> wrote:
 
-Yup, this was only a quick draft.
-I think the dumb simple thing that I did before was the best way to do
-it for now.
-I first thought that the find_next_open_fd() function already exists but
-when I went to write a POC for testing realized it doesn't anyway.
+> > @@ -224,6 +228,9 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
+> >  	INIT_WORK(&sch->todo_work, css_sch_todo);
+> >  	sch->dev.release = &css_subchannel_release;
+> >  	device_initialize(&sch->dev);
+> > +	sch->dma_mask = css_dev_dma_mask;
+> > +	sch->dev.dma_mask = &sch->dma_mask;
+> > +	sch->dev.coherent_dma_mask = sch->dma_mask;  
+> 
+> Could we do:
+> 	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
+> 	sch->dev.coherent_dma_mask = css_dev_dma_mask;
+> ?
+
+Looks like a good idea to me. We will do it for all 3 (sch, ccw and
+css). Thanks!
+
+Regards,
+Halil
+
