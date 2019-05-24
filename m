@@ -2,103 +2,140 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD38628575
-	for <lists+linux-s390@lfdr.de>; Thu, 23 May 2019 19:58:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DFF828F6F
+	for <lists+linux-s390@lfdr.de>; Fri, 24 May 2019 05:11:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731514AbfEWR6C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 May 2019 13:58:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44012 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731311AbfEWR6C (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 May 2019 13:58:02 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E7F623086239;
-        Thu, 23 May 2019 17:58:01 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75D1F100200D;
-        Thu, 23 May 2019 17:57:55 +0000 (UTC)
-Date:   Thu, 23 May 2019 19:57:53 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH 2/9] KVM: selftests: Guard struct kvm_vcpu_events with
- __KVM_HAVE_VCPU_EVENTS
-Message-ID: <20190523175753.fpfapsh2hg3pjpqe@kamzik.brq.redhat.com>
-References: <20190523164309.13345-1-thuth@redhat.com>
- <20190523164309.13345-3-thuth@redhat.com>
+        id S2387920AbfEXDL1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 May 2019 23:11:27 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:39143 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387559AbfEXDL1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 23 May 2019 23:11:27 -0400
+Received: by mail-it1-f194.google.com with SMTP id 9so11694522itf.4;
+        Thu, 23 May 2019 20:11:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=E7hznSwoqjG8X1odMBGc2satoFe87v1Y0P/9fKHS9SY=;
+        b=a7Sc0ZmlEG6jC7OpcrRVUkNXq0SBb3Dc/hNdk5Vi6ayUDLd0Dm8M0wWvJFgwttZZ4M
+         aninTKfSUZDRjfNGqPsMzWLja++EezX/hO4fX5nJBzfyFI6kNO7dvjypaoVQz4ys7+R5
+         9IVPBxW1C4i6BRZ4f3bqLocvJh1c9QUTPILj4gipCVXMgVTUpT9LBYkMiRDL2TaalXNe
+         rQ6wJugIty6JwVWYs5nF97JpvrTENcxT3PWNqVTqRhEna4JwxQokvn2SUzkeP09LHMDC
+         DgccA6RcG2CmDNt2DoIHjZymnDK30hw9WxWvnBoApiNxfRbL6LLAu65RJr1Ih71O/P5e
+         SodQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=E7hznSwoqjG8X1odMBGc2satoFe87v1Y0P/9fKHS9SY=;
+        b=Ezz2Tgeoxjdv/gvVJ/MA5BphhJp0ROY7eGuEAPB34pjOfZ9Qhjq2ttOZI492SrJqID
+         oYb+trVWohcEsTTnuvrXvqhM9++ob+KDmqye9lu5WGczS9UEq2zlUGooX0bFUTQ7eDNO
+         73TpY8KHHy+M7pkUnZ7s50p4JClZ/FVH+/BnIUFnJHG2PFE26yzI5AaPHTyZc6iITSaB
+         nqFqf1RuwcGj8pV4vQ7v0OO0m5cntojFaB/EJT2diuKOwc2KO87DKUsVqyDu/xj3efNO
+         jRbywuuPXIY3ktLzuRoSCd49qjhz+CSclAPfHslijAnC/ldpKQ38cq/SakMisXgIe5f4
+         /CnQ==
+X-Gm-Message-State: APjAAAU/nXJChSYn3/OkCY5jM66bpCt/c1PazWN/OjkBlJQ/qjpoKeug
+        A1Ap6yIXeByCvDlPB2sRDwiDyk7343xDzT5OICXlSzV8sA==
+X-Google-Smtp-Source: APXvYqz4ssg3ircx9GKZ/bOQFSdzkDIVdQtquf3WB1GzGhZLWMOO7FDaVjBjQGy32wO2lRBtVYsHwdCKMGdQi1fBKFw=
+X-Received: by 2002:a24:1dce:: with SMTP id 197mr16766439itj.16.1558667486023;
+ Thu, 23 May 2019 20:11:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523164309.13345-3-thuth@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 23 May 2019 17:58:02 +0000 (UTC)
+References: <1556087581-14513-1-git-send-email-kernelfans@gmail.com>
+ <10dc5468-6cd9-85c7-ba66-1dfa5aa922b7@suse.com> <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
+ <CAFgQCTtQm7SuBRfXik6B065Aa+uQ=Mx6i+Y1q+NJU1GEiUgH4g@mail.gmail.com>
+In-Reply-To: <CAFgQCTtQm7SuBRfXik6B065Aa+uQ=Mx6i+Y1q+NJU1GEiUgH4g@mail.gmail.com>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Fri, 24 May 2019 11:11:13 +0800
+Message-ID: <CAFgQCTuAEbST8ZdSJmPDTPbqkL3uZ8j6U-vTWT879wARDhUwTw@mail.gmail.com>
+Subject: Re: [PATCHv2] kernel/crash: make parse_crashkernel()'s return value
+ more indicant
+To:     Matthias Brugger <mbrugger@suse.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, Rich Felker <dalias@libc.org>,
+        linux-ia64@vger.kernel.org,
+        Julien Thierry <julien.thierry@arm.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org,
+        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-s390@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        David Hildenbrand <david@redhat.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ingo Molnar <mingo@redhat.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        James Hogan <jhogan@kernel.org>,
+        Dave Young <dyoung@redhat.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>,
+        Borislav Petkov <bp@alien8.de>, Stefan Agner <stefan@agner.ch>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        Jens Axboe <axboe@kernel.dk>, Tony Luck <tony.luck@intel.com>,
+        Baoquan He <bhe@redhat.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Greg Hackmann <ghackmann@android.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, May 23, 2019 at 06:43:02PM +0200, Thomas Huth wrote:
-> The struct kvm_vcpu_events code is only available on certain architectures
-> (arm, arm64 and x86). To be able to compile kvm_util.c also for other
-> architectures, we have to fence the code with __KVM_HAVE_VCPU_EVENTS.
-> 
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> ---
->  tools/testing/selftests/kvm/include/kvm_util.h | 2 ++
->  tools/testing/selftests/kvm/lib/kvm_util.c     | 2 ++
->  2 files changed, 4 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> index a5a4b28f14d8..b8bf961074fe 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -114,10 +114,12 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
->  		    struct kvm_sregs *sregs);
->  int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
->  		    struct kvm_sregs *sregs);
-> +#ifdef __KVM_HAVE_VCPU_EVENTS
->  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
->  		     struct kvm_vcpu_events *events);
->  void vcpu_events_set(struct kvm_vm *vm, uint32_t vcpuid,
->  		     struct kvm_vcpu_events *events);
-> +#endif
->  #ifdef __x86_64__
->  void vcpu_nested_state_get(struct kvm_vm *vm, uint32_t vcpuid,
->  			   struct kvm_nested_state *state);
-> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
-> index ba1359ac504f..08edb8436c47 100644
-> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
-> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
-> @@ -1224,6 +1224,7 @@ void vcpu_regs_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_regs *regs)
->  		ret, errno);
->  }
->  
-> +#ifdef __KVM_HAVE_VCPU_EVENTS
->  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
->  		     struct kvm_vcpu_events *events)
->  {
-> @@ -1249,6 +1250,7 @@ void vcpu_events_set(struct kvm_vm *vm, uint32_t vcpuid,
->  	TEST_ASSERT(ret == 0, "KVM_SET_VCPU_EVENTS, failed, rc: %i errno: %i",
->  		ret, errno);
->  }
-> +#endif
->  
->  #ifdef __x86_64__
->  void vcpu_nested_state_get(struct kvm_vm *vm, uint32_t vcpuid,
-> -- 
-> 2.21.0
->
+Matthias, ping? Any suggestions?
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
+Thanks,
+Pingfan
+
+
+On Thu, May 2, 2019 at 2:22 PM Pingfan Liu <kernelfans@gmail.com> wrote:
+>
+> On Thu, Apr 25, 2019 at 4:20 PM Pingfan Liu <kernelfans@gmail.com> wrote:
+> >
+> > On Wed, Apr 24, 2019 at 4:31 PM Matthias Brugger <mbrugger@suse.com> wrote:
+> > >
+> > >
+> > [...]
+> > > > @@ -139,6 +141,8 @@ static int __init parse_crashkernel_simple(char *cmdline,
+> > > >               pr_warn("crashkernel: unrecognized char: %c\n", *cur);
+> > > >               return -EINVAL;
+> > > >       }
+> > > > +     if (*crash_size == 0)
+> > > > +             return -EINVAL;
+> > >
+> > > This covers the case where I pass an argument like "crashkernel=0M" ?
+> > > Can't we fix that by using kstrtoull() in memparse and check if the return value
+> > > is < 0? In that case we could return without updating the retptr and we will be
+> > > fine.
+> After a series of work, I suddenly realized that it can not be done
+> like this way. "0M" causes kstrtoull() to return -EINVAL, but this is
+> caused by "M", not "0". If passing "0" to kstrtoull(), it will return
+> 0 on success.
+>
+> > >
+> > It seems that kstrtoull() treats 0M as invalid parameter, while
+> > simple_strtoull() does not.
+> >
+> My careless going through the code. And I tested with a valid value
+> "256M" using kstrtoull(), it also returned -EINVAL.
+>
+> So I think there is no way to distinguish 0 from a positive value
+> inside this basic math function.
+> Do I miss anything?
+>
+> Thanks and regards,
+> Pingfan
