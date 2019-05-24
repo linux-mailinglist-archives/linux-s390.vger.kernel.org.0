@@ -2,140 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DFF828F6F
-	for <lists+linux-s390@lfdr.de>; Fri, 24 May 2019 05:11:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 48846291FB
+	for <lists+linux-s390@lfdr.de>; Fri, 24 May 2019 09:44:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387920AbfEXDL1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 May 2019 23:11:27 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:39143 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387559AbfEXDL1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 23 May 2019 23:11:27 -0400
-Received: by mail-it1-f194.google.com with SMTP id 9so11694522itf.4;
-        Thu, 23 May 2019 20:11:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E7hznSwoqjG8X1odMBGc2satoFe87v1Y0P/9fKHS9SY=;
-        b=a7Sc0ZmlEG6jC7OpcrRVUkNXq0SBb3Dc/hNdk5Vi6ayUDLd0Dm8M0wWvJFgwttZZ4M
-         aninTKfSUZDRjfNGqPsMzWLja++EezX/hO4fX5nJBzfyFI6kNO7dvjypaoVQz4ys7+R5
-         9IVPBxW1C4i6BRZ4f3bqLocvJh1c9QUTPILj4gipCVXMgVTUpT9LBYkMiRDL2TaalXNe
-         rQ6wJugIty6JwVWYs5nF97JpvrTENcxT3PWNqVTqRhEna4JwxQokvn2SUzkeP09LHMDC
-         DgccA6RcG2CmDNt2DoIHjZymnDK30hw9WxWvnBoApiNxfRbL6LLAu65RJr1Ih71O/P5e
-         SodQ==
+        id S2389164AbfEXHoM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 24 May 2019 03:44:12 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:47089 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388911AbfEXHoL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 24 May 2019 03:44:11 -0400
+Received: by mail-qk1-f196.google.com with SMTP id a132so6005115qkb.13;
+        Fri, 24 May 2019 00:44:10 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=E7hznSwoqjG8X1odMBGc2satoFe87v1Y0P/9fKHS9SY=;
-        b=Ezz2Tgeoxjdv/gvVJ/MA5BphhJp0ROY7eGuEAPB34pjOfZ9Qhjq2ttOZI492SrJqID
-         oYb+trVWohcEsTTnuvrXvqhM9++ob+KDmqye9lu5WGczS9UEq2zlUGooX0bFUTQ7eDNO
-         73TpY8KHHy+M7pkUnZ7s50p4JClZ/FVH+/BnIUFnJHG2PFE26yzI5AaPHTyZc6iITSaB
-         nqFqf1RuwcGj8pV4vQ7v0OO0m5cntojFaB/EJT2diuKOwc2KO87DKUsVqyDu/xj3efNO
-         jRbywuuPXIY3ktLzuRoSCd49qjhz+CSclAPfHslijAnC/ldpKQ38cq/SakMisXgIe5f4
-         /CnQ==
-X-Gm-Message-State: APjAAAU/nXJChSYn3/OkCY5jM66bpCt/c1PazWN/OjkBlJQ/qjpoKeug
-        A1Ap6yIXeByCvDlPB2sRDwiDyk7343xDzT5OICXlSzV8sA==
-X-Google-Smtp-Source: APXvYqz4ssg3ircx9GKZ/bOQFSdzkDIVdQtquf3WB1GzGhZLWMOO7FDaVjBjQGy32wO2lRBtVYsHwdCKMGdQi1fBKFw=
-X-Received: by 2002:a24:1dce:: with SMTP id 197mr16766439itj.16.1558667486023;
- Thu, 23 May 2019 20:11:26 -0700 (PDT)
+        bh=k2hM4uRH+xcF6VZw3zZp57FHF0UiIEpfXR9WFJl84UE=;
+        b=PYXq1Idzv0Di7KLMknzWpNB+eY+yAOjbVLGoI5HUbfbPvDLGbeqCylQHAYwjvuSa0e
+         IkMKSeoe3IR3aNnjCBw+MHwc5WWQdgsseuj/aC59yOVLI4d0Twksyz4v5wc494lIhagG
+         tI6f8JhIFaoCJFSmJxKQFc1dQ+AEZABwqBiQEMUXnGdfiMTZB2Gs3uPZ3vGAsGa/AdF7
+         LCIl7WMuGS5y0Bo6e8XQO/aJiEDa/nlQqrbspcGRQGNzl23DvPUNFRrB+4NRjwo/OfAB
+         atqkh0iKBC0EFrVTNrQ50gbR+7yV90h01bA/rQNSKkLlx5BjivcZnCzdDU1XcWXk/L1l
+         WKfA==
+X-Gm-Message-State: APjAAAXwfXByxZKYfWiMo9NPVH0LPLmzUDK7pZnqtwgzF0APfN1TY0OJ
+        4eLsFdXsvJQkA4Q8mb4D3BVwKXzWUO3mq3l/+tQ=
+X-Google-Smtp-Source: APXvYqy/WqyRL4BlbMWLM5GdeDgLkBJI6XwCNcVvXGonN+2oV2dtTQWrObje5U17OKbtEn0pWH9nlYsDR25/fOWgBDY=
+X-Received: by 2002:ac8:2433:: with SMTP id c48mr70119188qtc.18.1558683849757;
+ Fri, 24 May 2019 00:44:09 -0700 (PDT)
 MIME-Version: 1.0
-References: <1556087581-14513-1-git-send-email-kernelfans@gmail.com>
- <10dc5468-6cd9-85c7-ba66-1dfa5aa922b7@suse.com> <CAFgQCTstd667wP6g+maxYekz4u3iBR2R=FHUiS1V=XxTs6MKUw@mail.gmail.com>
- <CAFgQCTtQm7SuBRfXik6B065Aa+uQ=Mx6i+Y1q+NJU1GEiUgH4g@mail.gmail.com>
-In-Reply-To: <CAFgQCTtQm7SuBRfXik6B065Aa+uQ=Mx6i+Y1q+NJU1GEiUgH4g@mail.gmail.com>
-From:   Pingfan Liu <kernelfans@gmail.com>
-Date:   Fri, 24 May 2019 11:11:13 +0800
-Message-ID: <CAFgQCTuAEbST8ZdSJmPDTPbqkL3uZ8j6U-vTWT879wARDhUwTw@mail.gmail.com>
-Subject: Re: [PATCHv2] kernel/crash: make parse_crashkernel()'s return value
- more indicant
-To:     Matthias Brugger <mbrugger@suse.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Rich Felker <dalias@libc.org>,
-        linux-ia64@vger.kernel.org,
-        Julien Thierry <julien.thierry@arm.com>,
-        Yangtao Li <tiny.windzz@gmail.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org,
-        linux-mips@vger.kernel.org, Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-s390@vger.kernel.org,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        linux-sh@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        David Hildenbrand <david@redhat.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Ingo Molnar <mingo@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Dave Young <dyoung@redhat.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linuxppc-dev@lists.ozlabs.org,
-        Ananth N Mavinakayanahalli <ananth@linux.vnet.ibm.com>,
-        Borislav Petkov <bp@alien8.de>, Stefan Agner <stefan@agner.ch>,
+References: <20190522155259.11174-1-christian@brauner.io> <67e4458a-9cc4-d1aa-608c-73ebe9e2f7a3@yandex-team.ru>
+ <20190523163345.q5ynd2ytk7nxcvqf@brauner.io>
+In-Reply-To: <20190523163345.q5ynd2ytk7nxcvqf@brauner.io>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Fri, 24 May 2019 09:43:53 +0200
+Message-ID: <CAK8P3a26uvqmExJZsezhB+cp2ADM0Ai9jVUKWOFM6kg848bCKg@mail.gmail.com>
+Subject: Re: [PATCH v1 1/2] open: add close_range()
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Florian Weimer <fweimer@redhat.com>,
+        Jann Horn <jannh@google.com>, Oleg Nesterov <oleg@redhat.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>, Tony Luck <tony.luck@intel.com>,
-        Baoquan He <bhe@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Greg Hackmann <ghackmann@android.com>
+        Shuah Khan <shuah@kernel.org>,
+        David Howells <dhowells@redhat.com>,
+        Todd Kjos <tkjos@android.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        Miklos Szeredi <miklos@szeredi.hu>,
+        alpha <linux-alpha@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        linux-mips@vger.kernel.org,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux <sparclinux@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Matthias, ping? Any suggestions?
-
-Thanks,
-Pingfan
-
-
-On Thu, May 2, 2019 at 2:22 PM Pingfan Liu <kernelfans@gmail.com> wrote:
->
-> On Thu, Apr 25, 2019 at 4:20 PM Pingfan Liu <kernelfans@gmail.com> wrote:
+On Thu, May 23, 2019 at 6:33 PM Christian Brauner <christian@brauner.io> wrote:
+> On Thu, May 23, 2019 at 07:22:17PM +0300, Konstantin Khlebnikov wrote:
+> > On 22.05.2019 18:52, Christian Brauner wrote:> This adds the close_range() syscall. It allows to efficiently close a range
+> > >   22 files changed, 100 insertions(+), 9 deletions(-)
+> > >
 > >
-> > On Wed, Apr 24, 2019 at 4:31 PM Matthias Brugger <mbrugger@suse.com> wrote:
-> > >
-> > >
-> > [...]
-> > > > @@ -139,6 +141,8 @@ static int __init parse_crashkernel_simple(char *cmdline,
-> > > >               pr_warn("crashkernel: unrecognized char: %c\n", *cur);
-> > > >               return -EINVAL;
-> > > >       }
-> > > > +     if (*crash_size == 0)
-> > > > +             return -EINVAL;
-> > >
-> > > This covers the case where I pass an argument like "crashkernel=0M" ?
-> > > Can't we fix that by using kstrtoull() in memparse and check if the return value
-> > > is < 0? In that case we could return without updating the retptr and we will be
-> > > fine.
-> After a series of work, I suddenly realized that it can not be done
-> like this way. "0M" causes kstrtoull() to return -EINVAL, but this is
-> caused by "M", not "0". If passing "0" to kstrtoull(), it will return
-> 0 on success.
+> > It would be better to split arch/ wiring into separate patch for better readability.
 >
-> > >
-> > It seems that kstrtoull() treats 0M as invalid parameter, while
-> > simple_strtoull() does not.
-> >
-> My careless going through the code. And I tested with a valid value
-> "256M" using kstrtoull(), it also returned -EINVAL.
->
-> So I think there is no way to distinguish 0 from a positive value
-> inside this basic math function.
-> Do I miss anything?
->
-> Thanks and regards,
-> Pingfan
+> Ok. You mean only do x86 - seems to be the standard - and then move the
+> others into a separate patch? Doesn't seem worth to have a patch
+> per-arch, I'd think.
+
+I think I would prefer the first patch to just add the call without wiring it up
+anywhere, and a second patch do add it on all architectures including x86.
+
+     Arnd
