@@ -2,106 +2,146 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4F19295E4
-	for <lists+linux-s390@lfdr.de>; Fri, 24 May 2019 12:33:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 567722963A
+	for <lists+linux-s390@lfdr.de>; Fri, 24 May 2019 12:44:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390402AbfEXKdL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 24 May 2019 06:33:11 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50416 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390274AbfEXKdK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 24 May 2019 06:33:10 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4OAVfht101154
-        for <linux-s390@vger.kernel.org>; Fri, 24 May 2019 06:33:09 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2spbpqheb3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 24 May 2019 06:33:09 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 24 May 2019 11:33:07 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 24 May 2019 11:33:03 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4OAX21415204492
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 24 May 2019 10:33:02 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B27A142052;
-        Fri, 24 May 2019 10:33:02 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E43542041;
-        Fri, 24 May 2019 10:33:02 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 24 May 2019 10:33:02 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
-        id 35B2CE00B3; Fri, 24 May 2019 12:33:02 +0200 (CEST)
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kselftest@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: [PATCH] KVM: selftests: enable pgste option for the linker on s390
-Date:   Fri, 24 May 2019 12:33:01 +0200
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190523164309.13345-1-thuth@redhat.com>
-References: <20190523164309.13345-1-thuth@redhat.com>
+        id S2390374AbfEXKo3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 24 May 2019 06:44:29 -0400
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:53319 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390535AbfEXKo3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 24 May 2019 06:44:29 -0400
+Received: by mail-wm1-f68.google.com with SMTP id 198so8862703wme.3;
+        Fri, 24 May 2019 03:44:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=0jy20rK00X/Jpvye1eiZdw+BT0nVJunFQCUMU0sD3iQ=;
+        b=X1PxbDFgBqLM2NhmlrzxN/Z4MQHhxPSqs6aIHaPvF6iBAMLHzmH4nUvsmk//1HfYtC
+         M7+RiqIUBnxnUqtQ25FtAlI9TYUuDf8FA0WWWY/sJW0s+MvmNdXDzLauptvrWs2cUaqj
+         xB+/SW80bPKdsBGtHWxc3y8FmFHI5GngHXc59KD+O5Lr2DZmG38IJpvxIEkC6uuIeR/7
+         wWJu9Qn8qPhvMRywg+V6bnzPeOFiQ/IORcoYGzLsMY7vtwENi1rb4BA++E0rVIYk3rnv
+         Y0vPlbwObLKxWrwWEwMTrgKOWFImoQkdIM62Bc2RaeWmlzzqiOrhfp4C5RF5aK4p4H/c
+         49DQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :in-reply-to:references:mime-version:content-transfer-encoding;
+        bh=0jy20rK00X/Jpvye1eiZdw+BT0nVJunFQCUMU0sD3iQ=;
+        b=dxKknvKYCf+qdGu5T4HpBMZ1JuqQ4tf9CezMFm2bmpuxekMSz8gPS2sPR2q9L5+qP3
+         OzbC77RH80chMLppMfi5jeucEsRVgVJy0rtDFM3+ecdmdsT5B/uaxdFQN2453zwwDT0g
+         +PMLK4hENioCAxCZaV+fgkbkUtBWintsQm0G8DqYntHfBLid4nCx1gVQQVi8U/DU/bwx
+         pXK2DEuNbWG3GwI6gPkGk3jfD71/O+Bw/7dGeqLRokXarfpvBvU8PdGedmZMFGj2pX/X
+         f+7GFNUvRR0ZkmEkydnr7VmBbuqywDD1UKi1p+5aC6lIpruVzoE9Wxpt4Kc9SgUDpG27
+         u4dw==
+X-Gm-Message-State: APjAAAUysrWhKLDeQyJi2f+YbeDLqUxBzXOhzSgN5KO/Vl561VLV7zKs
+        ksYYVOTwpDGNfhk2XX3eBoc=
+X-Google-Smtp-Source: APXvYqyeytuN8l7DauI//G/eM6aGcU8yhn6PWpRVKMHeZ4rs7BNDg9Pkie2MVw5YsStjKFsnchTflQ==
+X-Received: by 2002:a1c:6c0a:: with SMTP id h10mr16235945wmc.135.1558694666632;
+        Fri, 24 May 2019 03:44:26 -0700 (PDT)
+Received: from macbookpro.malat.net ([2a01:e34:ee1e:860:6f23:82e6:aa2d:bbd1])
+        by smtp.gmail.com with ESMTPSA id o6sm4589463wrh.55.2019.05.24.03.44.25
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Fri, 24 May 2019 03:44:25 -0700 (PDT)
+Received: by macbookpro.malat.net (Postfix, from userid 1000)
+        id 9E40B11415E7; Fri, 24 May 2019 12:44:24 +0200 (CEST)
+From:   Mathieu Malaterre <malat@debian.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
+Date:   Fri, 24 May 2019 12:44:18 +0200
+Message-Id: <20190524104418.17194-1-malat@debian.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190523114736.30268-1-malat@debian.org>
+References: <20190523114736.30268-1-malat@debian.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052410-0016-0000-0000-0000027EFF17
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052410-0017-0000-0000-000032DBFAC2
-Message-Id: <20190524103301.87017-1-borntraeger@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-24_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=580 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905240072
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-To avoid testcase failures we need to enable the pgstes. This can be
-done with /proc/sys/vm/allocate_pgste or with a linker option that
-creates an  S390_PGSTE program header.
+The declaration for pfn_is_nosave is only available in
+kernel/power/power.h. Since this function can be override in arch,
+expose it globally. Having a prototype will make sure to avoid warning
+(sometime treated as error with W=1) such as:
 
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+  arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+
+This moves the declaration into a globally visible header file and add
+missing include to avoid a warning on powerpc. Also remove the
+duplicated prototypes since not required anymore.
+
+Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+Signed-off-by: Mathieu Malaterre <malat@debian.org>
 ---
- tools/testing/selftests/kvm/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+v2: As suggestion by christophe remove duplicates prototypes
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index aef5bd1166cf..4aac14c1919f 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -44,7 +44,10 @@ CFLAGS += -O2 -g -std=gnu99 -fno-stack-protector -fno-PIE -I$(LINUX_TOOL_INCLUDE
- no-pie-option := $(call try-run, echo 'int main() { return 0; }' | \
-         $(CC) -Werror $(KBUILD_CPPFLAGS) $(CC_OPTION_CFLAGS) -no-pie -x c - -o "$$TMP", -no-pie)
+ arch/powerpc/kernel/suspend.c | 1 +
+ arch/s390/kernel/entry.h      | 1 -
+ include/linux/suspend.h       | 1 +
+ kernel/power/power.h          | 2 --
+ 4 files changed, 2 insertions(+), 3 deletions(-)
+
+diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
+index a531154cc0f3..9e1b6b894245 100644
+--- a/arch/powerpc/kernel/suspend.c
++++ b/arch/powerpc/kernel/suspend.c
+@@ -8,6 +8,7 @@
+  */
  
--LDFLAGS += -pthread $(no-pie-option)
-+# On s390, build the testcases KVM-enabled
-+pgste-option := $(call cc-ldoption, -Wl$(comma)--s390-pgste)
-+
-+LDFLAGS += -pthread $(no-pie-option) $(pgste-option)
+ #include <linux/mm.h>
++#include <linux/suspend.h>
+ #include <asm/page.h>
+ #include <asm/sections.h>
  
- # After inclusion, $(OUTPUT) is defined and
- # $(TEST_GEN_PROGS) starts with $(OUTPUT)/
+diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
+index 20420c2b8a14..b2956d49b6ad 100644
+--- a/arch/s390/kernel/entry.h
++++ b/arch/s390/kernel/entry.h
+@@ -63,7 +63,6 @@ void __init startup_init(void);
+ void die(struct pt_regs *regs, const char *str);
+ int setup_profiling_timer(unsigned int multiplier);
+ void __init time_init(void);
+-int pfn_is_nosave(unsigned long);
+ void s390_early_resume(void);
+ unsigned long prepare_ftrace_return(unsigned long parent, unsigned long sp, unsigned long ip);
+ 
+diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+index 6b3ea9ea6a9e..e8b8a7bede90 100644
+--- a/include/linux/suspend.h
++++ b/include/linux/suspend.h
+@@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
+ extern bool hibernation_available(void);
+ asmlinkage int swsusp_save(void);
+ extern struct pbe *restore_pblist;
++int pfn_is_nosave(unsigned long pfn);
+ #else /* CONFIG_HIBERNATION */
+ static inline void register_nosave_region(unsigned long b, unsigned long e) {}
+ static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
+diff --git a/kernel/power/power.h b/kernel/power/power.h
+index 9e58bdc8a562..44bee462ff57 100644
+--- a/kernel/power/power.h
++++ b/kernel/power/power.h
+@@ -75,8 +75,6 @@ static inline void hibernate_reserved_size_init(void) {}
+ static inline void hibernate_image_size_init(void) {}
+ #endif /* !CONFIG_HIBERNATION */
+ 
+-extern int pfn_is_nosave(unsigned long);
+-
+ #define power_attr(_name) \
+ static struct kobj_attribute _name##_attr = {	\
+ 	.attr	= {				\
 -- 
-2.21.0
+2.20.1
 
