@@ -2,125 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5138929EF8
-	for <lists+linux-s390@lfdr.de>; Fri, 24 May 2019 21:22:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8FC9E2A3AF
+	for <lists+linux-s390@lfdr.de>; Sat, 25 May 2019 11:22:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391181AbfEXTWA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 24 May 2019 15:22:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:53839 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729918AbfEXTV7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 24 May 2019 15:21:59 -0400
-Received: by mail-wm1-f66.google.com with SMTP id 198so10432893wme.3
-        for <linux-s390@vger.kernel.org>; Fri, 24 May 2019 12:21:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=hhpEA5bjl58Li319ZLPi9C0clAwaLvwax4NH0f/4Z7g=;
-        b=gpkxd74Pnq56kYFt3vQ5f00dQTqr0tjG//HcQstmnK+f6KNLN1/BcZU/T9EfcanqUq
-         F8SRx7om/0dj+ivBvXhSrKoewefelVBROgNKNx3RPNKUPYC1gA7c4bt+xkKRm9U8mBqf
-         rOCW/WqsFpB8UAW9TKa2+FADNxWNQVOQrzJvZzlg60tIvaXQ41bqQWned5u8kIKy15nd
-         VKXz+gP0VWEkvhBpwLwUhJt31V8oTAtdOKSUHNZcklfIg0AXk/VMWcFMdCnMSDEpoofk
-         o7OmRzvP7NnxEkwVCDCdC74xi+Ra/mzdOrqE2Q9vcUVpOfwQb8WkBYZiXRALxC9yTpc1
-         DfnQ==
-X-Gm-Message-State: APjAAAWCcen2PI7KqmwKFCreOVpNc/txMqn8zhN0WyK/bmDrdp2ccm8Y
-        X6ap/5Bgcm5uZ73Tjn45z3qAIV0066E=
-X-Google-Smtp-Source: APXvYqzVW8+lSidchypL8va23vulSlBcABe601SqasKD35Z2ztw7HupPhfH149YMzdfE/fat/9pzVg==
-X-Received: by 2002:a05:600c:551:: with SMTP id k17mr16995780wmc.35.1558725717133;
-        Fri, 24 May 2019 12:21:57 -0700 (PDT)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id 67sm4994440wmd.38.2019.05.24.12.21.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 24 May 2019 12:21:56 -0700 (PDT)
-Subject: Re: [PATCH] KVM: s390: fix memory slot handling for
- KVM_SET_USER_MEMORY_REGION
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kselftest@vger.kernel.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <20190524140623.104033-1-borntraeger@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <89ad11b6-b044-5669-a9a3-398da002182f@redhat.com>
-Date:   Fri, 24 May 2019 21:21:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726464AbfEYJWS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 25 May 2019 05:22:18 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59198 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726497AbfEYJWS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 25 May 2019 05:22:18 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4P9MGaq059128
+        for <linux-s390@vger.kernel.org>; Sat, 25 May 2019 05:22:17 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2sq0pa3djb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Sat, 25 May 2019 05:22:16 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <sebott@linux.ibm.com>;
+        Sat, 25 May 2019 10:22:08 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 25 May 2019 10:22:05 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4P9M4Sl31326410
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 25 May 2019 09:22:04 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3B4954C046;
+        Sat, 25 May 2019 09:22:04 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2E4744C04A;
+        Sat, 25 May 2019 09:22:03 +0000 (GMT)
+Received: from sig-9-145-26-217.uk.ibm.com (unknown [9.145.26.217])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat, 25 May 2019 09:22:03 +0000 (GMT)
+Date:   Sat, 25 May 2019 11:22:02 +0200 (CEST)
+From:   Sebastian Ott <sebott@linux.ibm.com>
+X-X-Sender: sebott@schleppi
+To:     Michael Mueller <mimu@linux.ibm.com>
+cc:     KVM Mailing List <kvm@vger.kernel.org>,
+        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: Re: [PATCH v2 2/8] s390/cio: introduce DMA pools to cio
+In-Reply-To: <20190523162209.9543-3-mimu@linux.ibm.com>
+References: <20190523162209.9543-1-mimu@linux.ibm.com> <20190523162209.9543-3-mimu@linux.ibm.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
+ =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
+ =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
+ =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
+ =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
+ =?ISO-8859-15?Q?94=22?=
 MIME-Version: 1.0
-In-Reply-To: <20190524140623.104033-1-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+X-TM-AS-GCONF: 00
+x-cbid: 19052509-0028-0000-0000-000003714BC5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052509-0029-0000-0000-0000243103CD
+Message-Id: <alpine.LFD.2.21.1905251115590.3359@schleppi>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-25_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=11 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905250066
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24/05/19 16:06, Christian Borntraeger wrote:
-> kselftests exposed a problem in the s390 handling for memory slots.
-> Right now we only do proper memory slot handling for creation of new
-> memory slots. Neither MOVE, nor DELETION are handled properly. Let us
-> implement those.
-> 
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  arch/s390/kvm/kvm-s390.c | 35 +++++++++++++++++++++--------------
->  1 file changed, 21 insertions(+), 14 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 871d2e99b156..6ec0685ab2c7 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4525,21 +4525,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
->  				const struct kvm_memory_slot *new,
->  				enum kvm_mr_change change)
->  {
-> -	int rc;
-> +	int rc = 0;
->  
-> -	/* If the basics of the memslot do not change, we do not want
-> -	 * to update the gmap. Every update causes several unnecessary
-> -	 * segment translation exceptions. This is usually handled just
-> -	 * fine by the normal fault handler + gmap, but it will also
-> -	 * cause faults on the prefix page of running guest CPUs.
-> -	 */
-> -	if (old->userspace_addr == mem->userspace_addr &&
-> -	    old->base_gfn * PAGE_SIZE == mem->guest_phys_addr &&
-> -	    old->npages * PAGE_SIZE == mem->memory_size)
-> -		return;
-> -
-> -	rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
-> -		mem->guest_phys_addr, mem->memory_size);
-> +	switch (change) {
-> +	case KVM_MR_DELETE:
-> +		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-> +					old->npages * PAGE_SIZE);
-> +		break;
-> +	case KVM_MR_MOVE:
-> +		rc = gmap_unmap_segment(kvm->arch.gmap, old->base_gfn * PAGE_SIZE,
-> +					old->npages * PAGE_SIZE);
-> +		if (rc)
-> +			break;
-> +		/* FALLTHROUGH */
-> +	case KVM_MR_CREATE:
-> +		rc = gmap_map_segment(kvm->arch.gmap, mem->userspace_addr,
-> +				      mem->guest_phys_addr, mem->memory_size);
-> +		break;
-> +	case KVM_MR_FLAGS_ONLY:
-> +		break;
-> +	default:
-> +		WARN(1, "Unknown KVM MR CHANGE: %d\n", change);
-> +	}
->  	if (rc)
->  		pr_warn("failed to commit memory region\n");
->  	return;
-> 
 
-Queued for 5.2-rc2, thanks.
+On Thu, 23 May 2019, Michael Mueller wrote:
+> +static void __init cio_dma_pool_init(void)
+> +{
+> +	/* No need to free up the resources: compiled in */
+> +	cio_dma_pool = cio_gp_dma_create(cio_get_dma_css_dev(), 1);
 
-Paolo
+This can return NULL.
+
+> +/**
+> + * Allocate dma memory from the css global pool. Intended for memory not
+> + * specific to any single device within the css. The allocated memory
+> + * is not guaranteed to be 31-bit addressable.
+> + *
+> + * Caution: Not suitable for early stuff like console.
+> + *
+> + */
+
+drivers/s390/cio/css.c:1121: warning: Function parameter or member 'size' not described in 'cio_dma_zalloc'
+
+Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+
