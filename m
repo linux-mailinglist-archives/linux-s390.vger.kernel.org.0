@@ -2,104 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B70B2A3C9
-	for <lists+linux-s390@lfdr.de>; Sat, 25 May 2019 11:51:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EDF72AC16
+	for <lists+linux-s390@lfdr.de>; Sun, 26 May 2019 22:27:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfEYJvN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 25 May 2019 05:51:13 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52980 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726651AbfEYJvM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 25 May 2019 05:51:12 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4P9kXgf113354
-        for <linux-s390@vger.kernel.org>; Sat, 25 May 2019 05:51:11 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sq275hj4a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Sat, 25 May 2019 05:51:11 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <sebott@linux.ibm.com>;
-        Sat, 25 May 2019 10:51:09 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 25 May 2019 10:51:05 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4P9p4WE57409604
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 25 May 2019 09:51:04 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1FDEF5204F;
-        Sat, 25 May 2019 09:51:04 +0000 (GMT)
-Received: from sig-9-145-26-217.uk.ibm.com (unknown [9.145.26.217])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 1DB9F5204E;
-        Sat, 25 May 2019 09:51:03 +0000 (GMT)
-Date:   Sat, 25 May 2019 11:51:02 +0200 (CEST)
-From:   Sebastian Ott <sebott@linux.ibm.com>
-X-X-Sender: sebott@schleppi
-To:     Michael Mueller <mimu@linux.ibm.com>
-cc:     KVM Mailing List <kvm@vger.kernel.org>,
-        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Subject: Re: [PATCH v2 4/8] s390/airq: use DMA memory for adapter
- interrupts
-In-Reply-To: <20190523162209.9543-5-mimu@linux.ibm.com>
-References: <20190523162209.9543-1-mimu@linux.ibm.com> <20190523162209.9543-5-mimu@linux.ibm.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
- =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
- =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
- =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
- =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
- =?ISO-8859-15?Q?94=22?=
+        id S1726072AbfEZU1r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 26 May 2019 16:27:47 -0400
+Received: from port70.net ([81.7.13.123]:59088 "EHLO port70.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725616AbfEZU1q (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 26 May 2019 16:27:46 -0400
+X-Greylist: delayed 420 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 May 2019 16:27:44 EDT
+Received: by port70.net (Postfix, from userid 1002)
+        id 64F7EABEC0BA; Sun, 26 May 2019 22:20:42 +0200 (CEST)
+Date:   Sun, 26 May 2019 22:20:42 +0200
+From:   Szabolcs Nagy <nsz@port70.net>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        torvalds@linux-foundation.org, fweimer@redhat.com,
+        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
+        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
+        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
+        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
+        linux-kselftest@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH v2 1/2] open: add close_range()
+Message-ID: <20190526202041.GO16415@port70.net>
+References: <20190523154747.15162-1-christian@brauner.io>
+ <20190523154747.15162-2-christian@brauner.io>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-x-cbid: 19052509-0012-0000-0000-0000031F49A3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052509-0013-0000-0000-0000215808D5
-Message-Id: <alpine.LFD.2.21.1905251150350.3359@schleppi>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-25_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=608 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905250070
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190523154747.15162-2-christian@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-On Thu, 23 May 2019, Michael Mueller wrote:
-> From: Halil Pasic <pasic@linux.ibm.com>
+* Christian Brauner <christian@brauner.io> [2019-05-23 17:47:46 +0200]:
+> This adds the close_range() syscall. It allows to efficiently close a range
+> of file descriptors up to all file descriptors of a calling task.
 > 
-> Protected virtualization guests have to use shared pages for airq
-> notifier bit vectors, because hypervisor needs to write these bits.
+> The syscall came up in a recent discussion around the new mount API and
+> making new file descriptor types cloexec by default. During this
+> discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
+> syscall in this manner has been requested by various people over time.
 > 
-> Let us make sure we allocate DMA memory for the notifier bit vectors by
-> replacing the kmem_cache with a dma_cache and kalloc() with
-> cio_dma_zalloc().
+> First, it helps to close all file descriptors of an exec()ing task. This
+> can be done safely via (quoting Al's example from [1] verbatim):
 > 
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+>         /* that exec is sensitive */
+>         unshare(CLONE_FILES);
+>         /* we don't want anything past stderr here */
+>         close_range(3, ~0U);
+>         execve(....);
 
-Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+this does not work in a hosted c implementation unless the libc
+guarantees not to use libc internal fds (e.g. in execve).
+(the libc cannot easily abstract fds, so the syscall abi layer
+fd semantics is necessarily visible to user code.)
 
+i think this is a new constraint for userspace runtimes.
+(not entirely unreasonable though)
+
+> The code snippet above is one way of working around the problem that file
+> descriptors are not cloexec by default. This is aggravated by the fact that
+> we can't just switch them over without massively regressing userspace. For
+> a whole class of programs having an in-kernel method of closing all file
+> descriptors is very helpful (e.g. demons, service managers, programming
+> language standard libraries, container managers etc.).
+
+was cloexec_range(a,b) considered?
+
+> (Please note, unshare(CLONE_FILES) should only be needed if the calling
+>  task is multi-threaded and shares the file descriptor table with another
+>  thread in which case two threads could race with one thread allocating
+>  file descriptors and the other one closing them via close_range(). For the
+>  general case close_range() before the execve() is sufficient.)
+
+assuming there is no unblocked signal handler that may open fds.
+
+a syscall that tramples on fds not owned by the caller is ugly
+(not generally safe to use and may break things if it gets used),
+i don't have a better solution for fd leaks or missing cloexec,
+but i think it needs more analysis how it can be used.
