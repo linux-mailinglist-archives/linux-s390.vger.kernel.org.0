@@ -2,98 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 32D2C2B27F
-	for <lists+linux-s390@lfdr.de>; Mon, 27 May 2019 12:53:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 76D972B284
+	for <lists+linux-s390@lfdr.de>; Mon, 27 May 2019 12:53:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726063AbfE0Kxb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 May 2019 06:53:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41840 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725814AbfE0Kxb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 May 2019 06:53:31 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 41B4E307D855;
-        Mon, 27 May 2019 10:53:31 +0000 (UTC)
-Received: from gondolin (ovpn-204-109.brq.redhat.com [10.40.204.109])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3EFDD5D704;
-        Mon, 27 May 2019 10:53:23 +0000 (UTC)
-Date:   Mon, 27 May 2019 12:53:20 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Michael Mueller <mimu@linux.ibm.com>
-Cc:     KVM Mailing List <kvm@vger.kernel.org>,
-        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
+        id S1725814AbfE0Kxp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 May 2019 06:53:45 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63322 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726476AbfE0Kxo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 May 2019 06:53:44 -0400
+Received: from 79.184.255.36.ipv4.supernova.orange.pl (79.184.255.36) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id 3e9dcd1393346651; Mon, 27 May 2019 12:53:42 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Subject: Re: [PATCH v2 4/8] s390/airq: use DMA memory for adapter interrupts
-Message-ID: <20190527125320.7540049a.cohuck@redhat.com>
-In-Reply-To: <20190523162209.9543-5-mimu@linux.ibm.com>
-References: <20190523162209.9543-1-mimu@linux.ibm.com>
-        <20190523162209.9543-5-mimu@linux.ibm.com>
-Organization: Red Hat GmbH
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
+Date:   Mon, 27 May 2019 12:53:41 +0200
+Message-ID: <1929721.iDiXxTFbjN@kreacher>
+In-Reply-To: <20190524104418.17194-1-malat@debian.org>
+References: <20190523114736.30268-1-malat@debian.org> <20190524104418.17194-1-malat@debian.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 27 May 2019 10:53:31 +0000 (UTC)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 23 May 2019 18:22:05 +0200
-Michael Mueller <mimu@linux.ibm.com> wrote:
-
-> From: Halil Pasic <pasic@linux.ibm.com>
+On Friday, May 24, 2019 12:44:18 PM CEST Mathieu Malaterre wrote:
+> The declaration for pfn_is_nosave is only available in
+> kernel/power/power.h. Since this function can be override in arch,
+> expose it globally. Having a prototype will make sure to avoid warning
+> (sometime treated as error with W=1) such as:
 > 
-> Protected virtualization guests have to use shared pages for airq
-> notifier bit vectors, because hypervisor needs to write these bits.
+>   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
 > 
-> Let us make sure we allocate DMA memory for the notifier bit vectors by
-> replacing the kmem_cache with a dma_cache and kalloc() with
-> cio_dma_zalloc().
+> This moves the declaration into a globally visible header file and add
+> missing include to avoid a warning on powerpc. Also remove the
+> duplicated prototypes since not required anymore.
 > 
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
 > ---
->  arch/s390/include/asm/airq.h |  2 ++
->  drivers/s390/cio/airq.c      | 32 ++++++++++++++++++++------------
->  drivers/s390/cio/cio.h       |  2 ++
->  drivers/s390/cio/css.c       |  1 +
->  4 files changed, 25 insertions(+), 12 deletions(-)
-
-(...)
-
-> diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-> index 789f6ecdbbcc..f09521771a32 100644
-> --- a/drivers/s390/cio/css.c
-> +++ b/drivers/s390/cio/css.c
-> @@ -1173,6 +1173,7 @@ static int __init css_bus_init(void)
->  		goto out_unregister;
->  	}
->  	cio_dma_pool_init();
-> +	airq_init();
->  	css_init_done = 1;
+> v2: As suggestion by christophe remove duplicates prototypes
+> 
+>  arch/powerpc/kernel/suspend.c | 1 +
+>  arch/s390/kernel/entry.h      | 1 -
+>  include/linux/suspend.h       | 1 +
+>  kernel/power/power.h          | 2 --
+>  4 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
+> index a531154cc0f3..9e1b6b894245 100644
+> --- a/arch/powerpc/kernel/suspend.c
+> +++ b/arch/powerpc/kernel/suspend.c
+> @@ -8,6 +8,7 @@
+>   */
 >  
->  	/* Enable default isc for I/O subchannels. */
+>  #include <linux/mm.h>
+> +#include <linux/suspend.h>
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+>  
+> diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
+> index 20420c2b8a14..b2956d49b6ad 100644
+> --- a/arch/s390/kernel/entry.h
+> +++ b/arch/s390/kernel/entry.h
+> @@ -63,7 +63,6 @@ void __init startup_init(void);
+>  void die(struct pt_regs *regs, const char *str);
+>  int setup_profiling_timer(unsigned int multiplier);
+>  void __init time_init(void);
+> -int pfn_is_nosave(unsigned long);
+>  void s390_early_resume(void);
+>  unsigned long prepare_ftrace_return(unsigned long parent, unsigned long sp, unsigned long ip);
+>  
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 6b3ea9ea6a9e..e8b8a7bede90 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
+>  extern bool hibernation_available(void);
+>  asmlinkage int swsusp_save(void);
+>  extern struct pbe *restore_pblist;
+> +int pfn_is_nosave(unsigned long pfn);
+>  #else /* CONFIG_HIBERNATION */
+>  static inline void register_nosave_region(unsigned long b, unsigned long e) {}
+>  static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
+> diff --git a/kernel/power/power.h b/kernel/power/power.h
+> index 9e58bdc8a562..44bee462ff57 100644
+> --- a/kernel/power/power.h
+> +++ b/kernel/power/power.h
+> @@ -75,8 +75,6 @@ static inline void hibernate_reserved_size_init(void) {}
+>  static inline void hibernate_image_size_init(void) {}
+>  #endif /* !CONFIG_HIBERNATION */
+>  
+> -extern int pfn_is_nosave(unsigned long);
+> -
+>  #define power_attr(_name) \
+>  static struct kobj_attribute _name##_attr = {	\
+>  	.attr	= {				\
+> 
 
-Not directly related to this patch (I don't really have any comment
-here), but I started looking at the code again and now I'm wondering
-about chsc. I think it came up before, but I can't remember if chsc
-needed special treatment... Anyway, css_bus_init() uses some chscs
-early (before cio_dma_pool_init), so we could not use the pools there,
-even if we wanted to. Do chsc commands either work, or else fail
-benignly on a protected virt guest?
+With an ACK from the powerpc maintainers, I could apply this one.
+
+
+
+
