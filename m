@@ -2,179 +2,176 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 21DA02B7C0
-	for <lists+linux-s390@lfdr.de>; Mon, 27 May 2019 16:40:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ACBAD2B810
+	for <lists+linux-s390@lfdr.de>; Mon, 27 May 2019 17:01:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726420AbfE0OkT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 May 2019 10:40:19 -0400
-Received: from conuserg-07.nifty.com ([210.131.2.74]:44487 "EHLO
-        conuserg-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726274AbfE0OkT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 27 May 2019 10:40:19 -0400
-Received: from grover.flets-west.jp (softbank126125154139.bbtec.net [126.125.154.139]) (authenticated)
-        by conuserg-07.nifty.com with ESMTP id x4REc8hp015915;
-        Mon, 27 May 2019 23:38:10 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-07.nifty.com x4REc8hp015915
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1558967891;
-        bh=aMC7wmc6MMrYj/SHWn59QiqWoFmT1b06tH2CVxBYQ/k=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OKUBRFm8XZeO61bzi1Dt9OL9aFjL/GMFhjLgL9UsMdBmtaKiMZhsQ+ax4GKFt48Cn
-         QXnq5+/DwPeKbyfSh+X5hpA4lMmO3AfHt3HO5+8MzEDoOJnnm1DgbJv2P4HY6KZOMB
-         8uBa9R/Z6424lD+ZwCQdB/+QXNkW9F9pbLIrZIHedwIqSFoPsQQmTYbGVnBHOfeMtp
-         1G87BxhCj+OMqnMfu6o5d3iVOARn4eDMu7DllObLccIp3d3LGqZ3EDl6yeVVkcm9p4
-         WieBNMO7gyMrM4TyG5JnuaJWofywUCzfq+PQD9CH2lNwzCVA3NZjH1KsDoC5efuVGv
-         NffcJi2LM4IdQ==
-X-Nifty-SrcIP: [126.125.154.139]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Paul Walmsley <paul@pwsan.com>,
-        Firoz Khan <firoz.khan@linaro.org>,
-        Richard Henderson <rth@twiddle.net>,
-        Matt Turner <mattst88@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        Greentime Hu <green.hu@gmail.com>, Guo Ren <guoren@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
+        id S1726094AbfE0PBX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 May 2019 11:01:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42914 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726291AbfE0PBX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 27 May 2019 11:01:23 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4REqalA103617
+        for <linux-s390@vger.kernel.org>; Mon, 27 May 2019 11:01:22 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2srh5sb0cr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 27 May 2019 11:01:21 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <mimu@linux.ibm.com>;
+        Mon, 27 May 2019 16:01:19 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 27 May 2019 16:01:14 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4RF1DN260096556
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 27 May 2019 15:01:13 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 499CDAA101;
+        Mon, 27 May 2019 15:01:13 +0000 (GMT)
+Received: from [9.152.98.56] (unknown [9.152.98.56])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B6FA1AA0FD;
+        Mon, 27 May 2019 15:01:12 +0000 (GMT)
+Reply-To: mimu@linux.ibm.com
+Subject: Re: [PATCH v2 3/8] s390/cio: add basic protected virtualization
+ support
+To:     Sebastian Ott <sebott@linux.ibm.com>
+Cc:     KVM Mailing List <kvm@vger.kernel.org>,
+        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        linux-kernel@vger.kernel.org, Vincent Chen <deanbo422@gmail.com>,
-        linux-alpha@vger.kernel.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: [PATCH 4/5] kconfig: make arch/*/configs/defconfig the default of KBUILD_DEFCONFIG
-Date:   Mon, 27 May 2019 23:37:24 +0900
-Message-Id: <20190527143725.12542-4-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190527143725.12542-1-yamada.masahiro@socionext.com>
-References: <20190527143725.12542-1-yamada.masahiro@socionext.com>
+        Halil Pasic <pasic@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+References: <20190523162209.9543-1-mimu@linux.ibm.com>
+ <20190523162209.9543-4-mimu@linux.ibm.com>
+ <alpine.LFD.2.21.1905251124230.3359@schleppi>
+From:   Michael Mueller <mimu@linux.ibm.com>
+Organization: IBM
+Date:   Mon, 27 May 2019 17:01:12 +0200
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.LFD.2.21.1905251124230.3359@schleppi>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052715-0016-0000-0000-0000027FF93D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052715-0017-0000-0000-000032DCFF66
+Message-Id: <f2b8d5c3-a39b-8632-c463-cde47bf38c91@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-27_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905270106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Until recently, if KBUILD_DEFCONFIG was not set by the arch Makefile,
-the default path arch/*/defconfig was used.
 
-The last users of the default are gone by the following commits:
 
-- Commit f3e20ad67b4c ("s390: move arch/s390/defconfig to
-  arch/s390/configs/defconfig")
+On 25.05.19 11:44, Sebastian Ott wrote:
+> 
+> On Thu, 23 May 2019, Michael Mueller wrote:
+>>   static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
+>>   {
+>>   	struct ccw_device *cdev;
+>> +	struct gen_pool *dma_pool;
+>>   
+>>   	cdev  = kzalloc(sizeof(*cdev), GFP_KERNEL);
+>> -	if (cdev) {
+>> -		cdev->private = kzalloc(sizeof(struct ccw_device_private),
+>> -					GFP_KERNEL | GFP_DMA);
+>> -		if (cdev->private)
+>> -			return cdev;
+>> -	}
+>> +	if (!cdev)
+>> +		goto err_cdev;
+>> +	cdev->private = kzalloc(sizeof(struct ccw_device_private),
+>> +				GFP_KERNEL | GFP_DMA);
+>> +	if (!cdev->private)
+>> +		goto err_priv;
+>> +	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
+>> +	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
+>> +	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
+> 
+> This can return NULL. gen_pool_alloc will panic in this case.
+> [...]
 
-- Commit 986a13769c4b ("alpha: move arch/alpha/defconfig to
-  arch/alpha/configs/defconfig")
+yep, will handled in next version
 
-Let's set arch/*/configs/defconfig as a new default. This saves
-KBUILD_DEFCONFIG for some architectures.
+> 
+>> +err_dma_area:
+>> +		kfree(io_priv);
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+one tab gone
 
- arch/alpha/Makefile      | 2 --
- arch/arm64/Makefile      | 2 --
- arch/csky/Makefile       | 1 -
- arch/nds32/Makefile      | 2 --
- arch/riscv/Makefile      | 2 --
- arch/s390/Makefile       | 2 --
- scripts/kconfig/Makefile | 4 ++++
- 7 files changed, 4 insertions(+), 11 deletions(-)
+> 
+> Indentation.
+> 
+>> +err_priv:
+>> +	put_device(&sch->dev);
+>> +	return ERR_PTR(-ENOMEM);
+>>   }
+> [...]
+>>   void ccw_device_update_sense_data(struct ccw_device *cdev)
+>>   {
+>>   	memset(&cdev->id, 0, sizeof(cdev->id));
+>> -	cdev->id.cu_type   = cdev->private->senseid.cu_type;
+>> -	cdev->id.cu_model  = cdev->private->senseid.cu_model;
+>> -	cdev->id.dev_type  = cdev->private->senseid.dev_type;
+>> -	cdev->id.dev_model = cdev->private->senseid.dev_model;
+>> +	cdev->id.cu_type   =
+>> +		cdev->private->dma_area->senseid.cu_type;
+>> +	cdev->id.cu_model  =
+>> +		cdev->private->dma_area->senseid.cu_model;
+>> +	cdev->id.dev_type  =
+>> +		cdev->private->dma_area->senseid.dev_type;
+>> +	cdev->id.dev_model =
+>> +		cdev->private->dma_area->senseid.dev_model;
+> 
+> These fit into one line.
 
-diff --git a/arch/alpha/Makefile b/arch/alpha/Makefile
-index b3314e0dcb6f..12dee59b011c 100644
---- a/arch/alpha/Makefile
-+++ b/arch/alpha/Makefile
-@@ -8,8 +8,6 @@
- # Copyright (C) 1994 by Linus Torvalds
- #
- 
--KBUILD_DEFCONFIG := defconfig
--
- NM := $(NM) -B
- 
- LDFLAGS_vmlinux	:= -static -N #-relax
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index b025304bde46..970c41a30ed3 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -30,8 +30,6 @@ LDFLAGS_vmlinux	+= --fix-cortex-a53-843419
-   endif
- endif
- 
--KBUILD_DEFCONFIG := defconfig
--
- # Check for binutils support for specific extensions
- lseinstr := $(call as-instr,.arch_extension lse,-DCONFIG_AS_LSE=1)
- 
-diff --git a/arch/csky/Makefile b/arch/csky/Makefile
-index f9aab9157c4a..fb1bbbd91954 100644
---- a/arch/csky/Makefile
-+++ b/arch/csky/Makefile
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- OBJCOPYFLAGS		:=-O binary
- GZFLAGS			:=-9
--KBUILD_DEFCONFIG	:= defconfig
- 
- ifdef CONFIG_CPU_HAS_FPU
- FPUEXT = f
-diff --git a/arch/nds32/Makefile b/arch/nds32/Makefile
-index 14dab5ad88ef..ccdca7142020 100644
---- a/arch/nds32/Makefile
-+++ b/arch/nds32/Makefile
-@@ -2,8 +2,6 @@
- LDFLAGS_vmlinux	:= --no-undefined -X
- OBJCOPYFLAGS	:= -O binary -R .note -R .note.gnu.build-id -R .comment -S
- 
--KBUILD_DEFCONFIG := defconfig
--
- ifdef CONFIG_FUNCTION_TRACER
- arch-y += -malways-save-lp -mno-relax
- endif
-diff --git a/arch/riscv/Makefile b/arch/riscv/Makefile
-index 03e760267657..7a117be8297c 100644
---- a/arch/riscv/Makefile
-+++ b/arch/riscv/Makefile
-@@ -16,8 +16,6 @@ endif
- KBUILD_AFLAGS_MODULE += -fPIC
- KBUILD_CFLAGS_MODULE += -fPIC
- 
--KBUILD_DEFCONFIG = defconfig
--
- export BITS
- ifeq ($(CONFIG_ARCH_RV64I),y)
- 	BITS := 64
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index de8521fc9de5..df1d6a150f30 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -10,8 +10,6 @@
- # Copyright (C) 1994 by Linus Torvalds
- #
- 
--KBUILD_DEFCONFIG := defconfig
--
- LD_BFD		:= elf64-s390
- KBUILD_LDFLAGS	:= -m elf64_s390
- KBUILD_AFLAGS_MODULE += -fPIC
-diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-index 059642bd6584..ab30fe724c43 100644
---- a/scripts/kconfig/Makefile
-+++ b/scripts/kconfig/Makefile
-@@ -12,6 +12,10 @@ else
- Kconfig := Kconfig
- endif
- 
-+ifndef KBUILD_DEFCONFIG
-+KBUILD_DEFCONFIG := defconfig
-+endif
-+
- ifeq ($(quiet),silent_)
- silent := -s
- endif
--- 
-2.17.1
+yep, surprisingly below 80 characters
+
+> 
+>> +/**
+>> + * Allocate zeroed dma coherent 31 bit addressable memory using
+>> + * the subchannels dma pool. Maximal size of allocation supported
+>> + * is PAGE_SIZE.
+>> + */
+> drivers/s390/cio/device_ops.c:708: warning: Function parameter or member 'cdev' not described in 'ccw_device_dma_zalloc'
+> drivers/s390/cio/device_ops.c:708: warning: Function parameter or member 'size' not described in 'ccw_device_dma_zalloc'
+
+changing comment open token
+
+> 
+> 
+> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+> 
+
+Thanks!
+
+
+Michael
 
