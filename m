@@ -2,92 +2,185 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EDF72AC16
-	for <lists+linux-s390@lfdr.de>; Sun, 26 May 2019 22:27:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 751282AF03
+	for <lists+linux-s390@lfdr.de>; Mon, 27 May 2019 08:57:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726072AbfEZU1r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 26 May 2019 16:27:47 -0400
-Received: from port70.net ([81.7.13.123]:59088 "EHLO port70.net"
+        id S1725943AbfE0G5h (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 May 2019 02:57:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57618 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725616AbfEZU1q (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 26 May 2019 16:27:46 -0400
-X-Greylist: delayed 420 seconds by postgrey-1.27 at vger.kernel.org; Sun, 26 May 2019 16:27:44 EDT
-Received: by port70.net (Postfix, from userid 1002)
-        id 64F7EABEC0BA; Sun, 26 May 2019 22:20:42 +0200 (CEST)
-Date:   Sun, 26 May 2019 22:20:42 +0200
-From:   Szabolcs Nagy <nsz@port70.net>
-To:     Christian Brauner <christian@brauner.io>
-Cc:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
-        torvalds@linux-foundation.org, fweimer@redhat.com,
-        jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
-        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
-        linux-alpha@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-kselftest@vger.kernel.org, x86@kernel.org
-Subject: Re: [PATCH v2 1/2] open: add close_range()
-Message-ID: <20190526202041.GO16415@port70.net>
-References: <20190523154747.15162-1-christian@brauner.io>
- <20190523154747.15162-2-christian@brauner.io>
+        id S1725940AbfE0G5g (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 27 May 2019 02:57:36 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 17D9781DF0;
+        Mon, 27 May 2019 06:57:31 +0000 (UTC)
+Received: from gondolin (ovpn-204-109.brq.redhat.com [10.40.204.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4022160BEC;
+        Mon, 27 May 2019 06:57:22 +0000 (UTC)
+Date:   Mon, 27 May 2019 08:57:18 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Michael Mueller <mimu@linux.ibm.com>
+Cc:     KVM Mailing List <kvm@vger.kernel.org>,
+        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: Re: [PATCH v2 2/8] s390/cio: introduce DMA pools to cio
+Message-ID: <20190527085718.10494ee2.cohuck@redhat.com>
+In-Reply-To: <20190523162209.9543-3-mimu@linux.ibm.com>
+References: <20190523162209.9543-1-mimu@linux.ibm.com>
+        <20190523162209.9543-3-mimu@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190523154747.15162-2-christian@brauner.io>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 27 May 2019 06:57:36 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-* Christian Brauner <christian@brauner.io> [2019-05-23 17:47:46 +0200]:
-> This adds the close_range() syscall. It allows to efficiently close a range
-> of file descriptors up to all file descriptors of a calling task.
+On Thu, 23 May 2019 18:22:03 +0200
+Michael Mueller <mimu@linux.ibm.com> wrote:
+
+> From: Halil Pasic <pasic@linux.ibm.com>
 > 
-> The syscall came up in a recent discussion around the new mount API and
-> making new file descriptor types cloexec by default. During this
-> discussion, Al suggested the close_range() syscall (cf. [1]). Note, a
-> syscall in this manner has been requested by various people over time.
+> To support protected virtualization cio will need to make sure the
+> memory used for communication with the hypervisor is DMA memory.
 > 
-> First, it helps to close all file descriptors of an exec()ing task. This
-> can be done safely via (quoting Al's example from [1] verbatim):
+> Let us introduce one global cio, and some tools for pools seated
+
+"one global pool for cio"?
+
+> at individual devices.
 > 
->         /* that exec is sensitive */
->         unshare(CLONE_FILES);
->         /* we don't want anything past stderr here */
->         close_range(3, ~0U);
->         execve(....);
+> Our DMA pools are implemented as a gen_pool backed with DMA pages. The
+> idea is to avoid each allocation effectively wasting a page, as we
+> typically allocate much less than PAGE_SIZE.
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> ---
+>  arch/s390/Kconfig           |   1 +
+>  arch/s390/include/asm/cio.h |  11 +++++
+>  drivers/s390/cio/css.c      | 110 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 122 insertions(+)
+> 
 
-this does not work in a hosted c implementation unless the libc
-guarantees not to use libc internal fds (e.g. in execve).
-(the libc cannot easily abstract fds, so the syscall abi layer
-fd semantics is necessarily visible to user code.)
+(...)
 
-i think this is a new constraint for userspace runtimes.
-(not entirely unreasonable though)
+> @@ -1018,6 +1024,109 @@ static struct notifier_block css_power_notifier = {
+>  	.notifier_call = css_power_event,
+>  };
+>  
+> +#define POOL_INIT_PAGES 1
+> +static struct gen_pool *cio_dma_pool;
+> +/* Currently cio supports only a single css */
 
-> The code snippet above is one way of working around the problem that file
-> descriptors are not cloexec by default. This is aggravated by the fact that
-> we can't just switch them over without massively regressing userspace. For
-> a whole class of programs having an in-kernel method of closing all file
-> descriptors is very helpful (e.g. demons, service managers, programming
-> language standard libraries, container managers etc.).
+This comment looks misplaced.
 
-was cloexec_range(a,b) considered?
+> +#define  CIO_DMA_GFP (GFP_KERNEL | __GFP_ZERO)
+> +
+> +
+> +struct device *cio_get_dma_css_dev(void)
+> +{
+> +	return &channel_subsystems[0]->device;
+> +}
+> +
+> +struct gen_pool *cio_gp_dma_create(struct device *dma_dev, int nr_pages)
+> +{
+> +	struct gen_pool *gp_dma;
+> +	void *cpu_addr;
+> +	dma_addr_t dma_addr;
+> +	int i;
+> +
+> +	gp_dma = gen_pool_create(3, -1);
+> +	if (!gp_dma)
+> +		return NULL;
+> +	for (i = 0; i < nr_pages; ++i) {
+> +		cpu_addr = dma_alloc_coherent(dma_dev, PAGE_SIZE, &dma_addr,
+> +					      CIO_DMA_GFP);
+> +		if (!cpu_addr)
+> +			return gp_dma;
 
-> (Please note, unshare(CLONE_FILES) should only be needed if the calling
->  task is multi-threaded and shares the file descriptor table with another
->  thread in which case two threads could race with one thread allocating
->  file descriptors and the other one closing them via close_range(). For the
->  general case close_range() before the execve() is sufficient.)
+So, you may return here with no memory added to the pool at all (or
+less than requested), but for the caller that is indistinguishable from
+an allocation that went all right. May that be a problem?
 
-assuming there is no unblocked signal handler that may open fds.
+> +		gen_pool_add_virt(gp_dma, (unsigned long) cpu_addr,
+> +				  dma_addr, PAGE_SIZE, -1);
+> +	}
+> +	return gp_dma;
+> +}
+> +
 
-a syscall that tramples on fds not owned by the caller is ugly
-(not generally safe to use and may break things if it gets used),
-i don't have a better solution for fd leaks or missing cloexec,
-but i think it needs more analysis how it can be used.
+(...)
+
+> +static void __init cio_dma_pool_init(void)
+> +{
+> +	/* No need to free up the resources: compiled in */
+> +	cio_dma_pool = cio_gp_dma_create(cio_get_dma_css_dev(), 1);
+
+Does it make sense to continue if you did not get a pool here? I don't
+think that should happen unless things were really bad already?
+
+> +}
+> +
+> +void *cio_gp_dma_zalloc(struct gen_pool *gp_dma, struct device *dma_dev,
+> +			size_t size)
+> +{
+> +	dma_addr_t dma_addr;
+> +	unsigned long addr;
+> +	size_t chunk_size;
+> +
+> +	addr = gen_pool_alloc(gp_dma, size);
+> +	while (!addr) {
+> +		chunk_size = round_up(size, PAGE_SIZE);
+> +		addr = (unsigned long) dma_alloc_coherent(dma_dev,
+> +					 chunk_size, &dma_addr, CIO_DMA_GFP);
+> +		if (!addr)
+> +			return NULL;
+> +		gen_pool_add_virt(gp_dma, addr, dma_addr, chunk_size, -1);
+> +		addr = gen_pool_alloc(gp_dma, size);
+> +	}
+> +	return (void *) addr;
+> +}
+> +
+> +void cio_gp_dma_free(struct gen_pool *gp_dma, void *cpu_addr, size_t size)
+> +{
+> +	if (!cpu_addr)
+> +		return;
+> +	memset(cpu_addr, 0, size);
+> +	gen_pool_free(gp_dma, (unsigned long) cpu_addr, size);
+> +}
+> +
+> +/**
+> + * Allocate dma memory from the css global pool. Intended for memory not
+> + * specific to any single device within the css. The allocated memory
+> + * is not guaranteed to be 31-bit addressable.
+> + *
+> + * Caution: Not suitable for early stuff like console.
+> + *
+> + */
+> +void *cio_dma_zalloc(size_t size)
+> +{
+> +	return cio_gp_dma_zalloc(cio_dma_pool, cio_get_dma_css_dev(), size);
+
+Ok, that looks like the failure I mentioned above should be
+accommodated by the code. Still, I think it's a bit odd.
+
+> +}
