@@ -2,176 +2,70 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACBAD2B810
-	for <lists+linux-s390@lfdr.de>; Mon, 27 May 2019 17:01:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 561032BCB8
+	for <lists+linux-s390@lfdr.de>; Tue, 28 May 2019 03:16:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726094AbfE0PBX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 27 May 2019 11:01:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42914 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726291AbfE0PBX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 27 May 2019 11:01:23 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4REqalA103617
-        for <linux-s390@vger.kernel.org>; Mon, 27 May 2019 11:01:22 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2srh5sb0cr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 27 May 2019 11:01:21 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <mimu@linux.ibm.com>;
-        Mon, 27 May 2019 16:01:19 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 27 May 2019 16:01:14 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4RF1DN260096556
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 27 May 2019 15:01:13 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 499CDAA101;
-        Mon, 27 May 2019 15:01:13 +0000 (GMT)
-Received: from [9.152.98.56] (unknown [9.152.98.56])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B6FA1AA0FD;
-        Mon, 27 May 2019 15:01:12 +0000 (GMT)
-Reply-To: mimu@linux.ibm.com
-Subject: Re: [PATCH v2 3/8] s390/cio: add basic protected virtualization
- support
-To:     Sebastian Ott <sebott@linux.ibm.com>
-Cc:     KVM Mailing List <kvm@vger.kernel.org>,
-        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
-        Cornelia Huck <cohuck@redhat.com>,
+        id S1727567AbfE1BQE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 27 May 2019 21:16:04 -0400
+Received: from ozlabs.org ([203.11.71.1]:41341 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727090AbfE1BQE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 27 May 2019 21:16:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45CbWg518wz9s3Z;
+        Tue, 28 May 2019 11:15:59 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-References: <20190523162209.9543-1-mimu@linux.ibm.com>
- <20190523162209.9543-4-mimu@linux.ibm.com>
- <alpine.LFD.2.21.1905251124230.3359@schleppi>
-From:   Michael Mueller <mimu@linux.ibm.com>
-Organization: IBM
-Date:   Mon, 27 May 2019 17:01:12 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
+In-Reply-To: <20190524104418.17194-1-malat@debian.org>
+References: <20190523114736.30268-1-malat@debian.org> <20190524104418.17194-1-malat@debian.org>
+Date:   Tue, 28 May 2019 11:15:56 +1000
+Message-ID: <878surqsz7.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <alpine.LFD.2.21.1905251124230.3359@schleppi>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052715-0016-0000-0000-0000027FF93D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052715-0017-0000-0000-000032DCFF66
-Message-Id: <f2b8d5c3-a39b-8632-c463-cde47bf38c91@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-27_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905270106
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Mathieu Malaterre <malat@debian.org> writes:
+> The declaration for pfn_is_nosave is only available in
+> kernel/power/power.h. Since this function can be override in arch,
+> expose it globally. Having a prototype will make sure to avoid warning
+> (sometime treated as error with W=1) such as:
+>
+>   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+>
+> This moves the declaration into a globally visible header file and add
+> missing include to avoid a warning on powerpc. Also remove the
+> duplicated prototypes since not required anymore.
+>
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+> v2: As suggestion by christophe remove duplicates prototypes
+>
+>  arch/powerpc/kernel/suspend.c | 1 +
+>  arch/s390/kernel/entry.h      | 1 -
+>  include/linux/suspend.h       | 1 +
+>  kernel/power/power.h          | 2 --
+>  4 files changed, 2 insertions(+), 3 deletions(-)
 
+Looks fine to me.
 
-On 25.05.19 11:44, Sebastian Ott wrote:
-> 
-> On Thu, 23 May 2019, Michael Mueller wrote:
->>   static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
->>   {
->>   	struct ccw_device *cdev;
->> +	struct gen_pool *dma_pool;
->>   
->>   	cdev  = kzalloc(sizeof(*cdev), GFP_KERNEL);
->> -	if (cdev) {
->> -		cdev->private = kzalloc(sizeof(struct ccw_device_private),
->> -					GFP_KERNEL | GFP_DMA);
->> -		if (cdev->private)
->> -			return cdev;
->> -	}
->> +	if (!cdev)
->> +		goto err_cdev;
->> +	cdev->private = kzalloc(sizeof(struct ccw_device_private),
->> +				GFP_KERNEL | GFP_DMA);
->> +	if (!cdev->private)
->> +		goto err_priv;
->> +	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
->> +	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
->> +	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
-> 
-> This can return NULL. gen_pool_alloc will panic in this case.
-> [...]
+Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
 
-yep, will handled in next version
-
-> 
->> +err_dma_area:
->> +		kfree(io_priv);
-
-one tab gone
-
-> 
-> Indentation.
-> 
->> +err_priv:
->> +	put_device(&sch->dev);
->> +	return ERR_PTR(-ENOMEM);
->>   }
-> [...]
->>   void ccw_device_update_sense_data(struct ccw_device *cdev)
->>   {
->>   	memset(&cdev->id, 0, sizeof(cdev->id));
->> -	cdev->id.cu_type   = cdev->private->senseid.cu_type;
->> -	cdev->id.cu_model  = cdev->private->senseid.cu_model;
->> -	cdev->id.dev_type  = cdev->private->senseid.dev_type;
->> -	cdev->id.dev_model = cdev->private->senseid.dev_model;
->> +	cdev->id.cu_type   =
->> +		cdev->private->dma_area->senseid.cu_type;
->> +	cdev->id.cu_model  =
->> +		cdev->private->dma_area->senseid.cu_model;
->> +	cdev->id.dev_type  =
->> +		cdev->private->dma_area->senseid.dev_type;
->> +	cdev->id.dev_model =
->> +		cdev->private->dma_area->senseid.dev_model;
-> 
-> These fit into one line.
-
-yep, surprisingly below 80 characters
-
-> 
->> +/**
->> + * Allocate zeroed dma coherent 31 bit addressable memory using
->> + * the subchannels dma pool. Maximal size of allocation supported
->> + * is PAGE_SIZE.
->> + */
-> drivers/s390/cio/device_ops.c:708: warning: Function parameter or member 'cdev' not described in 'ccw_device_dma_zalloc'
-> drivers/s390/cio/device_ops.c:708: warning: Function parameter or member 'size' not described in 'ccw_device_dma_zalloc'
-
-changing comment open token
-
-> 
-> 
-> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-> 
-
-Thanks!
-
-
-Michael
-
+cheers
