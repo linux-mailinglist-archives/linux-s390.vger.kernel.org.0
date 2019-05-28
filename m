@@ -2,147 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFDEA2C95C
-	for <lists+linux-s390@lfdr.de>; Tue, 28 May 2019 16:58:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 099342CAA0
+	for <lists+linux-s390@lfdr.de>; Tue, 28 May 2019 17:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726463AbfE1O6V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 May 2019 10:58:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51856 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726540AbfE1O6V (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 May 2019 10:58:21 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4SEvVmt024009
-        for <linux-s390@vger.kernel.org>; Tue, 28 May 2019 10:58:19 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ss6ndsn2k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 28 May 2019 10:58:19 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <mimu@linux.ibm.com>;
-        Tue, 28 May 2019 15:58:17 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 28 May 2019 15:58:13 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4SEwCD545744128
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 28 May 2019 14:58:12 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E050052052;
-        Tue, 28 May 2019 14:58:11 +0000 (GMT)
-Received: from [9.152.99.121] (unknown [9.152.99.121])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6B19E52071;
-        Tue, 28 May 2019 14:58:11 +0000 (GMT)
-Reply-To: mimu@linux.ibm.com
-Subject: Re: [PATCH v2 8/8] virtio/s390: make airq summary indicators DMA
-To:     Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     KVM Mailing List <kvm@vger.kernel.org>,
-        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
+        id S1726819AbfE1PtC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 May 2019 11:49:02 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:59632 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726452AbfE1PtC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 28 May 2019 11:49:02 -0400
+Received: from 79.184.255.225.ipv4.supernova.orange.pl (79.184.255.225) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.213)
+ id f088da01f68d15dd; Tue, 28 May 2019 17:48:59 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Mathieu Malaterre <malat@debian.org>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-References: <20190523162209.9543-1-mimu@linux.ibm.com>
- <20190523162209.9543-9-mimu@linux.ibm.com>
- <20190527140018.7c2d34ff.cohuck@redhat.com>
- <20190528163342.335eea0b.pasic@linux.ibm.com>
-From:   Michael Mueller <mimu@linux.ibm.com>
-Organization: IBM
-Date:   Tue, 28 May 2019 16:58:11 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.7.0
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
+Date:   Tue, 28 May 2019 17:48:58 +0200
+Message-ID: <7467366.tOSDWnDKPa@kreacher>
+In-Reply-To: <875zpvqsy9.fsf@concordia.ellerman.id.au>
+References: <20190523114736.30268-1-malat@debian.org> <1929721.iDiXxTFbjN@kreacher> <875zpvqsy9.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20190528163342.335eea0b.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19052814-0020-0000-0000-000003414827
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19052814-0021-0000-0000-0000219444FF
-Message-Id: <f06a939d-0d80-a3b2-e69c-3bac9bb2c688@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-28_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1905280097
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tuesday, May 28, 2019 3:16:30 AM CEST Michael Ellerman wrote:
+> "Rafael J. Wysocki" <rjw@rjwysocki.net> writes:
+> > On Friday, May 24, 2019 12:44:18 PM CEST Mathieu Malaterre wrote:
+> >> The declaration for pfn_is_nosave is only available in
+> >> kernel/power/power.h. Since this function can be override in arch,
+> >> expose it globally. Having a prototype will make sure to avoid warning
+> >> (sometime treated as error with W=1) such as:
+> >> 
+> >>   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+> >> 
+> >> This moves the declaration into a globally visible header file and add
+> >> missing include to avoid a warning on powerpc. Also remove the
+> >> duplicated prototypes since not required anymore.
+> >> 
+> >> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> >> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> >> ---
+> >> v2: As suggestion by christophe remove duplicates prototypes
+> >> 
+> >>  arch/powerpc/kernel/suspend.c | 1 +
+> >>  arch/s390/kernel/entry.h      | 1 -
+> >>  include/linux/suspend.h       | 1 +
+> >>  kernel/power/power.h          | 2 --
+> >>  4 files changed, 2 insertions(+), 3 deletions(-)
+> >> 
+> >> diff --git a/kernel/power/power.h b/kernel/power/power.h
+> >> index 9e58bdc8a562..44bee462ff57 100644
+> >> --- a/kernel/power/power.h
+> >> +++ b/kernel/power/power.h
+> >> @@ -75,8 +75,6 @@ static inline void hibernate_reserved_size_init(void) {}
+> >>  static inline void hibernate_image_size_init(void) {}
+> >>  #endif /* !CONFIG_HIBERNATION */
+> >>  
+> >> -extern int pfn_is_nosave(unsigned long);
+> >> -
+> >>  #define power_attr(_name) \
+> >>  static struct kobj_attribute _name##_attr = {	\
+> >>  	.attr	= {				\
+> >> 
+> >
+> > With an ACK from the powerpc maintainers, I could apply this one.
+> 
+> Sent.
+
+Thanks!
 
 
-On 28.05.19 16:33, Halil Pasic wrote:
-> On Mon, 27 May 2019 14:00:18 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
->> On Thu, 23 May 2019 18:22:09 +0200
->> Michael Mueller <mimu@linux.ibm.com> wrote:
->>
->>> From: Halil Pasic <pasic@linux.ibm.com>
->>>
->>> Hypervisor needs to interact with the summary indicators, so these
->>> need to be DMA memory as well (at least for protected virtualization
->>> guests).
->>>
->>> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
->>> ---
->>>   drivers/s390/virtio/virtio_ccw.c | 22 +++++++++++++++-------
->>>   1 file changed, 15 insertions(+), 7 deletions(-)
->>
->> (...)
->>
->>> @@ -1501,6 +1508,7 @@ static int __init virtio_ccw_init(void)
->>>   {
->>>   	/* parse no_auto string before we do anything further */
->>>   	no_auto_parse();
->>> +	summary_indicators = cio_dma_zalloc(MAX_AIRQ_AREAS);
->>
->> What happens if this fails?
-> 
-> Bad things could happen!
-> 
-> How about adding
-> 
-> if (!summary_indicators)
-> 	virtio_ccw_use_airq = 0; /* fall back to classic */
-> 
-> ?
-> 
-> Since it ain't very likely to happen, we could also just fail
-> virtio_ccw_init() with -ENOMEM.
-
-That is what I'm currently doing in v3.
-
-> 
-> Regards,
-> Halil
-> 
-> 
->>
->>>   	return ccw_driver_register(&virtio_ccw_driver);
->>>   }
->>>   device_initcall(virtio_ccw_init);
->>
-> 
-
-Michael
 
