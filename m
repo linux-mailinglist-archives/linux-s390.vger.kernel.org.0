@@ -2,86 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F32962C70F
-	for <lists+linux-s390@lfdr.de>; Tue, 28 May 2019 14:54:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 460EA2C752
+	for <lists+linux-s390@lfdr.de>; Tue, 28 May 2019 15:06:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfE1Mxt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 May 2019 08:53:49 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54224 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726620AbfE1Mxt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 May 2019 08:53:49 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 84CE8A3B6C;
-        Tue, 28 May 2019 12:53:49 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 85B2B1972C;
-        Tue, 28 May 2019 12:53:47 +0000 (UTC)
-Date:   Tue, 28 May 2019 14:53:44 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?UTF-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re:  [PATCH 8/9] KVM: s390: Do not report unusabled IDs via
- KVM_CAP_MAX_VCPU_ID
-Message-ID: <20190528145344.42fe6bc5.cohuck@redhat.com>
-In-Reply-To: <1deb73ac-9589-89cb-9a9b-f9957584733e@de.ibm.com>
-References: <20190523164309.13345-1-thuth@redhat.com>
-        <20190523164309.13345-9-thuth@redhat.com>
-        <1deb73ac-9589-89cb-9a9b-f9957584733e@de.ibm.com>
-Organization: Red Hat GmbH
+        id S1726620AbfE1NGI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 May 2019 09:06:08 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39098 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726897AbfE1NGI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 28 May 2019 09:06:08 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 9196F290A5DB12249000;
+        Tue, 28 May 2019 21:06:03 +0800 (CST)
+Received: from [127.0.0.1] (10.177.23.164) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Tue, 28 May 2019
+ 21:05:52 +0800
+Subject: Re: [PATCH v7 1/1] iommu: enhance IOMMU dma mode build options
+To:     Joerg Roedel <joro@8bytes.org>
+References: <20190520135947.14960-1-thunder.leizhen@huawei.com>
+ <20190520135947.14960-2-thunder.leizhen@huawei.com>
+ <20190527142140.GH8420@8bytes.org>
+CC:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        John Garry <john.garry@huawei.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        linux-doc <linux-doc@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        "Gerald Schaefer" <gerald.schaefer@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        David Woodhouse <dwmw2@infradead.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>,
+        Hanjun Guo <guohanjun@huawei.com>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <5CED322E.20102@huawei.com>
+Date:   Tue, 28 May 2019 21:05:50 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190527142140.GH8420@8bytes.org>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 28 May 2019 12:53:49 +0000 (UTC)
+X-Originating-IP: [10.177.23.164]
+X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 28 May 2019 13:00:30 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-> Paolo, Radim,
-> 
-> would you consider this patch (or the full series) as 5.2 material or 5.3 material?
 
-FWIW, I'd consider this patch 5.2 material, as we're currently relaying
-wrong values to userspace.
+On 2019/5/27 22:21, Joerg Roedel wrote:
+> Hi Zhen Lei,
+> 
+> On Mon, May 20, 2019 at 09:59:47PM +0800, Zhen Lei wrote:
+>>  arch/ia64/kernel/pci-dma.c                |  2 +-
+>>  arch/powerpc/platforms/powernv/pci-ioda.c |  3 ++-
+>>  arch/s390/pci/pci_dma.c                   |  2 +-
+>>  arch/x86/kernel/pci-dma.c                 |  7 ++---
+>>  drivers/iommu/Kconfig                     | 44 ++++++++++++++++++++++++++-----
+>>  drivers/iommu/amd_iommu_init.c            |  3 ++-
+>>  drivers/iommu/intel-iommu.c               |  2 +-
+>>  drivers/iommu/iommu.c                     |  3 ++-
+>>  8 files changed, 48 insertions(+), 18 deletions(-)
+> 
+> This needs Acks from the arch maintainers of ia64, powerpc, s390 and
+> x86, at least.
+> 
+> It is easier for them if you split it up into the Kconfig change and
+> separete patches per arch and per iommu driver. Then collect the Acks on
+> the individual patches.
+
+OK, thanks. I will do it tomorrow.
 
 > 
+> Thanks,
 > 
-> On 23.05.19 18:43, Thomas Huth wrote:
-> > KVM_CAP_MAX_VCPU_ID is currently always reporting KVM_MAX_VCPU_ID on all
-> > architectures. However, on s390x, the amount of usable CPUs is determined
-> > during runtime - it is depending on the features of the machine the code
-> > is running on. Since we are using the vcpu_id as an index into the SCA
-> > structures that are defined by the hardware (see e.g. the sca_add_vcpu()
-> > function), it is not only the amount of CPUs that is limited by the hard-
-> > ware, but also the range of IDs that we can use.
-> > Thus KVM_CAP_MAX_VCPU_ID must be determined during runtime on s390x, too.
-> > So the handling of KVM_CAP_MAX_VCPU_ID has to be moved from the common
-> > code into the architecture specific code, and on s390x we have to return
-> > the same value here as for KVM_CAP_MAX_VCPUS.
-> > This problem has been discovered with the kvm_create_max_vcpus selftest.
-> > With this change applied, the selftest now passes on s390x, too.
-> > 
-> > Signed-off-by: Thomas Huth <thuth@redhat.com>
-> > ---
-> >  arch/mips/kvm/mips.c       | 3 +++
-> >  arch/powerpc/kvm/powerpc.c | 3 +++
-> >  arch/s390/kvm/kvm-s390.c   | 1 +
-> >  arch/x86/kvm/x86.c         | 3 +++
-> >  virt/kvm/arm/arm.c         | 3 +++
-> >  virt/kvm/kvm_main.c        | 2 --
-> >  6 files changed, 13 insertions(+), 2 deletions(-)
+> 	Joerg
+> 
+> .
+> 
+
+-- 
+Thanks!
+BestRegards
+
