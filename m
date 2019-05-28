@@ -2,149 +2,251 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 663DB2CD16
-	for <lists+linux-s390@lfdr.de>; Tue, 28 May 2019 19:05:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF2672D118
+	for <lists+linux-s390@lfdr.de>; Tue, 28 May 2019 23:41:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfE1RFm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 May 2019 13:05:42 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:33266 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726515AbfE1RFm (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 May 2019 13:05:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 74093341;
-        Tue, 28 May 2019 10:05:41 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C6A43F59C;
-        Tue, 28 May 2019 10:05:39 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] kselftest: Extend vDSO selftest to clock_getres
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Shuah Khan <shuah@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-kselftest@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arch@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>
-References: <20190523112116.19233-1-vincenzo.frascino@arm.com>
- <20190523112116.19233-4-vincenzo.frascino@arm.com>
- <87lfyrp0d2.fsf@concordia.ellerman.id.au>
- <afb7395f-43e9-c304-2db2-349e6727b687@arm.com>
- <20190528190132.Horde.a454OBLbW8Q4Xvx6vYRfSA1@messagerie.si.c-s.fr>
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-Message-ID: <bc9a8567-500f-46d4-8574-2148dbf478b5@arm.com>
-Date:   Tue, 28 May 2019 18:05:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726506AbfE1Vl4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 May 2019 17:41:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51324 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726492AbfE1Vl4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 28 May 2019 17:41:56 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C35563162;
+        Tue, 28 May 2019 21:41:55 +0000 (UTC)
+Received: from x1.home (ovpn-116-22.phx2.redhat.com [10.3.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E66860C4C;
+        Tue, 28 May 2019 21:41:54 +0000 (UTC)
+Date:   Tue, 28 May 2019 15:41:53 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     sebott@linux.vnet.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.vnet.ibm.com, borntraeger@de.ibm.com,
+        walling@linux.ibm.com, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org, joro@8bytes.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        robin.murphy@arm.com
+Subject: Re: [PATCH v3 3/3] vfio: pci: Using a device region to retrieve
+ zPCI information
+Message-ID: <20190528154153.590f9ad9@x1.home>
+In-Reply-To: <1558614326-24711-4-git-send-email-pmorel@linux.ibm.com>
+References: <1558614326-24711-1-git-send-email-pmorel@linux.ibm.com>
+        <1558614326-24711-4-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <20190528190132.Horde.a454OBLbW8Q4Xvx6vYRfSA1@messagerie.si.c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 28 May 2019 21:41:55 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Christophe,
+On Thu, 23 May 2019 14:25:26 +0200
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-On 28/05/2019 18:01, Christophe Leroy wrote:
-> Vincenzo Frascino <vincenzo.frascino@arm.com> a écrit :
+> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
 > 
->> Hi Michael,
->>
->> thank you for your reply.
->>
->> On 28/05/2019 07:19, Michael Ellerman wrote:
->>> Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
->>>
->>>> The current version of the multiarch vDSO selftest verifies only
->>>> gettimeofday.
->>>>
->>>> Extend the vDSO selftest to clock_getres, to verify that the
->>>> syscall and the vDSO library function return the same information.
->>>>
->>>> The extension has been used to verify the hrtimer_resoltion fix.
->>>
->>> This is passing for me even without patch 1 applied, shouldn't it fail
->>> without the fix? What am I missing?
->>>
->>
->> This is correct, because during the refactoring process I missed an "n" :)
->>
->> if·((x.tv_sec·!=·y.tv_sec)·||·(x.tv_sec·!=·y.tv_sec))
->>
->> Should be:
->>
->> if·((x.tv_sec·!=·y.tv_sec)·||·(x.tv_nsec·!=·y.tv_nsec))
+> When the VFIO_PCI_ZDEV feature is configured we initialize
+> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
+> the information from the ZPCI device the userland needs to
+> give to a guest driving the zPCI function.
 > 
-> Maybe you'd better use timercmp() from sys/time.h
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  drivers/vfio/pci/Kconfig            |  7 ++++
+>  drivers/vfio/pci/Makefile           |  1 +
+>  drivers/vfio/pci/vfio_pci.c         |  9 ++++
+>  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
+>  drivers/vfio/pci/vfio_pci_zdev.c    | 83 +++++++++++++++++++++++++++++++++++++
+>  5 files changed, 110 insertions(+)
+>  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
 > 
+> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
+> index d0f8e4f..9c1181c 100644
+> --- a/drivers/vfio/pci/Kconfig
+> +++ b/drivers/vfio/pci/Kconfig
+> @@ -44,3 +44,10 @@ config VFIO_PCI_NVLINK2
+>  	depends on VFIO_PCI && PPC_POWERNV
+>  	help
+>  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
+> +
+> +config VFIO_PCI_ZDEV
+> +	tristate "VFIO PCI Generic for ZPCI devices"
 
-timercmp() takes "struct timeval" not "struct timespec".
+Shouldn't this be 'bool'?
 
-> Christophe
-> 
->>
->> My mistake, I am going to fix the test and re-post v5 of this set.
->>
->> Without my patch if you pass "highres=off" to the kernel (as a command line
->> parameter) it leads to a broken implementation of clock_getres since  
->> the value
->> of CLOCK_REALTIME_RES does not change at runtime.
->>
->> Expected result (with highres=off):
->>
->> # uname -r
->> 5.2.0-rc2
->> # ./vdso_clock_getres
->> clock_id: CLOCK_REALTIME [FAIL]
->> clock_id: CLOCK_BOOTTIME [PASS]
->> clock_id: CLOCK_TAI [PASS]
->> clock_id: CLOCK_REALTIME_COARSE [PASS]
->> clock_id: CLOCK_MONOTONIC [FAIL]
->> clock_id: CLOCK_MONOTONIC_RAW [PASS]
->> clock_id: CLOCK_MONOTONIC_COARSE [PASS]
->>
->> The reason of this behavior is that the only clocks supported by getres on
->> powerpc are CLOCK_REALTIME and CLOCK_MONOTONIC, the rest on the clocks use
->> always syscalls.
->>
->>> # uname -r
->>> 5.2.0-rc2-gcc-8.2.0
->>>
->>> # ./vdso_clock_getres
->>> clock_id: CLOCK_REALTIME [PASS]
->>> clock_id: CLOCK_BOOTTIME [PASS]
->>> clock_id: CLOCK_TAI [PASS]
->>> clock_id: CLOCK_REALTIME_COARSE [PASS]
->>> clock_id: CLOCK_MONOTONIC [PASS]
->>> clock_id: CLOCK_MONOTONIC_RAW [PASS]
->>> clock_id: CLOCK_MONOTONIC_COARSE [PASS]
->>>
->>> cheers
->>>
->>>> Cc: Shuah Khan <shuah@kernel.org>
->>>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->>>> ---
->>>>
->>>> Note: This patch is independent from the others in this series, hence it
->>>> can be merged singularly by the kselftest maintainers.
->>>>
->>>>  tools/testing/selftests/vDSO/Makefile         |   2 +
->>>>  .../selftests/vDSO/vdso_clock_getres.c        | 124 ++++++++++++++++++
->>>>  2 files changed, 126 insertions(+)
->>>>  create mode 100644 tools/testing/selftests/vDSO/vdso_clock_getres.c
->>
->> --
->> Regards,
->> Vincenzo
-> 
-> 
+> +	depends on VFIO_PCI && S390
+> +	default y
+> +	help
+> +	  VFIO PCI support for S390 Z-PCI devices
+> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
+> index 9662c06..fd53819 100644
+> --- a/drivers/vfio/pci/Makefile
+> +++ b/drivers/vfio/pci/Makefile
+> @@ -2,5 +2,6 @@
+>  vfio-pci-y := vfio_pci.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
+>  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
+>  vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
+> +vfio-pci-$(CONFIG_VFIO_PCI_ZDEV) += vfio_pci_zdev.o
+>  
+>  obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
+> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
+> index 3fa20e9..b6087d6 100644
+> --- a/drivers/vfio/pci/vfio_pci.c
+> +++ b/drivers/vfio/pci/vfio_pci.c
+> @@ -362,6 +362,15 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
+>  		}
+>  	}
+>  
+> +	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV)) {
+> +		ret = vfio_pci_zdev_init(vdev);
+> +		if (ret) {
+> +			dev_warn(&vdev->pdev->dev,
+> +				 "Failed to setup ZDEV regions\n");
+> +			goto disable_exit;
+> +		}
+> +	}
+> +
+>  	vfio_pci_probe_mmaps(vdev);
+>  
+>  	return 0;
+> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
+> index 1812cf2..db73cdf 100644
+> --- a/drivers/vfio/pci/vfio_pci_private.h
+> +++ b/drivers/vfio/pci/vfio_pci_private.h
+> @@ -189,4 +189,14 @@ static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
+>  	return -ENODEV;
+>  }
+>  #endif
+> +
+> +#ifdef(IS_ENABLED_VFIO_PCI_ZDEV)
 
--- 
-Regards,
-Vincenzo
+I thought this might be some clever new macro, but is it just a typo?
+Seems it should just be
+
+#ifdef CONFIG_VFIO_PCI_ZDEV
+
+> +extern int vfio_pci_zdev_init(struct vfio_pci_device *vdev);
+> +#else
+> +static inline int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif
+> +
+>  #endif /* VFIO_PCI_PRIVATE_H */
+> diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
+> new file mode 100644
+> index 0000000..230a4e4
+> --- /dev/null
+> +++ b/drivers/vfio/pci/vfio_pci_zdev.c
+> @@ -0,0 +1,83 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * VFIO ZPCI devices support
+> + *
+> + * Copyright (C) IBM Corp. 2019.  All rights reserved.
+> + *	Author: Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +#include <linux/io.h>
+> +#include <linux/pci.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/vfio.h>
+> +#include <linux/vfio_zdev.h>
+> +
+> +#include "vfio_pci_private.h"
+> +
+> +static size_t vfio_pci_zdev_rw(struct vfio_pci_device *vdev,
+> +			       char __user *buf, size_t count, loff_t *ppos,
+> +			       bool iswrite)
+> +{
+> +	struct vfio_region_zpci_info *region;
+> +	struct zpci_dev *zdev;
+> +	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
+> +
+> +	if (!vdev->pdev->bus)
+> +		return -ENODEV;
+> +
+> +	zdev = vdev->pdev->bus->sysdata;
+> +	if (!zdev)
+> +		return -ENODEV;
+> +
+> +	if ((*ppos & VFIO_PCI_OFFSET_MASK) || (count != sizeof(*region)))
+> +		return -EINVAL;
+
+Why?  This sort of restriction would need to be documented in the ABI.
+
+> +
+> +	region = vdev->region[index - VFIO_PCI_NUM_REGIONS].data;
+> +	region->dasm = zdev->dma_mask;
+> +	region->start_dma = zdev->start_dma;
+> +	region->end_dma = zdev->end_dma;
+> +	region->msi_addr = zdev->msi_addr;
+> +	region->flags = VFIO_PCI_ZDEV_FLAGS_REFRESH;
+> +	region->gid = zdev->pfgid;
+> +	region->mui = zdev->fmb_update;
+> +	region->noi = zdev->max_msi;
+> +	memcpy(region->util_str, zdev->util_str, CLP_UTIL_STR_LEN);
+
+Does anything here change?  Why not do this in the init function?
+
+> +	if (copy_to_user(buf, region, count))
+> +		return -EFAULT;
+
+It's really not that difficult to make this support arbitrary reads.
+
+> +
+> +	return count;
+> +}
+> +
+> +static void vfio_pci_zdev_release(struct vfio_pci_device *vdev,
+> +				  struct vfio_pci_region *region)
+> +{
+> +	kfree(region->data);
+> +}
+> +
+> +static const struct vfio_pci_regops vfio_pci_zdev_regops = {
+> +	.rw		= vfio_pci_zdev_rw,
+> +	.release	= vfio_pci_zdev_release,
+> +};
+> +
+> +int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
+> +{
+> +	struct vfio_region_zpci_info *region;
+> +	int ret;
+> +
+> +	region = kmalloc(sizeof(*region), GFP_KERNEL);
+> +	if (!region)
+> +		return -ENOMEM;
+> +
+> +	ret = vfio_pci_register_dev_region(vdev,
+> +		PCI_VENDOR_ID_IBM | VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
+
+The uapi should specify 0x1014 as the vendor ID to eliminate any
+confusion.
+
+> +		VFIO_REGION_SUBTYPE_ZDEV_CLP,
+> +		&vfio_pci_zdev_regops, sizeof(*region),
+
+'sizeof(*region) + CLP_UTIL_STR_LEN' if suggestion in previous patch is
+used.
+
+> +		VFIO_REGION_INFO_FLAG_READ, region);
+
+This FLAG_READ only tells the user what is supported, it's up to your
+.rw callback to reject iswrite.
+
+> +
+> +	return ret;
+> +}
+
