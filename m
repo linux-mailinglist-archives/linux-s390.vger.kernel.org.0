@@ -2,84 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 339D02DD18
-	for <lists+linux-s390@lfdr.de>; Wed, 29 May 2019 14:30:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3DA402DD73
+	for <lists+linux-s390@lfdr.de>; Wed, 29 May 2019 14:50:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726628AbfE2Ma4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 May 2019 08:30:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46390 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726581AbfE2Ma4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 29 May 2019 08:30:56 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C8A0D30C318A;
-        Wed, 29 May 2019 12:30:55 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 73D921972C;
-        Wed, 29 May 2019 12:30:49 +0000 (UTC)
-Date:   Wed, 29 May 2019 14:30:47 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Michael Mueller <mimu@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        KVM Mailing List <kvm@vger.kernel.org>,
-        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
+        id S1726104AbfE2Muy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 May 2019 08:50:54 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57488 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726702AbfE2Mux (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 29 May 2019 08:50:53 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x4TClAvV109767
+        for <linux-s390@vger.kernel.org>; Wed, 29 May 2019 08:50:52 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ssse8auew-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 29 May 2019 08:50:52 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 29 May 2019 13:50:50 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 29 May 2019 13:50:46 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x4TCojBN34406558
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 29 May 2019 12:50:46 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C292111C04A;
+        Wed, 29 May 2019 12:50:45 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B0D1011C04C;
+        Wed, 29 May 2019 12:50:45 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 29 May 2019 12:50:45 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 6649DE01D7; Wed, 29 May 2019 14:50:45 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Subject: Re: [PATCH v2 3/8] s390/cio: add basic protected virtualization
- support
-Message-ID: <20190529143047.35b5c7d3.cohuck@redhat.com>
-In-Reply-To: <e794bad2-5fc2-b30c-972e-b586770a0065@linux.ibm.com>
-References: <20190523162209.9543-1-mimu@linux.ibm.com>
-        <20190523162209.9543-4-mimu@linux.ibm.com>
-        <20190527123802.54cd3589.cohuck@redhat.com>
-        <20190527143014.3b48a0d2.pasic@linux.ibm.com>
-        <20190527153130.0f473ffd.cohuck@redhat.com>
-        <e794bad2-5fc2-b30c-972e-b586770a0065@linux.ibm.com>
-Organization: Red Hat GmbH
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+Subject: [GIT PULL 0/2] KVM: s390: fixes for 5.2-rc3
+Date:   Wed, 29 May 2019 14:50:43 +0200
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 29 May 2019 12:30:56 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19052912-0028-0000-0000-000003729CEB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19052912-0029-0000-0000-000024326153
+Message-Id: <20190529125045.42935-1-borntraeger@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-05-29_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=575 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1905290085
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 29 May 2019 14:24:39 +0200
-Michael Mueller <mimu@linux.ibm.com> wrote:
+Paolo, Radim,
 
-> On 27.05.19 15:31, Cornelia Huck wrote:
+The following changes since commit cd6c84d8f0cdc911df435bb075ba22ce3c605b07:
 
-> > To actually make the guest use the 3270 as its console, I guess you
-> > need to explicitly force it (see
-> > https://wiki.qemu.org/Features/3270#Using_3270_as_the_console)...
-> > actually starting the console will almost certainly fail; but you can
-> > at least check whether device recognition in the console path works.
-> >   
-> >>
-> >> Mimu, do we have something more elaborate with regards to this?  
-> 
-> I ran that with success
-> 
-> [root@ap01 ~]# lscss | grep 3270
-> 0.0.002a 0.0.0008  0000/00 3270/00 yes  80  80  ff   01000000 00000000
-> 
-> and was able to connect and login.
+  Linux 5.2-rc2 (2019-05-26 16:49:19 -0700)
 
-Oh, cool. I'm actually a bit surprised this works without additional
-changes to the 3270 code :)
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.2-2
+
+for you to fetch changes up to a86cb413f4bf273a9d341a3ab2c2ca44e12eb317:
+
+  KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID (2019-05-28 15:52:19 +0200)
+
+----------------------------------------------------------------
+KVM: s390: Fixes
+
+- fix compilation for !CONFIG_PCI
+- fix the output of KVM_CAP_MAX_VCPU_ID
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      kvm: fix compile on s390 part 2
+
+Thomas Huth (1):
+      KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
+
+ arch/mips/kvm/mips.c       | 3 +++
+ arch/powerpc/kvm/powerpc.c | 3 +++
+ arch/s390/kvm/kvm-s390.c   | 1 +
+ arch/x86/kvm/x86.c         | 3 +++
+ virt/kvm/arm/arm.c         | 3 +++
+ virt/kvm/kvm_main.c        | 4 ++--
+ 6 files changed, 15 insertions(+), 2 deletions(-)
+
