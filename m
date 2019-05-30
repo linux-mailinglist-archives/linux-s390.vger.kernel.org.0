@@ -2,80 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 525672FC75
-	for <lists+linux-s390@lfdr.de>; Thu, 30 May 2019 15:40:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A703D2FDBE
+	for <lists+linux-s390@lfdr.de>; Thu, 30 May 2019 16:28:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726837AbfE3Nj6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 May 2019 09:39:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36316 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725919AbfE3Nj6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 May 2019 09:39:58 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=1z2R00tGmVK2jShz09WQ0aSl4fghOklhUmq3MkzmZGo=; b=cO8H1JSNfCwyIOlnTHicp8Zhy
-        tdZp1B1hNurTw3WgAzPBczTGKcSpIkF2nUeFXWFXbacSglBjt8yYhoxBpvJQd2bkSo8SPeHDMVlbk
-        AmGm77WpHy+tChpRqlM72RL0yDXaK+gT4W1Kljnz/VQ/KVDugsJZ0Tc/HFFB2pHCUi7WQ8dCXvAcZ
-        squPNwIZONWngjyh6R0Q/O1CiEId8WQLaglsMjfxroLiY82v0UZBHk7vWS3/3ejIRWejmUyHZlDM1
-        gPiCoTWkidUnsD2jvuDxMSsXlKB3TaOPHa9W0ihPAK8uyAmomCO3ELcq+JfaA9MCjatOQ5PlCd63o
-        jpySg/rQw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hWLHe-0001vX-Pd; Thu, 30 May 2019 13:39:54 +0000
-Date:   Thu, 30 May 2019 06:39:54 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        id S1726399AbfE3O2l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 May 2019 10:28:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbfE3O2l (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 May 2019 10:28:41 -0400
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D975F25ADC;
+        Thu, 30 May 2019 14:28:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1559226520;
+        bh=+Q7jRzI+M/anX5LfvaXilWi6p15ICQ6el/ITqMpdKrA=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=BGm48iFnmwhxeaM/klXZnK0kvBFvDAflnLLDE8+siDjc+eCOQ5yoF2A3OpJGGkSt1
+         V0nqsK1v0DNXUd3RSsccjAOKEu20d4zoOIaTmGU+ENNxjq3L+QOKZifTxVcwACq6ma
+         fqvekD33Ih3PjTLl2iQGW74EqLPR28S/B3jEcsHs=
+Subject: Re: [PATCH v5 1/3] powerpc: Fix vDSO clock_getres()
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: Re: [RFC] mm: Generalize notify_page_fault()
-Message-ID: <20190530133954.GA2024@bombadil.infradead.org>
-References: <1559195713-6956-1-git-send-email-anshuman.khandual@arm.com>
- <20190530110639.GC23461@bombadil.infradead.org>
- <4f9a610d-e856-60f6-4467-09e9c3836771@arm.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        shuah <shuah@kernel.org>, Shuah Khan <skhan@linuxfoundation.org>
+References: <20190528120446.48911-1-vincenzo.frascino@arm.com>
+ <20190528120446.48911-2-vincenzo.frascino@arm.com>
+From:   shuah <shuah@kernel.org>
+Message-ID: <d4c2380d-1811-18f3-51a3-10bd3782b9de@kernel.org>
+Date:   Thu, 30 May 2019 08:28:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <4f9a610d-e856-60f6-4467-09e9c3836771@arm.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <20190528120446.48911-2-vincenzo.frascino@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, May 30, 2019 at 05:31:15PM +0530, Anshuman Khandual wrote:
-> On 05/30/2019 04:36 PM, Matthew Wilcox wrote:
-> > The two handle preemption differently.  Why is x86 wrong and this one
-> > correct?
+On 5/28/19 6:04 AM, Vincenzo Frascino wrote:
+> clock_getres in the vDSO library has to preserve the same behaviour
+> of posix_get_hrtimer_res().
 > 
-> Here it expects context to be already non-preemptible where as the proposed
-> generic function makes it non-preemptible with a preempt_[disable|enable]()
-> pair for the required code section, irrespective of it's present state. Is
-> not this better ?
+> In particular, posix_get_hrtimer_res() does:
+>      sec = 0;
+>      ns = hrtimer_resolution;
+> and hrtimer_resolution depends on the enablement of the high
+> resolution timers that can happen either at compile or at run time.
+> 
+> Fix the powerpc vdso implementation of clock_getres keeping a copy of
+> hrtimer_resolution in vdso data and using that directly.
+> 
+> Fixes: a7f290dad32e ("[PATCH] powerpc: Merge vdso's and add vdso support
+> to 32 bits kernel")
+> Cc: stable@vger.kernel.org
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
+> ---
+> 
+> Note: This patch is independent from the others in this series, hence it
+> can be merged singularly by the powerpc maintainers.
+> 
 
-git log -p arch/x86/mm/fault.c
+Acked-by: Shuah Khan <skhan@linuxfoundation.org>
 
-search for 'kprobes'.
+thanks,
+-- Shuah
 
-tell me what you think.
