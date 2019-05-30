@@ -2,81 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 736622FDC4
-	for <lists+linux-s390@lfdr.de>; Thu, 30 May 2019 16:29:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4931F30146
+	for <lists+linux-s390@lfdr.de>; Thu, 30 May 2019 19:54:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726643AbfE3O3l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 May 2019 10:29:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725440AbfE3O3l (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 May 2019 10:29:41 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 647DB25AE7;
-        Thu, 30 May 2019 14:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559226580;
-        bh=MOK0Q0CBcC4ffnKxK65gGpI4OI3xMaujvGqobppRdSc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=zBalS9N1SjTiPLA9KUgcgJ7w4KPB18QNfTkKU0fhz/j2S6111JM6bXUyocTtDqwqa
-         8hOyFFM5I5Gg6bzFZcmYtuXdvb9g1/cGVpywc57BC/EZ11XJagh4v6BuOr3brfZbFn
-         +dMA/kqAZSEb6t6yd66D41ogmshMWJ+SWQFRvuDs=
-Subject: Re: [PATCH v5 2/3] s390: Fix vDSO clock_getres()
-To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>, shuah <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>
-References: <20190528120446.48911-1-vincenzo.frascino@arm.com>
- <20190528120446.48911-3-vincenzo.frascino@arm.com>
-From:   shuah <shuah@kernel.org>
-Message-ID: <dbcf69ff-1fe7-3a2e-5940-11fed052d45e@kernel.org>
-Date:   Thu, 30 May 2019 08:29:38 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726688AbfE3RyD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 May 2019 13:54:03 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:32828 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbfE3RyC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 May 2019 13:54:02 -0400
+Received: by mail-ed1-f66.google.com with SMTP id n17so10345495edb.0
+        for <linux-s390@vger.kernel.org>; Thu, 30 May 2019 10:54:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=soleen.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QlYOqgGgItn5hucl8pZOYZeRpF+/j+lyZEX0rN4v98g=;
+        b=LYlHNdAV/SNBSa2OU1jdHVGlps7i+f4ToRjbTl9D2wFgpxOnqYU6L0tHRyBKqXN8PS
+         bA20mdUlqFwilW74sDweWwxCRjLlo9fuLRBJptvvxIq+vYgZ96pbtG7pADnxLsZ5u6Ed
+         xa3CEpbgxATF5V1HpcSCSGovWdI7wIoti8PlUbQ7uPq+eFKDXrzPzbDKxcOs/rbfxHdW
+         3wcYT/Y0vSetxxTI7PMr+4dEKBZMAaPHqAJ4cafp6No1HT2gZdPpzYTqxY9BWFqu5i8v
+         c8SEsw9ZPMpf8Cmj587OTzTy+La1UCwO9pu1FiOK6SpUJ9aeYM0ra8QLMjn3GNWlh/JN
+         PXWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QlYOqgGgItn5hucl8pZOYZeRpF+/j+lyZEX0rN4v98g=;
+        b=hJTx8ReQWr14eQJs0byOYZxK51Ua2HWhmwRxtMt0z9ZSleeoEVYXy7s5Oo6m7SCtCp
+         sZjV3CJJqWr9Dz+/lXj6YKffyzQY6lYHnQ5+zj3U+1cqmpWoY+mnVppaC8Wh1g7DZln7
+         4kbNmrZrXi1rjcUC7H6Hf13Y5tuupNk08apvqUNaQndKV2K+YhHDE2DByme+PWLck+6E
+         2BjccoqfgviJWCxCZ0RAQTv6KqTVoLIMkXU3uk8rpI+1fuHikHowY1LYyZb63zIzxXmw
+         ZjS4+6XCsEULxHuqAWPNNfqXE+TJcz2zPlwRue0y04138MOUuKyJi3l3kmBHnrkahIPC
+         rINA==
+X-Gm-Message-State: APjAAAXmzryQG1U8QArinVqCc/RW1Bu+waN6GKwIwY5mFDdx0FH2+1/n
+        fLzOLz4+8j+/hnEmGDeYh9ci5ox2oM3/qZ6XwfRJ7w==
+X-Google-Smtp-Source: APXvYqxJpnEky/HQoCMiqMXy5GPOyKza2hJ+52II0wfo1HpL9rVDxjuGoL3UWKguhdIYjncFwf0xnjjAWLfB3JRkG5w=
+X-Received: by 2002:a17:906:a354:: with SMTP id bz20mr4932536ejb.209.1559238840892;
+ Thu, 30 May 2019 10:54:00 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190528120446.48911-3-vincenzo.frascino@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190527111152.16324-1-david@redhat.com> <20190527111152.16324-2-david@redhat.com>
+In-Reply-To: <20190527111152.16324-2-david@redhat.com>
+From:   Pavel Tatashin <pasha.tatashin@soleen.com>
+Date:   Thu, 30 May 2019 13:53:50 -0400
+Message-ID: <CA+CK2bBW4vH+J6bam1dOxjSwFwvoOEok0VNO0n_JjyHxpkGj+A@mail.gmail.com>
+Subject: Re: [PATCH v3 01/11] mm/memory_hotplug: Simplify and fix check_hotplug_memory_range()
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 5/28/19 6:04 AM, Vincenzo Frascino wrote:
-> clock_getres in the vDSO library has to preserve the same behaviour
-> of posix_get_hrtimer_res().
-> 
-> In particular, posix_get_hrtimer_res() does:
->      sec = 0;
->      ns = hrtimer_resolution;
-> and hrtimer_resolution depends on the enablement of the high
-> resolution timers that can happen either at compile or at run time.
-> 
-> Fix the s390 vdso implementation of clock_getres keeping a copy of
-> hrtimer_resolution in vdso data and using that directly.
-> 
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-> Acked-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> ---
-> 
-> Note: This patch is independent from the others in this series, hence it
-> can be merged singularly by the s390 maintainers.
-> 
+On Mon, May 27, 2019 at 7:12 AM David Hildenbrand <david@redhat.com> wrote:
+>
+> By converting start and size to page granularity, we actually ignore
+> unaligned parts within a page instead of properly bailing out with an
+> error.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Arun KS <arunks@codeaurora.org>
+> Cc: Mathieu Malaterre <malat@debian.org>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 
-Acked-by: Shuah Khan <skhan@linuxfoundation.org>
-
-thanks,
--- Shuah
+Reviewed-by: Pavel Tatashin <pasha.tatashin@soleen.com>
