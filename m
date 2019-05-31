@@ -2,66 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6613C306BA
-	for <lists+linux-s390@lfdr.de>; Fri, 31 May 2019 04:48:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E8E2830A96
+	for <lists+linux-s390@lfdr.de>; Fri, 31 May 2019 10:47:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726666AbfEaCsX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 May 2019 22:48:23 -0400
-Received: from conuserg-12.nifty.com ([210.131.2.79]:29589 "EHLO
-        conuserg-12.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726512AbfEaCsX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 May 2019 22:48:23 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-12.nifty.com with ESMTP id x4V2mCYt023870;
-        Fri, 31 May 2019 11:48:13 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-12.nifty.com x4V2mCYt023870
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559270893;
-        bh=Ij0pOCzJB2iFfpknlMBVBCn6Obu++o0pWtkbqK6Q+Lc=;
-        h=From:To:Cc:Subject:Date:From;
-        b=QZWPpLpcnCynH/qmOUqLwQr/SqY7iXXX7KYvC+qXpBvf4/2jP+TRzwHwbNNxCp1Tw
-         AMuay50wALlCln34iz8cXuHFWnTND3/bzd3m3oXiuOUjAoa/A1hfMCtmMPu7t50EZ0
-         3K3uhgiCrOz0BJLchx1Em3sk1TBia/zyRRHS8HUfWC58p7s6kEQrTfEbPbN5y0V0Hp
-         lS6XG3AlbUDDQ2qksaU5esaizy4Oh7y0t7rM+dRZwcXntD+c2PNwrGOB4dJsvKhGZW
-         G9jrhOqXRTJ4eyWVkHObrR3byHBcla4d50VWMQvC/dUMkNAXzOoEDiWeJGyfnnP6Zz
-         1tS+uXUU/c6DA==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        id S1726403AbfEaIri (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 31 May 2019 04:47:38 -0400
+Received: from foss.arm.com ([217.140.101.70]:47918 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726002AbfEaIri (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 31 May 2019 04:47:38 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7619E341;
+        Fri, 31 May 2019 01:47:37 -0700 (PDT)
+Received: from [10.162.42.223] (unknown [10.162.42.223])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 20D713F59C;
+        Fri, 31 May 2019 01:47:28 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [RFC] mm: Generalize notify_page_fault()
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] s390/purgatory: update .gitignore
-Date:   Fri, 31 May 2019 11:46:51 +0900
-Message-Id: <20190531024651.5925-1-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>
+References: <1559195713-6956-1-git-send-email-anshuman.khandual@arm.com>
+ <20190530110639.GC23461@bombadil.infradead.org>
+ <4f9a610d-e856-60f6-4467-09e9c3836771@arm.com>
+ <20190530133954.GA2024@bombadil.infradead.org>
+Message-ID: <f1995445-d5ab-f292-d26c-809581002184@arm.com>
+Date:   Fri, 31 May 2019 14:17:43 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190530133954.GA2024@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Since commit 4c0f032d4963 ("s390/purgatory: Omit use of bin2c"),
-kexec-purgatory.c is not generated.
 
-purgatory and purgatory.lds are generated files, so should be ignored
-by git.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
+On 05/30/2019 07:09 PM, Matthew Wilcox wrote:
+> On Thu, May 30, 2019 at 05:31:15PM +0530, Anshuman Khandual wrote:
+>> On 05/30/2019 04:36 PM, Matthew Wilcox wrote:
+>>> The two handle preemption differently.  Why is x86 wrong and this one
+>>> correct?
+>>
+>> Here it expects context to be already non-preemptible where as the proposed
+>> generic function makes it non-preemptible with a preempt_[disable|enable]()
+>> pair for the required code section, irrespective of it's present state. Is
+>> not this better ?
+> 
+> git log -p arch/x86/mm/fault.c
+> 
+> search for 'kprobes'.
+> 
+> tell me what you think.
+> 
 
- arch/s390/purgatory/.gitignore | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Are you referring to these following commits
 
-diff --git a/arch/s390/purgatory/.gitignore b/arch/s390/purgatory/.gitignore
-index e9e66f178a6d..04a03433c720 100644
---- a/arch/s390/purgatory/.gitignore
-+++ b/arch/s390/purgatory/.gitignore
-@@ -1,2 +1,3 @@
--kexec-purgatory.c
-+purgatory
-+purgatory.lds
- purgatory.ro
--- 
-2.17.1
+a980c0ef9f6d ("x86/kprobes: Refactor kprobes_fault() like kprobe_exceptions_notify()")
+b506a9d08bae ("x86: code clarification patch to Kprobes arch code")
 
+In particular the later one (b506a9d08bae). It explains how the invoking context
+in itself should be non-preemptible for the kprobes processing context irrespective
+of whether kprobe_running() or perhaps smp_processor_id() is safe or not. Hence it
+does not make much sense to continue when original invoking context is preemptible.
+Instead just bail out earlier. This seems to be making more sense than preempt
+disable-enable pair. If there are no concerns about this change from other platforms,
+I will change the preemption behavior in proposed generic function next time around.
