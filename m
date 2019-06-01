@@ -2,64 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B7A131755
-	for <lists+linux-s390@lfdr.de>; Sat,  1 Jun 2019 00:50:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 04F0D31B2F
+	for <lists+linux-s390@lfdr.de>; Sat,  1 Jun 2019 12:21:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbfEaWuC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 31 May 2019 18:50:02 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:35054 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726559AbfEaWuC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 31 May 2019 18:50:02 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c6so3903708wml.0
-        for <linux-s390@vger.kernel.org>; Fri, 31 May 2019 15:50:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=r6NgNqRhWaq191x9dCxnD4RlXHbkV9/EdBSxvhFP1Vw=;
-        b=nsaHRsdmUuJ5xx+WC2kB+JPlPXYzLlDWPSLRpoVyzEJzp0wWRJI8wJamKfzdaQVYw5
-         Uh8mn2/hGYZwNaGcVqL+LppjSod0HY3MMwZ8f8bYiLJZk4vPw8Eq2Tuc4BHHXbQWO+Kw
-         BjIA1n6tiQU9w2kwAqYU+SF/1hGDo7vxzjQpBNZ7v1dxjq1JiMBcHBeOKpQWWDEesDhz
-         OqQp/7BRwS9ehk/Xx8RcWhrzTKvDe/RexhaI09tqnQM1Kaf8MtCVsVAHM57uJWQOcdoR
-         gMZSMJc5v7olePEcvcgpDBiI95NWY451qXKajAKqpM7gudUVBS57yT/4lebYa+KOIFqS
-         F29Q==
-X-Gm-Message-State: APjAAAU1xzYdQX9njWaSnysKx7b/nwNTidzLgTWTFu7Rlyj7s0JROECj
-        aGvbI1EJ/a8XhgofDR52UuTBtg==
-X-Google-Smtp-Source: APXvYqyM/XrwIroyNNYyH1E8zovWVkinoiBQN1Mfy1JzMUBi6FOH+Ym/XaVAOeu1WdbtomeeWlvF1Q==
-X-Received: by 2002:a1c:7405:: with SMTP id p5mr7106342wmc.80.1559343000581;
-        Fri, 31 May 2019 15:50:00 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f910:d845:2bcd:e6c8? ([2001:b07:6468:f312:f910:d845:2bcd:e6c8])
-        by smtp.gmail.com with ESMTPSA id u9sm15979696wme.48.2019.05.31.15.49.59
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Fri, 31 May 2019 15:50:00 -0700 (PDT)
-Subject: Re: [GIT PULL 0/2] KVM: s390: fixes for 5.2-rc3
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-References: <20190529125045.42935-1-borntraeger@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <7c70ab2b-4a3e-e8e6-8872-7d4f0f151306@redhat.com>
-Date:   Sat, 1 Jun 2019 00:49:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726130AbfFAKVM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 1 Jun 2019 06:21:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52070 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726089AbfFAKVM (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 1 Jun 2019 06:21:12 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x51AHDlv046094
+        for <linux-s390@vger.kernel.org>; Sat, 1 Jun 2019 06:21:11 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2sup84swau-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Sat, 01 Jun 2019 06:21:10 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Sat, 1 Jun 2019 11:21:09 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 1 Jun 2019 11:21:07 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x51AL68J48234544
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 1 Jun 2019 10:21:06 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2ABC142042;
+        Sat,  1 Jun 2019 10:21:06 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F253942041;
+        Sat,  1 Jun 2019 10:21:05 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat,  1 Jun 2019 10:21:05 +0000 (GMT)
+Date:   Sat, 1 Jun 2019 12:21:04 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     xiaolinkui <xiaolinkui@kylinos.cn>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arch: s390: use struct_size() in kmalloc()
+References: <1558077317-12201-1-git-send-email-xiaolinkui@kylinos.cn>
 MIME-Version: 1.0
-In-Reply-To: <20190529125045.42935-1-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1558077317-12201-1-git-send-email-xiaolinkui@kylinos.cn>
+X-TM-AS-GCONF: 00
+x-cbid: 19060110-0012-0000-0000-000003218158
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060110-0013-0000-0000-0000215A5618
+Message-Id: <20190601102104.GA3600@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-01_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=44 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=874 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906010076
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29/05/19 14:50, Christian Borntraeger wrote:
->   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.2-2
+On Fri, May 17, 2019 at 03:15:17PM +0800, xiaolinkui wrote:
+> Use the new struct_size() helper to keep code simple.
+> 
+> Signed-off-by: xiaolinkui <xiaolinkui@kylinos.cn>
+> ---
+>  arch/s390/include/asm/idals.h | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/s390/include/asm/idals.h b/arch/s390/include/asm/idals.h
+> index 15578fd..6fb7ace 100644
+> --- a/arch/s390/include/asm/idals.h
+> +++ b/arch/s390/include/asm/idals.h
+> @@ -122,8 +122,7 @@ idal_buffer_alloc(size_t size, int page_order)
+> 
+>  	nr_ptrs = (size + IDA_BLOCK_SIZE - 1) >> IDA_SIZE_LOG;
+>  	nr_chunks = (4096 << page_order) >> IDA_SIZE_LOG;
+> -	ib = kmalloc(sizeof(struct idal_buffer) + nr_ptrs*sizeof(void *),
+> -		     GFP_DMA | GFP_KERNEL);
+> +	ib = kmalloc(struct_size(ib, data, nr_ptrs), GFP_DMA | GFP_KERNEL);
+>  	if (ib == NULL)
+>  		return ERR_PTR(-ENOMEM);
+>  	ib->size = size;
 
-Pulled, thanks.
+Applied, thanks.
 
-Paolo
