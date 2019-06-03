@@ -2,152 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3C4033340
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Jun 2019 17:15:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 714433337F
+	for <lists+linux-s390@lfdr.de>; Mon,  3 Jun 2019 17:27:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfFCPPy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 3 Jun 2019 11:15:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59792 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729081AbfFCPPx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Jun 2019 11:15:53 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x53FC7eL091176
-        for <linux-s390@vger.kernel.org>; Mon, 3 Jun 2019 11:15:52 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2sw4hw59rr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 03 Jun 2019 11:15:52 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Mon, 3 Jun 2019 16:05:39 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 3 Jun 2019 16:05:35 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x53F5XJx54919388
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 3 Jun 2019 15:05:33 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC1624C04E;
-        Mon,  3 Jun 2019 15:05:33 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 75B174C046;
-        Mon,  3 Jun 2019 15:05:33 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  3 Jun 2019 15:05:33 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        id S1727454AbfFCP1v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 3 Jun 2019 11:27:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50332 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726714AbfFCP1v (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 3 Jun 2019 11:27:51 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 480F0307D95F;
+        Mon,  3 Jun 2019 15:27:51 +0000 (UTC)
+Received: from gondolin (ovpn-204-96.brq.redhat.com [10.40.204.96])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9A55660576;
+        Mon,  3 Jun 2019 15:27:44 +0000 (UTC)
+Date:   Mon, 3 Jun 2019 17:27:40 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Michael Mueller <mimu@linux.ibm.com>
+Cc:     KVM Mailing List <kvm@vger.kernel.org>,
+        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net 4/4] s390/qeth: handle error when updating TX queue count
-Date:   Mon,  3 Jun 2019 17:04:46 +0200
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190603150446.23351-1-jwi@linux.ibm.com>
-References: <20190603150446.23351-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19060315-0008-0000-0000-000002ED6871
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060315-0009-0000-0000-0000225A488F
-Message-Id: <20190603150446.23351-5-jwi@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906030106
+        Halil Pasic <pasic@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: Re: [PATCH v3 4/8] s390/airq: use DMA memory for adapter interrupts
+Message-ID: <20190603172740.1023e078.cohuck@redhat.com>
+In-Reply-To: <20190529122657.166148-5-mimu@linux.ibm.com>
+References: <20190529122657.166148-1-mimu@linux.ibm.com>
+        <20190529122657.166148-5-mimu@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 03 Jun 2019 15:27:51 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-netif_set_real_num_tx_queues() can return an error, deal with it.
+On Wed, 29 May 2019 14:26:53 +0200
+Michael Mueller <mimu@linux.ibm.com> wrote:
 
-Fixes: 73dc2daf110f ("s390/qeth: add TX multiqueue support for OSA devices")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core_main.c | 22 ++++++++++++++++------
- 1 file changed, 16 insertions(+), 6 deletions(-)
+> From: Halil Pasic <pasic@linux.ibm.com>
+> 
+> Protected virtualization guests have to use shared pages for airq
+> notifier bit vectors, because hypervisor needs to write these bits.
+> 
+> Let us make sure we allocate DMA memory for the notifier bit vectors by
+> replacing the kmem_cache with a dma_cache and kalloc() with
+> cio_dma_zalloc().
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+> Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/airq.h |  2 ++
+>  drivers/s390/cio/airq.c      | 32 ++++++++++++++++++++------------
+>  drivers/s390/cio/cio.h       |  2 ++
+>  drivers/s390/cio/css.c       |  1 +
+>  4 files changed, 25 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 009f2c0ec504..b1823d75dd35 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -1274,16 +1274,20 @@ static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
- 	return 0;
- }
- 
--static void qeth_osa_set_output_queues(struct qeth_card *card, bool single)
-+static int qeth_osa_set_output_queues(struct qeth_card *card, bool single)
- {
- 	unsigned int count = single ? 1 : card->dev->num_tx_queues;
-+	int rc;
- 
- 	rtnl_lock();
--	netif_set_real_num_tx_queues(card->dev, count);
-+	rc = netif_set_real_num_tx_queues(card->dev, count);
- 	rtnl_unlock();
- 
-+	if (rc)
-+		return rc;
-+
- 	if (card->qdio.no_out_queues == count)
--		return;
-+		return 0;
- 
- 	if (atomic_read(&card->qdio.state) != QETH_QDIO_UNINITIALIZED)
- 		qeth_free_qdio_queues(card);
-@@ -1293,12 +1297,14 @@ static void qeth_osa_set_output_queues(struct qeth_card *card, bool single)
- 
- 	card->qdio.default_out_queue = single ? 0 : QETH_DEFAULT_QUEUE;
- 	card->qdio.no_out_queues = count;
-+	return 0;
- }
- 
- static int qeth_update_from_chp_desc(struct qeth_card *card)
- {
- 	struct ccw_device *ccwdev;
- 	struct channel_path_desc_fmt0 *chp_dsc;
-+	int rc = 0;
- 
- 	QETH_DBF_TEXT(SETUP, 2, "chp_desc");
- 
-@@ -1311,12 +1317,12 @@ static int qeth_update_from_chp_desc(struct qeth_card *card)
- 
- 	if (IS_OSD(card) || IS_OSX(card))
- 		/* CHPP field bit 6 == 1 -> single queue */
--		qeth_osa_set_output_queues(card, chp_dsc->chpp & 0x02);
-+		rc = qeth_osa_set_output_queues(card, chp_dsc->chpp & 0x02);
- 
- 	kfree(chp_dsc);
- 	QETH_DBF_TEXT_(SETUP, 2, "nr:%x", card->qdio.no_out_queues);
- 	QETH_DBF_TEXT_(SETUP, 2, "lvl:%02x", card->info.func_level);
--	return 0;
-+	return rc;
- }
- 
- static void qeth_init_qdio_info(struct qeth_card *card)
-@@ -5597,8 +5603,12 @@ static struct net_device *qeth_alloc_netdev(struct qeth_card *card)
- 		dev->hw_features |= NETIF_F_SG;
- 		dev->vlan_features |= NETIF_F_SG;
- 		if (IS_IQD(card)) {
--			netif_set_real_num_tx_queues(dev, QETH_IQD_MIN_TXQ);
- 			dev->features |= NETIF_F_SG;
-+			if (netif_set_real_num_tx_queues(dev,
-+							 QETH_IQD_MIN_TXQ)) {
-+				free_netdev(dev);
-+				return NULL;
-+			}
- 		}
- 	}
- 
--- 
-2.17.1
+Apologies if that already has been answered (and I missed it in my mail
+pile...), but two things had come to my mind previously:
 
+- CHSC... does anything need to be done there? Last time I asked:
+  "Anyway, css_bus_init() uses some chscs
+   early (before cio_dma_pool_init), so we could not use the pools
+   there, even if we wanted to. Do chsc commands either work, or else
+   fail benignly on a protected virt guest?"
+- PCI indicators... does this interact with any dma configuration on
+  the pci device? (I know pci is not supported yet, and I don't really
+  expect any problems.)
