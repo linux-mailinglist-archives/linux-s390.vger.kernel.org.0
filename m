@@ -2,115 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A868832DFE
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Jun 2019 12:51:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 346A332E04
+	for <lists+linux-s390@lfdr.de>; Mon,  3 Jun 2019 12:52:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfFCKvE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 3 Jun 2019 06:51:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59500 "EHLO mx1.redhat.com"
+        id S1727423AbfFCKwB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 3 Jun 2019 06:52:01 -0400
+Received: from 8bytes.org ([81.169.241.247]:41064 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727476AbfFCKvD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 3 Jun 2019 06:51:03 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 117E93082134;
-        Mon,  3 Jun 2019 10:51:03 +0000 (UTC)
-Received: from localhost (ovpn-204-96.brq.redhat.com [10.40.204.96])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 93A1461101;
-        Mon,  3 Jun 2019 10:51:02 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>
-Subject: [PULL 7/7] s390/cio: Remove vfio-ccw checks of command codes
-Date:   Mon,  3 Jun 2019 12:50:38 +0200
-Message-Id: <20190603105038.11788-8-cohuck@redhat.com>
-In-Reply-To: <20190603105038.11788-1-cohuck@redhat.com>
-References: <20190603105038.11788-1-cohuck@redhat.com>
+        id S1727255AbfFCKwB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 3 Jun 2019 06:52:01 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id C6EF836B; Mon,  3 Jun 2019 12:51:59 +0200 (CEST)
+Date:   Mon, 3 Jun 2019 12:51:58 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Tom Murphy <tmurphy@arista.com>
+Cc:     iommu@lists.linux-foundation.org, murphyt7@tcd.ie,
+        Will Deacon <will.deacon@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+Subject: Re: [PATCH v3 0/4] iommu/amd: Convert the AMD iommu driver to the
+ dma-iommu api
+Message-ID: <20190603105158.GL12745@8bytes.org>
+References: <20190506185207.31069-1-tmurphy@arista.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Mon, 03 Jun 2019 10:51:03 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190506185207.31069-1-tmurphy@arista.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Eric Farman <farman@linux.ibm.com>
+Hi Tom,
 
-If the CCW being processed is a No-Operation, then by definition no
-data is being transferred.  Let's fold those checks into the normal
-CCW processors, rather than skipping out early.
+On Mon, May 06, 2019 at 07:52:02PM +0100, Tom Murphy wrote:
+> Convert the AMD iommu driver to the dma-iommu api. Remove the iova
+> handling and reserve region code from the AMD iommu driver.
 
-Likewise, if the CCW being processed is a "test" (a category defined
-here as an opcode that contains zero in the lowest four bits) then no
-special processing is necessary as far as vfio-ccw is concerned.
-These command codes have not been valid since the S/370 days, meaning
-they are invalid in the same way as one that ends in an eight [1] or
-an otherwise valid command code that is undefined for the device type
-in question.  Considering that, let's just process "test" CCWs like
-any other CCW, and send everything to the hardware.
+Thank you for your work on this! I appreciate that much, but I am not
+sure we are ready to make that move for the AMD and Intel IOMMU drivers
+yet.
 
-[1] POPS states that a x08 is a TIC CCW, and that having any high-order
-bits enabled is invalid for format-1 CCWs.  For format-0 CCWs, the
-high-order bits are ignored.
+My main concern right now is that these changes will add a per-page
+table lock into the fast-path for dma-mapping operations. There has been
+much work in the past to remove all locking from these code-paths and
+make it scalable on x86.
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
-Message-Id: <20190516161403.79053-4-farman@linux.ibm.com>
-Acked-by: Farhan Ali <alifm@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
----
- drivers/s390/cio/vfio_ccw_cp.c | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+The dma-ops implementations in the x86 IOMMU drivers have the benefit
+that they can call their page-table manipulation functions directly and
+without locks, because they can make the necessary assumptions. The
+IOMMU-API mapping/unmapping path can't make these assumptions because it
+is also used for non-DMA-API use-cases.
 
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index c77c9b4cd2a8..f73cfcfdd032 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -295,8 +295,6 @@ static long copy_ccw_from_iova(struct channel_program *cp,
- #define ccw_is_read_backward(_ccw) (((_ccw)->cmd_code & 0x0F) == 0x0C)
- #define ccw_is_sense(_ccw) (((_ccw)->cmd_code & 0x0F) == CCW_CMD_BASIC_SENSE)
- 
--#define ccw_is_test(_ccw) (((_ccw)->cmd_code & 0x0F) == 0)
--
- #define ccw_is_noop(_ccw) ((_ccw)->cmd_code == CCW_CMD_NOOP)
- 
- #define ccw_is_tic(_ccw) ((_ccw)->cmd_code == CCW_CMD_TIC)
-@@ -320,6 +318,10 @@ static inline int ccw_does_data_transfer(struct ccw1 *ccw)
- 	if (ccw->count == 0)
- 		return 0;
- 
-+	/* If the command is a NOP, then no data will be transferred */
-+	if (ccw_is_noop(ccw))
-+		return 0;
-+
- 	/* If the skip flag is off, then data will be transferred */
- 	if (!ccw_is_skip(ccw))
- 		return 1;
-@@ -404,7 +406,7 @@ static void ccwchain_cda_free(struct ccwchain *chain, int idx)
- {
- 	struct ccw1 *ccw = chain->ch_ccw + idx;
- 
--	if (ccw_is_test(ccw) || ccw_is_noop(ccw) || ccw_is_tic(ccw))
-+	if (ccw_is_tic(ccw))
- 		return;
- 
- 	kfree((void *)(u64)ccw->cda);
-@@ -730,9 +732,6 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
- {
- 	struct ccw1 *ccw = chain->ch_ccw + idx;
- 
--	if (ccw_is_test(ccw) || ccw_is_noop(ccw))
--		return 0;
--
- 	if (ccw_is_tic(ccw))
- 		return ccwchain_fetch_tic(chain, idx, cp);
- 
--- 
-2.20.1
+So before we can move the AMD and Intel drivers to the generic DMA-API
+implementation we need to solve this problem to not introduce new
+scalability regressions.
+
+Regards,
+
+	Joerg
 
