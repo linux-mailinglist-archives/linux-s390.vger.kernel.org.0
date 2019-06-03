@@ -2,118 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 883A1327D2
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Jun 2019 06:53:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AD1F32A08
+	for <lists+linux-s390@lfdr.de>; Mon,  3 Jun 2019 09:49:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726257AbfFCExU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 3 Jun 2019 00:53:20 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:44420 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726221AbfFCExT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 3 Jun 2019 00:53:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A87D1341;
-        Sun,  2 Jun 2019 21:53:18 -0700 (PDT)
-Received: from [10.162.40.144] (p8cg001049571a15.blr.arm.com [10.162.40.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CC0BB3F5AF;
-        Sun,  2 Jun 2019 21:53:11 -0700 (PDT)
-Subject: Re: [RFC] mm: Generalize notify_page_fault()
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        id S1726416AbfFCHs6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 3 Jun 2019 03:48:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726179AbfFCHs5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Jun 2019 03:48:57 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x537lRg7030302
+        for <linux-s390@vger.kernel.org>; Mon, 3 Jun 2019 03:48:56 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2svwjcmh47-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 03 Jun 2019 03:48:56 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <freude@linux.ibm.com>;
+        Mon, 3 Jun 2019 08:48:54 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 3 Jun 2019 08:48:52 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x537mpGK18481326
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 3 Jun 2019 07:48:51 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 18ACA4203F;
+        Mon,  3 Jun 2019 07:48:51 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CAE7B42042;
+        Mon,  3 Jun 2019 07:48:50 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.152.224.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  3 Jun 2019 07:48:50 +0000 (GMT)
+Subject: Re: [PATCH v1] s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+To:     David Hildenbrand <david@redhat.com>, linux-s390@vger.kernel.org
+Cc:     linux-kernel@vger.kernel.org,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>
-References: <1559195713-6956-1-git-send-email-anshuman.khandual@arm.com>
- <20190530110639.GC23461@bombadil.infradead.org>
- <4f9a610d-e856-60f6-4467-09e9c3836771@arm.com>
- <20190530133954.GA2024@bombadil.infradead.org>
- <f1995445-d5ab-f292-d26c-809581002184@arm.com>
- <20190531174854.GA31852@bombadil.infradead.org>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <6338fef8-e097-a76e-5c07-455d0d9b6e24@arm.com>
-Date:   Mon, 3 Jun 2019 10:23:26 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20190531093628.14766-1-david@redhat.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Mon, 3 Jun 2019 09:48:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190531174854.GA31852@bombadil.infradead.org>
+In-Reply-To: <20190531093628.14766-1-david@redhat.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19060307-0008-0000-0000-000002ED3534
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060307-0009-0000-0000-0000225A131F
+Message-Id: <3dfea8fd-dbe7-f9d0-f7a7-2c65349c0a81@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-03_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906030058
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 31.05.19 11:36, David Hildenbrand wrote:
+> systemd-modules-load.service automatically tries to load the pkey module
+> on systems that have MSA.
+>
+> Pkey also requires the MSA3 facility and a bunch of subfunctions.
+> Failing with -EOPNOTSUPP makes "systemd-modules-load.service" fail on
+> any system that does not have all needed subfunctions. For example,
+> when running under QEMU TCG (but also on systems where protected keys
+> are disabled via the HMC).
+>
+> Let's use -ENODEV, so systemd-modules-load.service properly ignores
+> failing to load the pkey module because of missing HW functionality.
+>
+> Cc: Harald Freudenberger <freude@linux.ibm.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/s390/crypto/pkey_api.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+> index 45eb0c14b880..ddfcefb47284 100644
+> --- a/drivers/s390/crypto/pkey_api.c
+> +++ b/drivers/s390/crypto/pkey_api.c
+> @@ -1695,15 +1695,15 @@ static int __init pkey_init(void)
+>  	 * are able to work with protected keys.
+>  	 */
+>  	if (!cpacf_query(CPACF_PCKMO, &pckmo_functions))
+> -		return -EOPNOTSUPP;
+> +		return -ENODEV;
+>  
+>  	/* check for kmc instructions available */
+>  	if (!cpacf_query(CPACF_KMC, &kmc_functions))
+> -		return -EOPNOTSUPP;
+> +		return -ENODEV;
+>  	if (!cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_128) ||
+>  	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_192) ||
+>  	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_256))
+> -		return -EOPNOTSUPP;
+> +		return -ENODEV;
+>  
+>  	pkey_debug_init();
+>  
+I can't really agree to this: there are a lot more modules returning
+EOPNOTSUPP, for example have a look into the arch/s390/crypto
+subdirectory. The ghash_s390 module also registers for MSA feature
+and also returns EOPNOTSUPPORTED when the required hardware extension
+is not available. Same with the prng kernel module, sha1_s390, sha256_s390
+and I assume there is a bunch of other kernel modules with same behavior.
+I would prefer having this fixed on the systemd-modules-load.service side.
+
+regards
+Harald Freudenberger
 
 
-On 05/31/2019 11:18 PM, Matthew Wilcox wrote:
-> On Fri, May 31, 2019 at 02:17:43PM +0530, Anshuman Khandual wrote:
->> On 05/30/2019 07:09 PM, Matthew Wilcox wrote:
->>> On Thu, May 30, 2019 at 05:31:15PM +0530, Anshuman Khandual wrote:
->>>> On 05/30/2019 04:36 PM, Matthew Wilcox wrote:
->>>>> The two handle preemption differently.  Why is x86 wrong and this one
->>>>> correct?
->>>>
->>>> Here it expects context to be already non-preemptible where as the proposed
->>>> generic function makes it non-preemptible with a preempt_[disable|enable]()
->>>> pair for the required code section, irrespective of it's present state. Is
->>>> not this better ?
->>>
->>> git log -p arch/x86/mm/fault.c
->>>
->>> search for 'kprobes'.
->>>
->>> tell me what you think.
->>
->> Are you referring to these following commits
->>
->> a980c0ef9f6d ("x86/kprobes: Refactor kprobes_fault() like kprobe_exceptions_notify()")
->> b506a9d08bae ("x86: code clarification patch to Kprobes arch code")
->>
->> In particular the later one (b506a9d08bae). It explains how the invoking context
->> in itself should be non-preemptible for the kprobes processing context irrespective
->> of whether kprobe_running() or perhaps smp_processor_id() is safe or not. Hence it
->> does not make much sense to continue when original invoking context is preemptible.
->> Instead just bail out earlier. This seems to be making more sense than preempt
->> disable-enable pair. If there are no concerns about this change from other platforms,
->> I will change the preemption behavior in proposed generic function next time around.
-> 
-> Exactly.
-> 
-> So, any of the arch maintainers know of a reason they behave differently
-> from x86 in this regard?  Or can Anshuman use the x86 implementation
-> for all the architectures supporting kprobes?
-
-So the generic notify_page_fault() will be like this.
-
-int __kprobes notify_page_fault(struct pt_regs *regs, unsigned int trap)
-{
-        int ret = 0;
-
-        /*
-         * To be potentially processing a kprobe fault and to be allowed
-         * to call kprobe_running(), we have to be non-preemptible.
-         */
-        if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
-                if (kprobe_running() && kprobe_fault_handler(regs, trap))
-                        ret = 1;
-        }
-        return ret;
-}
