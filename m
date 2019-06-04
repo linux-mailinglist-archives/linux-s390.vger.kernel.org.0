@@ -2,102 +2,104 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CCC83413A
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 10:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B083418A
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 10:16:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726855AbfFDIMG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 04:12:06 -0400
-Received: from foss.arm.com ([217.140.101.70]:37106 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726637AbfFDIMG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 4 Jun 2019 04:12:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 22F87A78;
-        Tue,  4 Jun 2019 01:12:06 -0700 (PDT)
-Received: from [10.162.40.144] (p8cg001049571a15.blr.arm.com [10.162.40.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82BA43F246;
-        Tue,  4 Jun 2019 01:11:55 -0700 (PDT)
-Subject: Re: [RFC V2] mm: Generalize notify_page_fault()
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        id S1727184AbfFDIP7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 04:15:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50220 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727181AbfFDIPX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 04:15:23 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x548CIZo030887
+        for <linux-s390@vger.kernel.org>; Tue, 4 Jun 2019 04:15:22 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2swhyh70sp-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 04 Jun 2019 04:15:22 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Tue, 4 Jun 2019 09:15:20 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 4 Jun 2019 09:15:18 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x548FHB854657038
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Jun 2019 08:15:17 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E5FC042056;
+        Tue,  4 Jun 2019 08:15:16 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8CED34205F;
+        Tue,  4 Jun 2019 08:15:16 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Jun 2019 08:15:16 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <1559630046-12940-1-git-send-email-anshuman.khandual@arm.com>
- <20190604065401.GE3402@hirez.programming.kicks-ass.net>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <afe886e5-8420-0c33-ed2f-159cd3d55882@arm.com>
-Date:   Tue, 4 Jun 2019 13:42:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <20190604065401.GE3402@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Stefan Raspl <raspl@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH v2 net 0/4] s390/qeth: fixes 2019-06-04
+Date:   Tue,  4 Jun 2019 10:15:05 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19060408-0012-0000-0000-00000322E70F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060408-0013-0000-0000-0000215BC4BB
+Message-Id: <20190604081509.56160-1-jwi@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906040056
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Dave,
+
+same patch series as yesterday, except that patch 2 has been adjusted
+as per your review to use dst_check(). Please have another look.
 
 
-On 06/04/2019 12:24 PM, Peter Zijlstra wrote:
-> On Tue, Jun 04, 2019 at 12:04:06PM +0530, Anshuman Khandual wrote:
->> diff --git a/mm/memory.c b/mm/memory.c
->> index ddf20bd..b6bae8f 100644
->> --- a/mm/memory.c
->> +++ b/mm/memory.c
->> @@ -52,6 +52,7 @@
->>  #include <linux/pagemap.h>
->>  #include <linux/memremap.h>
->>  #include <linux/ksm.h>
->> +#include <linux/kprobes.h>
->>  #include <linux/rmap.h>
->>  #include <linux/export.h>
->>  #include <linux/delayacct.h>
->> @@ -141,6 +142,21 @@ static int __init init_zero_pfn(void)
->>  core_initcall(init_zero_pfn);
->>  
->>  
->> +int __kprobes notify_page_fault(struct pt_regs *regs, unsigned int trap)
->> +{
->> +	int ret = 0;
->> +
->> +	/*
->> +	 * To be potentially processing a kprobe fault and to be allowed
->> +	 * to call kprobe_running(), we have to be non-preemptible.
->> +	 */
->> +	if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
->> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
->> +			ret = 1;
->> +	}
->> +	return ret;
->> +}
-> 
-> That thing should be called kprobe_page_fault() or something,
-> notify_page_fault() is a horribly crap name for this function.
+From the v1 cover letter:
 
-Agreed. kprobe_page_fault() sounds good.
+Please apply the following set of qeth fixes to -net.
+
+- The first two patches fix issues in the L3 driver's cast type
+  selection for transmitted skbs.
+- Alexandra adds a sanity check when retrieving VLAN information from
+  neighbour address events.
+- The last patch adds some missing error handling for qeth's new
+  multiqueue code.
+
+Thanks,
+Julian
+
+
+Alexandra Winter (1):
+  s390/qeth: fix VLAN attribute in bridge_hostnotify udev event
+
+Julian Wiedmann (3):
+  s390/qeth: handle limited IPv4 broadcast in L3 TX path
+  s390/qeth: check dst entry before use
+  s390/qeth: handle error when updating TX queue count
+
+ drivers/s390/net/qeth_core_main.c | 22 ++++++++++++++++------
+ drivers/s390/net/qeth_l2_main.c   |  2 +-
+ drivers/s390/net/qeth_l3_main.c   | 20 +++++++++++++++++---
+ 3 files changed, 34 insertions(+), 10 deletions(-)
+
+-- 
+2.17.1
+
