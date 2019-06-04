@@ -2,335 +2,201 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 13FD534441
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 12:18:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AEE9A347A3
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 15:08:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727246AbfFDKRS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 06:17:18 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:41888 "EHLO
-        conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727061AbfFDKRS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 06:17:18 -0400
-Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x54AEC7B032511;
-        Tue, 4 Jun 2019 19:14:18 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7B032511
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559643259;
-        bh=Oka5YpAg+k5l88SL/bB7/ELT3B4mHTq93jBuR0XeVDU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J+lYbqkDyx5TCbBD+Dn9u83I3HtBZWpgzIStSV9W5m8Vm7NsIAtCgZTTnviNOz2/k
-         OIa3qQLjn3LJ7SFdO7cx4WcnlaqSOAOAOumyzJ/LJRtUiJsfCSRsZYwrzkeOJHFloh
-         5StGJrqnxtUoL1ZJgKMKnW+FVSO1PQZGYbOztFRAmSmiiFVQv6vKdRLA4xCR4r48yn
-         wXht5Fpzui7RHx47kKqdrv4g+1N3wRkcfOsMq3aPvHHshb53vEmzlWyFS9ffiyfLYg
-         ENAWvph9pzP8vXv0G83Xee/xAieRnQjeb2MJfRFGjniA0vGhfY5j4gVUCvNpi8ZGY8
-         i977mhymYRHng==
-X-Nifty-SrcIP: [153.142.97.92]
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-To:     linux-kbuild@vger.kernel.org
-Cc:     Randy Dunlap <rdunlap@infradead.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Jani Nikula <jani.nikula@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        linux-parisc@vger.kernel.org,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-kernel@vger.kernel.org, Vincent Chen <deanbo422@gmail.com>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Paul Mackerras <paulus@samba.org>,
+        id S1727093AbfFDNI3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 09:08:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38680 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727274AbfFDNI3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 09:08:29 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54D3fHh045014
+        for <linux-s390@vger.kernel.org>; Tue, 4 Jun 2019 09:08:27 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2swqd6nc7e-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 04 Jun 2019 09:08:27 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 4 Jun 2019 14:08:25 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 4 Jun 2019 14:08:23 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54D8LL661276310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 4 Jun 2019 13:08:21 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFF9A42041;
+        Tue,  4 Jun 2019 13:08:20 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4274642054;
+        Tue,  4 Jun 2019 13:08:20 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.145])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  4 Jun 2019 13:08:20 +0000 (GMT)
+Date:   Tue, 4 Jun 2019 15:08:19 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Michael Mueller <mimu@linux.ibm.com>,
+        KVM Mailing List <kvm@vger.kernel.org>,
+        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S . Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: [PATCH 05/15] kbuild: add CONFIG_HEADERS_INSTALL and loosen the dependency of samples
-Date:   Tue,  4 Jun 2019 19:13:59 +0900
-Message-Id: <20190604101409.2078-6-yamada.masahiro@socionext.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
-References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Pierre Morel <pmorel@linux.ibm.com>
+Subject: Re: [PATCH v3 7/8] virtio/s390: use DMA memory for ccw I/O and
+ classic notifiers
+In-Reply-To: <20190603181716.325101d9.cohuck@redhat.com>
+References: <20190529122657.166148-1-mimu@linux.ibm.com>
+        <20190529122657.166148-8-mimu@linux.ibm.com>
+        <20190603181716.325101d9.cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19060413-4275-0000-0000-0000033C8A73
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19060413-4276-0000-0000-0000384C995A
+Message-Id: <20190604150819.1f8707b5.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906040089
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Commit 5318321d367c ("samples: disable CONFIG_SAMPLES for UML") used
-a big hammer to fix the build errors under the samples/ directory,
-while only some samples actually include uapi headers from usr/include.
+On Mon, 3 Jun 2019 18:17:16 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-Introduce CONFIG_HEADERS_INSTALL since 'depends on HEADERS_INSTALL' is
-clearer than 'depends on !UML'. If this option is enabled, uapi headers
-are installed before starting directory descending.
+> On Wed, 29 May 2019 14:26:56 +0200
+> Michael Mueller <mimu@linux.ibm.com> wrote:
+> 
+> > From: Halil Pasic <pasic@linux.ibm.com>
+> > 
+> > Before virtio-ccw could get away with not using DMA API for the pieces of
+> > memory it does ccw I/O with. With protected virtualization this has to
+> > change, since the hypervisor needs to read and sometimes also write these
+> > pieces of memory.
+> > 
+> > The hypervisor is supposed to poke the classic notifiers, if these are
+> > used, out of band with regards to ccw I/O. So these need to be allocated
+> > as DMA memory (which is shared memory for protected virtualization
+> > guests).
+> > 
+> > Let us factor out everything from struct virtio_ccw_device that needs to
+> > be DMA memory in a satellite that is allocated as such.
+> > 
+> > Note: The control blocks of I/O instructions do not need to be shared.
+> > These are marshalled by the ultravisor.
+> > 
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+> > Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+> > ---
+> >  drivers/s390/virtio/virtio_ccw.c | 177 +++++++++++++++++++++------------------
+> >  1 file changed, 96 insertions(+), 81 deletions(-)
+> > 
+> 
+> (...)
+> 
+> > @@ -176,6 +180,22 @@ static struct virtio_ccw_device *to_vc_device(struct virtio_device *vdev)
+> >  	return container_of(vdev, struct virtio_ccw_device, vdev);
+> >  }
+> >  
+> > +static inline void *__vc_dma_alloc(struct virtio_device *vdev, size_t size)
+> > +{
+> > +	return ccw_device_dma_zalloc(to_vc_device(vdev)->cdev, size);
+> > +}
+> > +
+> > +static inline void __vc_dma_free(struct virtio_device *vdev, size_t size,
+> > +				 void *cpu_addr)
+> > +{
+> > +	return ccw_device_dma_free(to_vc_device(vdev)->cdev, cpu_addr, size);
+> > +}
+> > +
+> > +#define vc_dma_alloc_struct(vdev, ptr) \
+> > +	({ptr = __vc_dma_alloc(vdev, sizeof(*(ptr))); })
+> > +#define vc_dma_free_struct(vdev, ptr) \
+> > +	__vc_dma_free(vdev, sizeof(*(ptr)), (ptr))
+> > +
+> 
+> I *still* don't like these #defines (and the __vc_dma_* functions), as I
+> already commented last time. I think they make it harder to follow the
+> code.
+> 
 
-I added 'depends on HEADERS_INSTALL' to per-sample CONFIG options.
-This allows UML to compile some samples.
+Sorry! I think we simply forgot to address this comment of yours. 
 
-$ make ARCH=um allmodconfig samples/
-  [ snip ]
-  CC [M]  samples/configfs/configfs_sample.o
-  CC [M]  samples/kfifo/bytestream-example.o
-  CC [M]  samples/kfifo/dma-example.o
-  CC [M]  samples/kfifo/inttype-example.o
-  CC [M]  samples/kfifo/record-example.o
-  CC [M]  samples/kobject/kobject-example.o
-  CC [M]  samples/kobject/kset-example.o
-  CC [M]  samples/trace_events/trace-events-sample.o
-  CC [M]  samples/trace_printk/trace-printk.o
-  AR      samples/vfio-mdev/built-in.a
-  AR      samples/built-in.a
+> >  static void drop_airq_indicator(struct virtqueue *vq, struct airq_info *info)
+> >  {
+> >  	unsigned long i, flags;
+> > @@ -336,8 +356,7 @@ static void virtio_ccw_drop_indicator(struct virtio_ccw_device *vcdev,
+> >  	struct airq_info *airq_info = vcdev->airq_info;
+> >  
+> >  	if (vcdev->is_thinint) {
+> > -		thinint_area = kzalloc(sizeof(*thinint_area),
+> > -				       GFP_DMA | GFP_KERNEL);
+> > +		vc_dma_alloc_struct(&vcdev->vdev, thinint_area);
+> 
+> Last time I wrote:
+> 
+> "Any reason why this takes a detour via the virtio device? The ccw
+>  device is already referenced in vcdev, isn't it?
+>
+> thinint_area = ccw_device_dma_zalloc(vcdev->cdev, sizeof(*thinint_area));
+> 
+>  looks much more obvious to me."
+> 
+> It still seems more obvious to me.
+>
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
 
- Makefile                              |  8 ++++----
- arch/arc/configs/tb10x_defconfig      |  1 +
- arch/nds32/configs/defconfig          |  1 +
- arch/parisc/configs/a500_defconfig    |  1 +
- arch/parisc/configs/b180_defconfig    |  1 +
- arch/parisc/configs/c3000_defconfig   |  1 +
- arch/parisc/configs/default_defconfig |  1 +
- arch/powerpc/configs/ppc6xx_defconfig |  1 +
- arch/s390/configs/debug_defconfig     |  1 +
- lib/Kconfig.debug                     | 19 ++++++++++++++-----
- samples/Kconfig                       | 14 +++++++++++---
- samples/Makefile                      |  4 ++--
- 12 files changed, 39 insertions(+), 14 deletions(-)
+The reason why I decided to introduce __vc_dma_alloc() back then is
+because I had no clarity what do we want to do there. If you take a look
+the body of __vc_dma_alloc() changed quite a lot, while I the usage not
+so much. 
 
-diff --git a/Makefile b/Makefile
-index 8348939765d3..ce5a9551860d 100644
---- a/Makefile
-+++ b/Makefile
-@@ -1053,9 +1053,6 @@ vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
+Regarding why is the first argument a pointer struct virtio_device, the
+idea was probably to keep the needs to be ZONE_DMA and can use the full
+64 bit address space separate. But I abandoned the ideal.
+
+Also vc_dma_alloc_struct() started out more elaborate (I used to manage
+a dma_addr_t as well -- see RFC).
+
+I'm not quite sure what is your problem with the these. As far as I
+understand, this is another of those matter of taste things. But it ain't
+a big deal. 
+
+I will change this for v4 as you requested. Again sorry for missing it!
+
+Regards,
+Halil
+
  
- targets := vmlinux
- 
--# Some samples need headers_install.
--samples: headers_install
--
- # The actual objects are generated when descending,
- # make sure no implicit rule kicks in
- $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
-@@ -1199,6 +1196,10 @@ headers_check: headers_install
- 	$(Q)$(MAKE) $(hdr-inst)=include/uapi dst=include HDRCHECK=1
- 	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi dst=include HDRCHECK=1
- 
-+ifdef CONFIG_HEADERS_INSTALL
-+prepare: headers_install
-+endif
-+
- ifdef CONFIG_HEADERS_CHECK
- all: headers_check
- endif
-@@ -1745,7 +1746,6 @@ build-dir = $(patsubst %/,%,$(dir $(build-target)))
- PHONY += /
- /: ./
- 
--samples/: headers_install
- %/: prepare FORCE
- 	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
- 
-diff --git a/arch/arc/configs/tb10x_defconfig b/arch/arc/configs/tb10x_defconfig
-index 5b5119d2b5d5..dc739bd093e3 100644
---- a/arch/arc/configs/tb10x_defconfig
-+++ b/arch/arc/configs/tb10x_defconfig
-@@ -94,6 +94,7 @@ CONFIG_CONFIGFS_FS=y
- CONFIG_DEBUG_INFO=y
- CONFIG_STRIP_ASM_SYMS=y
- CONFIG_DEBUG_FS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_DEBUG_SECTION_MISMATCH=y
- CONFIG_MAGIC_SYSRQ=y
-diff --git a/arch/nds32/configs/defconfig b/arch/nds32/configs/defconfig
-index 65ce9259081b..40313a635075 100644
---- a/arch/nds32/configs/defconfig
-+++ b/arch/nds32/configs/defconfig
-@@ -92,6 +92,7 @@ CONFIG_DEBUG_INFO=y
- CONFIG_DEBUG_INFO_DWARF4=y
- CONFIG_GDB_SCRIPTS=y
- CONFIG_READABLE_ASM=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_DEBUG_SECTION_MISMATCH=y
- CONFIG_MAGIC_SYSRQ=y
-diff --git a/arch/parisc/configs/a500_defconfig b/arch/parisc/configs/a500_defconfig
-index 5acb93dcaabf..390c0bc09179 100644
---- a/arch/parisc/configs/a500_defconfig
-+++ b/arch/parisc/configs/a500_defconfig
-@@ -167,6 +167,7 @@ CONFIG_NLS_ISO8859_1=m
- CONFIG_NLS_ISO8859_15=m
- CONFIG_NLS_UTF8=m
- CONFIG_DEBUG_FS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- # CONFIG_DEBUG_BUGVERBOSE is not set
-diff --git a/arch/parisc/configs/b180_defconfig b/arch/parisc/configs/b180_defconfig
-index 83ffd161aec5..bdf1fe2b217f 100644
---- a/arch/parisc/configs/b180_defconfig
-+++ b/arch/parisc/configs/b180_defconfig
-@@ -91,6 +91,7 @@ CONFIG_NLS_ASCII=m
- CONFIG_NLS_ISO8859_1=m
- CONFIG_NLS_ISO8859_15=m
- CONFIG_NLS_UTF8=m
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_KERNEL=y
-diff --git a/arch/parisc/configs/c3000_defconfig b/arch/parisc/configs/c3000_defconfig
-index 8d41a73bd71b..ed4d49575b38 100644
---- a/arch/parisc/configs/c3000_defconfig
-+++ b/arch/parisc/configs/c3000_defconfig
-@@ -140,6 +140,7 @@ CONFIG_NLS_ISO8859_1=m
- CONFIG_NLS_ISO8859_15=m
- CONFIG_NLS_UTF8=m
- CONFIG_DEBUG_FS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_MUTEXES=y
-diff --git a/arch/parisc/configs/default_defconfig b/arch/parisc/configs/default_defconfig
-index 52c9050a7c5c..fcfd9eaadf9b 100644
---- a/arch/parisc/configs/default_defconfig
-+++ b/arch/parisc/configs/default_defconfig
-@@ -184,6 +184,7 @@ CONFIG_NLS_KOI8_R=m
- CONFIG_NLS_KOI8_U=m
- CONFIG_NLS_UTF8=y
- CONFIG_DEBUG_FS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_KERNEL=y
-diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/configs/ppc6xx_defconfig
-index 7c6baf6df139..463aa3e53084 100644
---- a/arch/powerpc/configs/ppc6xx_defconfig
-+++ b/arch/powerpc/configs/ppc6xx_defconfig
-@@ -1124,6 +1124,7 @@ CONFIG_NLS_KOI8_R=m
- CONFIG_NLS_KOI8_U=m
- CONFIG_DEBUG_INFO=y
- CONFIG_UNUSED_SYMBOLS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_MAGIC_SYSRQ=y
- CONFIG_DEBUG_KERNEL=y
-diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
-index b0920b35f87b..994e03fad424 100644
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@ -586,6 +586,7 @@ CONFIG_GDB_SCRIPTS=y
- CONFIG_FRAME_WARN=1024
- CONFIG_READABLE_ASM=y
- CONFIG_UNUSED_SYMBOLS=y
-+CONFIG_HEADERS_INSTALL=y
- CONFIG_HEADERS_CHECK=y
- CONFIG_DEBUG_SECTION_MISMATCH=y
- CONFIG_MAGIC_SYSRQ=y
-diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
-index 7cdcb962358c..6a6ea4219d1e 100644
---- a/lib/Kconfig.debug
-+++ b/lib/Kconfig.debug
-@@ -305,14 +305,23 @@ config DEBUG_FS
- 
- 	  If unsure, say N.
- 
-+config HEADERS_INSTALL
-+	bool "Install uapi headers to usr/include"
-+	depends on !UML
-+	help
-+	  This option will install uapi headers (headers exported to user-space)
-+	  into the usr/include directory for use during the kernel build.
-+	  This is unneeded for building the kernel itself, but needed for some
-+	  user-space program samples. It is also needed by some features such
-+	  as uapi header sanity checks.
-+
- config HEADERS_CHECK
- 	bool "Run sanity checks on uapi headers when building 'all'"
--	depends on !UML
-+	depends on HEADERS_INSTALL
- 	help
--	  This option will extract the user-visible kernel headers when
--	  building the 'all' target, and will run basic sanity checks on them to
--	  ensure that exported files do not attempt to include files which
--	  were not exported, etc.
-+	  This option will run basic sanity checks on uapi headers when
-+	  building the 'all' target, for example, ensure that they do not
-+	  attempt to include files which were not exported, etc.
- 
- 	  If you're making modifications to header files which are
- 	  relevant for userspace, say 'Y', and check the headers
-diff --git a/samples/Kconfig b/samples/Kconfig
-index d63cc8a3e0df..71b5e833dd9e 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -1,7 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- menuconfig SAMPLES
- 	bool "Sample kernel code"
--	depends on !UML
- 	help
- 	  You can build and test sample kernel code here.
- 
-@@ -95,16 +94,24 @@ config SAMPLE_CONFIGFS
- 
- config SAMPLE_CONNECTOR
- 	tristate "Build connector sample -- loadable modules only"
--	depends on CONNECTOR && m
-+	depends on CONNECTOR && HEADERS_INSTALL && m
- 	help
- 	  When enabled, this builds both a sample kernel module for
- 	  the connector interface and a user space tool to communicate
- 	  with it.
- 	  See also Documentation/connector/connector.txt
- 
-+config SAMPLE_HIDRAW
-+	bool "hidraw sample"
-+	depends on HEADERS_INSTALL
-+
-+config SAMPLE_PIDFD
-+	bool "pidfd sample"
-+	depends on HEADERS_INSTALL
-+
- config SAMPLE_SECCOMP
- 	bool "Build seccomp sample code"
--	depends on SECCOMP_FILTER
-+	depends on SECCOMP_FILTER && HEADERS_INSTALL
- 	help
- 	  Build samples of seccomp filters using various methods of
- 	  BPF filter construction.
-@@ -156,6 +163,7 @@ config SAMPLE_ANDROID_BINDERFS
- 
- config SAMPLE_VFS
- 	bool "Build example programs that use new VFS system calls"
-+	depends on HEADERS_INSTALL
- 	help
- 	  Build example userspace programs that use new VFS system calls such
- 	  as mount API and statx().  Note that this is restricted to the x86
-diff --git a/samples/Makefile b/samples/Makefile
-index debf8925f06f..7d6e4ca28d69 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -4,14 +4,14 @@
- obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
- obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
- obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
--subdir-y				+= hidraw
-+subdir-$(CONFIG_SAMPLE_HIDRAW)		+= hidraw
- obj-$(CONFIG_SAMPLE_HW_BREAKPOINT)	+= hw_breakpoint/
- obj-$(CONFIG_SAMPLE_KDB)		+= kdb/
- obj-$(CONFIG_SAMPLE_KFIFO)		+= kfifo/
- obj-$(CONFIG_SAMPLE_KOBJECT)		+= kobject/
- obj-$(CONFIG_SAMPLE_KPROBES)		+= kprobes/
- obj-$(CONFIG_SAMPLE_LIVEPATCH)		+= livepatch/
--subdir-y				+= pidfd
-+subdir-$(CONFIG_SAMPLE_PIDFD)		+= pidfd
- obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+= qmi/
- obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
- subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
--- 
-2.17.1
+> >  		if (!thinint_area)
+> >  			return;
+> >  		thinint_area->summary_indicator =
+> 
 
