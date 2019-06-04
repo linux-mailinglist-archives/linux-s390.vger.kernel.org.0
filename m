@@ -2,125 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ADA6A34E97
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 19:19:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E291034F05
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 19:36:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726092AbfFDRTe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 13:19:34 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:40015 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726303AbfFDRTd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 13:19:33 -0400
-Received: by mail-wm1-f67.google.com with SMTP id v19so206173wmj.5
-        for <linux-s390@vger.kernel.org>; Tue, 04 Jun 2019 10:19:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/1gqrY2ImTpTIUPPPU1PDfWa7bCSQk/2OUjIHFRsVkk=;
-        b=Zz8Vld7XtFV7/m3yvZOzO7Rnz26IyfWoOJ13Np4Vx0PUL+F7AExFvOWcKxFt+Co1R+
-         kpdlMuJM6FsN3th8xQesQ1nfLZG+r6v3CYTcvH79Sc2trBcN4k6BvEh0FA2PanEWDGsU
-         KRqScM3q7bCqyIKkHgW9Zy38hcinwaKjaOVWeXe6jEDO0lMsmXUeECoJ9/OB8cU4vRGQ
-         SpA6B6FMJuw/bSmgepVQAxlYZaTh+6NnWMMpKKPaKkzbtthDuoNxTlfuf0K/2+p7WJwM
-         RR9TglrTZYkBk0PWjNPLfEuwzkIVzGF3f1etWwqt6U1vf4wokkoWJJezZLtE710rNe72
-         fqHg==
-X-Gm-Message-State: APjAAAWbLiyIsdFI/Y8PkswNN7GglK5P3dcNwn4RgUU0946Myn6a/Bzk
-        mgHTjpP9Sqry7n7lVHV1CmvaUfPS9wq7ZQ==
-X-Google-Smtp-Source: APXvYqzCTmSwqWr7Reg0Gs56V3SrKXWAOK1pOsi8iZhuHvPXpdeLwgLPTMRSYHM34prx2EZwe/cbcA==
-X-Received: by 2002:a1c:c583:: with SMTP id v125mr4957627wmf.158.1559668771167;
-        Tue, 04 Jun 2019 10:19:31 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:657f:501:149f:5617? ([2001:b07:6468:f312:657f:501:149f:5617])
-        by smtp.gmail.com with ESMTPSA id f10sm31540077wrg.24.2019.06.04.10.19.29
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 04 Jun 2019 10:19:30 -0700 (PDT)
-Subject: Re: [PATCH v1 0/9] KVM selftests for s390x
-To:     Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Andrew Jones <drjones@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <20190523164309.13345-1-thuth@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <f2daf197-bb5d-15d7-8219-d17cd40c85c9@redhat.com>
-Date:   Tue, 4 Jun 2019 19:19:28 +0200
+        id S1726245AbfFDRgL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 13:36:11 -0400
+Received: from foss.arm.com ([217.140.101.70]:48706 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726173AbfFDRgL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 4 Jun 2019 13:36:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 523C980D;
+        Tue,  4 Jun 2019 10:36:10 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0002F3F5AF;
+        Tue,  4 Jun 2019 10:36:05 -0700 (PDT)
+Subject: Re: [PATCH v3 04/11] arm64/mm: Add temporary arch_remove_memory()
+ implementation
+To:     David Hildenbrand <david@redhat.com>,
+        Wei Yang <richard.weiyang@gmail.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Chintan Pandya <cpandya@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+References: <20190527111152.16324-1-david@redhat.com>
+ <20190527111152.16324-5-david@redhat.com>
+ <20190603214139.mercn5hol2yyfl2s@master>
+ <5059f68d-45d2-784e-0770-ee67060773c7@redhat.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <7a5b8c8d-f1bb-9c7e-9809-405af374fecd@arm.com>
+Date:   Tue, 4 Jun 2019 18:36:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190523164309.13345-1-thuth@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <5059f68d-45d2-784e-0770-ee67060773c7@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 23/05/19 18:43, Thomas Huth wrote:
-> This patch series enables the KVM selftests for s390x. As a first
-> test, the sync_regs from x86 has been adapted to s390x, and after
-> a fix for KVM_CAP_MAX_VCPU_ID on s390x, the kvm_create_max_vcpus
-> is now enabled here, too.
+On 04/06/2019 07:56, David Hildenbrand wrote:
+> On 03.06.19 23:41, Wei Yang wrote:
+>> On Mon, May 27, 2019 at 01:11:45PM +0200, David Hildenbrand wrote:
+>>> A proper arch_remove_memory() implementation is on its way, which also
+>>> cleanly removes page tables in arch_add_memory() in case something goes
+>>> wrong.
+>>
+>> Would this be better to understand?
+>>
+>>      removes page tables created in arch_add_memory
 > 
-> Please note that the ucall() interface is not used yet - since
-> s390x neither has PIO nor MMIO, this needs some more work first
-> before it becomes usable (we likely should use a DIAG hypercall
-> here, which is what the sync_reg test is currently using, too...
-> I started working on that topic, but did not finish that work
-> yet, so I decided to not include it yet).
+> That's not what this sentence expresses. Have a look at
+> arch_add_memory(), in case  __add_pages() fails, the page tables are not
+> removed. This will also be fixed by Anshuman in the same shot.
+> 
+>>
+>>>
+>>> As we want to use arch_remove_memory() in case something goes wrong
+>>> during memory hotplug after arch_add_memory() finished, let's add
+>>> a temporary hack that is sufficient enough until we get a proper
+>>> implementation that cleans up page table entries.
+>>>
+>>> We will remove CONFIG_MEMORY_HOTREMOVE around this code in follow up
+>>> patches.
+>>>
+>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
+>>> Cc: Will Deacon <will.deacon@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>>> Cc: Chintan Pandya <cpandya@codeaurora.org>
+>>> Cc: Mike Rapoport <rppt@linux.ibm.com>
+>>> Cc: Jun Yao <yaojun8558363@gmail.com>
+>>> Cc: Yu Zhao <yuzhao@google.com>
+>>> Cc: Robin Murphy <robin.murphy@arm.com>
+>>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>> arch/arm64/mm/mmu.c | 19 +++++++++++++++++++
+>>> 1 file changed, 19 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>>> index a1bfc4413982..e569a543c384 100644
+>>> --- a/arch/arm64/mm/mmu.c
+>>> +++ b/arch/arm64/mm/mmu.c
+>>> @@ -1084,4 +1084,23 @@ int arch_add_memory(int nid, u64 start, u64 size,
+>>> 	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
+>>> 			   restrictions);
+>>> }
+>>> +#ifdef CONFIG_MEMORY_HOTREMOVE
+>>> +void arch_remove_memory(int nid, u64 start, u64 size,
+>>> +			struct vmem_altmap *altmap)
+>>> +{
+>>> +	unsigned long start_pfn = start >> PAGE_SHIFT;
+>>> +	unsigned long nr_pages = size >> PAGE_SHIFT;
+>>> +	struct zone *zone;
+>>> +
+>>> +	/*
+>>> +	 * FIXME: Cleanup page tables (also in arch_add_memory() in case
+>>> +	 * adding fails). Until then, this function should only be used
+>>> +	 * during memory hotplug (adding memory), not for memory
+>>> +	 * unplug. ARCH_ENABLE_MEMORY_HOTREMOVE must not be
+>>> +	 * unlocked yet.
+>>> +	 */
+>>> +	zone = page_zone(pfn_to_page(start_pfn));
+>>
+>> Compared with arch_remove_memory in x86. If altmap is not NULL, zone will be
+>> retrieved from page related to altmap. Not sure why this is not the same?
+> 
+> This is a minimal implementation, sufficient for this use case here. A
+> full implementation is in the works. For now, this function will not be
+> used with an altmap (ZONE_DEVICE is not esupported for arm64 yet).
 
-Christian, please include this in your tree (rebasing on top of kvm/next
-as soon as I push it).  Note that Thomas is away for about a month.
+FWIW the other pieces of ZONE_DEVICE are now due to land in parallel, 
+but as long as we don't throw the ARCH_ENABLE_MEMORY_HOTREMOVE switch 
+then there should still be no issue. Besides, given that we should 
+consistently ignore the altmap everywhere at the moment, it may even 
+work out regardless.
 
-Paolo
+One thing stands out about the failure path thing, though - if 
+__add_pages() did fail, can it still be guaranteed to have initialised 
+the memmap such that page_zone() won't return nonsense? Last time I 
+looked that was still a problem when removing memory which had been 
+successfully added, but never onlined (although I do know that 
+particular case was already being discussed at the time, and I've not 
+been paying the greatest attention since).
 
-> RFC -> v1:
->  - Rebase, needed to add the first patch for vcpu_nested_state_get/set
->  - Added patch to introduce VM_MODE_DEFAULT macro
->  - Improved/cleaned up the code in processor.c
->  - Added patch to fix KVM_CAP_MAX_VCPU_ID on s390x
->  - Added patch to enable the kvm_create_max_vcpus on s390x and aarch64
-> 
-> Andrew Jones (1):
->   kvm: selftests: aarch64: fix default vm mode
-> 
-> Thomas Huth (8):
->   KVM: selftests: Wrap vcpu_nested_state_get/set functions with x86
->     guard
->   KVM: selftests: Guard struct kvm_vcpu_events with
->     __KVM_HAVE_VCPU_EVENTS
->   KVM: selftests: Introduce a VM_MODE_DEFAULT macro for the default bits
->   KVM: selftests: Align memory region addresses to 1M on s390x
->   KVM: selftests: Add processor code for s390x
->   KVM: selftests: Add the sync_regs test for s390x
->   KVM: s390: Do not report unusabled IDs via KVM_CAP_MAX_VCPU_ID
->   KVM: selftests: Move kvm_create_max_vcpus test to generic code
-> 
->  MAINTAINERS                                   |   2 +
->  arch/mips/kvm/mips.c                          |   3 +
->  arch/powerpc/kvm/powerpc.c                    |   3 +
->  arch/s390/kvm/kvm-s390.c                      |   1 +
->  arch/x86/kvm/x86.c                            |   3 +
->  tools/testing/selftests/kvm/Makefile          |   7 +-
->  .../testing/selftests/kvm/include/kvm_util.h  |  10 +
->  .../selftests/kvm/include/s390x/processor.h   |  22 ++
->  .../kvm/{x86_64 => }/kvm_create_max_vcpus.c   |   3 +-
->  .../selftests/kvm/lib/aarch64/processor.c     |   2 +-
->  tools/testing/selftests/kvm/lib/kvm_util.c    |  25 +-
->  .../selftests/kvm/lib/s390x/processor.c       | 286 ++++++++++++++++++
->  .../selftests/kvm/lib/x86_64/processor.c      |   2 +-
->  .../selftests/kvm/s390x/sync_regs_test.c      | 151 +++++++++
->  virt/kvm/arm/arm.c                            |   3 +
->  virt/kvm/kvm_main.c                           |   2 -
->  16 files changed, 514 insertions(+), 11 deletions(-)
->  create mode 100644 tools/testing/selftests/kvm/include/s390x/processor.h
->  rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
->  create mode 100644 tools/testing/selftests/kvm/lib/s390x/processor.c
->  create mode 100644 tools/testing/selftests/kvm/s390x/sync_regs_test.c
-> 
-
+Robin.
