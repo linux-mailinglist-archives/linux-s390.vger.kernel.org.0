@@ -2,149 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3C0C034B8F
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 17:06:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D73E834C23
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 17:24:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfFDPG4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 11:06:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43508 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727822AbfFDPGz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 11:06:55 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54ExXwd037351
-        for <linux-s390@vger.kernel.org>; Tue, 4 Jun 2019 11:06:54 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2swsnu4kj4-1
+        id S1727857AbfFDPYv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 11:24:51 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42104 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727953AbfFDPYv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 11:24:51 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x54FF4VD095295
+        for <linux-s390@vger.kernel.org>; Tue, 4 Jun 2019 11:24:50 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2swu4bredf-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 04 Jun 2019 11:06:50 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 04 Jun 2019 11:24:49 -0400
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 4 Jun 2019 16:06:25 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Tue, 4 Jun 2019 16:24:47 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 4 Jun 2019 16:06:22 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54F6KhA35258566
+        Tue, 4 Jun 2019 16:24:45 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x54FOiFC45744334
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 4 Jun 2019 15:06:20 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A69E542042;
-        Tue,  4 Jun 2019 15:06:20 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 079E442041;
-        Tue,  4 Jun 2019 15:06:20 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.145])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  4 Jun 2019 15:06:19 +0000 (GMT)
-Date:   Tue, 4 Jun 2019 17:06:18 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
+        Tue, 4 Jun 2019 15:24:44 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 22762A4060;
+        Tue,  4 Jun 2019 15:24:44 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB830A4054;
+        Tue,  4 Jun 2019 15:24:43 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue,  4 Jun 2019 15:24:43 +0000 (GMT)
+Date:   Tue, 4 Jun 2019 17:24:42 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
 To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Michael Mueller <mimu@linux.ibm.com>,
-        KVM Mailing List <kvm@vger.kernel.org>,
-        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
         Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>
-Subject: Re: [PATCH v3 4/8] s390/airq: use DMA memory for adapter interrupts
-In-Reply-To: <20190604165120.5afdce78.cohuck@redhat.com>
-References: <20190529122657.166148-1-mimu@linux.ibm.com>
-        <20190529122657.166148-5-mimu@linux.ibm.com>
-        <20190603172740.1023e078.cohuck@redhat.com>
-        <20190604152256.158d688c.pasic@linux.ibm.com>
-        <20190604165120.5afdce78.cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PULL 0/7] vfio-ccw: fixes
+References: <20190603105038.11788-1-cohuck@redhat.com>
+ <20190603111124.GB20699@osiris>
+ <20190603131641.4ad411f0.cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190603131641.4ad411f0.cohuck@redhat.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19060415-0028-0000-0000-000003754689
+x-cbid: 19060415-4275-0000-0000-0000033CA89C
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060415-0029-0000-0000-000024351F18
-Message-Id: <20190604170618.74f2c561.pasic@linux.ibm.com>
+x-cbparentid: 19060415-4276-0000-0000-0000384CB838
+Message-Id: <20190604152442.GG5774@osiris>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-04_10:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906040098
+ mlxlogscore=800 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906040100
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 4 Jun 2019 16:51:20 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
-
-> On Tue, 4 Jun 2019 15:22:56 +0200
-> Halil Pasic <pasic@linux.ibm.com> wrote:
+On Mon, Jun 03, 2019 at 01:16:41PM +0200, Cornelia Huck wrote:
+> On Mon, 3 Jun 2019 13:11:24 +0200
+> Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
 > 
-> > On Mon, 3 Jun 2019 17:27:40 +0200
-> > Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > > Apologies if that already has been answered (and I missed it in my mail
-> > > pile...), but two things had come to my mind previously:
+> > On Mon, Jun 03, 2019 at 12:50:31PM +0200, Cornelia Huck wrote:
+> > > The following changes since commit 674459be116955e025d6a5e6142e2d500103de8e:
 > > > 
-> > > - CHSC... does anything need to be done there? Last time I asked:
-> > >   "Anyway, css_bus_init() uses some chscs
-> > >    early (before cio_dma_pool_init), so we could not use the pools
-> > >    there, even if we wanted to. Do chsc commands either work, or else
-> > >    fail benignly on a protected virt guest?"  
+> > >   MAINTAINERS: add Vasily Gorbik and Christian Borntraeger for s390 (2019-05-31 10:14:15 +0200)
+> > > 
+> > > are available in the Git repository at:
+> > > 
+> > >   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw.git tags/vfio-ccw-20190603
+> > > 
+> > > for you to fetch changes up to 9b6e57e5a51696171de990b3c41bd53d4b8ab8ac:
+> > > 
+> > >   s390/cio: Remove vfio-ccw checks of command codes (2019-06-03 12:02:55 +0200)
+> > > 
+> > > ----------------------------------------------------------------
+> > > various vfio-ccw fixes (ccw translation, state machine)
+> > > 
+> > > ----------------------------------------------------------------
+> > > 
+> > > Eric Farman (7):
+> > >   s390/cio: Update SCSW if it points to the end of the chain
+> > >   s390/cio: Set vfio-ccw FSM state before ioeventfd
+> > >   s390/cio: Split pfn_array_alloc_pin into pieces
+> > >   s390/cio: Initialize the host addresses in pfn_array
+> > >   s390/cio: Don't pin vfio pages for empty transfers
+> > >   s390/cio: Allow zero-length CCWs in vfio-ccw
+> > >   s390/cio: Remove vfio-ccw checks of command codes  
 > > 
-> > Protected virt won't support all CHSC. The supported ones won't requre
-> > use of shared memory. So we are fine.
+> > Given that none of the commits contains a stable tag, I assume it's ok
+> > to schedule these for the next merge window (aka 'feature branch')?
 > 
-> I suppose the supported ones are the sync chscs that use the chsc area
-> as a direct parameter (and therefore are handled similarly to the other
-> I/O instructions that supply a direct parameter)? I don't think we care
-> about async chscs in KVM/QEMU anyway, as we don't even emulate chsc
-> subchannels :) (And IIRC, you don't get chsc subchannels in z/VM
-> guests, either.)
-
-Nod.
-
+> All are bug fixes, but for what I think are edge cases. Would be nice
+> if they could still make it into 5.2, but I have no real problem with
+> deferring them to the next release, either.
 > 
-> > 
-> > > - PCI indicators... does this interact with any dma configuration on
-> > >   the pci device? (I know pci is not supported yet, and I don't really
-> > >   expect any problems.)
-> > >   
-> > 
-> > It does but, I'm pretty confident we don't have a problem with PCI. IMHO
-> > Sebastian is the guy who needs to be paranoid about this, and he r-b-ed
-> > the respective patches.
-> 
-> Just wanted to make sure that this was on the radar. You guys are
-> obviously in a better position than me to judge this :)
-> 
-> Anyway, I do not intend to annoy with those questions, it's just hard
-> to get a feel if there are areas that still need care if you don't have
-> access to the documentation for this... if you tell me that you are
-> aware of it and it should work, that's fine for me.
-> 
+> Eric, Farhan: Do you agree?
 
-The questions are important. It is just the not so unusual problem with
-the availability of public documentation that makes things a bit
-difficult for me as well.
+As discussed on IRC: pulled and pushed to features branch. Urgent
+fixes really should either have a stable and/or fixes tag, if
+possible.
 
-And sorry if these questions were ignored in the past. I did not have
-the bandwidth to take care of all the questions properly, but I did
-enough so that the other guys never knew if they need to engage or not.
-
-Regards,
-Halil
+Thank you!
 
