@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE7EA35412
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Jun 2019 01:30:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A936635359
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Jun 2019 01:24:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727401AbfFDXai (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 19:30:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34448 "EHLO mail.kernel.org"
+        id S1727618AbfFDXYd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 19:24:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35602 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727350AbfFDXXs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:23:48 -0400
+        id S1727613AbfFDXYc (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:24:32 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 021DB20859;
-        Tue,  4 Jun 2019 23:23:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 74B1620883;
+        Tue,  4 Jun 2019 23:24:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690627;
-        bh=Qb7YbNznCW8kC+aVurRGbRKhb6EowYJJu3J1fO63EkM=;
+        s=default; t=1559690672;
+        bh=P0Fx1LFVw40DO3B5elgZ8KOSxtnwXqvfk80TEOPqYPg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zXW8QS2thY2Lk9t9w9yY26Z8T0w1x2XvOvuyH/KSh/436mGa29yTgQkv2fd8ekaT7
-         Ctu+yj1oPW7szd1iTyRmru4gYWBBsGZzGGHMgFSSaF4LYBcV53gxf4ci8kYnD4wokg
-         n9ulL6jJL55s7EA1FVkaDEIX+YeVM1Wum+s+jisg=
+        b=hZa690EBFA6CGqi3yEX7NPPIfc5+iUtbbIsC//FEou/T/gDguXxA1HCe4SFSQIywV
+         EWb4f2H09QxBKxT3WjZrVQJQhAmGBADFTK5Z136bxHS6qrCQxniB3MaOrJkNmd/48U
+         NzdoTKU2zr4A2/L4sZDITjozYjzH1D1cSNYkyxe8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/36] s390/kasan: fix strncpy_from_user kasan checks
-Date:   Tue,  4 Jun 2019 19:23:01 -0400
-Message-Id: <20190604232333.7185-6-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 06/24] s390/kasan: fix strncpy_from_user kasan checks
+Date:   Tue,  4 Jun 2019 19:23:57 -0400
+Message-Id: <20190604232416.7479-6-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604232333.7185-1-sashal@kernel.org>
-References: <20190604232333.7185-1-sashal@kernel.org>
+In-Reply-To: <20190604232416.7479-1-sashal@kernel.org>
+References: <20190604232416.7479-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,10 +64,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index ad6b91013a05..5332f628c1ed 100644
+index cdd0f0d999e2..689eae8d3859 100644
 --- a/arch/s390/include/asm/uaccess.h
 +++ b/arch/s390/include/asm/uaccess.h
-@@ -56,8 +56,10 @@ raw_copy_from_user(void *to, const void __user *from, unsigned long n);
+@@ -67,8 +67,10 @@ raw_copy_from_user(void *to, const void __user *from, unsigned long n);
  unsigned long __must_check
  raw_copy_to_user(void __user *to, const void *from, unsigned long n);
  
