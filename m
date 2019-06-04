@@ -2,83 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BFD73340F0
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 09:59:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F099834107
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 10:01:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727137AbfFDH7D (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 03:59:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56876 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727028AbfFDH7C (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 4 Jun 2019 03:59:02 -0400
-Received: from PC-kkoz.proceq.com (unknown [213.160.61.66])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AEB3D24D3D;
-        Tue,  4 Jun 2019 07:59:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559635142;
-        bh=BGPVBwJeHoElaUtEavKKbm0/aDM8XNbhtrBPJNIJn9Y=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DyY2TTvBHAhL+dlseHCh809aq7njNbpYYJOhcA3Nv8vFJeYLItkwqo1/IfSN6RQxE
-         zSVx3hroxmFFPFRhwYj+l8jLFykJ73rWLBWiUfb29+9/XIU0dzuKQEhOI5SHktYlTY
-         gU5BtQjZaITuRbo353CZK4RZG78hZRFZqFHajGWQ=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1727023AbfFDIBL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 04:01:11 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36011 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726940AbfFDIBK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 04:01:10 -0400
+Received: by mail-lj1-f193.google.com with SMTP id i21so4188354ljj.3;
+        Tue, 04 Jun 2019 01:01:09 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BvFaMGVaktx6XKkqQeK7fvOreSNIgCtTOvEyHkLilfU=;
+        b=DAb7HhVvVZXE7KmaOg63b5oZ3xfDHo3PHX8yNQrI36YjlYr9XySitHPZIpDFkeXhxT
+         BNFYlijKk/lvgjKqdkmSvN8rPKbDLQj2GD57ewoHqu+/WcgIQ+zntFvmTHbrqOo4uJH3
+         6BawJPNXhGKEm4qW2zKF1RNDd6P7OKKXCANGNQmANcTHkc+jFJLBIq4hr6r/vZqW2H2o
+         ev6PFKRkPATvQqd3zNromvM+hy88EHKYbWesIJ87U01UCtzfv4CbZLkzY+XHiJxX5lDg
+         THYMuA7HTIaLIll+wdpuDu9qvTLjyfJvWK761EpgH+appuc8or/tPEpfS3DGsABapHyl
+         9N1w==
+X-Gm-Message-State: APjAAAXsYcnhc5E/8ieOYsgAZJ9+w2kxEcWefqM0IDv0QTaGgX2UPfMY
+        d4mn25j1hskOnVeDZ5HnzLWTsX8ft6kTaPfkFrEyUQok
+X-Google-Smtp-Source: APXvYqzdKDfUrdD2yLUySgCqLbrKLPjcc3QTgMFqln86lXM7PL5KME2KFi2ut8N2lB5NlBCCEusCB8gbB7d/u3/+cHc=
+X-Received: by 2002:a2e:9255:: with SMTP id v21mr9188077ljg.178.1559635268569;
+ Tue, 04 Jun 2019 01:01:08 -0700 (PDT)
+MIME-Version: 1.0
+References: <1559635137-20900-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <1559635137-20900-1-git-send-email-krzk@kernel.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 4 Jun 2019 10:00:55 +0200
+Message-ID: <CAMuHMdX04Y2n8v641bv5P+P0oeRfO7arOft_6dk6w0wQF1yzew@mail.gmail.com>
+Subject: Re: [PATCH] s390: configs: Remove useless UEVENT_HELPER_PATH
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH] s390: configs: Remove useless UEVENT_HELPER_PATH
-Date:   Tue,  4 Jun 2019 09:58:57 +0200
-Message-Id: <1559635137-20900-1-git-send-email-krzk@kernel.org>
-X-Mailer: git-send-email 2.7.4
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Geert Uytterhoeven <geert+renesas@glider.be>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Remove the CONFIG_UEVENT_HELPER_PATH because:
-1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
-   CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
-   made default to 'n',
-2. It is not recommended (help message: "This should not be used today
-   [...] creates a high system load") and was kept only for ancient
-   userland,
-3. Certain userland specifically requests it to be disabled (systemd
-   README: "Legacy hotplug slows down the system and confuses udev").
+On Tue, Jun 4, 2019 at 9:59 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
+> Remove the CONFIG_UEVENT_HELPER_PATH because:
+> 1. It is disabled since commit 1be01d4a5714 ("driver: base: Disable
+>    CONFIG_UEVENT_HELPER by default") as its dependency (UEVENT_HELPER) was
+>    made default to 'n',
+> 2. It is not recommended (help message: "This should not be used today
+>    [...] creates a high system load") and was kept only for ancient
+>    userland,
+> 3. Certain userland specifically requests it to be disabled (systemd
+>    README: "Legacy hotplug slows down the system and confuses udev").
+>
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/s390/configs/defconfig          | 1 -
- arch/s390/configs/zfcpdump_defconfig | 1 -
- 2 files changed, 2 deletions(-)
+Acked-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/s390/configs/defconfig b/arch/s390/configs/defconfig
-index c59b922cb6c5..18cff2e4607d 100644
---- a/arch/s390/configs/defconfig
-+++ b/arch/s390/configs/defconfig
-@@ -94,7 +94,6 @@ CONFIG_NET_CLS_RSVP6=m
- CONFIG_NET_CLS_ACT=y
- CONFIG_NET_ACT_POLICE=y
- CONFIG_BPF_JIT=y
--CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_DEVTMPFS=y
- CONFIG_BLK_DEV_LOOP=m
- CONFIG_BLK_DEV_NBD=m
-diff --git a/arch/s390/configs/zfcpdump_defconfig b/arch/s390/configs/zfcpdump_defconfig
-index 7dc7f58c4287..d92bab844b73 100644
---- a/arch/s390/configs/zfcpdump_defconfig
-+++ b/arch/s390/configs/zfcpdump_defconfig
-@@ -24,7 +24,6 @@ CONFIG_CRASH_DUMP=y
- # CONFIG_SECCOMP is not set
- CONFIG_NET=y
- # CONFIG_IUCV is not set
--CONFIG_UEVENT_HELPER_PATH="/sbin/hotplug"
- CONFIG_DEVTMPFS=y
- CONFIG_BLK_DEV_RAM=y
- # CONFIG_BLK_DEV_XPRAM is not set
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
