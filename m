@@ -2,216 +2,517 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D79634F52
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 19:52:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3925B34F9D
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 20:11:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726162AbfFDRwA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 13:52:00 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36912 "EHLO mx1.redhat.com"
+        id S1726460AbfFDSLR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 14:11:17 -0400
+Received: from foss.arm.com ([217.140.101.70]:49124 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725929AbfFDRwA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 4 Jun 2019 13:52:00 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id DC01AC04FFF1;
-        Tue,  4 Jun 2019 17:51:59 +0000 (UTC)
-Received: from [10.36.116.79] (ovpn-116-79.ams2.redhat.com [10.36.116.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 735B9600CC;
-        Tue,  4 Jun 2019 17:51:53 +0000 (UTC)
-Subject: Re: [PATCH v3 04/11] arm64/mm: Add temporary arch_remove_memory()
- implementation
-To:     Robin Murphy <robin.murphy@arm.com>,
-        Wei Yang <richard.weiyang@gmail.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        id S1725933AbfFDSLR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 4 Jun 2019 14:11:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DA77D80D;
+        Tue,  4 Jun 2019 11:11:15 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AB4B13F690;
+        Tue,  4 Jun 2019 11:11:10 -0700 (PDT)
+Subject: Re: [PATCH v3 1/4] iommu: Add gfp parameter to iommu_ops::map
+To:     Tom Murphy <tmurphy@arista.com>, iommu@lists.linux-foundation.org
+Cc:     murphyt7@tcd.ie, Joerg Roedel <joro@8bytes.org>,
         Will Deacon <will.deacon@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Chintan Pandya <cpandya@codeaurora.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Jun Yao <yaojun8558363@gmail.com>, Yu Zhao <yuzhao@google.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-5-david@redhat.com>
- <20190603214139.mercn5hol2yyfl2s@master>
- <5059f68d-45d2-784e-0770-ee67060773c7@redhat.com>
- <7a5b8c8d-f1bb-9c7e-9809-405af374fecd@arm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
- dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
- QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
- XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
- Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
- PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
- WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
- UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
- jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
- B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABzSREYXZpZCBIaWxk
- ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT7CwX4EEwECACgFAljj9eoCGwMFCQlmAYAGCwkI
- BwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEE3eEPcA/4Na5IIP/3T/FIQMxIfNzZshIq687qgG
- 8UbspuE/YSUDdv7r5szYTK6KPTlqN8NAcSfheywbuYD9A4ZeSBWD3/NAVUdrCaRP2IvFyELj
- xoMvfJccbq45BxzgEspg/bVahNbyuBpLBVjVWwRtFCUEXkyazksSv8pdTMAs9IucChvFmmq3
- jJ2vlaz9lYt/lxN246fIVceckPMiUveimngvXZw21VOAhfQ+/sofXF8JCFv2mFcBDoa7eYob
- s0FLpmqFaeNRHAlzMWgSsP80qx5nWWEvRLdKWi533N2vC/EyunN3HcBwVrXH4hxRBMco3jvM
- m8VKLKao9wKj82qSivUnkPIwsAGNPdFoPbgghCQiBjBe6A75Z2xHFrzo7t1jg7nQfIyNC7ez
- MZBJ59sqA9EDMEJPlLNIeJmqslXPjmMFnE7Mby/+335WJYDulsRybN+W5rLT5aMvhC6x6POK
- z55fMNKrMASCzBJum2Fwjf/VnuGRYkhKCqqZ8gJ3OvmR50tInDV2jZ1DQgc3i550T5JDpToh
- dPBxZocIhzg+MBSRDXcJmHOx/7nQm3iQ6iLuwmXsRC6f5FbFefk9EjuTKcLMvBsEx+2DEx0E
- UnmJ4hVg7u1PQ+2Oy+Lh/opK/BDiqlQ8Pz2jiXv5xkECvr/3Sv59hlOCZMOaiLTTjtOIU7Tq
- 7ut6OL64oAq+zsFNBFXLn5EBEADn1959INH2cwYJv0tsxf5MUCghCj/CA/lc/LMthqQ773ga
- uB9mN+F1rE9cyyXb6jyOGn+GUjMbnq1o121Vm0+neKHUCBtHyseBfDXHA6m4B3mUTWo13nid
- 0e4AM71r0DS8+KYh6zvweLX/LL5kQS9GQeT+QNroXcC1NzWbitts6TZ+IrPOwT1hfB4WNC+X
- 2n4AzDqp3+ILiVST2DT4VBc11Gz6jijpC/KI5Al8ZDhRwG47LUiuQmt3yqrmN63V9wzaPhC+
- xbwIsNZlLUvuRnmBPkTJwwrFRZvwu5GPHNndBjVpAfaSTOfppyKBTccu2AXJXWAE1Xjh6GOC
- 8mlFjZwLxWFqdPHR1n2aPVgoiTLk34LR/bXO+e0GpzFXT7enwyvFFFyAS0Nk1q/7EChPcbRb
- hJqEBpRNZemxmg55zC3GLvgLKd5A09MOM2BrMea+l0FUR+PuTenh2YmnmLRTro6eZ/qYwWkC
- u8FFIw4pT0OUDMyLgi+GI1aMpVogTZJ70FgV0pUAlpmrzk/bLbRkF3TwgucpyPtcpmQtTkWS
- gDS50QG9DR/1As3LLLcNkwJBZzBG6PWbvcOyrwMQUF1nl4SSPV0LLH63+BrrHasfJzxKXzqg
- rW28CTAE2x8qi7e/6M/+XXhrsMYG+uaViM7n2je3qKe7ofum3s4vq7oFCPsOgwARAQABwsFl
- BBgBAgAPBQJVy5+RAhsMBQkJZgGAAAoJEE3eEPcA/4NagOsP/jPoIBb/iXVbM+fmSHOjEshl
- KMwEl/m5iLj3iHnHPVLBUWrXPdS7iQijJA/VLxjnFknhaS60hkUNWexDMxVVP/6lbOrs4bDZ
- NEWDMktAeqJaFtxackPszlcpRVkAs6Msn9tu8hlvB517pyUgvuD7ZS9gGOMmYwFQDyytpepo
- YApVV00P0u3AaE0Cj/o71STqGJKZxcVhPaZ+LR+UCBZOyKfEyq+ZN311VpOJZ1IvTExf+S/5
- lqnciDtbO3I4Wq0ArLX1gs1q1XlXLaVaA3yVqeC8E7kOchDNinD3hJS4OX0e1gdsx/e6COvy
- qNg5aL5n0Kl4fcVqM0LdIhsubVs4eiNCa5XMSYpXmVi3HAuFyg9dN+x8thSwI836FoMASwOl
- C7tHsTjnSGufB+D7F7ZBT61BffNBBIm1KdMxcxqLUVXpBQHHlGkbwI+3Ye+nE6HmZH7IwLwV
- W+Ajl7oYF+jeKaH4DZFtgLYGLtZ1LDwKPjX7VAsa4Yx7S5+EBAaZGxK510MjIx6SGrZWBrrV
- TEvdV00F2MnQoeXKzD7O4WFbL55hhyGgfWTHwZ457iN9SgYi1JLPqWkZB0JRXIEtjd4JEQcx
- +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <4f2a87e9-7fd6-4b2b-892d-52482a330235@redhat.com>
-Date:   Tue, 4 Jun 2019 19:51:52 +0200
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org
+References: <20190506185207.31069-1-tmurphy@arista.com>
+ <20190506185207.31069-2-tmurphy@arista.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <33a1e3c1-1906-9e45-d060-e7998424973b@arm.com>
+Date:   Tue, 4 Jun 2019 19:11:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <7a5b8c8d-f1bb-9c7e-9809-405af374fecd@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 04 Jun 2019 17:52:00 +0000 (UTC)
+In-Reply-To: <20190506185207.31069-2-tmurphy@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 04.06.19 19:36, Robin Murphy wrote:
-> On 04/06/2019 07:56, David Hildenbrand wrote:
->> On 03.06.19 23:41, Wei Yang wrote:
->>> On Mon, May 27, 2019 at 01:11:45PM +0200, David Hildenbrand wrote:
->>>> A proper arch_remove_memory() implementation is on its way, which also
->>>> cleanly removes page tables in arch_add_memory() in case something goes
->>>> wrong.
->>>
->>> Would this be better to understand?
->>>
->>>      removes page tables created in arch_add_memory
->>
->> That's not what this sentence expresses. Have a look at
->> arch_add_memory(), in case  __add_pages() fails, the page tables are not
->> removed. This will also be fixed by Anshuman in the same shot.
->>
->>>
->>>>
->>>> As we want to use arch_remove_memory() in case something goes wrong
->>>> during memory hotplug after arch_add_memory() finished, let's add
->>>> a temporary hack that is sufficient enough until we get a proper
->>>> implementation that cleans up page table entries.
->>>>
->>>> We will remove CONFIG_MEMORY_HOTREMOVE around this code in follow up
->>>> patches.
->>>>
->>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>> Cc: Will Deacon <will.deacon@arm.com>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
->>>> Cc: Chintan Pandya <cpandya@codeaurora.org>
->>>> Cc: Mike Rapoport <rppt@linux.ibm.com>
->>>> Cc: Jun Yao <yaojun8558363@gmail.com>
->>>> Cc: Yu Zhao <yuzhao@google.com>
->>>> Cc: Robin Murphy <robin.murphy@arm.com>
->>>> Cc: Anshuman Khandual <anshuman.khandual@arm.com>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>> arch/arm64/mm/mmu.c | 19 +++++++++++++++++++
->>>> 1 file changed, 19 insertions(+)
->>>>
->>>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->>>> index a1bfc4413982..e569a543c384 100644
->>>> --- a/arch/arm64/mm/mmu.c
->>>> +++ b/arch/arm64/mm/mmu.c
->>>> @@ -1084,4 +1084,23 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>>> 	return __add_pages(nid, start >> PAGE_SHIFT, size >> PAGE_SHIFT,
->>>> 			   restrictions);
->>>> }
->>>> +#ifdef CONFIG_MEMORY_HOTREMOVE
->>>> +void arch_remove_memory(int nid, u64 start, u64 size,
->>>> +			struct vmem_altmap *altmap)
->>>> +{
->>>> +	unsigned long start_pfn = start >> PAGE_SHIFT;
->>>> +	unsigned long nr_pages = size >> PAGE_SHIFT;
->>>> +	struct zone *zone;
->>>> +
->>>> +	/*
->>>> +	 * FIXME: Cleanup page tables (also in arch_add_memory() in case
->>>> +	 * adding fails). Until then, this function should only be used
->>>> +	 * during memory hotplug (adding memory), not for memory
->>>> +	 * unplug. ARCH_ENABLE_MEMORY_HOTREMOVE must not be
->>>> +	 * unlocked yet.
->>>> +	 */
->>>> +	zone = page_zone(pfn_to_page(start_pfn));
->>>
->>> Compared with arch_remove_memory in x86. If altmap is not NULL, zone will be
->>> retrieved from page related to altmap. Not sure why this is not the same?
->>
->> This is a minimal implementation, sufficient for this use case here. A
->> full implementation is in the works. For now, this function will not be
->> used with an altmap (ZONE_DEVICE is not esupported for arm64 yet).
+On 06/05/2019 19:52, Tom Murphy wrote:
+> Add a gfp_t parameter to the iommu_ops::map function.
+> Remove the needless locking in the AMD iommu driver.
 > 
-> FWIW the other pieces of ZONE_DEVICE are now due to land in parallel, 
-> but as long as we don't throw the ARCH_ENABLE_MEMORY_HOTREMOVE switch 
-> then there should still be no issue. Besides, given that we should 
-> consistently ignore the altmap everywhere at the moment, it may even 
-> work out regardless.
+> The iommu_ops::map function (or the iommu_map function which calls it)
+> was always supposed to be sleepable (according to Joerg's comment in
+> this thread: https://lore.kernel.org/patchwork/patch/977520/ ) and so
+> should probably have had a "might_sleep()" since it was written. However
+> currently the dma-iommu api can call iommu_map in an atomic context,
+> which it shouldn't do. This doesn't cause any problems because any iommu
+> driver which uses the dma-iommu api uses gfp_atomic in it's
+> iommu_ops::map function. But doing this wastes the memory allocators
+> atomic pools.
 
-Thanks for the info.
+Hmm, in some cases iommu_ops::unmap may need to allocate as well, 
+primarily if it needs to split a hugepage mapping. Should we pass flags 
+through there as well, or are we prepared to assume that that case will 
+happen rarely enough that it's fair to just assume GFP_ATOMIC? It won't 
+happen for DMA ops, but it's conceivable that other users such as GPU 
+drivers might make partial unmaps, and I doubt we could totally rule out 
+the wackiest ones doing so from non-sleeping contexts.
 
+Robin.
+
+> We can remove the mutex lock from amd_iommu_map and amd_iommu_unmap.
+> iommu_map doesn’t lock while mapping and so no two calls should touch
+> the same iova range. The AMD driver already handles the page table page
+> allocations without locks so we can safely remove the locks.
 > 
-> One thing stands out about the failure path thing, though - if 
-> __add_pages() did fail, can it still be guaranteed to have initialised 
-> the memmap such that page_zone() won't return nonsense? Last time I 
-
-if __add_pages() fails, then arch_add_memory() fails and
-arch_remove_memory() will not be called in the context of this series.
-Only if it succeeded.
-
-> looked that was still a problem when removing memory which had been 
-> successfully added, but never onlined (although I do know that 
-> particular case was already being discussed at the time, and I've not 
-> been paying the greatest attention since).
-
-Yes, that part is next on my list. It works but is ugly. The memory
-removal process should not care about zones at all.
-
-Slowly moving into the right direction :)
-
+> Signed-off-by: Tom Murphy <tmurphy@arista.com>
+> ---
+>   drivers/iommu/amd_iommu.c      | 14 ++++-------
+>   drivers/iommu/arm-smmu-v3.c    |  2 +-
+>   drivers/iommu/arm-smmu.c       |  2 +-
+>   drivers/iommu/dma-iommu.c      |  6 ++---
+>   drivers/iommu/exynos-iommu.c   |  2 +-
+>   drivers/iommu/intel-iommu.c    |  2 +-
+>   drivers/iommu/iommu.c          | 43 +++++++++++++++++++++++++++++-----
+>   drivers/iommu/ipmmu-vmsa.c     |  2 +-
+>   drivers/iommu/msm_iommu.c      |  2 +-
+>   drivers/iommu/mtk_iommu.c      |  2 +-
+>   drivers/iommu/mtk_iommu_v1.c   |  2 +-
+>   drivers/iommu/omap-iommu.c     |  2 +-
+>   drivers/iommu/qcom_iommu.c     |  2 +-
+>   drivers/iommu/rockchip-iommu.c |  2 +-
+>   drivers/iommu/s390-iommu.c     |  2 +-
+>   drivers/iommu/tegra-gart.c     |  2 +-
+>   drivers/iommu/tegra-smmu.c     |  2 +-
+>   include/linux/iommu.h          | 21 ++++++++++++++++-
+>   18 files changed, 78 insertions(+), 34 deletions(-)
 > 
-> Robin.
+> diff --git a/drivers/iommu/amd_iommu.c b/drivers/iommu/amd_iommu.c
+> index ebd062522cf5..ea3a5dc61bb0 100644
+> --- a/drivers/iommu/amd_iommu.c
+> +++ b/drivers/iommu/amd_iommu.c
+> @@ -3092,7 +3092,8 @@ static int amd_iommu_attach_device(struct iommu_domain *dom,
+>   }
+>   
+>   static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
+> -			 phys_addr_t paddr, size_t page_size, int iommu_prot)
+> +			 phys_addr_t paddr, size_t page_size, int iommu_prot,
+> +			 gfp_t gfp)
+>   {
+>   	struct protection_domain *domain = to_pdomain(dom);
+>   	int prot = 0;
+> @@ -3106,9 +3107,7 @@ static int amd_iommu_map(struct iommu_domain *dom, unsigned long iova,
+>   	if (iommu_prot & IOMMU_WRITE)
+>   		prot |= IOMMU_PROT_IW;
+>   
+> -	mutex_lock(&domain->api_lock);
+> -	ret = iommu_map_page(domain, iova, paddr, page_size, prot, GFP_KERNEL);
+> -	mutex_unlock(&domain->api_lock);
+> +	ret = iommu_map_page(domain, iova, paddr, page_size, prot, gfp);
+>   
+>   	domain_flush_np_cache(domain, iova, page_size);
+>   
+> @@ -3119,16 +3118,11 @@ static size_t amd_iommu_unmap(struct iommu_domain *dom, unsigned long iova,
+>   			   size_t page_size)
+>   {
+>   	struct protection_domain *domain = to_pdomain(dom);
+> -	size_t unmap_size;
+>   
+>   	if (domain->mode == PAGE_MODE_NONE)
+>   		return 0;
+>   
+> -	mutex_lock(&domain->api_lock);
+> -	unmap_size = iommu_unmap_page(domain, iova, page_size);
+> -	mutex_unlock(&domain->api_lock);
+> -
+> -	return unmap_size;
+> +	return iommu_unmap_page(domain, iova, page_size);
+>   }
+>   
+>   static phys_addr_t amd_iommu_iova_to_phys(struct iommu_domain *dom,
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d3880010c6cf..e5c48089b49f 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -1777,7 +1777,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>   }
+>   
+>   static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+> -			phys_addr_t paddr, size_t size, int prot)
+> +			phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+>   
+> diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
+> index 045d93884164..2d50db55b788 100644
+> --- a/drivers/iommu/arm-smmu.c
+> +++ b/drivers/iommu/arm-smmu.c
+> @@ -1286,7 +1286,7 @@ static int arm_smmu_attach_dev(struct iommu_domain *domain, struct device *dev)
+>   }
+>   
+>   static int arm_smmu_map(struct iommu_domain *domain, unsigned long iova,
+> -			phys_addr_t paddr, size_t size, int prot)
+> +			phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	struct io_pgtable_ops *ops = to_smmu_domain(domain)->pgtbl_ops;
+>   	struct arm_smmu_device *smmu = to_smmu_domain(domain)->smmu;
+> diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> index fa5713a4f6f8..7a96c2c8f56b 100644
+> --- a/drivers/iommu/dma-iommu.c
+> +++ b/drivers/iommu/dma-iommu.c
+> @@ -440,7 +440,7 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+>   	if (!iova)
+>   		return DMA_MAPPING_ERROR;
+>   
+> -	if (iommu_map(domain, iova, phys - iova_off, size, prot)) {
+> +	if (iommu_map_atomic(domain, iova, phys - iova_off, size, prot)) {
+>   		iommu_dma_free_iova(cookie, iova, size);
+>   		return DMA_MAPPING_ERROR;
+>   	}
+> @@ -641,7 +641,7 @@ static void *iommu_dma_alloc_remap(struct device *dev, size_t size,
+>   			arch_dma_prep_coherent(sg_page(sg), sg->length);
+>   	}
+>   
+> -	if (iommu_map_sg(domain, iova, sgt.sgl, sgt.orig_nents, ioprot)
+> +	if (iommu_map_sg_atomic(domain, iova, sgt.sgl, sgt.orig_nents, ioprot)
+>   			< size)
+>   		goto out_free_sg;
+>   
+> @@ -1003,7 +1003,7 @@ static int iommu_dma_map_sg(struct device *dev, struct scatterlist *sg,
+>   	 * We'll leave any physical concatenation to the IOMMU driver's
+>   	 * implementation - it knows better than we do.
+>   	 */
+> -	if (iommu_map_sg(domain, iova, sg, nents, prot) < iova_len)
+> +	if (iommu_map_sg_atomic(domain, iova, sg, nents, prot) < iova_len)
+>   		goto out_free_iova;
+>   
+>   	return __finalise_sg(dev, sg, nents, iova);
+> diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+> index 05c6bc099d62..46414234c179 100644
+> --- a/drivers/iommu/exynos-iommu.c
+> +++ b/drivers/iommu/exynos-iommu.c
+> @@ -1078,7 +1078,7 @@ static int lv2set_page(sysmmu_pte_t *pent, phys_addr_t paddr, size_t size,
+>    */
+>   static int exynos_iommu_map(struct iommu_domain *iommu_domain,
+>   			    unsigned long l_iova, phys_addr_t paddr, size_t size,
+> -			    int prot)
+> +			    int prot, gfp_t gfp)
+>   {
+>   	struct exynos_iommu_domain *domain = to_exynos_domain(iommu_domain);
+>   	sysmmu_pte_t *entry;
+> diff --git a/drivers/iommu/intel-iommu.c b/drivers/iommu/intel-iommu.c
+> index 28cb713d728c..4f0ff28f7cb9 100644
+> --- a/drivers/iommu/intel-iommu.c
+> +++ b/drivers/iommu/intel-iommu.c
+> @@ -5137,7 +5137,7 @@ static void intel_iommu_detach_device(struct iommu_domain *domain,
+>   
+>   static int intel_iommu_map(struct iommu_domain *domain,
+>   			   unsigned long iova, phys_addr_t hpa,
+> -			   size_t size, int iommu_prot)
+> +			   size_t size, int iommu_prot, gfp_t gfp)
+>   {
+>   	struct dmar_domain *dmar_domain = to_dmar_domain(domain);
+>   	u64 max_addr;
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 109de67d5d72..1b49841c177e 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1584,8 +1584,8 @@ static size_t iommu_pgsize(struct iommu_domain *domain,
+>   	return pgsize;
+>   }
+>   
+> -int iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -	      phys_addr_t paddr, size_t size, int prot)
+> +int __iommu_map(struct iommu_domain *domain, unsigned long iova,
+> +	      phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	const struct iommu_ops *ops = domain->ops;
+>   	unsigned long orig_iova = iova;
+> @@ -1622,8 +1622,8 @@ int iommu_map(struct iommu_domain *domain, unsigned long iova,
+>   
+>   		pr_debug("mapping: iova 0x%lx pa %pa pgsize 0x%zx\n",
+>   			 iova, &paddr, pgsize);
+> +		ret = ops->map(domain, iova, paddr, pgsize, prot, gfp);
+>   
+> -		ret = ops->map(domain, iova, paddr, pgsize, prot);
+>   		if (ret)
+>   			break;
+>   
+> @@ -1643,8 +1643,22 @@ int iommu_map(struct iommu_domain *domain, unsigned long iova,
+>   
+>   	return ret;
+>   }
+> +
+> +int iommu_map(struct iommu_domain *domain, unsigned long iova,
+> +	      phys_addr_t paddr, size_t size, int prot)
+> +{
+> +	might_sleep();
+> +	return __iommu_map(domain, iova, paddr, size, prot, GFP_KERNEL);
+> +}
+>   EXPORT_SYMBOL_GPL(iommu_map);
+>   
+> +int iommu_map_atomic(struct iommu_domain *domain, unsigned long iova,
+> +	      phys_addr_t paddr, size_t size, int prot)
+> +{
+> +	return __iommu_map(domain, iova, paddr, size, prot, GFP_ATOMIC);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_map_atomic);
+> +
+>   static size_t __iommu_unmap(struct iommu_domain *domain,
+>   			    unsigned long iova, size_t size,
+>   			    bool sync)
+> @@ -1719,8 +1733,9 @@ size_t iommu_unmap_fast(struct iommu_domain *domain,
+>   }
+>   EXPORT_SYMBOL_GPL(iommu_unmap_fast);
+>   
+> -size_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
+> -		    struct scatterlist *sg, unsigned int nents, int prot)
+> +size_t __iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
+> +		    struct scatterlist *sg, unsigned int nents, int prot,
+> +		    gfp_t gfp)
+>   {
+>   	size_t len = 0, mapped = 0;
+>   	phys_addr_t start;
+> @@ -1731,7 +1746,9 @@ size_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
+>   		phys_addr_t s_phys = sg_phys(sg);
+>   
+>   		if (len && s_phys != start + len) {
+> -			ret = iommu_map(domain, iova + mapped, start, len, prot);
+> +			ret = __iommu_map(domain, iova + mapped, start,
+> +					len, prot, gfp);
+> +
+>   			if (ret)
+>   				goto out_err;
+>   
+> @@ -1759,8 +1776,22 @@ size_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
+>   	return 0;
+>   
+>   }
+> +
+> +size_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
+> +		    struct scatterlist *sg, unsigned int nents, int prot)
+> +{
+> +	might_sleep();
+> +	return __iommu_map_sg(domain, iova, sg, nents, prot, GFP_KERNEL);
+> +}
+>   EXPORT_SYMBOL_GPL(iommu_map_sg);
+>   
+> +size_t iommu_map_sg_atomic(struct iommu_domain *domain, unsigned long iova,
+> +		    struct scatterlist *sg, unsigned int nents, int prot)
+> +{
+> +	return __iommu_map_sg(domain, iova, sg, nents, prot, GFP_ATOMIC);
+> +}
+> +EXPORT_SYMBOL_GPL(iommu_map_sg_atomic);
+> +
+>   int iommu_domain_window_enable(struct iommu_domain *domain, u32 wnd_nr,
+>   			       phys_addr_t paddr, u64 size, int prot)
+>   {
+> diff --git a/drivers/iommu/ipmmu-vmsa.c b/drivers/iommu/ipmmu-vmsa.c
+> index 9a380c10655e..e005c83d49d8 100644
+> --- a/drivers/iommu/ipmmu-vmsa.c
+> +++ b/drivers/iommu/ipmmu-vmsa.c
+> @@ -707,7 +707,7 @@ static void ipmmu_detach_device(struct iommu_domain *io_domain,
+>   }
+>   
+>   static int ipmmu_map(struct iommu_domain *io_domain, unsigned long iova,
+> -		     phys_addr_t paddr, size_t size, int prot)
+> +		     phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	struct ipmmu_vmsa_domain *domain = to_vmsa_domain(io_domain);
+>   
+> diff --git a/drivers/iommu/msm_iommu.c b/drivers/iommu/msm_iommu.c
+> index 9fb0eb7a4d02..3f6bf3653aa2 100644
+> --- a/drivers/iommu/msm_iommu.c
+> +++ b/drivers/iommu/msm_iommu.c
+> @@ -508,7 +508,7 @@ static void msm_iommu_detach_dev(struct iommu_domain *domain,
+>   }
+>   
+>   static int msm_iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -			 phys_addr_t pa, size_t len, int prot)
+> +			 phys_addr_t pa, size_t len, int prot, gfp_t gfp)
+>   {
+>   	struct msm_priv *priv = to_msm_priv(domain);
+>   	unsigned long flags;
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index de3e02277b70..3176b9b54d4d 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -364,7 +364,7 @@ static void mtk_iommu_detach_device(struct iommu_domain *domain,
+>   }
+>   
+>   static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -			 phys_addr_t paddr, size_t size, int prot)
+> +			 phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
+>   	unsigned long flags;
+> diff --git a/drivers/iommu/mtk_iommu_v1.c b/drivers/iommu/mtk_iommu_v1.c
+> index 52b01e3a49df..e7b1907faec1 100644
+> --- a/drivers/iommu/mtk_iommu_v1.c
+> +++ b/drivers/iommu/mtk_iommu_v1.c
+> @@ -303,7 +303,7 @@ static void mtk_iommu_detach_device(struct iommu_domain *domain,
+>   }
+>   
+>   static int mtk_iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -			 phys_addr_t paddr, size_t size, int prot)
+> +			 phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
+>   	unsigned int page_num = size >> MT2701_IOMMU_PAGE_SHIFT;
+> diff --git a/drivers/iommu/omap-iommu.c b/drivers/iommu/omap-iommu.c
+> index d2fb347aa4ff..c1d5a71285dc 100644
+> --- a/drivers/iommu/omap-iommu.c
+> +++ b/drivers/iommu/omap-iommu.c
+> @@ -1109,7 +1109,7 @@ static u32 iotlb_init_entry(struct iotlb_entry *e, u32 da, u32 pa, int pgsz)
+>   }
+>   
+>   static int omap_iommu_map(struct iommu_domain *domain, unsigned long da,
+> -			  phys_addr_t pa, size_t bytes, int prot)
+> +			  phys_addr_t pa, size_t bytes, int prot, gfp_t gfp)
+>   {
+>   	struct omap_iommu_domain *omap_domain = to_omap_domain(domain);
+>   	struct device *dev = omap_domain->dev;
+> diff --git a/drivers/iommu/qcom_iommu.c b/drivers/iommu/qcom_iommu.c
+> index 8cdd3f059513..a01e07a4e76f 100644
+> --- a/drivers/iommu/qcom_iommu.c
+> +++ b/drivers/iommu/qcom_iommu.c
+> @@ -411,7 +411,7 @@ static void qcom_iommu_detach_dev(struct iommu_domain *domain, struct device *de
+>   }
+>   
+>   static int qcom_iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -			  phys_addr_t paddr, size_t size, int prot)
+> +			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	int ret;
+>   	unsigned long flags;
+> diff --git a/drivers/iommu/rockchip-iommu.c b/drivers/iommu/rockchip-iommu.c
+> index 77d4bd93fe4b..aa3507f35107 100644
+> --- a/drivers/iommu/rockchip-iommu.c
+> +++ b/drivers/iommu/rockchip-iommu.c
+> @@ -760,7 +760,7 @@ static int rk_iommu_map_iova(struct rk_iommu_domain *rk_domain, u32 *pte_addr,
+>   }
+>   
+>   static int rk_iommu_map(struct iommu_domain *domain, unsigned long _iova,
+> -			phys_addr_t paddr, size_t size, int prot)
+> +			phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	struct rk_iommu_domain *rk_domain = to_rk_domain(domain);
+>   	unsigned long flags;
+> diff --git a/drivers/iommu/s390-iommu.c b/drivers/iommu/s390-iommu.c
+> index 22d4db302c1c..efa6aa68521d 100644
+> --- a/drivers/iommu/s390-iommu.c
+> +++ b/drivers/iommu/s390-iommu.c
+> @@ -265,7 +265,7 @@ static int s390_iommu_update_trans(struct s390_domain *s390_domain,
+>   }
+>   
+>   static int s390_iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -			  phys_addr_t paddr, size_t size, int prot)
+> +			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	struct s390_domain *s390_domain = to_s390_domain(domain);
+>   	int flags = ZPCI_PTE_VALID, rc = 0;
+> diff --git a/drivers/iommu/tegra-gart.c b/drivers/iommu/tegra-gart.c
+> index 4d8057916552..f300099852b1 100644
+> --- a/drivers/iommu/tegra-gart.c
+> +++ b/drivers/iommu/tegra-gart.c
+> @@ -190,7 +190,7 @@ static inline int __gart_iommu_map(struct gart_device *gart, unsigned long iova,
+>   }
+>   
+>   static int gart_iommu_map(struct iommu_domain *domain, unsigned long iova,
+> -			  phys_addr_t pa, size_t bytes, int prot)
+> +			  phys_addr_t pa, size_t bytes, int prot, gfp_t gfp)
+>   {
+>   	struct gart_device *gart = gart_handle;
+>   	int ret;
+> diff --git a/drivers/iommu/tegra-smmu.c b/drivers/iommu/tegra-smmu.c
+> index 5182c7d6171e..e1bf867e0607 100644
+> --- a/drivers/iommu/tegra-smmu.c
+> +++ b/drivers/iommu/tegra-smmu.c
+> @@ -641,7 +641,7 @@ static void tegra_smmu_set_pte(struct tegra_smmu_as *as, unsigned long iova,
+>   }
+>   
+>   static int tegra_smmu_map(struct iommu_domain *domain, unsigned long iova,
+> -			  phys_addr_t paddr, size_t size, int prot)
+> +			  phys_addr_t paddr, size_t size, int prot, gfp_t gfp)
+>   {
+>   	struct tegra_smmu_as *as = to_smmu_as(domain);
+>   	dma_addr_t pte_dma;
+> diff --git a/include/linux/iommu.h b/include/linux/iommu.h
+> index ffbbc7e39cee..76b8e7fe3ed0 100644
+> --- a/include/linux/iommu.h
+> +++ b/include/linux/iommu.h
+> @@ -198,7 +198,7 @@ struct iommu_ops {
+>   	int (*attach_dev)(struct iommu_domain *domain, struct device *dev);
+>   	void (*detach_dev)(struct iommu_domain *domain, struct device *dev);
+>   	int (*map)(struct iommu_domain *domain, unsigned long iova,
+> -		   phys_addr_t paddr, size_t size, int prot);
+> +		   phys_addr_t paddr, size_t size, int prot, gfp_t gfp);
+>   	size_t (*unmap)(struct iommu_domain *domain, unsigned long iova,
+>   		     size_t size);
+>   	void (*flush_iotlb_all)(struct iommu_domain *domain);
+> @@ -295,12 +295,17 @@ extern struct iommu_domain *iommu_get_domain_for_dev(struct device *dev);
+>   extern struct iommu_domain *iommu_get_dma_domain(struct device *dev);
+>   extern int iommu_map(struct iommu_domain *domain, unsigned long iova,
+>   		     phys_addr_t paddr, size_t size, int prot);
+> +extern int iommu_map_atomic(struct iommu_domain *domain, unsigned long iova,
+> +		     phys_addr_t paddr, size_t size, int prot);
+>   extern size_t iommu_unmap(struct iommu_domain *domain, unsigned long iova,
+>   			  size_t size);
+>   extern size_t iommu_unmap_fast(struct iommu_domain *domain,
+>   			       unsigned long iova, size_t size);
+>   extern size_t iommu_map_sg(struct iommu_domain *domain, unsigned long iova,
+>   			   struct scatterlist *sg,unsigned int nents, int prot);
+> +extern size_t iommu_map_sg_atomic(struct iommu_domain *domain,
+> +				  unsigned long iova, struct scatterlist *sg,
+> +				  unsigned int nents, int prot);
+>   extern phys_addr_t iommu_iova_to_phys(struct iommu_domain *domain, dma_addr_t iova);
+>   extern void iommu_set_fault_handler(struct iommu_domain *domain,
+>   			iommu_fault_handler_t handler, void *token);
+> @@ -469,6 +474,13 @@ static inline int iommu_map(struct iommu_domain *domain, unsigned long iova,
+>   	return -ENODEV;
+>   }
+>   
+> +static inline int iommu_map_atomic(struct iommu_domain *domain,
+> +				   unsigned long iova, phys_addr_t paddr,
+> +				   size_t size, int prot)
+> +{
+> +	return -ENODEV;
+> +}
+> +
+>   static inline size_t iommu_unmap(struct iommu_domain *domain,
+>   				 unsigned long iova, size_t size)
+>   {
+> @@ -488,6 +500,13 @@ static inline size_t iommu_map_sg(struct iommu_domain *domain,
+>   	return 0;
+>   }
+>   
+> +static inline size_t iommu_map_sg_atomic(struct iommu_domain *domain,
+> +				  unsigned long iova, struct scatterlist *sg,
+> +				  unsigned int nents, int prot)
+> +{
+> +	return 0;
+> +}
+> +
+>   static inline void iommu_flush_tlb_all(struct iommu_domain *domain)
+>   {
+>   }
 > 
-
-
--- 
-
-Thanks,
-
-David / dhildenb
