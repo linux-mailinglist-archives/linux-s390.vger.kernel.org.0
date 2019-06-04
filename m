@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C678353A0
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Jun 2019 01:27:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13E783538D
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Jun 2019 01:27:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbfFDX0s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 19:26:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37312 "EHLO mail.kernel.org"
+        id S1727418AbfFDXZt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 19:25:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37792 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728044AbfFDXZb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 4 Jun 2019 19:25:31 -0400
+        id S1728141AbfFDXZs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 4 Jun 2019 19:25:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0E299208CB;
-        Tue,  4 Jun 2019 23:25:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6940B208CB;
+        Tue,  4 Jun 2019 23:25:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1559690730;
-        bh=AR4eTHwSeJQcxxIju8U2g2uV2eCRmqIjgfKgnmshzos=;
+        s=default; t=1559690748;
+        bh=fjhDZJsyBQxRSiPzjUNxPvagBNxuDS97BMGlYWT8VDQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cCCLfOLUDhE8RJ6dT7Gx+EDgypg1KTOgVPAsVBE3UkJ3yQ3vf+MbaeuC3ZiacqwPL
-         bmkbK1OkVSCNXOAkuFKRz+jhViuV4IPF3Ys/QmFw4QVZPWyUgnG2niGBlF1XiDpI57
-         NUaadR2BTPWpAzokiiFtGNCqHi2YFCpa4EUpl/9I=
+        b=ea4w8eOsPA7F5zlpm84/2A4IIBpdL/DHmJZMhjT/1u1CdnqWwCeKDlALLUmxZffkZ
+         oCK/Z8tp6qB61ayfFQ5UIKpwtMNjQkfextZd05vnK/pii5595LzZ+MwwVTrcHt+KHJ
+         XWSpWLxcHyDo6GR/MWbbO+2DmkCF5C7B0ITcwqfA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Paolo Bonzini <pbonzini@redhat.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 17/17] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
-Date:   Tue,  4 Jun 2019 19:24:58 -0400
-Message-Id: <20190604232459.7745-17-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 10/10] KVM: s390: fix memory slot handling for KVM_SET_USER_MEMORY_REGION
+Date:   Tue,  4 Jun 2019 19:25:31 -0400
+Message-Id: <20190604232532.7953-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190604232459.7745-1-sashal@kernel.org>
-References: <20190604232459.7745-1-sashal@kernel.org>
+In-Reply-To: <20190604232532.7953-1-sashal@kernel.org>
+References: <20190604232532.7953-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -60,10 +60,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 21 insertions(+), 14 deletions(-)
 
 diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 2032ab81b2d7..07f571900676 100644
+index 5ddb1debba95..23911ecfbad6 100644
 --- a/arch/s390/kvm/kvm-s390.c
 +++ b/arch/s390/kvm/kvm-s390.c
-@@ -3288,21 +3288,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
+@@ -2721,21 +2721,28 @@ void kvm_arch_commit_memory_region(struct kvm *kvm,
  				const struct kvm_memory_slot *new,
  				enum kvm_mr_change change)
  {
