@@ -2,149 +2,70 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89A6B33A23
-	for <lists+linux-s390@lfdr.de>; Mon,  3 Jun 2019 23:49:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E2E433EB4
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 08:03:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726101AbfFCVtf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 3 Jun 2019 17:49:35 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:42726 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfFCVtf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 3 Jun 2019 17:49:35 -0400
-Received: by mail-ed1-f65.google.com with SMTP id z25so2864664edq.9;
-        Mon, 03 Jun 2019 14:49:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:reply-to:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=jSb30N0jvHoftFPeqnRT0DDU5guICPUBTZ+cum9JlR4=;
-        b=mgXqHJD2asQbJ2oQs51g/wKDUPSvM+cdNOzAPTyJufLHFAJ19jz11IiehaMBP9Q8ik
-         U7cGojJDSlIkY3XlU1wbDp/ZvfgCPH2xtvqbe8RTcqyW4RgEYqKYfvzgUXPExUHfWphX
-         l6AEhObQDHlSi21ygsz20Rc+h9b47N32S+aUh7dW5enm+vZUggpdxoXVUyuZMF5MtWwu
-         HvQgRVJ2g/tV3CdwcqyDzfDmGbDOJgMVhPQtiAPMWcP+2I1nYtbVep68GhMqaZszwkMu
-         ZoMyIv97BEMZtXBzKLTZmelReybdKtsgdltfFU51nMZzyYEnx+zhis0dtU/Ii/M4+PfR
-         vrDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:reply-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jSb30N0jvHoftFPeqnRT0DDU5guICPUBTZ+cum9JlR4=;
-        b=j/w/YqFMJVKc+N4HOxL9Ycgncj+YQcIbHaLhxFJcCtft0530EWSYoCDp5/CRyzt/TY
-         fbRgMlLOkXbbctJcu4iYJDAhAxfc6D19RYy8obc7qsiOZYejG2jxorqaRDQHqnzR7yV2
-         hFv1Y7pBm3oiTKbod7Q8zzV5P5tnEnlSjwCbJTXaD3oMhojosGQPH6gvWtxQOrMC4Cnf
-         qmkJPYIhxTj7LuORRSldylSRmFbGz2nQEuYQfM/04ISS7gTutvpAyH55g+26oonNLSwV
-         rp3TgeTo3eN9IogWHVXd/nQs0u74bsAsU0J6qYmLJtD1X4PyiYU4WDXSHnwVE/eUxtuh
-         mVTw==
-X-Gm-Message-State: APjAAAU0Kqq0cVk6Kvg7QTN6RI59VNy/pAeJvGv5LxcQeStcb23oa4Gg
-        NJbO7ZM150kwuCsfwRcpOeM=
-X-Google-Smtp-Source: APXvYqy1VbSFtSybN1lKgHKlPjNOgnekacgTTpaBFyeruT/9MIRoRmfvBRLBg5v3bxan4Gxq56A6XA==
-X-Received: by 2002:aa7:c645:: with SMTP id z5mr31432297edr.43.1559598573674;
-        Mon, 03 Jun 2019 14:49:33 -0700 (PDT)
-Received: from localhost ([185.92.221.13])
-        by smtp.gmail.com with ESMTPSA id d5sm1533710edr.8.2019.06.03.14.49.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 03 Jun 2019 14:49:32 -0700 (PDT)
-Date:   Mon, 3 Jun 2019 21:49:32 +0000
-From:   Wei Yang <richard.weiyang@gmail.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 05/11] drivers/base/memory: Pass a block_id to
- init_memory_block()
-Message-ID: <20190603214932.3xsvxwiiutcve4tz@master>
-Reply-To: Wei Yang <richard.weiyang@gmail.com>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-6-david@redhat.com>
+        id S1726535AbfFDGDm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 02:03:42 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45810 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726136AbfFDGDl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 4 Jun 2019 02:03:41 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D76323086239;
+        Tue,  4 Jun 2019 06:03:41 +0000 (UTC)
+Received: from gondolin (ovpn-116-92.ams2.redhat.com [10.36.116.92])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 77CCC60C67;
+        Tue,  4 Jun 2019 06:03:40 +0000 (UTC)
+Date:   Tue, 4 Jun 2019 08:03:36 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Farhan Ali <alifm@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        farman@linux.ibm.com, pasic@linux.ibm.com
+Subject: Re: [PATCH v1 1/1] vfio-ccw: Destroy kmem cache region on module
+ exit
+Message-ID: <20190604080336.3b56c6d2.cohuck@redhat.com>
+In-Reply-To: <c0f39039d28af39ea2939391bf005e3495d890fd.1559576250.git.alifm@linux.ibm.com>
+References: <cover.1559576250.git.alifm@linux.ibm.com>
+        <c0f39039d28af39ea2939391bf005e3495d890fd.1559576250.git.alifm@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-6-david@redhat.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 04 Jun 2019 06:03:41 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 27, 2019 at 01:11:46PM +0200, David Hildenbrand wrote:
->We'll rework hotplug_memory_register() shortly, so it no longer consumes
->pass a section.
->
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->Signed-off-by: David Hildenbrand <david@redhat.com>
->---
-> drivers/base/memory.c | 15 +++++++--------
-> 1 file changed, 7 insertions(+), 8 deletions(-)
->
->diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->index f180427e48f4..f914fa6fe350 100644
->--- a/drivers/base/memory.c
->+++ b/drivers/base/memory.c
->@@ -651,21 +651,18 @@ int register_memory(struct memory_block *memory)
-> 	return ret;
-> }
-> 
->-static int init_memory_block(struct memory_block **memory,
->-			     struct mem_section *section, unsigned long state)
->+static int init_memory_block(struct memory_block **memory, int block_id,
->+			     unsigned long state)
-> {
-> 	struct memory_block *mem;
-> 	unsigned long start_pfn;
->-	int scn_nr;
-> 	int ret = 0;
-> 
-> 	mem = kzalloc(sizeof(*mem), GFP_KERNEL);
-> 	if (!mem)
-> 		return -ENOMEM;
-> 
->-	scn_nr = __section_nr(section);
->-	mem->start_section_nr =
->-			base_memory_block_id(scn_nr) * sections_per_block;
->+	mem->start_section_nr = block_id * sections_per_block;
-> 	mem->end_section_nr = mem->start_section_nr + sections_per_block - 1;
-> 	mem->state = state;
-> 	start_pfn = section_nr_to_pfn(mem->start_section_nr);
->@@ -694,7 +691,8 @@ static int add_memory_block(int base_section_nr)
-> 
-> 	if (section_count == 0)
-> 		return 0;
->-	ret = init_memory_block(&mem, __nr_to_section(section_nr), MEM_ONLINE);
->+	ret = init_memory_block(&mem, base_memory_block_id(base_section_nr),
->+				MEM_ONLINE);
+On Mon,  3 Jun 2019 11:42:47 -0400
+Farhan Ali <alifm@linux.ibm.com> wrote:
 
-If my understanding is correct, section_nr could be removed too.
-
-> 	if (ret)
-> 		return ret;
-> 	mem->section_count = section_count;
->@@ -707,6 +705,7 @@ static int add_memory_block(int base_section_nr)
->  */
-> int hotplug_memory_register(int nid, struct mem_section *section)
-> {
->+	int block_id = base_memory_block_id(__section_nr(section));
-> 	int ret = 0;
-> 	struct memory_block *mem;
+> Free the vfio_ccw_cmd_region on module exit.
 > 
->@@ -717,7 +716,7 @@ int hotplug_memory_register(int nid, struct mem_section *section)
-> 		mem->section_count++;
-> 		put_device(&mem->dev);
-> 	} else {
->-		ret = init_memory_block(&mem, section, MEM_OFFLINE);
->+		ret = init_memory_block(&mem, block_id, MEM_OFFLINE);
-> 		if (ret)
-> 			goto out;
-> 		mem->section_count++;
->-- 
->2.20.1
+> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+> ---
+> 
+> I guess I missed this earlier while reviewing, but should'nt 
+> we destroy the vfio_ccw_cmd_region on module exit, as well?
+> 
+>  drivers/s390/cio/vfio_ccw_drv.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+> index 66a66ac..9cee9f2 100644
+> --- a/drivers/s390/cio/vfio_ccw_drv.c
+> +++ b/drivers/s390/cio/vfio_ccw_drv.c
+> @@ -299,6 +299,7 @@ static void __exit vfio_ccw_sch_exit(void)
+>  	css_driver_unregister(&vfio_ccw_sch_driver);
+>  	isc_unregister(VFIO_CCW_ISC);
+>  	kmem_cache_destroy(vfio_ccw_io_region);
+> +	kmem_cache_destroy(vfio_ccw_cmd_region);
+>  	destroy_workqueue(vfio_ccw_work_q);
+>  }
+>  module_init(vfio_ccw_sch_init);
 
--- 
-Wei Yang
-Help you, Help me
+Yes, you're right. Will queue when the pull req has been processed.
