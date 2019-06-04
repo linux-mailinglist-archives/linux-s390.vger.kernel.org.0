@@ -2,29 +2,29 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7312E34447
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 12:18:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 13FD534441
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 12:18:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfFDKSj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 06:18:39 -0400
-Received: from conuserg-08.nifty.com ([210.131.2.75]:44024 "EHLO
+        id S1727246AbfFDKRS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 06:17:18 -0400
+Received: from conuserg-08.nifty.com ([210.131.2.75]:41888 "EHLO
         conuserg-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727139AbfFDKSj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 06:18:39 -0400
+        with ESMTP id S1727061AbfFDKRS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 06:17:18 -0400
 Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
-        by conuserg-08.nifty.com with ESMTP id x54AEC76032511;
-        Tue, 4 Jun 2019 19:14:12 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC76032511
+        by conuserg-08.nifty.com with ESMTP id x54AEC7B032511;
+        Tue, 4 Jun 2019 19:14:18 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com x54AEC7B032511
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1559643254;
-        bh=2Cnt75TjD0TucqN65Zm4F4aK2FsJEMupPn4+qQfaomQ=;
-        h=From:To:Cc:Subject:Date:From;
-        b=T4jvQ0G6x7AI4kdGX5qwlpK7HOvTaBPAv/cRO5t4X32Dcs0uPZAvSErXh4DSjGB31
-         HcpKj3d7GK+dEJgeRDnlb3IgG5M1SUitGYK8fWYBHTStYwEem3M/mbalLmPcf7FXff
-         2NyynthHyJ0CxXthF++gCaIlODh+BwsYOnM6Vm7DKEJGoJYT3haZXkmHOejQU4htdI
-         qbLlQa5xUwjLEMB8M7yoUoLHvQw77TZmiZ2m1IsbGjpX7v+Ox9dBMBaEmddSnnMqUe
-         FudqJKtGFxDLUHkFG12GbiN4Ma4TLji3PyPSof/DKDCjFWY8qenZH14JVAqU6EKQqf
-         rZdDvtK1Yi38A==
+        s=dec2015msa; t=1559643259;
+        bh=Oka5YpAg+k5l88SL/bB7/ELT3B4mHTq93jBuR0XeVDU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=J+lYbqkDyx5TCbBD+Dn9u83I3HtBZWpgzIStSV9W5m8Vm7NsIAtCgZTTnviNOz2/k
+         OIa3qQLjn3LJ7SFdO7cx4WcnlaqSOAOAOumyzJ/LJRtUiJsfCSRsZYwrzkeOJHFloh
+         5StGJrqnxtUoL1ZJgKMKnW+FVSO1PQZGYbOztFRAmSmiiFVQv6vKdRLA4xCR4r48yn
+         wXht5Fpzui7RHx47kKqdrv4g+1N3wRkcfOsMq3aPvHHshb53vEmzlWyFS9ffiyfLYg
+         ENAWvph9pzP8vXv0G83Xee/xAieRnQjeb2MJfRFGjniA0vGhfY5j4gVUCvNpi8ZGY8
+         i977mhymYRHng==
 X-Nifty-SrcIP: [153.142.97.92]
 From:   Masahiro Yamada <yamada.masahiro@socionext.com>
 To:     linux-kbuild@vger.kernel.org
@@ -34,149 +34,303 @@ Cc:     Randy Dunlap <rdunlap@infradead.org>,
         Sam Ravnborg <sam@ravnborg.org>,
         Jani Nikula <jani.nikula@intel.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        linux-riscv@lists.infradead.org,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        linux-s390@vger.kernel.org, Greentime Hu <green.hu@gmail.com>,
+        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        linux-parisc@vger.kernel.org,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
         Helge Deller <deller@gmx.de>,
         Vineet Gupta <vgupta@synopsys.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org,
-        Song Liu <songliubraving@fb.com>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Yonghong Song <yhs@fb.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        linux-kernel@vger.kernel.org, Vincent Chen <deanbo422@gmail.com>,
         Michal Marek <michal.lkml@markovi.net>,
         Paul Mackerras <paulus@samba.org>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        linux-parisc@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-kernel@vger.kernel.org, Vincent Chen <deanbo422@gmail.com>,
-        netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Subject: [PATCH 00/15] kbuild: refactor headers_install and support compile-test of UAPI headers
-Date:   Tue,  4 Jun 2019 19:13:54 +0900
-Message-Id: <20190604101409.2078-1-yamada.masahiro@socionext.com>
+        linux-snps-arc@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [PATCH 05/15] kbuild: add CONFIG_HEADERS_INSTALL and loosen the dependency of samples
+Date:   Tue,  4 Jun 2019 19:13:59 +0900
+Message-Id: <20190604101409.2078-6-yamada.masahiro@socionext.com>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190604101409.2078-1-yamada.masahiro@socionext.com>
+References: <20190604101409.2078-1-yamada.masahiro@socionext.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Commit 5318321d367c ("samples: disable CONFIG_SAMPLES for UML") used
+a big hammer to fix the build errors under the samples/ directory,
+while only some samples actually include uapi headers from usr/include.
 
-Multiple people have suggested to compile-test UAPI headers.
+Introduce CONFIG_HEADERS_INSTALL since 'depends on HEADERS_INSTALL' is
+clearer than 'depends on !UML'. If this option is enabled, uapi headers
+are installed before starting directory descending.
 
-Currently, Kbuild provides simple sanity checks by headers_check
-but they are not enough to catch bugs.
+I added 'depends on HEADERS_INSTALL' to per-sample CONFIG options.
+This allows UML to compile some samples.
 
-The most recent patch I know is David Howells' work:
-https://patchwork.kernel.org/patch/10590203/
+$ make ARCH=um allmodconfig samples/
+  [ snip ]
+  CC [M]  samples/configfs/configfs_sample.o
+  CC [M]  samples/kfifo/bytestream-example.o
+  CC [M]  samples/kfifo/dma-example.o
+  CC [M]  samples/kfifo/inttype-example.o
+  CC [M]  samples/kfifo/record-example.o
+  CC [M]  samples/kobject/kobject-example.o
+  CC [M]  samples/kobject/kset-example.o
+  CC [M]  samples/trace_events/trace-events-sample.o
+  CC [M]  samples/trace_printk/trace-printk.o
+  AR      samples/vfio-mdev/built-in.a
+  AR      samples/built-in.a
 
-I agree that we need better tests for UAPI headers,
-but I want to integrate it in a clean way.
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
 
-The idea that has been in my mind is to compile each header
-to make sure the selfcontainedness.
+ Makefile                              |  8 ++++----
+ arch/arc/configs/tb10x_defconfig      |  1 +
+ arch/nds32/configs/defconfig          |  1 +
+ arch/parisc/configs/a500_defconfig    |  1 +
+ arch/parisc/configs/b180_defconfig    |  1 +
+ arch/parisc/configs/c3000_defconfig   |  1 +
+ arch/parisc/configs/default_defconfig |  1 +
+ arch/powerpc/configs/ppc6xx_defconfig |  1 +
+ arch/s390/configs/debug_defconfig     |  1 +
+ lib/Kconfig.debug                     | 19 ++++++++++++++-----
+ samples/Kconfig                       | 14 +++++++++++---
+ samples/Makefile                      |  4 ++--
+ 12 files changed, 39 insertions(+), 14 deletions(-)
 
-Recently, Jani Nikula proposed a new syntax 'header-test-y'.
-https://patchwork.kernel.org/patch/10947005/
-
-So, I implemented UAPI compile-testing on top of that.
-
-When adding a new feature, cleaning the code first is a
-good practice.
-
-[1] Remove headers_install_all
-
-This target installs UAPI headers of all architectures
-in a single tree.
-It does not make sense to compile test of headers from
-multiple arches at the same time. Hence, removed.
-
-[2] Split header installation into 'make headers' and 'make headers_install'
-
-To compile-test UAPI headers, we need a work-directory somewhere
-to save objects and .*.cmd files.
-
-usr/include/ will be the work-directory.
-
-Since we cannot pollute the final destination of headers_install,
-
-I split the header installation into two stages.
-
-'make headers' will build up
-the ready-to-install headers in usr/include,
-which will be also used as a work-directory for the compile-test.
-
-'make headers_install' will copy headers
-from usr/include to $(INSTALL_HDR_PATH)/include.
-
-[3] Support compile-test of UAPI headers
-
-This is implemented in usr/include/Makefile
-
-
-Jani Nikula (1):
-  kbuild: add support for ensuring headers are self-contained
-
-Masahiro Yamada (14):
-  kbuild: remove headers_{install,check}_all
-  kbuild: remove stale dependency between Documentation/ and
-    headers_install
-  kbuild: make gdb_script depend on prepare0 instead of prepare
-  kbuild: fix Kconfig prompt of CONFIG_HEADERS_CHECK
-  kbuild: add CONFIG_HEADERS_INSTALL and loosen the dependency of
-    samples
-  kbuild: remove build_unifdef target in scripts/Makefile
-  kbuild: build all prerequisite of headers_install simultaneously
-  kbuild: add 'headers' target to build up ready-to-install uapi headers
-  kbuild: re-implement Makefile.headersinst without directory descending
-  kbuild: move hdr-inst shorthand to top Makefile
-  kbuild: simplify scripts/headers_install.sh
-  kbuild: deb-pkg: do not run headers_check
-  fixup: kbuild: add support for ensuring headers are self-contained
-  kbuild: compile test UAPI headers to ensure they are self-contained
-
- Documentation/kbuild/headers_install.txt |   7 --
- Documentation/kbuild/makefiles.txt       |  13 ++-
- Makefile                                 |  56 +++++-----
- arch/arc/configs/tb10x_defconfig         |   1 +
- arch/nds32/configs/defconfig             |   1 +
- arch/parisc/configs/a500_defconfig       |   1 +
- arch/parisc/configs/b180_defconfig       |   1 +
- arch/parisc/configs/c3000_defconfig      |   1 +
- arch/parisc/configs/default_defconfig    |   1 +
- arch/powerpc/configs/ppc6xx_defconfig    |   1 +
- arch/s390/configs/debug_defconfig        |   1 +
- include/uapi/{linux => }/Kbuild          |   6 +-
- init/Kconfig                             |  20 ++++
- lib/Kconfig.debug                        |  25 +++--
- samples/Kconfig                          |  14 ++-
- samples/Makefile                         |   4 +-
- scripts/Kbuild.include                   |   6 --
- scripts/Makefile                         |   5 -
- scripts/Makefile.build                   |   9 ++
- scripts/Makefile.headersinst             | 132 ++++++++++-------------
- scripts/Makefile.lib                     |   3 +
- scripts/cc-system-headers.sh             |   8 ++
- scripts/headers.sh                       |  29 -----
- scripts/headers_install.sh               |  48 ++++-----
- scripts/package/builddeb                 |   2 +-
- usr/.gitignore                           |   1 -
- usr/Makefile                             |   2 +
- usr/include/.gitignore                   |   3 +
- usr/include/Makefile                     | 132 +++++++++++++++++++++++
- 29 files changed, 329 insertions(+), 204 deletions(-)
- rename include/uapi/{linux => }/Kbuild (77%)
- create mode 100755 scripts/cc-system-headers.sh
- delete mode 100755 scripts/headers.sh
- create mode 100644 usr/include/.gitignore
- create mode 100644 usr/include/Makefile
-
+diff --git a/Makefile b/Makefile
+index 8348939765d3..ce5a9551860d 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1053,9 +1053,6 @@ vmlinux: scripts/link-vmlinux.sh autoksyms_recursive $(vmlinux-deps) FORCE
+ 
+ targets := vmlinux
+ 
+-# Some samples need headers_install.
+-samples: headers_install
+-
+ # The actual objects are generated when descending,
+ # make sure no implicit rule kicks in
+ $(sort $(vmlinux-deps)): $(vmlinux-dirs) ;
+@@ -1199,6 +1196,10 @@ headers_check: headers_install
+ 	$(Q)$(MAKE) $(hdr-inst)=include/uapi dst=include HDRCHECK=1
+ 	$(Q)$(MAKE) $(hdr-inst)=arch/$(SRCARCH)/include/uapi dst=include HDRCHECK=1
+ 
++ifdef CONFIG_HEADERS_INSTALL
++prepare: headers_install
++endif
++
+ ifdef CONFIG_HEADERS_CHECK
+ all: headers_check
+ endif
+@@ -1745,7 +1746,6 @@ build-dir = $(patsubst %/,%,$(dir $(build-target)))
+ PHONY += /
+ /: ./
+ 
+-samples/: headers_install
+ %/: prepare FORCE
+ 	$(Q)$(MAKE) KBUILD_MODULES=1 $(build)=$(build-dir)
+ 
+diff --git a/arch/arc/configs/tb10x_defconfig b/arch/arc/configs/tb10x_defconfig
+index 5b5119d2b5d5..dc739bd093e3 100644
+--- a/arch/arc/configs/tb10x_defconfig
++++ b/arch/arc/configs/tb10x_defconfig
+@@ -94,6 +94,7 @@ CONFIG_CONFIGFS_FS=y
+ CONFIG_DEBUG_INFO=y
+ CONFIG_STRIP_ASM_SYMS=y
+ CONFIG_DEBUG_FS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_DEBUG_SECTION_MISMATCH=y
+ CONFIG_MAGIC_SYSRQ=y
+diff --git a/arch/nds32/configs/defconfig b/arch/nds32/configs/defconfig
+index 65ce9259081b..40313a635075 100644
+--- a/arch/nds32/configs/defconfig
++++ b/arch/nds32/configs/defconfig
+@@ -92,6 +92,7 @@ CONFIG_DEBUG_INFO=y
+ CONFIG_DEBUG_INFO_DWARF4=y
+ CONFIG_GDB_SCRIPTS=y
+ CONFIG_READABLE_ASM=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_DEBUG_SECTION_MISMATCH=y
+ CONFIG_MAGIC_SYSRQ=y
+diff --git a/arch/parisc/configs/a500_defconfig b/arch/parisc/configs/a500_defconfig
+index 5acb93dcaabf..390c0bc09179 100644
+--- a/arch/parisc/configs/a500_defconfig
++++ b/arch/parisc/configs/a500_defconfig
+@@ -167,6 +167,7 @@ CONFIG_NLS_ISO8859_1=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_UTF8=m
+ CONFIG_DEBUG_FS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ # CONFIG_DEBUG_BUGVERBOSE is not set
+diff --git a/arch/parisc/configs/b180_defconfig b/arch/parisc/configs/b180_defconfig
+index 83ffd161aec5..bdf1fe2b217f 100644
+--- a/arch/parisc/configs/b180_defconfig
++++ b/arch/parisc/configs/b180_defconfig
+@@ -91,6 +91,7 @@ CONFIG_NLS_ASCII=m
+ CONFIG_NLS_ISO8859_1=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_UTF8=m
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_KERNEL=y
+diff --git a/arch/parisc/configs/c3000_defconfig b/arch/parisc/configs/c3000_defconfig
+index 8d41a73bd71b..ed4d49575b38 100644
+--- a/arch/parisc/configs/c3000_defconfig
++++ b/arch/parisc/configs/c3000_defconfig
+@@ -140,6 +140,7 @@ CONFIG_NLS_ISO8859_1=m
+ CONFIG_NLS_ISO8859_15=m
+ CONFIG_NLS_UTF8=m
+ CONFIG_DEBUG_FS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_MUTEXES=y
+diff --git a/arch/parisc/configs/default_defconfig b/arch/parisc/configs/default_defconfig
+index 52c9050a7c5c..fcfd9eaadf9b 100644
+--- a/arch/parisc/configs/default_defconfig
++++ b/arch/parisc/configs/default_defconfig
+@@ -184,6 +184,7 @@ CONFIG_NLS_KOI8_R=m
+ CONFIG_NLS_KOI8_U=m
+ CONFIG_NLS_UTF8=y
+ CONFIG_DEBUG_FS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_KERNEL=y
+diff --git a/arch/powerpc/configs/ppc6xx_defconfig b/arch/powerpc/configs/ppc6xx_defconfig
+index 7c6baf6df139..463aa3e53084 100644
+--- a/arch/powerpc/configs/ppc6xx_defconfig
++++ b/arch/powerpc/configs/ppc6xx_defconfig
+@@ -1124,6 +1124,7 @@ CONFIG_NLS_KOI8_R=m
+ CONFIG_NLS_KOI8_U=m
+ CONFIG_DEBUG_INFO=y
+ CONFIG_UNUSED_SYMBOLS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_MAGIC_SYSRQ=y
+ CONFIG_DEBUG_KERNEL=y
+diff --git a/arch/s390/configs/debug_defconfig b/arch/s390/configs/debug_defconfig
+index b0920b35f87b..994e03fad424 100644
+--- a/arch/s390/configs/debug_defconfig
++++ b/arch/s390/configs/debug_defconfig
+@@ -586,6 +586,7 @@ CONFIG_GDB_SCRIPTS=y
+ CONFIG_FRAME_WARN=1024
+ CONFIG_READABLE_ASM=y
+ CONFIG_UNUSED_SYMBOLS=y
++CONFIG_HEADERS_INSTALL=y
+ CONFIG_HEADERS_CHECK=y
+ CONFIG_DEBUG_SECTION_MISMATCH=y
+ CONFIG_MAGIC_SYSRQ=y
+diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+index 7cdcb962358c..6a6ea4219d1e 100644
+--- a/lib/Kconfig.debug
++++ b/lib/Kconfig.debug
+@@ -305,14 +305,23 @@ config DEBUG_FS
+ 
+ 	  If unsure, say N.
+ 
++config HEADERS_INSTALL
++	bool "Install uapi headers to usr/include"
++	depends on !UML
++	help
++	  This option will install uapi headers (headers exported to user-space)
++	  into the usr/include directory for use during the kernel build.
++	  This is unneeded for building the kernel itself, but needed for some
++	  user-space program samples. It is also needed by some features such
++	  as uapi header sanity checks.
++
+ config HEADERS_CHECK
+ 	bool "Run sanity checks on uapi headers when building 'all'"
+-	depends on !UML
++	depends on HEADERS_INSTALL
+ 	help
+-	  This option will extract the user-visible kernel headers when
+-	  building the 'all' target, and will run basic sanity checks on them to
+-	  ensure that exported files do not attempt to include files which
+-	  were not exported, etc.
++	  This option will run basic sanity checks on uapi headers when
++	  building the 'all' target, for example, ensure that they do not
++	  attempt to include files which were not exported, etc.
+ 
+ 	  If you're making modifications to header files which are
+ 	  relevant for userspace, say 'Y', and check the headers
+diff --git a/samples/Kconfig b/samples/Kconfig
+index d63cc8a3e0df..71b5e833dd9e 100644
+--- a/samples/Kconfig
++++ b/samples/Kconfig
+@@ -1,7 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ menuconfig SAMPLES
+ 	bool "Sample kernel code"
+-	depends on !UML
+ 	help
+ 	  You can build and test sample kernel code here.
+ 
+@@ -95,16 +94,24 @@ config SAMPLE_CONFIGFS
+ 
+ config SAMPLE_CONNECTOR
+ 	tristate "Build connector sample -- loadable modules only"
+-	depends on CONNECTOR && m
++	depends on CONNECTOR && HEADERS_INSTALL && m
+ 	help
+ 	  When enabled, this builds both a sample kernel module for
+ 	  the connector interface and a user space tool to communicate
+ 	  with it.
+ 	  See also Documentation/connector/connector.txt
+ 
++config SAMPLE_HIDRAW
++	bool "hidraw sample"
++	depends on HEADERS_INSTALL
++
++config SAMPLE_PIDFD
++	bool "pidfd sample"
++	depends on HEADERS_INSTALL
++
+ config SAMPLE_SECCOMP
+ 	bool "Build seccomp sample code"
+-	depends on SECCOMP_FILTER
++	depends on SECCOMP_FILTER && HEADERS_INSTALL
+ 	help
+ 	  Build samples of seccomp filters using various methods of
+ 	  BPF filter construction.
+@@ -156,6 +163,7 @@ config SAMPLE_ANDROID_BINDERFS
+ 
+ config SAMPLE_VFS
+ 	bool "Build example programs that use new VFS system calls"
++	depends on HEADERS_INSTALL
+ 	help
+ 	  Build example userspace programs that use new VFS system calls such
+ 	  as mount API and statx().  Note that this is restricted to the x86
+diff --git a/samples/Makefile b/samples/Makefile
+index debf8925f06f..7d6e4ca28d69 100644
+--- a/samples/Makefile
++++ b/samples/Makefile
+@@ -4,14 +4,14 @@
+ obj-$(CONFIG_SAMPLE_ANDROID_BINDERFS)	+= binderfs/
+ obj-$(CONFIG_SAMPLE_CONFIGFS)		+= configfs/
+ obj-$(CONFIG_SAMPLE_CONNECTOR)		+= connector/
+-subdir-y				+= hidraw
++subdir-$(CONFIG_SAMPLE_HIDRAW)		+= hidraw
+ obj-$(CONFIG_SAMPLE_HW_BREAKPOINT)	+= hw_breakpoint/
+ obj-$(CONFIG_SAMPLE_KDB)		+= kdb/
+ obj-$(CONFIG_SAMPLE_KFIFO)		+= kfifo/
+ obj-$(CONFIG_SAMPLE_KOBJECT)		+= kobject/
+ obj-$(CONFIG_SAMPLE_KPROBES)		+= kprobes/
+ obj-$(CONFIG_SAMPLE_LIVEPATCH)		+= livepatch/
+-subdir-y				+= pidfd
++subdir-$(CONFIG_SAMPLE_PIDFD)		+= pidfd
+ obj-$(CONFIG_SAMPLE_QMI_CLIENT)		+= qmi/
+ obj-$(CONFIG_SAMPLE_RPMSG_CLIENT)	+= rpmsg/
+ subdir-$(CONFIG_SAMPLE_SECCOMP)		+= seccomp
 -- 
 2.17.1
 
