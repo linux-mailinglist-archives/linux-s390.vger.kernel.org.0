@@ -2,169 +2,220 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1702E348F4
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 15:36:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BD083490D
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Jun 2019 15:39:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfFDNge (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 09:36:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40222 "EHLO mx1.redhat.com"
+        id S1727392AbfFDNj3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Jun 2019 09:39:29 -0400
+Received: from pegase1.c-s.fr ([93.17.236.30]:39853 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727229AbfFDNge (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 4 Jun 2019 09:36:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C43FFA3B60;
-        Tue,  4 Jun 2019 13:36:33 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB1EA60C91;
-        Tue,  4 Jun 2019 13:36:27 +0000 (UTC)
-Date:   Tue, 4 Jun 2019 15:36:25 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Michael Mueller <mimu@linux.ibm.com>,
-        KVM Mailing List <kvm@vger.kernel.org>,
-        Linux-S390 Mailing List <linux-s390@vger.kernel.org>,
-        Sebastian Ott <sebott@linux.ibm.com>,
+        id S1727348AbfFDNj2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 4 Jun 2019 09:39:28 -0400
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 45JChC5TlzzB09ZP;
+        Tue,  4 Jun 2019 15:39:23 +0200 (CEST)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=F+VIbRBN; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id FpGA5AV0SBtj; Tue,  4 Jun 2019 15:39:23 +0200 (CEST)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 45JChC4ML9zB09ZN;
+        Tue,  4 Jun 2019 15:39:23 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1559655563; bh=ZxJ4EJ0Ae+y89Ajqu5TI7ryRY4j6CW1K7IMmoeKZvkI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=F+VIbRBNXoLlU2f+1RreZS338z6pBnEwqNoZ6ljPTtrHpcKEnvXfbaUfMm2q7qSdi
+         0qtTZLl4pmbSxo9ltWgu35vN08j9XdDMS7NCuzeI+JinFN7iSMp8KiqFjHanc3URrV
+         2s3z8X+2toNoMu7DqYAb1IGV+XI+0s0VRyLHkFXU=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 83A068B98D;
+        Tue,  4 Jun 2019 15:39:24 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Ywbglewt1FTu; Tue,  4 Jun 2019 15:39:24 +0200 (CEST)
+Received: from PO15451 (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 205008B967;
+        Tue,  4 Jun 2019 15:39:23 +0200 (CEST)
+Subject: Re: [PATCH v4 3/3] kselftest: Extend vDSO selftest to clock_getres
+To:     Vincenzo Frascino <vincenzo.frascino@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linux-arch@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kselftest@vger.kernel.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S . Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>
-Subject: Re: [PATCH v3 7/8] virtio/s390: use DMA memory for ccw I/O and
- classic notifiers
-Message-ID: <20190604153625.6c03c232.cohuck@redhat.com>
-In-Reply-To: <20190604150819.1f8707b5.pasic@linux.ibm.com>
-References: <20190529122657.166148-1-mimu@linux.ibm.com>
-        <20190529122657.166148-8-mimu@linux.ibm.com>
-        <20190603181716.325101d9.cohuck@redhat.com>
-        <20190604150819.1f8707b5.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        Shuah Khan <shuah@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20190523112116.19233-1-vincenzo.frascino@arm.com>
+ <20190523112116.19233-4-vincenzo.frascino@arm.com>
+ <87lfyrp0d2.fsf@concordia.ellerman.id.au>
+ <afb7395f-43e9-c304-2db2-349e6727b687@arm.com>
+ <5c99721a-ce6b-10a0-99f2-6c37c1da4542@c-s.fr>
+ <b710d906-edac-f8a7-792b-e6822399187c@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <dd8bf915-f438-74f0-494e-427d10fc0505@c-s.fr>
+Date:   Tue, 4 Jun 2019 15:39:22 +0200
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 04 Jun 2019 13:36:34 +0000 (UTC)
+In-Reply-To: <b710d906-edac-f8a7-792b-e6822399187c@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 4 Jun 2019 15:08:19 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> On Mon, 3 Jun 2019 18:17:16 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > On Wed, 29 May 2019 14:26:56 +0200
-> > Michael Mueller <mimu@linux.ibm.com> wrote:
 
-> > (...)
-> >   
-> > > @@ -176,6 +180,22 @@ static struct virtio_ccw_device *to_vc_device(struct virtio_device *vdev)
-> > >  	return container_of(vdev, struct virtio_ccw_device, vdev);
-> > >  }
-> > >  
-> > > +static inline void *__vc_dma_alloc(struct virtio_device *vdev, size_t size)
-> > > +{
-> > > +	return ccw_device_dma_zalloc(to_vc_device(vdev)->cdev, size);
-> > > +}
-> > > +
-> > > +static inline void __vc_dma_free(struct virtio_device *vdev, size_t size,
-> > > +				 void *cpu_addr)
-> > > +{
-> > > +	return ccw_device_dma_free(to_vc_device(vdev)->cdev, cpu_addr, size);
-> > > +}
-> > > +
-> > > +#define vc_dma_alloc_struct(vdev, ptr) \
-> > > +	({ptr = __vc_dma_alloc(vdev, sizeof(*(ptr))); })
-> > > +#define vc_dma_free_struct(vdev, ptr) \
-> > > +	__vc_dma_free(vdev, sizeof(*(ptr)), (ptr))
-> > > +  
-> > 
-> > I *still* don't like these #defines (and the __vc_dma_* functions), as I
-> > already commented last time. I think they make it harder to follow the
-> > code.
-> >   
+Le 04/06/2019 à 15:32, Vincenzo Frascino a écrit :
+> Hi Christophe,
 > 
-> Sorry! I think we simply forgot to address this comment of yours. 
+> On 04/06/2019 14:16, Christophe Leroy wrote:
+>> Hi Vincenzo
+>>
+>> Le 28/05/2019 à 13:57, Vincenzo Frascino a écrit :
+>>> Hi Michael,
+>>>
+>>> thank you for your reply.
+>>>
+>>> On 28/05/2019 07:19, Michael Ellerman wrote:
+>>>> Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
+>>>>
+>>>>> The current version of the multiarch vDSO selftest verifies only
+>>>>> gettimeofday.
+>>>>>
+>>>>> Extend the vDSO selftest to clock_getres, to verify that the
+>>>>> syscall and the vDSO library function return the same information.
+>>>>>
+>>>>> The extension has been used to verify the hrtimer_resoltion fix.
+>>>>
+>>>> This is passing for me even without patch 1 applied, shouldn't it fail
+>>>> without the fix? What am I missing?
+>>>>
+>>>
+>>> This is correct, because during the refactoring process I missed an "n" :)
+>>>
+>>> if·((x.tv_sec·!=·y.tv_sec)·||·(x.tv_sec·!=·y.tv_sec))
+>>>
+>>> Should be:
+>>>
+>>> if·((x.tv_sec·!=·y.tv_sec)·||·(x.tv_nsec·!=·y.tv_nsec))
+>>>
+>>> My mistake, I am going to fix the test and re-post v5 of this set.
+>>>
+>>> Without my patch if you pass "highres=off" to the kernel (as a command line
+>>> parameter) it leads to a broken implementation of clock_getres since the value
+>>> of CLOCK_REALTIME_RES does not change at runtime.
+>>>
+>>> Expected result (with highres=off):
+>>>
+>>> # uname -r
+>>> 5.2.0-rc2
+>>> # ./vdso_clock_getres
+>>> clock_id: CLOCK_REALTIME [FAIL]
+>>> clock_id: CLOCK_BOOTTIME [PASS]
+>>> clock_id: CLOCK_TAI [PASS]
+>>> clock_id: CLOCK_REALTIME_COARSE [PASS]
+>>> clock_id: CLOCK_MONOTONIC [FAIL]
+>>> clock_id: CLOCK_MONOTONIC_RAW [PASS]
+>>> clock_id: CLOCK_MONOTONIC_COARSE [PASS]
+>>>
+>>> The reason of this behavior is that the only clocks supported by getres on
+>>> powerpc are CLOCK_REALTIME and CLOCK_MONOTONIC, the rest on the clocks use
+>>> always syscalls.
+>>
+>> vdso64 is supposed to implement CLOCK_{REALTIME/MONOTONIC}_COARSE, so I
+>> guess it should fail for them too ?
+>>
+>> Or is your test done on vdso32 ?
+>>
 > 
-> > >  static void drop_airq_indicator(struct virtqueue *vq, struct airq_info *info)
-> > >  {
-> > >  	unsigned long i, flags;
-> > > @@ -336,8 +356,7 @@ static void virtio_ccw_drop_indicator(struct virtio_ccw_device *vcdev,
-> > >  	struct airq_info *airq_info = vcdev->airq_info;
-> > >  
-> > >  	if (vcdev->is_thinint) {
-> > > -		thinint_area = kzalloc(sizeof(*thinint_area),
-> > > -				       GFP_DMA | GFP_KERNEL);
-> > > +		vc_dma_alloc_struct(&vcdev->vdev, thinint_area);  
-> > 
-> > Last time I wrote:
-> > 
-> > "Any reason why this takes a detour via the virtio device? The ccw
-> >  device is already referenced in vcdev, isn't it?
-> >
-> > thinint_area = ccw_device_dma_zalloc(vcdev->cdev, sizeof(*thinint_area));
-> > 
-> >  looks much more obvious to me."
-> > 
-> > It still seems more obvious to me.
-> >  
+> Based on what I can see in kernel/vdso64 in 5.2-rc3:
 > 
+> /*
+>   * Exact prototype of clock_getres()
+>   *
+>   * int __kernel_clock_getres(clockid_t clock_id, struct timespec *res);
+>   *
+>   */
+> V_FUNCTION_BEGIN(__kernel_clock_getres)
+>    .cfi_startproc
+> 	/* Check for supported clock IDs */
+> 	cmpwi	cr0,r3,CLOCK_REALTIME
+> 	cmpwi	cr1,r3,CLOCK_MONOTONIC
+> 	cror	cr0*4+eq,cr0*4+eq,cr1*4+eq
+> 	bne	cr0,99f
 > 
-> The reason why I decided to introduce __vc_dma_alloc() back then is
-> because I had no clarity what do we want to do there. If you take a look
-> the body of __vc_dma_alloc() changed quite a lot, while I the usage not
-> so much. 
+> 	li	r3,0
+> 	cmpldi	cr0,r4,0
+> 	crclr	cr0*4+so
+> 	beqlr
+> 	lis	r5,CLOCK_REALTIME_RES@h
+> 	ori	r5,r5,CLOCK_REALTIME_RES@l
+> 	std	r3,TSPC64_TV_SEC(r4)
+> 	std	r5,TSPC64_TV_NSEC(r4)
+> 	blr
 > 
-> Regarding why is the first argument a pointer struct virtio_device, the
-> idea was probably to keep the needs to be ZONE_DMA and can use the full
-> 64 bit address space separate. But I abandoned the ideal.
+> 	/*
+> 	 * syscall fallback
+> 	 */
+> 99:
+> 	li	r0,__NR_clock_getres
+> 	sc
+> 	blr
+>    .cfi_endproc
+> V_FUNCTION_END(__kernel_clock_getres)
 > 
-> Also vc_dma_alloc_struct() started out more elaborate (I used to manage
-> a dma_addr_t as well -- see RFC).
+> it does not seem so for what concerns vdso64. I did run again the test both on
+> ppc and ppc64 qemu instances and the result is the same to what I reported in
+> this thread.
+> 
+> Am I missing something?
 
-Understood, history is often important :)
+I was thinking about 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=5c929885f1bb 
+but apparently clock_getres() was left aside. Should we do something 
+about it ?
+
+Christophe
 
 > 
-> I'm not quite sure what is your problem with the these. As far as I
-> understand, this is another of those matter of taste things. But it ain't
-> a big deal. 
-
-Two things:
-- The call path goes from the vcdev to the vdev, then back to the vcdev
-  and then to the cdev. Going from the vcdev to the cdev  directly
-  eliminates the roundtrip via the vdev, which I think does not add
-  anything.
-- I prefer
-	variable = function_returning_a_pointer(...);
-  over
-	function_setting_a_variable(..., variable);
-  The latter obscures the fact that we change the value of the
-  variable, unless named very obviously.
-
+>> Christophe
+>>
+>>>
+>>>> # uname -r
+>>>> 5.2.0-rc2-gcc-8.2.0
+>>>>
+>>>> # ./vdso_clock_getres
+>>>> clock_id: CLOCK_REALTIME [PASS]
+>>>> clock_id: CLOCK_BOOTTIME [PASS]
+>>>> clock_id: CLOCK_TAI [PASS]
+>>>> clock_id: CLOCK_REALTIME_COARSE [PASS]
+>>>> clock_id: CLOCK_MONOTONIC [PASS]
+>>>> clock_id: CLOCK_MONOTONIC_RAW [PASS]
+>>>> clock_id: CLOCK_MONOTONIC_COARSE [PASS]
+>>>>
+>>>> cheers
+>>>>
+>>>>> Cc: Shuah Khan <shuah@kernel.org>
+>>>>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
+>>>>> ---
+>>>>>
+>>>>> Note: This patch is independent from the others in this series, hence it
+>>>>> can be merged singularly by the kselftest maintainers.
+>>>>>
+>>>>>    tools/testing/selftests/vDSO/Makefile         |   2 +
+>>>>>    .../selftests/vDSO/vdso_clock_getres.c        | 124 ++++++++++++++++++
+>>>>>    2 files changed, 126 insertions(+)
+>>>>>    create mode 100644 tools/testing/selftests/vDSO/vdso_clock_getres.c
+>>>
 > 
-> I will change this for v4 as you requested. Again sorry for missing it!
-
-np, can happen.
-
-> 
-> Regards,
-> Halil
-> 
->  
-> > >  		if (!thinint_area)
-> > >  			return;
-> > >  		thinint_area->summary_indicator =  
-> >   
-> 
-
