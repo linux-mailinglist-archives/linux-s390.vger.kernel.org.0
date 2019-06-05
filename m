@@ -2,95 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEA3635B38
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Jun 2019 13:23:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ECF3D35B46
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Jun 2019 13:29:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727418AbfFELXf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Jun 2019 07:23:35 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:41390 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726280AbfFELXf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Jun 2019 07:23:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=sVN3EHsvpO4JEKTL1zRRHRBKbHxUnSg7DWieN951vaQ=; b=ZxNl0qOQMb2nfXeNThDfWARnO
-        IjMcoH4MbKtQUU/nYGjzXO/SzWGoG4bwvM6cBsqxqnboCmwXwdmrZT6ztabNtnUgigfRmXDx8fQga
-        0rKqTEt4/6uc2AluHwNMT79+xCxIagqOb/We+wKGSyrnU5U0zj89HIUQ91CjDb3ocZFKE34NA73Xt
-        ht21jsc6XZzCEdyBsoxDu/s7ytcLxb6tZ+TqSKkA+jPRHteOcwa78zZTOL6egPiRNwQtvKPfLFnxB
-        43TAXA7rZyGVZ8LyRQz4qMmoOohTstIupqEoWtffXXODQJqZlI73n1KFz6tSlAtnVI5oGHg9JPstG
-        ajfQGCbTw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hYU0u-0005Bg-TM; Wed, 05 Jun 2019 11:23:28 +0000
-Date:   Wed, 5 Jun 2019 04:23:28 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-Subject: Re: [RFC V2] mm: Generalize notify_page_fault()
-Message-ID: <20190605112328.GB2025@bombadil.infradead.org>
-References: <1559630046-12940-1-git-send-email-anshuman.khandual@arm.com>
- <87sgsomg91.fsf@concordia.ellerman.id.au>
+        id S1726461AbfFEL3v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 5 Jun 2019 07:29:51 -0400
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:18127 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726280AbfFEL3v (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Jun 2019 07:29:51 -0400
+Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com [209.85.217.48]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id x55BThr4023935;
+        Wed, 5 Jun 2019 20:29:44 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com x55BThr4023935
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1559734184;
+        bh=bujSVOPDmVIdKwoGDrNqagrzcEvHKAapyl9W5rclyIQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=M8e3A4paeWv1Rk+ChhYRKbpXvwUYCnXFa300HtyGKnu30uU09n5eP56Lmb7R2CQD3
+         aciaaB/myHE4qvEJf5yE5wda9vr8QZVcgFGqlWn+ok0fWb5RVVFpootXwQZJmYf3ZH
+         WbkuTAJn3ow0O9cLjtOJsrPebgEd2fFzLKOqWUA/h92hoUMS/S+BH8AG7jn7urVabf
+         jNgH4K0cCVYPDSXE1/PUYHriY74TpLtEfeUBDr1RD2PE2ELqSA4zDhZ50tMBg3zRsv
+         MGf2nGa5A3p6yJYf0XYJuR2iSTlw8CxdUFpCIDpOZCRWGGs9UDykRSbfmMHYMvrvnA
+         kSKlcUSkhGx4g==
+X-Nifty-SrcIP: [209.85.217.48]
+Received: by mail-vs1-f48.google.com with SMTP id l125so15412314vsl.13;
+        Wed, 05 Jun 2019 04:29:43 -0700 (PDT)
+X-Gm-Message-State: APjAAAXXePtbcQOYhv3bHI8B2Rmaj2A/uCeJyaeAHeWZ2SGa5Wlvorh3
+        I2DTRA2VZjLZzsrR6rSNizK3IbJe0FEIbENSHM4=
+X-Google-Smtp-Source: APXvYqzJue7ZjLWp60MMqbuwjVbzlIfqBJ8ddQ/y7vWB10W5mIJYautJKHwqVx0dSshy76SivadMhOYQn3yJisMYKyI=
+X-Received: by 2002:a67:cd1a:: with SMTP id u26mr1403661vsl.155.1559734182801;
+ Wed, 05 Jun 2019 04:29:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87sgsomg91.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+References: <20190605111416.13341-1-jslaby@suse.cz>
+In-Reply-To: <20190605111416.13341-1-jslaby@suse.cz>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 5 Jun 2019 20:29:06 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQxW9x1mVa742vD7-NJuUNh=pTNqfT8BRUt=hs_7EiE2w@mail.gmail.com>
+Message-ID: <CAK7LNAQxW9x1mVa742vD7-NJuUNh=pTNqfT8BRUt=hs_7EiE2w@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: s390, do not remove autogenerated headers on clean
+To:     Jiri Slaby <jslaby@suse.cz>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jun 05, 2019 at 09:19:22PM +1000, Michael Ellerman wrote:
-> Anshuman Khandual <anshuman.khandual@arm.com> writes:
-> > Similar notify_page_fault() definitions are being used by architectures
-> > duplicating much of the same code. This attempts to unify them into a
-> > single implementation, generalize it and then move it to a common place.
-> > kprobes_built_in() can detect CONFIG_KPROBES, hence notify_page_fault()
-> > need not be wrapped again within CONFIG_KPROBES. Trap number argument can
-> > now contain upto an 'unsigned int' accommodating all possible platforms.
-> ...
-> 
-> You've changed several of the architectures from something like above,
-> where it disables preemption around the call into the below:
-> 
-> 
-> Which skips everything if we're preemptible. Is that an equivalent
-> change? If so can you please explain why in more detail.
+On Wed, Jun 5, 2019 at 8:14 PM Jiri Slaby <jslaby@suse.cz> wrote:
+>
+> 'make clean' does NOT remove autogenerated headers generated from
+> arch/s390/kernel/syscalls/. For example:
+> asm-offsets.h
+> irq_regs.h
+> irq_work.h
+> unistd_nr.h
+>
+> But 'make clean' DOES currently remove dis-defs.h and facility-defs.h
+> generated from arch/s390/tools/.
+>
+> The issue is that facility-defs.h is included from <asm/facility.h> and
+> builds of external modules fail due to missing header. (When cleaned
+> build directory is used.)
+>
+> Fix this by adding these targets to no-clean-files.
+>
+> Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Cc: Michal Marek <michal.lkml@markovi.net>
+> Cc: linux-kbuild@vger.kernel.org
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> ---
+>
+> I would love to see comments from KBuild guys as I am not sure if this
+> fix is correct at all.
 
-See the discussion in v1 of this patch, which you were cc'd on.
 
-I agree the description here completely fails to mention why the change.
-It should mention commit a980c0ef9f6d8c.
+This issue had already been fixed by the side-effect of
+another patch, which is in linux-next.
 
-> Also why not have it return bool?
-> 
-> cheers
-> 
+
+
+See this:
+
+
+commit 10077c9f2dae1afabab2808a0326ecf3e8e5a82c
+Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Fri May 17 16:54:27 2019 +0900
+
+    s390: drop meaningless 'targets' from tools Makefile
+
+    'targets' should be specified to include .*.cmd files to evaluate
+    if_changed or friends.
+
+    Here, facility-defs.h and dis-defs.h are generated by filechk.
+
+    Because filechk does not generate .*.cmd file, the 'targets' addition
+    is meaningless. The filechk correctly updates the target when its
+    content is changed.
+
+    Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+    Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+
+
+Thanks.
+
+
+-- 
+Best Regards
+Masahiro Yamada
