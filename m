@@ -2,47 +2,69 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 787BB35590
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Jun 2019 05:13:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7962535664
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Jun 2019 07:50:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726528AbfFEDNi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Jun 2019 23:13:38 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56390 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726354AbfFEDNh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Jun 2019 23:13:37 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 3CC49150477FF;
-        Tue,  4 Jun 2019 20:13:37 -0700 (PDT)
-Date:   Tue, 04 Jun 2019 20:13:36 -0700 (PDT)
-Message-Id: <20190604.201336.1810440055167628114.davem@davemloft.net>
-To:     jwi@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH v2 net 0/4] s390/qeth: fixes 2019-06-04
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190604081509.56160-1-jwi@linux.ibm.com>
-References: <20190604081509.56160-1-jwi@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 04 Jun 2019 20:13:37 -0700 (PDT)
+        id S1726512AbfFEFub (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 5 Jun 2019 01:50:31 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51614 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726050AbfFEFub (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Jun 2019 01:50:31 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Transfer-Encoding
+        :Content-Type:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
+        Sender:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=OjIrnGQGCOhzp7rHkVNxq6gEHvDiczQ7n+SWfkZXfuA=; b=FOh08iBoGdxd0TgZxWZAe6HY72
+        /y1hc0WRaI1KV40nBnCVCTOhmnFS1h4bSdNQSrxJOcNtvxu9PmbP/uk1SBAVW477UVP8nRBqs8cbF
+        J5rNRQNgZgLlmWRdm3illrkt8ckb3/2rN9ec5hh+jO5+vHItXKFdgfmAJFEuqyf+sww13/3n97E7S
+        vmtMhW40lznrYzWF2YPcOysOUiar1cIRSChCJkFf0lIO4NYUTTy0cr1p0wB2J5Fcp87h6zNekn8aN
+        GFTzn57fRV37XuUpKUTT7A5+IWgfzWtQwvq+XOvRwiMRtJIxwiUQHM5iDrSZzCiFK2UrdsiP5ne72
+        HRloGgdA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hYOoX-0005Al-PR; Wed, 05 Jun 2019 05:50:21 +0000
+Date:   Tue, 4 Jun 2019 22:50:21 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <tmurphy@arista.com>
+Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        David Brown <david.brown@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Andy Gross <andy.gross@linaro.org>,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, murphyt7@tcd.ie,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH v3 1/4] iommu: Add gfp parameter to iommu_ops::map
+Message-ID: <20190605055021.GA15036@infradead.org>
+References: <20190506185207.31069-1-tmurphy@arista.com>
+ <20190506185207.31069-2-tmurphy@arista.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190506185207.31069-2-tmurphy@arista.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
-Date: Tue,  4 Jun 2019 10:15:05 +0200
+On Mon, May 06, 2019 at 07:52:03PM +0100, Tom Murphy via iommu wrote:
+> We can remove the mutex lock from amd_iommu_map and amd_iommu_unmap.
+> iommu_map doesn’t lock while mapping and so no two calls should touch
+> the same iova range. The AMD driver already handles the page table page
+> allocations without locks so we can safely remove the locks.
 
-> same patch series as yesterday, except that patch 2 has been adjusted
-> as per your review to use dst_check(). Please have another look.
-
-The correct usage is:
-
-	dst = dst_check();
+Btw, this really should be a separate patch.
