@@ -2,246 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 619B037ECE
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Jun 2019 22:29:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D2E1B38517
+	for <lists+linux-s390@lfdr.de>; Fri,  7 Jun 2019 09:34:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727303AbfFFU2z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 6 Jun 2019 16:28:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58108 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726964AbfFFU2l (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Jun 2019 16:28:41 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x56KQwfL006738
-        for <linux-s390@vger.kernel.org>; Thu, 6 Jun 2019 16:28:39 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2sy8xwjk3h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 06 Jun 2019 16:28:39 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
-        Thu, 6 Jun 2019 21:28:37 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 6 Jun 2019 21:28:35 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x56KSYxI61341722
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Jun 2019 20:28:34 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55B29AE045;
-        Thu,  6 Jun 2019 20:28:34 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3B249AE057;
-        Thu,  6 Jun 2019 20:28:34 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  6 Jun 2019 20:28:34 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id 686E5E0389; Thu,  6 Jun 2019 22:28:33 +0200 (CEST)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>, Farhan Ali <alifm@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH v2 9/9] s390/cio: Combine direct and indirect CCW paths
-Date:   Thu,  6 Jun 2019 22:28:31 +0200
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190606202831.44135-1-farman@linux.ibm.com>
-References: <20190606202831.44135-1-farman@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19060620-0020-0000-0000-00000347C045
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060620-0021-0000-0000-0000219AD68B
-Message-Id: <20190606202831.44135-10-farman@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-06_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=899 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906060138
+        id S1726956AbfFGHec (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 7 Jun 2019 03:34:32 -0400
+Received: from smtp4.iitb.ac.in ([103.21.127.18]:42060 "EHLO smtp1.iitb.ac.in"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725497AbfFGHec (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 7 Jun 2019 03:34:32 -0400
+X-Greylist: delayed 3437 seconds by postgrey-1.27 at vger.kernel.org; Fri, 07 Jun 2019 03:34:30 EDT
+Received: from ldns1.iitb.ac.in (ldns1.iitb.ac.in [10.200.12.1])
+        by smtp1.iitb.ac.in (Postfix) with SMTP id AB81E10575B6
+        for <linux-s390@vger.kernel.org>; Fri,  7 Jun 2019 12:01:33 +0530 (IST)
+Received: (qmail 27999 invoked by uid 510); 7 Jun 2019 12:01:33 +0530
+X-Qmail-Scanner-Diagnostics: from 10.200.1.25 by ldns1 (envelope-from <rws@aero.iitb.ac.in>, uid 501) with qmail-scanner-2.11
+ spamassassin: 3.4.1. mhr: 1.0. {clamdscan: 0.100.0/25472} 
+ Clear:RC:1(10.200.1.25):SA:0(1.5/7.0):. Processed in 2.069313 secs; 07 Jun 2019 12:01:33 +0530
+X-Spam-Checker-Version: SpamAssassin 3.4.1 (2015-04-28) on ldns1.iitb.ac.in
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=7.0 tests=BAYES_50,IITB_ORIG,
+        MISSING_HEADERS,PROPER_IITB_MSGID,T_RP_MATCHES_RCVD autolearn=disabled
+        version=3.4.1
+X-Spam-Pyzor: Reported 0 times.
+X-Envelope-From: rws@aero.iitb.ac.in
+X-Qmail-Scanner-Mime-Attachments: |
+X-Qmail-Scanner-Zip-Files: |
+Received: from unknown (HELO ldns1.iitb.ac.in) (10.200.1.25)
+  by ldns1.iitb.ac.in with SMTP; 7 Jun 2019 12:01:31 +0530
+Received: from vayu.aero.iitb.ac.in (vayu.aero.iitb.ac.in [10.101.1.1])
+        by ldns1.iitb.ac.in (Postfix) with ESMTP id 80518360036;
+        Fri,  7 Jun 2019 12:01:17 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+        by vayu.aero.iitb.ac.in (Postfix) with ESMTP id E4B948902E55E;
+        Fri,  7 Jun 2019 12:01:16 +0530 (IST)
+Received: from vayu.aero.iitb.ac.in ([127.0.0.1])
+        by localhost (vayu.aero.iitb.ac.in [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id uy24o_MU5OGU; Fri,  7 Jun 2019 12:01:16 +0530 (IST)
+Received: from localhost (localhost [127.0.0.1])
+        by vayu.aero.iitb.ac.in (Postfix) with ESMTP id 5C3AC8902E548;
+        Fri,  7 Jun 2019 12:01:14 +0530 (IST)
+X-Virus-Scanned: amavisd-new at aero.iitb.ac.in
+Received: from vayu.aero.iitb.ac.in ([127.0.0.1])
+        by localhost (vayu.aero.iitb.ac.in [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 2kbUWSjAc2AF; Fri,  7 Jun 2019 12:01:14 +0530 (IST)
+Received: from vayu.aero.iitb.ac.in (vayu.aero.iitb.ac.in [10.101.1.1])
+        by vayu.aero.iitb.ac.in (Postfix) with ESMTP id 0EEE684310111;
+        Fri,  7 Jun 2019 12:01:10 +0530 (IST)
+Date:   Fri, 7 Jun 2019 12:01:09 +0530 (IST)
+From:   Martins Henry <rws@aero.iitb.ac.in>
+Message-ID: <412557711.60336.1559889069980.JavaMail.zimbra@aero.iitb.ac.in>
+Subject: Thanks and I wait for your answer
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.101.1.5]
+X-Mailer: Zimbra 8.8.12_GA_3803 (ZimbraWebClient - FF11 (Win)/8.8.12_GA_3794)
+Thread-Index: SsslhYkcLNFU69da/wYft5cO9/ZYnA==
+Thread-Topic: Thanks and I wait for your answer
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-With both the direct-addressed and indirect-addressed CCW paths
-simplified to this point, the amount of shared code between them is
-(hopefully) more easily visible.  Move the processing of IDA-specific
-bits into the direct-addressed path, and add some useful commentary of
-what the individual pieces are doing.  This allows us to remove the
-entire ccwchain_fetch_idal() routine and maintain a single function
-for any non-TIC CCW.
+Hello,
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- drivers/s390/cio/vfio_ccw_cp.c | 115 +++++++++++----------------------
- 1 file changed, 39 insertions(+), 76 deletions(-)
+I am Martin Henry, An American Citizen; I am the personal secretary to
+Mr. Donald Railton, the controller of a Lottery Company. Please I am
+having big problem now, I have a 6yrs old daughter who has leukemia, a
+disease of the blood, and she needs a bone marrow transplant or she
+will die.
 
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index 8205d0b527fc..90d86e1354c1 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -534,10 +534,12 @@ static int ccwchain_fetch_direct(struct ccwchain *chain,
- {
- 	struct ccw1 *ccw;
- 	struct pfn_array *pa;
-+	u64 iova;
- 	unsigned long *idaws;
- 	int ret;
- 	int bytes = 1;
--	int idaw_nr;
-+	int idaw_nr, idal_len;
-+	int i;
- 
- 	ccw = chain->ch_ccw + idx;
- 
-@@ -545,7 +547,17 @@ static int ccwchain_fetch_direct(struct ccwchain *chain,
- 		bytes = ccw->count;
- 
- 	/* Calculate size of IDAL */
--	idaw_nr = idal_nr_words((void *)(u64)ccw->cda, bytes);
-+	if (ccw_is_idal(ccw)) {
-+		/* Read first IDAW to see if it's 4K-aligned or not. */
-+		/* All subsequent IDAws will be 4K-aligned. */
-+		ret = copy_from_iova(cp->mdev, &iova, ccw->cda, sizeof(iova));
-+		if (ret)
-+			return ret;
-+	} else {
-+		iova = ccw->cda;
-+	}
-+	idaw_nr = idal_nr_words((void *)iova, bytes);
-+	idal_len = idaw_nr * sizeof(*idaws);
- 
- 	/* Allocate an IDAL from host storage */
- 	idaws = kcalloc(idaw_nr, sizeof(*idaws), GFP_DMA | GFP_KERNEL);
-@@ -555,15 +567,36 @@ static int ccwchain_fetch_direct(struct ccwchain *chain,
- 	}
- 
- 	/*
--	 * Pin data page(s) in memory.
--	 * The number of pages actually is the count of the idaws which will be
--	 * needed when translating a direct ccw to a idal ccw.
-+	 * Allocate an array of pfn's for pages to pin/translate.
-+	 * The number of pages is actually the count of the idaws
-+	 * required for the data transfer, since we only only support
-+	 * 4K IDAWs today.
- 	 */
- 	pa = chain->ch_pa + idx;
--	ret = pfn_array_alloc(pa, ccw->cda, bytes);
-+	ret = pfn_array_alloc(pa, iova, bytes);
- 	if (ret < 0)
- 		goto out_free_idaws;
- 
-+	if (ccw_is_idal(ccw)) {
-+		/* Copy guest IDAL into host IDAL */
-+		ret = copy_from_iova(cp->mdev, idaws, ccw->cda, idal_len);
-+		if (ret)
-+			goto out_unpin;
-+
-+		/*
-+		 * Copy guest IDAWs into pfn_array, in case the memory they
-+		 * occupy is not contiguous.
-+		 */
-+		for (i = 0; i < idaw_nr; i++)
-+			pa->pa_iova_pfn[i] = idaws[i] >> PAGE_SHIFT;
-+	} else {
-+		/*
-+		 * No action is required here; the iova addresses in pfn_array
-+		 * were initialized sequentially in pfn_array_alloc() beginning
-+		 * with the contents of ccw->cda.
-+		 */
-+	}
-+
- 	if (ccw_does_data_transfer(ccw)) {
- 		ret = pfn_array_pin(pa, cp->mdev);
- 		if (ret < 0)
-@@ -589,73 +622,6 @@ static int ccwchain_fetch_direct(struct ccwchain *chain,
- 	return ret;
- }
- 
--static int ccwchain_fetch_idal(struct ccwchain *chain,
--			       int idx,
--			       struct channel_program *cp)
--{
--	struct ccw1 *ccw;
--	struct pfn_array *pa;
--	unsigned long *idaws;
--	u64 idaw_iova;
--	unsigned int idaw_nr, idaw_len;
--	int i, ret;
--	int bytes = 1;
--
--	ccw = chain->ch_ccw + idx;
--
--	if (ccw->count)
--		bytes = ccw->count;
--
--	/* Calculate size of idaws. */
--	ret = copy_from_iova(cp->mdev, &idaw_iova, ccw->cda, sizeof(idaw_iova));
--	if (ret)
--		return ret;
--	idaw_nr = idal_nr_words((void *)(idaw_iova), bytes);
--	idaw_len = idaw_nr * sizeof(*idaws);
--
--	/* Pin data page(s) in memory. */
--	pa = chain->ch_pa + idx;
--	ret = pfn_array_alloc(pa, idaw_iova, bytes);
--	if (ret)
--		goto out_init;
--
--	/* Translate idal ccw to use new allocated idaws. */
--	idaws = kzalloc(idaw_len, GFP_DMA | GFP_KERNEL);
--	if (!idaws) {
--		ret = -ENOMEM;
--		goto out_unpin;
--	}
--
--	ret = copy_from_iova(cp->mdev, idaws, ccw->cda, idaw_len);
--	if (ret)
--		goto out_free_idaws;
--
--	ccw->cda = virt_to_phys(idaws);
--
--	for (i = 0; i < idaw_nr; i++)
--		pa->pa_iova_pfn[i] = idaws[i] >> PAGE_SHIFT;
--
--	if (ccw_does_data_transfer(ccw)) {
--		ret = pfn_array_pin(pa, cp->mdev);
--		if (ret < 0)
--			goto out_free_idaws;
--	} else {
--		pa->pa_nr = 0;
--	}
--
--	pfn_array_idal_create_words(pa, idaws);
--
--	return 0;
--
--out_free_idaws:
--	kfree(idaws);
--out_unpin:
--	pfn_array_unpin_free(pa, cp->mdev);
--out_init:
--	ccw->cda = 0;
--	return ret;
--}
--
- /*
-  * Fetch one ccw.
-  * To reduce memory copy, we'll pin the cda page in memory,
-@@ -671,9 +637,6 @@ static int ccwchain_fetch_one(struct ccwchain *chain,
- 	if (ccw_is_tic(ccw))
- 		return ccwchain_fetch_tic(chain, idx, cp);
- 
--	if (ccw_is_idal(ccw))
--		return ccwchain_fetch_idal(chain, idx, cp);
--
- 	return ccwchain_fetch_direct(chain, idx, cp);
- }
- 
--- 
-2.17.1
+Please I am only asking for your help and you will benefit from it
+also. As an insider with Lottery Firm, working as the personal
+secretary to the controller, I want you to send me your name to play,
+I have some numbers that are going to win, stored in his secret data
+system in the office. The Lottery is an online entry with credit card
+anywhere with a name and address. All I want you to do is to send your
+name to play it and I will send confirmation to you.
 
+I will play with my card on your name and the Prize will be shared
+equally between us. Immediately the results are released they will
+contact you for payment as the oversea winner. The lotto can be played
+with 9.00 dollars, or 50 dollars but the prize will be Millions.
+Remember that I am playing on your name with my card; I just want to
+front you for this, because I need this money to save the life of my
+little daughter.
+
+Thanks and I wait for your answer
+Martin Henry.
