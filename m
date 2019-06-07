@@ -2,231 +2,137 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E52F438CFD
-	for <lists+linux-s390@lfdr.de>; Fri,  7 Jun 2019 16:29:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87BC038E6D
+	for <lists+linux-s390@lfdr.de>; Fri,  7 Jun 2019 17:06:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728311AbfFGO3O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 7 Jun 2019 10:29:14 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48192 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729210AbfFGO3O (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 7 Jun 2019 10:29:14 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x57EML6Y132537
-        for <linux-s390@vger.kernel.org>; Fri, 7 Jun 2019 10:29:12 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2syr5pw315-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 07 Jun 2019 10:29:12 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 7 Jun 2019 15:29:10 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 7 Jun 2019 15:29:07 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x57ET4Yw55378118
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 7 Jun 2019 14:29:05 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE414AE055;
-        Fri,  7 Jun 2019 14:29:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5F137AE051;
-        Fri,  7 Jun 2019 14:29:04 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.168])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  7 Jun 2019 14:29:04 +0000 (GMT)
-Date:   Fri, 7 Jun 2019 16:29:03 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com,
-        alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v9 3/4] s390: ap: implement PAPQ AQIC interception in
- kernel
-In-Reply-To: <2ffee52b-5e7f-f52a-069f-0a43d6418341@linux.ibm.com>
-References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
-        <1558452877-27822-4-git-send-email-pmorel@linux.ibm.com>
-        <2ffee52b-5e7f-f52a-069f-0a43d6418341@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1728665AbfFGPGc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 7 Jun 2019 11:06:32 -0400
+Received: from mga17.intel.com ([192.55.52.151]:51032 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728446AbfFGPGc (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 7 Jun 2019 11:06:32 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Jun 2019 08:06:31 -0700
+X-ExtLoop1: 1
+Received: from unknown (HELO [10.7.198.156]) ([10.7.198.156])
+  by orsmga002.jf.intel.com with ESMTP; 07 Jun 2019 08:06:30 -0700
+Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
+ kprobe_page_fault()
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <6e095842-0f7f-f428-653d-2b6e98fea6b3@intel.com>
+Date:   Fri, 7 Jun 2019 08:06:30 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19060714-0020-0000-0000-00000348174A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19060714-0021-0000-0000-0000219B31B6
-Message-Id: <20190607162903.22fd959f.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-07_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906070102
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 4 Jun 2019 15:38:51 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On 6/7/19 3:34 AM, Anshuman Khandual wrote:
+> +static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+> +					      unsigned int trap)
+> +{
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * To be potentially processing a kprobe fault and to be allowed
+> +	 * to call kprobe_running(), we have to be non-preemptible.
+> +	 */
+> +	if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
+> +		if (kprobe_running() && kprobe_fault_handler(regs, trap))
+> +			ret = 1;
+> +	}
+> +	return ret;
+> +}
 
-> On 5/21/19 11:34 AM, Pierre Morel wrote:
-> > We register a AP PQAP instruction hook during the open
-> > of the mediated device. And unregister it on release.
+Nits: Other that taking the nice, readable, x86 one and globbing it onto
+a single line, looks OK to me.  It does seem a _bit_ silly to go to the
+trouble of converting to 'bool' and then using 0/1 and an 'int'
+internally instead of true/false and a bool, though.  It's also not a
+horrible thing to add a single line comment to this sucker to say:
 
-[..]
+/* returns true if kprobes handled the fault */
 
-> > +/**
-> > + * vfio_ap_wait_for_irqclear
-> > + * @apqn: The AP Queue number
-> > + *
-> > + * Checks the IRQ bit for the status of this APQN using ap_tapq.
-> > + * Returns if the ap_tapq function succedded and the bit is clear.
-> 
-> s/succedded/succeeded/
-> 
+In any case, and even if you don't clean any of this up:
 
-I'm gonna fix this up when picking.
-
-> > + * Returns if ap_tapq function failed with invalid, deconfigured or
-> > + * checkstopped AP.
-> > + * Otherwise retries up to 5 times after waiting 20ms.
-> > + *
-> > + */
-> > +static void vfio_ap_wait_for_irqclear(int apqn)
-> > +{
-> > +	struct ap_queue_status status;
-> > +	int retry = 5;
-> > +
-> > +	do {
-> > +		status = ap_tapq(apqn, NULL);
-> > +		switch (status.response_code) {
-> > +		case AP_RESPONSE_NORMAL:
-> > +		case AP_RESPONSE_RESET_IN_PROGRESS:
-> > +			if (!status.irq_enabled)
-> > +				return;
-> > +			/* Fall through */
-> > +		case AP_RESPONSE_BUSY:
-> > +			msleep(20);
-> > +			break;
-> > +		case AP_RESPONSE_Q_NOT_AVAIL:
-> > +		case AP_RESPONSE_DECONFIGURED:
-> > +		case AP_RESPONSE_CHECKSTOPPED:
-> > +		default:
-> > +			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
-> > +				  status.response_code, apqn);
-> > +			return;
-> 
-> Why not just break out of the loop and just use the WARN_ONCE
-> outside of the loop?
-> 
-
-AFAIU the idea was to differentiate between got a strange response_code
-and ran out of retires.
-
-Actually I suspect that we are fine in case of AP_RESPONSE_Q_NOT_AVAIL,
- AP_RESPONSE_DECONFIGURED and AP_RESPONSE_CHECKSTOPPED in a sense that
-what should be the post-condition of this function is guaranteed to be
-reached. What do you think?
-
-While I think that we can do better here, I see this as something that
-should be done on top.
-
-> > +		}
-> > +	} while (--retry);
-> > +
-> > +	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
-> > +		  __func__, status.response_code, apqn);
-> > +}
-> > +
-> > +/**
-> > + * vfio_ap_free_aqic_resources
-> > + * @q: The vfio_ap_queue
-> > + *
-> > + * Unregisters the ISC in the GIB when the saved ISC not invalid.
-> > + * Unpin the guest's page holding the NIB when it exist.
-> > + * Reset the saved_pfn and saved_isc to invalid values.
-> > + * Clear the pointer to the matrix mediated device.
-> > + *
-> > + */
-
-[..]
-
-> > +struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
-> > +{
-> > +	struct ap_qirq_ctrl aqic_gisa = {};
-> > +	struct ap_queue_status status;
-> > +	int retries = 5;
-> > +
-> > +	do {
-> > +		status = ap_aqic(q->apqn, aqic_gisa, NULL);
-> > +		switch (status.response_code) {
-> > +		case AP_RESPONSE_OTHERWISE_CHANGED:
-> > +		case AP_RESPONSE_NORMAL:
-> > +			vfio_ap_wait_for_irqclear(q->apqn);
-> > +			goto end_free;
-> > +		case AP_RESPONSE_RESET_IN_PROGRESS:
-> > +		case AP_RESPONSE_BUSY:
-> > +			msleep(20);
-> > +			break;
-> > +		case AP_RESPONSE_Q_NOT_AVAIL:
-> > +		case AP_RESPONSE_DECONFIGURED:
-> > +		case AP_RESPONSE_CHECKSTOPPED:
-> > +		case AP_RESPONSE_INVALID_ADDRESS:
-> > +		default:
-> > +			/* All cases in default means AP not operational */
-> > +			WARN_ONCE(1, "%s: ap_aqic status %d\n", __func__,
-> > +				  status.response_code);
-> > +			goto end_free;
-> 
-> Why not just break out of the loop instead of repeating the WARN_ONCE
-> message?
-> 
-
-I suppose the reason is same as above. I'm not entirely happy with this
-code myself. E.g. why do we do retries here -- shouldn't we just fail the
-aqic by the guest?
-
-[..]
-
-> > +static int handle_pqap(struct kvm_vcpu *vcpu)
-> > +{
-> > +	uint64_t status;
-> > +	uint16_t apqn;
-> > +	struct vfio_ap_queue *q;
-> > +	struct ap_queue_status qstatus = {
-> > +			       .response_code = AP_RESPONSE_Q_NOT_AVAIL, };
-> > +	struct ap_matrix_mdev *matrix_mdev;
-> > +
-> > +	/* If we do not use the AIV facility just go to userland */
-> > +	if (!(vcpu->arch.sie_block->eca & ECA_AIV))
-> > +		return -EOPNOTSUPP;
-> > +
-> > +	apqn = vcpu->run->s.regs.gprs[0] & 0xffff;
-> > +	mutex_lock(&matrix_dev->lock);
-> > +
-> > +	if (!vcpu->kvm->arch.crypto.pqap_hook)
-> 
-> Wasn't this already checked in patch 2 prior to calling this
-> function? In fact, doesn't the hook point to this function?
-> 
-
-Let us benevolently call this defensive programming. We are actually
-in that callback AFAICT, so it sure was set a moment ago, and I guess
-the client code still holds the kvm.lock so it is guaranteed to stay
-so unless somebody is playing foul.
-
-We can address this with a patch on top.
-
-Regards,
-Halil
-
+Reviewed-by: Dave Hansen <dave.hansen@linux.intel.com>
