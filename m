@@ -2,20 +2,20 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E263B9D8
-	for <lists+linux-s390@lfdr.de>; Mon, 10 Jun 2019 18:46:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 22F813BA1B
+	for <lists+linux-s390@lfdr.de>; Mon, 10 Jun 2019 18:56:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbfFJQqe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 10 Jun 2019 12:46:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:56302 "EHLO mx1.suse.de"
+        id S1728015AbfFJQ4s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 10 Jun 2019 12:56:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57588 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726217AbfFJQqe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 10 Jun 2019 12:46:34 -0400
+        id S1727648AbfFJQ4s (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 10 Jun 2019 12:56:48 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6FFB8AD0C;
-        Mon, 10 Jun 2019 16:46:32 +0000 (UTC)
-Date:   Mon, 10 Jun 2019 18:46:27 +0200
+        by mx1.suse.de (Postfix) with ESMTP id C303FAC3A;
+        Mon, 10 Jun 2019 16:56:46 +0000 (UTC)
+Date:   Mon, 10 Jun 2019 18:56:43 +0200
 From:   Oscar Salvador <osalvador@suse.de>
 To:     David Hildenbrand <david@redhat.com>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
@@ -25,42 +25,53 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Wei Yang <richard.weiyang@gmail.com>,
         Igor Mammedov <imammedo@redhat.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v3 01/11] mm/memory_hotplug: Simplify and fix
- check_hotplug_memory_range()
-Message-ID: <20190610164622.GA5643@linux>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v3 10/11] mm/memory_hotplug: Make
+ unregister_memory_block_under_nodes() never fail
+Message-ID: <20190610165642.GB5643@linux>
 References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-2-david@redhat.com>
+ <20190527111152.16324-11-david@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-2-david@redhat.com>
+In-Reply-To: <20190527111152.16324-11-david@redhat.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, May 27, 2019 at 01:11:42PM +0200, David Hildenbrand wrote:
-> By converting start and size to page granularity, we actually ignore
-> unaligned parts within a page instead of properly bailing out with an
-> error.
+On Mon, May 27, 2019 at 01:11:51PM +0200, David Hildenbrand wrote:
+> We really don't want anything during memory hotunplug to fail.
+> We always pass a valid memory block device, that check can go. Avoid
+> allocating memory and eventually failing. As we are always called under
+> lock, we can use a static piece of memory. This avoids having to put
+> the structure onto the stack, having to guess about the stack size
+> of callers.
 > 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Oscar Salvador <osalvador@suse.de>
-> Cc: Michal Hocko <mhocko@suse.com>
+> Patch inspired by a patch from Oscar Salvador.
+> 
+> In the future, there might be no need to iterate over nodes at all.
+> mem->nid should tell us exactly what to remove. Memory block devices
+> with mixed nodes (added during boot) should properly fenced off and never
+> removed.
+> 
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: Alex Deucher <alexander.deucher@amd.com>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Mark Brown <broonie@kernel.org>
+> Cc: Chris Wilson <chris@chris-wilson.co.uk>
 > Cc: David Hildenbrand <david@redhat.com>
-> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Cc: Qian Cai <cai@lca.pw>
-> Cc: Wei Yang <richard.weiyang@gmail.com>
-> Cc: Arun KS <arunks@codeaurora.org>
-> Cc: Mathieu Malaterre <malat@debian.org>
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 > Signed-off-by: David Hildenbrand <david@redhat.com>
 
 Reviewed-by: Oscar Salvador <osalvador@suse.de>
