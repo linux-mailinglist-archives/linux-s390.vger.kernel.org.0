@@ -2,174 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C27933D210
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2019 18:20:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 05B343D25F
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2019 18:38:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405509AbfFKQUD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Jun 2019 12:20:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59078 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405444AbfFKQUD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:20:03 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B2FC537E8E;
-        Tue, 11 Jun 2019 16:19:54 +0000 (UTC)
-Received: from gondolin (ovpn-204-147.brq.redhat.com [10.40.204.147])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 276BD5DD8D;
-        Tue, 11 Jun 2019 16:19:47 +0000 (UTC)
-Date:   Tue, 11 Jun 2019 18:19:44 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
+        id S2404379AbfFKQiL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Jun 2019 12:38:11 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57056 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2404364AbfFKQiL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 11 Jun 2019 12:38:11 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BGR874102550
+        for <linux-s390@vger.kernel.org>; Tue, 11 Jun 2019 12:38:10 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t2eug3vn3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 11 Jun 2019 12:38:10 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Tue, 11 Jun 2019 17:38:08 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Jun 2019 17:38:06 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BGbvYw16843122
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Jun 2019 16:37:57 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4769F4C062;
+        Tue, 11 Jun 2019 16:38:04 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED4804C058;
+        Tue, 11 Jun 2019 16:38:03 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jun 2019 16:38:03 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        "Jason J. Herne" <jjherne@linux.ibm.com>
-Subject: Re: [PATCH v4 4/8] s390/airq: use DMA memory for adapter interrupts
-Message-ID: <20190611181944.5bf2b953.cohuck@redhat.com>
-In-Reply-To: <20190611162721.67ca8932.pasic@linux.ibm.com>
-References: <20190606115127.55519-1-pasic@linux.ibm.com>
-        <20190606115127.55519-5-pasic@linux.ibm.com>
-        <20190611121721.61bf09b4.cohuck@redhat.com>
-        <20190611162721.67ca8932.pasic@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 11 Jun 2019 16:20:03 +0000 (UTC)
+        Stefan Raspl <raspl@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net-next 00/13] s390/qeth: updates 2019-06-11
+Date:   Tue, 11 Jun 2019 18:37:47 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19061116-0012-0000-0000-000003283B15
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061116-0013-0000-0000-000021613E6E
+Message-Id: <20190611163800.64730-1-jwi@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=891 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 11 Jun 2019 16:27:21 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
+Hi Dave,
 
-> On Tue, 11 Jun 2019 12:17:21 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
-> 
-> > On Thu,  6 Jun 2019 13:51:23 +0200
-> > Halil Pasic <pasic@linux.ibm.com> wrote:
-> >   
-> > > Protected virtualization guests have to use shared pages for airq
-> > > notifier bit vectors, because hypervisor needs to write these bits.
-> > > 
-> > > Let us make sure we allocate DMA memory for the notifier bit vectors by
-> > > replacing the kmem_cache with a dma_cache and kalloc() with
-> > > cio_dma_zalloc().
-> > > 
-> > > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> > > Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-> > > ---
-> > >  arch/s390/include/asm/airq.h |  2 ++
-> > >  drivers/s390/cio/airq.c      | 32 ++++++++++++++++++++------------
-> > >  drivers/s390/cio/cio.h       |  2 ++
-> > >  drivers/s390/cio/css.c       |  1 +
-> > >  4 files changed, 25 insertions(+), 12 deletions(-)
-> > >   
-> > 
-> > (...)
-> >   
-> > > @@ -295,12 +303,12 @@ unsigned long airq_iv_scan(struct airq_iv *iv, unsigned long start,
-> > >  }
-> > >  EXPORT_SYMBOL(airq_iv_scan);
-> > >  
-> > > -static int __init airq_init(void)
-> > > +int __init airq_init(void)
-> > >  {
-> > > -	airq_iv_cache = ) "airq_iv_cache", cache_line_size(),
-> > > -					  cache_line_size(), 0, NULL);
-> > > +	airq_iv_cache = dma_pool_create("airq_iv_cache", cio_get_dma_css_dev(),
-> > > +					cache_line_size(),
-> > > +					cache_line_size(), PAGE_SIZE);
-> > >  	if (!airq_iv_cache)
-> > >  		return -ENOMEM;  
-> > 
-> > Sorry about not noticing that in the last iteration; but you may return
-> > an error here if airq_iv_cache could not be allocated...
-> >   
-> > >  	return 0;
-> > >  }
-> > > -subsys_initcall(airq_init);  
-> > 
-> > (...)
-> >   
-> > > diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-> > > index 6fc91d534af1..7901c8ed3597 100644
-> > > --- a/drivers/s390/cio/css.c
-> > > +++ b/drivers/s390/cio/css.c
-> > > @@ -1182,6 +1182,7 @@ static int __init css_bus_init(void)
-> > >  	ret = cio_dma_pool_init();
-> > >  	if (ret)
-> > >  		goto out_unregister_pmn;
-> > > +	airq_init();  
-> > 
-> > ...but don't check the return code here. Probably a pathological case,
-> > but shouldn't you handle that error as well?
-> >   
-> 
-> Tricky business... The problem is that the airq stuff ain't 'private' to
-> the CIO subsystem (e.g. zPCI). I'm afraid failing to init css won't
-> really prevent all usages.
+please apply the following patch series for qeth to net-next.
+This brings all sorts of cleanups and minor improvements,
+primarily for the control IO path.
 
-Architecture-wise, there's an unfortunate tie-in of some things like
-zPCI with the channel subsystem (most of that seems to come in via chsc
-and machine checks; but as you say, airq as well). I'd basically
-consider css to be a base system for virtually any I/O on s390...
+Thanks,
+Julian
 
-> 
-> My first thought was, that this is more or less analogous to what we
-> had before. Namely kmem_cache_create() and dma_pool_create() should fail
-> under similar circumstances, and the return value of airq_init() was
-> ignored in do_initcall_level(). So I was like ignoring it seems to be
-> consistent with previous state.
-> 
-> But, ouch, there is a big difference! While kmem_cache_zalloc() seems
-> to tolerate the first argument (pointer to kmem_cache) being NULL the
-> dma_pool_zalloc() does not.
 
-Yeah. While previously continuing with a failed allocation simply was
-not very workable, now we actually would end up with crashes :(
+Julian Wiedmann (13):
+  s390/qeth: don't mask TX errors on IQD devices
+  s390/qeth: use mm helpers
+  s390/qeth: simplify DOWN state handling
+  s390/qeth: restart pending READ cmd from callback
+  s390/qeth: clean up setting of BLKT defaults
+  s390/qeth: remove qeth_wait_for_buffer()
+  s390/qeth: remove OSN-specific IO code
+  s390/qeth: convert device-specific trace entries
+  s390/qeth: remove 'channel' parameter from callbacks
+  s390/qeth: add support for dynamically allocated cmds
+  s390/qeth: convert RCD code to common IO infrastructure
+  s390/qeth: command-chain the IDX sequence
+  s390/qeth: allocate a single cmd on read channel
 
-> 
-> IMHO the cleanest thing to do at this stage is to check if the
-> airq_iv_cache is NULL and fail the allocation if it is (to preserve
-> previous behavior).
+ drivers/s390/net/qeth_core.h      |  27 +-
+ drivers/s390/net/qeth_core_main.c | 614 ++++++++++++++----------------
+ drivers/s390/net/qeth_core_mpc.h  |   2 -
+ drivers/s390/net/qeth_l2_main.c   |  83 ++--
+ drivers/s390/net/qeth_l3_main.c   |  41 +-
+ 5 files changed, 351 insertions(+), 416 deletions(-)
 
-That's probably the least invasive fix for now. Did you check whether
-any of the other dma pools this series introduces have a similar
-problem due to init not failing?
+-- 
+2.17.1
 
-> 
-> I would prefer having a separate discussion on eventually changing
-> the behavior (e.g. fail css initialization).
-
-I did a quick check of the common I/O layer code and one place that
-looks dangerous is the chsc initialization (where we get two pages that
-are later accessed unconditionally by the code).
-
-All of this is related to not being able to fulfill some basic memory
-availability requirements early during boot and then discovering that
-pulling the emergency break did not actually stop the train. I'd vote
-for calling panic() if the common I/O layer cannot perform its setup;
-but as this is really a pathological case I also think we should solve
-that independently of this patch series.
-
-> 
-> Connie, would that work with you? Thanks for spotting this!
-
-Yeah, let's give your approach a try.
