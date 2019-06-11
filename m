@@ -2,204 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2A643C355
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2019 07:15:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 075F13C714
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2019 11:15:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390539AbfFKFPU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Jun 2019 01:15:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:53006 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390492AbfFKFPU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 11 Jun 2019 01:15:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 55CCB344;
-        Mon, 10 Jun 2019 22:15:19 -0700 (PDT)
-Received: from [10.162.43.135] (p8cg001049571a15.blr.arm.com [10.162.43.135])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A7FF3F73C;
-        Mon, 10 Jun 2019 22:15:11 -0700 (PDT)
-Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
+        id S1727726AbfFKJP4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Jun 2019 05:15:56 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33672 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727642AbfFKJP4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Jun 2019 05:15:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VEECxa63lSDae44YYA0SmkX/nnYgGF1NhyGuBAx1jCI=; b=XCNS03hoWW8vU0KkhyVxGPJ6f
+        n+Nq9eTPb2heNUo12nB3A4BhWw98SyHCSRjyFfNtBC00CtsfVPJFVhxv0Ke/4QOAxZXg81dp9TF6N
+        BkZptKuD3RWSih9ooyCN5h506xvu0nilbBx8XTBlPHo6dvOyvVHaMrXTqonIGn7myRieJUvIHahRD
+        G4ZqdLy5csut//3VWHVkbk0AEOIR9KxWxiiLJkvRPlClaIaI6BqoFxT+9ZSx7JK3q/RiMCIGzG8II
+        etomQjJ1NReKz5VoBcGkXNg3dAmPeQDECmWb+cbOLova0UTApObf4FpXfkyB1hQZnYJzVZhy/6QkP
+        y+dpLbAdg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hacse-00069J-8B; Tue, 11 Jun 2019 09:15:48 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 54CF8202173E3; Tue, 11 Jun 2019 11:15:46 +0200 (CEST)
+Date:   Tue, 11 Jun 2019 11:15:46 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>
-References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
- <ec764ff4-f68a-fce5-ac1e-a4664e1123c7@c-s.fr>
- <97e9c9b3-89c8-d378-4730-841a900e6800@arm.com>
- <f6d295c8-574d-3e64-79ae-2f7d3ff4c9f0@c-s.fr>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <1875ab7a-204e-4150-c7cc-d282f69da724@arm.com>
-Date:   Tue, 11 Jun 2019 10:45:30 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH/RFC 2/3] s390: improve wait logic of stop_machine
+Message-ID: <20190611091546.GV3436@hirez.programming.kicks-ass.net>
+References: <20190608110853.35961-1-heiko.carstens@de.ibm.com>
+ <20190608110853.35961-3-heiko.carstens@de.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <f6d295c8-574d-3e64-79ae-2f7d3ff4c9f0@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190608110853.35961-3-heiko.carstens@de.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Sat, Jun 08, 2019 at 01:08:52PM +0200, Heiko Carstens wrote:
+> --- a/arch/s390/kernel/processor.c
+> +++ b/arch/s390/kernel/processor.c
+> @@ -31,6 +31,7 @@ struct cpu_info {
+>  };
+>  
+>  static DEFINE_PER_CPU(struct cpu_info, cpu_info);
+> +static DEFINE_PER_CPU(int, cpu_relax_retry);
+>  
+>  static bool machine_has_cpu_mhz;
+>  
+> @@ -58,13 +59,21 @@ void s390_update_cpu_mhz(void)
+>  		on_each_cpu(update_cpu_mhz, NULL, 0);
+>  }
+>  
+> +void notrace cpu_relax_yield(const struct cpumask *cpumask)
+>  {
+> +	int cpu;
+> +
+> +	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
+> +		__this_cpu_write(cpu_relax_retry, 0);
 
+I don't mind, but do we really need a per-cpu variable for this? Does it
+really matter if you spin on a stack variable and occasionally spin a
+bit longer due to the missed tail of the previous spin?
 
-On 06/11/2019 10:16 AM, Christophe Leroy wrote:
-> 
-> 
-> Le 10/06/2019 à 04:39, Anshuman Khandual a écrit :
->>
->>
->> On 06/07/2019 09:01 PM, Christophe Leroy wrote:
->>>
->>>
->>> Le 07/06/2019 à 12:34, Anshuman Khandual a écrit :
->>>> Very similar definitions for notify_page_fault() are being used by multiple
->>>> architectures duplicating much of the same code. This attempts to unify all
->>>> of them into a generic implementation, rename it as kprobe_page_fault() and
->>>> then move it to a common header.
->>>>
->>>> kprobes_built_in() can detect CONFIG_KPROBES, hence new kprobe_page_fault()
->>>> need not be wrapped again within CONFIG_KPROBES. Trap number argument can
->>>> now contain upto an 'unsigned int' accommodating all possible platforms.
->>>>
->>>> kprobe_page_fault() goes the x86 way while dealing with preemption context.
->>>> As explained in these following commits the invoking context in itself must
->>>> be non-preemptible for kprobes processing context irrespective of whether
->>>> kprobe_running() or perhaps smp_processor_id() is safe or not. It does not
->>>> make much sense to continue when original context is preemptible. Instead
->>>> just bail out earlier.
->>>>
->>>> commit a980c0ef9f6d
->>>> ("x86/kprobes: Refactor kprobes_fault() like kprobe_exceptions_notify()")
->>>>
->>>> commit b506a9d08bae ("x86: code clarification patch to Kprobes arch code")
->>>>
->>>> Cc: linux-arm-kernel@lists.infradead.org
->>>> Cc: linux-ia64@vger.kernel.org
->>>> Cc: linuxppc-dev@lists.ozlabs.org
->>>> Cc: linux-s390@vger.kernel.org
->>>> Cc: linux-sh@vger.kernel.org
->>>> Cc: sparclinux@vger.kernel.org
->>>> Cc: x86@kernel.org
->>>> Cc: Andrew Morton <akpm@linux-foundation.org>
->>>> Cc: Michal Hocko <mhocko@suse.com>
->>>> Cc: Matthew Wilcox <willy@infradead.org>
->>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
->>>> Cc: Stephen Rothwell <sfr@canb.auug.org.au>
->>>> Cc: Andrey Konovalov <andreyknvl@google.com>
->>>> Cc: Michael Ellerman <mpe@ellerman.id.au>
->>>> Cc: Paul Mackerras <paulus@samba.org>
->>>> Cc: Russell King <linux@armlinux.org.uk>
->>>> Cc: Catalin Marinas <catalin.marinas@arm.com>
->>>> Cc: Will Deacon <will.deacon@arm.com>
->>>> Cc: Tony Luck <tony.luck@intel.com>
->>>> Cc: Fenghua Yu <fenghua.yu@intel.com>
->>>> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
->>>> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->>>> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->>>> Cc: "David S. Miller" <davem@davemloft.net>
->>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>> Cc: Peter Zijlstra <peterz@infradead.org>
->>>> Cc: Ingo Molnar <mingo@redhat.com>
->>>> Cc: Andy Lutomirski <luto@kernel.org>
->>>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->>>>
->>>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->>>> ---
->>>> Testing:
->>>>
->>>> - Build and boot tested on arm64 and x86
->>>> - Build tested on some other archs (arm, sparc64, alpha, powerpc etc)
->>>>
->>>> Changes in RFC V3:
->>>>
->>>> - Updated the commit message with an explaination for new preemption behaviour
->>>> - Moved notify_page_fault() to kprobes.h with 'static nokprobe_inline' per Matthew
->>>> - Changed notify_page_fault() return type from int to bool per Michael Ellerman
->>>> - Renamed notify_page_fault() as kprobe_page_fault() per Peterz
->>>>
->>>> Changes in RFC V2: (https://patchwork.kernel.org/patch/10974221/)
->>>>
->>>> - Changed generic notify_page_fault() per Mathew Wilcox
->>>> - Changed x86 to use new generic notify_page_fault()
->>>> - s/must not/need not/ in commit message per Matthew Wilcox
->>>>
->>>> Changes in RFC V1: (https://patchwork.kernel.org/patch/10968273/)
->>>>
->>>>    arch/arm/mm/fault.c      | 24 +-----------------------
->>>>    arch/arm64/mm/fault.c    | 24 +-----------------------
->>>>    arch/ia64/mm/fault.c     | 24 +-----------------------
->>>>    arch/powerpc/mm/fault.c  | 23 ++---------------------
->>>>    arch/s390/mm/fault.c     | 16 +---------------
->>>>    arch/sh/mm/fault.c       | 18 ++----------------
->>>>    arch/sparc/mm/fault_64.c | 16 +---------------
->>>>    arch/x86/mm/fault.c      | 21 ++-------------------
->>>>    include/linux/kprobes.h  | 16 ++++++++++++++++
->>>>    9 files changed, 27 insertions(+), 155 deletions(-)
->>>>
->>>
->>> [...]
->>>
->>>> diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
->>>> index 443d980..064dd15 100644
->>>> --- a/include/linux/kprobes.h
->>>> +++ b/include/linux/kprobes.h
->>>> @@ -458,4 +458,20 @@ static inline bool is_kprobe_optinsn_slot(unsigned long addr)
->>>>    }
->>>>    #endif
->>>>    +static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
->>>> +                          unsigned int trap)
->>>> +{
->>>> +    int ret = 0;
->>>
->>> ret is pointless.
->>>
->>>> +
->>>> +    /*
->>>> +     * To be potentially processing a kprobe fault and to be allowed
->>>> +     * to call kprobe_running(), we have to be non-preemptible.
->>>> +     */
->>>> +    if (kprobes_built_in() && !preemptible() && !user_mode(regs)) {
->>>> +        if (kprobe_running() && kprobe_fault_handler(regs, trap))
->>>
->>> don't need an 'if A if B', can do 'if A && B'
->>
->> Which will make it a very lengthy condition check.
-> 
-> Yes. But is that a problem at all ?
+> +		cpu = cpumask_next(smp_processor_id(), cpumask);
+> +		if (cpu >= nr_cpu_ids) {
+> +			cpu = cpumask_first(cpumask);
+> +			if (cpu == smp_processor_id())
+> +				return;
 
-Probably not.
+If this function is passed an empty cpumask, the above will result in
+'cpu == nr_cpu_ids' and the below might be unhappy with that.
 
-> 
-> For me the following would be easier to read.
-> 
-> if (kprobes_built_in() && !preemptible() && !user_mode(regs) &&
->     kprobe_running() && kprobe_fault_handler(regs, trap))
->     ret = 1;
+(FWIW we do have cpumask_next_wrap(), but I admit it is somewhat awkward
+to use)
 
-As mentioned before will stick with current x86 implementation. 
+> +		}
+> +		if (arch_vcpu_is_preempted(cpu))
+> +			smp_yield_cpu(cpu);
+>  	}
+>  }
+>  EXPORT_SYMBOL(cpu_relax_yield);
