@@ -2,95 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 075F13C714
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2019 11:15:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B6A083C7B8
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2019 11:56:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727726AbfFKJP4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Jun 2019 05:15:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:33672 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727642AbfFKJP4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Jun 2019 05:15:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VEECxa63lSDae44YYA0SmkX/nnYgGF1NhyGuBAx1jCI=; b=XCNS03hoWW8vU0KkhyVxGPJ6f
-        n+Nq9eTPb2heNUo12nB3A4BhWw98SyHCSRjyFfNtBC00CtsfVPJFVhxv0Ke/4QOAxZXg81dp9TF6N
-        BkZptKuD3RWSih9ooyCN5h506xvu0nilbBx8XTBlPHo6dvOyvVHaMrXTqonIGn7myRieJUvIHahRD
-        G4ZqdLy5csut//3VWHVkbk0AEOIR9KxWxiiLJkvRPlClaIaI6BqoFxT+9ZSx7JK3q/RiMCIGzG8II
-        etomQjJ1NReKz5VoBcGkXNg3dAmPeQDECmWb+cbOLova0UTApObf4FpXfkyB1hQZnYJzVZhy/6QkP
-        y+dpLbAdg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hacse-00069J-8B; Tue, 11 Jun 2019 09:15:48 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 54CF8202173E3; Tue, 11 Jun 2019 11:15:46 +0200 (CEST)
-Date:   Tue, 11 Jun 2019 11:15:46 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        id S2391367AbfFKJ4L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Jun 2019 05:56:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36332 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727726AbfFKJ4L (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 11 Jun 2019 05:56:11 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EC61B3092677;
+        Tue, 11 Jun 2019 09:56:10 +0000 (UTC)
+Received: from gondolin (ovpn-204-147.brq.redhat.com [10.40.204.147])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78AF8600CC;
+        Tue, 11 Jun 2019 09:56:04 +0000 (UTC)
+Date:   Tue, 11 Jun 2019 11:55:29 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH/RFC 2/3] s390: improve wait logic of stop_machine
-Message-ID: <20190611091546.GV3436@hirez.programming.kicks-ass.net>
-References: <20190608110853.35961-1-heiko.carstens@de.ibm.com>
- <20190608110853.35961-3-heiko.carstens@de.ibm.com>
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        "Jason J. Herne" <jjherne@linux.ibm.com>
+Subject: Re: [PATCH v4 2/8] s390/cio: introduce DMA pools to cio
+Message-ID: <20190611115529.6e3ae12d.cohuck@redhat.com>
+In-Reply-To: <20190606115127.55519-3-pasic@linux.ibm.com>
+References: <20190606115127.55519-1-pasic@linux.ibm.com>
+        <20190606115127.55519-3-pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190608110853.35961-3-heiko.carstens@de.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 11 Jun 2019 09:56:11 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Jun 08, 2019 at 01:08:52PM +0200, Heiko Carstens wrote:
-> --- a/arch/s390/kernel/processor.c
-> +++ b/arch/s390/kernel/processor.c
-> @@ -31,6 +31,7 @@ struct cpu_info {
->  };
->  
->  static DEFINE_PER_CPU(struct cpu_info, cpu_info);
-> +static DEFINE_PER_CPU(int, cpu_relax_retry);
->  
->  static bool machine_has_cpu_mhz;
->  
-> @@ -58,13 +59,21 @@ void s390_update_cpu_mhz(void)
->  		on_each_cpu(update_cpu_mhz, NULL, 0);
->  }
->  
-> +void notrace cpu_relax_yield(const struct cpumask *cpumask)
->  {
-> +	int cpu;
-> +
-> +	if (__this_cpu_inc_return(cpu_relax_retry) >= spin_retry) {
-> +		__this_cpu_write(cpu_relax_retry, 0);
+On Thu,  6 Jun 2019 13:51:21 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-I don't mind, but do we really need a per-cpu variable for this? Does it
-really matter if you spin on a stack variable and occasionally spin a
-bit longer due to the missed tail of the previous spin?
+> To support protected virtualization cio will need to make sure the
+> memory used for communication with the hypervisor is DMA memory.
+> 
+> Let us introduce one global pool for cio.
+> 
+> Our DMA pools are implemented as a gen_pool backed with DMA pages. The
+> idea is to avoid each allocation effectively wasting a page, as we
+> typically allocate much less than PAGE_SIZE.
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+> ---
+>  arch/s390/Kconfig           |   1 +
+>  arch/s390/include/asm/cio.h |  11 +++
+>  drivers/s390/cio/css.c      | 131 ++++++++++++++++++++++++++++++++++--
+>  3 files changed, 139 insertions(+), 4 deletions(-)
 
-> +		cpu = cpumask_next(smp_processor_id(), cpumask);
-> +		if (cpu >= nr_cpu_ids) {
-> +			cpu = cpumask_first(cpumask);
-> +			if (cpu == smp_processor_id())
-> +				return;
+(...)
 
-If this function is passed an empty cpumask, the above will result in
-'cpu == nr_cpu_ids' and the below might be unhappy with that.
+> +void cio_gp_dma_destroy(struct gen_pool *gp_dma, struct device *dma_dev)
+> +{
+> +	if (!gp_dma)
+> +		return;
+> +	/* this is qite ugly but no better idea */
 
-(FWIW we do have cpumask_next_wrap(), but I admit it is somewhat awkward
-to use)
+typo: s/qite/quite/
 
-> +		}
-> +		if (arch_vcpu_is_preempted(cpu))
-> +			smp_yield_cpu(cpu);
->  	}
->  }
->  EXPORT_SYMBOL(cpu_relax_yield);
+> +	gen_pool_for_each_chunk(gp_dma, __gp_dma_free_dma, dma_dev);
+> +	gen_pool_destroy(gp_dma);
+> +}
+
+(...)
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
