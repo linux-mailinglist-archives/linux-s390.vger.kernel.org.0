@@ -2,261 +2,166 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A72E63D26D
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2019 18:38:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C2BD3D439
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Jun 2019 19:31:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2405655AbfFKQi1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Jun 2019 12:38:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51390 "EHLO
+        id S2406172AbfFKRbh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Jun 2019 13:31:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56870 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2404758AbfFKQiU (ORCPT
+        by vger.kernel.org with ESMTP id S2406313AbfFKRbh (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 11 Jun 2019 12:38:20 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BGR8Bs058788
-        for <linux-s390@vger.kernel.org>; Tue, 11 Jun 2019 12:38:19 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t2cxr1gwt-1
+        Tue, 11 Jun 2019 13:31:37 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5BHJAlJ094562
+        for <linux-s390@vger.kernel.org>; Tue, 11 Jun 2019 13:31:36 -0400
+Received: from e13.ny.us.ibm.com (e13.ny.us.ibm.com [129.33.205.203])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t2eug5u1g-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 11 Jun 2019 12:38:18 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 11 Jun 2019 13:31:36 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Tue, 11 Jun 2019 17:38:14 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e13.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <leonardo@linux.ibm.com>;
+        Tue, 11 Jun 2019 18:31:35 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e13.ny.us.ibm.com (146.89.104.200) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Jun 2019 17:38:11 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BGc9dU21364978
+        Tue, 11 Jun 2019 18:31:27 +0100
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5BHVPUl15401272
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Jun 2019 16:38:09 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 729B74C050;
-        Tue, 11 Jun 2019 16:38:09 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E3C34C058;
-        Tue, 11 Jun 2019 16:38:09 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 Jun 2019 16:38:09 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Tue, 11 Jun 2019 17:31:25 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5393F112061;
+        Tue, 11 Jun 2019 17:31:25 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89B10112065;
+        Tue, 11 Jun 2019 17:31:18 +0000 (GMT)
+Received: from leobras.br.ibm.com (unknown [9.86.24.233])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 11 Jun 2019 17:31:18 +0000 (GMT)
+Subject: Re: [RFC V3] mm: Generalize and rename notify_page_fault() as
+ kprobe_page_fault()
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Michal Hocko <mhocko@suse.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 13/13] s390/qeth: allocate a single cmd on read channel
-Date:   Tue, 11 Jun 2019 18:38:00 +0200
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190611163800.64730-1-jwi@linux.ibm.com>
-References: <20190611163800.64730-1-jwi@linux.ibm.com>
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>, x86@kernel.org,
+        Russell King <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Will Deacon <will.deacon@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Tony Luck <tony.luck@intel.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Date:   Tue, 11 Jun 2019 14:31:12 -0300
+In-Reply-To: <7b0a7afd-2776-0d95-19c5-3e15959744eb@arm.com>
+References: <1559903655-5609-1-git-send-email-anshuman.khandual@arm.com>
+         <ec764ff4-f68a-fce5-ac1e-a4664e1123c7@c-s.fr>
+         <97e9c9b3-89c8-d378-4730-841a900e6800@arm.com>
+         <8dd6168592437378ff4a7c204e0f2962d002b44f.camel@linux.ibm.com>
+         <7b0a7afd-2776-0d95-19c5-3e15959744eb@arm.com>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-+TvBOjv046XEorglXBMQ"
+User-Agent: Evolution 3.30.5 (3.30.5-1.fc29) 
+MIME-Version: 1.0
 X-TM-AS-GCONF: 00
-x-cbid: 19061116-0008-0000-0000-000002F2611D
+x-cbid: 19061117-0064-0000-0000-000003ECE701
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011247; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01216523; UDB=6.00639641; IPR=6.00997622;
+ MB=3.00027266; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-11 17:31:34
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061116-0009-0000-0000-0000225F5DB9
-Message-Id: <20190611163800.64730-14-jwi@linux.ibm.com>
+x-cbparentid: 19061117-0065-0000-0000-00003DDA7110
+Message-Id: <bec5983d50e37953b3962a6e53fca0a243c7158b.camel@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-11_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906110106
+ mlxlogscore=675 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906110111
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-We statically allocate 8 cmd buffers on the read channel, when the only
-IO left that's still using them is the long-running READ.
-Replace this with a single allocated cmd, that gets restarted whenever
-the READ completed.
 
-This introduces refcounting for allocated cmds, so that the READ cmd can
-survive the IO completion.
+--=-+TvBOjv046XEorglXBMQ
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core.h      |  7 ++++
- drivers/s390/net/qeth_core_main.c | 54 ++++++++++++++++++-------------
- drivers/s390/net/qeth_l2_main.c   |  1 -
- drivers/s390/net/qeth_l3_main.c   |  1 -
- 4 files changed, 39 insertions(+), 24 deletions(-)
+On Tue, 2019-06-11 at 10:44 +0530, Anshuman Khandual wrote:
+>=20
+> On 06/10/2019 08:57 PM, Leonardo Bras wrote:
+> > On Mon, 2019-06-10 at 08:09 +0530, Anshuman Khandual wrote:
+> > > > > +    /*
+> > > > > +     * To be potentially processing a kprobe fault and to be all=
+owed
+> > > > > +     * to call kprobe_running(), we have to be non-preemptible.
+> > > > > +     */
+> > > > > +    if (kprobes_built_in() && !preemptible() && !user_mode(regs)=
+) {
+> > > > > +        if (kprobe_running() && kprobe_fault_handler(regs, trap)=
+)
+> > > >=20
+> > > > don't need an 'if A if B', can do 'if A && B'
+> > >=20
+> > > Which will make it a very lengthy condition check.
+> >=20
+> > Well, is there any problem line-breaking the if condition?
+> >=20
+> > if (A && B && C &&
+> >     D && E )
+> >=20
+> > Also, if it's used only to decide the return value, maybe would be fine
+> > to do somethink like that:
+> >=20
+> > return (A && B && C &&
+> >         D && E );=20
+>=20
+> Got it. But as Dave and Matthew had pointed out earlier, the current x86
+> implementation has better readability. Hence will probably stick with it.
+>=20
+Sure, I agree with them. It's way more readable.
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 962945a63235..5bcdede5e955 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -579,6 +579,7 @@ struct qeth_channel;
- struct qeth_cmd_buffer {
- 	enum qeth_cmd_buffer_state state;
- 	unsigned int length;
-+	refcount_t ref_count;
- 	struct qeth_channel *channel;
- 	struct qeth_reply *reply;
- 	long timeout;
-@@ -588,6 +589,11 @@ struct qeth_cmd_buffer {
- 	void (*callback)(struct qeth_card *card, struct qeth_cmd_buffer *iob);
- };
- 
-+static inline void qeth_get_cmd(struct qeth_cmd_buffer *iob)
-+{
-+	refcount_inc(&iob->ref_count);
-+}
-+
- static inline struct qeth_ipa_cmd *__ipa_cmd(struct qeth_cmd_buffer *iob)
- {
- 	return (struct qeth_ipa_cmd *)(iob->data + IPA_PDU_HEADER_SIZE);
-@@ -771,6 +777,7 @@ struct qeth_card {
- 	enum qeth_card_states state;
- 	spinlock_t lock;
- 	struct ccwgroup_device *gdev;
-+	struct qeth_cmd_buffer *read_cmd;
- 	struct qeth_channel read;
- 	struct qeth_channel write;
- 	struct qeth_channel data;
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 11e6a3820421..fe3dfeaf5ceb 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -496,26 +496,21 @@ static void qeth_setup_ccw(struct ccw1 *ccw, u8 cmd_code, u8 flags, u32 len,
- 
- static int __qeth_issue_next_read(struct qeth_card *card)
- {
--	struct qeth_channel *channel = &card->read;
--	struct qeth_cmd_buffer *iob;
--	struct ccw1 *ccw;
-+	struct qeth_cmd_buffer *iob = card->read_cmd;
-+	struct qeth_channel *channel = iob->channel;
-+	struct ccw1 *ccw = __ccw_from_cmd(iob);
- 	int rc;
- 
- 	QETH_CARD_TEXT(card, 5, "issnxrd");
- 	if (channel->state != CH_STATE_UP)
- 		return -EIO;
--	iob = qeth_get_buffer(channel);
--	if (!iob) {
--		dev_warn(&card->gdev->dev, "The qeth device driver "
--			"failed to recover an error on the device\n");
--		QETH_DBF_MESSAGE(2, "issue_next_read on device %x failed: no iob available\n",
--				 CARD_DEVID(card));
--		return -ENOMEM;
--	}
- 
--	ccw = __ccw_from_cmd(iob);
--	qeth_setup_ccw(ccw, CCW_CMD_READ, 0, QETH_BUFSIZE, iob->data);
-+	memset(iob->data, 0, iob->length);
-+	qeth_setup_ccw(ccw, CCW_CMD_READ, 0, iob->length, iob->data);
- 	iob->callback = qeth_issue_next_read_cb;
-+	/* keep the cmd alive after completion: */
-+	qeth_get_cmd(iob);
-+
- 	QETH_CARD_TEXT(card, 6, "noirqpnd");
- 	rc = ccw_device_start(channel->ccwdev, ccw, (addr_t) iob, 0, 0);
- 	if (rc) {
-@@ -694,6 +689,16 @@ static int qeth_check_idx_response(struct qeth_card *card,
- 	return 0;
- }
- 
-+static void qeth_put_cmd(struct qeth_cmd_buffer *iob)
-+{
-+	if (refcount_dec_and_test(&iob->ref_count)) {
-+		if (iob->reply)
-+			qeth_put_reply(iob->reply);
-+		kfree(iob->data);
-+		kfree(iob);
-+	}
-+}
-+
- static struct qeth_cmd_buffer *__qeth_get_buffer(struct qeth_channel *channel)
- {
- 	__u8 index;
-@@ -720,10 +725,7 @@ void qeth_release_buffer(struct qeth_cmd_buffer *iob)
- 	unsigned long flags;
- 
- 	if (iob->state == BUF_STATE_MALLOC) {
--		if (iob->reply)
--			qeth_put_reply(iob->reply);
--		kfree(iob->data);
--		kfree(iob);
-+		qeth_put_cmd(iob);
- 		return;
- 	}
- 
-@@ -787,6 +789,7 @@ static struct qeth_cmd_buffer *qeth_alloc_cmd(struct qeth_channel *channel,
- 	}
- 
- 	iob->state = BUF_STATE_MALLOC;
-+	refcount_set(&iob->ref_count, 1);
- 	iob->channel = channel;
- 	iob->timeout = timeout;
- 	iob->length = length;
-@@ -1445,10 +1448,14 @@ static struct qeth_card *qeth_alloc_card(struct ccwgroup_device *gdev)
- 						 dev_name(&gdev->dev));
- 	if (!card->event_wq)
- 		goto out_wq;
--	if (qeth_setup_channel(&card->read, true))
--		goto out_ip;
-+
-+	card->read_cmd = qeth_alloc_cmd(&card->read, QETH_BUFSIZE, 1, 0);
-+	if (!card->read_cmd)
-+		goto out_read_cmd;
-+	if (qeth_setup_channel(&card->read, false))
-+		goto out_read;
- 	if (qeth_setup_channel(&card->write, true))
--		goto out_channel;
-+		goto out_write;
- 	if (qeth_setup_channel(&card->data, false))
- 		goto out_data;
- 	card->qeth_service_level.seq_print = qeth_core_sl_print;
-@@ -1457,9 +1464,11 @@ static struct qeth_card *qeth_alloc_card(struct ccwgroup_device *gdev)
- 
- out_data:
- 	qeth_clean_channel(&card->write);
--out_channel:
-+out_write:
- 	qeth_clean_channel(&card->read);
--out_ip:
-+out_read:
-+	qeth_release_buffer(card->read_cmd);
-+out_read_cmd:
- 	destroy_workqueue(card->event_wq);
- out_wq:
- 	dev_set_drvdata(&gdev->dev, NULL);
-@@ -4892,6 +4901,7 @@ static void qeth_core_free_card(struct qeth_card *card)
- 	qeth_clean_channel(&card->read);
- 	qeth_clean_channel(&card->write);
- 	qeth_clean_channel(&card->data);
-+	qeth_release_buffer(card->read_cmd);
- 	destroy_workqueue(card->event_wq);
- 	qeth_free_qdio_queues(card);
- 	unregister_service_level(&card->qeth_service_level);
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index e1b25084dcd4..9565ef9747c1 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -292,7 +292,6 @@ static void qeth_l2_stop_card(struct qeth_card *card)
- 		card->state = CARD_STATE_DOWN;
- 	}
- 
--	qeth_clear_cmd_buffers(&card->read);
- 	qeth_clear_cmd_buffers(&card->write);
- 	flush_workqueue(card->event_wq);
- 	card->info.mac_bits &= ~QETH_LAYER2_MAC_REGISTERED;
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 15758f45837d..4d66f9556451 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -1436,7 +1436,6 @@ static void qeth_l3_stop_card(struct qeth_card *card)
- 		card->state = CARD_STATE_DOWN;
- 	}
- 
--	qeth_clear_cmd_buffers(&card->read);
- 	qeth_clear_cmd_buffers(&card->write);
- 	flush_workqueue(card->event_wq);
- }
--- 
-2.17.1
+--=-+TvBOjv046XEorglXBMQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEMdeUgIzgjf6YmUyOlQYWtz9SttQFAlz/5WAACgkQlQYWtz9S
+ttSg4A/6A45T2BOxIm5qp+PJ+LwF0fbX0ZI762cE3X6nXDk5fJuRrjyQifBfrD0V
+IVWSUrnOXqarYOmPT3CxT33rW05vGtDWObX+OI6J/QW6qU7jSOD1Db1ZUHL0W3WL
+7B27RA3gNmEMugnjmM+JvtMkf5SwTdk3ZLr2IA22revoOBxOF5b8iICzA0HfaXg6
+8lFSegTY8C2nNQipkeSS4d3KiObNEA1TVJUFqhwJ/VA6qYMnOpKD6WR58QCOxFaF
+NIP4ln+HJccwleioGnQ+Q7jFGRD8Hb9zqLKNccpN1MfuZdE9OXcbFB5MXVuPyE/h
+JVYbITwMXbIxpZe8o6/Yoc875Tz1phA2GeprZlEF3FDbw/tH0tyb6U5o+8UNpOXp
+YdrNxy1oJRK6ZzhW0+FqgMJVo/BBh/8OV3r9ECwYxR3o8ELPVFAcyqrx2XEU7E6p
+fBWN/cYXuZFizM0/b2yKd3kO/JIemEdz58/aPOTgJevEb996p7JohS8H8/3lm4gu
+VcnlAsH9ivKDmkoFzz6JuXWJB19OSohPW8j2p9fqP5LA5snz8o+ehsewTjaVQsPJ
+eNlp1HQzVumviM07wrZmXzVc0zoUb3YhWHrUL26xcfvtfDZVQ+gIOCH9baNsgcoe
+U0uI1HQuuUreC4L10sgC2qrlYqbWMUmK5uj6T8fjTRaHlzP1UX8=
+=i2hD
+-----END PGP SIGNATURE-----
+
+--=-+TvBOjv046XEorglXBMQ--
 
