@@ -2,102 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C1E0B427EC
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 15:47:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DD40D427F1
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 15:48:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436724AbfFLNrK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jun 2019 09:47:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44188 "EHLO mx1.redhat.com"
+        id S2436827AbfFLNsd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Jun 2019 09:48:33 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56558 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2436660AbfFLNrJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:47:09 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S2436800AbfFLNsd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:48:33 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4188F307D965;
-        Wed, 12 Jun 2019 13:47:08 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 64D3D309703F;
+        Wed, 12 Jun 2019 13:48:28 +0000 (UTC)
 Received: from gondolin (ovpn-116-169.ams2.redhat.com [10.36.116.169])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D24AA60922;
-        Wed, 12 Jun 2019 13:46:58 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 15:46:55 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A82841001B13;
+        Wed, 12 Jun 2019 13:48:21 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 15:48:18 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        "Jason J. Herne" <jjherne@linux.ibm.com>
-Subject: Re: [PATCH v4 4/8] s390/airq: use DMA memory for adapter interrupts
-Message-ID: <20190612154655.1fcc2cd4.cohuck@redhat.com>
-In-Reply-To: <20190612153324.3dc6632c.pasic@linux.ibm.com>
-References: <20190606115127.55519-1-pasic@linux.ibm.com>
-        <20190606115127.55519-5-pasic@linux.ibm.com>
-        <20190611121721.61bf09b4.cohuck@redhat.com>
-        <20190611162721.67ca8932.pasic@linux.ibm.com>
-        <20190611181944.5bf2b953.cohuck@redhat.com>
-        <20190612023231.7da4908c.pasic@linux.ibm.com>
-        <20190612082127.3fd63091.cohuck@redhat.com>
-        <20190612153324.3dc6632c.pasic@linux.ibm.com>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>
+Subject: Re: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
+Message-ID: <20190612154818.69a02949.cohuck@redhat.com>
+In-Reply-To: <20190612133306.10231-1-david@redhat.com>
+References: <20190612133306.10231-1-david@redhat.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 12 Jun 2019 13:47:09 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 12 Jun 2019 13:48:33 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 12 Jun 2019 15:33:24 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
+On Wed, 12 Jun 2019 15:33:02 +0200
+David Hildenbrand <david@redhat.com> wrote:
 
-> On Wed, 12 Jun 2019 08:21:27 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
+> s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
+> -ENODEV in case HW support is not available.
 > 
-> > On Wed, 12 Jun 2019 02:32:31 +0200
-> > Halil Pasic <pasic@linux.ibm.com> wrote:
-> >   
-> > > On Tue, 11 Jun 2019 18:19:44 +0200
-> > > Cornelia Huck <cohuck@redhat.com> wrote:
-> > >     
-> > > > On Tue, 11 Jun 2019 16:27:21 +0200
-> > > > Halil Pasic <pasic@linux.ibm.com> wrote:    
-> >   
-> > > > > IMHO the cleanest thing to do at this stage is to check if the
-> > > > > airq_iv_cache is NULL and fail the allocation if it is (to preserve
-> > > > > previous behavior).      
-> > > > 
-> > > > That's probably the least invasive fix for now. Did you check whether
-> > > > any of the other dma pools this series introduces have a similar
-> > > > problem due to init not failing?
-> > > >      
-> > > 
-> > > Good question!
-> > > 
-> > > I did a quick check. virtio_ccw_init() should be OK, because we don't
-> > > register the driver if allocation fails, so the thing is going to end
-> > > up dysfunctional as expected.
-> > > 
-> > > If however cio_dma_pool_init() fails, then we end up with the same
-> > > problem with airqs, just on the !AIRQ_IV_CACHELINE code path. It can be
-> > > fixed analogously: make cio_dma_zalloc() fail all allocation if
-> > > cio_dma_pool_init() failed before.    
-> > 
-> > Ok, makes sense.  
+> Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
+> ignores this error properly.
 > 
-> v5 is out with the fixes. I have no ack/r-b from you for patch 4. Would
-> you like to give some, or should I proceed without?
+> v2 -> v3:
+> - "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
+> -- Also convert pkey_clr2protkey() as requested by Harald
 
-Please give this some more time, I will look at this later.
+Looks reasonable; my r-b still stands.
+
+> - Add r-b's (thanks!)
+> 
+> v1 -> v2:
+> - Include
+> -- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
+> -- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
+> -- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
+> 
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Harald Freudenberger <freude@linux.ibm.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> 
+> David Hildenbrand (4):
+>   s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
+> 
+>  arch/s390/crypto/ghash_s390.c  | 2 +-
+>  arch/s390/crypto/prng.c        | 4 ++--
+>  arch/s390/crypto/sha1_s390.c   | 2 +-
+>  arch/s390/crypto/sha256_s390.c | 2 +-
+>  arch/s390/crypto/sha512_s390.c | 2 +-
+>  drivers/s390/crypto/pkey_api.c | 8 ++++----
+>  6 files changed, 10 insertions(+), 10 deletions(-)
+> 
+
