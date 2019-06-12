@@ -2,100 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A54E427A6
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 15:33:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B17E2427AE
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 15:35:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439469AbfFLNdd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jun 2019 09:33:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41676 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406669AbfFLNdY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:33:24 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E57C3079B8E;
-        Wed, 12 Jun 2019 13:33:24 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-159.ams2.redhat.com [10.36.116.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 33495756EA;
-        Wed, 12 Jun 2019 13:33:21 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-        David Hildenbrand <david@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
+        id S1728845AbfFLNee (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Jun 2019 09:34:34 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43266 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726747AbfFLNed (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 12 Jun 2019 09:34:33 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CDILXe072644
+        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 09:34:32 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t2yr47nq2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 09:34:23 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Wed, 12 Jun 2019 14:33:46 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Jun 2019 14:33:43 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CDXfLL27263206
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 13:33:41 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB36252067;
+        Wed, 12 Jun 2019 13:33:41 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.26])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 458F252054;
+        Wed, 12 Jun 2019 13:33:41 +0000 (GMT)
+Date:   Wed, 12 Jun 2019 15:33:24 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH v3 4/4] s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
-Date:   Wed, 12 Jun 2019 15:33:06 +0200
-Message-Id: <20190612133306.10231-5-david@redhat.com>
-In-Reply-To: <20190612133306.10231-1-david@redhat.com>
-References: <20190612133306.10231-1-david@redhat.com>
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        "Jason J. Herne" <jjherne@linux.ibm.com>
+Subject: Re: [PATCH v4 4/8] s390/airq: use DMA memory for adapter interrupts
+In-Reply-To: <20190612082127.3fd63091.cohuck@redhat.com>
+References: <20190606115127.55519-1-pasic@linux.ibm.com>
+        <20190606115127.55519-5-pasic@linux.ibm.com>
+        <20190611121721.61bf09b4.cohuck@redhat.com>
+        <20190611162721.67ca8932.pasic@linux.ibm.com>
+        <20190611181944.5bf2b953.cohuck@redhat.com>
+        <20190612023231.7da4908c.pasic@linux.ibm.com>
+        <20190612082127.3fd63091.cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 12 Jun 2019 13:33:24 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19061213-0012-0000-0000-000003287F9E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061213-0013-0000-0000-000021618793
+Message-Id: <20190612153324.3dc6632c.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=833 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906120092
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's use the error value that is typically used if HW support is not
-available when trying to load a module - this is also what systemd's
-systemd-modules-load.service expects.
+On Wed, 12 Jun 2019 08:21:27 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/s390/crypto/sha1_s390.c   | 2 +-
- arch/s390/crypto/sha256_s390.c | 2 +-
- arch/s390/crypto/sha512_s390.c | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+> On Wed, 12 Jun 2019 02:32:31 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
+> 
+> > On Tue, 11 Jun 2019 18:19:44 +0200
+> > Cornelia Huck <cohuck@redhat.com> wrote:
+> >   
+> > > On Tue, 11 Jun 2019 16:27:21 +0200
+> > > Halil Pasic <pasic@linux.ibm.com> wrote:  
+> 
+> > > > IMHO the cleanest thing to do at this stage is to check if the
+> > > > airq_iv_cache is NULL and fail the allocation if it is (to preserve
+> > > > previous behavior).    
+> > > 
+> > > That's probably the least invasive fix for now. Did you check whether
+> > > any of the other dma pools this series introduces have a similar
+> > > problem due to init not failing?
+> > >    
+> > 
+> > Good question!
+> > 
+> > I did a quick check. virtio_ccw_init() should be OK, because we don't
+> > register the driver if allocation fails, so the thing is going to end
+> > up dysfunctional as expected.
+> > 
+> > If however cio_dma_pool_init() fails, then we end up with the same
+> > problem with airqs, just on the !AIRQ_IV_CACHELINE code path. It can be
+> > fixed analogously: make cio_dma_zalloc() fail all allocation if
+> > cio_dma_pool_init() failed before.  
+> 
+> Ok, makes sense.
 
-diff --git a/arch/s390/crypto/sha1_s390.c b/arch/s390/crypto/sha1_s390.c
-index 009572e8276d..7c15542d3685 100644
---- a/arch/s390/crypto/sha1_s390.c
-+++ b/arch/s390/crypto/sha1_s390.c
-@@ -86,7 +86,7 @@ static struct shash_alg alg = {
- static int __init sha1_s390_init(void)
- {
- 	if (!cpacf_query_func(CPACF_KIMD, CPACF_KIMD_SHA_1))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 	return crypto_register_shash(&alg);
- }
- 
-diff --git a/arch/s390/crypto/sha256_s390.c b/arch/s390/crypto/sha256_s390.c
-index 62833a1d8724..af7505148f80 100644
---- a/arch/s390/crypto/sha256_s390.c
-+++ b/arch/s390/crypto/sha256_s390.c
-@@ -117,7 +117,7 @@ static int __init sha256_s390_init(void)
- 	int ret;
- 
- 	if (!cpacf_query_func(CPACF_KIMD, CPACF_KIMD_SHA_256))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 	ret = crypto_register_shash(&sha256_alg);
- 	if (ret < 0)
- 		goto out;
-diff --git a/arch/s390/crypto/sha512_s390.c b/arch/s390/crypto/sha512_s390.c
-index be589c340d15..ad29db085a18 100644
---- a/arch/s390/crypto/sha512_s390.c
-+++ b/arch/s390/crypto/sha512_s390.c
-@@ -127,7 +127,7 @@ static int __init init(void)
- 	int ret;
- 
- 	if (!cpacf_query_func(CPACF_KIMD, CPACF_KIMD_SHA_512))
--		return -EOPNOTSUPP;
-+		return -ENODEV;
- 	if ((ret = crypto_register_shash(&sha512_alg)) < 0)
- 		goto out;
- 	if ((ret = crypto_register_shash(&sha384_alg)) < 0)
--- 
-2.21.0
+v5 is out with the fixes. I have no ack/r-b from you for patch 4. Would
+you like to give some, or should I proceed without?
+
+Regards,
+Halil
 
