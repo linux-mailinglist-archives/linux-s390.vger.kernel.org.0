@@ -2,114 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E49F41C30
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 08:27:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 323BC41C3B
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 08:30:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731065AbfFLG07 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jun 2019 02:26:59 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:18137 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726010AbfFLG07 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Jun 2019 02:26:59 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 81C41E146AD85FC4BB65;
-        Wed, 12 Jun 2019 14:26:54 +0800 (CST)
-Received: from [127.0.0.1] (10.133.215.186) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Wed, 12 Jun 2019
- 14:26:46 +0800
-Subject: Re: [PATCH v8 2/7] x86/dma: use IS_ENABLED() to simplify the code
-To:     Borislav Petkov <bp@alien8.de>
-CC:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        John Garry <john.garry@huawei.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        linux-doc <linux-doc@vger.kernel.org>,
+        id S1731079AbfFLGa3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Jun 2019 02:30:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50222 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726010AbfFLGa3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 12 Jun 2019 02:30:29 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D94333082E71;
+        Wed, 12 Jun 2019 06:30:28 +0000 (UTC)
+Received: from gondolin (ovpn-116-169.ams2.redhat.com [10.36.116.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3B89948CFB;
+        Wed, 12 Jun 2019 06:30:21 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 08:30:17 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "Michael Ellerman" <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        x86 <x86@kernel.org>, linux-ia64 <linux-ia64@vger.kernel.org>,
-        Hanjun Guo <guohanjun@huawei.com>
-References: <20190530034831.4184-1-thunder.leizhen@huawei.com>
- <20190530034831.4184-3-thunder.leizhen@huawei.com>
- <20190612051624.GF32652@zn.tnic>
-From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <bd743433-73e9-3cf1-c159-4371abebd989@huawei.com>
-Date:   Wed, 12 Jun 2019 14:26:43 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        "Jason J. Herne" <jjherne@linux.ibm.com>
+Subject: Re: [PATCH v4 2/8] s390/cio: introduce DMA pools to cio
+Message-ID: <20190612083017.0cbbe17b.cohuck@redhat.com>
+In-Reply-To: <20190606115127.55519-3-pasic@linux.ibm.com>
+References: <20190606115127.55519-1-pasic@linux.ibm.com>
+        <20190606115127.55519-3-pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20190612051624.GF32652@zn.tnic>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.133.215.186]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Wed, 12 Jun 2019 06:30:29 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu,  6 Jun 2019 13:51:21 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
+[just looked at it in the context of failed init]
 
-On 2019/6/12 13:16, Borislav Petkov wrote:
-> On Thu, May 30, 2019 at 11:48:26AM +0800, Zhen Lei wrote:
->> This patch removes the ifdefs around CONFIG_IOMMU_DEFAULT_PASSTHROUGH to
->> improve readablity.
-> 
-> Avoid having "This patch" or "This commit" in the commit message. It is
-> tautologically useless.
+> +static void __gp_dma_free_dma(struct gen_pool *pool,
+> +			      struct gen_pool_chunk *chunk, void *data)
 
-OK, thanks.
+Just to note: the 'pool' is mandated by the api for this callback.
 
-> 
-> Also, do
-> 
-> $ git grep 'This patch' Documentation/process
-> 
-> for more details.
-> 
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  arch/x86/kernel/pci-dma.c | 7 ++-----
->>  1 file changed, 2 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/x86/kernel/pci-dma.c b/arch/x86/kernel/pci-dma.c
->> index dcd272dbd0a9330..9f2b19c35a060df 100644
->> --- a/arch/x86/kernel/pci-dma.c
->> +++ b/arch/x86/kernel/pci-dma.c
->> @@ -43,11 +43,8 @@
->>   * It is also possible to disable by default in kernel config, and enable with
->>   * iommu=nopt at boot time.
->>   */
->> -#ifdef CONFIG_IOMMU_DEFAULT_PASSTHROUGH
->> -int iommu_pass_through __read_mostly = 1;
->> -#else
->> -int iommu_pass_through __read_mostly;
->> -#endif
->> +int iommu_pass_through __read_mostly =
->> +			IS_ENABLED(CONFIG_IOMMU_DEFAULT_PASSTHROUGH);
-> 
-> Let that line stick out.
+> +{
+> +	size_t chunk_size = chunk->end_addr - chunk->start_addr + 1;
+> +
+> +	dma_free_coherent((struct device *) data, chunk_size,
+> +			 (void *) chunk->start_addr,
+> +			 (dma_addr_t) chunk->phys_addr);
+> +}
+> +
+> +void cio_gp_dma_destroy(struct gen_pool *gp_dma, struct device *dma_dev)
+> +{
+> +	if (!gp_dma)
+> +		return;
 
-OK, I will merge them on the same line.
+So this seems fine.
 
-> 
-> Thx.
-> 
+> +	/* this is qite ugly but no better idea */
+> +	gen_pool_for_each_chunk(gp_dma, __gp_dma_free_dma, dma_dev);
+> +	gen_pool_destroy(gp_dma);
+> +}
+> +
+> +static int cio_dma_pool_init(void)
+> +{
+> +	/* No need to free up the resources: compiled in */
+> +	cio_dma_pool = cio_gp_dma_create(cio_get_dma_css_dev(), 1);
+> +	if (!cio_dma_pool)
+> +		return -ENOMEM;
+> +	return 0;
+> +}
+> +
+> +void *cio_gp_dma_zalloc(struct gen_pool *gp_dma, struct device *dma_dev,
+> +			size_t size)
+> +{
+> +	dma_addr_t dma_addr;
+> +	unsigned long addr;
+> +	size_t chunk_size;
+> +
 
+I'd probably do a quick exit for !gp_dma here as well (just to be on
+the safe side).
+
+> +	addr = gen_pool_alloc(gp_dma, size);
+> +	while (!addr) {
+> +		chunk_size = round_up(size, PAGE_SIZE);
+> +		addr = (unsigned long) dma_alloc_coherent(dma_dev,
+> +					 chunk_size, &dma_addr, CIO_DMA_GFP);
+> +		if (!addr)
+> +			return NULL;
+> +		gen_pool_add_virt(gp_dma, addr, dma_addr, chunk_size, -1);
+> +		addr = gen_pool_alloc(gp_dma, size);
+> +	}
+> +	return (void *) addr;
+> +}
+> +
+> +void cio_gp_dma_free(struct gen_pool *gp_dma, void *cpu_addr, size_t size)
+> +{
+> +	if (!cpu_addr)
+> +		return;
+
+This already makes it safe enough.
+
+> +	memset(cpu_addr, 0, size);
+> +	gen_pool_free(gp_dma, (unsigned long) cpu_addr, size);
+> +}
+> +
+> +/*
+> + * Allocate dma memory from the css global pool. Intended for memory not
+> + * specific to any single device within the css. The allocated memory
+> + * is not guaranteed to be 31-bit addressable.
+> + *
+> + * Caution: Not suitable for early stuff like console.
+> + */
+> +void *cio_dma_zalloc(size_t size)
+> +{
+
+If you check in the called function, you do not need to check here.
+Probably a matter of taste.
+
+> +	return cio_gp_dma_zalloc(cio_dma_pool, cio_get_dma_css_dev(), size);
+> +}
+> +
+> +void cio_dma_free(void *cpu_addr, size_t size)
+> +{
+
+This one should be safe due to the check in the called function.
+
+> +	cio_gp_dma_free(cio_dma_pool, cpu_addr, size);
+> +}
+> +
+>  /*
+>   * Now that the driver core is running, we can setup our channel subsystem.
+>   * The struct subchannel's are created during probing.
