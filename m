@@ -2,102 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 72C0F4282D
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 15:57:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1968428C5
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 16:24:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436459AbfFLN5s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jun 2019 09:57:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2436673AbfFLN5r (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Jun 2019 09:57:47 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CDh8PV073043
-        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 09:57:46 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3242htww-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 09:57:46 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <freude@linux.ibm.com>;
-        Wed, 12 Jun 2019 14:57:42 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Jun 2019 14:57:40 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CDvbGs39059542
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 13:57:37 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCC7242047;
-        Wed, 12 Jun 2019 13:57:37 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09C7A4204C;
-        Wed, 12 Jun 2019 13:57:37 +0000 (GMT)
-Received: from [10.0.2.15] (unknown [9.145.62.239])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Jun 2019 13:57:36 +0000 (GMT)
-Subject: Re: [PATCH v9 4/4] s390: ap: kvm: Enable PQAP/AQIC facility for the
- guest
-To:     Pierre Morel <pmorel@linux.ibm.com>, borntraeger@de.ibm.com
-Cc:     alex.williamson@redhat.com, cohuck@redhat.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, frankja@linux.ibm.com, akrowiak@linux.ibm.com,
-        pasic@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, mimu@linux.ibm.com
-References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
- <1558452877-27822-5-git-send-email-pmorel@linux.ibm.com>
-From:   Harald Freudenberger <freude@linux.ibm.com>
-Date:   Wed, 12 Jun 2019 15:57:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S2407554AbfFLOYA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Jun 2019 10:24:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42708 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2407783AbfFLOYA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 12 Jun 2019 10:24:00 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 820E13079B8F;
+        Wed, 12 Jun 2019 14:23:59 +0000 (UTC)
+Received: from gondolin (ovpn-116-169.ams2.redhat.com [10.36.116.169])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE1D777DC8;
+        Wed, 12 Jun 2019 14:23:50 +0000 (UTC)
+Date:   Wed, 12 Jun 2019 16:23:48 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        "Jason J. Herne" <jjherne@linux.ibm.com>
+Subject: Re: [PATCH v5 2/8] s390/cio: introduce DMA pools to cio
+Message-ID: <20190612162348.0c43b806.cohuck@redhat.com>
+In-Reply-To: <20190612111236.99538-3-pasic@linux.ibm.com>
+References: <20190612111236.99538-1-pasic@linux.ibm.com>
+        <20190612111236.99538-3-pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <1558452877-27822-5-git-send-email-pmorel@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19061213-0012-0000-0000-00000328817C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061213-0013-0000-0000-000021618992
-Message-Id: <d9b32e45-43de-aff4-61ef-2b40bf84dcf1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120093
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 12 Jun 2019 14:24:00 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 21.05.19 17:34, Pierre Morel wrote:
-> AP Queue Interruption Control (AQIC) facility gives
-> the guest the possibility to control interruption for
-> the Cryptographic Adjunct Processor queues.
->
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  arch/s390/tools/gen_facilities.c | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
-> index 61ce5b5..aed14fc 100644
-> --- a/arch/s390/tools/gen_facilities.c
-> +++ b/arch/s390/tools/gen_facilities.c
-> @@ -114,6 +114,7 @@ static struct facility_def facility_defs[] = {
->  		.bits = (int[]){
->  			12, /* AP Query Configuration Information */
->  			15, /* AP Facilities Test */
-> +			65, /* AP Queue Interruption Control */
->  			156, /* etoken facility */
->  			-1  /* END */
->  		}
-acked-by: Harald Freudenberger <freude@linux.ibm.com>
+On Wed, 12 Jun 2019 13:12:30 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
+> To support protected virtualization cio will need to make sure the
+> memory used for communication with the hypervisor is DMA memory.
+> 
+> Let us introduce one global pool for cio.
+> 
+> Our DMA pools are implemented as a gen_pool backed with DMA pages. The
+> idea is to avoid each allocation effectively wasting a page, as we
+> typically allocate much less than PAGE_SIZE.
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> ---
+>  arch/s390/Kconfig           |   1 +
+>  arch/s390/include/asm/cio.h |  11 +++
+>  drivers/s390/cio/css.c      | 133 ++++++++++++++++++++++++++++++++++--
+>  3 files changed, 141 insertions(+), 4 deletions(-)
+
+Changes look good to me.
