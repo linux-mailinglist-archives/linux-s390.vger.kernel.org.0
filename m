@@ -2,160 +2,248 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF85D4237E
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 13:08:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A93AB42397
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 13:13:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404956AbfFLLIo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jun 2019 07:08:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37768 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406137AbfFLLIn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Jun 2019 07:08:43 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E9D273082131;
-        Wed, 12 Jun 2019 11:08:42 +0000 (UTC)
-Received: from [10.36.116.159] (ovpn-116-159.ams2.redhat.com [10.36.116.159])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C4F7F1001B01;
-        Wed, 12 Jun 2019 11:08:40 +0000 (UTC)
-Subject: Re: [PATCH v2 1/4] s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
-To:     Harald Freudenberger <freude@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1727633AbfFLLNF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Jun 2019 07:13:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45482 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725771AbfFLLNF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 12 Jun 2019 07:13:05 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CB9CHC113088
+        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 07:13:03 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t2w9p06nj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 07:13:03 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Wed, 12 Jun 2019 12:13:01 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Jun 2019 12:12:59 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CBCoAJ35717562
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 11:12:50 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6B2A042045;
+        Wed, 12 Jun 2019 11:12:57 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC67842042;
+        Wed, 12 Jun 2019 11:12:56 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 12 Jun 2019 11:12:56 +0000 (GMT)
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        virtualization@lists.linux-foundation.org,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Thomas Huth <thuth@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-References: <20190612102248.18903-1-david@redhat.com>
- <20190612102248.18903-2-david@redhat.com>
- <7f313d87-f9ea-e291-49e2-8da29cf41680@linux.ibm.com>
- <53936c66-ca09-98a7-4c3c-eae8c6024887@redhat.com>
- <dcdf0d42-3a39-53aa-188a-82895c86cc34@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <c7c81266-fec1-3961-7445-c595a3588d3d@redhat.com>
-Date:   Wed, 12 Jun 2019 13:08:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <dcdf0d42-3a39-53aa-188a-82895c86cc34@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 12 Jun 2019 11:08:43 +0000 (UTC)
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        "Jason J. Herne" <jjherne@linux.ibm.com>
+Subject: [PATCH v5 0/8] s390: virtio: support protected virtualization
+Date:   Wed, 12 Jun 2019 13:12:28 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19061211-0008-0000-0000-000002F315C4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061211-0009-0000-0000-00002260170D
+Message-Id: <20190612111236.99538-1-pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906120078
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12.06.19 13:07, Harald Freudenberger wrote:
-> On 12.06.19 12:41, David Hildenbrand wrote:
->> On 12.06.19 12:39, Harald Freudenberger wrote:
->>> On 12.06.19 12:22, David Hildenbrand wrote:
->>>> systemd-modules-load.service automatically tries to load the pkey module
->>>> on systems that have MSA.
->>>>
->>>> Pkey also requires the MSA3 facility and a bunch of subfunctions.
->>>> Failing with -EOPNOTSUPP makes "systemd-modules-load.service" fail on
->>>> any system that does not have all needed subfunctions. For example,
->>>> when running under QEMU TCG (but also on systems where protected keys
->>>> are disabled via the HMC).
->>>>
->>>> Let's use -ENODEV, so systemd-modules-load.service properly ignores
->>>> failing to load the pkey module because of missing HW functionality.
->>>>
->>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>>> Signed-off-by: David Hildenbrand <david@redhat.com>
->>>> ---
->>>>  drivers/s390/crypto/pkey_api.c | 6 +++---
->>>>  1 file changed, 3 insertions(+), 3 deletions(-)
->>>>
->>>> diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
->>>> index 45eb0c14b880..ddfcefb47284 100644
->>>> --- a/drivers/s390/crypto/pkey_api.c
->>>> +++ b/drivers/s390/crypto/pkey_api.c
->>>> @@ -1695,15 +1695,15 @@ static int __init pkey_init(void)
->>>>  	 * are able to work with protected keys.
->>>>  	 */
->>>>  	if (!cpacf_query(CPACF_PCKMO, &pckmo_functions))
->>>> -		return -EOPNOTSUPP;
->>>> +		return -ENODEV;
->>>>  
->>>>  	/* check for kmc instructions available */
->>>>  	if (!cpacf_query(CPACF_KMC, &kmc_functions))
->>>> -		return -EOPNOTSUPP;
->>>> +		return -ENODEV;
->>>>  	if (!cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_128) ||
->>>>  	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_192) ||
->>>>  	    !cpacf_test_func(&kmc_functions, CPACF_KMC_PAES_256))
->>>> -		return -EOPNOTSUPP;
->>>> +		return -ENODEV;
->>>>  
->>>>  	pkey_debug_init();
->>>>  
->>> You missed one match in this file. Function pkey_clr2protkey()
->>> also does a cpacf_test_func() and may return -EOPNOTSUPP.
->>> I checked the call chain, it's save to change the returncode there also.
->> That's unrelated to module loading (if I am not wrong), shall we still
->> include this change here?
->>
->> Thanks!
-> That would be nice.
-> However, I agree it is not related to module loading.
+Enhanced virtualization protection technology may require the use of
+bounce buffers for I/O. While support for this was built into the virtio
+core, virtio-ccw wasn't changed accordingly.
 
-I can include that, thanks!
+Some background on technology (not part of this series) and the
+terminology used.
 
+* Protected Virtualization (PV):
+
+Protected Virtualization guarantees, that non-shared memory of a  guest
+that operates in PV mode private to that guest. I.e. any attempts by the
+hypervisor or other guests to access it will result in an exception. If
+supported by the environment (machine, KVM, guest VM) a guest can decide
+to change into PV mode by doing the appropriate ultravisor calls.
+
+* Ultravisor:
+
+A hardware/firmware entity that manages PV guests, and polices access to
+their memory. A PV guest prospect needs to interact with the ultravisor,
+to enter PV mode, and potentially to share pages (for I/O which should
+be encrypted by the guest). A guest interacts with the ultravisor via so
+called ultravisor calls. A hypervisor needs to interact with the
+ultravisor to facilitate interpretation, emulation and swapping. A
+hypervisor  interacts with the ultravisor via ultravisor calls and via
+the SIE state description. Generally the ultravisor sanitizes hypervisor
+inputs so that the guest can not be corrupted (except for denial of
+service.
+
+
+What needs to be done
+=====================
+
+Thus what needs to be done to bring virtio-ccw up to speed with respect
+to protected virtualization is:
+* use some 'new' common virtio stuff
+* make sure that virtio-ccw specific stuff uses shared memory when
+  talking to the hypervisor (except control/communication blocks like ORB,
+  these are handled by the ultravisor)
+* make sure the DMA API does what is necessary to talk through shared
+  memory if we are a protected virtualization guest.
+* make sure the common IO layer plays along as well (airqs, sense).
+
+
+Important notes
+================
+
+* This patch set is based on Martins features branch
+ (git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git branch
+ 'features').
+
+* Documentation is still very sketchy. I'm committed to improving this,
+  but I'm currently hampered by some dependencies currently.  
+
+* The existing naming in the common infrastructure (kernel internal
+  interfaces) is pretty much based on the AMD SEV terminology. Thus the
+  names aren't always perfect. There might be merit to changing these
+  names to more abstract ones. I did not put much thought into that at
+  the current stage.
+
+* Testing: Please use iommu_platform=on for any virtio devices you are
+  going to test this code with (so virtio actually uses the DMA API).
+
+@Sebastian: I kept your r-b on patch 2 "s390/cio: introduce DMA pools to
+cio" despite the small changes pointed out below. Please do complain if
+it ain't OK for you!
+
+Change log
+==========
+
+v4 --> v5:
+* work around dma_pool API not tolerating NULL dma pool (patch 4)
+* make the genpool based dma pools API  tolerate NULL genpool (patch 2)
+* fix typo (patch 2)
+* fix unintended code move (patch 7)
+* add more r-b's
+
+
+
+v3 --> v4
+* fixed cleanup in css_bus_init() (Connie)
+* made cio.h include genalloc.h instead of a forward declaration
+  (Connie)
+* added comments about dma_mask/coherent_dma_mask values (Connie)
+* fixed error handling in virtio_ccw_init() (Connie)
+* got rid of the *vc_dma* wrappers (Connie)
+* added some Reviewed-bys
+* rebased on top of current master, no changes were necessary
+
+v2 --> v3:
+* patch 2/8
+    potential cio_dma_pool_init() returning NULL issue fixed
+    potential cio_gp_dma_create() returning NULL issue fixed
+    warning issues with doc type comments fixed
+    unused define statement removed 
+* patch 3/8
+    potential cio_gp_dma_create() returning NULL issue fixed
+    whitespace issue fixed
+    warning issues with doc type comments fixed
+* patch 8/8
+    potential cio_dma_zalloc() returning NULL issue fixed
+
+v1 --> v2:
+* patch "virtio/s390: use vring_create_virtqueue" went already upstream
+* patch "virtio/s390: DMA support for virtio-ccw" went already upstream
+* patch "virtio/s390: enable packed ring" went already upstream
+* Made dev.dma_mask point to dev.coherent_dma_mask for css, subchannel
+  and ccw devices.
+* While rebasing 's390/airq: use DMA memory for adapter interrupts' the
+  newly introduced kmem_cache  was replaced with an equivalent dma_pool;
+  the kalloc() allocations are now replaced with cio_dma_zalloc()
+  allocations to avoid wasting almost a full page.
+* Made virtio-ccw use the new AIRQ_IV_CACHELINE flag.
+* fixed all remaining checkpatch issues
+
+RFC --> v1:
+* Fixed bugs found by Connie (may_reduce and handling reduced,  warning,
+  split move -- thanks Connie!).
+* Fixed console bug found by Sebastian (thanks Sebastian!).
+* Removed the completely useless duplicate of dma-mapping.h spotted by
+  Christoph (thanks Christoph!).
+* Don't use the global DMA pool for subchannel and ccw device
+  owned memory as requested by Sebastian. Consequences:
+	* Both subchannel and ccw devices have their dma masks
+	now (both specifying 31 bit addressable)
+	* We require at least 2 DMA pages per ccw device now, most of
+	this memory is wasted though.
+	* DMA memory allocated by virtio is also 31 bit addressable now
+        as virtio uses the parent (which is the ccw device).
+* Enabled packed ring.
+* Rebased onto Martins feature branch; using the actual uv (ultravisor)
+  interface instead of TODO comments.
+* Added some explanations to the cover letter (Connie, David).
+* Squashed a couple of patches together and fixed some text stuff. 
+
+Halil Pasic (8):
+  s390/mm: force swiotlb for protected virtualization
+  s390/cio: introduce DMA pools to cio
+  s390/cio: add basic protected virtualization support
+  s390/airq: use DMA memory for adapter interrupts
+  virtio/s390: use cacheline aligned airq bit vectors
+  virtio/s390: add indirection to indicators access
+  virtio/s390: use DMA memory for ccw I/O and classic notifiers
+  virtio/s390: make airq summary indicators DMA
+
+ arch/s390/Kconfig                   |   5 +
+ arch/s390/include/asm/airq.h        |   2 +
+ arch/s390/include/asm/ccwdev.h      |   4 +
+ arch/s390/include/asm/cio.h         |  11 ++
+ arch/s390/include/asm/mem_encrypt.h |  18 ++
+ arch/s390/mm/init.c                 |  47 ++++++
+ drivers/s390/cio/airq.c             |  37 +++--
+ drivers/s390/cio/ccwreq.c           |   9 +-
+ drivers/s390/cio/cio.h              |   2 +
+ drivers/s390/cio/css.c              | 134 ++++++++++++++-
+ drivers/s390/cio/device.c           |  68 ++++++--
+ drivers/s390/cio/device_fsm.c       |  49 +++---
+ drivers/s390/cio/device_id.c        |  20 ++-
+ drivers/s390/cio/device_ops.c       |  21 ++-
+ drivers/s390/cio/device_pgid.c      |  22 +--
+ drivers/s390/cio/device_status.c    |  24 +--
+ drivers/s390/cio/io_sch.h           |  20 ++-
+ drivers/s390/virtio/virtio_ccw.c    | 246 +++++++++++++++-------------
+ 18 files changed, 538 insertions(+), 201 deletions(-)
+ create mode 100644 arch/s390/include/asm/mem_encrypt.h
 
 -- 
+2.17.1
 
-Thanks,
-
-David / dhildenb
