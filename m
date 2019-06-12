@@ -2,146 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DF5504296A
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 16:35:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D15242A60
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 17:09:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbfFLOfM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jun 2019 10:35:12 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57486 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726840AbfFLOfM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Jun 2019 10:35:12 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A73D9772F9;
-        Wed, 12 Jun 2019 14:35:11 +0000 (UTC)
-Received: from gondolin (ovpn-116-169.ams2.redhat.com [10.36.116.169])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 272F46061E;
-        Wed, 12 Jun 2019 14:35:03 +0000 (UTC)
-Date:   Wed, 12 Jun 2019 16:35:01 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        id S2439959AbfFLPJN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Jun 2019 11:09:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49626 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2439910AbfFLPJN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 12 Jun 2019 11:09:13 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CF4Q8n123231
+        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 11:09:12 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t32s6bbb1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 11:09:11 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 12 Jun 2019 16:09:09 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 12 Jun 2019 16:08:53 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CF8qKU27787328
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 12 Jun 2019 15:08:52 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 214F85204E;
+        Wed, 12 Jun 2019 15:08:52 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id AFDCF52052;
+        Wed, 12 Jun 2019 15:08:51 +0000 (GMT)
+Date:   Wed, 12 Jun 2019 17:08:50 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        "David S. Miller" <davem@davemloft.net>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        "Jason J. Herne" <jjherne@linux.ibm.com>
-Subject: Re: [PATCH v5 4/8] s390/airq: use DMA memory for adapter interrupts
-Message-ID: <20190612163501.45a050b0.cohuck@redhat.com>
-In-Reply-To: <20190612111236.99538-5-pasic@linux.ibm.com>
-References: <20190612111236.99538-1-pasic@linux.ibm.com>
-        <20190612111236.99538-5-pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
+References: <20190612133306.10231-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 12 Jun 2019 14:35:11 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612133306.10231-1-david@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19061215-0008-0000-0000-000002F327F4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061215-0009-0000-0000-000022602A52
+Message-Id: <20190612150850.GA4038@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=884 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906120101
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 12 Jun 2019 13:12:32 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
-
-> Protected virtualization guests have to use shared pages for airq
-> notifier bit vectors, because hypervisor needs to write these bits.
+On Wed, Jun 12, 2019 at 03:33:02PM +0200, David Hildenbrand wrote:
+> s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
+> -ENODEV in case HW support is not available.
 > 
-> Let us make sure we allocate DMA memory for the notifier bit vectors by
-> replacing the kmem_cache with a dma_cache and kalloc() with
-> cio_dma_zalloc().
+> Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
+> ignores this error properly.
 > 
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-> ---
->  arch/s390/include/asm/airq.h |  2 ++
->  drivers/s390/cio/airq.c      | 37 ++++++++++++++++++++++--------------
->  drivers/s390/cio/cio.h       |  2 ++
->  drivers/s390/cio/css.c       |  1 +
->  4 files changed, 28 insertions(+), 14 deletions(-)
+> v2 -> v3:
+> - "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
+> -- Also convert pkey_clr2protkey() as requested by Harald
+> - Add r-b's (thanks!)
 > 
+> v1 -> v2:
+> - Include
+> -- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
+> -- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
+> -- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
+> 
+> Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Harald Freudenberger <freude@linux.ibm.com>
+> Cc: Cornelia Huck <cohuck@redhat.com>
+> 
+> David Hildenbrand (4):
+>   s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
+>   s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
 
-(...)
+Should I pick these up so they can go upstream via the s390 tree?
 
->  /**
->   * airq_iv_create - create an interrupt vector
->   * @bits: number of bits in the interrupt vector
-> @@ -132,17 +139,19 @@ struct airq_iv *airq_iv_create(unsigned long bits, unsigned long flags)
->  		goto out;
->  	iv->bits = bits;
->  	iv->flags = flags;
-> -	size = BITS_TO_LONGS(bits) * sizeof(unsigned long);
-> +	size = iv_size(bits);
->  
->  	if (flags & AIRQ_IV_CACHELINE) {
-> -		if ((cache_line_size() * BITS_PER_BYTE) < bits)
-> +		if ((cache_line_size() * BITS_PER_BYTE) < bits
-> +				|| !airq_iv_cache)
-
-I still think squashing this into the same if statement is a bit ugly,
-but not really an issue.
-
->  			goto out_free;
->  
-> -		iv->vector = kmem_cache_zalloc(airq_iv_cache, GFP_KERNEL);
-> +		iv->vector = dma_pool_zalloc(airq_iv_cache, GFP_KERNEL,
-> +					     &iv->vector_dma);
->  		if (!iv->vector)
->  			goto out_free;
->  	} else {
-> -		iv->vector = kzalloc(size, GFP_KERNEL);
-> +		iv->vector = cio_dma_zalloc(size);
->  		if (!iv->vector)
->  			goto out_free;
->  	}
-
-(...)
-
-> diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-> index 06a91743335a..4d6c7d16416e 100644
-> --- a/drivers/s390/cio/cio.h
-> +++ b/drivers/s390/cio/cio.h
-> @@ -135,6 +135,8 @@ extern int cio_commit_config(struct subchannel *sch);
->  int cio_tm_start_key(struct subchannel *sch, struct tcw *tcw, u8 lpm, u8 key);
->  int cio_tm_intrg(struct subchannel *sch);
->  
-> +extern int __init airq_init(void);
-> +
->  /* Use with care. */
->  #ifdef CONFIG_CCW_CONSOLE
->  extern struct subchannel *cio_probe_console(void);
-> diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-> index e0f19f1e82a0..1b867c941b86 100644
-> --- a/drivers/s390/cio/css.c
-> +++ b/drivers/s390/cio/css.c
-> @@ -1184,6 +1184,7 @@ static int __init css_bus_init(void)
->  	ret = cio_dma_pool_init();
->  	if (ret)
->  		goto out_unregister_pmn;
-> +	airq_init();
-
-Ignoring the return code here does not really hurt right now, but we
-probably want to change that if we want to consider failures in css
-initialization to be fatal.
-
->  	css_init_done = 1;
->  
->  	/* Enable default isc for I/O subchannels. */
-
-On the whole, not really anything that needs changes right now, so have
-a
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
