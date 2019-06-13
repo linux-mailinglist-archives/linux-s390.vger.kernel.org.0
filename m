@@ -2,72 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4200843939
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 17:12:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C6C41438D4
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 17:09:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732525AbfFMPMT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jun 2019 11:12:19 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50584 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732286AbfFMNtM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Jun 2019 09:49:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=K3KSbmQVJmhgaolOXqN5jC7ueDvgBWUaym2beuTKQRM=; b=DinTrsufwYtZHErmCGkaFeASA
-        aVkny4bZYVbium2ZfOuKEEE8OUINrp31PJgKc09WyfN5syWyQ4Qzkqoc+9Di1xO0MTtqT7I2bdpHb
-        ZKg1Xg5iQ4S9MAWHCVzYTlQSMheCPUDg3SXhw3EjhdpMJdzvON1dcduU4J+tvwFlFzsqBPs1TGcYR
-        bHxcRRlD7nZR3eSlt2t7jUyYXhnLsY3Q1Fpjm+CayodVN3GTNDdWoMha9z/WwcjcdUgx2DXscNCKP
-        yMkr41g4hi9aHKTWebr9a0O6qr2afDMgiqKJYGFmOkSJ3gg6Rx5N1fKcs5ocDBIt5Hz4zTUPlZFzX
-        9Wg4OiTCw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hbQ68-0007xY-J5; Thu, 13 Jun 2019 13:49:00 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D892420316592; Thu, 13 Jun 2019 15:48:58 +0200 (CEST)
-Date:   Thu, 13 Jun 2019 15:48:58 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1732371AbfFMPJC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jun 2019 11:09:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43832 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732367AbfFMN6h (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 13 Jun 2019 09:58:37 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DDrgZ0107809
+        for <linux-s390@vger.kernel.org>; Thu, 13 Jun 2019 09:58:36 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t3q91sxuy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 13 Jun 2019 09:58:35 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Thu, 13 Jun 2019 14:58:34 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Jun 2019 14:58:30 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DDwTsi54263852
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 13:58:29 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58AE252057;
+        Thu, 13 Jun 2019 13:58:29 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 0F37A52054;
+        Thu, 13 Jun 2019 13:58:29 +0000 (GMT)
+Date:   Thu, 13 Jun 2019 15:58:27 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCHv2 0/3] improve wait logic of stop_machine
-Message-ID: <20190613134858.GL3436@hirez.programming.kicks-ass.net>
-References: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
+        Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PULL 1/1] vfio-ccw: Destroy kmem cache region on module exit
+References: <20190612101645.9439-1-cohuck@redhat.com>
+ <20190612101645.9439-2-cohuck@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190613103510.60529-1-heiko.carstens@de.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190612101645.9439-2-cohuck@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19061313-0008-0000-0000-000002F3799E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061313-0009-0000-0000-000022608001
+Message-Id: <20190613135827.GA30929@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=5 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130106
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jun 13, 2019 at 12:35:07PM +0200, Heiko Carstens wrote:
-> Heiko Carstens (2):
->   processor: remove spin_cpu_yield
->   processor: get rid of cpu_relax_yield
+On Wed, Jun 12, 2019 at 12:16:45PM +0200, Cornelia Huck wrote:
+> From: Farhan Ali <alifm@linux.ibm.com>
 > 
-> Martin Schwidefsky (1):
->   s390: improve wait logic of stop_machine
+> Free the vfio_ccw_cmd_region on module exit.
 > 
->  arch/powerpc/include/asm/processor.h |  2 --
->  arch/s390/include/asm/processor.h    |  7 +------
->  arch/s390/kernel/processor.c         | 19 +++++++++++++------
->  arch/s390/kernel/smp.c               |  2 +-
->  include/linux/processor.h            |  9 ---------
->  include/linux/sched.h                |  4 ----
->  include/linux/stop_machine.h         |  1 +
->  kernel/stop_machine.c                | 19 ++++++++++++++-----
->  8 files changed, 30 insertions(+), 33 deletions(-)
+> Fixes: d5afd5d135c8 ("vfio-ccw: add handling for async channel instructions")
+> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+> Message-Id: <c0f39039d28af39ea2939391bf005e3495d890fd.1559576250.git.alifm@linux.ibm.com>
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+> ---
+>  drivers/s390/cio/vfio_ccw_drv.c | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+> index 66a66ac1f3d1..9cee9f20d310 100644
+> --- a/drivers/s390/cio/vfio_ccw_drv.c
+> +++ b/drivers/s390/cio/vfio_ccw_drv.c
+> @@ -299,6 +299,7 @@ static void __exit vfio_ccw_sch_exit(void)
+>  	css_driver_unregister(&vfio_ccw_sch_driver);
+>  	isc_unregister(VFIO_CCW_ISC);
+>  	kmem_cache_destroy(vfio_ccw_io_region);
+> +	kmem_cache_destroy(vfio_ccw_cmd_region);
+>  	destroy_workqueue(vfio_ccw_work_q);
 
-Seems sensible to me.
+Applied to 'fixes' branch. Thanks!
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
