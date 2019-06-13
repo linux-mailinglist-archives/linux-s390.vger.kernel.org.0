@@ -2,135 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8E9C643AA9
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 17:23:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F2E344019
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 18:03:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732971AbfFMPWx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jun 2019 11:22:53 -0400
-Received: from foss.arm.com ([217.140.110.172]:42400 "EHLO foss.arm.com"
+        id S1728865AbfFMQDA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jun 2019 12:03:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41784 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731965AbfFMPWx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Jun 2019 11:22:53 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 765F6367;
-        Thu, 13 Jun 2019 08:22:52 -0700 (PDT)
-Received: from [10.1.196.72] (e119884-lin.cambridge.arm.com [10.1.196.72])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7915C3F718;
-        Thu, 13 Jun 2019 08:22:50 -0700 (PDT)
-Subject: Re: [PATCH v4 3/3] kselftest: Extend vDSO selftest to clock_getres
-From:   Vincenzo Frascino <vincenzo.frascino@arm.com>
-To:     Michael Ellerman <mpe@ellerman.id.au>, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kselftest@vger.kernel.org
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Arnd Bergmann <arnd@arndb.de>
-References: <20190523112116.19233-1-vincenzo.frascino@arm.com>
- <20190523112116.19233-4-vincenzo.frascino@arm.com>
- <87lfyrp0d2.fsf@concordia.ellerman.id.au>
- <afb7395f-43e9-c304-2db2-349e6727b687@arm.com>
-Message-ID: <5262a024-7af1-4792-ec74-4cb5f2b0e76c@arm.com>
-Date:   Thu, 13 Jun 2019 16:22:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S2389378AbfFMQCg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 13 Jun 2019 12:02:36 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2536D301E111;
+        Thu, 13 Jun 2019 16:02:36 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 33DED5E7A2;
+        Thu, 13 Jun 2019 16:02:35 +0000 (UTC)
+Date:   Thu, 13 Jun 2019 18:02:32 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v2 5/9] vfio-ccw: Rearrange pfn_array and
+ pfn_array_table arrays
+Message-ID: <20190613180232.3cbea661.cohuck@redhat.com>
+In-Reply-To: <20190606202831.44135-6-farman@linux.ibm.com>
+References: <20190606202831.44135-1-farman@linux.ibm.com>
+        <20190606202831.44135-6-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <afb7395f-43e9-c304-2db2-349e6727b687@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Thu, 13 Jun 2019 16:02:36 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Michael,
+On Thu,  6 Jun 2019 22:28:27 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
-I wanted to check with you if you had time to have a look at my new version (v5)
-of the patches with the fixed test, and if they are ready to be merged or if
-there is anything else I can do.
+> While processing a channel program, we currently have two nested
+> arrays that carry a slightly different structure.  The direct CCW
+> path creates this:
+> 
+>   ccwchain->pfn_array_table[1]->pfn_array[#pages]
+> 
+> while an IDA CCW creates:
+> 
+>   ccwchain->pfn_array_table[#idaws]->pfn_array[1]
+> 
+> The distinction appears to state that each pfn_array_table entry
+> points to an array of contiguous pages, represented by a pfn_array,
+> um, array.  Since the direct-addressed scenario can ONLY represent
+> contiguous pages, it makes the intermediate array necessary but
+> difficult to recognize.  Meanwhile, since an IDAL can contain
+> non-contiguous pages and there is no logic in vfio-ccw to detect
+> adjacent IDAWs, it is the second array that is necessary but appearing
+> to be superfluous.
+> 
+> I am not aware of any documentation that states the pfn_array[] needs
+> to be of contiguous pages; it is just what the code does today.
+> I don't see any reason for this either, let's just flip the IDA
+> codepath around so that it generates:
+> 
+>   ch_pat->pfn_array_table[1]->pfn_array[#idaws]
+> 
+> This will bring it in line with the direct-addressed codepath,
+> so that we can understand the behavior of this memory regardless
+> of what type of CCW is being processed.  And it means the casual
+> observer does not need to know/care whether the pfn_array[]
+> represents contiguous pages or not.
+> 
+> NB: The existing vfio-ccw code only supports 4K-block Format-2 IDAs,
+> so that "#pages" == "#idaws" in this area.  This means that we will
+> have difficulty with this overlap in terminology if support for
+> Format-1 or 2K-block Format-2 IDAs is ever added.  I don't think that
+> this patch changes our ability to make that distinction.
 
-Thanks and Regards,
-Vincenzo
+I agree; and knowing that later patches will simplify things further, I
+think it will even be easier to do than on the current code base.
 
-On 28/05/2019 12:57, Vincenzo Frascino wrote:
-> Hi Michael,
 > 
-> thank you for your reply.
-> 
-> On 28/05/2019 07:19, Michael Ellerman wrote:
->> Vincenzo Frascino <vincenzo.frascino@arm.com> writes:
->>
->>> The current version of the multiarch vDSO selftest verifies only
->>> gettimeofday.
->>>
->>> Extend the vDSO selftest to clock_getres, to verify that the
->>> syscall and the vDSO library function return the same information.
->>>
->>> The extension has been used to verify the hrtimer_resoltion fix.
->>
->> This is passing for me even without patch 1 applied, shouldn't it fail
->> without the fix? What am I missing?
->>
-> 
-> This is correct, because during the refactoring process I missed an "n" :)
-> 
-> if·((x.tv_sec·!=·y.tv_sec)·||·(x.tv_sec·!=·y.tv_sec))
-> 
-> Should be:
-> 
-> if·((x.tv_sec·!=·y.tv_sec)·||·(x.tv_nsec·!=·y.tv_nsec))
-> 
-> My mistake, I am going to fix the test and re-post v5 of this set.
-> 
-> Without my patch if you pass "highres=off" to the kernel (as a command line
-> parameter) it leads to a broken implementation of clock_getres since the value
-> of CLOCK_REALTIME_RES does not change at runtime.
-> 
-> Expected result (with highres=off):
-> 
-> # uname -r
-> 5.2.0-rc2
-> # ./vdso_clock_getres
-> clock_id: CLOCK_REALTIME [FAIL]
-> clock_id: CLOCK_BOOTTIME [PASS]
-> clock_id: CLOCK_TAI [PASS]
-> clock_id: CLOCK_REALTIME_COARSE [PASS]
-> clock_id: CLOCK_MONOTONIC [FAIL]
-> clock_id: CLOCK_MONOTONIC_RAW [PASS]
-> clock_id: CLOCK_MONOTONIC_COARSE [PASS]
-> 
-> The reason of this behavior is that the only clocks supported by getres on
-> powerpc are CLOCK_REALTIME and CLOCK_MONOTONIC, the rest on the clocks use
-> always syscalls.
-> 
->> # uname -r
->> 5.2.0-rc2-gcc-8.2.0
->>
->> # ./vdso_clock_getres
->> clock_id: CLOCK_REALTIME [PASS]
->> clock_id: CLOCK_BOOTTIME [PASS]
->> clock_id: CLOCK_TAI [PASS]
->> clock_id: CLOCK_REALTIME_COARSE [PASS]
->> clock_id: CLOCK_MONOTONIC [PASS]
->> clock_id: CLOCK_MONOTONIC_RAW [PASS]
->> clock_id: CLOCK_MONOTONIC_COARSE [PASS]
->>
->> cheers
->>
->>> Cc: Shuah Khan <shuah@kernel.org>
->>> Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
->>> ---
->>>
->>> Note: This patch is independent from the others in this series, hence it
->>> can be merged singularly by the kselftest maintainers.
->>>
->>>  tools/testing/selftests/vDSO/Makefile         |   2 +
->>>  .../selftests/vDSO/vdso_clock_getres.c        | 124 ++++++++++++++++++
->>>  2 files changed, 126 insertions(+)
->>>  create mode 100644 tools/testing/selftests/vDSO/vdso_clock_getres.c
-> 
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> ---
+>  drivers/s390/cio/vfio_ccw_cp.c | 26 +++++++++++---------------
+>  1 file changed, 11 insertions(+), 15 deletions(-)
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
