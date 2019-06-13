@@ -2,110 +2,132 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EC2944CEB
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 22:04:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A7E5744F30
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Jun 2019 00:39:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbfFMUEM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jun 2019 16:04:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728752AbfFMUEM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Jun 2019 16:04:12 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E84021537;
-        Thu, 13 Jun 2019 20:04:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1560456250;
-        bh=STyJgmmKr944RjOkqQ8HWC3xeSyqe7HVqnGI2LWRsD8=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=N2gTptqwNshky9t39zHrhF/tFwNwxgbkrbTJor+tak1vLqX97uKewRk8bUnzrn4Ko
-         U5IaH0MfRPlK77bT7Yc/4PbSrlc3n6J8M0GsjcRBoXIwR5bmuZZez1tgkNHDFM277/
-         c+zGeW7mHjTeucDkGZEHLB7VbopRA5mQ7/vZdAH4=
-Date:   Thu, 13 Jun 2019 13:04:08 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        id S1726649AbfFMWjS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jun 2019 18:39:18 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:34456 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725819AbfFMWjR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 13 Jun 2019 18:39:17 -0400
+Received: by mail-ed1-f66.google.com with SMTP id s49so544602edb.1
+        for <linux-s390@vger.kernel.org>; Thu, 13 Jun 2019 15:39:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EcPKIz/cx9BuSCY4h5Jds9dddvg3WP5b4PjiRQaCMNk=;
+        b=Q7YqbkWKog9myMLVKuEgSGV/QhFlPY8pqvqD3ElQJa5O+VupGahQ/2KWdmD42UChZU
+         wPmlxSspSryqNb5xCB8JLtGZX6vRCzXM8xY7AmfA6QICBXISxNprKepOzIgPRJ0PmKvq
+         lwOf3L9Aeaw9au+GkaXXU5HxIJQ1vxFfownqyJtqMjhF5SRbY4FdMVVh7ZLQ7hbQYj3Q
+         iidXZkXXf0qlsVYk9WxwAFcMHH4IP3leZkOYhpAmRlGBv4K+6lmx2ZeQRojQOmlcq9FK
+         mitiCFQNPcpZ74hbmAblxvrrqQFu7g6p6HGZuZiNBMXyyAAw52tc7SZA4bY0a5yZBSlR
+         Rxmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=EcPKIz/cx9BuSCY4h5Jds9dddvg3WP5b4PjiRQaCMNk=;
+        b=Mv/4IOav6O8CfHidBdsIsy1W5kRUyoOK+bjkOb87fVsE3+MsygC1KSv77Wk1gYLhz5
+         D1+iL3nEzjAfRikRg6RRxz9RbNz2pf+7Cwu+J7YbPHblb4vU4rWBAwIXI3F5RariFZcM
+         uuWpAQ1cTt8x0qa+Puv8eRbL1ytis78zyi6Mq/0AOzu+xHFRNuZS2VkGC7bc81ZLPcq3
+         sVoA0cjUVOJJi1PPJci/1bXuUby3mku8DZKG8FH9SAR81H9LYzfsAoVGN3oBEwaJw3Vp
+         CcwfiauXKVMdQfETW4J+zuEOU2JgdBfDViAOlX0ftnNlHXzJRMtBlxbyaGSTU6JJiE1W
+         kgAQ==
+X-Gm-Message-State: APjAAAX1p5NOpE6Rjd25yLWkmvl6ylrQlyfdbu7qou2U9PZBdshCwH1e
+        BT2tbjvOBCxsxU3U6yMjn8H64w==
+X-Google-Smtp-Source: APXvYqznp1hHyw5PYwIoh2oTLD6q+OMGquaY21fb63SmdivVnsFdvFIZnOzRxPqoidZqkL4RdKrnQw==
+X-Received: by 2002:a50:bdc2:: with SMTP id z2mr97240407edh.245.1560465555952;
+        Thu, 13 Jun 2019 15:39:15 -0700 (PDT)
+Received: from localhost.localdomain ([2a02:8084:a0:bc00:8042:d435:a754:1f22])
+        by smtp.googlemail.com with ESMTPSA id s16sm216522eji.27.2019.06.13.15.39.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Thu, 13 Jun 2019 15:39:14 -0700 (PDT)
+From:   Tom Murphy <murphyt7@tcd.ie>
+To:     iommu@lists.linux-foundation.org
+Cc:     Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>,
         Will Deacon <will.deacon@arm.com>,
-        Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>
-Subject: Re: [PATCH] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-Message-Id: <20190613130408.3091869d8e50d0524157523f@linux-foundation.org>
-In-Reply-To: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-References: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        David Brown <david.brown@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH v4 0/5] iommu/amd: Convert the AMD iommu driver to the dma-iommu api
+Date:   Thu, 13 Jun 2019 23:38:55 +0100
+Message-Id: <20190613223901.9523-1-murphyt7@tcd.ie>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 13 Jun 2019 15:37:24 +0530 Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+Convert the AMD iommu driver to the dma-iommu api. Remove the iova
+handling and reserve region code from the AMD iommu driver.
 
-> Architectures which support kprobes have very similar boilerplate around
-> calling kprobe_fault_handler(). Use a helper function in kprobes.h to unify
-> them, based on the x86 code.
-> 
-> This changes the behaviour for other architectures when preemption is
-> enabled. Previously, they would have disabled preemption while calling the
-> kprobe handler. However, preemption would be disabled if this fault was
-> due to a kprobe, so we know the fault was not due to a kprobe handler and
-> can simply return failure.
-> 
-> This behaviour was introduced in the commit a980c0ef9f6d ("x86/kprobes:
-> Refactor kprobes_fault() like kprobe_exceptions_notify()")
-> 
-> ...
->
-> --- a/arch/arm/mm/fault.c
-> +++ b/arch/arm/mm/fault.c
-> @@ -30,28 +30,6 @@
->  
->  #ifdef CONFIG_MMU
->  
-> -#ifdef CONFIG_KPROBES
-> -static inline int notify_page_fault(struct pt_regs *regs, unsigned int fsr)
+Change-log:
+V4:
+-Rebase on top of linux-next
+-Split the removing of the unnecessary locking in the amd iommu driver into a seperate patch
+-refactor the "iommu/dma-iommu: Handle deferred devices" patch and address comments
+v3:
+-rename dma_limit to dma_mask
+-exit handle_deferred_device early if (!is_kdump_kernel())
+-remove pointless calls to handle_deferred_device
+v2:
+-Rebase on top of this series:
+ http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma-iommu-ops.3
+-Add a gfp_t parameter to the iommu_ops::map function.
+-Made use of the reserve region code inside the dma-iommu api
 
-Some architectures make this `static inline'.  Others make it
-`nokprobes_inline', others make it `static inline __kprobes'.  The
-latter seems weird - why try to put an inline function into
-.kprobes.text?
+Tom Murphy (5):
+  iommu/amd: Remove unnecessary locking from AMD iommu driver
+  iommu: Add gfp parameter to iommu_ops::map
+  iommu/dma-iommu: Handle deferred devices
+  iommu/dma-iommu: Use the dev->coherent_dma_mask
+  iommu/amd: Convert AMD iommu driver to the dma-iommu api
 
-So..  what's the best thing to do here?  You chose `static
-nokprobe_inline' - is that the best approach, if so why?  Does
-kprobe_page_fault() actually need to be inlined?
+ drivers/iommu/Kconfig           |   1 +
+ drivers/iommu/amd_iommu.c       | 690 ++++----------------------------
+ drivers/iommu/amd_iommu_types.h |   1 -
+ drivers/iommu/arm-smmu-v3.c     |   2 +-
+ drivers/iommu/arm-smmu.c        |   2 +-
+ drivers/iommu/dma-iommu.c       |  45 ++-
+ drivers/iommu/exynos-iommu.c    |   2 +-
+ drivers/iommu/intel-iommu.c     |   2 +-
+ drivers/iommu/iommu.c           |  43 +-
+ drivers/iommu/ipmmu-vmsa.c      |   2 +-
+ drivers/iommu/msm_iommu.c       |   2 +-
+ drivers/iommu/mtk_iommu.c       |   2 +-
+ drivers/iommu/mtk_iommu_v1.c    |   2 +-
+ drivers/iommu/omap-iommu.c      |   2 +-
+ drivers/iommu/qcom_iommu.c      |   2 +-
+ drivers/iommu/rockchip-iommu.c  |   2 +-
+ drivers/iommu/s390-iommu.c      |   2 +-
+ drivers/iommu/tegra-gart.c      |   2 +-
+ drivers/iommu/tegra-smmu.c      |   2 +-
+ drivers/iommu/virtio-iommu.c    |   2 +-
+ include/linux/iommu.h           |  21 +-
+ 21 files changed, 179 insertions(+), 652 deletions(-)
 
-Also, some architectures had notify_page_fault returning int, others
-bool.  You chose bool and that seems appropriate and all callers are OK
-with that.
+-- 
+2.20.1
+
