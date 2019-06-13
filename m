@@ -2,125 +2,82 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B27442A75
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Jun 2019 17:13:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8538C44684
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 18:52:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408730AbfFLPNA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Jun 2019 11:13:00 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2408727AbfFLPNA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Jun 2019 11:13:00 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5CFCOnG131262
-        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 11:12:58 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t33jk0wxr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 12 Jun 2019 11:12:54 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Wed, 12 Jun 2019 16:11:12 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Jun 2019 16:11:09 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5CFB8FH39584166
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Jun 2019 15:11:08 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2221CAE055;
-        Wed, 12 Jun 2019 15:11:08 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7EAE7AE051;
-        Wed, 12 Jun 2019 15:11:07 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.26])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Jun 2019 15:11:07 +0000 (GMT)
-Date:   Wed, 12 Jun 2019 17:11:05 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        virtualization@lists.linux-foundation.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Thomas Huth <thuth@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        id S2404336AbfFMQw1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jun 2019 12:52:27 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:56480 "EHLO deadmen.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730117AbfFMDOA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 12 Jun 2019 23:14:00 -0400
+Received: from gondobar.mordor.me.apana.org.au ([192.168.128.4] helo=gondobar)
+        by deadmen.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1hbGBa-0004Tx-6t; Thu, 13 Jun 2019 11:13:58 +0800
+Received: from herbert by gondobar with local (Exim 4.89)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1hbGBX-0001u2-TG; Thu, 13 Jun 2019 11:13:55 +0800
+Date:   Thu, 13 Jun 2019 11:13:55 +0800
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        "Jason J. Herne" <jjherne@linux.ibm.com>
-Subject: Re: [PATCH v5 4/8] s390/airq: use DMA memory for adapter interrupts
-In-Reply-To: <20190612163501.45a050b0.cohuck@redhat.com>
-References: <20190612111236.99538-1-pasic@linux.ibm.com>
-        <20190612111236.99538-5-pasic@linux.ibm.com>
-        <20190612163501.45a050b0.cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
+Message-ID: <20190613031355.7vya4vwhr3eia5g4@gondor.apana.org.au>
+References: <20190612133306.10231-1-david@redhat.com>
+ <20190612150850.GA4038@osiris>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19061215-0012-0000-0000-0000032887F9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061215-0013-0000-0000-000021619065
-Message-Id: <20190612171105.230b976d.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-12_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906120102
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190612150850.GA4038@osiris>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 12 Jun 2019 16:35:01 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
-
-> On Wed, 12 Jun 2019 13:12:32 +0200
-> Halil Pasic <pasic@linux.ibm.com> wrote:
-
-[..]
-
-> > --- a/drivers/s390/cio/css.c
-> > +++ b/drivers/s390/cio/css.c
-> > @@ -1184,6 +1184,7 @@ static int __init css_bus_init(void)
-> >  	ret = cio_dma_pool_init();
-> >  	if (ret)
-> >  		goto out_unregister_pmn;
-> > +	airq_init();
+On Wed, Jun 12, 2019 at 05:08:50PM +0200, Heiko Carstens wrote:
+> On Wed, Jun 12, 2019 at 03:33:02PM +0200, David Hildenbrand wrote:
+> > s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
+> > -ENODEV in case HW support is not available.
+> > 
+> > Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
+> > ignores this error properly.
+> > 
+> > v2 -> v3:
+> > - "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
+> > -- Also convert pkey_clr2protkey() as requested by Harald
+> > - Add r-b's (thanks!)
+> > 
+> > v1 -> v2:
+> > - Include
+> > -- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
+> > -- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
+> > -- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
+> > 
+> > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > Cc: Vasily Gorbik <gor@linux.ibm.com>
+> > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> > Cc: Harald Freudenberger <freude@linux.ibm.com>
+> > Cc: Cornelia Huck <cohuck@redhat.com>
+> > 
+> > David Hildenbrand (4):
+> >   s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+> >   s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
+> >   s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
+> >   s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
 > 
-> Ignoring the return code here does not really hurt right now, but we
-> probably want to change that if we want to consider failures in css
-> initialization to be fatal.
-> 
+> Should I pick these up so they can go upstream via the s390 tree?
 
-Right. I think that would even simplify the code a bit (no rollback).
-
-> >  	css_init_done = 1;
-> >  
-> >  	/* Enable default isc for I/O subchannels. */
-> 
-> On the whole, not really anything that needs changes right now, so have
-> a
-> 
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> 
-
-Thank you so much!
-
-Regards,
-Halil
-
+Sure Heiko.  Thanks!
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
