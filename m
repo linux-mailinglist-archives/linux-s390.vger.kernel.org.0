@@ -2,92 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0D784447F
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 18:37:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A546144410
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 18:36:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731697AbfFMQhZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jun 2019 12:37:25 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36122 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730654AbfFMHOp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Jun 2019 03:14:45 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 41A1B30C1212;
-        Thu, 13 Jun 2019 07:14:45 +0000 (UTC)
-Received: from localhost (ovpn-8-24.pek2.redhat.com [10.72.8.24])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 624B760CCD;
-        Thu, 13 Jun 2019 07:14:42 +0000 (UTC)
-From:   Ming Lei <ming.lei@redhat.com>
-To:     linux-scsi@vger.kernel.org,
-        "Martin K . Petersen" <martin.petersen@oracle.com>
-Cc:     James Bottomley <James.Bottomley@HansenPartnership.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Christoph Hellwig <hch@lst.de>, Jim Gill <jgill@vmware.com>,
-        Cathy Avery <cavery@redhat.com>,
-        "Ewan D . Milne" <emilne@redhat.com>,
-        Brian King <brking@us.ibm.com>,
-        James Smart <james.smart@broadcom.com>,
-        "Juergen E . Fischer" <fischer@norbit.de>,
-        Michael Schmitz <schmitzmic@gmail.com>,
-        Finn Thain <fthain@telegraphics.com.au>,
-        Ming Lei <ming.lei@redhat.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH V2 09/15] s390: zfcp_fc: use sg helper to operate sgl
-Date:   Thu, 13 Jun 2019 15:13:29 +0800
-Message-Id: <20190613071335.5679-10-ming.lei@redhat.com>
-In-Reply-To: <20190613071335.5679-1-ming.lei@redhat.com>
-References: <20190613071335.5679-1-ming.lei@redhat.com>
+        id S1730774AbfFMQef (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jun 2019 12:34:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52970 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730772AbfFMHv0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 13 Jun 2019 03:51:26 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5D7mTDV009558
+        for <linux-s390@vger.kernel.org>; Thu, 13 Jun 2019 03:51:25 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t3je1g3wu-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 13 Jun 2019 03:51:25 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Thu, 13 Jun 2019 08:51:22 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Jun 2019 08:51:20 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5D7pJMr42270804
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 07:51:19 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A80BA4053;
+        Thu, 13 Jun 2019 07:51:19 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6F43A4040;
+        Thu, 13 Jun 2019 07:51:18 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.21])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 13 Jun 2019 07:51:18 +0000 (GMT)
+Date:   Thu, 13 Jun 2019 09:51:17 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-crypto@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: Re: [PATCH v3 0/4] s390/crypto: Use -ENODEV instead of -EOPNOTSUPP
+References: <20190612133306.10231-1-david@redhat.com>
+ <20190612150850.GA4038@osiris>
+ <20190613031355.7vya4vwhr3eia5g4@gondor.apana.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Thu, 13 Jun 2019 07:14:45 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613031355.7vya4vwhr3eia5g4@gondor.apana.org.au>
+X-TM-AS-GCONF: 00
+x-cbid: 19061307-0012-0000-0000-00000328BBCE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061307-0013-0000-0000-00002161C685
+Message-Id: <20190613075117.GA4292@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=898 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130062
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The current way isn't safe for chained sgl, so use sg helper to
-operate sgl.
+On Thu, Jun 13, 2019 at 11:13:55AM +0800, Herbert Xu wrote:
+> On Wed, Jun 12, 2019 at 05:08:50PM +0200, Heiko Carstens wrote:
+> > On Wed, Jun 12, 2019 at 03:33:02PM +0200, David Hildenbrand wrote:
+> > > s390x crypto is one of the rare modules that returns -EOPNOTSUPP instead of
+> > > -ENODEV in case HW support is not available.
+> > > 
+> > > Convert to -ENODEV, so e.g., systemd's systemd-modules-load.service
+> > > ignores this error properly.
+> > > 
+> > > v2 -> v3:
+> > > - "s390/pkey: Use -ENODEV instead of -EOPNOTSUPP"
+> > > -- Also convert pkey_clr2protkey() as requested by Harald
+> > > - Add r-b's (thanks!)
+> > > 
+> > > v1 -> v2:
+> > > - Include
+> > > -- "s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP"
+> > > -- "s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP"
+> > > -- "s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP"
+> > > 
+> > > Cc: Herbert Xu <herbert@gondor.apana.org.au>
+> > > Cc: "David S. Miller" <davem@davemloft.net>
+> > > Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > > Cc: Vasily Gorbik <gor@linux.ibm.com>
+> > > Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> > > Cc: Harald Freudenberger <freude@linux.ibm.com>
+> > > Cc: Cornelia Huck <cohuck@redhat.com>
+> > > 
+> > > David Hildenbrand (4):
+> > >   s390/pkey: Use -ENODEV instead of -EOPNOTSUPP
+> > >   s390/crypto: ghash: Use -ENODEV instead of -EOPNOTSUPP
+> > >   s390/crypto: prng: Use -ENODEV instead of -EOPNOTSUPP
+> > >   s390/crypto: sha: Use -ENODEV instead of -EOPNOTSUPP
+> > 
+> > Should I pick these up so they can go upstream via the s390 tree?
+> 
+> Sure Heiko.  Thanks!
 
-Cc: Steffen Maier <maier@linux.ibm.com>
-Cc: Benjamin Block <bblock@linux.ibm.com>
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Signed-off-by: Ming Lei <ming.lei@redhat.com>
----
- drivers/s390/scsi/zfcp_fc.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
-index 33eddb02ee30..b018b61bd168 100644
---- a/drivers/s390/scsi/zfcp_fc.c
-+++ b/drivers/s390/scsi/zfcp_fc.c
-@@ -620,7 +620,7 @@ static void zfcp_fc_sg_free_table(struct scatterlist *sg, int count)
- {
- 	int i;
- 
--	for (i = 0; i < count; i++, sg++)
-+	for (i = 0; i < count; i++, sg = sg_next(sg))
- 		if (sg)
- 			free_page((unsigned long) sg_virt(sg));
- 		else
-@@ -641,7 +641,7 @@ static int zfcp_fc_sg_setup_table(struct scatterlist *sg, int count)
- 	int i;
- 
- 	sg_init_table(sg, count);
--	for (i = 0; i < count; i++, sg++) {
-+	for (i = 0; i < count; i++, sg = sg_next(sg)) {
- 		addr = (void *) get_zeroed_page(GFP_KERNEL);
- 		if (!addr) {
- 			zfcp_fc_sg_free_table(sg, i);
--- 
-2.20.1
+Ok, all applied. Thanks!
 
