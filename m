@@ -2,145 +2,229 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B070844A11
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 19:58:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 07D7C44C58
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Jun 2019 21:40:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfFMR6O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Jun 2019 13:58:14 -0400
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:56120 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728274AbfFMR6N (ORCPT
+        id S1729443AbfFMTkX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Jun 2019 15:40:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40780 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729376AbfFMTkX (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Jun 2019 13:58:13 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0CD24C219B;
-        Thu, 13 Jun 2019 17:58:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1560448693; bh=LJavSY8Csb6IKvT6GApPq2LFdmFwqvpDZcp/Rfd3GmE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From;
-        b=ASMcB1iCalm/RZa3MaAXMR3twsH8ZyJX6rfqatmxk3+7QCBhu85f5UBmILxUHCbfl
-         uaE0sw7etwQiMKS9V7YJZrEhAHXz66TINoKz78+fISnDKduWEBYv7lRoaFn8scBZQN
-         VnR5njjFVu134X4pAirp28InXohyxznUpt6PClsf/ZGUBvR85M/NdUObLRHuVPx/s6
-         AsnMMHJCWD6SKCrUlSF4srkQSWO2mCgHlmvDKP56rZWx5kEJf6CChlJU1Ik4gWIkvk
-         ihOI5ATSCNUHXOusPC1leckbpnXMxaNDbZMYmb4MGji+oLb6Crx+Zh17SLDN+aiIJM
-         Mp08sJpYv2sig==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id AC3A5A009A;
-        Thu, 13 Jun 2019 17:58:00 +0000 (UTC)
-Received: from IN01WEHTCA.internal.synopsys.com (10.144.199.104) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 13 Jun 2019 10:58:00 -0700
-Received: from IN01WEHTCB.internal.synopsys.com (10.144.199.105) by
- IN01WEHTCA.internal.synopsys.com (10.144.199.103) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 13 Jun 2019 23:28:11 +0530
-Received: from [10.10.161.35] (10.10.161.35) by
- IN01WEHTCB.internal.synopsys.com (10.144.199.243) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Thu, 13 Jun 2019 23:28:10 +0530
-Subject: Re: [PATCH] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-To:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Michal Hocko <mhocko@suse.com>, <linux-ia64@vger.kernel.org>,
-        <linux-sh@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "Dave Hansen" <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        <sparclinux@vger.kernel.org>,
-        "Stephen Rothwell" <sfr@canb.auug.org.au>,
-        <linux-s390@vger.kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michael Ellerman <mpe@ellerman.id.au>, <x86@kernel.org>,
-        Russell King <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>,
-        <linux-snps-arc@lists.infradead.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        "Andy Lutomirski" <luto@kernel.org>,
-        Thomas Gleixner <tglx@synopsys.com>,
-        "Masami Hiramatsu" <masami.hiramatsu.pt@hitachi.com>
-Newsgroups: gmane.linux.ports.arm.kernel,gmane.linux.kernel.mm,gmane.linux.kernel,gmane.linux.ports.ia64,gmane.linux.ports.sh.devel,gmane.linux.ports.sparc,gmane.linux.kernel.arc,gmane.linux.ports.mips,gmane.linux.ports.ppc64.devel
-References: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-From:   Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vgupta@synopsys.com; keydata=
- mQINBFEffBMBEADIXSn0fEQcM8GPYFZyvBrY8456hGplRnLLFimPi/BBGFA24IR+B/Vh/EFk
- B5LAyKuPEEbR3WSVB1x7TovwEErPWKmhHFbyugdCKDv7qWVj7pOB+vqycTG3i16eixB69row
- lDkZ2RQyy1i/wOtHt8Kr69V9aMOIVIlBNjx5vNOjxfOLux3C0SRl1veA8sdkoSACY3McOqJ8
- zR8q1mZDRHCfz+aNxgmVIVFN2JY29zBNOeCzNL1b6ndjU73whH/1hd9YMx2Sp149T8MBpkuQ
- cFYUPYm8Mn0dQ5PHAide+D3iKCHMupX0ux1Y6g7Ym9jhVtxq3OdUI5I5vsED7NgV9c8++baM
- 7j7ext5v0l8UeulHfj4LglTaJIvwbUrCGgtyS9haKlUHbmey/af1j0sTrGxZs1ky1cTX7yeF
- nSYs12GRiVZkh/Pf3nRLkjV+kH++ZtR1GZLqwamiYZhAHjo1Vzyl50JT9EuX07/XTyq/Bx6E
- dcJWr79ZphJ+mR2HrMdvZo3VSpXEgjROpYlD4GKUApFxW6RrZkvMzuR2bqi48FThXKhFXJBd
- JiTfiO8tpXaHg/yh/V9vNQqdu7KmZIuZ0EdeZHoXe+8lxoNyQPcPSj7LcmE6gONJR8ZqAzyk
- F5voeRIy005ZmJJ3VOH3Gw6Gz49LVy7Kz72yo1IPHZJNpSV5xwARAQABtCpWaW5lZXQgR3Vw
- dGEgKGFsaWFzKSA8dmd1cHRhQHN5bm9wc3lzLmNvbT6JAj4EEwECACgCGwMGCwkIBwMCBhUI
- AgkKCwQWAgMBAh4BAheABQJbBYpwBQkLx0HcAAoJEGnX8d3iisJeChAQAMR2UVbJyydOv3aV
- jmqP47gVFq4Qml1weP5z6czl1I8n37bIhdW0/lV2Zll+yU1YGpMgdDTHiDqnGWi4pJeu4+c5
- xsI/VqkH6WWXpfruhDsbJ3IJQ46//jb79ogjm6VVeGlOOYxx/G/RUUXZ12+CMPQo7Bv+Jb+t
- NJnYXYMND2Dlr2TiRahFeeQo8uFbeEdJGDsSIbkOV0jzrYUAPeBwdN8N0eOB19KUgPqPAC4W
- HCg2LJ/o6/BImN7bhEFDFu7gTT0nqFVZNXlOw4UcGGpM3dq/qu8ZgRE0turY9SsjKsJYKvg4
- djAaOh7H9NJK72JOjUhXY/sMBwW5vnNwFyXCB5t4ZcNxStoxrMtyf35synJVinFy6wCzH3eJ
- XYNfFsv4gjF3l9VYmGEJeI8JG/ljYQVjsQxcrU1lf8lfARuNkleUL8Y3rtxn6eZVtAlJE8q2
- hBgu/RUj79BKnWEPFmxfKsaj8of+5wubTkP0I5tXh0akKZlVwQ3lbDdHxznejcVCwyjXBSny
- d0+qKIXX1eMh0/5sDYM06/B34rQyq9HZVVPRHdvsfwCU0s3G+5Fai02mK68okr8TECOzqZtG
- cuQmkAeegdY70Bpzfbwxo45WWQq8dSRURA7KDeY5LutMphQPIP2syqgIaiEatHgwetyVCOt6
- tf3ClCidHNaGky9KcNSQ
-Message-ID: <e5f45089-c3aa-4d78-2c8d-ed22f863d9ee@synopsys.com>
-Date:   Thu, 13 Jun 2019 10:57:45 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.10.161.35]
+        Thu, 13 Jun 2019 15:40:23 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5DJb20e108453;
+        Thu, 13 Jun 2019 15:39:54 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2t3tj6wm2b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jun 2019 15:39:54 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5DJET7k014456;
+        Thu, 13 Jun 2019 19:16:45 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma01dal.us.ibm.com with ESMTP id 2t1x6t0c74-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 13 Jun 2019 19:16:45 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5DJdmM931588666
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Jun 2019 19:39:48 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B79986E050;
+        Thu, 13 Jun 2019 19:39:48 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DF3A86E053;
+        Thu, 13 Jun 2019 19:39:45 +0000 (GMT)
+Received: from akrowiak-ThinkPad-P50.ibm.com (unknown [9.85.158.129])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Thu, 13 Jun 2019 19:39:45 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v4 0/7] s390: vfio-ap: dynamic configuration support
+Date:   Thu, 13 Jun 2019 15:39:33 -0400
+Message-Id: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-13_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906130146
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-+CC Masami San
+The current design for AP pass-through does not support making dynamic
+changes to the AP matrix of a running guest resulting in three deficiencies
+this patch series is intended to mitigate:
 
-On 6/13/19 3:07 AM, Anshuman Khandual wrote:
-> Questions:
-> 
-> AFAICT there is no equivalent of erstwhile notify_page_fault() during page
-> fault handling in arc and mips archs which can call this generic function.
-> Please let me know if that is not the case.
+1. Adapters, domains and control domains can not be added to or removed
+   from a running guest. In order to modify a guest's AP configuration,
+   the guest must be terminated; only then can AP resources be assigned
+   to or unassigned from the guest's matrix mdev. The new AP configuration
+   becomes available to the guest when it is subsequently restarted.
 
-For ARC do_page_fault() is entered for MMU exceptions (TLB Miss, access violations
-r/w/x etc). kprobes uses a combination of UNIMP_S and TRAP_S instructions which
-don't funnel into do_page_fault().
+2. The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask interfaces can
+   be modified by a root user without any restrictions. A change to either
+   mask can result in AP queue devices being unbound from the vfio_ap
+   device driver and bound to a zcrypt device driver even if a guest is
+   using the queues, thus giving the host access to the guest's private
+   crypto data and vice versa.
 
-UINMP_S leads to
+3. The APQNs derived from the Cartesian product of the APIDs of the
+   adapters and APQIs of the domains assigned to a matrix mdev must
+   an AP queue device bound to the vfio_ap device driver. 
 
-instr_service
-   do_insterror_or_kprobe
-      notify_die(DIE_IERR)
-         kprobe_exceptions_notify
-            arc_kprobe_handler
+This patch series introduces the following changes to the current design
+to alleviate the shortcomings described above as well as to implement more
+of the AP architecture:
 
+1. A root user will be prevented from making changes to the AP bus's
+   /sys/bus/ap/apmask or /sys/bus/ap/aqmask if the ownership of an APQN
+   changes from the vfio_ap device driver to a zcrypt driver if the APQN is
+   assigned to a matrix mdev.
 
-TRAP_S 2 leads to
+2. The sysfs bind/unbind interfaces will be disabled for the vfio_ap device
+   driver.
 
-EV_Trap
-   do_non_swi_trap
-      trap_is_kprobe
-         notify_die(DIE_TRAP)
-            kprobe_exceptions_notify
-               arc_post_kprobe_handler
+3. Allow AP resources to be assigned to or removed from a matrix mdev
+   while a guest is using it and hot plug the resource into or hot unplug
+   the resource from the running guest.
 
-But indeed we are *not* calling into kprobe_fault_handler() - from eithet of those
-paths and not sure if the existing arc*_kprobe_handler() combination does the
-equivalent in tandem.
+4. Allow assignment of an AP adapter or domain to a matrix mdev even if it
+   results in assignment of an APQN that does not reference an AP queue
+   device bound to the vfio_ap device driver, as long as the APQN is owned
+   by the vfio_ap driver. Allowing over-provisioning of AP resources
+   better models the architecture which does not preclude assigning AP
+   resources that are not yet available in the system.
 
--Vineet
+1. Rationale for changes to AP bus's apmask/aqmask interfaces:
+----------------------------------------------------------
+Due to the extremely sensitive nature of cryptographic data, it is
+imperative that great care be taken to ensure that such data is secured.
+Allowing a root user, either inadvertently or maliciously, to configure
+these masks such that a queue is shared between the host and a guest is
+not only avoidable, it is advisable. It was suggested that this scenario
+is better handled in user space with management software, but that does
+not preclude a malicious administrator from using the sysfs interfaces
+to gain access to a guest's crypto data. It was also suggested that this
+scenario could be avoided by taking access to the adapter away from the
+guest and zeroing out the queues prior to the vfio_ap driver releasing the
+device; however, stealing an adapter in use from a guest as a by-product
+of an operation is bad and will likely cause problems for the guest
+unnecessarily. It was decided that the most effective solution with the
+least number of negative side effects is to prevent the situation at the
+source. It is not out of the ordinary for the kernel to prevent a root
+user from performing an action under certain circumstances; for example,
+a root user is prevented from removing a module until all references to it
+are given up. An even more pertinent example is the device driver bind
+interface. Binding a device to a driver that does not meet the match
+criteria will be rejected by the kernel.
+
+2. Rationale for disabling bind/unbind interfaces for vfio_ap driver:
+-----------------------------------------------------------------
+By disabling the bind/unbind interfaces for the vfio_ap device driver, 
+the user is forced to use the AP bus's apmask/aqmask interfaces to control
+the probing and removing of AP queues. There are two primary reasons for
+disabling the bind/unbind interfaces for the vfio_ap device driver:
+
+* The device architecture does not provide a means to prevent unbinding
+  a device from a device driver, so an AP queue device can be unbound
+  from the vfio_ap driver even the queue is in use by a guest. By
+  disabling the unbind interface, the user is forced to use the AP bus's
+  apmask/aqmask interfaces which will prevent this.
+
+* Binding of AP queues is controlled by the AP bus /sys/bus/ap/apmask and
+  /sys/bus/ap/aqmask interfaces. If the masks indicate that an APQN is
+  owned by zcrypt, trying to bind it to the vfio_ap device driver will
+  fail; therefore, the bind interface is somewhat redundant and certainly
+  unnecessary.        
+  
+3. Rationale for hot plug/unplug using matrix mdev sysfs interfaces:
+----------------------------------------------------------------
+Allowing a user to hot plug/unplug AP resources using the matrix mdev
+sysfs interfaces circumvents the need to terminate the guest in order to
+modify its AP configuration. Allowing dynamic configuration makes 
+reconfiguring a guest's AP matrix much less disruptive.
+
+4. Rationale for allowing over-provisioning of AP resources:
+----------------------------------------------------------- 
+Allowing assignment of AP resources to a matrix mdev and ultimately to a
+guest better models the AP architecture. The architecture does not
+preclude assignment of unavailable AP resources. If a queue subsequently
+becomes available while a guest using the matrix mdev to which its APQN
+is assigned, the guest will automatically acquire access to it. If an APQN
+is dynamically unassigned from the underlying host system, it will 
+automatically become unavailable to the guest.
+
+Note: This patch series is rebased on top of the patch series for
+      'vfio: ap: AP Queue Interrupt Control' (v9) to make merging of the
+      two series simpler. 
+ 
+
+Change log v3->v4:
+-----------------
+* Restored patches preventing root user from changing ownership of
+  APQNs from zcrypt drivers to the vfio_ap driver if the APQN is
+  assigned to an mdev.
+
+* No longer enforcing requirement restricting guest access to
+  queues represented by a queue device bound to the vfio_ap
+  device driver.
+
+* Removed shadow CRYCB and now directly updating the guest CRYCB
+  from the matrix mdev's matrix.
+
+* Rebased the patch series on top of 'vfio: ap: AP Queue Interrupt
+  Control' patches.
+
+* Disabled bind/unbind sysfs interfaces for vfio_ap driver
+
+Change log v2->v3:
+-----------------
+* Allow guest access to an AP queue only if the queue is bound to
+  the vfio_ap device driver.
+
+* Removed the patch to test CRYCB masks before taking the vCPUs
+  out of SIE. Now checking the shadow CRYCB in the vfio_ap driver.
+
+Change log v1->v2:
+-----------------
+* Removed patches preventing root user from unbinding AP queues from 
+  the vfio_ap device driver
+* Introduced a shadow CRYCB in the vfio_ap driver to manage dynamic 
+  changes to the AP guest configuration due to root user interventions
+  or hardware anomalies.
+
+Tony Krowiak (7):
+  s390: vfio-ap: Refactor vfio_ap driver probe and remove callbacks
+  s390: vfio-ap: wait for queue empty on queue reset
+  s390: zcrypt: driver callback to indicate resource in use
+  s390: vfio-ap: implement in-use callback for vfio_ap driver
+  s390: vfio-ap: allow assignment of unavailable AP resources to mdev
+    device
+  s390: vfio-ap: allow hot plug/unplug of AP resources using mdev device
+  s390: vfio-ap: update documentation
+
+ Documentation/s390/vfio-ap.txt        | 292 +++++++++++++++++++--------
+ drivers/s390/crypto/ap_bus.c          | 138 ++++++++++++-
+ drivers/s390/crypto/ap_bus.h          |   3 +
+ drivers/s390/crypto/vfio_ap_drv.c     |  51 +++--
+ drivers/s390/crypto/vfio_ap_ops.c     | 370 +++++++++++++---------------------
+ drivers/s390/crypto/vfio_ap_private.h |   6 +-
+ 6 files changed, 526 insertions(+), 334 deletions(-)
+
+-- 
+2.7.4
+
