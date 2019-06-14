@@ -2,22 +2,28 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 40B23462F1
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Jun 2019 17:35:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E16D464D7
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Jun 2019 18:46:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfFNPfA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Jun 2019 11:35:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:47942 "EHLO newverein.lst.de"
+        id S1726289AbfFNQp6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Jun 2019 12:45:58 -0400
+Received: from mga14.intel.com ([192.55.52.115]:49994 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725780AbfFNPfA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 14 Jun 2019 11:35:00 -0400
-Received: by newverein.lst.de (Postfix, from userid 2407)
-        id DF91968AFE; Fri, 14 Jun 2019 17:34:28 +0200 (CEST)
-Date:   Fri, 14 Jun 2019 17:34:28 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        id S1725846AbfFNQp5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 14 Jun 2019 12:45:57 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Jun 2019 09:45:57 -0700
+X-ExtLoop1: 1
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 14 Jun 2019 09:45:50 -0700
+Received: by stinkbox (sSMTP sendmail emulation); Fri, 14 Jun 2019 19:45:49 +0300
+Date:   Fri, 14 Jun 2019 19:45:49 +0300
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
         Maxime Ripard <maxime.ripard@bootlin.com>,
         Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
         Daniel Vetter <daniel@ffwll.ch>,
@@ -33,38 +39,174 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linux-mm@kvack.org, iommu@lists.linux-foundation.org,
         "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Subject: Re: [PATCH 12/16] staging/comedi: mark as broken
-Message-ID: <20190614153428.GA10008@lst.de>
-References: <20190614134726.3827-1-hch@lst.de> <20190614134726.3827-13-hch@lst.de> <20190614140239.GA7234@kroah.com> <20190614144857.GA9088@lst.de> <20190614153032.GD18049@kroah.com>
+        linux-media@vger.kernel.org,
+        Chris Wilson <chris@chris-wilson.co.uk>
+Subject: Re: [Intel-gfx] [PATCH 03/16] drm/i915: stop using drm_pci_alloc
+Message-ID: <20190614164549.GD5942@intel.com>
+References: <20190614134726.3827-1-hch@lst.de>
+ <20190614134726.3827-4-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190614153032.GD18049@kroah.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190614134726.3827-4-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jun 14, 2019 at 05:30:32PM +0200, Greg KH wrote:
-> On Fri, Jun 14, 2019 at 04:48:57PM +0200, Christoph Hellwig wrote:
-> > On Fri, Jun 14, 2019 at 04:02:39PM +0200, Greg KH wrote:
-> > > Perhaps a hint as to how we can fix this up?  This is the first time
-> > > I've heard of the comedi code not handling dma properly.
-> > 
-> > It can be fixed by:
-> > 
-> >  a) never calling virt_to_page (or vmalloc_to_page for that matter)
-> >     on dma allocation
-> >  b) never remapping dma allocation with conflicting cache modes
-> >     (no remapping should be doable after a) anyway).
+On Fri, Jun 14, 2019 at 03:47:13PM +0200, Christoph Hellwig wrote:
+> Remove usage of the legacy drm PCI DMA wrappers, and with that the
+> incorrect usage cocktail of __GFP_COMP, virt_to_page on DMA allocation
+> and SetPageReserved.
 > 
-> Ok, fair enough, have any pointers of drivers/core code that does this
-> correctly?  I can put it on my todo list, but might take a week or so...
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/gpu/drm/i915/i915_gem.c        | 30 +++++++++++++-------------
+>  drivers/gpu/drm/i915/i915_gem_object.h |  3 ++-
+>  drivers/gpu/drm/i915/intel_display.c   |  2 +-
+>  3 files changed, 18 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/i915/i915_gem.c b/drivers/gpu/drm/i915/i915_gem.c
+> index ad01c92aaf74..8f2053c91aff 100644
+> --- a/drivers/gpu/drm/i915/i915_gem.c
+> +++ b/drivers/gpu/drm/i915/i915_gem.c
+> @@ -228,7 +228,6 @@ i915_gem_get_aperture_ioctl(struct drm_device *dev, void *data,
+>  static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
+>  {
+>  	struct address_space *mapping = obj->base.filp->f_mapping;
+> -	drm_dma_handle_t *phys;
+>  	struct sg_table *st;
+>  	struct scatterlist *sg;
+>  	char *vaddr;
+> @@ -242,13 +241,13 @@ static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
+>  	 * to handle all possible callers, and given typical object sizes,
+>  	 * the alignment of the buddy allocation will naturally match.
+>  	 */
+> -	phys = drm_pci_alloc(obj->base.dev,
+> -			     roundup_pow_of_two(obj->base.size),
+> -			     roundup_pow_of_two(obj->base.size));
+> -	if (!phys)
+> +	obj->phys_vaddr = dma_alloc_coherent(&obj->base.dev->pdev->dev,
+> +			roundup_pow_of_two(obj->base.size),
+> +			&obj->phys_handle, GFP_KERNEL);
+> +	if (!obj->phys_vaddr)
+>  		return -ENOMEM;
+>  
+> -	vaddr = phys->vaddr;
+> +	vaddr = obj->phys_vaddr;
+>  	for (i = 0; i < obj->base.size / PAGE_SIZE; i++) {
+>  		struct page *page;
+>  		char *src;
+> @@ -286,18 +285,17 @@ static int i915_gem_object_get_pages_phys(struct drm_i915_gem_object *obj)
+>  	sg->offset = 0;
+>  	sg->length = obj->base.size;
+>  
+> -	sg_dma_address(sg) = phys->busaddr;
+> +	sg_dma_address(sg) = obj->phys_handle;
+>  	sg_dma_len(sg) = obj->base.size;
+>  
+> -	obj->phys_handle = phys;
+> -
+>  	__i915_gem_object_set_pages(obj, st, sg->length);
+>  
+>  	return 0;
+>  
+>  err_phys:
+> -	drm_pci_free(obj->base.dev, phys);
+> -
+> +	dma_free_coherent(&obj->base.dev->pdev->dev,
+> +			roundup_pow_of_two(obj->base.size), obj->phys_vaddr,
+> +			obj->phys_handle);
 
-Just about everyone else.  They just need to remove the vmap and
-either do one large allocation, or live with the fact that they need
-helpers to access multiple array elements instead of one net vmap,
-which most of the users already seem to do anyway, with just a few
-using the vmap (which might explain why we didn't see blowups yet).
+Need to undo the damage to obj->phys_vaddr here since
+i915_gem_pwrite_ioctl() will now use that to determine if it's
+dealing with a phys obj.
+
+>  	return err;
+>  }
+>  
+> @@ -335,7 +333,7 @@ i915_gem_object_put_pages_phys(struct drm_i915_gem_object *obj,
+>  
+>  	if (obj->mm.dirty) {
+>  		struct address_space *mapping = obj->base.filp->f_mapping;
+> -		char *vaddr = obj->phys_handle->vaddr;
+> +		char *vaddr = obj->phys_vaddr;
+>  		int i;
+>  
+>  		for (i = 0; i < obj->base.size / PAGE_SIZE; i++) {
+> @@ -363,7 +361,9 @@ i915_gem_object_put_pages_phys(struct drm_i915_gem_object *obj,
+>  	sg_free_table(pages);
+>  	kfree(pages);
+>  
+> -	drm_pci_free(obj->base.dev, obj->phys_handle);
+> +	dma_free_coherent(&obj->base.dev->pdev->dev,
+> +			roundup_pow_of_two(obj->base.size), obj->phys_vaddr,
+> +			obj->phys_handle);
+
+This one is fine I think since the object remains a phys obj once
+turned into one. At least the current code isn't clearing
+phys_handle here. But my memory is a bit hazy on the details. Chris?
+
+Also maybe s/phys_handle/phys_busaddr/ all over?
+
+>  }
+>  
+>  static void
+> @@ -603,7 +603,7 @@ i915_gem_phys_pwrite(struct drm_i915_gem_object *obj,
+>  		     struct drm_i915_gem_pwrite *args,
+>  		     struct drm_file *file)
+>  {
+> -	void *vaddr = obj->phys_handle->vaddr + args->offset;
+> +	void *vaddr = obj->phys_vaddr + args->offset;
+>  	char __user *user_data = u64_to_user_ptr(args->data_ptr);
+>  
+>  	/* We manually control the domain here and pretend that it
+> @@ -1431,7 +1431,7 @@ i915_gem_pwrite_ioctl(struct drm_device *dev, void *data,
+>  		ret = i915_gem_gtt_pwrite_fast(obj, args);
+>  
+>  	if (ret == -EFAULT || ret == -ENOSPC) {
+> -		if (obj->phys_handle)
+> +		if (obj->phys_vaddr)
+>  			ret = i915_gem_phys_pwrite(obj, args, file);
+>  		else
+>  			ret = i915_gem_shmem_pwrite(obj, args);
+> diff --git a/drivers/gpu/drm/i915/i915_gem_object.h b/drivers/gpu/drm/i915/i915_gem_object.h
+> index ca93a40c0c87..14bd2d61d0f6 100644
+> --- a/drivers/gpu/drm/i915/i915_gem_object.h
+> +++ b/drivers/gpu/drm/i915/i915_gem_object.h
+> @@ -290,7 +290,8 @@ struct drm_i915_gem_object {
+>  	};
+>  
+>  	/** for phys allocated objects */
+> -	struct drm_dma_handle *phys_handle;
+> +	dma_addr_t phys_handle;
+> +	void *phys_vaddr;
+>  
+>  	struct reservation_object __builtin_resv;
+>  };
+> diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
+> index 5098228f1302..4f8b368ac4e2 100644
+> --- a/drivers/gpu/drm/i915/intel_display.c
+> +++ b/drivers/gpu/drm/i915/intel_display.c
+> @@ -10066,7 +10066,7 @@ static u32 intel_cursor_base(const struct intel_plane_state *plane_state)
+>  	u32 base;
+>  
+>  	if (INTEL_INFO(dev_priv)->display.cursor_needs_physical)
+> -		base = obj->phys_handle->busaddr;
+> +		base = obj->phys_handle;
+>  	else
+>  		base = intel_plane_ggtt_offset(plane_state);
+>  
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> Intel-gfx mailing list
+> Intel-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/intel-gfx
+
+-- 
+Ville Syrjälä
+Intel
