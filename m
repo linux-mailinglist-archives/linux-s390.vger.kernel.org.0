@@ -2,60 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D68946B9E
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Jun 2019 23:15:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0CE18475E7
+	for <lists+linux-s390@lfdr.de>; Sun, 16 Jun 2019 18:26:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726637AbfFNVPK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Jun 2019 17:15:10 -0400
-Received: from [89.32.41.185] ([89.32.41.185]:50064 "EHLO slot0.normalihy.ga"
-        rhost-flags-FAIL-FAIL-OK-OK) by vger.kernel.org with ESMTP
-        id S1726475AbfFNVPK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 14 Jun 2019 17:15:10 -0400
-X-Greylist: delayed 1909 seconds by postgrey-1.27 at vger.kernel.org; Fri, 14 Jun 2019 17:15:09 EDT
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed/relaxed; s=dkim; d=normalihy.ga;
- h=Content-Type:MIME-Version:Content-Transfer-Encoding:Content-Description:Subject:To:From:Date:Reply-To:Message-ID; i=slaoma@normalihy.ga;
- bh=LF69dDschg8kOsoWmykprZXCKM4=;
- b=Q6QN3pxs85s6utCniMjjwl8RCcQKbMx3cmoBN8vEx/DNSTwXexHbEeBgRHpFdIqpRlcUj3trmqyR
-   870GXw5yyKGwm2cEMork0P/eqbAZHBrelEuKTLW1/CofKc7ybJRaI9ZlMzHAU0USm+LAJBeR3HG8
-   pYfxjEfdU7e3LAWY45ljT7lr52fiv40zy+/PrLrlXxOQQUVPGHO96gOVUclqiOtS4wUelft1+lW1
-   af8/58gbMVduvPF6zlsWBJIcwtNRi2TjCb7r/QWaaw1R7KYLyUGIdVcj3/j2ZmCBdWnn++YQjvVX
-   TMTE2k+P7gzcyFjqEk5jANnzzdd86m5bPCpgdQ==
-DomainKey-Signature: a=rsa-sha1; c=nofws; q=dns; s=dkim; d=normalihy.ga;
- b=ZMGc5xJzb87s6HztdzGTB6kAAnxvjxIxcNjfK9HypRvj9vdcWaMXi+gRVaY/FVg+A/7TywBcLMgr
-   obdOAvBxTYtvRpaAlP32pAyERzDteEDCa69Isg/ztB4NNdMfQj+bAdo1Mg7tiUX2ZOQEaMKnRJbT
-   /vIWDisY7GdcHxKF8Qt99tb3P9c/F8++bGAIiWdu9wykd9h61njiHCPaBy/mGgI3rsP8O4umB1pz
-   zVldWAgFtCsArWY4mtq16GJgt9651IH5uELTlLQw6UHcU+JMjEyow/5307HcOB/oUSSRE6nEWLJP
-   aSAEDOn3HIVo4CAC5O2kEM7dnjLkLkIGnyMSWw==;
-Content-Type: text/plain; charset="utf-8"
+        id S1726515AbfFPQZ7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 16 Jun 2019 12:25:59 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52110 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726266AbfFPQZ6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 16 Jun 2019 12:25:58 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5GGMCcq144699
+        for <linux-s390@vger.kernel.org>; Sun, 16 Jun 2019 12:25:57 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t5dn0ykgt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Sun, 16 Jun 2019 12:25:57 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <bblock@linux.ibm.com>;
+        Sun, 16 Jun 2019 17:25:54 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 16 Jun 2019 17:25:49 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5GGPl8o16252976
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 16 Jun 2019 16:25:47 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D55B3AE051;
+        Sun, 16 Jun 2019 16:25:47 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BF26BAE04D;
+        Sun, 16 Jun 2019 16:25:47 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.145.28.202])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sun, 16 Jun 2019 16:25:47 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.92)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1hcXyU-0003QV-Jn; Sun, 16 Jun 2019 18:25:46 +0200
+Date:   Sun, 16 Jun 2019 18:25:46 +0200
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     Ming Lei <ming.lei@redhat.com>
+Cc:     linux-scsi@vger.kernel.org,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        James Bottomley <James.Bottomley@hansenpartnership.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Christoph Hellwig <hch@lst.de>, Jim Gill <jgill@vmware.com>,
+        Cathy Avery <cavery@redhat.com>,
+        "Ewan D . Milne" <emilne@redhat.com>,
+        Brian King <brking@us.ibm.com>,
+        James Smart <james.smart@broadcom.com>,
+        "Juergen E . Fischer" <fischer@norbit.de>,
+        Michael Schmitz <schmitzmic@gmail.com>,
+        Finn Thain <fthain@telegraphics.com.au>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-usb@vger.kernel.org,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH V3 09/15] s390: zfcp_fc: use sg helper to operate
+ scatterlist
+References: <20190614025316.7360-1-ming.lei@redhat.com>
+ <20190614025316.7360-10-ming.lei@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: INQUIRY -AGRA POLANDS
-To:     Recipients <slaoma@normalihy.ga>
-From:   "Mrkt dept" <slaoma@normalihy.ga>
-Date:   Fri, 14 Jun 2019 13:33:45 -0700
-Reply-To: agra.poland@aol.com
-Message-ID: <0.0.1.9F2.1D522F06ABBDAB0.0@slot0.normalihy.ga>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190614025316.7360-10-ming.lei@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-TM-AS-GCONF: 00
+x-cbid: 19061616-0016-0000-0000-000002898F72
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19061616-0017-0000-0000-000032E6D566
+Message-Id: <20190616162546.GB6610@t480-pf1aa2c2>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-16_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906160157
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Sir,
+On Fri, Jun 14, 2019 at 10:53:10AM +0800, Ming Lei wrote:
+> Use the scatterlist iterators and remove direct indexing of the
+> scatterlist array.
+> 
+> This way allows us to pre-allocate one small scatterlist, which can be
+> chained with one runtime allocated scatterlist if the pre-allocated one
+> isn't enough for the whole request.
+> 
+> Cc: Steffen Maier <maier@linux.ibm.com>
+> Cc: Benjamin Block <bblock@linux.ibm.com>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> Signed-off-by: Ming Lei <ming.lei@redhat.com>
+> ---
+>  drivers/s390/scsi/zfcp_fc.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+> index 33eddb02ee30..b018b61bd168 100644
+> --- a/drivers/s390/scsi/zfcp_fc.c
+> +++ b/drivers/s390/scsi/zfcp_fc.c
+> @@ -620,7 +620,7 @@ static void zfcp_fc_sg_free_table(struct scatterlist *sg, int count)
+>  {
+>  	int i;
+>  
+> -	for (i = 0; i < count; i++, sg++)
+> +	for (i = 0; i < count; i++, sg = sg_next(sg))
+>  		if (sg)
+>  			free_page((unsigned long) sg_virt(sg));
+>  		else
+> @@ -641,7 +641,7 @@ static int zfcp_fc_sg_setup_table(struct scatterlist *sg, int count)
+>  	int i;
+>  
+>  	sg_init_table(sg, count);
+> -	for (i = 0; i < count; i++, sg++) {
+> +	for (i = 0; i < count; i++, sg = sg_next(sg)) {
+>  		addr = (void *) get_zeroed_page(GFP_KERNEL);
+>  		if (!addr) {
+>  			zfcp_fc_sg_free_table(sg, i);
 
-Greetings rom Agra Polands.
-we have been building our international business since 1997, dealing with a=
- wide range of luxury consumer goods in order to efficiently and effectivel=
-y satisfy all our customers=E2=80=99 demands.
+Acked-by: Benjamin Block <bblock@linux.ibm.com>
 
-Kindly confirm if you be able to supply us with our desired items.
+-- 
+With Best Regards, Benjamin Block      /      Linux on IBM Z Kernel Development
+IBM Systems & Technology Group   /  IBM Deutschland Research & Development GmbH
+Vorsitz. AufsR.: Matthias Hartmann       /      Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
 
-What is your Payment terms and Shipments?.
-
-Regards
-
-Riccardo Corbo
-International Buyer & Analyst
-Address:Via Trento, 7/F - Lomazzo (CO) - Italy VAT IT 12165160156 =
-
-agra.poland@aol.com
