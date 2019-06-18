@@ -2,76 +2,58 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 10EAD4A6CA
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Jun 2019 18:26:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 616334A899
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Jun 2019 19:39:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729883AbfFRQ0W (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Jun 2019 12:26:22 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47312 "EHLO mx1.redhat.com"
+        id S1730170AbfFRRio (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Jun 2019 13:38:44 -0400
+Received: from smtp2.ono.com ([62.42.230.179]:18612 "EHLO smtp2.ono.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729308AbfFRQ0W (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 18 Jun 2019 12:26:22 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4B79F8552E;
-        Tue, 18 Jun 2019 16:26:12 +0000 (UTC)
-Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0860D600C8;
-        Tue, 18 Jun 2019 16:26:00 +0000 (UTC)
-Date:   Tue, 18 Jun 2019 18:25:58 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate
- resource in use
-Message-ID: <20190618182558.7d7e025a.cohuck@redhat.com>
-In-Reply-To: <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
-References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
-        <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1729477AbfFRRio (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 18 Jun 2019 13:38:44 -0400
+X-Junkmail-Premium-Raw: score=26/50,refid=2.7.2:2019.6.18.165417:17:26.894,ip=62.42.230.133,rules=__HAS_MSGID,
+ __SANE_MSGID, MSGID_JMAIL_DEFAULT, INVALID_MSGID_NO_FQDN, __HAS_FROM,
+ FROM_NAME_PHRASE, FROM_NAME_ALLCAPS, __HAS_REPLYTO, __FRAUD_WEBMAIL_REPLYTO,
+ BLANK_SUBJECT, __MIME_VERSION, __CT, __CT_TEXT_PLAIN, __CTE, MISSING_HEADERS,
+ __ANY_URI, __FRAUD_BODY_WEBMAIL, __URI_NO_WWW, __NO_HTML_TAG_RAW,
+ BODYTEXTP_SIZE_400_LESS, BODY_SIZE_200_299, BODYTEXTP_SIZE_3000_LESS,
+ __MIME_TEXT_P1, __MIME_TEXT_ONLY, __URI_NS, HTML_00_01, HTML_00_10,
+ BODY_SIZE_5000_LESS, __FRAUD_WEBMAIL, WEBMAIL_REPLYTO_NOT_FROM,
+ FRAUD_WEBMAIL_R_NOT_F, __MIME_TEXT_P, FRAUD_LITTLE_BODY,
+ __PHISH_SPEAR_STRUCTURE_1, BODY_SIZE_1000_LESS, BODY_SIZE_2000_LESS,
+ SMALL_BODY, __PHISH_SPEAR_STRUCTURE_2, REPLYTO_FROM_DIFF_ADDY, NO_URI_HTTPS,
+ BODY_SIZE_7000_LESS, TO_MALFORMED
+Received: from resprs03 (62.42.230.133) by smtp2.ono.com (9.0.019.09-1)
+        id 5CAF0F5D03693A66; Tue, 18 Jun 2019 19:30:26 +0200
+Received: from (149.126.75.9) by webmailcpr03n.ono.com;  Tue, 18 Jun 2019 19:30:24 +0200
+Message-ID: <33042059.649451560879024452.JavaMail.defaultUser@defaultHost>
+Date:   Tue, 18 Jun 2019 19:30:24 +0200 (CEST)
+From:   DR ALBERT ZONGO <rjpd@ono.com>
+Reply-To: dralbertddzongo@gmail.com
+Subject: 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain;charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 18 Jun 2019 16:26:22 +0000 (UTC)
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 13 Jun 2019 15:39:36 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> Introduces a new driver callback to prevent a root user from unbinding
-> an AP queue from its device driver if the queue is in use. This prevents
-> a root user from inadvertently taking a queue away from a guest and
-> giving it to the host, or vice versa. The callback will be invoked
-> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
-> result in one or more AP queues being removed from its driver. If the
-> callback responds in the affirmative for any driver queried, the change
-> to the apmask or aqmask will be rejected with a device in use error.
-> 
-> For this patch, only non-default drivers will be queried. Currently,
-> there is only one non-default driver, the vfio_ap device driver. The
-> vfio_ap device driver manages AP queues passed through to one or more
-> guests and we don't want to unexpectedly take AP resources away from
-> guests which are most likely independently administered.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
->  drivers/s390/crypto/ap_bus.h |   3 +
->  2 files changed, 135 insertions(+), 6 deletions(-)
 
-Hm... I recall objecting to this patch before, fearing that it makes it
-possible for a bad actor to hog resources that can't be removed by
-root, even forcefully. (I have not had time to look at the intervening
-versions, so I might be missing something.)
 
-Is there a way for root to forcefully override this?
+--
+Greetings,
+
+I have an intending proposal for you please i need you to contact my 
+private
+
+ E-mail (dralbertddzongo@gmail.com) for more updates,
+
+Best Wishes.
+
+DR ALBERT ZONGO
+
+--
+
