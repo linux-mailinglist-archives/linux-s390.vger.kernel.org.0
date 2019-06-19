@@ -2,110 +2,233 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BCAE74BE1D
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Jun 2019 18:29:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73F854C220
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Jun 2019 22:13:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfFSQ3F (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Jun 2019 12:29:05 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:35718 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727198AbfFSQ3F (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 19 Jun 2019 12:29:05 -0400
-Received: by mail-qk1-f196.google.com with SMTP id l128so11324631qke.2
-        for <linux-s390@vger.kernel.org>; Wed, 19 Jun 2019 09:29:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qnUOwWGBCAXAVLri1Ul0fDjUeERWKjKVp0Rio+t6Mw0=;
-        b=Mu7sgXi6O1BEfTzeAxDFiZq9WYAU+8GuA+frzMgX9hRk0/2Eo2VPU9VKN7SPqn7GLw
-         BMmvCbBlMZt8BrrdyjrzJb5mIwmN+Un5ohC6uh52oLeiu3fM9lYGSfsBxw2N/in8YFn5
-         94JBdMTWXqhPkHC5ogDkAk30Vj3tK2OB7FH+D8RuRjkNrh4KSwvNzZkKLQDt1o6UXnKk
-         akxzg79p5LQYrNgI6wQWhEDCa4i3Wr2Q3GuDm1M6C6XhuTkbEI5dQ8Rzs09QxzMXG/yv
-         86i6u7h1UReQ+1KLg8ARX3o5vtg8COFFdiinD/3xnzFLxOpaxmET6WHLpP1penmwv6Fz
-         qw4w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qnUOwWGBCAXAVLri1Ul0fDjUeERWKjKVp0Rio+t6Mw0=;
-        b=PUWnVsB6roCueiGwVnE1FrulEjIm9OS0DPjXN+r6c55wkSHAeNMVqTy9uJwDOy5S3Y
-         KkS4P0e0ROCUGYwRmwoxbgBd9Qzeb3F/NXuU6SKM90lwXKlloQYwEN9Y8KSnL2Dm1O4D
-         a15MqZclihjZG0TbeW45jsu8XCJ+myLwyEAc3y2Y6HGZnAAlmSo4g3iML0m9yV9+onjR
-         aBIovVCRePh5rOXtgAZ3iiyGVeDDzAxz77IzvRG/tLWjgQno0loi0FJHwWVi43gNvfCa
-         cmX4nocI+O8N4A38vA/25KVO5E+lpEVhBqnLKcbzdaBAwwq4ccTcL9+3E41ig78nSs0/
-         xGXQ==
-X-Gm-Message-State: APjAAAXXISF9ZhlhNz+zWjIInqA2/BvY6wapYFbJ07+XxWSWi3kXfvaL
-        lV+EB9iWr81JOJzJRrZ0VMe+Uw==
-X-Google-Smtp-Source: APXvYqxI2A2AbFb1+ZoFRIh7H3fg512a+PNV8rhMF80/TQ7Ui3RJ5j2fJJDqC3jWu2+hRHD8V09puw==
-X-Received: by 2002:a37:5444:: with SMTP id i65mr23556982qkb.263.1560961744340;
-        Wed, 19 Jun 2019 09:29:04 -0700 (PDT)
-Received: from ziepe.ca (hlfxns017vw-156-34-55-100.dhcp-dynamic.fibreop.ns.bellaliant.net. [156.34.55.100])
-        by smtp.gmail.com with ESMTPSA id n5sm11854916qta.29.2019.06.19.09.29.03
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 19 Jun 2019 09:29:03 -0700 (PDT)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1hddSJ-0001sf-Di; Wed, 19 Jun 2019 13:29:03 -0300
-Date:   Wed, 19 Jun 2019 13:29:03 -0300
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     Christoph Hellwig <hch@lst.de>,
-        Potnuri Bharat Teja <bharat@chelsio.com>
-Cc:     Dan Carpenter <dan.carpenter@oracle.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
-        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
-        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
-        linux-media@vger.kernel.org
-Subject: Re: use exact allocation for dma coherent memory
-Message-ID: <20190619162903.GF9360@ziepe.ca>
-References: <20190614134726.3827-1-hch@lst.de>
- <20190617082148.GF28859@kadam>
- <20190617083342.GA7883@lst.de>
+        id S1726449AbfFSUNh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Jun 2019 16:13:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:35448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726175AbfFSUNg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 19 Jun 2019 16:13:36 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JKC4k5080962;
+        Wed, 19 Jun 2019 16:13:12 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7ty7a7pc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Jun 2019 16:13:11 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5JK9o4e015565;
+        Wed, 19 Jun 2019 20:13:05 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma01dal.us.ibm.com with ESMTP id 2t75r0y98e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Jun 2019 20:13:05 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JKD44h41681200
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Jun 2019 20:13:05 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC154AE060;
+        Wed, 19 Jun 2019 20:13:04 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5D6FAE05F;
+        Wed, 19 Jun 2019 20:13:04 +0000 (GMT)
+Received: from [9.80.202.78] (unknown [9.80.202.78])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Jun 2019 20:13:04 +0000 (GMT)
+Subject: Re: [RFC PATCH v1 1/5] vfio-ccw: Move guest_cp storage into common
+ struct
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20190618202352.39702-1-farman@linux.ibm.com>
+ <20190618202352.39702-2-farman@linux.ibm.com>
+From:   Farhan Ali <alifm@linux.ibm.com>
+Message-ID: <0e55d558-08ee-996e-f9c2-f51e8695064a@linux.ibm.com>
+Date:   Wed, 19 Jun 2019 16:13:04 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190617083342.GA7883@lst.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190618202352.39702-2-farman@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_12:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190166
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jun 17, 2019 at 10:33:42AM +0200, Christoph Hellwig wrote:
-> > drivers/infiniband/hw/cxgb4/qp.c
-> >    129  static int alloc_host_sq(struct c4iw_rdev *rdev, struct t4_sq *sq)
-> >    130  {
-> >    131          sq->queue = dma_alloc_coherent(&(rdev->lldi.pdev->dev), sq->memsize,
-> >    132                                         &(sq->dma_addr), GFP_KERNEL);
-> >    133          if (!sq->queue)
-> >    134                  return -ENOMEM;
-> >    135          sq->phys_addr = virt_to_phys(sq->queue);
-> >    136          dma_unmap_addr_set(sq, mapping, sq->dma_addr);
-> >    137          return 0;
-> >    138  }
-> > 
-> > Is this a bug?
+
+
+On 06/18/2019 04:23 PM, Eric Farman wrote:
+> Rather than allocating/freeing a piece of memory every time
+> we try to figure out how long a CCW chain is, let's use a piece
+> of memory allocated for each device.
 > 
-> Yes.  This will blow up badly on many platforms, as sq->queue
-> might be vmapped, ioremapped, come from a pool without page backing.
+> The io_mutex added with commit 4f76617378ee9 ("vfio-ccw: protect
+> the I/O region") is held for the duration of the VFIO_CCW_EVENT_IO_REQ
+> event that accesses/uses this space, so there should be no race
+> concerns with another CPU attempting an (unexpected) SSCH for the
+> same device.
+> 
+> Suggested-by: Cornelia Huck <cohuck@redhat.com>
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> ---
+> Conny, your suggestion [1] did not go unnoticed.  :)
+> 
+> [1] https://patchwork.kernel.org/comment/22312659/
+> ---
+>   drivers/s390/cio/vfio_ccw_cp.c  | 23 ++++-------------------
+>   drivers/s390/cio/vfio_ccw_cp.h  |  7 +++++++
+>   drivers/s390/cio/vfio_ccw_drv.c |  7 +++++++
+>   3 files changed, 18 insertions(+), 19 deletions(-)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+> index 90d86e1354c1..f358502376be 100644
+> --- a/drivers/s390/cio/vfio_ccw_cp.c
+> +++ b/drivers/s390/cio/vfio_ccw_cp.c
+> @@ -16,12 +16,6 @@
+>   
+>   #include "vfio_ccw_cp.h"
+>   
+> -/*
+> - * Max length for ccw chain.
+> - * XXX: Limit to 256, need to check more?
+> - */
+> -#define CCWCHAIN_LEN_MAX	256
+> -
+>   struct pfn_array {
+>   	/* Starting guest physical I/O address. */
+>   	unsigned long		pa_iova;
+> @@ -386,7 +380,7 @@ static void ccwchain_cda_free(struct ccwchain *chain, int idx)
+>    */
+>   static int ccwchain_calc_length(u64 iova, struct channel_program *cp)
+>   {
+> -	struct ccw1 *ccw, *p;
+> +	struct ccw1 *ccw = cp->guest_cp;
+>   	int cnt;
+>   
+>   	/*
+> @@ -394,15 +388,9 @@ static int ccwchain_calc_length(u64 iova, struct channel_program *cp)
+>   	 * Currently the chain length is limited to CCWCHAIN_LEN_MAX (256).
+>   	 * So copying 2K is enough (safe).
+>   	 */
+> -	p = ccw = kcalloc(CCWCHAIN_LEN_MAX, sizeof(*ccw), GFP_KERNEL);
+> -	if (!ccw)
+> -		return -ENOMEM;
+> -
+>   	cnt = copy_ccw_from_iova(cp, ccw, iova, CCWCHAIN_LEN_MAX);
 
-Gah, this addr gets fed into io_remap_pfn_range/remap_pfn_range too..
+Just a minor concern, should we clear out cp->guest_cp memory before we 
+do the copying? Given that the ccwchain_calc_length will also call be 
+called during tic handling, it's possible there might be some garbage 
+data in guest_cp, no?
 
-Potnuri, you should fix this.. 
 
-You probably need to use dma_mmap_from_dev_coherent() in the mmap ?
-
-Jason
+> -	if (cnt) {
+> -		kfree(ccw);
+> +	if (cnt)
+>   		return cnt;
+> -	}
+>   
+>   	cnt = 0;
+>   	do {
+> @@ -413,10 +401,8 @@ static int ccwchain_calc_length(u64 iova, struct channel_program *cp)
+>   		 * orb specified one of the unsupported formats, we defer
+>   		 * checking for IDAWs in unsupported formats to here.
+>   		 */
+> -		if ((!cp->orb.cmd.c64 || cp->orb.cmd.i2k) && ccw_is_idal(ccw)) {
+> -			kfree(p);
+> +		if ((!cp->orb.cmd.c64 || cp->orb.cmd.i2k) && ccw_is_idal(ccw))
+>   			return -EOPNOTSUPP;
+> -		}
+>   
+>   		/*
+>   		 * We want to keep counting if the current CCW has the
+> @@ -435,7 +421,6 @@ static int ccwchain_calc_length(u64 iova, struct channel_program *cp)
+>   	if (cnt == CCWCHAIN_LEN_MAX + 1)
+>   		cnt = -EINVAL;
+>   
+> -	kfree(p);
+>   	return cnt;
+>   }
+>   
+> @@ -461,7 +446,7 @@ static int ccwchain_handle_ccw(u32 cda, struct channel_program *cp)
+>   	struct ccwchain *chain;
+>   	int len, ret;
+>   
+> -	/* Get chain length. */
+> +	/* Copy the chain from cda to cp, and count the CCWs in it */
+>   	len = ccwchain_calc_length(cda, cp);
+>   	if (len < 0)
+>   		return len;
+> diff --git a/drivers/s390/cio/vfio_ccw_cp.h b/drivers/s390/cio/vfio_ccw_cp.h
+> index 3c20cd208da5..7cdc38049033 100644
+> --- a/drivers/s390/cio/vfio_ccw_cp.h
+> +++ b/drivers/s390/cio/vfio_ccw_cp.h
+> @@ -16,6 +16,12 @@
+>   
+>   #include "orb.h"
+>   
+> +/*
+> + * Max length for ccw chain.
+> + * XXX: Limit to 256, need to check more?
+> + */
+> +#define CCWCHAIN_LEN_MAX	256
+> +
+>   /**
+>    * struct channel_program - manage information for channel program
+>    * @ccwchain_list: list head of ccwchains
+> @@ -32,6 +38,7 @@ struct channel_program {
+>   	union orb orb;
+>   	struct device *mdev;
+>   	bool initialized;
+> +	struct ccw1 *guest_cp;
+>   };
+>   
+>   extern int cp_init(struct channel_program *cp, struct device *mdev,
+> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+> index 66a66ac1f3d1..34a9a5e3fd36 100644
+> --- a/drivers/s390/cio/vfio_ccw_drv.c
+> +++ b/drivers/s390/cio/vfio_ccw_drv.c
+> @@ -129,6 +129,11 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+>   	if (!private)
+>   		return -ENOMEM;
+>   
+> +	private->cp.guest_cp = kcalloc(CCWCHAIN_LEN_MAX, sizeof(struct ccw1),
+> +				       GFP_KERNEL);
+> +	if (!private->cp.guest_cp)
+> +		goto out_free;
+> +
+>   	private->io_region = kmem_cache_zalloc(vfio_ccw_io_region,
+>   					       GFP_KERNEL | GFP_DMA);
+>   	if (!private->io_region)
+> @@ -169,6 +174,7 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+>   		kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
+>   	if (private->io_region)
+>   		kmem_cache_free(vfio_ccw_io_region, private->io_region);
+> +	kfree(private->cp.guest_cp);
+>   	kfree(private);
+>   	return ret;
+>   }
+> @@ -185,6 +191,7 @@ static int vfio_ccw_sch_remove(struct subchannel *sch)
+>   
+>   	kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
+>   	kmem_cache_free(vfio_ccw_io_region, private->io_region);
+> +	kfree(private->cp.guest_cp);
+>   	kfree(private);
+>   
+>   	return 0;
+> 
