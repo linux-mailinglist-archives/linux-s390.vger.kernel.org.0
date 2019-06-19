@@ -2,85 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0681A4B1BA
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Jun 2019 07:54:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E17704B3BB
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Jun 2019 10:14:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbfFSFyh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Jun 2019 01:54:37 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:39059 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725854AbfFSFyh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 19 Jun 2019 01:54:37 -0400
-X-Originating-IP: 79.86.19.127
-Received: from [192.168.0.12] (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id E2F4DE000E;
-        Wed, 19 Jun 2019 05:54:21 +0000 (UTC)
-From:   Alex Ghiti <alex@ghiti.fr>
-To:     Alexandre Ghiti <alex@ghiti.fr>
-Cc:     "James E . J . Bottomley" <james.bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH RESEND 1/8] s390: Start fallback of top-down mmap at
- mm->mmap_base
-References: <20190619054224.5983-1-alex@ghiti.fr>
- <20190619054224.5983-2-alex@ghiti.fr>
-Message-ID: <4fcd8c83-dc33-12ab-3ba2-85a8d851674d@ghiti.fr>
-Date:   Wed, 19 Jun 2019 01:54:20 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1731135AbfFSIO1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Jun 2019 04:14:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51576 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726142AbfFSIO1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 19 Jun 2019 04:14:27 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F3715550CF;
+        Wed, 19 Jun 2019 08:14:26 +0000 (UTC)
+Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 13374600C7;
+        Wed, 19 Jun 2019 08:14:25 +0000 (UTC)
+Date:   Wed, 19 Jun 2019 10:14:23 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [RFC PATCH v1 1/5] vfio-ccw: Move guest_cp storage into common
+ struct
+Message-ID: <20190619101423.5ed567e5.cohuck@redhat.com>
+In-Reply-To: <20190618202352.39702-2-farman@linux.ibm.com>
+References: <20190618202352.39702-1-farman@linux.ibm.com>
+        <20190618202352.39702-2-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20190619054224.5983-2-alex@ghiti.fr>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 19 Jun 2019 08:14:27 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Really sorry about that, my connection is weird this morning, I'll retry 
-tomorrow.
+On Tue, 18 Jun 2019 22:23:48 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
-Sorry again,
-
-Alex
-
-On 6/19/19 1:42 AM, Alexandre Ghiti wrote:
-> In case of mmap failure in top-down mode, there is no need to go through
-> the whole address space again for the bottom-up fallback: the goal of this
-> fallback is to find, as a last resort, space between the top-down mmap base
-> and the stack, which is the only place not covered by the top-down mmap.
->
-> Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+> Rather than allocating/freeing a piece of memory every time
+> we try to figure out how long a CCW chain is, let's use a piece
+> of memory allocated for each device.
+> 
+> The io_mutex added with commit 4f76617378ee9 ("vfio-ccw: protect
+> the I/O region") is held for the duration of the VFIO_CCW_EVENT_IO_REQ
+> event that accesses/uses this space, so there should be no race
+> concerns with another CPU attempting an (unexpected) SSCH for the
+> same device.
+> 
+> Suggested-by: Cornelia Huck <cohuck@redhat.com>
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
 > ---
->   arch/s390/mm/mmap.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
-> index cbc718ba6d78..4a222969843b 100644
-> --- a/arch/s390/mm/mmap.c
-> +++ b/arch/s390/mm/mmap.c
-> @@ -166,7 +166,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
->   	if (addr & ~PAGE_MASK) {
->   		VM_BUG_ON(addr != -ENOMEM);
->   		info.flags = 0;
-> -		info.low_limit = TASK_UNMAPPED_BASE;
-> +		info.low_limit = mm->mmap_base;
->   		info.high_limit = TASK_SIZE;
->   		addr = vm_unmapped_area(&info);
->   		if (addr & ~PAGE_MASK)
+> Conny, your suggestion [1] did not go unnoticed.  :)
+
+:)
+
+> 
+> [1] https://patchwork.kernel.org/comment/22312659/
+> ---
+>  drivers/s390/cio/vfio_ccw_cp.c  | 23 ++++-------------------
+>  drivers/s390/cio/vfio_ccw_cp.h  |  7 +++++++
+>  drivers/s390/cio/vfio_ccw_drv.c |  7 +++++++
+>  3 files changed, 18 insertions(+), 19 deletions(-)
+
+Nice!
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
