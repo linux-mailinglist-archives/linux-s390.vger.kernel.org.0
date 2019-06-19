@@ -2,46 +2,45 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4EFC4B895
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Jun 2019 14:32:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BA53C4B95E
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Jun 2019 15:05:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731358AbfFSMcL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Jun 2019 08:32:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:9404 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731788AbfFSMcI (ORCPT
+        id S1731893AbfFSNEm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Jun 2019 09:04:42 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56302 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731812AbfFSNEl (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 19 Jun 2019 08:32:08 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JCMacE106727
-        for <linux-s390@vger.kernel.org>; Wed, 19 Jun 2019 08:32:07 -0400
-Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7j5a1bn2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 19 Jun 2019 08:32:07 -0400
-Received: from localhost
-        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Wed, 19 Jun 2019 13:32:05 +0100
-Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
-        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Jun 2019 13:32:03 +0100
+        Wed, 19 Jun 2019 09:04:41 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5JD0iGL124868;
+        Wed, 19 Jun 2019 09:04:33 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t7m3hwae4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Jun 2019 09:04:32 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x5JCsT70007498;
+        Wed, 19 Jun 2019 13:04:22 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03dal.us.ibm.com with ESMTP id 2t4ra62vhq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 19 Jun 2019 13:04:22 +0000
 Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JCW01u37880254
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5JD4JAl42664256
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Jun 2019 12:32:00 GMT
+        Wed, 19 Jun 2019 13:04:19 GMT
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 190DE28059;
-        Wed, 19 Jun 2019 12:32:00 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 477C128064;
+        Wed, 19 Jun 2019 13:04:19 +0000 (GMT)
 Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32DA12805C;
-        Wed, 19 Jun 2019 12:31:59 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8EFC328059;
+        Wed, 19 Jun 2019 13:04:18 +0000 (GMT)
 Received: from [9.85.194.193] (unknown [9.85.194.193])
         by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Jun 2019 12:31:59 +0000 (GMT)
-Subject: Re: [PATCH v4 1/7] s390: vfio-ap: Refactor vfio_ap driver probe and
- remove callbacks
+        Wed, 19 Jun 2019 13:04:18 +0000 (GMT)
+Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate resource
+ in use
 To:     Cornelia Huck <cohuck@redhat.com>
 Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
@@ -50,136 +49,96 @@ Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         pmorel@linux.ibm.com, pasic@linux.ibm.com,
         alex.williamson@redhat.com, kwankhede@nvidia.com
 References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
- <1560454780-20359-2-git-send-email-akrowiak@linux.ibm.com>
- <20190618181456.0252227b.cohuck@redhat.com>
+ <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
+ <20190618182558.7d7e025a.cohuck@redhat.com>
 From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Wed, 19 Jun 2019 08:31:58 -0400
+Message-ID: <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
+Date:   Wed, 19 Jun 2019 09:04:18 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <20190618181456.0252227b.cohuck@redhat.com>
+In-Reply-To: <20190618182558.7d7e025a.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19061912-0072-0000-0000-0000043E66E3
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011290; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01220214; UDB=6.00641882; IPR=6.01001356;
- MB=3.00027374; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-19 12:32:05
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19061912-0073-0000-0000-00004CAE71A3
-Message-Id: <b4a77364-3924-20d7-42cd-e011106e0301@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-19_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906190103
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906190108
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/18/19 12:14 PM, Cornelia Huck wrote:
-> On Thu, 13 Jun 2019 15:39:34 -0400
+On 6/18/19 12:25 PM, Cornelia Huck wrote:
+> On Thu, 13 Jun 2019 15:39:36 -0400
 > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 > 
->> In order to limit the number of private mdev functions called from the
->> vfio_ap device driver as well as to provide a landing spot for dynamic
->> configuration code related to binding/unbinding AP queue devices to/from
->> the vfio_ap driver, the following changes are being introduced:
+>> Introduces a new driver callback to prevent a root user from unbinding
+>> an AP queue from its device driver if the queue is in use. This prevents
+>> a root user from inadvertently taking a queue away from a guest and
+>> giving it to the host, or vice versa. The callback will be invoked
+>> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
+>> result in one or more AP queues being removed from its driver. If the
+>> callback responds in the affirmative for any driver queried, the change
+>> to the apmask or aqmask will be rejected with a device in use error.
 >>
->> * Move code from the vfio_ap driver's probe callback into a function
->>    defined in the mdev private operations file.
->>
->> * Move code from the vfio_ap driver's remove callback into a function
->>    defined in the mdev private operations file.
+>> For this patch, only non-default drivers will be queried. Currently,
+>> there is only one non-default driver, the vfio_ap device driver. The
+>> vfio_ap device driver manages AP queues passed through to one or more
+>> guests and we don't want to unexpectedly take AP resources away from
+>> guests which are most likely independently administered.
 >>
 >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 >> ---
->>   drivers/s390/crypto/vfio_ap_drv.c     | 27 ++++++++++-----------------
->>   drivers/s390/crypto/vfio_ap_ops.c     | 28 ++++++++++++++++++++++++++++
->>   drivers/s390/crypto/vfio_ap_private.h |  6 +++---
->>   3 files changed, 41 insertions(+), 20 deletions(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
->> index 003662aa8060..3c60df70891b 100644
->> --- a/drivers/s390/crypto/vfio_ap_drv.c
->> +++ b/drivers/s390/crypto/vfio_ap_drv.c
->> @@ -49,15 +49,15 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
->>    */
->>   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
->>   {
->> -	struct vfio_ap_queue *q;
->> -
->> -	q = kzalloc(sizeof(*q), GFP_KERNEL);
->> -	if (!q)
->> -		return -ENOMEM;
->> -	dev_set_drvdata(&apdev->device, q);
->> -	q->apqn = to_ap_queue(&apdev->device)->qid;
->> -	q->saved_isc = VFIO_AP_ISC_INVALID;
->> +	int ret;
->> +	struct ap_queue *queue = to_ap_queue(&apdev->device);
->> +
->> +	ret = vfio_ap_mdev_probe_queue(queue);
->> +	if (ret)
->> +		return ret;
->> +
->>   	return 0;
->> +
+>>   drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
+>>   drivers/s390/crypto/ap_bus.h |   3 +
+>>   2 files changed, 135 insertions(+), 6 deletions(-)
 > 
-> Maybe you could even condense this into a simple
+> Hm... I recall objecting to this patch before, fearing that it makes it
+> possible for a bad actor to hog resources that can't be removed by
+> root, even forcefully. (I have not had time to look at the intervening
+> versions, so I might be missing something.)
 > 
-> return vfio_ap_mdev_probe_queue(to_ap_queue(&apdev->device));
-> 
-> (Unless you plan to do more things with queue in a future patch, of
-> course.)
+> Is there a way for root to forcefully override this?
 
-Consider it done.
+You recall correctly; however, after many internal crypto team
+discussions, it was decided that this feature was important
+and should be kept.
 
-> 
->>   }
->>   
->>   /**
-> 
-> (...)
-> 
->> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
->> index f46dde56b464..5cc3c2ebf151 100644
->> --- a/drivers/s390/crypto/vfio_ap_private.h
->> +++ b/drivers/s390/crypto/vfio_ap_private.h
->> @@ -90,8 +90,6 @@ struct ap_matrix_mdev {
->>   
->>   extern int vfio_ap_mdev_register(void);
->>   extern void vfio_ap_mdev_unregister(void);
->> -int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
->> -			     unsigned int retry);
-> 
-> If you don't need that function across files anymore, you probably want
-> to make it static.
+Allow me to first address your fear that a bad actor can hog
+resources that can't be removed by root. With this enhancement,
+there is nothing preventing a root user from taking resources
+from a matrix mdev, it simply forces him/her to follow the
+proper procedure. The resources to be removed must first be
+unassigned from the matrix mdev to which they are assigned.
+The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask
+sysfs attributes can then be edited to transfer ownership
+of the resources to zcrypt.
 
-Yes.
+The rationale for keeping this feature is:
 
-> 
->>   
->>   struct vfio_ap_queue {
->>   	struct ap_matrix_mdev *matrix_mdev;
->> @@ -100,5 +98,7 @@ struct vfio_ap_queue {
->>   #define VFIO_AP_ISC_INVALID 0xff
->>   	unsigned char saved_isc;
->>   };
->> -struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q);
-> 
-> Same here.
+* It is a bad idea to steal an adapter in use from a guest. In the worst
+   case, the guest could end up without access to any crypto adapters
+   without knowing why. This could lead to performance issues on guests
+   that rely heavily on crypto such as guests used for blockchain
+   transactions.
 
-Yes again.
+* There are plenty of examples in linux of the kernel preventing a root
+   user from performing a task. For example, a module can't be removed
+   if references are still held for it. Another example would be trying
+   to bind a CEX4 adapter to a device driver not registered for CEX4;
+   this action will also be rejected.
 
-> 
->> +int vfio_ap_mdev_probe_queue(struct ap_queue *queue);
->> +void vfio_ap_mdev_remove_queue(struct ap_queue *queue);
->> +
->>   #endif /* _VFIO_AP_PRIVATE_H_ */
+* The semantics are much cleaner and the logic is far less complicated.
+
+* It forces the use of the proper procedure to change ownership of AP
+   queues.
+
+
 > 
 
