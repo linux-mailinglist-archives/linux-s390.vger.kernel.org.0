@@ -2,85 +2,54 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B4215930D
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Jun 2019 06:54:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F33C94D9F9
+	for <lists+linux-s390@lfdr.de>; Thu, 20 Jun 2019 21:10:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfF1Ex7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 28 Jun 2019 00:53:59 -0400
-Received: from mail-pg1-f232.google.com ([209.85.215.232]:35528 "EHLO
-        mail-pg1-f232.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726505AbfF1Ex6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 28 Jun 2019 00:53:58 -0400
-Received: by mail-pg1-f232.google.com with SMTP id s27so2029222pgl.2
-        for <linux-s390@vger.kernel.org>; Thu, 27 Jun 2019 21:53:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ctcd-edu.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:thread-topic:thread-index:date:message-id
-         :accept-language:content-language:content-transfer-encoding
-         :mime-version;
-        bh=uja0RKLj8/ZClYB7/xee4WJU8BS3tEVS8HkeIEY1v6o=;
-        b=yoeySuHZ2sejtG818TC1O/sRk49+/vQ3CbN+Cdo+UHW9L5funzQd2Q0pE2uLs0b0US
-         3ooTACMRlY79vI4FLzqFZKHKKrxPTrXgXaWMcqe8jgbG9TaDTNtilkTZRtg6VlUGiKdp
-         KbTF2mzomGYMgE4bQnu5VDh7bapfFBiT2qYBZJe7YG5LbyDWz/Eh/rPZUG+Ac0xjJxZH
-         W3mbIfopUIqlT0EL+QWT7o/xSZm5JFZCL+eCmMMNv60Jnl/aFltkCdOXb5SlSsjXYCQB
-         Nb4cLYVjYvOUfUwx9XO2NitclNXqBV9hkxd1YcPbhSzExvM/+lHPAma8+4zL50ilre/p
-         2Ulg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:thread-topic:thread-index:date
-         :message-id:accept-language:content-language
-         :content-transfer-encoding:mime-version;
-        bh=uja0RKLj8/ZClYB7/xee4WJU8BS3tEVS8HkeIEY1v6o=;
-        b=geeMOYEgo8vazReSQw2qXtt7unyuXsa2uWDsbtEucKejh+XIaBNA3rMYbxOnye9JJm
-         K4X5qHf7YMTy2MQbeUSINmahgzh9EWCmTvuiFDGOotm/ZFw6/MWrWuSOj0l80AIafOI6
-         T5OmzlLLymlaaPWjNrYDbUk/vs7G3WtHnOZmBGAh8XUNVTf0F1YhXbtowkVGV5/48UPI
-         7TYCKFRYwUYARaejUd+e5KnkQPEzhZ+FCGNIYOcSak0/wnwUBrbmIAjeDMFIncFQ4njP
-         OMeQhcRnB1RFh2+PvDWPzm1EF7CFiEvaGOqJkQDEKQXZSjqd/PVvvgIKBIQtKDLK3wVP
-         +tkA==
-X-Gm-Message-State: APjAAAW13pVdy2UJbmJooNbiZ8CL/l4HQNPKafBdE9uAJAn37krlfzw8
-        BPo7HMbfakg34FY7U1O1p1T74d5C2RGAYM7iB4tbkoClHuJu8g==
-X-Google-Smtp-Source: APXvYqxJkYMp/D0/TOWa0cF+M2QrMgL6Fs/241l24lc+p+ZxC69PNEQYyCft/PgXL83TNevq6R0mSpDU13C7
-X-Received: by 2002:a17:90a:20c6:: with SMTP id f64mr10700090pjg.57.1561697638054;
-        Thu, 27 Jun 2019 21:53:58 -0700 (PDT)
-Received: from mail.ctcd.edu (rrcs-67-79-90-89.sw.biz.rr.com. [67.79.90.89])
-        by smtp-relay.gmail.com with ESMTPS id n69sm110753pjb.9.2019.06.27.21.53.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 27 Jun 2019 21:53:58 -0700 (PDT)
-X-Relaying-Domain: ctcd.edu
-Received: from CTCEmail02.campus.ctcd.org (172.17.139.89) by
- CTCEmail01.campus.ctcd.org (172.17.139.87) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.845.34; Thu, 20 Jun 2019 09:20:21 -0500
-Received: from CTCEmail02.campus.ctcd.org ([fe80::a0bb:ad1f:8c21:8800]) by
- CTCEmail02.campus.ctcd.org ([fe80::a0bb:ad1f:8c21:8800%2]) with mapi id
- 15.01.0845.034; Thu, 20 Jun 2019 09:20:21 -0500
-From:   "Chambers, Marcine" <MChambers@ctcd.edu>
-Subject: GOOD DAY
-Thread-Topic: GOOD DAY
-Thread-Index: AQHVJ3NH8MyJd8SpTkSfWerfM/UxGQ==
-Date:   Thu, 20 Jun 2019 14:20:21 +0000
-Message-ID: <1bcebb25cbc54329a424613008b7d525@ctcd.edu>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.17.139.254]
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726106AbfFTTKF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Jun 2019 15:10:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725905AbfFTTKF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 20 Jun 2019 15:10:05 -0400
+Subject: Re: [GIT PULL] s390 updates for 5.2-rc6
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1561057804;
+        bh=bOXL6+/OXDgEFWo2egX33mwohLHkdTecViIi+c1FV4U=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=x+Yh2w7uhYnlQjqm0lk79psIxzBkI6GKFdWVgDs8J0nC3yiAwNTjDbJhd1qLQkYhE
+         njF5gCNiV22n2/9+tZVSO9bTW5ZGWEtwotH91NXp7eMGrWyNU3X6fbe9ZxWXsjRkrn
+         38mSk3mWVT5d4zUo2mMDhh4YBrcCBm22zzh3ZF44=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <20190620121727.GA4387@osiris>
+References: <20190620121727.GA4387@osiris>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <20190620121727.GA4387@osiris>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.2-5
+X-PR-Tracked-Commit-Id: 11aff183225c5cf48fae074cd99d8f18ba84ed34
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: a409de616259c520cc864f3a2bba69dde208c8be
+Message-Id: <156105780442.22331.5122926078611703382.pr-tracker-bot@kernel.org>
+Date:   Thu, 20 Jun 2019 19:10:04 +0000
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-I am Vice Chairman of Hang Seng Bank, I have Important Matter to Discuss wi=
-th you concerning my late client, Died without a NEXT OF KIN. Send me your =
-private email for full details information. email me at (chienkraymond@outl=
-ook.com)
+The pull request you sent on Thu, 20 Jun 2019 14:17:27 +0200:
 
-Mail:infocarfer@aim.com
+> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.2-5
 
-Regards
-Dr.Raymond Chien Kuo Fung
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/a409de616259c520cc864f3a2bba69dde208c8be
 
+Thank you!
+
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
