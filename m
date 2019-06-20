@@ -2,100 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCC914C69A
-	for <lists+linux-s390@lfdr.de>; Thu, 20 Jun 2019 07:13:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A672B4CC4A
+	for <lists+linux-s390@lfdr.de>; Thu, 20 Jun 2019 12:52:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbfFTFNa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Jun 2019 01:13:30 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:51937 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfFTFNa (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Jun 2019 01:13:30 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id CD96D240006;
-        Thu, 20 Jun 2019 05:13:22 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH RESEND 8/8] mm: Remove mmap_legacy_base and mmap_compat_legacy_code fields from mm_struct
-Date:   Thu, 20 Jun 2019 01:03:28 -0400
-Message-Id: <20190620050328.8942-9-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190620050328.8942-1-alex@ghiti.fr>
-References: <20190620050328.8942-1-alex@ghiti.fr>
+        id S1726435AbfFTKv4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Jun 2019 06:51:56 -0400
+Received: from verein.lst.de ([213.95.11.211]:59434 "EHLO newverein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726211AbfFTKv4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 20 Jun 2019 06:51:56 -0400
+Received: by newverein.lst.de (Postfix, from userid 2407)
+        id 558CF68B20; Thu, 20 Jun 2019 12:51:24 +0200 (CEST)
+Date:   Thu, 20 Jun 2019 12:51:24 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Potnuri Bharat Teja <bharat@chelsio.com>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+Subject: Re: use exact allocation for dma coherent memory
+Message-ID: <20190620105124.GA25233@lst.de>
+References: <20190614134726.3827-1-hch@lst.de> <20190617082148.GF28859@kadam> <20190617083342.GA7883@lst.de> <20190619162903.GF9360@ziepe.ca>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190619162903.GF9360@ziepe.ca>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Now that x86 and parisc do not use those fields anymore, remove them from
-mm code.
+On Wed, Jun 19, 2019 at 01:29:03PM -0300, Jason Gunthorpe wrote:
+> > Yes.  This will blow up badly on many platforms, as sq->queue
+> > might be vmapped, ioremapped, come from a pool without page backing.
+> 
+> Gah, this addr gets fed into io_remap_pfn_range/remap_pfn_range too..
+> 
+> Potnuri, you should fix this.. 
+> 
+> You probably need to use dma_mmap_from_dev_coherent() in the mmap ?
 
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
----
- include/linux/mm_types.h | 2 --
- mm/debug.c               | 4 ++--
- 2 files changed, 2 insertions(+), 4 deletions(-)
+The function to use is dma_mmap_coherent, dma_mmap_from_dev_coherent is
+just an internal helper.
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 1d1093474c1a..9a5935f9cc7e 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -364,11 +364,9 @@ struct mm_struct {
- 				unsigned long pgoff, unsigned long flags);
- #endif
- 		unsigned long mmap_base;	/* base of mmap area */
--		unsigned long mmap_legacy_base;	/* base of mmap area in bottom-up allocations */
- #ifdef CONFIG_HAVE_ARCH_COMPAT_MMAP_BASES
- 		/* Base adresses for compatible mmap() */
- 		unsigned long mmap_compat_base;
--		unsigned long mmap_compat_legacy_base;
- #endif
- 		unsigned long task_size;	/* size of task vm space */
- 		unsigned long highest_vm_end;	/* highest vma end address */
-diff --git a/mm/debug.c b/mm/debug.c
-index 8345bb6e4769..3ddffe1efcda 100644
---- a/mm/debug.c
-+++ b/mm/debug.c
-@@ -134,7 +134,7 @@ void dump_mm(const struct mm_struct *mm)
- #ifdef CONFIG_MMU
- 		"get_unmapped_area %px\n"
- #endif
--		"mmap_base %lu mmap_legacy_base %lu highest_vm_end %lu\n"
-+		"mmap_base %lu highest_vm_end %lu\n"
- 		"pgd %px mm_users %d mm_count %d pgtables_bytes %lu map_count %d\n"
- 		"hiwater_rss %lx hiwater_vm %lx total_vm %lx locked_vm %lx\n"
- 		"pinned_vm %llx data_vm %lx exec_vm %lx stack_vm %lx\n"
-@@ -162,7 +162,7 @@ void dump_mm(const struct mm_struct *mm)
- #ifdef CONFIG_MMU
- 		mm->get_unmapped_area,
- #endif
--		mm->mmap_base, mm->mmap_legacy_base, mm->highest_vm_end,
-+		mm->mmap_base, mm->highest_vm_end,
- 		mm->pgd, atomic_read(&mm->mm_users),
- 		atomic_read(&mm->mm_count),
- 		mm_pgtables_bytes(mm),
--- 
-2.20.1
-
+That beiŋ said the drivers/infiniband code has a lot of
+*remap_pfn_range, and a lot of them look like they might be for
+DMA memory.
