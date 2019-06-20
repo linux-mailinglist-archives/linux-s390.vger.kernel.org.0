@@ -2,153 +2,140 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B250A4CD89
-	for <lists+linux-s390@lfdr.de>; Thu, 20 Jun 2019 14:17:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 629424CE71
+	for <lists+linux-s390@lfdr.de>; Thu, 20 Jun 2019 15:17:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbfFTMRh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Jun 2019 08:17:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38102 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726649AbfFTMRg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 20 Jun 2019 08:17:36 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KCEsFu097237
-        for <linux-s390@vger.kernel.org>; Thu, 20 Jun 2019 08:17:35 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2t88rqbgbm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 20 Jun 2019 08:17:35 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Thu, 20 Jun 2019 13:17:33 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 20 Jun 2019 13:17:31 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KCHTdk48169198
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 12:17:29 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5EA3D5204E;
-        Thu, 20 Jun 2019 12:17:29 +0000 (GMT)
-Received: from osiris (unknown [9.145.74.86])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 1BFE35204F;
-        Thu, 20 Jun 2019 12:17:29 +0000 (GMT)
-Date:   Thu, 20 Jun 2019 14:17:27 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] s390 updates for 5.2-rc6
+        id S1731979AbfFTNRH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Jun 2019 09:17:07 -0400
+Received: from mail-io1-f71.google.com ([209.85.166.71]:44625 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726952AbfFTNRG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Jun 2019 09:17:06 -0400
+Received: by mail-io1-f71.google.com with SMTP id i133so5170917ioa.11
+        for <linux-s390@vger.kernel.org>; Thu, 20 Jun 2019 06:17:06 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=pFl57I7Gu7LJtpS4kZ7e5rZsSSBo5xMttzXo6P3hq6Y=;
+        b=II+TyHUw0RNtlU692eiffr5bJypOGSfkA7wdu5zVo6tIVf3hl++LDXQmGVHAcpwS8i
+         sAP50dYJoTL/iZ8/c0zxWjfZt4h2bIyMlUR5zXqZlB2mLQeflGXrfpEd/5Q79/ugNxsP
+         nqKuSxwTurWTCwrSM1t1cO6d9Y91XvB47LB94siAlHJRC/MEjlXMCwBXXabJPNHX7wUB
+         gvpZe3LB4rDNpLZgkmuou9vgCuzdPs+W2vHRjxXz+n2DCFnw+r+Ygy4OWwbUDFY/F/8U
+         B+KYjOEJNXWmSY7J+mhAn1lUwnTE136vy/ZKZqrgBxTWaTTuRZpaOudlT49UkRmtANzt
+         iNBw==
+X-Gm-Message-State: APjAAAXCLXdnie+gCXEfaSozRDuaAfXDb62DTOGoaPEIv4Kpn0JnPmlZ
+        jPw6Qfn/nGtpofWSH1qG2ECiwVjPR9zAMaTIXjDovukPekUS
+X-Google-Smtp-Source: APXvYqwLnQfND50vIn2AJG13GUkJ3L6wdGfUhNSiK9/TZfF1gRHnqct2uCCZoIge4fY7fgOyrrONXpJorYI3kaD1zSbhdUhm7tSO
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19062012-4275-0000-0000-000003441300
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062012-4276-0000-0000-00003854426D
-Message-Id: <20190620121727.GA4387@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=978 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200091
+X-Received: by 2002:a5d:9ec4:: with SMTP id a4mr955576ioe.125.1561036625845;
+ Thu, 20 Jun 2019 06:17:05 -0700 (PDT)
+Date:   Thu, 20 Jun 2019 06:17:05 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000090ae7a058bc12946@google.com>
+Subject: WARNING in debug_check_no_obj_freed
+From:   syzbot <syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        ubraun@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Linus,
+Hello,
 
-The following changes since commit d1fdb6d8f6a4109a4263176c84b899076a5f8008:
+syzbot found the following crash on:
 
-  Linux 5.2-rc4 (2019-06-08 20:24:46 -0700)
+HEAD commit:    bed3c0d8 Merge tag 'for-5.2-rc5-tag' of git://git.kernel.o..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=13cc2c3aa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
+dashboard link: https://syzkaller.appspot.com/bug?extid=b972214bb803a343f4fe
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fcf0b2a00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a22ad6a00000
 
-are available in the git repository at:
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.2-5
+------------[ cut here ]------------
+ODEBUG: free active (active state 0) object type: work_struct hint:  
+smc_tx_work+0x0/0x260 net/smc/smc_tx.c:264
+WARNING: CPU: 0 PID: 8158 at lib/debugobjects.c:328 debug_print_object  
+lib/debugobjects.c:325 [inline]
+WARNING: CPU: 0 PID: 8158 at lib/debugobjects.c:328  
+__debug_check_no_obj_freed lib/debugobjects.c:785 [inline]
+WARNING: CPU: 0 PID: 8158 at lib/debugobjects.c:328  
+debug_check_no_obj_freed+0x5c0/0x740 lib/debugobjects.c:817
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 8158 Comm: syz-executor878 Not tainted 5.2.0-rc5+ #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  panic+0x28a/0x7c9 kernel/panic.c:219
+  __warn+0x216/0x220 kernel/panic.c:576
+  report_bug+0x190/0x290 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  do_error_trap+0xd7/0x450 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:986
+RIP: 0010:debug_print_object lib/debugobjects.c:325 [inline]
+RIP: 0010:__debug_check_no_obj_freed lib/debugobjects.c:785 [inline]
+RIP: 0010:debug_check_no_obj_freed+0x5c0/0x740 lib/debugobjects.c:817
+Code: 96 5c 4e fe 4c 89 fa 48 8b 4d b8 4c 8b 01 48 c7 c7 9c 55 66 88 48 c7  
+c6 ec 63 7e 88 44 89 e1 4c 8b 4d b0 31 c0 e8 30 05 e7 fd <0f> 0b 48 8b 4d  
+d0 48 8b 55 c8 ff 05 e8 b2 7c 05 48 b8 00 00 00 00
+RSP: 0018:ffff888084ba7b60 EFLAGS: 00010046
+RAX: ff4ab4ef149ca600 RBX: 1ffff110152b3acd RCX: ffff88808a330040
+RDX: 0000000000000000 RSI: 0000000080000001 RDI: 0000000000000000
+RBP: ffff888084ba7c00 R08: ffffffff815e87e4 R09: ffffed1015d440c2
+R10: ffffed1015d440c2 R11: 1ffff11015d440c1 R12: 0000000000000000
+R13: 1ffff110152b3acf R14: ffff888085381798 R15: dffffc0000000000
+  kmem_cache_free+0xb9/0x170 mm/slab.c:3697
+  sk_prot_free net/core/sock.c:1637 [inline]
+  __sk_destruct+0x558/0x660 net/core/sock.c:1725
+  sk_destruct net/core/sock.c:1733 [inline]
+  __sk_free+0x307/0x3d0 net/core/sock.c:1744
+  sk_free+0x2a/0x40 net/core/sock.c:1755
+  sock_put include/net/sock.h:1725 [inline]
+  smc_release+0x4b3/0x620 net/smc/af_smc.c:182
+  __sock_release net/socket.c:601 [inline]
+  sock_close+0xdb/0x280 net/socket.c:1273
+  __fput+0x2e4/0x740 fs/file_table.c:280
+  ____fput+0x15/0x20 fs/file_table.c:313
+  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:185 [inline]
+  exit_to_usermode_loop arch/x86/entry/common.c:168 [inline]
+  prepare_exit_to_usermode+0x402/0x4f0 arch/x86/entry/common.c:199
+  syscall_return_slowpath+0x110/0x440 arch/x86/entry/common.c:279
+  do_syscall_64+0x126/0x140 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x402720
+Code: 01 f0 ff ff 0f 83 40 0d 00 00 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f  
+44 00 00 83 3d 0d 94 2d 00 00 75 14 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
+ff 0f 83 14 0d 00 00 c3 48 83 ec 08 e8 7a 02 00 00
+RSP: 002b:00007ffda70c1198 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000004 RCX: 0000000000402720
+RDX: 0000000000000001 RSI: 0000000000000006 RDI: 0000000000000003
+RBP: 0000000000000000 R08: 0000000000000028 R09: 00000000004aa1df
+R10: 0000000020000000 R11: 0000000000000246 R12: 0000000000000001
+R13: 0000000000403950 R14: 0000000000000000 R15: 0000000000000000
 
-for you to fetch changes up to 11aff183225c5cf48fae074cd99d8f18ba84ed34:
+======================================================
 
-  vfio-ccw: Destroy kmem cache region on module exit (2019-06-13 15:52:28 +0200)
 
-----------------------------------------------------------------
-s390 updates for 5.2-rc6
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
- - Disable address-of-packed-member warning in s390 specific boot code
-   to get rid of a gcc9 warning which otherwise is already disabled
-   for the whole kernel.
-
- - Fix yet another compiler error seen with CONFIG_OPTIMIZE_INLINING
-   enabled.
-
- - Fix memory leak in vfio-ccw code on module exit.
-
-----------------------------------------------------------------
-Farhan Ali (1):
-      vfio-ccw: Destroy kmem cache region on module exit
-
-Guenter Roeck (1):
-      s390/ctl_reg: mark __ctl_set_bit and __ctl_clear_bit as __always_inline
-
-Heiko Carstens (1):
-      s390/boot: disable address-of-packed-member warning
-
- arch/s390/Makefile              | 1 +
- arch/s390/include/asm/ctl_reg.h | 4 ++--
- drivers/s390/cio/vfio_ccw_drv.c | 1 +
- 3 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index de8521f..e48013c 100644
---- a/arch/s390/Makefile
-+++ b/arch/s390/Makefile
-@@ -30,6 +30,7 @@ KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
- KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
- KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
- KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-option,-ffreestanding)
-+KBUILD_CFLAGS_DECOMPRESSOR += $(call cc-disable-warning, address-of-packed-member)
- KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),-g)
- KBUILD_CFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO_DWARF4), $(call cc-option, -gdwarf-4,))
- UTS_MACHINE	:= s390x
-diff --git a/arch/s390/include/asm/ctl_reg.h b/arch/s390/include/asm/ctl_reg.h
-index 4600453..3bda757 100644
---- a/arch/s390/include/asm/ctl_reg.h
-+++ b/arch/s390/include/asm/ctl_reg.h
-@@ -55,7 +55,7 @@
- 		: "i" (low), "i" (high));				\
- } while (0)
- 
--static inline void __ctl_set_bit(unsigned int cr, unsigned int bit)
-+static __always_inline void __ctl_set_bit(unsigned int cr, unsigned int bit)
- {
- 	unsigned long reg;
- 
-@@ -64,7 +64,7 @@ static inline void __ctl_set_bit(unsigned int cr, unsigned int bit)
- 	__ctl_load(reg, cr, cr);
- }
- 
--static inline void __ctl_clear_bit(unsigned int cr, unsigned int bit)
-+static __always_inline void __ctl_clear_bit(unsigned int cr, unsigned int bit)
- {
- 	unsigned long reg;
- 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index ee8767f..9125f7f 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -299,6 +299,7 @@ static void __exit vfio_ccw_sch_exit(void)
- 	css_driver_unregister(&vfio_ccw_sch_driver);
- 	isc_unregister(VFIO_CCW_ISC);
- 	kmem_cache_destroy(vfio_ccw_io_region);
-+	kmem_cache_destroy(vfio_ccw_cmd_region);
- 	destroy_workqueue(vfio_ccw_work_q);
- }
- module_init(vfio_ccw_sch_init);
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
