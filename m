@@ -2,20 +2,20 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DCBB04C678
-	for <lists+linux-s390@lfdr.de>; Thu, 20 Jun 2019 07:05:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D8A14C67C
+	for <lists+linux-s390@lfdr.de>; Thu, 20 Jun 2019 07:06:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbfFTFFL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Jun 2019 01:05:11 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:57929 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725857AbfFTFFL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Jun 2019 01:05:11 -0400
+        id S1730943AbfFTFGY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Jun 2019 01:06:24 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:39981 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725857AbfFTFGX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Jun 2019 01:06:23 -0400
 X-Originating-IP: 79.86.19.127
 Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
         (Authenticated sender: alex@ghiti.fr)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id DA6C6FF804;
-        Thu, 20 Jun 2019 05:04:55 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 476DCC000A;
+        Thu, 20 Jun 2019 05:06:06 +0000 (UTC)
 From:   Alexandre Ghiti <alex@ghiti.fr>
 To:     Andrew Morton <akpm@linux-foundation.org>
 Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
@@ -36,9 +36,9 @@ Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
         linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
         sparclinux@vger.kernel.org, linux-mm@kvack.org,
         Alexandre Ghiti <alex@ghiti.fr>
-Subject: [PATCH RESEND 1/8] s390: Start fallback of top-down mmap at mm->mmap_base
-Date:   Thu, 20 Jun 2019 01:03:21 -0400
-Message-Id: <20190620050328.8942-2-alex@ghiti.fr>
+Subject: [PATCH RESEND 2/8] sh: Start fallback of top-down mmap at mm->mmap_base
+Date:   Thu, 20 Jun 2019 01:03:22 -0400
+Message-Id: <20190620050328.8942-3-alex@ghiti.fr>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190620050328.8942-1-alex@ghiti.fr>
 References: <20190620050328.8942-1-alex@ghiti.fr>
@@ -56,14 +56,14 @@ and the stack, which is the only place not covered by the top-down mmap.
 
 Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
 ---
- arch/s390/mm/mmap.c | 2 +-
+ arch/sh/mm/mmap.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/mm/mmap.c b/arch/s390/mm/mmap.c
-index cbc718ba6d78..4a222969843b 100644
---- a/arch/s390/mm/mmap.c
-+++ b/arch/s390/mm/mmap.c
-@@ -166,7 +166,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
+diff --git a/arch/sh/mm/mmap.c b/arch/sh/mm/mmap.c
+index 6a1a1297baae..4c7da92473dd 100644
+--- a/arch/sh/mm/mmap.c
++++ b/arch/sh/mm/mmap.c
+@@ -135,7 +135,7 @@ arch_get_unmapped_area_topdown(struct file *filp, const unsigned long addr0,
  	if (addr & ~PAGE_MASK) {
  		VM_BUG_ON(addr != -ENOMEM);
  		info.flags = 0;
@@ -71,7 +71,7 @@ index cbc718ba6d78..4a222969843b 100644
 +		info.low_limit = mm->mmap_base;
  		info.high_limit = TASK_SIZE;
  		addr = vm_unmapped_area(&info);
- 		if (addr & ~PAGE_MASK)
+ 	}
 -- 
 2.20.1
 
