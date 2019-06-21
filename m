@@ -2,105 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7548D4E7F4
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2019 14:25:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19DAA4E95B
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2019 15:37:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfFUMZo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Jun 2019 08:25:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47204 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726260AbfFUMZn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 21 Jun 2019 08:25:43 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9C583AC2E5;
-        Fri, 21 Jun 2019 12:25:43 +0000 (UTC)
-Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B06A819C4F;
-        Fri, 21 Jun 2019 12:25:42 +0000 (UTC)
-Date:   Fri, 21 Jun 2019 14:25:40 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Farhan Ali <alifm@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH v1 0/5] s390: more vfio-ccw code rework
-Message-ID: <20190621142540.4ed5f943.cohuck@redhat.com>
-In-Reply-To: <20190618202352.39702-1-farman@linux.ibm.com>
-References: <20190618202352.39702-1-farman@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726017AbfFUNhr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Jun 2019 09:37:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23142 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726010AbfFUNhq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 21 Jun 2019 09:37:46 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LDba15099061
+        for <linux-s390@vger.kernel.org>; Fri, 21 Jun 2019 09:37:45 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8y882wrw-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 21 Jun 2019 09:37:41 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Jun 2019 14:37:17 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Jun 2019 14:37:14 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LDb4W738994388
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Jun 2019 13:37:04 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B628DA405C;
+        Fri, 21 Jun 2019 13:37:12 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 592A7A4054;
+        Fri, 21 Jun 2019 13:37:12 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.137])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Jun 2019 13:37:12 +0000 (GMT)
+Date:   Fri, 21 Jun 2019 15:37:11 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
+In-Reply-To: <20190621115604.0f3e3f69.cohuck@redhat.com>
+References: <20190613110815.17251-1-cohuck@redhat.com>
+        <20190621115604.0f3e3f69.cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Fri, 21 Jun 2019 12:25:43 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062113-0012-0000-0000-0000032B3A4B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062113-0013-0000-0000-000021646468
+Message-Id: <20190621153711.7d713c4d.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=894 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210114
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 18 Jun 2019 22:23:47 +0200
-Eric Farman <farman@linux.ibm.com> wrote:
+On Fri, 21 Jun 2019 11:56:04 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-> A couple little improvements to the malloc load in vfio-ccw.
-> Really, there were just (the first) two patches, but then I
-> got excited and added a few stylistic ones to the end.
+> On Thu, 13 Jun 2019 13:08:15 +0200
+> Cornelia Huck <cohuck@redhat.com> wrote:
 > 
-> The routine ccwchain_calc_length() has this basic structure:
+> > Sometimes, we want to control which of the matching drivers
+> > binds to a subchannel device (e.g. for subchannels we want to
+> > handle via vfio-ccw).
+> > 
+> > For pci devices, a mechanism to do so has been introduced in
+> > 782a985d7af2 ("PCI: Introduce new device binding path using
+> > pci_dev.driver_override"). It makes sense to introduce the
+> > driver_override attribute for subchannel devices as well, so
+> > that we can easily extend the 'driverctl' tool (which makes
+> > use of the driver_override attribute for pci).
+> > 
+> > Note that unlike pci we still require a driver override to
+> > match the subchannel type; matching more than one subchannel
+> > type is probably not useful anyway.
+> > 
+> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+
+I guess the '\n' handling is customary, and is what the same what
+the pci counterpart (782a985d7af2) does anyway. It bothers
+me a little that you don't necessarily get back from with show
+what you stored. E.g. # echo -e "bug\nfree"
+> /sys/bus/css/devices/0.0.0001/driver_override # echo $?
+0
+# cat /sys/bus/css/devices/0.0.0001/driver_override
+bug
+# echo $?
+0
+But given the previous art (782a985d7af2) I think it is the best way
+to do it.
+
+The rest is very straightforward.
+
+> > ---
+> > 
+> > Lightly tested; did not yet attempt to adapt driverctl to actually
+> > make use of it.
 > 
->   ccwchain_calc_length
->     a0 = kcalloc(CCWCHAIN_LEN_MAX, sizeof(struct ccw1))
->     copy_ccw_from_iova(a0, src)
->       copy_from_iova
->         pfn_array_alloc
->           b = kcalloc(len, sizeof(*pa_iova_pfn + *pa_pfn)
->         pfn_array_pin
->           vfio_pin_pages
->         memcpy(a0, src)
->         pfn_array_unpin_free
->           vfio_unpin_pages
->           kfree(b)
->     kfree(a0)
+> Friendly ping.
 > 
-> We do this EVERY time we process a new channel program chain,
-> meaning at least once per SSCH and more if TICs are involved,
-> to figure out how many CCWs are chained together.  Once that
-> is determined, a new piece of memory is allocated (call it a1)
-> and then passed to copy_ccw_from_iova() again, but for the
-> value calculated by ccwchain_calc_length().
-> 
-> This seems inefficient.
-> 
-> Patch 1 moves the malloc of a0 from the CCW processor to the
-> initialization of the device.  Since only one SSCH can be
-> handled concurrently, we can use this space safely to
-> determine how long the chain being processed actually is.
-> 
-> Patch 2 then removes the second copy_ccw_from_iova() call
-> entirely, and replaces it with a memcpy from a0 to a1.  This
-> is done before we process a TIC and thus a second chain, so
-> there is no overlap in the storage in channel_program.
-> 
-> Patches 3-5 clean up some things that aren't as clear as I'd
-> like, but didn't want to pollute the first two changes.
-> For example, patch 3 moves the population of guest_cp to the
-> same routine that copies from it, rather than in a called
-> function.  Meanwhile, patch 4 (and thus, 5) was something I
-> had lying around for quite some time, because it looked to
-> be structured weird.  Maybe that's one bridge too far.
-> 
-> Eric Farman (5):
->   vfio-ccw: Move guest_cp storage into common struct
->   vfio-ccw: Skip second copy of guest cp to host
->   vfio-ccw: Copy CCW data outside length calculation
->   vfio-ccw: Factor out the ccw0-to-ccw1 transition
->   vfio-ccw: Remove copy_ccw_from_iova()
-> 
->  drivers/s390/cio/vfio_ccw_cp.c  | 108 +++++++++++---------------------
->  drivers/s390/cio/vfio_ccw_cp.h  |   7 +++
->  drivers/s390/cio/vfio_ccw_drv.c |   7 +++
->  3 files changed, 52 insertions(+), 70 deletions(-)
+> In the meanwhile, I figured out that you do not need to adapt driverctl
+> at all, but just need to pass it '-b css' to work on the css bus; this
+> seems to work just fine with this patch applied.
 > 
 
-Thanks, applied.
+Interesting. I hope to get around and have a closer look at it
+eventually.
+
+Regards,
+Halil
+
