@@ -2,135 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19DAA4E95B
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2019 15:37:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6064A4EA13
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2019 16:00:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726017AbfFUNhr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Jun 2019 09:37:47 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23142 "EHLO
+        id S1726045AbfFUOAw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Jun 2019 10:00:52 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63302 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726010AbfFUNhq (ORCPT
+        by vger.kernel.org with ESMTP id S1725985AbfFUOAv (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 21 Jun 2019 09:37:46 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LDba15099061
-        for <linux-s390@vger.kernel.org>; Fri, 21 Jun 2019 09:37:45 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8y882wrw-1
+        Fri, 21 Jun 2019 10:00:51 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5LE0Vdf015471
+        for <linux-s390@vger.kernel.org>; Fri, 21 Jun 2019 10:00:50 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8xamphuk-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 21 Jun 2019 09:37:41 -0400
+        for <linux-s390@vger.kernel.org>; Fri, 21 Jun 2019 10:00:46 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 21 Jun 2019 14:37:17 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 21 Jun 2019 15:00:39 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Jun 2019 14:37:14 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LDb4W738994388
+        Fri, 21 Jun 2019 15:00:36 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5LE0ZnC25100596
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Jun 2019 13:37:04 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B628DA405C;
-        Fri, 21 Jun 2019 13:37:12 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 592A7A4054;
-        Fri, 21 Jun 2019 13:37:12 +0000 (GMT)
+        Fri, 21 Jun 2019 14:00:35 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 788CD4C06A;
+        Fri, 21 Jun 2019 14:00:34 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 422434C07E;
+        Fri, 21 Jun 2019 14:00:34 +0000 (GMT)
 Received: from oc2783563651 (unknown [9.152.224.137])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Jun 2019 13:37:12 +0000 (GMT)
-Date:   Fri, 21 Jun 2019 15:37:11 +0200
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Jun 2019 14:00:34 +0000 (GMT)
+Date:   Fri, 21 Jun 2019 16:00:32 +0200
 From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
-In-Reply-To: <20190621115604.0f3e3f69.cohuck@redhat.com>
-References: <20190613110815.17251-1-cohuck@redhat.com>
-        <20190621115604.0f3e3f69.cohuck@redhat.com>
+To:     Farhan Ali <alifm@linux.ibm.com>
+Cc:     cohuck@redhat.com, farman@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [RFC v1 1/1] vfio-ccw: Don't call cp_free if we are processing
+ a channel program
+In-Reply-To: <46dc0cbdcb8a414d70b7807fceb1cca6229408d5.1561055076.git.alifm@linux.ibm.com>
+References: <cover.1561055076.git.alifm@linux.ibm.com>
+        <46dc0cbdcb8a414d70b7807fceb1cca6229408d5.1561055076.git.alifm@linux.ibm.com>
 Organization: IBM
 X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19062113-0012-0000-0000-0000032B3A4B
+x-cbid: 19062114-0008-0000-0000-000002F5DAEB
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062113-0013-0000-0000-000021646468
-Message-Id: <20190621153711.7d713c4d.pasic@linux.ibm.com>
+x-cbparentid: 19062114-0009-0000-0000-00002262FFC6
+Message-Id: <20190621160032.1bd0c15f.pasic@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-21_10:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=894 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906210114
+ mlxlogscore=924 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906210117
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Jun 2019 11:56:04 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+On Thu, 20 Jun 2019 17:07:09 -0400
+Farhan Ali <alifm@linux.ibm.com> wrote:
 
-> On Thu, 13 Jun 2019 13:08:15 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
+> There is a small window where it's possible that an interrupt can
+> arrive and can call cp_free, while we are still processing a channel
+> program (i.e allocating memory, pinnging pages, translating
+> addresses etc). This can lead to allocating and freeing at the same
+> time and can cause memory corruption.
 > 
-> > Sometimes, we want to control which of the matching drivers
-> > binds to a subchannel device (e.g. for subchannels we want to
-> > handle via vfio-ccw).
-> > 
-> > For pci devices, a mechanism to do so has been introduced in
-> > 782a985d7af2 ("PCI: Introduce new device binding path using
-> > pci_dev.driver_override"). It makes sense to introduce the
-> > driver_override attribute for subchannel devices as well, so
-> > that we can easily extend the 'driverctl' tool (which makes
-> > use of the driver_override attribute for pci).
-> > 
-> > Note that unlike pci we still require a driver override to
-> > match the subchannel type; matching more than one subchannel
-> > type is probably not useful anyway.
-> > 
-> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
-
-I guess the '\n' handling is customary, and is what the same what
-the pci counterpart (782a985d7af2) does anyway. It bothers
-me a little that you don't necessarily get back from with show
-what you stored. E.g. # echo -e "bug\nfree"
-> /sys/bus/css/devices/0.0.0001/driver_override # echo $?
-0
-# cat /sys/bus/css/devices/0.0.0001/driver_override
-bug
-# echo $?
-0
-But given the previous art (782a985d7af2) I think it is the best way
-to do it.
-
-The rest is very straightforward.
-
-> > ---
-> > 
-> > Lightly tested; did not yet attempt to adapt driverctl to actually
-> > make use of it.
+> Let's not call cp_free if we are currently processing a channel program.
 > 
-> Friendly ping.
+> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+> ---
 > 
-> In the meanwhile, I figured out that you do not need to adapt driverctl
-> at all, but just need to pass it '-b css' to work on the css bus; this
-> seems to work just fine with this patch applied.
+> I have been running my test overnight with this patch and I haven't
+> seen the stack traces that I mentioned about earlier. I would like
+> to get some reviews on this and also if this is the right thing to
+> do?
 > 
+> Thanks
+> Farhan
+> 
+>  drivers/s390/cio/vfio_ccw_drv.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+> index 66a66ac..61ece3f 100644
+> --- a/drivers/s390/cio/vfio_ccw_drv.c
+> +++ b/drivers/s390/cio/vfio_ccw_drv.c
+> @@ -88,7 +88,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
+>  		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
+>  	if (scsw_is_solicited(&irb->scsw)) {
+>  		cp_update_scsw(&private->cp, &irb->scsw);
+> -		if (is_final)
+> +		if (is_final && private->state != VFIO_CCW_STATE_CP_PROCESSING)
 
-Interesting. I hope to get around and have a closer look at it
-eventually.
+How is access to private->state correctly synchronized? And don't we
+expect private->state == VFIO_CCW_STATE_CP_PENDING in case the cp was
+submitted successfully with a ssch() and is done now (one way or the
+other)?
+
+Does this have something to do with 71189f2 "vfio-ccw: make it safe to
+access channel programs" (Cornelia Huck, 2019-01-21)?
 
 Regards,
 Halil
+
+>  			cp_free(&private->cp);
+>  	}
+>  	mutex_lock(&private->io_mutex);
 
