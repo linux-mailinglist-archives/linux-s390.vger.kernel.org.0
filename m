@@ -2,109 +2,210 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD2374DC57
-	for <lists+linux-s390@lfdr.de>; Thu, 20 Jun 2019 23:17:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8906E4E52A
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Jun 2019 11:56:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726015AbfFTVRY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Jun 2019 17:17:24 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42994 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725905AbfFTVRY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 20 Jun 2019 17:17:24 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5KL8MZ8104831
-        for <linux-s390@vger.kernel.org>; Thu, 20 Jun 2019 17:17:23 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2t8ht0g9mb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 20 Jun 2019 17:17:23 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
-        Thu, 20 Jun 2019 22:07:15 +0100
-Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 20 Jun 2019 22:07:13 +0100
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5KL7BmR58065178
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 20 Jun 2019 21:07:11 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7150D6A057;
-        Thu, 20 Jun 2019 21:07:11 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B0B456A04D;
-        Thu, 20 Jun 2019 21:07:10 +0000 (GMT)
-Received: from alifm-ThinkPad-T470p.ibm.com (unknown [9.85.195.114])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Thu, 20 Jun 2019 21:07:10 +0000 (GMT)
-From:   Farhan Ali <alifm@linux.ibm.com>
-To:     cohuck@redhat.com, farman@linux.ibm.com
-Cc:     pasic@linux.ibm.com, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, alifm@linux.ibm.com
-Subject: [RFC v1 1/1] vfio-ccw: Don't call cp_free if we are processing a channel program
-Date:   Thu, 20 Jun 2019 17:07:09 -0400
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1561055076.git.alifm@linux.ibm.com>
-References: <cover.1561055076.git.alifm@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19062021-0016-0000-0000-000009C42E34
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011299; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01220866; UDB=6.00642273; IPR=6.01002004;
- MB=3.00027397; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-20 21:07:14
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19062021-0017-0000-0000-000043B85401
-Message-Id: <46dc0cbdcb8a414d70b7807fceb1cca6229408d5.1561055076.git.alifm@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-20_14:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=760 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1906200152
+        id S1726505AbfFUJ4M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Jun 2019 05:56:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48426 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726210AbfFUJ4M (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 21 Jun 2019 05:56:12 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E3CE53084021;
+        Fri, 21 Jun 2019 09:56:11 +0000 (UTC)
+Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C98411001B27;
+        Fri, 21 Jun 2019 09:56:06 +0000 (UTC)
+Date:   Fri, 21 Jun 2019 11:56:04 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
+Message-ID: <20190621115604.0f3e3f69.cohuck@redhat.com>
+In-Reply-To: <20190613110815.17251-1-cohuck@redhat.com>
+References: <20190613110815.17251-1-cohuck@redhat.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Fri, 21 Jun 2019 09:56:12 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-There is a small window where it's possible that an interrupt can
-arrive and can call cp_free, while we are still processing a channel
-program (i.e allocating memory, pinnging pages, translating
-addresses etc). This can lead to allocating and freeing at the same
-time and can cause memory corruption.
+On Thu, 13 Jun 2019 13:08:15 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-Let's not call cp_free if we are currently processing a channel program.
+> Sometimes, we want to control which of the matching drivers
+> binds to a subchannel device (e.g. for subchannels we want to
+> handle via vfio-ccw).
+> 
+> For pci devices, a mechanism to do so has been introduced in
+> 782a985d7af2 ("PCI: Introduce new device binding path using
+> pci_dev.driver_override"). It makes sense to introduce the
+> driver_override attribute for subchannel devices as well, so
+> that we can easily extend the 'driverctl' tool (which makes
+> use of the driver_override attribute for pci).
+> 
+> Note that unlike pci we still require a driver override to
+> match the subchannel type; matching more than one subchannel
+> type is probably not useful anyway.
+> 
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+> ---
+> 
+> Lightly tested; did not yet attempt to adapt driverctl to actually
+> make use of it.
 
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
----
+Friendly ping.
 
-I have been running my test overnight with this patch and I haven't
-seen the stack traces that I mentioned about earlier. I would like
-to get some reviews on this and also if this is the right thing to
-do?
+In the meanwhile, I figured out that you do not need to adapt driverctl
+at all, but just need to pass it '-b css' to work on the css bus; this
+seems to work just fine with this patch applied.
 
-Thanks
-Farhan
-
- drivers/s390/cio/vfio_ccw_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index 66a66ac..61ece3f 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -88,7 +88,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
- 		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
- 	if (scsw_is_solicited(&irb->scsw)) {
- 		cp_update_scsw(&private->cp, &irb->scsw);
--		if (is_final)
-+		if (is_final && private->state != VFIO_CCW_STATE_CP_PROCESSING)
- 			cp_free(&private->cp);
- 	}
- 	mutex_lock(&private->io_mutex);
--- 
-2.7.4
+> 
+> For some background, refer to the thread around
+> https://lore.kernel.org/kvm/20190612091439.3a33f17b.cohuck@redhat.com/
+> 
+> ---
+>  Documentation/ABI/testing/sysfs-bus-css | 23 +++++++++++
+>  drivers/s390/cio/cio.h                  |  1 +
+>  drivers/s390/cio/css.c                  | 53 +++++++++++++++++++++++++
+>  3 files changed, 77 insertions(+)
+> 
+> diff --git a/Documentation/ABI/testing/sysfs-bus-css b/Documentation/ABI/testing/sysfs-bus-css
+> index 2979c40c10e9..966f8504bd7b 100644
+> --- a/Documentation/ABI/testing/sysfs-bus-css
+> +++ b/Documentation/ABI/testing/sysfs-bus-css
+> @@ -33,3 +33,26 @@ Description:	Contains the PIM/PAM/POM values, as reported by the
+>  		in sync with the values current in the channel subsystem).
+>  		Note: This is an I/O-subchannel specific attribute.
+>  Users:		s390-tools, HAL
+> +
+> +What:		/sys/bus/css/devices/.../driver_override
+> +Date:		June 2019
+> +Contact:	Cornelia Huck <cohuck@redhat.com>
+> +		linux-s390@vger.kernel.org
+> +Description:	This file allows the driver for a device to be specified. When
+> +		specified, only a driver with a name matching the value written
+> +		to driver_override will have an opportunity to bind to the
+> +		device. The override is specified by writing a string to the
+> +		driver_override file (echo vfio-ccw > driver_override) and
+> +		may be cleared with an empty string (echo > driver_override).
+> +		This returns the device to standard matching rules binding.
+> +		Writing to driver_override does not automatically unbind the
+> +		device from its current driver or make any attempt to
+> +		automatically load the specified driver.  If no driver with a
+> +		matching name is currently loaded in the kernel, the device
+> +		will not bind to any driver.  This also allows devices to
+> +		opt-out of driver binding using a driver_override name such as
+> +		"none".  Only a single driver may be specified in the override,
+> +		there is no support for parsing delimiters.
+> +		Note that unlike the mechanism of the same name for pci, this
+> +		file does not allow to override basic matching rules. I.e.,
+> +		the driver must still match the subchannel type of the device.
+> diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
+> index 06a91743335a..8c4af88f1ac3 100644
+> --- a/drivers/s390/cio/cio.h
+> +++ b/drivers/s390/cio/cio.h
+> @@ -113,6 +113,7 @@ struct subchannel {
+>  	enum sch_todo todo;
+>  	struct work_struct todo_work;
+>  	struct schib_config config;
+> +	char *driver_override; /* Driver name to force a match */
+>  } __attribute__ ((aligned(8)));
+>  
+>  DECLARE_PER_CPU_ALIGNED(struct irb, cio_irb);
+> diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+> index aea502922646..f3436a17e3b5 100644
+> --- a/drivers/s390/cio/css.c
+> +++ b/drivers/s390/cio/css.c
+> @@ -165,6 +165,7 @@ static void css_subchannel_release(struct device *dev)
+>  
+>  	sch->config.intparm = 0;
+>  	cio_commit_config(sch);
+> +	kfree(sch->driver_override);
+>  	kfree(sch->lock);
+>  	kfree(sch);
+>  }
+> @@ -315,9 +316,57 @@ static ssize_t modalias_show(struct device *dev, struct device_attribute *attr,
+>  
+>  static DEVICE_ATTR_RO(modalias);
+>  
+> +static ssize_t driver_override_store(struct device *dev,
+> +				     struct device_attribute *attr,
+> +				     const char *buf, size_t count)
+> +{
+> +	struct subchannel *sch = to_subchannel(dev);
+> +	char *driver_override, *old, *cp;
+> +
+> +	/* We need to keep extra room for a newline */
+> +	if (count >= (PAGE_SIZE - 1))
+> +		return -EINVAL;
+> +
+> +	driver_override = kstrndup(buf, count, GFP_KERNEL);
+> +	if (!driver_override)
+> +		return -ENOMEM;
+> +
+> +	cp = strchr(driver_override, '\n');
+> +	if (cp)
+> +		*cp = '\0';
+> +
+> +	device_lock(dev);
+> +	old = sch->driver_override;
+> +	if (strlen(driver_override)) {
+> +		sch->driver_override = driver_override;
+> +	} else {
+> +		kfree(driver_override);
+> +		sch->driver_override = NULL;
+> +	}
+> +	device_unlock(dev);
+> +
+> +	kfree(old);
+> +
+> +	return count;
+> +}
+> +
+> +static ssize_t driver_override_show(struct device *dev,
+> +				    struct device_attribute *attr, char *buf)
+> +{
+> +	struct subchannel *sch = to_subchannel(dev);
+> +	ssize_t len;
+> +
+> +	device_lock(dev);
+> +	len = snprintf(buf, PAGE_SIZE, "%s\n", sch->driver_override);
+> +	device_unlock(dev);
+> +	return len;
+> +}
+> +static DEVICE_ATTR_RW(driver_override);
+> +
+>  static struct attribute *subch_attrs[] = {
+>  	&dev_attr_type.attr,
+>  	&dev_attr_modalias.attr,
+> +	&dev_attr_driver_override.attr,
+>  	NULL,
+>  };
+>  
+> @@ -1222,6 +1271,10 @@ static int css_bus_match(struct device *dev, struct device_driver *drv)
+>  	struct css_driver *driver = to_cssdriver(drv);
+>  	struct css_device_id *id;
+>  
+> +	/* When driver_override is set, only bind to the matching driver */
+> +	if (sch->driver_override && strcmp(sch->driver_override, drv->name))
+> +		return 0;
+> +
+>  	for (id = driver->subchannel_type; id->match_flags; id++) {
+>  		if (sch->st == id->type)
+>  			return 1;
 
