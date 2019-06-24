@@ -2,75 +2,185 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D741502E6
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Jun 2019 09:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08DA650466
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Jun 2019 10:21:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726574AbfFXHRq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Jun 2019 03:17:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55668 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726453AbfFXHRq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 24 Jun 2019 03:17:46 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5C6C7308FEC6;
-        Mon, 24 Jun 2019 07:17:46 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B00115D739;
-        Mon, 24 Jun 2019 07:17:42 +0000 (UTC)
-Date:   Mon, 24 Jun 2019 09:17:40 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sebastian Ott <sebott@linux.ibm.com>
-Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
-Message-ID: <20190624091740.1d9c6c1d.cohuck@redhat.com>
-In-Reply-To: <alpine.LFD.2.21.1906211817010.2388@schleppi>
-References: <20190613110815.17251-1-cohuck@redhat.com>
-        <alpine.LFD.2.21.1906211817010.2388@schleppi>
-Organization: Red Hat GmbH
+        id S1726690AbfFXIVS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Jun 2019 04:21:18 -0400
+Received: from mail-io1-f69.google.com ([209.85.166.69]:41536 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727638AbfFXIVI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Jun 2019 04:21:08 -0400
+Received: by mail-io1-f69.google.com with SMTP id x17so20909876iog.8
+        for <linux-s390@vger.kernel.org>; Mon, 24 Jun 2019 01:21:07 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=PfmmemVraNIxI6xjjNEvl/9kDCueIQPxeZ900vua0uw=;
+        b=cAZMT8OnJhM2oN5mtj4C/cO3bs9e/HBl7RBfhzClaQaala41rDvr70nOtXvcWIaZ/G
+         2WMYRN2f6NhCCWiyMKzazDobk9qlozlCKQWZmJa2LUNnbaDuZ9U2MpakPKzSX7QEq52f
+         E09YDOxrEhEEpDmhb9s66+fuFoa2TDk76TU05pwNv9bAI7DmRUM557LS7O0Nb+3CATOc
+         RSugdhyB6TGlXh4wjOeNHLnY6SMnKPZi1QqWChwoN90+oTacSlRya7nzoLX1a3dq1NAV
+         INtkjm7yp8l4g8yFEhzbkdjvbNXMEsrmvByTQ8KLCihn2gE1y9Q5J4b+K4vNN5lOqi8m
+         37PA==
+X-Gm-Message-State: APjAAAXrwD0tCBGKpJKL8J7smpFpiQ8vgrm9092gtXhrEYH3zae27K82
+        3LO7OYjcSWmXbqaUIQkpOVyBH3e9sEkUMax4KyGYD34rI4u2
+X-Google-Smtp-Source: APXvYqxvzSw4Gt2SyXS2Fn9mr/9LihzP8O+jYOpbtX8llqrRJPzJyHM7fKRhwdVaVHbCyh/B1Cqwec6u0XZjJ4jAjtErRomE5BSU
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 24 Jun 2019 07:17:46 +0000 (UTC)
+X-Received: by 2002:a6b:b804:: with SMTP id i4mr11666934iof.119.1561364466899;
+ Mon, 24 Jun 2019 01:21:06 -0700 (PDT)
+Date:   Mon, 24 Jun 2019 01:21:06 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000006a28b5058c0d7e17@google.com>
+Subject: BUG: workqueue leaked lock or atomic in smc_tx_work
+From:   syzbot <syzbot+8759e3927fd85a7c520a@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        ubraun@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Jun 2019 18:19:36 +0200 (CEST)
-Sebastian Ott <sebott@linux.ibm.com> wrote:
+Hello,
 
-> On Thu, 13 Jun 2019, Cornelia Huck wrote:
-> > Sometimes, we want to control which of the matching drivers
-> > binds to a subchannel device (e.g. for subchannels we want to
-> > handle via vfio-ccw).
-> > 
-> > For pci devices, a mechanism to do so has been introduced in
-> > 782a985d7af2 ("PCI: Introduce new device binding path using
-> > pci_dev.driver_override"). It makes sense to introduce the
-> > driver_override attribute for subchannel devices as well, so
-> > that we can easily extend the 'driverctl' tool (which makes
-> > use of the driver_override attribute for pci).
-> > 
-> > Note that unlike pci we still require a driver override to
-> > match the subchannel type; matching more than one subchannel
-> > type is probably not useful anyway.
-> > 
-> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>  
-> 
-> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
-> 
-> Should I take that via our git tree or do you have other patches depending 
-> on this one?
-> 
+syzbot found the following crash on:
 
-No, this patch is stand-alone; everything else is happening in user
-space, so taking it via your tree would be great. Thanks!
+HEAD commit:    abf02e29 Merge tag 'pm-5.2-rc6' of git://git.kernel.org/pu..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=16ef68aaa00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=e5c77f8090a3b96b
+dashboard link: https://syzkaller.appspot.com/bug?extid=8759e3927fd85a7c520a
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+
+Unfortunately, I don't have any reproducer for this crash yet.
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+8759e3927fd85a7c520a@syzkaller.appspotmail.com
+
+BUG: workqueue leaked lock or atomic: kworker/1:2/0x00000000/22354
+      last function: smc_tx_work
+1 lock held by kworker/1:2/22354:
+  #0: 0000000093e90241 (sk_lock-AF_SMC){+.+.}, at: lock_sock  
+include/net/sock.h:1522 [inline]
+  #0: 0000000093e90241 (sk_lock-AF_SMC){+.+.}, at: smc_tx_work+0x22/0x1d0  
+net/smc/smc_tx.c:577
+CPU: 1 PID: 22354 Comm: kworker/1:2 Not tainted 5.2.0-rc5+ #57
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events smc_tx_work
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  process_one_work+0x108f/0x1790 kernel/workqueue.c:2284
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+======================================================
+WARNING: possible circular locking dependency detected
+5.2.0-rc5+ #57 Not tainted
+------------------------------------------------------
+kworker/1:2/22354 is trying to acquire lock:
+0000000007a836d5 ((wq_completion)events){+.+.}, at: __write_once_size  
+include/linux/compiler.h:221 [inline]
+0000000007a836d5 ((wq_completion)events){+.+.}, at: arch_atomic64_set  
+arch/x86/include/asm/atomic64_64.h:34 [inline]
+0000000007a836d5 ((wq_completion)events){+.+.}, at: atomic64_set  
+include/asm-generic/atomic-instrumented.h:855 [inline]
+0000000007a836d5 ((wq_completion)events){+.+.}, at: atomic_long_set  
+include/asm-generic/atomic-long.h:40 [inline]
+0000000007a836d5 ((wq_completion)events){+.+.}, at: set_work_data  
+kernel/workqueue.c:620 [inline]
+0000000007a836d5 ((wq_completion)events){+.+.}, at:  
+set_work_pool_and_clear_pending kernel/workqueue.c:647 [inline]
+0000000007a836d5 ((wq_completion)events){+.+.}, at:  
+process_one_work+0x87e/0x1790 kernel/workqueue.c:2240
+
+but task is already holding lock:
+0000000093e90241 (sk_lock-AF_SMC){+.+.}, at: lock_sock  
+include/net/sock.h:1522 [inline]
+0000000093e90241 (sk_lock-AF_SMC){+.+.}, at: smc_tx_work+0x22/0x1d0  
+net/smc/smc_tx.c:577
+
+which lock already depends on the new lock.
+
+
+the existing dependency chain (in reverse order) is:
+
+-> #2 (sk_lock-AF_SMC){+.+.}:
+        lock_sock_nested+0xcb/0x120 net/core/sock.c:2924
+        lock_sock include/net/sock.h:1522 [inline]
+        smc_tcp_listen_work+0x8a/0xf60 net/smc/af_smc.c:1366
+        process_one_work+0x989/0x1790 kernel/workqueue.c:2269
+        worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+        kthread+0x354/0x420 kernel/kthread.c:255
+        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+-> #1 ((work_completion)(&smc->tcp_listen_work)){+.+.}:
+        process_one_work+0x90f/0x1790 kernel/workqueue.c:2245
+        worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+        kthread+0x354/0x420 kernel/kthread.c:255
+        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+-> #0 ((wq_completion)events){+.+.}:
+        lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4303
+        process_one_work+0x8df/0x1790 kernel/workqueue.c:2244
+        worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+        kthread+0x354/0x420 kernel/kthread.c:255
+        ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+other info that might help us debug this:
+
+Chain exists of:
+   (wq_completion)events --> (work_completion)(&smc->tcp_listen_work) -->  
+sk_lock-AF_SMC
+
+  Possible unsafe locking scenario:
+
+        CPU0                    CPU1
+        ----                    ----
+   lock(sk_lock-AF_SMC);
+                                 
+lock((work_completion)(&smc->tcp_listen_work));
+                                lock(sk_lock-AF_SMC);
+   lock((wq_completion)events);
+
+  *** DEADLOCK ***
+
+1 lock held by kworker/1:2/22354:
+  #0: 0000000093e90241 (sk_lock-AF_SMC){+.+.}, at: lock_sock  
+include/net/sock.h:1522 [inline]
+  #0: 0000000093e90241 (sk_lock-AF_SMC){+.+.}, at: smc_tx_work+0x22/0x1d0  
+net/smc/smc_tx.c:577
+
+stack backtrace:
+CPU: 1 PID: 22354 Comm: kworker/1:2 Not tainted 5.2.0-rc5+ #57
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: events vmpressure_work_fn
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  print_circular_bug.cold+0x1cc/0x28f kernel/locking/lockdep.c:1565
+  check_prev_add kernel/locking/lockdep.c:2310 [inline]
+  check_prevs_add kernel/locking/lockdep.c:2418 [inline]
+  validate_chain kernel/locking/lockdep.c:2800 [inline]
+  __lock_acquire+0x3755/0x5490 kernel/locking/lockdep.c:3793
+  lock_acquire+0x16f/0x3f0 kernel/locking/lockdep.c:4303
+  process_one_work+0x8df/0x1790 kernel/workqueue.c:2244
+  worker_thread+0x98/0xe40 kernel/workqueue.c:2415
+  kthread+0x354/0x420 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+
+
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
