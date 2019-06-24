@@ -2,70 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 876B250213
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Jun 2019 08:19:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D741502E6
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Jun 2019 09:17:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfFXGT6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Jun 2019 02:19:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38664 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726355AbfFXGT5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Jun 2019 02:19:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HJFnO/8iFK6/8h+P54G3yCQG359ggQHSy2fGcxIE6tg=; b=dpTYhomxoOK7Fn9FZAWy/F2d7
-        OB7DbwOE/C/akpzeuzlFpIzjTzgoisvDVOi16ZOChuge0F6rRBKzi/zyrVCPfV41l37CddrCDy9wj
-        PkqmyYHP3GYQM23anQWNnajftFlRUdipaP1YC40vmEHUC9Xv2wt5GzuZEx40uTy0BMPSEfE4SLZFr
-        1GN8Gsm6hYT++2wtH7J0rAf26csTNJaeQwzpPzSohD0iNWgp9gSggAiNUCv8SKdG8HI94/bi3Wrnh
-        LvnWeGzcHl93S3WJCQWQi4N0S74dvgznU+OwCpBcRWi+2ZzrGpfA+z42pLHGuyd8wUxyrpgpbOC+0
-        xR9laD4Pg==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hfIKP-0001PA-JV; Mon, 24 Jun 2019 06:19:45 +0000
-Date:   Sun, 23 Jun 2019 23:19:45 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>
-Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will.deacon@arm.com>,
-        virtualization@lists.linux-foundation.org,
-        David Brown <david.brown@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>
-Subject: Re: [PATCH v4 0/5] iommu/amd: Convert the AMD iommu driver to the
- dma-iommu api
-Message-ID: <20190624061945.GA4912@infradead.org>
-References: <20190613223901.9523-1-murphyt7@tcd.ie>
+        id S1726574AbfFXHRq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Jun 2019 03:17:46 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55668 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726453AbfFXHRq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 24 Jun 2019 03:17:46 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5C6C7308FEC6;
+        Mon, 24 Jun 2019 07:17:46 +0000 (UTC)
+Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B00115D739;
+        Mon, 24 Jun 2019 07:17:42 +0000 (UTC)
+Date:   Mon, 24 Jun 2019 09:17:40 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sebastian Ott <sebott@linux.ibm.com>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390/cio: introduce driver_override on the css bus
+Message-ID: <20190624091740.1d9c6c1d.cohuck@redhat.com>
+In-Reply-To: <alpine.LFD.2.21.1906211817010.2388@schleppi>
+References: <20190613110815.17251-1-cohuck@redhat.com>
+        <alpine.LFD.2.21.1906211817010.2388@schleppi>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190613223901.9523-1-murphyt7@tcd.ie>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 24 Jun 2019 07:17:46 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Tom,
+On Fri, 21 Jun 2019 18:19:36 +0200 (CEST)
+Sebastian Ott <sebott@linux.ibm.com> wrote:
 
-next time please cc Jerg as the AMD IOMMU maintainer.
+> On Thu, 13 Jun 2019, Cornelia Huck wrote:
+> > Sometimes, we want to control which of the matching drivers
+> > binds to a subchannel device (e.g. for subchannels we want to
+> > handle via vfio-ccw).
+> > 
+> > For pci devices, a mechanism to do so has been introduced in
+> > 782a985d7af2 ("PCI: Introduce new device binding path using
+> > pci_dev.driver_override"). It makes sense to introduce the
+> > driver_override attribute for subchannel devices as well, so
+> > that we can easily extend the 'driverctl' tool (which makes
+> > use of the driver_override attribute for pci).
+> > 
+> > Note that unlike pci we still require a driver override to
+> > match the subchannel type; matching more than one subchannel
+> > type is probably not useful anyway.
+> > 
+> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>  
+> 
+> Reviewed-by: Sebastian Ott <sebott@linux.ibm.com>
+> 
+> Should I take that via our git tree or do you have other patches depending 
+> on this one?
+> 
 
-Joerg, any chance you could review this?  Toms patches to convert the
-AMD and Intel IOMMU drivers to the dma-iommu code are going to make my
-life in DMA land significantly easier, so I have a vested interest
-in this series moving forward :)
+No, this patch is stand-alone; everything else is happening in user
+space, so taking it via your tree would be great. Thanks!
