@@ -2,77 +2,70 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B7E24FB00
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Jun 2019 11:47:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 876B250213
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Jun 2019 08:19:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726508AbfFWJrB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 23 Jun 2019 05:47:01 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:41063 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726461AbfFWJrB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 23 Jun 2019 05:47:01 -0400
-Received: by mail-io1-f71.google.com with SMTP id x17so17655862iog.8
-        for <linux-s390@vger.kernel.org>; Sun, 23 Jun 2019 02:47:01 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=//qCEHHwsKmQKJGq2sElU6h7rWpgyd394JCVN/Ky63Y=;
-        b=kHGFJf+HQHRabOHh/fhNGS0zc+jDVdTOfMh3gYrhNdItIZWbr1a98dCRUad6NqR0B8
-         4bIZUFLXwZYNe5+0MbDFv2UB2QpimZb7Cdwt8Zh7YEcnv1dtegKLRnIIZrV0j70ZpzOa
-         EDkabijLOY+DjOKAPUYh7p8lzXtV6QW5RZ9nyXKxVbM9GU88AvpVMXcAbnIHSdsv1TF4
-         XmZqbhMZb3sRYAFiWzTvX29Nm6dzR0wnsUgkFS6wf/SZUxWekn7YRLqZ57mAcU1axdvl
-         OEgFIyF74cI25HiLrktBRfmcQ0eAcMdbFg0kP7bxlVQX/mRlqaqsLEhYnBF/fDlC6pZE
-         xnEw==
-X-Gm-Message-State: APjAAAXKTxgXcRLH4kfGg2Ey1+Mze4uICSt4HrVy6jmV+2PxYf0wk/Xq
-        gbMtuphgnV1qZT6kc49x+o+vrGdoJ4DNdwYuNHQqo6y4NJIc
-X-Google-Smtp-Source: APXvYqyGiLQ70dP6eFGnQ63Jed2MzJ0lmOsmDLwDerlbWSICxM7PikGk1Wtt/hUYnDo1CxkwarJk5FqD8R5xYTNQF8/oFlSwbHR+
+        id S1726795AbfFXGT6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Jun 2019 02:19:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:38664 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726355AbfFXGT5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Jun 2019 02:19:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=HJFnO/8iFK6/8h+P54G3yCQG359ggQHSy2fGcxIE6tg=; b=dpTYhomxoOK7Fn9FZAWy/F2d7
+        OB7DbwOE/C/akpzeuzlFpIzjTzgoisvDVOi16ZOChuge0F6rRBKzi/zyrVCPfV41l37CddrCDy9wj
+        PkqmyYHP3GYQM23anQWNnajftFlRUdipaP1YC40vmEHUC9Xv2wt5GzuZEx40uTy0BMPSEfE4SLZFr
+        1GN8Gsm6hYT++2wtH7J0rAf26csTNJaeQwzpPzSohD0iNWgp9gSggAiNUCv8SKdG8HI94/bi3Wrnh
+        LvnWeGzcHl93S3WJCQWQi4N0S74dvgznU+OwCpBcRWi+2ZzrGpfA+z42pLHGuyd8wUxyrpgpbOC+0
+        xR9laD4Pg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hfIKP-0001PA-JV; Mon, 24 Jun 2019 06:19:45 +0000
+Date:   Sun, 23 Jun 2019 23:19:45 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <murphyt7@tcd.ie>, Joerg Roedel <joro@8bytes.org>
+Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        virtualization@lists.linux-foundation.org,
+        David Brown <david.brown@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH v4 0/5] iommu/amd: Convert the AMD iommu driver to the
+ dma-iommu api
+Message-ID: <20190624061945.GA4912@infradead.org>
+References: <20190613223901.9523-1-murphyt7@tcd.ie>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:6a01:: with SMTP id x1mr26057928iog.77.1561283220587;
- Sun, 23 Jun 2019 02:47:00 -0700 (PDT)
-Date:   Sun, 23 Jun 2019 02:47:00 -0700
-In-Reply-To: <00000000000090ae7a058bc12946@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000c1cb06058bfa9371@google.com>
-Subject: Re: WARNING in debug_check_no_obj_freed
-From:   syzbot <syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com>
-To:     alexander.h.duyck@intel.com, amritha.nambiar@intel.com,
-        andriy.shevchenko@linux.intel.com, ast@kernel.org,
-        bpf@vger.kernel.org, daniel@iogearbox.net, davem@davemloft.net,
-        dmitry.torokhov@gmail.com, f.fainelli@gmail.com,
-        idosch@mellanox.com, jeffrey.t.kirsher@intel.com,
-        jiri@mellanox.com, kafai@fb.com, kgraul@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, tyhicks@canonical.com,
-        ubraun@linux.ibm.com, wanghai26@huawei.com, yhs@fb.com,
-        yuehaibing@huawei.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190613223901.9523-1-murphyt7@tcd.ie>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-syzbot has bisected this bug to:
+Tom,
 
-commit 99182beed858a1bde22f60046602b9b223225f73
-Author: Daniel Borkmann <daniel@iogearbox.net>
-Date:   Tue Apr 2 21:17:19 2019 +0000
+next time please cc Jerg as the AMD IOMMU maintainer.
 
-     Merge branch 'bpf-selftest-clang-fixes'
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12faf81aa00000
-start commit:   bed3c0d8 Merge tag 'for-5.2-rc5-tag' of git://git.kernel.o..
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=11faf81aa00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16faf81aa00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=28ec3437a5394ee0
-dashboard link: https://syzkaller.appspot.com/bug?extid=b972214bb803a343f4fe
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12fcf0b2a00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17a22ad6a00000
-
-Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
-Fixes: 99182beed858 ("Merge branch 'bpf-selftest-clang-fixes'")
-
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Joerg, any chance you could review this?  Toms patches to convert the
+AMD and Intel IOMMU drivers to the dma-iommu code are going to make my
+life in DMA land significantly easier, so I have a vested interest
+in this series moving forward :)
