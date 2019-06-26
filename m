@@ -2,23 +2,23 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79A555654F
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Jun 2019 11:09:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DCE87565D6
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Jun 2019 11:45:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726732AbfFZJI7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Jun 2019 05:08:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53086 "EHLO mx1.redhat.com"
+        id S1726006AbfFZJph (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Jun 2019 05:45:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41680 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725379AbfFZJI7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 26 Jun 2019 05:08:59 -0400
+        id S1725379AbfFZJph (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 26 Jun 2019 05:45:37 -0400
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 34A23A705;
-        Wed, 26 Jun 2019 09:08:58 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 76299A705;
+        Wed, 26 Jun 2019 09:45:36 +0000 (UTC)
 Received: from [10.36.116.174] (ovpn-116-174.ams2.redhat.com [10.36.116.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C90CB1001B05;
-        Wed, 26 Jun 2019 09:08:56 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 19AED1001925;
+        Wed, 26 Jun 2019 09:45:33 +0000 (UTC)
 Subject: Re: [PATCH v5 2/2] s390/kvm: diagnose 318 handling
 To:     Collin Walling <walling@linux.ibm.com>, cohuck@redhat.com,
         pbonzini@redhat.com, kvm@vger.kernel.org,
@@ -71,17 +71,17 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <cb01cb7b-51c5-b1e7-0a07-b2db4b1f2cf8@redhat.com>
-Date:   Wed, 26 Jun 2019 11:08:56 +0200
+Message-ID: <19c73246-48dd-ddc6-c5b1-b93f15cbf2f0@redhat.com>
+Date:   Wed, 26 Jun 2019 11:45:33 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
 In-Reply-To: <1561475022-18348-3-git-send-email-walling@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 26 Jun 2019 09:08:58 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 26 Jun 2019 09:45:36 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -108,11 +108,8 @@ On 25.06.19 17:03, Collin Walling wrote:
 > 
 > At this time, the CPVC is not reported during a VM_EVENT as its
 > format is yet to be properly defined.
-> > Signed-off-by: Collin Walling <walling@linux.ibm.com>
-
-Only some minor comments.
-
-
+> 
+> Signed-off-by: Collin Walling <walling@linux.ibm.com>
 > ---
 >  Documentation/virtual/kvm/devices/vm.txt | 14 ++++++
 >  arch/s390/include/asm/kvm_host.h         |  5 +-
@@ -216,10 +213,6 @@ Only some minor comments.
 > +	VCPU_EVENT(vcpu, 3, "diag 0x318 cpnc: 0x%x cpvc: 0x%llx",
 > +		   vcpu->kvm->arch.diag318_info.cpnc,
 > +		   (u64)vcpu->kvm->arch.diag318_info.cpvc);
-
-We have the event in kvm_s390_set_diag318_info(), do we really need this
-one, too?
-
 > +
 > +	return 0;
 > +}
@@ -266,18 +259,6 @@ one, too?
 > +		kvm_for_each_vcpu(i, vcpu, kvm) {
 > +			vcpu->arch.sie_block->cpnc = kvm->arch.diag318_info.cpnc;
 > +		}
-
-If two CPUs would be executing this in parallel, we could create an
-inconsistent cpnc value in the HW. Not sure if we care.
-
-Also, there is a possible race with CPU hotplug, depending on the
-compiler optimizations if I'm not wrong.
-
-Sure we don't want to protect this by a mutex just to avoid having to
-worry about such stuff?
-
-I guess, for ordinary guest operations, these races shouldn't matter.
-
 > +	}
 > +}
 > +
@@ -285,9 +266,6 @@ I guess, for ordinary guest operations, these races shouldn't matter.
 > +{
 > +	int ret;
 > +	u64 diag318_info;
-
-nit: reorder both
-
 > +
 > +	switch (attr->attr) {
 > +	case KVM_S390_VM_MISC_DIAG318:
@@ -311,9 +289,6 @@ nit: reorder both
 > +
 > +	VM_EVENT(kvm, 3, "QUERY: CPNC: 0x%x, CPVC: 0x%llx",
 > +		 kvm->arch.diag318_info.cpnc, (u64)kvm->arch.diag318_info.cpvc);
-
-Sure we need that cast / can't avoid it?
-
 > +	return 0;
 > +}
 > +
@@ -408,6 +383,8 @@ Sure we need that cast / can't avoid it?
 >  	rc = shadow_crycb(vcpu, vsie_page);
 > 
 
+BTW. there is currently no mechanism to fake absence of diag318. Should
+we have one? (in contrast, for CMMA we have, which is also a CPU feature)
 
 -- 
 
