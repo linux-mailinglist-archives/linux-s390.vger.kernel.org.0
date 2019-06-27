@@ -2,50 +2,47 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59211587E6
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 19:03:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9557D5882B
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 19:18:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726441AbfF0RDD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Jun 2019 13:03:03 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56460 "EHLO
+        id S1726480AbfF0RSm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Jun 2019 13:18:42 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:56748 "EHLO
         shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726405AbfF0RDC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Jun 2019 13:03:02 -0400
+        with ESMTP id S1726315AbfF0RSm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Jun 2019 13:18:42 -0400
 Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
         (using TLSv1 with cipher AES256-SHA (256/256 bits))
         (Client did not present a certificate)
         (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 1DF1314DB8376;
-        Thu, 27 Jun 2019 10:03:02 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 10:03:01 -0700 (PDT)
-Message-Id: <20190627.100301.1135989168205665397.davem@davemloft.net>
-To:     kgraul@linux.ibm.com
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id E7DF714DB8742;
+        Thu, 27 Jun 2019 10:18:41 -0700 (PDT)
+Date:   Thu, 27 Jun 2019 10:18:41 -0700 (PDT)
+Message-Id: <20190627.101841.1281601732982101635.davem@davemloft.net>
+To:     jwi@linux.ibm.com
 Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        gor@linux.ibm.com, heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
         ubraun@linux.ibm.com
-Subject: Re: [PATCH] net/smc: common release code for non-accepted sockets
+Subject: Re: [PATCH net-next 00/12] s390/qeth: updates 2019-06-27
 From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190627130452.15408-1-kgraul@linux.ibm.com>
-References: <20190627130452.15408-1-kgraul@linux.ibm.com>
+In-Reply-To: <20190627150133.58746-1-jwi@linux.ibm.com>
+References: <20190627150133.58746-1-jwi@linux.ibm.com>
 X-Mailer: Mew version 6.8 on Emacs 26.1
 Mime-Version: 1.0
 Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Jun 2019 10:03:02 -0700 (PDT)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Jun 2019 10:18:42 -0700 (PDT)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
-Date: Thu, 27 Jun 2019 15:04:52 +0200
+From: Julian Wiedmann <jwi@linux.ibm.com>
+Date: Thu, 27 Jun 2019 17:01:21 +0200
 
-> From: Ursula Braun <ubraun@linux.ibm.com>
-> 
-> There are common steps when releasing an accepted or unaccepted socket.
-> Move this code into a common routine.
-> 
-> Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+> please apply another round of qeth updates for net-next.
+> This completes the conversion of the control path to use dynamically
+> allocated cmd buffers, along with some fine-tuning for the route
+> validation fix that recently went into -net.
 
-Applied.
+Series applied, thanks.
