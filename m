@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E720E57865
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 02:53:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E76B5577C3
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 02:49:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfF0AdH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Jun 2019 20:33:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36898 "EHLO mail.kernel.org"
+        id S1728714AbfF0Ah4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Jun 2019 20:37:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42282 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726681AbfF0AdE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 26 Jun 2019 20:33:04 -0400
+        id S1727686AbfF0Ahu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 26 Jun 2019 20:37:50 -0400
 Received: from sasha-vm.mshome.net (unknown [107.242.116.147])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 94BA921726;
-        Thu, 27 Jun 2019 00:32:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5F49B2080C;
+        Thu, 27 Jun 2019 00:37:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1561595583;
-        bh=6pTCiHokZSo+x6bTzDL+wGXN5Y4H5rugDsVSjeBS/Dk=;
+        s=default; t=1561595869;
+        bh=9XqVUcdIb7q56IsKIhs7Pus1VDDfsQccebNKK1Few+s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ex8VN5hmZEnq2PD3A0McvU51J+cd1dhvQW5VItJ2XuNl1F6u7F7e/MZqgr77T/EiH
-         I8NdrtvxAyYV0wN1aFj3SF3Fhzp5YUCESJO4RwD3zo/iPHKn8+v9nzLHxrCKiQxILz
-         GX4Px16QkPhKy7ffThC4gLL8W9wL32hzSp+5C1dk=
+        b=Xt6DtsZo67y5PPHOfnTYUYgO/iVfFJjK/fu7FvFSN10VC2UthauyqDDTxZcQrr36n
+         IxbkBnp2upCvv7s0Jv3g+2RcocVdGL18Yjn0vQktnFlQXv7O53/SLt793tp+b3utHe
+         Gt5S7HGoHDUHgzO09DvoDM9cRh/s3YF0hVneujYY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.1 47/95] s390/boot: disable address-of-packed-member warning
-Date:   Wed, 26 Jun 2019 20:29:32 -0400
-Message-Id: <20190627003021.19867-47-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 30/60] s390/boot: disable address-of-packed-member warning
+Date:   Wed, 26 Jun 2019 20:35:45 -0400
+Message-Id: <20190627003616.20767-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190627003021.19867-1-sashal@kernel.org>
-References: <20190627003021.19867-1-sashal@kernel.org>
+In-Reply-To: <20190627003616.20767-1-sashal@kernel.org>
+References: <20190627003616.20767-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,7 +65,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-index e21053e5e0da..bbd2dab6730e 100644
+index ee65185bbc80..e6c2e8925fef 100644
 --- a/arch/s390/Makefile
 +++ b/arch/s390/Makefile
 @@ -24,6 +24,7 @@ KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
