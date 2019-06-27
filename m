@@ -2,133 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47FB757D17
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 09:25:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9888A57F0C
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 11:15:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726385AbfF0HZ2 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Thu, 27 Jun 2019 03:25:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52370 "EHLO mx1.redhat.com"
+        id S1726315AbfF0JPA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Jun 2019 05:15:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53668 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726054AbfF0HZ2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 27 Jun 2019 03:25:28 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1726293AbfF0JPA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 27 Jun 2019 05:15:00 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AB95430820DD;
-        Thu, 27 Jun 2019 07:25:27 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id A425DA70E;
+        Thu, 27 Jun 2019 09:14:59 +0000 (UTC)
 Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BEB3B60856;
-        Thu, 27 Jun 2019 07:25:20 +0000 (UTC)
-Date:   Thu, 27 Jun 2019 09:25:18 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B44B260BE0;
+        Thu, 27 Jun 2019 09:14:58 +0000 (UTC)
+Date:   Thu, 27 Jun 2019 11:14:56 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate
- resource in use
-Message-ID: <20190627092518.1f8d7d48.cohuck@redhat.com>
-In-Reply-To: <44f13e89-2fb4-bf8c-7849-641aae8d08cc@linux.ibm.com>
-References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
-        <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
-        <20190618182558.7d7e025a.cohuck@redhat.com>
-        <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
-        <44f13e89-2fb4-bf8c-7849-641aae8d08cc@linux.ibm.com>
+To:     Farhan Ali <alifm@linux.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>, pasic@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [RFC v1 1/1] vfio-ccw: Don't call cp_free if we are processing
+ a channel program
+Message-ID: <20190627111456.3e6da01c.cohuck@redhat.com>
+In-Reply-To: <7841b312-13ad-a4b3-85d9-1f5a4991f7fd@linux.ibm.com>
+References: <cover.1561055076.git.alifm@linux.ibm.com>
+        <46dc0cbdcb8a414d70b7807fceb1cca6229408d5.1561055076.git.alifm@linux.ibm.com>
+        <638804dc-53c0-ff2f-d123-13c257ad593f@linux.ibm.com>
+        <581d756d-7418-cd67-e0e8-f9e4fe10b22d@linux.ibm.com>
+        <2d9c04ba-ee50-2f9b-343a-5109274ff52d@linux.ibm.com>
+        <56ced048-8c66-a030-af35-8afbbd2abea8@linux.ibm.com>
+        <20190624114231.2d81e36f.cohuck@redhat.com>
+        <20190624120514.4b528db5.cohuck@redhat.com>
+        <20190624134622.2bb3bba2.cohuck@redhat.com>
+        <20190624140723.5aa7b0b1.cohuck@redhat.com>
+        <3e93215c-c11a-d0bb-8982-be3f2b467e13@linux.ibm.com>
+        <20190624170937.4c76de8d.cohuck@redhat.com>
+        <7841b312-13ad-a4b3-85d9-1f5a4991f7fd@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Thu, 27 Jun 2019 07:25:27 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 27 Jun 2019 09:14:59 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 26 Jun 2019 17:13:50 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Mon, 24 Jun 2019 11:24:16 -0400
+Farhan Ali <alifm@linux.ibm.com> wrote:
 
-> On 6/19/19 9:04 AM, Tony Krowiak wrote:
-> > On 6/18/19 12:25 PM, Cornelia Huck wrote:  
-> >> On Thu, 13 Jun 2019 15:39:36 -0400
-> >> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-> >>  
-> >>> Introduces a new driver callback to prevent a root user from unbinding
-> >>> an AP queue from its device driver if the queue is in use. This prevents
-> >>> a root user from inadvertently taking a queue away from a guest and
-> >>> giving it to the host, or vice versa. The callback will be invoked
-> >>> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
-> >>> result in one or more AP queues being removed from its driver. If the
-> >>> callback responds in the affirmative for any driver queried, the change
-> >>> to the apmask or aqmask will be rejected with a device in use error.
-> >>>
-> >>> For this patch, only non-default drivers will be queried. Currently,
-> >>> there is only one non-default driver, the vfio_ap device driver. The
-> >>> vfio_ap device driver manages AP queues passed through to one or more
-> >>> guests and we don't want to unexpectedly take AP resources away from
-> >>> guests which are most likely independently administered.
-> >>>
-> >>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> >>> ---
-> >>>   drivers/s390/crypto/ap_bus.c | 138 
-> >>> +++++++++++++++++++++++++++++++++++++++++--
-> >>>   drivers/s390/crypto/ap_bus.h |   3 +
-> >>>   2 files changed, 135 insertions(+), 6 deletions(-)  
-> >>
-> >> Hm... I recall objecting to this patch before, fearing that it makes it
-> >> possible for a bad actor to hog resources that can't be removed by
-> >> root, even forcefully. (I have not had time to look at the intervening
-> >> versions, so I might be missing something.)
-> >>
-> >> Is there a way for root to forcefully override this?  
-> > 
-> > You recall correctly; however, after many internal crypto team
-> > discussions, it was decided that this feature was important
-> > and should be kept.
-> > 
-> > Allow me to first address your fear that a bad actor can hog
-> > resources that can't be removed by root. With this enhancement,
-> > there is nothing preventing a root user from taking resources
-> > from a matrix mdev, it simply forces him/her to follow the
-> > proper procedure. The resources to be removed must first be
-> > unassigned from the matrix mdev to which they are assigned.
-> > The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask
-> > sysfs attributes can then be edited to transfer ownership
-> > of the resources to zcrypt.
-> > 
-> > The rationale for keeping this feature is:
-> > 
-> > * It is a bad idea to steal an adapter in use from a guest. In the worst
-> >    case, the guest could end up without access to any crypto adapters
-> >    without knowing why. This could lead to performance issues on guests
-> >    that rely heavily on crypto such as guests used for blockchain
-> >    transactions.
-> > 
-> > * There are plenty of examples in linux of the kernel preventing a root
-> >    user from performing a task. For example, a module can't be removed
-> >    if references are still held for it. Another example would be trying
-> >    to bind a CEX4 adapter to a device driver not registered for CEX4;
-> >    this action will also be rejected.
-> > 
-> > * The semantics are much cleaner and the logic is far less complicated.
-> > 
-> > * It forces the use of the proper procedure to change ownership of AP
-> >    queues.
-> >  
-> 
-> Any feedback on this?
+> On 06/24/2019 11:09 AM, Cornelia Huck wrote:
+> > On Mon, 24 Jun 2019 10:44:17 -0400
+> > Farhan Ali <alifm@linux.ibm.com> wrote:
 
-Had not yet time to look at this, sorry.
-
-
-> 
-> Tony K
-> 
-> >   
-> >>  
+> >> But even if we don't remove the cp_free from vfio_ccw_sch_io_todo, I am
+> >> not sure if your suggestion will fix the problem. The problem here is
+> >> that we can call vfio_ccw_sch_io_todo (for a clear or halt interrupt) at
+> >> the same time we are handling an ssch request. So depending on the order
+> >> of the operations we could still end up calling cp_free from both from
+> >> threads (i refer to the threads I mentioned in response to Eric's
+> >> earlier email).  
+> > 
+> > What I don't see is why this is a problem with ->initialized; wasn't
+> > the problem that we misinterpreted an interrupt for csch as one for a
+> > not-yet-issued ssch?
 > >   
 > 
+> It's the order in which we do things, which could cause the problem. 
+> Since we queue interrupt handling in the workqueue, we could delay 
+> processing the csch interrupt. During this delay if ssch comes through, 
+> we might have already set ->initialized to true.
+> 
+> So when we get around to handling the interrupt in io_todo, we would go 
+> ahead and call cp_free. This would cause the problem of freeing the 
+> ccwchain list while we might be adding to it.
+> 
+> >>
+> >> Another thing that concerns me is that vfio-ccw can also issue csch/hsch
+> >> in the quiesce path, independently of what the guest issues. So in that
+> >> case we could have a similar scenario to processing an ssch request and
+> >> issuing halt/clear in parallel. But maybe I am being paranoid :)  
+> > 
+> > I think the root problem is really trying to clear a cp while another
+> > thread is trying to set it up. Should we maybe use something like rcu?
+> > 
+> >   
+> 
+> Yes, this is the root problem. I am not too familiar with rcu locking, 
+> but what would be the benefit over a traditional mutex?
 
+I don't quite remember what I had been envisioning at the time (sorry,
+the heat seems to make my brain a bit slushy :/), but I think we might
+have two copies of the cp and use an rcu-ed pointer in the private
+structure to point to one of the copies. If we make sure we've
+synchronized on the pointer at interrupt time, we should be able to
+free the old one in _todo and act on the new on when doing ssch. And
+yes, I realize that this is awfully vague :)
