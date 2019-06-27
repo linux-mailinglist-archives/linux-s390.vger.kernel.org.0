@@ -2,134 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B073158147
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 13:18:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA5F658224
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 14:04:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726425AbfF0LSE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Jun 2019 07:18:04 -0400
-Received: from mail-eopbgr760097.outbound.protection.outlook.com ([40.107.76.97]:51342
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726187AbfF0LSE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 27 Jun 2019 07:18:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=os.amperecomputing.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rPksX9kTKCzYCXwG24gRwSMKH1dwPvwYcTm0uG09s8o=;
- b=n84QFvk5ZqMJzHVSoL1riHfmgpB591XYvxtW7Tob7LiAj5ePFXt6flNRGsXU0UXMNNePBEJ5/zMv+z8spKYpK6VrjGReTc2hZqPvDdlceGH/M1cGL9w5m110d8dTba9/kA+Z0sY5mrGBDbrmPGFXvSqzlr1+zwj2DE+i6JqE5G0=
-Received: from DM6PR01MB4825.prod.exchangelabs.com (20.177.218.222) by
- DM6PR01MB4906.prod.exchangelabs.com (20.176.119.95) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2032.18; Thu, 27 Jun 2019 11:17:59 +0000
-Received: from DM6PR01MB4825.prod.exchangelabs.com
- ([fe80::390e:9996:6dec:d60f]) by DM6PR01MB4825.prod.exchangelabs.com
- ([fe80::390e:9996:6dec:d60f%6]) with mapi id 15.20.2032.016; Thu, 27 Jun 2019
- 11:17:59 +0000
-From:   Aaron Lindsay OS <aaron@os.amperecomputing.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-CC:     Hoan Tran OS <hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Open Source Submission <patches@amperecomputing.com>
-Subject: Re: [PATCH 0/5] Enable CONFIG_NODES_SPAN_OTHER_NODES by default for
- NUMA
-Thread-Topic: [PATCH 0/5] Enable CONFIG_NODES_SPAN_OTHER_NODES by default for
- NUMA
-Thread-Index: AQHVK6WT5IKFNhd5LECqV06L4uyCQKatFN0AgAJHxoA=
-Date:   Thu, 27 Jun 2019 11:17:58 +0000
-Message-ID: <20190627111755.GJ7133@okra.localdomain>
-References: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com>
- <CAADWXX8wdEPNZ26SFJUfwrhQson3HPTrZ7D2jju3RhEeMuc+QQ@mail.gmail.com>
-In-Reply-To: <CAADWXX8wdEPNZ26SFJUfwrhQson3HPTrZ7D2jju3RhEeMuc+QQ@mail.gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: MN2PR04CA0016.namprd04.prod.outlook.com
- (2603:10b6:208:d4::29) To DM6PR01MB4825.prod.exchangelabs.com
- (2603:10b6:5:6b::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aaron@os.amperecomputing.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [2600:3c03::f03c:91ff:febb:cdda]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 41020974-51cb-4a3d-32c1-08d6faf11be8
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:DM6PR01MB4906;
-x-ms-traffictypediagnostic: DM6PR01MB4906:
-x-microsoft-antispam-prvs: <DM6PR01MB490676652E3A18AA2A5EE7738AFD0@DM6PR01MB4906.prod.exchangelabs.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 008184426E
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(366004)(136003)(376002)(346002)(39850400004)(396003)(189003)(199004)(54906003)(71200400001)(71190400001)(52116002)(46003)(8936002)(25786009)(8676002)(316002)(6116002)(81166006)(81156014)(1076003)(99286004)(446003)(186003)(11346002)(7416002)(386003)(6506007)(478600001)(486006)(102836004)(476003)(4326008)(33656002)(14454004)(76176011)(2906002)(14444005)(256004)(305945005)(5660300002)(7736002)(66946007)(6436002)(73956011)(45080400002)(9686003)(6512007)(68736007)(229853002)(66556008)(64756008)(6486002)(66476007)(86362001)(66446008)(107886003)(53936002)(6916009)(6246003);DIR:OUT;SFP:1102;SCL:1;SRVR:DM6PR01MB4906;H:DM6PR01MB4825.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: os.amperecomputing.com does not
- designate permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: S716oI9qHr9HoTifdQqNcAn+wRHxHq8BZGRzkdC9r3kNYPJ0F8JFHXzYx0SUOMq7ebgM62lCx+oVLzPlCypRkfyBve7WzA8ySs9nYANe2AjFY4bNJfJIZ2OONOm8zg0DMl/4TJtLFA8wg7EhvQp8zAFDre7IfLPXk/TLYKEM9ryqa+D1HtNpPnIMjuloBa7MejlWhifKAIVoL57h6X9ZzWrr9dbVpntQYKJGa8/ttYTwvgdVSPEmzauMFrB1ym2iCTn/fzAb2ttKXWkYyk88Yyfoa1DW6AKYrLYSJ3PiIs2rUeNjtGE4mmV/IcZCOUY7REJeaTXGK4Yit4lDLoLYa0JjtqNSjERT40U7jXVxNvg5Q2kFiZXA3krua9Em2Km6etMvmIhXSFW1sWtXqxljUVvr2n6EBUlal8Pd9Rhu+Oc=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DE70FA20B7464849A9C1EC473C6D4C0A@prod.exchangelabs.com>
-Content-Transfer-Encoding: quoted-printable
+        id S1726882AbfF0MEa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Jun 2019 08:04:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57000 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726908AbfF0ME3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 27 Jun 2019 08:04:29 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5RBwD6B058132
+        for <linux-s390@vger.kernel.org>; Thu, 27 Jun 2019 08:04:28 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tcvwjsqy2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 27 Jun 2019 08:04:27 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 27 Jun 2019 13:04:25 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 27 Jun 2019 13:04:23 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5RC4L9026018156
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 27 Jun 2019 12:04:21 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 190C3A4066;
+        Thu, 27 Jun 2019 12:04:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA0B8A4067;
+        Thu, 27 Jun 2019 12:04:20 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.115])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 27 Jun 2019 12:04:20 +0000 (GMT)
+Date:   Thu, 27 Jun 2019 14:04:19 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Pierre Morel <pmorel@linux.ibm.com>, alex.williamson@redhat.com,
+        cohuck@redhat.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
+        heiko.carstens@de.ibm.com, freude@linux.ibm.com, mimu@linux.ibm.com
+Subject: Re: [PATCH v9 4/4] s390: ap: kvm: Enable PQAP/AQIC facility for the
+ guest
+In-Reply-To: <69ca50bd-3f5c-98b1-3b39-04af75151baf@de.ibm.com>
+References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
+        <1558452877-27822-5-git-send-email-pmorel@linux.ibm.com>
+        <69ca50bd-3f5c-98b1-3b39-04af75151baf@de.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-OriginatorOrg: os.amperecomputing.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 41020974-51cb-4a3d-32c1-08d6faf11be8
-X-MS-Exchange-CrossTenant-originalarrivaltime: 27 Jun 2019 11:17:59.0263
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Aaron@os.amperecomputing.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR01MB4906
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062712-0020-0000-0000-0000034DE34E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062712-0021-0000-0000-000021A15DED
+Message-Id: <20190627140419.1df5f519.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-27_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906270140
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Jun 26 08:28, Linus Torvalds wrote:
-> This is not a comment on the patch series itself, it is a comment on the =
-emails.
->=20
-> Your email is mis-configured and ends up all being marked as spam for
-> me, because you go through the wrong smtp server (or maybe your smtp
-> server itself is miconfigured)
->=20
-> All your emails fail dmarc, because the "From" header is
-> os.amperecomputing.com, but the DKIM signature is for
-> amperemail.onmicrosoft.com.
+On Tue, 25 Jun 2019 22:13:12 +0200
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-It appears Microsoft enables DKIM by default, but does so using keys
-advertised at *.onmicrosoft.com domains, and our IT folks didn't
-initially notice this. We believe we've rectified the situation, so
-please let us know if our emails (including this one) continue to be an
-issue.
+> 
+> 
+> On 21.05.19 17:34, Pierre Morel wrote:
+> > AP Queue Interruption Control (AQIC) facility gives
+> > the guest the possibility to control interruption for
+> > the Cryptographic Adjunct Processor queues.
+> > 
+> > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> > Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> > ---
+> >  arch/s390/tools/gen_facilities.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
+> > index 61ce5b5..aed14fc 100644
+> > --- a/arch/s390/tools/gen_facilities.c
+> > +++ b/arch/s390/tools/gen_facilities.c
+> > @@ -114,6 +114,7 @@ static struct facility_def facility_defs[] = {
+> >  		.bits = (int[]){
+> >  			12, /* AP Query Configuration Information */
+> >  			15, /* AP Facilities Test */
+> > +			65, /* AP Queue Interruption Control */
+> >  			156, /* etoken facility */
+> >  			-1  /* END */
+> >  		}
+> > 
+> 
+> I think we should only set stfle.65 if we have the aiv facility (Because we do not
+> have a GISA otherwise)
+> 
+> So something like this instead?
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 28ebd64..1501cd6 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -2461,6 +2461,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+>                 set_kvm_facility(kvm->arch.model.fac_list, 147);
+>         }
+>  
+> +       if (css_general_characteristics.aiv)
+> +               set_kvm_facility(kvm->arch.model.fac_mask, 65);
+> +       
+>         kvm->arch.model.cpuid = kvm_s390_get_initial_cpuid();
+>         kvm->arch.model.ibc = sclp.ibc & 0x0fff;
 
-> End result: it wil all go into the spam box of anybody who checks DKIM.
+I will go with this option because it is more readable (easier to find)
+IMHO. Will also add a chech for host sltfle.65. So I end up with:
 
-Interestingly, *some* receiving mail servers (at least gmail.com) were
-reporting DKIM/DMARC pass for emails sent directly from our domain
-(though not those sent through a mailing list), which I believe allowed
-our IT to falsely think they had everything configured correctly.
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 28ebd647784c..1c4113f0f2a8 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -2461,6 +2461,9 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+                set_kvm_facility(kvm->arch.model.fac_list, 147);
+        }
+ 
++       if (css_general_characteristics.aiv && test_facility(65))
++               set_kvm_facility(kvm->arch.model.fac_mask, 65);
++
+        kvm->arch.model.cpuid = kvm_s390_get_initial_cpuid();
+        kvm->arch.model.ibc = sclp.ibc & 0x0fff;
+ 
+diff --git a/arch/s390/tools/gen_facilities.c b/arch/s390/tools/gen_facilities.c
+index d52f537b7169..cead9e0dcffb 100644
+--- a/arch/s390/tools/gen_facilities.c
++++ b/arch/s390/tools/gen_facilities.c
+@@ -111,7 +111,6 @@ static struct facility_def facility_defs[] = {
+                .bits = (int[]){
+                        12, /* AP Query Configuration Information */
+                        15, /* AP Facilities Test */
+-                       65, /* AP Queue Interruption Control */
+                        156, /* etoken facility */
+                        -1  /* END */
 
--Aaron
+
