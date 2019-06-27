@@ -2,47 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9557D5882B
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Jun 2019 19:18:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA63258D77
+	for <lists+linux-s390@lfdr.de>; Fri, 28 Jun 2019 00:00:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfF0RSm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Jun 2019 13:18:42 -0400
-Received: from shards.monkeyblade.net ([23.128.96.9]:56748 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726315AbfF0RSm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Jun 2019 13:18:42 -0400
-Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id E7DF714DB8742;
-        Thu, 27 Jun 2019 10:18:41 -0700 (PDT)
-Date:   Thu, 27 Jun 2019 10:18:41 -0700 (PDT)
-Message-Id: <20190627.101841.1281601732982101635.davem@davemloft.net>
-To:     jwi@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH net-next 00/12] s390/qeth: updates 2019-06-27
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20190627150133.58746-1-jwi@linux.ibm.com>
-References: <20190627150133.58746-1-jwi@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 27 Jun 2019 10:18:42 -0700 (PDT)
+        id S1726513AbfF0WAE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Jun 2019 18:00:04 -0400
+Received: from cloudserver094114.home.pl ([79.96.170.134]:46740 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726498AbfF0WAD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Jun 2019 18:00:03 -0400
+Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
+ id b993f47717c4d2a7; Fri, 28 Jun 2019 00:00:00 +0200
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Mathieu Malaterre <malat@debian.org>
+Cc:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
+Date:   Fri, 28 Jun 2019 00:00:00 +0200
+Message-ID: <2178909.1BmBeJAm6j@kreacher>
+In-Reply-To: <20190524104418.17194-1-malat@debian.org>
+References: <20190523114736.30268-1-malat@debian.org> <20190524104418.17194-1-malat@debian.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
-Date: Thu, 27 Jun 2019 17:01:21 +0200
+On Friday, May 24, 2019 12:44:18 PM CEST Mathieu Malaterre wrote:
+> The declaration for pfn_is_nosave is only available in
+> kernel/power/power.h. Since this function can be override in arch,
+> expose it globally. Having a prototype will make sure to avoid warning
+> (sometime treated as error with W=1) such as:
+> 
+>   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
+> 
+> This moves the declaration into a globally visible header file and add
+> missing include to avoid a warning on powerpc. Also remove the
+> duplicated prototypes since not required anymore.
+> 
+> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
+> Signed-off-by: Mathieu Malaterre <malat@debian.org>
+> ---
+> v2: As suggestion by christophe remove duplicates prototypes
+> 
+>  arch/powerpc/kernel/suspend.c | 1 +
+>  arch/s390/kernel/entry.h      | 1 -
+>  include/linux/suspend.h       | 1 +
+>  kernel/power/power.h          | 2 --
+>  4 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
+> index a531154cc0f3..9e1b6b894245 100644
+> --- a/arch/powerpc/kernel/suspend.c
+> +++ b/arch/powerpc/kernel/suspend.c
+> @@ -8,6 +8,7 @@
+>   */
+>  
+>  #include <linux/mm.h>
+> +#include <linux/suspend.h>
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+>  
+> diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
+> index 20420c2b8a14..b2956d49b6ad 100644
+> --- a/arch/s390/kernel/entry.h
+> +++ b/arch/s390/kernel/entry.h
+> @@ -63,7 +63,6 @@ void __init startup_init(void);
+>  void die(struct pt_regs *regs, const char *str);
+>  int setup_profiling_timer(unsigned int multiplier);
+>  void __init time_init(void);
+> -int pfn_is_nosave(unsigned long);
+>  void s390_early_resume(void);
+>  unsigned long prepare_ftrace_return(unsigned long parent, unsigned long sp, unsigned long ip);
+>  
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 6b3ea9ea6a9e..e8b8a7bede90 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
+>  extern bool hibernation_available(void);
+>  asmlinkage int swsusp_save(void);
+>  extern struct pbe *restore_pblist;
+> +int pfn_is_nosave(unsigned long pfn);
+>  #else /* CONFIG_HIBERNATION */
+>  static inline void register_nosave_region(unsigned long b, unsigned long e) {}
+>  static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
+> diff --git a/kernel/power/power.h b/kernel/power/power.h
+> index 9e58bdc8a562..44bee462ff57 100644
+> --- a/kernel/power/power.h
+> +++ b/kernel/power/power.h
+> @@ -75,8 +75,6 @@ static inline void hibernate_reserved_size_init(void) {}
+>  static inline void hibernate_image_size_init(void) {}
+>  #endif /* !CONFIG_HIBERNATION */
+>  
+> -extern int pfn_is_nosave(unsigned long);
+> -
+>  #define power_attr(_name) \
+>  static struct kobj_attribute _name##_attr = {	\
+>  	.attr	= {				\
+> 
 
-> please apply another round of qeth updates for net-next.
-> This completes the conversion of the control path to use dynamically
-> allocated cmd buffers, along with some fine-tuning for the route
-> validation fix that recently went into -net.
+Applied, thanks!
 
-Series applied, thanks.
+
+
