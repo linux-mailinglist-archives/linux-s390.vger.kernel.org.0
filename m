@@ -2,181 +2,195 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65DE95902C
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Jun 2019 04:04:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F99959B31
+	for <lists+linux-s390@lfdr.de>; Fri, 28 Jun 2019 14:31:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726315AbfF1CEQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Jun 2019 22:04:16 -0400
-Received: from ozlabs.org ([203.11.71.1]:51859 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfF1CEQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 27 Jun 2019 22:04:16 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Zg703sPhz9s3Z;
-        Fri, 28 Jun 2019 12:04:11 +1000 (AEST)
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Sven Schnelle <svens@stackframe.org>, kexec@lists.infradead.org
-Cc:     linux-s390@vger.kernel.org, deller@gmx.de,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH RFC] generic ELF support for kexec
-In-Reply-To: <20190625185433.GA10934@t470p.stackframe.org>
-References: <20190625185433.GA10934@t470p.stackframe.org>
-Date:   Fri, 28 Jun 2019 12:04:11 +1000
-Message-ID: <87o92isbxg.fsf@concordia.ellerman.id.au>
+        id S1727424AbfF1Mbj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 28 Jun 2019 08:31:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:39644 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727127AbfF1Map (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 28 Jun 2019 08:30:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=/ACtFTJ8t0rgRWDNSeADECk30Wwk28wX2Poo52xAGI8=; b=e+2o4PfTUqmLAP9+yVgRTSMqCY
+        Tnf5U0x2uPJDPkns5j2lSPUa//SkDRojN/zK7V3DPohSOh24J2v2XKdQVQPgWUQRkknLsIsR2a8sw
+        vIAtdmC4K3NnPyXm2z2HalcpZEHRSrjqde3msUjYzWYE60G4cwtqKGBoAYWj4cxEpZ9n8vkk4NQTY
+        1+enRTu9Mq7VFZJn9umR7TD5TBCMyx72vxi0UDfoSYRsI6HfJ0L9lPadMMeWB5FaFlAffVzHajfi7
+        eN3oY5WswA3cPdrB9qfCaBwvbmkCjuN4BFIdR7nw0X6L23eBpFfBVPgLZAKHqt7pbT7NyOgMG4Gb8
+        qPMmGZ4w==;
+Received: from [186.213.242.156] (helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hgq1U-00055C-Fo; Fri, 28 Jun 2019 12:30:36 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hgq1S-0005Rx-94; Fri, 28 Jun 2019 09:30:34 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 13/39] docs: add arch doc directories to the index
+Date:   Fri, 28 Jun 2019 09:30:06 -0300
+Message-Id: <df4b7dbf72f2ca0695adc6e5997ad852be2332a7.1561724493.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
+References: <cover.1561724493.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Sven,
+Now that several arch documents were converted to ReST,
+add their indexes to Documentation/index.rst and remove the
+:orphan:  from them.
 
-Sven Schnelle <svens@stackframe.org> writes:
-> Hi List,
->
-> i recently started working on kexec for PA-RISC. While doing so, i figured
-> that powerpc already has support for reading ELF images inside of the Kernel.
-> My first attempt was to steal the source code and modify it for PA-RISC, but
-> it turned out that i didn't had to change much. Only ARM specific stuff like
-> fdt blob fetching had to be removed.
->
-> So instead of duplicating the code, i thought about moving the ELF stuff to
-> the core kexec code, and exposing several function to use that code from the
-> arch specific code.
->
-> I'm attaching the patch to this Mail. What do you think about that change?
-> s390 also uses ELF files, and (maybe?) could also switch to this implementation.
-> But i don't know anything about S/390 and don't have one in my basement. So
-> i'll leave s390 to the IBM folks.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/arm/index.rst     |  2 --
+ Documentation/arm64/index.rst   |  2 --
+ Documentation/ia64/index.rst    |  2 --
+ Documentation/index.rst         | 10 ++++++++++
+ Documentation/m68k/index.rst    |  2 +-
+ Documentation/powerpc/index.rst |  2 +-
+ Documentation/riscv/index.rst   |  2 --
+ Documentation/s390/index.rst    |  2 --
+ Documentation/sparc/index.rst   |  2 --
+ Documentation/xtensa/index.rst  |  2 +-
+ 10 files changed, 13 insertions(+), 15 deletions(-)
 
-It looks mostly OK, a few comments below.
+diff --git a/Documentation/arm/index.rst b/Documentation/arm/index.rst
+index bd316d1a1802..9c2f781f4685 100644
+--- a/Documentation/arm/index.rst
++++ b/Documentation/arm/index.rst
+@@ -1,5 +1,3 @@
+-﻿:orphan:
+-
+ ================
+ ARM Architecture
+ ================
+diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
+index 018b7836ecb7..96b696ba4e6c 100644
+--- a/Documentation/arm64/index.rst
++++ b/Documentation/arm64/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ==================
+ ARM64 Architecture
+ ==================
+diff --git a/Documentation/ia64/index.rst b/Documentation/ia64/index.rst
+index a3e3052ad6e2..ef99475f672b 100644
+--- a/Documentation/ia64/index.rst
++++ b/Documentation/ia64/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ==================
+ IA-64 Architecture
+ ==================
+diff --git a/Documentation/index.rst b/Documentation/index.rst
+index 95db26bf2899..f898def833f4 100644
+--- a/Documentation/index.rst
++++ b/Documentation/index.rst
+@@ -118,7 +118,17 @@ implementation.
+    :maxdepth: 2
+ 
+    sh/index
++   arm/index
++   arm64/index
++   ia64/index
++   m68k/index
++   powerpc/index
++   riscv/index
++   s390/index
++   sh/index
++   sparc/index
+    x86/index
++   xtensa/index
+ 
+ Filesystem Documentation
+ ------------------------
+diff --git a/Documentation/m68k/index.rst b/Documentation/m68k/index.rst
+index f3273ec075c3..3a5ba7fe1703 100644
+--- a/Documentation/m68k/index.rst
++++ b/Documentation/m68k/index.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
+ 
+ =================
+ m68k Architecture
+diff --git a/Documentation/powerpc/index.rst b/Documentation/powerpc/index.rst
+index 1ff17268db46..549b1cdd77ae 100644
+--- a/Documentation/powerpc/index.rst
++++ b/Documentation/powerpc/index.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
+ 
+ =======
+ powerpc
+diff --git a/Documentation/riscv/index.rst b/Documentation/riscv/index.rst
+index c4b906d9b5a7..e3ca0922a8c2 100644
+--- a/Documentation/riscv/index.rst
++++ b/Documentation/riscv/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ===================
+ RISC-V architecture
+ ===================
+diff --git a/Documentation/s390/index.rst b/Documentation/s390/index.rst
+index 1a914da2a07b..4602312909d3 100644
+--- a/Documentation/s390/index.rst
++++ b/Documentation/s390/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ =================
+ s390 Architecture
+ =================
+diff --git a/Documentation/sparc/index.rst b/Documentation/sparc/index.rst
+index 91f7d6643dd5..71cff621f243 100644
+--- a/Documentation/sparc/index.rst
++++ b/Documentation/sparc/index.rst
+@@ -1,5 +1,3 @@
+-:orphan:
+-
+ ==================
+ Sparc Architecture
+ ==================
+diff --git a/Documentation/xtensa/index.rst b/Documentation/xtensa/index.rst
+index 5a24e365e35f..52fa04eb39a3 100644
+--- a/Documentation/xtensa/index.rst
++++ b/Documentation/xtensa/index.rst
+@@ -1,4 +1,4 @@
+-:orphan:
++.. SPDX-License-Identifier: GPL-2.0
+ 
+ ===================
+ Xtensa Architecture
+-- 
+2.21.0
 
-> I haven't really tested PowerPC yet. Can anyone give me a helping hand what
-> would be a good target to test this code in QEMU? Or even better, test this
-> code on real Hardware?
-
-There's some info on using qemu here:
-  https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu
-
-But I'm not sure where you get a version of kexec that uses kexec_file().
-
-We can probably work out those details though.
-
-> If that change is acceptable i would finish the patch and submit it. I think
-> best would be to push this change through Helge's parisc tree, so we don't
-> have any dependencies to sort out.
-
-That will work for you but could cause us problems if we have any
-changes that touch that code.
-
-It's easy enough to create a topic branch with just that patch that both
-of us merge.
-
-
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index c47b328eada0..de7520100136 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -18,6 +18,9 @@ config KEXEC_CORE
->  	select CRASH_CORE
->  	bool
->  
-> +config KEXEC_FILE_ELF
-> +	bool
-
-We could probably just call it KEXEC_ELF I think? The functions are
-called that after all.
-
-> diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
-> index ba4f18a43ee8..0059e36913e9 100644
-> --- a/arch/powerpc/kernel/kexec_elf_64.c
-> +++ b/arch/powerpc/kernel/kexec_elf_64.c
-> @@ -21,8 +21,6 @@
->   * GNU General Public License for more details.
->   */
->  
-> -#define pr_fmt(fmt)	"kexec_elf: " fmt
-> -
-
-Please don't remove that, there are still some prints left in this file
-that use it.
-
->  #include <linux/elf.h>
->  #include <linux/kexec.h>
->  #include <linux/libfdt.h>
-> @@ -31,540 +29,6 @@
->  #include <linux/slab.h>
->  #include <linux/types.h>
->  
-> -#define PURGATORY_STACK_SIZE	(16 * 1024)
-
-This is unused AFAICS. We should probably remove it explicitly rather
-than as part of this patch.
-
-> diff --git a/kernel/kexec_file_elf.c b/kernel/kexec_file_elf.c
-> new file mode 100644
-> index 000000000000..bb966c93492c
-> --- /dev/null
-> +++ b/kernel/kexec_file_elf.c
-> @@ -0,0 +1,574 @@
-> +/*
-> + * Load ELF vmlinux file for the kexec_file_load syscall.
-> + *
-> + * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
-> + * Copyright (C) 2004  IBM Corp.
-> + * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
-> + * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
-> + * Copyright (C) 2016  IBM Corporation
-> + *
-> + * Based on kexec-tools' kexec-elf-exec.c and kexec-elf-ppc64.c.
-> + * Heavily modified for the kernel by
-> + * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation (version 2 of the License).
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-
-You shouldn't be adding new license text. Instead remove those two
-paragraphs and use a SPDX tag.
-
-If you look at the file in master it already has the tag.
-
-> +
-> +#define pr_fmt(fmt)	"kexec_elf: " fmt
-> +
-> +#include <linux/elf.h>
-> +#include <linux/kexec.h>
-> +#include <linux/libfdt.h>
-
-You don't need that do you?
-
-> +#include <linux/module.h>
-> +#include <linux/of_fdt.h>
-
-Or that.
-
-> +#include <linux/slab.h>
-> +#include <linux/types.h>
-> +
-> +#define elf_addr_to_cpu	elf64_to_cpu
-
-Why are we doing that rather than just using elf64_to_cpu directly?
-
-> +#ifndef Elf_Rel
-> +#define Elf_Rel		Elf64_Rel
-> +#endif /* Elf_Rel */
-
-And that?
-
-
-
-cheers
