@@ -2,195 +2,166 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F99959B31
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Jun 2019 14:31:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A176859C86
+	for <lists+linux-s390@lfdr.de>; Fri, 28 Jun 2019 15:05:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727424AbfF1Mbj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 28 Jun 2019 08:31:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39644 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727127AbfF1Map (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 28 Jun 2019 08:30:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/ACtFTJ8t0rgRWDNSeADECk30Wwk28wX2Poo52xAGI8=; b=e+2o4PfTUqmLAP9+yVgRTSMqCY
-        Tnf5U0x2uPJDPkns5j2lSPUa//SkDRojN/zK7V3DPohSOh24J2v2XKdQVQPgWUQRkknLsIsR2a8sw
-        vIAtdmC4K3NnPyXm2z2HalcpZEHRSrjqde3msUjYzWYE60G4cwtqKGBoAYWj4cxEpZ9n8vkk4NQTY
-        1+enRTu9Mq7VFZJn9umR7TD5TBCMyx72vxi0UDfoSYRsI6HfJ0L9lPadMMeWB5FaFlAffVzHajfi7
-        eN3oY5WswA3cPdrB9qfCaBwvbmkCjuN4BFIdR7nw0X6L23eBpFfBVPgLZAKHqt7pbT7NyOgMG4Gb8
-        qPMmGZ4w==;
-Received: from [186.213.242.156] (helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hgq1U-00055C-Fo; Fri, 28 Jun 2019 12:30:36 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hgq1S-0005Rx-94; Fri, 28 Jun 2019 09:30:34 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH 13/39] docs: add arch doc directories to the index
-Date:   Fri, 28 Jun 2019 09:30:06 -0300
-Message-Id: <df4b7dbf72f2ca0695adc6e5997ad852be2332a7.1561724493.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.1561724493.git.mchehab+samsung@kernel.org>
-References: <cover.1561724493.git.mchehab+samsung@kernel.org>
+        id S1727136AbfF1NFQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 28 Jun 2019 09:05:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12178 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726731AbfF1NFQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 28 Jun 2019 09:05:16 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x5SD3g9d034202
+        for <linux-s390@vger.kernel.org>; Fri, 28 Jun 2019 09:05:15 -0400
+Received: from e14.ny.us.ibm.com (e14.ny.us.ibm.com [129.33.205.204])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tdjtt1pge-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 28 Jun 2019 09:05:15 -0400
+Received: from localhost
+        by e14.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
+        Fri, 28 Jun 2019 14:05:14 +0100
+Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
+        by e14.ny.us.ibm.com (146.89.104.201) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Jun 2019 14:05:12 +0100
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x5SD5BXk7209600
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Jun 2019 13:05:11 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28B34112065;
+        Fri, 28 Jun 2019 13:05:11 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 022B311206B;
+        Fri, 28 Jun 2019 13:05:10 +0000 (GMT)
+Received: from [9.80.218.122] (unknown [9.80.218.122])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Jun 2019 13:05:10 +0000 (GMT)
+Subject: Re: [RFC v1 1/1] vfio-ccw: Don't call cp_free if we are processing a
+ channel program
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Eric Farman <farman@linux.ibm.com>, pasic@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+References: <cover.1561055076.git.alifm@linux.ibm.com>
+ <46dc0cbdcb8a414d70b7807fceb1cca6229408d5.1561055076.git.alifm@linux.ibm.com>
+ <638804dc-53c0-ff2f-d123-13c257ad593f@linux.ibm.com>
+ <581d756d-7418-cd67-e0e8-f9e4fe10b22d@linux.ibm.com>
+ <2d9c04ba-ee50-2f9b-343a-5109274ff52d@linux.ibm.com>
+ <56ced048-8c66-a030-af35-8afbbd2abea8@linux.ibm.com>
+ <20190624114231.2d81e36f.cohuck@redhat.com>
+ <20190624120514.4b528db5.cohuck@redhat.com>
+ <20190624134622.2bb3bba2.cohuck@redhat.com>
+ <20190624140723.5aa7b0b1.cohuck@redhat.com>
+ <3e93215c-c11a-d0bb-8982-be3f2b467e13@linux.ibm.com>
+ <20190624170937.4c76de8d.cohuck@redhat.com>
+ <7841b312-13ad-a4b3-85d9-1f5a4991f7fd@linux.ibm.com>
+ <20190627111456.3e6da01c.cohuck@redhat.com>
+From:   Farhan Ali <alifm@linux.ibm.com>
+Date:   Fri, 28 Jun 2019 09:05:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190627111456.3e6da01c.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19062813-0052-0000-0000-000003D80424
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011346; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01224482; UDB=6.00644477; IPR=6.01005674;
+ MB=3.00027507; MTD=3.00000008; XFM=3.00000015; UTC=2019-06-28 13:05:13
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19062813-0053-0000-0000-0000617E2016
+Message-Id: <f42fa379-470a-c14a-a120-c4221029076d@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-06-28_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1906280156
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Now that several arch documents were converted to ReST,
-add their indexes to Documentation/index.rst and remove the
-:orphan:  from them.
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/arm/index.rst     |  2 --
- Documentation/arm64/index.rst   |  2 --
- Documentation/ia64/index.rst    |  2 --
- Documentation/index.rst         | 10 ++++++++++
- Documentation/m68k/index.rst    |  2 +-
- Documentation/powerpc/index.rst |  2 +-
- Documentation/riscv/index.rst   |  2 --
- Documentation/s390/index.rst    |  2 --
- Documentation/sparc/index.rst   |  2 --
- Documentation/xtensa/index.rst  |  2 +-
- 10 files changed, 13 insertions(+), 15 deletions(-)
 
-diff --git a/Documentation/arm/index.rst b/Documentation/arm/index.rst
-index bd316d1a1802..9c2f781f4685 100644
---- a/Documentation/arm/index.rst
-+++ b/Documentation/arm/index.rst
-@@ -1,5 +1,3 @@
--﻿:orphan:
--
- ================
- ARM Architecture
- ================
-diff --git a/Documentation/arm64/index.rst b/Documentation/arm64/index.rst
-index 018b7836ecb7..96b696ba4e6c 100644
---- a/Documentation/arm64/index.rst
-+++ b/Documentation/arm64/index.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- ==================
- ARM64 Architecture
- ==================
-diff --git a/Documentation/ia64/index.rst b/Documentation/ia64/index.rst
-index a3e3052ad6e2..ef99475f672b 100644
---- a/Documentation/ia64/index.rst
-+++ b/Documentation/ia64/index.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- ==================
- IA-64 Architecture
- ==================
-diff --git a/Documentation/index.rst b/Documentation/index.rst
-index 95db26bf2899..f898def833f4 100644
---- a/Documentation/index.rst
-+++ b/Documentation/index.rst
-@@ -118,7 +118,17 @@ implementation.
-    :maxdepth: 2
- 
-    sh/index
-+   arm/index
-+   arm64/index
-+   ia64/index
-+   m68k/index
-+   powerpc/index
-+   riscv/index
-+   s390/index
-+   sh/index
-+   sparc/index
-    x86/index
-+   xtensa/index
- 
- Filesystem Documentation
- ------------------------
-diff --git a/Documentation/m68k/index.rst b/Documentation/m68k/index.rst
-index f3273ec075c3..3a5ba7fe1703 100644
---- a/Documentation/m68k/index.rst
-+++ b/Documentation/m68k/index.rst
-@@ -1,4 +1,4 @@
--:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
- 
- =================
- m68k Architecture
-diff --git a/Documentation/powerpc/index.rst b/Documentation/powerpc/index.rst
-index 1ff17268db46..549b1cdd77ae 100644
---- a/Documentation/powerpc/index.rst
-+++ b/Documentation/powerpc/index.rst
-@@ -1,4 +1,4 @@
--:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
- 
- =======
- powerpc
-diff --git a/Documentation/riscv/index.rst b/Documentation/riscv/index.rst
-index c4b906d9b5a7..e3ca0922a8c2 100644
---- a/Documentation/riscv/index.rst
-+++ b/Documentation/riscv/index.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- ===================
- RISC-V architecture
- ===================
-diff --git a/Documentation/s390/index.rst b/Documentation/s390/index.rst
-index 1a914da2a07b..4602312909d3 100644
---- a/Documentation/s390/index.rst
-+++ b/Documentation/s390/index.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- =================
- s390 Architecture
- =================
-diff --git a/Documentation/sparc/index.rst b/Documentation/sparc/index.rst
-index 91f7d6643dd5..71cff621f243 100644
---- a/Documentation/sparc/index.rst
-+++ b/Documentation/sparc/index.rst
-@@ -1,5 +1,3 @@
--:orphan:
--
- ==================
- Sparc Architecture
- ==================
-diff --git a/Documentation/xtensa/index.rst b/Documentation/xtensa/index.rst
-index 5a24e365e35f..52fa04eb39a3 100644
---- a/Documentation/xtensa/index.rst
-+++ b/Documentation/xtensa/index.rst
-@@ -1,4 +1,4 @@
--:orphan:
-+.. SPDX-License-Identifier: GPL-2.0
- 
- ===================
- Xtensa Architecture
--- 
-2.21.0
+On 06/27/2019 05:14 AM, Cornelia Huck wrote:
+> On Mon, 24 Jun 2019 11:24:16 -0400
+> Farhan Ali <alifm@linux.ibm.com> wrote:
+> 
+>> On 06/24/2019 11:09 AM, Cornelia Huck wrote:
+>>> On Mon, 24 Jun 2019 10:44:17 -0400
+>>> Farhan Ali <alifm@linux.ibm.com> wrote:
+> 
+>>>> But even if we don't remove the cp_free from vfio_ccw_sch_io_todo, I am
+>>>> not sure if your suggestion will fix the problem. The problem here is
+>>>> that we can call vfio_ccw_sch_io_todo (for a clear or halt interrupt) at
+>>>> the same time we are handling an ssch request. So depending on the order
+>>>> of the operations we could still end up calling cp_free from both from
+>>>> threads (i refer to the threads I mentioned in response to Eric's
+>>>> earlier email).
+>>>
+>>> What I don't see is why this is a problem with ->initialized; wasn't
+>>> the problem that we misinterpreted an interrupt for csch as one for a
+>>> not-yet-issued ssch?
+>>>    
+>>
+>> It's the order in which we do things, which could cause the problem.
+>> Since we queue interrupt handling in the workqueue, we could delay
+>> processing the csch interrupt. During this delay if ssch comes through,
+>> we might have already set ->initialized to true.
+>>
+>> So when we get around to handling the interrupt in io_todo, we would go
+>> ahead and call cp_free. This would cause the problem of freeing the
+>> ccwchain list while we might be adding to it.
+>>
+>>>>
+>>>> Another thing that concerns me is that vfio-ccw can also issue csch/hsch
+>>>> in the quiesce path, independently of what the guest issues. So in that
+>>>> case we could have a similar scenario to processing an ssch request and
+>>>> issuing halt/clear in parallel. But maybe I am being paranoid :)
+>>>
+>>> I think the root problem is really trying to clear a cp while another
+>>> thread is trying to set it up. Should we maybe use something like rcu?
+>>>
+>>>    
+>>
+>> Yes, this is the root problem. I am not too familiar with rcu locking,
+>> but what would be the benefit over a traditional mutex?
+> 
+> I don't quite remember what I had been envisioning at the time (sorry,
+> the heat seems to make my brain a bit slushy :/), but I think we might
+> have two copies of the cp and use an rcu-ed pointer in the private
+> structure to point to one of the copies. If we make sure we've
+> synchronized on the pointer at interrupt time, we should be able to
+> free the old one in _todo and act on the new on when doing ssch. And
+> yes, I realize that this is awfully vague :)
+> 
+> 
+
+Sorry for the delayed response. I was trying out few ideas, and I think 
+the simplest one for me that worked and that makes sense is to 
+explicitly add the check to see if the state == CP_PENDING when trying 
+to free the cp (as mentioned by Halil in a separate thread).
+
+When we are in the CP_PENDING state then we know for sure that we have a 
+currently allocated cp and no other thread is working on it. So in the 
+interrupt context, it should be okay to free cp.
+
+I have prototyped with the mutex, but the code becomes too hairy. I 
+looked into the rcu api and from what I understand about rcu it would 
+provide advantage if we more readers than updaters. But in our case we 
+really have 2 updaters, updating the cp at the same time.
+
+In the meantime I also have some minor fixes while going over the code 
+again :). I will post a v2 soon for review.
+
+Thanks
+Farhan
 
