@@ -2,117 +2,181 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AA63258D77
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Jun 2019 00:00:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 65DE95902C
+	for <lists+linux-s390@lfdr.de>; Fri, 28 Jun 2019 04:04:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbfF0WAE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Jun 2019 18:00:04 -0400
-Received: from cloudserver094114.home.pl ([79.96.170.134]:46740 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726498AbfF0WAD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Jun 2019 18:00:03 -0400
-Received: from 79.184.254.216.ipv4.supernova.orange.pl (79.184.254.216) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.267)
- id b993f47717c4d2a7; Fri, 28 Jun 2019 00:00:00 +0200
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Mathieu Malaterre <malat@debian.org>
-Cc:     Michael Ellerman <mpe@ellerman.id.au>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Pavel Machek <pavel@ucw.cz>, Len Brown <len.brown@intel.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH v2] powerpc/power: Expose pfn_is_nosave prototype
-Date:   Fri, 28 Jun 2019 00:00:00 +0200
-Message-ID: <2178909.1BmBeJAm6j@kreacher>
-In-Reply-To: <20190524104418.17194-1-malat@debian.org>
-References: <20190523114736.30268-1-malat@debian.org> <20190524104418.17194-1-malat@debian.org>
+        id S1726315AbfF1CEQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Jun 2019 22:04:16 -0400
+Received: from ozlabs.org ([203.11.71.1]:51859 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725770AbfF1CEQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 27 Jun 2019 22:04:16 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 45Zg703sPhz9s3Z;
+        Fri, 28 Jun 2019 12:04:11 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Sven Schnelle <svens@stackframe.org>, kexec@lists.infradead.org
+Cc:     linux-s390@vger.kernel.org, deller@gmx.de,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH RFC] generic ELF support for kexec
+In-Reply-To: <20190625185433.GA10934@t470p.stackframe.org>
+References: <20190625185433.GA10934@t470p.stackframe.org>
+Date:   Fri, 28 Jun 2019 12:04:11 +1000
+Message-ID: <87o92isbxg.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Friday, May 24, 2019 12:44:18 PM CEST Mathieu Malaterre wrote:
-> The declaration for pfn_is_nosave is only available in
-> kernel/power/power.h. Since this function can be override in arch,
-> expose it globally. Having a prototype will make sure to avoid warning
-> (sometime treated as error with W=1) such as:
-> 
->   arch/powerpc/kernel/suspend.c:18:5: error: no previous prototype for 'pfn_is_nosave' [-Werror=missing-prototypes]
-> 
-> This moves the declaration into a globally visible header file and add
-> missing include to avoid a warning on powerpc. Also remove the
-> duplicated prototypes since not required anymore.
-> 
-> Cc: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Mathieu Malaterre <malat@debian.org>
-> ---
-> v2: As suggestion by christophe remove duplicates prototypes
-> 
->  arch/powerpc/kernel/suspend.c | 1 +
->  arch/s390/kernel/entry.h      | 1 -
->  include/linux/suspend.h       | 1 +
->  kernel/power/power.h          | 2 --
->  4 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/powerpc/kernel/suspend.c b/arch/powerpc/kernel/suspend.c
-> index a531154cc0f3..9e1b6b894245 100644
-> --- a/arch/powerpc/kernel/suspend.c
-> +++ b/arch/powerpc/kernel/suspend.c
-> @@ -8,6 +8,7 @@
+Hi Sven,
+
+Sven Schnelle <svens@stackframe.org> writes:
+> Hi List,
+>
+> i recently started working on kexec for PA-RISC. While doing so, i figured
+> that powerpc already has support for reading ELF images inside of the Kernel.
+> My first attempt was to steal the source code and modify it for PA-RISC, but
+> it turned out that i didn't had to change much. Only ARM specific stuff like
+> fdt blob fetching had to be removed.
+>
+> So instead of duplicating the code, i thought about moving the ELF stuff to
+> the core kexec code, and exposing several function to use that code from the
+> arch specific code.
+>
+> I'm attaching the patch to this Mail. What do you think about that change?
+> s390 also uses ELF files, and (maybe?) could also switch to this implementation.
+> But i don't know anything about S/390 and don't have one in my basement. So
+> i'll leave s390 to the IBM folks.
+
+It looks mostly OK, a few comments below.
+
+> I haven't really tested PowerPC yet. Can anyone give me a helping hand what
+> would be a good target to test this code in QEMU? Or even better, test this
+> code on real Hardware?
+
+There's some info on using qemu here:
+  https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu
+
+But I'm not sure where you get a version of kexec that uses kexec_file().
+
+We can probably work out those details though.
+
+> If that change is acceptable i would finish the patch and submit it. I think
+> best would be to push this change through Helge's parisc tree, so we don't
+> have any dependencies to sort out.
+
+That will work for you but could cause us problems if we have any
+changes that touch that code.
+
+It's easy enough to create a topic branch with just that patch that both
+of us merge.
+
+
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index c47b328eada0..de7520100136 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -18,6 +18,9 @@ config KEXEC_CORE
+>  	select CRASH_CORE
+>  	bool
+>  
+> +config KEXEC_FILE_ELF
+> +	bool
+
+We could probably just call it KEXEC_ELF I think? The functions are
+called that after all.
+
+> diff --git a/arch/powerpc/kernel/kexec_elf_64.c b/arch/powerpc/kernel/kexec_elf_64.c
+> index ba4f18a43ee8..0059e36913e9 100644
+> --- a/arch/powerpc/kernel/kexec_elf_64.c
+> +++ b/arch/powerpc/kernel/kexec_elf_64.c
+> @@ -21,8 +21,6 @@
+>   * GNU General Public License for more details.
 >   */
 >  
->  #include <linux/mm.h>
-> +#include <linux/suspend.h>
->  #include <asm/page.h>
->  #include <asm/sections.h>
->  
-> diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
-> index 20420c2b8a14..b2956d49b6ad 100644
-> --- a/arch/s390/kernel/entry.h
-> +++ b/arch/s390/kernel/entry.h
-> @@ -63,7 +63,6 @@ void __init startup_init(void);
->  void die(struct pt_regs *regs, const char *str);
->  int setup_profiling_timer(unsigned int multiplier);
->  void __init time_init(void);
-> -int pfn_is_nosave(unsigned long);
->  void s390_early_resume(void);
->  unsigned long prepare_ftrace_return(unsigned long parent, unsigned long sp, unsigned long ip);
->  
-> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-> index 6b3ea9ea6a9e..e8b8a7bede90 100644
-> --- a/include/linux/suspend.h
-> +++ b/include/linux/suspend.h
-> @@ -395,6 +395,7 @@ extern bool system_entering_hibernation(void);
->  extern bool hibernation_available(void);
->  asmlinkage int swsusp_save(void);
->  extern struct pbe *restore_pblist;
-> +int pfn_is_nosave(unsigned long pfn);
->  #else /* CONFIG_HIBERNATION */
->  static inline void register_nosave_region(unsigned long b, unsigned long e) {}
->  static inline void register_nosave_region_late(unsigned long b, unsigned long e) {}
-> diff --git a/kernel/power/power.h b/kernel/power/power.h
-> index 9e58bdc8a562..44bee462ff57 100644
-> --- a/kernel/power/power.h
-> +++ b/kernel/power/power.h
-> @@ -75,8 +75,6 @@ static inline void hibernate_reserved_size_init(void) {}
->  static inline void hibernate_image_size_init(void) {}
->  #endif /* !CONFIG_HIBERNATION */
->  
-> -extern int pfn_is_nosave(unsigned long);
+> -#define pr_fmt(fmt)	"kexec_elf: " fmt
 > -
->  #define power_attr(_name) \
->  static struct kobj_attribute _name##_attr = {	\
->  	.attr	= {				\
-> 
 
-Applied, thanks!
+Please don't remove that, there are still some prints left in this file
+that use it.
+
+>  #include <linux/elf.h>
+>  #include <linux/kexec.h>
+>  #include <linux/libfdt.h>
+> @@ -31,540 +29,6 @@
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  
+> -#define PURGATORY_STACK_SIZE	(16 * 1024)
+
+This is unused AFAICS. We should probably remove it explicitly rather
+than as part of this patch.
+
+> diff --git a/kernel/kexec_file_elf.c b/kernel/kexec_file_elf.c
+> new file mode 100644
+> index 000000000000..bb966c93492c
+> --- /dev/null
+> +++ b/kernel/kexec_file_elf.c
+> @@ -0,0 +1,574 @@
+> +/*
+> + * Load ELF vmlinux file for the kexec_file_load syscall.
+> + *
+> + * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
+> + * Copyright (C) 2004  IBM Corp.
+> + * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
+> + * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
+> + * Copyright (C) 2016  IBM Corporation
+> + *
+> + * Based on kexec-tools' kexec-elf-exec.c and kexec-elf-ppc64.c.
+> + * Heavily modified for the kernel by
+> + * Thiago Jung Bauermann <bauerman@linux.vnet.ibm.com>.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation (version 2 of the License).
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+
+You shouldn't be adding new license text. Instead remove those two
+paragraphs and use a SPDX tag.
+
+If you look at the file in master it already has the tag.
+
+> +
+> +#define pr_fmt(fmt)	"kexec_elf: " fmt
+> +
+> +#include <linux/elf.h>
+> +#include <linux/kexec.h>
+> +#include <linux/libfdt.h>
+
+You don't need that do you?
+
+> +#include <linux/module.h>
+> +#include <linux/of_fdt.h>
+
+Or that.
+
+> +#include <linux/slab.h>
+> +#include <linux/types.h>
+> +
+> +#define elf_addr_to_cpu	elf64_to_cpu
+
+Why are we doing that rather than just using elf64_to_cpu directly?
+
+> +#ifndef Elf_Rel
+> +#define Elf_Rel		Elf64_Rel
+> +#endif /* Elf_Rel */
+
+And that?
 
 
 
+cheers
