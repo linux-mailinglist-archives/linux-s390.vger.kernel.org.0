@@ -2,99 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8301F5C1BA
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 19:09:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A7995C1FD
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 19:31:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfGARJD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jul 2019 13:09:03 -0400
-Received: from smtp.duncanthrax.net ([89.31.1.170]:35385 "EHLO
-        smtp.duncanthrax.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726840AbfGARJD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jul 2019 13:09:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=duncanthrax.net; s=dkim; h=In-Reply-To:Content-Type:MIME-Version:References
-        :Message-ID:Subject:Cc:To:From:Date;
-        bh=lMzex8jlUCJ2Gwea4xwdWvbCtAAUxSDLkgjI9TE9va0=; b=ZdE/vRjPVuJYU9QL+q2GQwaSjq
-        qeaGU3B+ntdQjmLgoZc6V6wW40HUteu1CTDy6jkHHjWywYcj36MCoQbPCuT/ufIwd+gCZCsCwfUk9
-        IqU54V7HHV4AFAjIk89VwcSCw2Lt4ly1qCt1JF10kSnBpRIko28/gILQyjAaYuWMiuZM=;
-Received: from [134.3.44.134] (helo=t470p.stackframe.org)
-        by smtp.eurescom.eu with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.86_2)
-        (envelope-from <svens@stackframe.org>)
-        id 1hhznT-0006GR-8o; Mon, 01 Jul 2019 19:08:55 +0200
-Date:   Mon, 1 Jul 2019 19:08:53 +0200
-From:   Sven Schnelle <svens@stackframe.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     kexec@lists.infradead.org, linux-s390@vger.kernel.org,
-        deller@gmx.de, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH RFC] generic ELF support for kexec
-Message-ID: <20190701170853.GD19243@t470p.stackframe.org>
-References: <20190625185433.GA10934@t470p.stackframe.org>
- <87o92isbxg.fsf@concordia.ellerman.id.au>
+        id S1727849AbfGARbt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jul 2019 13:31:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:38438 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727310AbfGARbs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jul 2019 13:31:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id p11so3540485wro.5
+        for <linux-s390@vger.kernel.org>; Mon, 01 Jul 2019 10:31:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=0oDdampWlKVXNLYu+/89k7YGxDIYT51dqwB+v1WNubU=;
+        b=RO6FmhyX0VreK0RuZiViwwEX7D9cKk1tyIzYHGbaTf2w4Cd1kZ6WV9ayp1FqPm7+q/
+         7qvNuCAGAqlQjBuqYiQODTNclgdAnBVO0FZY6uGYoS8RJ/E9v/gmCA/pjLImxWlr6mmA
+         UOOzniLuOmrRJfPcOq/742wKwQL0LMn2VlnlNWE/MQ5/xoMhLBVOTgveAcbUmH7ijVLf
+         teRNXHlewGiO3F8YA0jgrau3SwekEXyVNWw1HHQZoUkWPcXeJfByoADqyBU6cMtTTkc9
+         pQnuJ6Hhc8wU74Bkp60cVFtS4L4odRNDhKn0a5xIiwM3t8QFrClaqRQsgGAhYdQaPA3e
+         EiKw==
+X-Gm-Message-State: APjAAAXM+fs38WFqxEJTiPrcjz4GTeGF9kYKsZ6QSUYb01Af+VT99DYl
+        UMpsMkcH06FBSb4jSsMXtLeAhQ==
+X-Google-Smtp-Source: APXvYqwg9dhLkF1Iujl0uqE4A3r+uhurZ83HyVWio+gQZWV/JpCFrWQSHRRw7rYBF5ODs2UEfbcD3Q==
+X-Received: by 2002:adf:fb10:: with SMTP id c16mr16422856wrr.72.1562002306291;
+        Mon, 01 Jul 2019 10:31:46 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:b8:794:183e:9e2a? ([2001:b07:6468:f312:b8:794:183e:9e2a])
+        by smtp.gmail.com with ESMTPSA id c1sm22704441wrh.1.2019.07.01.10.31.45
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 01 Jul 2019 10:31:45 -0700 (PDT)
+Subject: Re: [GIT PULL 0/7] KVM: s390: add kselftests
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>
+References: <20190701125848.276133-1-borntraeger@de.ibm.com>
+ <b5f74797-1ff7-26fc-4a5a-1fdabef22671@redhat.com>
+ <b1ff22c4-7a2e-158d-e179-d08d3d281a97@de.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d9697009-cda2-9a22-436d-e80475c5adba@redhat.com>
+Date:   Mon, 1 Jul 2019 19:31:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87o92isbxg.fsf@concordia.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <b1ff22c4-7a2e-158d-e179-d08d3d281a97@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Michael,
-
-On Fri, Jun 28, 2019 at 12:04:11PM +1000, Michael Ellerman wrote:
-> Sven Schnelle <svens@stackframe.org> writes:
->   https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu
+On 01/07/19 17:29, Christian Borntraeger wrote:
 > 
-> But I'm not sure where you get a version of kexec that uses kexec_file().
-
-kexec-tools HEAD supports it, so that's not a problem.
-
-> > If that change is acceptable i would finish the patch and submit it. I think
-> > best would be to push this change through Helge's parisc tree, so we don't
-> > have any dependencies to sort out.
 > 
-> That will work for you but could cause us problems if we have any
-> changes that touch that code.
+> On 01.07.19 16:07, Paolo Bonzini wrote:
+>> On 01/07/19 14:58, Christian Borntraeger wrote:
+>>> Paolo, Radim,
+>>>
+>>> kselftest for s390x. There is a small conflict with Linus tree due to
+>>> 61cfcd545e42 ("kvm: tests: Sort tests in the Makefile alphabetically")
+>>> which is part of kvm/master but not kvm/next.
+>>> Other than that this looks good.
+>>
+>> Thanks! I'll delay this to after the first merge window pull request to
+>> avoid the conflict.
 > 
-> It's easy enough to create a topic branch with just that patch that both
-> of us merge.
+> I do not have to do anything, correct?
 
-What should be the base branch for that patch? Christophe suggested the
-powerpc/merge branch?
+No, it's done on your side. Just an explanation of why you'll not see
+this in kvm/next for a week or so.
 
-> >  #include <linux/elf.h>
-> >  #include <linux/kexec.h>
-> >  #include <linux/libfdt.h>
-> > @@ -31,540 +29,6 @@
-> >  #include <linux/slab.h>
-> >  #include <linux/types.h>
-> >  
-> > -#define PURGATORY_STACK_SIZE	(16 * 1024)
+Paolo
+
+> As an alternative I could rebase on top of rc6.
+>>
+>> Paolo
+>>
+>>>
+>>> The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
+>>>
+>>>   Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
+>>>
+>>> are available in the Git repository at:
+>>>
+>>>   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.3-1
+>>>
+>>> for you to fetch changes up to 8343ba2d4820b1738bbb7cb40ec18ea0a3b0b331:
+>>>
+>>>   KVM: selftests: enable pgste option for the linker on s390 (2019-06-04 14:05:38 +0200)
+>>>
+>>> ----------------------------------------------------------------
+>>> KVM: s390: add kselftests
+>>>
+>>> This is the initial implementation for KVM selftests on s390.
+>>>
+>>> ----------------------------------------------------------------
+>>> Christian Borntraeger (1):
+>>>       KVM: selftests: enable pgste option for the linker on s390
+>>>
+>>> Thomas Huth (6):
+>>>       KVM: selftests: Guard struct kvm_vcpu_events with __KVM_HAVE_VCPU_EVENTS
+>>>       KVM: selftests: Introduce a VM_MODE_DEFAULT macro for the default bits
+>>>       KVM: selftests: Align memory region addresses to 1M on s390x
+>>>       KVM: selftests: Add processor code for s390x
+>>>       KVM: selftests: Add the sync_regs test for s390x
+>>>       KVM: selftests: Move kvm_create_max_vcpus test to generic code
+>>>
+>>>  MAINTAINERS                                        |   2 +
+>>>  tools/testing/selftests/kvm/Makefile               |  14 +-
+>>>  tools/testing/selftests/kvm/include/kvm_util.h     |   8 +
+>>>  .../selftests/kvm/include/s390x/processor.h        |  22 ++
+>>>  .../kvm/{x86_64 => }/kvm_create_max_vcpus.c        |   3 +-
+>>>  .../testing/selftests/kvm/lib/aarch64/processor.c  |   2 +-
+>>>  tools/testing/selftests/kvm/lib/kvm_util.c         |  23 +-
+>>>  tools/testing/selftests/kvm/lib/s390x/processor.c  | 286 +++++++++++++++++++++
+>>>  tools/testing/selftests/kvm/lib/x86_64/processor.c |   2 +-
+>>>  tools/testing/selftests/kvm/s390x/sync_regs_test.c | 151 +++++++++++
+>>>  10 files changed, 503 insertions(+), 10 deletions(-)
+>>>  create mode 100644 tools/testing/selftests/kvm/include/s390x/processor.h
+>>>  rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
+>>>  create mode 100644 tools/testing/selftests/kvm/lib/s390x/processor.c
+>>>  create mode 100644 tools/testing/selftests/kvm/s390x/sync_regs_test.c
+>>>
+>>
 > 
-> This is unused AFAICS. We should probably remove it explicitly rather
-> than as part of this patch.
 
-I have one patch right now. If wanted i can split up all the changes
-suggested during the review into smaller pieces, whatever you prefer.
-
-> Or that.
-> 
-> > +#include <linux/slab.h>
-> > +#include <linux/types.h>
-> > +
-> > +#define elf_addr_to_cpu	elf64_to_cpu
-> 
-> Why are we doing that rather than just using elf64_to_cpu directly?
-> 
-> > +#ifndef Elf_Rel
-> > +#define Elf_Rel		Elf64_Rel
-> > +#endif /* Elf_Rel */
-> 
-> And that?
-
-Don't know - ask the PPC people :-)
-
-Regards
-Sven
