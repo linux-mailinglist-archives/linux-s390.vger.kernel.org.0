@@ -2,114 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7E565AE50
-	for <lists+linux-s390@lfdr.de>; Sun, 30 Jun 2019 06:40:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C9A8E5B5D0
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 09:42:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725959AbfF3Ekt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 30 Jun 2019 00:40:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:44468 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725771AbfF3Eks (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 30 Jun 2019 00:40:48 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5A8E728;
-        Sat, 29 Jun 2019 21:40:47 -0700 (PDT)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5ECD73F706;
-        Sat, 29 Jun 2019 21:40:37 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH] mm: Generalize and rename notify_page_fault() as
- kprobe_page_fault()
-To:     Guenter Roeck <linux@roeck-us.net>
+        id S1727035AbfGAHmG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jul 2019 03:42:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50024 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726036AbfGAHmG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 1 Jul 2019 03:42:06 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5F478AFFA;
+        Mon,  1 Jul 2019 07:42:04 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 09:42:02 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Michal Hocko <mhocko@suse.com>, linux-ia64@vger.kernel.org,
-        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        linux-s390@vger.kernel.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org,
-        Russell King <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>,
-        linux-snps-arc@lists.infradead.org,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Tony Luck <tony.luck@intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>, linux-mips@vger.kernel.org,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-References: <1560420444-25737-1-git-send-email-anshuman.khandual@arm.com>
- <20190629145009.GA28613@roeck-us.net>
-Message-ID: <78863cd0-8cb5-c4fd-ed06-b1136bdbb6ef@arm.com>
-Date:   Sun, 30 Jun 2019 10:11:03 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richard.weiyang@gmail.com>,
+        Igor Mammedov <imammedo@redhat.com>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>,
+        Wei Yang <richardw.yang@linux.intel.com>
+Subject: Re: [PATCH v3 01/11] mm/memory_hotplug: Simplify and fix
+ check_hotplug_memory_range()
+Message-ID: <20190701074202.GB6376@dhcp22.suse.cz>
+References: <20190527111152.16324-1-david@redhat.com>
+ <20190527111152.16324-2-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190629145009.GA28613@roeck-us.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190527111152.16324-2-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Guenter,
+[Sorry for a really late response]
 
-On 06/29/2019 08:20 PM, Guenter Roeck wrote:
-> Hi,
-> 
-> On Thu, Jun 13, 2019 at 03:37:24PM +0530, Anshuman Khandual wrote:
->> Architectures which support kprobes have very similar boilerplate around
->> calling kprobe_fault_handler(). Use a helper function in kprobes.h to unify
->> them, based on the x86 code.
->>
->> This changes the behaviour for other architectures when preemption is
->> enabled. Previously, they would have disabled preemption while calling the
->> kprobe handler. However, preemption would be disabled if this fault was
->> due to a kprobe, so we know the fault was not due to a kprobe handler and
->> can simply return failure.
->>
->> This behaviour was introduced in the commit a980c0ef9f6d ("x86/kprobes:
->> Refactor kprobes_fault() like kprobe_exceptions_notify()")
->>
-> 
-> With this patch applied, parisc:allmodconfig images no longer build.
-> 
-> In file included from arch/parisc/mm/fixmap.c:8:
-> include/linux/kprobes.h: In function 'kprobe_page_fault':
-> include/linux/kprobes.h:477:9: error:
-> 	implicit declaration of function 'kprobe_fault_handler'; did you mean 'kprobe_page_fault'?
+On Mon 27-05-19 13:11:42, David Hildenbrand wrote:
+> By converting start and size to page granularity, we actually ignore
+> unaligned parts within a page instead of properly bailing out with an
+> error.
 
-Yikes.. Arch parisc does not even define (unlike mips which did but never exported)
-now required function kprobe_fault_handler() when CONFIG_KPROBES is enabled.
-
-I believe rather than defining one stub version only for parsic it would be better
-to have an weak symbol generic stub definition for kprobe_fault_handler() in file
-include/linux/kprobes.h when CONFIG_KPROBES is enabled along side the other stub
-definition when !CONFIG_KPROBES. But arch which wants to use kprobe_page_fault()
-cannot use stub kprobe_fault_handler() definition and will have to provide one.
-I will probably add a comment regarding this.
-
+I do not expect any code path would ever provide an unaligned address
+and even if it did then rounding that to a pfn doesn't sound like a
+terrible thing to do. Anyway this removes few lines so why not.
 > 
-> Reverting the patch fixes the problem.
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Arun KS <arunks@codeaurora.org>
+> Cc: Mathieu Malaterre <malat@debian.org>
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> Reviewed-by: Wei Yang <richardw.yang@linux.intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
+> ---
+>  mm/memory_hotplug.c | 11 +++--------
+>  1 file changed, 3 insertions(+), 8 deletions(-)
 > 
-> Guenter
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index e096c987d261..762887b2358b 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -1051,16 +1051,11 @@ int try_online_node(int nid)
+>  
+>  static int check_hotplug_memory_range(u64 start, u64 size)
+>  {
+> -	unsigned long block_sz = memory_block_size_bytes();
+> -	u64 block_nr_pages = block_sz >> PAGE_SHIFT;
+> -	u64 nr_pages = size >> PAGE_SHIFT;
+> -	u64 start_pfn = PFN_DOWN(start);
+> -
+>  	/* memory range must be block size aligned */
+> -	if (!nr_pages || !IS_ALIGNED(start_pfn, block_nr_pages) ||
+> -	    !IS_ALIGNED(nr_pages, block_nr_pages)) {
+> +	if (!size || !IS_ALIGNED(start, memory_block_size_bytes()) ||
+> +	    !IS_ALIGNED(size, memory_block_size_bytes())) {
+>  		pr_err("Block size [%#lx] unaligned hotplug range: start %#llx, size %#llx",
+> -		       block_sz, start, size);
+> +		       memory_block_size_bytes(), start, size);
+>  		return -EINVAL;
+>  	}
+>  
+> -- 
+> 2.20.1
 > 
 
-Thanks for reporting the problem.
+-- 
+Michal Hocko
+SUSE Labs
