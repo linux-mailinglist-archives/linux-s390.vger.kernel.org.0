@@ -2,81 +2,68 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3D39F5BB18
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 14:00:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 787875BB55
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 14:19:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727508AbfGAMAk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jul 2019 08:00:40 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40720 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727302AbfGAMAj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jul 2019 08:00:39 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61BvBbX020084
-        for <linux-s390@vger.kernel.org>; Mon, 1 Jul 2019 08:00:38 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tfgg7cnwd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 01 Jul 2019 08:00:38 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Mon, 1 Jul 2019 13:00:36 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 1 Jul 2019 13:00:31 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61C0TsO51707912
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 12:00:29 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55C91AE079;
-        Mon,  1 Jul 2019 12:00:29 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA7A2AE076;
-        Mon,  1 Jul 2019 12:00:28 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.119])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  1 Jul 2019 12:00:28 +0000 (GMT)
-Date:   Mon, 1 Jul 2019 14:00:27 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     borntraeger@de.ibm.com, alex.williamson@redhat.com,
-        cohuck@redhat.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        frankja@linux.ibm.com, akrowiak@linux.ibm.com, david@redhat.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        freude@linux.ibm.com, mimu@linux.ibm.com
-Subject: Re: [PATCH v9 0/4] vfio: ap: AP Queue Interrupt Control
-In-Reply-To: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
-References: <1558452877-27822-1-git-send-email-pmorel@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1727740AbfGAMTR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jul 2019 08:19:17 -0400
+Received: from 8bytes.org ([81.169.241.247]:33632 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727243AbfGAMTR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 1 Jul 2019 08:19:17 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id B9E84229; Mon,  1 Jul 2019 14:19:15 +0200 (CEST)
+Date:   Mon, 1 Jul 2019 14:19:14 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Tom Murphy <murphyt7@tcd.ie>, iommu@lists.linux-foundation.org,
+        Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        virtualization@lists.linux-foundation.org,
+        David Brown <david.brown@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-tegra@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>
+Subject: Re: [PATCH v4 0/5] iommu/amd: Convert the AMD iommu driver to the
+ dma-iommu api
+Message-ID: <20190701121914.GD8166@8bytes.org>
+References: <20190613223901.9523-1-murphyt7@tcd.ie>
+ <20190624061945.GA4912@infradead.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19070112-0020-0000-0000-0000034F263C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070112-0021-0000-0000-000021A2B05B
-Message-Id: <20190701140027.04de417a.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=574 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010150
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190624061945.GA4912@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 21 May 2019 17:34:33 +0200
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+Hi,
+	
+On Sun, Jun 23, 2019 at 11:19:45PM -0700, Christoph Hellwig wrote:
+> Joerg, any chance you could review this?  Toms patches to convert the
+> AMD and Intel IOMMU drivers to the dma-iommu code are going to make my
+> life in DMA land significantly easier, so I have a vested interest
+> in this series moving forward :)
 
-> This patch series implements PQAP/AQIC interception in KVM.
+I really appreciate Toms work on this. Tom, please rebase and resubmit
+this series after the next merge window and I will do more performance
+testing on it. If all goes well I and no other issues show up I can
+apply it for v5.4.
 
-Thanks, applied
+Regards,
+
+	Joerg
 
