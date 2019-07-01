@@ -2,22 +2,22 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6206A5B822
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 11:36:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B1B6B5B8F9
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 12:28:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728418AbfGAJgu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jul 2019 05:36:50 -0400
-Received: from mx2.suse.de ([195.135.220.15]:52840 "EHLO mx1.suse.de"
+        id S1728885AbfGAK17 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jul 2019 06:27:59 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37858 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728035AbfGAJgu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 1 Jul 2019 05:36:50 -0400
+        id S1726076AbfGAK17 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 1 Jul 2019 06:27:59 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 6E628AB87;
-        Mon,  1 Jul 2019 09:36:48 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 11:36:44 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     Michal Hocko <mhocko@kernel.org>
+        by mx1.suse.de (Postfix) with ESMTP id EE62EAF32;
+        Mon,  1 Jul 2019 10:27:57 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 12:27:56 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Oscar Salvador <osalvador@suse.de>
 Cc:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
         linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
         linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
@@ -34,35 +34,39 @@ Cc:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
         Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Subject: Re: [PATCH v3 10/11] mm/memory_hotplug: Make
  unregister_memory_block_under_nodes() never fail
-Message-ID: <20190701093640.GA17349@linux>
+Message-ID: <20190701102756.GO6376@dhcp22.suse.cz>
 References: <20190527111152.16324-1-david@redhat.com>
  <20190527111152.16324-11-david@redhat.com>
  <20190701085144.GJ6376@dhcp22.suse.cz>
+ <20190701093640.GA17349@linux>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190701085144.GJ6376@dhcp22.suse.cz>
+In-Reply-To: <20190701093640.GA17349@linux>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 01, 2019 at 10:51:44AM +0200, Michal Hocko wrote:
-> Yeah, we do not allow to offline multi zone (node) ranges so the current
-> code seems to be over engineered.
+On Mon 01-07-19 11:36:44, Oscar Salvador wrote:
+> On Mon, Jul 01, 2019 at 10:51:44AM +0200, Michal Hocko wrote:
+> > Yeah, we do not allow to offline multi zone (node) ranges so the current
+> > code seems to be over engineered.
+> > 
+> > Anyway, I am wondering why do we have to strictly check for already
+> > removed nodes links. Is the sysfs code going to complain we we try to
+> > remove again?
 > 
-> Anyway, I am wondering why do we have to strictly check for already
-> removed nodes links. Is the sysfs code going to complain we we try to
-> remove again?
+> No, sysfs will silently "fail" if the symlink has already been removed.
+> At least that is what I saw last time I played with it.
+> 
+> I guess the question is what if sysfs handling changes in the future
+> and starts dropping warnings when trying to remove a symlink is not there.
+> Maybe that is unlikely to happen?
 
-No, sysfs will silently "fail" if the symlink has already been removed.
-At least that is what I saw last time I played with it.
-
-I guess the question is what if sysfs handling changes in the future
-and starts dropping warnings when trying to remove a symlink is not there.
-Maybe that is unlikely to happen?
-
+And maybe we handle it then rather than have a static allocation that
+everybody with hotremove configured has to pay for.
 -- 
-Oscar Salvador
-SUSE L3
+Michal Hocko
+SUSE Labs
