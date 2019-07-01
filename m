@@ -2,402 +2,154 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F9075C2AC
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 20:12:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2C595C39F
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 21:27:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726967AbfGASMF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jul 2019 14:12:05 -0400
-Received: from smtp.duncanthrax.net ([89.31.1.170]:59564 "EHLO
-        smtp.duncanthrax.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726846AbfGASME (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jul 2019 14:12:04 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=duncanthrax.net; s=dkim; h=In-Reply-To:Content-Type:MIME-Version:References
-        :Message-ID:Subject:Cc:To:From:Date;
-        bh=AVgBC13hYlw1kbcnpEX2h0I1Q9eJcPTvTXABwzeZx0w=; b=B4YWRUd3czixaVKu+JNw8cHSMV
-        eZyaeYuZIfQTJ/Hh/O0dWtmesrBkFehXj8yPBOBhT0N4/0LmAGwD+BRD5XPn8A2lhqHZ56nv9FwIt
-        04kVqbgXblQWSWpha/qPpGAqHowJBBEo0CrlLSRE+d7GGhH5HjM2be1sMw/OOByqQhbc=;
-Received: from [134.3.44.134] (helo=t470p.stackframe.org)
-        by smtp.eurescom.eu with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.86_2)
-        (envelope-from <svens@stackframe.org>)
-        id 1hi0mV-0007Qq-9s; Mon, 01 Jul 2019 20:11:59 +0200
-Date:   Mon, 1 Jul 2019 20:11:57 +0200
-From:   Sven Schnelle <svens@stackframe.org>
-To:     Philipp Rudo <prudo@linux.ibm.com>
-Cc:     kexec@lists.infradead.org, linux-s390@vger.kernel.org,
-        deller@gmx.de, linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH RFC] generic ELF support for kexec
-Message-ID: <20190701181157.GE19243@t470p.stackframe.org>
-References: <20190625185433.GA10934@t470p.stackframe.org>
- <20190701143120.20c71b30@laptop-ibm>
+        id S1726442AbfGAT1B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jul 2019 15:27:01 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42734 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726076AbfGAT1A (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 1 Jul 2019 15:27:00 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EA97BC1EB200;
+        Mon,  1 Jul 2019 19:26:59 +0000 (UTC)
+Received: from gondolin (ovpn-117-220.ams2.redhat.com [10.36.117.220])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B8BCE2C8E2;
+        Mon,  1 Jul 2019 19:26:46 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 21:26:43 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate
+ resource in use
+Message-ID: <20190701212643.0dd7d4ab.cohuck@redhat.com>
+In-Reply-To: <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
+References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
+        <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
+        <20190618182558.7d7e025a.cohuck@redhat.com>
+        <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190701143120.20c71b30@laptop-ibm>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Mon, 01 Jul 2019 19:27:00 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Philipp,
+On Wed, 19 Jun 2019 09:04:18 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-On Mon, Jul 01, 2019 at 02:31:20PM +0200, Philipp Rudo wrote:
-> Sven Schnelle <svens@stackframe.org> wrote:
+> On 6/18/19 12:25 PM, Cornelia Huck wrote:
+> > On Thu, 13 Jun 2019 15:39:36 -0400
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> >   
+> >> Introduces a new driver callback to prevent a root user from unbinding
+> >> an AP queue from its device driver if the queue is in use. This prevents
+> >> a root user from inadvertently taking a queue away from a guest and
+> >> giving it to the host, or vice versa. The callback will be invoked
+> >> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
+> >> result in one or more AP queues being removed from its driver. If the
+> >> callback responds in the affirmative for any driver queried, the change
+> >> to the apmask or aqmask will be rejected with a device in use error.
+> >>
+> >> For this patch, only non-default drivers will be queried. Currently,
+> >> there is only one non-default driver, the vfio_ap device driver. The
+> >> vfio_ap device driver manages AP queues passed through to one or more
+> >> guests and we don't want to unexpectedly take AP resources away from
+> >> guests which are most likely independently administered.
+> >>
+> >> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> >> ---
+> >>   drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
+> >>   drivers/s390/crypto/ap_bus.h |   3 +
+> >>   2 files changed, 135 insertions(+), 6 deletions(-)  
+> > 
+> > Hm... I recall objecting to this patch before, fearing that it makes it
+> > possible for a bad actor to hog resources that can't be removed by
+> > root, even forcefully. (I have not had time to look at the intervening
+> > versions, so I might be missing something.)
+> > 
+> > Is there a way for root to forcefully override this?  
 > 
-> > I'm attaching the patch to this Mail. What do you think about that change?
-> > s390 also uses ELF files, and (maybe?) could also switch to this implementation.
-> > But i don't know anything about S/390 and don't have one in my basement. So
-> > i'll leave s390 to the IBM folks.
-> 
-> I'm afraid there isn't much code here s390 can reuse. I see multiple problems
-> in kexec_elf_load:
-> 
-> * while loading the phdrs we also need to setup some data structures to pass
->   to the next kernel
-> * the s390 kernel needs to be loaded to a fixed address
-> * there is no support to load a crash kernel
-> 
-> Of course that could all be fixed/worked around by introducing some arch hooks.
-> But when you take into account that the whole elf loader on s390 is ~100 lines
-> of code, I don't think it is worth it.
+> You recall correctly; however, after many internal crypto team
+> discussions, it was decided that this feature was important
+> and should be kept.
 
-That's fine. I didn't really look into the S/390 Loader, and just wanted to let
-the IBM people know.
-
-> More comments below.
->  
-> [...]
-> 
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index b9b1bc5f9669..49b23b425f84 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -216,6 +216,41 @@ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
-> >  				       void **addr, unsigned long *sz);
-> >  #endif /* CONFIG_KEXEC_FILE */
-> >  
-> > +#ifdef CONFIG_KEXEC_FILE_ELF
-> > +
-> > +struct kexec_elf_info {
-> > +	/*
-> > +	 * Where the ELF binary contents are kept.
-> > +	 * Memory managed by the user of the struct.
-> > +	 */
-> > +	const char *buffer;
-> > +
-> > +	const struct elfhdr *ehdr;
-> > +	const struct elf_phdr *proghdrs;
-> > +	struct elf_shdr *sechdrs;
-> > +};
-> 
-> Do i understand this right? elf_info->buffer contains the full elf file and
-> elf_info->ehdr is a (endianness translated) copy of the files ehdr?
-> 
-> If so ...
-> 
-> > +void kexec_free_elf_info(struct kexec_elf_info *elf_info);
-> > +
-> > +int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
-> > +			  struct kexec_elf_info *elf_info);
-> > +
-> > +int kexec_elf_kernel_load(struct kimage *image, struct kexec_buf *kbuf,
-> > +			  char *kernel_buf, unsigned long kernel_len,
-> > +			  unsigned long *kernel_load_addr);
-> > +
-> > +int kexec_elf_probe(const char *buf, unsigned long len);
-> > +
-> > +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-> > +			 struct kexec_elf_info *elf_info,
-> > +			 struct kexec_buf *kbuf,
-> > +			 unsigned long *lowest_load_addr);
-> > +
-> > +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-> > +			 struct kexec_elf_info *elf_info,
-> > +			 struct kexec_buf *kbuf,
-> > +			 unsigned long *lowest_load_addr);
-> 
-> ... you could simplify the arguments by dropping the ehdr argument. The
-> elf_info should contain all the information needed. Furthermore the kexec_buf
-> also contains a pointer to its kimage. So you can drop that argument as well.
-> 
-> An other thing is that you kzalloc the memory needed for proghdrs and sechdrs
-> but expect the user of those functions to provide the memory needed for ehdr.
-> Wouldn't it be more consistent to also kzalloc the ehdr?
-> 
-
-Good point. I'll think about it. I would like to do that in an extra patch,
-as it is not a small style change.
+That's the problem with internal discussions: they're internal :( Would
+have been nice to have some summary of this in the changelog.
 
 > 
-> > diff --git a/kernel/kexec_file_elf.c b/kernel/kexec_file_elf.c
-> > new file mode 100644
-> > index 000000000000..bb966c93492c
-> > --- /dev/null
-> > +++ b/kernel/kexec_file_elf.c
-> > @@ -0,0 +1,574 @@
-> 
-> [...]
-> 
-> > +static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
-> > +{
-> > +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> > +		value = le64_to_cpu(value);
-> > +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> > +		value = be64_to_cpu(value);
-> > +
-> > +	return value;
-> > +}
-> > +
-> > +static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
-> > +{
-> > +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> > +		value = le16_to_cpu(value);
-> > +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> > +		value = be16_to_cpu(value);
-> > +
-> > +	return value;
-> > +}
-> > +
-> > +static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
-> > +{
-> > +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
-> > +		value = le32_to_cpu(value);
-> > +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
-> > +		value = be32_to_cpu(value);
-> > +
-> > +	return value;
-> > +}
-> 
-> What are the elf*_to_cpu good for? In general I'd assume that kexec loads a
-> kernel for the same architecture it is running on. So the new kernel should
-> also have the same endianness like the one which loads it. Is this a
-> ppcle/ppcbe issue?
+> Allow me to first address your fear that a bad actor can hog
+> resources that can't be removed by root. With this enhancement,
+> there is nothing preventing a root user from taking resources
+> from a matrix mdev, it simply forces him/her to follow the
+> proper procedure. The resources to be removed must first be
+> unassigned from the matrix mdev to which they are assigned.
+> The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask
+> sysfs attributes can then be edited to transfer ownership
+> of the resources to zcrypt.
 
-Don't know. I would agree, but i'm not an powerpc expert.
+What is the suggested procedure when root wants to unbind a queue
+device? Find the mdev using the queue (is that easy enough?), unassign
+it, then unbind? Failing to unbind is a bit unexpected; can we point
+the admin to the correct mdev from which the queue has to be removed
+first?
 
-> Furthermore the current order is 64->16->32, which my OCPD absolutely hates :)
+> 
+> The rationale for keeping this feature is:
+> 
+> * It is a bad idea to steal an adapter in use from a guest. In the worst
+>    case, the guest could end up without access to any crypto adapters
+>    without knowing why. This could lead to performance issues on guests
+>    that rely heavily on crypto such as guests used for blockchain
+>    transactions.
 
-Fixed.
+Yanking adapters out from a running guest is not a good idea, yes; but
+I see it more as a problem of the management layer. Performance issues
+etc. are not something we want, obviously; but is removing access to
+the adapter deadly, or can the guest keep limping along? (Does the
+guest have any chance to find out that the adapter is gone? What
+happens on an LPAR if an adapter is gone, maybe due to a hardware
+failure?)
 
-> [...]
 > 
-> > +/**
-> > + * elf_is_shdr_sane - check that it is safe to use the section header
-> > + * @buf_len:	size of the buffer in which the ELF file is loaded.
-> > + */
-> > +static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
-> > +{
-> > +	bool size_ok;
-> > +
-> > +	/* SHT_NULL headers have undefined values, so we can't check them. */
-> > +	if (shdr->sh_type == SHT_NULL)
-> > +		return true;
-> > +
-> > +	/* Now verify sh_entsize */
-> > +	switch (shdr->sh_type) {
-> > +	case SHT_SYMTAB:
-> > +		size_ok = shdr->sh_entsize == sizeof(Elf_Sym);
-> > +		break;
-> > +	case SHT_RELA:
-> > +		size_ok = shdr->sh_entsize == sizeof(Elf_Rela);
-> > +		break;
-> > +	case SHT_DYNAMIC:
-> > +		size_ok = shdr->sh_entsize == sizeof(Elf_Dyn);
-> > +		break;
-> > +	case SHT_REL:
-> > +		size_ok = shdr->sh_entsize == sizeof(Elf_Rel);
-> > +		break;
-> > +	case SHT_NOTE:
-> > +	case SHT_PROGBITS:
-> > +	case SHT_HASH:
-> > +	case SHT_NOBITS:
-> > +	default:
-> > +		/*
-> > +		 * This is a section whose entsize requirements
-> > +		 * I don't care about.  If I don't know about
-> > +		 * the section I can't care about it's entsize
-> > +		 * requirements.
-> > +		 */
-> > +		size_ok = true;
-> > +		break;
-> > +	}
-> > +
-> > +	if (!size_ok) {
-> > +		pr_debug("ELF section with wrong entry size.\n");
-> > +		return false;
-> > +	} else if (shdr->sh_addr + shdr->sh_size < shdr->sh_addr) {
-> > +		pr_debug("ELF section address wraps around.\n");
-> > +		return false;
-> > +	}
-> > +
-> > +	if (shdr->sh_type != SHT_NOBITS) {
-> > +		if (shdr->sh_offset + shdr->sh_size < shdr->sh_offset) {
-> > +			pr_debug("ELF section location wraps around.\n");
-> > +			return false;
-> > +		} else if (shdr->sh_offset + shdr->sh_size > buf_len) {
-> > +			pr_debug("ELF section not in file.\n");
-> > +			return false;
-> > +		}
-> > +	}
-> > +
-> > +	return true;
-> > +}
-> > +
-> > +static int elf_read_shdr(const char *buf, size_t len, struct kexec_elf_info *elf_info,
-> > +			 int idx)
-> > +{
-> > +	struct elf_shdr *shdr = &elf_info->sechdrs[idx];
-> > +	const struct elfhdr *ehdr = elf_info->ehdr;
-> > +	const char *sbuf;
-> > +	struct elf_shdr *buf_shdr;
-> > +
-> > +	sbuf = buf + ehdr->e_shoff + idx * sizeof(*buf_shdr);
-> > +	buf_shdr = (struct elf_shdr *) sbuf;
-> > +
-> > +	shdr->sh_name      = elf32_to_cpu(ehdr, buf_shdr->sh_name);
-> > +	shdr->sh_type      = elf32_to_cpu(ehdr, buf_shdr->sh_type);
-> > +	shdr->sh_addr      = elf_addr_to_cpu(ehdr, buf_shdr->sh_addr);
-> > +	shdr->sh_offset    = elf_addr_to_cpu(ehdr, buf_shdr->sh_offset);
-> > +	shdr->sh_link      = elf32_to_cpu(ehdr, buf_shdr->sh_link);
-> > +	shdr->sh_info      = elf32_to_cpu(ehdr, buf_shdr->sh_info);
-> > +
-> > +	/*
-> > +	 * The following fields have a type equivalent to Elf_Addr
-> > +	 * both in 32 bit and 64 bit ELF.
-> > +	 */
-> > +	shdr->sh_flags     = elf_addr_to_cpu(ehdr, buf_shdr->sh_flags);
-> > +	shdr->sh_size      = elf_addr_to_cpu(ehdr, buf_shdr->sh_size);
-> > +	shdr->sh_addralign = elf_addr_to_cpu(ehdr, buf_shdr->sh_addralign);
-> > +	shdr->sh_entsize   = elf_addr_to_cpu(ehdr, buf_shdr->sh_entsize);
-> > +
-> > +	return elf_is_shdr_sane(shdr, len) ? 0 : -ENOEXEC;
-> > +}
-> > +
-> > +/**
-> > + * elf_read_shdrs - read the section headers from the buffer
-> > + *
-> > + * This function assumes that the section header table was checked for sanity.
-> > + * Use elf_is_ehdr_sane() if it wasn't.
-> > + */
-> > +static int elf_read_shdrs(const char *buf, size_t len,
-> > +			  struct kexec_elf_info *elf_info)
-> > +{
-> > +	size_t shdr_size, i;
-> > +
-> > +	/*
-> > +	 * e_shnum is at most 65536 so calculating
-> > +	 * the size of the section header cannot overflow.
-> > +	 */
-> > +	shdr_size = sizeof(struct elf_shdr) * elf_info->ehdr->e_shnum;
-> > +
-> > +	elf_info->sechdrs = kzalloc(shdr_size, GFP_KERNEL);
-> > +	if (!elf_info->sechdrs)
-> > +		return -ENOMEM;
-> > +
-> > +	for (i = 0; i < elf_info->ehdr->e_shnum; i++) {
-> > +		int ret;
-> > +
-> > +		ret = elf_read_shdr(buf, len, elf_info, i);
-> > +		if (ret) {
-> > +			kfree(elf_info->sechdrs);
-> > +			elf_info->sechdrs = NULL;
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> 
-> In the end you only use the phdrs. So in theory you can drop everything shdr
-> related. Although keeping it would be 'formally more correct'.
+> * There are plenty of examples in linux of the kernel preventing a root
+>    user from performing a task. For example, a module can't be removed
+>    if references are still held for it. 
 
-Correct, done.
- 
-> [...]
-> 
-> > +/**
-> > + * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
-> > + */
-> > +void kexec_free_elf_info(struct kexec_elf_info *elf_info)
-> > +{
-> > +	kfree(elf_info->proghdrs);
-> > +	kfree(elf_info->sechdrs);
-> > +	memset(elf_info, 0, sizeof(*elf_info));
-> > +}
-> > +EXPORT_SYMBOL(kexec_free_elf_info);
-> 
-> Why are you exporting these functions? Is there any kexec implementation out
-> there which is put into a module? Do you even want that to be possible?
+In this case, removing the module would actively break/crash anything
+relying on it; I'm not sure how analogous the situation is here (i.e.
+can we limp on without the device?)
 
-My fault. Fixed.
+> Another example would be trying
+>    to bind a CEX4 adapter to a device driver not registered for CEX4;
+>    this action will also be rejected.
 
-> > +/**
-> > + * kexec_build_elf_info - read ELF executable and check that we can use it
-> > + */
-> > +int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
-> > +			  struct kexec_elf_info *elf_info)
-> > +{
-> > +	int i;
-> > +	int ret;
-> > +
-> > +	ret = elf_read_from_buffer(buf, len, ehdr, elf_info);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	/* Big endian vmlinux has type ET_DYN. */
-> > +	if (ehdr->e_type != ET_EXEC && ehdr->e_type != ET_DYN) {
-> 
-> s390 is big endian and it's vmlinux has type ET_EXEC. So I assume that this is
-> a ppc issue?
+I don't think this one is analogous at all: The device driver can't
+drive the device, so why should it be able to bind to it?
 
-Again, don't know. :)
+> 
+> * The semantics are much cleaner and the logic is far less complicated.
 
-> > +		pr_err("Not an ELF executable.\n");
-> > +		goto error;
-> > +	} else if (!elf_info->proghdrs) {
-> > +		pr_err("No ELF program header.\n");
-> > +		goto error;
-> > +	}
-> > +
-> > +	for (i = 0; i < ehdr->e_phnum; i++) {
-> > +		/*
-> > +		 * Kexec does not support loading interpreters.
-> > +		 * In addition this check keeps us from attempting
-> > +		 * to kexec ordinay executables.
-> > +		 */
-> > +		if (elf_info->proghdrs[i].p_type == PT_INTERP) {
-> > +			pr_err("Requires an ELF interpreter.\n");
-> > +			goto error;
-> > +		}
-> > +	}
-> > +
-> > +	return 0;
-> > +error:
-> > +	kexec_free_elf_info(elf_info);
-> > +	return -ENOEXEC;
-> > +}
-> > +EXPORT_SYMBOL(kexec_build_elf_info);
+This is actually the most convincing of the arguments, I think :) If we
+need some really byzantine logic to allow unbinding, it's probably not
+worth it.
+
 > 
-> [...]
-> 
-> > +int kexec_elf_probe(const char *buf, unsigned long len)
-> > +{
-> > +	struct elfhdr ehdr;
-> > +	struct kexec_elf_info elf_info;
-> > +	int ret;
-> > +
-> > +	ret = kexec_build_elf_info(buf, len, &ehdr, &elf_info);
-> 
-> On s390 I only check the elf magic when probing. That's because the image
-> loader cannot reliably check the image and thus accepts everything that is
-> given to it. That also means that any elf file the elf probe rejects (e.g.
-> because it has a phdr with type PT_INTERP) is passed on to the image loader,
-> which happily takes it.
-> 
-> If you plan to also add an image loader you should keep that in mind.
-> 
-> Thanks
-> Philipp
-> 
+> * It forces the use of the proper procedure to change ownership of AP
+>    queues.
+
+This needs to be properly documented, and the admin needs to have a
+chance to find out why unbinding didn't work and what needs to be done
+(see my comments above).
