@@ -2,135 +2,402 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A7995C1FD
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 19:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6F9075C2AC
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 20:12:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727849AbfGARbt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jul 2019 13:31:49 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38438 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727310AbfGARbs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jul 2019 13:31:48 -0400
-Received: by mail-wr1-f66.google.com with SMTP id p11so3540485wro.5
-        for <linux-s390@vger.kernel.org>; Mon, 01 Jul 2019 10:31:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0oDdampWlKVXNLYu+/89k7YGxDIYT51dqwB+v1WNubU=;
-        b=RO6FmhyX0VreK0RuZiViwwEX7D9cKk1tyIzYHGbaTf2w4Cd1kZ6WV9ayp1FqPm7+q/
-         7qvNuCAGAqlQjBuqYiQODTNclgdAnBVO0FZY6uGYoS8RJ/E9v/gmCA/pjLImxWlr6mmA
-         UOOzniLuOmrRJfPcOq/742wKwQL0LMn2VlnlNWE/MQ5/xoMhLBVOTgveAcbUmH7ijVLf
-         teRNXHlewGiO3F8YA0jgrau3SwekEXyVNWw1HHQZoUkWPcXeJfByoADqyBU6cMtTTkc9
-         pQnuJ6Hhc8wU74Bkp60cVFtS4L4odRNDhKn0a5xIiwM3t8QFrClaqRQsgGAhYdQaPA3e
-         EiKw==
-X-Gm-Message-State: APjAAAXM+fs38WFqxEJTiPrcjz4GTeGF9kYKsZ6QSUYb01Af+VT99DYl
-        UMpsMkcH06FBSb4jSsMXtLeAhQ==
-X-Google-Smtp-Source: APXvYqwg9dhLkF1Iujl0uqE4A3r+uhurZ83HyVWio+gQZWV/JpCFrWQSHRRw7rYBF5ODs2UEfbcD3Q==
-X-Received: by 2002:adf:fb10:: with SMTP id c16mr16422856wrr.72.1562002306291;
-        Mon, 01 Jul 2019 10:31:46 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:b8:794:183e:9e2a? ([2001:b07:6468:f312:b8:794:183e:9e2a])
-        by smtp.gmail.com with ESMTPSA id c1sm22704441wrh.1.2019.07.01.10.31.45
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 01 Jul 2019 10:31:45 -0700 (PDT)
-Subject: Re: [GIT PULL 0/7] KVM: s390: add kselftests
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-References: <20190701125848.276133-1-borntraeger@de.ibm.com>
- <b5f74797-1ff7-26fc-4a5a-1fdabef22671@redhat.com>
- <b1ff22c4-7a2e-158d-e179-d08d3d281a97@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d9697009-cda2-9a22-436d-e80475c5adba@redhat.com>
-Date:   Mon, 1 Jul 2019 19:31:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1726967AbfGASMF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jul 2019 14:12:05 -0400
+Received: from smtp.duncanthrax.net ([89.31.1.170]:59564 "EHLO
+        smtp.duncanthrax.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726846AbfGASME (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jul 2019 14:12:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=duncanthrax.net; s=dkim; h=In-Reply-To:Content-Type:MIME-Version:References
+        :Message-ID:Subject:Cc:To:From:Date;
+        bh=AVgBC13hYlw1kbcnpEX2h0I1Q9eJcPTvTXABwzeZx0w=; b=B4YWRUd3czixaVKu+JNw8cHSMV
+        eZyaeYuZIfQTJ/Hh/O0dWtmesrBkFehXj8yPBOBhT0N4/0LmAGwD+BRD5XPn8A2lhqHZ56nv9FwIt
+        04kVqbgXblQWSWpha/qPpGAqHowJBBEo0CrlLSRE+d7GGhH5HjM2be1sMw/OOByqQhbc=;
+Received: from [134.3.44.134] (helo=t470p.stackframe.org)
+        by smtp.eurescom.eu with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.86_2)
+        (envelope-from <svens@stackframe.org>)
+        id 1hi0mV-0007Qq-9s; Mon, 01 Jul 2019 20:11:59 +0200
+Date:   Mon, 1 Jul 2019 20:11:57 +0200
+From:   Sven Schnelle <svens@stackframe.org>
+To:     Philipp Rudo <prudo@linux.ibm.com>
+Cc:     kexec@lists.infradead.org, linux-s390@vger.kernel.org,
+        deller@gmx.de, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH RFC] generic ELF support for kexec
+Message-ID: <20190701181157.GE19243@t470p.stackframe.org>
+References: <20190625185433.GA10934@t470p.stackframe.org>
+ <20190701143120.20c71b30@laptop-ibm>
 MIME-Version: 1.0
-In-Reply-To: <b1ff22c4-7a2e-158d-e179-d08d3d281a97@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190701143120.20c71b30@laptop-ibm>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 01/07/19 17:29, Christian Borntraeger wrote:
-> 
-> 
-> On 01.07.19 16:07, Paolo Bonzini wrote:
->> On 01/07/19 14:58, Christian Borntraeger wrote:
->>> Paolo, Radim,
->>>
->>> kselftest for s390x. There is a small conflict with Linus tree due to
->>> 61cfcd545e42 ("kvm: tests: Sort tests in the Makefile alphabetically")
->>> which is part of kvm/master but not kvm/next.
->>> Other than that this looks good.
->>
->> Thanks! I'll delay this to after the first merge window pull request to
->> avoid the conflict.
-> 
-> I do not have to do anything, correct?
+Hi Philipp,
 
-No, it's done on your side. Just an explanation of why you'll not see
-this in kvm/next for a week or so.
+On Mon, Jul 01, 2019 at 02:31:20PM +0200, Philipp Rudo wrote:
+> Sven Schnelle <svens@stackframe.org> wrote:
+> 
+> > I'm attaching the patch to this Mail. What do you think about that change?
+> > s390 also uses ELF files, and (maybe?) could also switch to this implementation.
+> > But i don't know anything about S/390 and don't have one in my basement. So
+> > i'll leave s390 to the IBM folks.
+> 
+> I'm afraid there isn't much code here s390 can reuse. I see multiple problems
+> in kexec_elf_load:
+> 
+> * while loading the phdrs we also need to setup some data structures to pass
+>   to the next kernel
+> * the s390 kernel needs to be loaded to a fixed address
+> * there is no support to load a crash kernel
+> 
+> Of course that could all be fixed/worked around by introducing some arch hooks.
+> But when you take into account that the whole elf loader on s390 is ~100 lines
+> of code, I don't think it is worth it.
 
-Paolo
+That's fine. I didn't really look into the S/390 Loader, and just wanted to let
+the IBM people know.
 
-> As an alternative I could rebase on top of rc6.
->>
->> Paolo
->>
->>>
->>> The following changes since commit f2c7c76c5d0a443053e94adb9f0918fa2fb85c3a:
->>>
->>>   Linux 5.2-rc3 (2019-06-02 13:55:33 -0700)
->>>
->>> are available in the Git repository at:
->>>
->>>   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.3-1
->>>
->>> for you to fetch changes up to 8343ba2d4820b1738bbb7cb40ec18ea0a3b0b331:
->>>
->>>   KVM: selftests: enable pgste option for the linker on s390 (2019-06-04 14:05:38 +0200)
->>>
->>> ----------------------------------------------------------------
->>> KVM: s390: add kselftests
->>>
->>> This is the initial implementation for KVM selftests on s390.
->>>
->>> ----------------------------------------------------------------
->>> Christian Borntraeger (1):
->>>       KVM: selftests: enable pgste option for the linker on s390
->>>
->>> Thomas Huth (6):
->>>       KVM: selftests: Guard struct kvm_vcpu_events with __KVM_HAVE_VCPU_EVENTS
->>>       KVM: selftests: Introduce a VM_MODE_DEFAULT macro for the default bits
->>>       KVM: selftests: Align memory region addresses to 1M on s390x
->>>       KVM: selftests: Add processor code for s390x
->>>       KVM: selftests: Add the sync_regs test for s390x
->>>       KVM: selftests: Move kvm_create_max_vcpus test to generic code
->>>
->>>  MAINTAINERS                                        |   2 +
->>>  tools/testing/selftests/kvm/Makefile               |  14 +-
->>>  tools/testing/selftests/kvm/include/kvm_util.h     |   8 +
->>>  .../selftests/kvm/include/s390x/processor.h        |  22 ++
->>>  .../kvm/{x86_64 => }/kvm_create_max_vcpus.c        |   3 +-
->>>  .../testing/selftests/kvm/lib/aarch64/processor.c  |   2 +-
->>>  tools/testing/selftests/kvm/lib/kvm_util.c         |  23 +-
->>>  tools/testing/selftests/kvm/lib/s390x/processor.c  | 286 +++++++++++++++++++++
->>>  tools/testing/selftests/kvm/lib/x86_64/processor.c |   2 +-
->>>  tools/testing/selftests/kvm/s390x/sync_regs_test.c | 151 +++++++++++
->>>  10 files changed, 503 insertions(+), 10 deletions(-)
->>>  create mode 100644 tools/testing/selftests/kvm/include/s390x/processor.h
->>>  rename tools/testing/selftests/kvm/{x86_64 => }/kvm_create_max_vcpus.c (93%)
->>>  create mode 100644 tools/testing/selftests/kvm/lib/s390x/processor.c
->>>  create mode 100644 tools/testing/selftests/kvm/s390x/sync_regs_test.c
->>>
->>
+> More comments below.
+>  
+> [...]
+> 
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index b9b1bc5f9669..49b23b425f84 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -216,6 +216,41 @@ extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+> >  				       void **addr, unsigned long *sz);
+> >  #endif /* CONFIG_KEXEC_FILE */
+> >  
+> > +#ifdef CONFIG_KEXEC_FILE_ELF
+> > +
+> > +struct kexec_elf_info {
+> > +	/*
+> > +	 * Where the ELF binary contents are kept.
+> > +	 * Memory managed by the user of the struct.
+> > +	 */
+> > +	const char *buffer;
+> > +
+> > +	const struct elfhdr *ehdr;
+> > +	const struct elf_phdr *proghdrs;
+> > +	struct elf_shdr *sechdrs;
+> > +};
+> 
+> Do i understand this right? elf_info->buffer contains the full elf file and
+> elf_info->ehdr is a (endianness translated) copy of the files ehdr?
+> 
+> If so ...
+> 
+> > +void kexec_free_elf_info(struct kexec_elf_info *elf_info);
+> > +
+> > +int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
+> > +			  struct kexec_elf_info *elf_info);
+> > +
+> > +int kexec_elf_kernel_load(struct kimage *image, struct kexec_buf *kbuf,
+> > +			  char *kernel_buf, unsigned long kernel_len,
+> > +			  unsigned long *kernel_load_addr);
+> > +
+> > +int kexec_elf_probe(const char *buf, unsigned long len);
+> > +
+> > +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+> > +			 struct kexec_elf_info *elf_info,
+> > +			 struct kexec_buf *kbuf,
+> > +			 unsigned long *lowest_load_addr);
+> > +
+> > +int kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
+> > +			 struct kexec_elf_info *elf_info,
+> > +			 struct kexec_buf *kbuf,
+> > +			 unsigned long *lowest_load_addr);
+> 
+> ... you could simplify the arguments by dropping the ehdr argument. The
+> elf_info should contain all the information needed. Furthermore the kexec_buf
+> also contains a pointer to its kimage. So you can drop that argument as well.
+> 
+> An other thing is that you kzalloc the memory needed for proghdrs and sechdrs
+> but expect the user of those functions to provide the memory needed for ehdr.
+> Wouldn't it be more consistent to also kzalloc the ehdr?
 > 
 
+Good point. I'll think about it. I would like to do that in an extra patch,
+as it is not a small style change.
+
+> 
+> > diff --git a/kernel/kexec_file_elf.c b/kernel/kexec_file_elf.c
+> > new file mode 100644
+> > index 000000000000..bb966c93492c
+> > --- /dev/null
+> > +++ b/kernel/kexec_file_elf.c
+> > @@ -0,0 +1,574 @@
+> 
+> [...]
+> 
+> > +static uint64_t elf64_to_cpu(const struct elfhdr *ehdr, uint64_t value)
+> > +{
+> > +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
+> > +		value = le64_to_cpu(value);
+> > +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
+> > +		value = be64_to_cpu(value);
+> > +
+> > +	return value;
+> > +}
+> > +
+> > +static uint16_t elf16_to_cpu(const struct elfhdr *ehdr, uint16_t value)
+> > +{
+> > +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
+> > +		value = le16_to_cpu(value);
+> > +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
+> > +		value = be16_to_cpu(value);
+> > +
+> > +	return value;
+> > +}
+> > +
+> > +static uint32_t elf32_to_cpu(const struct elfhdr *ehdr, uint32_t value)
+> > +{
+> > +	if (ehdr->e_ident[EI_DATA] == ELFDATA2LSB)
+> > +		value = le32_to_cpu(value);
+> > +	else if (ehdr->e_ident[EI_DATA] == ELFDATA2MSB)
+> > +		value = be32_to_cpu(value);
+> > +
+> > +	return value;
+> > +}
+> 
+> What are the elf*_to_cpu good for? In general I'd assume that kexec loads a
+> kernel for the same architecture it is running on. So the new kernel should
+> also have the same endianness like the one which loads it. Is this a
+> ppcle/ppcbe issue?
+
+Don't know. I would agree, but i'm not an powerpc expert.
+
+> Furthermore the current order is 64->16->32, which my OCPD absolutely hates :)
+
+Fixed.
+
+> [...]
+> 
+> > +/**
+> > + * elf_is_shdr_sane - check that it is safe to use the section header
+> > + * @buf_len:	size of the buffer in which the ELF file is loaded.
+> > + */
+> > +static bool elf_is_shdr_sane(const struct elf_shdr *shdr, size_t buf_len)
+> > +{
+> > +	bool size_ok;
+> > +
+> > +	/* SHT_NULL headers have undefined values, so we can't check them. */
+> > +	if (shdr->sh_type == SHT_NULL)
+> > +		return true;
+> > +
+> > +	/* Now verify sh_entsize */
+> > +	switch (shdr->sh_type) {
+> > +	case SHT_SYMTAB:
+> > +		size_ok = shdr->sh_entsize == sizeof(Elf_Sym);
+> > +		break;
+> > +	case SHT_RELA:
+> > +		size_ok = shdr->sh_entsize == sizeof(Elf_Rela);
+> > +		break;
+> > +	case SHT_DYNAMIC:
+> > +		size_ok = shdr->sh_entsize == sizeof(Elf_Dyn);
+> > +		break;
+> > +	case SHT_REL:
+> > +		size_ok = shdr->sh_entsize == sizeof(Elf_Rel);
+> > +		break;
+> > +	case SHT_NOTE:
+> > +	case SHT_PROGBITS:
+> > +	case SHT_HASH:
+> > +	case SHT_NOBITS:
+> > +	default:
+> > +		/*
+> > +		 * This is a section whose entsize requirements
+> > +		 * I don't care about.  If I don't know about
+> > +		 * the section I can't care about it's entsize
+> > +		 * requirements.
+> > +		 */
+> > +		size_ok = true;
+> > +		break;
+> > +	}
+> > +
+> > +	if (!size_ok) {
+> > +		pr_debug("ELF section with wrong entry size.\n");
+> > +		return false;
+> > +	} else if (shdr->sh_addr + shdr->sh_size < shdr->sh_addr) {
+> > +		pr_debug("ELF section address wraps around.\n");
+> > +		return false;
+> > +	}
+> > +
+> > +	if (shdr->sh_type != SHT_NOBITS) {
+> > +		if (shdr->sh_offset + shdr->sh_size < shdr->sh_offset) {
+> > +			pr_debug("ELF section location wraps around.\n");
+> > +			return false;
+> > +		} else if (shdr->sh_offset + shdr->sh_size > buf_len) {
+> > +			pr_debug("ELF section not in file.\n");
+> > +			return false;
+> > +		}
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> > +
+> > +static int elf_read_shdr(const char *buf, size_t len, struct kexec_elf_info *elf_info,
+> > +			 int idx)
+> > +{
+> > +	struct elf_shdr *shdr = &elf_info->sechdrs[idx];
+> > +	const struct elfhdr *ehdr = elf_info->ehdr;
+> > +	const char *sbuf;
+> > +	struct elf_shdr *buf_shdr;
+> > +
+> > +	sbuf = buf + ehdr->e_shoff + idx * sizeof(*buf_shdr);
+> > +	buf_shdr = (struct elf_shdr *) sbuf;
+> > +
+> > +	shdr->sh_name      = elf32_to_cpu(ehdr, buf_shdr->sh_name);
+> > +	shdr->sh_type      = elf32_to_cpu(ehdr, buf_shdr->sh_type);
+> > +	shdr->sh_addr      = elf_addr_to_cpu(ehdr, buf_shdr->sh_addr);
+> > +	shdr->sh_offset    = elf_addr_to_cpu(ehdr, buf_shdr->sh_offset);
+> > +	shdr->sh_link      = elf32_to_cpu(ehdr, buf_shdr->sh_link);
+> > +	shdr->sh_info      = elf32_to_cpu(ehdr, buf_shdr->sh_info);
+> > +
+> > +	/*
+> > +	 * The following fields have a type equivalent to Elf_Addr
+> > +	 * both in 32 bit and 64 bit ELF.
+> > +	 */
+> > +	shdr->sh_flags     = elf_addr_to_cpu(ehdr, buf_shdr->sh_flags);
+> > +	shdr->sh_size      = elf_addr_to_cpu(ehdr, buf_shdr->sh_size);
+> > +	shdr->sh_addralign = elf_addr_to_cpu(ehdr, buf_shdr->sh_addralign);
+> > +	shdr->sh_entsize   = elf_addr_to_cpu(ehdr, buf_shdr->sh_entsize);
+> > +
+> > +	return elf_is_shdr_sane(shdr, len) ? 0 : -ENOEXEC;
+> > +}
+> > +
+> > +/**
+> > + * elf_read_shdrs - read the section headers from the buffer
+> > + *
+> > + * This function assumes that the section header table was checked for sanity.
+> > + * Use elf_is_ehdr_sane() if it wasn't.
+> > + */
+> > +static int elf_read_shdrs(const char *buf, size_t len,
+> > +			  struct kexec_elf_info *elf_info)
+> > +{
+> > +	size_t shdr_size, i;
+> > +
+> > +	/*
+> > +	 * e_shnum is at most 65536 so calculating
+> > +	 * the size of the section header cannot overflow.
+> > +	 */
+> > +	shdr_size = sizeof(struct elf_shdr) * elf_info->ehdr->e_shnum;
+> > +
+> > +	elf_info->sechdrs = kzalloc(shdr_size, GFP_KERNEL);
+> > +	if (!elf_info->sechdrs)
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < elf_info->ehdr->e_shnum; i++) {
+> > +		int ret;
+> > +
+> > +		ret = elf_read_shdr(buf, len, elf_info, i);
+> > +		if (ret) {
+> > +			kfree(elf_info->sechdrs);
+> > +			elf_info->sechdrs = NULL;
+> > +			return ret;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +}
+> 
+> In the end you only use the phdrs. So in theory you can drop everything shdr
+> related. Although keeping it would be 'formally more correct'.
+
+Correct, done.
+ 
+> [...]
+> 
+> > +/**
+> > + * kexec_free_elf_info - free memory allocated by elf_read_from_buffer
+> > + */
+> > +void kexec_free_elf_info(struct kexec_elf_info *elf_info)
+> > +{
+> > +	kfree(elf_info->proghdrs);
+> > +	kfree(elf_info->sechdrs);
+> > +	memset(elf_info, 0, sizeof(*elf_info));
+> > +}
+> > +EXPORT_SYMBOL(kexec_free_elf_info);
+> 
+> Why are you exporting these functions? Is there any kexec implementation out
+> there which is put into a module? Do you even want that to be possible?
+
+My fault. Fixed.
+
+> > +/**
+> > + * kexec_build_elf_info - read ELF executable and check that we can use it
+> > + */
+> > +int kexec_build_elf_info(const char *buf, size_t len, struct elfhdr *ehdr,
+> > +			  struct kexec_elf_info *elf_info)
+> > +{
+> > +	int i;
+> > +	int ret;
+> > +
+> > +	ret = elf_read_from_buffer(buf, len, ehdr, elf_info);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	/* Big endian vmlinux has type ET_DYN. */
+> > +	if (ehdr->e_type != ET_EXEC && ehdr->e_type != ET_DYN) {
+> 
+> s390 is big endian and it's vmlinux has type ET_EXEC. So I assume that this is
+> a ppc issue?
+
+Again, don't know. :)
+
+> > +		pr_err("Not an ELF executable.\n");
+> > +		goto error;
+> > +	} else if (!elf_info->proghdrs) {
+> > +		pr_err("No ELF program header.\n");
+> > +		goto error;
+> > +	}
+> > +
+> > +	for (i = 0; i < ehdr->e_phnum; i++) {
+> > +		/*
+> > +		 * Kexec does not support loading interpreters.
+> > +		 * In addition this check keeps us from attempting
+> > +		 * to kexec ordinay executables.
+> > +		 */
+> > +		if (elf_info->proghdrs[i].p_type == PT_INTERP) {
+> > +			pr_err("Requires an ELF interpreter.\n");
+> > +			goto error;
+> > +		}
+> > +	}
+> > +
+> > +	return 0;
+> > +error:
+> > +	kexec_free_elf_info(elf_info);
+> > +	return -ENOEXEC;
+> > +}
+> > +EXPORT_SYMBOL(kexec_build_elf_info);
+> 
+> [...]
+> 
+> > +int kexec_elf_probe(const char *buf, unsigned long len)
+> > +{
+> > +	struct elfhdr ehdr;
+> > +	struct kexec_elf_info elf_info;
+> > +	int ret;
+> > +
+> > +	ret = kexec_build_elf_info(buf, len, &ehdr, &elf_info);
+> 
+> On s390 I only check the elf magic when probing. That's because the image
+> loader cannot reliably check the image and thus accepts everything that is
+> given to it. That also means that any elf file the elf probe rejects (e.g.
+> because it has a phdr with type PT_INTERP) is passed on to the image loader,
+> which happily takes it.
+> 
+> If you plan to also add an image loader you should keep that in mind.
+> 
+> Thanks
+> Philipp
+> 
