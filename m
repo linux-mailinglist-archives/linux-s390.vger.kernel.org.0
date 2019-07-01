@@ -2,95 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F7885C10C
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 18:24:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8301F5C1BA
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 19:09:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728608AbfGAQYM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jul 2019 12:24:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15388 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727227AbfGAQYL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jul 2019 12:24:11 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x61GNptR096041;
-        Mon, 1 Jul 2019 12:23:55 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tfkhf0qrc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jul 2019 12:23:55 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x61GJK4l007577;
-        Mon, 1 Jul 2019 16:23:53 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma01dal.us.ibm.com with ESMTP id 2tdym6r3cc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 01 Jul 2019 16:23:53 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x61GNpAX35324180
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 1 Jul 2019 16:23:51 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 11FDCBE051;
-        Mon,  1 Jul 2019 16:23:51 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6E513BE04F;
-        Mon,  1 Jul 2019 16:23:50 +0000 (GMT)
-Received: from alifm-ThinkPad-T470p.pok.ibm.com (unknown [9.56.58.42])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Mon,  1 Jul 2019 16:23:50 +0000 (GMT)
-From:   Farhan Ali <alifm@linux.ibm.com>
-To:     cohuck@redhat.com, farman@linux.ibm.com, pasic@linux.ibm.com
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        alifm@linux.ibm.com
-Subject: [RFC v1 4/4] vfio-ccw: Don't call cp_free if we are processing a channel program
-Date:   Mon,  1 Jul 2019 12:23:46 -0400
-Message-Id: <31c3c29e3e9c4f0312f9363a1c3a5d22b74f68cb.1561997809.git.alifm@linux.ibm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1561997809.git.alifm@linux.ibm.com>
-References: <cover.1561997809.git.alifm@linux.ibm.com>
-In-Reply-To: <cover.1561997809.git.alifm@linux.ibm.com>
-References: <cover.1561997809.git.alifm@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-01_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=835 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907010198
+        id S1727030AbfGARJD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jul 2019 13:09:03 -0400
+Received: from smtp.duncanthrax.net ([89.31.1.170]:35385 "EHLO
+        smtp.duncanthrax.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726840AbfGARJD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 1 Jul 2019 13:09:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=duncanthrax.net; s=dkim; h=In-Reply-To:Content-Type:MIME-Version:References
+        :Message-ID:Subject:Cc:To:From:Date;
+        bh=lMzex8jlUCJ2Gwea4xwdWvbCtAAUxSDLkgjI9TE9va0=; b=ZdE/vRjPVuJYU9QL+q2GQwaSjq
+        qeaGU3B+ntdQjmLgoZc6V6wW40HUteu1CTDy6jkHHjWywYcj36MCoQbPCuT/ufIwd+gCZCsCwfUk9
+        IqU54V7HHV4AFAjIk89VwcSCw2Lt4ly1qCt1JF10kSnBpRIko28/gILQyjAaYuWMiuZM=;
+Received: from [134.3.44.134] (helo=t470p.stackframe.org)
+        by smtp.eurescom.eu with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.86_2)
+        (envelope-from <svens@stackframe.org>)
+        id 1hhznT-0006GR-8o; Mon, 01 Jul 2019 19:08:55 +0200
+Date:   Mon, 1 Jul 2019 19:08:53 +0200
+From:   Sven Schnelle <svens@stackframe.org>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     kexec@lists.infradead.org, linux-s390@vger.kernel.org,
+        deller@gmx.de, linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH RFC] generic ELF support for kexec
+Message-ID: <20190701170853.GD19243@t470p.stackframe.org>
+References: <20190625185433.GA10934@t470p.stackframe.org>
+ <87o92isbxg.fsf@concordia.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87o92isbxg.fsf@concordia.ellerman.id.au>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-There is a small window where it's possible that we could be working
-on an interrupt (queued in the workqueue) and setting up a channel
-program (i.e allocating memory, pinning pages, translating address).
-This can lead to allocating and freeing the channel program at the
-same time and can cause memory corruption.
+Hi Michael,
 
-Let's not call cp_free if we are currently processing a channel program.
-The only way we know for sure that we don't have a thread setting
-up a channel program is when the state is set to VFIO_CCW_STATE_CP_PENDING.
+On Fri, Jun 28, 2019 at 12:04:11PM +1000, Michael Ellerman wrote:
+> Sven Schnelle <svens@stackframe.org> writes:
+>   https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu
+> 
+> But I'm not sure where you get a version of kexec that uses kexec_file().
 
-Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
----
- drivers/s390/cio/vfio_ccw_drv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+kexec-tools HEAD supports it, so that's not a problem.
 
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index 4e3a903..0357165 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -92,7 +92,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
- 		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
- 	if (scsw_is_solicited(&irb->scsw)) {
- 		cp_update_scsw(&private->cp, &irb->scsw);
--		if (is_final)
-+		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
- 			cp_free(&private->cp);
- 	}
- 	mutex_lock(&private->io_mutex);
--- 
-2.7.4
+> > If that change is acceptable i would finish the patch and submit it. I think
+> > best would be to push this change through Helge's parisc tree, so we don't
+> > have any dependencies to sort out.
+> 
+> That will work for you but could cause us problems if we have any
+> changes that touch that code.
+> 
+> It's easy enough to create a topic branch with just that patch that both
+> of us merge.
 
+What should be the base branch for that patch? Christophe suggested the
+powerpc/merge branch?
+
+> >  #include <linux/elf.h>
+> >  #include <linux/kexec.h>
+> >  #include <linux/libfdt.h>
+> > @@ -31,540 +29,6 @@
+> >  #include <linux/slab.h>
+> >  #include <linux/types.h>
+> >  
+> > -#define PURGATORY_STACK_SIZE	(16 * 1024)
+> 
+> This is unused AFAICS. We should probably remove it explicitly rather
+> than as part of this patch.
+
+I have one patch right now. If wanted i can split up all the changes
+suggested during the review into smaller pieces, whatever you prefer.
+
+> Or that.
+> 
+> > +#include <linux/slab.h>
+> > +#include <linux/types.h>
+> > +
+> > +#define elf_addr_to_cpu	elf64_to_cpu
+> 
+> Why are we doing that rather than just using elf64_to_cpu directly?
+> 
+> > +#ifndef Elf_Rel
+> > +#define Elf_Rel		Elf64_Rel
+> > +#endif /* Elf_Rel */
+> 
+> And that?
+
+Don't know - ask the PPC people :-)
+
+Regards
+Sven
