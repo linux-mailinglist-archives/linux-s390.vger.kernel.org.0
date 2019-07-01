@@ -2,104 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 212915B732
-	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 10:52:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6206A5B822
+	for <lists+linux-s390@lfdr.de>; Mon,  1 Jul 2019 11:36:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbfGAIwd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 1 Jul 2019 04:52:33 -0400
-Received: from mx2.suse.de ([195.135.220.15]:41964 "EHLO mx1.suse.de"
+        id S1728418AbfGAJgu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 1 Jul 2019 05:36:50 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52840 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726442AbfGAIwd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 1 Jul 2019 04:52:33 -0400
+        id S1728035AbfGAJgu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 1 Jul 2019 05:36:50 -0400
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AE529AD23;
-        Mon,  1 Jul 2019 08:52:31 +0000 (UTC)
-Date:   Mon, 1 Jul 2019 10:52:31 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        Dan Williams <dan.j.williams@intel.com>,
+        by mx1.suse.de (Postfix) with ESMTP id 6E628AB87;
+        Mon,  1 Jul 2019 09:36:48 +0000 (UTC)
+Date:   Mon, 1 Jul 2019 11:36:44 +0200
+From:   Oscar Salvador <osalvador@suse.de>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
         Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>
-Subject: Re: [PATCH v3 11/11] mm/memory_hotplug: Remove "zone" parameter from
- sparse_remove_one_section
-Message-ID: <20190701085231.GK6376@dhcp22.suse.cz>
+        Igor Mammedov <imammedo@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Subject: Re: [PATCH v3 10/11] mm/memory_hotplug: Make
+ unregister_memory_block_under_nodes() never fail
+Message-ID: <20190701093640.GA17349@linux>
 References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-12-david@redhat.com>
+ <20190527111152.16324-11-david@redhat.com>
+ <20190701085144.GJ6376@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190527111152.16324-12-david@redhat.com>
+In-Reply-To: <20190701085144.GJ6376@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon 27-05-19 13:11:52, David Hildenbrand wrote:
-> The parameter is unused, so let's drop it. Memory removal paths should
-> never care about zones. This is the job of memory offlining and will
-> require more refactorings.
+On Mon, Jul 01, 2019 at 10:51:44AM +0200, Michal Hocko wrote:
+> Yeah, we do not allow to offline multi zone (node) ranges so the current
+> code seems to be over engineered.
 > 
-> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+> Anyway, I am wondering why do we have to strictly check for already
+> removed nodes links. Is the sysfs code going to complain we we try to
+> remove again?
 
-Acked-by: Michal Hocko <mhocko@suse.com>
+No, sysfs will silently "fail" if the symlink has already been removed.
+At least that is what I saw last time I played with it.
 
-> ---
->  include/linux/memory_hotplug.h | 2 +-
->  mm/memory_hotplug.c            | 2 +-
->  mm/sparse.c                    | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
-> index 2f1f87e13baa..1a4257c5f74c 100644
-> --- a/include/linux/memory_hotplug.h
-> +++ b/include/linux/memory_hotplug.h
-> @@ -346,7 +346,7 @@ extern void move_pfn_range_to_zone(struct zone *zone, unsigned long start_pfn,
->  extern bool is_memblock_offlined(struct memory_block *mem);
->  extern int sparse_add_one_section(int nid, unsigned long start_pfn,
->  				  struct vmem_altmap *altmap);
-> -extern void sparse_remove_one_section(struct zone *zone, struct mem_section *ms,
-> +extern void sparse_remove_one_section(struct mem_section *ms,
->  		unsigned long map_offset, struct vmem_altmap *altmap);
->  extern struct page *sparse_decode_mem_map(unsigned long coded_mem_map,
->  					  unsigned long pnum);
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 82136c5b4c5f..e48ec7b9dee2 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -524,7 +524,7 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
->  	start_pfn = section_nr_to_pfn((unsigned long)scn_nr);
->  	__remove_zone(zone, start_pfn);
->  
-> -	sparse_remove_one_section(zone, ms, map_offset, altmap);
-> +	sparse_remove_one_section(ms, map_offset, altmap);
->  }
->  
->  /**
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index d1d5e05f5b8d..1552c855d62a 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -800,8 +800,8 @@ static void free_section_usemap(struct page *memmap, unsigned long *usemap,
->  		free_map_bootmem(memmap);
->  }
->  
-> -void sparse_remove_one_section(struct zone *zone, struct mem_section *ms,
-> -		unsigned long map_offset, struct vmem_altmap *altmap)
-> +void sparse_remove_one_section(struct mem_section *ms, unsigned long map_offset,
-> +			       struct vmem_altmap *altmap)
->  {
->  	struct page *memmap = NULL;
->  	unsigned long *usemap = NULL;
-> -- 
-> 2.20.1
+I guess the question is what if sysfs handling changes in the future
+and starts dropping warnings when trying to remove a symlink is not there.
+Maybe that is unlikely to happen?
 
 -- 
-Michal Hocko
-SUSE Labs
+Oscar Salvador
+SUSE L3
