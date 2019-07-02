@@ -2,71 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C6ED5CC2D
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jul 2019 10:45:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F35365CCDF
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jul 2019 11:48:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726594AbfGBIpx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Jul 2019 04:45:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46262 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726105AbfGBIpx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 2 Jul 2019 04:45:53 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 77804307D853;
-        Tue,  2 Jul 2019 08:45:53 +0000 (UTC)
-Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8C1AE5C28D;
-        Tue,  2 Jul 2019 08:45:52 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 10:45:50 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Farhan Ali <alifm@linux.ibm.com>
-Cc:     farman@linux.ibm.com, pasic@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [RFC v1 3/4] vfio-ccw: Set pa_nr to 0 if memory allocation
- fails for pa_iova_pfn
-Message-ID: <20190702104550.7d2e7563.cohuck@redhat.com>
-In-Reply-To: <19d813c58e0c45df3f23d8b1033e00b5ac5c7779.1561997809.git.alifm@linux.ibm.com>
-References: <cover.1561997809.git.alifm@linux.ibm.com>
-        <19d813c58e0c45df3f23d8b1033e00b5ac5c7779.1561997809.git.alifm@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726768AbfGBJsy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Jul 2019 05:48:54 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:39856 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726455AbfGBJsu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jul 2019 05:48:50 -0400
+Received: by mail-wr1-f66.google.com with SMTP id x4so17009465wrt.6
+        for <linux-s390@vger.kernel.org>; Tue, 02 Jul 2019 02:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=UdYCIZGQ7tAt7A88vWqWA422Qpx5IuQReKn9P3m3xX8=;
+        b=PZuM9EJbQb3YhMp+qaw+VF6BwkhSSyYMquhljCcVZSO+tjIcy06ofVIGPbwYNmREXi
+         pRcuGFWqgU+nSlEobDVIi97m26fD20LGHZVCL/m/+eGewb0yAO7NlvlF/9gBYN5Rgy0B
+         UVcUnIeulg2Ui8pzjNF76wVB55J/p/3pN/YrI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UdYCIZGQ7tAt7A88vWqWA422Qpx5IuQReKn9P3m3xX8=;
+        b=LpC/vgNnAXdsPRAkfNebD+I7xAQo9Qs8uDpYJJQAA+BpuR6w6TYPSzzu7MTNdOFuyN
+         4JWO822LgYEY57gK7wzt+e2sJVGHSwXXJcX1qppMu+7vK2swewQhc7PZstRR0y4f3b0k
+         ypmtaWrqVo9I4EIH4ReYMkKI+wuYdfIHxa0mvx+BDhazWpMK3oYRoyzX41dO7kwN3InJ
+         YL5J5uOFk/NMR+kBt2GyG/UjlpGHRTxUW1p+rjXcPZQgKtp6o78LKd0bMWWIFxtMP3Mm
+         Rsqe1pvi6oBurnt6y4EgyEXAOHz0U32VW5Wo9e5/M8J8Kz7N1rAi0YRmitEqK9dr5qew
+         kfUQ==
+X-Gm-Message-State: APjAAAWugJ9MHKUH17NNRAtpquBXwVkRhI5FXkSG7uoHXApqYyJQBsjC
+        Xcr5ddWCMZ9yjnIY9+GF0toFmg==
+X-Google-Smtp-Source: APXvYqw+cs3wphtlInYiqa/iYYLL5YBkbuaWsrCFwdpkqDK8kfUrPvl8YI8TNOvUo+26MvPNs1E1Ng==
+X-Received: by 2002:adf:9487:: with SMTP id 7mr9588274wrr.114.1562060928176;
+        Tue, 02 Jul 2019 02:48:48 -0700 (PDT)
+Received: from [10.176.68.244] ([192.19.248.250])
+        by smtp.gmail.com with ESMTPSA id l124sm2421987wmf.36.2019.07.02.02.48.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 02 Jul 2019 02:48:47 -0700 (PDT)
+Subject: Re: use exact allocation for dma coherent memory
+To:     Christoph Hellwig <hch@lst.de>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>
+Cc:     devel@driverdev.osuosl.org, linux-s390@vger.kernel.org,
+        Intel Linux Wireless <linuxwifi@intel.com>,
+        linux-rdma@vger.kernel.org, netdev@vger.kernel.org,
+        intel-gfx@lists.freedesktop.org, linux-wireless@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-mm@kvack.org, iommu@lists.linux-foundation.org,
+        "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>,
+        linux-media@vger.kernel.org
+References: <20190614134726.3827-1-hch@lst.de> <20190701084833.GA22927@lst.de>
+From:   Arend Van Spriel <arend.vanspriel@broadcom.com>
+Message-ID: <74eb9d99-6aa6-d1ad-e66d-6cc9c496b2f3@broadcom.com>
+Date:   Tue, 2 Jul 2019 11:48:44 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190701084833.GA22927@lst.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 02 Jul 2019 08:45:53 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon,  1 Jul 2019 12:23:45 -0400
-Farhan Ali <alifm@linux.ibm.com> wrote:
 
-> So we clean up correctly.
-> 
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> ---
->  drivers/s390/cio/vfio_ccw_cp.c | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-> index cab1be9..c5655de 100644
-> --- a/drivers/s390/cio/vfio_ccw_cp.c
-> +++ b/drivers/s390/cio/vfio_ccw_cp.c
-> @@ -72,8 +72,10 @@ static int pfn_array_alloc(struct pfn_array *pa, u64 iova, unsigned int len)
->  				  sizeof(*pa->pa_iova_pfn) +
->  				  sizeof(*pa->pa_pfn),
->  				  GFP_KERNEL);
-> -	if (unlikely(!pa->pa_iova_pfn))
-> +	if (unlikely(!pa->pa_iova_pfn)) {
-> +		pa->pa_nr = 0;
->  		return -ENOMEM;
-> +	}
->  	pa->pa_pfn = pa->pa_iova_pfn + pa->pa_nr;
->  
->  	pa->pa_iova_pfn[0] = pa->pa_iova >> PAGE_SHIFT;
 
-This looks like an older error -- can you give a Fixes: tag? (Yeah, I
-know I sound like a broken record wrt that tag... :)
+On 7/1/2019 10:48 AM, Christoph Hellwig wrote:
+> On Fri, Jun 14, 2019 at 03:47:10PM +0200, Christoph Hellwig wrote:
+>> Switching to a slightly cleaned up alloc_pages_exact is pretty easy,
+>> but it turns out that because we didn't filter valid gfp_t flags
+>> on the DMA allocator, a bunch of drivers were passing __GFP_COMP
+>> to it, which is rather bogus in too many ways to explain.  Arm has
+>> been filtering it for a while, but this series instead tries to fix
+>> the drivers and warn when __GFP_COMP is passed, which makes it much
+>> larger than just adding the functionality.
+> 
+> Dear driver maintainers,
+> 
+> can you look over the patches touching your drivers, please?  I'd
+> like to get as much as possible of the driver patches into this
+> merge window, so that it can you through your maintainer trees.
+
+You made me look ;-) Actually not touching my drivers so I'm off the 
+hook. However, I was wondering if drivers could know so I decided to 
+look into the DMA-API.txt documentation which currently states:
+
+"""
+The flag parameter (dma_alloc_coherent() only) allows the caller to
+specify the ``GFP_`` flags (see kmalloc()) for the allocation (the
+implementation may choose to ignore flags that affect the location of
+the returned memory, like GFP_DMA).
+"""
+
+I do expect you are going to change that description as well now that 
+you are going to issue a warning on __GFP_COMP. Maybe include that in 
+patch 15/16 where you introduce that warning.
+
+Regards,
+Arend
