@@ -2,98 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23A915D5E7
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jul 2019 20:09:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A98AF5D731
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jul 2019 21:50:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbfGBSJi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Jul 2019 14:09:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51028 "EHLO
+        id S1726529AbfGBTuW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Jul 2019 15:50:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4258 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726329AbfGBSJi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jul 2019 14:09:38 -0400
+        by vger.kernel.org with ESMTP id S1726291AbfGBTuW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jul 2019 15:50:22 -0400
 Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62I6u3T061266
-        for <linux-s390@vger.kernel.org>; Tue, 2 Jul 2019 14:09:36 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tgb3tjqjg-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62Jkge9035841
+        for <linux-s390@vger.kernel.org>; Tue, 2 Jul 2019 15:50:20 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tgb3tp46x-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 02 Jul 2019 14:09:36 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 02 Jul 2019 15:50:20 -0400
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
-        Tue, 2 Jul 2019 19:09:34 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <walling@linux.ibm.com>;
+        Tue, 2 Jul 2019 20:50:19 +0100
+Received: from b01cxnp23034.gho.pok.ibm.com (9.57.198.29)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 2 Jul 2019 19:09:31 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x62I9Ueh48955538
+        Tue, 2 Jul 2019 20:50:17 +0100
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x62JoG1d54657504
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jul 2019 18:09:30 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2560BA405C;
-        Tue,  2 Jul 2019 18:09:30 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14509A405F;
-        Tue,  2 Jul 2019 18:09:30 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  2 Jul 2019 18:09:30 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id C7515E0065; Tue,  2 Jul 2019 20:09:29 +0200 (CEST)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>, Farhan Ali <alifm@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH] vfio-ccw: Fix the conversion of Format-0 CCWs to Format-1
-Date:   Tue,  2 Jul 2019 20:09:28 +0200
-X-Mailer: git-send-email 2.17.1
+        Tue, 2 Jul 2019 19:50:16 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A89DF2805A;
+        Tue,  2 Jul 2019 19:50:16 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A166C28058;
+        Tue,  2 Jul 2019 19:50:16 +0000 (GMT)
+Received: from [9.63.14.98] (unknown [9.63.14.98])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Jul 2019 19:50:16 +0000 (GMT)
+Subject: Re: [PATCH v5 2/2] s390/kvm: diagnose 318 handling
+To:     David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        cohuck@redhat.com, pbonzini@redhat.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+References: <1561475022-18348-1-git-send-email-walling@linux.ibm.com>
+ <1561475022-18348-3-git-send-email-walling@linux.ibm.com>
+ <19c73246-48dd-ddc6-c5b1-b93f15cbf2f0@redhat.com>
+ <17fe3423-91b1-2351-54cb-26cd9e1b0e3f@de.ibm.com>
+ <dd1f4c39-9937-b223-adc8-01a764cf9462@linux.ibm.com>
+ <a7f4b3aa-b9d8-59b3-22c4-251acc2ef20f@redhat.com>
+From:   Collin Walling <walling@linux.ibm.com>
+Date:   Tue, 2 Jul 2019 15:50:16 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
+In-Reply-To: <a7f4b3aa-b9d8-59b3-22c4-251acc2ef20f@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19070218-0016-0000-0000-0000028E8B30
+x-cbid: 19070219-0060-0000-0000-000003581464
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011367; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01226508; UDB=6.00645709; IPR=6.01007728;
+ MB=3.00027558; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-02 19:50:19
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19070218-0017-0000-0000-000032EC1FAE
-Message-Id: <20190702180928.18113-1-farman@linux.ibm.com>
+x-cbparentid: 19070219-0061-0000-0000-000049FD708D
+Message-Id: <ae6e3725-2d5e-3fc6-96bf-7875fb14d919@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_09:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=852 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907020200
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907020219
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-When processing Format-0 CCWs, we use the "len" variable as the
-number of CCWs to convert to Format-1.  But that variable
-contains zero here, and is not a meaningful CCW count until
-ccwchain_calc_length() returns.  Since that routine requires and
-expects Format-1 CCWs to identify the chaining behavior, the
-format conversion must be done first.
+On 6/26/19 10:31 AM, David Hildenbrand wrote:
+> On 26.06.19 16:30, Collin Walling wrote:
+>> On 6/26/19 6:28 AM, Christian Borntraeger wrote:
+>>>
+>>>
+>>> On 26.06.19 11:45, David Hildenbrand wrote:
+>>>
+>>>>
+>>>> BTW. there is currently no mechanism to fake absence of diag318. Should
+>>>> we have one? (in contrast, for CMMA we have, which is also a CPU feature)
+>>>
+>>> Yes, we want to be able to disable diag318 via a CPU model feature. That actually
+>>> means that the kernel must not answer this if we disable it.
+>>>
+>> Correct. If the guest specifies diag318=off, then the instruction
+>> shouldn't be executed (it is fenced off in the kernel by checking the
+>> Read SCP Info bit).
+> 
+> But the guest *could* execute it and not get an exception.
+> 
 
-Convert the 2KB we copied even if it's more than we need.
+IIUC, you're talking about the situation where QEMU supports diag318,
+but KVM does not. The worst case is the guest specifies diag318=on, and
+nothing will stop the guest from attempting to execute the instruction.
 
-Fixes: 7f8e89a8f2fd ("vfio-ccw: Factor out the ccw0-to-ccw1 transition")
-Reported-by: Farhan Ali <alifm@linux.ibm.com>
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- drivers/s390/cio/vfio_ccw_cp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+However, this is fenced in my QEMU patches. In (v5), I have this
+following snippet:
 
-diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
-index 9cddc1288059..a870bde10445 100644
---- a/drivers/s390/cio/vfio_ccw_cp.c
-+++ b/drivers/s390/cio/vfio_ccw_cp.c
-@@ -431,7 +431,7 @@ static int ccwchain_handle_ccw(u32 cda, struct channel_program *cp)
- 
- 	/* Convert any Format-0 CCWs to Format-1 */
- 	if (!cp->orb.cmd.fmt)
--		convert_ccw0_to_ccw1(cp->guest_cp, len);
-+		convert_ccw0_to_ccw1(cp->guest_cp, CCWCHAIN_LEN_MAX);
- 
- 	/* Count the CCWs in the current chain */
- 	len = ccwchain_calc_length(cda, cp);
--- 
-2.17.1
+@@ -2323,6 +2345,13 @@ void kvm_s390_get_host_cpu_model(S390CPUModel 
+*model, Error **errp)
+          KVM_S390_VM_CRYPTO_ENABLE_APIE)) {
+          set_bit(S390_FEAT_AP, model->features);
+      }
++
++    /* if KVM supports interception of diag318, then let's provide the 
+bit */
++    if (kvm_vm_check_attr(kvm_state, KVM_S390_VM_MISC,
++        KVM_S390_VM_MISC_DIAG318)) {
++        set_bit(S390_FEAT_DIAG318, model->features);
++    }
++
+      /* strip of features that are not part of the maximum model */
+      bitmap_and(model->features, model->features, model->def->full_feat,
+                 S390_FEAT_MAX);
+
+If the guest specifies diag318=on, and KVM does *not* support emulation,
+then the following message will be observed:
+
+qemu-system-s390x: Some features requested in the CPU model are not
+available in the configuration: diag318
+
+and the guest will fail to start. Does this suffice?
 
