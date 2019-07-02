@@ -2,58 +2,58 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 964035D277
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jul 2019 17:12:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B69705D410
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jul 2019 18:15:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725858AbfGBPMJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Jul 2019 11:12:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38688 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725851AbfGBPMJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jul 2019 11:12:09 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62F861j167221;
-        Tue, 2 Jul 2019 11:11:50 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tg7p45r19-1
+        id S1726252AbfGBQPb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Jul 2019 12:15:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1338 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725996AbfGBQPb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jul 2019 12:15:31 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62G9Xpq058705;
+        Tue, 2 Jul 2019 12:15:10 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tg9nx2r27-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jul 2019 11:11:50 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x62F59XT021048;
-        Tue, 2 Jul 2019 15:11:49 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma04dal.us.ibm.com with ESMTP id 2tdym6pujk-1
+        Tue, 02 Jul 2019 12:15:10 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x62G9RTt011190;
+        Tue, 2 Jul 2019 16:15:07 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma03dal.us.ibm.com with ESMTP id 2tdym6y6ym-1
         (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 02 Jul 2019 15:11:49 +0000
+        Tue, 02 Jul 2019 16:15:07 +0000
 Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x62FBmOq55247142
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x62GF75Y50921906
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 2 Jul 2019 15:11:48 GMT
+        Tue, 2 Jul 2019 16:15:07 GMT
 Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4DF2AE064;
-        Tue,  2 Jul 2019 15:11:48 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id E18C8AE05C;
+        Tue,  2 Jul 2019 16:15:06 +0000 (GMT)
 Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3E97DAE05F;
-        Tue,  2 Jul 2019 15:11:48 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C2431AE060;
+        Tue,  2 Jul 2019 16:15:06 +0000 (GMT)
 Received: from [9.60.84.127] (unknown [9.60.84.127])
         by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  2 Jul 2019 15:11:48 +0000 (GMT)
-Subject: Re: [RFC v1 1/4] vfio-ccw: Set orb.cmd.c64 before calling
- ccwchain_handle_ccw
+        Tue,  2 Jul 2019 16:15:06 +0000 (GMT)
+Subject: Re: [RFC v1 2/4] vfio-ccw: No need to call cp_free on an error in
+ cp_init
 To:     Farhan Ali <alifm@linux.ibm.com>, Cornelia Huck <cohuck@redhat.com>
 Cc:     pasic@linux.ibm.com, linux-s390@vger.kernel.org,
         kvm@vger.kernel.org
 References: <cover.1561997809.git.alifm@linux.ibm.com>
- <050943a6f5a427317ea64100bc2b4ec6394a4411.1561997809.git.alifm@linux.ibm.com>
- <20190702102606.2e9cfed3.cohuck@redhat.com>
- <de9ae025-a96a-11ab-2ba9-8252d8b070e0@linux.ibm.com>
+ <5f1b69cd3a52e367f9f5014a3613768c8634408c.1561997809.git.alifm@linux.ibm.com>
+ <20190702104257.102f32d3.cohuck@redhat.com>
+ <66d92fe7-6395-46a6-b9bc-b76cbe7fb48e@linux.ibm.com>
 From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <62c3b191-3fae-011d-505d-59e8412229d0@linux.ibm.com>
-Date:   Tue, 2 Jul 2019 11:11:47 -0400
+Message-ID: <4f7e52bd-6b22-90b0-ab7b-f9c5c3ccac3f@linux.ibm.com>
+Date:   Tue, 2 Jul 2019 12:15:06 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.0
 MIME-Version: 1.0
-In-Reply-To: <de9ae025-a96a-11ab-2ba9-8252d8b070e0@linux.ibm.com>
+In-Reply-To: <66d92fe7-6395-46a6-b9bc-b76cbe7fb48e@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -64,7 +64,7 @@ X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorit
  malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907020164
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907020176
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -72,69 +72,65 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 7/2/19 9:56 AM, Farhan Ali wrote:
+On 7/2/19 9:58 AM, Farhan Ali wrote:
 > 
 > 
-> On 07/02/2019 04:26 AM, Cornelia Huck wrote:
->> On Mon,  1 Jul 2019 12:23:43 -0400
+> On 07/02/2019 04:42 AM, Cornelia Huck wrote:
+>> On Mon,  1 Jul 2019 12:23:44 -0400
 >> Farhan Ali <alifm@linux.ibm.com> wrote:
 >>
->>> Because ccwchain_handle_ccw calls ccwchain_calc_length and
->>> as per the comment we should set orb.cmd.c64 before calling
->>> ccwchanin_calc_length.
+>>> We don't set cp->initialized to true so calling cp_free
+>>> will just return and not do anything.
 >>>
 >>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 >>> ---
->>>   drivers/s390/cio/vfio_ccw_cp.c | 10 +++++-----
->>>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>>   drivers/s390/cio/vfio_ccw_cp.c | 2 --
+>>>   1 file changed, 2 deletions(-)
 >>>
 >>> diff --git a/drivers/s390/cio/vfio_ccw_cp.c
 >>> b/drivers/s390/cio/vfio_ccw_cp.c
->>> index d6a8dff..5ac4c1e 100644
+>>> index 5ac4c1e..cab1be9 100644
 >>> --- a/drivers/s390/cio/vfio_ccw_cp.c
 >>> +++ b/drivers/s390/cio/vfio_ccw_cp.c
->>> @@ -640,16 +640,16 @@ int cp_init(struct channel_program *cp, struct
+>>> @@ -647,8 +647,6 @@ int cp_init(struct channel_program *cp, struct
 >>> device *mdev, union orb *orb)
->>>       memcpy(&cp->orb, orb, sizeof(*orb));
->>>       cp->mdev = mdev;
->>>   -    /* Build a ccwchain for the first CCW segment */
->>> -    ret = ccwchain_handle_ccw(orb->cmd.cpa, cp);
+>>>         /* Build a ccwchain for the first CCW segment */
+>>>       ret = ccwchain_handle_ccw(orb->cmd.cpa, cp);
 >>> -    if (ret)
 >>> -        cp_free(cp);
->>> -
->>>       /* It is safe to force: if not set but idals used
->>>        * ccwchain_calc_length returns an error.
->>>        */
->>>       cp->orb.cmd.c64 = 1;
->>>   +    /* Build a ccwchain for the first CCW segment */
->>> +    ret = ccwchain_handle_ccw(orb->cmd.cpa, cp);
->>> +    if (ret)
->>> +        cp_free(cp);
->>> +
->>>       if (!ret)
+>>
+>> Makes sense; hopefully ccwchain_handle_ccw() cleans up correctly on
+>> error :) (I think it does)
+>>
+> 
+> I have checked that it does as well, but wouldn't hurt if someone else
+> also glances over once again :)
+
+Oh noes.  What happens once we start encountering TICs?  If we do:
+
+ccwchain_handle_ccw()	(OK)
+ccwchain_loop_tic()	(OK)
+ccwchain_handle_ccw()	(FAIL)
+
+The first _handle_ccw() will have added a ccwchain to the cp list, which
+doesn't appear to get cleaned up now.  That used to be done in cp_init()
+until I squashed cp_free and cp_unpin_free.  :(
+
+> 
+>> Maybe add a comment
+>>
+>> /* ccwchain_handle_ccw() already cleans up on error */
+>>
+>> so we don't stumble over this in the future?
+> 
+> Sure.
+> 
+>>
+>> (Also, does this want a Fixes: tag?)
+> 
+> This might warrant a fixes tag as well.
+>>
+>>>         if (!ret)
 >>>           cp->initialized = true;
->>>   
->>
->> Hm... has this ever been correct, or did this break only with the
->> recent refactorings?
->>
->> (IOW, what should Fixes: point to?)
-
-Yeah, that looks like it should blame my refactoring.
-
 >>
 >>
-> 
-> I think it was correct before some of the new refactoring we did. But we
-> do need to set before calling ccwchain_calc_length, because the function
-> does have a check for orb.cmd.64. I will see which exact commit did it.
-
-I get why that check exists, but does anyone know why it's buried in
-ccwchain_calc_length()?  Is it simply because ccwchain_calc_length()
-assumes to be working on Format-1 CCWs?  I don't think that routine
-cares if it's an IDA or not, an it'd be nice if we could put a check for
-the supported IDA formats somewhere up front.
-
-> 
-> Thanks
-> Farhan
