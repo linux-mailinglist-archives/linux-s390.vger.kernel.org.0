@@ -2,101 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 233F65CCF0
-	for <lists+linux-s390@lfdr.de>; Tue,  2 Jul 2019 11:51:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F6E55D10E
+	for <lists+linux-s390@lfdr.de>; Tue,  2 Jul 2019 15:56:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727182AbfGBJvi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 2 Jul 2019 05:51:38 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43440 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727128AbfGBJvi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 2 Jul 2019 05:51:38 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 184B1C02938A;
-        Tue,  2 Jul 2019 09:51:38 +0000 (UTC)
-Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E60A6F93D;
-        Tue,  2 Jul 2019 09:51:37 +0000 (UTC)
-Date:   Tue, 2 Jul 2019 11:51:34 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Farhan Ali <alifm@linux.ibm.com>
+        id S1726475AbfGBN4Z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 2 Jul 2019 09:56:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23008 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726341AbfGBN4Z (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 2 Jul 2019 09:56:25 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x62DsgUf104875
+        for <linux-s390@vger.kernel.org>; Tue, 2 Jul 2019 09:56:24 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tg72jv255-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 02 Jul 2019 09:56:23 -0400
+Received: from localhost
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
+        Tue, 2 Jul 2019 14:56:22 +0100
+Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 2 Jul 2019 14:56:20 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x62DuJhY45613396
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 2 Jul 2019 13:56:19 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 565CAB2067;
+        Tue,  2 Jul 2019 13:56:19 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47E98B2065;
+        Tue,  2 Jul 2019 13:56:19 +0000 (GMT)
+Received: from [9.56.58.42] (unknown [9.56.58.42])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue,  2 Jul 2019 13:56:19 +0000 (GMT)
+Subject: Re: [RFC v1 1/4] vfio-ccw: Set orb.cmd.c64 before calling
+ ccwchain_handle_ccw
+To:     Cornelia Huck <cohuck@redhat.com>
 Cc:     farman@linux.ibm.com, pasic@linux.ibm.com,
         linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [RFC v1 4/4] vfio-ccw: Don't call cp_free if we are processing
- a channel program
-Message-ID: <20190702115134.790f8891.cohuck@redhat.com>
-In-Reply-To: <31c3c29e3e9c4f0312f9363a1c3a5d22b74f68cb.1561997809.git.alifm@linux.ibm.com>
 References: <cover.1561997809.git.alifm@linux.ibm.com>
-        <31c3c29e3e9c4f0312f9363a1c3a5d22b74f68cb.1561997809.git.alifm@linux.ibm.com>
-Organization: Red Hat GmbH
+ <050943a6f5a427317ea64100bc2b4ec6394a4411.1561997809.git.alifm@linux.ibm.com>
+ <20190702102606.2e9cfed3.cohuck@redhat.com>
+From:   Farhan Ali <alifm@linux.ibm.com>
+Date:   Tue, 2 Jul 2019 09:56:19 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190702102606.2e9cfed3.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 02 Jul 2019 09:51:38 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19070213-0072-0000-0000-0000044371ED
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011365; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01226390; UDB=6.00645639; IPR=6.01007610;
+ MB=3.00027553; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-02 13:56:22
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070213-0073-0000-0000-00004CB3AA25
+Message-Id: <de9ae025-a96a-11ab-2ba9-8252d8b070e0@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-02_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907020152
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon,  1 Jul 2019 12:23:46 -0400
-Farhan Ali <alifm@linux.ibm.com> wrote:
 
-> There is a small window where it's possible that we could be working
-> on an interrupt (queued in the workqueue) and setting up a channel
-> program (i.e allocating memory, pinning pages, translating address).
-> This can lead to allocating and freeing the channel program at the
-> same time and can cause memory corruption.
 
-This can only happen if the interrupt is for a halt/clear operation,
-right?
-
+On 07/02/2019 04:26 AM, Cornelia Huck wrote:
+> On Mon,  1 Jul 2019 12:23:43 -0400
+> Farhan Ali <alifm@linux.ibm.com> wrote:
 > 
-> Let's not call cp_free if we are currently processing a channel program.
-> The only way we know for sure that we don't have a thread setting
-> up a channel program is when the state is set to VFIO_CCW_STATE_CP_PENDING.
-
-I have looked through the code again and I think you are right.
-
+>> Because ccwchain_handle_ccw calls ccwchain_calc_length and
+>> as per the comment we should set orb.cmd.c64 before calling
+>> ccwchanin_calc_length.
+>>
+>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+>> ---
+>>   drivers/s390/cio/vfio_ccw_cp.c | 10 +++++-----
+>>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+>> index d6a8dff..5ac4c1e 100644
+>> --- a/drivers/s390/cio/vfio_ccw_cp.c
+>> +++ b/drivers/s390/cio/vfio_ccw_cp.c
+>> @@ -640,16 +640,16 @@ int cp_init(struct channel_program *cp, struct device *mdev, union orb *orb)
+>>   	memcpy(&cp->orb, orb, sizeof(*orb));
+>>   	cp->mdev = mdev;
+>>   
+>> -	/* Build a ccwchain for the first CCW segment */
+>> -	ret = ccwchain_handle_ccw(orb->cmd.cpa, cp);
+>> -	if (ret)
+>> -		cp_free(cp);
+>> -
+>>   	/* It is safe to force: if not set but idals used
+>>   	 * ccwchain_calc_length returns an error.
+>>   	 */
+>>   	cp->orb.cmd.c64 = 1;
+>>   
+>> +	/* Build a ccwchain for the first CCW segment */
+>> +	ret = ccwchain_handle_ccw(orb->cmd.cpa, cp);
+>> +	if (ret)
+>> +		cp_free(cp);
+>> +
+>>   	if (!ret)
+>>   		cp->initialized = true;
+>>   
 > 
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> ---
->  drivers/s390/cio/vfio_ccw_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> Hm... has this ever been correct, or did this break only with the
+> recent refactorings?
 > 
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> index 4e3a903..0357165 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -92,7 +92,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
->  		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
->  	if (scsw_is_solicited(&irb->scsw)) {
->  		cp_update_scsw(&private->cp, &irb->scsw);
-> -		if (is_final)
-> +		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
+> (IOW, what should Fixes: point to?)
+> 
+> 
 
-Do we actually want to call cp_update_scsw() unconditionally?
+I think it was correct before some of the new refactoring we did. But we 
+do need to set before calling ccwchain_calc_length, because the function 
+does have a check for orb.cmd.64. I will see which exact commit did it.
 
-At this point, we know that we have a solicited interrupt; that may be
-for several reasons:
-- Interrupt for something we issued via ssch; it makes sense to update
-  the scsw with the cpa address.
-- Interrupt for a csch; the cpa address will be unpredictable, even if
-  we did a ssch before. cp_update_scsw() hopefully can deal with that?
-  Given that its purpose is to translate the cpa back, any
-  unpredictable value in the scsw should be fine in the end.
-- Interrupt for a hsch after we did a ssch; the cpa might be valid (see
-  figure 16-6).
-- Interrupt for a hsch without a prior ssch; we'll end up with an
-  unpredictable cpa, again.
-
-So I *think* we're fine with calling cp_update_scsw() in all cases,
-even if there's junk in the cpa of the scsw we get from the hardware.
-Opinions?
-
->  			cp_free(&private->cp);
->  	}
->  	mutex_lock(&private->io_mutex);
+Thanks
+Farhan
 
