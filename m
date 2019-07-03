@@ -2,125 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D1B905E10A
-	for <lists+linux-s390@lfdr.de>; Wed,  3 Jul 2019 11:30:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39C9A5E1E1
+	for <lists+linux-s390@lfdr.de>; Wed,  3 Jul 2019 12:20:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727010AbfGCJaI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Wed, 3 Jul 2019 05:30:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:19693 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725847AbfGCJaI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 3 Jul 2019 05:30:08 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 98C5443AB2;
-        Wed,  3 Jul 2019 09:30:07 +0000 (UTC)
-Received: from gondolin (dhcp-192-192.str.redhat.com [10.33.192.192])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 79AF5871EA;
-        Wed,  3 Jul 2019 09:30:06 +0000 (UTC)
-Date:   Wed, 3 Jul 2019 11:30:04 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Farhan Ali <alifm@linux.ibm.com>, pasic@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [RFC v1 1/4] vfio-ccw: Set orb.cmd.c64 before calling
- ccwchain_handle_ccw
-Message-ID: <20190703113004.217ca43e.cohuck@redhat.com>
-In-Reply-To: <62c3b191-3fae-011d-505d-59e8412229d0@linux.ibm.com>
-References: <cover.1561997809.git.alifm@linux.ibm.com>
-        <050943a6f5a427317ea64100bc2b4ec6394a4411.1561997809.git.alifm@linux.ibm.com>
-        <20190702102606.2e9cfed3.cohuck@redhat.com>
-        <de9ae025-a96a-11ab-2ba9-8252d8b070e0@linux.ibm.com>
-        <62c3b191-3fae-011d-505d-59e8412229d0@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 03 Jul 2019 09:30:07 +0000 (UTC)
+        id S1726993AbfGCKUP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 3 Jul 2019 06:20:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32898 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726765AbfGCKUP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 3 Jul 2019 06:20:15 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x63AJGtC146420
+        for <linux-s390@vger.kernel.org>; Wed, 3 Jul 2019 06:20:13 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tgrdrwm4k-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 03 Jul 2019 06:20:13 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <maier@linux.ibm.com>;
+        Wed, 3 Jul 2019 11:20:11 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 3 Jul 2019 11:20:08 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x63AK7qr34800090
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 3 Jul 2019 10:20:07 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 007124C044;
+        Wed,  3 Jul 2019 10:20:07 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B087C4C04A;
+        Wed,  3 Jul 2019 10:20:06 +0000 (GMT)
+Received: from oc4120165700.ibm.com (unknown [9.152.97.10])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  3 Jul 2019 10:20:06 +0000 (GMT)
+From:   Steffen Maier <maier@linux.ibm.com>
+To:     linux-doc@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] docs: s390: restore content and update s390dbf.rst
+Date:   Wed,  3 Jul 2019 12:19:46 +0200
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19070310-0028-0000-0000-0000037FF27A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070310-0029-0000-0000-000024403038
+Message-Id: <1562149189-1417-1-git-send-email-maier@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-03_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=744 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907030125
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 2 Jul 2019 11:11:47 -0400
-Eric Farman <farman@linux.ibm.com> wrote:
+This is based on top of the 3 s390 patches Heiko already queued on our
+s390 features branch.
+[("Re: [PATCH v3 00/33] Convert files to ReST - part 1")
+ https://www.spinics.net/lists/linux-doc/msg66137.html
+ https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/log/Documentation/s390?h=features]
 
-> On 7/2/19 9:56 AM, Farhan Ali wrote:
-> > 
-> > 
-> > On 07/02/2019 04:26 AM, Cornelia Huck wrote:  
-> >> On Mon,  1 Jul 2019 12:23:43 -0400
-> >> Farhan Ali <alifm@linux.ibm.com> wrote:
-> >>  
-> >>> Because ccwchain_handle_ccw calls ccwchain_calc_length and
-> >>> as per the comment we should set orb.cmd.c64 before calling
-> >>> ccwchanin_calc_length.
-> >>>
-> >>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> >>> ---
-> >>>   drivers/s390/cio/vfio_ccw_cp.c | 10 +++++-----
-> >>>   1 file changed, 5 insertions(+), 5 deletions(-)
-> >>>
-> >>> diff --git a/drivers/s390/cio/vfio_ccw_cp.c
-> >>> b/drivers/s390/cio/vfio_ccw_cp.c
-> >>> index d6a8dff..5ac4c1e 100644
-> >>> --- a/drivers/s390/cio/vfio_ccw_cp.c
-> >>> +++ b/drivers/s390/cio/vfio_ccw_cp.c
-> >>> @@ -640,16 +640,16 @@ int cp_init(struct channel_program *cp, struct
-> >>> device *mdev, union orb *orb)
-> >>>       memcpy(&cp->orb, orb, sizeof(*orb));
-> >>>       cp->mdev = mdev;
-> >>>   -    /* Build a ccwchain for the first CCW segment */
-> >>> -    ret = ccwchain_handle_ccw(orb->cmd.cpa, cp);
-> >>> -    if (ret)
-> >>> -        cp_free(cp);
-> >>> -
-> >>>       /* It is safe to force: if not set but idals used
-> >>>        * ccwchain_calc_length returns an error.
-> >>>        */
-> >>>       cp->orb.cmd.c64 = 1;
-> >>>   +    /* Build a ccwchain for the first CCW segment */
-> >>> +    ret = ccwchain_handle_ccw(orb->cmd.cpa, cp);
-> >>> +    if (ret)
-> >>> +        cp_free(cp);
-> >>> +
-> >>>       if (!ret)
-> >>>           cp->initialized = true;
-> >>>     
-> >>
-> >> Hm... has this ever been correct, or did this break only with the
-> >> recent refactorings?
-> >>
-> >> (IOW, what should Fixes: point to?)  
-> 
-> Yeah, that looks like it should blame my refactoring.
-> 
-> >>
-> >>  
-> > 
-> > I think it was correct before some of the new refactoring we did. But we
-> > do need to set before calling ccwchain_calc_length, because the function
-> > does have a check for orb.cmd.64. I will see which exact commit did it.  
-> 
-> I get why that check exists, but does anyone know why it's buried in
-> ccwchain_calc_length()?  Is it simply because ccwchain_calc_length()
-> assumes to be working on Format-1 CCWs?  I don't think that routine
-> cares if it's an IDA or not, an it'd be nice if we could put a check for
-> the supported IDA formats somewhere up front.
+If I was not mistaken, some documentation was accidentally lost
+and patch 1 restores it.
 
-The more I stare at this code, the more confused I get :(
+After having looked closer, I came up with patches 2 and 3.
+Rendered successfully on a current Fedora 30 and it looks good:
+$ make SPHINXDIRS="s390" htmldocs
 
-Apparently we want to allow the guest to specify an orb without cmd.c64
-set, as this is fine as long as the channel program does not use idals.
-However, we _do_ want to reject it if cmd.c64 is not set, but idals are
-used; so we actually _don't_ want to force this before the processing.
-We just want the flag in the orb to be set when we do the ssch.
+Steffen Maier (3):
+  docs: s390: restore important non-kdoc parts of s390dbf.rst
+  docs: s390: unify and update s390dbf kdocs at debug.c
+  docs: s390: s390dbf: typos and formatting, update crash command
 
-So it seems that the comment does not really talk about what
-ccwchain_calc_length _will_ do, but what it _generally_ does (and, in
-this case, already would have done.)
+ Documentation/s390/s390dbf.rst | 390 +++++++++++++++++++++++++++++++++++++++--
+ arch/s390/include/asm/debug.h  | 112 ++----------
+ arch/s390/kernel/debug.c       | 105 +++++++++--
+ 3 files changed, 473 insertions(+), 134 deletions(-)
 
-If my understanding is correct, maybe we should reword the comment
-instead? i.e. s/returns/would have returned/
+-- 
+1.8.3.1
+
