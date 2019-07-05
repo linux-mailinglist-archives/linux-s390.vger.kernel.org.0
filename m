@@ -2,521 +2,342 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 765F35FD33
-	for <lists+linux-s390@lfdr.de>; Thu,  4 Jul 2019 20:58:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CA7F600A4
+	for <lists+linux-s390@lfdr.de>; Fri,  5 Jul 2019 07:31:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727102AbfGDS6j (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 4 Jul 2019 14:58:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36288 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726199AbfGDS6i (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 4 Jul 2019 14:58:38 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x64IvCsO134366;
-        Thu, 4 Jul 2019 14:57:45 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2thkw6dm40-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 14:57:45 -0400
-Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x64IvVRC137337;
-        Thu, 4 Jul 2019 14:57:45 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2thkw6dm3f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 14:57:45 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x64IsFCp021090;
-        Thu, 4 Jul 2019 18:57:44 GMT
-Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
-        by ppma03dal.us.ibm.com with ESMTP id 2tdym7exyy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 04 Jul 2019 18:57:44 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x64Ivhwf48234842
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 4 Jul 2019 18:57:43 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47183AE062;
-        Thu,  4 Jul 2019 18:57:43 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5642DAE063;
-        Thu,  4 Jul 2019 18:57:38 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.80.237.7])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu,  4 Jul 2019 18:57:38 +0000 (GMT)
-References: <20190628021934.4260-1-bauerman@linux.ibm.com> <20190628021934.4260-2-bauerman@linux.ibm.com> <20190701144752.GC25484@linux-8ccs> <87lfxel2q6.fsf@morokweng.localdomain> <20190704125427.31146026@laptop-ibm>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Philipp Rudo <prudo@linux.ibm.com>
-Cc:     Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-crypto@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
-        "James Morris" <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        "David Howells" <dhowells@redhat.com>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        "AKASHI\, Takahiro" <takahiro.akashi@linaro.org>,
+        id S1727649AbfGEFbR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 5 Jul 2019 01:31:17 -0400
+Received: from foss.arm.com ([217.140.110.172]:57920 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727159AbfGEFbR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 5 Jul 2019 01:31:17 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5D37028;
+        Thu,  4 Jul 2019 22:31:15 -0700 (PDT)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.41.127])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 978163F246;
+        Thu,  4 Jul 2019 22:32:57 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v12 01/11] MODSIGN: Export module signature definitions
-In-reply-to: <20190704125427.31146026@laptop-ibm>
-Date:   Thu, 04 Jul 2019 15:57:34 -0300
-Message-ID: <874l41ocf5.fsf@morokweng.localdomain>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-04_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907040244
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org
+Subject: [PATCH] mm/kprobes: Add generic kprobe_fault_handler() fallback definition
+Date:   Fri,  5 Jul 2019 11:00:29 +0530
+Message-Id: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Architectures like parisc enable CONFIG_KROBES without having a definition
+for kprobe_fault_handler() which results in a build failure. Arch needs to
+provide kprobe_fault_handler() as it is platform specific and cannot have
+a generic working alternative. But in the event when platform lacks such a
+definition there needs to be a fallback.
 
-Hello Philipp,
+This adds a stub kprobe_fault_handler() definition which not only prevents
+a build failure but also makes sure that kprobe_page_fault() if called will
+always return negative in absence of a sane platform specific alternative.
 
-Philipp Rudo <prudo@linux.ibm.com> writes:
+While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
+definitions for generic kporbe_fault_handler() and kprobes_built_in() can
+just be dropped. Only on x86 it needs to be added back locally as it gets
+used in a !CONFIG_KPROBES function do_general_protection().
 
-> Hi Thiago,
->
->
-> On Thu, 04 Jul 2019 03:42:57 -0300
-> Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
->
->> Jessica Yu <jeyu@kernel.org> writes:
->> 
->> > +++ Thiago Jung Bauermann [27/06/19 23:19 -0300]:  
->> >>IMA will use the module_signature format for append signatures, so export
->> >>the relevant definitions and factor out the code which verifies that the
->> >>appended signature trailer is valid.
->> >>
->> >>Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
->> >>and be able to use mod_check_sig() without having to depend on either
->> >>CONFIG_MODULE_SIG or CONFIG_MODULES.
->> >>
->> >>Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> >>Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
->> >>Cc: Jessica Yu <jeyu@kernel.org>
->> >>---
->> >> include/linux/module.h           |  3 --
->> >> include/linux/module_signature.h | 44 +++++++++++++++++++++++++
->> >> init/Kconfig                     |  6 +++-
->> >> kernel/Makefile                  |  1 +
->> >> kernel/module.c                  |  1 +
->> >> kernel/module_signature.c        | 46 ++++++++++++++++++++++++++
->> >> kernel/module_signing.c          | 56 +++++---------------------------
->> >> scripts/Makefile                 |  2 +-
->> >> 8 files changed, 106 insertions(+), 53 deletions(-)
->> >>
->> >>diff --git a/include/linux/module.h b/include/linux/module.h
->> >>index 188998d3dca9..aa56f531cf1e 100644
->> >>--- a/include/linux/module.h
->> >>+++ b/include/linux/module.h
->> >>@@ -25,9 +25,6 @@
->> >> #include <linux/percpu.h>
->> >> #include <asm/module.h>
->> >>
->> >>-/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
->> >>-#define MODULE_SIG_STRING "~Module signature appended~\n"
->> >>-  
->> >
->> > Hi Thiago, apologies for the delay.  
->> 
->> Hello Jessica, thanks for reviewing the patch!
->> 
->> > It looks like arch/s390/kernel/machine_kexec_file.c also relies on
->> > MODULE_SIG_STRING being defined, so module_signature.h will need to be
->> > included there too, otherwise we'll run into a compilation error.  
->> 
->> Indeed. Thanks for spotting that. The patch below fixes it. It's
->> identical to the previous version except for the changes in 
->> arch/s390/kernel/machine_kexec_file.c and their description in the
->> commit message. I'm also copying some s390 people in this email.
->
-> to me the s390 part looks good but for one minor nit.
-
-Thanks for the prompt review!
-
-> In arch/s390/Kconfig KEXEC_VERIFY_SIG currently depends on
-> SYSTEM_DATA_VERIFICATION. I'd prefer when you update this to the new
-> MODULE_SIG_FORMAT. It shouldn't make any difference right now, as we don't
-> use mod_check_sig in our code path. But it could cause problems in the future,
-> when more code might be shared.
-
-Makes sense. Here is the updated patch with the Kconfig change.
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
-
-From d0e870a6eccc7126c0416ad7369888052c15eb18 Mon Sep 17 00:00:00 2001
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Date: Thu, 17 May 2018 21:46:12 -0300
-Subject: [PATCH 1/1] MODSIGN: Export module signature definitions
-
-IMA will use the module_signature format for append signatures, so export
-the relevant definitions and factor out the code which verifies that the
-appended signature trailer is valid.
-
-Also, create a CONFIG_MODULE_SIG_FORMAT option so that IMA can select it
-and be able to use mod_check_sig() without having to depend on either
-CONFIG_MODULE_SIG or CONFIG_MODULES.
-
-s390 duplicated the definition of struct module_signature so now they can
-use the new <linux/module_signature.h> header instead.
-
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com>
-Acked-by: Jessica Yu <jeyu@kernel.org>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: Paul Burton <paul.burton@mips.com>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Philipp Rudo <prudo@linux.ibm.com>
----
- arch/s390/Kconfig                     |  2 +-
- arch/s390/kernel/machine_kexec_file.c | 24 +-----------
- include/linux/module.h                |  3 --
- include/linux/module_signature.h      | 44 +++++++++++++++++++++
- init/Kconfig                          |  6 ++-
- kernel/Makefile                       |  1 +
- kernel/module.c                       |  1 +
- kernel/module_signature.c             | 46 ++++++++++++++++++++++
- kernel/module_signing.c               | 56 ++++-----------------------
- scripts/Makefile                      |  2 +-
- 10 files changed, 108 insertions(+), 77 deletions(-)
- create mode 100644 include/linux/module_signature.h
- create mode 100644 kernel/module_signature.c
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+Cc: Masami Hiramatsu <mhiramat@kernel.org>
+Cc: Allison Randal <allison@lohutok.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Enrico Weigelt <info@metux.net>
+Cc: Richard Fontana <rfontana@redhat.com>
+Cc: Kate Stewart <kstewart@linuxfoundation.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: x86@kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linux-mips@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
 
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 109243fdb6ec..446b7ffa1294 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -557,7 +557,7 @@ config ARCH_HAS_KEXEC_PURGATORY
- 
- config KEXEC_VERIFY_SIG
- 	bool "Verify kernel signature during kexec_file_load() syscall"
--	depends on KEXEC_FILE && SYSTEM_DATA_VERIFICATION
-+	depends on KEXEC_FILE && MODULE_SIG_FORMAT
- 	help
- 	  This option makes kernel signature verification mandatory for
- 	  the kexec_file_load() syscall.
-diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index fbdd3ea73667..1ac9fbc6e01e 100644
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -10,7 +10,7 @@
- #include <linux/elf.h>
- #include <linux/errno.h>
- #include <linux/kexec.h>
--#include <linux/module.h>
-+#include <linux/module_signature.h>
- #include <linux/verification.h>
- #include <asm/boot_data.h>
- #include <asm/ipl.h>
-@@ -23,28 +23,6 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+ arch/arc/include/asm/kprobes.h     |  1 +
+ arch/arm/include/asm/kprobes.h     |  1 +
+ arch/arm64/include/asm/kprobes.h   |  1 +
+ arch/ia64/include/asm/kprobes.h    |  1 +
+ arch/mips/include/asm/kprobes.h    |  1 +
+ arch/powerpc/include/asm/kprobes.h |  1 +
+ arch/s390/include/asm/kprobes.h    |  1 +
+ arch/sh/include/asm/kprobes.h      |  1 +
+ arch/sparc/include/asm/kprobes.h   |  1 +
+ arch/x86/include/asm/kprobes.h     |  6 ++++++
+ include/linux/kprobes.h            | 32 ++++++++++++++++++------------
+ 11 files changed, 34 insertions(+), 13 deletions(-)
+
+diff --git a/arch/arc/include/asm/kprobes.h b/arch/arc/include/asm/kprobes.h
+index 2134721dce44..ee8efe256675 100644
+--- a/arch/arc/include/asm/kprobes.h
++++ b/arch/arc/include/asm/kprobes.h
+@@ -45,6 +45,7 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
  };
  
- #ifdef CONFIG_KEXEC_VERIFY_SIG
--/*
-- * Module signature information block.
-- *
-- * The constituents of the signature section are, in order:
-- *
-- *	- Signer's name
-- *	- Key identifier
-- *	- Signature data
-- *	- Information block
-- */
--struct module_signature {
--	u8	algo;		/* Public-key crypto algorithm [0] */
--	u8	hash;		/* Digest algorithm [0] */
--	u8	id_type;	/* Key identifier type [PKEY_ID_PKCS7] */
--	u8	signer_len;	/* Length of signer's name [0] */
--	u8	key_id_len;	/* Length of key identifier [0] */
--	u8	__pad[3];
--	__be32	sig_len;	/* Length of signature data */
--};
--
--#define PKEY_ID_PKCS7 2
--
- int s390_verify_sig(const char *kernel, unsigned long kernel_len)
- {
- 	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
-diff --git a/include/linux/module.h b/include/linux/module.h
-index 188998d3dca9..aa56f531cf1e 100644
---- a/include/linux/module.h
-+++ b/include/linux/module.h
-@@ -25,9 +25,6 @@
- #include <linux/percpu.h>
- #include <asm/module.h>
++#define kprobe_fault_handler kprobe_fault_handler
+ int kprobe_fault_handler(struct pt_regs *regs, unsigned long cause);
+ void kretprobe_trampoline(void);
+ void trap_is_kprobe(unsigned long address, struct pt_regs *regs);
+diff --git a/arch/arm/include/asm/kprobes.h b/arch/arm/include/asm/kprobes.h
+index 213607a1f45c..660f877b989f 100644
+--- a/arch/arm/include/asm/kprobes.h
++++ b/arch/arm/include/asm/kprobes.h
+@@ -38,6 +38,7 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
  
--/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
--#define MODULE_SIG_STRING "~Module signature appended~\n"
--
- /* Not Yet Implemented */
- #define MODULE_SUPPORTED_DEVICE(name)
++#define kprobe_fault_handler kprobe_fault_handler
+ void arch_remove_kprobe(struct kprobe *);
+ int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+ int kprobe_exceptions_notify(struct notifier_block *self,
+diff --git a/arch/arm64/include/asm/kprobes.h b/arch/arm64/include/asm/kprobes.h
+index 97e511d645a2..667773f75616 100644
+--- a/arch/arm64/include/asm/kprobes.h
++++ b/arch/arm64/include/asm/kprobes.h
+@@ -42,6 +42,7 @@ struct kprobe_ctlblk {
+ 	struct kprobe_step_ctx ss_ctx;
+ };
  
-diff --git a/include/linux/module_signature.h b/include/linux/module_signature.h
-new file mode 100644
-index 000000000000..523617fc5b6a
---- /dev/null
-+++ b/include/linux/module_signature.h
-@@ -0,0 +1,44 @@
-+/* SPDX-License-Identifier: GPL-2.0+ */
-+/*
-+ * Module signature handling.
-+ *
-+ * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#ifndef _LINUX_MODULE_SIGNATURE_H
-+#define _LINUX_MODULE_SIGNATURE_H
-+
-+/* In stripped ARM and x86-64 modules, ~ is surprisingly rare. */
-+#define MODULE_SIG_STRING "~Module signature appended~\n"
-+
-+enum pkey_id_type {
-+	PKEY_ID_PGP,		/* OpenPGP generated key ID */
-+	PKEY_ID_X509,		/* X.509 arbitrary subjectKeyIdentifier */
-+	PKEY_ID_PKCS7,		/* Signature in PKCS#7 message */
-+};
-+
-+/*
-+ * Module signature information block.
-+ *
-+ * The constituents of the signature section are, in order:
-+ *
-+ *	- Signer's name
-+ *	- Key identifier
-+ *	- Signature data
-+ *	- Information block
-+ */
-+struct module_signature {
-+	u8	algo;		/* Public-key crypto algorithm [0] */
-+	u8	hash;		/* Digest algorithm [0] */
-+	u8	id_type;	/* Key identifier type [PKEY_ID_PKCS7] */
-+	u8	signer_len;	/* Length of signer's name [0] */
-+	u8	key_id_len;	/* Length of key identifier [0] */
-+	u8	__pad[3];
-+	__be32	sig_len;	/* Length of signature data */
-+};
-+
-+int mod_check_sig(const struct module_signature *ms, size_t file_len,
-+		  const char *name);
-+
-+#endif /* _LINUX_MODULE_SIGNATURE_H */
-diff --git a/init/Kconfig b/init/Kconfig
-index 8b9ffe236e4f..c2286a3c74c5 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -1852,6 +1852,10 @@ config BASE_SMALL
- 	default 0 if BASE_FULL
- 	default 1 if !BASE_FULL
++#define kprobe_fault_handler kprobe_fault_handler
+ void arch_remove_kprobe(struct kprobe *);
+ int kprobe_fault_handler(struct pt_regs *regs, unsigned int fsr);
+ int kprobe_exceptions_notify(struct notifier_block *self,
+diff --git a/arch/ia64/include/asm/kprobes.h b/arch/ia64/include/asm/kprobes.h
+index c5cf5e4fb338..c321e8585089 100644
+--- a/arch/ia64/include/asm/kprobes.h
++++ b/arch/ia64/include/asm/kprobes.h
+@@ -106,6 +106,7 @@ struct arch_specific_insn {
+ 	unsigned short slot;
+ };
  
-+config MODULE_SIG_FORMAT
-+	def_bool n
-+	select SYSTEM_DATA_VERIFICATION
-+
- menuconfig MODULES
- 	bool "Enable loadable module support"
- 	option modules
-@@ -1929,7 +1933,7 @@ config MODULE_SRCVERSION_ALL
- config MODULE_SIG
- 	bool "Module signature verification"
- 	depends on MODULES
--	select SYSTEM_DATA_VERIFICATION
-+	select MODULE_SIG_FORMAT
- 	help
- 	  Check modules for valid signatures upon load: the signature
- 	  is simply appended to the module. For more information see
-diff --git a/kernel/Makefile b/kernel/Makefile
-index 33824f0385b3..f29ae2997a43 100644
---- a/kernel/Makefile
-+++ b/kernel/Makefile
-@@ -58,6 +58,7 @@ endif
- obj-$(CONFIG_UID16) += uid16.o
- obj-$(CONFIG_MODULES) += module.o
- obj-$(CONFIG_MODULE_SIG) += module_signing.o
-+obj-$(CONFIG_MODULE_SIG_FORMAT) += module_signature.o
- obj-$(CONFIG_KALLSYMS) += kallsyms.o
- obj-$(CONFIG_BSD_PROCESS_ACCT) += acct.o
- obj-$(CONFIG_CRASH_CORE) += crash_core.o
-diff --git a/kernel/module.c b/kernel/module.c
-index 6e6712b3aaf5..2712f4d217f5 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -19,6 +19,7 @@
- #include <linux/export.h>
- #include <linux/extable.h>
- #include <linux/moduleloader.h>
-+#include <linux/module_signature.h>
- #include <linux/trace_events.h>
- #include <linux/init.h>
- #include <linux/kallsyms.h>
-diff --git a/kernel/module_signature.c b/kernel/module_signature.c
-new file mode 100644
-index 000000000000..4224a1086b7d
---- /dev/null
-+++ b/kernel/module_signature.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Module signature checker
-+ *
-+ * Copyright (C) 2012 Red Hat, Inc. All Rights Reserved.
-+ * Written by David Howells (dhowells@redhat.com)
-+ */
-+
-+#include <linux/errno.h>
-+#include <linux/printk.h>
-+#include <linux/module_signature.h>
-+#include <asm/byteorder.h>
-+
-+/**
-+ * mod_check_sig - check that the given signature is sane
-+ *
-+ * @ms:		Signature to check.
-+ * @file_len:	Size of the file to which @ms is appended.
-+ * @name:	What is being checked. Used for error messages.
-+ */
-+int mod_check_sig(const struct module_signature *ms, size_t file_len,
-+		  const char *name)
++#define kprobe_fault_handler kprobe_fault_handler
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ extern int kprobe_exceptions_notify(struct notifier_block *self,
+ 				    unsigned long val, void *data);
+diff --git a/arch/mips/include/asm/kprobes.h b/arch/mips/include/asm/kprobes.h
+index 68b1e5d458cf..d1efe991ea22 100644
+--- a/arch/mips/include/asm/kprobes.h
++++ b/arch/mips/include/asm/kprobes.h
+@@ -40,6 +40,7 @@ do {									\
+ 
+ #define kretprobe_blacklist_size 0
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ void arch_remove_kprobe(struct kprobe *p);
+ int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ 
+diff --git a/arch/powerpc/include/asm/kprobes.h b/arch/powerpc/include/asm/kprobes.h
+index 66b3f2983b22..c94f375ec957 100644
+--- a/arch/powerpc/include/asm/kprobes.h
++++ b/arch/powerpc/include/asm/kprobes.h
+@@ -84,6 +84,7 @@ struct arch_optimized_insn {
+ 	kprobe_opcode_t *insn;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ extern int kprobe_exceptions_notify(struct notifier_block *self,
+ 					unsigned long val, void *data);
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+diff --git a/arch/s390/include/asm/kprobes.h b/arch/s390/include/asm/kprobes.h
+index b106aa29bf55..0ecaebb78092 100644
+--- a/arch/s390/include/asm/kprobes.h
++++ b/arch/s390/include/asm/kprobes.h
+@@ -73,6 +73,7 @@ struct kprobe_ctlblk {
+ void arch_remove_kprobe(struct kprobe *p);
+ void kretprobe_trampoline(void);
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ int kprobe_exceptions_notify(struct notifier_block *self,
+ 	unsigned long val, void *data);
+diff --git a/arch/sh/include/asm/kprobes.h b/arch/sh/include/asm/kprobes.h
+index 6171682f7798..637a698393c0 100644
+--- a/arch/sh/include/asm/kprobes.h
++++ b/arch/sh/include/asm/kprobes.h
+@@ -45,6 +45,7 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ extern int kprobe_exceptions_notify(struct notifier_block *self,
+ 				    unsigned long val, void *data);
+diff --git a/arch/sparc/include/asm/kprobes.h b/arch/sparc/include/asm/kprobes.h
+index bfcaa6326c20..9aa4d25a45a8 100644
+--- a/arch/sparc/include/asm/kprobes.h
++++ b/arch/sparc/include/asm/kprobes.h
+@@ -47,6 +47,7 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ int kprobe_exceptions_notify(struct notifier_block *self,
+ 			     unsigned long val, void *data);
+ int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+diff --git a/arch/x86/include/asm/kprobes.h b/arch/x86/include/asm/kprobes.h
+index 5dc909d9ad81..1af2b6db13bd 100644
+--- a/arch/x86/include/asm/kprobes.h
++++ b/arch/x86/include/asm/kprobes.h
+@@ -101,11 +101,17 @@ struct kprobe_ctlblk {
+ 	struct prev_kprobe prev_kprobe;
+ };
+ 
++#define kprobe_fault_handler kprobe_fault_handler
+ extern int kprobe_fault_handler(struct pt_regs *regs, int trapnr);
+ extern int kprobe_exceptions_notify(struct notifier_block *self,
+ 				    unsigned long val, void *data);
+ extern int kprobe_int3_handler(struct pt_regs *regs);
+ extern int kprobe_debug_handler(struct pt_regs *regs);
++#else
++static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
 +{
-+	if (be32_to_cpu(ms->sig_len) >= file_len - sizeof(*ms))
-+		return -EBADMSG;
-+
-+	if (ms->id_type != PKEY_ID_PKCS7) {
-+		pr_err("%s: Module is not signed with expected PKCS#7 message\n",
-+		       name);
-+		return -ENOPKG;
-+	}
-+
-+	if (ms->algo != 0 ||
-+	    ms->hash != 0 ||
-+	    ms->signer_len != 0 ||
-+	    ms->key_id_len != 0 ||
-+	    ms->__pad[0] != 0 ||
-+	    ms->__pad[1] != 0 ||
-+	    ms->__pad[2] != 0) {
-+		pr_err("%s: PKCS#7 signature info has unexpected non-zero params\n",
-+		       name);
-+		return -EBADMSG;
-+	}
-+
 +	return 0;
 +}
-diff --git a/kernel/module_signing.c b/kernel/module_signing.c
-index 6b9a926fd86b..cdd04a6b8074 100644
---- a/kernel/module_signing.c
-+++ b/kernel/module_signing.c
-@@ -11,37 +11,13 @@
  
- #include <linux/kernel.h>
- #include <linux/errno.h>
-+#include <linux/module.h>
-+#include <linux/module_signature.h>
- #include <linux/string.h>
- #include <linux/verification.h>
- #include <crypto/public_key.h>
- #include "module-internal.h"
- 
--enum pkey_id_type {
--	PKEY_ID_PGP,		/* OpenPGP generated key ID */
--	PKEY_ID_X509,		/* X.509 arbitrary subjectKeyIdentifier */
--	PKEY_ID_PKCS7,		/* Signature in PKCS#7 message */
--};
--
--/*
-- * Module signature information block.
-- *
-- * The constituents of the signature section are, in order:
-- *
-- *	- Signer's name
-- *	- Key identifier
-- *	- Signature data
-- *	- Information block
-- */
--struct module_signature {
--	u8	algo;		/* Public-key crypto algorithm [0] */
--	u8	hash;		/* Digest algorithm [0] */
--	u8	id_type;	/* Key identifier type [PKEY_ID_PKCS7] */
--	u8	signer_len;	/* Length of signer's name [0] */
--	u8	key_id_len;	/* Length of key identifier [0] */
--	u8	__pad[3];
--	__be32	sig_len;	/* Length of signature data */
--};
--
+ #endif /* CONFIG_KPROBES */
+ #endif /* _ASM_X86_KPROBES_H */
+diff --git a/include/linux/kprobes.h b/include/linux/kprobes.h
+index 04bdaf01112c..e106f3018804 100644
+--- a/include/linux/kprobes.h
++++ b/include/linux/kprobes.h
+@@ -182,11 +182,19 @@ DECLARE_PER_CPU(struct kprobe_ctlblk, kprobe_ctlblk);
  /*
-  * Verify the signature on a module.
+  * For #ifdef avoidance:
   */
-@@ -49,6 +25,7 @@ int mod_verify_sig(const void *mod, struct load_info *info)
- {
- 	struct module_signature ms;
- 	size_t sig_len, modlen = info->len;
-+	int ret;
- 
- 	pr_devel("==>%s(,%zu)\n", __func__, modlen);
- 
-@@ -56,32 +33,15 @@ int mod_verify_sig(const void *mod, struct load_info *info)
- 		return -EBADMSG;
- 
- 	memcpy(&ms, mod + (modlen - sizeof(ms)), sizeof(ms));
--	modlen -= sizeof(ms);
+-static inline int kprobes_built_in(void)
 +
-+	ret = mod_check_sig(&ms, modlen, info->name);
-+	if (ret)
-+		return ret;
- 
- 	sig_len = be32_to_cpu(ms.sig_len);
--	if (sig_len >= modlen)
--		return -EBADMSG;
--	modlen -= sig_len;
-+	modlen -= sig_len + sizeof(ms);
- 	info->len = modlen;
- 
--	if (ms.id_type != PKEY_ID_PKCS7) {
--		pr_err("%s: Module is not signed with expected PKCS#7 message\n",
--		       info->name);
--		return -ENOPKG;
--	}
++/*
++ * Architectures need to override this with their own implementation
++ * if they care to call kprobe_page_fault(). This will just ensure
++ * that kprobe_page_fault() returns false when called without having
++ * a proper platform specific definition for kprobe_fault_handler().
++ */
++#ifndef kprobe_fault_handler
++static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+ {
+-	return 1;
++	return 0;
+ }
 -
--	if (ms.algo != 0 ||
--	    ms.hash != 0 ||
--	    ms.signer_len != 0 ||
--	    ms.key_id_len != 0 ||
--	    ms.__pad[0] != 0 ||
--	    ms.__pad[1] != 0 ||
--	    ms.__pad[2] != 0) {
--		pr_err("%s: PKCS#7 signature info has unexpected non-zero params\n",
--		       info->name);
--		return -EBADMSG;
--	}
--
- 	return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
- 				      VERIFY_USE_SECONDARY_KEYRING,
- 				      VERIFYING_MODULE_SIGNATURE,
-diff --git a/scripts/Makefile b/scripts/Makefile
-index 9d442ee050bd..52098b080ab7 100644
---- a/scripts/Makefile
-+++ b/scripts/Makefile
-@@ -17,7 +17,7 @@ hostprogs-$(CONFIG_VT)           += conmakehash
- hostprogs-$(BUILD_C_RECORDMCOUNT) += recordmcount
- hostprogs-$(CONFIG_BUILDTIME_EXTABLE_SORT) += sortextable
- hostprogs-$(CONFIG_ASN1)	 += asn1_compiler
--hostprogs-$(CONFIG_MODULE_SIG)	 += sign-file
-+hostprogs-$(CONFIG_MODULE_SIG_FORMAT) += sign-file
- hostprogs-$(CONFIG_SYSTEM_TRUSTED_KEYRING) += extract-cert
- hostprogs-$(CONFIG_SYSTEM_EXTRA_CERTIFICATE) += insert-sys-cert
++#endif
+ #ifdef CONFIG_KRETPROBES
+ extern void arch_prepare_kretprobe(struct kretprobe_instance *ri,
+ 				   struct pt_regs *regs);
+@@ -375,14 +383,6 @@ void free_insn_page(void *page);
  
+ #else /* !CONFIG_KPROBES: */
+ 
+-static inline int kprobes_built_in(void)
+-{
+-	return 0;
+-}
+-static inline int kprobe_fault_handler(struct pt_regs *regs, int trapnr)
+-{
+-	return 0;
+-}
+ static inline struct kprobe *get_kprobe(void *addr)
+ {
+ 	return NULL;
+@@ -458,12 +458,11 @@ static inline bool is_kprobe_optinsn_slot(unsigned long addr)
+ }
+ #endif
+ 
++#ifdef CONFIG_KPROBES
+ /* Returns true if kprobes handled the fault */
+ static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+ 					      unsigned int trap)
+ {
+-	if (!kprobes_built_in())
+-		return false;
+ 	if (user_mode(regs))
+ 		return false;
+ 	/*
+@@ -476,5 +475,12 @@ static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
+ 		return false;
+ 	return kprobe_fault_handler(regs, trap);
+ }
++#else
++static nokprobe_inline bool kprobe_page_fault(struct pt_regs *regs,
++					      unsigned int trap)
++{
++	return false;
++}
++#endif
+ 
+ #endif /* _LINUX_KPROBES_H */
+-- 
+2.20.1
+
