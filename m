@@ -2,74 +2,69 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8424605D5
-	for <lists+linux-s390@lfdr.de>; Fri,  5 Jul 2019 14:20:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B04E605E7
+	for <lists+linux-s390@lfdr.de>; Fri,  5 Jul 2019 14:27:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfGEMUa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 5 Jul 2019 08:20:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38670 "EHLO mail.kernel.org"
+        id S1726765AbfGEM16 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 5 Jul 2019 08:27:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43832 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725730AbfGEMU3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 5 Jul 2019 08:20:29 -0400
+        id S1725730AbfGEM16 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 5 Jul 2019 08:27:58 -0400
 Received: from localhost (deibp9eh1--blueice1n7.emea.ibm.com [195.212.29.161])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 706642147A;
-        Fri,  5 Jul 2019 12:20:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 05E9421850;
+        Fri,  5 Jul 2019 12:27:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562329229;
-        bh=FvcAYMrwn+ocFjV0CkPScRrtGx5+x9Q9eo+5jIIZC54=;
+        s=default; t=1562329677;
+        bh=dW7+yV8waH31bo5/Ho09eL3LeOtx3l2YmJNVaozgVu4=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=i5KD2kyqpd7Thrp5ooeCtvC5Zce8EDphZj3afgOlcx9TCyshFYKG6804h5b+7ZtCB
-         hEkAH5lZ4bm3sAGwQXvBSofHM+DYq6LkDYb6SWK+RvCC5HAfSjGHNgFGzMN5PhhjnV
-         /5BJgfRZduwmC3h6DR517XXGqMoSKGpYS+VewBCQ=
-Date:   Fri, 5 Jul 2019 14:20:24 +0200
+        b=FEUS8cWk+Q6Ul4bM5zwJjUs9QhRMjJIA4f4ZSlDYFAQihmc802L5/PdvVrf0HIKRH
+         yyY7UwOP+7VZheiMqb258FlXlDs0ui7oW4YxuOoNb2kZkoruOLMww1NHymRRWRPu4h
+         A0vTs2Qwn+D37ZAYJ+UgsLW4BQgVGSo1ZGtNxmBo=
+Date:   Fri, 5 Jul 2019 14:27:53 +0200
 From:   Vasily Gorbik <gor@kernel.org>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+To:     Steffen Maier <maier@linux.ibm.com>
+Cc:     linux-doc@vger.kernel.org, linux-s390@vger.kernel.org,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PULL 0/1] vfio-ccw fix for 5.3
-Message-ID: <your-ad-here.call-01562329224-ext-7594@work.hours>
-References: <20190705062132.20755-1-cohuck@redhat.com>
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/3] docs: s390: unify and update s390dbf kdocs at debug.c
+Message-ID: <your-ad-here.call-01562329673-ext-3862@work.hours>
+References: <1562149189-1417-1-git-send-email-maier@linux.ibm.com>
+ <1562149189-1417-3-git-send-email-maier@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190705062132.20755-1-cohuck@redhat.com>
+In-Reply-To: <1562149189-1417-3-git-send-email-maier@linux.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jul 05, 2019 at 08:21:31AM +0200, Cornelia Huck wrote:
-> The following changes since commit 05f31e3bf6b34fe6e4922868d132f6455f81d5bf:
+On Wed, Jul 03, 2019 at 12:19:48PM +0200, Steffen Maier wrote:
+> For non-static-inlines, debug.c already had non-compliant function
+> header docs. So move the pure prototype kdocs of
+> ("s390: include/asm/debug.h add kerneldoc markups")
+> from debug.h to debug.c and merge them with the old function docs.
+> Also, I had the impression that kdoc typically is at the implementation
+> in the compile unit rather than at the prototype in the header file.
 > 
->   s390: ap: kvm: Enable PQAP/AQIC facility for the guest (2019-07-02 16:00:28 +0200)
+> While at it, update the short kdoc description to distinguish the
+> different functions. And a few more consistency cleanups.
 > 
-> are available in the Git repository at:
+> Added a new kdoc for debug_set_critical() since debug.h comments it
+> as part of the API.
 > 
->   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw.git tags/vfio-ccw-20190705
+> Signed-off-by: Steffen Maier <maier@linux.ibm.com>
+> ---
+>  Documentation/s390/s390dbf.rst |   1 +
+>  arch/s390/include/asm/debug.h  | 112 ++++++-----------------------------------
+>  arch/s390/kernel/debug.c       | 105 +++++++++++++++++++++++++++++++-------
+>  3 files changed, 102 insertions(+), 116 deletions(-)
 > 
-> for you to fetch changes up to c382cbc6dbf513d73cf896ad43a3789ad42c2e2f:
-> 
->   vfio-ccw: Fix the conversion of Format-0 CCWs to Format-1 (2019-07-05 07:58:53 +0200)
-> 
-> ----------------------------------------------------------------
-> Fix a bug introduced in the refactoring.
-> 
-> ----------------------------------------------------------------
-> 
-> Eric Farman (1):
->   vfio-ccw: Fix the conversion of Format-0 CCWs to Format-1
-> 
->  drivers/s390/cio/vfio_ccw_cp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> -- 
-> 2.20.1
-> 
-Applied, thanks.
+Applied with "permisions->permissions" and couple of whitespaces removed, thanks.
