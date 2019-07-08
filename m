@@ -2,56 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE4B1629A6
-	for <lists+linux-s390@lfdr.de>; Mon,  8 Jul 2019 21:33:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5239462A25
+	for <lists+linux-s390@lfdr.de>; Mon,  8 Jul 2019 22:10:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404542AbfGHTaG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 8 Jul 2019 15:30:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36728 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726072AbfGHTaG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 8 Jul 2019 15:30:06 -0400
-Subject: Re: [GIT PULL] s390 patches for the 5.3 merge window
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1562614206;
-        bh=gDSgH1UghIBBa4Kc+a5srXCu0zfSvwVcaJ9P/khcXKQ=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=cOf8vY6BW0SmjlPyF5+qVqNsYvZOdw09f3EXvKA/eN5cZAogAIM6P1zdkye5w7hz0
-         UIENfwy9eE4IB20XdlQKshTQjfPJfF07Izl8KBSMMHntuH2m3DcGSymCVpawifOIG2
-         fa8RAyLkPmSfD7Js/eZMV9QfqyG6QUskfofkF+E4=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01562573328-ext-8139@work.hours>
-References: <your-ad-here.call-01562573328-ext-8139@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01562573328-ext-8139@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git s390-5.3-1
-X-PR-Tracked-Commit-Id: 499723d12063aab97dfe6b41c822e9c1c74eff3e
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 1758feddb0f9751debdc865fefde94b45907c948
-Message-Id: <156261420606.31351.17681092519828073675.pr-tracker-bot@kernel.org>
-Date:   Mon, 08 Jul 2019 19:30:06 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+        id S1731890AbfGHUKo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 8 Jul 2019 16:10:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24108 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731861AbfGHUKo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 8 Jul 2019 16:10:44 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x68K91L4039054
+        for <linux-s390@vger.kernel.org>; Mon, 8 Jul 2019 16:10:43 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tmbrssubr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 08 Jul 2019 16:10:43 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
+        Mon, 8 Jul 2019 21:10:43 +0100
+Received: from b03cxnp07029.gho.boulder.ibm.com (9.17.130.16)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 8 Jul 2019 21:10:41 +0100
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x68KAeJa61538766
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 8 Jul 2019 20:10:40 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 251E2BE053;
+        Mon,  8 Jul 2019 20:10:40 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 98893BE04F;
+        Mon,  8 Jul 2019 20:10:39 +0000 (GMT)
+Received: from alifm-ThinkPad-T470p.pok.ibm.com (unknown [9.56.58.103])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Mon,  8 Jul 2019 20:10:39 +0000 (GMT)
+From:   Farhan Ali <alifm@linux.ibm.com>
+To:     cohuck@redhat.com, farman@linux.ibm.com, pasic@linux.ibm.com
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        alifm@linux.ibm.com
+Subject: [RFC v2 0/5] Some vfio-ccw fixes
+Date:   Mon,  8 Jul 2019 16:10:33 -0400
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19070820-0004-0000-0000-000015258937
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011397; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01229353; UDB=6.00647438; IPR=6.01010612;
+ MB=3.00027639; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-08 20:10:42
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19070820-0005-0000-0000-00008C613B1D
+Message-Id: <cover.1562616169.git.alifm@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-08_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=844 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907080250
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Mon, 8 Jul 2019 10:22:54 +0200:
+Hi,
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git s390-5.3-1
+While trying to chase down the problem regarding the stacktraces,
+I have also found some minor problems in the code.
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/1758feddb0f9751debdc865fefde94b45907c948
+Would appreciate any review or feedback regarding them.
 
-Thank you!
+Thanks
+Farhan
+
+ChangeLog
+---------
+v1 -> v2
+   - Update docs for csch/hsch since we can support those
+     instructions now (patch 5)
+   - Fix the memory leak where we fail to free a ccwchain (patch 2)
+   - Add fixes tag where appropriate.
+   - Fix comment instead of the order when setting orb.cmd.c64 (patch 1)
+
+Farhan Ali (5):
+  vfio-ccw: Fix misleading comment when setting orb.cmd.c64
+  vfio-ccw: Fix memory leak and don't call cp_free in cp_init
+  vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
+  vfio-ccw: Don't call cp_free if we are processing a channel program
+  vfio-ccw: Update documentation for csch/hsch
+
+ Documentation/s390/vfio-ccw.rst | 31 ++++++++++++++++++++++++++++---
+ drivers/s390/cio/vfio_ccw_cp.c  | 19 ++++++++++++-------
+ drivers/s390/cio/vfio_ccw_drv.c |  2 +-
+ 3 files changed, 41 insertions(+), 11 deletions(-)
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.7.4
+
