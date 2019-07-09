@@ -2,164 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2EE7C63564
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2019 14:13:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 985976358D
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2019 14:25:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726046AbfGIMM7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Jul 2019 08:12:59 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:36792 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726010AbfGIMM7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jul 2019 08:12:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EPh8wiwYFbrQiRAGa1lms7iYJ89lqNUFUiznPwwaf0w=; b=CBChqLXVtMVigRCYZ0Ra9IigY
-        nC4p3VJdhX6cirj5J6z0CM0/syCi6mBW1iS2TubibvyvrgV20knbKJA8NDmw1wjeTI572jZolH9KP
-        45V+dT9P69fTqXNYPafIsI9oLtkqVw/ribBVGDVomM8xUihwofhFvDD9IvMqulXuW90X5GLfDQEWQ
-        //uSDbzvYBjmWygTKzQXpdLDlHufJFWPY8SJGbeWw99NtnHyGYx1OKdHwyqmobSnszT1PD/ZwHfdr
-        vW2bog+ars4IuLr/BdQBJA2WICNGy6r2AnLoft5nsiLtETYNXAmbfcEiaXR6ReAxoj49jC4AfJpfZ
-        pYILXnH3Q==;
-Received: from 177.43.30.58.dynamic.adsl.gvt.net.br ([177.43.30.58] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1hkozP-00025I-DO; Tue, 09 Jul 2019 12:12:55 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hkozL-0004ni-Ik; Tue, 09 Jul 2019 09:12:51 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Jonathan Corbet <corbet@lwn.net>,
+        id S1726046AbfGIMZQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Jul 2019 08:25:16 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:40871 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726025AbfGIMZQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jul 2019 08:25:16 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v19so3010792wmj.5;
+        Tue, 09 Jul 2019 05:25:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Ea9OBefP7pvSSVqfUjzFtJLO1qfu1J5IpuBC6szvXA8=;
+        b=lIar8W4V571Uxu2sERl4IlWUHpeepEqFxd/bFLkygRHMvazE9Zr+z/Yc3aTF8JC8Ra
+         B55X43nzw41xyOLFNVrJJhwdsInndY3rU7HG9jZeEqP/C+K/I/9lj959goQLVF02n5E7
+         FrXMazJ4C+P6EVwBN0ZAUGFvD6E+lEsbKGzWKIMxlkM5xpTQ7WANdGIxf5dOW9YGbdKf
+         xGGXv6wyAE6YXSNaAs5SSExZCicSfiCIXHir0k1m/CsFY0H4RbVapgdkcpBoK8pvPViI
+         p8aBxqUTJfjtBVyMR88jy3UrFCDqdcUu1tdCo8gXBqTKqoRxgxHlXlAp0GK2d4090G8a
+         TITA==
+X-Gm-Message-State: APjAAAWfy/ruBe+CvDucBWLiNoHuLMrRdYdSwCJ2gdsNHx6F1oBuoz42
+        MemV8yl8cj2+HgG4jLvli4E=
+X-Google-Smtp-Source: APXvYqzDZc0RyEdZ7iWpR3epirfMFXKeXritactUFpnbeioCQkvkLq+btZ7C1vEOYk7kJC7xOrnXqg==
+X-Received: by 2002:a1c:7a02:: with SMTP id v2mr22236575wmc.159.1562675114409;
+        Tue, 09 Jul 2019 05:25:14 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id j26sm21223565wrb.88.2019.07.09.05.25.13
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 09 Jul 2019 05:25:13 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Harald Freudenberger <freude@linux.ibm.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        linux-doc@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH] docs: don't use nested tables
-Date:   Tue,  9 Jul 2019 09:12:50 -0300
-Message-Id: <925686792c61b584f05dd9f13f078cd82d5b6a54.1562674354.git.mchehab+samsung@kernel.org>
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/zcrypt: remove the exporting of ap_query_configuration
+Date:   Tue,  9 Jul 2019 15:25:07 +0300
+Message-Id: <20190709122507.11158-1-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Nested tables aren't supported for pdf output on Sphinx 1.7.9:
+The function ap_query_configuration is declared static and marked
+EXPORT_SYMBOL, which is at best an odd combination. Because the
+function is not used outside of the drivers/s390/crypto/ap_bus.c
+file it is defined in, this commit removes the EXPORT_SYMBOL() marking.
 
-	admin-guide/laptops/sonypi:: nested tables are not yet implemented.
-	admin-guide/laptops/toshiba_haps:: nested tables are not yet implemented.
-	driver-api/nvdimm/btt:: nested tables are not yet implemented.
-	s390/debugging390:: nested tables are not yet implemented.
-
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fixes: f1b0a4343c41 ("s390/zcrypt: Integrate ap_asm.h into include/asm/ap.h.")
+Fixes: 050349b5b71d ("s390/zcrypt: externalize AP config info query")
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- Documentation/admin-guide/laptops/sonypi.rst  | 26 +++++++++----------
- .../admin-guide/laptops/toshiba_haps.rst      |  8 +++---
- Documentation/driver-api/nvdimm/btt.rst       |  2 +-
- Documentation/s390/debugging390.rst           |  2 +-
- 4 files changed, 18 insertions(+), 20 deletions(-)
+ drivers/s390/crypto/ap_bus.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/Documentation/admin-guide/laptops/sonypi.rst b/Documentation/admin-guide/laptops/sonypi.rst
-index 2a1975ed7ee4..c6eaaf48f7c1 100644
---- a/Documentation/admin-guide/laptops/sonypi.rst
-+++ b/Documentation/admin-guide/laptops/sonypi.rst
-@@ -53,7 +53,7 @@ module or sonypi.<param>=<value> on the kernel boot line when sonypi is
- statically linked into the kernel). Those options are:
+diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+index b9fc502c58c2..379e43b79006 100644
+--- a/drivers/s390/crypto/ap_bus.c
++++ b/drivers/s390/crypto/ap_bus.c
+@@ -208,7 +208,6 @@ static inline int ap_query_configuration(struct ap_config_info *info)
+ 		return -EINVAL;
+ 	return ap_qci(info);
+ }
+-EXPORT_SYMBOL(ap_query_configuration);
  
- 	=============== =======================================================
--	minor: 		minor number of the misc device /dev/sonypi,
-+	minor:		minor number of the misc device /dev/sonypi,
- 			default is -1 (automatic allocation, see /proc/misc
- 			or kernel logs)
- 
-@@ -89,24 +89,22 @@ statically linked into the kernel). Those options are:
- 			set to 0xffffffff, meaning that all possible events
- 			will be tried. You can use the following bits to
- 			construct your own event mask (from
--			drivers/char/sonypi.h):
-+			drivers/char/sonypi.h)::
- 
--				========================	======
--				SONYPI_JOGGER_MASK 		0x0001
--				SONYPI_CAPTURE_MASK 		0x0002
--				SONYPI_FNKEY_MASK 		0x0004
--				SONYPI_BLUETOOTH_MASK 		0x0008
--				SONYPI_PKEY_MASK 		0x0010
--				SONYPI_BACK_MASK 		0x0020
--				SONYPI_HELP_MASK 		0x0040
--				SONYPI_LID_MASK 		0x0080
--				SONYPI_ZOOM_MASK 		0x0100
--				SONYPI_THUMBPHRASE_MASK 	0x0200
-+				SONYPI_JOGGER_MASK		0x0001
-+				SONYPI_CAPTURE_MASK		0x0002
-+				SONYPI_FNKEY_MASK		0x0004
-+				SONYPI_BLUETOOTH_MASK		0x0008
-+				SONYPI_PKEY_MASK		0x0010
-+				SONYPI_BACK_MASK		0x0020
-+				SONYPI_HELP_MASK		0x0040
-+				SONYPI_LID_MASK			0x0080
-+				SONYPI_ZOOM_MASK		0x0100
-+				SONYPI_THUMBPHRASE_MASK		0x0200
- 				SONYPI_MEYE_MASK		0x0400
- 				SONYPI_MEMORYSTICK_MASK		0x0800
- 				SONYPI_BATTERY_MASK		0x1000
- 				SONYPI_WIRELESS_MASK		0x2000
--				========================	======
- 
- 	useinput:	if set (which is the default) two input devices are
- 			created, one which interprets the jogdial events as
-diff --git a/Documentation/admin-guide/laptops/toshiba_haps.rst b/Documentation/admin-guide/laptops/toshiba_haps.rst
-index 11dfc428c080..d28b6c3f2849 100644
---- a/Documentation/admin-guide/laptops/toshiba_haps.rst
-+++ b/Documentation/admin-guide/laptops/toshiba_haps.rst
-@@ -75,11 +75,11 @@ The sysfs files under /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/ are:
- protection_level   The protection_level is readable and writeable, and
- 		   provides a way to let userspace query the current protection
- 		   level, as well as set the desired protection level, the
--		   available protection levels are:
-+		   available protection levels are::
- 
--		   ============   =======   ==========   ========
--		   0 - Disabled   1 - Low   2 - Medium   3 - High
--		   ============   =======   ==========   ========
-+		     ============   =======   ==========   ========
-+		     0 - Disabled   1 - Low   2 - Medium   3 - High
-+		     ============   =======   ==========   ========
- 
- reset_protection   The reset_protection entry is writeable only, being "1"
- 		   the only parameter it accepts, it is used to trigger
-diff --git a/Documentation/driver-api/nvdimm/btt.rst b/Documentation/driver-api/nvdimm/btt.rst
-index 2d8269f834bd..107395c042ae 100644
---- a/Documentation/driver-api/nvdimm/btt.rst
-+++ b/Documentation/driver-api/nvdimm/btt.rst
-@@ -83,7 +83,7 @@ flags, and the remaining form the internal block number.
- ======== =============================================================
- Bit      Description
- ======== =============================================================
--31 - 30	 Error and Zero flags - Used in the following way:
-+31 - 30	 Error and Zero flags - Used in the following way::
- 
- 	   == ==  ====================================================
- 	   31 30  Description
-diff --git a/Documentation/s390/debugging390.rst b/Documentation/s390/debugging390.rst
-index d49305fd5e1a..73ad0b06c666 100644
---- a/Documentation/s390/debugging390.rst
-+++ b/Documentation/s390/debugging390.rst
-@@ -170,7 +170,7 @@ currently running at.
- |        +----------------+-------------------------------------------------+
- |        |    32          | Basic Addressing Mode                           |
- |        |                |                                                 |
--|        |                | Used to set addressing mode                     |
-+|        |                | Used to set addressing mode::                   |
- |        |                |                                                 |
- |        |                |    +---------+----------+----------+            |
- |        |                |    | PSW 31  | PSW 32   |          |            |
+ /**
+  * ap_init_configuration(): Allocate and query configuration array.
 -- 
 2.21.0
 
