@@ -2,110 +2,164 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E71B63483
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2019 12:49:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EE7C63564
+	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2019 14:13:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726091AbfGIKtd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Jul 2019 06:49:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60728 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725947AbfGIKtd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 9 Jul 2019 06:49:33 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8AC7C369CC;
-        Tue,  9 Jul 2019 10:49:32 +0000 (UTC)
-Received: from gondolin (unknown [10.40.205.62])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2B8118441C;
-        Tue,  9 Jul 2019 10:49:23 +0000 (UTC)
-Date:   Tue, 9 Jul 2019 12:49:20 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
-        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-Subject: Re: [PATCH v4 3/7] s390: zcrypt: driver callback to indicate
- resource in use
-Message-ID: <20190709124920.3a910dca.cohuck@redhat.com>
-In-Reply-To: <c771961d-f840-fe8a-09b7-a11b39a74d4c@linux.ibm.com>
-References: <1560454780-20359-1-git-send-email-akrowiak@linux.ibm.com>
-        <1560454780-20359-4-git-send-email-akrowiak@linux.ibm.com>
-        <20190618182558.7d7e025a.cohuck@redhat.com>
-        <2366c6b6-fd9e-0c32-0e9d-018cd601a0ad@linux.ibm.com>
-        <20190701212643.0dd7d4ab.cohuck@redhat.com>
-        <c771961d-f840-fe8a-09b7-a11b39a74d4c@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726046AbfGIMM7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Jul 2019 08:12:59 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:36792 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726010AbfGIMM7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jul 2019 08:12:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=EPh8wiwYFbrQiRAGa1lms7iYJ89lqNUFUiznPwwaf0w=; b=CBChqLXVtMVigRCYZ0Ra9IigY
+        nC4p3VJdhX6cirj5J6z0CM0/syCi6mBW1iS2TubibvyvrgV20knbKJA8NDmw1wjeTI572jZolH9KP
+        45V+dT9P69fTqXNYPafIsI9oLtkqVw/ribBVGDVomM8xUihwofhFvDD9IvMqulXuW90X5GLfDQEWQ
+        //uSDbzvYBjmWygTKzQXpdLDlHufJFWPY8SJGbeWw99NtnHyGYx1OKdHwyqmobSnszT1PD/ZwHfdr
+        vW2bog+ars4IuLr/BdQBJA2WICNGy6r2AnLoft5nsiLtETYNXAmbfcEiaXR6ReAxoj49jC4AfJpfZ
+        pYILXnH3Q==;
+Received: from 177.43.30.58.dynamic.adsl.gvt.net.br ([177.43.30.58] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hkozP-00025I-DO; Tue, 09 Jul 2019 12:12:55 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hkozL-0004ni-Ik; Tue, 09 Jul 2019 09:12:51 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        linux-doc@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH] docs: don't use nested tables
+Date:   Tue,  9 Jul 2019 09:12:50 -0300
+Message-Id: <925686792c61b584f05dd9f13f078cd82d5b6a54.1562674354.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 09 Jul 2019 10:49:32 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 8 Jul 2019 10:27:11 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+Nested tables aren't supported for pdf output on Sphinx 1.7.9:
 
-> On 7/1/19 3:26 PM, Cornelia Huck wrote:
-> > On Wed, 19 Jun 2019 09:04:18 -0400
-> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+	admin-guide/laptops/sonypi:: nested tables are not yet implemented.
+	admin-guide/laptops/toshiba_haps:: nested tables are not yet implemented.
+	driver-api/nvdimm/btt:: nested tables are not yet implemented.
+	s390/debugging390:: nested tables are not yet implemented.
 
-> >> Allow me to first address your fear that a bad actor can hog
-> >> resources that can't be removed by root. With this enhancement,
-> >> there is nothing preventing a root user from taking resources
-> >> from a matrix mdev, it simply forces him/her to follow the
-> >> proper procedure. The resources to be removed must first be
-> >> unassigned from the matrix mdev to which they are assigned.
-> >> The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask
-> >> sysfs attributes can then be edited to transfer ownership
-> >> of the resources to zcrypt.  
-> > 
-> > What is the suggested procedure when root wants to unbind a queue
-> > device? Find the mdev using the queue (is that easy enough?), unassign
-> > it, then unbind? Failing to unbind is a bit unexpected; can we point
-> > the admin to the correct mdev from which the queue has to be removed
-> > first?  
-> 
-> The proper procedure is to first unassign the adapter, domain, or both
-> from the mdev to which the APQN is assigned. The difficulty in finding
-> the queue depends upon how many mdevs have been created. I would expect
-> that an admin would keep records of who owns what, but in the case he or
-> she doesn't, it would be a matter of printing out the matrix attribute
-> of each mdev until you find the mdev to which the APQN is assigned.
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/admin-guide/laptops/sonypi.rst  | 26 +++++++++----------
+ .../admin-guide/laptops/toshiba_haps.rst      |  8 +++---
+ Documentation/driver-api/nvdimm/btt.rst       |  2 +-
+ Documentation/s390/debugging390.rst           |  2 +-
+ 4 files changed, 18 insertions(+), 20 deletions(-)
 
-Ok, so the information is basically available, if needed.
+diff --git a/Documentation/admin-guide/laptops/sonypi.rst b/Documentation/admin-guide/laptops/sonypi.rst
+index 2a1975ed7ee4..c6eaaf48f7c1 100644
+--- a/Documentation/admin-guide/laptops/sonypi.rst
++++ b/Documentation/admin-guide/laptops/sonypi.rst
+@@ -53,7 +53,7 @@ module or sonypi.<param>=<value> on the kernel boot line when sonypi is
+ statically linked into the kernel). Those options are:
+ 
+ 	=============== =======================================================
+-	minor: 		minor number of the misc device /dev/sonypi,
++	minor:		minor number of the misc device /dev/sonypi,
+ 			default is -1 (automatic allocation, see /proc/misc
+ 			or kernel logs)
+ 
+@@ -89,24 +89,22 @@ statically linked into the kernel). Those options are:
+ 			set to 0xffffffff, meaning that all possible events
+ 			will be tried. You can use the following bits to
+ 			construct your own event mask (from
+-			drivers/char/sonypi.h):
++			drivers/char/sonypi.h)::
+ 
+-				========================	======
+-				SONYPI_JOGGER_MASK 		0x0001
+-				SONYPI_CAPTURE_MASK 		0x0002
+-				SONYPI_FNKEY_MASK 		0x0004
+-				SONYPI_BLUETOOTH_MASK 		0x0008
+-				SONYPI_PKEY_MASK 		0x0010
+-				SONYPI_BACK_MASK 		0x0020
+-				SONYPI_HELP_MASK 		0x0040
+-				SONYPI_LID_MASK 		0x0080
+-				SONYPI_ZOOM_MASK 		0x0100
+-				SONYPI_THUMBPHRASE_MASK 	0x0200
++				SONYPI_JOGGER_MASK		0x0001
++				SONYPI_CAPTURE_MASK		0x0002
++				SONYPI_FNKEY_MASK		0x0004
++				SONYPI_BLUETOOTH_MASK		0x0008
++				SONYPI_PKEY_MASK		0x0010
++				SONYPI_BACK_MASK		0x0020
++				SONYPI_HELP_MASK		0x0040
++				SONYPI_LID_MASK			0x0080
++				SONYPI_ZOOM_MASK		0x0100
++				SONYPI_THUMBPHRASE_MASK		0x0200
+ 				SONYPI_MEYE_MASK		0x0400
+ 				SONYPI_MEMORYSTICK_MASK		0x0800
+ 				SONYPI_BATTERY_MASK		0x1000
+ 				SONYPI_WIRELESS_MASK		0x2000
+-				========================	======
+ 
+ 	useinput:	if set (which is the default) two input devices are
+ 			created, one which interprets the jogdial events as
+diff --git a/Documentation/admin-guide/laptops/toshiba_haps.rst b/Documentation/admin-guide/laptops/toshiba_haps.rst
+index 11dfc428c080..d28b6c3f2849 100644
+--- a/Documentation/admin-guide/laptops/toshiba_haps.rst
++++ b/Documentation/admin-guide/laptops/toshiba_haps.rst
+@@ -75,11 +75,11 @@ The sysfs files under /sys/devices/LNXSYSTM:00/LNXSYBUS:00/TOS620A:00/ are:
+ protection_level   The protection_level is readable and writeable, and
+ 		   provides a way to let userspace query the current protection
+ 		   level, as well as set the desired protection level, the
+-		   available protection levels are:
++		   available protection levels are::
+ 
+-		   ============   =======   ==========   ========
+-		   0 - Disabled   1 - Low   2 - Medium   3 - High
+-		   ============   =======   ==========   ========
++		     ============   =======   ==========   ========
++		     0 - Disabled   1 - Low   2 - Medium   3 - High
++		     ============   =======   ==========   ========
+ 
+ reset_protection   The reset_protection entry is writeable only, being "1"
+ 		   the only parameter it accepts, it is used to trigger
+diff --git a/Documentation/driver-api/nvdimm/btt.rst b/Documentation/driver-api/nvdimm/btt.rst
+index 2d8269f834bd..107395c042ae 100644
+--- a/Documentation/driver-api/nvdimm/btt.rst
++++ b/Documentation/driver-api/nvdimm/btt.rst
+@@ -83,7 +83,7 @@ flags, and the remaining form the internal block number.
+ ======== =============================================================
+ Bit      Description
+ ======== =============================================================
+-31 - 30	 Error and Zero flags - Used in the following way:
++31 - 30	 Error and Zero flags - Used in the following way::
+ 
+ 	   == ==  ====================================================
+ 	   31 30  Description
+diff --git a/Documentation/s390/debugging390.rst b/Documentation/s390/debugging390.rst
+index d49305fd5e1a..73ad0b06c666 100644
+--- a/Documentation/s390/debugging390.rst
++++ b/Documentation/s390/debugging390.rst
+@@ -170,7 +170,7 @@ currently running at.
+ |        +----------------+-------------------------------------------------+
+ |        |    32          | Basic Addressing Mode                           |
+ |        |                |                                                 |
+-|        |                | Used to set addressing mode                     |
++|        |                | Used to set addressing mode::                   |
+ |        |                |                                                 |
+ |        |                |    +---------+----------+----------+            |
+ |        |                |    | PSW 31  | PSW 32   |          |            |
+-- 
+2.21.0
 
-> The only means I know of for informing the admin to which mdev a given
-> APQN is assigned is to log the error when it occurs. 
-
-That might be helpful, if it's easy to do.
-
-> I think Matt is
-> also looking to provide query functions in the management tool on which
-> he is currently working.
-
-That also sounds helpful.
-
-(...)
-
-> >> * It forces the use of the proper procedure to change ownership of AP
-> >>     queues.  
-> > 
-> > This needs to be properly documented, and the admin needs to have a
-> > chance to find out why unbinding didn't work and what needs to be done
-> > (see my comments above).  
-> 
-> I will create a section in the vfio-ap.txt document that comes with this
-> patch set describing the proper procedure for unbinding queues. Of
-> course, we'll make sure the official IBM doc also more thoroughly
-> describes this.
-
-+1 for good documentation.
-
-With that, I don't really object to this change.
