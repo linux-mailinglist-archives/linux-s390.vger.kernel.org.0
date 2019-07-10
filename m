@@ -2,399 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5479E6457C
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jul 2019 12:59:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BF536645D0
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jul 2019 13:35:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727030AbfGJK73 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 10 Jul 2019 06:59:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43576 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726043AbfGJK73 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 10 Jul 2019 06:59:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AB7B9AC2C;
-        Wed, 10 Jul 2019 10:59:27 +0000 (UTC)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jpoimboe@redhat.com, jikos@kernel.org, pmladek@suse.com,
-        joe.lawrence@redhat.com, nstange@suse.de,
-        live-patching@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
-Subject: [PATCH] s390/livepatch: Implement reliable stack tracing for the consistency model
-Date:   Wed, 10 Jul 2019 12:59:18 +0200
-Message-Id: <20190710105918.22487-1-mbenes@suse.cz>
-X-Mailer: git-send-email 2.22.0
+        id S1726338AbfGJLfD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 10 Jul 2019 07:35:03 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37962 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726708AbfGJLfD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 10 Jul 2019 07:35:03 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6ABVxlv015148
+        for <linux-s390@vger.kernel.org>; Wed, 10 Jul 2019 07:35:02 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tneeehtbb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 10 Jul 2019 07:35:02 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
+        Wed, 10 Jul 2019 12:34:59 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 10 Jul 2019 12:34:57 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6ABYt8W49479812
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 10 Jul 2019 11:34:55 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C7BDFA4053;
+        Wed, 10 Jul 2019 11:34:55 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8614BA4040;
+        Wed, 10 Jul 2019 11:34:55 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.168])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 10 Jul 2019 11:34:55 +0000 (GMT)
+Date:   Wed, 10 Jul 2019 13:34:54 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        netdev <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: [PATCH] MAINTAINERS: update BPF JIT S390 maintainers
+References: <patch.git-d365382dfc69.your-ad-here.call-01562755343-ext-3127@work.hours>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <patch.git-d365382dfc69.your-ad-here.call-01562755343-ext-3127@work.hours>
+X-TM-AS-GCONF: 00
+x-cbid: 19071011-0012-0000-0000-00000330F481
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071011-0013-0000-0000-0000216A5D48
+Message-Id: <your-ad-here.call-01562758494-ext-2794@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-10_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907100139
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The livepatch consistency model requires reliable stack tracing
-architecture support in order to work properly. In order to achieve
-this, two main issues have to be solved. First, reliable and consistent
-call chain backtracing has to be ensured. Second, the unwinder needs to
-be able to detect stack corruptions and return errors.
+On Wed, Jul 10, 2019 at 12:43:45PM +0200, Vasily Gorbik wrote:
+> Ilya Leoshkevich is joining as s390 bpf maintainer. With his background
+> as gcc developer he would be valuable for the team and community as a
+> whole. Ilya, have fun!
+> 
+> Since there is now enough eyes on s390 bpf, relieve Christian Borntraeger,
+> so that he could focus on his maintainer tasks for other components.
+> 
+> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> ---
+>  MAINTAINERS | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 558acf24ea1e..98e7411dfe56 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -3066,9 +3066,9 @@ S:	Maintained
+>  F:	arch/riscv/net/
+>  
+>  BPF JIT for S390
+> +M:	Ilya Leoshkevich <iii@linux.ibm.com>
+>  M:	Heiko Carstens <heiko.carstens@de.ibm.com>
+>  M:	Vasily Gorbik <gor@linux.ibm.com>
+> -M:	Christian Borntraeger <borntraeger@de.ibm.com>
+>  L:	netdev@vger.kernel.org
+>  L:	bpf@vger.kernel.org
+>  S:	Maintained
+> -- 
+> 2.21.0
 
-The "zSeries ELF Application Binary Interface Supplement" says:
+Dave, Alexei, Daniel,
+would you take it via one of your trees? Or should I take it via s390?
 
-  "The stack pointer points to the first word of the lowest allocated
-  stack frame. If the "back chain" is implemented this word will point to
-  the previously allocated stack frame (towards higher addresses), except
-  for the first stack frame, which shall have a back chain of zero (NULL).
-  The stack shall grow downwards, in other words towards lower addresses."
-
-"back chain" is optional. GCC option -mbackchain enables it. Quoting
-Martin Schwidefsky [1]:
-
-  "The compiler is called with the -mbackchain option, all normal C
-  function will store the backchain in the function prologue. All
-  functions written in assembler code should do the same, if you find one
-  that does not we should fix that. The end result is that a task that
-  *voluntarily* called schedule() should have a proper backchain at all
-  times.
-
-  Dependent on the use case this may or may not be enough. Asynchronous
-  interrupts may stop the CPU at the beginning of a function, if kernel
-  preemption is enabled we can end up with a broken backchain.  The
-  production kernels for IBM Z are all compiled *without* kernel
-  preemption. So yes, we might get away without the objtool support.
-
-  On a side-note, we do have a line item to implement the ORC unwinder for
-  the kernel, that includes the objtool support. Once we have that we can
-  drop the -mbackchain option for the kernel build. That gives us a nice
-  little performance benefit. I hope that the change from backchain to the
-  ORC unwinder will not be too hard to implement in the livepatch tools."
-
-Thus, the call chain backtracing should be currently ensured and objtool
-should not be necessary for livepatch purposes.
-
-Regarding the second issue, stack corruptions and non-reliable states
-have to be recognized by the unwinder. Mainly it means to detect
-preemption or page faults, the end of the task stack must be reached,
-return addresses must be valid text addresses and hacks like function
-graph tracing and kretprobes must be properly detected.
-
-Unwinding a running task's stack is not a problem, because there is a
-livepatch requirement that every checked task is blocked, except for the
-current task. Due to that, the implementation can be much simpler
-compared to the existing non-reliable infrastructure. We can consider a
-task's kernel/thread stack only and skip the other stacks.
-
-Idle tasks are a bit special. Their final back chains point to no_dat
-stacks. See for reference CALL_ON_STACK() in smp_start_secondary()
-callback used in __cpu_up(). The unwinding is stopped there and it is
-not considered to be a stack corruption.
-
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
----
-- based on Linus' master
-- passes livepatch kselftests
-- passes tests from https://github.com/lpechacek/qa_test_klp, which
-  stress the consistency model and the unwinder a bit more
-
- arch/s390/Kconfig                  |  1 +
- arch/s390/include/asm/stacktrace.h |  5 ++
- arch/s390/include/asm/unwind.h     | 19 ++++++
- arch/s390/kernel/dumpstack.c       | 28 +++++++++
- arch/s390/kernel/stacktrace.c      | 78 +++++++++++++++++++++++++
- arch/s390/kernel/unwind_bc.c       | 93 ++++++++++++++++++++++++++++++
- 6 files changed, 224 insertions(+)
-
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index fdb4246265a5..ea73e555063d 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -170,6 +170,7 @@ config S390
- 	select HAVE_PERF_EVENTS
- 	select HAVE_RCU_TABLE_FREE
- 	select HAVE_REGS_AND_STACK_ACCESS_API
-+	select HAVE_RELIABLE_STACKTRACE
- 	select HAVE_RSEQ
- 	select HAVE_SYSCALL_TRACEPOINTS
- 	select HAVE_VIRT_CPU_ACCOUNTING
-diff --git a/arch/s390/include/asm/stacktrace.h b/arch/s390/include/asm/stacktrace.h
-index 0ae4bbf7779c..2b5c913c408f 100644
---- a/arch/s390/include/asm/stacktrace.h
-+++ b/arch/s390/include/asm/stacktrace.h
-@@ -23,6 +23,11 @@ const char *stack_type_name(enum stack_type type);
- int get_stack_info(unsigned long sp, struct task_struct *task,
- 		   struct stack_info *info, unsigned long *visit_mask);
- 
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+int get_stack_info_reliable(unsigned long sp, struct task_struct *task,
-+			    struct stack_info *info);
-+#endif
-+
- static inline bool on_stack(struct stack_info *info,
- 			    unsigned long addr, size_t len)
- {
-diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
-index d827b5b9a32c..1cc96c54169c 100644
---- a/arch/s390/include/asm/unwind.h
-+++ b/arch/s390/include/asm/unwind.h
-@@ -45,6 +45,25 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- bool unwind_next_frame(struct unwind_state *state);
- unsigned long unwind_get_return_address(struct unwind_state *state);
- 
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+void __unwind_start_reliable(struct unwind_state *state,
-+			     struct task_struct *task, unsigned long sp);
-+bool unwind_next_frame_reliable(struct unwind_state *state);
-+
-+static inline void unwind_start_reliable(struct unwind_state *state,
-+					 struct task_struct *task)
-+{
-+	unsigned long sp;
-+
-+	if (task == current)
-+		sp = current_stack_pointer();
-+	else
-+		sp = task->thread.ksp;
-+
-+	__unwind_start_reliable(state, task, sp);
-+}
-+#endif
-+
- static inline bool unwind_done(struct unwind_state *state)
- {
- 	return state->stack_info.type == STACK_TYPE_UNKNOWN;
-diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
-index ac06c3949ab3..b21ef2a766ff 100644
---- a/arch/s390/kernel/dumpstack.c
-+++ b/arch/s390/kernel/dumpstack.c
-@@ -127,6 +127,34 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
- 	return -EINVAL;
- }
- 
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+int get_stack_info_reliable(unsigned long sp, struct task_struct *task,
-+			    struct stack_info *info)
-+{
-+	if (!sp)
-+		goto error;
-+
-+	/* Sanity check: ABI requires SP to be aligned 8 bytes. */
-+	if (sp & 0x7)
-+		goto error;
-+
-+	if (!task)
-+		goto error;
-+
-+	/*
-+	 * The unwinding should not start on nodat_stack, async_stack or
-+	 * restart_stack. The task is either current or must be inactive.
-+	 */
-+	if (!in_task_stack(sp, task, info))
-+		goto error;
-+
-+	return 0;
-+error:
-+	info->type = STACK_TYPE_UNKNOWN;
-+	return -EINVAL;
-+}
-+#endif
-+
- void show_stack(struct task_struct *task, unsigned long *stack)
- {
- 	struct unwind_state state;
-diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
-index f6a620f854e1..7d774a325163 100644
---- a/arch/s390/kernel/stacktrace.c
-+++ b/arch/s390/kernel/stacktrace.c
-@@ -13,6 +13,7 @@
- #include <linux/export.h>
- #include <asm/stacktrace.h>
- #include <asm/unwind.h>
-+#include <asm/kprobes.h>
- 
- void save_stack_trace(struct stack_trace *trace)
- {
-@@ -60,3 +61,80 @@ void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
- 	}
- }
- EXPORT_SYMBOL_GPL(save_stack_trace_regs);
-+
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+/*
-+ * This function returns an error if it detects any unreliable features of the
-+ * stack.  Otherwise it guarantees that the stack trace is reliable.
-+ *
-+ * If the task is not 'current', the caller *must* ensure the task is inactive.
-+ */
-+static __always_inline int
-+__save_stack_trace_tsk_reliable(struct task_struct *tsk,
-+				struct stack_trace *trace)
-+{
-+	struct unwind_state state;
-+
-+	for (unwind_start_reliable(&state, tsk);
-+	     !unwind_done(&state) && !unwind_error(&state);
-+	     unwind_next_frame_reliable(&state)) {
-+
-+		if (!__kernel_text_address(state.ip))
-+			return -EINVAL;
-+
-+#ifdef CONFIG_KPROBES
-+		/*
-+		 * Mark stacktraces with kretprobed functions on them
-+		 * as unreliable.
-+		 */
-+		if (state.ip == (unsigned long)kretprobe_trampoline)
-+			return -EINVAL;
-+#endif
-+
-+		if (trace->nr_entries >= trace->max_entries)
-+			return -E2BIG;
-+
-+		if (!trace->skip)
-+			trace->entries[trace->nr_entries++] = state.ip;
-+		else
-+			trace->skip--;
-+	}
-+
-+	/* Check for stack corruption */
-+	if (unwind_error(&state))
-+		return -EINVAL;
-+
-+	/* Store kernel_thread_starter, null for swapper/0 */
-+	if (tsk->flags & (PF_KTHREAD | PF_IDLE)) {
-+		if (trace->nr_entries >= trace->max_entries)
-+			return -E2BIG;
-+
-+		if (!trace->skip)
-+			trace->entries[trace->nr_entries++] =
-+				state.regs->psw.addr;
-+		else
-+			trace->skip--;
-+	}
-+
-+	return 0;
-+}
-+
-+int save_stack_trace_tsk_reliable(struct task_struct *tsk,
-+				  struct stack_trace *trace)
-+{
-+	int ret;
-+
-+	/*
-+	 * If the task doesn't have a stack (e.g., a zombie), the stack is
-+	 * "reliably" empty.
-+	 */
-+	if (!try_get_task_stack(tsk))
-+		return 0;
-+
-+	ret = __save_stack_trace_tsk_reliable(tsk, trace);
-+
-+	put_task_stack(tsk);
-+
-+	return ret;
-+}
-+#endif
-diff --git a/arch/s390/kernel/unwind_bc.c b/arch/s390/kernel/unwind_bc.c
-index 3ce8a0808059..ada3a8538961 100644
---- a/arch/s390/kernel/unwind_bc.c
-+++ b/arch/s390/kernel/unwind_bc.c
-@@ -153,3 +153,96 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
- 	state->reliable = reliable;
- }
- EXPORT_SYMBOL_GPL(__unwind_start);
-+
-+#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-+void __unwind_start_reliable(struct unwind_state *state,
-+			     struct task_struct *task, unsigned long sp)
-+{
-+	struct stack_info *info = &state->stack_info;
-+	struct stack_frame *sf;
-+	unsigned long ip;
-+
-+	memset(state, 0, sizeof(*state));
-+	state->task = task;
-+
-+	/* Get current stack pointer and initialize stack info */
-+	if (get_stack_info_reliable(sp, task, info) ||
-+	    !on_stack(info, sp, sizeof(struct stack_frame))) {
-+		/* Something is wrong with the stack pointer */
-+		info->type = STACK_TYPE_UNKNOWN;
-+		state->error = true;
-+		return;
-+	}
-+
-+	/* Get the instruction pointer from the stack frame */
-+	sf = (struct stack_frame *) sp;
-+	ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-+
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+	/* Decode any ftrace redirection */
-+	if (ip == (unsigned long) return_to_handler)
-+		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-+					   ip, NULL);
-+#endif
-+
-+	/* Update unwind state */
-+	state->sp = sp;
-+	state->ip = ip;
-+}
-+
-+bool unwind_next_frame_reliable(struct unwind_state *state)
-+{
-+	struct stack_info *info = &state->stack_info;
-+	struct stack_frame *sf;
-+	struct pt_regs *regs;
-+	unsigned long sp, ip;
-+
-+	sf = (struct stack_frame *) state->sp;
-+	sp = READ_ONCE_NOCHECK(sf->back_chain);
-+	/*
-+	 * Idle tasks are special. The final back-chain points to nodat_stack.
-+	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
-+	 * __cpu_up(). We just accept it, go to else branch and look for
-+	 * pt_regs.
-+	 */
-+	if (likely(sp && !(is_idle_task(state->task) &&
-+			   outside_of_stack(state, sp)))) {
-+		/* Non-zero back-chain points to the previous frame */
-+		if (unlikely(outside_of_stack(state, sp)))
-+			goto out_err;
-+
-+		sf = (struct stack_frame *) sp;
-+		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-+	} else {
-+		/* No back-chain, look for a pt_regs structure */
-+		sp = state->sp + STACK_FRAME_OVERHEAD;
-+		regs = (struct pt_regs *) sp;
-+		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
-+			goto out_err;
-+		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
-+		     !user_mode(regs))
-+			goto out_err;
-+
-+		state->regs = regs;
-+		goto out_stop;
-+	}
-+
-+#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-+	/* Decode any ftrace redirection */
-+	if (ip == (unsigned long) return_to_handler)
-+		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-+					   ip, (void *) sp);
-+#endif
-+
-+	/* Update unwind state */
-+	state->sp = sp;
-+	state->ip = ip;
-+	return true;
-+
-+out_err:
-+	state->error = true;
-+out_stop:
-+	state->stack_info.type = STACK_TYPE_UNKNOWN;
-+	return false;
-+}
-+#endif
--- 
-2.22.0
+Thanks,
+Vasily
 
