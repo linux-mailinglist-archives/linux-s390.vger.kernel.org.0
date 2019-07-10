@@ -2,153 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE47663D4C
-	for <lists+linux-s390@lfdr.de>; Tue,  9 Jul 2019 23:27:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B570763EA3
+	for <lists+linux-s390@lfdr.de>; Wed, 10 Jul 2019 02:35:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727024AbfGIV1w (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 9 Jul 2019 17:27:52 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36722 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726428AbfGIV1w (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 9 Jul 2019 17:27:52 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x69LQWrX032338;
-        Tue, 9 Jul 2019 17:27:49 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tn0dcn9ak-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jul 2019 17:27:49 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x69LOYJA007592;
-        Tue, 9 Jul 2019 21:27:48 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03dal.us.ibm.com with ESMTP id 2tjk96qsms-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 09 Jul 2019 21:27:48 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x69LRlC848300466
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 9 Jul 2019 21:27:47 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 99DA428064;
-        Tue,  9 Jul 2019 21:27:47 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D3612805E;
-        Tue,  9 Jul 2019 21:27:47 +0000 (GMT)
-Received: from [9.56.58.103] (unknown [9.56.58.103])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Tue,  9 Jul 2019 21:27:47 +0000 (GMT)
-Subject: Re: [RFC v2 4/5] vfio-ccw: Don't call cp_free if we are processing a
- channel program
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Cornelia Huck <cohuck@redhat.com>, farman@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <cover.1562616169.git.alifm@linux.ibm.com>
- <1405df8415d3bff446c22753d0e9b91ff246eb0f.1562616169.git.alifm@linux.ibm.com>
- <20190709121613.6a3554fa.cohuck@redhat.com>
- <45ad7230-3674-2601-af5b-d9beef9312be@linux.ibm.com>
- <20190709162142.789dd605.pasic@linux.ibm.com>
-From:   Farhan Ali <alifm@linux.ibm.com>
-Message-ID: <87f7a37f-cc34-36fb-3a33-309e33bbbdde@linux.ibm.com>
-Date:   Tue, 9 Jul 2019 17:27:47 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
-MIME-Version: 1.0
-In-Reply-To: <20190709162142.789dd605.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        id S1726784AbfGJAfD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 9 Jul 2019 20:35:03 -0400
+Received: from mail-eopbgr680115.outbound.protection.outlook.com ([40.107.68.115]:42119
+        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726444AbfGJAfD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 9 Jul 2019 20:35:03 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=2DXeYGwDAu8XiBRuIFYeU35G8ERKcDs4TKxSlAcuhhQ=;
+ b=XjQCg58DJh5OWvBF27jHXcjJdIs9et5RPAEB96GUpfBPzRiOvqRix5m2vwihDnxYPRuHYwHpSTSgym0Gi69ZOB1lZQf8TekQ7pemn07PYtvKlW87mISqtx/adYE+YrVW0oIo7oqtHdU2emat+85KTeXBzVtefhwY0aGA/TFXvfU=
+Received: from SN6PR01MB4094.prod.exchangelabs.com (52.135.119.23) by
+ SN6PR01MB3790.prod.exchangelabs.com (52.132.123.140) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2052.18; Wed, 10 Jul 2019 00:34:19 +0000
+Received: from SN6PR01MB4094.prod.exchangelabs.com
+ ([fe80::b958:7797:c21b:5725]) by SN6PR01MB4094.prod.exchangelabs.com
+ ([fe80::b958:7797:c21b:5725%5]) with mapi id 15.20.2052.020; Wed, 10 Jul 2019
+ 00:34:19 +0000
+From:   Hoan Tran OS <hoan@os.amperecomputing.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+CC:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Open Source Submission <patches@amperecomputing.com>
+Subject: Re: [PATCH 3/5] x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+Thread-Topic: [PATCH 3/5] x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+Thread-Index: AQHVK6WX71HRsQts10W3HaW79T6UP6as+COAgBYe74A=
+Date:   Wed, 10 Jul 2019 00:34:19 +0000
+Message-ID: <1c5bc3a8-0c6f-dce3-95a2-8aec765408a2@os.amperecomputing.com>
+References: <1561501810-25163-1-git-send-email-Hoan@os.amperecomputing.com>
+ <1561501810-25163-4-git-send-email-Hoan@os.amperecomputing.com>
+ <alpine.DEB.2.21.1906260032250.32342@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1906260032250.32342@nanos.tec.linutronix.de>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-09_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907090258
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: CY4PR06CA0048.namprd06.prod.outlook.com
+ (2603:10b6:903:77::34) To SN6PR01MB4094.prod.exchangelabs.com
+ (2603:10b6:805:a4::23)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=hoan@os.amperecomputing.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [27.68.67.201]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: bb0fe928-c6f4-4bc5-9d58-08d704ce5894
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(7193020);SRVR:SN6PR01MB3790;
+x-ms-traffictypediagnostic: SN6PR01MB3790:
+x-microsoft-antispam-prvs: <SN6PR01MB37900B4D5DBABBA819D47E45F1F00@SN6PR01MB3790.prod.exchangelabs.com>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0094E3478A
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(346002)(366004)(376002)(39840400004)(136003)(396003)(189003)(199004)(54534003)(68736007)(66066001)(486006)(2616005)(186003)(6116002)(76176011)(54906003)(31696002)(11346002)(446003)(6246003)(3846002)(316002)(8676002)(107886003)(6916009)(25786009)(478600001)(14454004)(86362001)(6512007)(52116002)(476003)(81156014)(81166006)(66476007)(7736002)(64756008)(66946007)(66556008)(229853002)(256004)(6486002)(386003)(6506007)(26005)(7416002)(66446008)(5660300002)(305945005)(99286004)(53546011)(71200400001)(31686004)(4326008)(53936002)(71190400001)(102836004)(6436002)(2906002)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR01MB3790;H:SN6PR01MB4094.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: os.amperecomputing.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: S5KyvRHNyHX690M0L8U8FPmcFEGo8JmEPvSX3mb2MAyMU4SIUy55UM7YxwWRYqXNW9DlK1BZeqtX15DF7S83MUVw8KM7/Yh5EwxXNAMZIm2aMteWKVBaiAblNLmqY1P+Hkp1/VBaD1dpfJQBUSIKQ9tNVy++Z/b/Eti+XW4HJiYpXWeynUnxFYbihmOwnJB6jMc+yn2lU3Ym5/qoXasQl2FoQqO7bpv7Cu16BR4XTsBO+m7zpf2IPIQYqM8UpuX3YtsLENYIZzML7TZck88G/vihyLzH7dtDC23Gyinj0Rg0I3m+KhkcOI+/UxigbgpXaMK6QgWdr+d0npL58N7rbE975vRD4m8DUElXDHHO2QwdAxt4oceP9lvtViM78BBUKdTsy/SoeH283AO3R8CevORbimUO56jsuo+6fLlJY6k=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <856DBE6A98D2C64F9203DA2E92E3CCD6@prod.exchangelabs.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb0fe928-c6f4-4bc5-9d58-08d704ce5894
+X-MS-Exchange-CrossTenant-originalarrivaltime: 10 Jul 2019 00:34:19.5061
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Hoan@os.amperecomputing.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR01MB3790
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 07/09/2019 10:21 AM, Halil Pasic wrote:
-> On Tue, 9 Jul 2019 09:46:51 -0400
-> Farhan Ali <alifm@linux.ibm.com> wrote:
-> 
->>
->>
->> On 07/09/2019 06:16 AM, Cornelia Huck wrote:
->>> On Mon,  8 Jul 2019 16:10:37 -0400
->>> Farhan Ali <alifm@linux.ibm.com> wrote:
->>>
->>>> There is a small window where it's possible that we could be working
->>>> on an interrupt (queued in the workqueue) and setting up a channel
->>>> program (i.e allocating memory, pinning pages, translating address).
->>>> This can lead to allocating and freeing the channel program at the
->>>> same time and can cause memory corruption.
->>>>
->>>> Let's not call cp_free if we are currently processing a channel program.
->>>> The only way we know for sure that we don't have a thread setting
->>>> up a channel program is when the state is set to VFIO_CCW_STATE_CP_PENDING.
->>>
->>> Can we pinpoint a commit that introduced this bug, or has it been there
->>> since the beginning?
->>>
->>
->> I think the problem was always there.
->>
-> 
-> I think it became relevant with the async stuff. Because after the async
-> stuff was added we start getting solicited interrupts that are not about
-> channel program is done. At least this is how I remember the discussion.
-> 
->>>>
->>>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
->>>> ---
->>>>    drivers/s390/cio/vfio_ccw_drv.c | 2 +-
->>>>    1 file changed, 1 insertion(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
->>>> index 4e3a903..0357165 100644
->>>> --- a/drivers/s390/cio/vfio_ccw_drv.c
->>>> +++ b/drivers/s390/cio/vfio_ccw_drv.c
->>>> @@ -92,7 +92,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
->>>>    		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
->>>>    	if (scsw_is_solicited(&irb->scsw)) {
->>>>    		cp_update_scsw(&private->cp, &irb->scsw);
->>>> -		if (is_final)
->>>> +		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
-> 
-> Ain't private->state potentially used by multiple threads of execution?
-
-yes
-
-One of the paths I can think of is a machine check from the host which 
-will ultimately call vfio_ccw_sch_event callback which could set state 
-to NOT_OPER or IDLE.
-
-> Do we need to use atomic operations or external synchronization to avoid
-> this being another gamble? Or am I missing something?
-
-I think we probably should think about atomic operations for 
-synchronizing the state (and it could be a separate add on patch?).
-
-But for preventing 2 threads from stomping on the cp the check should be 
-enough, unless I am missing something?
-
-> 
->>>>    			cp_free(&private->cp);
->>>>    	}
->>>>    	mutex_lock(&private->io_mutex);
->>>
->>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>>
->>>
->> Thanks for reviewing.
->>
->> Thanks
->> Farhan
-> 
-> 
+SGkgVGhvbWFzLA0KDQpUaGFua3MgZm9yIHlvdSBjb21tZW50cw0KDQpPbiA2LzI1LzE5IDM6NDUg
+UE0sIFRob21hcyBHbGVpeG5lciB3cm90ZToNCj4gSG9hbiwNCj4gDQo+IE9uIFR1ZSwgMjUgSnVu
+IDIwMTksIEhvYW4gVHJhbiBPUyB3cm90ZToNCj4gDQo+IFBsZWFzZSB1c2UgJ3g4Ni9LY29uZmln
+OiAnIGFzIHByZWZpeC4NCj4gDQo+PiBUaGlzIHBhdGNoIHJlbW92ZXMgQ09ORklHX05PREVTX1NQ
+QU5fT1RIRVJfTk9ERVMgYXMgaXQncw0KPj4gZW5hYmxlZCBieSBkZWZhdWx0IHdpdGggTlVNQS4N
+Cj4gDQo+IFBsZWFzZSBkbyBub3QgdXNlICdUaGlzIHBhdGNoJyBpbiBjaGFuZ2Vsb2dzLiBJdCdz
+IHBvaW50bGVzcyBiZWNhdXNlIHdlDQo+IGFscmVhZHkga25vdyB0aGF0IHRoaXMgaXMgYSBwYXRj
+aC4NCj4gDQo+IFNlZSBhbHNvIERvY3VtZW50YXRpb24vcHJvY2Vzcy9zdWJtaXR0aW5nLXBhdGNo
+ZXMucnN0IGFuZCBzZWFyY2ggZm9yICdUaGlzDQo+IHBhdGNoJw0KPiANCj4gU2ltcGx5IHNheToN
+Cj4gDQo+ICAgIFJlbW92ZSBDT05GSUdfTk9ERVNfU1BBTl9PVEhFUl9OT0RFUyBhcyBpdCdzIGVu
+YWJsZWQgYnkgZGVmYXVsdCB3aXRoDQo+ICAgIE5VTUEuDQo+IA0KDQpHb3QgaXQsIHdpbGwgZml4
+DQoNCj4gQnV0IC4uLi4uDQo+IA0KPj4gQEAgLTE1NjcsMTUgKzE1NjcsNiBAQCBjb25maWcgWDg2
+XzY0X0FDUElfTlVNQQ0KPj4gICAJLS0taGVscC0tLQ0KPj4gICAJICBFbmFibGUgQUNQSSBTUkFU
+IGJhc2VkIG5vZGUgdG9wb2xvZ3kgZGV0ZWN0aW9uLg0KPj4gICANCj4+IC0jIFNvbWUgTlVNQSBu
+b2RlcyBoYXZlIG1lbW9yeSByYW5nZXMgdGhhdCBzcGFuDQo+PiAtIyBvdGhlciBub2Rlcy4gIEV2
+ZW4gdGhvdWdoIGEgcGZuIGlzIHZhbGlkIGFuZA0KPj4gLSMgYmV0d2VlbiBhIG5vZGUncyBzdGFy
+dCBhbmQgZW5kIHBmbnMsIGl0IG1heSBub3QNCj4+IC0jIHJlc2lkZSBvbiB0aGF0IG5vZGUuICBT
+ZWUgbWVtbWFwX2luaXRfem9uZSgpDQo+PiAtIyBmb3IgZGV0YWlscy4NCj4+IC1jb25maWcgTk9E
+RVNfU1BBTl9PVEhFUl9OT0RFUw0KPj4gLQlkZWZfYm9vbCB5DQo+PiAtCWRlcGVuZHMgb24gWDg2
+XzY0X0FDUElfTlVNQQ0KPiANCj4gdGhlIGNoYW5nZWxvZyBkb2VzIG5vdCBtZW50aW9uIHRoYXQg
+dGhpcyBsaWZ0cyB0aGUgZGVwZW5kZW5jeSBvbg0KPiBYODZfNjRfQUNQSV9OVU1BIGFuZCB0aGVy
+ZWZvcmUgZW5hYmxlcyB0aGF0IGZ1bmN0aW9uYWxpdHkgZm9yIGFueXRoaW5nDQo+IHdoaWNoIGhh
+cyBOVU1BIGVuYWJsZWQgaW5jbHVkaW5nIDMyYml0Lg0KPiANCg0KSSB0aGluayB0aGlzIGNvbmZp
+ZyBpcyB1c2VkIGZvciBhIE5VTUEgbGF5b3V0IHdoaWNoIE5VTUEgbm9kZXMgYWRkcmVzc2VzIA0K
+YXJlIHNwYW5uZWQgdG8gb3RoZXIgbm9kZXMuIEkgdGhpbmsgMzJiaXQgTlVNQSBhbHNvIGhhdmUg
+dGhlIHNhbWUgaXNzdWUgDQp3aXRoIHRoYXQgbGF5b3V0LiBQbGVhc2UgY29ycmVjdCBtZSBpZiBJ
+J20gd3JvbmcuDQoNCj4gVGhlIGNvcmUgbW0gY2hhbmdlIGdpdmVzIG5vIGhlbHBmdWwgaW5mb3Jt
+YXRpb24gZWl0aGVyLiBZb3UganVzdCBjb3BpZWQgdGhlDQo+IGFib3ZlIGNvbW1lbnQgdGV4dCBm
+cm9tIHNvbWUgcmFuZG9tIEtjb25maWcuDQoNClllcywgYXMgaXQncyBhIGNvcnJlY3QgY29tbWVu
+dCBhbmQgaXMgdXNlZCBhdCBtdWx0aXBsZSBwbGFjZXMuDQoNClRoYW5rcw0KSG9hbg0KDQo+IA0K
+PiBUaGlzIG5lZWRzIGEgYml0IG1vcmUgZGF0YSBpbiB0aGUgY2hhbmdlbG9ncyBhbmQgdGhlIGNv
+dmVyIGxldHRlcjoNCj4gDQo+ICAgICAgIC0gV2h5IGlzIGl0IHVzZWZ1bCB0byBlbmFibGUgaXQg
+dW5jb25kaXRpb25hbGx5DQo+IA0KPiAgICAgICAtIFdoeSBpcyBpdCBzYWZlIHRvIGRvIHNvLCBl
+dmVuIGlmIHRoZSBhcmNoaXRlY3R1cmUgaGFkIGNvbnN0cmFpbnRzIG9uDQo+ICAgICAgICAgaXQN
+Cj4gDQo+ICAgICAgIC0gV2hhdCdzIHRoZSBwb3RlbnRpYWwgaW1wYWN0DQo+IA0KPiBUaGFua3Ms
+DQo+IA0KPiAJdGdseA0KPiANCg==
