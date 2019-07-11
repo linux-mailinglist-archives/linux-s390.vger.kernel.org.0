@@ -2,71 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4781565439
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jul 2019 11:57:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A973656DE
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jul 2019 14:28:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728357AbfGKJ5t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 11 Jul 2019 05:57:49 -0400
-Received: from foss.arm.com ([217.140.110.172]:44082 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728295AbfGKJ5t (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 11 Jul 2019 05:57:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7565337;
-        Thu, 11 Jul 2019 02:57:47 -0700 (PDT)
-Received: from [10.162.42.96] (p8cg001049571a15.blr.arm.com [10.162.42.96])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64DD13F71F;
-        Thu, 11 Jul 2019 02:57:36 -0700 (PDT)
-Subject: Re: [PATCH] mm/kprobes: Add generic kprobe_fault_handler() fallback
- definition
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Vineet Gupta <vgupta@synopsys.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
-        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Enrico Weigelt <info@metux.net>,
-        Richard Fontana <rfontana@redhat.com>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
-        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org
-References: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <542893ae-ed64-55b2-11ee-1f19710a25e4@arm.com>
-Date:   Thu, 11 Jul 2019 15:28:07 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1728342AbfGKM2s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 11 Jul 2019 08:28:48 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4018 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725926AbfGKM2s (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 11 Jul 2019 08:28:48 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BCSgsY072220;
+        Thu, 11 Jul 2019 08:28:45 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tp3r3m8cr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Jul 2019 08:28:44 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6BCPI7O016119;
+        Thu, 11 Jul 2019 12:28:29 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2tjk96v285-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 11 Jul 2019 12:28:29 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BCSTKR32964928
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 11 Jul 2019 12:28:29 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 18776AC059;
+        Thu, 11 Jul 2019 12:28:29 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E1C10AC05E;
+        Thu, 11 Jul 2019 12:28:28 +0000 (GMT)
+Received: from [9.60.89.60] (unknown [9.60.89.60])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 11 Jul 2019 12:28:28 +0000 (GMT)
+Subject: Re: [RFC v2 4/5] vfio-ccw: Don't call cp_free if we are processing a
+ channel program
+To:     Farhan Ali <alifm@linux.ibm.com>, Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <cover.1562616169.git.alifm@linux.ibm.com>
+ <1405df8415d3bff446c22753d0e9b91ff246eb0f.1562616169.git.alifm@linux.ibm.com>
+ <20190709121613.6a3554fa.cohuck@redhat.com>
+ <45ad7230-3674-2601-af5b-d9beef9312be@linux.ibm.com>
+ <20190709162142.789dd605.pasic@linux.ibm.com>
+ <87f7a37f-cc34-36fb-3a33-309e33bbbdde@linux.ibm.com>
+ <20190710154549.5c31cc0c.cohuck@redhat.com>
+ <75e71cc4-7552-b9e5-5649-4de2cdd8f59a@linux.ibm.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <076c223c-d21c-634e-72d2-2de2fe082530@linux.ibm.com>
+Date:   Thu, 11 Jul 2019 08:28:28 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
+In-Reply-To: <75e71cc4-7552-b9e5-5649-4de2cdd8f59a@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907110143
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -74,73 +77,35 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 07/05/2019 11:00 AM, Anshuman Khandual wrote:
-> Architectures like parisc enable CONFIG_KROBES without having a definition
-> for kprobe_fault_handler() which results in a build failure. Arch needs to
-> provide kprobe_fault_handler() as it is platform specific and cannot have
-> a generic working alternative. But in the event when platform lacks such a
-> definition there needs to be a fallback.
+On 7/10/19 12:10 PM, Farhan Ali wrote:
 > 
-> This adds a stub kprobe_fault_handler() definition which not only prevents
-> a build failure but also makes sure that kprobe_page_fault() if called will
-> always return negative in absence of a sane platform specific alternative.
 > 
-> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
-> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
-> just be dropped. Only on x86 it needs to be added back locally as it gets
-> used in a !CONFIG_KPROBES function do_general_protection().
-> 
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Tony Luck <tony.luck@intel.com>
-> Cc: Fenghua Yu <fenghua.yu@intel.com>
-> Cc: Ralf Baechle <ralf@linux-mips.org>
-> Cc: Paul Burton <paul.burton@mips.com>
-> Cc: James Hogan <jhogan@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-> Cc: Rich Felker <dalias@libc.org>
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
-> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: Allison Randal <allison@lohutok.net>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Enrico Weigelt <info@metux.net>
-> Cc: Richard Fontana <rfontana@redhat.com>
-> Cc: Kate Stewart <kstewart@linuxfoundation.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: x86@kernel.org
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-ia64@vger.kernel.org
-> Cc: linux-mips@vger.kernel.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-sh@vger.kernel.org
-> Cc: sparclinux@vger.kernel.org
-> 
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
+> On 07/10/2019 09:45 AM, Cornelia Huck wrote:
+>> On Tue, 9 Jul 2019 17:27:47 -0400
+>> Farhan Ali <alifm@linux.ibm.com> wrote:
+>>
+>>> On 07/09/2019 10:21 AM, Halil Pasic wrote:
+>>>> Do we need to use atomic operations or external synchronization to
+>>>> avoid
+>>>> this being another gamble? Or am I missing something?
+>>>
+>>> I think we probably should think about atomic operations for
+>>> synchronizing the state (and it could be a separate add on patch?).
+>>
+>> +1 to thinking about some atomicity changes later.
 
-Any updates or suggestions on this patch ? Currently there is a build failure on
-parisc architecture due to the lack of a kprobe_fault_handler() definition when
-CONFIG_KPROBES is enabled and this build failure needs to be fixed.
++1
 
-This patch solves the build problem. But otherwise I am also happy to just define
-a stub definition for kprobe_fault_handler() on parisc arch when CONFIG_KPROBES
-is enabled, which will avoid the build failure. Please suggest.
+>>
+>>>
+>>> But for preventing 2 threads from stomping on the cp the check should be
+>>> enough, unless I am missing something?
+>>
+>> I think so. Plus, the patch is small enough that we can merge it right
+>> away, and figure out a more generic change later.
+> 
+> I will send out a v3 soon if no one else has any other suggestions.
+> 
+
+I thumbed through them and think they look good with Conny's
+suggestions.  Nothing else jumps to mind for me.
