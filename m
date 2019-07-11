@@ -2,81 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CB7264A82
-	for <lists+linux-s390@lfdr.de>; Wed, 10 Jul 2019 18:10:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4781565439
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jul 2019 11:57:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728167AbfGJQK3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 10 Jul 2019 12:10:29 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18222 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728086AbfGJQK2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 10 Jul 2019 12:10:28 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6AG7MYM140107
-        for <linux-s390@vger.kernel.org>; Wed, 10 Jul 2019 12:10:27 -0400
-Received: from e35.co.us.ibm.com (e35.co.us.ibm.com [32.97.110.153])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tnjkut3gx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 10 Jul 2019 12:10:26 -0400
-Received: from localhost
-        by e35.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
-        Wed, 10 Jul 2019 17:10:26 +0100
-Received: from b03cxnp08026.gho.boulder.ibm.com (9.17.130.18)
-        by e35.co.us.ibm.com (192.168.1.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 10 Jul 2019 17:10:23 +0100
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6AGALcR50266582
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 10 Jul 2019 16:10:21 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CEB956E04C;
-        Wed, 10 Jul 2019 16:10:21 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 601956E053;
-        Wed, 10 Jul 2019 16:10:21 +0000 (GMT)
-Received: from [9.56.58.103] (unknown [9.56.58.103])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 10 Jul 2019 16:10:21 +0000 (GMT)
-Subject: Re: [RFC v2 4/5] vfio-ccw: Don't call cp_free if we are processing a
- channel program
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>, farman@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <cover.1562616169.git.alifm@linux.ibm.com>
- <1405df8415d3bff446c22753d0e9b91ff246eb0f.1562616169.git.alifm@linux.ibm.com>
- <20190709121613.6a3554fa.cohuck@redhat.com>
- <45ad7230-3674-2601-af5b-d9beef9312be@linux.ibm.com>
- <20190709162142.789dd605.pasic@linux.ibm.com>
- <87f7a37f-cc34-36fb-3a33-309e33bbbdde@linux.ibm.com>
- <20190710154549.5c31cc0c.cohuck@redhat.com>
-From:   Farhan Ali <alifm@linux.ibm.com>
-Date:   Wed, 10 Jul 2019 12:10:20 -0400
+        id S1728357AbfGKJ5t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 11 Jul 2019 05:57:49 -0400
+Received: from foss.arm.com ([217.140.110.172]:44082 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728295AbfGKJ5t (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 11 Jul 2019 05:57:49 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7565337;
+        Thu, 11 Jul 2019 02:57:47 -0700 (PDT)
+Received: from [10.162.42.96] (p8cg001049571a15.blr.arm.com [10.162.42.96])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 64DD13F71F;
+        Thu, 11 Jul 2019 02:57:36 -0700 (PDT)
+Subject: Re: [PATCH] mm/kprobes: Add generic kprobe_fault_handler() fallback
+ definition
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vineet Gupta <vgupta@synopsys.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>, Tony Luck <tony.luck@intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>,
+        Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Enrico Weigelt <info@metux.net>,
+        Richard Fontana <rfontana@redhat.com>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>, x86@kernel.org,
+        linux-snps-arc@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org
+References: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <542893ae-ed64-55b2-11ee-1f19710a25e4@arm.com>
+Date:   Thu, 11 Jul 2019 15:28:07 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190710154549.5c31cc0c.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1562304629-29376-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071016-0012-0000-0000-0000174E6CF8
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011405; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01230223; UDB=6.00647965; IPR=6.01011492;
- MB=3.00027667; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-10 16:10:25
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071016-0013-0000-0000-000058038C3B
-Message-Id: <75e71cc4-7552-b9e5-5649-4de2cdd8f59a@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-10_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907100183
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -84,121 +74,73 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 07/10/2019 09:45 AM, Cornelia Huck wrote:
-> On Tue, 9 Jul 2019 17:27:47 -0400
-> Farhan Ali <alifm@linux.ibm.com> wrote:
+On 07/05/2019 11:00 AM, Anshuman Khandual wrote:
+> Architectures like parisc enable CONFIG_KROBES without having a definition
+> for kprobe_fault_handler() which results in a build failure. Arch needs to
+> provide kprobe_fault_handler() as it is platform specific and cannot have
+> a generic working alternative. But in the event when platform lacks such a
+> definition there needs to be a fallback.
 > 
->> On 07/09/2019 10:21 AM, Halil Pasic wrote:
->>> On Tue, 9 Jul 2019 09:46:51 -0400
->>> Farhan Ali <alifm@linux.ibm.com> wrote:
->>>    
->>>>
->>>>
->>>> On 07/09/2019 06:16 AM, Cornelia Huck wrote:
->>>>> On Mon,  8 Jul 2019 16:10:37 -0400
->>>>> Farhan Ali <alifm@linux.ibm.com> wrote:
->>>>>   
->>>>>> There is a small window where it's possible that we could be working
->>>>>> on an interrupt (queued in the workqueue) and setting up a channel
->>>>>> program (i.e allocating memory, pinning pages, translating address).
->>>>>> This can lead to allocating and freeing the channel program at the
->>>>>> same time and can cause memory corruption.
->>>>>>
->>>>>> Let's not call cp_free if we are currently processing a channel program.
->>>>>> The only way we know for sure that we don't have a thread setting
->>>>>> up a channel program is when the state is set to VFIO_CCW_STATE_CP_PENDING.
->>>>>
->>>>> Can we pinpoint a commit that introduced this bug, or has it been there
->>>>> since the beginning?
->>>>>   
->>>>
->>>> I think the problem was always there.
->>>>   
->>>
->>> I think it became relevant with the async stuff. Because after the async
->>> stuff was added we start getting solicited interrupts that are not about
->>> channel program is done. At least this is how I remember the discussion.
->>>    
->>>>>>
->>>>>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
->>>>>> ---
->>>>>>     drivers/s390/cio/vfio_ccw_drv.c | 2 +-
->>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
->>>>>> index 4e3a903..0357165 100644
->>>>>> --- a/drivers/s390/cio/vfio_ccw_drv.c
->>>>>> +++ b/drivers/s390/cio/vfio_ccw_drv.c
->>>>>> @@ -92,7 +92,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
->>>>>>     		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
->>>>>>     	if (scsw_is_solicited(&irb->scsw)) {
->>>>>>     		cp_update_scsw(&private->cp, &irb->scsw);
->>>>>> -		if (is_final)
->>>>>> +		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
->>>
->>> Ain't private->state potentially used by multiple threads of execution?
->>
->> yes
->>
->> One of the paths I can think of is a machine check from the host which
->> will ultimately call vfio_ccw_sch_event callback which could set state
->> to NOT_OPER or IDLE.
+> This adds a stub kprobe_fault_handler() definition which not only prevents
+> a build failure but also makes sure that kprobe_page_fault() if called will
+> always return negative in absence of a sane platform specific alternative.
 > 
-> Now I went through the machine check rabbit hole because I thought
-> freeing the cp in there might be a good idea, but it's not that easy
-> (who'd have thought...)
+> While here wrap kprobe_page_fault() in CONFIG_KPROBES. This enables stud
+> definitions for generic kporbe_fault_handler() and kprobes_built_in() can
+> just be dropped. Only on x86 it needs to be added back locally as it gets
+> used in a !CONFIG_KPROBES function do_general_protection().
+> 
+> Cc: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Tony Luck <tony.luck@intel.com>
+> Cc: Fenghua Yu <fenghua.yu@intel.com>
+> Cc: Ralf Baechle <ralf@linux-mips.org>
+> Cc: Paul Burton <paul.burton@mips.com>
+> Cc: James Hogan <jhogan@kernel.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Rich Felker <dalias@libc.org>
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: "Naveen N. Rao" <naveen.n.rao@linux.ibm.com>
+> Cc: Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>
+> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+> Cc: Allison Randal <allison@lohutok.net>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Enrico Weigelt <info@metux.net>
+> Cc: Richard Fontana <rfontana@redhat.com>
+> Cc: Kate Stewart <kstewart@linuxfoundation.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: x86@kernel.org
+> Cc: linux-snps-arc@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-ia64@vger.kernel.org
+> Cc: linux-mips@vger.kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-sh@vger.kernel.org
+> Cc: sparclinux@vger.kernel.org
+> 
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
 
-Thanks for taking a deeper look :)
+Any updates or suggestions on this patch ? Currently there is a build failure on
+parisc architecture due to the lack of a kprobe_fault_handler() definition when
+CONFIG_KPROBES is enabled and this build failure needs to be fixed.
 
-> 
-> If I read the POP correctly, an IPI or IPR in the subchannel CRW will
-> indicate that the subchannel has been restored to a state after an I/O
-> reset; in particular, that means that the subchannel does not have any
-> I/O pending. However, that does not seem to be the case e.g. for an IPM
-> (the doc does not seem to be very clear on that, though.) We can't
-> unconditionally do something, as we do not know what event we're being
-> called for (please disregard the positively ancient "we're called for
-> IPI" comment in css_process_crw(), I think I added that one in the
-> Linux 2.4 or 2.5 timeframe...) tl;dr We can't rely on anything...
-
-Yes, the CRW infrastructure in Linux does not convey the exact event 
-back to the subchannel driver.
-
-> 
->>
->>> Do we need to use atomic operations or external synchronization to avoid
->>> this being another gamble? Or am I missing something?
->>
->> I think we probably should think about atomic operations for
->> synchronizing the state (and it could be a separate add on patch?).
-> 
-> +1 to thinking about some atomicity changes later.
-> 
->>
->> But for preventing 2 threads from stomping on the cp the check should be
->> enough, unless I am missing something?
-> 
-> I think so. Plus, the patch is small enough that we can merge it right
-> away, and figure out a more generic change later.
-
-I will send out a v3 soon if no one else has any other suggestions.
-
-> 
->>
->>>    
->>>>>>     			cp_free(&private->cp);
->>>>>>     	}
->>>>>>     	mutex_lock(&private->io_mutex);
->>>>>
->>>>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>>>>
->>>>>   
->>>> Thanks for reviewing.
->>>>
->>>> Thanks
->>>> Farhan
->>>
->>>    
-> 
-> 
-
+This patch solves the build problem. But otherwise I am also happy to just define
+a stub definition for kprobe_fault_handler() on parisc arch when CONFIG_KPROBES
+is enabled, which will avoid the build failure. Please suggest.
