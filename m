@@ -2,109 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B07B6581E
-	for <lists+linux-s390@lfdr.de>; Thu, 11 Jul 2019 15:52:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F79C658DB
+	for <lists+linux-s390@lfdr.de>; Thu, 11 Jul 2019 16:29:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728376AbfGKNw5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 11 Jul 2019 09:52:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:3274 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725971AbfGKNw5 (ORCPT
+        id S1728725AbfGKO3B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 11 Jul 2019 10:29:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48718 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728678AbfGKO3B (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 11 Jul 2019 09:52:57 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BDl79b054640
-        for <linux-s390@vger.kernel.org>; Thu, 11 Jul 2019 09:52:57 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tp5a13h95-1
+        Thu, 11 Jul 2019 10:29:01 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6BEJFqi164245
+        for <linux-s390@vger.kernel.org>; Thu, 11 Jul 2019 10:29:00 -0400
+Received: from e16.ny.us.ibm.com (e16.ny.us.ibm.com [129.33.205.206])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tp49t6w1c-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 11 Jul 2019 09:52:56 -0400
+        for <linux-s390@vger.kernel.org>; Thu, 11 Jul 2019 10:29:00 -0400
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Thu, 11 Jul 2019 14:52:54 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e16.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <alifm@linux.ibm.com>;
+        Thu, 11 Jul 2019 15:28:59 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e16.ny.us.ibm.com (146.89.104.203) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 11 Jul 2019 14:52:51 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BDqoBj27525506
+        Thu, 11 Jul 2019 15:28:56 +0100
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6BEStD540501664
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 11 Jul 2019 13:52:50 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 387404C052;
-        Thu, 11 Jul 2019 13:52:50 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F09524C046;
-        Thu, 11 Jul 2019 13:52:49 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.168])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu, 11 Jul 2019 13:52:49 +0000 (GMT)
-Date:   Thu, 11 Jul 2019 15:52:48 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Harald Freudenberger <freude@linux.ibm.com>
-Cc:     Denis Efremov <efremov@linux.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/zcrypt: remove the exporting of
- ap_query_configuration
-References: <20190709122507.11158-1-efremov@linux.com>
- <a71450e5-892c-3841-22d6-9f5c7b2d4ca4@linux.ibm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <a71450e5-892c-3841-22d6-9f5c7b2d4ca4@linux.ibm.com>
+        Thu, 11 Jul 2019 14:28:56 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E33CCAC060;
+        Thu, 11 Jul 2019 14:28:55 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 89B37AC05F;
+        Thu, 11 Jul 2019 14:28:55 +0000 (GMT)
+Received: from alifm-ThinkPad-T470p.ibm.com (unknown [9.85.180.152])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Thu, 11 Jul 2019 14:28:55 +0000 (GMT)
+From:   Farhan Ali <alifm@linux.ibm.com>
+To:     cohuck@redhat.com, farman@linux.ibm.com, pasic@linux.ibm.com
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        alifm@linux.ibm.com
+Subject: [PATCH v3 0/5] Some vfio-ccw fixes
+Date:   Thu, 11 Jul 2019 10:28:50 -0400
+X-Mailer: git-send-email 2.7.4
 X-TM-AS-GCONF: 00
-x-cbid: 19071113-0028-0000-0000-000003837603
+x-cbid: 19071114-0072-0000-0000-000004479795
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011408; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000286; SDB=6.01230659; UDB=6.00648232; IPR=6.01011935;
+ MB=3.00027679; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-11 14:28:57
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071113-0029-0000-0000-000024438A74
-Message-Id: <your-ad-here.call-01562853168-ext-7276@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_02:,,
+x-cbparentid: 19071114-0073-0000-0000-00004CB7DC19
+Message-Id: <cover.1562854091.git.alifm@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-11_03:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907110156
+ mlxlogscore=915 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907110161
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 08:44:53AM +0200, Harald Freudenberger wrote:
-> On 09.07.19 14:25, Denis Efremov wrote:
-> > The function ap_query_configuration is declared static and marked
-> > EXPORT_SYMBOL, which is at best an odd combination. Because the
-> > function is not used outside of the drivers/s390/crypto/ap_bus.c
-> > file it is defined in, this commit removes the EXPORT_SYMBOL() marking.
-> >
-> > Fixes: f1b0a4343c41 ("s390/zcrypt: Integrate ap_asm.h into include/asm/ap.h.")
-> > Fixes: 050349b5b71d ("s390/zcrypt: externalize AP config info query")
-> > Signed-off-by: Denis Efremov <efremov@linux.com>
-> > ---
-> >  drivers/s390/crypto/ap_bus.c | 1 -
-> >  1 file changed, 1 deletion(-)
-> >
-> > diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-> > index b9fc502c58c2..379e43b79006 100644
-> > --- a/drivers/s390/crypto/ap_bus.c
-> > +++ b/drivers/s390/crypto/ap_bus.c
-> > @@ -208,7 +208,6 @@ static inline int ap_query_configuration(struct ap_config_info *info)
-> >  		return -EINVAL;
-> >  	return ap_qci(info);
-> >  }
-> > -EXPORT_SYMBOL(ap_query_configuration);
-> >  
-> >  /**
-> >   * ap_init_configuration(): Allocate and query configuration array.
-> This function was exported a while ago for KVM code. However, never used.
-> So removing the export is the right thing. Thanks Denis
-> 
-> Heiko/Vasily will you pick this patch please?
-> 
-> Reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
-> 
+Hi,
 
-Applied, thanks.
+While trying to chase down the problem regarding the stacktraces,
+I have also found some minor problems in the code.
+
+Would appreciate any review or feedback regarding them.
+
+Thanks
+Farhan
+
+ChangeLog
+---------
+v2 -> v3
+   - Minor changes as suggested by Conny
+   - Add Conny's reviewed-by tags
+   - Add fixes tag for patch 4 and patch 5
+
+v1 -> v2
+   - Update docs for csch/hsch since we can support those
+     instructions now (patch 5)
+   - Fix the memory leak where we fail to free a ccwchain (patch 2)
+   - Add fixes tag where appropriate.
+   - Fix comment instead of the order when setting orb.cmd.c64 (patch 1)
+
+
+Farhan Ali (5):
+  vfio-ccw: Fix misleading comment when setting orb.cmd.c64
+  vfio-ccw: Fix memory leak and don't call cp_free in cp_init
+  vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
+  vfio-ccw: Don't call cp_free if we are processing a channel program
+  vfio-ccw: Update documentation for csch/hsch
+
+ Documentation/s390/vfio-ccw.rst | 31 ++++++++++++++++++++++++++++---
+ drivers/s390/cio/vfio_ccw_cp.c  | 28 +++++++++++++++++-----------
+ drivers/s390/cio/vfio_ccw_drv.c |  2 +-
+ 3 files changed, 46 insertions(+), 15 deletions(-)
+
+-- 
+2.7.4
 
