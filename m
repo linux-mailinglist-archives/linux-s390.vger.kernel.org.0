@@ -2,67 +2,55 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C8D967309
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 18:10:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 245C267416
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 19:21:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfGLQKE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 12:10:04 -0400
-Received: from Galois.linutronix.de ([193.142.43.55]:44394 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfGLQKE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 12:10:04 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hly7R-0004TK-VG; Fri, 12 Jul 2019 18:09:58 +0200
-Date:   Fri, 12 Jul 2019 18:09:57 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH 2/3] DMA mapping: Move SME handling to x86-specific
- files
-In-Reply-To: <20190712053631.9814-3-bauerman@linux.ibm.com>
-Message-ID: <alpine.DEB.2.21.1907121806160.1788@nanos.tec.linutronix.de>
-References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-3-bauerman@linux.ibm.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        id S1727267AbfGLRVM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 13:21:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57916 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726976AbfGLRVM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 12 Jul 2019 13:21:12 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 519E2AF51;
+        Fri, 12 Jul 2019 17:21:11 +0000 (UTC)
+From:   Petr Tesarik <ptesarik@suse.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     Petr Tesarik <ptesarik@suse.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] Add uncompressed Linux banner to s390 bzImage
+Date:   Fri, 12 Jul 2019 19:20:59 +0200
+Message-Id: <cover.1562950641.git.ptesarik@suse.com>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 12 Jul 2019, Thiago Jung Bauermann wrote:
-> diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
-> index b310a9c18113..f2e399fb626b 100644
-> --- a/include/linux/mem_encrypt.h
-> +++ b/include/linux/mem_encrypt.h
-> @@ -21,23 +21,11 @@
->  
->  #else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
->  
-> -#define sme_me_mask	0ULL
-> -
-> -static inline bool sme_active(void) { return false; }
->  static inline bool sev_active(void) { return false; }
+These patches make it easy to determine the kernel version from a
+compressed binary by scanning for the Linux banner string in the
+uncompressed portion of bzImage.
 
-You want to move out sev_active as well, the only relevant thing is
-mem_encrypt_active(). Everything SME/SEV is an architecture detail.
+Petr Tesarik (2):
+  init: Separate banner from init_uts_ns
+  s390: add Linux banner to the compressed image
 
-> +static inline bool mem_encrypt_active(void) { return false; }
+ arch/s390/boot/compressed/Makefile |  1 +
+ init/Makefile                      |  2 +-
+ init/banner.c                      | 21 +++++++++++++++++++++
+ init/version.c                     | 10 ----------
+ 4 files changed, 23 insertions(+), 11 deletions(-)
+ create mode 100644 init/banner.c
 
-Thanks,
+-- 
+2.16.4
 
-	tglx
