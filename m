@@ -2,119 +2,104 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52F52671AF
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 16:52:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A74BF671CF
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 17:00:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726664AbfGLOwI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 10:52:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25632 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726976AbfGLOwI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 12 Jul 2019 10:52:08 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CEpExb127763
-        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2019 10:52:06 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tpsksqs2a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2019 10:52:06 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 12 Jul 2019 15:52:03 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Jul 2019 15:51:57 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CEptPa46399566
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 14:51:55 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72848A4062;
-        Fri, 12 Jul 2019 14:51:55 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F3367A405C;
-        Fri, 12 Jul 2019 14:51:54 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.222])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jul 2019 14:51:54 +0000 (GMT)
-Date:   Fri, 12 Jul 2019 16:51:53 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>, x86@kernel.org,
-        iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86
- arch code
-In-Reply-To: <20190712140812.GA29628@lst.de>
-References: <20190712053631.9814-1-bauerman@linux.ibm.com>
-        <20190712053631.9814-4-bauerman@linux.ibm.com>
-        <20190712150912.3097215e.pasic@linux.ibm.com>
-        <20190712140812.GA29628@lst.de>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1726896AbfGLPAM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 11:00:12 -0400
+Received: from mx2.suse.de ([195.135.220.15]:50336 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726466AbfGLPAL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 12 Jul 2019 11:00:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C4457ABE9;
+        Fri, 12 Jul 2019 15:00:09 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 17:00:07 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Open Source Submission <patches@amperecomputing.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>, willy@infradead.org
+Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20190712150007.GU29483@dhcp22.suse.cz>
+References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20190712070247.GM29483@dhcp22.suse.cz>
+ <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
+ <20190712121223.GR29483@dhcp22.suse.cz>
+ <20190712143730.au3662g4ua2tjudu@willie-the-truck>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071214-4275-0000-0000-0000034C810B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071214-4276-0000-0000-0000385C8C00
-Message-Id: <20190712165153.78d49095.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120161
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712143730.au3662g4ua2tjudu@willie-the-truck>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 12 Jul 2019 16:08:12 +0200
-Christoph Hellwig <hch@lst.de> wrote:
-
-> On Fri, Jul 12, 2019 at 03:09:12PM +0200, Halil Pasic wrote:
-> > This is the implementation for the guys that don't
-> > have ARCH_HAS_MEM_ENCRYPT.
-> > 
-> > Means sev_active() may not be used in such code after this
-> > patch. What about 
-> > 
-> > static inline bool force_dma_unencrypted(void)
-> > {
-> >         return sev_active();
-> > }
-> > 
-> > in kernel/dma/direct.c?
+On Fri 12-07-19 15:37:30, Will Deacon wrote:
+> Hi all,
 > 
-> FYI, I have this pending in the dma-mapping tree:
+> On Fri, Jul 12, 2019 at 02:12:23PM +0200, Michal Hocko wrote:
+> > On Fri 12-07-19 10:56:47, Hoan Tran OS wrote:
+> > [...]
+> > > It would be good if we can enable it by-default. Otherwise, let arch 
+> > > enables it by them-self. Do you have any suggestions?
+> > 
+> > I can hardly make any suggestions when it is not really clear _why_ you
+> > want to remove this config option in the first place. Please explain
+> > what motivated you to make this change.
 > 
-> http://git.infradead.org/users/hch/dma-mapping.git/commitdiff/e67a5ed1f86f4370991c601f2fcad9ebf9e1eebb
+> Sorry, I think this confusion might actually be my fault and Hoan has just
+> been implementing my vague suggestion here:
+> 
+> https://lore.kernel.org/linux-arm-kernel/20190625101245.s4vxfosoop52gl4e@willie-the-truck/
+> 
+> If the preference of the mm folks is to leave CONFIG_NODES_SPAN_OTHER_NODES
+> as it is, then we can define it for arm64. I just find it a bit weird that
+> the majority of NUMA-capable architectures have to add a symbol in the arch
+> Kconfig file, for what appears to be a performance optimisation applicable
+> only to ia64, mips and sh.
+> 
+> At the very least we could make the thing selectable.
 
-Thank you very much! I will have another look, but it seems to me,
-without further measures taken, this would break protected virtualization
-support on s390. The effect of the che for s390 is that
-force_dma_unencrypted() will always return false instead calling into
-the platform code like it did before the patch, right?
+Hmm, I thought this was selectable. But I am obviously wrong here.
+Looking more closely, it seems that this is indeed only about
+__early_pfn_to_nid and as such not something that should add a config
+symbol. This should have been called out in the changelog though.
 
-Should I send a  Fixes: e67a5ed1f86f "dma-direct: Force unencrypted DMA
-under SME for certain DMA masks" (Tom Lendacky, 2019-07-10) patch that
-rectifies things for s390 or how do we want handle this?
+Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
+bucket? Do we have any NUMA architecture that doesn't enable it?
 
-Regards,
-Halil
-
+Thanks!
+-- 
+Michal Hocko
+SUSE Labs
