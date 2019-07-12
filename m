@@ -2,37 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 767E26744E
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 19:34:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E71F675D0
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 22:19:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727335AbfGLRea (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 13:34:30 -0400
-Received: from ms.lwn.net ([45.79.88.28]:59320 "EHLO ms.lwn.net"
+        id S1727623AbfGLUTX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 16:19:23 -0400
+Received: from ms.lwn.net ([45.79.88.28]:59978 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726976AbfGLRea (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 12 Jul 2019 13:34:30 -0400
+        id S1727125AbfGLUTX (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 12 Jul 2019 16:19:23 -0400
 Received: from lwn.net (localhost [127.0.0.1])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by ms.lwn.net (Postfix) with ESMTPSA id B29512CC;
-        Fri, 12 Jul 2019 17:34:28 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 11:34:27 -0600
+        by ms.lwn.net (Postfix) with ESMTPSA id 4C42C382;
+        Fri, 12 Jul 2019 20:19:22 +0000 (UTC)
+Date:   Fri, 12 Jul 2019 14:19:21 -0600
 From:   Jonathan Corbet <corbet@lwn.net>
-To:     Alex Shi <alex.shi@linux.alibaba.com>
-Cc:     linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH 01/12] Documentation: move architectures together
-Message-ID: <20190712113427.62fa7ffc@lwn.net>
-In-Reply-To: <20190712022018.27989-1-alex.shi@linux.alibaba.com>
-References: <20190712022018.27989-1-alex.shi@linux.alibaba.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hannes Reinecke <hare@suse.com>, linux-kbuild@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-doc@vger.kernel.org, Omar Sandoval <osandov@fb.com>
+Subject: Re: [PATCH 0/5] PDF output fixes
+Message-ID: <20190712141921.7f8a1d02@lwn.net>
+In-Reply-To: <cover.1562696797.git.mchehab+samsung@kernel.org>
+References: <cover.1562696797.git.mchehab+samsung@kernel.org>
 Organization: LWN.net
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -42,29 +42,36 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 12 Jul 2019 10:20:07 +0800
-Alex Shi <alex.shi@linux.alibaba.com> wrote:
+On Tue,  9 Jul 2019 15:33:18 -0300
+Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 
-> There are many different archs in Documentation/ dir, it's better to
-> move them together in 'Documentation/arch' which follows from kernel source.
+> In order to be able to build all PDF books, besides the two patches I
+> already sent:
+> 
+>     docs: pdf: add all Documentation/*/index.rst to PDF output
+>     docs: automarkup.py: ignore exceptions when seeking for xrefs
+> 
+> A few others are needed:
+> 
+> - patch 1 removes nested tables for a few files I converted, as 
+>   Sphinx LaTeX builder doesn't support it;
+> - Patches 2 to 4 addresses some minor issues on some books,
+>   usually requiring some blank lines, extra whitespaces or some
+>   tag replacement;
+> - Patch 5 is required in order to be able to build the translations
+>   PDF book, as it adds Asian fonts support to XeLaTeX.
 
-So this seems certain to collide badly with Mauro's RST-conversion monster
-patch set.
+So, modulo my one comment on the last patch the series seems OK, though I
+don't like having to work around limitations in PDF generation this way.
+Can't you just make rst2pdf work instead? :)
 
-More to the point, though...if we are going to thrash up things this
-badly, we want to be sure that we're doing it right so we don't end up
-renaming everything again.  Grouping stuff into a new arch/ subdirectory
-adds a bit of order, but it doesn't do much toward trying to organize our
-documentation for its readers, and it doesn't help us to modernize the
-docs and get rid of the old, useless stuff.  A quick check shows that many
-of these files have seen no changes other than typo fixes since the
-beginning of the Git era.
-
-So, in my mind, this needs some thought.  Maybe we want a
-Documentation/arch in the end, but I'm not convinced that we should just
-create it and fill it with a snow shovel.  This might be a good thing to
-discuss at the kernel summit in September.
+I guess it makes sense for these to go with the big band-aid-removal patch
+set.
 
 Thanks,
 
 jon
+
+P.S. it seems that rst2pdf is actually being developed again:
+https://akrabat.com/rst2pdf-back-from-the-dead/ .  I wonder how far
+they'll get with it.
