@@ -2,81 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB09866BA2
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 13:30:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78AA466C19
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 14:08:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfGLLaK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 07:30:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60478 "EHLO mx1.redhat.com"
+        id S1727078AbfGLMIJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 08:08:09 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:27932 "EHLO mx2.mailbox.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726198AbfGLLaJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 12 Jul 2019 07:30:09 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726466AbfGLMII (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 12 Jul 2019 08:08:08 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BF4F030BC594;
-        Fri, 12 Jul 2019 11:30:09 +0000 (UTC)
-Received: from gondolin (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CF86C5D756;
-        Fri, 12 Jul 2019 11:30:08 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 13:30:06 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Farhan Ali <alifm@linux.ibm.com>
-Cc:     farman@linux.ibm.com, pasic@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-Subject: Re: [PATCH v3 5/5] vfio-ccw: Update documentation for csch/hsch
-Message-ID: <20190712133006.23efcd0d.cohuck@redhat.com>
-In-Reply-To: <7d977612c3f3152ffb950d77ae11b4b25c1e20c4.1562854091.git.alifm@linux.ibm.com>
-References: <cover.1562854091.git.alifm@linux.ibm.com>
-        <7d977612c3f3152ffb950d77ae11b4b25c1e20c4.1562854091.git.alifm@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mx2.mailbox.org (Postfix) with ESMTPS id 9E9DDA1FD8;
+        Fri, 12 Jul 2019 14:08:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
+        with ESMTP id vunrqErDeJEg; Fri, 12 Jul 2019 14:07:58 +0200 (CEST)
+Date:   Fri, 12 Jul 2019 22:07:43 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        Christian Brauner <christian@brauner.io>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 04/10] namei: split out nd->dfd handling to
+ dirfd_path_init
+Message-ID: <20190712120743.mka3vl5t4zndc5wj@yavin>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-5-cyphar@cyphar.com>
+ <20190712042050.GH17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Fri, 12 Jul 2019 11:30:09 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="d4v7lkh6hn3fnrr5"
+Content-Disposition: inline
+In-Reply-To: <20190712042050.GH17978@ZenIV.linux.org.uk>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 11 Jul 2019 10:28:55 -0400
-Farhan Ali <alifm@linux.ibm.com> wrote:
 
-> We now support CLEAR SUBCHANNEL and HALT SUBCHANNEL
-> via ccw_cmd_region.
-> 
-> Fixes: d5afd5d135c8 ("vfio-ccw: add handling for async channel instructions")
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> ---
->  Documentation/s390/vfio-ccw.rst | 31 ++++++++++++++++++++++++++++---
->  1 file changed, 28 insertions(+), 3 deletions(-)
+--d4v7lkh6hn3fnrr5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-(...)
+On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Sun, Jul 07, 2019 at 12:57:31AM +1000, Aleksa Sarai wrote:
+> > Previously, path_init's handling of *at(dfd, ...) was only done once,
+> > but with LOOKUP_BENEATH (and LOOKUP_IN_ROOT) we have to parse the
+> > initial nd->path at different times (before or after absolute path
+> > handling) depending on whether we have been asked to scope resolution
+> > within a root.
+>=20
+> >  	if (*s =3D=3D '/') {
+> > -		set_root(nd);
+> > -		if (likely(!nd_jump_root(nd)))
+> > -			return s;
+> > -		return ERR_PTR(-ECHILD);
+>=20
+> > +		if (likely(!nd->root.mnt))
+> > +			set_root(nd);
+>=20
+> How can we get there with non-NULL nd->root.mnt, when LOOKUP_ROOT case
+> has been already handled by that point?
 
-> +vfio-ccw cmd region
-> +-------------------
-> +
-> +The vfio-ccw cmd region is used to accept asynchronous instructions
-> +from userspace.
-> +
+Yup, you're completely right. I will remove the
+  if (!nd->root.mnt)
+in the next version.
 
-Add :: and indent the structure so that we get proper formatting?
 
-(Sorry about not noticing this last time; but I can add it while
-applying if there are no other comments.)
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-> +#define VFIO_CCW_ASYNC_CMD_HSCH (1 << 0)
-> +#define VFIO_CCW_ASYNC_CMD_CSCH (1 << 1)
-> +struct ccw_cmd_region {
-> +       __u32 command;
-> +       __u32 ret_code;
-> +} __packed;
-> +
-> +This region is exposed via region type VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD.
-> +
-> +Currently, CLEAR SUBCHANNEL and HALT SUBCHANNEL use this region.
-> +
+--d4v7lkh6hn3fnrr5
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Otherwise,
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSh4CgAKCRCdlLljIbnQ
+EmXbAP9tX+q7bWxunLL4KxbGY/ld+vFqPXrdHyJAsnYXD1QLXwEAosmgLN7YU35t
+LUn9+NWS+cu0VbO4qtSioBcFwh5cpwA=
+=zvz5
+-----END PGP SIGNATURE-----
+
+--d4v7lkh6hn3fnrr5--
