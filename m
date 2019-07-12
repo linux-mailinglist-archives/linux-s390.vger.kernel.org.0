@@ -2,97 +2,132 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C01B6648E
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 04:46:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0ACBE66578
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 06:15:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728866AbfGLCqU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 11 Jul 2019 22:46:20 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:48254 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729051AbfGLCqU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 11 Jul 2019 22:46:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=CE9lRDNR3rg1yz6aah5KMfonhpsYj2jNZxnH84MyUXA=; b=Wwvuit121V9ZexPPxKanwzYwi
-        ddflUWN9v4CPX9+H9bPbsvo6jxG2wAC3BBUGG9cauFnrXCTSOlPmcxTfJ4cy1SoI/qV0rZFfQ8wXK
-        twKXl0uRqWh6MZCEQ4HqlEM/PWywXXcbt23O50K/7l8UCi6eUz+0WWlTABE3X/EmQ8vMCNgrdJOUI
-        XmrxItz1Xzoi+k4KF8fMeEEpmheizoVHxyVD+cHZm12cjh4pB42mf75Kc1mH4q1gaP9QIS4uoV1m1
-        wCsORVvxaufFYS8GiSdvH5t76Q0DsCgP2JngRttI2f6/InFGOA/gWbNVKK/mNSfIwMK1nlVEdHuym
-        hVorcePaw==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hllYv-0001rK-Qf; Fri, 12 Jul 2019 02:45:29 +0000
-Date:   Thu, 11 Jul 2019 19:45:29 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Hoan Tran OS <hoan@os.amperecomputing.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        id S1728660AbfGLEPg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 00:15:36 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:60074 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727061AbfGLEPg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 00:15:36 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlmxT-000330-0Q; Fri, 12 Jul 2019 04:14:55 +0000
+Date:   Fri, 12 Jul 2019 05:14:54 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Open Source Submission <patches@amperecomputing.com>
-Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20190712024529.GU32320@bombadil.infradead.org>
-References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 01/10] namei: obey trailing magic-link DAC permissions
+Message-ID: <20190712041454.GG17978@ZenIV.linux.org.uk>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-2-cyphar@cyphar.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190706145737.5299-2-cyphar@cyphar.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jul 11, 2019 at 11:25:44PM +0000, Hoan Tran OS wrote:
-> In NUMA layout which nodes have memory ranges that span across other nodes,
-> the mm driver can detect the memory node id incorrectly.
-> 
-> For example, with layout below
-> Node 0 address: 0000 xxxx 0000 xxxx
-> Node 1 address: xxxx 1111 xxxx 1111
-> 
-> Note:
->  - Memory from low to high
->  - 0/1: Node id
->  - x: Invalid memory of a node
-> 
-> When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> config, mm only checks the memory validity but not the node id.
-> Because of that, Node 1 also detects the memory from node 0 as below
-> when it scans from the start address to the end address of node 1.
-> 
-> Node 0 address: 0000 xxxx xxxx xxxx
-> Node 1 address: xxxx 1111 1111 1111
-> 
-> This layout could occur on any architecture. This patch enables
-> CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA to fix this issue.
+On Sun, Jul 07, 2019 at 12:57:28AM +1000, Aleksa Sarai wrote:
 
-How do you know it could occur on any architecture?  Surely you should
-just enable this for the architecture where you've noticed the problem.
+> @@ -514,7 +516,14 @@ static void set_nameidata(struct nameidata *p, int dfd, struct filename *name)
+>  	p->stack = p->internal;
+>  	p->dfd = dfd;
+>  	p->name = name;
+> -	p->total_link_count = old ? old->total_link_count : 0;
+> +	p->total_link_count = 0;
+> +	p->acc_mode = 0;
+> +	p->opath_mask = FMODE_PATH_READ | FMODE_PATH_WRITE;
+> +	if (old) {
+> +		p->total_link_count = old->total_link_count;
+> +		p->acc_mode = old->acc_mode;
+> +		p->opath_mask = old->opath_mask;
+> +	}
+
+Huh?  Could somebody explain why traversals of NFS4 referrals should inherit
+->acc_mode and ->opath_mask?
+
+>  static __always_inline
+> -const char *get_link(struct nameidata *nd)
+> +const char *get_link(struct nameidata *nd, bool trailing)
+>  {
+>  	struct saved *last = nd->stack + nd->depth - 1;
+>  	struct dentry *dentry = last->link.dentry;
+> @@ -1081,6 +1134,44 @@ const char *get_link(struct nameidata *nd)
+>  		} else {
+>  			res = get(dentry, inode, &last->done);
+>  		}
+> +		/* If we just jumped it was because of a magic-link. */
+> +		if (unlikely(nd->flags & LOOKUP_JUMPED)) {
+
+That's not quite guaranteed (it is possible to bind a symlink on top
+of a regular file, and you will get LOOKUP_JUMPED on the entry into
+trailing_symlink() when looking the result up).  Moreover, why bother
+with LOOKUP_JUMPED here?  See that
+	nd->last_type = LAST_BIND;
+several lines prior?  That's precisely to be able to recognize those
+suckers.
+
+And _that_ would've avoided another piece of ugliness - your LOOKUP_JUMPED
+kludge forces you to handle that cra^Wsclero^Wvaluable security hardening
+in get_link(), instead of trailing_symlink() where you apparently want
+it to be.  Simply because nd_jump_root() done later in get_link() will set
+LOOKUP_JUMPED for absolute symlinks, confusing your test.
+
+Moreover, I'm not sure that trailing_symlink() is the right place for
+that either - I would be rather tempted to fold do_o_path() into
+path_openat(), inline path_lookupat() there (as in
+        s = path_init(nd, flags);
+
+        while (!(error = link_path_walk(s, nd))
+                && ((error = lookup_last(nd)) > 0)) {
+                s = trailing_symlink(nd);
+        }
+        if (!error)
+                error = complete_walk(nd);
+        if (!error && nd->flags & LOOKUP_DIRECTORY)
+                if (!d_can_lookup(nd->path.dentry))
+                        error = -ENOTDIR;
+        if (!error) {
+                audit_inode(nd->name, nd->path.dentry, 0);
+                error = vfs_open(&nd->path, file);
+        }
+        terminate_walk(nd);
+- we don't need LOOKUP_DOWN there) and then we only care about the
+two callers of trailing_symlink() that are in path_openat().  Which
+is where you have your ->acc_mode and ->opath_mask without the need
+to dump them into nameidata.  Or to bring that mess into the
+things like stat(2) et.al. - it simply doesn't belong there.
+
+In any case, this "bool trailing" is completely wrong; whether that
+check belongs in trailing_symlink() or (some of) its callers, putting
+it into get_link() is a mistake, forced by kludgy check for procfs-style
+symlinks.
