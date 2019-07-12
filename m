@@ -2,57 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C56B66EB7
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 14:40:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0395F66F5E
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 14:56:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728572AbfGLMkg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 08:40:36 -0400
-Received: from www62.your-server.de ([213.133.104.62]:45642 "EHLO
-        www62.your-server.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727896AbfGLMkf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 08:40:35 -0400
-Received: from [78.46.172.3] (helo=sslproxy06.your-server.de)
-        by www62.your-server.de with esmtpsa (TLSv1.2:DHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89_1)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hluqf-0003sE-Uz; Fri, 12 Jul 2019 14:40:26 +0200
-Received: from [2a02:1205:5069:fce0:c5f9:cd68:79d4:446d] (helo=linux.home)
-        by sslproxy06.your-server.de with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.89)
-        (envelope-from <daniel@iogearbox.net>)
-        id 1hluqf-000Wv3-Nh; Fri, 12 Jul 2019 14:40:25 +0200
-Subject: Re: [PATCH] MAINTAINERS: update BPF JIT S390 maintainers
-To:     David Miller <davem@davemloft.net>, gor@linux.ibm.com
-Cc:     ast@kernel.org, heiko.carstens@de.ibm.com, borntraeger@de.ibm.com,
-        iii@linux.ibm.com, netdev@vger.kernel.org, bpf@vger.kernel.org,
-        linux-s390@vger.kernel.org
-References: <patch.git-d365382dfc69.your-ad-here.call-01562755343-ext-3127@work.hours>
- <your-ad-here.call-01562758494-ext-2794@work.hours>
- <20190711.113343.906691840255971211.davem@davemloft.net>
-From:   Daniel Borkmann <daniel@iogearbox.net>
-Message-ID: <aff5da65-ea70-43dd-1fb2-b731a343ce74@iogearbox.net>
-Date:   Fri, 12 Jul 2019 14:40:24 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.3.0
+        id S1727429AbfGLM4Q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 08:56:16 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38082 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727096AbfGLM4P (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 08:56:15 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlv5c-0007Pc-Mt; Fri, 12 Jul 2019 12:55:52 +0000
+Date:   Fri, 12 Jul 2019 13:55:52 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190712125552.GL17978@ZenIV.linux.org.uk>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
+ <20190712105745.nruaftgeat6irhzr@yavin>
+ <20190712123924.GK17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20190711.113343.906691840255971211.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Authenticated-Sender: daniel@iogearbox.net
-X-Virus-Scanned: Clear (ClamAV 0.100.3/25508/Fri Jul 12 10:10:04 2019)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712123924.GK17978@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 07/11/2019 08:33 PM, David Miller wrote:
-> From: Vasily Gorbik <gor@linux.ibm.com>
-> Date: Wed, 10 Jul 2019 13:34:54 +0200
+On Fri, Jul 12, 2019 at 01:39:24PM +0100, Al Viro wrote:
+> On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
 > 
->> Dave, Alexei, Daniel,
->> would you take it via one of your trees? Or should I take it via s390?
+> > > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+> > > >  			s = ERR_PTR(error);
+> > > >  		return s;
+> > > >  	}
+> > > > -	error = dirfd_path_init(nd);
+> > > > -	if (unlikely(error))
+> > > > -		return ERR_PTR(error);
+> > > > +	if (likely(!nd->path.mnt)) {
+> > > 
+> > > Is that a weird way of saying "if we hadn't already called dirfd_path_init()"?
+> > 
+> > Yes. I did it to be more consistent with the other "have we got the
+> > root" checks elsewhere. Is there another way you'd prefer I do it?
 > 
-> I think it can go via the bpf tree.
+> "Have we got the root" checks are inevitable evil; here you are making the
+> control flow in a single function hard to follow.
+> 
+> I *think* what you are doing is
+> 	absolute pathname, no LOOKUP_BENEATH:
+> 		set_root
+> 		error = nd_jump_root(nd)
+> 	else
+> 		error = dirfd_path_init(nd)
+> 	return unlikely(error) ? ERR_PTR(error) : s;
+> which should be a lot easier to follow (not to mention shorter), but I might
+> be missing something in all of that.
 
-Yep, just applied to bpf, thanks!
+PS: if that's what's going on, I would be tempted to turn the entire
+path_init() part into this:
+	if (flags & LOOKUP_BENEATH)
+		while (*s == '/')
+			s++;
+in the very beginning (plus the handling of nd_jump_root() prototype
+change, but that belongs with nd_jump_root() change itself, obviously).
+Again, I might be missing something here...
