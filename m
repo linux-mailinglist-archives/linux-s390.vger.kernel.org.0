@@ -2,117 +2,164 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABBC366FF6
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 15:24:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2117366FFE
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 15:26:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726318AbfGLNYA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 09:24:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1540 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727557AbfGLNYA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 12 Jul 2019 09:24:00 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CDDNR6047360
-        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2019 09:23:57 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tps3cd3ke-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2019 09:23:57 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
-        Fri, 12 Jul 2019 14:23:56 +0100
-Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Jul 2019 14:23:54 +0100
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CDNrEj50201004
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 13:23:53 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AA6128059;
-        Fri, 12 Jul 2019 13:23:53 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3CEBE28058;
-        Fri, 12 Jul 2019 13:23:53 +0000 (GMT)
-Received: from [9.85.144.233] (unknown [9.85.144.233])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Fri, 12 Jul 2019 13:23:53 +0000 (GMT)
-Subject: Re: [PATCH v3 4/5] vfio-ccw: Don't call cp_free if we are processing
- a channel program
-To:     Farhan Ali <alifm@linux.ibm.com>, cohuck@redhat.com,
-        pasic@linux.ibm.com
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <cover.1562854091.git.alifm@linux.ibm.com>
- <62e87bf67b38dc8d5760586e7c96d400db854ebe.1562854091.git.alifm@linux.ibm.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Date:   Fri, 12 Jul 2019 09:19:38 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S1727376AbfGLN0T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 09:26:19 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:38536 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfGLN0T (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 09:26:19 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlvYf-0008I4-Sv; Fri, 12 Jul 2019 13:25:53 +0000
+Date:   Fri, 12 Jul 2019 14:25:53 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190712132553.GN17978@ZenIV.linux.org.uk>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
+ <20190712105745.nruaftgeat6irhzr@yavin>
+ <20190712123924.GK17978@ZenIV.linux.org.uk>
+ <20190712125552.GL17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <62e87bf67b38dc8d5760586e7c96d400db854ebe.1562854091.git.alifm@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071213-2213-0000-0000-000003ADA721
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011415; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231109; UDB=6.00648508; IPR=6.01012394;
- MB=3.00027691; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-12 13:23:56
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071213-2214-0000-0000-00005F34800E
-Message-Id: <32c1c941-2971-f956-c532-b606336ea74b@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120144
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190712125552.GL17978@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 7/11/19 10:28 AM, Farhan Ali wrote:
-> There is a small window where it's possible that we could be working
-> on an interrupt (queued in the workqueue) and setting up a channel
-> program (i.e allocating memory, pinning pages, translating address).
-> This can lead to allocating and freeing the channel program at the
-> same time and can cause memory corruption.
+On Fri, Jul 12, 2019 at 01:55:52PM +0100, Al Viro wrote:
+> On Fri, Jul 12, 2019 at 01:39:24PM +0100, Al Viro wrote:
+> > On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
+> > 
+> > > > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+> > > > >  			s = ERR_PTR(error);
+> > > > >  		return s;
+> > > > >  	}
+> > > > > -	error = dirfd_path_init(nd);
+> > > > > -	if (unlikely(error))
+> > > > > -		return ERR_PTR(error);
+> > > > > +	if (likely(!nd->path.mnt)) {
+> > > > 
+> > > > Is that a weird way of saying "if we hadn't already called dirfd_path_init()"?
+> > > 
+> > > Yes. I did it to be more consistent with the other "have we got the
+> > > root" checks elsewhere. Is there another way you'd prefer I do it?
+> > 
+> > "Have we got the root" checks are inevitable evil; here you are making the
+> > control flow in a single function hard to follow.
+> > 
+> > I *think* what you are doing is
+> > 	absolute pathname, no LOOKUP_BENEATH:
+> > 		set_root
+> > 		error = nd_jump_root(nd)
+> > 	else
+> > 		error = dirfd_path_init(nd)
+> > 	return unlikely(error) ? ERR_PTR(error) : s;
+> > which should be a lot easier to follow (not to mention shorter), but I might
+> > be missing something in all of that.
 > 
-> Let's not call cp_free if we are currently processing a channel program.
-> The only way we know for sure that we don't have a thread setting
-> up a channel program is when the state is set to VFIO_CCW_STATE_CP_PENDING.>
-> Fixes: d5afd5d135c8 ("vfio-ccw: add handling for async channel instructions")
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> PS: if that's what's going on, I would be tempted to turn the entire
+> path_init() part into this:
+> 	if (flags & LOOKUP_BENEATH)
+> 		while (*s == '/')
+> 			s++;
+> in the very beginning (plus the handling of nd_jump_root() prototype
+> change, but that belongs with nd_jump_root() change itself, obviously).
+> Again, I might be missing something here...
 
-I think this seems like a reasonable fix.
+Argh... I am, at that - you have setting path->root (and grabbing it)
+in LOOKUP_BENEATH cases and you do it after dirfd_path_init().  So
+how about
+	if (flags & LOOKUP_BENEATH)
+		while (*s == '/')
+			s++;
+before the whole thing and
+        if (*s == '/') { /* can happen only without LOOKUP_BENEATH */
+                set_root(nd);
+		error = nd_jump_root(nd);
+		if (unlikely(error))
+			return ERR_PTR(error);
+        } else if (nd->dfd == AT_FDCWD) {
+                if (flags & LOOKUP_RCU) {
+                        struct fs_struct *fs = current->fs;
+                        unsigned seq;
 
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
+                        do {
+                                seq = read_seqcount_begin(&fs->seq);
+                                nd->path = fs->pwd;
+                                nd->inode = nd->path.dentry->d_inode;
+                                nd->seq = __read_seqcount_begin(&nd->path.dentry->d_seq);
+                        } while (read_seqcount_retry(&fs->seq, seq));
+                } else {
+                        get_fs_pwd(current->fs, &nd->path);
+                        nd->inode = nd->path.dentry->d_inode;
+                }  
+        } else {
+                /* Caller must check execute permissions on the starting path component */
+                struct fd f = fdget_raw(nd->dfd);
+                struct dentry *dentry;
 
-> ---
->  drivers/s390/cio/vfio_ccw_drv.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> index 4e3a903..0357165 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -92,7 +92,7 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
->  		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
->  	if (scsw_is_solicited(&irb->scsw)) {
->  		cp_update_scsw(&private->cp, &irb->scsw);
-> -		if (is_final)
-> +		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
->  			cp_free(&private->cp);
->  	}
->  	mutex_lock(&private->io_mutex);
-> 
+                if (!f.file)
+                        return ERR_PTR(-EBADF);
 
+                dentry = f.file->f_path.dentry;
+
+                if (*s && unlikely(!d_can_lookup(dentry))) {
+                        fdput(f);
+                        return ERR_PTR(-ENOTDIR);
+                }
+
+                nd->path = f.file->f_path;
+                if (flags & LOOKUP_RCU) {
+                        nd->inode = nd->path.dentry->d_inode;
+                        nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
+                } else {
+                        path_get(&nd->path);
+                        nd->inode = nd->path.dentry->d_inode;
+                }
+                fdput(f);
+        }
+	if (flags & LOOKUP_BENEATH) {
+		nd->root = nd->path;
+		if (!(flags & LOOKUP_RCU))
+			path_get(&nd->root);
+		else
+			nd->root_seq = nd->seq;
+	}
+	return s;
+replacing the part in the end?  Makes for much smaller change; it might
+very well still make sense to add dirfd_path_init() as a separate
+cleanup (perhaps with the *s == '/' case included), though.
