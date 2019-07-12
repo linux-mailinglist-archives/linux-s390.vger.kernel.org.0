@@ -2,141 +2,279 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2116367653
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 23:56:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 906F867682
+	for <lists+linux-s390@lfdr.de>; Sat, 13 Jul 2019 00:27:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727685AbfGLV4F (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 17:56:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727245AbfGLV4F (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 12 Jul 2019 17:56:05 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CLqI69085485
-        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2019 17:56:03 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tq1edjewf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2019 17:56:03 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Fri, 12 Jul 2019 22:56:02 +0100
-Received: from b01cxnp22036.gho.pok.ibm.com (9.57.198.26)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 12 Jul 2019 22:55:57 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CLtupx10814168
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 12 Jul 2019 21:55:56 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 95FB3AE062;
-        Fri, 12 Jul 2019 21:55:56 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0522EAE05F;
-        Fri, 12 Jul 2019 21:55:51 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.135.203])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Fri, 12 Jul 2019 21:55:51 +0000 (GMT)
-References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-4-bauerman@linux.ibm.com> <20190712150912.3097215e.pasic@linux.ibm.com>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        "Lendacky\, Thomas" <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86 arch code
-In-reply-to: <20190712150912.3097215e.pasic@linux.ibm.com>
-Date:   Fri, 12 Jul 2019 18:55:47 -0300
+        id S1728062AbfGLW1Q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 18:27:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51968 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727245AbfGLW1Q (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 18:27:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:
+        From:Date:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VM9qpAs/ICtRYE/ZKsbasB/7+epYpXQ7+ZIhOINoByw=; b=DDBNzD6VGixx85DQB7GNNTwUG
+        TgheVxDJciYE2Cw6b0dnj+nuPh8uJ+yOD0d92QK6C3Vlc68vY7sfziXp/iHi0Fw3NhuCeB8xVLO5E
+        0c5OJlqZiR+snFsxI80l1yDkTv0awzdROQNDrLtvKu7PLxawZ2E1pbSuUnM6gueAXOIGLeBjP7R1p
+        Vrbdgvx9ImdNLiC4AGZ56unjhBZ+uthWlUj5OSgC4gZlWR4IfCOtqxITmLFMlgowLt1saZu9bkb/H
+        eyLbLI1yCaIfG1/VWUtMeVzik4TD+JRYVxpk0gj0d2ba56Z4dvkMKx+iO8KEDIYKYR3m+3hPfJlRc
+        pd6C7TlPA==;
+Received: from [186.213.242.57] (helo=coco.lan)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hm40U-0004ss-Gc; Fri, 12 Jul 2019 22:27:10 +0000
+Date:   Fri, 12 Jul 2019 19:27:05 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Hannes Reinecke <hare@suse.com>, linux-kbuild@vger.kernel.org,
+        Jens Axboe <axboe@kernel.dk>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-doc@vger.kernel.org, Omar Sandoval <osandov@fb.com>
+Subject: Re: [PATCH 0/5] PDF output fixes
+Message-ID: <20190712192705.71b97717@coco.lan>
+In-Reply-To: <20190712141921.7f8a1d02@lwn.net>
+References: <cover.1562696797.git.mchehab+samsung@kernel.org>
+        <20190712141921.7f8a1d02@lwn.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19071221-2213-0000-0000-000003ADCDAE
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011417; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000286; SDB=6.01231280; UDB=6.00648610; IPR=6.01012564;
- MB=3.00027695; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-12 21:56:01
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071221-2214-0000-0000-00005F35B676
-Message-Id: <87tvbqgboc.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907120224
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Em Fri, 12 Jul 2019 14:19:21 -0600
+Jonathan Corbet <corbet@lwn.net> escreveu:
 
-[ Cc'ing Tom Lendacky which I forgot to do earlier. Sorry about that. ]
+> On Tue,  9 Jul 2019 15:33:18 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+> 
+> > In order to be able to build all PDF books, besides the two patches I
+> > already sent:
+> > 
+> >     docs: pdf: add all Documentation/*/index.rst to PDF output
+> >     docs: automarkup.py: ignore exceptions when seeking for xrefs
+> > 
+> > A few others are needed:
+> > 
+> > - patch 1 removes nested tables for a few files I converted, as 
+> >   Sphinx LaTeX builder doesn't support it;
+> > - Patches 2 to 4 addresses some minor issues on some books,
+> >   usually requiring some blank lines, extra whitespaces or some
+> >   tag replacement;
+> > - Patch 5 is required in order to be able to build the translations
+> >   PDF book, as it adds Asian fonts support to XeLaTeX.  
+> 
+> So, modulo my one comment on the last patch the series seems OK, though I
+> don't like having to work around limitations in PDF generation this way.
 
-Hello Halil,
+Yeah, I feel the pain. I didn't like writing those patches either.
 
-Thanks for the quick review.
+> Can't you just make rst2pdf work instead? :)
 
-Halil Pasic <pasic@linux.ibm.com> writes:
+Well, we can try. Last time we tried, there were lots of things missing
+for it to work. 
 
-> On Fri, 12 Jul 2019 02:36:31 -0300
-> Thiago Jung Bauermann <bauerman@linux.ibm.com> wrote:
->
->> Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
->> appear in generic kernel code because it forces non-x86 architectures to
->> define the sev_active() function, which doesn't make a lot of sense.
->
-> sev_active() might be just bad (too specific) name for a general
-> concept. s390 code defines it drives the right behavior in
-> kernel/dma/direct.c (which uses it).
+Based on:
 
-I thought about that but couldn't put my finger on a general concept.
-Is it "guest with memory inaccessible to the host"?
+	https://pypi.org/project/rst2pdf/
 
-Since your proposed definiton for force_dma_unencrypted() is simply to
-make it equivalent to sev_active(), I thought it was more
-straightforward to make each arch define force_dma_unencrypted()
-directly.
+The project got stuck back on Dec, 2012, up to the beginning of this
+year. Maybe the issues we had in the past got fixed.
 
-Also, does sev_active() drive the right behavior for s390 in
-elfcorehdr_read() as well?
+Also, right now, rst2pdf only supports Python 2.7.
 
->> To solve this problem, add an x86 elfcorehdr_read() function to override
->> the generic weak implementation. To do that, it's necessary to make
->> read_from_oldmem() public so that it can be used outside of vmcore.c.
->>
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> ---
->>  arch/x86/kernel/crash_dump_64.c |  5 +++++
->>  fs/proc/vmcore.c                |  8 ++++----
->>  include/linux/crash_dump.h      | 14 ++++++++++++++
->>  include/linux/mem_encrypt.h     |  1 -
->>  4 files changed, 23 insertions(+), 5 deletions(-)
->
-> Does not seem to apply to today's or yesterdays master.
+I would wait for it to support Python 3.x before doing the actual
+migration.
 
-It assumes the presence of the two patches I mentioned in the cover
-letter. Only one of them is in master.
+-
 
-I hadn't realized the s390 virtio patches were on their way to upstream.
-I was keeping an eye on the email thread but didn't see they were picked
-up in the s390 pull request. I'll add a new patch to this series making
-the corresponding changes to s390's <asm/mem_encrypt.h> as well.
+I don't remember the exact details, but when rst2pdf were
+used with some documents, it didn't produce a valid PDF file, but perhaps
+someone fixed it.
 
---
-Thiago Jung Bauermann
-IBM Linux Technology Center
+Assuming that rst2pdf works now, there are still several LaTeX specific
+hacks on some files:
+
+	$ git grep -l latex|grep rst|wc -l
+	     28  
+
+I guess almost all of them are related to the lack of proper support
+at ReST markup language that would allow adjusting the output to fit
+within the page limits. 
+
+On media, we need two types of additional features:
+
+1) Sphinx pdf builder uses two different LaTeX ways of producing a table.
+(tabular x tabularx x longtable - don't remember anymore the exact
+two dialects it uses).
+
+One of the dialect allows a table to be on multiple pages; the other
+one doesn't. The builder decides the dialect if a table has more than 30
+columns, but there's a way to force longtable (by changing the css style).
+
+Not sure if rst2pdf honors the same css style.
+
+2) Table scaling / font resize. The Sphinx PDF builder doesn't scale
+the fonts inside a table, nor the ReST dialect allows changing the font
+size. So, we had to use raw LaTeX dialects for it to work.
+
+Anyway, I'm enclosing an experimental patch that would enable rst2pdf.
+It is not at production level.
+
+It also shows some crashes like this one:
+
+[ERROR] pdfbuilder.py:133 format not resolved, probably missing URL scheme or undefined destination target for 'Callback%20Registry'
+Traceback (most recent call last):
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/rst2pdf/pdfbuilder.py", line 130, in write
+    docwriter.write(doctree, destination)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/docutils/writers/__init__.py", line 80, in write
+    self.translate()
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/rst2pdf/pdfbuilder.py", line 633, in translate
+    compressed=self.compressed)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/rst2pdf/createpdf.py", line 664, in createPdf
+    pdfdoc.multiBuild(elements)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/platypus/doctemplate.py", line 1154, in multiBuild
+    self.canv.save()
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfgen/canvas.py", line 1242, in save
+    self._doc.SaveToFile(self._filename, self)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 215, in SaveToFile
+    data = self.GetPDFData(canvas)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 241, in GetPDFData
+    return self.format()
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 423, in format
+    IOf = IO.format(self)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 871, in format
+    fcontent = format(self.content, document, toplevel=1)   # yes this is at top level
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 80, in format
+    f = element.format(document)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 1608, in format
+    return D.format(document)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 679, in format
+    L = [(format(PDFName(k),document)+b" "+format(dict[k],document)) for k in keys]
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 80, in format
+    f = element.format(document)
+  File "/devel/v4l/docs/sphinx_1.7.9/lib/python2.7/site-packages/reportlab/pdfbase/pdfdoc.py", line 1773, in format
+    if f is None: raise ValueError("format not resolved, probably missing URL scheme or undefined destination target for '%s'" % self.name)
+ValueError: format not resolved, probably missing URL scheme or undefined destination target for 'Callback%20Registry'
+FAILED
+
+
+> 
+> I guess it makes sense for these to go with the big band-aid-removal patch
+> set.
+
+OK, I'll send it together with the big patchset.
+
+> 
+> Thanks,
+> 
+> jon
+> 
+> P.S. it seems that rst2pdf is actually being developed again:
+> https://akrabat.com/rst2pdf-back-from-the-dead/ .  I wonder how far
+> they'll get with it.
+
+Thanks,
+Mauro
+
+[PATCH RFC] docs: experimental: build PDF with rst2pdf
+
+Change the logic to use rst2pdf instead of LaTeX.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+diff --git a/Documentation/Makefile b/Documentation/Makefile
+index e145e4db508b..cc913f96a66d 100644
+--- a/Documentation/Makefile
++++ b/Documentation/Makefile
+@@ -95,9 +95,10 @@ pdfdocs:
+ 
+ else # HAVE_PDFLATEX
+ 
+-pdfdocs: latexdocs
++pdfdocs:
+ 	@$(srctree)/scripts/sphinx-pre-install --version-check
+-	$(foreach var,$(SPHINXDIRS), $(MAKE) PDFLATEX="$(PDFLATEX)" LATEXOPTS="$(LATEXOPTS)" -C $(BUILDDIR)/$(var)/latex || exit;)
++	mkdir -p $(BUILDDIR)/pdf
++	@+$(foreach var,$(SPHINXDIRS),$(call loop_cmd,sphinx,pdf,$(var),pdf,$(var)))
+ 
+ endif # HAVE_PDFLATEX
+ 
+diff --git a/Documentation/conf.py b/Documentation/conf.py
+index fa0a42b47e62..4db8a62d7c6a 100644
+--- a/Documentation/conf.py
++++ b/Documentation/conf.py
+@@ -35,13 +35,14 @@ needs_sphinx = '1.3'
+ # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
+ # ones.
+ extensions = ['kerneldoc', 'rstFlatTable', 'kernel_include', 'cdomain',
+-              'kfigure', 'sphinx.ext.ifconfig', 'automarkup']
++              'kfigure', 'sphinx.ext.ifconfig', 'automarkup', 'rst2pdf.pdfbuilder']
+ 
+-# The name of the math extension changed on Sphinx 1.4
+-if (major == 1 and minor > 3) or (major > 1):
+-    extensions.append("sphinx.ext.imgmath")
+-else:
+-    extensions.append("sphinx.ext.pngmath")
++# FIXME: when rst2pdf.pdfbuilder is added, the code below causes an error
++## The name of the math extension changed on Sphinx 1.4
++#if (major == 1 and minor > 3) or (major > 1):
++#    extensions.append("sphinx.ext.imgmath")
++#else:
++#    extensions.append("sphinx.ext.pngmath")
+ 
+ # Add any paths that contain templates here, relative to this directory.
+ templates_path = ['_templates']
+@@ -564,12 +565,15 @@ epub_exclude_files = ['search.html']
+ #
+ # See the Sphinx chapter of http://ralsina.me/static/manual.pdf
+ #
+-# FIXME: Do not add the index file here; the result will be too big. Adding
+-# multiple PDF files here actually tries to get the cross-referencing right
+-# *between* PDF files.
+-pdf_documents = [
+-    ('kernel-documentation', u'Kernel', u'Kernel', u'J. Random Bozo'),
+-]
++
++# Add all LaTeX files to PDF documents as well
++pdf_documents = []
++for l in latex_documents:
++    doc = l[0]
++    fn = l[1].replace("tex", "pdf")
++    name = l[2]
++    authors = l[3]
++    pdf_documents.append((doc, fn, name, authors))
+ 
+ # kernel-doc extension configuration for running Sphinx directly (e.g. by Read
+ # the Docs). In a normal build, these are supplied from the Makefile via command
+diff --git a/Documentation/media/Makefile b/Documentation/media/Makefile
+index d75d70f191bc..3050136ed489 100644
+--- a/Documentation/media/Makefile
++++ b/Documentation/media/Makefile
+@@ -53,12 +53,13 @@ $(BUILDDIR)/lirc.h.rst: ${UAPI}/lirc.h ${PARSER} $(SRC_DIR)/lirc.h.rst.exception
+ 
+ # Media build rules
+ 
+-.PHONY: all html epub xml latex
++.PHONY: all html epub xml latex pdf
+ 
+ all: $(IMGDOT) $(BUILDDIR) ${TARGETS}
+ html: all
+ epub: all
+ xml: all
++pdf: all
+ latex: $(IMGPDF) all
+ linkcheck:
+ 
 
