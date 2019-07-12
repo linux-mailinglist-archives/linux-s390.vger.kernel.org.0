@@ -2,117 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5D4ED66FBB
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 15:10:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0904266FD9
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 15:17:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727693AbfGLNKg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 09:10:36 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:38300 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727059AbfGLNKg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 09:10:36 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlvJN-0007n9-6P; Fri, 12 Jul 2019 13:10:05 +0000
-Date:   Fri, 12 Jul 2019 14:10:05 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 01/10] namei: obey trailing magic-link DAC permissions
-Message-ID: <20190712131005.GM17978@ZenIV.linux.org.uk>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-2-cyphar@cyphar.com>
- <20190712041454.GG17978@ZenIV.linux.org.uk>
- <20190712122017.xkowq2cjreylpotm@yavin>
+        id S1727189AbfGLNRB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 09:17:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53116 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727594AbfGLNRB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:17:01 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CDC23D100663
+        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2019 09:17:00 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tptns0ub5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 12 Jul 2019 09:16:59 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <bblock@linux.ibm.com>;
+        Fri, 12 Jul 2019 14:16:57 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 12 Jul 2019 14:16:54 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CDGqkn40632534
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 13:16:53 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C2096AE053;
+        Fri, 12 Jul 2019 13:16:52 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B042AAE051;
+        Fri, 12 Jul 2019 13:16:52 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.152.212.90])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 12 Jul 2019 13:16:52 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.92)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1hlvPw-0005iR-Dw; Fri, 12 Jul 2019 15:16:52 +0200
+Date:   Fri, 12 Jul 2019 15:16:52 +0200
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-scsi@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH 0/3] zfcp: fixes for the zFCP device driver
+References: <cover.1562098940.git.bblock@linux.ibm.com>
+ <yq1pnmg6ozj.fsf@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190712122017.xkowq2cjreylpotm@yavin>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yq1pnmg6ozj.fsf@oracle.com>
 User-Agent: Mutt/1.11.3 (2019-02-01)
+X-TM-AS-GCONF: 00
+x-cbid: 19071213-0028-0000-0000-00000383BDB7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071213-0029-0000-0000-00002443D5B9
+Message-Id: <20190712131652.GC27203@t480-pf1aa2c2.w3ibm.bluemix.net>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907120144
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 10:20:17PM +1000, Aleksa Sarai wrote:
-> On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > On Sun, Jul 07, 2019 at 12:57:28AM +1000, Aleksa Sarai wrote:
-> > > @@ -514,7 +516,14 @@ static void set_nameidata(struct nameidata *p, int dfd, struct filename *name)
-> > >  	p->stack = p->internal;
-> > >  	p->dfd = dfd;
-> > >  	p->name = name;
-> > > -	p->total_link_count = old ? old->total_link_count : 0;
-> > > +	p->total_link_count = 0;
-> > > +	p->acc_mode = 0;
-> > > +	p->opath_mask = FMODE_PATH_READ | FMODE_PATH_WRITE;
-> > > +	if (old) {
-> > > +		p->total_link_count = old->total_link_count;
-> > > +		p->acc_mode = old->acc_mode;
-> > > +		p->opath_mask = old->opath_mask;
-> > > +	}
-> > 
-> > Huh?  Could somebody explain why traversals of NFS4 referrals should inherit
-> > ->acc_mode and ->opath_mask?
+On Thu, Jul 11, 2019 at 09:06:08PM -0400, Martin K. Petersen wrote:
 > 
-> I'll be honest -- I don't understand what set_nameidata() did so I just
-> did what I thought would be an obvious change (to just copy the
-> contents). I thought it was related to some aspect of the symlink stack
-> handling.
+> Benjamin,
+> 
+> > So please consider them for the next cycle. Or should I not have send
+> > them in that case? Sorry, this step of the process was a bit unclear
+> > to me.
+> 
+> A fix is a fix. Applied the series to 5.3/scsi-fixes. Thanks!
+> 
 
-No.  It's handling of (very rare) nested pathwalk.  The only case I can think
-of is handling of NFS4 referrals - they are triggered by ->d_automount()
-and include NFS4 mount.  Which does internal pathwalk of its own, to get
-to the root of subtree being automounted.
+Thanks Martin.
 
-NFS has its own recursion protection on that path (no deeper nesting than
-one level of referral traversals), but there some nesting is inevitable;
-we do get another nameidata instance on stack.  And for nd_jump_link() we
-need to keep track of the innermost one.
+-- 
+With Best Regards, Benjamin Block      /      Linux on IBM Z Kernel Development
+IBM Systems & Technology Group   /  IBM Deutschland Research & Development GmbH
+Vorsitz. AufsR.: Matthias Hartmann       /      Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
 
-For symlinks nothing of that sort happens - they are dealt with on the same
-struct nameidata.  ->total_link_count copying is there for one reason only -
-we want the total amount of symlinks traversed during the pathwalk (including
-the referral processing, etc.) to count towards MAXSYMLINKS check.  It could've
-been moved from nameidata to task_struct, but it's cheaper to handle it that
-way.
-
-Again, nesting is *rare*.
-
-> In that case, should they both be set to 0 on set_nameidata()? This will
-> mean that fd re-opening (or magic-link opening) through a
-> set_nameidata() would always fail.
-
-Huh?  set_nameidata() is done for *all* instances - it's pretty much the
-constructor of that object (and restore_nameidata() - a destructor).
-Everything goes through it.
-
-And again, I'm not sure we want these fields in nameidata - IMO they belong
-in open_flags.  Things like e.g. stat() don't need them at all.
-
-Incidentally, O_PATH opening of symlinks combined with subsequent procfs
-symlink traversals is worth testing - that's where the things get subtle
-and that's where it's easy to get in trouble on modifications.
