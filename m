@@ -2,104 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A74BF671CF
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 17:00:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A974671DD
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 17:01:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbfGLPAM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 11:00:12 -0400
-Received: from mx2.suse.de ([195.135.220.15]:50336 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726466AbfGLPAL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 12 Jul 2019 11:00:11 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C4457ABE9;
-        Fri, 12 Jul 2019 15:00:09 +0000 (UTC)
-Date:   Fri, 12 Jul 2019 17:00:07 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        id S1727272AbfGLPAy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 11:00:54 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39588 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727035AbfGLPAx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 11:00:53 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hlx2B-000201-9w; Fri, 12 Jul 2019 15:00:27 +0000
+Date:   Fri, 12 Jul 2019 16:00:27 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>, willy@infradead.org
-Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20190712150007.GU29483@dhcp22.suse.cz>
-References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
- <20190712070247.GM29483@dhcp22.suse.cz>
- <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
- <20190712121223.GR29483@dhcp22.suse.cz>
- <20190712143730.au3662g4ua2tjudu@willie-the-truck>
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190712150026.GO17978@ZenIV.linux.org.uk>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
+ <20190712105745.nruaftgeat6irhzr@yavin>
+ <20190712123924.GK17978@ZenIV.linux.org.uk>
+ <20190712125552.GL17978@ZenIV.linux.org.uk>
+ <20190712132553.GN17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190712143730.au3662g4ua2tjudu@willie-the-truck>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190712132553.GN17978@ZenIV.linux.org.uk>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri 12-07-19 15:37:30, Will Deacon wrote:
-> Hi all,
-> 
-> On Fri, Jul 12, 2019 at 02:12:23PM +0200, Michal Hocko wrote:
-> > On Fri 12-07-19 10:56:47, Hoan Tran OS wrote:
-> > [...]
-> > > It would be good if we can enable it by-default. Otherwise, let arch 
-> > > enables it by them-self. Do you have any suggestions?
-> > 
-> > I can hardly make any suggestions when it is not really clear _why_ you
-> > want to remove this config option in the first place. Please explain
-> > what motivated you to make this change.
-> 
-> Sorry, I think this confusion might actually be my fault and Hoan has just
-> been implementing my vague suggestion here:
-> 
-> https://lore.kernel.org/linux-arm-kernel/20190625101245.s4vxfosoop52gl4e@willie-the-truck/
-> 
-> If the preference of the mm folks is to leave CONFIG_NODES_SPAN_OTHER_NODES
-> as it is, then we can define it for arm64. I just find it a bit weird that
-> the majority of NUMA-capable architectures have to add a symbol in the arch
-> Kconfig file, for what appears to be a performance optimisation applicable
-> only to ia64, mips and sh.
-> 
-> At the very least we could make the thing selectable.
+On Fri, Jul 12, 2019 at 02:25:53PM +0100, Al Viro wrote:
 
-Hmm, I thought this was selectable. But I am obviously wrong here.
-Looking more closely, it seems that this is indeed only about
-__early_pfn_to_nid and as such not something that should add a config
-symbol. This should have been called out in the changelog though.
+> 	if (flags & LOOKUP_BENEATH) {
+> 		nd->root = nd->path;
+> 		if (!(flags & LOOKUP_RCU))
+> 			path_get(&nd->root);
+> 		else
+> 			nd->root_seq = nd->seq;
 
-Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
-bucket? Do we have any NUMA architecture that doesn't enable it?
+BTW, this assignment is needed for LOOKUP_RCU case.  Without it
+you are pretty much guaranteed that lazy pathwalk will fail,
+when it comes to complete_walk().
 
-Thanks!
--- 
-Michal Hocko
-SUSE Labs
+Speaking of which, what would happen if LOOKUP_ROOT/LOOKUP_BENEATH
+combination would someday get passed?
