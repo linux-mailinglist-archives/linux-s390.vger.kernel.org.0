@@ -2,164 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2117366FFE
-	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 15:26:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B92146700D
+	for <lists+linux-s390@lfdr.de>; Fri, 12 Jul 2019 15:27:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727376AbfGLN0T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 12 Jul 2019 09:26:19 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:38536 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726466AbfGLN0T (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 12 Jul 2019 09:26:19 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hlvYf-0008I4-Sv; Fri, 12 Jul 2019 13:25:53 +0000
-Date:   Fri, 12 Jul 2019 14:25:53 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
-Message-ID: <20190712132553.GN17978@ZenIV.linux.org.uk>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-6-cyphar@cyphar.com>
- <20190712043341.GI17978@ZenIV.linux.org.uk>
- <20190712105745.nruaftgeat6irhzr@yavin>
- <20190712123924.GK17978@ZenIV.linux.org.uk>
- <20190712125552.GL17978@ZenIV.linux.org.uk>
+        id S1727305AbfGLN14 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 12 Jul 2019 09:27:56 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59008 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726466AbfGLN14 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 12 Jul 2019 09:27:56 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6CDRjHW048958;
+        Fri, 12 Jul 2019 09:27:54 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tpsvfkkey-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 09:27:46 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6CDPjTG013506;
+        Fri, 12 Jul 2019 13:27:16 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 2tjk973v2s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 12 Jul 2019 13:27:16 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6CDREE753936522
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 12 Jul 2019 13:27:14 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37CA66E059;
+        Fri, 12 Jul 2019 13:27:14 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BEC836E04E;
+        Fri, 12 Jul 2019 13:27:13 +0000 (GMT)
+Received: from [9.56.58.103] (unknown [9.56.58.103])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 12 Jul 2019 13:27:13 +0000 (GMT)
+Subject: Re: [PATCH v3 5/5] vfio-ccw: Update documentation for csch/hsch
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     farman@linux.ibm.com, pasic@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
+References: <cover.1562854091.git.alifm@linux.ibm.com>
+ <7d977612c3f3152ffb950d77ae11b4b25c1e20c4.1562854091.git.alifm@linux.ibm.com>
+ <20190712133006.23efcd0d.cohuck@redhat.com>
+From:   Farhan Ali <alifm@linux.ibm.com>
+Message-ID: <7b71133b-0257-ba6e-a544-02ec8216094c@linux.ibm.com>
+Date:   Fri, 12 Jul 2019 09:27:13 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190712125552.GL17978@ZenIV.linux.org.uk>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190712133006.23efcd0d.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-12_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907120145
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jul 12, 2019 at 01:55:52PM +0100, Al Viro wrote:
-> On Fri, Jul 12, 2019 at 01:39:24PM +0100, Al Viro wrote:
-> > On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
-> > 
-> > > > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
-> > > > >  			s = ERR_PTR(error);
-> > > > >  		return s;
-> > > > >  	}
-> > > > > -	error = dirfd_path_init(nd);
-> > > > > -	if (unlikely(error))
-> > > > > -		return ERR_PTR(error);
-> > > > > +	if (likely(!nd->path.mnt)) {
-> > > > 
-> > > > Is that a weird way of saying "if we hadn't already called dirfd_path_init()"?
-> > > 
-> > > Yes. I did it to be more consistent with the other "have we got the
-> > > root" checks elsewhere. Is there another way you'd prefer I do it?
-> > 
-> > "Have we got the root" checks are inevitable evil; here you are making the
-> > control flow in a single function hard to follow.
-> > 
-> > I *think* what you are doing is
-> > 	absolute pathname, no LOOKUP_BENEATH:
-> > 		set_root
-> > 		error = nd_jump_root(nd)
-> > 	else
-> > 		error = dirfd_path_init(nd)
-> > 	return unlikely(error) ? ERR_PTR(error) : s;
-> > which should be a lot easier to follow (not to mention shorter), but I might
-> > be missing something in all of that.
+
+
+On 07/12/2019 07:30 AM, Cornelia Huck wrote:
+> On Thu, 11 Jul 2019 10:28:55 -0400
+> Farhan Ali <alifm@linux.ibm.com> wrote:
 > 
-> PS: if that's what's going on, I would be tempted to turn the entire
-> path_init() part into this:
-> 	if (flags & LOOKUP_BENEATH)
-> 		while (*s == '/')
-> 			s++;
-> in the very beginning (plus the handling of nd_jump_root() prototype
-> change, but that belongs with nd_jump_root() change itself, obviously).
-> Again, I might be missing something here...
+>> We now support CLEAR SUBCHANNEL and HALT SUBCHANNEL
+>> via ccw_cmd_region.
+>>
+>> Fixes: d5afd5d135c8 ("vfio-ccw: add handling for async channel instructions")
+>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+>> ---
+>>   Documentation/s390/vfio-ccw.rst | 31 ++++++++++++++++++++++++++++---
+>>   1 file changed, 28 insertions(+), 3 deletions(-)
+> 
+> (...)
+> 
+>> +vfio-ccw cmd region
+>> +-------------------
+>> +
+>> +The vfio-ccw cmd region is used to accept asynchronous instructions
+>> +from userspace.
+>> +
+> 
+> Add :: and indent the structure so that we get proper formatting?
+> 
+> (Sorry about not noticing this last time; but I can add it while
+> applying if there are no other comments.)
 
-Argh... I am, at that - you have setting path->root (and grabbing it)
-in LOOKUP_BENEATH cases and you do it after dirfd_path_init().  So
-how about
-	if (flags & LOOKUP_BENEATH)
-		while (*s == '/')
-			s++;
-before the whole thing and
-        if (*s == '/') { /* can happen only without LOOKUP_BENEATH */
-                set_root(nd);
-		error = nd_jump_root(nd);
-		if (unlikely(error))
-			return ERR_PTR(error);
-        } else if (nd->dfd == AT_FDCWD) {
-                if (flags & LOOKUP_RCU) {
-                        struct fs_struct *fs = current->fs;
-                        unsigned seq;
+There is one other thing, I forgot to add a fixes tag to the first 
+patch. If you don't mind fixing that as well that will be great :)
 
-                        do {
-                                seq = read_seqcount_begin(&fs->seq);
-                                nd->path = fs->pwd;
-                                nd->inode = nd->path.dentry->d_inode;
-                                nd->seq = __read_seqcount_begin(&nd->path.dentry->d_seq);
-                        } while (read_seqcount_retry(&fs->seq, seq));
-                } else {
-                        get_fs_pwd(current->fs, &nd->path);
-                        nd->inode = nd->path.dentry->d_inode;
-                }  
-        } else {
-                /* Caller must check execute permissions on the starting path component */
-                struct fd f = fdget_raw(nd->dfd);
-                struct dentry *dentry;
+otherwise I could send a new round
 
-                if (!f.file)
-                        return ERR_PTR(-EBADF);
 
-                dentry = f.file->f_path.dentry;
+> 
+>> +#define VFIO_CCW_ASYNC_CMD_HSCH (1 << 0)
+>> +#define VFIO_CCW_ASYNC_CMD_CSCH (1 << 1)
+>> +struct ccw_cmd_region {
+>> +       __u32 command;
+>> +       __u32 ret_code;
+>> +} __packed;
+>> +
+>> +This region is exposed via region type VFIO_REGION_SUBTYPE_CCW_ASYNC_CMD.
+>> +
+>> +Currently, CLEAR SUBCHANNEL and HALT SUBCHANNEL use this region.
+>> +
+> 
+> Otherwise,
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> 
 
-                if (*s && unlikely(!d_can_lookup(dentry))) {
-                        fdput(f);
-                        return ERR_PTR(-ENOTDIR);
-                }
+Thanks for reviewing it
 
-                nd->path = f.file->f_path;
-                if (flags & LOOKUP_RCU) {
-                        nd->inode = nd->path.dentry->d_inode;
-                        nd->seq = read_seqcount_begin(&nd->path.dentry->d_seq);
-                } else {
-                        path_get(&nd->path);
-                        nd->inode = nd->path.dentry->d_inode;
-                }
-                fdput(f);
-        }
-	if (flags & LOOKUP_BENEATH) {
-		nd->root = nd->path;
-		if (!(flags & LOOKUP_RCU))
-			path_get(&nd->root);
-		else
-			nd->root_seq = nd->seq;
-	}
-	return s;
-replacing the part in the end?  Makes for much smaller change; it might
-very well still make sense to add dirfd_path_init() as a separate
-cleanup (perhaps with the *s == '/' case included), though.
+Thanks
+Farhan
