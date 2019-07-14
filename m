@@ -2,172 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EC1F67E97
-	for <lists+linux-s390@lfdr.de>; Sun, 14 Jul 2019 12:31:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6128C67F50
+	for <lists+linux-s390@lfdr.de>; Sun, 14 Jul 2019 16:35:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728312AbfGNKba (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 14 Jul 2019 06:31:30 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:28908 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728009AbfGNKba (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 14 Jul 2019 06:31:30 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 9FD654DF84;
-        Sun, 14 Jul 2019 12:31:24 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
-        with ESMTP id JHLEpiHFM8dg; Sun, 14 Jul 2019 12:31:19 +0200 (CEST)
-Date:   Sun, 14 Jul 2019 20:31:04 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Christian Brauner <christian@brauner.io>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
-Message-ID: <20190714100825.umyql5op6cxhmpqa@yavin>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-6-cyphar@cyphar.com>
- <20190712043341.GI17978@ZenIV.linux.org.uk>
- <20190712105745.nruaftgeat6irhzr@yavin>
- <20190712123924.GK17978@ZenIV.linux.org.uk>
- <20190712125552.GL17978@ZenIV.linux.org.uk>
- <20190712132553.GN17978@ZenIV.linux.org.uk>
+        id S1728368AbfGNOfo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 14 Jul 2019 10:35:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31612 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728362AbfGNOfo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 14 Jul 2019 10:35:44 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6EEWde6104353
+        for <linux-s390@vger.kernel.org>; Sun, 14 Jul 2019 10:35:43 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tqvdu0avd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Sun, 14 Jul 2019 10:35:43 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
+        Sun, 14 Jul 2019 15:35:40 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 14 Jul 2019 15:35:37 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6EEZaQ035389884
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 14 Jul 2019 14:35:36 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2AF71AE04D;
+        Sun, 14 Jul 2019 14:35:36 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7C0E6AE045;
+        Sun, 14 Jul 2019 14:35:35 +0000 (GMT)
+Received: from localhost (unknown [9.145.65.183])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sun, 14 Jul 2019 14:35:35 +0000 (GMT)
+Date:   Sun, 14 Jul 2019 16:35:33 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Petr Tesarik <ptesarik@suse.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] s390: add Linux banner to the compressed image
+References: <cover.1562950641.git.ptesarik@suse.com>
+ <aa477dd145aa2beb37fe813619b0723744a22a0a.1562950641.git.ptesarik@suse.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="kaevdj3q3yxfna5u"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190712132553.GN17978@ZenIV.linux.org.uk>
+In-Reply-To: <aa477dd145aa2beb37fe813619b0723744a22a0a.1562950641.git.ptesarik@suse.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19071414-0020-0000-0000-000003537F01
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071414-0021-0000-0000-000021A741FD
+Message-Id: <your-ad-here.call-01563114933-ext-9422@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-14_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907140180
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, Jul 12, 2019 at 07:21:01PM +0200, Petr Tesarik wrote:
+> Various tools determine the kernel version from a given binary by
+> scanning for the Linux banner string. This does not work if the
+> banner string is compressed, but we can link it once more into the
+> uncompressed portion of bzImage.
+> 
+> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> ---
+>  arch/s390/boot/compressed/Makefile | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/arch/s390/boot/compressed/Makefile b/arch/s390/boot/compressed/Makefile
+> index fa529c5b4486..9bc4685477c5 100644
+> --- a/arch/s390/boot/compressed/Makefile
+> +++ b/arch/s390/boot/compressed/Makefile
+> @@ -11,6 +11,7 @@ UBSAN_SANITIZE := n
+>  KASAN_SANITIZE := n
+>  
+>  obj-y	:= $(if $(CONFIG_KERNEL_UNCOMPRESSED),,decompressor.o) piggy.o info.o
+> +obj-y   += ../../../../init/banner.o
 
---kaevdj3q3yxfna5u
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We don't reuse objects from another build stage, we rebuild them with
+distinct decompressor's build flags.
+$ git grep "ctype.[oc]" -- arch/s390/boot
+arch/s390/boot/Makefile:obj-y   += ctype.o text_dma.o
+arch/s390/boot/ctype.c:#include "../../../lib/ctype.c"
 
-On 2019-07-12, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Fri, Jul 12, 2019 at 01:55:52PM +0100, Al Viro wrote:
-> > On Fri, Jul 12, 2019 at 01:39:24PM +0100, Al Viro wrote:
-> > > On Fri, Jul 12, 2019 at 08:57:45PM +1000, Aleksa Sarai wrote:
-> > >=20
-> > > > > > @@ -2350,9 +2400,11 @@ static const char *path_init(struct name=
-idata *nd, unsigned flags)
-> > > > > >  			s =3D ERR_PTR(error);
-> > > > > >  		return s;
-> > > > > >  	}
-> > > > > > -	error =3D dirfd_path_init(nd);
-> > > > > > -	if (unlikely(error))
-> > > > > > -		return ERR_PTR(error);
-> > > > > > +	if (likely(!nd->path.mnt)) {
-> > > > >=20
-> > > > > Is that a weird way of saying "if we hadn't already called dirfd_=
-path_init()"?
-> > > >=20
-> > > > Yes. I did it to be more consistent with the other "have we got the
-> > > > root" checks elsewhere. Is there another way you'd prefer I do it?
-> > >=20
-> > > "Have we got the root" checks are inevitable evil; here you are makin=
-g the
-> > > control flow in a single function hard to follow.
-> > >=20
-> > > I *think* what you are doing is
-> > > 	absolute pathname, no LOOKUP_BENEATH:
-> > > 		set_root
-> > > 		error =3D nd_jump_root(nd)
-> > > 	else
-> > > 		error =3D dirfd_path_init(nd)
-> > > 	return unlikely(error) ? ERR_PTR(error) : s;
-> > > which should be a lot easier to follow (not to mention shorter), but =
-I might
-> > > be missing something in all of that.
-> >=20
-> > PS: if that's what's going on, I would be tempted to turn the entire
-> > path_init() part into this:
-> > 	if (flags & LOOKUP_BENEATH)
-> > 		while (*s =3D=3D '/')
-> > 			s++;
-> > in the very beginning (plus the handling of nd_jump_root() prototype
-> > change, but that belongs with nd_jump_root() change itself, obviously).
-> > Again, I might be missing something here...
->=20
-> Argh... I am, at that - you have setting path->root (and grabbing it)
-> in LOOKUP_BENEATH cases and you do it after dirfd_path_init().  So
-> how about
-> 	if (flags & LOOKUP_BENEATH)
-> 		while (*s =3D=3D '/')
-> 			s++;
+Besides that, there is a special CONFIG_KERNEL_UNCOMPRESSED mode, with
+which "strings vmlinuz | grep 'Linux version'" I assume you are using
+would still yield result. Adding the second version of banner would
+produce duplicated result in this case.
 
-I can do this for LOOKUP_IN_ROOT, but currently the semantics for
-LOOKUP_BENEATH is that absolute paths will return -EXDEV
-indiscriminately (nd_jump_root() errors out with LOOKUP_BENEATH). To be
-honest, the check could actually just be:
+But even before discussing solutions I would like to understand the
+problem first. Which specific tools are you referring to? What are they
+good for? And how do they get the kernel version from other architectures
+compressed images?
 
-  if (flags & LOOKUP_BENEATH)
-    if (*s =3D=3D '/')
-	  return ERR_PTR(-EXDEV);
-
-(Though we'd still need -EXDEV in nd_jump_root() for obvious reasons.)
-
-The logic being that an absolute path means that the resolution starts
-out without being "beneath" the starting point -- thus violating the
-contract of LOOKUP_BENEATH. And since the "handle absolute paths like
-they're scoped to the root" is only implemented for LOOKUP_IN_ROOT, I'd
-think it's a bit odd to have LOOKUP_BENEATH do it too for absolute
-paths.
-
-I'll be honest, this patchset is more confusing to both of us because of
-LOOKUP_BENEATH -- I've only kept it since it was part of the original
-patchset (O_BENEATH). Personally I think more people will be far more
-interested in LOOKUP_IN_ROOT. Does anyone mind if I drop the
-LOOKUP_BENEATH parts of this series, and only keep LOOKUP_NO_* and
-LOOKUP_IN_ROOT?
-
-I make a change as you outlined for LOOKUP_IN_ROOT, though.
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---kaevdj3q3yxfna5u
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXSsEZQAKCRCdlLljIbnQ
-EnUcAP0UIrWhoFUdmcGKVnbHflUGk+2uDxtG83hk6KmhY14aGgD/bIuyNZSByUo2
-62tn/pqpuWfU42XocRvuCvKllOoWpgc=
-=3x3j
------END PGP SIGNATURE-----
-
---kaevdj3q3yxfna5u--
