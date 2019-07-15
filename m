@@ -2,77 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F31D969492
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 16:52:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B482D69436
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 16:50:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391722AbfGOOaq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jul 2019 10:30:46 -0400
-Received: from verein.lst.de ([213.95.11.211]:33049 "EHLO verein.lst.de"
+        id S2405155AbfGOOrC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Jul 2019 10:47:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391714AbfGOOaq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:30:46 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C945368B05; Mon, 15 Jul 2019 16:30:39 +0200 (CEST)
-Date:   Mon, 15 Jul 2019 16:30:39 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, x86@kernel.org,
-        iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        "Lendacky, Thomas" <thomas.lendacky@amd.com>
-Subject: Re: [PATCH 3/3] fs/core/vmcore: Move sev_active() reference to x86
- arch code
-Message-ID: <20190715143039.GA6892@lst.de>
-References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-4-bauerman@linux.ibm.com> <20190712150912.3097215e.pasic@linux.ibm.com> <87tvbqgboc.fsf@morokweng.localdomain> <20190715160317.7e3dfb33.pasic@linux.ibm.com>
+        id S2405147AbfGOOrB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:47:01 -0400
+Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0C96C20651;
+        Mon, 15 Jul 2019 14:46:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563202020;
+        bh=rICwTybRnCVcvC1GDeqf6rZ3WYYb1FHZqLdwNlEeVCU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=1axxnf3Z0SxR0b501Gy7B4DvvKkIf/gDzEEe77yTajsB0lXBtD9FCZxpoAcqu4RYA
+         F9hix3wAwF3CdtUlbfRfOCvytEiTElaqO2E7Kk99CDbLczHG9P1eIxCLqGBA3sJhyU
+         V31PowrG3sI7bORY/63bM62aJ28OJ+9IQHkVFHE4=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 24/53] s390/qdio: handle PENDING state for QEBSM devices
+Date:   Mon, 15 Jul 2019 10:45:06 -0400
+Message-Id: <20190715144535.11636-24-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190715144535.11636-1-sashal@kernel.org>
+References: <20190715144535.11636-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190715160317.7e3dfb33.pasic@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 04:03:17PM +0200, Halil Pasic wrote:
-> > I thought about that but couldn't put my finger on a general concept.
-> > Is it "guest with memory inaccessible to the host"?
-> > 
-> 
-> Well, force_dma_unencrypted() is a much better name thatn sev_active():
-> s390 has no AMD SEV, that is sure, but for virtio to work we do need to
-> make our dma accessible to the hypervisor. Yes, your "guest with memory
-> inaccessible to the host" shows into the right direction IMHO.
-> Unfortunately I don't have too many cycles to spend on this right now.
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-In x86 it means that we need to remove dma encryption using
-set_memory_decrypted before using it for DMA purposes.  In the SEV
-case that seems to be so that the hypervisor can access it, in the SME
-case that Tom just fixes it is because there is an encrypted bit set
-in the physical address, and if the device doesn't support a large
-enough DMA address the direct mapping code has to encrypt the pages
-used for the contigous allocation.
+[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
 
-> Being on cc for your patch made me realize that things got broken on
-> s390. Thanks! I've sent out a patch that fixes protvirt, but we are going
-> to benefit from your cleanups. I think with your cleanups and that patch
-> of mine both sev_active() and sme_active() can be removed. Feel free to
-> do so. If not, I can attend to it as well.
+When a CQ-enabled device uses QEBSM for SBAL state inspection,
+get_buf_states() can return the PENDING state for an Output Queue.
+get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
+buffer will permanently stall all further completion processing on this
+Queue.
 
-Yes, I think with the dma-mapping fix and this series sme_active and
-sev_active should be gone from common code.  We should also be able
-to remove the exports x86 has for them.
+This isn't a concern for non-QEBSM devices, as get_buf_states() for such
+devices will manually turn PENDING buffers into EMPTY ones.
 
-I'll wait a few days and will then feed the dma-mapping fix to Linus,
-it might make sense to either rebase Thiagos series on top of the
-dma-mapping for-next branch, or wait a few days before reposting.
+Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/qdio_main.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index d64b401f3d05..8d7fc3b6ca63 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -752,6 +752,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
+ 
+ 	switch (state) {
+ 	case SLSB_P_OUTPUT_EMPTY:
++	case SLSB_P_OUTPUT_PENDING:
+ 		/* the adapter got it */
+ 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
+ 			"out empty:%1d %02x", q->nr, count);
+-- 
+2.20.1
+
