@@ -2,161 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 78D3E6984C
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 17:21:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EFE2169858
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 17:25:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730806AbfGOPVG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jul 2019 11:21:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63880 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730548AbfGOPVF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Jul 2019 11:21:05 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FF7jnC004608;
-        Mon, 15 Jul 2019 11:20:30 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2truujgjy7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jul 2019 11:20:30 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6FFDhmj021083;
-        Mon, 15 Jul 2019 11:20:29 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2truujgjwj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jul 2019 11:20:29 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6FF9ogF022024;
-        Mon, 15 Jul 2019 15:20:27 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma01dal.us.ibm.com with ESMTP id 2tq6x6g9ay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 15 Jul 2019 15:20:27 +0000
-Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FFKQv165470810
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 15:20:26 GMT
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F0EEBC6055;
-        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
-Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 647F0C605B;
-        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
-Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
-        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 15 Jul 2019 10:23:08 -0500
-From:   janani <janani@linux.ibm.com>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     x86@kernel.org, linux-s390@vger.kernel.org,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        iommu@lists.linux-foundation.org, Ingo Molnar <mingo@redhat.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-fsdevel@vger.kernel.org,
+        id S1730885AbfGOPZs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Jul 2019 11:25:48 -0400
+Received: from mail-eopbgr810053.outbound.protection.outlook.com ([40.107.81.53]:56768
+        "EHLO NAM01-BY2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730650AbfGOPZs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 15 Jul 2019 11:25:48 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=eN6ONlz29HlNTQQmZyR9Q0Cqqibf5wXkg+4jfWUFmbaVf9FBTNsNRsJAveuCDLwe277kyhXUMDrHMUZd/PZpF+VWvdndhH4TT0paGfVikT1UR0PE6avtPu9UxD6bpDNJLkxBaJKxuDfkpU57UNluQO5pFX6Hi+EO8beCZ9KUi7JQUi/bdpIivSEEMad2UVsTW4TlTCKeh7eFKINFe+KvkGNoEtdVIRO1iejyw9TgAc0pqwENBGy3X5LfiVK0RX7Nf75ktwKP4VzVzd7JeiwJ/XN2GqNJls/J+cKCkd1m9PSr6AuqBWt8rrbnOxnzrS+tr7n0ifLFBZPEFboPqRvA3g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hJp3Z2XIi2XSaZT+2SVa3WQCpicHH6kPsOq70Ikj8jI=;
+ b=mSjwMAl3nhTWfttxXM3YSkiNEe2YQCTE25p3l0P4lv2WxvQHnuaAiSLNMAAVuajDcZTFMfI8/4JdOIzGde8edRziE25OAxAjpdkzrc7Og+8ClIHFbtiUGCbRLEYmImhO+BAuxP2WJcmS8vqC6OvMKr07yRG6w7uH7SSFleednqBrvb7QT1f+ZGd8+A6yTFt/VhLhpXIi+paS9s692/0ttwsLY9PYoac7h1hKEHbr67OojXxo+E2syxivWSsHis0fMsWrHcCpLwZuTev1El2AGvFKqq9gYsGEFsYbd0vnV05ubRFeVujWBl3nW5ienhd6FQrVja79FUnWnAGi0TuinQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
+ smtp.mailfrom=amd.com;dmarc=pass action=none header.from=amd.com;dkim=pass
+ header.d=amd.com;arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector1-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=hJp3Z2XIi2XSaZT+2SVa3WQCpicHH6kPsOq70Ikj8jI=;
+ b=GkDMWYKizM8j+AXdVK2r1A+FZCPK8EZOLpjpWSc6zWv0pVklY2XTpnWTI65BQ+Jx2/cRefCI3isvD9VhIiUw2K8pgAXZ4UAZZyaMq6xxfr3y2ipx/mNdPMdIz/cno7tsxYBCQcd/AB9CMe70G/ydJxzGQt290AcIeOIjovLWUJE=
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com (20.179.104.150) by
+ DM6PR12MB3467.namprd12.prod.outlook.com (20.178.199.10) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2073.14; Mon, 15 Jul 2019 15:25:45 +0000
+Received: from DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7]) by DM6PR12MB3163.namprd12.prod.outlook.com
+ ([fe80::9c3d:8593:906c:e4f7%6]) with mapi id 15.20.2073.012; Mon, 15 Jul 2019
+ 15:25:45 +0000
+From:   "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+To:     Christoph Hellwig <hch@infradead.org>
+CC:     Halil Pasic <pasic@linux.ibm.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Linuxppc-dev 
-        <linuxppc-dev-bounces+janani=linux.ibm.com@lists.ozlabs.org>
-Subject: Re: [PATCH 1/3] x86, s390: Move ARCH_HAS_MEM_ENCRYPT definition to
- arch/Kconfig
-Organization: IBM
-Reply-To: janani@linux.ibm.com
-Mail-Reply-To: janani@linux.ibm.com
-In-Reply-To: <20190713044554.28719-2-bauerman@linux.ibm.com>
-References: <20190713044554.28719-1-bauerman@linux.ibm.com>
- <20190713044554.28719-2-bauerman@linux.ibm.com>
-Message-ID: <3dc137a99c73b1b6582fc854844a417e@linux.vnet.ibm.com>
-X-Sender: janani@linux.ibm.com
-User-Agent: Roundcube Webmail/1.0.1
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907150181
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/protvirt: restore force_dma_unencrypted()
+Thread-Topic: [PATCH 1/1] s390/protvirt: restore force_dma_unencrypted()
+Thread-Index: AQHVOw+4rDn9YtKGU0COMSucJynHjabLqgKAgAACLwCAAA6qgIAAEieA
+Date:   Mon, 15 Jul 2019 15:25:45 +0000
+Message-ID: <3f6616a5-7fd5-c706-4d2b-90341882e602@amd.com>
+References: <20190715131719.100650-1-pasic@linux.ibm.com>
+ <20190715132027.GA18357@infradead.org>
+ <7e393b48-4165-e1d4-0450-e52dd914a3cd@amd.com>
+ <20190715142045.GA908@infradead.org>
+In-Reply-To: <20190715142045.GA908@infradead.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN6PR04CA0062.namprd04.prod.outlook.com
+ (2603:10b6:805:2a::39) To DM6PR12MB3163.namprd12.prod.outlook.com
+ (2603:10b6:5:182::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Thomas.Lendacky@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [165.204.77.1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a7259913-428d-440e-53ff-08d70938b49d
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3467;
+x-ms-traffictypediagnostic: DM6PR12MB3467:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <DM6PR12MB3467D4C7221507BCC7DE20DCECCF0@DM6PR12MB3467.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 00997889E7
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(366004)(39860400002)(136003)(189003)(199004)(6116002)(3846002)(186003)(25786009)(54906003)(68736007)(26005)(6436002)(66066001)(6306002)(316002)(8676002)(31686004)(446003)(478600001)(2616005)(476003)(11346002)(6512007)(966005)(6246003)(7736002)(256004)(81156014)(8936002)(81166006)(14454004)(7416002)(4326008)(71200400001)(71190400001)(52116002)(76176011)(36756003)(6506007)(386003)(102836004)(6486002)(4744005)(53546011)(53936002)(66446008)(99286004)(64756008)(31696002)(6916009)(5660300002)(229853002)(66946007)(66476007)(66556008)(86362001)(2906002)(305945005)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3467;H:DM6PR12MB3163.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: I7isukUKVnhKbvlQaE37T3MsiqdPyR2En4c7EZ8knmUMbv3FoQyNwQV6mFY2MtHaX9IJsOvmWZ4kKQmN9mDROtB8rVeDLSRB8kukD4X29fi7+rikQFvMTe1glxOvj/DOgd5QF3gwRO4pMr/d+ZOxnNVxQXhPdKl+FdnBYP7bE+850Muy9A/G6plstOY5e5PMud0saoY1cdt1zAI8BjCDVDde6xtYLrT29rwudBAQ5+QtGcZzg4F3vWzA7ADVY0eQEFWyvAYvovUo4AQfouKU0S5AbrXuHCuz3kS8qWHPZ7OQ2O9IQotHwVsVJcBAvrwLEf3bZvaX3ADjP9sC/5N4zmIqkCIJxW2jwE8ZxWPQms0alq5MGgrqvlFcwI62Nv2kQ5aIBFvuTxxRVB39YnXkAvDcf0cEw54Ava2ySXGhPhw=
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <C0B0E7303168684AABB6319B9CC87D6B@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a7259913-428d-440e-53ff-08d70938b49d
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Jul 2019 15:25:45.1401
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: tlendack@amd.com
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3467
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2019-07-12 23:45, Thiago Jung Bauermann wrote:
-> powerpc is also going to use this feature, so put it in a generic 
-> location.
-> 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->  arch/Kconfig      | 3 +++
->  arch/s390/Kconfig | 3 ---
->  arch/x86/Kconfig  | 4 +---
->  3 files changed, 4 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index c47b328eada0..4ef3499d4480 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -927,6 +927,9 @@ config LOCK_EVENT_COUNTS
->  	  the chance of application behavior change because of timing
->  	  differences. The counts are reported via debugfs.
-> 
-> +config ARCH_HAS_MEM_ENCRYPT
-> +	bool
-> +
->  source "kernel/gcov/Kconfig"
-> 
->  source "scripts/gcc-plugins/Kconfig"
-> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> index 5d8570ed6cab..f820e631bf89 100644
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -1,7 +1,4 @@
->  # SPDX-License-Identifier: GPL-2.0
-> -config ARCH_HAS_MEM_ENCRYPT
-> -        def_bool y
-> -
-
-  Since you are removing the "def_bool y" when ARCH_HAS_MEM_ENCRYPT is 
-moved to arch/Kconfig, does the s390/Kconfig need "select 
-ARCH_HAS_MEM_ENCRYPT" added like you do for x86/Kconfig?
-
-  - Janani
-
->  config MMU
->  	def_bool y
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index c9f331bb538b..5d3295f2df94 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -68,6 +68,7 @@ config X86
->  	select ARCH_HAS_FORTIFY_SOURCE
->  	select ARCH_HAS_GCOV_PROFILE_ALL
->  	select ARCH_HAS_KCOV			if X86_64
-> +	select ARCH_HAS_MEM_ENCRYPT
->  	select ARCH_HAS_MEMBARRIER_SYNC_CORE
->  	select ARCH_HAS_PMEM_API		if X86_64
->  	select ARCH_HAS_PTE_SPECIAL
-> @@ -1520,9 +1521,6 @@ config X86_CPA_STATISTICS
->  	  helps to determine the effectiveness of preserving large and huge
->  	  page mappings when mapping protections are changed.
-> 
-> -config ARCH_HAS_MEM_ENCRYPT
-> -	def_bool y
-> -
->  config AMD_MEM_ENCRYPT
->  	bool "AMD Secure Memory Encryption (SME) support"
->  	depends on X86_64 && CPU_SUP_AMD
+T24gNy8xNS8xOSA5OjIwIEFNLCBDaHJpc3RvcGggSGVsbHdpZyB3cm90ZToNCj4gT2ssDQo+IA0K
+PiBJJ3ZlIGZvbGRlZCB0aGUgbWluaW1hbCBzMzkwIGZpeCBpbiwgcGxlYXNlIGJvdGggZG91Ymxl
+IGNoZWNrIHRoYXQgdGhpcw0KPiBpcyBvayBhcyB0aGUgbWluaW1hbGx5IGludmFzaXZlIGZpeDoN
+Cg0KTG9va3MgZ29vZCB0byBtZS4NCg0KVGhhbmtzLA0KVG9tDQoNCj4gDQo+IGh0dHA6Ly9naXQu
+aW5mcmFkZWFkLm9yZy91c2Vycy9oY2gvZG1hLW1hcHBpbmcuZ2l0L2NvbW1pdGRpZmYvN2JiOWJi
+Y2VlODg0NWFmNjYzYTdhNjBkZjllMmNjMjQ0MjJiM2RlNQ0KPiANCj4gVGhlIHMzOTAgZml4IHRv
+IGNsZWFuIHVwIHNldl9hY3RpdmUgY2FuIHRoZW4gZ28gaW50byB0aGUgc2VyaWVzIHRoYXQNCj4g
+VGhpYWdvIGlzIHdvcmtpbmcgb24uDQo+IA0K
