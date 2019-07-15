@@ -2,25 +2,25 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 218146875D
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 12:51:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BA9268783
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 12:58:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfGOKvc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jul 2019 06:51:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58526 "EHLO mx1.redhat.com"
+        id S1729747AbfGOK63 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Jul 2019 06:58:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38408 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729695AbfGOKvc (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Jul 2019 06:51:32 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        id S1729591AbfGOK63 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 15 Jul 2019 06:58:29 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D41E9307D910;
-        Mon, 15 Jul 2019 10:51:31 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 10740356C4;
+        Mon, 15 Jul 2019 10:58:28 +0000 (UTC)
 Received: from [10.36.117.137] (ovpn-117-137.ams2.redhat.com [10.36.117.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A77F31001B17;
-        Mon, 15 Jul 2019 10:51:28 +0000 (UTC)
-Subject: Re: [PATCH v3 02/11] s390x/mm: Fail when an altmap is used for
- arch_add_memory()
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2036C5D9D2;
+        Mon, 15 Jul 2019 10:58:22 +0000 (UTC)
+Subject: Re: [PATCH v3 09/11] mm/memory_hotplug: Remove memory block devices
+ before arch_remove_memory()
 To:     Michal Hocko <mhocko@kernel.org>
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
@@ -29,14 +29,23 @@ Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Dan Williams <dan.j.williams@intel.com>,
         Wei Yang <richard.weiyang@gmail.com>,
         Igor Mammedov <imammedo@redhat.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Oscar Salvador <osalvador@suse.com>
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Andrew Banman <andrew.banman@hpe.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Mark Brown <broonie@kernel.org>,
+        Chris Wilson <chris@chris-wilson.co.uk>,
+        Oscar Salvador <osalvador@suse.de>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
 References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-3-david@redhat.com>
- <20190701074306.GC6376@dhcp22.suse.cz> <20190701124628.GT6376@dhcp22.suse.cz>
+ <20190527111152.16324-10-david@redhat.com>
+ <20190701084129.GI6376@dhcp22.suse.cz>
 From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
@@ -83,43 +92,53 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <86f3ff3d-d035-a806-88b7-b8c7b77c206e@redhat.com>
-Date:   Mon, 15 Jul 2019 12:51:27 +0200
+Message-ID: <54a2f873-374e-b132-ae0f-4924a7e332c0@redhat.com>
+Date:   Mon, 15 Jul 2019 12:58:22 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20190701124628.GT6376@dhcp22.suse.cz>
+In-Reply-To: <20190701084129.GI6376@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 15 Jul 2019 10:51:32 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Mon, 15 Jul 2019 10:58:28 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 01.07.19 14:46, Michal Hocko wrote:
-> On Mon 01-07-19 09:43:06, Michal Hocko wrote:
->> On Mon 27-05-19 13:11:43, David Hildenbrand wrote:
->>> ZONE_DEVICE is not yet supported, fail if an altmap is passed, so we
->>> don't forget arch_add_memory()/arch_remove_memory() when unlocking
->>> support.
+On 01.07.19 10:41, Michal Hocko wrote:
+> On Mon 27-05-19 13:11:50, David Hildenbrand wrote:
+>> Let's factor out removing of memory block devices, which is only
+>> necessary for memory added via add_memory() and friends that created
+>> memory block devices. Remove the devices before calling
+>> arch_remove_memory().
 >>
->> Why do we need this? Sure ZONE_DEVICE is not supported for s390 and so
->> might be the case for other arches which support hotplug. I do not see
->> much point in adding warning to each of them.
+>> This finishes factoring out memory block device handling from
+>> arch_add_memory() and arch_remove_memory().
 > 
-> I would drop this one. If there is a strong reason to have something
-> like that it should come with a better explanation and it can be done on
-> top.
+> OK, this makes sense again. Just a nit. Calling find_memory_block_by_id
+> for each memory block looks a bit suboptimal, especially when we are
+> removing consequent physical memblocks. I have to confess that I do not
+> know how expensive is the search and I also expect that there won't be
+> that many memblocks in the removed range anyway as large setups have
+> large memblocks.
 > 
 
-This was requested by Dan and I agree it is the right thing to do. In
-the context of paravirtualized devices (e.g., virtio-pmem), it makes
-sense to block functionality an arch does not support.
+The devices are not allocated sequentially, so there is no easy way to
+look them up.
 
-I'll leave the decision to Andrew.
+There is a comment for find_memory_block():
+
+"For now, we have a linear search to go find the appropriate
+memory_block corresponding to a particular phys_index. If this gets to
+be a real problem, we can always use a radix tree or something here."
+
+So if this becomes a problem, we need a separate data structure to speed
+up the lookup. (IOW, this was already the same in the old code)
+
+Thanks!
 
 -- 
 
