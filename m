@@ -2,80 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2E07C69528
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 16:57:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9D728694BA
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 16:53:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390225AbfGOOUd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jul 2019 10:20:33 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45010 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389797AbfGOOUd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:20:33 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 33E0E20651;
-        Mon, 15 Jul 2019 14:20:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563200433;
-        bh=tG4a5Lvu8njscnRNe/cyWM4ApT0qh+9aLYSG6J7l6fE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2pEr7rs4Waurl0JiKMSO4Vf0CqSvavzVQemU8Xv62nBVl13CgjpYaSX63DvcGu1+F
-         DB0yuSfz56Hm96uFwnoA8DovYKvKNYwrs/zJGVk2dj66D+t0zq/KbdAOhcErOOYd3H
-         Vj10RtfY6DCkQoy5nOg9e7VbuFqqmO+I1SnwO1L8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 048/158] s390/qdio: handle PENDING state for QEBSM devices
-Date:   Mon, 15 Jul 2019 10:16:19 -0400
-Message-Id: <20190715141809.8445-48-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
-References: <20190715141809.8445-1-sashal@kernel.org>
+        id S2391556AbfGOO3U (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Jul 2019 10:29:20 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:33164 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2391541AbfGOO3T (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 15 Jul 2019 10:29:19 -0400
+Received: by mail-ot1-f66.google.com with SMTP id q20so17165097otl.0
+        for <linux-s390@vger.kernel.org>; Mon, 15 Jul 2019 07:29:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=brauner.io; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=6QkSbJ8pehcPJsEqSW/0Jw3Kj7WtEh8gEc9PVJH1CrA=;
+        b=YDX5Cni69En7Hnte+J3OlCSJ0HlBPkTtUerLm+TEt90UKpDUfDuJvjCxyA/xsbdN+4
+         NlM28WRfcpu6byVaPN4oE7VH4s3k0vd1hEb+a57aabIHxBzldliL2Htoq2btKjK4n7AS
+         dEk3INMwrusBqXJOHjVd5y+1ZYzs3lAeIPfrwgpru+b49OUDLgXf6+CpcsZ6fG8itG0F
+         1l0rPwOFa7qBIOGncKcrTTI0b32v3jNfOV6b+s6CSQAQGdFNyL4RrykbWCb0WlSmG84g
+         rPg2y0ELpTG/hNU8ek2ztwI6ffWkYO0HuhjiHpT2javBLichO07Q+0RuqzlaxnSebk5a
+         7e7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=6QkSbJ8pehcPJsEqSW/0Jw3Kj7WtEh8gEc9PVJH1CrA=;
+        b=pIl/SHcomU0CVDBGjjitr/JtABn+Ej9+jtjDlj2EC8gWZc9DtRzvmYklhuh/fIujVf
+         BGVpayWnQ2JlqqlsuQSTeJJAjoteBcSPEVH2Ta78Jevp2zN5Ih9+QUb0Pjar+iWAEynD
+         wtWEFQ7HumVmkfMM1bnw46fl+VJSoEE/nHOjhcWiKm3V3j44dWVdu56o82LAVn3wW3nU
+         B2UsyWMEnAczD86mhE6i2qSWLSqT7Et8qNODxWWlAQyjZARzN2IKYIWsWB64NUHOC7GN
+         3W0MhNPjLiwwhQpEmT5K0s5TZD7Nh8Mgnl0rV69Lr47ZjMEuwNde84xx0QSDhLbr5rVU
+         ARoA==
+X-Gm-Message-State: APjAAAXu4rukm/EyjoLaf3LBWcnKFceZ/mk2vi3jR+IV7gWr79iPRgb0
+        5eD6N7z6wH0yVg/oUtRqNd0=
+X-Google-Smtp-Source: APXvYqyjL0Ot/+YneSRjZE4d+NlwotmvVCLCkSyihKbIEGxxfUrBUzxa4ggVFEdDWrNvLtFCu+w3cQ==
+X-Received: by 2002:a05:6830:193:: with SMTP id q19mr20811013ota.187.1563200957973;
+        Mon, 15 Jul 2019 07:29:17 -0700 (PDT)
+Received: from brauner.io ([208.54.86.135])
+        by smtp.gmail.com with ESMTPSA id a94sm6577090otb.15.2019.07.15.07.29.11
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Jul 2019 07:29:16 -0700 (PDT)
+Date:   Mon, 15 Jul 2019 16:29:09 +0200
+From:   Christian Brauner <christian@brauner.io>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
+        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
+Message-ID: <20190715142907.7p43dgmx5sz5oouz@brauner.io>
+References: <20190714192205.27190-1-christian@brauner.io>
+ <20190714192205.27190-2-christian@brauner.io>
+ <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
+> I think Vasily already has a clone3 patch for s390x with 435. 
 
-[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
+Excellent. I'll leave the # 435 reserved for clone3 on s390x in until
+this patch has landed. It shouldn't be a merge conflict and if so it
+should be trivial.
 
-When a CQ-enabled device uses QEBSM for SBAL state inspection,
-get_buf_states() can return the PENDING state for an Output Queue.
-get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
-buffer will permanently stall all further completion processing on this
-Queue.
-
-This isn't a concern for non-QEBSM devices, as get_buf_states() for such
-devices will manually turn PENDING buffers into EMPTY ones.
-
-Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/cio/qdio_main.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index 9c7d9da42ba0..4ac4a73037f5 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -749,6 +749,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
- 
- 	switch (state) {
- 	case SLSB_P_OUTPUT_EMPTY:
-+	case SLSB_P_OUTPUT_PENDING:
- 		/* the adapter got it */
- 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
- 			"out empty:%1d %02x", q->nr, count);
--- 
-2.20.1
-
+Christian
