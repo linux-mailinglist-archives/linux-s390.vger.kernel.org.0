@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9E1A2692AF
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 16:38:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E07C69528
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 16:57:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404770AbfGOOi1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jul 2019 10:38:27 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35588 "EHLO mail.kernel.org"
+        id S2390225AbfGOOUd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Jul 2019 10:20:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45010 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2404766AbfGOOi0 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Jul 2019 10:38:26 -0400
+        id S2389797AbfGOOUd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 15 Jul 2019 10:20:33 -0400
 Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6848A205ED;
-        Mon, 15 Jul 2019 14:38:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 33E0E20651;
+        Mon, 15 Jul 2019 14:20:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563201506;
-        bh=8vn1pkw3AVTOn8LyB2XGiWV2KQZtXc4YimentJQZtrQ=;
+        s=default; t=1563200433;
+        bh=tG4a5Lvu8njscnRNe/cyWM4ApT0qh+9aLYSG6J7l6fE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WqgxnQ3qeqSUD58MKNHfzFn7Ab4hYrSi1RgK/u+2+bKLJYzaYiRNPKc0gYY9jzceh
-         lFt99nq2N5rYmpnuaxnITEth9pjZThrKecMFwCLwgKXvmxan7Btllz3h7Y5U5LOZ1g
-         XqDATXzg+KrIu29PfjUtNDsoBsNkLo/lc+zbvZlE=
+        b=2pEr7rs4Waurl0JiKMSO4Vf0CqSvavzVQemU8Xv62nBVl13CgjpYaSX63DvcGu1+F
+         DB0yuSfz56Hm96uFwnoA8DovYKvKNYwrs/zJGVk2dj66D+t0zq/KbdAOhcErOOYd3H
+         Vj10RtfY6DCkQoy5nOg9e7VbuFqqmO+I1SnwO1L8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 30/73] s390/qdio: handle PENDING state for QEBSM devices
-Date:   Mon, 15 Jul 2019 10:35:46 -0400
-Message-Id: <20190715143629.10893-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 048/158] s390/qdio: handle PENDING state for QEBSM devices
+Date:   Mon, 15 Jul 2019 10:16:19 -0400
+Message-Id: <20190715141809.8445-48-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715143629.10893-1-sashal@kernel.org>
-References: <20190715143629.10893-1-sashal@kernel.org>
+In-Reply-To: <20190715141809.8445-1-sashal@kernel.org>
+References: <20190715141809.8445-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -65,10 +65,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+)
 
 diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index 18ab84e9c6b2..58cd0e0c9680 100644
+index 9c7d9da42ba0..4ac4a73037f5 100644
 --- a/drivers/s390/cio/qdio_main.c
 +++ b/drivers/s390/cio/qdio_main.c
-@@ -758,6 +758,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
+@@ -749,6 +749,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q)
  
  	switch (state) {
  	case SLSB_P_OUTPUT_EMPTY:
