@@ -2,80 +2,161 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F3C046979D
-	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 17:12:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 78D3E6984C
+	for <lists+linux-s390@lfdr.de>; Mon, 15 Jul 2019 17:21:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbfGONvG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jul 2019 09:51:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41706 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731803AbfGONvE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Jul 2019 09:51:04 -0400
-Received: from sasha-vm.mshome.net (unknown [73.61.17.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8FA5B2081C;
-        Mon, 15 Jul 2019 13:51:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563198663;
-        bh=0jxzida8Nrq1/xjaMQLT+q8JO8kBcnfMpyXemMAAhmM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UhQd3DK0tmmAe/0Z/qsd8PSe9MgjCSccbgXZOVzoiWy4J/EZ40r3eHbwxgkffo7vz
-         SdYUW5zl7kFETjKcOfc9y9jOo8uZnssI1k501TixLuabA/FOhR3huCJZWyYXtpdXcT
-         Dh8K17pCHN/xTbe64FoQ7KNeSDhXdOnwk6LShpqc=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 077/249] s390/qdio: handle PENDING state for QEBSM devices
-Date:   Mon, 15 Jul 2019 09:44:02 -0400
-Message-Id: <20190715134655.4076-77-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190715134655.4076-1-sashal@kernel.org>
-References: <20190715134655.4076-1-sashal@kernel.org>
+        id S1730806AbfGOPVG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 15 Jul 2019 11:21:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63880 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730548AbfGOPVF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 15 Jul 2019 11:21:05 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FF7jnC004608;
+        Mon, 15 Jul 2019 11:20:30 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2truujgjy7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 11:20:30 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6FFDhmj021083;
+        Mon, 15 Jul 2019 11:20:29 -0400
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2truujgjwj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 11:20:29 -0400
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6FF9ogF022024;
+        Mon, 15 Jul 2019 15:20:27 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma01dal.us.ibm.com with ESMTP id 2tq6x6g9ay-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 15 Jul 2019 15:20:27 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FFKQv165470810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Jul 2019 15:20:26 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F0EEBC6055;
+        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 647F0C605B;
+        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
+Received: from ltc.linux.ibm.com (unknown [9.16.170.189])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Jul 2019 15:20:25 +0000 (GMT)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 15 Jul 2019 10:23:08 -0500
+From:   janani <janani@linux.ibm.com>
+To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc:     x86@kernel.org, linux-s390@vger.kernel.org,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        iommu@lists.linux-foundation.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-fsdevel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Linuxppc-dev 
+        <linuxppc-dev-bounces+janani=linux.ibm.com@lists.ozlabs.org>
+Subject: Re: [PATCH 1/3] x86, s390: Move ARCH_HAS_MEM_ENCRYPT definition to
+ arch/Kconfig
+Organization: IBM
+Reply-To: janani@linux.ibm.com
+Mail-Reply-To: janani@linux.ibm.com
+In-Reply-To: <20190713044554.28719-2-bauerman@linux.ibm.com>
+References: <20190713044554.28719-1-bauerman@linux.ibm.com>
+ <20190713044554.28719-2-bauerman@linux.ibm.com>
+Message-ID: <3dc137a99c73b1b6582fc854844a417e@linux.vnet.ibm.com>
+X-Sender: janani@linux.ibm.com
+User-Agent: Roundcube Webmail/1.0.1
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907150181
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+On 2019-07-12 23:45, Thiago Jung Bauermann wrote:
+> powerpc is also going to use this feature, so put it in a generic 
+> location.
+> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/Kconfig      | 3 +++
+>  arch/s390/Kconfig | 3 ---
+>  arch/x86/Kconfig  | 4 +---
+>  3 files changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index c47b328eada0..4ef3499d4480 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -927,6 +927,9 @@ config LOCK_EVENT_COUNTS
+>  	  the chance of application behavior change because of timing
+>  	  differences. The counts are reported via debugfs.
+> 
+> +config ARCH_HAS_MEM_ENCRYPT
+> +	bool
+> +
+>  source "kernel/gcov/Kconfig"
+> 
+>  source "scripts/gcc-plugins/Kconfig"
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index 5d8570ed6cab..f820e631bf89 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -1,7 +1,4 @@
+>  # SPDX-License-Identifier: GPL-2.0
+> -config ARCH_HAS_MEM_ENCRYPT
+> -        def_bool y
+> -
 
-[ Upstream commit 04310324c6f482921c071444833e70fe861b73d9 ]
+  Since you are removing the "def_bool y" when ARCH_HAS_MEM_ENCRYPT is 
+moved to arch/Kconfig, does the s390/Kconfig need "select 
+ARCH_HAS_MEM_ENCRYPT" added like you do for x86/Kconfig?
 
-When a CQ-enabled device uses QEBSM for SBAL state inspection,
-get_buf_states() can return the PENDING state for an Output Queue.
-get_outbound_buffer_frontier() isn't prepared for this, and any PENDING
-buffer will permanently stall all further completion processing on this
-Queue.
+  - Janani
 
-This isn't a concern for non-QEBSM devices, as get_buf_states() for such
-devices will manually turn PENDING buffers into EMPTY ones.
-
-Fixes: 104ea556ee7f ("qdio: support asynchronous delivery of storage blocks")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/cio/qdio_main.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
-index 7b7620de2acd..730c4e68094b 100644
---- a/drivers/s390/cio/qdio_main.c
-+++ b/drivers/s390/cio/qdio_main.c
-@@ -736,6 +736,7 @@ static int get_outbound_buffer_frontier(struct qdio_q *q, unsigned int start)
- 
- 	switch (state) {
- 	case SLSB_P_OUTPUT_EMPTY:
-+	case SLSB_P_OUTPUT_PENDING:
- 		/* the adapter got it */
- 		DBF_DEV_EVENT(DBF_INFO, q->irq_ptr,
- 			"out empty:%1d %02x", q->nr, count);
--- 
-2.20.1
-
+>  config MMU
+>  	def_bool y
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index c9f331bb538b..5d3295f2df94 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -68,6 +68,7 @@ config X86
+>  	select ARCH_HAS_FORTIFY_SOURCE
+>  	select ARCH_HAS_GCOV_PROFILE_ALL
+>  	select ARCH_HAS_KCOV			if X86_64
+> +	select ARCH_HAS_MEM_ENCRYPT
+>  	select ARCH_HAS_MEMBARRIER_SYNC_CORE
+>  	select ARCH_HAS_PMEM_API		if X86_64
+>  	select ARCH_HAS_PTE_SPECIAL
+> @@ -1520,9 +1521,6 @@ config X86_CPA_STATISTICS
+>  	  helps to determine the effectiveness of preserving large and huge
+>  	  page mappings when mapping protections are changed.
+> 
+> -config ARCH_HAS_MEM_ENCRYPT
+> -	def_bool y
+> -
+>  config AMD_MEM_ENCRYPT
+>  	bool "AMD Secure Memory Encryption (SME) support"
+>  	depends on X86_64 && CPU_SUP_AMD
