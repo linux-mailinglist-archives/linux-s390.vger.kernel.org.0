@@ -2,165 +2,152 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF58A69EC3
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jul 2019 00:13:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCD206A37D
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jul 2019 10:04:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732826AbfGOWMb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 15 Jul 2019 18:12:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21576 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732779AbfGOWMa (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 15 Jul 2019 18:12:30 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6FLvQ5A011405
-        for <linux-s390@vger.kernel.org>; Mon, 15 Jul 2019 18:12:29 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ts0w6tptc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 15 Jul 2019 18:12:28 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Mon, 15 Jul 2019 23:12:26 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Jul 2019 23:12:23 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6FMCMGD46661880
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Jul 2019 22:12:22 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0711DA4040;
-        Mon, 15 Jul 2019 22:12:22 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3C165A404D;
-        Mon, 15 Jul 2019 22:12:21 +0000 (GMT)
-Received: from localhost (unknown [9.145.71.68])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 15 Jul 2019 22:12:21 +0000 (GMT)
-Date:   Tue, 16 Jul 2019 00:12:19 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Petr Tesarik <PTesarik@suse.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Raymund Will <rw@suse.com>
-Subject: [PATCH] s390: enable detection of kernel version from bzImage
-References: <your-ad-here.call-01563228330-ext-8076@work.hours>
+        id S1730938AbfGPIEG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jul 2019 04:04:06 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:35732 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727042AbfGPIEF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 16 Jul 2019 04:04:05 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id 65FB4506CB;
+        Tue, 16 Jul 2019 10:03:57 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by gerste.heinlein-support.de (gerste.heinlein-support.de [91.198.250.173]) (amavisd-new, port 10030)
+        with ESMTP id FP9J3tccLygu; Tue, 16 Jul 2019 10:03:51 +0200 (CEST)
+Date:   Tue, 16 Jul 2019 18:03:38 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org,
+        rgb@redhat.com, paul@paul-moore.com, raven@themaw.net,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>
+Subject: Re: [PATCH v9 05/10] namei: O_BENEATH-style path resolution flags
+Message-ID: <20190716080338.al4cnwdfvdbpzh3r@yavin>
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-6-cyphar@cyphar.com>
+ <20190712043341.GI17978@ZenIV.linux.org.uk>
+ <20190712105745.nruaftgeat6irhzr@yavin>
+ <20190712123924.GK17978@ZenIV.linux.org.uk>
+ <20190712125552.GL17978@ZenIV.linux.org.uk>
+ <20190712132553.GN17978@ZenIV.linux.org.uk>
+ <20190712150026.GO17978@ZenIV.linux.org.uk>
+ <20190713024153.GA3817@ZenIV.linux.org.uk>
+ <20190714035826.GQ17978@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lshvdcpckvdb4crm"
 Content-Disposition: inline
-In-Reply-To: <your-ad-here.call-01563228330-ext-8076@work.hours>
-X-Patchwork-Bot: notify
-X-TM-AS-GCONF: 00
-x-cbid: 19071522-0016-0000-0000-00000292D1B5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071522-0017-0000-0000-000032F09FA6
-Message-Id: <patch.git-94e9726bbfe5.your-ad-here.call-01563228538-ext-5706@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-15_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907150246
+In-Reply-To: <20190714035826.GQ17978@ZenIV.linux.org.uk>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Extend "parmarea" to include an offset of the version string, which is
-stored as 8-byte big endian value.
 
-To retrieve version string from bzImage reliably, one should check the
-presence of "S390EP" ascii string at 0x10008 (available since v3.2),
-then read the version string offset from 0x10428 (which has been 0
-since v3.2 up to now). The string is null terminated.
+--lshvdcpckvdb4crm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Could be retrieved with the following "file" command magic (requires
-file v5.34):
-8 string \x02\x00\x00\x18\x60\x00\x00\x50\x02\x00\x00\x68\x60\x00\x00\x50\x40\x40\x40\x40\x40\x40\x40\x40 Linux S390
->0x10008       string          S390EP
->>0x10428      bequad          >0
->>>(0x10428.Q) string          >\0             \b, version %s
+On 2019-07-14, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Sat, Jul 13, 2019 at 03:41:53AM +0100, Al Viro wrote:
+> > On Fri, Jul 12, 2019 at 04:00:26PM +0100, Al Viro wrote:
+> > > On Fri, Jul 12, 2019 at 02:25:53PM +0100, Al Viro wrote:
+> > >=20
+> > > > 	if (flags & LOOKUP_BENEATH) {
+> > > > 		nd->root =3D nd->path;
+> > > > 		if (!(flags & LOOKUP_RCU))
+> > > > 			path_get(&nd->root);
+> > > > 		else
+> > > > 			nd->root_seq =3D nd->seq;
+> > >=20
+> > > BTW, this assignment is needed for LOOKUP_RCU case.  Without it
+> > > you are pretty much guaranteed that lazy pathwalk will fail,
+> > > when it comes to complete_walk().
+> > >=20
+> > > Speaking of which, what would happen if LOOKUP_ROOT/LOOKUP_BENEATH
+> > > combination would someday get passed?
+> >=20
+> > I don't understand what's going on with ->r_seq in there - your
+> > call of path_is_under() is after having (re-)sampled rename_lock,
+> > but if that was the only .. in there, who's going to recheck
+> > the value?  For that matter, what's to guarantee that the thing
+> > won't get moved just as you are returning from handle_dots()?
+> >=20
+> > IOW, what does LOOKUP_IN_ROOT guarantee for caller (openat2())?
+>=20
+> Sigh...  Usual effects of trying to document things:
+>=20
+> 1) LOOKUP_NO_EVAL looks bogus.  It had been introduced by commit 57d46577=
+16ac
+> (audit: ignore fcaps on umount) and AFAICS it's crap.  It is set in
+> ksys_umount() and nowhere else.  It's ignored by everything except
+> filename_mountpoint().  The thing is, call graph for filename_mountpoint()
+> is
+> 	filename_mountpoint()
+> 		<- user_path_mountpoint_at()
+> 			<- ksys_umount()
+> 		<- kern_path_mountpoint()
+> 			<- autofs_dev_ioctl_ismountpoint()
+> 			<- find_autofs_mount()
+> 				<- autofs_dev_ioctl_open_mountpoint()
+> 				<- autofs_dev_ioctl_requester()
+> 				<- autofs_dev_ioctl_ismountpoint()
+> In other words, that flag is basically "was filename_mountpoint()
+> been called by umount(2) or has it come from an autofs ioctl?".
+> And looking at the rationale in that commit, autofs ioctls need
+> it just as much as umount(2) does.  Why is it not set for those
+> as well?  And why is it conditional at all?
 
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
----
- arch/s390/boot/Makefile       | 2 +-
- arch/s390/boot/head.S         | 1 +
- arch/s390/boot/version.c      | 6 ++++++
- arch/s390/include/asm/setup.h | 4 +++-
- 4 files changed, 11 insertions(+), 2 deletions(-)
- create mode 100644 arch/s390/boot/version.c
+In addition, LOOKUP_NO_EVAL =3D=3D LOOKUP_OPEN (0x100). Is that meant to be
+the case? Also I just saw you have a patch in work.namei that fixes this
+up -- do you want me to rebase on top of that?
 
-diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
-index 7cba96e7587b..4cf0bddb7d92 100644
---- a/arch/s390/boot/Makefile
-+++ b/arch/s390/boot/Makefile
-@@ -36,7 +36,7 @@ CFLAGS_sclp_early_core.o += -I$(srctree)/drivers/s390/char
- 
- obj-y	:= head.o als.o startup.o mem_detect.o ipl_parm.o ipl_report.o
- obj-y	+= string.o ebcdic.o sclp_early_core.o mem.o ipl_vmparm.o cmdline.o
--obj-y	+= ctype.o text_dma.o
-+obj-y	+= version.o ctype.o text_dma.o
- obj-$(CONFIG_PROTECTED_VIRTUALIZATION_GUEST)	+= uv.o
- obj-$(CONFIG_RELOCATABLE)	+= machine_kexec_reloc.o
- obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
-diff --git a/arch/s390/boot/head.S b/arch/s390/boot/head.S
-index 028aab03a9e7..2087bed6e60f 100644
---- a/arch/s390/boot/head.S
-+++ b/arch/s390/boot/head.S
-@@ -361,6 +361,7 @@ ENTRY(startup_kdump)
- 	.quad	0			# INITRD_SIZE
- 	.quad	0			# OLDMEM_BASE
- 	.quad	0			# OLDMEM_SIZE
-+	.quad	kernel_version		# points to kernel version string
- 
- 	.org	COMMAND_LINE
- 	.byte	"root=/dev/ram0 ro"
-diff --git a/arch/s390/boot/version.c b/arch/s390/boot/version.c
-new file mode 100644
-index 000000000000..ea5e49651931
---- /dev/null
-+++ b/arch/s390/boot/version.c
-@@ -0,0 +1,6 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <generated/utsrelease.h>
-+#include <generated/compile.h>
-+
-+const char kernel_version[] = UTS_RELEASE
-+	" (" LINUX_COMPILE_BY "@" LINUX_COMPILE_HOST ") " UTS_VERSION;
-diff --git a/arch/s390/include/asm/setup.h b/arch/s390/include/asm/setup.h
-index 925889d360c1..e5d28a475f76 100644
---- a/arch/s390/include/asm/setup.h
-+++ b/arch/s390/include/asm/setup.h
-@@ -54,6 +54,7 @@
- #define INITRD_SIZE_OFFSET	0x10410
- #define OLDMEM_BASE_OFFSET	0x10418
- #define OLDMEM_SIZE_OFFSET	0x10420
-+#define KERNEL_VERSION_OFFSET	0x10428
- #define COMMAND_LINE_OFFSET	0x10480
- 
- #ifndef __ASSEMBLY__
-@@ -74,7 +75,8 @@ struct parmarea {
- 	unsigned long initrd_size;			/* 0x10410 */
- 	unsigned long oldmem_base;			/* 0x10418 */
- 	unsigned long oldmem_size;			/* 0x10420 */
--	char pad1[0x10480 - 0x10428];			/* 0x10428 - 0x10480 */
-+	unsigned long kernel_version;			/* 0x10428 */
-+	char pad1[0x10480 - 0x10430];			/* 0x10430 - 0x10480 */
- 	char command_line[ARCH_COMMAND_LINE_SIZE];	/* 0x10480 */
- };
- 
--- 
-2.21.0
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
+--lshvdcpckvdb4crm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXS2E1wAKCRCdlLljIbnQ
+EvUWAP4hDKNKmCaghR/nSF7B9A3mjchQtut9n7vItMKjRPJjLAD9GRABOJCnZ47q
+TqUSuZfxKfq260PQMTx91hQd/K+//QE=
+=XoHc
+-----END PGP SIGNATURE-----
+
+--lshvdcpckvdb4crm--
