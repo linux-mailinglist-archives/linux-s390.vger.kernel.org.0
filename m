@@ -2,94 +2,72 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDC3B6A424
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jul 2019 10:48:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CDE526A62E
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jul 2019 12:09:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731521AbfGPIqk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jul 2019 04:46:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:54292 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728004AbfGPIqk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 16 Jul 2019 04:46:40 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 51E92AFCE;
-        Tue, 16 Jul 2019 08:46:38 +0000 (UTC)
-Date:   Tue, 16 Jul 2019 10:46:34 +0200
-From:   Oscar Salvador <osalvador@suse.de>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        akpm@linux-foundation.org, Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richard.weiyang@gmail.com>,
-        Igor Mammedov <imammedo@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Brown <broonie@kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Subject: Re: [PATCH v3 10/11] mm/memory_hotplug: Make
- unregister_memory_block_under_nodes() never fail
-Message-ID: <20190716084626.GA12394@linux>
-References: <20190527111152.16324-1-david@redhat.com>
- <20190527111152.16324-11-david@redhat.com>
- <20190701085144.GJ6376@dhcp22.suse.cz>
- <20190701093640.GA17349@linux>
- <20190701102756.GO6376@dhcp22.suse.cz>
- <d450488d-7a82-f7a9-c8d3-b69a0bca48c6@redhat.com>
+        id S1731015AbfGPKJM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jul 2019 06:09:12 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36138 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728136AbfGPKJM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 16 Jul 2019 06:09:12 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E52E23082141;
+        Tue, 16 Jul 2019 10:09:11 +0000 (UTC)
+Received: from localhost (ovpn-117-180.ams2.redhat.com [10.36.117.180])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F8DE19C59;
+        Tue, 16 Jul 2019 10:09:11 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>
+Subject: [PULL 0/5] vfio-ccw fixes for 5.3
+Date:   Tue, 16 Jul 2019 12:09:03 +0200
+Message-Id: <20190716100908.3460-1-cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d450488d-7a82-f7a9-c8d3-b69a0bca48c6@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 16 Jul 2019 10:09:12 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 01:10:33PM +0200, David Hildenbrand wrote:
-> On 01.07.19 12:27, Michal Hocko wrote:
-> > On Mon 01-07-19 11:36:44, Oscar Salvador wrote:
-> >> On Mon, Jul 01, 2019 at 10:51:44AM +0200, Michal Hocko wrote:
-> >>> Yeah, we do not allow to offline multi zone (node) ranges so the current
-> >>> code seems to be over engineered.
-> >>>
-> >>> Anyway, I am wondering why do we have to strictly check for already
-> >>> removed nodes links. Is the sysfs code going to complain we we try to
-> >>> remove again?
-> >>
-> >> No, sysfs will silently "fail" if the symlink has already been removed.
-> >> At least that is what I saw last time I played with it.
-> >>
-> >> I guess the question is what if sysfs handling changes in the future
-> >> and starts dropping warnings when trying to remove a symlink is not there.
-> >> Maybe that is unlikely to happen?
-> > 
-> > And maybe we handle it then rather than have a static allocation that
-> > everybody with hotremove configured has to pay for.
-> > 
-> 
-> So what's the suggestion? Dropping the nodemask_t completely and calling
-> sysfs_remove_link() on already potentially removed links?
-> 
-> Of course, we can also just use mem_blk->nid and rest assured that it
-> will never be called for memory blocks belonging to multiple nodes.
+The following changes since commit 9a159190414d461fdac7ae5bb749c2d532b35419:
 
-Hi David,
+  s390/unwind: avoid int overflow in outside_of_stack (2019-07-11 20:40:02 +0200)
 
-While it is easy to construct a scenario where a memblock belongs to multiple
-nodes, I have to confess that I yet have not seen that in a real-world scenario.
+are available in the Git repository at:
 
-Given said that, I think that the less risky way is to just drop the nodemask_t
-and do not care about calling sysfs_remove_link() for already removed links.
-As I said, sysfs_remove_link() will silently fail when it fails to find the
-symlink, so I do not think it is a big deal.
+  https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw.git tags/vfio-ccw-20190716
 
+for you to fetch changes up to 127e62174041496b383f82d696e1592ce6838604:
+
+  vfio-ccw: Update documentation for csch/hsch (2019-07-15 14:22:57 +0200)
+
+----------------------------------------------------------------
+Fixes in vfio-ccw for older and newer issues.
+
+----------------------------------------------------------------
+
+Farhan Ali (5):
+  vfio-ccw: Fix misleading comment when setting orb.cmd.c64
+  vfio-ccw: Fix memory leak and don't call cp_free in cp_init
+  vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
+  vfio-ccw: Don't call cp_free if we are processing a channel program
+  vfio-ccw: Update documentation for csch/hsch
+
+ Documentation/s390/vfio-ccw.rst | 31 ++++++++++++++++++++++++++++---
+ drivers/s390/cio/vfio_ccw_cp.c  | 28 +++++++++++++++++-----------
+ drivers/s390/cio/vfio_ccw_drv.c |  2 +-
+ 3 files changed, 46 insertions(+), 15 deletions(-)
 
 -- 
-Oscar Salvador
-SUSE L3
+2.20.1
+
