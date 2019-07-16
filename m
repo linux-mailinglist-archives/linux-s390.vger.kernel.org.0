@@ -2,175 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1B4846A928
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jul 2019 15:06:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B665E6A947
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jul 2019 15:12:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732472AbfGPNGq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jul 2019 09:06:46 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:36748 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbfGPNGq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 16 Jul 2019 09:06:46 -0400
-Received: by mail-pg1-f194.google.com with SMTP id l21so9430910pgm.3
-        for <linux-s390@vger.kernel.org>; Tue, 16 Jul 2019 06:06:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=HndzIrwk0eloZ/VKZJ3ivaH1s8315qlKpsro16xZw70=;
-        b=b8dhUBZSz3RGMnHXa2eQUBcpb0Fr1c6vhDDwn4sy14RwoF3LeMqo4GwVei/eUCKLfN
-         2ysAKK0S6zo65plaT8Lmyu1cdKbX5vv5C3GPTJPIInad+mBHinkOAREnbCNuxmpL9VDG
-         fvZUIwNFnzQNqEmzHkL0RRQ1MQkDpVZLaNNcaAVC/zAYUxremZf5+M3FMQbomiyN3wH4
-         zc2zC/xff3jM5dpplZUlTKdEFImIprhxsju27ez6MU1i0OsgFNq72UzfzJW9Togr4CqO
-         YkkRxSa2wlAwsL/E0oFuYOap/7lvKcKnsDSBvmk5MITFO2BYwQSiCBv4/QcWtaXdxpFP
-         2++g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HndzIrwk0eloZ/VKZJ3ivaH1s8315qlKpsro16xZw70=;
-        b=BguCnObdufmfqFXJ+cEdWtMvpx3FHY4eqcgWCWKtrn5X6QS6qhnBea+Z2il63iX5st
-         YISnX2B3SCplji4DRpc4gwLoNMK1DRHDonDIAaFBup1OWe4OqUBfY4QDnC9dcPBSHTlt
-         TGNJeH9Xe7y1GU1zOi6kZbdFG+Tue2lzz5xEL0DnR4PRtP2Yxfqg+C+mAg+9DryZ6Wgv
-         gepMgh7tQXsJgdpTZlkiRtz2J8IysDR3JqldpieG5ukGo8rdd3YQEz+pOD9Cw3QhAz3d
-         AwgS8PMMfTdo9Y7L6QELUZuQFEjMhnjue6oipCi35dqySe2IFE7KW7IyKlw4PBwUFiio
-         ujew==
-X-Gm-Message-State: APjAAAWJ9xwbm/DfqeuoHKXN4x8kd/uAIP/UYztdarGPjINqid5gwO7N
-        uKU6D9S64kD+jekUSoAMva4=
-X-Google-Smtp-Source: APXvYqxc7HGOD0D5gu8WnhNrsT1I3LmFfpI6lWg9smWBUfjHYlbiTNFFnqhLddSt9tTLEeru8OLm5Q==
-X-Received: by 2002:a63:b1d:: with SMTP id 29mr33615344pgl.103.1563282405436;
-        Tue, 16 Jul 2019 06:06:45 -0700 (PDT)
-Received: from brauner.io ([172.58.30.188])
-        by smtp.gmail.com with ESMTPSA id a12sm42618252pje.3.2019.07.16.06.06.37
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Tue, 16 Jul 2019 06:06:44 -0700 (PDT)
-Date:   Tue, 16 Jul 2019 15:06:33 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, arnd@arndb.de,
-        linux-arch@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>, mpe@ellerman.id.au
-Subject: Re: [PATCH 1/2] arch: mark syscall number 435 reserved for clone3
-Message-ID: <20190716130631.tohj4ub54md25dys@brauner.io>
-References: <20190714192205.27190-1-christian@brauner.io>
- <20190714192205.27190-2-christian@brauner.io>
- <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
+        id S1727796AbfGPNLt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jul 2019 09:11:49 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60254 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726053AbfGPNLt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 16 Jul 2019 09:11:49 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6GCw6dq123907
+        for <linux-s390@vger.kernel.org>; Tue, 16 Jul 2019 09:11:47 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tse22kgvv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 16 Jul 2019 09:11:47 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
+        Tue, 16 Jul 2019 14:11:45 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Jul 2019 14:11:42 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6GDBeDN42336360
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Jul 2019 13:11:40 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8704CAE045;
+        Tue, 16 Jul 2019 13:11:40 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 33210AE055;
+        Tue, 16 Jul 2019 13:11:40 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.110])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Jul 2019 13:11:40 +0000 (GMT)
+Date:   Tue, 16 Jul 2019 15:11:38 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Petr Tesarik <PTesarik@suse.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Raymund Will <rw@suse.com>
+Subject: Re: [PATCH] s390: enable detection of kernel version from bzImage
+References: <your-ad-here.call-01563228330-ext-8076@work.hours>
+ <patch.git-94e9726bbfe5.your-ad-here.call-01563228538-ext-5706@work.hours>
+ <20190716123006.2d426ec8@ezekiel.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <e14eb2f9-43cb-0b9d-dec4-b7e7dcd62091@de.ibm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190716123006.2d426ec8@ezekiel.suse.cz>
+X-TM-AS-GCONF: 00
+x-cbid: 19071613-0016-0000-0000-0000029304B3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071613-0017-0000-0000-000032F0D5A3
+Message-Id: <your-ad-here.call-01563282698-ext-9575@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-16_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=869 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907160161
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 15, 2019 at 03:56:04PM +0200, Christian Borntraeger wrote:
-> I think Vasily already has a clone3 patch for s390x with 435. 
+On Tue, Jul 16, 2019 at 10:30:14AM +0000, Petr Tesarik wrote:
+> On Tue, 16 Jul 2019 00:12:19 +0200
+> Vasily Gorbik <gor@linux.ibm.com> wrote:
+> 
+> > Extend "parmarea" to include an offset of the version string, which is
+> > stored as 8-byte big endian value.
+> > 
+> > To retrieve version string from bzImage reliably, one should check the
+> > presence of "S390EP" ascii string at 0x10008 (available since v3.2),
+> > then read the version string offset from 0x10428 (which has been 0
+> > since v3.2 up to now). The string is null terminated.
+> > 
+> > Could be retrieved with the following "file" command magic (requires
+> > file v5.34):
+> > 8 string \x02\x00\x00\x18\x60\x00\x00\x50\x02\x00\x00\x68\x60\x00\x00\x50\x40\x40\x40\x40\x40\x40\x40\x40 Linux S390
+> > >0x10008       string          S390EP  
+> > >>0x10428      bequad          >0  
+> > >>>(0x10428.Q) string          >\0             \b, version %s  
+> > 
+> > Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> 
+> This looks great! Much cleaner than the original approach.
+> 
+> Thank you,
+> Petr T
 
-A quick follow-up on this. Helge and Michael have asked whether there
-are any tests for clone3. Yes, there will be and I try to have them
-ready by the end of the this or next week for review. In the meantime I
-hope the following minimalistic test program that just verifies very
-very basic functionality (It's not pretty.) will help you test:
+Then I'll add
+Reported-by: Petr Tesarik <ptesarik@suse.com>
+Suggested-by: Petr Tesarik <ptesarik@suse.com>
+if you don't mind and try to queue that for 5.3.
 
-#define _GNU_SOURCE
-#include <err.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <linux/sched.h>
-#include <linux/types.h>
-#include <sched.h>
-#include <signal.h>
-#include <stdint.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <sys/mount.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/syscall.h>
-#include <sys/sysmacros.h>
-#include <sys/types.h>
-#include <sys/un.h>
-#include <sys/wait.h>
-#include <unistd.h>
-
-#ifndef CLONE_PIDFD
-#define CLONE_PIDFD 0x00001000
-#endif
-
-#ifndef __NR_clone3
-#define __NR_clone3 -1
-#endif
-
-static pid_t sys_clone3(struct clone_args *args)
-{
-	return syscall(__NR_clone3, args, sizeof(struct clone_args));
-}
-
-static int wait_for_pid(pid_t pid)
-{
-	int status, ret;
-
-again:
-	ret = waitpid(pid, &status, 0);
-	if (ret == -1) {
-		if (errno == EINTR)
-			goto again;
-
-		return -1;
-	}
-
-	if (ret != pid)
-		goto again;
-
-	if (!WIFEXITED(status) || WEXITSTATUS(status) != 0)
-		return -1;
-
-	return 0;
-}
-
-#define ptr_to_u64(ptr) ((__u64)((uintptr_t)(ptr)))
-
-int main(int argc, char *argv[])
-{
-	int pidfd = -1;
-	pid_t parent_tid = -1, pid = -1;
-	struct clone_args args = {0};
-
-	args.parent_tid = ptr_to_u64(&parent_tid); /* CLONE_PARENT_SETTID */
-	args.pidfd = ptr_to_u64(&pidfd); /* CLONE_PIDFD */
-	args.flags = CLONE_PIDFD | CLONE_PARENT_SETTID;
-	args.exit_signal = SIGCHLD;
-
-	pid = sys_clone3(&args);
-	if (pid < 0) {
-		fprintf(stderr, "%s - Failed to create new process\n", strerror(errno));
-		exit(EXIT_FAILURE);
-	}
-
-	if (pid == 0) {
-		printf("Child process with pid %d\n", getpid());
-		exit(EXIT_SUCCESS);
-	}
-
-	printf("Parent process received child's pid %d as return value\n", pid);
-	printf("Parent process received child's pidfd %d\n", *(int *)args.pidfd);
-	printf("Parent process received child's pid %d as return argument\n",
-	       *(pid_t *)args.parent_tid);
-
-	if (wait_for_pid(pid))
-		exit(EXIT_FAILURE);
-
-	if (pid != *(pid_t *)args.parent_tid)
-		exit(EXIT_FAILURE);
-
-	close(pidfd);
-
-	return 0;
-}
