@@ -2,166 +2,454 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 025E66AB83
-	for <lists+linux-s390@lfdr.de>; Tue, 16 Jul 2019 17:19:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08CCE6AF06
+	for <lists+linux-s390@lfdr.de>; Tue, 16 Jul 2019 20:45:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728771AbfGPPTz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 16 Jul 2019 11:19:55 -0400
-Received: from m9a0002g.houston.softwaregrp.com ([15.124.64.67]:39044 "EHLO
-        m9a0002g.houston.softwaregrp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728137AbfGPPTz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 16 Jul 2019 11:19:55 -0400
-Received: FROM m9a0002g.houston.softwaregrp.com (15.121.0.190) BY m9a0002g.houston.softwaregrp.com WITH ESMTP;
- Tue, 16 Jul 2019 15:19:54 +0000
-Received: from M9W0068.microfocus.com (2002:f79:bf::f79:bf) by
- M9W0067.microfocus.com (2002:f79:be::f79:be) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Tue, 16 Jul 2019 15:10:33 +0000
-Received: from NAM03-DM3-obe.outbound.protection.outlook.com (15.124.72.12) by
- M9W0068.microfocus.com (15.121.0.191) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10 via Frontend Transport; Tue, 16 Jul 2019 15:10:33 +0000
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=WlCKAabnBGzE37jxY7Kh4+R8bR+KydM7/Oi18g1SuIID02yZcmubK+CneRr0oIfT4MJ0ptce2UQaL6WY+8B6cXnC3/DjfDpUzRQdiM3ozPxolBQgnqFip1FbO9eKc3R4lGAub3y/MNbo0xXJEwHCZKK5vz07R0N9eKsVUtpLhpDQeEfXvnZJiwNhFDXG9NqmUp6tItjYGJ2z9KIX6q9GrRqX7ulCX3KBTNR7L56G31mLLC7MoUr+6lMeIVYfz+jhUMsqy9MZ/RZhhvKONwiRD6VL15Z3hwPf/Lrxn7B2phUo6bNG58rLUC9GPkMJUTtthxpk36lTdiu1Kc70Bwricg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=uR767Ckf0sa37w/K7oA48XRywI6r2u0bAfU4MHovKZo=;
- b=P3YoDgTr+pPkMUAQiQ7Y2wueO+BfYtI34hJhGmNf3BcEJmI+EeNQ8iDAHTzzcUYO8MdZBdll7Tsi7AdFhiQZNqvmc7PiugxZQnl6vP9EklKlc0KDOw+VpIo6er8OT6pjKPKc52pTXSHXsfghzp3gXfRogBVclhOUY9w52ZGhJxzlWI6lEDuyHcZQLh78rMTNFFKMpVvP2Spgd/g8rbXZIl3zHYXFa77/jpYkrqrh/Edim1SkJyWvf4WXqm71abm3rjb3Jv8K7yaBJbiO0N/n5tLvrj2/6W2Z3yGkSv5Eq+zwGdoXULbZbzTfZwiJ7q1ZEcZ5tYXLo9/q+gnlDEiJpg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1;spf=pass
- smtp.mailfrom=suse.com;dmarc=pass action=none header.from=suse.com;dkim=pass
- header.d=suse.com;arc=none
-Received: from MN2PR18MB2846.namprd18.prod.outlook.com (20.179.21.147) by
- MN2PR18MB2686.namprd18.prod.outlook.com (20.179.81.94) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2073.11; Tue, 16 Jul 2019 15:10:32 +0000
-Received: from MN2PR18MB2846.namprd18.prod.outlook.com
- ([fe80::307c:8422:7d8c:8ac6]) by MN2PR18MB2846.namprd18.prod.outlook.com
- ([fe80::307c:8422:7d8c:8ac6%3]) with mapi id 15.20.2073.012; Tue, 16 Jul 2019
- 15:10:32 +0000
-From:   Petr Tesarik <PTesarik@suse.com>
-To:     Vasily Gorbik <gor@linux.ibm.com>
-CC:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Laura Abbott" <labbott@redhat.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Raymund Will <rw@suse.com>
-Subject: Re: [PATCH] s390: enable detection of kernel version from bzImage
-Thread-Topic: [PATCH] s390: enable detection of kernel version from bzImage
-Thread-Index: AQHVO1p2NdiEYNQpfUiSTDvrwXSeS6bNLbAAgAALz9SAACD1gA==
-Date:   Tue, 16 Jul 2019 15:10:32 +0000
-Message-ID: <20190716171019.0313d3d9@ezekiel.suse.cz>
-References: <your-ad-here.call-01563228330-ext-8076@work.hours>
-        <patch.git-94e9726bbfe5.your-ad-here.call-01563228538-ext-5706@work.hours>
-        <20190716123006.2d426ec8@ezekiel.suse.cz>
-        <your-ad-here.call-01563282698-ext-9575@work.hours>
-In-Reply-To: <your-ad-here.call-01563282698-ext-9575@work.hours>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: yes
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR07CA0244.eurprd07.prod.outlook.com
- (2603:10a6:802:58::47) To MN2PR18MB2846.namprd18.prod.outlook.com
- (2603:10b6:208:3e::19)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=PTesarik@suse.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
-x-originating-ip: [195.146.112.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 0fdd58d3-a749-4240-710b-08d709ffbeec
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600148)(711020)(4605104)(1401327)(2017052603328)(49563074)(7193020);SRVR:MN2PR18MB2686;
-x-ms-traffictypediagnostic: MN2PR18MB2686:
-x-microsoft-antispam-prvs: <MN2PR18MB26862D1F55065039EAF0A25DA6CE0@MN2PR18MB2686.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 0100732B76
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(4636009)(39860400002)(346002)(396003)(136003)(366004)(376002)(199004)(189003)(4326008)(68736007)(316002)(25786009)(3846002)(6116002)(5660300002)(80792005)(478600001)(256004)(54906003)(99286004)(52116002)(76176011)(66066001)(102836004)(71190400001)(66446008)(64756008)(305945005)(66556008)(2906002)(1076003)(66476007)(66616009)(71200400001)(8676002)(26005)(99936001)(50226002)(6506007)(6916009)(229853002)(186003)(386003)(486006)(476003)(6512007)(9686003)(66946007)(86362001)(14454004)(6436002)(53936002)(107886003)(7736002)(6486002)(81166006)(81156014)(8936002)(446003)(7416002)(11346002)(6246003)(39210200001);DIR:OUT;SFP:1102;SCL:1;SRVR:MN2PR18MB2686;H:MN2PR18MB2846.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: suse.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: C9kKtHNqRxEVfErqrpQQTZZC7DlH9g641e3Fw4QGY1IBTAdvCHTOY++jlDKOEwrWwwtzETEWvn+n3JdldyGAg0oI/V31+UH1L26tInlEWDymTp9fqgWtCWo/qy28w+UBm9UIRAckA0AuD0o7gklzX1KqqSHJVsUJd9A2XDdWN5Si0dHhSk77eWOivARQl66J+J5sIKmCLjure5LqJVkuyAWlnGVcOQbCiTkY6NndKqUBu1+72lxaAxnmV5W38CcHwIhXo4CFH9iefcABd2g5AF23ObbMLDmfgwGMMJAv6OOo/NNpPYBEYdWYrkq3stLXx4ZxTtFSXl8Xk4eBLlN0cP0iIZj06KoQxedFHiMYLFjw9gXM6vt1n3IJYxkAJ4V8EXO+mH8+u2ncqgdgZhiHKKeb5Kgr32Jj7NUIggjJIRQ=
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        boundary="Sig_/QOVQTxMmYG2vTcfhSUNHucV";
-        protocol="application/pgp-signature"
+        id S1728573AbfGPSpx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 16 Jul 2019 14:45:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54176 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728366AbfGPSpx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 16 Jul 2019 14:45:53 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D1DFB3091740;
+        Tue, 16 Jul 2019 18:45:52 +0000 (UTC)
+Received: from redhat.com (dhcp-17-153.bos.redhat.com [10.18.17.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A67745DAA4;
+        Tue, 16 Jul 2019 18:45:51 +0000 (UTC)
+Date:   Tue, 16 Jul 2019 14:45:49 -0400
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        jikos@kernel.org, pmladek@suse.com, nstange@suse.de,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH] s390/livepatch: Implement reliable stack tracing for the
+ consistency model
+Message-ID: <20190716184549.GA26084@redhat.com>
+References: <20190710105918.22487-1-mbenes@suse.cz>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0fdd58d3-a749-4240-710b-08d709ffbeec
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jul 2019 15:10:32.3779
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 856b813c-16e5-49a5-85ec-6f081e13b527
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: PTesarik@suse.com
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2686
-X-OriginatorOrg: suse.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190710105918.22487-1-mbenes@suse.cz>
+User-Agent: Mutt/1.12.0 (2019-05-25)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 16 Jul 2019 18:45:52 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/QOVQTxMmYG2vTcfhSUNHucV
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Jul 10, 2019 at 12:59:18PM +0200, Miroslav Benes wrote:
+> The livepatch consistency model requires reliable stack tracing
+> architecture support in order to work properly. In order to achieve
+> this, two main issues have to be solved. First, reliable and consistent
+> call chain backtracing has to be ensured. Second, the unwinder needs to
+> be able to detect stack corruptions and return errors.
+> 
+> The "zSeries ELF Application Binary Interface Supplement" says:
+> 
+>   "The stack pointer points to the first word of the lowest allocated
+>   stack frame. If the "back chain" is implemented this word will point to
+>   the previously allocated stack frame (towards higher addresses), except
+>   for the first stack frame, which shall have a back chain of zero (NULL).
+>   The stack shall grow downwards, in other words towards lower addresses."
+> 
+> "back chain" is optional. GCC option -mbackchain enables it. Quoting
+> Martin Schwidefsky [1]:
+> 
+>   "The compiler is called with the -mbackchain option, all normal C
+>   function will store the backchain in the function prologue. All
+>   functions written in assembler code should do the same, if you find one
+>   that does not we should fix that. The end result is that a task that
+>   *voluntarily* called schedule() should have a proper backchain at all
+>   times.
+> 
+>   Dependent on the use case this may or may not be enough. Asynchronous
+>   interrupts may stop the CPU at the beginning of a function, if kernel
+>   preemption is enabled we can end up with a broken backchain.  The
+>   production kernels for IBM Z are all compiled *without* kernel
+>   preemption. So yes, we might get away without the objtool support.
+> 
+>   On a side-note, we do have a line item to implement the ORC unwinder for
+>   the kernel, that includes the objtool support. Once we have that we can
+>   drop the -mbackchain option for the kernel build. That gives us a nice
+>   little performance benefit. I hope that the change from backchain to the
+>   ORC unwinder will not be too hard to implement in the livepatch tools."
+> 
+> Thus, the call chain backtracing should be currently ensured and objtool
+> should not be necessary for livepatch purposes.
 
-On Tue, 16 Jul 2019 15:11:38 +0200
-Vasily Gorbik <gor@linux.ibm.com> wrote:
+Hi Miroslav,
 
-> On Tue, Jul 16, 2019 at 10:30:14AM +0000, Petr Tesarik wrote:
-> > On Tue, 16 Jul 2019 00:12:19 +0200
-> > Vasily Gorbik <gor@linux.ibm.com> wrote:
-> >  =20
-> > > Extend "parmarea" to include an offset of the version string, which is
-> > > stored as 8-byte big endian value.
-> > >=20
-> > > To retrieve version string from bzImage reliably, one should check the
-> > > presence of "S390EP" ascii string at 0x10008 (available since v3.2),
-> > > then read the version string offset from 0x10428 (which has been 0
-> > > since v3.2 up to now). The string is null terminated.
-> > >=20
-> > > Could be retrieved with the following "file" command magic (requires
-> > > file v5.34):
-> > > 8 string \x02\x00\x00\x18\x60\x00\x00\x50\x02\x00\x00\x68\x60\x00\x00=
-\x50\x40\x40\x40\x40\x40\x40\x40\x40 Linux S390 =20
-> > > >0x10008       string          S390EP   =20
-> > > >>0x10428      bequad          >0   =20
-> > > >>>(0x10428.Q) string          >\0             \b, version %s   =20
-> > >=20
-> > > Signed-off-by: Vasily Gorbik <gor@linux.ibm.com> =20
-> >=20
-> > This looks great! Much cleaner than the original approach.
-> >=20
-> > Thank you,
-> > Petr T =20
->=20
-> Then I'll add
-> Reported-by: Petr Tesarik <ptesarik@suse.com>
-> Suggested-by: Petr Tesarik <ptesarik@suse.com>
-> if you don't mind and try to queue that for 5.3.
+Should there be a CONFIG? dependency on -mbackchain and/or kernel
+preemption, or does the following ensure that we don't need a explicit
+build time checks?
 
-Oh, sure, please add these lines and go ahead.
+> Regarding the second issue, stack corruptions and non-reliable states
+> have to be recognized by the unwinder. Mainly it means to detect
+> preemption or page faults, the end of the task stack must be reached,
+> return addresses must be valid text addresses and hacks like function
+> graph tracing and kretprobes must be properly detected.
+> 
+> Unwinding a running task's stack is not a problem, because there is a
+> livepatch requirement that every checked task is blocked, except for the
+> current task. Due to that, the implementation can be much simpler
+> compared to the existing non-reliable infrastructure. We can consider a
+> task's kernel/thread stack only and skip the other stacks.
+> 
+> Idle tasks are a bit special. Their final back chains point to no_dat
+> stacks. See for reference CALL_ON_STACK() in smp_start_secondary()
+> callback used in __cpu_up(). The unwinding is stopped there and it is
+> not considered to be a stack corruption.
+> 
+> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+> ---
+> - based on Linus' master
+> - passes livepatch kselftests
+> - passes tests from https://github.com/lpechacek/qa_test_klp, which
+>   stress the consistency model and the unwinder a bit more
+> 
+>  arch/s390/Kconfig                  |  1 +
+>  arch/s390/include/asm/stacktrace.h |  5 ++
+>  arch/s390/include/asm/unwind.h     | 19 ++++++
+>  arch/s390/kernel/dumpstack.c       | 28 +++++++++
+>  arch/s390/kernel/stacktrace.c      | 78 +++++++++++++++++++++++++
+>  arch/s390/kernel/unwind_bc.c       | 93 ++++++++++++++++++++++++++++++
+>  6 files changed, 224 insertions(+)
+> 
+> diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> index fdb4246265a5..ea73e555063d 100644
+> --- a/arch/s390/Kconfig
+> +++ b/arch/s390/Kconfig
+> @@ -170,6 +170,7 @@ config S390
+>  	select HAVE_PERF_EVENTS
+>  	select HAVE_RCU_TABLE_FREE
+>  	select HAVE_REGS_AND_STACK_ACCESS_API
+> +	select HAVE_RELIABLE_STACKTRACE
+>  	select HAVE_RSEQ
+>  	select HAVE_SYSCALL_TRACEPOINTS
+>  	select HAVE_VIRT_CPU_ACCOUNTING
+> diff --git a/arch/s390/include/asm/stacktrace.h b/arch/s390/include/asm/stacktrace.h
+> index 0ae4bbf7779c..2b5c913c408f 100644
+> --- a/arch/s390/include/asm/stacktrace.h
+> +++ b/arch/s390/include/asm/stacktrace.h
+> @@ -23,6 +23,11 @@ const char *stack_type_name(enum stack_type type);
+>  int get_stack_info(unsigned long sp, struct task_struct *task,
+>  		   struct stack_info *info, unsigned long *visit_mask);
+>  
+> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
+> +int get_stack_info_reliable(unsigned long sp, struct task_struct *task,
+> +			    struct stack_info *info);
+> +#endif
+> +
+>  static inline bool on_stack(struct stack_info *info,
+>  			    unsigned long addr, size_t len)
+>  {
+> diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
+> index d827b5b9a32c..1cc96c54169c 100644
+> --- a/arch/s390/include/asm/unwind.h
+> +++ b/arch/s390/include/asm/unwind.h
+> @@ -45,6 +45,25 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+>  bool unwind_next_frame(struct unwind_state *state);
+>  unsigned long unwind_get_return_address(struct unwind_state *state);
+>  
+> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
+> +void __unwind_start_reliable(struct unwind_state *state,
+> +			     struct task_struct *task, unsigned long sp);
+> +bool unwind_next_frame_reliable(struct unwind_state *state);
+> +
+> +static inline void unwind_start_reliable(struct unwind_state *state,
+> +					 struct task_struct *task)
+> +{
+> +	unsigned long sp;
+> +
+> +	if (task == current)
+> +		sp = current_stack_pointer();
+> +	else
+> +		sp = task->thread.ksp;
+> +
+> +	__unwind_start_reliable(state, task, sp);
+> +}
+> +#endif
+> +
+>  static inline bool unwind_done(struct unwind_state *state)
+>  {
+>  	return state->stack_info.type == STACK_TYPE_UNKNOWN;
+> diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
+> index ac06c3949ab3..b21ef2a766ff 100644
+> --- a/arch/s390/kernel/dumpstack.c
+> +++ b/arch/s390/kernel/dumpstack.c
+> @@ -127,6 +127,34 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
+>  	return -EINVAL;
+>  }
+>  
+> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
+> +int get_stack_info_reliable(unsigned long sp, struct task_struct *task,
+> +			    struct stack_info *info)
+> +{
+> +	if (!sp)
+> +		goto error;
+> +
+> +	/* Sanity check: ABI requires SP to be aligned 8 bytes. */
+> +	if (sp & 0x7)
+> +		goto error;
+> +
 
-Thank you again,
-Petr T
+Does SP alignment only need to be checked for the initial frame, or
+should it be verified everytime it's moved in
+unwind_next_frame_reliable()?
 
---Sig_/QOVQTxMmYG2vTcfhSUNHucV
-Content-Type: application/pgp-signature
-Content-Description: Digitální podpis OpenPGP
+> +	if (!task)
+> +		goto error;
+> +
+> +	/*
+> +	 * The unwinding should not start on nodat_stack, async_stack or
+> +	 * restart_stack. The task is either current or must be inactive.
+> +	 */
+> +	if (!in_task_stack(sp, task, info))
+> +		goto error;
+> +
+> +	return 0;
+> +error:
+> +	info->type = STACK_TYPE_UNKNOWN;
+> +	return -EINVAL;
+> +}
+> +#endif
+> +
+>  void show_stack(struct task_struct *task, unsigned long *stack)
+>  {
+>  	struct unwind_state state;
+> diff --git a/arch/s390/kernel/stacktrace.c b/arch/s390/kernel/stacktrace.c
+> index f6a620f854e1..7d774a325163 100644
+> --- a/arch/s390/kernel/stacktrace.c
+> +++ b/arch/s390/kernel/stacktrace.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/export.h>
+>  #include <asm/stacktrace.h>
+>  #include <asm/unwind.h>
+> +#include <asm/kprobes.h>
+>  
+>  void save_stack_trace(struct stack_trace *trace)
+>  {
+> @@ -60,3 +61,80 @@ void save_stack_trace_regs(struct pt_regs *regs, struct stack_trace *trace)
+>  	}
+>  }
+>  EXPORT_SYMBOL_GPL(save_stack_trace_regs);
+> +
+> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
+> +/*
+> + * This function returns an error if it detects any unreliable features of the
+> + * stack.  Otherwise it guarantees that the stack trace is reliable.
+> + *
+> + * If the task is not 'current', the caller *must* ensure the task is inactive.
+> + */
+> +static __always_inline int
+> +__save_stack_trace_tsk_reliable(struct task_struct *tsk,
+> +				struct stack_trace *trace)
+> +{
+> +	struct unwind_state state;
+> +
+> +	for (unwind_start_reliable(&state, tsk);
+> +	     !unwind_done(&state) && !unwind_error(&state);
+> +	     unwind_next_frame_reliable(&state)) {
+> +
+> +		if (!__kernel_text_address(state.ip))
+> +			return -EINVAL;
+> +
+> +#ifdef CONFIG_KPROBES
+> +		/*
+> +		 * Mark stacktraces with kretprobed functions on them
+> +		 * as unreliable.
+> +		 */
+> +		if (state.ip == (unsigned long)kretprobe_trampoline)
+> +			return -EINVAL;
+> +#endif
+> +
+> +		if (trace->nr_entries >= trace->max_entries)
+> +			return -E2BIG;
+> +
+> +		if (!trace->skip)
+> +			trace->entries[trace->nr_entries++] = state.ip;
+> +		else
+> +			trace->skip--;
+> +	}
+> +
+> +	/* Check for stack corruption */
+> +	if (unwind_error(&state))
+> +		return -EINVAL;
+> +
+> +	/* Store kernel_thread_starter, null for swapper/0 */
+> +	if (tsk->flags & (PF_KTHREAD | PF_IDLE)) {
+> +		if (trace->nr_entries >= trace->max_entries)
+> +			return -E2BIG;
+> +
+> +		if (!trace->skip)
+> +			trace->entries[trace->nr_entries++] =
+> +				state.regs->psw.addr;
+> +		else
+> +			trace->skip--;
 
------BEGIN PGP SIGNATURE-----
+An idea for a follow up patch: stuff this into a function like
+int save_trace_entry(struct stack_trace *trace, unsigned long entry);
+which could one day make the trace->entries[] code generic across arches. 
 
-iQEzBAEBCAAdFiEEHl2YIZkIo5VO2MxYqlA7ya4PR6cFAl0t6NsACgkQqlA7ya4P
-R6d7Xwf+JNE4QIkYg1+FqAdL+wSIawGHgDsRlLflNNiFUtSyXFP6YQ2QiNVZkW6u
-IAI8Q9hexXcHBcPttgIxoc7spvMxWnsUnfdy75BlyeUIpmArKUeoWyOoA4CycAuo
-MIBwcXWkLv59+7VrZYCSHuquMjtRisnYLj7iwGshjLjlrT4BCfwboJozfGvjRDDB
-1fbPen/3fnYtACRZWZ6lXrWHo+q0qdnGzi3Q3MtDRRgcn2NvMGk43V2Qf/KGJ7kf
-WDpkJqqcLUS2yq9By7X6m3Exx/AimjomPgSJv43qJnHRKeRkCePX8g/0l0JcZxi3
-FKC3BMjzl1UEuf1YZ2UwubO+6YvuNg==
-=YyiZ
------END PGP SIGNATURE-----
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +int save_stack_trace_tsk_reliable(struct task_struct *tsk,
+> +				  struct stack_trace *trace)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * If the task doesn't have a stack (e.g., a zombie), the stack is
+> +	 * "reliably" empty.
+> +	 */
+> +	if (!try_get_task_stack(tsk))
+> +		return 0;
+> +
+> +	ret = __save_stack_trace_tsk_reliable(tsk, trace);
+> +
+> +	put_task_stack(tsk);
+> +
+> +	return ret;
+> +}
+> +#endif
+> diff --git a/arch/s390/kernel/unwind_bc.c b/arch/s390/kernel/unwind_bc.c
+> index 3ce8a0808059..ada3a8538961 100644
+> --- a/arch/s390/kernel/unwind_bc.c
+> +++ b/arch/s390/kernel/unwind_bc.c
+> @@ -153,3 +153,96 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
+>  	state->reliable = reliable;
+>  }
+>  EXPORT_SYMBOL_GPL(__unwind_start);
+> +
+> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
+> +void __unwind_start_reliable(struct unwind_state *state,
+> +			     struct task_struct *task, unsigned long sp)
+> +{
+> +	struct stack_info *info = &state->stack_info;
+> +	struct stack_frame *sf;
+> +	unsigned long ip;
+> +
+> +	memset(state, 0, sizeof(*state));
+> +	state->task = task;
+> +
+> +	/* Get current stack pointer and initialize stack info */
+> +	if (get_stack_info_reliable(sp, task, info) ||
+> +	    !on_stack(info, sp, sizeof(struct stack_frame))) {
+> +		/* Something is wrong with the stack pointer */
+> +		info->type = STACK_TYPE_UNKNOWN;
+> +		state->error = true;
+> +		return;
+> +	}
+> +
+> +	/* Get the instruction pointer from the stack frame */
+> +	sf = (struct stack_frame *) sp;
+> +	ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+> +
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> +	/* Decode any ftrace redirection */
+> +	if (ip == (unsigned long) return_to_handler)
+> +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
+> +					   ip, NULL);
+                                               ^^^^
+double checking: we ignore the retp here and not in the next-frame case?
 
---Sig_/QOVQTxMmYG2vTcfhSUNHucV--
+> +#endif
+> +
+> +	/* Update unwind state */
+> +	state->sp = sp;
+> +	state->ip = ip;
+> +}
+> +
+> +bool unwind_next_frame_reliable(struct unwind_state *state)
+> +{
+> +	struct stack_info *info = &state->stack_info;
+> +	struct stack_frame *sf;
+> +	struct pt_regs *regs;
+> +	unsigned long sp, ip;
+> +
+> +	sf = (struct stack_frame *) state->sp;
+> +	sp = READ_ONCE_NOCHECK(sf->back_chain);
+> +	/*
+> +	 * Idle tasks are special. The final back-chain points to nodat_stack.
+> +	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
+> +	 * __cpu_up(). We just accept it, go to else branch and look for
+> +	 * pt_regs.
+> +	 */
+> +	if (likely(sp && !(is_idle_task(state->task) &&
+> +			   outside_of_stack(state, sp)))) {
+> +		/* Non-zero back-chain points to the previous frame */
+> +		if (unlikely(outside_of_stack(state, sp)))
+> +			goto out_err;
+> +
+> +		sf = (struct stack_frame *) sp;
+> +		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
+> +	} else {
+> +		/* No back-chain, look for a pt_regs structure */
+> +		sp = state->sp + STACK_FRAME_OVERHEAD;
+> +		regs = (struct pt_regs *) sp;
+> +		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
+> +			goto out_err;
+> +		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
+> +		     !user_mode(regs))
+> +			goto out_err;
+> +
+> +		state->regs = regs;
+> +		goto out_stop;
+> +	}
+> +
+> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
+> +	/* Decode any ftrace redirection */
+> +	if (ip == (unsigned long) return_to_handler)
+> +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
+> +					   ip, (void *) sp);
+> +#endif
+> +
+> +	/* Update unwind state */
+> +	state->sp = sp;
+> +	state->ip = ip;
+
+minor nit: maybe the CONFIG_FUNCTION_GRAPH_TRACER and "Update unwind
+state" logic could be combined into a function?  (Not a big deal either
+way.)
+
+> +	return true;
+> +
+> +out_err:
+> +	state->error = true;
+> +out_stop:
+> +	state->stack_info.type = STACK_TYPE_UNKNOWN;
+> +	return false;
+> +}
+> +#endif
+> -- 
+> 2.22.0
+> 
+
+I've tested the patch with positive results, however I didn't stress it
+very hard (basically only selftests).  The code logic seems
+straightforward and correct by inspection.
+
+On a related note, do you think it would be feasible to extend (in
+another patchset) the reliable stack unwinding code a bit so that we
+could feed it pre-baked stacks ... then we could verify that the code
+was finding interesting scenarios.  That was a passing thought I had
+back when Nicolai and I were debugging the ppc64le exception frame
+marker bug, but didn't think it worth the time/effort at the time.
+
+One more note:  Using READ_ONCE_NOCHECK is probably correct here, but
+s390 happens to define a READ_ONCE_TASK_STACK macro which calls
+READ_ONCE_NOCHECK when task != current.  According to the code comments,
+this "disables KASAN checking when reading a value from another task's
+stack".  Is there any scenario here where we would want to use the that
+wrapper macro?
+
+-- Joe
