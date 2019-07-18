@@ -2,118 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B362D6D55C
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jul 2019 21:48:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 409D96D60B
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jul 2019 22:54:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391712AbfGRTrZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 18 Jul 2019 15:47:25 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16082 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2391394AbfGRTrZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 18 Jul 2019 15:47:25 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IJiBLf013287
-        for <linux-s390@vger.kernel.org>; Thu, 18 Jul 2019 15:47:24 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ttvjvxbef-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 18 Jul 2019 15:47:23 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <bauerman@linux.ibm.com>;
-        Thu, 18 Jul 2019 20:47:23 +0100
-Received: from b01cxnp23032.gho.pok.ibm.com (9.57.198.27)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 20:47:18 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IJlHl035455434
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 19:47:17 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 35C1EAE064;
-        Thu, 18 Jul 2019 19:47:17 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8940AE05C;
-        Thu, 18 Jul 2019 19:47:13 +0000 (GMT)
-Received: from morokweng.localdomain (unknown [9.85.186.82])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Thu, 18 Jul 2019 19:47:13 +0000 (GMT)
-References: <20190712053631.9814-1-bauerman@linux.ibm.com> <20190712053631.9814-3-bauerman@linux.ibm.com> <alpine.DEB.2.21.1907121806160.1788@nanos.tec.linutronix.de>
-User-agent: mu4e 1.2.0; emacs 26.2
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH 2/3] DMA mapping: Move SME handling to x86-specific files
-In-reply-to: <alpine.DEB.2.21.1907121806160.1788@nanos.tec.linutronix.de>
-Date:   Thu, 18 Jul 2019 16:47:09 -0300
+        id S1727928AbfGRUyJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 18 Jul 2019 16:54:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:58738 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727762AbfGRUyJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 18 Jul 2019 16:54:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5E7FBAD1E;
+        Thu, 18 Jul 2019 20:54:08 +0000 (UTC)
+Date:   Thu, 18 Jul 2019 22:54:02 +0200
+From:   Petr Tesarik <ptesarik@suse.cz>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
+Message-ID: <20190718225402.6e8f31e0@ezekiel.suse.cz>
+In-Reply-To: <20190718172120.69947-1-pasic@linux.ibm.com>
+References: <20190718172120.69947-1-pasic@linux.ibm.com>
+Organization: SUSE Linux, s.r.o.
+X-Mailer: Claws Mail 3.16.0 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-x-cbid: 19071819-2213-0000-0000-000003B2DB12
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00011453; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000287; SDB=6.01234063; UDB=6.00650301; IPR=6.01015390;
- MB=3.00027784; MTD=3.00000008; XFM=3.00000015; UTC=2019-07-18 19:47:21
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071819-2214-0000-0000-00005F4C56EA
-Message-Id: <878ssv3z2a.fsf@morokweng.localdomain>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180202
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/4Ll9JpNP1hrR3Lz8kH3Tm9Z"; protocol="application/pgp-signature"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+--Sig_/4Ll9JpNP1hrR3Lz8kH3Tm9Z
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Thomas Gleixner <tglx@linutronix.de> writes:
+On Thu, 18 Jul 2019 19:21:20 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> On Fri, 12 Jul 2019, Thiago Jung Bauermann wrote:
->> diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
->> index b310a9c18113..f2e399fb626b 100644
->> --- a/include/linux/mem_encrypt.h
->> +++ b/include/linux/mem_encrypt.h
->> @@ -21,23 +21,11 @@
->>  
->>  #else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
->>  
->> -#define sme_me_mask	0ULL
->> -
->> -static inline bool sme_active(void) { return false; }
->>  static inline bool sev_active(void) { return false; }
->
-> You want to move out sev_active as well, the only relevant thing is
-> mem_encrypt_active(). Everything SME/SEV is an architecture detail.
+> On s390 ZONE_DMA is up to 2G, i.e. ARCH_ZONE_DMA_BITS should be 31 bits.
+> The current value is 24 and makes __dma_direct_alloc_pages() take a
+> wrong turn first (but __dma_direct_alloc_pages() recovers then).
+>=20
+> Let's correct ARCH_ZONE_DMA_BITS value and avoid wrong turns.
+>=20
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Reported-by: Petr Tesarik <ptesarik@suse.cz>
+> Fixes: c61e9637340e ("dma-direct: add support for allocation from
+> ZONE_DMA and ZONE_DMA32")
+> ---
+>  arch/s390/include/asm/dma.h | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/s390/include/asm/dma.h b/arch/s390/include/asm/dma.h
+> index 6f26f35d4a71..3b0329665b13 100644
+> --- a/arch/s390/include/asm/dma.h
+> +++ b/arch/s390/include/asm/dma.h
+> @@ -10,6 +10,7 @@
+>   * by the 31 bit heritage.
+>   */
+>  #define MAX_DMA_ADDRESS         0x80000000
+> +#define ARCH_ZONE_DMA_BITS      31
+> =20
+>  #ifdef CONFIG_PCI
+>  extern int isa_dma_bridge_buggy;
 
-I'm sure you saw it. I addressed sev_active in a separate patch.
+Looks good to me.
 
-Thanks for reviewing this series!
+Petr T
 
->> +static inline bool mem_encrypt_active(void) { return false; }
->
-> Thanks,
->
-> 	tglx
+--Sig_/4Ll9JpNP1hrR3Lz8kH3Tm9Z
+Content-Type: application/pgp-signature
+Content-Description: Digitální podpis OpenPGP
 
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+iQEzBAEBCAAdFiEEHl2YIZkIo5VO2MxYqlA7ya4PR6cFAl0w3GoACgkQqlA7ya4P
+R6cplggAueuZZMDHcHgPZXsVT6ZtElx6CMi1ODR2GMydMbgaHrsYUZVSNGsRZuUf
+lQqeDk1Ssyg9Q4In6Fq9qkzhCoaGRr5jm8tBUlSg4ov9QX+XugmxPOT6YVRIuPAf
++ko+Wagwsb1BhbGJuE/jXJSOdis1ORZPTKE7TG+5cKNffwRgR9TEJUW2DmWOWeh/
+c5hD1rJKSI5E+SNDKHcONOuoAut8UEFbi3my0a4luHxIov+UkxhG6oPQpjuHDCaI
+c26k6RyPynGS2p/wY2oBw/5zHxZML+mm7F0dTLZyCQT55871mbFJqRCZSwbL/dmK
+hZqlwPCjGe0Bu8GskCPmEMuHnQ+Lkw==
+=lwF8
+-----END PGP SIGNATURE-----
 
+--Sig_/4Ll9JpNP1hrR3Lz8kH3Tm9Z--
