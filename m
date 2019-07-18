@@ -2,101 +2,177 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 663396CFA4
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jul 2019 16:27:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8AE6A6D03E
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jul 2019 16:48:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727757AbfGRO1n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 18 Jul 2019 10:27:43 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12132 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727730AbfGRO1n (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 18 Jul 2019 10:27:43 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6IEJCuv095322
-        for <linux-s390@vger.kernel.org>; Thu, 18 Jul 2019 10:27:42 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tts6vm9gv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 18 Jul 2019 10:27:42 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Thu, 18 Jul 2019 15:27:40 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 18 Jul 2019 15:27:38 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6IERbNw38797820
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 18 Jul 2019 14:27:37 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D3365204E;
-        Thu, 18 Jul 2019 14:27:37 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.219])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E62A552052;
-        Thu, 18 Jul 2019 14:27:36 +0000 (GMT)
-Date:   Thu, 18 Jul 2019 16:27:35 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     Petr Tesarik <ptesarik@suse.cz>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: Is __dma_direct_alloc_pages broken on s390?
-In-Reply-To: <20190718131059.GA18742@infradead.org>
-References: <20190718091700.353b3721@ezekiel.suse.cz>
-        <20190718113633.GB3581@osiris>
-        <20190718135112.5c65685f@ezekiel.suse.cz>
-        <20190718145044.03dc9804.pasic@linux.ibm.com>
-        <20190718131059.GA18742@infradead.org>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S2390765AbfGROsS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 18 Jul 2019 10:48:18 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41476 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390672AbfGROsS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 18 Jul 2019 10:48:18 -0400
+Received: by mail-lj1-f195.google.com with SMTP id d24so27628485ljg.8
+        for <linux-s390@vger.kernel.org>; Thu, 18 Jul 2019 07:48:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=qOzcTnaZtrCxVZ+wrCV9j1v3ZSJaRvDDDE3Ip4m8PX4=;
+        b=BvozhdyNjQm5IKs1TT9YoWn3Ui6wySHrveALu6p1t7AtDp7QFxBLfHh88f5ww+lLJn
+         uwy3k971xxqR/HSbz4pAOIhSLMVdxGZ//qhiRBmEGbP5iSimOi3DrF8NmakZGMPtS2dX
+         7klk9Axk//12MJN1Z1lHBXwZgwDxdfLj6taYs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=qOzcTnaZtrCxVZ+wrCV9j1v3ZSJaRvDDDE3Ip4m8PX4=;
+        b=qAD/dOcUXjwZqclsYA153GFr3kdIna1HwrX6NDNxsN4zXoYERY0eYnXrr0B3WHyQnb
+         P6RnvLFwQwF/VSFpwkYTzaHxb6j370D+1gDRMNinHyi49OVTetOKEO+6T2OSmAzLPKkV
+         ZBb8JgP1rnk4s3EPdQz6r2ayNVD5MiFYu7w6Iprm7Tbsf7dxLsemmLkBlcxmuU5a80GF
+         dnsK9hpxVgfDs0zJxOHO9vBp7bCKoIWXzeRxXpoXeOKvysmvNms7CMzUxOBVB6BOQ6Yw
+         04Psm5B4NdDjuKJiRN/JDSE85e8kPKKPTCuCYouqOR5QP3APslFW7QCNpgXyvI3xZrX9
+         eSog==
+X-Gm-Message-State: APjAAAXSULJF5F7uRC1z6m5JX38L40eHxOWw6N2ZUngqWRoaYqSDChrY
+        xJw4llsbn4jMUFI5LZfOFr4=
+X-Google-Smtp-Source: APXvYqxmTPpUAHG/iv/MbFly8EXHSdBuBHGZ2qYmzwo/cj6avvxhzmR7eZRDDVHxMRGQ2XfudRkVGQ==
+X-Received: by 2002:a05:651c:d1:: with SMTP id 17mr24822389ljr.174.1563461295757;
+        Thu, 18 Jul 2019 07:48:15 -0700 (PDT)
+Received: from [172.16.11.28] ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id t4sm5672901ljh.9.2019.07.18.07.48.13
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 18 Jul 2019 07:48:15 -0700 (PDT)
+Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
+To:     Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>
+Cc:     Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+References: <20190706145737.5299-1-cyphar@cyphar.com>
+ <20190706145737.5299-9-cyphar@cyphar.com>
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <845e4364-685f-343b-46fb-c418766dce3e@rasmusvillemoes.dk>
+Date:   Thu, 18 Jul 2019 16:48:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19071814-0028-0000-0000-00000385BB13
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19071814-0029-0000-0000-00002445E535
-Message-Id: <20190718162735.1559b561.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-18_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=906 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907180149
+In-Reply-To: <20190706145737.5299-9-cyphar@cyphar.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 18 Jul 2019 06:10:59 -0700
-Christoph Hellwig <hch@infradead.org> wrote:
-
-> On Thu, Jul 18, 2019 at 02:50:44PM +0200, Halil Pasic wrote:
-> > > I wondered why the kernel works OK on my system, and it is in fact not
-> > > so bad. If the first allocation fails, the kernel adds GFP_DMA and
-> > > retries, so this is not fatal, but with a proper definition of
-> > > ARCH_ZONE_DMA_BITS it should be possible to get success in the first
-> > > attempt already, let's do it.
-> > > 
-> > > Petr T
-> > 
-> > I fully agree! I will post a patch that provides correct
-> > ARCH_ZONE_DMA_BITS for s390.
-> > 
-> > BTW I wonder if ARCH_ZONE_DMA_BITS can be inferred from MAX_DMA_ADDRESS,
-> > and why do we need both.@Christoph, maybe you can help me understand if
-> > there is a relationship between the two or not, or?
+On 06/07/2019 16.57, Aleksa Sarai wrote:
 > 
-> MAX_DMA_ADDRESS is a bit of a weird beast which I honestly do not
-> understand fully, but most of the uses in common code look a little
-> bogus, and we should probably get rid of it.
+> --- a/fs/open.c
+> +++ b/fs/open.c
+> @@ -928,24 +928,32 @@ struct file *open_with_fake_path(const struct path *path, int flags,
+>  }
+>  EXPORT_SYMBOL(open_with_fake_path);
+>  
+> -static inline int build_open_flags(int flags, umode_t mode, struct open_flags *op)
+> +static inline int build_open_flags(struct open_how how, struct open_flags *op)
+>  {
 
-Thanks!
+How does passing such a huge struct by value affect code generation?
+Does gcc actually inline the function (and does it even inline the old
+one given that it's already non-trivial and has more than one caller).
 
-Regards,
-Halil
+>  	int lookup_flags = 0;
+> -	int acc_mode = ACC_MODE(flags);
+> +	int opath_mask = 0;
+> +	int acc_mode = ACC_MODE(how.flags);
+> +
+> +	if (how.resolve & ~VALID_RESOLVE_FLAGS)
+> +		return -EINVAL;
+> +	if (!(how.flags & (O_PATH | O_CREAT | __O_TMPFILE)) && how.mode != 0)
+> +		return -EINVAL;
+> +	if (memchr_inv(how.reserved, 0, sizeof(how.reserved)))
+> +		return -EINVAL;
 
+How about passing how by const reference, and copy the few fields you
+need to local variables. That would at least simplify this patch by
+eliminating a lot of the
+
+> -	flags &= VALID_OPEN_FLAGS;
+> +	how.flags &= VALID_OPEN_FLAGS;
+>  
+> -	if (flags & (O_CREAT | __O_TMPFILE))
+> -		op->mode = (mode & S_IALLUGO) | S_IFREG;
+> +	if (how.flags & (O_CREAT | __O_TMPFILE))
+> +		op->mode = (how.mode & S_IALLUGO) | S_IFREG;
+
+churn.
+
+>  
+> diff --git a/include/linux/fcntl.h b/include/linux/fcntl.h
+> index 2868ae6c8fc1..e59917292213 100644
+> --- a/include/linux/fcntl.h
+> +++ b/include/linux/fcntl.h
+> @@ -4,13 +4,26 @@
+>  
+>  #include <uapi/linux/fcntl.h>
+>  
+> -/* list of all valid flags for the open/openat flags argument: */
+> +/* Should open_how.mode be set for older syscalls wrappers? */
+> +#define OPENHOW_MODE(flags, mode) \
+> +	(((flags) | (O_CREAT | __O_TMPFILE)) ? (mode) : 0)
+> +
+
+Typo: (((flags) & (O_CREAT | __O_TMPFILE)) ? (mode) : 0)
+
+> +/**
+> + * Arguments for how openat2(2) should open the target path. If @extra is zero,
+> + * then openat2(2) is identical to openat(2).
+> + *
+> + * @flags: O_* flags (unknown flags ignored).
+> + * @mode: O_CREAT file mode (ignored otherwise).
+
+should probably say "O_CREAT/O_TMPFILE file mode".
+
+> + * @upgrade_mask: restrict how the O_PATH may be re-opened (ignored otherwise).
+> + * @resolve: RESOLVE_* flags (-EINVAL on unknown flags).
+> + * @reserved: reserved for future extensions, must be zeroed.
+> + */
+> +struct open_how {
+> +	__u32 flags;
+> +	union {
+> +		__u16 mode;
+> +		__u16 upgrade_mask;
+> +	};
+> +	__u16 resolve;
+
+So mode and upgrade_mask are naturally u16 aka mode_t. And yes, they
+probably never need to be used together, so the union works. That then
+makes the next member 2-byte aligned, so using a u16 for the resolve
+flags brings us to an 8-byte boundary, and 11 unused flag bits should be
+enough for a while. But it seems a bit artificial to cram all this
+together and then add 56 bytes of reserved space.
+
+Rasmus
