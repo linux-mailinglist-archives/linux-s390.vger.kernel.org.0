@@ -2,61 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4F366CB29
-	for <lists+linux-s390@lfdr.de>; Thu, 18 Jul 2019 10:45:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 811FE6CCDF
+	for <lists+linux-s390@lfdr.de>; Thu, 18 Jul 2019 12:37:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389519AbfGRIpA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 18 Jul 2019 04:45:00 -0400
-Received: from verein.lst.de ([213.95.11.211]:57902 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726482AbfGRIo7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 18 Jul 2019 04:44:59 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id BEB5068B05; Thu, 18 Jul 2019 10:44:57 +0200 (CEST)
-Date:   Thu, 18 Jul 2019 10:44:56 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
-        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>
-Subject: Re: [PATCH v3 6/6] s390/mm: Remove sev_active() function
-Message-ID: <20190718084456.GE24562@lst.de>
-References: <20190718032858.28744-1-bauerman@linux.ibm.com> <20190718032858.28744-7-bauerman@linux.ibm.com>
+        id S1726482AbfGRKhd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 18 Jul 2019 06:37:33 -0400
+Received: from asavdk4.altibox.net ([109.247.116.15]:47058 "EHLO
+        asavdk4.altibox.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726423AbfGRKhd (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 18 Jul 2019 06:37:33 -0400
+Received: from ravnborg.org (unknown [158.248.194.18])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by asavdk4.altibox.net (Postfix) with ESMTPS id 0121980335;
+        Thu, 18 Jul 2019 12:37:27 +0200 (CEST)
+Date:   Thu, 18 Jul 2019 12:37:26 +0200
+From:   Sam Ravnborg <sam@ravnborg.org>
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc:     Intel Graphics Development <intel-gfx@lists.freedesktop.org>,
+        Jens Remus <jremus@linux.ibm.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-fbdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Nicolas Pitre <nicolas.pitre@linaro.org>,
+        Martin Hostettler <textshell@uchuujin.de>,
+        Adam Borowski <kilobyte@angband.pl>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH] vt: Grab console_lock around con_is_bound in show_bind
+Message-ID: <20190718103726.GA17341@ravnborg.org>
+References: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190718032858.28744-7-bauerman@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20190718080903.22622-1-daniel.vetter@ffwll.ch>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-CMAE-Score: 0
+X-CMAE-Analysis: v=2.3 cv=VcLZwmh9 c=1 sm=1 tr=0
+        a=UWs3HLbX/2nnQ3s7vZ42gw==:117 a=UWs3HLbX/2nnQ3s7vZ42gw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=7gkXJVJtAAAA:8
+        a=VnNF1IyMAAAA:8 a=VwQbUJbxAAAA:8 a=e5mUnYsNAAAA:8 a=ag1SF4gXAAAA:8
+        a=KKAkSRfTAAAA:8 a=20KFwNOVAAAA:8 a=QyXUC8HyAAAA:8 a=II7inwo8ijMyP0ieMOUA:9
+        a=CjuIK1q_8ugA:10 a=E9Po1WZjFZOl8hwRPBS3:22 a=AjGcO6oz07-iQ99wixmX:22
+        a=Vxmtnl_E_bksehYqCbjh:22 a=Yupwre4RP9_Eg_Bd0iYG:22
+        a=cvBusfyB2V15izCimMoJ:22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> -/* are we a protected virtualization guest? */
-> -bool sev_active(void)
-> -{
-> -	return is_prot_virt_guest();
-> -}
-> -
->  bool force_dma_unencrypted(struct device *dev)
+Hi Daniel.
+
+Patch looks good. You can add my:
+Acked-by: Sam Ravnborg <sam@ravnborg.org>
+
+For good measure I checked all other users of con_is_bound()
+and they looked good from a locking perspective.
+Then I looked a bit more for missing locking and lost
+the overview.
+
+On Thu, Jul 18, 2019 at 10:09:03AM +0200, Daniel Vetter wrote:
+> Not really harmful not to, but also not harm in grabbing the lock. And
+> this shuts up a new WARNING I introduced in commit ddde3c18b700 ("vt:
+> More locking checks").
+
+Maybe add the warning that Jens reported to the changelog, in case
+someone hits something that looks like this warning.
+Mainly for google fodder, but also in case changelogs are searched.
+
+	Sam
+> 
+> Reported-by: Jens Remus <jremus@linux.ibm.com>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: dri-devel@lists.freedesktop.org
+> Cc: linux-fbdev@vger.kernel.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+> Cc: Martin Hostettler <textshell@uchuujin.de>
+> Cc: Adam Borowski <kilobyte@angband.pl>
+> Cc: Mikulas Patocka <mpatocka@redhat.com>
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Sam Ravnborg <sam@ravnborg.org>
+> ---
+>  drivers/tty/vt/vt.c | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
+> index ec92f36ab5c4..34aa39d1aed9 100644
+> --- a/drivers/tty/vt/vt.c
+> +++ b/drivers/tty/vt/vt.c
+> @@ -3771,7 +3771,11 @@ static ssize_t show_bind(struct device *dev, struct device_attribute *attr,
+>  			 char *buf)
 >  {
-> -	return sev_active();
-> +	return is_prot_virt_guest();
+>  	struct con_driver *con = dev_get_drvdata(dev);
+> -	int bind = con_is_bound(con->con);
+> +	int bind;
+> +
+> +	console_lock();
+> +	bind = con_is_bound(con->con);
+> +	console_unlock();
+>  
+>  	return snprintf(buf, PAGE_SIZE, "%i\n", bind);
 >  }
-
-Do we want to keep the comment for force_dma_unencrypted?
-
-Otherwise looks good:
-
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+> -- 
+> 2.20.1
