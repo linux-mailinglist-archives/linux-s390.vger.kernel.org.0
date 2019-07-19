@@ -2,118 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6DAF56E456
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jul 2019 12:30:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E13C6E4A4
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jul 2019 13:03:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727703AbfGSK3z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 Jul 2019 06:29:55 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:55296 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727603AbfGSK3v (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 19 Jul 2019 06:29:51 -0400
-Received: by mail-wm1-f66.google.com with SMTP id a15so28277287wmj.5
-        for <linux-s390@vger.kernel.org>; Fri, 19 Jul 2019 03:29:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/54Z+i2NAAKKYqTyaHCknB2yONX433P+mrrcxDIdMKQ=;
-        b=JAjsDhcTKFikvYch2sdYf3M1YIU4lD8gtr6ULD+m66RVXVuqlNpAWJ5aCmwhzsJqfu
-         NYMs/ngfnZnIR8qK+5gnlfw/LTN1DoKaojW4kG3ixmkDG7tw9PX3Gi1H6Z3rJyqaYFRY
-         gtdhUxjOR3aQahCtFDINrBG/OSP8pnsgZFupRZsDuzUdLCVJo0FcPvznY5c5cU461qY8
-         z6fVQ/+Mbzs3h37QWljm/AYaqqO87pyj8pyd6RorqrMiW7iIeyvakf6A7A7GAM2bH4rw
-         cbSgv5bCTz5aSE0toZ8ZOUCkVQ0c1BjSzCzQ1F1IbaB+eNv/4FBgS3Np35nlQBPDWp48
-         Qe+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/54Z+i2NAAKKYqTyaHCknB2yONX433P+mrrcxDIdMKQ=;
-        b=rMFnKu5gfQ6w2LxsXZ++ZNKD0uczV4G4Jz08VfajbOFWsQ82ur5pGLLGGLuepAB/GU
-         67YexIv0MUeJXLaumaLaQf0I7L1zgNSxWyWTffboXDnKIuQOkQRukxbEc9Nk9ymZ9Key
-         6frnT0BRHL6iKAGadAfDySimDMXzoXHkxduCc6Ll2+w2I2dwIoYGlQAw1PYKXAPf/2L7
-         rbR6X4nU0Ax69W3XOP5/vY+jb0XgyxBqQSG2QS8rxVlslmaaRz8NRxi8ptzYV7jVmiWg
-         J3ybX8iV7N/yMiqTTHPbpy+3lI1vAOjes8qnrBhOd7mQZz6pSx3aUSVuNDOLiAIb2u5Y
-         TQFQ==
-X-Gm-Message-State: APjAAAXZ2oE/ZdfGfHeGfu0rDvIVmgTFkhddBfcVQnzBrFKSGUVHqh3d
-        qpj/A7iw67sVqRP6Fb8Y+yQ=
-X-Google-Smtp-Source: APXvYqynzSxRaiMvY03x+MCUOq/ut+wmSYg6CTggvreuOHjcm6imyyhYbJGXSWZ87v9KsAJECqBb6Q==
-X-Received: by 2002:a1c:c145:: with SMTP id r66mr47654238wmf.139.1563532189209;
-        Fri, 19 Jul 2019 03:29:49 -0700 (PDT)
-Received: from brauner.io ([81.92.17.140])
-        by smtp.gmail.com with ESMTPSA id v4sm25167633wmg.22.2019.07.19.03.29.47
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Fri, 19 Jul 2019 03:29:49 -0700 (PDT)
-Date:   Fri, 19 Jul 2019 12:29:41 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Dmitry V. Levin" <ldv@altlinux.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Aleksa Sarai <cyphar@cyphar.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org,
-        alpha <linux-alpha@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        linux-mips@vger.kernel.org,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        sparclinux <sparclinux@vger.kernel.org>
-Subject: Re: [PATCH v9 08/10] open: openat2(2) syscall
-Message-ID: <20190719102932.274pvmxnrbjcc6gu@brauner.io>
-References: <20190706145737.5299-1-cyphar@cyphar.com>
- <20190706145737.5299-9-cyphar@cyphar.com>
- <CAK8P3a33rGhPDFfRBAQyLTMG_WoEgX_toDgWR2O7rSwxKsZG+w@mail.gmail.com>
- <20190718161231.xcno272nvqpln3wj@yavin>
- <CAK8P3a3MiYK4bJiA3G_m5H-TpfN5__--b+=szsJBhG7_it+NQg@mail.gmail.com>
- <20190719021218.GB18022@altlinux.org>
+        id S1727486AbfGSLBj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 Jul 2019 07:01:39 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11884 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726075AbfGSLBj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 19 Jul 2019 07:01:39 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6JAwODT010423
+        for <linux-s390@vger.kernel.org>; Fri, 19 Jul 2019 07:01:38 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2tubeebasc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 19 Jul 2019 07:01:37 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 19 Jul 2019 12:01:36 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 19 Jul 2019 12:01:33 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6JB1VTh41812050
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 19 Jul 2019 11:01:31 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C551042047;
+        Fri, 19 Jul 2019 11:01:31 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8671F42049;
+        Fri, 19 Jul 2019 11:01:31 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.184])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 19 Jul 2019 11:01:31 +0000 (GMT)
+Date:   Fri, 19 Jul 2019 13:01:30 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
+In-Reply-To: <20190719063249.GA4852@osiris>
+References: <20190718172120.69947-1-pasic@linux.ibm.com>
+        <20190719063249.GA4852@osiris>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190719021218.GB18022@altlinux.org>
-User-Agent: NeoMutt/20180716
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19071911-0020-0000-0000-0000035557B7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19071911-0021-0000-0000-000021A9344B
+Message-Id: <20190719130130.3ef4fa9c.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-19_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=786 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907190128
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 05:12:18AM +0300, Dmitry V. Levin wrote:
-> On Thu, Jul 18, 2019 at 11:29:50PM +0200, Arnd Bergmann wrote:
-> [...]
-> > 5. you get the same problem with seccomp and strace that
-> >    clone3() has -- these and others only track the register
-> >    arguments by default.
+On Fri, 19 Jul 2019 08:32:49 +0200
+Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
+
+> On Thu, Jul 18, 2019 at 07:21:20PM +0200, Halil Pasic wrote:
+> > On s390 ZONE_DMA is up to 2G, i.e. ARCH_ZONE_DMA_BITS should be 31 bits.
+> > The current value is 24 and makes __dma_direct_alloc_pages() take a
+> > wrong turn first (but __dma_direct_alloc_pages() recovers then).
+> > 
+> > Let's correct ARCH_ZONE_DMA_BITS value and avoid wrong turns.
+> > 
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > Reported-by: Petr Tesarik <ptesarik@suse.cz>
+> > Fixes: c61e9637340e ("dma-direct: add support for allocation from
+> > ZONE_DMA and ZONE_DMA32")
 > 
-> Just for the record, this is definitely not the case for strace:
-> it decodes arrays, structures, netlink messages, and so on by default.
+> Please don't add linebreaks to "Fixes:" tags.
+> 
 
-There sure is value in trying to design syscalls that can be handled
-nicely by seccomp but that shouldn't become a burden on designing
-extensible syscalls.
-I suggested a session for Ksummit where we can discuss if and how we can
-make seccomp more compatible with pointer-args in syscalls.
+Will remember that, thanks! I was not aware of the rule and checkpatch
+did not complain. 
 
-Christian
+> > ---
+> >  arch/s390/include/asm/dma.h | 1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/arch/s390/include/asm/dma.h b/arch/s390/include/asm/dma.h
+> > index 6f26f35d4a71..3b0329665b13 100644
+> > --- a/arch/s390/include/asm/dma.h
+> > +++ b/arch/s390/include/asm/dma.h
+> > @@ -10,6 +10,7 @@
+> >   * by the 31 bit heritage.
+> >   */
+> >  #define MAX_DMA_ADDRESS         0x80000000
+> > +#define ARCH_ZONE_DMA_BITS      31
+> 
+> powerpc has this in arch/powerpc/include/asm/page.h. This really
+> should be consistently defined in the same header file across
+> architectures.
+> 
+> Christoph, what is the preferred header file for this definition?
+> 
+> I'd also rather say it would be better to move the #ifndef ARCH_ZONE_DMA_BITS
+> check to a common code header file instead of having it in a C file, and
+> make it more obvious in which header file architectures should/can override
+> the default, no?
+
++1
+
+I will wait for Christoph's answer with a respin. Thanks for having a
+look.
+
+Regards,
+Halil
+
