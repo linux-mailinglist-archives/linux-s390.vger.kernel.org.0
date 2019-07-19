@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8DE8B6DD79
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jul 2019 06:23:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 08F516DD01
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jul 2019 06:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388054AbfGSEKY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 Jul 2019 00:10:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45094 "EHLO mail.kernel.org"
+        id S2389339AbfGSEUE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 Jul 2019 00:20:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48318 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388041AbfGSEKY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:10:24 -0400
+        id S2388967AbfGSEMs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:12:48 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1C55D2189D;
-        Fri, 19 Jul 2019 04:10:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 331BB218C3;
+        Fri, 19 Jul 2019 04:12:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563509422;
-        bh=MhKAvb/O4ISy5XQueKOiaa7SpJ04lUxPLCvm9AXPcSw=;
+        s=default; t=1563509567;
+        bh=h6vyEgOAt91ilNFETqHclV73kLzKMq/VD9cGUMby9Ec=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gj7UBd/RghdYKmo8YIYxldhUMt+LGyfOHo/Y/Ilv30giEqGsOHNn4utrCi3b1dSYK
-         Gbs+roxuj61KE4Pv8/v/PEiiH3bE+oEMJhZONToE3ZJdMZqSAdtPMIoWPGw721cQ/T
-         2Nj55nmxG+6fVI9jTocvTcZW2Pa5JeAjsVNoIF68=
+        b=hxEeK61/y4/gBvi0J1D1FM3wHoQF637xyLa3PWW0JV9sOaevBxughrV0VXp7elIzx
+         OXvIzxk9ARHuVXT2cBWfhzGTZ3UQJHxelO8YXMM0zXl3nQzi2Ws95kT17H1ME+b/Yp
+         awYx1LzUwYDubZLo19J6caDsSkCSX/OTCfUyhuFE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
         Stefan Haberland <sth@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 085/101] s390/dasd: Make layout analysis ESE compatible
-Date:   Fri, 19 Jul 2019 00:07:16 -0400
-Message-Id: <20190719040732.17285-85-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 52/60] s390/dasd: Make layout analysis ESE compatible
+Date:   Fri, 19 Jul 2019 00:11:01 -0400
+Message-Id: <20190719041109.18262-52-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719040732.17285-1-sashal@kernel.org>
-References: <20190719040732.17285-1-sashal@kernel.org>
+In-Reply-To: <20190719041109.18262-1-sashal@kernel.org>
+References: <20190719041109.18262-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -86,10 +86,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+), 6 deletions(-)
 
 diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index f89f9d02e788..fccdf9812c1f 100644
+index 0d5e2d92e05b..090c312eae32 100644
 --- a/drivers/s390/block/dasd_eckd.c
 +++ b/drivers/s390/block/dasd_eckd.c
-@@ -157,7 +157,7 @@ static const int sizes_trk0[] = { 28, 148, 84 };
+@@ -156,7 +156,7 @@ static const int sizes_trk0[] = { 28, 148, 84 };
  #define LABEL_SIZE 140
  
  /* head and record addresses of count_area read in analysis ccw */
@@ -98,7 +98,7 @@ index f89f9d02e788..fccdf9812c1f 100644
  static const int count_area_rec[] = { 1, 2, 3, 4, 1 };
  
  static inline unsigned int
-@@ -1823,8 +1823,8 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
+@@ -1820,8 +1820,8 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
  	if (IS_ERR(cqr))
  		return cqr;
  	ccw = cqr->cpaddr;
@@ -109,7 +109,7 @@ index f89f9d02e788..fccdf9812c1f 100644
  		      DASD_ECKD_CCW_READ_COUNT, device, 0);
  	LO_data = cqr->data + sizeof(struct DE_eckd_data);
  	/* Locate record for the first 4 records on track 0. */
-@@ -1843,9 +1843,9 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
+@@ -1840,9 +1840,9 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
  		count_data++;
  	}
  
@@ -121,7 +121,7 @@ index f89f9d02e788..fccdf9812c1f 100644
  		      DASD_ECKD_CCW_READ_COUNT, device, 0);
  	/* Read count ccw. */
  	ccw[-1].flags |= CCW_FLAG_CC;
-@@ -1967,7 +1967,7 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
+@@ -1964,7 +1964,7 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
  		}
  	}
  	if (i == 3)
