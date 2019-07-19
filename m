@@ -2,134 +2,183 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84EA16DF6C
-	for <lists+linux-s390@lfdr.de>; Fri, 19 Jul 2019 06:35:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B19D16E062
+	for <lists+linux-s390@lfdr.de>; Fri, 19 Jul 2019 07:00:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfGSEez (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 19 Jul 2019 00:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33442 "EHLO mail.kernel.org"
+        id S1727120AbfGSE75 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 19 Jul 2019 00:59:57 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55242 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729620AbfGSEBm (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 19 Jul 2019 00:01:42 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1725853AbfGSE75 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 19 Jul 2019 00:59:57 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1A5D218A6;
-        Fri, 19 Jul 2019 04:01:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563508901;
-        bh=q6ZwduEz3SIA3cGQ9kT7ctMqIpIL+dpMb15m/DyQLtw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xRZvywWrvV8Ak412507F0CDIeAErd04wnZUZDEAwhywVKiHrgpDyKK6z0qSMglYr1
-         gOuSB86Fs8TPT0ysBTXsXPF1ETTUPQDzvdcUNXKvKJ1WoSNhg1dMGNcbosq9WtRv19
-         HrNPeIQ2S9X7F733cRjxwdKZCYPujk6jel3HQNoo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 149/171] s390/dasd: Make layout analysis ESE compatible
-Date:   Thu, 18 Jul 2019 23:56:20 -0400
-Message-Id: <20190719035643.14300-149-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190719035643.14300-1-sashal@kernel.org>
-References: <20190719035643.14300-1-sashal@kernel.org>
+        by mx1.redhat.com (Postfix) with ESMTPS id A8707C024AF6;
+        Fri, 19 Jul 2019 04:59:55 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-12-123.pek2.redhat.com [10.72.12.123])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C94C363633;
+        Fri, 19 Jul 2019 04:59:45 +0000 (UTC)
+Subject: Re: [PATCH v3 5/6] fs/core/vmcore: Move sev_active() reference to x86
+ arch code
+To:     "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Cc:     "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, Baoquan He <bhe@redhat.com>
+References: <20190718032858.28744-1-bauerman@linux.ibm.com>
+ <20190718032858.28744-6-bauerman@linux.ibm.com>
+ <4a07bf75-b516-c81b-da7a-4b323e6d7e52@amd.com>
+From:   lijiang <lijiang@redhat.com>
+Message-ID: <c85ae8ff-3b7b-88bf-6b6a-c41b159c9cc2@redhat.com>
+Date:   Fri, 19 Jul 2019 12:59:41 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-X-stable: review
-X-Patchwork-Hint: Ignore
+In-Reply-To: <4a07bf75-b516-c81b-da7a-4b323e6d7e52@amd.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 19 Jul 2019 04:59:56 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Jan Höppner <hoeppner@linux.ibm.com>
+在 2019年07月19日 01:47, Lendacky, Thomas 写道:
+> On 7/17/19 10:28 PM, Thiago Jung Bauermann wrote:
+>> Secure Encrypted Virtualization is an x86-specific feature, so it shouldn't
+>> appear in generic kernel code because it forces non-x86 architectures to
+>> define the sev_active() function, which doesn't make a lot of sense.
+>>
+>> To solve this problem, add an x86 elfcorehdr_read() function to override
+>> the generic weak implementation. To do that, it's necessary to make
+>> read_from_oldmem() public so that it can be used outside of vmcore.c.
+>>
+>> Also, remove the export for sev_active() since it's only used in files that
+>> won't be built as modules.
+>>
+>> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> 
+> Adding Lianbo and Baoquan, who recently worked on this, for their review.
+> 
 
-[ Upstream commit ce6915f5343f5f2a2a937b683d8ffbf12dab3ad4 ]
+This change looks good to me.
 
-The disk layout and volume information of a DASD reside in the first two
-tracks of cylinder 0. When a DASD is set online, currently the first
-three tracks are read and analysed to confirm an expected layout.
+Reviewed-by: Lianbo Jiang <lijiang@redhat.com>
 
-For CDL (Compatible Disk Layout) only count area data of the first track
-is evaluated and checked against expected key and data lengths. For LDL
-(Linux Disk Layout) the first and third track is evaluated. However,
-an LDL formatted volume is expected to be in the same format across all
-tracks. Checking the third track therefore doesn't have any more value
-than checking any other track at random.
+Thanks.
+Lianbo
 
-Now, an Extent Space Efficient (ESE) DASD is initialised by only
-formatting the first two tracks, as those tracks always contain all
-information necessarry.
-
-Checking the third track on an ESE volume will therefore most likely
-fail with a record not found error, as the third track will be empty.
-This in turn leads to the device being recognised with a volume size of
-0. Attempts to write volume information on the first two tracks then
-fail with "no space left on device" errors.
-
-Initialising the first three tracks for an ESE volume is not a viable
-solution, because the third track is already a regular track and could
-contain user data. With that there is potential for data corruption.
-
-Instead, always only analyse the first two tracks, as it is sufficiant
-for both CDL and LDL, and allow ESE volumes to be recognised as well.
-
-Signed-off-by: Jan Höppner <hoeppner@linux.ibm.com>
-Reviewed-by: Stefan Haberland <sth@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/block/dasd_eckd.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
-
-diff --git a/drivers/s390/block/dasd_eckd.c b/drivers/s390/block/dasd_eckd.c
-index c09039eea707..c7aec1b44b7c 100644
---- a/drivers/s390/block/dasd_eckd.c
-+++ b/drivers/s390/block/dasd_eckd.c
-@@ -157,7 +157,7 @@ static const int sizes_trk0[] = { 28, 148, 84 };
- #define LABEL_SIZE 140
- 
- /* head and record addresses of count_area read in analysis ccw */
--static const int count_area_head[] = { 0, 0, 0, 0, 2 };
-+static const int count_area_head[] = { 0, 0, 0, 0, 1 };
- static const int count_area_rec[] = { 1, 2, 3, 4, 1 };
- 
- static inline unsigned int
-@@ -1823,8 +1823,8 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
- 	if (IS_ERR(cqr))
- 		return cqr;
- 	ccw = cqr->cpaddr;
--	/* Define extent for the first 3 tracks. */
--	define_extent(ccw++, cqr->data, 0, 2,
-+	/* Define extent for the first 2 tracks. */
-+	define_extent(ccw++, cqr->data, 0, 1,
- 		      DASD_ECKD_CCW_READ_COUNT, device, 0);
- 	LO_data = cqr->data + sizeof(struct DE_eckd_data);
- 	/* Locate record for the first 4 records on track 0. */
-@@ -1843,9 +1843,9 @@ dasd_eckd_analysis_ccw(struct dasd_device *device)
- 		count_data++;
- 	}
- 
--	/* Locate record for the first record on track 2. */
-+	/* Locate record for the first record on track 1. */
- 	ccw[-1].flags |= CCW_FLAG_CC;
--	locate_record(ccw++, LO_data++, 2, 0, 1,
-+	locate_record(ccw++, LO_data++, 1, 0, 1,
- 		      DASD_ECKD_CCW_READ_COUNT, device, 0);
- 	/* Read count ccw. */
- 	ccw[-1].flags |= CCW_FLAG_CC;
-@@ -1967,7 +1967,7 @@ static int dasd_eckd_end_analysis(struct dasd_block *block)
- 		}
- 	}
- 	if (i == 3)
--		count_area = &private->count_area[4];
-+		count_area = &private->count_area[3];
- 
- 	if (private->uses_cdl == 0) {
- 		for (i = 0; i < 5; i++) {
--- 
-2.20.1
-
+> Thanks,
+> Tom
+> 
+>> ---
+>>  arch/x86/kernel/crash_dump_64.c |  5 +++++
+>>  arch/x86/mm/mem_encrypt.c       |  1 -
+>>  fs/proc/vmcore.c                |  8 ++++----
+>>  include/linux/crash_dump.h      | 14 ++++++++++++++
+>>  include/linux/mem_encrypt.h     |  1 -
+>>  5 files changed, 23 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
+>> index 22369dd5de3b..045e82e8945b 100644
+>> --- a/arch/x86/kernel/crash_dump_64.c
+>> +++ b/arch/x86/kernel/crash_dump_64.c
+>> @@ -70,3 +70,8 @@ ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
+>>  {
+>>  	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true);
+>>  }
+>> +
+>> +ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+>> +{
+>> +	return read_from_oldmem(buf, count, ppos, 0, sev_active());
+>> +}
+>> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+>> index 7139f2f43955..b1e823441093 100644
+>> --- a/arch/x86/mm/mem_encrypt.c
+>> +++ b/arch/x86/mm/mem_encrypt.c
+>> @@ -349,7 +349,6 @@ bool sev_active(void)
+>>  {
+>>  	return sme_me_mask && sev_enabled;
+>>  }
+>> -EXPORT_SYMBOL(sev_active);
+>>  
+>>  /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+>>  bool force_dma_unencrypted(struct device *dev)
+>> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+>> index 57957c91c6df..ca1f20bedd8c 100644
+>> --- a/fs/proc/vmcore.c
+>> +++ b/fs/proc/vmcore.c
+>> @@ -100,9 +100,9 @@ static int pfn_is_ram(unsigned long pfn)
+>>  }
+>>  
+>>  /* Reads a page from the oldmem device from given offset. */
+>> -static ssize_t read_from_oldmem(char *buf, size_t count,
+>> -				u64 *ppos, int userbuf,
+>> -				bool encrypted)
+>> +ssize_t read_from_oldmem(char *buf, size_t count,
+>> +			 u64 *ppos, int userbuf,
+>> +			 bool encrypted)
+>>  {
+>>  	unsigned long pfn, offset;
+>>  	size_t nr_bytes;
+>> @@ -166,7 +166,7 @@ void __weak elfcorehdr_free(unsigned long long addr)
+>>   */
+>>  ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+>>  {
+>> -	return read_from_oldmem(buf, count, ppos, 0, sev_active());
+>> +	return read_from_oldmem(buf, count, ppos, 0, false);
+>>  }
+>>  
+>>  /*
+>> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+>> index f774c5eb9e3c..4664fc1871de 100644
+>> --- a/include/linux/crash_dump.h
+>> +++ b/include/linux/crash_dump.h
+>> @@ -115,4 +115,18 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
+>>  	return -EOPNOTSUPP;
+>>  }
+>>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>> +
+>> +#ifdef CONFIG_PROC_VMCORE
+>> +ssize_t read_from_oldmem(char *buf, size_t count,
+>> +			 u64 *ppos, int userbuf,
+>> +			 bool encrypted);
+>> +#else
+>> +static inline ssize_t read_from_oldmem(char *buf, size_t count,
+>> +				       u64 *ppos, int userbuf,
+>> +				       bool encrypted)
+>> +{
+>> +	return -EOPNOTSUPP;
+>> +}
+>> +#endif /* CONFIG_PROC_VMCORE */
+>> +
+>>  #endif /* LINUX_CRASHDUMP_H */
+>> diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
+>> index 0c5b0ff9eb29..5c4a18a91f89 100644
+>> --- a/include/linux/mem_encrypt.h
+>> +++ b/include/linux/mem_encrypt.h
+>> @@ -19,7 +19,6 @@
+>>  #else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
+>>  
+>>  static inline bool mem_encrypt_active(void) { return false; }
+>> -static inline bool sev_active(void) { return false; }
+>>  
+>>  #endif	/* CONFIG_ARCH_HAS_MEM_ENCRYPT */
+>>  
+>>
