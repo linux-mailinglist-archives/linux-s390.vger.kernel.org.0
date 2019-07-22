@@ -2,134 +2,150 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DC7C6FFA9
-	for <lists+linux-s390@lfdr.de>; Mon, 22 Jul 2019 14:30:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 346377023D
+	for <lists+linux-s390@lfdr.de>; Mon, 22 Jul 2019 16:24:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727868AbfGVMaT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 22 Jul 2019 08:30:19 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55236 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726846AbfGVMaS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 22 Jul 2019 08:30:18 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6MCRPX7147139
-        for <linux-s390@vger.kernel.org>; Mon, 22 Jul 2019 08:30:17 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2twbppctvr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 22 Jul 2019 08:30:16 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Mon, 22 Jul 2019 13:30:15 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 22 Jul 2019 13:30:13 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6MCTueb31719888
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 22 Jul 2019 12:29:57 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7719EA406B;
-        Mon, 22 Jul 2019 12:30:11 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3A229A4065;
-        Mon, 22 Jul 2019 12:30:11 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.134])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 22 Jul 2019 12:30:11 +0000 (GMT)
-Date:   Mon, 22 Jul 2019 14:30:09 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+        id S1729469AbfGVOYI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 22 Jul 2019 10:24:08 -0400
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:62942 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbfGVOYI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 22 Jul 2019 10:24:08 -0400
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id x6MENt1U028190;
+        Mon, 22 Jul 2019 23:23:56 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com x6MENt1U028190
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1563805436;
+        bh=3ZfWItRLOnV63S6AGRS3B2hVnUmtHS2K0MQ3z/GNBLI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=aTimKetZ9a/8ET7Y+BeYKMFQgVxFBEyIEzIpiBSmOy7tj37eLWk7fGO/bGzzHj+S4
+         P18YoGFRULxx7f2gDmQW0KDkOQgc2wQy6ZB5VFcE5+19D0p40lWPP9LF2pzjUGJD72
+         2WAeZxkTyA5rlWn0kqRWW4di2xuZcsK0twL645xguADCc2zikCpPUfor2jlN3JzMg9
+         9GTgN1FYBGl5qKGMrUgplp+9MYqG0F/44ugiAmYO6p48KBg5k/BPNIP1TLFKdlM5uZ
+         i4M+WtKlHoopz1McjsyVbYrKGYoqF6ktPsZiFAES892GrmDoDXUupa1EyyOm4Va++C
+         HoQT3MTFQ/kLA==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id r3so26178514vsr.13;
+        Mon, 22 Jul 2019 07:23:56 -0700 (PDT)
+X-Gm-Message-State: APjAAAXkbFsnqyhQVAaed/cqyXwOXsfw2dFpSSgS7+tZaqDcTd5LVLaQ
+        4hjmvpbUGID0wbHJQE20uqrkSntRoBsgqG7BbMA=
+X-Google-Smtp-Source: APXvYqyyUvjKdhYx03OMr4hDMFoJSyNIvpdnvpFBiZefZ1BW1DeU5VQpjrbER7S2MSpLIS3Df1zGzQhYosAQar7DCR4=
+X-Received: by 2002:a67:8e0a:: with SMTP id q10mr19275682vsd.215.1563805434968;
+ Mon, 22 Jul 2019 07:23:54 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190721142008.30093-1-yamada.masahiro@socionext.com> <20190722123009.GA5864@osiris>
+In-Reply-To: <20190722123009.GA5864@osiris>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Mon, 22 Jul 2019 23:23:18 +0900
+X-Gmail-Original-Message-ID: <CAK7LNARSq=vchY4CT_17zHzJgv8a=Gtow599gJKq2HbM4Ffguw@mail.gmail.com>
+Message-ID: <CAK7LNARSq=vchY4CT_17zHzJgv8a=Gtow599gJKq2HbM4Ffguw@mail.gmail.com>
+Subject: Re: [PATCH] s390: use __u{16,32,64} instead of uint{16,32,64}_t in
+ uapi header
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Harald Freudenberger <freude@linux.ibm.com>,
         Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390: use __u{16,32,64} instead of uint{16,32,64}_t in
- uapi header
-References: <20190721142008.30093-1-yamada.masahiro@socionext.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190721142008.30093-1-yamada.masahiro@socionext.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19072212-0028-0000-0000-00000386CF00
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072212-0029-0000-0000-0000244702E1
-Message-Id: <20190722123009.GA5864@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-22_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907220147
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, Jul 21, 2019 at 11:20:08PM +0900, Masahiro Yamada wrote:
-> When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
-> make sure they can be included from user-space.
-> 
-> Currently, zcrypt.h is excluded from the test coverage. To make it
-> join the compile-test, we need to fix the build errors attached below.
-> 
-> For a case like this, we decided to use __u{8,16,32,64} variable types
-> in this discussion:
-> 
->   https://lkml.org/lkml/2019/6/5/18
-...
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Mon, Jul 22, 2019 at 9:30 PM Heiko Carstens
+<heiko.carstens@de.ibm.com> wrote:
+>
+> On Sun, Jul 21, 2019 at 11:20:08PM +0900, Masahiro Yamada wrote:
+> > When CONFIG_UAPI_HEADER_TEST=y, exported headers are compile-tested to
+> > make sure they can be included from user-space.
+> >
+> > Currently, zcrypt.h is excluded from the test coverage. To make it
+> > join the compile-test, we need to fix the build errors attached below.
+> >
+> > For a case like this, we decided to use __u{8,16,32,64} variable types
+> > in this discussion:
+> >
+> >   https://lkml.org/lkml/2019/6/5/18
+> ...
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> >  arch/s390/include/uapi/asm/zcrypt.h | 35 +++++++++++++++--------------
+> >  1 file changed, 18 insertions(+), 17 deletions(-)
+>
+> Applied, thanks!
+
+Thanks.
+
+> I also added the patch below:
+>
+> From b312d5e2244f635f83cbf19b850e26c1c443f465 Mon Sep 17 00:00:00 2001
+> From: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Date: Mon, 22 Jul 2019 14:16:46 +0200
+> Subject: [PATCH 2/2] kbuild: enable arch/s390/include/uapi/asm/zcrypt.h for
+>  uapi header test
+>
+> Masahiro Yamada changed the zcrypt.h header file to use __u{16,32,64}
+> instead of uint{16,32,64}_t with ("s390: use __u{16,32,64} instead of
+> uint{16,32,64}_t in uapi header").
+>
+> This makes all s390 header files pass - remove zcrypt.h from the blacklist.
+>
+> Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+
+
+Yeah, I had noticed this.
+
+I am sending out various patches to various subsystems.
+
+To avoid potential conflicts, my plan was to sync the blacklist
+from time to time, like the following commit:
+
+commit 67bf47452ea00edd90e796054229b651e64b82c1
+Author: Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed Jul 17 15:29:13 2019 +0900
+
+    kbuild: update compile-test header list for v5.3-rc1
+
+
+For this particular case, probably a merge conflict will not happen,
+so either is fine.
+
+
+
+
+
+
 > ---
-> 
->  arch/s390/include/uapi/asm/zcrypt.h | 35 +++++++++++++++--------------
->  1 file changed, 18 insertions(+), 17 deletions(-)
+>  usr/include/Makefile | 4 ----
+>  1 file changed, 4 deletions(-)
+>
+> diff --git a/usr/include/Makefile b/usr/include/Makefile
+> index aa316d99e035..1fb6abe29b2f 100644
+> --- a/usr/include/Makefile
+> +++ b/usr/include/Makefile
+> @@ -101,10 +101,6 @@ ifeq ($(SRCARCH),riscv)
+>  header-test- += linux/bpf_perf_event.h
+>  endif
+>
+> -ifeq ($(SRCARCH),s390)
+> -header-test- += asm/zcrypt.h
+> -endif
+> -
+>  ifeq ($(SRCARCH),sparc)
+>  header-test- += asm/stat.h
+>  header-test- += asm/uctx.h
+> --
+> 2.17.1
+>
 
-Applied, thanks!
 
-I also added the patch below:
-
-From b312d5e2244f635f83cbf19b850e26c1c443f465 Mon Sep 17 00:00:00 2001
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
-Date: Mon, 22 Jul 2019 14:16:46 +0200
-Subject: [PATCH 2/2] kbuild: enable arch/s390/include/uapi/asm/zcrypt.h for
- uapi header test
-
-Masahiro Yamada changed the zcrypt.h header file to use __u{16,32,64}
-instead of uint{16,32,64}_t with ("s390: use __u{16,32,64} instead of
-uint{16,32,64}_t in uapi header").
-
-This makes all s390 header files pass - remove zcrypt.h from the blacklist.
-
-Cc: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
----
- usr/include/Makefile | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/usr/include/Makefile b/usr/include/Makefile
-index aa316d99e035..1fb6abe29b2f 100644
---- a/usr/include/Makefile
-+++ b/usr/include/Makefile
-@@ -101,10 +101,6 @@ ifeq ($(SRCARCH),riscv)
- header-test- += linux/bpf_perf_event.h
- endif
- 
--ifeq ($(SRCARCH),s390)
--header-test- += asm/zcrypt.h
--endif
--
- ifeq ($(SRCARCH),sparc)
- header-test- += asm/stat.h
- header-test- += asm/uctx.h
 -- 
-2.17.1
-
+Best Regards
+Masahiro Yamada
