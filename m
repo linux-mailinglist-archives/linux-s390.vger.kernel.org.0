@@ -2,115 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3D6071850
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jul 2019 14:33:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C252871C3A
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jul 2019 17:52:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731753AbfGWMdj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jul 2019 08:33:39 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64584 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726438AbfGWMdj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Jul 2019 08:33:39 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6NCTFmP036128
-        for <linux-s390@vger.kernel.org>; Tue, 23 Jul 2019 08:33:38 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tx03hprhq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 23 Jul 2019 08:33:18 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 23 Jul 2019 13:32:32 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Jul 2019 13:32:29 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6NCWSEu59703370
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jul 2019 12:32:28 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E418D11C054;
-        Tue, 23 Jul 2019 12:32:27 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FC5811C052;
-        Tue, 23 Jul 2019 12:32:27 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.145])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jul 2019 12:32:27 +0000 (GMT)
-Date:   Tue, 23 Jul 2019 14:32:26 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Christoph Hellwig <hch@infradead.org>,
+        id S1731478AbfGWPwu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Jul 2019 11:52:50 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53224 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728497AbfGWPwt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 23 Jul 2019 11:52:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=is+r8dxblNhDKZzXEGDWw1uqTuIfnmvA2uNHNQ+F5to=; b=s2nY5uuCAcKnWxU4mjttDOOje
+        7rbAEudFeIwehYshWoTvjgcXy0wzo9BTlNMYfyOMOXhi2EOpPgUtoofsTBxiCmlwq1P46YMmhYfGI
+        yRXilMY6iS0pViD+TIy3Syddkf4cNI5wWxzxcIRpcVynblMemsOtNcN/66yu/lBo59NJ5MgIn5zWU
+        0fAEMeg7kN/52f57NR3WUS+PJN6uSorPSGCFvFOi7bB1qyl0T2SrFTKuHlQSoJjl76lAp2csXPOTk
+        ZyAmBxnxhV2aPMorzg8ZKIW0LOQA9OwhnkiVdhrcv+csIW1URAGUn8Zocfhs6i/lZp4fZeLqmfFMo
+        +zRfQjGOg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hpx5t-00081N-6X; Tue, 23 Jul 2019 15:52:49 +0000
+Date:   Tue, 23 Jul 2019 08:52:49 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Petr Tesarik <ptesarik@suse.cz>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
 Subject: Re: [PATCH 1/1] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
-In-Reply-To: <20190719130130.3ef4fa9c.pasic@linux.ibm.com>
+Message-ID: <20190723155249.GA30643@infradead.org>
 References: <20190718172120.69947-1-pasic@linux.ibm.com>
-        <20190719063249.GA4852@osiris>
-        <20190719130130.3ef4fa9c.pasic@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+ <20190719063249.GA4852@osiris>
+ <20190719130130.3ef4fa9c.pasic@linux.ibm.com>
+ <20190723143226.6d929d7a.pasic@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19072312-4275-0000-0000-0000034FD5FC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072312-4276-0000-0000-0000385FFAD5
-Message-Id: <20190723143226.6d929d7a.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=891 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907230123
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190723143226.6d929d7a.pasic@linux.ibm.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 19 Jul 2019 13:01:30 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
-
-> > > diff --git a/arch/s390/include/asm/dma.h b/arch/s390/include/asm/dma.h
-> > > index 6f26f35d4a71..3b0329665b13 100644
-> > > --- a/arch/s390/include/asm/dma.h
-> > > +++ b/arch/s390/include/asm/dma.h
-> > > @@ -10,6 +10,7 @@
-> > >   * by the 31 bit heritage.
-> > >   */
-> > >  #define MAX_DMA_ADDRESS         0x80000000
-> > > +#define ARCH_ZONE_DMA_BITS      31  
-> > 
-> > powerpc has this in arch/powerpc/include/asm/page.h. This really
-> > should be consistently defined in the same header file across
-> > architectures.
-> > 
-> > Christoph, what is the preferred header file for this definition?
-
-ping
-
-Christoph could you please answer Heiko's question, so I can do my
-respin.
-
-Regards,
-Halil
-
-> > 
-> > I'd also rather say it would be better to move the #ifndef ARCH_ZONE_DMA_BITS
-> > check to a common code header file instead of having it in a C file, and
-> > make it more obvious in which header file architectures should/can override
-> > the default, no?  
+On Tue, Jul 23, 2019 at 02:32:26PM +0200, Halil Pasic wrote:
+> On Fri, 19 Jul 2019 13:01:30 +0200
+> Halil Pasic <pasic@linux.ibm.com> wrote:
 > 
-> +1
+> > > > diff --git a/arch/s390/include/asm/dma.h b/arch/s390/include/asm/dma.h
+> > > > index 6f26f35d4a71..3b0329665b13 100644
+> > > > --- a/arch/s390/include/asm/dma.h
+> > > > +++ b/arch/s390/include/asm/dma.h
+> > > > @@ -10,6 +10,7 @@
+> > > >   * by the 31 bit heritage.
+> > > >   */
+> > > >  #define MAX_DMA_ADDRESS         0x80000000
+> > > > +#define ARCH_ZONE_DMA_BITS      31  
+> > > 
+> > > powerpc has this in arch/powerpc/include/asm/page.h. This really
+> > > should be consistently defined in the same header file across
+> > > architectures.
+> > > 
+> > > Christoph, what is the preferred header file for this definition?
 > 
-> I will wait for Christoph's answer with a respin. Thanks for having a
-> look.
+> ping
+> 
+> Christoph could you please answer Heiko's question, so I can do my
+> respin.
 
+page.h is fine for now.  dma.h is odd for sure as it is for legacy
+ISA DMA only.
