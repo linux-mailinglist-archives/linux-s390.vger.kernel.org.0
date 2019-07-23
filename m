@@ -2,99 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 989F2714BC
-	for <lists+linux-s390@lfdr.de>; Tue, 23 Jul 2019 11:14:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3D6071850
+	for <lists+linux-s390@lfdr.de>; Tue, 23 Jul 2019 14:33:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388795AbfGWJOK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jul 2019 05:14:10 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52532 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726352AbfGWJOK (ORCPT
+        id S1731753AbfGWMdj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Jul 2019 08:33:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64584 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726438AbfGWMdj (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Jul 2019 05:14:10 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6N98K8q134400
-        for <linux-s390@vger.kernel.org>; Tue, 23 Jul 2019 05:14:09 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2twxw59ab4-1
+        Tue, 23 Jul 2019 08:33:39 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6NCTFmP036128
+        for <linux-s390@vger.kernel.org>; Tue, 23 Jul 2019 08:33:38 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2tx03hprhq-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 23 Jul 2019 05:14:09 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 23 Jul 2019 08:33:18 -0400
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Tue, 23 Jul 2019 10:14:07 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 23 Jul 2019 13:32:32 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Jul 2019 10:14:04 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6N9E34q59834518
+        Tue, 23 Jul 2019 13:32:29 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6NCWSEu59703370
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jul 2019 09:14:03 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B8EBA4040;
-        Tue, 23 Jul 2019 09:14:03 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0902BA4069;
-        Tue, 23 Jul 2019 09:14:03 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.134])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 23 Jul 2019 09:14:02 +0000 (GMT)
-Date:   Tue, 23 Jul 2019 11:14:01 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Tue, 23 Jul 2019 12:32:28 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E418D11C054;
+        Tue, 23 Jul 2019 12:32:27 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FC5811C052;
+        Tue, 23 Jul 2019 12:32:27 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.145])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 23 Jul 2019 12:32:27 +0000 (GMT)
+Date:   Tue, 23 Jul 2019 14:32:26 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Farhan Ali <alifm@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PULL v2 0/6] vfio-ccw fixes for 5.3
-References: <20190717094350.13620-1-cohuck@redhat.com>
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH 1/1] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
+In-Reply-To: <20190719130130.3ef4fa9c.pasic@linux.ibm.com>
+References: <20190718172120.69947-1-pasic@linux.ibm.com>
+        <20190719063249.GA4852@osiris>
+        <20190719130130.3ef4fa9c.pasic@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190717094350.13620-1-cohuck@redhat.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19072309-0028-0000-0000-000003870AC2
+x-cbid: 19072312-4275-0000-0000-0000034FD5FC
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072309-0029-0000-0000-000024474209
-Message-Id: <20190723091401.GA4022@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_04:,,
+x-cbparentid: 19072312-4276-0000-0000-0000385FFAD5
+Message-Id: <20190723143226.6d929d7a.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1907230086
+ mlxlogscore=891 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1907230123
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 17, 2019 at 11:43:44AM +0200, Cornelia Huck wrote:
-> The following changes since commit 9a159190414d461fdac7ae5bb749c2d532b35419:
-> 
->   s390/unwind: avoid int overflow in outside_of_stack (2019-07-11 20:40:02 +0200)
-> 
-> are available in the Git repository at:
-> 
->   https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw.git tags/vfio-ccw-20190717-2
->
-> Cornelia Huck (1):
->   Documentation: fix vfio-ccw doc
-> 
-> Farhan Ali (5):
->   vfio-ccw: Fix misleading comment when setting orb.cmd.c64
->   vfio-ccw: Fix memory leak and don't call cp_free in cp_init
->   vfio-ccw: Set pa_nr to 0 if memory allocation fails for pa_iova_pfn
->   vfio-ccw: Don't call cp_free if we are processing a channel program
->   vfio-ccw: Update documentation for csch/hsch
-> 
->  Documentation/s390/vfio-ccw.rst | 31 ++++++++++++++++++++++++++++---
->  drivers/s390/cio/vfio_ccw_cp.c  | 28 +++++++++++++++++-----------
->  drivers/s390/cio/vfio_ccw_drv.c |  2 +-
->  3 files changed, 46 insertions(+), 15 deletions(-)
+On Fri, 19 Jul 2019 13:01:30 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-Pulled and pushed to fixes branch. Thanks!
+> > > diff --git a/arch/s390/include/asm/dma.h b/arch/s390/include/asm/dma.h
+> > > index 6f26f35d4a71..3b0329665b13 100644
+> > > --- a/arch/s390/include/asm/dma.h
+> > > +++ b/arch/s390/include/asm/dma.h
+> > > @@ -10,6 +10,7 @@
+> > >   * by the 31 bit heritage.
+> > >   */
+> > >  #define MAX_DMA_ADDRESS         0x80000000
+> > > +#define ARCH_ZONE_DMA_BITS      31  
+> > 
+> > powerpc has this in arch/powerpc/include/asm/page.h. This really
+> > should be consistently defined in the same header file across
+> > architectures.
+> > 
+> > Christoph, what is the preferred header file for this definition?
+
+ping
+
+Christoph could you please answer Heiko's question, so I can do my
+respin.
+
+Regards,
+Halil
+
+> > 
+> > I'd also rather say it would be better to move the #ifndef ARCH_ZONE_DMA_BITS
+> > check to a common code header file instead of having it in a C file, and
+> > make it more obvious in which header file architectures should/can override
+> > the default, no?  
+> 
+> +1
+> 
+> I will wait for Christoph's answer with a respin. Thanks for having a
+> look.
 
