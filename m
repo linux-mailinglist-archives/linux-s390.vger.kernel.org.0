@@ -2,181 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EBABD724A6
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jul 2019 04:29:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A33972776
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jul 2019 07:44:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfGXC3e (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jul 2019 22:29:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42644 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728381AbfGXC3d (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Jul 2019 22:29:33 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1B6FD20665;
-        Wed, 24 Jul 2019 02:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1563935372;
-        bh=xyGI4uCYWEr2lO836/ICxA9AvTBNnIvsvCU3AJm+6ow=;
-        h=Date:From:To:Cc:Subject:From;
-        b=siMBMDy9vo2/jHG7hKJgJJAIF63RyFm5VmvVvih+a/uIdcP8nC6sxn+s/R8bRDxPF
-         V0ZcIyiWwdZ6588JvXLI6kYcLdxcg3RNQ+33M/0NiISfDFNlWMon+r4oz18dS7xQ7m
-         W/shP0qUi5OExLMrQIK98gXpw2aA3rkCbl87m8IY=
-Date:   Tue, 23 Jul 2019 19:29:30 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Reminder: 5 open syzbot bugs in "net/smc" subsystem
-Message-ID: <20190724022930.GR643@sol.localdomain>
-Mail-Followup-To: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+        id S1725917AbfGXFou (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 24 Jul 2019 01:44:50 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53620 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725870AbfGXFou (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 24 Jul 2019 01:44:50 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6O5gO89183550
+        for <linux-s390@vger.kernel.org>; Wed, 24 Jul 2019 01:44:49 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2txhcqr70g-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 24 Jul 2019 01:44:49 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 24 Jul 2019 06:44:47 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 24 Jul 2019 06:44:44 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6O5igU540436056
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 24 Jul 2019 05:44:42 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DD0311C050;
+        Wed, 24 Jul 2019 05:44:42 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39B9C11C052;
+        Wed, 24 Jul 2019 05:44:42 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.134])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 24 Jul 2019 05:44:42 +0000 (GMT)
+Date:   Wed, 24 Jul 2019 07:44:40 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Christoph Hellwig <hch@infradead.org>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Petr Tesarik <ptesarik@suse.cz>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] s390/dma: provide proper ARCH_ZONE_DMA_BITS value
+References: <20190723225155.3915-1-pasic@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20190723225155.3915-1-pasic@linux.ibm.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19072405-0008-0000-0000-000003003A0C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072405-0009-0000-0000-0000226DC921
+Message-Id: <20190724054440.GA4412@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-24_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=557 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907240065
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-[This email was generated by a script.  Let me know if you have any suggestions
-to make it better, or if you want it re-generated with the latest status.]
+On Wed, Jul 24, 2019 at 12:51:55AM +0200, Halil Pasic wrote:
+> On s390 ZONE_DMA is up to 2G, i.e. ARCH_ZONE_DMA_BITS should be 31 bits.
+> The current value is 24 and makes __dma_direct_alloc_pages() take a
+> wrong turn first (but __dma_direct_alloc_pages() recovers then).
+> 
+> Let's correct ARCH_ZONE_DMA_BITS value and avoid wrong turns.
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Reported-by: Petr Tesarik <ptesarik@suse.cz>
+> Fixes: c61e9637340e ("dma-direct: add support for allocation from ZONE_DMA and ZONE_DMA32")
+> ---
+>  arch/s390/include/asm/page.h | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Of the currently open syzbot reports against the upstream kernel, I've manually
-marked 5 of them as possibly being bugs in the "net/smc" subsystem.  I've listed
-these reports below, sorted by an algorithm that tries to list first the reports
-most likely to be still valid, important, and actionable.
-
-Of these 5 bugs, 4 were seen in mainline in the last week.
-
-Of these 5 bugs, 1 was bisected to a commit from the following person:
-
-	Ursula Braun <ubraun@linux.ibm.com>
-
-If you believe a bug is no longer valid, please close the syzbot report by
-sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
-original thread, as explained at https://goo.gl/tpsmEJ#status
-
-If you believe I misattributed a bug to the "net/smc" subsystem, please let me
-know, and if possible forward the report to the correct people or mailing list.
-
-Here are the bugs:
-
---------------------------------------------------------------------------------
-Title:              WARNING in smc_unhash_sk (2)
-Last occurred:      0 days ago
-Reported:           101 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=f650845a184aed6947c0dd0f4d99d561335a7c31
-Original thread:    https://lkml.kernel.org/lkml/000000000000ac48ed05866bbc2c@google.com/T/#u
-
-This bug has a C reproducer.
-
-This bug was bisected to:
-
-	commit 50717a37db032ce783f50685a73bb2ac68471a5a
-	Author: Ursula Braun <ubraun@linux.ibm.com>
-	Date:   Fri Apr 12 10:57:23 2019 +0000
-
-	  net/smc: nonblocking connect rework
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000ac48ed05866bbc2c@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING: ODEBUG bug in __sk_destruct
-Last occurred:      0 days ago
-Reported:           450 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=591666b46bf0d9e2fbb8dbb386982d12ba804648
-Original thread:    https://lkml.kernel.org/lkml/000000000000451f9d056aff4397@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one replied to the original thread for this bug.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+92209502e7aab127c75f@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000451f9d056aff4397@google.com
-
---------------------------------------------------------------------------------
-Title:              memory leak in new_inode_pseudo (2)
-Last occurred:      1 day ago
-Reported:           7 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=911dac8eb1de0c09979e8e0054cb6cbe198cd5bb
-Original thread:    https://lkml.kernel.org/lkml/000000000000111cbe058dc7754d@google.com/T/#u
-
-This bug has a C reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+e682cca30bc101a4d9d9@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please reply to the original
-thread.  For the git send-email command to use, or tips on how to reply if the
-thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/000000000000111cbe058dc7754d@google.com
-
---------------------------------------------------------------------------------
-Title:              WARNING in debug_check_no_obj_freed
-Last occurred:      0 days ago
-Reported:           33 days ago
-Branches:           Mainline
-Dashboard link:     https://syzkaller.appspot.com/bug?id=83687867d4a435fce7c6045b34425b1cfb3bf2d6
-Original thread:    https://lkml.kernel.org/lkml/00000000000090ae7a058bc12946@google.com/T/#u
-
-This bug has a C reproducer.
-
-syzbot has bisected this bug, but I think the bisection result is incorrect.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/00000000000090ae7a058bc12946@google.com
-
---------------------------------------------------------------------------------
-Title:              BUG: workqueue leaked lock or atomic in smc_tx_work
-Last occurred:      27 days ago
-Reported:           29 days ago
-Branches:           Mainline and others
-Dashboard link:     https://syzkaller.appspot.com/bug?id=dd71ec2acfdd198626ec8e914f70afc70cf35c72
-Original thread:    https://lkml.kernel.org/lkml/0000000000006a28b5058c0d7e17@google.com/T/#u
-
-Unfortunately, this bug does not have a reproducer.
-
-No one has replied to the original thread for this bug yet.
-
-If you fix this bug, please add the following tag to the commit:
-    Reported-by: syzbot+8759e3927fd85a7c520a@syzkaller.appspotmail.com
-
-If you send any email or patch for this bug, please consider replying to the
-original thread.  For the git send-email command to use, or tips on how to reply
-if the thread isn't in your mailbox, see the "Reply instructions" at
-https://lkml.kernel.org/r/0000000000006a28b5058c0d7e17@google.com
+Applied, thanks!
 
