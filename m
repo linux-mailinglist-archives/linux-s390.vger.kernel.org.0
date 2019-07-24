@@ -2,119 +2,181 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CECE722B0
-	for <lists+linux-s390@lfdr.de>; Wed, 24 Jul 2019 00:58:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EBABD724A6
+	for <lists+linux-s390@lfdr.de>; Wed, 24 Jul 2019 04:29:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731228AbfGWW6l (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 23 Jul 2019 18:58:41 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7880 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731201AbfGWW6l (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 23 Jul 2019 18:58:41 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6NMuuL7040282
-        for <linux-s390@vger.kernel.org>; Tue, 23 Jul 2019 18:58:39 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2tx927585v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 23 Jul 2019 18:58:39 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 23 Jul 2019 23:58:37 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 23 Jul 2019 23:58:35 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6NMwI7L37945688
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 23 Jul 2019 22:58:18 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 807FF11C054;
-        Tue, 23 Jul 2019 22:58:33 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3DA1011C04C;
-        Tue, 23 Jul 2019 22:58:33 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 23 Jul 2019 22:58:33 +0000 (GMT)
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Marc Hartmayer <mhartmay@linux.ibm.com>,
-        virtualization@lists.linux-foundation.org
-Subject: [PATCH 1/1] virtio/s390: fix race on airq_areas[]
-Date:   Wed, 24 Jul 2019 00:58:17 +0200
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19072322-0012-0000-0000-000003358E7A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072322-0013-0000-0000-0000216F2048
-Message-Id: <20190723225817.12800-1-pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-23_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=903 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907230235
+        id S1728932AbfGXC3e (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 23 Jul 2019 22:29:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42644 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728381AbfGXC3d (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 23 Jul 2019 22:29:33 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B6FD20665;
+        Wed, 24 Jul 2019 02:29:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1563935372;
+        bh=xyGI4uCYWEr2lO836/ICxA9AvTBNnIvsvCU3AJm+6ow=;
+        h=Date:From:To:Cc:Subject:From;
+        b=siMBMDy9vo2/jHG7hKJgJJAIF63RyFm5VmvVvih+a/uIdcP8nC6sxn+s/R8bRDxPF
+         V0ZcIyiWwdZ6588JvXLI6kYcLdxcg3RNQ+33M/0NiISfDFNlWMon+r4oz18dS7xQ7m
+         W/shP0qUi5OExLMrQIK98gXpw2aA3rkCbl87m8IY=
+Date:   Tue, 23 Jul 2019 19:29:30 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Subject: Reminder: 5 open syzbot bugs in "net/smc" subsystem
+Message-ID: <20190724022930.GR643@sol.localdomain>
+Mail-Followup-To: linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The access to airq_areas was racy ever since the adapter interrupts got
-introduced to virtio-ccw, but since commit 39c7dcb15892 ("virtio/s390:
-make airq summary indicators DMA") this became an issue in practice as
-well. Namely before that commit the airq_info that got overwritten was
-still functional. After that commit however the two infos share a
-summary_indicator, which aggravates the situation. Which means
-auto-online mechanism occasionally hangs the boot with virtio_blk.
+[This email was generated by a script.  Let me know if you have any suggestions
+to make it better, or if you want it re-generated with the latest status.]
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-Fixes: 96b14536d935 ("virtio-ccw: virtio-ccw adapter interrupt support.")
----
-* We need definitely this fixed for 5.3. For older stable kernels it is
-to be discussed. @Connie what do you think: do we need a cc stable?
+Of the currently open syzbot reports against the upstream kernel, I've manually
+marked 5 of them as possibly being bugs in the "net/smc" subsystem.  I've listed
+these reports below, sorted by an algorithm that tries to list first the reports
+most likely to be still valid, important, and actionable.
 
-* I have a variant that does not need the extra mutex but uses cmpxchg().
-Decided to post this one because that one is more complex. But if there
-is interest we can have a look at it as well.
----
- drivers/s390/virtio/virtio_ccw.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Of these 5 bugs, 4 were seen in mainline in the last week.
 
-diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-index 1a55e5942d36..d97742662755 100644
---- a/drivers/s390/virtio/virtio_ccw.c
-+++ b/drivers/s390/virtio/virtio_ccw.c
-@@ -145,6 +145,8 @@ struct airq_info {
- 	struct airq_iv *aiv;
- };
- static struct airq_info *airq_areas[MAX_AIRQ_AREAS];
-+DEFINE_MUTEX(airq_areas_lock);
-+
- static u8 *summary_indicators;
- 
- static inline u8 *get_summary_indicator(struct airq_info *info)
-@@ -265,9 +267,11 @@ static unsigned long get_airq_indicator(struct virtqueue *vqs[], int nvqs,
- 	unsigned long bit, flags;
- 
- 	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
-+		mutex_lock(&airq_areas_lock);
- 		if (!airq_areas[i])
- 			airq_areas[i] = new_airq_info(i);
- 		info = airq_areas[i];
-+		mutex_unlock(&airq_areas_lock);
- 		if (!info)
- 			return 0;
- 		write_lock_irqsave(&info->lock, flags);
--- 
-2.17.1
+Of these 5 bugs, 1 was bisected to a commit from the following person:
+
+	Ursula Braun <ubraun@linux.ibm.com>
+
+If you believe a bug is no longer valid, please close the syzbot report by
+sending a '#syz fix', '#syz dup', or '#syz invalid' command in reply to the
+original thread, as explained at https://goo.gl/tpsmEJ#status
+
+If you believe I misattributed a bug to the "net/smc" subsystem, please let me
+know, and if possible forward the report to the correct people or mailing list.
+
+Here are the bugs:
+
+--------------------------------------------------------------------------------
+Title:              WARNING in smc_unhash_sk (2)
+Last occurred:      0 days ago
+Reported:           101 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=f650845a184aed6947c0dd0f4d99d561335a7c31
+Original thread:    https://lkml.kernel.org/lkml/000000000000ac48ed05866bbc2c@google.com/T/#u
+
+This bug has a C reproducer.
+
+This bug was bisected to:
+
+	commit 50717a37db032ce783f50685a73bb2ac68471a5a
+	Author: Ursula Braun <ubraun@linux.ibm.com>
+	Date:   Fri Apr 12 10:57:23 2019 +0000
+
+	  net/smc: nonblocking connect rework
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000ac48ed05866bbc2c@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING: ODEBUG bug in __sk_destruct
+Last occurred:      0 days ago
+Reported:           450 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=591666b46bf0d9e2fbb8dbb386982d12ba804648
+Original thread:    https://lkml.kernel.org/lkml/000000000000451f9d056aff4397@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one replied to the original thread for this bug.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+92209502e7aab127c75f@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000451f9d056aff4397@google.com
+
+--------------------------------------------------------------------------------
+Title:              memory leak in new_inode_pseudo (2)
+Last occurred:      1 day ago
+Reported:           7 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=911dac8eb1de0c09979e8e0054cb6cbe198cd5bb
+Original thread:    https://lkml.kernel.org/lkml/000000000000111cbe058dc7754d@google.com/T/#u
+
+This bug has a C reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+e682cca30bc101a4d9d9@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please reply to the original
+thread.  For the git send-email command to use, or tips on how to reply if the
+thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/000000000000111cbe058dc7754d@google.com
+
+--------------------------------------------------------------------------------
+Title:              WARNING in debug_check_no_obj_freed
+Last occurred:      0 days ago
+Reported:           33 days ago
+Branches:           Mainline
+Dashboard link:     https://syzkaller.appspot.com/bug?id=83687867d4a435fce7c6045b34425b1cfb3bf2d6
+Original thread:    https://lkml.kernel.org/lkml/00000000000090ae7a058bc12946@google.com/T/#u
+
+This bug has a C reproducer.
+
+syzbot has bisected this bug, but I think the bisection result is incorrect.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/00000000000090ae7a058bc12946@google.com
+
+--------------------------------------------------------------------------------
+Title:              BUG: workqueue leaked lock or atomic in smc_tx_work
+Last occurred:      27 days ago
+Reported:           29 days ago
+Branches:           Mainline and others
+Dashboard link:     https://syzkaller.appspot.com/bug?id=dd71ec2acfdd198626ec8e914f70afc70cf35c72
+Original thread:    https://lkml.kernel.org/lkml/0000000000006a28b5058c0d7e17@google.com/T/#u
+
+Unfortunately, this bug does not have a reproducer.
+
+No one has replied to the original thread for this bug yet.
+
+If you fix this bug, please add the following tag to the commit:
+    Reported-by: syzbot+8759e3927fd85a7c520a@syzkaller.appspotmail.com
+
+If you send any email or patch for this bug, please consider replying to the
+original thread.  For the git send-email command to use, or tips on how to reply
+if the thread isn't in your mailbox, see the "Reply instructions" at
+https://lkml.kernel.org/r/0000000000006a28b5058c0d7e17@google.com
 
