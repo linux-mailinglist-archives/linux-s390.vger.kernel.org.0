@@ -2,73 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 581B27484F
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2019 09:40:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8626D74B79
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2019 12:24:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388191AbfGYHk5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 25 Jul 2019 03:40:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47682 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387989AbfGYHk4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:40:56 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B8D43A836;
-        Thu, 25 Jul 2019 07:40:56 +0000 (UTC)
-Received: from gondolin (dhcp-192-232.str.redhat.com [10.33.192.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 458A95D9DE;
-        Thu, 25 Jul 2019 07:40:55 +0000 (UTC)
-Date:   Thu, 25 Jul 2019 09:40:53 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Farhan Ali <alifm@linux.ibm.com>
-Cc:     farman@linux.ibm.com, pasic@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        qemu-devel@nongnu.org, qemu-s390x@nongnu.org
+        id S1729852AbfGYKWU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 25 Jul 2019 06:22:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10352 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727402AbfGYKWU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 25 Jul 2019 06:22:20 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6PAHvxQ092813
+        for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2019 06:22:18 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ty77cgayy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2019 06:22:17 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Thu, 25 Jul 2019 11:22:03 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 25 Jul 2019 11:22:01 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6PALx6F38732286
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 25 Jul 2019 10:21:59 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 619D5AE057;
+        Thu, 25 Jul 2019 10:21:59 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 19606AE053;
+        Thu, 25 Jul 2019 10:21:59 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.134])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 25 Jul 2019 10:21:59 +0000 (GMT)
+Date:   Thu, 25 Jul 2019 12:21:57 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Farhan Ali <alifm@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        farman@linux.ibm.com, pasic@linux.ibm.com,
+        linux-s390@vger.kernel.org, kvm@vger.kernel.org
 Subject: Re: [PATCH 1/1] MAINTAINERS: vfio-ccw: Remove myself as the
  maintainer
-Message-ID: <20190725094053.2367e272.cohuck@redhat.com>
-In-Reply-To: <355a4ac2923ff3dcf2171cb23d477440bd010b34.1564003698.git.alifm@linux.ibm.com>
-References: <cover.1564003698.git.alifm@linux.ibm.com>
-        <355a4ac2923ff3dcf2171cb23d477440bd010b34.1564003698.git.alifm@linux.ibm.com>
-Organization: Red Hat GmbH
+References: <cover.1564003585.git.alifm@linux.ibm.com>
+ <19aee1ab0e5bcc01053b515117a66426a9332086.1564003585.git.alifm@linux.ibm.com>
+ <20190725093335.09c96c0d.cohuck@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 25 Jul 2019 07:40:56 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190725093335.09c96c0d.cohuck@redhat.com>
+X-TM-AS-GCONF: 00
+x-cbid: 19072510-0012-0000-0000-000003360C8C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072510-0013-0000-0000-0000216FA3AC
+Message-Id: <20190725102157.GA25333@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=725 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907250124
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-[added the missing qemu mailing lists]
-
-On Wed, 24 Jul 2019 17:35:46 -0400
-Farhan Ali <alifm@linux.ibm.com> wrote:
-
-> I will not be able to continue with my maintainership responsibilities
-> going forward, so remove myself as the maintainer.
-
-Thank you again for your work!
-
+On Thu, Jul 25, 2019 at 09:33:35AM +0200, Cornelia Huck wrote:
+> On Wed, 24 Jul 2019 17:32:03 -0400
+> Farhan Ali <alifm@linux.ibm.com> wrote:
 > 
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> ---
->  MAINTAINERS | 1 -
->  1 file changed, 1 deletion(-)
+> > I will not be able to continue with my maintainership responsibilities
+> > going forward, so remove myself as the maintainer.
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index acbad13..fe2797a 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1452,7 +1452,6 @@ F: include/hw/vfio/
->  vfio-ccw
->  M: Cornelia Huck <cohuck@redhat.com>
->  M: Eric Farman <farman@linux.ibm.com>
-> -M: Farhan Ali <alifm@linux.ibm.com>
->  S: Supported
->  F: hw/vfio/ccw.c
->  F: hw/s390x/s390-ccw.c
+> ::sadface::
+> 
+> Thank you for all of your good work!
+> 
+> > 
+> > Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+> > ---
+> >  MAINTAINERS | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 0e90487..dd07a23 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -13696,7 +13696,6 @@ F:	drivers/pci/hotplug/s390_pci_hpc.c
+> >  
+> >  S390 VFIO-CCW DRIVER
+> >  M:	Cornelia Huck <cohuck@redhat.com>
+> > -M:	Farhan Ali <alifm@linux.ibm.com>
+> >  M:	Eric Farman <farman@linux.ibm.com>
+> >  R:	Halil Pasic <pasic@linux.ibm.com>
+> >  L:	linux-s390@vger.kernel.org
+> 
+> Acked-by: Cornelia Huck <cohuck@redhat.com>
+> 
+> Heiko/Vasily/Christian: can you take this one directly through the s390
+> tree?
 
-Queued to s390-fixes.
+Sure.
+
