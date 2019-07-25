@@ -2,52 +2,51 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 06C7B747C0
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2019 09:07:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BFE37480E
+	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2019 09:26:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfGYHHD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 25 Jul 2019 03:07:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62038 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726691AbfGYHHD (ORCPT
+        id S2388079AbfGYH0E (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 25 Jul 2019 03:26:04 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36266 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387951AbfGYH0E (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 25 Jul 2019 03:07:03 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6P76fab057552
-        for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2019 03:07:02 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ty77c95ny-1
+        Thu, 25 Jul 2019 03:26:04 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6P7Lmka085345
+        for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2019 03:26:02 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ty6urasfm-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2019 03:07:01 -0400
+        for <linux-s390@vger.kernel.org>; Thu, 25 Jul 2019 03:26:02 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 25 Jul 2019 08:06:59 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 25 Jul 2019 08:26:00 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 25 Jul 2019 08:06:56 +0100
+        Thu, 25 Jul 2019 08:25:58 +0100
 Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6P76s6Z48562420
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6P7Pgsf24117680
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jul 2019 07:06:54 GMT
+        Thu, 25 Jul 2019 07:25:42 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D537142041;
-        Thu, 25 Jul 2019 07:06:54 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 23E6642042;
+        Thu, 25 Jul 2019 07:25:57 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B91E42047;
-        Thu, 25 Jul 2019 07:06:54 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C83E54203F;
+        Thu, 25 Jul 2019 07:25:56 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.1.27])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jul 2019 07:06:54 +0000 (GMT)
+        Thu, 25 Jul 2019 07:25:56 +0000 (GMT)
 Subject: Re: [PATCH 1/1] MAINTAINERS: vfio-ccw: Remove myself as the
  maintainer
 To:     Farhan Ali <alifm@linux.ibm.com>, cohuck@redhat.com,
         farman@linux.ibm.com, pasic@linux.ibm.com
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        qemu-s390x <qemu-s390x@nongnu.org>
-References: <cover.1564003698.git.alifm@linux.ibm.com>
- <355a4ac2923ff3dcf2171cb23d477440bd010b34.1564003698.git.alifm@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org
+References: <cover.1564003585.git.alifm@linux.ibm.com>
+ <19aee1ab0e5bcc01053b515117a66426a9332086.1564003585.git.alifm@linux.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
@@ -93,34 +92,34 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
  oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
  syiRa+UVlsKmx1hsEg==
-Date:   Thu, 25 Jul 2019 09:06:54 +0200
+Date:   Thu, 25 Jul 2019 09:25:56 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <355a4ac2923ff3dcf2171cb23d477440bd010b34.1564003698.git.alifm@linux.ibm.com>
+In-Reply-To: <19aee1ab0e5bcc01053b515117a66426a9332086.1564003585.git.alifm@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19072507-0008-0000-0000-0000030095F1
+x-cbid: 19072507-0012-0000-0000-00000335FB8A
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072507-0009-0000-0000-0000226E2927
-Message-Id: <1f1011d3-2fd5-2152-cbf8-b44dd76ee75a@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_03:,,
+x-cbparentid: 19072507-0013-0000-0000-0000216F9216
+Message-Id: <fca81b91-1ce8-655a-363b-79983943db2c@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=738 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907250085
+ mlxlogscore=748 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907250088
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-So this is the qemu patch, right?
+Conny shall we pick that directly into the s390 tree?
 
-On 24.07.19 23:35, Farhan Ali wrote:
+On 24.07.19 23:32, Farhan Ali wrote:
 > I will not be able to continue with my maintainership responsibilities
 > going forward, so remove myself as the maintainer.
 > 
@@ -130,16 +129,16 @@ On 24.07.19 23:35, Farhan Ali wrote:
 >  1 file changed, 1 deletion(-)
 > 
 > diff --git a/MAINTAINERS b/MAINTAINERS
-> index acbad13..fe2797a 100644
+> index 0e90487..dd07a23 100644
 > --- a/MAINTAINERS
 > +++ b/MAINTAINERS
-> @@ -1452,7 +1452,6 @@ F: include/hw/vfio/
->  vfio-ccw
->  M: Cornelia Huck <cohuck@redhat.com>
->  M: Eric Farman <farman@linux.ibm.com>
-> -M: Farhan Ali <alifm@linux.ibm.com>
->  S: Supported
->  F: hw/vfio/ccw.c
->  F: hw/s390x/s390-ccw.c
+> @@ -13696,7 +13696,6 @@ F:	drivers/pci/hotplug/s390_pci_hpc.c
+> 
+>  S390 VFIO-CCW DRIVER
+>  M:	Cornelia Huck <cohuck@redhat.com>
+> -M:	Farhan Ali <alifm@linux.ibm.com>
+>  M:	Eric Farman <farman@linux.ibm.com>
+>  R:	Halil Pasic <pasic@linux.ibm.com>
+>  L:	linux-s390@vger.kernel.org
 > 
 
