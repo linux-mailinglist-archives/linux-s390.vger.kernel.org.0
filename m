@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A02617687C
-	for <lists+linux-s390@lfdr.de>; Fri, 26 Jul 2019 15:44:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A530768DE
+	for <lists+linux-s390@lfdr.de>; Fri, 26 Jul 2019 15:48:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388440AbfGZNov (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 26 Jul 2019 09:44:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:53240 "EHLO mail.kernel.org"
+        id S2387747AbfGZNrv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 26 Jul 2019 09:47:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388435AbfGZNov (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:44:51 -0400
+        id S1728228AbfGZNpn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:45:43 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CC9D22CE9;
-        Fri, 26 Jul 2019 13:44:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63DF422CE8;
+        Fri, 26 Jul 2019 13:45:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148690;
+        s=default; t=1564148742;
         bh=9jzAsxYR1nC0MVSbpaL+bXHxXjQehw47JxfE2DMXHQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZoH7R0D4uDPRpGnqvO6RDLjgv4Q3flC062L3eECYpvKHlOkWa6IZwFYJzsB9DXA+
-         5ps6ISzzStvj0eatCKjdxjhBmGvWxgxrsBhJ/lUkIEkUp9YglZNh5tcX+fHDGySaEs
-         kOd02blNAMRffyr5BbkTq0wd6YKFD0dvg9Fm2eMQ=
+        b=C6HqF+s+Mrp0aXWQjZFkO6kL0cStT8ZOCQOBCUfaSv61tQG2ky8JgRMXQSFle5IxV
+         iguZUKdWkKF4/YVyzgIdtIhXHnw3UIEMG4KqskkuhzrSs0G4CNCj3UkYRBx+51FMwk
+         3L8xNC1Dgtx5xTS7Yxs+qfG51fl4ysn36z6PnLj8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Benjamin Block <bblock@linux.ibm.com>,
@@ -30,12 +30,12 @@ Cc:     Benjamin Block <bblock@linux.ibm.com>,
         Steffen Maier <maier@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 13/30] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
-Date:   Fri, 26 Jul 2019 09:44:15 -0400
-Message-Id: <20190726134432.12993-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 09/23] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
+Date:   Fri, 26 Jul 2019 09:45:08 -0400
+Message-Id: <20190726134522.13308-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
-References: <20190726134432.12993-1-sashal@kernel.org>
+In-Reply-To: <20190726134522.13308-1-sashal@kernel.org>
+References: <20190726134522.13308-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
