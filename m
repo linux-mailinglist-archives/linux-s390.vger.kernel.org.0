@@ -2,127 +2,280 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EC71A74F38
-	for <lists+linux-s390@lfdr.de>; Thu, 25 Jul 2019 15:24:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3613E7631B
+	for <lists+linux-s390@lfdr.de>; Fri, 26 Jul 2019 12:06:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727830AbfGYNYJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 25 Jul 2019 09:24:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64540 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726653AbfGYNYI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 25 Jul 2019 09:24:08 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6PDM8H8112696;
-        Thu, 25 Jul 2019 09:24:07 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tybqbcse8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jul 2019 09:24:07 -0400
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x6PDMLav113681;
-        Thu, 25 Jul 2019 09:24:07 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2tybqbcsdd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jul 2019 09:24:07 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x6PDJTAj023197;
-        Thu, 25 Jul 2019 13:24:06 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04dal.us.ibm.com with ESMTP id 2tx61n6sg8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 25 Jul 2019 13:24:06 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6PDO1Vd53346578
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 25 Jul 2019 13:24:01 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7AB0B6E05B;
-        Thu, 25 Jul 2019 13:24:01 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ABD536E052;
-        Thu, 25 Jul 2019 13:24:00 +0000 (GMT)
-Received: from [9.56.58.37] (unknown [9.56.58.37])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Thu, 25 Jul 2019 13:24:00 +0000 (GMT)
-Subject: Re: [PATCH 1/1] MAINTAINERS: vfio-ccw: Remove myself as the
- maintainer
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     farman@linux.ibm.com, pasic@linux.ibm.com,
-        linux-s390@vger.kernel.org, kvm@vger.kernel.org
-References: <cover.1564003585.git.alifm@linux.ibm.com>
- <19aee1ab0e5bcc01053b515117a66426a9332086.1564003585.git.alifm@linux.ibm.com>
- <20190725093335.09c96c0d.cohuck@redhat.com>
-From:   Farhan Ali <alifm@linux.ibm.com>
-Message-ID: <42b67a01-1194-7f4b-5c13-ad86454590f7@linux.ibm.com>
-Date:   Thu, 25 Jul 2019 09:24:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.4.0
+        id S1726240AbfGZKGX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 26 Jul 2019 06:06:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45282 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725953AbfGZKGW (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 26 Jul 2019 06:06:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 23E8081134;
+        Fri, 26 Jul 2019 10:06:22 +0000 (UTC)
+Received: from localhost (dhcp-192-232.str.redhat.com [10.33.192.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A1339600C4;
+        Fri, 26 Jul 2019 10:06:21 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH RFC UNTESTED] vfio-ccw: indirect access to translated cps
+Date:   Fri, 26 Jul 2019 12:06:17 +0200
+Message-Id: <20190726100617.19718-1-cohuck@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190725093335.09c96c0d.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-25_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907250156
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Fri, 26 Jul 2019 10:06:22 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+We're currently keeping a single area for translated channel
+programs in our private structure, which is filled out when
+we are translating a channel program we have been given by
+user space and marked invalid again when we received an final
+interrupt for that I/O.
 
+Unfortunately, properly tracking the lifetime of that cp is
+not easy: failures may happen during translation or right when
+it is sent to the hardware, unsolicited interrupts may trigger
+a deferred condition code, a halt/clear request may be issued
+while the I/O is supposed to be running, or a reset request may
+come in from the side. The _PROCESSING state and the ->initialized
+flag help a bit, but not enough.
 
-On 07/25/2019 03:33 AM, Cornelia Huck wrote:
-> On Wed, 24 Jul 2019 17:32:03 -0400
-> Farhan Ali <alifm@linux.ibm.com> wrote:
-> 
->> I will not be able to continue with my maintainership responsibilities
->> going forward, so remove myself as the maintainer.
-> 
-> ::sadface::
-> 
-> Thank you for all of your good work!
+We want to have a way to figure out whether we actually have a cp
+currently in progress, so we can update/free only when applicable.
+Points to keep in mind:
+- We will get an interrupt after a cp has been submitted iff ssch
+  finished with cc 0.
+- We will get more interrupts for a cp if the interrupt status is
+  not final.
+- We can have only one cp in flight at a time.
 
-It was a pleasure working with everyone :)
+Let's decouple the actual area in the private structure from the
+means to access it: Only after we have successfully submitted a
+cp (ssch with cc 0), update the pointer in the private structure
+to point to the area used. Therefore, the interrupt handler won't
+access the cp if we don't actually expect an interrupt pertaining
+to it.
 
-Thanks for all your help.
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+---
 
-Thanks
-Farhan
+Just hacked this up to get some feedback, did not actually try it
+out. Not even sure if this is a sensible approach; if not, let's
+blame it on the heat and pretend it didn't happen :)
 
-> 
->>
->> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
->> ---
->>   MAINTAINERS | 1 -
->>   1 file changed, 1 deletion(-)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 0e90487..dd07a23 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -13696,7 +13696,6 @@ F:	drivers/pci/hotplug/s390_pci_hpc.c
->>   
->>   S390 VFIO-CCW DRIVER
->>   M:	Cornelia Huck <cohuck@redhat.com>
->> -M:	Farhan Ali <alifm@linux.ibm.com>
->>   M:	Eric Farman <farman@linux.ibm.com>
->>   R:	Halil Pasic <pasic@linux.ibm.com>
->>   L:	linux-s390@vger.kernel.org
-> 
-> Acked-by: Cornelia Huck <cohuck@redhat.com>
-> 
-> Heiko/Vasily/Christian: can you take this one directly through the s390
-> tree?
-> 
-> 
+I also thought about having *two* translation areas and switching
+the pointer between them; this might be too complicated, though?
+
+---
+ drivers/s390/cio/vfio_ccw_drv.c     | 19 +++++++++++--------
+ drivers/s390/cio/vfio_ccw_fsm.c     | 25 +++++++++++++++++--------
+ drivers/s390/cio/vfio_ccw_ops.c     | 11 +++++++----
+ drivers/s390/cio/vfio_ccw_private.h |  6 ++++--
+ 4 files changed, 39 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+index 9208c0e56c33..059b88c94378 100644
+--- a/drivers/s390/cio/vfio_ccw_drv.c
++++ b/drivers/s390/cio/vfio_ccw_drv.c
+@@ -86,10 +86,13 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
+ 
+ 	is_final = !(scsw_actl(&irb->scsw) &
+ 		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
+-	if (scsw_is_solicited(&irb->scsw)) {
+-		cp_update_scsw(&private->cp, &irb->scsw);
+-		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
+-			cp_free(&private->cp);
++	if (scsw_is_solicited(&irb->scsw) && private->cp) {
++		cp_update_scsw(private->cp, &irb->scsw);
++		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING) {
++			struct channel_program *cp = private->cp;
++			private->cp = NULL;
++			cp_free(cp);
++		}
+ 	}
+ 	mutex_lock(&private->io_mutex);
+ 	memcpy(private->io_region->irb_area, irb, sizeof(*irb));
+@@ -129,9 +132,9 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+ 	if (!private)
+ 		return -ENOMEM;
+ 
+-	private->cp.guest_cp = kcalloc(CCWCHAIN_LEN_MAX, sizeof(struct ccw1),
++	private->cp_area.guest_cp = kcalloc(CCWCHAIN_LEN_MAX, sizeof(struct ccw1),
+ 				       GFP_KERNEL);
+-	if (!private->cp.guest_cp)
++	if (!private->cp_area.guest_cp)
+ 		goto out_free;
+ 
+ 	private->io_region = kmem_cache_zalloc(vfio_ccw_io_region,
+@@ -174,7 +177,7 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+ 		kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
+ 	if (private->io_region)
+ 		kmem_cache_free(vfio_ccw_io_region, private->io_region);
+-	kfree(private->cp.guest_cp);
++	kfree(private->cp_area.guest_cp);
+ 	kfree(private);
+ 	return ret;
+ }
+@@ -191,7 +194,7 @@ static int vfio_ccw_sch_remove(struct subchannel *sch)
+ 
+ 	kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
+ 	kmem_cache_free(vfio_ccw_io_region, private->io_region);
+-	kfree(private->cp.guest_cp);
++	kfree(private->cp_area.guest_cp);
+ 	kfree(private);
+ 
+ 	return 0;
+diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
+index 49d9d3da0282..543d007ddc46 100644
+--- a/drivers/s390/cio/vfio_ccw_fsm.c
++++ b/drivers/s390/cio/vfio_ccw_fsm.c
+@@ -18,7 +18,8 @@
+ #define CREATE_TRACE_POINTS
+ #include "vfio_ccw_trace.h"
+ 
+-static int fsm_io_helper(struct vfio_ccw_private *private)
++static int fsm_io_helper(struct vfio_ccw_private *private,
++			 struct channel_program *cp)
+ {
+ 	struct subchannel *sch;
+ 	union orb *orb;
+@@ -31,7 +32,7 @@ static int fsm_io_helper(struct vfio_ccw_private *private)
+ 
+ 	spin_lock_irqsave(sch->lock, flags);
+ 
+-	orb = cp_get_orb(&private->cp, (u32)(addr_t)sch, sch->lpm);
++	orb = cp_get_orb(cp, (u32)(addr_t)sch, sch->lpm);
+ 	if (!orb) {
+ 		ret = -EIO;
+ 		goto out;
+@@ -47,6 +48,7 @@ static int fsm_io_helper(struct vfio_ccw_private *private)
+ 		 */
+ 		sch->schib.scsw.cmd.actl |= SCSW_ACTL_START_PEND;
+ 		ret = 0;
++		private->cp = cp;
+ 		private->state = VFIO_CCW_STATE_CP_PENDING;
+ 		break;
+ 	case 1:		/* Status pending */
+@@ -236,31 +238,38 @@ static void fsm_io_request(struct vfio_ccw_private *private,
+ 	if (scsw->cmd.fctl & SCSW_FCTL_START_FUNC) {
+ 		orb = (union orb *)io_region->orb_area;
+ 
++		/* I/O already in progress? Should not happen (bug in FSM?). */
++		if (private->cp) {
++			io_region->ret_code = -EBUSY;
++			errstr = "cp in progress";
++			goto err_out;
++		}
+ 		/* Don't try to build a cp if transport mode is specified. */
+ 		if (orb->tm.b) {
+ 			io_region->ret_code = -EOPNOTSUPP;
+ 			errstr = "transport mode";
+ 			goto err_out;
+ 		}
+-		io_region->ret_code = cp_init(&private->cp, mdev_dev(mdev),
+-					      orb);
++		io_region->ret_code = cp_init(&private->cp_area,
++					      mdev_dev(mdev), orb);
+ 		if (io_region->ret_code) {
+ 			errstr = "cp init";
+ 			goto err_out;
+ 		}
+ 
+-		io_region->ret_code = cp_prefetch(&private->cp);
++		io_region->ret_code = cp_prefetch(&private->cp_area);
+ 		if (io_region->ret_code) {
+ 			errstr = "cp prefetch";
+-			cp_free(&private->cp);
++			cp_free(&private->cp_area);
+ 			goto err_out;
+ 		}
+ 
+ 		/* Start channel program and wait for I/O interrupt. */
+-		io_region->ret_code = fsm_io_helper(private);
++		io_region->ret_code = fsm_io_helper(private,
++						    &private->cp_area);
+ 		if (io_region->ret_code) {
+ 			errstr = "cp fsm_io_helper";
+-			cp_free(&private->cp);
++			cp_free(&private->cp_area);
+ 			goto err_out;
+ 		}
+ 		return;
+diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
+index 5eb61116ca6f..5ad6a7b672bd 100644
+--- a/drivers/s390/cio/vfio_ccw_ops.c
++++ b/drivers/s390/cio/vfio_ccw_ops.c
+@@ -58,13 +58,14 @@ static int vfio_ccw_mdev_notifier(struct notifier_block *nb,
+ 	if (action == VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
+ 		struct vfio_iommu_type1_dma_unmap *unmap = data;
+ 
+-		if (!cp_iova_pinned(&private->cp, unmap->iova))
++		if (!cp_iova_pinned(&private->cp_area, unmap->iova))
+ 			return NOTIFY_OK;
+ 
+ 		if (vfio_ccw_mdev_reset(private->mdev))
+ 			return NOTIFY_BAD;
+ 
+-		cp_free(&private->cp);
++		private->cp = NULL;
++		cp_free(&private->cp_area);
+ 		return NOTIFY_OK;
+ 	}
+ 
+@@ -139,7 +140,8 @@ static int vfio_ccw_mdev_remove(struct mdev_device *mdev)
+ 		/* The state will be NOT_OPER on error. */
+ 	}
+ 
+-	cp_free(&private->cp);
++	private->cp = NULL;
++	cp_free(&private->cp_area);
+ 	private->mdev = NULL;
+ 	atomic_inc(&private->avail);
+ 
+@@ -180,7 +182,8 @@ static void vfio_ccw_mdev_release(struct mdev_device *mdev)
+ 		/* The state will be NOT_OPER on error. */
+ 	}
+ 
+-	cp_free(&private->cp);
++	private->cp = NULL;
++	cp_free(&private->cp_area);
+ 	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+ 				 &private->nb);
+ 
+diff --git a/drivers/s390/cio/vfio_ccw_private.h b/drivers/s390/cio/vfio_ccw_private.h
+index f1092c3dc1b1..e792a20202c3 100644
+--- a/drivers/s390/cio/vfio_ccw_private.h
++++ b/drivers/s390/cio/vfio_ccw_private.h
+@@ -68,7 +68,8 @@ int vfio_ccw_register_async_dev_regions(struct vfio_ccw_private *private);
+  * @region: additional regions for other subchannel operations
+  * @cmd_region: MMIO region for asynchronous I/O commands other than START
+  * @num_regions: number of additional regions
+- * @cp: channel program for the current I/O operation
++ * @cp_area: channel program memory area
++ * @cp: pointer to channel program for the current I/O operation
+  * @irb: irb info received from interrupt
+  * @scsw: scsw info
+  * @io_trigger: eventfd ctx for signaling userspace I/O results
+@@ -87,7 +88,8 @@ struct vfio_ccw_private {
+ 	struct ccw_cmd_region	*cmd_region;
+ 	int num_regions;
+ 
+-	struct channel_program	cp;
++	struct channel_program cp_area;
++	struct channel_program	*cp;
+ 	struct irb		irb;
+ 	union scsw		scsw;
+ 
+-- 
+2.20.1
+
