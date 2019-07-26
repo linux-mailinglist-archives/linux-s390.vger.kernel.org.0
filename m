@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C7D957682C
-	for <lists+linux-s390@lfdr.de>; Fri, 26 Jul 2019 15:42:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02617687C
+	for <lists+linux-s390@lfdr.de>; Fri, 26 Jul 2019 15:44:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388044AbfGZNms (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 26 Jul 2019 09:42:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50144 "EHLO mail.kernel.org"
+        id S2388440AbfGZNov (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 26 Jul 2019 09:44:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53240 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388039AbfGZNmr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 26 Jul 2019 09:42:47 -0400
+        id S2388435AbfGZNov (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 26 Jul 2019 09:44:51 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D43C022CBD;
-        Fri, 26 Jul 2019 13:42:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2CC9D22CE9;
+        Fri, 26 Jul 2019 13:44:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564148566;
-        bh=l9OGrWheufQP0+CwPOwPLWMhUfh+EraEKkAJGpVQxCc=;
+        s=default; t=1564148690;
+        bh=9jzAsxYR1nC0MVSbpaL+bXHxXjQehw47JxfE2DMXHQs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bb8bzPxNEz2ABi49Zk8Jmd64Nq6XfifSrTMC6fR0kY8ZQH0bEP1NyBejYCZaksQNK
-         wYeO8/p8/j+V+xd7rDoGSR9tDIYxS4PD3vkSFurmCywqi/LUyNUJqo6CjM0AkA6XC4
-         t/a/W8eGppdPKeXO4hbHes3nlmQtXyMV/OoHji80=
+        b=kZoH7R0D4uDPRpGnqvO6RDLjgv4Q3flC062L3eECYpvKHlOkWa6IZwFYJzsB9DXA+
+         5ps6ISzzStvj0eatCKjdxjhBmGvWxgxrsBhJ/lUkIEkUp9YglZNh5tcX+fHDGySaEs
+         kOd02blNAMRffyr5BbkTq0wd6YKFD0dvg9Fm2eMQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Benjamin Block <bblock@linux.ibm.com>,
@@ -30,12 +30,12 @@ Cc:     Benjamin Block <bblock@linux.ibm.com>,
         Steffen Maier <maier@linux.ibm.com>,
         "Martin K . Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 22/47] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
-Date:   Fri, 26 Jul 2019 09:41:45 -0400
-Message-Id: <20190726134210.12156-22-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 13/30] scsi: zfcp: fix GCC compiler warning emitted with -Wmaybe-uninitialized
+Date:   Fri, 26 Jul 2019 09:44:15 -0400
+Message-Id: <20190726134432.12993-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190726134210.12156-1-sashal@kernel.org>
-References: <20190726134210.12156-1-sashal@kernel.org>
+In-Reply-To: <20190726134432.12993-1-sashal@kernel.org>
+References: <20190726134432.12993-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -131,10 +131,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+)
 
 diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
-index ebdbc457003f..332701db7379 100644
+index abe460eac712..cc62d8cc8cfd 100644
 --- a/drivers/s390/scsi/zfcp_erp.c
 +++ b/drivers/s390/scsi/zfcp_erp.c
-@@ -11,6 +11,7 @@
+@@ -10,6 +10,7 @@
  #define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
  
  #include <linux/kthread.h>
@@ -142,7 +142,7 @@ index ebdbc457003f..332701db7379 100644
  #include "zfcp_ext.h"
  #include "zfcp_reqlist.h"
  
-@@ -238,6 +239,12 @@ static struct zfcp_erp_action *zfcp_erp_setup_act(int need, u32 act_status,
+@@ -244,6 +245,12 @@ static struct zfcp_erp_action *zfcp_erp_setup_act(int need, u32 act_status,
  	struct zfcp_erp_action *erp_action;
  	struct zfcp_scsi_dev *zfcp_sdev;
  
