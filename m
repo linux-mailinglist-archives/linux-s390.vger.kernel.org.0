@@ -2,70 +2,64 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 065C37802F
-	for <lists+linux-s390@lfdr.de>; Sun, 28 Jul 2019 17:29:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A7DA78188
+	for <lists+linux-s390@lfdr.de>; Sun, 28 Jul 2019 22:31:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726105AbfG1P3R (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 28 Jul 2019 11:29:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47014 "EHLO mail.kernel.org"
+        id S1726203AbfG1UbA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 28 Jul 2019 16:31:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50608 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfG1P3R (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 28 Jul 2019 11:29:17 -0400
-Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726129AbfG1UbA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 28 Jul 2019 16:31:00 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E7632077C;
-        Sun, 28 Jul 2019 15:29:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1564327756;
-        bh=it/c594nq63bawVbXYDdCfpOHcrl2SNnrKBSMfDSlVI=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QNV3qT/MLrxNCORulzbIpehxK8OS68l4tUkZAdAW0RsniquleeP51fbR6mEAjNSF2
-         RdHU1udaoGJxmg/RCHVBGoJkVKH78yygJVpsyZEH7XyK4RJuwipIpGJAAhaDm1xF1n
-         E/s7aOmSYo7OHvYhKKHv23kZ5OXnJzgH9SsEwReU=
-Date:   Sun, 28 Jul 2019 11:29:15 -0400
-From:   Sasha Levin <sashal@kernel.org>
-To:     Jan =?iso-8859-1?Q?H=F6ppner?= <hoeppner@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: Re: [PATCH AUTOSEL 5.2 149/171] s390/dasd: Make layout analysis ESE
- compatible
-Message-ID: <20190728152915.GF8637@sasha-vm>
-References: <20190719035643.14300-1-sashal@kernel.org>
- <20190719035643.14300-149-sashal@kernel.org>
- <a8ad62c7-383a-a890-ca20-4348d8ab9dec@de.ibm.com>
- <018f17c4-07c9-7fcf-1f22-0a712b452b25@linux.ibm.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id DA90D3B551;
+        Sun, 28 Jul 2019 20:30:59 +0000 (UTC)
+Received: from treble (ovpn-120-102.rdu2.redhat.com [10.10.120.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0705C5D70D;
+        Sun, 28 Jul 2019 20:30:55 +0000 (UTC)
+Date:   Sun, 28 Jul 2019 15:30:53 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     Joe Lawrence <joe.lawrence@redhat.com>, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jikos@kernel.org, pmladek@suse.com, nstange@suse.de,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH] s390/livepatch: Implement reliable stack tracing for the
+ consistency model
+Message-ID: <20190728203053.q3pafkwnzm5j3ccs@treble>
+References: <20190710105918.22487-1-mbenes@suse.cz>
+ <20190716184549.GA26084@redhat.com>
+ <alpine.LSU.2.21.1907171223540.4492@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <018f17c4-07c9-7fcf-1f22-0a712b452b25@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <alpine.LSU.2.21.1907171223540.4492@pobox.suse.cz>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sun, 28 Jul 2019 20:31:00 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Jul 19, 2019 at 10:47:42AM +0200, Jan Höppner wrote:
->On 19.07.19 09:47, Christian Borntraeger wrote:
->> The comment is true for all stable versions.
->>
->> This patch is part of a larger series that enables ESE volumes.
->> I think it should not go alone as other patches like
->> 5e2b17e712cf s390/dasd: Add dynamic formatting support for ESE volumes
->> are needed to actually work with ESE volumes.
->> So I suggest to drop this patch.
->> Jan, Stefan, do you agree?
->>
->
->This patch is a requirement for ESE volumes to work and doesn't
->add any value alone. I suggest to drop this patch as well.
+On Wed, Jul 17, 2019 at 01:01:27PM +0200, Miroslav Benes wrote:
+> > On a related note, do you think it would be feasible to extend (in
+> > another patchset) the reliable stack unwinding code a bit so that we
+> > could feed it pre-baked stacks ... then we could verify that the code
+> > was finding interesting scenarios.  That was a passing thought I had
+> > back when Nicolai and I were debugging the ppc64le exception frame
+> > marker bug, but didn't think it worth the time/effort at the time.
+> 
+> That is an interesting thought. It would help the testing a lot. I will 
+> make a note in my todo list.
 
-I've dropped it from everywhere, thank you!
+Another idea I had for reliable unwinder testing: add a
+CONFIG_RELIABLE_STACKTRACE_DEBUG option which does a periodic stack
+trace and warns if it doesn't reach the end.  It could triggered from a
+periodic NMI, or from schedule().
 
---
-Thanks,
-Sasha
+-- 
+Josh
