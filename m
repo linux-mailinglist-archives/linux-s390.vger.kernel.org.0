@@ -2,106 +2,144 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A397578979
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jul 2019 12:16:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6D76A78F12
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jul 2019 17:22:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728030AbfG2KQf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Jul 2019 06:16:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46254 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726358AbfG2KQe (ORCPT
+        id S2387970AbfG2PWn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Jul 2019 11:22:43 -0400
+Received: from gateway33.websitewelcome.com ([192.185.146.210]:25502 "EHLO
+        gateway33.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387925AbfG2PWm (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 29 Jul 2019 06:16:34 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6TAE4R5134459
-        for <linux-s390@vger.kernel.org>; Mon, 29 Jul 2019 06:16:33 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u1wq83k4x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 29 Jul 2019 06:16:33 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Mon, 29 Jul 2019 11:16:31 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 29 Jul 2019 11:16:29 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6TAGSeH52625430
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 29 Jul 2019 10:16:28 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08436A405C;
-        Mon, 29 Jul 2019 10:16:28 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D734FA405B;
-        Mon, 29 Jul 2019 10:16:27 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.110])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 29 Jul 2019 10:16:27 +0000 (GMT)
-Date:   Mon, 29 Jul 2019 12:16:26 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: [PATCH] vfio-ccw: make vfio_ccw_async_region_ops static
-References: <patch.git-1c8e853871be.your-ad-here.call-01564389487-ext-4282@work.hours>
- <20190729111640.4c03169c.cohuck@redhat.com>
+        Mon, 29 Jul 2019 11:22:42 -0400
+X-Greylist: delayed 1372 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 11:22:42 EDT
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway33.websitewelcome.com (Postfix) with ESMTP id E5FCD419CAD
+        for <linux-s390@vger.kernel.org>; Mon, 29 Jul 2019 09:59:49 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id s77thtxVI2qH7s77thwNML; Mon, 29 Jul 2019 09:59:49 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=XmpL5my71AoWQs+D7f6gDo6C6zjPh/VxE9FhrUoDW+k=; b=YPfJRKWVkoa9XYZRrUKQgiiCxX
+        J3prPSSfYQzABPIC6B6QcsrlM04EbFP+jAIIgkFw48U8jXrGiVI/52jKJv4Rp7+S/CC6Kx7T0Vsf6
+        yV5M6bQElyRVSa4WNwiERV336bJ5QVJOhU0MhMb+RCdmimiMLItg/GWW8fKhpRxhW8ts864U67Ku2
+        NCx3UDswU5OOgTXNgVMogNu7tyfQzjUdEfH0sg9SbiNm0+pXFFpRwSfAxVkSZRvFHLgSbEqfr+sBP
+        DAmAgaKjwOMv2HGC09OJ8p7lAq/XReMmZ3y80wkjHNREuqYAFY/4jU5uf1dQhPRju2BalFtFNkC7H
+        KXfx+Qpw==;
+Received: from [187.192.11.120] (port=51566 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hs77s-002aSP-HK; Mon, 29 Jul 2019 09:59:48 -0500
+Date:   Mon, 29 Jul 2019 09:59:47 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] net/af_iucv: mark expected switch fall-throughs
+Message-ID: <20190729145947.GA9494@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190729111640.4c03169c.cohuck@redhat.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19072910-0016-0000-0000-00000297340E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19072910-0017-0000-0000-000032F53C2E
-Message-Id: <your-ad-here.call-01564395386-ext-6219@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-29_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907290122
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hs77s-002aSP-HK
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:51566
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 29
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 11:16:40AM +0200, Cornelia Huck wrote:
-> On Mon, 29 Jul 2019 10:38:52 +0200
-> Vasily Gorbik <gor@linux.ibm.com> wrote:
-> 
-> > Since vfio_ccw_async_region_ops is not exported and has no reason to be
-> > globally visible make it static to avoid the following sparse warning:
-> > drivers/s390/cio/vfio_ccw_async.c:73:30: warning: symbol 'vfio_ccw_async_region_ops' was not declared. Should it be static?
-> 
-> Fixes: d5afd5d135c8 ("vfio-ccw: add handling for async channel instructions")
-> > 
-> > Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-> > ---
-> >  drivers/s390/cio/vfio_ccw_async.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/s390/cio/vfio_ccw_async.c b/drivers/s390/cio/vfio_ccw_async.c
-> > index 8c1d2357ef5b..7a838e3d7c0f 100644
-> > --- a/drivers/s390/cio/vfio_ccw_async.c
-> > +++ b/drivers/s390/cio/vfio_ccw_async.c
-> > @@ -70,7 +70,7 @@ static void vfio_ccw_async_region_release(struct vfio_ccw_private *private,
-> >  
-> >  }
-> >  
-> > -const struct vfio_ccw_regops vfio_ccw_async_region_ops = {
-> > +static const struct vfio_ccw_regops vfio_ccw_async_region_ops = {
-> >  	.read = vfio_ccw_async_region_read,
-> >  	.write = vfio_ccw_async_region_write,
-> >  	.release = vfio_ccw_async_region_release,
-> 
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> 
-> Should I queue this and send a pull request (currently, there's nothing
-> else pending), or do you want to apply this directly?
+Mark switch cases where we are expecting to fall through.
 
-Then I'll just take it directly to avoid pull request overhead,
-thanks!
+This patch fixes the following warnings:
+
+net/iucv/af_iucv.c: warning: this statement may fall
+through [-Wimplicit-fallthrough=]:  => 537:3, 519:6, 2246:6, 510:6
+
+Notice that, in this particular case, the code comment is
+modified in accordance with what GCC is expecting to find.
+
+Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ net/iucv/af_iucv.c | 14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
+
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index 09e1694b6d34..ebb62a4ebe30 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -512,7 +512,9 @@ static void iucv_sock_close(struct sock *sk)
+ 			sk->sk_state = IUCV_DISCONN;
+ 			sk->sk_state_change(sk);
+ 		}
+-	case IUCV_DISCONN:   /* fall through */
++		/* fall through */
++
++	case IUCV_DISCONN:
+ 		sk->sk_state = IUCV_CLOSING;
+ 		sk->sk_state_change(sk);
+ 
+@@ -525,8 +527,9 @@ static void iucv_sock_close(struct sock *sk)
+ 					iucv_sock_in_state(sk, IUCV_CLOSED, 0),
+ 					timeo);
+ 		}
++		/* fall through */
+ 
+-	case IUCV_CLOSING:   /* fall through */
++	case IUCV_CLOSING:
+ 		sk->sk_state = IUCV_CLOSED;
+ 		sk->sk_state_change(sk);
+ 
+@@ -535,8 +538,9 @@ static void iucv_sock_close(struct sock *sk)
+ 
+ 		skb_queue_purge(&iucv->send_skb_q);
+ 		skb_queue_purge(&iucv->backlog_skb_q);
++		/* fall through */
+ 
+-	default:   /* fall through */
++	default:
+ 		iucv_sever_path(sk, 1);
+ 	}
+ 
+@@ -2247,10 +2251,10 @@ static int afiucv_hs_rcv(struct sk_buff *skb, struct net_device *dev,
+ 			kfree_skb(skb);
+ 			break;
+ 		}
+-		/* fall through and receive non-zero length data */
++		/* fall through - and receive non-zero length data */
+ 	case (AF_IUCV_FLAG_SHT):
+ 		/* shutdown request */
+-		/* fall through and receive zero length data */
++		/* fall through - and receive zero length data */
+ 	case 0:
+ 		/* plain data frame */
+ 		IUCV_SKB_CB(skb)->class = trans_hdr->iucv_hdr.class;
+-- 
+2.22.0
 
