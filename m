@@ -2,208 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7697E78190
-	for <lists+linux-s390@lfdr.de>; Sun, 28 Jul 2019 22:45:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 507DB7879D
+	for <lists+linux-s390@lfdr.de>; Mon, 29 Jul 2019 10:39:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726120AbfG1UpD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 28 Jul 2019 16:45:03 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37392 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726089AbfG1UpC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 28 Jul 2019 16:45:02 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1C2C0308FC20;
-        Sun, 28 Jul 2019 20:45:02 +0000 (UTC)
-Received: from treble (ovpn-120-102.rdu2.redhat.com [10.10.120.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F5A6600C7;
-        Sun, 28 Jul 2019 20:44:58 +0000 (UTC)
-Date:   Sun, 28 Jul 2019 15:44:56 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jikos@kernel.org, pmladek@suse.com,
-        joe.lawrence@redhat.com, nstange@suse.de,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH] s390/livepatch: Implement reliable stack tracing for the
- consistency model
-Message-ID: <20190728204456.7bxnsbuo4o3tjxeq@treble>
-References: <20190710105918.22487-1-mbenes@suse.cz>
+        id S1727109AbfG2IjB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Jul 2019 04:39:01 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26564 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726305AbfG2IjB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 29 Jul 2019 04:39:01 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6T8YCZu033897
+        for <linux-s390@vger.kernel.org>; Mon, 29 Jul 2019 04:39:00 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u1t790as9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 29 Jul 2019 04:39:00 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
+        Mon, 29 Jul 2019 09:38:58 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 29 Jul 2019 09:38:55 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6T8crH352297760
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 29 Jul 2019 08:38:53 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C5BC1A4060;
+        Mon, 29 Jul 2019 08:38:53 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9E8ACA405F;
+        Mon, 29 Jul 2019 08:38:53 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.110])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 29 Jul 2019 08:38:53 +0000 (GMT)
+Date:   Mon, 29 Jul 2019 10:38:52 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390 <linux-s390@vger.kernel.org>
+Subject: [PATCH] vfio-ccw: make vfio_ccw_async_region_ops static
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190710105918.22487-1-mbenes@suse.cz>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Sun, 28 Jul 2019 20:45:02 +0000 (UTC)
+X-Patchwork-Bot: notify
+X-TM-AS-GCONF: 00
+x-cbid: 19072908-0016-0000-0000-000002972DE7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19072908-0017-0000-0000-000032F5358A
+Message-Id: <patch.git-1c8e853871be.your-ad-here.call-01564389487-ext-4282@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-29_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=818 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907290102
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 10, 2019 at 12:59:18PM +0200, Miroslav Benes wrote:
-> The livepatch consistency model requires reliable stack tracing
-> architecture support in order to work properly. In order to achieve
-> this, two main issues have to be solved. First, reliable and consistent
-> call chain backtracing has to be ensured. Second, the unwinder needs to
-> be able to detect stack corruptions and return errors.
-> 
-> The "zSeries ELF Application Binary Interface Supplement" says:
-> 
->   "The stack pointer points to the first word of the lowest allocated
->   stack frame. If the "back chain" is implemented this word will point to
->   the previously allocated stack frame (towards higher addresses), except
->   for the first stack frame, which shall have a back chain of zero (NULL).
->   The stack shall grow downwards, in other words towards lower addresses."
-> 
-> "back chain" is optional. GCC option -mbackchain enables it. Quoting
-> Martin Schwidefsky [1]:
+Since vfio_ccw_async_region_ops is not exported and has no reason to be
+globally visible make it static to avoid the following sparse warning:
+drivers/s390/cio/vfio_ccw_async.c:73:30: warning: symbol 'vfio_ccw_async_region_ops' was not declared. Should it be static?
 
-This reference footnote seems to be missing at the bottom of the patch
-description.
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+---
+ drivers/s390/cio/vfio_ccw_async.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-> diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
-> index d827b5b9a32c..1cc96c54169c 100644
-> --- a/arch/s390/include/asm/unwind.h
-> +++ b/arch/s390/include/asm/unwind.h
-> @@ -45,6 +45,25 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
->  bool unwind_next_frame(struct unwind_state *state);
->  unsigned long unwind_get_return_address(struct unwind_state *state);
->  
-> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-> +void __unwind_start_reliable(struct unwind_state *state,
-> +			     struct task_struct *task, unsigned long sp);
-> +bool unwind_next_frame_reliable(struct unwind_state *state);
-> +
-> +static inline void unwind_start_reliable(struct unwind_state *state,
-> +					 struct task_struct *task)
-> +{
-> +	unsigned long sp;
-> +
-> +	if (task == current)
-> +		sp = current_stack_pointer();
-> +	else
-> +		sp = task->thread.ksp;
-> +
-> +	__unwind_start_reliable(state, task, sp);
-> +}
-> +#endif
-> +
-
-(Ah, cool, I didn't realize s390 ported the x86 unwind interfaces.  We
-should look at unifying them someday.)
-
-Why do you need _reliable() variants of the unwind interfaces?  Can the
-error checking be integrated into unwind_start() and unwind_next_frame()
-like they are on x86?
-
-> +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-> +void __unwind_start_reliable(struct unwind_state *state,
-> +			     struct task_struct *task, unsigned long sp)
-> +{
-> +	struct stack_info *info = &state->stack_info;
-> +	struct stack_frame *sf;
-> +	unsigned long ip;
-> +
-> +	memset(state, 0, sizeof(*state));
-> +	state->task = task;
-> +
-> +	/* Get current stack pointer and initialize stack info */
-> +	if (get_stack_info_reliable(sp, task, info) ||
-> +	    !on_stack(info, sp, sizeof(struct stack_frame))) {
-> +		/* Something is wrong with the stack pointer */
-> +		info->type = STACK_TYPE_UNKNOWN;
-> +		state->error = true;
-> +		return;
-> +	}
-> +
-> +	/* Get the instruction pointer from the stack frame */
-> +	sf = (struct stack_frame *) sp;
-> +	ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +	/* Decode any ftrace redirection */
-> +	if (ip == (unsigned long) return_to_handler)
-> +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-> +					   ip, NULL);
-> +#endif
-
-The return_to_handler and ifdef checks aren't needed.  Those are done
-already by the call.
-
-Also it seems a bit odd that the kretprobes check isn't done in this
-function next to the ftrace check.
-
-> +
-> +	/* Update unwind state */
-> +	state->sp = sp;
-> +	state->ip = ip;
-> +}
-> +
-> +bool unwind_next_frame_reliable(struct unwind_state *state)
-> +{
-> +	struct stack_info *info = &state->stack_info;
-> +	struct stack_frame *sf;
-> +	struct pt_regs *regs;
-> +	unsigned long sp, ip;
-> +
-> +	sf = (struct stack_frame *) state->sp;
-> +	sp = READ_ONCE_NOCHECK(sf->back_chain);
-> +	/*
-> +	 * Idle tasks are special. The final back-chain points to nodat_stack.
-> +	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
-> +	 * __cpu_up(). We just accept it, go to else branch and look for
-> +	 * pt_regs.
-> +	 */
-> +	if (likely(sp && !(is_idle_task(state->task) &&
-> +			   outside_of_stack(state, sp)))) {
-> +		/* Non-zero back-chain points to the previous frame */
-> +		if (unlikely(outside_of_stack(state, sp)))
-> +			goto out_err;
-> +
-> +		sf = (struct stack_frame *) sp;
-> +		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> +	} else {
-> +		/* No back-chain, look for a pt_regs structure */
-> +		sp = state->sp + STACK_FRAME_OVERHEAD;
-> +		regs = (struct pt_regs *) sp;
-> +		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
-> +			goto out_err;
-> +		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
-> +		     !user_mode(regs))
-> +			goto out_err;
-> +
-> +		state->regs = regs;
-> +		goto out_stop;
-> +	}
-> +
-> +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> +	/* Decode any ftrace redirection */
-> +	if (ip == (unsigned long) return_to_handler)
-> +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-> +					   ip, (void *) sp);
-> +#endif
-> +
-> +	/* Update unwind state */
-> +	state->sp = sp;
-> +	state->ip = ip;
-> +	return true;
-> +
-> +out_err:
-> +	state->error = true;
-> +out_stop:
-> +	state->stack_info.type = STACK_TYPE_UNKNOWN;
-> +	return false;
-> +}
-> +#endif
-
-For the _reliable() variants of the unwind interfaces, there's a lot of
-code duplication with the non-reliable variants.  It looks like it would
-be a lot cleaner (and easier to follow) if they were integrated.
-
-Overall it's looking good though.
-
+diff --git a/drivers/s390/cio/vfio_ccw_async.c b/drivers/s390/cio/vfio_ccw_async.c
+index 8c1d2357ef5b..7a838e3d7c0f 100644
+--- a/drivers/s390/cio/vfio_ccw_async.c
++++ b/drivers/s390/cio/vfio_ccw_async.c
+@@ -70,7 +70,7 @@ static void vfio_ccw_async_region_release(struct vfio_ccw_private *private,
+ 
+ }
+ 
+-const struct vfio_ccw_regops vfio_ccw_async_region_ops = {
++static const struct vfio_ccw_regops vfio_ccw_async_region_ops = {
+ 	.read = vfio_ccw_async_region_read,
+ 	.write = vfio_ccw_async_region_write,
+ 	.release = vfio_ccw_async_region_release,
 -- 
-Josh
+2.21.0
+
