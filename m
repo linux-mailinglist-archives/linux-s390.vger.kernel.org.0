@@ -2,107 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6C10D7A11D
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 08:12:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DDD0E7A2EE
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 10:14:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbfG3GM3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Jul 2019 02:12:29 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:40455 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726128AbfG3GM3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 Jul 2019 02:12:29 -0400
-Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8126E240007;
-        Tue, 30 Jul 2019 06:12:20 +0000 (UTC)
-Subject: Re: [PATCH RESEND 0/8] Fix mmap base in bottom-up mmap
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
+        id S1726713AbfG3IOU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Jul 2019 04:14:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36754 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726535AbfG3IOU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 30 Jul 2019 04:14:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 59F32ABE9;
+        Tue, 30 Jul 2019 08:14:18 +0000 (UTC)
+Date:   Tue, 30 Jul 2019 10:14:15 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Hoan Tran OS <hoan@os.amperecomputing.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Open Source Submission <patches@amperecomputing.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org
-References: <20190620050328.8942-1-alex@ghiti.fr>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <175168c1-d25f-7a93-e19b-dbb6ae6289e1@ghiti.fr>
-Date:   Tue, 30 Jul 2019 08:12:20 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "willy@infradead.org" <willy@infradead.org>
+Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20190730081415.GN9330@dhcp22.suse.cz>
+References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20190712070247.GM29483@dhcp22.suse.cz>
+ <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
+ <20190712121223.GR29483@dhcp22.suse.cz>
+ <20190712143730.au3662g4ua2tjudu@willie-the-truck>
+ <20190712150007.GU29483@dhcp22.suse.cz>
+ <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
 MIME-Version: 1.0
-In-Reply-To: <20190620050328.8942-1-alex@ghiti.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/20/19 7:03 AM, Alexandre Ghiti wrote:
-> This series fixes the fallback of the top-down mmap: in case of
-> failure, a bottom-up scheme can be tried as a last resort between
-> the top-down mmap base and the stack, hoping for a large unused stack
-> limit.
->
-> Lots of architectures and even mm code start this fallback
-> at TASK_UNMAPPED_BASE, which is useless since the top-down scheme
-> already failed on the whole address space: instead, simply use
-> mmap_base.
->
-> Along the way, it allows to get rid of of mmap_legacy_base and
-> mmap_compat_legacy_base from mm_struct.
->
-> Note that arm and mips already implement this behaviour.
->
-> Alexandre Ghiti (8):
->    s390: Start fallback of top-down mmap at mm->mmap_base
->    sh: Start fallback of top-down mmap at mm->mmap_base
->    sparc: Start fallback of top-down mmap at mm->mmap_base
->    x86, hugetlbpage: Start fallback of top-down mmap at mm->mmap_base
->    mm: Start fallback top-down mmap at mm->mmap_base
->    parisc: Use mmap_base, not mmap_legacy_base, as low_limit for
->      bottom-up mmap
->    x86: Use mmap_*base, not mmap_*legacy_base, as low_limit for bottom-up
->      mmap
->    mm: Remove mmap_legacy_base and mmap_compat_legacy_code fields from
->      mm_struct
->
->   arch/parisc/kernel/sys_parisc.c  |  8 +++-----
->   arch/s390/mm/mmap.c              |  2 +-
->   arch/sh/mm/mmap.c                |  2 +-
->   arch/sparc/kernel/sys_sparc_64.c |  2 +-
->   arch/sparc/mm/hugetlbpage.c      |  2 +-
->   arch/x86/include/asm/elf.h       |  2 +-
->   arch/x86/kernel/sys_x86_64.c     |  4 ++--
->   arch/x86/mm/hugetlbpage.c        |  7 ++++---
->   arch/x86/mm/mmap.c               | 20 +++++++++-----------
->   include/linux/mm_types.h         |  2 --
->   mm/debug.c                       |  4 ++--
->   mm/mmap.c                        |  2 +-
->   12 files changed, 26 insertions(+), 31 deletions(-)
->
+[Sorry for a late reply]
 
-Hi everyone,
+On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
+> Hi,
+> 
+> On 7/12/19 10:00 PM, Michal Hocko wrote:
+[...]
+> > Hmm, I thought this was selectable. But I am obviously wrong here.
+> > Looking more closely, it seems that this is indeed only about
+> > __early_pfn_to_nid and as such not something that should add a config
+> > symbol. This should have been called out in the changelog though.
+> 
+> Yes, do you have any other comments about my patch?
 
-This is just a preparatory series for the merging of x86 mmap top-down 
-functions with
-the generic ones (those should get into v5.3), if you could take some 
-time to take a look,
-that would be great :)
+Not really. Just make sure to explicitly state that
+CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
+doesn't really deserve it's own config and can be pulled under NUMA.
 
-Thanks,
+> > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
+> > bucket? Do we have any NUMA architecture that doesn't enable it?
+> > 
+> 
+> As I checked with arch Kconfig files, there are 2 architectures, riscv 
+> and microblaze, do not support NUMA but enable this config.
+> 
+> And 1 architecture, alpha, supports NUMA but does not enable this config.
 
-Alex
+Care to have a look and clean this up please?
 
+-- 
+Michal Hocko
+SUSE Labs
