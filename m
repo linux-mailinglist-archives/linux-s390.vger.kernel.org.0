@@ -2,302 +2,341 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B6FA7AB92
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 16:57:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18DE17ACB9
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 17:49:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731711AbfG3O5r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Jul 2019 10:57:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8928 "EHLO
+        id S1728325AbfG3PtX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Jul 2019 11:49:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1900 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731050AbfG3O5o (ORCPT
+        by vger.kernel.org with ESMTP id S1725974AbfG3PtW (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 30 Jul 2019 10:57:44 -0400
+        Tue, 30 Jul 2019 11:49:22 -0400
 Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6UEvT5N078954
-        for <linux-s390@vger.kernel.org>; Tue, 30 Jul 2019 10:57:42 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2u2nm8xump-1
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6UFlLMW074473
+        for <linux-s390@vger.kernel.org>; Tue, 30 Jul 2019 11:49:21 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u2r94sqcy-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 30 Jul 2019 10:57:42 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 30 Jul 2019 11:49:20 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 30 Jul 2019 15:57:39 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 30 Jul 2019 16:49:19 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 30 Jul 2019 15:57:36 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6UEvZjS23921000
+        Tue, 30 Jul 2019 16:49:16 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6UFnF7345154438
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 30 Jul 2019 14:57:35 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4AF2FA405F;
-        Tue, 30 Jul 2019 14:57:35 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 437D7A4062;
-        Tue, 30 Jul 2019 14:57:34 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.144.206])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 30 Jul 2019 14:57:34 +0000 (GMT)
-Subject: Re: [PATCH 2/2] KVM: selftests: Enable dirty_log_test on s390x
-To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
-References: <20190730100112.18205-1-thuth@redhat.com>
- <20190730100112.18205-3-thuth@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Tue, 30 Jul 2019 16:57:33 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Tue, 30 Jul 2019 15:49:15 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DAC5F11C05B;
+        Tue, 30 Jul 2019 15:49:15 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA06811C04A;
+        Tue, 30 Jul 2019 15:49:15 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.193])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 30 Jul 2019 15:49:15 +0000 (GMT)
+Date:   Tue, 30 Jul 2019 17:49:10 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH RFC UNTESTED] vfio-ccw: indirect access to translated
+ cps
+In-Reply-To: <20190726100617.19718-1-cohuck@redhat.com>
+References: <20190726100617.19718-1-cohuck@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190730100112.18205-3-thuth@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19073014-0012-0000-0000-00000337A7DD
+x-cbid: 19073015-0008-0000-0000-000003024340
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19073014-0013-0000-0000-000021714DBD
-Message-Id: <d48ac43b-c960-54af-a145-360a67b4a3d9@de.ibm.com>
+x-cbparentid: 19073015-0009-0000-0000-0000226FE5A8
+Message-Id: <20190730174910.47930494.pasic@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-30_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907300155
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907300163
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, 26 Jul 2019 12:06:17 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-
-On 30.07.19 12:01, Thomas Huth wrote:
-> To run the dirty_log_test on s390x, we have to make sure that we
-> access the dirty log bitmap with little endian byte ordering and
-> we have to properly align the memslot of the guest.
-> Also all dirty bits of a segment are set once on s390x when one
-> of the pages of a segment are written to for the first time, so
-> we have to make sure that we touch all pages during the first
-> iteration to keep the test in sync here.
-
-While this fixes the test (and the migration does work fine), it still
-means that s390x overindicates the dirty bit for sparsely populated
-1M segments. It is just a performance issue, but maybe we should try 
-to get this fixed. Not sure what to do here to remember us about this, 
-adding this as expected fail?
+> We're currently keeping a single area for translated channel
+> programs in our private structure, which is filled out when
+> we are translating a channel program we have been given by
+> user space and marked invalid again when we received an final
+> interrupt for that I/O.
 > 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> Unfortunately, properly tracking the lifetime of that cp is
+> not easy: failures may happen during translation or right when
+> it is sent to the hardware, unsolicited interrupts may trigger
+> a deferred condition code, a halt/clear request may be issued
+> while the I/O is supposed to be running, or a reset request may
+> come in from the side. The _PROCESSING state and the ->initialized
+> flag help a bit, but not enough.
+> 
+> We want to have a way to figure out whether we actually have a cp
+> currently in progress, so we can update/free only when applicable.
+> Points to keep in mind:
+> - We will get an interrupt after a cp has been submitted iff ssch
+>   finished with cc 0.
+> - We will get more interrupts for a cp if the interrupt status is
+>   not final.
+> - We can have only one cp in flight at a time.
+> 
+> Let's decouple the actual area in the private structure from the
+> means to access it: Only after we have successfully submitted a
+> cp (ssch with cc 0), update the pointer in the private structure
+> to point to the area used. Therefore, the interrupt handler won't
+> access the cp if we don't actually expect an interrupt pertaining
+> to it.
+> 
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 > ---
->  tools/testing/selftests/kvm/Makefile         |  1 +
->  tools/testing/selftests/kvm/dirty_log_test.c | 70 ++++++++++++++++++--
->  2 files changed, 66 insertions(+), 5 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-> index ba7849751989..ac7e63e00fee 100644
-> --- a/tools/testing/selftests/kvm/Makefile
-> +++ b/tools/testing/selftests/kvm/Makefile
-> @@ -33,6 +33,7 @@ TEST_GEN_PROGS_aarch64 += dirty_log_test
->  TEST_GEN_PROGS_aarch64 += kvm_create_max_vcpus
+> Just hacked this up to get some feedback, did not actually try it
+> out. Not even sure if this is a sensible approach; if not, let's
+> blame it on the heat and pretend it didn't happen :)
+> 
+
+Do not multiple threads access this new cp pointer (and at least one of
+them writes)? If that is the case, it smells like a data race to me.
+
+Besides the only point of converting cp to a pointer seems to be
+policing access to cp_area (which used to be cp). I.e. if it is
+NULL: don't touch it, otherwise: go ahead. We can do that with a single
+bit, we don't need a pointer for that.
+
+Could we convert initialized into some sort of cp.status that
+tracks/controls access and responsibilities? By working with bits we
+could benefit from the atomicity of bit-ops -- if I'm not wrong.
+
+> I also thought about having *two* translation areas and switching
+> the pointer between them; this might be too complicated, though?
+
+We only have one channel program at a time or? I can't see the benefit
+of having two areas.
+
+Sorry I didn't intend to open a huge discussion, as I'm on vacation
+starting Thursday -- means expect delays. If the rest of the bunch
+happens to see this differently, please feel free to not seek my consent.
+
+Regards,
+Halil
+
+
+> 
+> ---
+>  drivers/s390/cio/vfio_ccw_drv.c     | 19 +++++++++++--------
+>  drivers/s390/cio/vfio_ccw_fsm.c     | 25 +++++++++++++++++--------
+>  drivers/s390/cio/vfio_ccw_ops.c     | 11 +++++++----
+>  drivers/s390/cio/vfio_ccw_private.h |  6 ++++--
+>  4 files changed, 39 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+> index 9208c0e56c33..059b88c94378 100644
+> --- a/drivers/s390/cio/vfio_ccw_drv.c
+> +++ b/drivers/s390/cio/vfio_ccw_drv.c
+> @@ -86,10 +86,13 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
 >  
->  TEST_GEN_PROGS_s390x += s390x/sync_regs_test
-> +TEST_GEN_PROGS_s390x += dirty_log_test
->  TEST_GEN_PROGS_s390x += kvm_create_max_vcpus
+>  	is_final = !(scsw_actl(&irb->scsw) &
+>  		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
+> -	if (scsw_is_solicited(&irb->scsw)) {
+> -		cp_update_scsw(&private->cp, &irb->scsw);
+> -		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
+> -			cp_free(&private->cp);
+> +	if (scsw_is_solicited(&irb->scsw) && private->cp) {
+> +		cp_update_scsw(private->cp, &irb->scsw);
+> +		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING) {
+> +			struct channel_program *cp = private->cp;
+> +			private->cp = NULL;
+> +			cp_free(cp);
+> +		}
+>  	}
+>  	mutex_lock(&private->io_mutex);
+>  	memcpy(private->io_region->irb_area, irb, sizeof(*irb));
+> @@ -129,9 +132,9 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+>  	if (!private)
+>  		return -ENOMEM;
 >  
->  TEST_GEN_PROGS += $(TEST_GEN_PROGS_$(UNAME_M))
-> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> index ceb52b952637..7a1223ad0ff3 100644
-> --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> @@ -26,9 +26,22 @@
->  /* The memory slot index to track dirty pages */
->  #define TEST_MEM_SLOT_INDEX		1
+> -	private->cp.guest_cp = kcalloc(CCWCHAIN_LEN_MAX, sizeof(struct ccw1),
+> +	private->cp_area.guest_cp = kcalloc(CCWCHAIN_LEN_MAX, sizeof(struct ccw1),
+>  				       GFP_KERNEL);
+> -	if (!private->cp.guest_cp)
+> +	if (!private->cp_area.guest_cp)
+>  		goto out_free;
 >  
-> +#ifdef __s390x__
-> +
-> +/*
-> + * On s390x, the ELF program is sometimes linked at 0x80000000, so we can
-> + * not use 0x40000000 here without overlapping into that region. Thus let's
-> + * use 0xc0000000 as base address there instead.
-> + */
-> +#define DEFAULT_GUEST_TEST_MEM		0xc0000000
-> +
-> +#else
-> +
->  /* Default guest test memory offset, 1G */
->  #define DEFAULT_GUEST_TEST_MEM		0x40000000
+>  	private->io_region = kmem_cache_zalloc(vfio_ccw_io_region,
+> @@ -174,7 +177,7 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+>  		kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
+>  	if (private->io_region)
+>  		kmem_cache_free(vfio_ccw_io_region, private->io_region);
+> -	kfree(private->cp.guest_cp);
+> +	kfree(private->cp_area.guest_cp);
+>  	kfree(private);
+>  	return ret;
+>  }
+> @@ -191,7 +194,7 @@ static int vfio_ccw_sch_remove(struct subchannel *sch)
 >  
-> +#endif
-> +
->  /* How many pages to dirty for each guest loop */
->  #define TEST_PAGES_PER_LOOP		1024
+>  	kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
+>  	kmem_cache_free(vfio_ccw_io_region, private->io_region);
+> -	kfree(private->cp.guest_cp);
+> +	kfree(private->cp_area.guest_cp);
+>  	kfree(private);
 >  
-> @@ -38,6 +51,27 @@
->  /* Interval for each host loop (ms) */
->  #define TEST_HOST_LOOP_INTERVAL		10UL
+>  	return 0;
+> diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
+> index 49d9d3da0282..543d007ddc46 100644
+> --- a/drivers/s390/cio/vfio_ccw_fsm.c
+> +++ b/drivers/s390/cio/vfio_ccw_fsm.c
+> @@ -18,7 +18,8 @@
+>  #define CREATE_TRACE_POINTS
+>  #include "vfio_ccw_trace.h"
 >  
-> +/* Dirty bitmaps are always little endian, so we need to swap on big endian */
-> +#if defined(__s390x__)
-> +# define BITOP_LE_SWIZZLE	((BITS_PER_LONG-1) & ~0x7)
-> +# define test_bit_le(nr, addr) \
-> +	test_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> +# define set_bit_le(nr, addr) \
-> +	set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> +# define clear_bit_le(nr, addr) \
-> +	clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> +# define test_and_set_bit_le(nr, addr) \
-> +	test_and_set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> +# define test_and_clear_bit_le(nr, addr) \
-> +	test_and_clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> +#else
-> +# define test_bit_le	test_bit
-> +# define set_bit_le	set_bit
-> +# define clear_bit_le	clear_bit
-> +# define test_and_set_bit_le	test_and_set_bit
-> +# define test_and_clear_bit_le	test_and_clear_bit
-> +#endif
-> +
->  /*
->   * Guest/Host shared variables. Ensure addr_gva2hva() and/or
->   * sync_global_to/from_guest() are used when accessing from
-> @@ -69,11 +103,25 @@ static uint64_t guest_test_virt_mem = DEFAULT_GUEST_TEST_MEM;
->   */
->  static void guest_code(void)
+> -static int fsm_io_helper(struct vfio_ccw_private *private)
+> +static int fsm_io_helper(struct vfio_ccw_private *private,
+> +			 struct channel_program *cp)
 >  {
-> +	uint64_t addr;
->  	int i;
+>  	struct subchannel *sch;
+>  	union orb *orb;
+> @@ -31,7 +32,7 @@ static int fsm_io_helper(struct vfio_ccw_private *private)
 >  
-> +#ifdef __s390x__
-> +	/*
-> +	 * On s390x, all pages of a 1M segment are initially marked as dirty
-> +	 * when a page of the segment is written to for the very first time.
-> +	 * To compensate this specialty in this test, we need to touch all
-> +	 * pages during the first iteration.
-> +	 */
-> +	for (i = 0; i < guest_num_pages; i++) {
-> +		addr = guest_test_virt_mem + i * guest_page_size;
-> +		*(uint64_t *)addr = READ_ONCE(iteration);
-> +	}
-> +#endif
-> +
->  	while (true) {
->  		for (i = 0; i < TEST_PAGES_PER_LOOP; i++) {
-> -			uint64_t addr = guest_test_virt_mem;
-> +			addr = guest_test_virt_mem;
->  			addr += (READ_ONCE(random_array[i]) % guest_num_pages)
->  				* guest_page_size;
->  			addr &= ~(host_page_size - 1);
-> @@ -158,15 +206,15 @@ static void vm_dirty_log_verify(unsigned long *bmap)
->  		value_ptr = host_test_mem + page * host_page_size;
+>  	spin_lock_irqsave(sch->lock, flags);
 >  
->  		/* If this is a special page that we were tracking... */
-> -		if (test_and_clear_bit(page, host_bmap_track)) {
-> +		if (test_and_clear_bit_le(page, host_bmap_track)) {
->  			host_track_next_count++;
-> -			TEST_ASSERT(test_bit(page, bmap),
-> +			TEST_ASSERT(test_bit_le(page, bmap),
->  				    "Page %"PRIu64" should have its dirty bit "
->  				    "set in this iteration but it is missing",
->  				    page);
+> -	orb = cp_get_orb(&private->cp, (u32)(addr_t)sch, sch->lpm);
+> +	orb = cp_get_orb(cp, (u32)(addr_t)sch, sch->lpm);
+>  	if (!orb) {
+>  		ret = -EIO;
+>  		goto out;
+> @@ -47,6 +48,7 @@ static int fsm_io_helper(struct vfio_ccw_private *private)
+>  		 */
+>  		sch->schib.scsw.cmd.actl |= SCSW_ACTL_START_PEND;
+>  		ret = 0;
+> +		private->cp = cp;
+>  		private->state = VFIO_CCW_STATE_CP_PENDING;
+>  		break;
+>  	case 1:		/* Status pending */
+> @@ -236,31 +238,38 @@ static void fsm_io_request(struct vfio_ccw_private *private,
+>  	if (scsw->cmd.fctl & SCSW_FCTL_START_FUNC) {
+>  		orb = (union orb *)io_region->orb_area;
+>  
+> +		/* I/O already in progress? Should not happen (bug in FSM?). */
+> +		if (private->cp) {
+> +			io_region->ret_code = -EBUSY;
+> +			errstr = "cp in progress";
+> +			goto err_out;
+> +		}
+>  		/* Don't try to build a cp if transport mode is specified. */
+>  		if (orb->tm.b) {
+>  			io_region->ret_code = -EOPNOTSUPP;
+>  			errstr = "transport mode";
+>  			goto err_out;
+>  		}
+> -		io_region->ret_code = cp_init(&private->cp, mdev_dev(mdev),
+> -					      orb);
+> +		io_region->ret_code = cp_init(&private->cp_area,
+> +					      mdev_dev(mdev), orb);
+>  		if (io_region->ret_code) {
+>  			errstr = "cp init";
+>  			goto err_out;
 >  		}
 >  
-> -		if (test_bit(page, bmap)) {
-> +		if (test_bit_le(page, bmap)) {
->  			host_dirty_count++;
->  			/*
->  			 * If the bit is set, the value written onto
-> @@ -209,7 +257,7 @@ static void vm_dirty_log_verify(unsigned long *bmap)
->  				 * should report its dirtyness in the
->  				 * next run
->  				 */
-> -				set_bit(page, host_bmap_track);
-> +				set_bit_le(page, host_bmap_track);
->  			}
+> -		io_region->ret_code = cp_prefetch(&private->cp);
+> +		io_region->ret_code = cp_prefetch(&private->cp_area);
+>  		if (io_region->ret_code) {
+>  			errstr = "cp prefetch";
+> -			cp_free(&private->cp);
+> +			cp_free(&private->cp_area);
+>  			goto err_out;
 >  		}
->  	}
-> @@ -293,6 +341,10 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
->  	 * case where the size is not aligned to 64 pages.
->  	 */
->  	guest_num_pages = (1ul << (30 - guest_page_shift)) + 16;
-> +#ifdef __s390x__
-> +	/* Round up to multiple of 1M (segment size) */
-> +	guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
-> +#endif
->  	host_page_size = getpagesize();
->  	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
->  			 !!((guest_num_pages * guest_page_size) % host_page_size);
-> @@ -304,6 +356,11 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
->  		guest_test_phys_mem = phys_offset;
+>  
+>  		/* Start channel program and wait for I/O interrupt. */
+> -		io_region->ret_code = fsm_io_helper(private);
+> +		io_region->ret_code = fsm_io_helper(private,
+> +						    &private->cp_area);
+>  		if (io_region->ret_code) {
+>  			errstr = "cp fsm_io_helper";
+> -			cp_free(&private->cp);
+> +			cp_free(&private->cp_area);
+>  			goto err_out;
+>  		}
+>  		return;
+> diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
+> index 5eb61116ca6f..5ad6a7b672bd 100644
+> --- a/drivers/s390/cio/vfio_ccw_ops.c
+> +++ b/drivers/s390/cio/vfio_ccw_ops.c
+> @@ -58,13 +58,14 @@ static int vfio_ccw_mdev_notifier(struct notifier_block *nb,
+>  	if (action == VFIO_IOMMU_NOTIFY_DMA_UNMAP) {
+>  		struct vfio_iommu_type1_dma_unmap *unmap = data;
+>  
+> -		if (!cp_iova_pinned(&private->cp, unmap->iova))
+> +		if (!cp_iova_pinned(&private->cp_area, unmap->iova))
+>  			return NOTIFY_OK;
+>  
+>  		if (vfio_ccw_mdev_reset(private->mdev))
+>  			return NOTIFY_BAD;
+>  
+> -		cp_free(&private->cp);
+> +		private->cp = NULL;
+> +		cp_free(&private->cp_area);
+>  		return NOTIFY_OK;
 >  	}
 >  
-> +#ifdef __s390x__
-> +	/* Align to 1M (segment size) */
-> +	guest_test_phys_mem &= ~((1 << 20) - 1);
-> +#endif
-> +
->  	DEBUG("guest physical test memory offset: 0x%lx\n", guest_test_phys_mem);
->  
->  	bmap = bitmap_alloc(host_num_pages);
-> @@ -454,6 +511,9 @@ int main(int argc, char *argv[])
->  		vm_guest_mode_params_init(VM_MODE_P48V48_64K, true, true);
+> @@ -139,7 +140,8 @@ static int vfio_ccw_mdev_remove(struct mdev_device *mdev)
+>  		/* The state will be NOT_OPER on error. */
 >  	}
->  #endif
-> +#ifdef __s390x__
-> +	vm_guest_mode_params_init(VM_MODE_P40V48_4K, true, true);
-> +#endif
 >  
->  	while ((opt = getopt(argc, argv, "hi:I:p:m:")) != -1) {
->  		switch (opt) {
-> 
+> -	cp_free(&private->cp);
+> +	private->cp = NULL;
+> +	cp_free(&private->cp_area);
+>  	private->mdev = NULL;
+>  	atomic_inc(&private->avail);
+>  
+> @@ -180,7 +182,8 @@ static void vfio_ccw_mdev_release(struct mdev_device *mdev)
+>  		/* The state will be NOT_OPER on error. */
+>  	}
+>  
+> -	cp_free(&private->cp);
+> +	private->cp = NULL;
+> +	cp_free(&private->cp_area);
+>  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+>  				 &private->nb);
+>  
+> diff --git a/drivers/s390/cio/vfio_ccw_private.h b/drivers/s390/cio/vfio_ccw_private.h
+> index f1092c3dc1b1..e792a20202c3 100644
+> --- a/drivers/s390/cio/vfio_ccw_private.h
+> +++ b/drivers/s390/cio/vfio_ccw_private.h
+> @@ -68,7 +68,8 @@ int vfio_ccw_register_async_dev_regions(struct vfio_ccw_private *private);
+>   * @region: additional regions for other subchannel operations
+>   * @cmd_region: MMIO region for asynchronous I/O commands other than START
+>   * @num_regions: number of additional regions
+> - * @cp: channel program for the current I/O operation
+> + * @cp_area: channel program memory area
+> + * @cp: pointer to channel program for the current I/O operation
+>   * @irb: irb info received from interrupt
+>   * @scsw: scsw info
+>   * @io_trigger: eventfd ctx for signaling userspace I/O results
+> @@ -87,7 +88,8 @@ struct vfio_ccw_private {
+>  	struct ccw_cmd_region	*cmd_region;
+>  	int num_regions;
+>  
+> -	struct channel_program	cp;
+> +	struct channel_program cp_area;
+> +	struct channel_program	*cp;
+>  	struct irb		irb;
+>  	union scsw		scsw;
+>  
 
