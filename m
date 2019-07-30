@@ -2,74 +2,107 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A49D7A093
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 07:51:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C10D7A11D
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 08:12:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726033AbfG3FvF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Jul 2019 01:51:05 -0400
-Received: from o5.email.flywheelsites.com ([167.89.24.251]:25669 "EHLO
-        o5.email.flywheelsites.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725791AbfG3FvE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 30 Jul 2019 01:51:04 -0400
-X-Greylist: delayed 303 seconds by postgrey-1.27 at vger.kernel.org; Tue, 30 Jul 2019 01:51:04 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fw-mail.com;
-        h=subject:from:mime-version:to:content-type:content-transfer-encoding;
-        s=s1; bh=ypHXcUb5veCEwHacvep/xmAsTAwj3ViL+vdD1sWjj+k=;
-        b=WYPH7CI75MwV0Nt+QA/s618cwYExNYiJemvL8fgo8gSbnO69rkzB1YHn7JSHQdu98c8K
-        mnsSsLFfPZwHR+LgZEzVmRa5zz8acojlbLw84SbnRXUrvRXwoqxSZ0OgIVs12d38SP/Bqs
-        +F8sEAkUAHwSCRV9l9Qj8UJ7BMK2wMHdk=
-Received: by filter0098p3iad2.sendgrid.net with SMTP id filter0098p3iad2-5406-5D3FD999-5
-        2019-07-30 05:46:01.191657552 +0000 UTC m=+297234.866012866
-Received: from fw093593.localdomain (unknown [165.227.67.7])
-        by ismtpd0001p1iad1.sendgrid.net (SG) with ESMTP id V1TFpmRiSamus7rRUh3fgg
-        for <linux-s390@vger.kernel.org>; Tue, 30 Jul 2019 05:46:01.199 +0000 (UTC)
-Received: by fw093593.localdomain (Postfix, from userid 998)
-        id 1FAD0BDB6F; Tue, 30 Jul 2019 05:46:01 +0000 (UTC)
-X-Spam-Level: **
-X-Spam-Status: No, score=2.3
-Received: from fw093593 (localhost [127.0.0.1])
-        by fw093593.localdomain (Postfix) with SMTP id E9B98BDB5D
-        for <linux-s390@vger.kernel.org>; Tue, 30 Jul 2019 05:45:57 +0000 (UTC)
-Subject: Thank you for contacting Heirloom Properties
-Date:   Tue, 30 Jul 2019 05:46:01 +0000 (UTC)
-From:   "davidlpippin@gmail.com" <wordpress@heirloomproperties.com>
-Message-ID: <f27208e57e87affad119e43b5be2aecd@heirloomproperties.com>
-X-Mailer: PHPMailer 5.2.22 (https://github.com/PHPMailer/PHPMailer)
+        id S1726078AbfG3GM3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Jul 2019 02:12:29 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:40455 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726128AbfG3GM3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 30 Jul 2019 02:12:29 -0400
+Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 8126E240007;
+        Tue, 30 Jul 2019 06:12:20 +0000 (UTC)
+Subject: Re: [PATCH RESEND 0/8] Fix mmap base in bottom-up mmap
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-mm@kvack.org
+References: <20190620050328.8942-1-alex@ghiti.fr>
+From:   Alexandre Ghiti <alex@ghiti.fr>
+Message-ID: <175168c1-d25f-7a93-e19b-dbb6ae6289e1@ghiti.fr>
+Date:   Tue, 30 Jul 2019 08:12:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-SG-EID: =?us-ascii?Q?vUtuGhLCYeaMqPIFl2+2VlbADNHKAC3LYTC2k68QQxqfyW5ZE+IfpLIdfTQK8H?=
- =?us-ascii?Q?kFYLm6ybRIjfde1XwS=2FYozXBWhcxrF5TwuHpAM+?=
- =?us-ascii?Q?tmaZFexarfwjCT6Mcr900gZ+uOz6mzkIRrKAJRr?=
- =?us-ascii?Q?LLUpmOFYsDnNUHk=2F+sEMCZJVFQ7GH5vllEmvW9a?=
- =?us-ascii?Q?DpFwNg+ewUpzzTDMu2GVBmbDeSTHqYlDtSr0LWj?=
- =?us-ascii?Q?i4SrzZRSqP=2FDWkbJWJQl8E0=2FS2d8aByL8FNTxje?=
- =?us-ascii?Q?7a5cbOHjW6n54NuUw8VeQ=3D=3D?=
-X-SG-ID: =?us-ascii?Q?N2C25iY2uzGMFz6rgvQsb8raWjw0ZPf1VmjsCkspi=2FIVy1Wk0DfJfDJiWxWC7D?=
- =?us-ascii?Q?XKL4QuINM1bTtBlmb8jAx8Ptdn2=2FVP3bxJfkJRd?=
- =?us-ascii?Q?tk9SIqSHRmHs=2FSWANh8JJX4lTOWARKmRzUUbj88?=
- =?us-ascii?Q?PwlhaB=2FVOBY=2F4rhpEyTLhGBrxGECawM=3D?=
-To:     linux-s390@vger.kernel.org
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <20190620050328.8942-1-alex@ghiti.fr>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
+Content-Language: fr
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Lonnieasted,
+On 6/20/19 7:03 AM, Alexandre Ghiti wrote:
+> This series fixes the fallback of the top-down mmap: in case of
+> failure, a bottom-up scheme can be tried as a last resort between
+> the top-down mmap base and the stack, hoping for a large unused stack
+> limit.
+>
+> Lots of architectures and even mm code start this fallback
+> at TASK_UNMAPPED_BASE, which is useless since the top-down scheme
+> already failed on the whole address space: instead, simply use
+> mmap_base.
+>
+> Along the way, it allows to get rid of of mmap_legacy_base and
+> mmap_compat_legacy_base from mm_struct.
+>
+> Note that arm and mips already implement this behaviour.
+>
+> Alexandre Ghiti (8):
+>    s390: Start fallback of top-down mmap at mm->mmap_base
+>    sh: Start fallback of top-down mmap at mm->mmap_base
+>    sparc: Start fallback of top-down mmap at mm->mmap_base
+>    x86, hugetlbpage: Start fallback of top-down mmap at mm->mmap_base
+>    mm: Start fallback top-down mmap at mm->mmap_base
+>    parisc: Use mmap_base, not mmap_legacy_base, as low_limit for
+>      bottom-up mmap
+>    x86: Use mmap_*base, not mmap_*legacy_base, as low_limit for bottom-up
+>      mmap
+>    mm: Remove mmap_legacy_base and mmap_compat_legacy_code fields from
+>      mm_struct
+>
+>   arch/parisc/kernel/sys_parisc.c  |  8 +++-----
+>   arch/s390/mm/mmap.c              |  2 +-
+>   arch/sh/mm/mmap.c                |  2 +-
+>   arch/sparc/kernel/sys_sparc_64.c |  2 +-
+>   arch/sparc/mm/hugetlbpage.c      |  2 +-
+>   arch/x86/include/asm/elf.h       |  2 +-
+>   arch/x86/kernel/sys_x86_64.c     |  4 ++--
+>   arch/x86/mm/hugetlbpage.c        |  7 ++++---
+>   arch/x86/mm/mmap.c               | 20 +++++++++-----------
+>   include/linux/mm_types.h         |  2 --
+>   mm/debug.c                       |  4 ++--
+>   mm/mmap.c                        |  2 +-
+>   12 files changed, 26 insertions(+), 31 deletions(-)
+>
 
-I just wanted to shoot you a quick email to let you know that we received your online contact submission and will respond back as soon as we can! Have a great day and looking forward to speaking with you soon. 
+Hi everyone,
 
+This is just a preparatory series for the merging of x86 mmap top-down 
+functions with
+the generic ones (those should get into v5.3), if you could take some 
+time to take a look,
+that would be great :)
 
-Best,
-David Pippin                             
-Heirloom Properties
-Phone: 404-643-2563 | eFax: 404-937-6224
+Thanks,
 
+Alex
 
-ICON Agent 2015-2016
-Nest Atlanta Real Estate Group
-eXp Realty International
-
-
-A referral is the best compliment I can receive!
