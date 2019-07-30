@@ -2,101 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDD0E7A2EE
-	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 10:14:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77B357A558
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 12:01:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726713AbfG3IOU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 30 Jul 2019 04:14:20 -0400
-Received: from mx2.suse.de ([195.135.220.15]:36754 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726535AbfG3IOU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 30 Jul 2019 04:14:20 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 59F32ABE9;
-        Tue, 30 Jul 2019 08:14:18 +0000 (UTC)
-Date:   Tue, 30 Jul 2019 10:14:15 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Hoan Tran OS <hoan@os.amperecomputing.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        id S1731840AbfG3KBY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 30 Jul 2019 06:01:24 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57644 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727770AbfG3KBY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 30 Jul 2019 06:01:24 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id EEAC7C024906;
+        Tue, 30 Jul 2019 10:01:23 +0000 (UTC)
+Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0175B19C77;
+        Tue, 30 Jul 2019 10:01:16 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     kvm@vger.kernel.org,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20190730081415.GN9330@dhcp22.suse.cz>
-References: <1562887528-5896-1-git-send-email-Hoan@os.amperecomputing.com>
- <20190712070247.GM29483@dhcp22.suse.cz>
- <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
- <20190712121223.GR29483@dhcp22.suse.cz>
- <20190712143730.au3662g4ua2tjudu@willie-the-truck>
- <20190712150007.GU29483@dhcp22.suse.cz>
- <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
+        Janosch Frank <frankja@linux.ibm.com>
+Cc:     linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
+Subject: [PATCH 0/2] KVM: selftests: Enable ucall and dirty_log_test on s390x
+Date:   Tue, 30 Jul 2019 12:01:10 +0200
+Message-Id: <20190730100112.18205-1-thuth@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 30 Jul 2019 10:01:24 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-[Sorry for a late reply]
+Implement the ucall() interface on s390x to be able to use the
+dirty_log_test KVM selftest on s390x, too.
 
-On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
-> Hi,
-> 
-> On 7/12/19 10:00 PM, Michal Hocko wrote:
-[...]
-> > Hmm, I thought this was selectable. But I am obviously wrong here.
-> > Looking more closely, it seems that this is indeed only about
-> > __early_pfn_to_nid and as such not something that should add a config
-> > symbol. This should have been called out in the changelog though.
-> 
-> Yes, do you have any other comments about my patch?
+Thomas Huth (2):
+  KVM: selftests: Implement ucall() for s390x
+  KVM: selftests: Enable dirty_log_test on s390x
 
-Not really. Just make sure to explicitly state that
-CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
-doesn't really deserve it's own config and can be pulled under NUMA.
-
-> > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
-> > bucket? Do we have any NUMA architecture that doesn't enable it?
-> > 
-> 
-> As I checked with arch Kconfig files, there are 2 architectures, riscv 
-> and microblaze, do not support NUMA but enable this config.
-> 
-> And 1 architecture, alpha, supports NUMA but does not enable this config.
-
-Care to have a look and clean this up please?
+ tools/testing/selftests/kvm/Makefile          |  1 +
+ tools/testing/selftests/kvm/dirty_log_test.c  | 70 +++++++++++++++++--
+ .../testing/selftests/kvm/include/kvm_util.h  |  2 +-
+ tools/testing/selftests/kvm/lib/ucall.c       | 34 +++++++--
+ .../selftests/kvm/s390x/sync_regs_test.c      |  6 +-
+ 5 files changed, 98 insertions(+), 15 deletions(-)
 
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
