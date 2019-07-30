@@ -2,141 +2,182 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C32BC79137
-	for <lists+linux-s390@lfdr.de>; Mon, 29 Jul 2019 18:39:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0564279D77
+	for <lists+linux-s390@lfdr.de>; Tue, 30 Jul 2019 02:40:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfG2Qj4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 29 Jul 2019 12:39:56 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41640 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726708AbfG2Qjz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 29 Jul 2019 12:39:55 -0400
-Received: by mail-pg1-f193.google.com with SMTP id x15so18187865pgg.8
-        for <linux-s390@vger.kernel.org>; Mon, 29 Jul 2019 09:39:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Nb4CjHnrkOlFdXVrAOvEL/gOTXxG/KIC7AXINQV9eWk=;
-        b=nlGEvZB5fX2ZSbjO+u+hA8aR3krsDKHgKYElzvXmv0PoxwN2zWeRAb4a2Brjil6QEI
-         B0hYH7uYLCYxzBMwAIjS7pmNDh42vwo3hfnbAaUYvsjT0Kh5nxhMPoAwH6hY020rLd1r
-         kiIA8RbrpGdG55B62jcb5KYpu2RuFV4FJczq0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=Nb4CjHnrkOlFdXVrAOvEL/gOTXxG/KIC7AXINQV9eWk=;
-        b=RrXETPfezNIw8iABLnoolFejmE/rzCMGdNmGtC4u4brPF12cRqI48zcL0LXVvc26SY
-         MnX0GLpSbYkCXx7NENmtKN29A4ek1/ZZkDT+g+3LBP76US1sGIkzEI3hktVo7vbOyVvD
-         tFfoiWND3MOJdrpTFCmDeVrfNBEe1R+XuvjiXbjFQvGlmTrHwVDFPd2K24xsF7WpAflW
-         jEWJCGkJD7G5HWENx38qwCRFVrYa1hbFBsEWZkHxJ5jWFiyLcWeB5mCS5BagkJTq7RRG
-         cm6jtgX7SUvnNXfqjKrSubJmiQqEf/NAxsJsfFYuwhDkasKe1+1g+a+IC+0bFELrHdwG
-         5IAQ==
-X-Gm-Message-State: APjAAAUXKUzXADumWJMQbGRHX00QY9xpYr1Z3ioei8V1tfcxb1LONSxc
-        yADeKGRQpiCBju8NQAxktaVzQg==
-X-Google-Smtp-Source: APXvYqyK2+iAItNJDXrCfMN9a1yOxU/cDJlsagolowGQVyJ92TnTYjA+8yIMajRcltnHr0bAJ/49qw==
-X-Received: by 2002:aa7:8502:: with SMTP id v2mr36642822pfn.98.1564418395411;
-        Mon, 29 Jul 2019 09:39:55 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x14sm79017275pfq.158.2019.07.29.09.39.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 29 Jul 2019 09:39:54 -0700 (PDT)
-Date:   Mon, 29 Jul 2019 09:39:53 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        id S1728107AbfG3AkP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 29 Jul 2019 20:40:15 -0400
+Received: from gateway22.websitewelcome.com ([192.185.46.225]:13617 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727957AbfG3AkP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 29 Jul 2019 20:40:15 -0400
+X-Greylist: delayed 1374 seconds by postgrey-1.27 at vger.kernel.org; Mon, 29 Jul 2019 20:40:14 EDT
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id 63A775C6F
+        for <linux-s390@vger.kernel.org>; Mon, 29 Jul 2019 19:17:20 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id sFpQhjgjI2PzOsFpQhpWlR; Mon, 29 Jul 2019 19:17:20 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=D7kzJNqVG7VZ9ECv09vvZ/hGrMRr3ZR7WMVFb+PMcAU=; b=pYyEwi+P+3UMsPlfgyR2FChKCk
+        gourTHd7j8AhnZdrB+GACI8F3KTDJKSQIYqWejMjRn8Qdzpv6wzBf3CPHS65GwDGILgxKy7QPcoeQ
+        Ff+A9NFoCbVGOOmizE/NTE07bYGLi5vylDAvpbIY1KaGstNlqc1qNnLi4A4nZ5a2hBMYWWCo01NO+
+        /+E9z/aB50rkfga7R2ilkVZoTKP6NZ3TPRomQIo5nVY2l+V6hDGe9K74lWp9zAFNKFjwHrqfP+Hxw
+        0IjY+Rfs1QUN98+jsKgRJhOkXg0Bc08Rm/3wF/OQfu+tm3FnGbhf975nFO+rXy6Mze8tkS4E5L3t8
+        dG5+EAkw==;
+Received: from [187.192.11.120] (port=35326 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hsFpP-002utY-40; Mon, 29 Jul 2019 19:17:19 -0500
+Date:   Mon, 29 Jul 2019 19:17:15 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Julian Wiedmann <jwi@linux.ibm.com>,
         Ursula Braun <ubraun@linux.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH] net/af_iucv: mark expected switch fall-throughs
-Message-ID: <201907290939.A3EF9B979@keescook>
-References: <20190729145947.GA9494@embeddedor>
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>
+Subject: [PATCH] s390/net: Mark expected switch fall-throughs
+Message-ID: <20190730001715.GA20706@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190729145947.GA9494@embeddedor>
+Content-Transfer-Encoding: 8bit
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 187.192.11.120
+X-Source-L: No
+X-Exim-ID: 1hsFpP-002utY-40
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [187.192.11.120]:35326
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jul 29, 2019 at 09:59:47AM -0500, Gustavo A. R. Silva wrote:
-> Mark switch cases where we are expecting to fall through.
-> 
-> This patch fixes the following warnings:
-> 
-> net/iucv/af_iucv.c: warning: this statement may fall
-> through [-Wimplicit-fallthrough=]:  => 537:3, 519:6, 2246:6, 510:6
-> 
-> Notice that, in this particular case, the code comment is
-> modified in accordance with what GCC is expecting to find.
-> 
-> Reported-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Mark switch cases where we are expecting to fall through.
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
+This patch fixes the following warnings (Building: s390):
 
--Kees
+drivers/s390/net/ctcm_fsms.c: In function ‘ctcmpc_chx_attnbusy’:
+drivers/s390/net/ctcm_fsms.c:1703:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (grp->changed_side == 1) {
+      ^
+drivers/s390/net/ctcm_fsms.c:1707:2: note: here
+  case MPCG_STATE_XID0IOWAIX:
+  ^~~~
 
-> ---
->  net/iucv/af_iucv.c | 14 +++++++++-----
->  1 file changed, 9 insertions(+), 5 deletions(-)
-> 
-> diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-> index 09e1694b6d34..ebb62a4ebe30 100644
-> --- a/net/iucv/af_iucv.c
-> +++ b/net/iucv/af_iucv.c
-> @@ -512,7 +512,9 @@ static void iucv_sock_close(struct sock *sk)
->  			sk->sk_state = IUCV_DISCONN;
->  			sk->sk_state_change(sk);
->  		}
-> -	case IUCV_DISCONN:   /* fall through */
-> +		/* fall through */
-> +
-> +	case IUCV_DISCONN:
->  		sk->sk_state = IUCV_CLOSING;
->  		sk->sk_state_change(sk);
->  
-> @@ -525,8 +527,9 @@ static void iucv_sock_close(struct sock *sk)
->  					iucv_sock_in_state(sk, IUCV_CLOSED, 0),
->  					timeo);
->  		}
-> +		/* fall through */
->  
-> -	case IUCV_CLOSING:   /* fall through */
-> +	case IUCV_CLOSING:
->  		sk->sk_state = IUCV_CLOSED;
->  		sk->sk_state_change(sk);
->  
-> @@ -535,8 +538,9 @@ static void iucv_sock_close(struct sock *sk)
->  
->  		skb_queue_purge(&iucv->send_skb_q);
->  		skb_queue_purge(&iucv->backlog_skb_q);
-> +		/* fall through */
->  
-> -	default:   /* fall through */
-> +	default:
->  		iucv_sever_path(sk, 1);
->  	}
->  
-> @@ -2247,10 +2251,10 @@ static int afiucv_hs_rcv(struct sk_buff *skb, struct net_device *dev,
->  			kfree_skb(skb);
->  			break;
->  		}
-> -		/* fall through and receive non-zero length data */
-> +		/* fall through - and receive non-zero length data */
->  	case (AF_IUCV_FLAG_SHT):
->  		/* shutdown request */
-> -		/* fall through and receive zero length data */
-> +		/* fall through - and receive zero length data */
->  	case 0:
->  		/* plain data frame */
->  		IUCV_SKB_CB(skb)->class = trans_hdr->iucv_hdr.class;
-> -- 
-> 2.22.0
-> 
+drivers/s390/net/ctcm_mpc.c: In function ‘ctc_mpc_alloc_channel’:
+drivers/s390/net/ctcm_mpc.c:358:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (callback)
+      ^
+drivers/s390/net/ctcm_mpc.c:360:2: note: here
+  case MPCG_STATE_XID0IOWAIT:
+  ^~~~
 
+drivers/s390/net/ctcm_mpc.c: In function ‘mpc_action_timeout’:
+drivers/s390/net/ctcm_mpc.c:1469:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if ((fsm_getstate(rch->fsm) == CH_XID0_PENDING) &&
+      ^
+drivers/s390/net/ctcm_mpc.c:1472:2: note: here
+  default:
+  ^~~~~~~
+drivers/s390/net/ctcm_mpc.c: In function ‘mpc_send_qllc_discontact’:
+drivers/s390/net/ctcm_mpc.c:2087:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+   if (grp->estconnfunc) {
+      ^
+drivers/s390/net/ctcm_mpc.c:2092:2: note: here
+  case MPCG_STATE_FLOWC:
+  ^~~~
+
+drivers/s390/net/qeth_l2_main.c: In function ‘qeth_l2_process_inbound_buffer’:
+drivers/s390/net/qeth_l2_main.c:328:7: warning: this statement may fall through [-Wimplicit-fallthrough=]
+    if (IS_OSN(card)) {
+       ^
+drivers/s390/net/qeth_l2_main.c:337:3: note: here
+   default:
+   ^~~~~~~
+
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ drivers/s390/net/ctcm_fsms.c    | 1 +
+ drivers/s390/net/ctcm_mpc.c     | 3 +++
+ drivers/s390/net/qeth_l2_main.c | 2 +-
+ 3 files changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/s390/net/ctcm_fsms.c b/drivers/s390/net/ctcm_fsms.c
+index 1b4ee570b712..4a8a5373cb35 100644
+--- a/drivers/s390/net/ctcm_fsms.c
++++ b/drivers/s390/net/ctcm_fsms.c
+@@ -1704,6 +1704,7 @@ static void ctcmpc_chx_attnbusy(fsm_instance *fsm, int event, void *arg)
+ 			grp->changed_side = 2;
+ 			break;
+ 		}
++		/* Else, fall through */
+ 	case MPCG_STATE_XID0IOWAIX:
+ 	case MPCG_STATE_XID7INITW:
+ 	case MPCG_STATE_XID7INITX:
+diff --git a/drivers/s390/net/ctcm_mpc.c b/drivers/s390/net/ctcm_mpc.c
+index e02f295d38a9..1534420a0243 100644
+--- a/drivers/s390/net/ctcm_mpc.c
++++ b/drivers/s390/net/ctcm_mpc.c
+@@ -357,6 +357,7 @@ int ctc_mpc_alloc_channel(int port_num, void (*callback)(int, int))
+ 		/*fsm_newstate(grp->fsm, MPCG_STATE_XID2INITW);*/
+ 		if (callback)
+ 			grp->send_qllc_disc = 1;
++		/* Else, fall through */
+ 	case MPCG_STATE_XID0IOWAIT:
+ 		fsm_deltimer(&grp->timer);
+ 		grp->outstanding_xid2 = 0;
+@@ -1469,6 +1470,7 @@ static void mpc_action_timeout(fsm_instance *fi, int event, void *arg)
+ 		if ((fsm_getstate(rch->fsm) == CH_XID0_PENDING) &&
+ 		   (fsm_getstate(wch->fsm) == CH_XID0_PENDING))
+ 			break;
++		/* Else, fall through */
+ 	default:
+ 		fsm_event(grp->fsm, MPCG_EVENT_INOP, dev);
+ 	}
+@@ -2089,6 +2091,7 @@ static int mpc_send_qllc_discontact(struct net_device *dev)
+ 			grp->estconnfunc = NULL;
+ 			break;
+ 		}
++		/* Else, fall through */
+ 	case MPCG_STATE_FLOWC:
+ 	case MPCG_STATE_READY:
+ 		grp->send_qllc_disc = 2;
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index fd64bc3f4062..cbead3d1b2fd 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -333,7 +333,7 @@ static int qeth_l2_process_inbound_buffer(struct qeth_card *card,
+ 				card->osn_info.data_cb(skb);
+ 				break;
+ 			}
+-			/* else unknown */
++			/* Else, fall through */
+ 		default:
+ 			dev_kfree_skb_any(skb);
+ 			QETH_CARD_TEXT(card, 3, "inbunkno");
 -- 
-Kees Cook
+2.22.0
+
