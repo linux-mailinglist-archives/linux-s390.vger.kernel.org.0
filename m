@@ -2,176 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99C5E7C144
-	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 14:26:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 156B77C278
+	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 14:58:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387502AbfGaM0t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 31 Jul 2019 08:26:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:23828 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387536AbfGaM0s (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 31 Jul 2019 08:26:48 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VCMS4i016315
-        for <linux-s390@vger.kernel.org>; Wed, 31 Jul 2019 08:26:48 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u39p5v6t2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 31 Jul 2019 08:26:47 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Wed, 31 Jul 2019 13:26:45 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 31 Jul 2019 13:26:37 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6VCQZF059244618
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 31 Jul 2019 12:26:36 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB81511C05B;
-        Wed, 31 Jul 2019 12:26:35 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D43D911C04A;
-        Wed, 31 Jul 2019 12:26:33 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.168])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed, 31 Jul 2019 12:26:33 +0000 (GMT)
-Date:   Wed, 31 Jul 2019 15:26:32 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        Paul Mackerras <paulus@samba.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "x86@kernel.org" <x86@kernel.org>,
+        id S1729206AbfGaM5q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 31 Jul 2019 08:57:46 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:42862 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727546AbfGaM5k (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 31 Jul 2019 08:57:40 -0400
+Received: by mail-wr1-f68.google.com with SMTP id x1so19670057wrr.9
+        for <linux-s390@vger.kernel.org>; Wed, 31 Jul 2019 05:57:39 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=JZf3ntVvlrIXripUKO5rZBanmNCibf9/L/ozsw4HA8o=;
+        b=LaEGzRE6WENir098cIpkBY0T1Af51HJkyi8Ok6w6tDIcbS5Yvg0nWL4Dpmt81PNn1u
+         /agi313NaHAyjmT1Q3BWd3t5GnxgTXnJK4kkjM99gDmg6b5rgbOGoG6RwdSee3FIRgbx
+         vloZDOGcMJG7oPbC/+R2CXtZnturggACapxA7whoei4t5nECkFSAC71CtZwvl6hd2GOc
+         bbWii+VRG5any3+HzB+j8/EdekyuM96scUjyKJ185dBQRSwK5LcEHOILEAsZjnyd3erz
+         Xr7dlh39AyWTeLy9Z2lCI8pBngf3bwHxZqMZTdJP1m8+K9xp43bu/qsgCiB/JwDBI0+f
+         wGuQ==
+X-Gm-Message-State: APjAAAWTPdxp+7lHCoAfmSOIjON/PC4+CzF83tKKUoFQpUSGmumkr5Qb
+        paneiKgc2gCOLVy+hzdguFWPwg==
+X-Google-Smtp-Source: APXvYqw7bOP3kc6TQ9IqEEedb7bS/T5LWV18de5oQMupwOl7c6btl9JW5t7pYEd70NAd/6Zc55OWqA==
+X-Received: by 2002:a05:6000:12c8:: with SMTP id l8mr41721246wrx.72.1564577858774;
+        Wed, 31 Jul 2019 05:57:38 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:91e7:65e:d8cd:fdb3? ([2001:b07:6468:f312:91e7:65e:d8cd:fdb3])
+        by smtp.gmail.com with ESMTPSA id c1sm155407528wrh.1.2019.07.31.05.57.37
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 31 Jul 2019 05:57:38 -0700 (PDT)
+Subject: Re: [PATCH 1/2] KVM: selftests: Implement ucall() for s390x
+To:     Thomas Huth <thuth@redhat.com>, Andrew Jones <drjones@redhat.com>
+Cc:     kvm@vger.kernel.org,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Open Source Submission <patches@amperecomputing.com>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        "willy@infradead.org" <willy@infradead.org>
-Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-References: <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
- <20190712121223.GR29483@dhcp22.suse.cz>
- <20190712143730.au3662g4ua2tjudu@willie-the-truck>
- <20190712150007.GU29483@dhcp22.suse.cz>
- <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
- <20190730081415.GN9330@dhcp22.suse.cz>
- <20190731062420.GC21422@rapoport-lnx>
- <20190731080309.GZ9330@dhcp22.suse.cz>
- <20190731111422.GA14538@rapoport-lnx>
- <20190731114016.GI9330@dhcp22.suse.cz>
+        Janosch Frank <frankja@linux.ibm.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
+References: <20190730100112.18205-1-thuth@redhat.com>
+ <20190730100112.18205-2-thuth@redhat.com>
+ <20190730104807.7uzuvd52foybakgu@kamzik.brq.redhat.com>
+ <d9cb3c86-6390-3803-f2c6-d47f5c24139f@redhat.com>
+ <20190731102849.x26rdan7cddmpvhe@kamzik.brq.redhat.com>
+ <0c38beb7-7383-a7ac-13d4-9d4bde4a21bb@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <f7a103fa-51ef-533d-d3a4-7764fb742e44@redhat.com>
+Date:   Wed, 31 Jul 2019 14:57:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190731114016.GI9330@dhcp22.suse.cz>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-TM-AS-GCONF: 00
-x-cbid: 19073112-0028-0000-0000-00000389A2B7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19073112-0029-0000-0000-00002449F381
-Message-Id: <20190731122631.GB14538@rapoport-lnx>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=760 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1907310126
+In-Reply-To: <0c38beb7-7383-a7ac-13d4-9d4bde4a21bb@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 01:40:16PM +0200, Michal Hocko wrote:
-> On Wed 31-07-19 14:14:22, Mike Rapoport wrote:
-> > On Wed, Jul 31, 2019 at 10:03:09AM +0200, Michal Hocko wrote:
-> > > On Wed 31-07-19 09:24:21, Mike Rapoport wrote:
-> > > > [ sorry for a late reply too, somehow I missed this thread before ]
-> > > > 
-> > > > On Tue, Jul 30, 2019 at 10:14:15AM +0200, Michal Hocko wrote:
-> > > > > [Sorry for a late reply]
-> > > > > 
-> > > > > On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
-> > > > > > Hi,
-> > > > > > 
-> > > > > > On 7/12/19 10:00 PM, Michal Hocko wrote:
-> > > > > [...]
-> > > > > > > Hmm, I thought this was selectable. But I am obviously wrong here.
-> > > > > > > Looking more closely, it seems that this is indeed only about
-> > > > > > > __early_pfn_to_nid and as such not something that should add a config
-> > > > > > > symbol. This should have been called out in the changelog though.
-> > > > > > 
-> > > > > > Yes, do you have any other comments about my patch?
-> > > > > 
-> > > > > Not really. Just make sure to explicitly state that
-> > > > > CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
-> > > > > doesn't really deserve it's own config and can be pulled under NUMA.
-> > > > > 
-> > > > > > > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
-> > > > > > > bucket? Do we have any NUMA architecture that doesn't enable it?
-> > > > > > > 
-> > > > 
-> > > > HAVE_MEMBLOCK_NODE_MAP makes huge difference in node/zone initialization
-> > > > sequence so it's not only about a singe function.
-> > > 
-> > > The question is whether we want to have this a config option or enable
-> > > it unconditionally for each NUMA system.
-> > 
-> > We can make it 'default NUMA', but we can't drop it completely because
-> > microblaze uses sparse_memory_present_with_active_regions() which is
-> > unavailable when HAVE_MEMBLOCK_NODE_MAP=n.
-> 
-> I suppose you mean that microblaze is using
-> sparse_memory_present_with_active_regions even without CONFIG_NUMA,
-> right?
+On 31/07/19 13:16, Thomas Huth wrote:
+> Or maybe even better: Let's move this file into lib/x86_64/ and
+> lib/aarch64/ instead, since there is more different code between the
+> architectures here than common code.
 
-Yes.
+All good solutions, just choose one. :))
 
-> I have to confess I do not understand that code. What is the deal
-> with setting node id there?
-
-The sparse_memory_present_with_active_regions() iterates over
-memblock.memory regions and uses the node id of each region as the
-parameter to memory_present(). The assumption here is that sometime before
-each region was assigned a proper non-negative node id. 
-
-microblaze uses device tree for memory enumeration and the current FDT code
-does memblock_add() that implicitly sets nid in memblock.memory regions to -1.
-
-So in order to have proper node id passed to memory_present() microblaze
-has to call memblock_set_node() before it can use
-sparse_memory_present_with_active_regions().
-
-> -- 
-> Michal Hocko
-> SUSE Labs
-
--- 
-Sincerely yours,
-Mike.
-
+Paolo
