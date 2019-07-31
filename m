@@ -2,132 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70FE77BC07
-	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 10:44:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50D107BC6A
+	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 10:58:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726736AbfGaIoR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 31 Jul 2019 04:44:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38484 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbfGaIoR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 31 Jul 2019 04:44:17 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 62E3B883D7;
-        Wed, 31 Jul 2019 08:44:16 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 64BEF1001281;
-        Wed, 31 Jul 2019 08:44:07 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 10:44:05 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH 2/2] KVM: selftests: Enable dirty_log_test on s390x
-Message-ID: <20190731084405.tn3x6nmt2svkjkiq@kamzik.brq.redhat.com>
-References: <20190730100112.18205-1-thuth@redhat.com>
- <20190730100112.18205-3-thuth@redhat.com>
- <20190730105721.z4zsul7uxl2igoue@kamzik.brq.redhat.com>
- <a9824265-daf8-db36-86b8-ad890dc73f14@redhat.com>
+        id S1727758AbfGaI63 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 31 Jul 2019 04:58:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54028 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727638AbfGaI62 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 31 Jul 2019 04:58:28 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6V8l1Bl089759
+        for <linux-s390@vger.kernel.org>; Wed, 31 Jul 2019 04:58:27 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2u37hnh89r-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 31 Jul 2019 04:58:27 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 31 Jul 2019 09:58:25 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 31 Jul 2019 09:58:23 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6V8w5Jr19005810
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 08:58:05 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9C6D0A405C;
+        Wed, 31 Jul 2019 08:58:21 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 573FEA4060;
+        Wed, 31 Jul 2019 08:58:21 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.134])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 31 Jul 2019 08:58:21 +0000 (GMT)
+Date:   Wed, 31 Jul 2019 10:58:20 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390@vger.kernel.org,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Patrick Steuer <steuer@linux.ibm.com>
+Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
+References: <20190731163915.3fdfcb14@canb.auug.org.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <a9824265-daf8-db36-86b8-ad890dc73f14@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 31 Jul 2019 08:44:16 +0000 (UTC)
+In-Reply-To: <20190731163915.3fdfcb14@canb.auug.org.au>
+X-TM-AS-GCONF: 00
+x-cbid: 19073108-0012-0000-0000-00000337EE06
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19073108-0013-0000-0000-000021719646
+Message-Id: <20190731085819.GA3488@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907310095
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 10:19:57AM +0200, Thomas Huth wrote:
-> On 30/07/2019 12.57, Andrew Jones wrote:
-> > On Tue, Jul 30, 2019 at 12:01:12PM +0200, Thomas Huth wrote:
-> >> To run the dirty_log_test on s390x, we have to make sure that we
-> >> access the dirty log bitmap with little endian byte ordering and
-> >> we have to properly align the memslot of the guest.
-> >> Also all dirty bits of a segment are set once on s390x when one
-> >> of the pages of a segment are written to for the first time, so
-> >> we have to make sure that we touch all pages during the first
-> >> iteration to keep the test in sync here.
-> >>
-> >> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> >> ---
-> [...]
-> >> diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-> >> index ceb52b952637..7a1223ad0ff3 100644
-> >> --- a/tools/testing/selftests/kvm/dirty_log_test.c
-> >> +++ b/tools/testing/selftests/kvm/dirty_log_test.c
-> >> @@ -26,9 +26,22 @@
-> >>  /* The memory slot index to track dirty pages */
-> >>  #define TEST_MEM_SLOT_INDEX		1
-> >>  
-> >> +#ifdef __s390x__
-> >> +
-> >> +/*
-> >> + * On s390x, the ELF program is sometimes linked at 0x80000000, so we can
-> >> + * not use 0x40000000 here without overlapping into that region. Thus let's
-> >> + * use 0xc0000000 as base address there instead.
-> >> + */
-> >> +#define DEFAULT_GUEST_TEST_MEM		0xc0000000
-> > 
-> > I think both x86 and aarch64 should be ok with this offset. If testing
-> > proves it does, then we can just change it for all architecture.
+On Wed, Jul 31, 2019 at 04:39:15PM +1000, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Ok. It seems to work on x86 - could you please check aarch64, since I
-> don't have such a system available right now?
+> Changes since 20190730:
 
-Tested it. It works on aarch64 too.
+Hello Ard,
 
-> 
-> >> +/* Dirty bitmaps are always little endian, so we need to swap on big endian */
-> >> +#if defined(__s390x__)
-> >> +# define BITOP_LE_SWIZZLE	((BITS_PER_LONG-1) & ~0x7)
-> >> +# define test_bit_le(nr, addr) \
-> >> +	test_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +# define set_bit_le(nr, addr) \
-> >> +	set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +# define clear_bit_le(nr, addr) \
-> >> +	clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +# define test_and_set_bit_le(nr, addr) \
-> >> +	test_and_set_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +# define test_and_clear_bit_le(nr, addr) \
-> >> +	test_and_clear_bit((nr) ^ BITOP_LE_SWIZZLE, addr)
-> >> +#else
-> >> +# define test_bit_le	test_bit
-> >> +# define set_bit_le	set_bit
-> >> +# define clear_bit_le	clear_bit
-> >> +# define test_and_set_bit_le	test_and_set_bit
-> >> +# define test_and_clear_bit_le	test_and_clear_bit
-> >> +#endif
-> > 
-> > nit: does the formatting above look right after applying the patch?
-> 
-> It looked ok to me, but I can add some more tabs to even make it nicer :)
-> 
-> >> @@ -293,6 +341,10 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
-> >>  	 * case where the size is not aligned to 64 pages.
-> >>  	 */
-> >>  	guest_num_pages = (1ul << (30 - guest_page_shift)) + 16;
-> >> +#ifdef __s390x__
-> >> +	/* Round up to multiple of 1M (segment size) */
-> >> +	guest_num_pages = (guest_num_pages + 0xff) & ~0xffUL;
-> > 
-> > We could maybe do this for all architectures as well.
-> 
-> It's really only needed on s390x, so I think we should keep the #ifdef here.
->
+two of your patches in the crypto tree cause build breakage on s390:
 
-OK
+The patch ("crypto: aes - create AES library based on the fixed time AES code")
+causes this:
 
-Thanks,
-drew 
+arch/s390/crypto/aes_s390.c:111:13: error: conflicting types for 'aes_encrypt'
+  111 | static void aes_encrypt(struct crypto_tfm *tfm, u8 *out, const u8 *in)
+      |             ^~~~~~~~~~~
+
+And the commit ("crypto: aegis128 - add support for SIMD acceleration") causes
+another build breakage:
+
+crypto/aegis128-core.c:19:10: fatal error: asm/simd.h: No such file or directory
+   19 | #include <asm/simd.h>
+      |          ^~~~~~~~~~~~
+
