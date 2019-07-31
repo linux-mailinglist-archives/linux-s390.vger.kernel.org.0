@@ -2,150 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3F1B7C675
-	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 17:25:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 506937C72B
+	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 17:46:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728089AbfGaPYw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 31 Jul 2019 11:24:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36454 "EHLO mx1.redhat.com"
+        id S1729789AbfGaPqi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 31 Jul 2019 11:46:38 -0400
+Received: from foss.arm.com ([217.140.110.172]:49736 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730143AbfGaPYv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 31 Jul 2019 11:24:51 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B07AF89C3A;
-        Wed, 31 Jul 2019 15:15:41 +0000 (UTC)
-Received: from thuth.com (dhcp-200-228.str.redhat.com [10.33.200.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CF8F019C65;
-        Wed, 31 Jul 2019 15:15:39 +0000 (UTC)
-From:   Thomas Huth <thuth@redhat.com>
-To:     kvm@vger.kernel.org, Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Peter Xu <peterx@redhat.com>, Andrew Jones <drjones@redhat.com>
-Subject: [PATCH v3 2/3] KVM: selftests: Implement ucall() for s390x
-Date:   Wed, 31 Jul 2019 17:15:24 +0200
-Message-Id: <20190731151525.17156-3-thuth@redhat.com>
-In-Reply-To: <20190731151525.17156-1-thuth@redhat.com>
-References: <20190731151525.17156-1-thuth@redhat.com>
+        id S1729758AbfGaPqg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 31 Jul 2019 11:46:36 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 230CC1570;
+        Wed, 31 Jul 2019 08:46:36 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.133])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 21C233F694;
+        Wed, 31 Jul 2019 08:46:33 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v10 08/22] s390: mm: Add p?d_leaf() definitions
+Date:   Wed, 31 Jul 2019 16:45:49 +0100
+Message-Id: <20190731154603.41797-9-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190731154603.41797-1-steven.price@arm.com>
+References: <20190731154603.41797-1-steven.price@arm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 31 Jul 2019 15:15:41 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On s390x, we can neither exit via PIO nor MMIO, but have to use an
-instruction like DIAGNOSE. Now that ucall() is implemented, we can
-use it in the sync_reg_test on s390x, too.
+walk_page_range() is going to be allowed to walk page tables other than
+those of user space. For this it needs to know when it has reached a
+'leaf' entry in the page tables. This information is provided by the
+p?d_leaf() functions/macros.
 
-Reviewed-by: Andrew Jones <drjones@redhat.com>
-Signed-off-by: Thomas Huth <thuth@redhat.com>
+For s390, pud_large() and pmd_large() are already implemented as static
+inline functions. Add a macro to provide the p?d_leaf names for the
+generic code to use.
+
+CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+CC: Vasily Gorbik <gor@linux.ibm.com>
+CC: Christian Borntraeger <borntraeger@de.ibm.com>
+CC: linux-s390@vger.kernel.org
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- tools/testing/selftests/kvm/Makefile          |  2 +-
- tools/testing/selftests/kvm/lib/s390x/ucall.c | 56 +++++++++++++++++++
- .../selftests/kvm/s390x/sync_regs_test.c      |  6 +-
- 3 files changed, 61 insertions(+), 3 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/lib/s390x/ucall.c
+ arch/s390/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/tools/testing/selftests/kvm/Makefile b/tools/testing/selftests/kvm/Makefile
-index a51e3b83df40..75ea1ecbf85a 100644
---- a/tools/testing/selftests/kvm/Makefile
-+++ b/tools/testing/selftests/kvm/Makefile
-@@ -10,7 +10,7 @@ UNAME_M := $(shell uname -m)
- LIBKVM = lib/assert.c lib/elf.c lib/io.c lib/kvm_util.c lib/sparsebit.c
- LIBKVM_x86_64 = lib/x86_64/processor.c lib/x86_64/vmx.c lib/x86_64/ucall.c
- LIBKVM_aarch64 = lib/aarch64/processor.c lib/aarch64/ucall.c
--LIBKVM_s390x = lib/s390x/processor.c
-+LIBKVM_s390x = lib/s390x/processor.c lib/s390x/ucall.c
- 
- TEST_GEN_PROGS_x86_64 = x86_64/cr4_cpuid_sync_test
- TEST_GEN_PROGS_x86_64 += x86_64/evmcs_test
-diff --git a/tools/testing/selftests/kvm/lib/s390x/ucall.c b/tools/testing/selftests/kvm/lib/s390x/ucall.c
-new file mode 100644
-index 000000000000..fd589dc9bfab
---- /dev/null
-+++ b/tools/testing/selftests/kvm/lib/s390x/ucall.c
-@@ -0,0 +1,56 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ucall support. A ucall is a "hypercall to userspace".
-+ *
-+ * Copyright (C) 2019 Red Hat, Inc.
-+ */
-+#include "kvm_util.h"
-+
-+void ucall_init(struct kvm_vm *vm, void *arg)
-+{
-+}
-+
-+void ucall_uninit(struct kvm_vm *vm)
-+{
-+}
-+
-+void ucall(uint64_t cmd, int nargs, ...)
-+{
-+	struct ucall uc = {
-+		.cmd = cmd,
-+	};
-+	va_list va;
-+	int i;
-+
-+	nargs = nargs <= UCALL_MAX_ARGS ? nargs : UCALL_MAX_ARGS;
-+
-+	va_start(va, nargs);
-+	for (i = 0; i < nargs; ++i)
-+		uc.args[i] = va_arg(va, uint64_t);
-+	va_end(va);
-+
-+	/* Exit via DIAGNOSE 0x501 (normally used for breakpoints) */
-+	asm volatile ("diag 0,%0,0x501" : : "a"(&uc) : "memory");
-+}
-+
-+uint64_t get_ucall(struct kvm_vm *vm, uint32_t vcpu_id, struct ucall *uc)
-+{
-+	struct kvm_run *run = vcpu_state(vm, vcpu_id);
-+	struct ucall ucall = {};
-+
-+	if (run->exit_reason == KVM_EXIT_S390_SIEIC &&
-+	    run->s390_sieic.icptcode == 4 &&
-+	    (run->s390_sieic.ipa >> 8) == 0x83 &&    /* 0x83 means DIAGNOSE */
-+	    (run->s390_sieic.ipb >> 16) == 0x501) {
-+		int reg = run->s390_sieic.ipa & 0xf;
-+
-+		memcpy(&ucall, addr_gva2hva(vm, run->s.regs.gprs[reg]),
-+		       sizeof(ucall));
-+
-+		vcpu_run_complete_io(vm, vcpu_id);
-+		if (uc)
-+			memcpy(uc, &ucall, sizeof(ucall));
-+	}
-+
-+	return ucall.cmd;
-+}
-diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
-index e85ff0d69548..bbc93094519b 100644
---- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
-+++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
-@@ -25,9 +25,11 @@
- 
- static void guest_code(void)
- {
-+	register u64 stage asm("11") = 0;
-+
- 	for (;;) {
--		asm volatile ("diag 0,0,0x501");
--		asm volatile ("ahi 11,1");
-+		GUEST_SYNC(0);
-+		asm volatile ("ahi %0,1" : : "r"(stage));
- 	}
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 9b274fcaacb6..f99a5f546e5e 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -674,6 +674,7 @@ static inline int pud_none(pud_t pud)
+ 	return pud_val(pud) == _REGION3_ENTRY_EMPTY;
  }
  
++#define pud_leaf	pud_large
+ static inline int pud_large(pud_t pud)
+ {
+ 	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
+@@ -691,6 +692,7 @@ static inline unsigned long pud_pfn(pud_t pud)
+ 	return (pud_val(pud) & origin_mask) >> PAGE_SHIFT;
+ }
+ 
++#define pmd_leaf	pmd_large
+ static inline int pmd_large(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_LARGE) != 0;
 -- 
-2.21.0
+2.20.1
 
