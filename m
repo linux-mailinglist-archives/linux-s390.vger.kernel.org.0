@@ -2,56 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74B7A7BFFE
-	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 13:33:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BBA27C035
+	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 13:40:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727235AbfGaLc2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 31 Jul 2019 07:32:28 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:40390 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726231AbfGaLc1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 31 Jul 2019 07:32:27 -0400
-Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
-        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1hsmqA-00052w-Du; Wed, 31 Jul 2019 21:32:18 +1000
-Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1hsmq8-0005UF-82; Wed, 31 Jul 2019 21:32:16 +1000
-Date:   Wed, 31 Jul 2019 21:32:16 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-Message-ID: <20190731113216.GA21068@gondor.apana.org.au>
-References: <20190731163915.3fdfcb14@canb.auug.org.au>
- <20190731085819.GA3488@osiris>
- <20190731110816.GA20753@gondor.apana.org.au>
- <20190731111520.GC3488@osiris>
+        id S1727201AbfGaLkU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 31 Jul 2019 07:40:20 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54426 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727086AbfGaLkU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 31 Jul 2019 07:40:20 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4AF45AF04;
+        Wed, 31 Jul 2019 11:40:17 +0000 (UTC)
+Date:   Wed, 31 Jul 2019 13:40:16 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Hoan Tran OS <hoan@os.amperecomputing.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Open Source Submission <patches@amperecomputing.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        "willy@infradead.org" <willy@infradead.org>
+Subject: Re: [PATCH v2 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+Message-ID: <20190731114016.GI9330@dhcp22.suse.cz>
+References: <20190712070247.GM29483@dhcp22.suse.cz>
+ <586ae736-a429-cf94-1520-1a94ffadad88@os.amperecomputing.com>
+ <20190712121223.GR29483@dhcp22.suse.cz>
+ <20190712143730.au3662g4ua2tjudu@willie-the-truck>
+ <20190712150007.GU29483@dhcp22.suse.cz>
+ <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
+ <20190730081415.GN9330@dhcp22.suse.cz>
+ <20190731062420.GC21422@rapoport-lnx>
+ <20190731080309.GZ9330@dhcp22.suse.cz>
+ <20190731111422.GA14538@rapoport-lnx>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190731111520.GC3488@osiris>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190731111422.GA14538@rapoport-lnx>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 01:15:20PM +0200, Heiko Carstens wrote:
->
-> However that doesn't fix the simd.h header file breakage with the
-> second patch :)
+On Wed 31-07-19 14:14:22, Mike Rapoport wrote:
+> On Wed, Jul 31, 2019 at 10:03:09AM +0200, Michal Hocko wrote:
+> > On Wed 31-07-19 09:24:21, Mike Rapoport wrote:
+> > > [ sorry for a late reply too, somehow I missed this thread before ]
+> > > 
+> > > On Tue, Jul 30, 2019 at 10:14:15AM +0200, Michal Hocko wrote:
+> > > > [Sorry for a late reply]
+> > > > 
+> > > > On Mon 15-07-19 17:55:07, Hoan Tran OS wrote:
+> > > > > Hi,
+> > > > > 
+> > > > > On 7/12/19 10:00 PM, Michal Hocko wrote:
+> > > > [...]
+> > > > > > Hmm, I thought this was selectable. But I am obviously wrong here.
+> > > > > > Looking more closely, it seems that this is indeed only about
+> > > > > > __early_pfn_to_nid and as such not something that should add a config
+> > > > > > symbol. This should have been called out in the changelog though.
+> > > > > 
+> > > > > Yes, do you have any other comments about my patch?
+> > > > 
+> > > > Not really. Just make sure to explicitly state that
+> > > > CONFIG_NODES_SPAN_OTHER_NODES is only about __early_pfn_to_nid and that
+> > > > doesn't really deserve it's own config and can be pulled under NUMA.
+> > > > 
+> > > > > > Also while at it, does HAVE_MEMBLOCK_NODE_MAP fall into a similar
+> > > > > > bucket? Do we have any NUMA architecture that doesn't enable it?
+> > > > > > 
+> > > 
+> > > HAVE_MEMBLOCK_NODE_MAP makes huge difference in node/zone initialization
+> > > sequence so it's not only about a singe function.
+> > 
+> > The question is whether we want to have this a config option or enable
+> > it unconditionally for each NUMA system.
+> 
+> We can make it 'default NUMA', but we can't drop it completely because
+> microblaze uses sparse_memory_present_with_active_regions() which is
+> unavailable when HAVE_MEMBLOCK_NODE_MAP=n.
 
-That fix should be there now too.
-
-Thanks,
+I suppose you mean that microblaze is using
+sparse_memory_present_with_active_regions even without CONFIG_NUMA,
+right? I have to confess I do not understand that code. What is the deal
+with setting node id there?
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Michal Hocko
+SUSE Labs
