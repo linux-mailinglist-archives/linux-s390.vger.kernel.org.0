@@ -2,143 +2,150 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59BC97BE67
-	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 12:29:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B70737BEA8
+	for <lists+linux-s390@lfdr.de>; Wed, 31 Jul 2019 12:50:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387573AbfGaK3C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 31 Jul 2019 06:29:02 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60684 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387399AbfGaK3C (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 31 Jul 2019 06:29:02 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 44D6EC01DE0D;
-        Wed, 31 Jul 2019 10:29:01 +0000 (UTC)
-Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F173019C70;
-        Wed, 31 Jul 2019 10:28:51 +0000 (UTC)
-Date:   Wed, 31 Jul 2019 12:28:49 +0200
-From:   Andrew Jones <drjones@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     kvm@vger.kernel.org,
+        id S2387855AbfGaKux (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 31 Jul 2019 06:50:53 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13368 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387852AbfGaKuw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 31 Jul 2019 06:50:52 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x6VAnuss013471
+        for <linux-s390@vger.kernel.org>; Wed, 31 Jul 2019 06:50:52 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u39k4818t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 31 Jul 2019 06:50:51 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Wed, 31 Jul 2019 11:50:47 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 31 Jul 2019 11:50:42 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x6VAoO2a36831616
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 31 Jul 2019 10:50:24 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 35FC8A4059;
+        Wed, 31 Jul 2019 10:50:41 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC671A4055;
+        Wed, 31 Jul 2019 10:50:40 +0000 (GMT)
+Received: from osiris (unknown [9.152.212.134])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 31 Jul 2019 10:50:40 +0000 (GMT)
+Date:   Wed, 31 Jul 2019 12:50:39 +0200
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "David S. Miller" <davem@davemloft.net>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Shuah Khan <shuah@kernel.org>, Peter Xu <peterx@redhat.com>
-Subject: Re: [PATCH 1/2] KVM: selftests: Implement ucall() for s390x
-Message-ID: <20190731102849.x26rdan7cddmpvhe@kamzik.brq.redhat.com>
-References: <20190730100112.18205-1-thuth@redhat.com>
- <20190730100112.18205-2-thuth@redhat.com>
- <20190730104807.7uzuvd52foybakgu@kamzik.brq.redhat.com>
- <d9cb3c86-6390-3803-f2c6-d47f5c24139f@redhat.com>
+        Kai =?iso-8859-1?Q?M=E4kisara?= <Kai.Makisara@kolumbus.fi>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        linux-ide@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-scsi@vger.kernel.org
+Subject: Re: [PATCH v5 15/29] compat_ioctl: move tape handling into drivers
+References: <20190730192552.4014288-1-arnd@arndb.de>
+ <20190730195819.901457-1-arnd@arndb.de>
+ <20190730195819.901457-3-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d9cb3c86-6390-3803-f2c6-d47f5c24139f@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 31 Jul 2019 10:29:01 +0000 (UTC)
+In-Reply-To: <20190730195819.901457-3-arnd@arndb.de>
+X-TM-AS-GCONF: 00
+x-cbid: 19073110-0008-0000-0000-000003028EAC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19073110-0009-0000-0000-0000227033BB
+Message-Id: <20190731105039.GB3488@osiris>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-07-31_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=664 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1907310112
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 11:43:16AM +0200, Thomas Huth wrote:
-> On 30/07/2019 12.48, Andrew Jones wrote:
-> > On Tue, Jul 30, 2019 at 12:01:11PM +0200, Thomas Huth wrote:
-> >> On s390x, we can neither exit via PIO nor MMIO, but have to use
-> >> an instruction like DIAGNOSE. While we're at it, rename UCALL_PIO
-> >> to UCALL_DEFAULT, since PIO only works on x86 anyway, and this
-> >> way we can re-use the "default" type for the DIAGNOSE exit on s390x.
-> >>
-> >> Now that ucall() is implemented, we can use it in the sync_reg_test
-> >> on s390x, too.
-> >>
-> >> Signed-off-by: Thomas Huth <thuth@redhat.com>
-> >> ---
-> >>  .../testing/selftests/kvm/include/kvm_util.h  |  2 +-
-> >>  tools/testing/selftests/kvm/lib/ucall.c       | 34 +++++++++++++++----
-> >>  .../selftests/kvm/s390x/sync_regs_test.c      |  6 ++--
-> >>  3 files changed, 32 insertions(+), 10 deletions(-)
-> >>
-> >> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
-> >> index e0e66b115ef2..c37aea2e33e5 100644
-> >> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> >> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> >> @@ -167,7 +167,7 @@ int vm_create_device(struct kvm_vm *vm, struct kvm_create_device *cd);
-> >>  
-> >>  /* ucall implementation types */
-> >>  typedef enum {
-> >> -	UCALL_PIO,
-> >> +	UCALL_DEFAULT,
-> > 
-> > I'd rather we keep explicit types defined; keep PIO and add DIAG. Then
-> > we can have
-> > 
-> > /*  Set default ucall types */
-> > #if defined(__x86_64__)
-> >   ucall_type = UCALL_PIO;
-> > #elif defined(__aarch64__)
-> >   ucall_type = UCALL_MMIO;
-> >   ucall_requires_init = true;
-> > #elif defined(__s390x__)
-> >   ucall_type = UCALL_DIAG;
-> > #endif
-> > 
-> > And add an assert in get_ucall()
-> > 
-> >  assert(!ucall_requires_init || ucall_initialized);
+On Tue, Jul 30, 2019 at 09:55:31PM +0200, Arnd Bergmann wrote:
+> MTIOCPOS and MTIOCGET are incompatible between 32-bit and 64-bit user
+> space, and traditionally have been translated in fs/compat_ioctl.c.
 > 
-> I'm not sure whether I really like that. It's yet another additional
-> #ifdef block, and yet another variable ...
+> To get rid of that translation handler, move a corresponding
+> implementation into each of the four drivers implementing those commands.
 > 
-> What do you think about removing the enum completely and simply code it
-> directly, without the ucall_type indirection, i.e.:
+> The interesting part of that is now in a new linux/mtio.h header that
+> wraps the existing uapi/linux/mtio.h header and provides an abstraction
+> to let drivers handle both cases easily. Using an in_compat_syscall()
+> check, the caller does not have to keep track of whether this was
+> called through .unlocked_ioctl() or .compat_ioctl().
 > 
-> void ucall(uint64_t cmd, int nargs, ...)
-> {
-> 	struct ucall uc = {
-> 		.cmd = cmd,
-> 	};
-> 	va_list va;
-> 	int i;
-> 
-> 	nargs = nargs <= UCALL_MAX_ARGS ? nargs : UCALL_MAX_ARGS;
-> 
-> 	va_start(va, nargs);
-> 	for (i = 0; i < nargs; ++i)
-> 		uc.args[i] = va_arg(va, uint64_t);
-> 	va_end(va);
-> 
-> #if defined(__x86_64__)
-> 
-> 	/* Exit via PIO */
-> 	asm volatile("in %[port], %%al"
-> 		: : [port] "d" (UCALL_PIO_PORT), "D" (&uc) : "rax");
-> 
-> #elif defined(__aarch64__)
-> 
-> 	*ucall_exit_mmio_addr = (vm_vaddr_t)&uc;
-> 
-> #elif defined(__s390x__)
-> 
-> 	/* Exit via DIAGNOSE 0x501 (normally used for breakpoints) */
-> 	asm volatile ("diag 0,%0,0x501" : : "a"(&uc) : "memory");
-> 
-> #endif
-> }
-> 
-> I think that's way less confusing than having to understand the meaning
-> of ucall_type etc. before...?
->
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-Sounds good to me.
+Besides the two minor things below
 
-Thanks,
-drew 
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+
+> diff --git a/include/linux/mtio.h b/include/linux/mtio.h
+> new file mode 100644
+> index 000000000000..fa2783fd37d1
+> --- /dev/null
+> +++ b/include/linux/mtio.h
+> @@ -0,0 +1,59 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _LINUX_MTIO_COMPAT_H
+> +#define _LINUX_MTIO_COMPAT_H
+> +
+> +#include <linux/compat.h>
+> +#include <uapi/linux/mtio.h>
+> +#include <linux/uaccess.h>
+> +
+> +/*
+> + * helper functions for implementing compat ioctls on the four tape
+> + * drivers: we define the 32-bit layout of each incompatible strucucture,
+
+typo: structure
+
+> + * plus a wrapper function to copy it to user space in either format.
+> + */
+> +
+> +struct	mtget32 {
+> +	s32	mt_type;
+> +	s32	mt_resid;
+> +	s32	mt_dsreg;
+> +	s32	mt_gstat;
+> +	s32	mt_erreg;
+> +	s32	mt_fileno;
+> +	s32	mt_blkno;
+> +};
+> +#define	MTIOCGET32	_IOR('m', 2, struct mtget32)
+> +
+> +struct	mtpos32 {
+> +	s32 	mt_blkno;
+> +};
+> +#define	MTIOCPOS32	_IOR('m', 3, struct mtpos32)
+> +
+> +static inline int put_user_mtget(void __user *u, struct mtget *k)
+> +{
+> +	struct mtget32 k32 = {
+> +		.mt_type   = k->mt_type,
+> +		.mt_resid  = k->mt_resid,
+> +		.mt_dsreg  = k->mt_dsreg,
+> +		.mt_gstat  = k->mt_gstat,
+> +		.mt_fileno = k->mt_fileno,
+> +		.mt_blkno  = k->mt_blkno,
+> +	};
+
+mt_erreg is missing here.
+
