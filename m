@@ -2,145 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD6157DFA7
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2019 18:02:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C63357E116
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2019 19:29:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727899AbfHAQAa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Aug 2019 12:00:30 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46452 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729117AbfHAQAa (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 1 Aug 2019 12:00:30 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7FF1DAC2E;
-        Thu,  1 Aug 2019 16:00:27 +0000 (UTC)
-Message-ID: <ed5388412df78ad0a9ed69cdf3ac716eac075141.camel@suse.de>
-Subject: Re: [PATCH 6/8] dma-direct: turn ARCH_ZONE_DMA_BITS into a variable
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     catalin.marinas@arm.com, wahrenst@gmx.net, marc.zyngier@arm.com,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
-        iommu@lists.linux-foundation.org, linux-mm@kvack.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org, eric@anholt.net,
-        mbrugger@suse.com, akpm@linux-foundation.org,
-        frowand.list@gmail.com, linux-rpi-kernel@lists.infradead.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
-Date:   Thu, 01 Aug 2019 17:59:34 +0200
-In-Reply-To: <20190801140452.GB23435@lst.de>
-References: <20190731154752.16557-1-nsaenzjulienne@suse.de>
-         <20190731154752.16557-7-nsaenzjulienne@suse.de>
-         <20190801140452.GB23435@lst.de>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-1xpVXG9aO5tI8LW1PkIr"
-User-Agent: Evolution 3.32.4 
+        id S1732699AbfHAR3J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Aug 2019 13:29:09 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40910 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729220AbfHAR3I (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Aug 2019 13:29:08 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r1so74423027wrl.7
+        for <linux-s390@vger.kernel.org>; Thu, 01 Aug 2019 10:29:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V7iES048LQCKT01wi1ZH6mu+llZ9u5BBJ+ptxxo4m+U=;
+        b=WoHkVxtXyOlDI8FIrsWX+mKng5MgkynwGfd/EiStmKxt5ZmRGwagRY65HZ1D/QQNaj
+         v4dQ3o6i+FbowNs5iKg+uUWIfd1LDUikpWW4Stm6hL/a+dh8l98sjXdIoUQ2DGyWdW9D
+         VwHTiK6m88q/cO6xDvrUQ3OVGBezKVCugRm52n40mmP1+TOql/Ahky5a7rBp1QesQTNr
+         ygTczmDMsij0pflEsuxDve0CwQVXOUzBdxX9X7P85zCpzUJm9RBRhz9BJuFUaEuWCUHT
+         KkHtw/5RQDWhEyUF3UuSCcNG0QKqk09Oq1fURsscjTBaMQlUlp96ZULSpZUEU0G2IdcC
+         sziQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V7iES048LQCKT01wi1ZH6mu+llZ9u5BBJ+ptxxo4m+U=;
+        b=HLKE79RmDm2Z2Mn8YtCwVqVhjYvVg1C2aroL6huM4P7eg/nOI4Jyr/exTyOfJtb20z
+         hX+K6CAem+JCVYKJxLpRfa69SbVQixE9IsaNkkPHZqqn+e6oPH0kSmxnRkSwGowlvtfu
+         7/y4iuD6Fyu0r/igfTEJHP0dXphwL8rLdGN1u6fz5R/cA8rDm8QLny3dl/5EHpaT/VNa
+         KnWEkYNEkTyDxVWPt+sKT8pFfbgk93sAmxzU4ixOYGmuaWgH984BLYBYQHZ97TEa+04L
+         ltgXeAeABgl02ZA3xOsqSAeF+kbusrU8mdhsB1q++3ykZUdpus2NXURGyilAS0eRgZ7G
+         9C3w==
+X-Gm-Message-State: APjAAAUv4TWyzJapiL3dPqgyPJaXuzIy6FqaiuWlgxl8USkW7j8ncd1t
+        CM2BxwN+5MV8eTEoqfwpoG59JLkan5cQ+1uJ9+tiAw==
+X-Google-Smtp-Source: APXvYqwQ4BT46vMcwoHkV6Gc8YIsZiFmZw8/ASpSzzC9Tz3z1i9lnwO696CATx2wOyOHjR2u5qFB2fR3Zp04ForpvZs=
+X-Received: by 2002:a5d:6b07:: with SMTP id v7mr31905638wrw.169.1564680546461;
+ Thu, 01 Aug 2019 10:29:06 -0700 (PDT)
 MIME-Version: 1.0
+References: <20190731163915.3fdfcb14@canb.auug.org.au> <20190731085819.GA3488@osiris>
+ <20190731110816.GA20753@gondor.apana.org.au> <20190731111520.GC3488@osiris>
+ <20190731113216.GA21068@gondor.apana.org.au> <20190731114453.GD3488@osiris> <20190801122849.GB4163@osiris>
+In-Reply-To: <20190801122849.GB4163@osiris>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Thu, 1 Aug 2019 20:28:56 +0300
+Message-ID: <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Patrick Steuer <steuer@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, 1 Aug 2019 at 15:28, Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
+>
+> On Wed, Jul 31, 2019 at 01:44:54PM +0200, Heiko Carstens wrote:
+> > On Wed, Jul 31, 2019 at 09:32:16PM +1000, Herbert Xu wrote:
+> > > On Wed, Jul 31, 2019 at 01:15:20PM +0200, Heiko Carstens wrote:
+> > > >
+> > > > However that doesn't fix the simd.h header file breakage with the
+> > > > second patch :)
+> > >
+> > > That fix should be there now too.
+> >
+> > Yes, works now. Thank you!
+>
+> Still not... with linux-next as of today I get this (s390 defconfig):
+>
+> ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
+> ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
+> ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
+> scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
+>
 
---=-1xpVXG9aO5tI8LW1PkIr
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Hello Heiko,
 
-Hi Christoph, thanks for the review.
+Apologies for the breakage. The first two fixes addressed obvious
+shortcomings in my code, but with this issue, I'm a bit puzzled tbh.
+The calls to these missing functions should be optimized away, since
+have_simd never gets assigned if CONFIG_CRYPTO_AEGIS128_SIMD is not
+defined, but for some reason, this isn't working. Which version of GCC
+are you using?
 
-On Thu, 2019-08-01 at 16:04 +0200, Christoph Hellwig wrote:
-> A few nitpicks, otherwise this looks great:
->=20
-> > @@ -201,7 +202,7 @@ static int __init mark_nonram_nosave(void)
-> >   * everything else. GFP_DMA32 page allocations automatically fall back=
- to
-> >   * ZONE_DMA.
-> >   *
-> > - * By using 31-bit unconditionally, we can exploit ARCH_ZONE_DMA_BITS =
-to
-> > + * By using 31-bit unconditionally, we can exploit arch_zone_dma_bits =
-to
-> >   * inform the generic DMA mapping code.  32-bit only devices (if not
-> > handled
-> >   * by an IOMMU anyway) will take a first dip into ZONE_NORMAL and get
-> >   * otherwise served by ZONE_DMA.
-> > @@ -237,9 +238,18 @@ void __init paging_init(void)
-> >  	printk(KERN_DEBUG "Memory hole size: %ldMB\n",
-> >  	       (long int)((top_of_ram - total_ram) >> 20));
-> > =20
-> > +	/*
-> > +	 * Allow 30-bit DMA for very limited Broadcom wifi chips on many
-> > +	 * powerbooks.
-> > +	 */
-> > +	if (IS_ENABLED(CONFIG_PPC32))
-> > +		arch_zone_dma_bits =3D 30;
-> > +	else
-> > +		arch_zone_dma_bits =3D 31;
-> > +
->=20
-> So the above unconditionally comment obviously isn't true any more, and
-> Ben also said for the recent ppc32 hack he'd prefer dynamic detection.
->=20
-> Maybe Ben and or other ppc folks can chime in an add a patch to the serie=
-s
-> to sort this out now that we have a dynamic ZONE_DMA threshold?
+Also, could you please try whether the patch below fixes the problem? Thanks
 
-Noted, for now I'll remove the comment.
-
-> > diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-> > index 59bdceea3737..40dfc9b4ee4c 100644
-> > --- a/kernel/dma/direct.c
-> > +++ b/kernel/dma/direct.c
-> > @@ -19,9 +19,7 @@
-> >   * Most architectures use ZONE_DMA for the first 16 Megabytes, but
-> >   * some use it for entirely different regions:
-> >   */
-> > -#ifndef ARCH_ZONE_DMA_BITS
-> > -#define ARCH_ZONE_DMA_BITS 24
-> > -#endif
-> > +unsigned int arch_zone_dma_bits __ro_after_init =3D 24;
->=20
-> I'd prefer to drop the arch_ prefix and just calls this zone_dma_bits.
-> In the long run we really need to find a way to just automatically set
-> this from the meminit code, but that is out of scope for this series.
-> For now can you please just update the comment above to say something
-> like:
->=20
-> /*
->  * Most architectures use ZONE_DMA for the first 16 Megabytes, but some u=
-se it
->  * it for entirely different regions.  In that case the arch code needs t=
-o
->  * override the variable below for dma-direct to work properly.
->  */
-
-Ok perfect.
-
-
---=-1xpVXG9aO5tI8LW1PkIr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl1DDGYACgkQlfZmHno8
-x/7w9wgAsuuhgVK1nlC7WgrB2sfSYqL6HTJlDfkLJ2RMgzu/WSw4RJsje86on5R9
-NmRSTVntXnCdpTNiKcSEKP7MnrVtMh2TtopfTOCvgho/uDJsc4DPAqZaLHO4quzo
-ZfimsWkcpC6n/E8ybEcew+6U7BIyqJPtqxgdkXz98gLQ1NK1wJU2x0Gt+KXT5a/0
-hR3hA3whz8yIe4hwQTEiAzX/LnSP8+Yp+g1LLFjYveqt2RUbfC/udykYkLS7LdoO
-SJ6j5S/1jRpvusBjENkY3PQiRGrhfRnT4qxVSdpkK/rMG6pLMW4l9YjfbQCLOFhn
-8qxZKNifDs1KxpZjExjd4Lisum4nhw==
-=nw8i
------END PGP SIGNATURE-----
-
---=-1xpVXG9aO5tI8LW1PkIr--
-
+https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuvel@linaro.org/
