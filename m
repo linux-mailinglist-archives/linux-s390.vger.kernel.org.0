@@ -2,96 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 399A17DB75
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2019 14:29:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CC4E7DD4B
+	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2019 16:04:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729506AbfHAM3C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Aug 2019 08:29:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6954 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728800AbfHAM3C (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Aug 2019 08:29:02 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x71CSt5t084616
-        for <linux-s390@vger.kernel.org>; Thu, 1 Aug 2019 08:29:01 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u3yseh3xq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 01 Aug 2019 08:29:00 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Thu, 1 Aug 2019 13:28:56 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 1 Aug 2019 13:28:53 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x71CSpCO32637432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 1 Aug 2019 12:28:51 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 59FDEA405B;
-        Thu,  1 Aug 2019 12:28:51 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0EFABA4067;
-        Thu,  1 Aug 2019 12:28:51 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.134])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  1 Aug 2019 12:28:50 +0000 (GMT)
-Date:   Thu, 1 Aug 2019 14:28:49 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-References: <20190731163915.3fdfcb14@canb.auug.org.au>
- <20190731085819.GA3488@osiris>
- <20190731110816.GA20753@gondor.apana.org.au>
- <20190731111520.GC3488@osiris>
- <20190731113216.GA21068@gondor.apana.org.au>
- <20190731114453.GD3488@osiris>
+        id S1730664AbfHAOE5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Aug 2019 10:04:57 -0400
+Received: from verein.lst.de ([213.95.11.211]:43759 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730581AbfHAOE5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 1 Aug 2019 10:04:57 -0400
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 5620168AFE; Thu,  1 Aug 2019 16:04:52 +0200 (CEST)
+Date:   Thu, 1 Aug 2019 16:04:52 +0200
+From:   Christoph Hellwig <hch@lst.de>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     catalin.marinas@arm.com, hch@lst.de, wahrenst@gmx.net,
+        marc.zyngier@arm.com, Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        iommu@lists.linux-foundation.org, linux-mm@kvack.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        phill@raspberryi.org, f.fainelli@gmail.com, will@kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org, eric@anholt.net,
+        mbrugger@suse.com, akpm@linux-foundation.org,
+        frowand.list@gmail.com, linux-rpi-kernel@lists.infradead.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 6/8] dma-direct: turn ARCH_ZONE_DMA_BITS into a variable
+Message-ID: <20190801140452.GB23435@lst.de>
+References: <20190731154752.16557-1-nsaenzjulienne@suse.de> <20190731154752.16557-7-nsaenzjulienne@suse.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190731114453.GD3488@osiris>
-X-TM-AS-GCONF: 00
-x-cbid: 19080112-4275-0000-0000-00000352BFAA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080112-4276-0000-0000-00003863B24B
-Message-Id: <20190801122849.GB4163@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-01_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908010131
+In-Reply-To: <20190731154752.16557-7-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jul 31, 2019 at 01:44:54PM +0200, Heiko Carstens wrote:
-> On Wed, Jul 31, 2019 at 09:32:16PM +1000, Herbert Xu wrote:
-> > On Wed, Jul 31, 2019 at 01:15:20PM +0200, Heiko Carstens wrote:
-> > >
-> > > However that doesn't fix the simd.h header file breakage with the
-> > > second patch :)
-> > 
-> > That fix should be there now too.
-> 
-> Yes, works now. Thank you!
+A few nitpicks, otherwise this looks great:
 
-Still not... with linux-next as of today I get this (s390 defconfig):
+> @@ -201,7 +202,7 @@ static int __init mark_nonram_nosave(void)
+>   * everything else. GFP_DMA32 page allocations automatically fall back to
+>   * ZONE_DMA.
+>   *
+> - * By using 31-bit unconditionally, we can exploit ARCH_ZONE_DMA_BITS to
+> + * By using 31-bit unconditionally, we can exploit arch_zone_dma_bits to
+>   * inform the generic DMA mapping code.  32-bit only devices (if not handled
+>   * by an IOMMU anyway) will take a first dip into ZONE_NORMAL and get
+>   * otherwise served by ZONE_DMA.
+> @@ -237,9 +238,18 @@ void __init paging_init(void)
+>  	printk(KERN_DEBUG "Memory hole size: %ldMB\n",
+>  	       (long int)((top_of_ram - total_ram) >> 20));
+>  
+> +	/*
+> +	 * Allow 30-bit DMA for very limited Broadcom wifi chips on many
+> +	 * powerbooks.
+> +	 */
+> +	if (IS_ENABLED(CONFIG_PPC32))
+> +		arch_zone_dma_bits = 30;
+> +	else
+> +		arch_zone_dma_bits = 31;
+> +
 
-ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
-ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
+So the above unconditionally comment obviously isn't true any more, and
+Ben also said for the recent ppc32 hack he'd prefer dynamic detection.
 
+Maybe Ben and or other ppc folks can chime in an add a patch to the series
+to sort this out now that we have a dynamic ZONE_DMA threshold?
+
+> diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
+> index 59bdceea3737..40dfc9b4ee4c 100644
+> --- a/kernel/dma/direct.c
+> +++ b/kernel/dma/direct.c
+> @@ -19,9 +19,7 @@
+>   * Most architectures use ZONE_DMA for the first 16 Megabytes, but
+>   * some use it for entirely different regions:
+>   */
+> -#ifndef ARCH_ZONE_DMA_BITS
+> -#define ARCH_ZONE_DMA_BITS 24
+> -#endif
+> +unsigned int arch_zone_dma_bits __ro_after_init = 24;
+
+I'd prefer to drop the arch_ prefix and just calls this zone_dma_bits.
+In the long run we really need to find a way to just automatically set
+this from the meminit code, but that is out of scope for this series.
+For now can you please just update the comment above to say something
+like:
+
+/*
+ * Most architectures use ZONE_DMA for the first 16 Megabytes, but some use it
+ * it for entirely different regions.  In that case the arch code needs to
+ * override the variable below for dma-direct to work properly.
+ */
