@@ -2,90 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5B187EA81
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 04:56:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC1FB7EAB9
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 05:37:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfHBC41 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Aug 2019 22:56:27 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38979 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbfHBC40 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Aug 2019 22:56:26 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b7so33087394pls.6
-        for <linux-s390@vger.kernel.org>; Thu, 01 Aug 2019 19:56:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=BvkY4aVBVPfmgyNrK1xBM8Fg1dpebDjbELoJMy6SXxI=;
-        b=fEkUMSb8f0VAD/xcGka5xQk7/E6jRDQogO9opCbYglQs6NjrKOX44pm2RKm+zwT1W4
-         Mqvow+9ZBifiKM8Bhf4C2nAVjnTcvkJIldn+kS5xB3NVmk5dGX++Bcr87eLoX0L1kdY4
-         hmNwPudcy8RJlOL+HDls7F+LHPUB84lhlq4edLEVljT8UyPFE2p46H63IiD+LZj70ZxQ
-         A2G/tonzfkrMXh9QYsx5TWYHDcz9QrLqibOfR6qAWA8O4om8CYrBPBL2jVzxRX+Z6Wzy
-         chtYca2cRhes4z2MK5kKL7JUi00FDWFvcjAi/bgpO6Exv2DUhZcxUELO7ikwGTT5tLL4
-         rfAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=BvkY4aVBVPfmgyNrK1xBM8Fg1dpebDjbELoJMy6SXxI=;
-        b=PyZXBT5KiiUwQtKxnpSizHnCk6XfaGG4xpByO0X+bIpm+gemTFGAriYL4PgeoHEi9s
-         GnBPCdtF86KK2+u7yiyrIg5PLDkX2qrdz1XXvMLBckinw+sJuB7ezF5OIRBKRVkBK5WN
-         EAersObHI/P/bSgIYBHQLhyWbQisbMMGhZDR0qWO8mUCOSMQ24JqxvBCNYU0ZCBK5sjQ
-         hGGsqrYO0O2GLfu3mHpI5Q4RatkuUyGQc185Pjvph9aJk/TrYGUcjq9ZQGxmHsOIRcrR
-         gFytjoky2cuSYUb423KTh6JAwgaRTvbjlsGoUqo49heX7VgQ2tOPTa6y1fc25uJ2Pqwu
-         70Lg==
-X-Gm-Message-State: APjAAAWm/RfCC82Ada8jioYW347TfZESwSTWvaI9j08o5B223Mwp8NTP
-        803wNWM3C3geKL+zamwp+4M=
-X-Google-Smtp-Source: APXvYqy8GNhUeLTLw/HJEURnHibq3O3UhDOV9vTMK2iJwmC7Cez4RItwvtxsxOo4Vsu7fmErZFtYVg==
-X-Received: by 2002:a17:902:7d86:: with SMTP id a6mr128929986plm.199.1564714074979;
-        Thu, 01 Aug 2019 19:47:54 -0700 (PDT)
-Received: from [192.168.200.229] (rrcs-76-80-14-36.west.biz.rr.com. [76.80.14.36])
-        by smtp.gmail.com with ESMTPSA id p2sm100756471pfb.118.2019.08.01.19.47.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Thu, 01 Aug 2019 19:47:53 -0700 (PDT)
-Subject: Re: [PATCH 1/1] s390/dasd: fix endless loop after read unit address
- configuration
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
-        hoeppner@linux.ibm.com, heiko.carstens@de.ibm.com,
-        borntraeger@de.ibm.com, gor@linux.ibm.com
-References: <20190801110630.82432-1-sth@linux.ibm.com>
- <20190801110630.82432-2-sth@linux.ibm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <20c4971d-68cd-b4d0-fb40-deef771602b1@kernel.dk>
-Date:   Thu, 1 Aug 2019 20:47:51 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730273AbfHBDh1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Aug 2019 23:37:27 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:48362 "EHLO fornost.hmeau.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726574AbfHBDh1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 1 Aug 2019 23:37:27 -0400
+Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
+        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
+        id 1htO1I-0004SL-NH; Fri, 02 Aug 2019 13:14:16 +1000
+Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
+        (envelope-from <herbert@gondor.apana.org.au>)
+        id 1htO1G-0003xg-Hf; Fri, 02 Aug 2019 13:14:14 +1000
+Date:   Fri, 2 Aug 2019 13:14:14 +1000
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Patrick Steuer <steuer@linux.ibm.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
+Message-ID: <20190802031414.GB14879@gondor.apana.org.au>
+References: <20190731163915.3fdfcb14@canb.auug.org.au>
+ <20190731085819.GA3488@osiris>
+ <20190731110816.GA20753@gondor.apana.org.au>
+ <20190731111520.GC3488@osiris>
+ <20190731113216.GA21068@gondor.apana.org.au>
+ <20190731114453.GD3488@osiris>
+ <20190801122849.GB4163@osiris>
+ <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+ <20190802102019.6a789c51@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190801110630.82432-2-sth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190802102019.6a789c51@canb.auug.org.au>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 8/1/19 5:06 AM, Stefan Haberland wrote:
-> After getting a storage server event that causes the DASD device driver
-> to update its unit address configuration during a device shutdown there is
-> the possibility of an endless loop in the device driver.
-> 
-> In the system log there will be ongoing DASD error messages with RC: -19.
-> 
-> The reason is that the loop starting the ruac request only terminates when
-> the retry counter is decreased to 0. But in the sleep_on function there are
-> early exit paths that do not decrease the retry counter.
-> 
-> Prevent an endless loop by handling those cases separately.
-> 
-> Remove the unnecessary do..while loop since the sleep_on function takes
-> care of retries by itself.
+Hi Stephen:
 
-Applied for 5.3, thanks.
+On Fri, Aug 02, 2019 at 10:20:19AM +1000, Stephen Rothwell wrote:
+>
+> It might be time to revert all this series and try again.  The
+> implementation seems to have not been well thought through from a kernel
+> building point of view.  For a start the two commits
+> 
+>   7cdc0ddbf74a ("crypto: aegis128 - add support for SIMD acceleration")
+>   ecc8bc81f2fb ("crypto: aegis128 - provide a SIMD implementation based on NEON intrinsics")
 
+I think the idea was that it would get optimised out if the
+implementation is absent which is why it was meant to work in
+this order.  But oviously as we have found out this didn't work.
+
+Ard, I think relying on the compiler to optimise something out based
+on an assignment within an if statement is just too error-prone.
+We'll need a different mechanism for this.
+
+For now I'm going to back out those two specific patches as the
+rest seem to be valid by themselves.
+
+Thanks,
 -- 
-Jens Axboe
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
