@@ -2,67 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D01D77ECE4
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 08:51:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CA5BB7EE9E
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 10:17:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389081AbfHBGvC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 2 Aug 2019 02:51:02 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:49158 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389053AbfHBGvC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 2 Aug 2019 02:51:02 -0400
-Received: from gondolin.me.apana.org.au ([192.168.0.6] helo=gondolin.hengli.com.au)
-        by fornost.hmeau.com with esmtps (Exim 4.89 #2 (Debian))
-        id 1htROu-0007m9-9r; Fri, 02 Aug 2019 16:50:52 +1000
-Received: from herbert by gondolin.hengli.com.au with local (Exim 4.80)
-        (envelope-from <herbert@gondor.apana.org.au>)
-        id 1htROs-00053c-Ht; Fri, 02 Aug 2019 16:50:50 +1000
-Date:   Fri, 2 Aug 2019 16:50:50 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-Message-ID: <20190802065050.GC19278@gondor.apana.org.au>
-References: <20190731085819.GA3488@osiris>
- <20190731110816.GA20753@gondor.apana.org.au>
- <20190731111520.GC3488@osiris>
- <20190731113216.GA21068@gondor.apana.org.au>
- <20190731114453.GD3488@osiris>
- <20190801122849.GB4163@osiris>
- <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
- <20190802102019.6a789c51@canb.auug.org.au>
- <20190802031414.GB14879@gondor.apana.org.au>
- <CAKv+Gu_dohBsU3HN_J8cZBSKakKM61g++K1V0T1CJ6JtkJ8V-A@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAKv+Gu_dohBsU3HN_J8cZBSKakKM61g++K1V0T1CJ6JtkJ8V-A@mail.gmail.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+        id S2404010AbfHBIRB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 2 Aug 2019 04:17:01 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30010 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2404001AbfHBIRB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 2 Aug 2019 04:17:01 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x728GZnx119429
+        for <linux-s390@vger.kernel.org>; Fri, 2 Aug 2019 04:16:59 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4g83b1rf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 02 Aug 2019 04:16:59 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <kgraul@linux.ibm.com>;
+        Fri, 2 Aug 2019 09:16:57 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 2 Aug 2019 09:16:54 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x728GaQj38207954
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 2 Aug 2019 08:16:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E575552051;
+        Fri,  2 Aug 2019 08:16:52 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B1C6C52063;
+        Fri,  2 Aug 2019 08:16:52 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        gor@linux.ibm.com, heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: [PATCH net] net/smc: do not schedule tx_work in SMC_CLOSED state
+Date:   Fri,  2 Aug 2019 10:16:38 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19080208-0008-0000-0000-00000303A53F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19080208-0009-0000-0000-00002272AB24
+Message-Id: <20190802081638.56207-1-kgraul@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908020083
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Aug 02, 2019 at 09:44:43AM +0300, Ard Biesheuvel wrote:
->
-> OK. I will adopt this mechanism [0] after all and resubmit, once I get
-> confirmation from either Voldis or Heiko that this makes the issue go
-> away (given that my local GCC does not reproduce the issue)
-> 
-> [0] https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuvel@linaro.org/
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-Please drop the ifdefs around the header files since we've already
-fixed that.
+The setsockopts options TCP_NODELAY and TCP_CORK may schedule the
+tx worker. Make sure the socket is not yet moved into SMC_CLOSED
+state (for instance by a shutdown SHUT_RDWR call).
 
-Thanks,
+Reported-by: syzbot+92209502e7aab127c75f@syzkaller.appspotmail.com
+Reported-by: syzbot+b972214bb803a343f4fe@syzkaller.appspotmail.com
+Fixes: 01d2f7e2cdd31 ("net/smc: sockopts TCP_NODELAY and TCP_CORK")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+---
+ net/smc/af_smc.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index 302e355f2ebc..f5ea09258ab0 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -1732,14 +1732,18 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
+ 		}
+ 		break;
+ 	case TCP_NODELAY:
+-		if (sk->sk_state != SMC_INIT && sk->sk_state != SMC_LISTEN) {
++		if (sk->sk_state != SMC_INIT &&
++		    sk->sk_state != SMC_LISTEN &&
++		    sk->sk_state != SMC_CLOSED) {
+ 			if (val && !smc->use_fallback)
+ 				mod_delayed_work(system_wq, &smc->conn.tx_work,
+ 						 0);
+ 		}
+ 		break;
+ 	case TCP_CORK:
+-		if (sk->sk_state != SMC_INIT && sk->sk_state != SMC_LISTEN) {
++		if (sk->sk_state != SMC_INIT &&
++		    sk->sk_state != SMC_LISTEN &&
++		    sk->sk_state != SMC_CLOSED) {
+ 			if (!val && !smc->use_fallback)
+ 				mod_delayed_work(system_wq, &smc->conn.tx_work,
+ 						 0);
 -- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+2.21.0
+
