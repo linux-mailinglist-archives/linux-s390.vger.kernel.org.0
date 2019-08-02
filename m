@@ -2,118 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42BA17EF96
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 10:48:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B699E7F6A9
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 14:14:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2404380AbfHBIsK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 2 Aug 2019 04:48:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30138 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731234AbfHBIsK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 2 Aug 2019 04:48:10 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x728lFXu116775
-        for <linux-s390@vger.kernel.org>; Fri, 2 Aug 2019 04:48:09 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u4gx32rqb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 02 Aug 2019 04:48:09 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <kgraul@linux.ibm.com>;
-        Fri, 2 Aug 2019 09:48:06 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 2 Aug 2019 09:48:05 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x728m4oT56688878
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 2 Aug 2019 08:48:04 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31CC9A4051;
-        Fri,  2 Aug 2019 08:48:04 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA378A404D;
-        Fri,  2 Aug 2019 08:48:03 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  2 Aug 2019 08:48:03 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        gor@linux.ibm.com, heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net] net/smc: avoid fallback in case of non-blocking connect
-Date:   Fri,  2 Aug 2019 10:47:50 +0200
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19080208-0028-0000-0000-0000038A55BD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19080208-0029-0000-0000-0000244AAD11
-Message-Id: <20190802084750.5518-1-kgraul@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-02_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908020089
+        id S2392013AbfHBMOs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 2 Aug 2019 08:14:48 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54552 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389277AbfHBMOs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 2 Aug 2019 08:14:48 -0400
+Received: by mail-wm1-f65.google.com with SMTP id p74so67720566wme.4
+        for <linux-s390@vger.kernel.org>; Fri, 02 Aug 2019 05:14:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:mime-version:content-transfer-encoding
+         :content-description:subject:to:from:date:reply-to;
+        bh=59dh0C/7GYpizs9Ea4CwXFyHgTSPzu+Sk+Mf/w7zvgQ=;
+        b=t191fxoaZCpY2ZtrEMD/7fT45LuW2tENvoVJg53+cqVz/JAOgDPgielTiCUsVY/ni1
+         bbjcF/TjErnx9OpOblOPMIMeEZAfXQYtdMjiz+Tk6nKsmF8VczYiYZmvHgyxOrMUEKcs
+         hJg0efsUuROHS9it3iamzYg3/WxmLgP2srp7eCG37s9FUuuSSo1sMyMH8WW1PAZo5q9a
+         Xx2/AXfTOS+AcsHLMLKXVopEKPyitJiRryOa29nJIxkV3cYAa6C2glR5amXpgXhWUyqh
+         6+8UvZQWvZ+p2o+oQgg+BHjKS3xrBntOaZBtYhryAGYVYRLbnqrbPuj89fKzTwbtofPt
+         spow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:content-description:subject:to:from:date
+         :reply-to;
+        bh=59dh0C/7GYpizs9Ea4CwXFyHgTSPzu+Sk+Mf/w7zvgQ=;
+        b=doy2sDPyHy+0gUZBJeo1wkF03eAgPRVodhWfdhn2ZUyP1YFXxP79AzKgxlAKXqbAfu
+         G77r7Pc/zT126ALKp+Gq/S6oYSqWNe0xJl152Bfmqo0Efets0enM3u2uEifX6jVOI5+Y
+         RLDZPR4upsk29G5C7mb4mbj59BLTSM82JTBwGjGxpFMXAs85AYOFK597I4tSgGvgszpx
+         bHtrsqNDB+VpD3SnsUT1cQy1nBYNi1X321uWUJuz3iIh1IUKdz3NLaiQJLugo9tOaQYR
+         1ivffh07Ug91OBYqHn1AAhzfobHYA0HxF6MYnSa9wMX4uYrQrVtIC+7Gyq1AiFhJKPNz
+         TksA==
+X-Gm-Message-State: APjAAAWUbQbksq6eJfgWRGSW/itcqzEJCOYtE6PrfWFtus9AuKIHtaSG
+        nwZVy+iZUvJG5hE74JO1BFXUX7en
+X-Google-Smtp-Source: APXvYqzG2U1IvvXnV5qGDt0iI9keSwE6ZJxZrDa58ujccYsUH6akqqh7J9LASOCy1Do7nMNnSvE31Q==
+X-Received: by 2002:a05:600c:228b:: with SMTP id 11mr4439411wmf.26.1564748086899;
+        Fri, 02 Aug 2019 05:14:46 -0700 (PDT)
+Received: from [192.168.100.16] ([41.210.10.123])
+        by smtp.gmail.com with ESMTPSA id o26sm151465265wro.53.2019.08.02.05.14.43
+        (version=TLS1 cipher=AES128-SHA bits=128/128);
+        Fri, 02 Aug 2019 05:14:46 -0700 (PDT)
+Message-ID: <5d442936.1c69fb81.59e8f.9ab3@mx.google.com>
+Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Gr=C3=BC=C3=9Fe_an_dich=2C_mein_lieber_Freund?=
+To:     Recipients <mariamabdul002@gmail.com>
+From:   "Mariam Abdul" <mariamabdul002@gmail.com>
+Date:   Fri, 02 Aug 2019 05:14:47 -0700
+Reply-To: mismariamabdul@gmail.com
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+Gr=FC=DFe an dich, mein lieber Freund,
 
-FASTOPEN is not possible with SMC. sendmsg() with msg_flag MSG_FASTOPEN
-triggers a fallback to TCP if the socket is in state SMC_INIT.
-But if a nonblocking connect is already started, fallback to TCP
-is no longer possible, even though the socket may still be in state
-SMC_INIT.
-And if a nonblocking connect is already started, a listen() call
-does not make sense.
+Mein Name ist Mariam Abdul, ich schreibe Ihnen diese Nachricht mit Tr=E4nen=
+ in den Augen. Der andauernde B=FCrgerkrieg in meinem Land Syrien hat mein =
+Leben so sehr beeinflusst. Ich habe letztes Jahr meine Familie verloren. Me=
+in Vater war vor seinem Tod ein reicher Gesch=E4ftsmann, er machte =D6l- un=
+d Gasgesch=E4fte, er machte auch Goldgesch=E4fte. Er verdiente ein gro=DFes=
+ Geld 25,3 Millionen US-Dollar, das Geld ist bei der First Gulf Bank in Dub=
+ai, Vereinigte Arabische Emirate, hinterlegt. Ich bin der n=E4chste Angeh=
+=F6rige, aber ich kann das Geld wegen des Krieges und der T=F6tung in Syrie=
+n nicht zur=FCckbekommen oder zur=FCckgeben .
 
-Reported-by: syzbot+bd8cc73d665590a1fcad@syzkaller.appspotmail.com
-Fixes: 50717a37db032 ("net/smc: nonblocking connect rework")
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/af_smc.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+Bitte helfen Sie mir, das Geld zu erhalten, und wir k=F6nnen vereinbaren, d=
+ass Sie es investieren, bis ich mich von meiner Krankheit erholt habe und z=
+u Ihnen komme.
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index f5ea09258ab0..5b932583e407 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -263,7 +263,7 @@ static int smc_bind(struct socket *sock, struct sockaddr *uaddr,
- 
- 	/* Check if socket is already active */
- 	rc = -EINVAL;
--	if (sk->sk_state != SMC_INIT)
-+	if (sk->sk_state != SMC_INIT || smc->connect_nonblock)
- 		goto out_rel;
- 
- 	smc->clcsock->sk->sk_reuse = sk->sk_reuse;
-@@ -1390,7 +1390,8 @@ static int smc_listen(struct socket *sock, int backlog)
- 	lock_sock(sk);
- 
- 	rc = -EINVAL;
--	if ((sk->sk_state != SMC_INIT) && (sk->sk_state != SMC_LISTEN))
-+	if ((sk->sk_state != SMC_INIT && sk->sk_state != SMC_LISTEN) ||
-+	    smc->connect_nonblock)
- 		goto out;
- 
- 	rc = 0;
-@@ -1518,7 +1519,7 @@ static int smc_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
- 		goto out;
- 
- 	if (msg->msg_flags & MSG_FASTOPEN) {
--		if (sk->sk_state == SMC_INIT) {
-+		if (sk->sk_state == SMC_INIT && !smc->connect_nonblock) {
- 			smc_switch_to_fallback(smc);
- 			smc->fallback_rsn = SMC_CLC_DECL_OPTUNSUPP;
- 		} else {
--- 
-2.21.0
+Ich m=F6chte Sie zum Gesch=E4ftspartner meines verstorbenen Vaters ernennen=
+, und die First Gulf Bank in Dubai =FCberweist Ihnen das Geld. Ich werde Ih=
+nen alle Unterlagen und Informationen zur Einzahlung des Geldes zusenden.
 
+Bitte lassen Sie mich wissen, ob Sie dies f=FCr mich tun k=F6nnen. Dies ist=
+ meine wahre Geschichte. Bitte, ich brauche Ihre Hilfe.
+
+Sie k=F6nnen mich per E-Mail kontaktieren (mismariamabdul@gmail.com)
+
+Mit freundlichen Gr=FC=DFen,
+
+Mariam Abdul
