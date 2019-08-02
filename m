@@ -2,145 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 187167E71F
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 02:20:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 031477EA7D
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 04:55:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730929AbfHBAUa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Aug 2019 20:20:30 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:58317 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726340AbfHBAUa (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 1 Aug 2019 20:20:30 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4607960P1Sz9sBF;
-        Fri,  2 Aug 2019 10:20:26 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1564705226;
-        bh=+ve0AekgqeeerfEkv1cIPb21hnwgyPwKRGIXqIAzqJk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=YjzdNqoPwyZUWcWwEkhgLFWielvXQDNt1oh/h/3f7OZHuhkvwAEnmS0NsS2aSWgx2
-         B2V300+TDrUdlC7OpBnVfPKCtyHspBYyVrIkzS2oKTUABP3kFuebLKXOxoWobTLpWa
-         uyp1LPoZKiFNdZfqftKot8ImxnEgY49kSfG4gIejZSVnSdHNAJI+OD6KU5ayeGi4SZ
-         ZQ5fjPNon1XBDUGhd/xAMdshCfRYN1u0zLF00rzcq6t+AaRto8nMHC3HX3UxSm3XyC
-         svZz2CrudgIRmQGzt7iCXoPxqo4vqvQbB04QRPB8Hx8WS8TAJMoIzMr45mqliclP3J
-         U7WmrRBAl+DRQ==
-Date:   Fri, 2 Aug 2019 10:20:19 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>,
-        Ondrej Mosnacek <omosnace@redhat.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-Message-ID: <20190802102019.6a789c51@canb.auug.org.au>
-In-Reply-To: <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
-References: <20190731163915.3fdfcb14@canb.auug.org.au>
-        <20190731085819.GA3488@osiris>
-        <20190731110816.GA20753@gondor.apana.org.au>
-        <20190731111520.GC3488@osiris>
-        <20190731113216.GA21068@gondor.apana.org.au>
-        <20190731114453.GD3488@osiris>
-        <20190801122849.GB4163@osiris>
-        <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+        id S1727848AbfHBCzk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Aug 2019 22:55:40 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:35285 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729400AbfHBCzj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Aug 2019 22:55:39 -0400
+Received: by mail-oi1-f196.google.com with SMTP id a127so55667810oii.2
+        for <linux-s390@vger.kernel.org>; Thu, 01 Aug 2019 19:55:39 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=SZXg7MkvG8X4G/e4/KyUmpRLOzGXiJZkoKc+bGigKJY=;
+        b=WVlsnLCY9reULBgfQIA4QFxuBSbdil0JyDx29QmZCA6kdJbwhCqsOqYJZk9tzPrutG
+         g2TVFIt3Mqow/U9r82MOuUJFDOGd1+MUL0CbPgXfX0uKm34PjjpPOkdE5/Io9NLGSA++
+         i80s6/ZUY1qR1SarBjuFykXltCia6AzsWUvSJI7tkYYspXOL5URCE3EpG3aFI+UzMjuJ
+         oJ/D8nA5ZD0q0OTaZe9tbq8uE+ehrHRhRkvsUpnfXJpQq4bVJ6STpUmaIdPiOTI2NNhl
+         gmJ0VzWFdRb3pWCooVk+sPiN8qV5df5GHakCsIgnEjl7M1WfrWIxF8Z9+6IrBEPyddYf
+         d1kQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SZXg7MkvG8X4G/e4/KyUmpRLOzGXiJZkoKc+bGigKJY=;
+        b=mEdBDmY9qsf705tiL5lQAlIJ46Bj7VyZQZ4lq2M/1tdT0OGx/uy0lXqDg23Cq3zK4H
+         nFuoJ0kPJgFWgCAg2c43XVmSBprgLos1nvi23FJTnZ3kh0Hm7m2iyJE2/OHUk1S676J4
+         W4OWU7X9LRbrHa7B9Gokyg6rgSV2BC14ADMjs/QFMkdSSaIa6216wa5dRfHZcgPzbx1r
+         8I2vKjsk5DGL8ZNqA4iH1CITsmAF9Xl3hDKaVH58hM6GVzxPLKxw8o4Z7XJMMnE2vuh9
+         oL1ktjW0Um9vxwyikwvXffkkoB2oJV6BALw/M7Ta9BlLN4t0XoyWNHZrsA5doNJUhNHg
+         xE6w==
+X-Gm-Message-State: APjAAAXZ13Z8z3aXPh04ocbJRrZS6bos3S7cEmtT5yvPLsveW8xLrJvf
+        XeNZaxn4PH0AShGZcg5o+8lit+CjRRs=
+X-Google-Smtp-Source: APXvYqxMAwM7gRmuihJFSYVFiyid8C3J+3mI4xgjPNsp/9po6iCu1laSZtFXCPcmwZrzuwtRAq4Umw==
+X-Received: by 2002:a63:1046:: with SMTP id 6mr125224852pgq.111.1564714049618;
+        Thu, 01 Aug 2019 19:47:29 -0700 (PDT)
+Received: from [192.168.200.229] (rrcs-76-80-14-36.west.biz.rr.com. [76.80.14.36])
+        by smtp.gmail.com with ESMTPSA id p68sm85467533pfb.80.2019.08.01.19.47.28
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 01 Aug 2019 19:47:28 -0700 (PDT)
+Subject: Re: [PATCH 0/1] sending DASD patches through linux-block
+To:     Stefan Haberland <sth@linux.ibm.com>
+Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        hoeppner@linux.ibm.com, heiko.carstens@de.ibm.com,
+        borntraeger@de.ibm.com, gor@linux.ibm.com
+References: <20190801110630.82432-1-sth@linux.ibm.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <c66977ae-7a17-5a54-0519-a69d8f825070@kernel.dk>
+Date:   Thu, 1 Aug 2019 20:47:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/wVw44K.uM21QiDqGKSG=HiW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20190801110630.82432-1-sth@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/wVw44K.uM21QiDqGKSG=HiW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 8/1/19 5:06 AM, Stefan Haberland wrote:
+> Hi Jens,
+> 
+> we would like to get our DASD related patches upstream through your
+> linux-block git tree in the future.
+> We hope to get a better integration and that we are able to identify
+> potential conflicts with generic blocklayer changes earlier.
+> 
+> I hope this is OK for you. I have attached a first patch that fixes a
+> bug in the DASD driver. This patch is based on the master branch of your
+> linux-block git tree.
 
-Hi Herbert,
+Certainly. No extra hassle for me, and if it makes it easier for you,
+then by all means.
 
-On Thu, 1 Aug 2019 20:28:56 +0300 Ard Biesheuvel <ard.biesheuvel@linaro.org=
-> wrote:
->
-> On Thu, 1 Aug 2019 at 15:28, Heiko Carstens <heiko.carstens@de.ibm.com> w=
-rote:
-> >
-> > On Wed, Jul 31, 2019 at 01:44:54PM +0200, Heiko Carstens wrote: =20
-> > > On Wed, Jul 31, 2019 at 09:32:16PM +1000, Herbert Xu wrote: =20
-> > > > On Wed, Jul 31, 2019 at 01:15:20PM +0200, Heiko Carstens wrote: =20
-> > > > >
-> > > > > However that doesn't fix the simd.h header file breakage with the
-> > > > > second patch :) =20
-> > > >
-> > > > That fix should be there now too. =20
-> > >
-> > > Yes, works now. Thank you! =20
-> >
-> > Still not... with linux-next as of today I get this (s390 defconfig):
-> >
-> > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefi=
-ned!
-> > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
-> > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefi=
-ned!
-> > scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
-> > =20
->=20
-> Hello Heiko,
->=20
-> Apologies for the breakage. The first two fixes addressed obvious
-> shortcomings in my code, but with this issue, I'm a bit puzzled tbh.
-> The calls to these missing functions should be optimized away, since
-> have_simd never gets assigned if CONFIG_CRYPTO_AEGIS128_SIMD is not
-> defined, but for some reason, this isn't working. Which version of GCC
-> are you using?
->=20
-> Also, could you please try whether the patch below fixes the problem? Tha=
-nks
->=20
-> https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuve=
-l@linaro.org/
+> Please let me know if I should change something in my workflow.
 
-It might be time to revert all this series and try again.  The
-implementation seems to have not been well thought through from a kernel
-building point of view.  For a start the two commits
+Looks fine to me, I generally prefer patches (individual or series)
+to git trees, unless it's a huge series.
 
-  7cdc0ddbf74a ("crypto: aegis128 - add support for SIMD acceleration")
-  ecc8bc81f2fb ("crypto: aegis128 - provide a SIMD implementation based on =
-NEON intrinsics")
+-- 
+Jens Axboe
 
-seem to be in the wrong order (function used in the first before being
-defined in the second).  There are a series of declarations of external
-functions in crypto/aegis128-core.c that should be in a header file.
-And there was the assumption that asm/simd.h was available everywhere.
-
-Also crypto_aegis128_decrypt_chunk_simd() is referenced in a structure
-initialisation (unprotected by any CONFIG_ variable - and so will be
-referenced even if it does not exist).  The compiler will have a hard
-time knowing that "have_simd" is effectively a constant zero (and
-crypto_simd_usable() is not constant).
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/wVw44K.uM21QiDqGKSG=HiW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1DgcMACgkQAVBC80lX
-0Gwx/Af/cVufoIrfiSSSl7Y9kjmf50nbufyfwr0bVq1E4/cox6s3YYwm5YjksyAv
-0Va0rY0BckXUkkFT6wi27uqVnX61synIjcUUDB4Gossa1LtK3+BlBqyWc2i8KYWk
-f04gN4Q8Y+CriSJPMkuXXy6mi0fp/kdxbfiJe4kag2Hs+5XCpVnDt3vwk4CP3Eci
-iasyqK5spS0ZcUBr8T6KmtiW8QmkO7wtdNnJOjeCFcioNihAu+KAK6yhaKtjAsIW
-/9uU761Bvzow2XqRp8uf71FXfWbiMKcJzJ+/ln5te2AS+4PFhU5vZtYeIYEZUN0w
-tuGhZn+FzLeLjMP1ZoPUVFCy4b0qFw==
-=WIXM
------END PGP SIGNATURE-----
-
---Sig_/wVw44K.uM21QiDqGKSG=HiW--
