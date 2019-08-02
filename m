@@ -2,89 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B699E7F6A9
-	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 14:14:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF4FA7F8B3
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 15:22:34 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392013AbfHBMOs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 2 Aug 2019 08:14:48 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54552 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389277AbfHBMOs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 2 Aug 2019 08:14:48 -0400
-Received: by mail-wm1-f65.google.com with SMTP id p74so67720566wme.4
-        for <linux-s390@vger.kernel.org>; Fri, 02 Aug 2019 05:14:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=message-id:mime-version:content-transfer-encoding
-         :content-description:subject:to:from:date:reply-to;
-        bh=59dh0C/7GYpizs9Ea4CwXFyHgTSPzu+Sk+Mf/w7zvgQ=;
-        b=t191fxoaZCpY2ZtrEMD/7fT45LuW2tENvoVJg53+cqVz/JAOgDPgielTiCUsVY/ni1
-         bbjcF/TjErnx9OpOblOPMIMeEZAfXQYtdMjiz+Tk6nKsmF8VczYiYZmvHgyxOrMUEKcs
-         hJg0efsUuROHS9it3iamzYg3/WxmLgP2srp7eCG37s9FUuuSSo1sMyMH8WW1PAZo5q9a
-         Xx2/AXfTOS+AcsHLMLKXVopEKPyitJiRryOa29nJIxkV3cYAa6C2glR5amXpgXhWUyqh
-         6+8UvZQWvZ+p2o+oQgg+BHjKS3xrBntOaZBtYhryAGYVYRLbnqrbPuj89fKzTwbtofPt
-         spow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:content-description:subject:to:from:date
-         :reply-to;
-        bh=59dh0C/7GYpizs9Ea4CwXFyHgTSPzu+Sk+Mf/w7zvgQ=;
-        b=doy2sDPyHy+0gUZBJeo1wkF03eAgPRVodhWfdhn2ZUyP1YFXxP79AzKgxlAKXqbAfu
-         G77r7Pc/zT126ALKp+Gq/S6oYSqWNe0xJl152Bfmqo0Efets0enM3u2uEifX6jVOI5+Y
-         RLDZPR4upsk29G5C7mb4mbj59BLTSM82JTBwGjGxpFMXAs85AYOFK597I4tSgGvgszpx
-         bHtrsqNDB+VpD3SnsUT1cQy1nBYNi1X321uWUJuz3iIh1IUKdz3NLaiQJLugo9tOaQYR
-         1ivffh07Ug91OBYqHn1AAhzfobHYA0HxF6MYnSa9wMX4uYrQrVtIC+7Gyq1AiFhJKPNz
-         TksA==
-X-Gm-Message-State: APjAAAWUbQbksq6eJfgWRGSW/itcqzEJCOYtE6PrfWFtus9AuKIHtaSG
-        nwZVy+iZUvJG5hE74JO1BFXUX7en
-X-Google-Smtp-Source: APXvYqzG2U1IvvXnV5qGDt0iI9keSwE6ZJxZrDa58ujccYsUH6akqqh7J9LASOCy1Do7nMNnSvE31Q==
-X-Received: by 2002:a05:600c:228b:: with SMTP id 11mr4439411wmf.26.1564748086899;
-        Fri, 02 Aug 2019 05:14:46 -0700 (PDT)
-Received: from [192.168.100.16] ([41.210.10.123])
-        by smtp.gmail.com with ESMTPSA id o26sm151465265wro.53.2019.08.02.05.14.43
-        (version=TLS1 cipher=AES128-SHA bits=128/128);
-        Fri, 02 Aug 2019 05:14:46 -0700 (PDT)
-Message-ID: <5d442936.1c69fb81.59e8f.9ab3@mx.google.com>
-Content-Type: text/plain; charset="iso-8859-1"
+        id S2393639AbfHBNVx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 2 Aug 2019 09:21:53 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60386 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2393419AbfHBNVx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 2 Aug 2019 09:21:53 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A45E62183F;
+        Fri,  2 Aug 2019 13:21:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1564752112;
+        bh=dOSPDrRD2QiTi8tCPk2vlAWhFFnuH0+UBqqhrlz598w=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ba6GD3gl8Nt52TLosgDeTaeUASfeUpPJmVhV7Hx5d+/lAdFSuxfKYlpb4qEIEvLTS
+         Y/t38HGdze6M63kY393WqAi+J2QlhZpNZg2MG2kzwEO2WNs4r9upDyXRp0Ww+u9wrM
+         0sgV8ZSDHVXKc+Q2jqdtGeIgQFDBdR2VS1gUJfTQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 47/76] s390/qdio: add sanity checks to the fast-requeue path
+Date:   Fri,  2 Aug 2019 09:19:21 -0400
+Message-Id: <20190802131951.11600-47-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190802131951.11600-1-sashal@kernel.org>
+References: <20190802131951.11600-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Gr=C3=BC=C3=9Fe_an_dich=2C_mein_lieber_Freund?=
-To:     Recipients <mariamabdul002@gmail.com>
-From:   "Mariam Abdul" <mariamabdul002@gmail.com>
-Date:   Fri, 02 Aug 2019 05:14:47 -0700
-Reply-To: mismariamabdul@gmail.com
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Gr=FC=DFe an dich, mein lieber Freund,
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-Mein Name ist Mariam Abdul, ich schreibe Ihnen diese Nachricht mit Tr=E4nen=
- in den Augen. Der andauernde B=FCrgerkrieg in meinem Land Syrien hat mein =
-Leben so sehr beeinflusst. Ich habe letztes Jahr meine Familie verloren. Me=
-in Vater war vor seinem Tod ein reicher Gesch=E4ftsmann, er machte =D6l- un=
-d Gasgesch=E4fte, er machte auch Goldgesch=E4fte. Er verdiente ein gro=DFes=
- Geld 25,3 Millionen US-Dollar, das Geld ist bei der First Gulf Bank in Dub=
-ai, Vereinigte Arabische Emirate, hinterlegt. Ich bin der n=E4chste Angeh=
-=F6rige, aber ich kann das Geld wegen des Krieges und der T=F6tung in Syrie=
-n nicht zur=FCckbekommen oder zur=FCckgeben .
+[ Upstream commit a6ec414a4dd529eeac5c3ea51c661daba3397108 ]
 
-Bitte helfen Sie mir, das Geld zu erhalten, und wir k=F6nnen vereinbaren, d=
-ass Sie es investieren, bis ich mich von meiner Krankheit erholt habe und z=
-u Ihnen komme.
+If the device driver were to send out a full queue's worth of SBALs,
+current code would end up discovering the last of those SBALs as PRIMED
+and erroneously skip the SIGA-w. This immediately stalls the queue.
 
-Ich m=F6chte Sie zum Gesch=E4ftspartner meines verstorbenen Vaters ernennen=
-, und die First Gulf Bank in Dubai =FCberweist Ihnen das Geld. Ich werde Ih=
-nen alle Unterlagen und Informationen zur Einzahlung des Geldes zusenden.
+Add a check to not attempt fast-requeue in this case. While at it also
+make sure that the state of the previous SBAL was successfully extracted
+before inspecting it.
 
-Bitte lassen Sie mich wissen, ob Sie dies f=FCr mich tun k=F6nnen. Dies ist=
- meine wahre Geschichte. Bitte, ich brauche Ihre Hilfe.
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Jens Remus <jremus@linux.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/qdio_main.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-Sie k=F6nnen mich per E-Mail kontaktieren (mismariamabdul@gmail.com)
+diff --git a/drivers/s390/cio/qdio_main.c b/drivers/s390/cio/qdio_main.c
+index 730c4e68094ba..7f5adf02f0959 100644
+--- a/drivers/s390/cio/qdio_main.c
++++ b/drivers/s390/cio/qdio_main.c
+@@ -1558,13 +1558,13 @@ static int handle_outbound(struct qdio_q *q, unsigned int callflags,
+ 		rc = qdio_kick_outbound_q(q, phys_aob);
+ 	} else if (need_siga_sync(q)) {
+ 		rc = qdio_siga_sync_q(q);
++	} else if (count < QDIO_MAX_BUFFERS_PER_Q &&
++		   get_buf_state(q, prev_buf(bufnr), &state, 0) > 0 &&
++		   state == SLSB_CU_OUTPUT_PRIMED) {
++		/* The previous buffer is not processed yet, tack on. */
++		qperf_inc(q, fast_requeue);
+ 	} else {
+-		/* try to fast requeue buffers */
+-		get_buf_state(q, prev_buf(bufnr), &state, 0);
+-		if (state != SLSB_CU_OUTPUT_PRIMED)
+-			rc = qdio_kick_outbound_q(q, 0);
+-		else
+-			qperf_inc(q, fast_requeue);
++		rc = qdio_kick_outbound_q(q, 0);
+ 	}
+ 
+ 	/* in case of SIGA errors we must process the error immediately */
+-- 
+2.20.1
 
-Mit freundlichen Gr=FC=DFen,
-
-Mariam Abdul
