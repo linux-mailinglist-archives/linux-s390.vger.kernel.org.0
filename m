@@ -2,97 +2,145 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C63357E116
-	for <lists+linux-s390@lfdr.de>; Thu,  1 Aug 2019 19:29:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 187167E71F
+	for <lists+linux-s390@lfdr.de>; Fri,  2 Aug 2019 02:20:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732699AbfHAR3J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 1 Aug 2019 13:29:09 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:40910 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729220AbfHAR3I (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 1 Aug 2019 13:29:08 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r1so74423027wrl.7
-        for <linux-s390@vger.kernel.org>; Thu, 01 Aug 2019 10:29:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=V7iES048LQCKT01wi1ZH6mu+llZ9u5BBJ+ptxxo4m+U=;
-        b=WoHkVxtXyOlDI8FIrsWX+mKng5MgkynwGfd/EiStmKxt5ZmRGwagRY65HZ1D/QQNaj
-         v4dQ3o6i+FbowNs5iKg+uUWIfd1LDUikpWW4Stm6hL/a+dh8l98sjXdIoUQ2DGyWdW9D
-         VwHTiK6m88q/cO6xDvrUQ3OVGBezKVCugRm52n40mmP1+TOql/Ahky5a7rBp1QesQTNr
-         ygTczmDMsij0pflEsuxDve0CwQVXOUzBdxX9X7P85zCpzUJm9RBRhz9BJuFUaEuWCUHT
-         KkHtw/5RQDWhEyUF3UuSCcNG0QKqk09Oq1fURsscjTBaMQlUlp96ZULSpZUEU0G2IdcC
-         sziQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=V7iES048LQCKT01wi1ZH6mu+llZ9u5BBJ+ptxxo4m+U=;
-        b=HLKE79RmDm2Z2Mn8YtCwVqVhjYvVg1C2aroL6huM4P7eg/nOI4Jyr/exTyOfJtb20z
-         hX+K6CAem+JCVYKJxLpRfa69SbVQixE9IsaNkkPHZqqn+e6oPH0kSmxnRkSwGowlvtfu
-         7/y4iuD6Fyu0r/igfTEJHP0dXphwL8rLdGN1u6fz5R/cA8rDm8QLny3dl/5EHpaT/VNa
-         KnWEkYNEkTyDxVWPt+sKT8pFfbgk93sAmxzU4ixOYGmuaWgH984BLYBYQHZ97TEa+04L
-         ltgXeAeABgl02ZA3xOsqSAeF+kbusrU8mdhsB1q++3ykZUdpus2NXURGyilAS0eRgZ7G
-         9C3w==
-X-Gm-Message-State: APjAAAUv4TWyzJapiL3dPqgyPJaXuzIy6FqaiuWlgxl8USkW7j8ncd1t
-        CM2BxwN+5MV8eTEoqfwpoG59JLkan5cQ+1uJ9+tiAw==
-X-Google-Smtp-Source: APXvYqwQ4BT46vMcwoHkV6Gc8YIsZiFmZw8/ASpSzzC9Tz3z1i9lnwO696CATx2wOyOHjR2u5qFB2fR3Zp04ForpvZs=
-X-Received: by 2002:a5d:6b07:: with SMTP id v7mr31905638wrw.169.1564680546461;
- Thu, 01 Aug 2019 10:29:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190731163915.3fdfcb14@canb.auug.org.au> <20190731085819.GA3488@osiris>
- <20190731110816.GA20753@gondor.apana.org.au> <20190731111520.GC3488@osiris>
- <20190731113216.GA21068@gondor.apana.org.au> <20190731114453.GD3488@osiris> <20190801122849.GB4163@osiris>
-In-Reply-To: <20190801122849.GB4163@osiris>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Thu, 1 Aug 2019 20:28:56 +0300
-Message-ID: <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
-Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
+        id S1730929AbfHBAUa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 1 Aug 2019 20:20:30 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:58317 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726340AbfHBAUa (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 1 Aug 2019 20:20:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4607960P1Sz9sBF;
+        Fri,  2 Aug 2019 10:20:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1564705226;
+        bh=+ve0AekgqeeerfEkv1cIPb21hnwgyPwKRGIXqIAzqJk=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=YjzdNqoPwyZUWcWwEkhgLFWielvXQDNt1oh/h/3f7OZHuhkvwAEnmS0NsS2aSWgx2
+         B2V300+TDrUdlC7OpBnVfPKCtyHspBYyVrIkzS2oKTUABP3kFuebLKXOxoWobTLpWa
+         uyp1LPoZKiFNdZfqftKot8ImxnEgY49kSfG4gIejZSVnSdHNAJI+OD6KU5ayeGi4SZ
+         ZQ5fjPNon1XBDUGhd/xAMdshCfRYN1u0zLF00rzcq6t+AaRto8nMHC3HX3UxSm3XyC
+         svZz2CrudgIRmQGzt7iCXoPxqo4vqvQbB04QRPB8Hx8WS8TAJMoIzMr45mqliclP3J
+         U7WmrRBAl+DRQ==
+Date:   Fri, 2 Aug 2019 10:20:19 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Linux Next Mailing List <linux-next@vger.kernel.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Harald Freudenberger <freude@linux.ibm.com>,
-        Patrick Steuer <steuer@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+        Patrick Steuer <steuer@linux.ibm.com>,
+        Ondrej Mosnacek <omosnace@redhat.com>
+Subject: Re: linux-next: Tree for Jul 31 - s390 crypto build breakage
+Message-ID: <20190802102019.6a789c51@canb.auug.org.au>
+In-Reply-To: <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+References: <20190731163915.3fdfcb14@canb.auug.org.au>
+        <20190731085819.GA3488@osiris>
+        <20190731110816.GA20753@gondor.apana.org.au>
+        <20190731111520.GC3488@osiris>
+        <20190731113216.GA21068@gondor.apana.org.au>
+        <20190731114453.GD3488@osiris>
+        <20190801122849.GB4163@osiris>
+        <CAKv+Gu_1HP2NapMk5O_-XpJdga5zyFJDkVudTRT6CWm+tqPndA@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/wVw44K.uM21QiDqGKSG=HiW";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 1 Aug 2019 at 15:28, Heiko Carstens <heiko.carstens@de.ibm.com> wrote:
+--Sig_/wVw44K.uM21QiDqGKSG=HiW
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Herbert,
+
+On Thu, 1 Aug 2019 20:28:56 +0300 Ard Biesheuvel <ard.biesheuvel@linaro.org=
+> wrote:
 >
-> On Wed, Jul 31, 2019 at 01:44:54PM +0200, Heiko Carstens wrote:
-> > On Wed, Jul 31, 2019 at 09:32:16PM +1000, Herbert Xu wrote:
-> > > On Wed, Jul 31, 2019 at 01:15:20PM +0200, Heiko Carstens wrote:
-> > > >
-> > > > However that doesn't fix the simd.h header file breakage with the
-> > > > second patch :)
-> > >
-> > > That fix should be there now too.
+> On Thu, 1 Aug 2019 at 15:28, Heiko Carstens <heiko.carstens@de.ibm.com> w=
+rote:
 > >
-> > Yes, works now. Thank you!
->
-> Still not... with linux-next as of today I get this (s390 defconfig):
->
-> ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-> ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
-> ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefined!
-> scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
->
+> > On Wed, Jul 31, 2019 at 01:44:54PM +0200, Heiko Carstens wrote: =20
+> > > On Wed, Jul 31, 2019 at 09:32:16PM +1000, Herbert Xu wrote: =20
+> > > > On Wed, Jul 31, 2019 at 01:15:20PM +0200, Heiko Carstens wrote: =20
+> > > > >
+> > > > > However that doesn't fix the simd.h header file breakage with the
+> > > > > second patch :) =20
+> > > >
+> > > > That fix should be there now too. =20
+> > >
+> > > Yes, works now. Thank you! =20
+> >
+> > Still not... with linux-next as of today I get this (s390 defconfig):
+> >
+> > ERROR: "crypto_aegis128_decrypt_chunk_simd" [crypto/aegis128.ko] undefi=
+ned!
+> > ERROR: "crypto_aegis128_update_simd" [crypto/aegis128.ko] undefined!
+> > ERROR: "crypto_aegis128_encrypt_chunk_simd" [crypto/aegis128.ko] undefi=
+ned!
+> > scripts/Makefile.modpost:105: recipe for target 'modules-modpost' failed
+> > =20
+>=20
+> Hello Heiko,
+>=20
+> Apologies for the breakage. The first two fixes addressed obvious
+> shortcomings in my code, but with this issue, I'm a bit puzzled tbh.
+> The calls to these missing functions should be optimized away, since
+> have_simd never gets assigned if CONFIG_CRYPTO_AEGIS128_SIMD is not
+> defined, but for some reason, this isn't working. Which version of GCC
+> are you using?
+>=20
+> Also, could you please try whether the patch below fixes the problem? Tha=
+nks
+>=20
+> https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuve=
+l@linaro.org/
 
-Hello Heiko,
+It might be time to revert all this series and try again.  The
+implementation seems to have not been well thought through from a kernel
+building point of view.  For a start the two commits
 
-Apologies for the breakage. The first two fixes addressed obvious
-shortcomings in my code, but with this issue, I'm a bit puzzled tbh.
-The calls to these missing functions should be optimized away, since
-have_simd never gets assigned if CONFIG_CRYPTO_AEGIS128_SIMD is not
-defined, but for some reason, this isn't working. Which version of GCC
-are you using?
+  7cdc0ddbf74a ("crypto: aegis128 - add support for SIMD acceleration")
+  ecc8bc81f2fb ("crypto: aegis128 - provide a SIMD implementation based on =
+NEON intrinsics")
 
-Also, could you please try whether the patch below fixes the problem? Thanks
+seem to be in the wrong order (function used in the first before being
+defined in the second).  There are a series of declarations of external
+functions in crypto/aegis128-core.c that should be in a header file.
+And there was the assumption that asm/simd.h was available everywhere.
 
-https://lore.kernel.org/linux-crypto/20190729074434.21064-1-ard.biesheuvel@linaro.org/
+Also crypto_aegis128_decrypt_chunk_simd() is referenced in a structure
+initialisation (unprotected by any CONFIG_ variable - and so will be
+referenced even if it does not exist).  The compiler will have a hard
+time knowing that "have_simd" is effectively a constant zero (and
+crypto_simd_usable() is not constant).
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/wVw44K.uM21QiDqGKSG=HiW
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl1DgcMACgkQAVBC80lX
+0Gwx/Af/cVufoIrfiSSSl7Y9kjmf50nbufyfwr0bVq1E4/cox6s3YYwm5YjksyAv
+0Va0rY0BckXUkkFT6wi27uqVnX61synIjcUUDB4Gossa1LtK3+BlBqyWc2i8KYWk
+f04gN4Q8Y+CriSJPMkuXXy6mi0fp/kdxbfiJe4kag2Hs+5XCpVnDt3vwk4CP3Eci
+iasyqK5spS0ZcUBr8T6KmtiW8QmkO7wtdNnJOjeCFcioNihAu+KAK6yhaKtjAsIW
+/9uU761Bvzow2XqRp8uf71FXfWbiMKcJzJ+/ln5te2AS+4PFhU5vZtYeIYEZUN0w
+tuGhZn+FzLeLjMP1ZoPUVFCy4b0qFw==
+=WIXM
+-----END PGP SIGNATURE-----
+
+--Sig_/wVw44K.uM21QiDqGKSG=HiW--
