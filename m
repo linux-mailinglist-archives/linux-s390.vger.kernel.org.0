@@ -2,127 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E1D782A94
-	for <lists+linux-s390@lfdr.de>; Tue,  6 Aug 2019 06:50:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2631883616
+	for <lists+linux-s390@lfdr.de>; Tue,  6 Aug 2019 18:01:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731607AbfHFEuh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 6 Aug 2019 00:50:37 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13484 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726076AbfHFEug (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Aug 2019 00:50:36 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x764kZUH076530;
-        Tue, 6 Aug 2019 00:50:16 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u72j8rm35-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 00:50:16 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x764kv8N077202;
-        Tue, 6 Aug 2019 00:50:15 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2u72j8rm2d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 00:50:15 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x764iccY015806;
-        Tue, 6 Aug 2019 04:50:14 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma03dal.us.ibm.com with ESMTP id 2u51w6nwq1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 06 Aug 2019 04:50:14 +0000
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x764oCt426870128
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 6 Aug 2019 04:50:13 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DBC037805C;
-        Tue,  6 Aug 2019 04:50:12 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 147A27805F;
-        Tue,  6 Aug 2019 04:50:08 +0000 (GMT)
-Received: from morokweng.localdomain.com (unknown [9.85.207.254])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue,  6 Aug 2019 04:50:07 +0000 (GMT)
-From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
-To:     x86@kernel.org
-Cc:     iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Thomas Lendacky <Thomas.Lendacky@amd.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Lianbo Jiang <lijiang@redhat.com>,
-        Mike Anderson <andmike@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: [PATCH v4 6/6] s390/mm: Remove sev_active() function
-Date:   Tue,  6 Aug 2019 01:49:19 -0300
-Message-Id: <20190806044919.10622-7-bauerman@linux.ibm.com>
+        id S1731840AbfHFQBu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 6 Aug 2019 12:01:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51984 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728756AbfHFQBu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 6 Aug 2019 12:01:50 -0400
+Received: by mail-wm1-f65.google.com with SMTP id 207so78761921wma.1;
+        Tue, 06 Aug 2019 09:01:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=8BYSLhg5cqJdI/Qakd7sQwghpIb3plM/wekPJNZB95U=;
+        b=X8vaBzf/Y76GVt7YmME7wBTCO0ehItVLkV5G/9kN6eU8mPXYUozcBBBNDMYnDf3EFw
+         SWUNrGKAVjdx/K2bu1AePiYdakcdC7AJ2mbQ3LsAT9IhJQBNhb9JeST9CfzrAaBzVZ6s
+         b0fqGsUCiye9tDp8P4SoudMI4HQpU10iz1+q1v5yhnihpj2oV2EMuk1GLYDIESx+bGp3
+         ZGJHvBGojCc7M8eagIZJ8S6o7Sme4ahDSDC3usLnH3d0Qj44qe3R28D2rlCiFLnKOYWk
+         CiAZl/wFeN7oRMhEH/7RsAhZdIdsv+gN+9LVIdw1qHXQtPZMlk7umzP3I38VgnwERJEq
+         w54Q==
+X-Gm-Message-State: APjAAAXfjSwpuAzaAAd6Y347f1x+L0ZPAG3cnT1Mmeiu6CupK72HMiBU
+        DVnByczk5RRKneLLR67ur+Y=
+X-Google-Smtp-Source: APXvYqxeuzoa2DLBzGVGm9OW8kXz3P0h8I74oSH2Q9hyJT47ssuRyoCLCXVTpKaKuLNcb5ViZgMX9w==
+X-Received: by 2002:a05:600c:2117:: with SMTP id u23mr5462928wml.117.1565107308156;
+        Tue, 06 Aug 2019 09:01:48 -0700 (PDT)
+Received: from green.intra.ispras.ru (bran.ispras.ru. [83.149.199.196])
+        by smtp.googlemail.com with ESMTPSA id b203sm129380410wmd.41.2019.08.06.09.01.47
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 06 Aug 2019 09:01:47 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] s390/pci: PCI_IOV_RESOURCES loop refactoring in zpci_map_resources
+Date:   Tue,  6 Aug 2019 19:01:37 +0300
+Message-Id: <20190806160137.29275-1-efremov@linux.com>
 X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190806044919.10622-1-bauerman@linux.ibm.com>
-References: <20190806044919.10622-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-06_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908060056
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-All references to sev_active() were moved to arch/x86 so we don't need to
-define it for s390 anymore.
+This patch alters the for loop iteration scheme in zpci_map_resources
+to make it more usual. Thus, the patch generalizes the style for
+PCI_IOV_RESOURCES iteration and improves readability.
 
-Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Signed-off-by: Denis Efremov <efremov@linux.com>
 ---
- arch/s390/include/asm/mem_encrypt.h | 1 -
- arch/s390/mm/init.c                 | 7 +------
- 2 files changed, 1 insertion(+), 7 deletions(-)
+ arch/s390/pci/pci.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/s390/include/asm/mem_encrypt.h b/arch/s390/include/asm/mem_encrypt.h
-index ff813a56bc30..2542cbf7e2d1 100644
---- a/arch/s390/include/asm/mem_encrypt.h
-+++ b/arch/s390/include/asm/mem_encrypt.h
-@@ -5,7 +5,6 @@
- #ifndef __ASSEMBLY__
+diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+index b0e3b9a0e488..c7fea9bea8cb 100644
+--- a/arch/s390/pci/pci.c
++++ b/arch/s390/pci/pci.c
+@@ -431,13 +431,13 @@ static void zpci_map_resources(struct pci_dev *pdev)
+ 	}
  
- static inline bool mem_encrypt_active(void) { return false; }
--extern bool sev_active(void);
+ #ifdef CONFIG_PCI_IOV
+-	i = PCI_IOV_RESOURCES;
++	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
++		int bar = i + PCI_IOV_RESOURCES;
  
- int set_memory_encrypted(unsigned long addr, int numpages);
- int set_memory_decrypted(unsigned long addr, int numpages);
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index 20340a03ad90..a124f19f7b3c 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -156,14 +156,9 @@ int set_memory_decrypted(unsigned long addr, int numpages)
+-	for (; i < PCI_SRIOV_NUM_BARS + PCI_IOV_RESOURCES; i++) {
+-		len = pci_resource_len(pdev, i);
++		len = pci_resource_len(pdev, bar);
+ 		if (!len)
+ 			continue;
+-		pdev->resource[i].parent = &iov_res;
++		pdev->resource[bar].parent = &iov_res;
+ 	}
+ #endif
  }
- 
- /* are we a protected virtualization guest? */
--bool sev_active(void)
--{
--	return is_prot_virt_guest();
--}
--
- bool force_dma_unencrypted(struct device *dev)
- {
--	return sev_active();
-+	return is_prot_virt_guest();
- }
- 
- /* protected virtualization */
+-- 
+2.21.0
+
