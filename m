@@ -2,98 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84F7083A9C
-	for <lists+linux-s390@lfdr.de>; Tue,  6 Aug 2019 22:48:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A987B84A8C
+	for <lists+linux-s390@lfdr.de>; Wed,  7 Aug 2019 13:23:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726044AbfHFUsF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 6 Aug 2019 16:48:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42564 "EHLO mail.kernel.org"
+        id S1729591AbfHGLXQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 7 Aug 2019 07:23:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41342 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726009AbfHFUsE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 6 Aug 2019 16:48:04 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1729516AbfHGLXQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 7 Aug 2019 07:23:16 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FA8A20818;
-        Tue,  6 Aug 2019 20:48:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1565124483;
-        bh=RXIWyokVY5jFs2cNty8/qR9NmcWvvGUIU49LRtWPjsw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=I0nc9rOMh6f1LbzncBqUH6zKXv/iuHIJJLjKQhhSo1j0VDi7lWFLEz549NJin+0N4
-         xOPldoIj1nl1bXaR/UosgFuoHdgbVOu7L0dicdlruXAXjUVjeiLLS1i2/KpC3JlqwT
-         4JEYsa/N6iP8bWWh0To5Gqco57+uKpI42OIZWr7U=
-Date:   Tue, 6 Aug 2019 15:48:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/pci: PCI_IOV_RESOURCES loop refactoring in
- zpci_map_resources
-Message-ID: <20190806204801.GV151852@google.com>
-References: <20190806160137.29275-1-efremov@linux.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 6EE7E3C936;
+        Wed,  7 Aug 2019 11:23:16 +0000 (UTC)
+Received: from gondolin (ovpn-117-166.ams2.redhat.com [10.36.117.166])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12BA72619E;
+        Wed,  7 Aug 2019 11:23:14 +0000 (UTC)
+Date:   Wed, 7 Aug 2019 13:23:11 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH RFC UNTESTED] vfio-ccw: indirect access to translated
+ cps
+Message-ID: <20190807132311.5238bc24.cohuck@redhat.com>
+In-Reply-To: <20190730174910.47930494.pasic@linux.ibm.com>
+References: <20190726100617.19718-1-cohuck@redhat.com>
+        <20190730174910.47930494.pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190806160137.29275-1-efremov@linux.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Wed, 07 Aug 2019 11:23:16 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Thanks for the patch!
+On Tue, 30 Jul 2019 17:49:10 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-Sebastian may have silently fixed this, but for future reference,
-
-  $ git log --oneline arch/s390/pci/pci.c
-  c7ff0e918a7c s390/pci: deal with devices that have no support for MIO instructions
-  dcd33b23c9f3 s390/pci: fix assignment of bus resources
-  56271303808f s390/pci: add parameter to disable usage of MIO instructions
-  71ba41c9b1d9 s390/pci: provide support for MIO instructions
-  81deca12c202 s390/pci: move io address mapping code to pci_insn.c
-  fbfe07d440f2 s390/pci: add parameter to force floating irqs
-  c840927cf5f2 s390/pci: move everything irq related to pci_irq.c
-  066ee72aecdc s390/pci: remove unused define
-  ...
-
-shows that the typical style there is to start the subject with a verb
-so it's an imperative sentence.
-
-On Tue, Aug 06, 2019 at 07:01:37PM +0300, Denis Efremov wrote:
-> This patch alters the for loop iteration scheme in zpci_map_resources
-> to make it more usual. Thus, the patch generalizes the style for
-> PCI_IOV_RESOURCES iteration and improves readability.
+> On Fri, 26 Jul 2019 12:06:17 +0200
+> Cornelia Huck <cohuck@redhat.com> wrote:
 > 
-> Signed-off-by: Denis Efremov <efremov@linux.com>
-> ---
->  arch/s390/pci/pci.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> > We're currently keeping a single area for translated channel
+> > programs in our private structure, which is filled out when
+> > we are translating a channel program we have been given by
+> > user space and marked invalid again when we received an final
+> > interrupt for that I/O.
+> > 
+> > Unfortunately, properly tracking the lifetime of that cp is
+> > not easy: failures may happen during translation or right when
+> > it is sent to the hardware, unsolicited interrupts may trigger
+> > a deferred condition code, a halt/clear request may be issued
+> > while the I/O is supposed to be running, or a reset request may
+> > come in from the side. The _PROCESSING state and the ->initialized
+> > flag help a bit, but not enough.
+> > 
+> > We want to have a way to figure out whether we actually have a cp
+> > currently in progress, so we can update/free only when applicable.
+> > Points to keep in mind:
+> > - We will get an interrupt after a cp has been submitted iff ssch
+> >   finished with cc 0.
+> > - We will get more interrupts for a cp if the interrupt status is
+> >   not final.
+> > - We can have only one cp in flight at a time.
+> > 
+> > Let's decouple the actual area in the private structure from the
+> > means to access it: Only after we have successfully submitted a
+> > cp (ssch with cc 0), update the pointer in the private structure
+> > to point to the area used. Therefore, the interrupt handler won't
+> > access the cp if we don't actually expect an interrupt pertaining
+> > to it.
+> > 
+> > Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+> > ---
+> > 
+> > Just hacked this up to get some feedback, did not actually try it
+> > out. Not even sure if this is a sensible approach; if not, let's
+> > blame it on the heat and pretend it didn't happen :)
+> >   
 > 
-> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> index b0e3b9a0e488..c7fea9bea8cb 100644
-> --- a/arch/s390/pci/pci.c
-> +++ b/arch/s390/pci/pci.c
-> @@ -431,13 +431,13 @@ static void zpci_map_resources(struct pci_dev *pdev)
->  	}
->  
->  #ifdef CONFIG_PCI_IOV
-> -	i = PCI_IOV_RESOURCES;
-> +	for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> +		int bar = i + PCI_IOV_RESOURCES;
->  
-> -	for (; i < PCI_SRIOV_NUM_BARS + PCI_IOV_RESOURCES; i++) {
-> -		len = pci_resource_len(pdev, i);
-> +		len = pci_resource_len(pdev, bar);
->  		if (!len)
->  			continue;
-> -		pdev->resource[i].parent = &iov_res;
-> +		pdev->resource[bar].parent = &iov_res;
->  	}
->  #endif
->  }
-> -- 
-> 2.21.0
+> Do not multiple threads access this new cp pointer (and at least one of
+> them writes)? If that is the case, it smells like a data race to me.
+
+We might need some additional concurrent read/write handling on top, if
+state machine guarantees are not enough. (We may need a respin of the
+state machine locking for that, which we probably want anyway.)
+
 > 
+> Besides the only point of converting cp to a pointer seems to be
+> policing access to cp_area (which used to be cp). I.e. if it is
+> NULL: don't touch it, otherwise: go ahead. We can do that with a single
+> bit, we don't need a pointer for that.
+
+The idea was
+- do translation etc. on an area only accessed by the thread doing the
+  translation
+- switch the pointer to that area once the cp has been submitted
+  successfully (and it is therefore associated with further interrupts
+  etc.)
+The approach in this patch is probably a bit simplistic.
+
+I think one bit is not enough, we have at least three states:
+- idle; start using the area if you like
+- translating; i.e. only the translator is touching the area, keep off
+- submitted; we wait for interrupts, handle them or free if no (more)
+  interrupts can happen
+
+> 
+> Could we convert initialized into some sort of cp.status that
+> tracks/controls access and responsibilities? By working with bits we
+> could benefit from the atomicity of bit-ops -- if I'm not wrong.
+
+We have both the state of the device (state machine) and the state of a
+cp, then. If we keep to a single cp area, we should track that within a
+single state (i.e. the device state).
+
+> 
+> > I also thought about having *two* translation areas and switching
+> > the pointer between them; this might be too complicated, though?  
+> 
+> We only have one channel program at a time or? I can't see the benefit
+> of having two areas.
+
+We can only have one in flight at a time; we could conceivably have
+another one that is currently in the process of being built. The idea
+was to switch between the two (so processing an in-flight one cannot
+overwrite one that is currently being built); but I think this is too
+complicated.
