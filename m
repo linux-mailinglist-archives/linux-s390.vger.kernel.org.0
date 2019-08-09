@@ -2,105 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB1CC87C1D
-	for <lists+linux-s390@lfdr.de>; Fri,  9 Aug 2019 15:52:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BAA787EDC
+	for <lists+linux-s390@lfdr.de>; Fri,  9 Aug 2019 18:03:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406374AbfHINw2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 9 Aug 2019 09:52:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59464 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726152AbfHINw2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 9 Aug 2019 09:52:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=EreDrMASgymCoOwex2lDSh6PBVp8vwwZo8lBW7Dx+AU=; b=DCezGss28UrQwdHuY2bFdI4p4
-        S1IQudbzVnxD+07DxZGKpMaIkZjBN26Cdg8l2/Fs8GMFEeX1pJqh0qZAiUghQaE6El6M1XDplTDve
-        EJJcjL9sO79CkY0k30aJUEJAymr58OsH+p8EsukYG7F9sRPnn0G8pCmZVLattID9zhXymV5yWXtFQ
-        ciqngFSM0ntk8BRdLo5xQ4zieBSWsCrkihQ+/ft5+CPIVKlVlUX+N97pCSyIU0MATtJ4kwuaN/o18
-        WCkKlxmfNm5M1Hch5V2lnDpS3brZehU45KR0NW0dNC4+r+Ph0RyNwH7KE6Q/WHvIQU+odBuHV4vuK
-        lstsiJ0Mg==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hw5JK-0002PQ-U7; Fri, 09 Aug 2019 13:52:02 +0000
-Date:   Fri, 9 Aug 2019 06:52:02 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        id S2436987AbfHIQDj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 9 Aug 2019 12:03:39 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8054 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2436968AbfHIQDj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 9 Aug 2019 12:03:39 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x79Fx0ZC115867;
+        Fri, 9 Aug 2019 12:03:02 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u99yw5vm2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Aug 2019 12:03:02 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x79Fxu6P120684;
+        Fri, 9 Aug 2019 12:03:02 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2u99yw5vjh-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Aug 2019 12:03:01 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x79G0rHB030868;
+        Fri, 9 Aug 2019 16:03:00 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02dal.us.ibm.com with ESMTP id 2u51w67d6c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 09 Aug 2019 16:03:00 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x79G2wo847055168
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 9 Aug 2019 16:02:58 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE060C605A;
+        Fri,  9 Aug 2019 16:02:58 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3BAAEC6059;
+        Fri,  9 Aug 2019 16:02:54 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.152.224])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTPS;
+        Fri,  9 Aug 2019 16:02:53 +0000 (GMT)
+References: <20190806044919.10622-1-bauerman@linux.ibm.com> <87sgqasdr6.fsf@concordia.ellerman.id.au>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     mpe@ellerman.id.au
+Cc:     x86@kernel.org, iommu@lists.linux-foundation.org,
+        linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
- table helpers
-Message-ID: <20190809135202.GN5482@bombadil.infradead.org>
-References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
- <20190809101632.GM5482@bombadil.infradead.org>
- <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>
+Subject: Re: [PATCH v4 0/6] Remove x86-specific code from generic headers
+In-reply-to: <87sgqasdr6.fsf@concordia.ellerman.id.au>
+Date:   Fri, 09 Aug 2019 13:02:48 -0300
+Message-ID: <874l2qfhsn.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-09_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908090155
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Aug 09, 2019 at 04:05:07PM +0530, Anshuman Khandual wrote:
-> On 08/09/2019 03:46 PM, Matthew Wilcox wrote:
-> > On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
-> >> Should alloc_gigantic_page() be made available as an interface for general
-> >> use in the kernel. The test module here uses very similar implementation from
-> >> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
-> >> needs to be exported through a header.
-> > 
-> > Why are you allocating memory at all instead of just using some
-> > known-to-exist PFNs like I suggested?
-> 
-> We needed PFN to be PUD aligned for pfn_pud() and PMD aligned for mk_pmd().
-> Now walking the kernel page table for a known symbol like kernel_init()
 
-I didn't say to walk the kernel page table.  I said to call virt_to_pfn()
-for a known symbol like kernel_init().
+mpe@ellerman.id.au writes:
 
-> as you had suggested earlier we might encounter page table page entries at PMD
-> and PUD which might not be PMD or PUD aligned respectively. It seemed to me
-> that alignment requirement is applicable only for mk_pmd() and pfn_pud()
-> which create large mappings at those levels but that requirement does not
-> exist for page table pages pointing to next level. Is not that correct ? Or
-> I am missing something here ?
+> Thiago Jung Bauermann <bauerman@linux.ibm.com> writes:
+>> Hello,
+>>
+>> This version has only a small change in the last patch as requested by
+>> Christoph and Halil, and collects Reviewed-by's.
+>>
+>> These patches are applied on top of v5.3-rc2.
+>>
+>> I don't have a way to test SME, SEV, nor s390's PEF so the patches have only
+>> been build tested.
+>
+> I need to take this series via the powerpc tree because there is another
+> fairly large powerpc specific series dependent on it.
+>
+> I think this series already has pretty much all the acks it needs, which
+> almost never happens, amazing work!
 
-Just clear the bottom bits off the PFN until you get a PMD or PUD aligned
-PFN.  It's really not hard.
+Yes, thank you very much to everyone who reviewed the patches!
 
+> I'll put the series in a topic branch, just in case there's any bad
+> conflicts and other folks want to merge it later on. I'll then merge the
+> topic branch into my next, and so this series will be tested in
+> linux-next that way.
+
+That's awesome. Thank you very much!
+
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
