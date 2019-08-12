@@ -2,155 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC54B8A16D
-	for <lists+linux-s390@lfdr.de>; Mon, 12 Aug 2019 16:45:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0BBBE8A7AF
+	for <lists+linux-s390@lfdr.de>; Mon, 12 Aug 2019 22:01:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727061AbfHLOor (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 12 Aug 2019 10:44:47 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39874 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726864AbfHLOor (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 12 Aug 2019 10:44:47 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7CEgZ66079353
-        for <linux-s390@vger.kernel.org>; Mon, 12 Aug 2019 10:44:45 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ub9afjd1u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 12 Aug 2019 10:44:45 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Mon, 12 Aug 2019 15:44:43 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 12 Aug 2019 15:44:40 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7CEidpp14745842
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 12 Aug 2019 14:44:39 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0E9A44203F;
-        Mon, 12 Aug 2019 14:44:39 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C48CD42049;
-        Mon, 12 Aug 2019 14:44:38 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 12 Aug 2019 14:44:38 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net] s390/qeth: serialize cmd reply with concurrent timeout
-Date:   Mon, 12 Aug 2019 16:44:35 +0200
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19081214-0020-0000-0000-0000035EDBF1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081214-0021-0000-0000-000021B3EBB1
-Message-Id: <20190812144435.67451-1-jwi@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-12_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=794 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908120165
+        id S1726966AbfHLUBh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 12 Aug 2019 16:01:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59704 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726910AbfHLUBh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 12 Aug 2019 16:01:37 -0400
+Received: from localhost (c-73-15-1-175.hsd1.ca.comcast.net [73.15.1.175])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 08C522064A;
+        Mon, 12 Aug 2019 20:01:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565640096;
+        bh=NSkesDbyTebD+v4e1h6gv7mP58q17+gzV7RA4nbnT38=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PM1nIv8I5QbxVroLS05rramZ5dZ0VSEA0hPtM4Nyi7x6O/cRZHpnUn2JqpjpSzmIf
+         3OIovcheUk0W4Xtzb1WjvkRcCUn7GWelbDPWulT11bQc2tDiTREjjfnPGKgCeb+cbF
+         g9JmGWAKO4QpqNwLOoGbde2poi97UEyKOHfYIiIc=
+Date:   Mon, 12 Aug 2019 15:01:34 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Denis Efremov <efremov@linux.com>
+Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        kvm@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        netdev@vger.kernel.org, x86@kernel.org, linux-s390@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/7] Add definition for the number of standard PCI BARs
+Message-ID: <20190812200134.GB11785@google.com>
+References: <20190811150802.2418-1-efremov@linux.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190811150802.2418-1-efremov@linux.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Callbacks for a cmd reply run outside the protection of card->lock, to
-allow for additional cmds to be issued & enqueued in parallel.
+On Sun, Aug 11, 2019 at 06:07:55PM +0300, Denis Efremov wrote:
+> Code that iterates over all standard PCI BARs typically uses
+> PCI_STD_RESOURCE_END, but this is error-prone because it requires
+> "i <= PCI_STD_RESOURCE_END" rather than something like
+> "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
+> way PCI_SRIOV_NUM_BARS is used. There is already the definition
+> PCI_BAR_COUNT for s390 only. Thus, this patchset introduces it globally.
+> 
+> The patch is splitted into 7 parts for different drivers/subsystems for
+> easy readability.
 
-When qeth_send_control_data() bails out for a cmd without having
-received a reply (eg. due to timeout), its callback may concurrently be
-processing a reply that just arrived. In this case, the callback
-potentially accesses a stale reply->reply_param area that eg. was
-on-stack and has already been released.
+This looks good.  I can take all these together, since they all depend
+on the first patch.  I have a few comments on the individual patches.
 
-To avoid this race, add some locking so that qeth_send_control_data()
-can (1) wait for a concurrently running callback, and (2) zap any
-pending callback that still wants to run.
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core.h      |  1 +
- drivers/s390/net/qeth_core_main.c | 20 ++++++++++++++++++++
- 2 files changed, 21 insertions(+)
-
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index c7ee07ce3615..28db887d38ed 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -629,6 +629,7 @@ struct qeth_seqno {
- struct qeth_reply {
- 	struct list_head list;
- 	struct completion received;
-+	spinlock_t lock;
- 	int (*callback)(struct qeth_card *, struct qeth_reply *,
- 		unsigned long);
- 	u32 seqno;
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 4d0caeebc802..9c3310c4d61d 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -544,6 +544,7 @@ static struct qeth_reply *qeth_alloc_reply(struct qeth_card *card)
- 	if (reply) {
- 		refcount_set(&reply->refcnt, 1);
- 		init_completion(&reply->received);
-+		spin_lock_init(&reply->lock);
- 	}
- 	return reply;
- }
-@@ -799,6 +800,13 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
- 
- 	if (!reply->callback) {
- 		rc = 0;
-+		goto no_callback;
-+	}
-+
-+	spin_lock_irqsave(&reply->lock, flags);
-+	if (reply->rc) {
-+		/* Bail out when the requestor has already left: */
-+		rc = reply->rc;
- 	} else {
- 		if (cmd) {
- 			reply->offset = (u16)((char *)cmd - (char *)iob->data);
-@@ -807,7 +815,9 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
- 			rc = reply->callback(card, reply, (unsigned long)iob);
- 		}
- 	}
-+	spin_unlock_irqrestore(&reply->lock, flags);
- 
-+no_callback:
- 	if (rc <= 0)
- 		qeth_notify_reply(reply, rc);
- 	qeth_put_reply(reply);
-@@ -1749,6 +1759,16 @@ static int qeth_send_control_data(struct qeth_card *card,
- 		rc = (timeout == -ERESTARTSYS) ? -EINTR : -ETIME;
- 
- 	qeth_dequeue_reply(card, reply);
-+
-+	if (reply_cb) {
-+		/* Wait until the callback for a late reply has completed: */
-+		spin_lock_irq(&reply->lock);
-+		if (rc)
-+			/* Zap any callback that's still pending: */
-+			reply->rc = rc;
-+		spin_unlock_irq(&reply->lock);
-+	}
-+
- 	if (!rc)
- 		rc = reply->rc;
- 	qeth_put_reply(reply);
--- 
-2.17.1
-
+> Denis Efremov (7):
+>   PCI: Add define for the number of standard PCI BARs
+>   s390/pci: Replace PCI_BAR_COUNT with PCI_STD_NUM_BARS
+>   x86/PCI: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
+>   PCI/net: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
+>   rapidio/tsi721: use PCI_STD_NUM_BARS in loops instead of
+>     PCI_STD_RESOURCE_END
+>   efifb: Use PCI_STD_NUM_BARS in loops instead of PCI_STD_RESOURCE_END
+>   vfio_pci: Use PCI_STD_NUM_BARS in loops instead of
+>     PCI_STD_RESOURCE_END
+> 
+>  arch/s390/include/asm/pci.h                      |  5 +----
+>  arch/s390/include/asm/pci_clp.h                  |  6 +++---
+>  arch/s390/pci/pci.c                              | 16 ++++++++--------
+>  arch/s390/pci/pci_clp.c                          |  6 +++---
+>  arch/x86/pci/common.c                            |  2 +-
+>  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |  4 ++--
+>  drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c   |  2 +-
+>  drivers/pci/quirks.c                             |  2 +-
+>  drivers/rapidio/devices/tsi721.c                 |  2 +-
+>  drivers/vfio/pci/vfio_pci.c                      |  4 ++--
+>  drivers/vfio/pci/vfio_pci_config.c               |  2 +-
+>  drivers/vfio/pci/vfio_pci_private.h              |  4 ++--
+>  drivers/video/fbdev/efifb.c                      |  2 +-
+>  include/linux/pci.h                              |  2 +-
+>  include/uapi/linux/pci_regs.h                    |  1 +
+>  15 files changed, 29 insertions(+), 31 deletions(-)
+> 
+> -- 
+> 2.21.0
+> 
