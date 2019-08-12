@@ -2,76 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BA5B8A8F8
-	for <lists+linux-s390@lfdr.de>; Mon, 12 Aug 2019 23:07:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B9528A9BC
+	for <lists+linux-s390@lfdr.de>; Mon, 12 Aug 2019 23:51:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726757AbfHLVHA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 12 Aug 2019 17:07:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38744 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726144AbfHLVHA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 12 Aug 2019 17:07:00 -0400
-Received: by mail-wm1-f66.google.com with SMTP id m125so844456wmm.3;
-        Mon, 12 Aug 2019 14:06:59 -0700 (PDT)
+        id S1727611AbfHLVvX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 12 Aug 2019 17:51:23 -0400
+Received: from mail-pl1-f202.google.com ([209.85.214.202]:35670 "EHLO
+        mail-pl1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727459AbfHLVvX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 12 Aug 2019 17:51:23 -0400
+Received: by mail-pl1-f202.google.com with SMTP id s21so61787051plr.2
+        for <linux-s390@vger.kernel.org>; Mon, 12 Aug 2019 14:51:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=VzbGHvSiySq50YMMXV5wIRss5YK1rFgm4/UGnmN70Bc=;
+        b=fAfaiSlH3IJrNJyZYLgYtoIVY8VZlqGfi5Z1XEd34Hclac8Tlt1XU022vSoo6lpHqW
+         WT5ZYdOnF51c3AJ+HgQLgSxq1DFgNbpPZFxvoOpgOi8CLocNEf/zT6VX0F2CI56S+DGU
+         emR9pGJLtKNGCGQGSx/vmN9VKkZcYZVXI6eXGk1DQEFDNeHCD/bdYD6Zet1y/2Gzi9uE
+         yf/jN+kbTfyFtb4u9PsKcmr7JPvUHlj3Oa0vtajMh2hl9bXBiepZSxxAR7vIHlyXgTiy
+         3qSQ1ycRcwY27pQbPVEKnAVbB3qlQm8NnHi8Ju6BN+Yoi5wFlqrTPtF5AwdB6r/eozZn
+         AJbA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=qWOFH+vnQ/d55qFCAGVCq+EnpKRZ2n+KSZvDsQ6ulNI=;
-        b=FIGNzvn5pMOFb/ZhIonIJ50VtezyxDgcWTRYehOfbeKYUPxQDhbs+0hCyixcoDVOBJ
-         5Qz4ZQ5t/8nPfP7eyfeXzs/DpV0rA98IONqKnYAVh2YaOg0aNtFoA9iN4SPDoKLU0xSh
-         cxKDTwNdP7NXa5nJcL0jLtzNXJP5KVndy6Y8k8SB+47h85zXpESwManC4CSAi0vLKKBH
-         m2ZkOTv5c4c/kzywS4oVQ3hg80sHCtwcHVMbwoYEKJpLT07iPgd77/ZGj4pbqhX3Gzop
-         gxeRf0sWVukmjnFyVzsUCNtuvLPWksP7cB5miInTq6yv9GjzlEgaQjt1HsClWNkWh114
-         twfg==
-X-Gm-Message-State: APjAAAUMDXvITrdZqQC6ZpaE3SfIhU6h88GP4ZYQETSrBxNTX/Tgw09i
-        buwDFvmsdqa6ZK601QBWCQ+B8Qyib10=
-X-Google-Smtp-Source: APXvYqyTfyfmXcBwUnQMX1BXqa6qMWfoGfpurBy5nZQqS3EqusXypmdFF0r/5bJNxz/6uyXyzPWj1A==
-X-Received: by 2002:a1c:ed06:: with SMTP id l6mr1035718wmh.128.1565644018345;
-        Mon, 12 Aug 2019 14:06:58 -0700 (PDT)
-Received: from [10.68.32.192] (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.gmail.com with ESMTPSA id j9sm3380620wrx.66.2019.08.12.14.06.57
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 12 Aug 2019 14:06:57 -0700 (PDT)
-Subject: Re: [PATCH 2/7] s390/pci: Replace PCI_BAR_COUNT with PCI_STD_NUM_BARS
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=VzbGHvSiySq50YMMXV5wIRss5YK1rFgm4/UGnmN70Bc=;
+        b=Dp1imcqDLNrapEcrpTnq+f2oD0p6NjiPAkA4OFP+NF8cW92rk9V9sMxauYEfX43Qbc
+         aAkqQf7qGIuwuB2S8u8yhRdWaUYv+Psu68iu4oPyCUhhYLFju4Kf1aW7vCOq+4MO5HBL
+         DUHkMddD/tfxoh14SyPdH5/raex0Spc1rW4K20X6hjO6WCdOPSIHQ3TiPJ/GVfeECd8n
+         QF51egg1/F17JZUKrd0IvMy4l0E2Uarrt+r6vx5GzrA548O2CXC1LIu7czotTdFCuXKC
+         4wAFx/+yV9AEONiHQz+VIj7e0nSSulWjbOXH97L2i1QTk/4X7XpkKE3eP65CcRPoiDw5
+         1Wyw==
+X-Gm-Message-State: APjAAAUtvtpcuK3zggWNv0mwnrCDotB5xg3ZBfULxUqLXIdi5fNTzVPU
+        XqlzN1wK2B+jIV9ToUJaV/3wzXSOtmXjWw5dMRg=
+X-Google-Smtp-Source: APXvYqxzQCyThBwBKrfD6856yni3bdzA7zdg2TImP8qBYmAZ8RHmc6ZzA/B5OR4SphKOBUyy2O28WZ+h0SMYwe93/kc=
+X-Received: by 2002:a63:2685:: with SMTP id m127mr31628780pgm.6.1565646682512;
+ Mon, 12 Aug 2019 14:51:22 -0700 (PDT)
+Date:   Mon, 12 Aug 2019 14:50:34 -0700
+Message-Id: <20190812215052.71840-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.23.0.rc1.153.gdeed80330f-goog
+Subject: [PATCH 01/16] s390/boot: fix section name escaping
+From:   Nick Desaulniers <ndesaulniers@google.com>
+To:     akpm@linux-foundation.org
+Cc:     sedat.dilek@gmail.com, jpoimboe@redhat.com, yhs@fb.com,
+        miguel.ojeda.sandonis@gmail.com,
+        clang-built-linux@googlegroups.com,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190811150802.2418-1-efremov@linux.com>
- <20190811150802.2418-3-efremov@linux.com> <20190812200201.GC11785@google.com>
-From:   Denis Efremov <efremov@linux.com>
-Message-ID: <a23079db-e130-e3b5-deee-ff7c06d9191e@linux.com>
-Date:   Tue, 13 Aug 2019 00:06:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <20190812200201.GC11785@google.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Philipp Rudo <prudo@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi!
+GCC unescapes escaped string section names while Clang does not. Because
+__section uses the `#` stringification operator for the section name, it
+doesn't need to be escaped.
 
-> 
-> There's a loop just below here that should be rewritten in the typical
-> style:
-> 
->         i = PCI_IOV_RESOURCES;
->         for (; i < PCI_SRIOV_NUM_BARS + PCI_IOV_RESOURCES; i++) {
->                 len = pci_resource_len(pdev, i);
-> 
-> Again, not strictly related to this patch, but probably trivial enough
-> to do in the same patch.
-> 
+This antipattern was found with:
+$ grep -e __section\(\" -e __section__\(\" -r
 
-I think it's already fixed in a separate patch https://lkml.org/lkml/2019/8/6/694
-Thanks for the review, I will send v2.
+Reported-by: Sedat Dilek <sedat.dilek@gmail.com>
+Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+---
+ arch/s390/boot/startup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Denis
+diff --git a/arch/s390/boot/startup.c b/arch/s390/boot/startup.c
+index 7b0d05414618..26493c4ff04b 100644
+--- a/arch/s390/boot/startup.c
++++ b/arch/s390/boot/startup.c
+@@ -46,7 +46,7 @@ struct diag_ops __bootdata_preserved(diag_dma_ops) = {
+ 	.diag0c = _diag0c_dma,
+ 	.diag308_reset = _diag308_reset_dma
+ };
+-static struct diag210 _diag210_tmp_dma __section(".dma.data");
++static struct diag210 _diag210_tmp_dma __section(.dma.data);
+ struct diag210 *__bootdata_preserved(__diag210_tmp_dma) = &_diag210_tmp_dma;
+ void _swsusp_reset_dma(void);
+ unsigned long __bootdata_preserved(__swsusp_reset_dma) = __pa(_swsusp_reset_dma);
+-- 
+2.23.0.rc1.153.gdeed80330f-goog
+
