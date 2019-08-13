@@ -2,83 +2,154 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FD908B980
-	for <lists+linux-s390@lfdr.de>; Tue, 13 Aug 2019 15:07:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CB0E88BA03
+	for <lists+linux-s390@lfdr.de>; Tue, 13 Aug 2019 15:23:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728932AbfHMNHX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 13 Aug 2019 09:07:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60956 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728486AbfHMNHX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 13 Aug 2019 09:07:23 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TsShzSbt4bhSjgobAYTU3+tEcGq+xbDvcHgE2PR7JFE=; b=KmK5lYfXHKPZIOmbtg/9TeMAU
-        jR94qd1Da/h0kWRTW7hGeEUlH1c4KOrfkC2dSXptMHhtZWircaTyetQorlqnfzWKzV9C6Cg+ft2Fo
-        OQuLSVQp9GHA79JrrHXsck2yRrzH6LkOOjR8Kqik8b5ubb2W0h6Ae2NNfAV8YqCNajfiomtWGipvp
-        WxW7vXm0ChbaigStFbDzEJAT/TzVxS9UKwU6vPkS/4Frrx+8+Me3QvNyyf7JX6x2ZvnHvebD7Xr4G
-        bR/wTN8GvtoDBRStGqvkfPy3jZX2zb50jyZE+l6CnSEppunxtiEfoeuzHRhptk7SE1ztKeERzvXXz
-        dwfHkwDNQ==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hxWW7-0002GY-Ir; Tue, 13 Aug 2019 13:07:11 +0000
-Date:   Tue, 13 Aug 2019 06:07:11 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Tom Murphy <murphyt7@tcd.ie>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will.deacon@arm.com>,
-        virtualization@lists.linux-foundation.org,
-        David Brown <david.brown@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        linux-s390@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Andy Gross <agross@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        David Woodhouse <dwmw2@infradead.org>,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v4 0/5] iommu/amd: Convert the AMD iommu driver to the
- dma-iommu api
-Message-ID: <20190813130711.GA30468@infradead.org>
-References: <20190613223901.9523-1-murphyt7@tcd.ie>
- <20190624061945.GA4912@infradead.org>
- <20190810071952.GA25550@infradead.org>
- <CALQxJuvxBc3MH3_B_fZ3FvURHOM3F3dvvZ6x=GtALUAvyu7Qxw@mail.gmail.com>
+        id S1728756AbfHMNXe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 13 Aug 2019 09:23:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15026 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728713AbfHMNXe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 13 Aug 2019 09:23:34 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7DDMJxx090997;
+        Tue, 13 Aug 2019 09:23:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubwduhwjw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 09:23:28 -0400
+Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x7DDMJct091083;
+        Tue, 13 Aug 2019 09:23:28 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ubwduhwj6-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 09:23:28 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x7DDJoUI000337;
+        Tue, 13 Aug 2019 13:23:27 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma02dal.us.ibm.com with ESMTP id 2u9nj63ctf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 13 Aug 2019 13:23:27 +0000
+Received: from b03ledav002.gho.boulder.ibm.com (b03ledav002.gho.boulder.ibm.com [9.17.130.233])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7DDNMnd40305086
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 13 Aug 2019 13:23:23 GMT
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8077136072;
+        Tue, 13 Aug 2019 13:23:22 +0000 (GMT)
+Received: from b03ledav002.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BA6B13607D;
+        Tue, 13 Aug 2019 13:23:20 +0000 (GMT)
+Received: from [9.85.180.3] (unknown [9.85.180.3])
+        by b03ledav002.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 13 Aug 2019 13:23:20 +0000 (GMT)
+Subject: Re: [PATCH] s390: vfio-ap: remove unnecessary calls to disable queue
+ interrupts
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, mjrosato@linux.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1565642829-20157-1-git-send-email-akrowiak@linux.ibm.com>
+ <20190813132957.7fafad2d.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <0d5b92ea-a16b-c38c-da15-0de150b28adf@linux.ibm.com>
+Date:   Tue, 13 Aug 2019 09:23:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CALQxJuvxBc3MH3_B_fZ3FvURHOM3F3dvvZ6x=GtALUAvyu7Qxw@mail.gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20190813132957.7fafad2d.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-13_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908130143
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Aug 13, 2019 at 08:09:26PM +0800, Tom Murphy wrote:
-> Hi Christoph,
+On 8/13/19 7:29 AM, Cornelia Huck wrote:
+> On Mon, 12 Aug 2019 16:47:09 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 > 
-> I quit my job and am having a great time traveling South East Asia.
-
-Enjoy!  I just returned from my vacation.
-
-> I definitely don't want this work to go to waste and I hope to repost it
-> later this week but I can't guarantee it.
+>> When an AP queue is reset (zeroized), interrupts are disabled. The queue
+>> reset function currently tries to disable interrupts unnecessarily. This patch
+>> removes the unnecessary calls to disable interrupts after queue reset.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/vfio_ap_ops.c | 13 +++++++++----
+>>   1 file changed, 9 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+>> index 0604b49a4d32..407c2f0f25f9 100644
+>> --- a/drivers/s390/crypto/vfio_ap_ops.c
+>> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+>> @@ -1114,18 +1114,19 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>>   	return NOTIFY_OK;
+>>   }
+>>   
+>> -static void vfio_ap_irq_disable_apqn(int apqn)
+>> +static struct vfio_ap_queue *vfio_ap_find_qdev(int apqn)
+>>   {
+>>   	struct device *dev;
+>> -	struct vfio_ap_queue *q;
+>> +	struct vfio_ap_queue *q = NULL;
+>>   
+>>   	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>>   				 &apqn, match_apqn);
+>>   	if (dev) {
+>>   		q = dev_get_drvdata(dev);
+>> -		vfio_ap_irq_disable(q);
+>>   		put_device(dev);
+>>   	}
+>> +
+>> +	return q;
+>>   }
+>>   
+>>   int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+>> @@ -1164,6 +1165,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>>   	int rc = 0;
+>>   	unsigned long apid, apqi;
+>>   	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+>> +	struct vfio_ap_queue *q;
+>>   
+>>   	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+>>   			     matrix_mdev->matrix.apm_max + 1) {
+>> @@ -1177,7 +1179,10 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>>   			 */
+>>   			if (ret)
+>>   				rc = ret;
+>> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
 > 
-> Let me know if you need this urgently.
+> Might be useful to stick a comment in this function that resetting the
+> queue has also disabled the interrupts, as the architecture
+> documentation for that is not publicly available.
 
-It isn't in any strict sense urgent.  I just have various DMA API plans
-that I'd rather just implement in dma-direct and dma-iommu rather than
-also in two additional commonly used iommu drivers.  So on the one had
-the sooner the better, on the other hand no real urgency.
+Will do.
+
+> 
+>> +
+>> +			q = vfio_ap_find_qdev(AP_MKQID(apid, apqi));
+>> +			if (q)
+>> +				vfio_ap_free_aqic_resources(q);
+>>   		}
+>>   	}
+>>   
+> 
+> Trusting your reading of the architecture,
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> 
+
