@@ -2,205 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B5468D17E
-	for <lists+linux-s390@lfdr.de>; Wed, 14 Aug 2019 12:52:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5E658E081
+	for <lists+linux-s390@lfdr.de>; Thu, 15 Aug 2019 00:14:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbfHNKwO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 14 Aug 2019 06:52:14 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57832 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725888AbfHNKwO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 14 Aug 2019 06:52:14 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 87819ADEF;
-        Wed, 14 Aug 2019 10:52:12 +0000 (UTC)
-Date:   Wed, 14 Aug 2019 12:52:07 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, jikos@kernel.org, pmladek@suse.com,
-        joe.lawrence@redhat.com, nstange@suse.de,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH] s390/livepatch: Implement reliable stack tracing for
- the consistency model
-In-Reply-To: <20190728204456.7bxnsbuo4o3tjxeq@treble>
-Message-ID: <alpine.LSU.2.21.1908141241061.16696@pobox.suse.cz>
-References: <20190710105918.22487-1-mbenes@suse.cz> <20190728204456.7bxnsbuo4o3tjxeq@treble>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1729352AbfHNWO3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 14 Aug 2019 18:14:29 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:41559 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728378AbfHNWOU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 14 Aug 2019 18:14:20 -0400
+Received: by mail-qt1-f195.google.com with SMTP id i4so353315qtj.8
+        for <linux-s390@vger.kernel.org>; Wed, 14 Aug 2019 15:14:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=p6m83mGjllDiHyeRTSS1oVMHX5M/xE6ILn6PPhzsgs4=;
+        b=l5PC+4msT+R1VOq1FIInu61dIh2STHPN9aSBt/Y5M3n644FfA169IT6wzP+sfbruwG
+         5vHd8QNfmmF7FOlV1OW4+1ls9+argQAW0MZ9696kjqRFjMtNiRxkPVvom8CpuMz6+P3J
+         lvnykAE+N5ClLjt8+21Oenlj55mmWn47h6bOufTUj3iAyACG+cL0ImoQgj5m6u3w1/lr
+         fVPm9fs++0X3Li7mpOQ13No26+jYpH9OobXYps5GGnrfpp0Xq6qTsPtsJRMHzlRsuSi2
+         Q5RuPSHMeFGhG1MzboDTj+tp2IBpQDy9TN5wUYjWC528WeGARQxpLHz2F9meUvIkEvkQ
+         sSPA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=p6m83mGjllDiHyeRTSS1oVMHX5M/xE6ILn6PPhzsgs4=;
+        b=NmliHGTjIwYch6Yu6fGaOY33R9Kh459uP7ZVKl+x9f+m6S0ZwwcpvS8y7TuFVh1hpp
+         LYpaliQ0fPlh7aOKAV3lOl9JtPwKvEVRn4gNp/0WZAKhiwh4Erb5B8unaiUE/FZ2D2cB
+         XbXLwKJhMJIicNHJRyObArgzWfzb1AJlhEQiT7GkLwfMtnEdlm0F3zDW/pzPENFk632L
+         9oGEyuRZhq3eCjSQSAB/2CABfzatSR3HMrh1wgukHPMdKRNNYWUl4yqrXuPYLPobQ0LX
+         ZpiSnb1qqb8b6fU/FJcrMnDvs4DlnpP6FekSvigZ125TL8AoX1XFfiV4MysiQQvFx3kx
+         0JSw==
+X-Gm-Message-State: APjAAAUPGR0P1QxIf0uSZVrLjy6Y8ZGcfjeiw9vpuZm5YPlyCaDEj4Ez
+        aW9PorXPM0ehbHKpbfr8dPwoBA8+G/44Q0maAuE=
+X-Google-Smtp-Source: APXvYqwvEwq36YC/YcFdGthiFQqEswOUmu8y33AXL4ty34gsygcaTEjmhvj04/dFUfa1vFoE719aJcDSjuFoUwkSVes=
+X-Received: by 2002:aed:3826:: with SMTP id j35mr1333309qte.54.1565820860049;
+ Wed, 14 Aug 2019 15:14:20 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Received: by 2002:aed:3544:0:0:0:0:0 with HTTP; Wed, 14 Aug 2019 15:14:19
+ -0700 (PDT)
+Reply-To: Katerinejones19@gmail.com
+From:   "MS. MARYANNA B. THOMASON" <westernunion.benin982@gmail.com>
+Date:   Wed, 14 Aug 2019 23:14:19 +0100
+Message-ID: <CAP=nHB+U+By16HzeUHiDfPT5KNtemGam6gniZhL2s7_itZ3F8w@mail.gmail.com>
+Subject: TODAY, Wed, Aug 14, 2019 I AM READY FOR COMING TO YOUR ADDRESS WITH
+ THIS ATM CARD
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> > diff --git a/arch/s390/include/asm/unwind.h b/arch/s390/include/asm/unwind.h
-> > index d827b5b9a32c..1cc96c54169c 100644
-> > --- a/arch/s390/include/asm/unwind.h
-> > +++ b/arch/s390/include/asm/unwind.h
-> > @@ -45,6 +45,25 @@ void __unwind_start(struct unwind_state *state, struct task_struct *task,
-> >  bool unwind_next_frame(struct unwind_state *state);
-> >  unsigned long unwind_get_return_address(struct unwind_state *state);
-> >  
-> > +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-> > +void __unwind_start_reliable(struct unwind_state *state,
-> > +			     struct task_struct *task, unsigned long sp);
-> > +bool unwind_next_frame_reliable(struct unwind_state *state);
-> > +
-> > +static inline void unwind_start_reliable(struct unwind_state *state,
-> > +					 struct task_struct *task)
-> > +{
-> > +	unsigned long sp;
-> > +
-> > +	if (task == current)
-> > +		sp = current_stack_pointer();
-> > +	else
-> > +		sp = task->thread.ksp;
-> > +
-> > +	__unwind_start_reliable(state, task, sp);
-> > +}
-> > +#endif
-> > +
-> 
-> (Ah, cool, I didn't realize s390 ported the x86 unwind interfaces.  We
-> should look at unifying them someday.)
+ATTN DEAR PARCEL BENEFICIARY.
 
-Yes, it is quite recent change.
- 
-> Why do you need _reliable() variants of the unwind interfaces?  Can the
-> error checking be integrated into unwind_start() and unwind_next_frame()
-> like they are on x86?
+I AM CATHY JONES,DIPLOMATIC AGENT ASIGNED ON THE DELIVERY OF YOUR ATM
+CARD THROUGH MS. MARYANNA B. THOMASON, DHL MANAGEMENT DIRECTOR NEW
+YORK.
+TODAY, Wed, Aug 14, 2019 I AM READY FOR COMING TO YOUR ADDRESS WITH
+THIS ATM CARD, So before i deliver I want you to send me.
+official diplomatic agent delivery fee sum of $150.00 us
+ only. I am here at JFK Airport,Florida. USA
 
-Good question. I rebased the patch a lot of times and it was much easier 
-in the end just to separate the original and reliable infrastructure. Not 
-the best for upstream inclusion though.
+SEND THIS FEE BY WESTERN UNION OR MONEY WITH RECEIVER'S NAME AND ADDRESS BELOW.
 
-unwind_start_reliable() is basically the same as the original. 
-get_stack_info_reliable() is the main difference. It is much simpler in 
-our case. I wanted to avoid a new parameter or a callback, but let me 
-think about it again.
-
-unwind_next_frame_reliable() is again a lot simpler than the original one, 
-because we know that the unwinding happens only on a task stack. I'll 
-think about inclusion to the unwind_next_frame() though. The code 
-duplication is not nice.
-
-> > +#ifdef CONFIG_HAVE_RELIABLE_STACKTRACE
-> > +void __unwind_start_reliable(struct unwind_state *state,
-> > +			     struct task_struct *task, unsigned long sp)
-> > +{
-> > +	struct stack_info *info = &state->stack_info;
-> > +	struct stack_frame *sf;
-> > +	unsigned long ip;
-> > +
-> > +	memset(state, 0, sizeof(*state));
-> > +	state->task = task;
-> > +
-> > +	/* Get current stack pointer and initialize stack info */
-> > +	if (get_stack_info_reliable(sp, task, info) ||
-> > +	    !on_stack(info, sp, sizeof(struct stack_frame))) {
-> > +		/* Something is wrong with the stack pointer */
-> > +		info->type = STACK_TYPE_UNKNOWN;
-> > +		state->error = true;
-> > +		return;
-> > +	}
-> > +
-> > +	/* Get the instruction pointer from the stack frame */
-> > +	sf = (struct stack_frame *) sp;
-> > +	ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> > +
-> > +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> > +	/* Decode any ftrace redirection */
-> > +	if (ip == (unsigned long) return_to_handler)
-> > +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-> > +					   ip, NULL);
-> > +#endif
-> 
-> The return_to_handler and ifdef checks aren't needed.  Those are done
-> already by the call.
-
-Correct. I realized it when Joe asked about the hunk.
- 
-> Also it seems a bit odd that the kretprobes check isn't done in this
-> function next to the ftrace check.
-
-Ah, yes.
-
-> > +
-> > +	/* Update unwind state */
-> > +	state->sp = sp;
-> > +	state->ip = ip;
-> > +}
-> > +
-> > +bool unwind_next_frame_reliable(struct unwind_state *state)
-> > +{
-> > +	struct stack_info *info = &state->stack_info;
-> > +	struct stack_frame *sf;
-> > +	struct pt_regs *regs;
-> > +	unsigned long sp, ip;
-> > +
-> > +	sf = (struct stack_frame *) state->sp;
-> > +	sp = READ_ONCE_NOCHECK(sf->back_chain);
-> > +	/*
-> > +	 * Idle tasks are special. The final back-chain points to nodat_stack.
-> > +	 * See CALL_ON_STACK() in smp_start_secondary() callback used in
-> > +	 * __cpu_up(). We just accept it, go to else branch and look for
-> > +	 * pt_regs.
-> > +	 */
-> > +	if (likely(sp && !(is_idle_task(state->task) &&
-> > +			   outside_of_stack(state, sp)))) {
-> > +		/* Non-zero back-chain points to the previous frame */
-> > +		if (unlikely(outside_of_stack(state, sp)))
-> > +			goto out_err;
-> > +
-> > +		sf = (struct stack_frame *) sp;
-> > +		ip = READ_ONCE_NOCHECK(sf->gprs[8]);
-> > +	} else {
-> > +		/* No back-chain, look for a pt_regs structure */
-> > +		sp = state->sp + STACK_FRAME_OVERHEAD;
-> > +		regs = (struct pt_regs *) sp;
-> > +		if ((unsigned long)regs != info->end - sizeof(struct pt_regs))
-> > +			goto out_err;
-> > +		if (!(state->task->flags & (PF_KTHREAD | PF_IDLE)) &&
-> > +		     !user_mode(regs))
-> > +			goto out_err;
-> > +
-> > +		state->regs = regs;
-> > +		goto out_stop;
-> > +	}
-> > +
-> > +#ifdef CONFIG_FUNCTION_GRAPH_TRACER
-> > +	/* Decode any ftrace redirection */
-> > +	if (ip == (unsigned long) return_to_handler)
-> > +		ip = ftrace_graph_ret_addr(state->task, &state->graph_idx,
-> > +					   ip, (void *) sp);
-> > +#endif
-> > +
-> > +	/* Update unwind state */
-> > +	state->sp = sp;
-> > +	state->ip = ip;
-> > +	return true;
-> > +
-> > +out_err:
-> > +	state->error = true;
-> > +out_stop:
-> > +	state->stack_info.type = STACK_TYPE_UNKNOWN;
-> > +	return false;
-> > +}
-> > +#endif
-> 
-> For the _reliable() variants of the unwind interfaces, there's a lot of
-> code duplication with the non-reliable variants.  It looks like it would
-> be a lot cleaner (and easier to follow) if they were integrated.
-
-True.
- 
-> Overall it's looking good though.
-
-Great. Now let me try to make it nicer.
-
-Thanks for the review.
-
-Miroslav
+RECEIVER'S NAME-----------------ERROL PRINGLE
+ADDRESS----------------3500 OLD DENTON RD APT 208; CARROLLTON, TEXAS 75007
+COUNTRY----------------USA
+AMOUNT--------------------$150.00 ONLY
+TEST QUESTION----------------WHO IS THE CREATOR
+ANSWER------------------GOD
+ meanwhile this $150.00 is required by the Custom Service,USA Homeland
+Security,for protection of your delivery, it will make the ATM CARD
+and funds worth $15.8MILLION US DOLLARS secure, Beleiev me, this is my
+word, remark my word,you will receive your delivery from me, Mrs.
+Cathy Jones once you send this only $150.00 today.
+I WAIT ON YOUR PAYMENT CONFIRMATION, ONCE I GOT YOUR PAYMENT, I WILL
+FINALLY ARRIVE TO YOUR NEAREST ADDRESS. today
+THANKS AND MAY GOD BLESS  YOU
+CATHY JONES,DIPLOMATIC AGENT
+EMAIL; katerinejones19@gmail.com
+CALL OR TEXT ME, DIPLOMATIC AGENT MS. CATHY JONES
+Phone Number; (408) 650-6103,
