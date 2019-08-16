@@ -2,180 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AD5AF8F70C
-	for <lists+linux-s390@lfdr.de>; Fri, 16 Aug 2019 00:34:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E3CF68FEDC
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Aug 2019 11:24:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728956AbfHOWeL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 15 Aug 2019 18:34:11 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2248 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729668AbfHOWeL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 15 Aug 2019 18:34:11 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7FMWAlU033026
-        for <linux-s390@vger.kernel.org>; Thu, 15 Aug 2019 18:34:10 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2udemdbdnk-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 15 Aug 2019 18:34:09 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Thu, 15 Aug 2019 23:34:07 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 15 Aug 2019 23:34:05 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7FMY4m237945780
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 15 Aug 2019 22:34:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2635F4205E;
-        Thu, 15 Aug 2019 22:34:04 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CE6D442059;
-        Thu, 15 Aug 2019 22:34:03 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.177.40])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 15 Aug 2019 22:34:03 +0000 (GMT)
-Date:   Fri, 16 Aug 2019 00:34:02 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH RFC UNTESTED] vfio-ccw: indirect access to translated
- cps
-In-Reply-To: <20190808104306.2450bdcf.cohuck@redhat.com>
-References: <20190726100617.19718-1-cohuck@redhat.com>
-        <20190730174910.47930494.pasic@linux.ibm.com>
-        <20190807132311.5238bc24.cohuck@redhat.com>
-        <20190807160136.178e69de.pasic@linux.ibm.com>
-        <20190808104306.2450bdcf.cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1726918AbfHPJY5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 16 Aug 2019 05:24:57 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41642 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726879AbfHPJY5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 16 Aug 2019 05:24:57 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j16so890377wrr.8;
+        Fri, 16 Aug 2019 02:24:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=/VxpV6HL/eaLGj7FsELgy9XZqdi/XB/wlgbntskeVnQ=;
+        b=IbAKXSF5R1mr1Ot5O0SVLwAG2d11xlP91LdIq3kT56OXCfcZQpdGKIylwQP3f1bF5V
+         cj+htenCqB1qBD1rvN+lyZF9nXCUCaeeJ0rSyIw3uuCrFgH7rGaf1+QIgKbEuGRdOjzh
+         criNKo5Du8irVDnbTXz7vicG14NNNWilRuwW0LUjrPCMYxazCc+DczVaDj5GXf3r3Miu
+         q5Hf+xL4WVFY9W+0XERsk+zkFtddPw2URZewd5zzvDjPcOdYRCqdjVfl4K1Zw9Op4zpR
+         0zwzM3zhWiRRFZ+i2PxOn4fn2725rRu/cwlHN0nttr8XcJiQT4Xn1pfhzkRJyFCVYVRK
+         yhWg==
+X-Gm-Message-State: APjAAAVtDI8tsSHPbZTPV4bguM28TsQVTUXOL7oqYePXixGMBsnPLfdz
+        qUdpugQy7H7Kp+Jc0NjAzU0=
+X-Google-Smtp-Source: APXvYqyy6pgFa+BB7KaySmOfpgsDcaufflSKyMcUlSVwwJjnZb2uc2ckVujWGkNfhMrvbZguRjo1Mw==
+X-Received: by 2002:adf:eac3:: with SMTP id o3mr8886853wrn.264.1565947494195;
+        Fri, 16 Aug 2019 02:24:54 -0700 (PDT)
+Received: from localhost.localdomain (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
+        by smtp.googlemail.com with ESMTPSA id q20sm16521138wrc.79.2019.08.16.02.24.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 16 Aug 2019 02:24:53 -0700 (PDT)
+From:   Denis Efremov <efremov@linux.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>, kvm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, netdev@vger.kernel.org,
+        x86@kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH v2 00/10] Add definition for the number of standard PCI BARs
+Date:   Fri, 16 Aug 2019 12:24:27 +0300
+Message-Id: <20190816092437.31846-1-efremov@linux.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19081522-4275-0000-0000-000003598D6E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19081522-4276-0000-0000-0000386BA429
-Message-Id: <20190816003402.2a52b863.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-15_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908150213
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 8 Aug 2019 10:43:06 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+Code that iterates over all standard PCI BARs typically uses
+PCI_STD_RESOURCE_END, but this is error-prone because it requires
+"i <= PCI_STD_RESOURCE_END" rather than something like
+"i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
+way PCI_SRIOV_NUM_BARS is used. There is already the definition
+PCI_BAR_COUNT for s390 only. Thus, this patchset introduces it globally.
 
-> On Wed, 7 Aug 2019 16:01:36 +0200
-> Halil Pasic <pasic@linux.ibm.com> wrote:
+Changes in v2:
+  - Reverse checks in pci_iomap_range,pci_iomap_wc_range.
+  - Refactor loops in vfio_pci to keep PCI_STD_RESOURCES.
+  - Add 2 new patches to replace the magic constant with new define.
+  - Split net patch in v1 to separate stmmac and dwc-xlgmac patches.
 
-[..]
+Denis Efremov (10):
+  PCI: Add define for the number of standard PCI BARs
+  s390/pci: Loop using PCI_STD_NUM_BARS
+  x86/PCI: Loop using PCI_STD_NUM_BARS
+  stmmac: pci: Loop using PCI_STD_NUM_BARS
+  net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
+  rapidio/tsi721: Loop using PCI_STD_NUM_BARS
+  efifb: Loop using PCI_STD_NUM_BARS
+  vfio_pci: Loop using PCI_STD_NUM_BARS
+  PCI: hv: Use PCI_STD_NUM_BARS
+  PCI: Use PCI_STD_NUM_BARS
 
-> > A respin of what? If you mean Pierre's "vfio: ccw: Make FSM functions
-> > atomic" (https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1711466.html)
-> > that won't work any more because of async.
-> 
-> s/respin/rework/, more likely.
+ arch/s390/include/asm/pci.h                      |  5 +----
+ arch/s390/include/asm/pci_clp.h                  |  6 +++---
+ arch/s390/pci/pci.c                              | 16 ++++++++--------
+ arch/s390/pci/pci_clp.c                          |  6 +++---
+ arch/x86/pci/common.c                            |  2 +-
+ drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |  4 ++--
+ drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c   |  2 +-
+ drivers/pci/controller/pci-hyperv.c              | 10 +++++-----
+ drivers/pci/pci.c                                | 11 ++++++-----
+ drivers/pci/quirks.c                             |  4 ++--
+ drivers/rapidio/devices/tsi721.c                 |  2 +-
+ drivers/vfio/pci/vfio_pci.c                      | 11 +++++++----
+ drivers/vfio/pci/vfio_pci_config.c               | 10 ++++++----
+ drivers/vfio/pci/vfio_pci_private.h              |  4 ++--
+ drivers/video/fbdev/efifb.c                      |  2 +-
+ include/linux/pci.h                              |  2 +-
+ include/uapi/linux/pci_regs.h                    |  1 +
+ 17 files changed, 51 insertions(+), 47 deletions(-)
 
-Nod.
-
-> 
-> > 
-> > > > 
-> > > > Besides the only point of converting cp to a pointer seems to be
-> > > > policing access to cp_area (which used to be cp). I.e. if it is
-> > > > NULL: don't touch it, otherwise: go ahead. We can do that with a single
-> > > > bit, we don't need a pointer for that.  
-> > > 
-> > > The idea was
-> > > - do translation etc. on an area only accessed by the thread doing the
-> > >   translation
-> > > - switch the pointer to that area once the cp has been submitted
-> > >   successfully (and it is therefore associated with further interrupts
-> > >   etc.)
-> > > The approach in this patch is probably a bit simplistic.
-> > > 
-> > > I think one bit is not enough, we have at least three states:
-> > > - idle; start using the area if you like
-> > > - translating; i.e. only the translator is touching the area, keep off
-> > > - submitted; we wait for interrupts, handle them or free if no (more)
-> > >   interrupts can happen  
-> > 
-> > I think your patch assigns the pointer when transitioning from
-> > translated --> submitted. That can be tracked with a single bit, that's
-> > what I was trying to say. You seem to have misunderstood: I never
-> > intended to claim that a single bit is sufficient to get this clean (only
-> > to accomplish what the pointer accomplishes -- modulo races).
-> > 
-> > My impression was that the 'initialized' field is abut the idle -->
-> > translating transition, but I never fully understood this 'initialized'
-> > patch.
-> 
-> So we do have three states here, right? (I hope we're not talking past
-> each other again...)
-
-Right, AFAIR  and without any consideration to fine details the three
-states and two state transitions do make sense.
-
-> 
-> > 
-> > >   
-> > > > 
-> > > > Could we convert initialized into some sort of cp.status that
-> > > > tracks/controls access and responsibilities? By working with bits we
-> > > > could benefit from the atomicity of bit-ops -- if I'm not wrong.  
-> > > 
-> > > We have both the state of the device (state machine) and the state of a
-> > > cp, then. If we keep to a single cp area, we should track that within a
-> > > single state (i.e. the device state).
-> > >   
-> > 
-> > Maybe. Maybe not. I would have to write or see the code to figure that
-> > out. Would we need additional states introduced to the device (state
-> > machine)?
-> 
-> We might, but I don't think so. My point is that we probably want to
-> track on a device level and not introduce extra tracking.
-> 
-
-OK
-
-> > 
-> > Anyway we do need to fix the races in the device state machine
-> > for sure. I've already provided some food for thought (in form of a draft
-> > patch) to Eric.
-> 
-> Any chance you could post that patch? :)
-> 
-
-Unfortunately I don't have the bandwidth to make a proper patch out of
-it. The interactions are quite complex and it would take quite some time
-to reach the point where I can say everything feels water-proof and
-clean (inclusive testing). But since you seem curious about it I will
-send you my draft work.
-
-[..]
-
-> > 
-> > TL;DR I don't think having two cp areas make sense.
-> 
-> Let's stop going down that way further, I agree.
-> 
-
-Great!
-
-Regards,
-Halil
+-- 
+2.21.0
 
