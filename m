@@ -2,113 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1BDAC901B5
-	for <lists+linux-s390@lfdr.de>; Fri, 16 Aug 2019 14:35:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DEA290325
+	for <lists+linux-s390@lfdr.de>; Fri, 16 Aug 2019 15:35:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727206AbfHPMf5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 16 Aug 2019 08:35:57 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53929 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726981AbfHPMf5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 16 Aug 2019 08:35:57 -0400
-Received: by mail-wm1-f65.google.com with SMTP id 10so3927638wmp.3
-        for <linux-s390@vger.kernel.org>; Fri, 16 Aug 2019 05:35:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=KwGTj9MadW2uA0xPCMC6ymqxz6VCNxTyOA8nd35Nmhw=;
-        b=G2N/p4oNYSX6WLzGsJakUi/5/XgFJwLKRg+H0yInBrVM2nkFfdOnO4Sx5s7Fk+gt+i
-         TXVl2hd890+fbbTtcL6wZn2bXmG/h/evEim9nlO3K8N8PC3+2DG66FLb7uytohKZeBJv
-         nnCPESUKDDEX3DVKDkhHQzmLgJUTelAOVMKqlRHdnY6KVb1ZMo2bx9IMpkfOlY9y8A8N
-         HDIfSDDkrJt9/zZKlgVDFVHuZmQTqabhOGEsifXkrh1+aDmDx/ciLawbkzz8dFqcmV2B
-         b8Fa2hGOsgKY0NLtPiI0jMVbMXCt/Xe/vDl0aTJP0eaFxBIeCcWnkeCrrkSg56GVcHcL
-         0tPw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=KwGTj9MadW2uA0xPCMC6ymqxz6VCNxTyOA8nd35Nmhw=;
-        b=aeLUOFQmJqW0tnG+uo5Dqu5Gsp22ZoEczDpViDZeMmPycE5OkqONrVZLMcC2GeELdO
-         gQ3by31y+V6Yr6i3uZ+1TpKUsRtbomsCt8mZLfYJNnzF7voon0bXLPkwEvivXJfe11iv
-         wEqS7qTsfAJL38try2qFn5MWvb4EWdlROa8pwrKOaz8CE71j6U0qSV1TzDp7qpWZS8OB
-         XuzyexI7HulilD1+ztBtg9qzYHbLS3JU7ZUfsRL4AQNhub9f2QFfcw8qWXaPPi1ApvTB
-         Odc+RsAO3LIyw5wmAtcDoOFdthNj2+uEoOsPbTFZ5pyeUFmRLAbCI15Vp+r5Lvg9MS0J
-         SA9Q==
-X-Gm-Message-State: APjAAAX0bwG0lpn2iIe6RyxbIQ6+/rF7bokU4qyNOJ/Xb4LUPnM9rgWv
-        aj42Var//VIF2+bhcAzrjMWmOcuMamjdGEmL
-X-Google-Smtp-Source: APXvYqwJPq+mvMHYfkzSJaDaNtdr6H+t7bT2MA2LX8QUMIl5otvakbRDAVgnuIpYHjNgWcnblXOPeg==
-X-Received: by 2002:a1c:a957:: with SMTP id s84mr7308060wme.65.1565958955178;
-        Fri, 16 Aug 2019 05:35:55 -0700 (PDT)
-Received: from localhost.localdomain ([2a02:587:a407:da00:f1b5:e68c:5f7f:79e7])
-        by smtp.gmail.com with ESMTPSA id o17sm4427187wrx.60.2019.08.16.05.35.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 16 Aug 2019 05:35:54 -0700 (PDT)
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-To:     linux-crypto@vger.kernel.org
-Cc:     herbert@gondor.apana.org.au, ebiggers@kernel.org,
-        linux-s390@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: [PATCH] crypto: s390/xts-aes - invoke fallback for ciphertext stealing
-Date:   Fri, 16 Aug 2019 15:35:45 +0300
-Message-Id: <20190816123545.22848-1-ard.biesheuvel@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        id S1727240AbfHPNfK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 16 Aug 2019 09:35:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33326 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726032AbfHPNfK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 16 Aug 2019 09:35:10 -0400
+Received: from localhost (173-25-83-245.client.mchsi.com [173.25.83.245])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4F6192086C;
+        Fri, 16 Aug 2019 13:35:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1565962508;
+        bh=ABxOftLwFXyEtVutr9yp4mVdKuJfymbfWw0PpyAU54k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qJ7XW4pB4oRR2wJecSKo5/EoIfu20RFdYa7/XabQkFzddIlh3mBwh4HDZuiXKFxPU
+         SvEV5PjiwW88n9OLgcCWvMgx9Z/ia+QmzkaswaxpDwUZbnHOb+iNwShwNNTFTANgEN
+         F15bBIGStYAxNZGMti+gxiIuC/+iSQAM6THA4Ulo=
+Date:   Fri, 16 Aug 2019 08:35:07 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Matt Porter <mporter@kernel.crashing.org>,
+        Alexandre Bounine <alex.bou9@gmail.com>,
+        Peter Jones <pjones@redhat.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Jose Abreu <Jose.Abreu@synopsys.com>, kvm@vger.kernel.org,
+        linux-fbdev@vger.kernel.org, netdev@vger.kernel.org,
+        x86@kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 00/10] Add definition for the number of standard PCI
+ BARs
+Message-ID: <20190816133507.GN253360@google.com>
+References: <20190816092437.31846-1-efremov@linux.com>
+ <20190816105128.GD14111@e119886-lin.cambridge.arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190816105128.GD14111@e119886-lin.cambridge.arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-For correctness and compliance with the XTS-AES specification, we are
-adding support for ciphertext stealing to XTS implementations, even
-though no use cases are known that will be enabled by this.
+On Fri, Aug 16, 2019 at 11:51:28AM +0100, Andrew Murray wrote:
+> On Fri, Aug 16, 2019 at 12:24:27PM +0300, Denis Efremov wrote:
+> > Code that iterates over all standard PCI BARs typically uses
+> > PCI_STD_RESOURCE_END, but this is error-prone because it requires
+> > "i <= PCI_STD_RESOURCE_END" rather than something like
+> > "i < PCI_STD_NUM_BARS". We could add such a definition and use it the same
+> > way PCI_SRIOV_NUM_BARS is used. There is already the definition
+> > PCI_BAR_COUNT for s390 only. Thus, this patchset introduces it globally.
+> > 
+> > Changes in v2:
+> >   - Reverse checks in pci_iomap_range,pci_iomap_wc_range.
+> >   - Refactor loops in vfio_pci to keep PCI_STD_RESOURCES.
+> >   - Add 2 new patches to replace the magic constant with new define.
+> >   - Split net patch in v1 to separate stmmac and dwc-xlgmac patches.
+> > 
+> > Denis Efremov (10):
+> >   PCI: Add define for the number of standard PCI BARs
+> >   s390/pci: Loop using PCI_STD_NUM_BARS
+> >   x86/PCI: Loop using PCI_STD_NUM_BARS
+> >   stmmac: pci: Loop using PCI_STD_NUM_BARS
+> >   net: dwc-xlgmac: Loop using PCI_STD_NUM_BARS
+> >   rapidio/tsi721: Loop using PCI_STD_NUM_BARS
+> >   efifb: Loop using PCI_STD_NUM_BARS
+> >   vfio_pci: Loop using PCI_STD_NUM_BARS
+> >   PCI: hv: Use PCI_STD_NUM_BARS
+> >   PCI: Use PCI_STD_NUM_BARS
+> > 
+> >  arch/s390/include/asm/pci.h                      |  5 +----
+> >  arch/s390/include/asm/pci_clp.h                  |  6 +++---
+> >  arch/s390/pci/pci.c                              | 16 ++++++++--------
+> >  arch/s390/pci/pci_clp.c                          |  6 +++---
+> >  arch/x86/pci/common.c                            |  2 +-
+> >  drivers/net/ethernet/stmicro/stmmac/stmmac_pci.c |  4 ++--
+> >  drivers/net/ethernet/synopsys/dwc-xlgmac-pci.c   |  2 +-
+> >  drivers/pci/controller/pci-hyperv.c              | 10 +++++-----
+> >  drivers/pci/pci.c                                | 11 ++++++-----
+> >  drivers/pci/quirks.c                             |  4 ++--
+> >  drivers/rapidio/devices/tsi721.c                 |  2 +-
+> >  drivers/vfio/pci/vfio_pci.c                      | 11 +++++++----
+> >  drivers/vfio/pci/vfio_pci_config.c               | 10 ++++++----
+> >  drivers/vfio/pci/vfio_pci_private.h              |  4 ++--
+> >  drivers/video/fbdev/efifb.c                      |  2 +-
+> >  include/linux/pci.h                              |  2 +-
+> >  include/uapi/linux/pci_regs.h                    |  1 +
+> >  17 files changed, 51 insertions(+), 47 deletions(-)
+> 
+> I've come across a few more places where this change can be made. There
+> may be multiple instances in the same file, but only the first is shown
+> below:
+> 
+> drivers/misc/pci_endpoint_test.c:       for (bar = BAR_0; bar <= BAR_5; bar++) {
+> drivers/net/ethernet/intel/e1000/e1000_main.c:          for (i = BAR_1; i <= BAR_5; i++) {
+> drivers/net/ethernet/intel/ixgb/ixgb_main.c:    for (i = BAR_1; i <= BAR_5; i++) {
+> drivers/pci/controller/dwc/pci-dra7xx.c:        for (bar = BAR_0; bar <= BAR_5; bar++)
+> drivers/pci/controller/dwc/pci-layerscape-ep.c: for (bar = BAR_0; bar <= BAR_5; bar++)
+> drivers/pci/controller/dwc/pcie-artpec6.c:      for (bar = BAR_0; bar <= BAR_5; bar++)
+> drivers/pci/controller/dwc/pcie-designware-plat.c:      for (bar = BAR_0; bar <= BAR_5; bar++)
+> drivers/pci/endpoint/functions/pci-epf-test.c:  for (bar = BAR_0; bar <= BAR_5; bar++) {
+> include/linux/pci-epc.h:        u64     bar_fixed_size[BAR_5 + 1];
+> drivers/scsi/pm8001/pm8001_hwi.c:       for (bar = 0; bar < 6; bar++) {
+> drivers/scsi/pm8001/pm8001_init.c:      for (bar = 0; bar < 6; bar++) {
+> drivers/ata/sata_nv.c:  for (bar = 0; bar < 6; bar++)
+> drivers/video/fbdev/core/fbmem.c:       for (idx = 0, bar = 0; bar < PCI_ROM_RESOURCE; bar++) {
+> drivers/staging/gasket/gasket_core.c:   for (i = 0; i < GASKET_NUM_BARS; i++) {
+> drivers/tty/serial/8250/8250_pci.c:     for (i = 0; i < PCI_NUM_BAR_RESOURCES; i++) { <-----------
 
-Since the s390 implementation already has a fallback skcipher standby
-for other purposes, let's use it for this purpose as well. If ciphertext
-stealing use cases ever become a bottleneck, we can always revisit this.
+Thanks, I agree, these look like good candidates as well.
 
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
----
- arch/s390/crypto/aes_s390.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> It looks like BARs are often iterated with PCI_NUM_BAR_RESOURCES, there
+> are a load of these too found with:
+> 
+> git grep PCI_ROM_RESOURCE | grep "< "
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index dc0f72dd6e03..a34faadc757e 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -512,7 +512,7 @@ static int xts_aes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
- 	unsigned long fc;
- 	int err;
- 
--	err = xts_check_key(tfm, in_key, key_len);
-+	err = xts_fallback_setkey(tfm, in_key, key_len);
- 	if (err)
- 		return err;
- 
-@@ -529,7 +529,7 @@ static int xts_aes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
- 	/* Check if the function code is available */
- 	xts_ctx->fc = (fc && cpacf_test_func(&km_functions, fc)) ? fc : 0;
- 	if (!xts_ctx->fc)
--		return xts_fallback_setkey(tfm, in_key, key_len);
-+		return 0;
- 
- 	/* Split the XTS key into the two subkeys */
- 	key_len = key_len / 2;
-@@ -586,7 +586,7 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
- 
--	if (unlikely(!xts_ctx->fc))
-+	if (unlikely(!xts_ctx->fc || (nbytes % XTS_BLOCKSIZE) != 0))
- 		return xts_fallback_encrypt(desc, dst, src, nbytes);
- 
- 	blkcipher_walk_init(&walk, dst, src, nbytes);
-@@ -600,7 +600,7 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
- 
--	if (unlikely(!xts_ctx->fc))
-+	if (unlikely(!xts_ctx->fc || (nbytes % XTS_BLOCKSIZE) != 0))
- 		return xts_fallback_decrypt(desc, dst, src, nbytes);
- 
- 	blkcipher_walk_init(&walk, dst, src, nbytes);
--- 
-2.17.1
+Good point, those are slightly questionable and I'd change those too.
 
+Bjorn
