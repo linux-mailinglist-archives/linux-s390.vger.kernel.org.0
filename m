@@ -2,116 +2,149 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 339BE90D2C
-	for <lists+linux-s390@lfdr.de>; Sat, 17 Aug 2019 07:37:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D099590DA6
+	for <lists+linux-s390@lfdr.de>; Sat, 17 Aug 2019 09:20:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725864AbfHQFhb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 17 Aug 2019 01:37:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:59788 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725784AbfHQFhb (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 17 Aug 2019 01:37:31 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8197321019;
-        Sat, 17 Aug 2019 05:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1566020249;
-        bh=sM9SVnToSEC9JTKhN4ZYvkSNHVjxoXICvqe16ZAr7GA=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=IczFTDtt63sxCNnWmjNUemvnl9aZTXtR6Y+LLmLZPoRUTWX7XteO/0vLvNvMXjbLg
-         9ThLUkxPtKecM5g5dcjc85PesMGXb4hRC4uUhEZoXwH487PDjkKDx3VNmiCQnl570I
-         4yIMOJRtqQSWDXFlzuZFDsJyrdPoiV0qZpoS9+dI=
-Date:   Fri, 16 Aug 2019 22:37:28 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 4/6] crypto: sha256 - Use get_unaligned_be32 to get
- input, memzero_explicit
-Message-ID: <20190817053728.GD8209@sol.localdomain>
-Mail-Followup-To: Hans de Goede <hdegoede@redhat.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190816211611.2568-1-hdegoede@redhat.com>
- <20190816211611.2568-5-hdegoede@redhat.com>
+        id S1726119AbfHQHUH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 17 Aug 2019 03:20:07 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39747 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726107AbfHQHUG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 17 Aug 2019 03:20:06 -0400
+Received: by mail-io1-f66.google.com with SMTP id l7so10780228ioj.6
+        for <linux-s390@vger.kernel.org>; Sat, 17 Aug 2019 00:20:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3gnS0PBpeFma+nR0/93xLJSxk0RZjywB6TYlsGP6x54=;
+        b=iuaKaoZkqD3jS65GkFRQXUesr+iHDQw7qZXVp3ez2fmCt49N//RMqfebteueaUoH+p
+         97zi714OqDL373xaRAuH3dX8FyF/Ggim5AtCytyMJbs8OW1HRJxUvrBWziOojWSjQyyv
+         N8V4gNN86Fa2SkaukvBfzPcjbRwF05BDdxAP0vXBWYtOD0SIpiwB1xkPByOxsAsX+9h1
+         04BQeNXJdFWKxBekEW+jFClh2sgwRA/Wjk7i3VyRYr7XND2lelrmJe56TnoW4qN1h7sB
+         KsNL/98KtTPtlpVSTykKF2Hed4ptAKREhBRKgytLAlnBDShNx9anmljZsQvOgXkrjk/s
+         f08A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3gnS0PBpeFma+nR0/93xLJSxk0RZjywB6TYlsGP6x54=;
+        b=cG7cK/aS4HWW7kEcXpKGCLmGQoa30WVL7sPS7OpL8X9gZkWXEI1hgTGsN8j4Ak35uA
+         1xzruWghQNM2tqR26xEynYQwgeV2+HsL1cPrs8bHKbU1eRAZ+drkMwsk8QBg3ELCHHt5
+         GYcWRamJ/K0nZsznPykeuukDr9s2+InY8Rkfnt/k67OKQ/3SI72w1ETTPndIdNq0Rxuy
+         QwIUxcUheh5g2HWjFl+2ZNIPekfRq9/wmz3X/Nqum8BqTCsUb91V1tSPSLma9VR/xflC
+         i4pfeS6l7L50EAcgHnF1UzQ6PclRAl5i4KROVxHDERagdaf1S1n59IpFB5RSP1YUhrtJ
+         93Vg==
+X-Gm-Message-State: APjAAAWSdSR11S/U5a/fcJe7biCqgdZFmrI1M/ZFIniROjN9rOojtvCW
+        6uIlnb6TgLpQaUoR71s+LSdSUOPw/k65Xz8+Mjs6wg==
+X-Google-Smtp-Source: APXvYqzi3uE7FL/BNaGBwf9NcctQEJa1uqSCgIDdI7X8T4a271+rNn6qVr2H/9WkS8ckRMiROhEplUC0qpc0vOhpjPg=
+X-Received: by 2002:a02:a18e:: with SMTP id n14mr15977616jah.84.1566026405753;
+ Sat, 17 Aug 2019 00:20:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190816211611.2568-5-hdegoede@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20190815110944.3579-1-murphyt7@tcd.ie> <20190817033914.4812-1-hdanton@sina.com>
+In-Reply-To: <20190817033914.4812-1-hdanton@sina.com>
+From:   Tom Murphy <murphyt7@tcd.ie>
+Date:   Sat, 17 Aug 2019 08:19:33 +0100
+Message-ID: <CALQxJut_0bjojiFza9bZF26n0+9Vjq8QFqsxgd5Rxag+Qx609Q@mail.gmail.com>
+Subject: Re: [PATCH V5 3/5] iommu/dma-iommu: Handle deferred devices
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
+        Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Aug 16, 2019 at 11:16:09PM +0200, Hans de Goede wrote:
-> Use get_unaligned_be32 in the lib/crypto/sha256.c sha256_transform()
-> implementation so that it can be used with unaligned buffers too,
-> making it more generic.
-> 
-> And use memzero_explicit for better clearing of sensitive data.
-> 
-> Note unlike other patches in this series this commit actually makes
-> functional changes to the sha256 code as used by the purgatory code.
-> 
-> This fully aligns the lib/crypto/sha256.c sha256_transform()
-> implementation with the one from crypto/sha256_generic.c allowing us
-> to remove the latter in further patches in this series.
-> 
-> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
-> ---
->  lib/crypto/sha256.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/lib/crypto/sha256.c b/lib/crypto/sha256.c
-> index b8114028d06f..09a435d845fc 100644
-> --- a/lib/crypto/sha256.c
-> +++ b/lib/crypto/sha256.c
-> @@ -14,7 +14,7 @@
->  #include <linux/bitops.h>
->  #include <linux/string.h>
->  #include <crypto/sha256.h>
-> -#include <asm/byteorder.h>
-> +#include <asm/unaligned.h>
->  
->  static inline u32 Ch(u32 x, u32 y, u32 z)
->  {
-> @@ -33,7 +33,7 @@ static inline u32 Maj(u32 x, u32 y, u32 z)
->  
->  static inline void LOAD_OP(int I, u32 *W, const u8 *input)
->  {
-> -	W[I] = __be32_to_cpu(((__be32 *)(input))[I]);
-> +	W[I] = get_unaligned_be32((__u32 *)input + I);
->  }
->  
->  static inline void BLEND_OP(int I, u32 *W)
-> @@ -201,7 +201,7 @@ static void sha256_transform(u32 *state, const u8 *input)
->  
->  	/* clear any sensitive info... */
->  	a = b = c = d = e = f = g = h = t1 = t2 = 0;
-> -	memset(W, 0, 64 * sizeof(u32));
-> +	memzero_explicit(W, 64 * sizeof(u32));
->  }
->  
+On Sat, 17 Aug 2019 at 04:39, Hillf Danton <hdanton@sina.com> wrote:
+>
+>
+> On Thu, 15 Aug 2019 12:09:41 +0100 Tom Murphy wrote:
+> >
+> > Handle devices which defer their attach to the iommu in the dma-iommu api
+> >
+> > Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
+> > ---
+> >  drivers/iommu/dma-iommu.c | 27 ++++++++++++++++++++++++++-
+> >  1 file changed, 26 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
+> > index 2712fbc68b28..906b7fa14d3c 100644
+> > --- a/drivers/iommu/dma-iommu.c
+> > +++ b/drivers/iommu/dma-iommu.c
+> > @@ -22,6 +22,7 @@
+> >  #include <linux/pci.h>
+> >  #include <linux/scatterlist.h>
+> >  #include <linux/vmalloc.h>
+> > +#include <linux/crash_dump.h>
+> >
+> >  struct iommu_dma_msi_page {
+> >       struct list_head        list;
+> > @@ -351,6 +352,21 @@ static int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
+> >       return iova_reserve_iommu_regions(dev, domain);
+> >  }
+> >
+> > +static int handle_deferred_device(struct device *dev,
+> > +     struct iommu_domain *domain)
+> > +{
+> > +     const struct iommu_ops *ops = domain->ops;
+> > +
+> > +     if (!is_kdump_kernel())
+> > +             return 0;
+> > +
+> > +     if (unlikely(ops->is_attach_deferred &&
+> > +             ops->is_attach_deferred(domain, dev)))
+> > +             return iommu_attach_device(domain, dev);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> >  /**
+> >   * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
+> >   *                    page flags.
+> > @@ -463,6 +479,9 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
+> >       size_t iova_off = iova_offset(iovad, phys);
+> >       dma_addr_t iova;
+> >
+> > +     if (unlikely(handle_deferred_device(dev, domain)))
+> > +             return DMA_MAPPING_ERROR;
+> > +
+> >       size = iova_align(iovad, size + iova_off);
+> >
+> >       iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
+>
+> iommu_map_atomic() is applied to __iommu_dma_map() in 2/5.
+> Is it an atomic context currently given the mutex_lock() in
+> iommu_attach_device()?
 
-There's also an unaligned access in sha256_final() which needs to be fixed.
+I don't see your point here. __iommu_dma_map isn't called from
+iommu_attach_device, why would we care about a mutex in
+iommu_attach_device?
 
-- Eric
+__iommu_dma_map can be called from an atomic context (it isn't always
+but it does happen). __iommu_dma_map is called by iommu_dma_alloc
+which implements the iommu_dma_ops::alloc function which by design
+needs to be callable from an atomic context. Does that answer your
+question?
+
+>
