@@ -2,49 +2,49 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0FAE912E0
-	for <lists+linux-s390@lfdr.de>; Sat, 17 Aug 2019 22:58:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 873B9912F3
+	for <lists+linux-s390@lfdr.de>; Sat, 17 Aug 2019 23:07:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726351AbfHQU6T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 17 Aug 2019 16:58:19 -0400
-Received: from mail-io1-f65.google.com ([209.85.166.65]:43214 "EHLO
+        id S1726465AbfHQVHb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 17 Aug 2019 17:07:31 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:33236 "EHLO
         mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726307AbfHQU6T (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 17 Aug 2019 16:58:19 -0400
-Received: by mail-io1-f65.google.com with SMTP id 18so13197167ioe.10
-        for <linux-s390@vger.kernel.org>; Sat, 17 Aug 2019 13:58:18 -0700 (PDT)
+        with ESMTP id S1726464AbfHQVHb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 17 Aug 2019 17:07:31 -0400
+Received: by mail-io1-f65.google.com with SMTP id z3so13208464iog.0
+        for <linux-s390@vger.kernel.org>; Sat, 17 Aug 2019 14:07:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=NuXJCtDYAF42ezbdDjEFYfu2iBTjQndKb/Edf61OrOk=;
-        b=PCXESTLeUcBNUWogs1gHv/iSg/bRj7rmybc37GwKrHxDe7CTeYQGPE82FFro2CLT61
-         8Q4IgUqoS7Jmsm9wuhAF9CCdJ8jA631YD8dGqkPPvzXyvuP2itYPnDRcHbp+2vkqaUSt
-         u4rxsZS9lGz/LPzZ8kGOEVrnbFqSW3syoXedbPJGimP78UP/Tg6J92XflG29pM3lwatF
-         OjAvDNX5+3tv2rh85pO4hmLeTRsEGL0KJ9d8KAbhP2qYNSdGVQpqF+mf38a8oxmStDJ9
-         9nvCgcj7mRwE6p6VKc6zn+f1lPTm2K1/WP8Olg56A4X8/QbiEq8e7laZGSLETkAb5Egu
-         FN1g==
+        bh=oaLZqyUNyQl0GDzg3TD6D3y22xcAlUrpApHmCWftkKw=;
+        b=RFEgb4b2hnNS1WpBLunJkjsIPF/Sn00DtxYAOuifEl6DxdVvHfM90BewsheCYGGIbc
+         KkLEVKkHBB0QA34K1oL1QqTpTDmH1r0AAS5LIo/Wzqnat3RY7e+91XBtlrB6cTkdTpWU
+         kte/9iGUVWH3tp9kz8MHvMt2gyye60gDCIBj8NdLeTB71AjDJMlqAJtKUxtx8xWkFhbs
+         YbzFpA0yJYJCQurf1gnnMtlqH+un70tn1BjQGrEcVg5mWlPKN1VotnQ0tUinFRHtRRZr
+         YGQo+eeilNUcY2675AOwdgK09hjXorEyFrfH2VgmS9azKAXXlU4rovb4iLfV8rGhNCxH
+         YgJQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=NuXJCtDYAF42ezbdDjEFYfu2iBTjQndKb/Edf61OrOk=;
-        b=CYTmC5fS6WlVwLHhyAbrSWtFfvs8PGUiDh4tg1D55h4NIHz7wMvEF4eReQflBuXCJ2
-         YaZwBo1Xf220aMQsFfGDyNQXX6Qnb/5CHWsZdO5aC436aMYfjj6a4YIvvPv/Vci07kOi
-         eIifcOMhJmjgNFdwNa55pd5stENmS8V+rrFJbvlbkFtJzk6phsW5NrRcEaDzxBxuI+r8
-         LL/XpBqOG2HT4OomY+lQ1wWDHMVIUoX8cjYdezeN8v47uwjtah5QPwylX3Yuh2vObf8z
-         FjD1BHusYVN4bvyE1jSXfZno7IJLFei57RuRnN/jxhOfGxuwdpv3Nvjjv4xcurObd6rA
-         4Rww==
-X-Gm-Message-State: APjAAAU/7lkPRsjCYbVUnG+vmEWiMzrdTszKUXASEq+swIBuEyEUJ/QI
-        654iK4psXKtK6eRzEqyN65BDkg==
-X-Google-Smtp-Source: APXvYqyKpLbmhNe3o5mV41HWvHYU+SiPLQTRVuTNOtg0cL831wKHUivDHHya6XYWHKa9ZnFnQ2CM9Q==
-X-Received: by 2002:a6b:8f0d:: with SMTP id r13mr15237433iod.121.1566075498344;
-        Sat, 17 Aug 2019 13:58:18 -0700 (PDT)
+        bh=oaLZqyUNyQl0GDzg3TD6D3y22xcAlUrpApHmCWftkKw=;
+        b=PVjl8rpJjCbH6eLkOomlGGxAWNSODkbtWHnnKo+PytAmzOrC4mpiLFAW2Z+LVGkNFj
+         XKodDlM8KgiaGD8i0zCjZHx3IuWC29ib0rfhwT1h8WYKvLgi+TFRM+BHDEh+mWOtems5
+         3WiCbqz7uK4MtPO82Yld8u/u11SPlC5q/9aJ0C4VNnCaidLRxiRMJ4Rct0KDZ7usMJfN
+         aa79d0hCQRsNZLcIchPtecbnCGsPYxGapA5D6H0bWFyKKUou+eXcNV2XrpG5DkkH2fvT
+         ze35qEF1DFhUk2nPVJjDui8yjzm5iDw8UNbzZ1dSrg2VyzDCxpFMeck76OBRmwMjbDSu
+         e6Wg==
+X-Gm-Message-State: APjAAAUhnI3ZGn2lS/CE+vp1wKTkcuT/fqGcp9bRr6PFmffEfpkMmWvp
+        Cpg39S8iadb9TmsEBvEBJoUm7Q==
+X-Google-Smtp-Source: APXvYqxg4I5F1jSj4ALE9JDvtf3Qsjlfm04dEVrcDSQX4DQggSlvp1PesRmYUB74gUk83a46+nakJw==
+X-Received: by 2002:a05:6638:637:: with SMTP id h23mr18425886jar.59.1566076050556;
+        Sat, 17 Aug 2019 14:07:30 -0700 (PDT)
 Received: from localhost (c-73-95-159-87.hsd1.co.comcast.net. [73.95.159.87])
-        by smtp.gmail.com with ESMTPSA id 6sm9905577iog.40.2019.08.17.13.58.16
+        by smtp.gmail.com with ESMTPSA id l6sm6664146ioc.15.2019.08.17.14.07.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Aug 2019 13:58:17 -0700 (PDT)
-Date:   Sat, 17 Aug 2019 13:58:16 -0700 (PDT)
+        Sat, 17 Aug 2019 14:07:29 -0700 (PDT)
+Date:   Sat, 17 Aug 2019 14:07:29 -0700 (PDT)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 X-X-Sender: paulw@viisi.sifive.com
 To:     Christoph Hellwig <hch@lst.de>
@@ -63,10 +63,11 @@ cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
         nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
         linux-snps-arc@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 14/26] asm-generic: don't provide __ioremap
-In-Reply-To: <20190817073253.27819-15-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1908171357180.4130@viisi.sifive.com>
-References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-15-hch@lst.de>
+Subject: Re: [PATCH 15/26] asm-generic: ioremap_uc should behave the same
+ with and without MMU
+In-Reply-To: <20190817073253.27819-16-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1908171403330.4130@viisi.sifive.com>
+References: <20190817073253.27819-1-hch@lst.de> <20190817073253.27819-16-hch@lst.de>
 User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
@@ -77,14 +78,47 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 On Sat, 17 Aug 2019, Christoph Hellwig wrote:
 
-> __ioremap is not a kernel API, but used for helpers with differing
-> semantics in arch code.  We should not provide it in as-generic.
+> Whatever reason there is for the existence of ioremap_uc, and the fact 
+> that it returns NULL by default on architectures with an MMU applies 
+> equally to nommu architectures, so don't provide different defaults.
+> 
+> In practice the difference is meaningless as the only portable driver
+> that uses ioremap_uc is atyfb which probably doesn't show up on nommu
+> devices.
 > 
 > Signed-off-by: Christoph Hellwig <hch@lst.de>
 
+[ ... ]
+
+> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
+> index d02806513670..a98ed6325727 100644
+> --- a/include/asm-generic/io.h
+> +++ b/include/asm-generic/io.h
+
+[ ... ]
+
+> @@ -1004,6 +985,21 @@ static inline void __iomem *ioremap_wt(phys_addr_t offset, size_t size)
+>  }
+>  #endif
+>  
+> +/*
+> + * ioremap_uc is special in that we do require an explicit architecture
+> + * implementation.  In general you do now want to use this function in a
+                                         ^^^ not
+
+> + * driver and use plain ioremap, which is uncached by default.  Similarly
+                ^ instead 
+
+> + * architectures should not implement it unless they have a very good
+> + * reason.
+> + */
+
+Looks like this mess is only needed on x86 with certain graphics drivers 
+and conflicts between MTRR and page table-based MMU attributes.
+
+
 Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
 Tested-by: Paul Walmsley <paul.walmsley@sifive.com> # rv32, rv64 boot
-Acked-by: Paul Walmsley <paul.walmsley@sifive.com> # arch/riscv
 
 
 - Paul
