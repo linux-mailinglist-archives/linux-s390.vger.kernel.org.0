@@ -2,149 +2,73 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D099590DA6
-	for <lists+linux-s390@lfdr.de>; Sat, 17 Aug 2019 09:20:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 40DCA90DC1
+	for <lists+linux-s390@lfdr.de>; Sat, 17 Aug 2019 09:35:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726119AbfHQHUH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 17 Aug 2019 03:20:07 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:39747 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726107AbfHQHUG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 17 Aug 2019 03:20:06 -0400
-Received: by mail-io1-f66.google.com with SMTP id l7so10780228ioj.6
-        for <linux-s390@vger.kernel.org>; Sat, 17 Aug 2019 00:20:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3gnS0PBpeFma+nR0/93xLJSxk0RZjywB6TYlsGP6x54=;
-        b=iuaKaoZkqD3jS65GkFRQXUesr+iHDQw7qZXVp3ez2fmCt49N//RMqfebteueaUoH+p
-         97zi714OqDL373xaRAuH3dX8FyF/Ggim5AtCytyMJbs8OW1HRJxUvrBWziOojWSjQyyv
-         N8V4gNN86Fa2SkaukvBfzPcjbRwF05BDdxAP0vXBWYtOD0SIpiwB1xkPByOxsAsX+9h1
-         04BQeNXJdFWKxBekEW+jFClh2sgwRA/Wjk7i3VyRYr7XND2lelrmJe56TnoW4qN1h7sB
-         KsNL/98KtTPtlpVSTykKF2Hed4ptAKREhBRKgytLAlnBDShNx9anmljZsQvOgXkrjk/s
-         f08A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3gnS0PBpeFma+nR0/93xLJSxk0RZjywB6TYlsGP6x54=;
-        b=cG7cK/aS4HWW7kEcXpKGCLmGQoa30WVL7sPS7OpL8X9gZkWXEI1hgTGsN8j4Ak35uA
-         1xzruWghQNM2tqR26xEynYQwgeV2+HsL1cPrs8bHKbU1eRAZ+drkMwsk8QBg3ELCHHt5
-         GYcWRamJ/K0nZsznPykeuukDr9s2+InY8Rkfnt/k67OKQ/3SI72w1ETTPndIdNq0Rxuy
-         QwIUxcUheh5g2HWjFl+2ZNIPekfRq9/wmz3X/Nqum8BqTCsUb91V1tSPSLma9VR/xflC
-         i4pfeS6l7L50EAcgHnF1UzQ6PclRAl5i4KROVxHDERagdaf1S1n59IpFB5RSP1YUhrtJ
-         93Vg==
-X-Gm-Message-State: APjAAAWSdSR11S/U5a/fcJe7biCqgdZFmrI1M/ZFIniROjN9rOojtvCW
-        6uIlnb6TgLpQaUoR71s+LSdSUOPw/k65Xz8+Mjs6wg==
-X-Google-Smtp-Source: APXvYqzi3uE7FL/BNaGBwf9NcctQEJa1uqSCgIDdI7X8T4a271+rNn6qVr2H/9WkS8ckRMiROhEplUC0qpc0vOhpjPg=
-X-Received: by 2002:a02:a18e:: with SMTP id n14mr15977616jah.84.1566026405753;
- Sat, 17 Aug 2019 00:20:05 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190815110944.3579-1-murphyt7@tcd.ie> <20190817033914.4812-1-hdanton@sina.com>
-In-Reply-To: <20190817033914.4812-1-hdanton@sina.com>
-From:   Tom Murphy <murphyt7@tcd.ie>
-Date:   Sat, 17 Aug 2019 08:19:33 +0100
-Message-ID: <CALQxJut_0bjojiFza9bZF26n0+9Vjq8QFqsxgd5Rxag+Qx609Q@mail.gmail.com>
-Subject: Re: [PATCH V5 3/5] iommu/dma-iommu: Handle deferred devices
-To:     Hillf Danton <hdanton@sina.com>
-Cc:     Joerg Roedel <joro@8bytes.org>, iommu@lists.linux-foundation.org,
-        Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Andy Gross <agross@kernel.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        id S1726067AbfHQHfS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 17 Aug 2019 03:35:18 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41948 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725864AbfHQHfR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 17 Aug 2019 03:35:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8stPQbNrg3B/R2Xd5KO2eeuMSLol2LwoVvz90ca57Uc=; b=W0bwqZTtbBiXb6VnEfyfA9mVE
+        9W9bQiZ+oFFnztrtL29HNStHhzgEzKZRwR0Y2Yt9fbTPXro2ana913j8J/x4VOrNIf7Vpp1s5xTBT
+        JBBgWHNPJDHxK8YM2EH/1iy4ZFyxsqX/E8MVm9oFi7/haC79fhkUSp31sjsxo5ixN+LjUtq5YiE/H
+        JgzEH6lBn4zXt6f6tZUImXk13a1mBaoeUkv03QCkMCv+JI9Ou3L3XpKNVs1qsGQXI8TQioogd4019
+        +YKCAK/dGkmyOlN7PU2frQDwzB/jnJxCvAQI78eDWfALqX6NNPVPNQ7KrDd1EV17QZV7xNJeKsN2w
+        pL/zibEBg==;
+Received: from 089144199030.atnat0008.highway.a1.net ([89.144.199.30] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1hytEw-0005B4-6B; Sat, 17 Aug 2019 07:35:06 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org
+Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Content-Type: text/plain; charset="UTF-8"
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: generic ioremap (and lots of cleanups)
+Date:   Sat, 17 Aug 2019 09:32:27 +0200
+Message-Id: <20190817073253.27819-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, 17 Aug 2019 at 04:39, Hillf Danton <hdanton@sina.com> wrote:
->
->
-> On Thu, 15 Aug 2019 12:09:41 +0100 Tom Murphy wrote:
-> >
-> > Handle devices which defer their attach to the iommu in the dma-iommu api
-> >
-> > Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
-> > ---
-> >  drivers/iommu/dma-iommu.c | 27 ++++++++++++++++++++++++++-
-> >  1 file changed, 26 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-> > index 2712fbc68b28..906b7fa14d3c 100644
-> > --- a/drivers/iommu/dma-iommu.c
-> > +++ b/drivers/iommu/dma-iommu.c
-> > @@ -22,6 +22,7 @@
-> >  #include <linux/pci.h>
-> >  #include <linux/scatterlist.h>
-> >  #include <linux/vmalloc.h>
-> > +#include <linux/crash_dump.h>
-> >
-> >  struct iommu_dma_msi_page {
-> >       struct list_head        list;
-> > @@ -351,6 +352,21 @@ static int iommu_dma_init_domain(struct iommu_domain *domain, dma_addr_t base,
-> >       return iova_reserve_iommu_regions(dev, domain);
-> >  }
-> >
-> > +static int handle_deferred_device(struct device *dev,
-> > +     struct iommu_domain *domain)
-> > +{
-> > +     const struct iommu_ops *ops = domain->ops;
-> > +
-> > +     if (!is_kdump_kernel())
-> > +             return 0;
-> > +
-> > +     if (unlikely(ops->is_attach_deferred &&
-> > +             ops->is_attach_deferred(domain, dev)))
-> > +             return iommu_attach_device(domain, dev);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> >  /**
-> >   * dma_info_to_prot - Translate DMA API directions and attributes to IOMMU API
-> >   *                    page flags.
-> > @@ -463,6 +479,9 @@ static dma_addr_t __iommu_dma_map(struct device *dev, phys_addr_t phys,
-> >       size_t iova_off = iova_offset(iovad, phys);
-> >       dma_addr_t iova;
-> >
-> > +     if (unlikely(handle_deferred_device(dev, domain)))
-> > +             return DMA_MAPPING_ERROR;
-> > +
-> >       size = iova_align(iovad, size + iova_off);
-> >
-> >       iova = iommu_dma_alloc_iova(domain, size, dma_get_mask(dev), dev);
->
-> iommu_map_atomic() is applied to __iommu_dma_map() in 2/5.
-> Is it an atomic context currently given the mutex_lock() in
-> iommu_attach_device()?
+Hi all,
 
-I don't see your point here. __iommu_dma_map isn't called from
-iommu_attach_device, why would we care about a mutex in
-iommu_attach_device?
+the last patches in this series add a generic ioremap implementation,
+and switch our 3 most recent and thus most tidy architeture ports over
+to use it.  With a little work and an additional arch hook or two the
+implementation should be able to eventually cover more than half of
+our ports.
 
-__iommu_dma_map can be called from an atomic context (it isn't always
-but it does happen). __iommu_dma_map is called by iommu_dma_alloc
-which implements the iommu_dma_ops::alloc function which by design
-needs to be callable from an atomic context. Does that answer your
-question?
+The patches before that clean up various lose ends in the ioremap
+and iounmap implementations.
 
->
+A git tree is also available here:
+
+    git://git.infradead.org/users/hch/misc.git generic-ioremap
+
+Gitweb:
+
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/generic-ioremap
