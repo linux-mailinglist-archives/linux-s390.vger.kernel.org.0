@@ -2,95 +2,283 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DEA4B9100C
-	for <lists+linux-s390@lfdr.de>; Sat, 17 Aug 2019 12:34:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2EF0391061
+	for <lists+linux-s390@lfdr.de>; Sat, 17 Aug 2019 14:18:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726188AbfHQKeK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 17 Aug 2019 06:34:10 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36695 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725947AbfHQKeJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 17 Aug 2019 06:34:09 -0400
-Received: by mail-wm1-f67.google.com with SMTP id g67so6023108wme.1;
-        Sat, 17 Aug 2019 03:34:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=39YvwnXSLPYPPS8HyY6xQ0pEYqQsaSVOcIZxY6QaSy0=;
-        b=HaU5j73Xl18SPfWIKR/l5s1id63iaB7lpk2eLE9Cv93RaSr0QygCeb8VtdrjK/DFoH
-         BzanBzeDzwH/CfWIayA254C8bK/pzQhAr1B+Cx1TRlWNSkT4XCzZLK+D58uxuJj/Z6c8
-         1+jn+z+dU7Ewi0li9IwJ7jmFgqXABsf3p+TxQXzA7fHIgWlPmx739auC7j/bqLC+8NoU
-         C3XDYz8eetWLerWT9nDLSd3eyiPofE72zfZEgyCEmcNmd7KEx0oxertXb8lLCukZQpFv
-         6wFercfLlPzs2ZP2Iysl6A4A+S9cPkEPkEAEiZMttS1pDBUiq7OyBBL/XEMk2UGfKSWg
-         tAUQ==
+        id S1726010AbfHQMSY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 17 Aug 2019 08:18:24 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43891 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725965AbfHQMSY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 17 Aug 2019 08:18:24 -0400
+Received: by mail-ed1-f67.google.com with SMTP id h13so7314685edq.10
+        for <linux-s390@vger.kernel.org>; Sat, 17 Aug 2019 05:18:22 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=39YvwnXSLPYPPS8HyY6xQ0pEYqQsaSVOcIZxY6QaSy0=;
-        b=YlyDnqzp/aXsF5I1ibSIfDJeQqZPLczBp3smnIgBj4mYbK81lMo8hkhTnrAJb8rgqG
-         cMzMZamZ3VwhqtXnvfq0pts+ZrNFxInv8fQO7xWXqGP19gabrUnPUgxfKAu8QaEc/Sle
-         B+3ArTgh++CFuZNdxRAm5E7kcvCfkj/C4R+TL6VbaIeNWxJ/MGagRDWAMaZ8SAzKvvVG
-         x7fkfizvMpLUFVdSJ+z5OVqiONuh060E5DAJjhmH5yHwRKAKqKD6ax2V4tEHXEtwVLyx
-         cWuJT+irlAI3bqzepSKQ3NEcTX9KbOxOK9V7tAV/aaeqPijlpHGmZk1CWojcS4lq6Bo3
-         IgQg==
-X-Gm-Message-State: APjAAAXHlZwj8UpncqJsZZdiPXqcYLCtLyRWXCTB8rBgi9BuK8fzoS7x
-        YWVr52MTgvhROZCV7dQJ0pM=
-X-Google-Smtp-Source: APXvYqx+skxBDSiX8lI2gwUVvrx6yD5s1jqeJ+6VF/JmtojW+ENXyX4cQUxihmaZEwvtXGQA8HaHqg==
-X-Received: by 2002:a1c:b342:: with SMTP id c63mr11130163wmf.84.1566038046300;
-        Sat, 17 Aug 2019 03:34:06 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id 4sm14396946wro.78.2019.08.17.03.34.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 17 Aug 2019 03:34:05 -0700 (PDT)
-Date:   Sat, 17 Aug 2019 12:34:02 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 12/26] x86: clean up ioremap
-Message-ID: <20190817103402.GA7602@gmail.com>
-References: <20190817073253.27819-1-hch@lst.de>
- <20190817073253.27819-13-hch@lst.de>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=kNOn18v8Rp5GbzUQE3NK96z4rSw+eVd6G/JY1Otz7tk=;
+        b=NAQhuQcp4QIJsAJZnXoPNsRrjV6F9ugYmnhwGbrw/BK5S0kv091mjWAfBUxXHgcybu
+         uFosbCO4xvSidVN7vB0h1vEfe8KguWZXxjOKkgPvNPUhxaZNmBidgIMFni4Yg6zi+QK5
+         HG6sPy6bJAHNK/ZZRH5Cre3tRVvYEzxl6jcRpvNz6GP1DMSnPKguNeaaeYDibZ9TxquJ
+         mMmjfppbwavUCmYgGX6i2ebL1rhKDHniSyvI1sPFasFhgiCl1nI5IEwHs/99wQq//KZD
+         9y4gam7NFIrHthvr3qPynMrw90U6lRGYfDs7+gMT4rTyGRkWVUO5wwokbDspbWZccCJT
+         DsjQ==
+X-Gm-Message-State: APjAAAUCQI2mXV5auwsFOtdTStNkPUNYntOv8MCPW4qc6mpBPkZEMd8m
+        upswAw3LoBxD8RiiuNyb1gLQHg==
+X-Google-Smtp-Source: APXvYqxBQbhyYhI1Vveh6TS0bYWp3aZ0XKaANav6LHXYmaHiP2YolHrGWMwYK/yevgow6XEmm/JCqA==
+X-Received: by 2002:a50:cf81:: with SMTP id h1mr15374391edk.141.1566044301869;
+        Sat, 17 Aug 2019 05:18:21 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id e24sm1199680ejb.53.2019.08.17.05.18.20
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sat, 17 Aug 2019 05:18:20 -0700 (PDT)
+Subject: Re: [PATCH 6/6] crypto: sha256_generic - Use sha256_transform from
+ generic sha256 lib
+To:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190816211611.2568-1-hdegoede@redhat.com>
+ <20190816211611.2568-7-hdegoede@redhat.com>
+ <20190817051318.GA8209@sol.localdomain>
+ <20190817053555.GC8209@sol.localdomain>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b6ce1a0c-63dd-7b0c-b050-1c56c0daeb84@redhat.com>
+Date:   Sat, 17 Aug 2019 14:18:19 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190817073253.27819-13-hch@lst.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190817053555.GC8209@sol.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Eric,
 
-* Christoph Hellwig <hch@lst.de> wrote:
+Thank you for the review and for the quick turn around time
+on the review.
 
-> Use ioremap as the main implemented function, and defined
-> ioremap_nocache to it as a deprecated alias.
+On 17-08-19 07:35, Eric Biggers wrote:
+> On Fri, Aug 16, 2019 at 10:13:18PM -0700, Eric Biggers wrote:
+>> On Fri, Aug 16, 2019 at 11:16:11PM +0200, Hans de Goede wrote:
+>>> Drop the duplicate sha256_transform function from crypto/sha256_generic.c
+>>> and use the implementation from lib/crypto/sha256.c instead.
+>>> "diff -u lib/crypto/sha256.c sha256_generic.c"
+>>> shows that both implementations are identical.
+>>>
+>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+>>
+>> Hi Hans, thanks for doing this!
+>>
+>> I'm a little concerned that the only sha256 lib function which sha256_generic.c
+>> calls is sha256_transform().  This means that sha256_init(), sha256_update(),
+>> and sha256_final() are not tested by the crypto self-tests.  They could be
+>> broken and we wouldn't know.
+>>
+>> IMO, it would be better to make sha256_generic.c use sha256_init(),
+>> sha256_update(), and sha256_final() rather than using sha256_base.h.
+>> Then we'd get test coverage of both the sha256 lib, and of sha256_base.h
+>> via the architecture-specific implementations.
+>>
+>> To do this you'll also need to add sha224_init(), sha224_update(), and
+>> sha224_final().  But that's straightforward.
+>>
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/x86/include/asm/io.h | 8 ++------
->  arch/x86/mm/ioremap.c     | 8 ++++----
->  arch/x86/mm/pageattr.c    | 4 ++--
->  3 files changed, 8 insertions(+), 12 deletions(-)
+> This is basically what I'm suggesting:
+> 
+> diff --git a/crypto/sha256_generic.c b/crypto/sha256_generic.c
+> index 51b3afcb5407..94bb23e33804 100644
+> --- a/crypto/sha256_generic.c
+> +++ b/crypto/sha256_generic.c
+> @@ -39,39 +39,42 @@ const u8 sha256_zero_message_hash[SHA256_DIGEST_SIZE] = {
+>   };
+>   EXPORT_SYMBOL_GPL(sha256_zero_message_hash);
+>   
+> -static void sha256_generic_block_fn(struct sha256_state *sst, u8 const *src,
+> -				    int blocks)
+> +static int crypto_sha256_init(struct shash_desc *desc)
+>   {
+> -	while (blocks--) {
+> -		sha256_transform(sst->state, src);
+> -		src += SHA256_BLOCK_SIZE;
+> -	}
+> +	return sha256_init(shash_desc_ctx(desc));
+> +}
+> +
+> +static int crypto_sha224_init(struct shash_desc *desc)
+> +{
+> +	return sha224_init(shash_desc_ctx(desc));
+>   }
+>   
+>   int crypto_sha256_update(struct shash_desc *desc, const u8 *data,
+>   			  unsigned int len)
+>   {
+> -	return sha256_base_do_update(desc, data, len, sha256_generic_block_fn);
+> +	return sha256_update(shash_desc_ctx(desc), data, len);
+>   }
+>   EXPORT_SYMBOL(crypto_sha256_update);
+>   
+>   static int crypto_sha256_final(struct shash_desc *desc, u8 *out)
+>   {
+> -	sha256_base_do_finalize(desc, sha256_generic_block_fn);
+> -	return sha256_base_finish(desc, out);
+> +	if (crypto_shash_digestsize(desc->tfm) == SHA224_DIGEST_SIZE)
+> +		return sha224_final(shash_desc_ctx(desc), out);
+> +	else
+> +		return sha256_final(shash_desc_ctx(desc), out);
+>   }
+>   
+>   int crypto_sha256_finup(struct shash_desc *desc, const u8 *data,
+>   			unsigned int len, u8 *hash)
+>   {
+> -	sha256_base_do_update(desc, data, len, sha256_generic_block_fn);
+> +	sha256_update(shash_desc_ctx(desc), data, len);
+>   	return crypto_sha256_final(desc, hash);
+>   }
+>   EXPORT_SYMBOL(crypto_sha256_finup);
+>   
+>   static struct shash_alg sha256_algs[2] = { {
+>   	.digestsize	=	SHA256_DIGEST_SIZE,
+> -	.init		=	sha256_base_init,
+> +	.init		=	crypto_sha256_init,
+>   	.update		=	crypto_sha256_update,
+>   	.final		=	crypto_sha256_final,
+>   	.finup		=	crypto_sha256_finup,
+> @@ -85,7 +88,7 @@ static struct shash_alg sha256_algs[2] = { {
+>   	}
+>   }, {
+>   	.digestsize	=	SHA224_DIGEST_SIZE,
+> -	.init		=	sha224_base_init,
+> +	.init		=	crypto_sha224_init,
+>   	.update		=	crypto_sha256_update,
+>   	.final		=	crypto_sha256_final,
+>   	.finup		=	crypto_sha256_finup,
+> diff --git a/include/crypto/sha256.h b/include/crypto/sha256.h
+> index f596202ad85f..44e207fb13ad 100644
+> --- a/include/crypto/sha256.h
+> +++ b/include/crypto/sha256.h
+> @@ -21,9 +21,13 @@
+>    */
+>   
+>   extern int sha256_init(struct sha256_state *sctx);
+> -extern void sha256_transform(u32 *state, const u8 *input);
+>   extern int sha256_update(struct sha256_state *sctx, const u8 *input,
+>   			 unsigned int length);
+>   extern int sha256_final(struct sha256_state *sctx, u8 *hash);
+>   
+> +extern int sha224_init(struct sha256_state *sctx);
+> +extern int sha224_update(struct sha256_state *sctx, const u8 *input,
+> +			 unsigned int length);
+> +extern int sha224_final(struct sha256_state *sctx, u8 *hash);
+> +
+>   #endif /* SHA256_H */
+> diff --git a/lib/crypto/sha256.c b/lib/crypto/sha256.c
+> index 3e9cc54f7e1c..d808543b3784 100644
+> --- a/lib/crypto/sha256.c
+> +++ b/lib/crypto/sha256.c
+> @@ -42,7 +42,7 @@ static inline void BLEND_OP(int I, u32 *W)
+>   	W[I] = s1(W[I-2]) + W[I-7] + s0(W[I-15]) + W[I-16];
+>   }
+>   
+> -void sha256_transform(u32 *state, const u8 *input)
+> +static void sha256_transform(u32 *state, const u8 *input)
+>   {
+>   	u32 a, b, c, d, e, f, g, h, t1, t2;
+>   	u32 W[64];
+> @@ -204,7 +204,6 @@ void sha256_transform(u32 *state, const u8 *input)
+>   	a = b = c = d = e = f = g = h = t1 = t2 = 0;
+>   	memzero_explicit(W, 64 * sizeof(u32));
+>   }
+> -EXPORT_SYMBOL(sha256_transform);
+>   
+>   int sha256_init(struct sha256_state *sctx)
+>   {
+> @@ -222,6 +221,22 @@ int sha256_init(struct sha256_state *sctx)
+>   }
+>   EXPORT_SYMBOL(sha256_init);
+>   
+> +int sha224_init(struct sha256_state *sctx)
+> +{
+> +	sctx->state[0] = SHA224_H0;
+> +	sctx->state[1] = SHA224_H1;
+> +	sctx->state[2] = SHA224_H2;
+> +	sctx->state[3] = SHA224_H3;
+> +	sctx->state[4] = SHA224_H4;
+> +	sctx->state[5] = SHA224_H5;
+> +	sctx->state[6] = SHA224_H6;
+> +	sctx->state[7] = SHA224_H7;
+> +	sctx->count = 0;
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL(sha224_init);
+> +
+>   int sha256_update(struct sha256_state *sctx, const u8 *data, unsigned int len)
+>   {
+>   	unsigned int partial, done;
+> @@ -253,7 +268,13 @@ int sha256_update(struct sha256_state *sctx, const u8 *data, unsigned int len)
+>   }
+>   EXPORT_SYMBOL(sha256_update);
+>   
+> -int sha256_final(struct sha256_state *sctx, u8 *out)
+> +int sha224_update(struct sha256_state *sctx, const u8 *data, unsigned int len)
+> +{
+> +	return sha256_update(sctx, data, len);
+> +}
+> +EXPORT_SYMBOL(sha224_update);
+> +
+> +static int __sha256_final(struct sha256_state *sctx, u8 *out, int digest_words)
+>   {
+>   	__be32 *dst = (__be32 *)out;
+>   	__be64 bits;
+> @@ -273,7 +294,7 @@ int sha256_final(struct sha256_state *sctx, u8 *out)
+>   	sha256_update(sctx, (const u8 *)&bits, sizeof(bits));
+>   
+>   	/* Store state in digest */
+> -	for (i = 0; i < 8; i++)
+> +	for (i = 0; i < digest_words; i++)
+>   		dst[i] = cpu_to_be32(sctx->state[i]);
+>   
+>   	/* Zeroize sensitive information. */
+> @@ -281,4 +302,15 @@ int sha256_final(struct sha256_state *sctx, u8 *out)
+>   
+>   	return 0;
+>   }
+> +
+> +int sha256_final(struct sha256_state *sctx, u8 *out)
+> +{
+> +	return __sha256_final(sctx, out, 8);
+> +}
+>   EXPORT_SYMBOL(sha256_final);
+> +
+> +int sha224_final(struct sha256_state *sctx, u8 *out)
+> +{
+> +	return __sha256_final(sctx, out, 7);
+> +}
+> +EXPORT_SYMBOL(sha224_final);
 
-Acked-by: Ingo Molnar <mingo@kernel.org>
+Thank you for the patch, I agree with what you are suggesting, I'm
+preparing a new version of the patch series with this added.
 
-Thanks,
+I'm adding a:
 
-	Ingo
+Suggested-by: Eric Biggers <ebiggers@kernel.org>
+
+To credit you for your input on this.
+
+Regards,
+
+Hans
+
