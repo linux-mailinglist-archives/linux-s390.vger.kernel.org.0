@@ -2,202 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E0199228F
-	for <lists+linux-s390@lfdr.de>; Mon, 19 Aug 2019 13:37:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AF1A1927FF
+	for <lists+linux-s390@lfdr.de>; Mon, 19 Aug 2019 17:08:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfHSLh3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 19 Aug 2019 07:37:29 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37881 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbfHSLh3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 19 Aug 2019 07:37:29 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46BsNL3FQnz9txwK;
-        Mon, 19 Aug 2019 13:37:22 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=IHsOl9a7; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id oFKXEToytF74; Mon, 19 Aug 2019 13:37:22 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46BsNL28mZz9txwM;
-        Mon, 19 Aug 2019 13:37:22 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566214642; bh=DGGXu4mqnMWHUmNbB5+ROy/HiaG54r+RC+Wcdt0Sf00=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=IHsOl9a7CLa7RJmKZxXfhR0/DCYj2G73xIPYDA6WCxKuP54N2JAhOGPed5LoWBaTr
-         xAGb92GOotvNXFzQSfGDwudvtj5Y3U/knm/8qpTZDycL0cX/rB8DbMAYW9xfoAPIEv
-         zTjXzmGw+t910F9DYOhcG4BB3avOkYfcesFTWTsI=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 9E5778B7B3;
-        Mon, 19 Aug 2019 13:37:27 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id equtsE-UlxDy; Mon, 19 Aug 2019 13:37:27 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 585EE8B7B1;
-        Mon, 19 Aug 2019 13:37:27 +0200 (CEST)
-Subject: Re: [PATCH 2/2] powerpc: support KASAN instrumentation of bitops
-To:     Daniel Axtens <dja@axtens.net>, linux-s390@vger.kernel.org,
-        linux-arch@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kasan-dev@googlegroups.com, Nicholas Piggin <npiggin@gmail.com>
-References: <20190819062814.5315-1-dja@axtens.net>
- <20190819062814.5315-2-dja@axtens.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <a1932e9e-3697-b8a0-c936-098b390b817f@c-s.fr>
-Date:   Mon, 19 Aug 2019 13:37:11 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726654AbfHSPIy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 19 Aug 2019 11:08:54 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39186 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725536AbfHSPIy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 19 Aug 2019 11:08:54 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t16so9085275wra.6
+        for <linux-s390@vger.kernel.org>; Mon, 19 Aug 2019 08:08:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0bqiUr7mK9fXp6x96uMwj7WX8Izkcyt+7fK1L9Oqq/I=;
+        b=dB+yi2FJTVQMiJeiyhxAbdyArUD3IvCoIAbeA/Gn3tvwj1a7Tsfj9Qh4cSVY/QCz0i
+         M97oicuE4a6Qk/4Tek6Kshj4jGp1HT3hblPEDnOIhwcriEJxKfJ+0kwvlay1u46F8Gcb
+         /sXwNJrCnoIw9D9KjNLTy28PQmZY2418/wkqxehnMjiM4Tov6b6X7KLgHk+cW15rHm/M
+         uMfZ9pbQ0N8F5FSdt8i++SfEx87pVFtAjwLWAB7WjpE7ILYbywelNZ5cM28fZrHJWyD2
+         UBvgSyBNACwkjjG68egjbcPWBFn5LqlFZd1DJ/HyR62DZrlZySQPKYSPD669d3y095kW
+         iyYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0bqiUr7mK9fXp6x96uMwj7WX8Izkcyt+7fK1L9Oqq/I=;
+        b=PTq/VxLcmLwgNdhEUI1QZ7JdbDFAS9QfU7dmHAp13N7YRpfoJ9Q7OINRVLFMQJ14QY
+         QDdjxA3DjPFmH0+plZ6JrP3VkxQTAKaOIEiwVlLKW1N7VNYTZUmL/ThU3x19w+6tQxPJ
+         nTmcwSlqlP1qolFu85UgMJVGSjb3KoQRg849zGS0te+5quUhik98aMy5I1DmPB6JQxDk
+         7WHRFcCGQB1noK619W2HjLKk3CEKF59Dp8GYySCoXnZo8sD855PGq2fTfqc1zmQaxeFz
+         T7ed/9pmJxreKlWdbxWjLq84gGNUUb9f60DECgI7bvuHa0gODk5bVpOxcZkFPClM2XZp
+         U9Gw==
+X-Gm-Message-State: APjAAAX0L6A2beLNj0qRBgnvA+/c4nrGN3WrEuW6nfJITUBJ+IkzB94L
+        42Tp1eQCBo8erjTMyJiH9Bw+PXwCje6333vZ35WjCA==
+X-Google-Smtp-Source: APXvYqxXXdkUqXANlStsk1lenJDmPI7xPnaoeWDCjml03nCZHiiMxeQ6Lcs34F/mDcvZcefaoGTe/GUtceMB6TU8lc4=
+X-Received: by 2002:adf:9e09:: with SMTP id u9mr28292550wre.169.1566227332245;
+ Mon, 19 Aug 2019 08:08:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190819062814.5315-2-dja@axtens.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+References: <20190817142435.8532-1-hdegoede@redhat.com>
+In-Reply-To: <20190817142435.8532-1-hdegoede@redhat.com>
+From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date:   Mon, 19 Aug 2019 18:08:34 +0300
+Message-ID: <CAKv+Gu_bdcEQVnUcBpucgxk8zJ3EgsS=mBUpqfECOq_k1YYN9w@mail.gmail.com>
+Subject: Re: [PATCH v2 0/7] crypto: sha256 - Merge 2 separate C
+ implementations into 1, put into separate library
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" 
+        <linux-crypto@vger.kernel.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Sat, 17 Aug 2019 at 17:24, Hans de Goede <hdegoede@redhat.com> wrote:
+>
+> Hi All,
+>
+> Here is v2 of my patch series refactoring the current 2 separate SHA256
+> C implementations into 1 and put it into a separate library.
+>
+> There are 3 reasons for this:
+>
+> 1) Remove the code duplication of having 2 separate implementations
+>
+> 2) Offer a separate library SHA256 implementation which can be used
+> without having to call crypto_alloc_shash first. This is especially
+> useful for use during early boot when crypto_alloc_shash does not
+> work yet.
+>
+> 3) Having the purgatory code using the same code as the crypto subsys means
+> that the purgratory code will be tested by the crypto subsys selftests.
+>
+> This has been tested on x86, including checking that kecec still works.
+>
+> This has NOT been tested on s390, if someone with access to s390 can
+> test that things still build with this series applied and that
+> kexec still works, that would be great.
+>
+> Changes in v2:
+> - Use put_unaligned_be32 to store the hash to allow callers to use an
+>   unaligned buffer for storing the hash
+> - Add a comment to include/crypto/sha256.h explaining that these functions
+>   now may be used outside of the purgatory too (and that using the crypto
+>   API instead is preferred)
+> - Add sha224 support to the lib/crypto/sha256 library code
+> - Make crypto/sha256_generic.c not only use sha256_transform from
+>   lib/crypto/sha256.c but also switch it to using sha256_init, sha256_update
+>   and sha256_final from there so that the crypto subsys selftests fully test
+>   the lib/crypto/sha256.c implementation
+>
 
-
-Le 19/08/2019 à 08:28, Daniel Axtens a écrit :
-> In KASAN development I noticed that the powerpc-specific bitops
-> were not being picked up by the KASAN test suite.
-
-I'm not sure anybody cares about who noticed the problem. This sentence 
-could be rephrased as:
-
-The powerpc-specific bitops are not being picked up by the KASAN test suite.
-
-> 
-> Instrumentation is done via the bitops/instrumented-{atomic,lock}.h
-> headers. They require that arch-specific versions of bitop functions
-> are renamed to arch_*. Do this renaming.
-> 
-> For clear_bit_unlock_is_negative_byte, the current implementation
-> uses the PG_waiters constant. This works because it's a preprocessor
-> macro - so it's only actually evaluated in contexts where PG_waiters
-> is defined. With instrumentation however, it becomes a static inline
-> function, and all of a sudden we need the actual value of PG_waiters.
-> Because of the order of header includes, it's not available and we
-> fail to compile. Instead, manually specify that we care about bit 7.
-> This is still correct: bit 7 is the bit that would mark a negative
-> byte.
-> 
-> Cc: Nicholas Piggin <npiggin@gmail.com> # clear_bit_unlock_negative_byte
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
-
-Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-Note that this patch might be an opportunity to replace all the 
-'__inline__' by the standard 'inline' keyword.
-
-Some () alignment to be fixes as well, see checkpatch warnings/checks at 
-https://openpower.xyz/job/snowpatch/job/snowpatch-linux-checkpatch/8601//artifact/linux/checkpatch.log
-
-> ---
->   arch/powerpc/include/asm/bitops.h | 31 +++++++++++++++++++------------
->   1 file changed, 19 insertions(+), 12 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/bitops.h b/arch/powerpc/include/asm/bitops.h
-> index 603aed229af7..8615b2bc35fe 100644
-> --- a/arch/powerpc/include/asm/bitops.h
-> +++ b/arch/powerpc/include/asm/bitops.h
-> @@ -86,22 +86,22 @@ DEFINE_BITOP(clear_bits, andc, "")
->   DEFINE_BITOP(clear_bits_unlock, andc, PPC_RELEASE_BARRIER)
->   DEFINE_BITOP(change_bits, xor, "")
->   
-> -static __inline__ void set_bit(int nr, volatile unsigned long *addr)
-> +static __inline__ void arch_set_bit(int nr, volatile unsigned long *addr)
->   {
->   	set_bits(BIT_MASK(nr), addr + BIT_WORD(nr));
->   }
->   
-> -static __inline__ void clear_bit(int nr, volatile unsigned long *addr)
-> +static __inline__ void arch_clear_bit(int nr, volatile unsigned long *addr)
->   {
->   	clear_bits(BIT_MASK(nr), addr + BIT_WORD(nr));
->   }
->   
-> -static __inline__ void clear_bit_unlock(int nr, volatile unsigned long *addr)
-> +static __inline__ void arch_clear_bit_unlock(int nr, volatile unsigned long *addr)
->   {
->   	clear_bits_unlock(BIT_MASK(nr), addr + BIT_WORD(nr));
->   }
->   
-> -static __inline__ void change_bit(int nr, volatile unsigned long *addr)
-> +static __inline__ void arch_change_bit(int nr, volatile unsigned long *addr)
->   {
->   	change_bits(BIT_MASK(nr), addr + BIT_WORD(nr));
->   }
-> @@ -138,26 +138,26 @@ DEFINE_TESTOP(test_and_clear_bits, andc, PPC_ATOMIC_ENTRY_BARRIER,
->   DEFINE_TESTOP(test_and_change_bits, xor, PPC_ATOMIC_ENTRY_BARRIER,
->   	      PPC_ATOMIC_EXIT_BARRIER, 0)
->   
-> -static __inline__ int test_and_set_bit(unsigned long nr,
-> +static __inline__ int arch_test_and_set_bit(unsigned long nr,
->   				       volatile unsigned long *addr)
->   {
->   	return test_and_set_bits(BIT_MASK(nr), addr + BIT_WORD(nr)) != 0;
->   }
->   
-> -static __inline__ int test_and_set_bit_lock(unsigned long nr,
-> +static __inline__ int arch_test_and_set_bit_lock(unsigned long nr,
->   				       volatile unsigned long *addr)
->   {
->   	return test_and_set_bits_lock(BIT_MASK(nr),
->   				addr + BIT_WORD(nr)) != 0;
->   }
->   
-> -static __inline__ int test_and_clear_bit(unsigned long nr,
-> +static __inline__ int arch_test_and_clear_bit(unsigned long nr,
->   					 volatile unsigned long *addr)
->   {
->   	return test_and_clear_bits(BIT_MASK(nr), addr + BIT_WORD(nr)) != 0;
->   }
->   
-> -static __inline__ int test_and_change_bit(unsigned long nr,
-> +static __inline__ int arch_test_and_change_bit(unsigned long nr,
->   					  volatile unsigned long *addr)
->   {
->   	return test_and_change_bits(BIT_MASK(nr), addr + BIT_WORD(nr)) != 0;
-> @@ -185,15 +185,18 @@ static __inline__ unsigned long clear_bit_unlock_return_word(int nr,
->   	return old;
->   }
->   
-> -/* This is a special function for mm/filemap.c */
-> -#define clear_bit_unlock_is_negative_byte(nr, addr)			\
-> -	(clear_bit_unlock_return_word(nr, addr) & BIT_MASK(PG_waiters))
-> +/*
-> + * This is a special function for mm/filemap.c
-> + * Bit 7 corresponds to PG_waiters.
-> + */
-> +#define arch_clear_bit_unlock_is_negative_byte(nr, addr)		\
-> +	(clear_bit_unlock_return_word(nr, addr) & BIT_MASK(7))
->   
->   #endif /* CONFIG_PPC64 */
->   
->   #include <asm-generic/bitops/non-atomic.h>
->   
-> -static __inline__ void __clear_bit_unlock(int nr, volatile unsigned long *addr)
-> +static __inline__ void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
->   {
->   	__asm__ __volatile__(PPC_RELEASE_BARRIER "" ::: "memory");
->   	__clear_bit(nr, addr);
-> @@ -239,6 +242,10 @@ unsigned long __arch_hweight64(__u64 w);
->   
->   #include <asm-generic/bitops/find.h>
->   
-> +/* wrappers that deal with KASAN instrumentation */
-> +#include <asm-generic/bitops/instrumented-atomic.h>
-> +#include <asm-generic/bitops/instrumented-lock.h>
-> +
->   /* Little-endian versions */
->   #include <asm-generic/bitops/le.h>
->   
-> 
+This looks fine to me, although I agree with Eric's feedback regarding
+further cleanups. Also, now that we have a C library, I'd like to drop
+the dependency of the mips and x86 sha256 algo implementations up
+sha256_generic.c, and use the library directly instead (so that
+sha256-generic is no longer needed on x86 or mips)
