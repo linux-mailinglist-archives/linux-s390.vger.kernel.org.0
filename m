@@ -2,30 +2,28 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F0C795F42
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Aug 2019 14:56:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2A4795FE2
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Aug 2019 15:22:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbfHTMzb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Aug 2019 08:55:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45056 "EHLO mx1.redhat.com"
+        id S1729810AbfHTNVt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Aug 2019 09:21:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:42350 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfHTMza (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 20 Aug 2019 08:55:30 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1729639AbfHTNVs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 20 Aug 2019 09:21:48 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 36FD3106BB26;
-        Tue, 20 Aug 2019 12:55:30 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id F29FC10F23E0;
+        Tue, 20 Aug 2019 13:21:47 +0000 (UTC)
 Received: from thuth.remote.csb (ovpn-116-232.ams2.redhat.com [10.36.116.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE0D35D9DC;
-        Tue, 20 Aug 2019 12:55:26 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 2/3] s390x: Diag288 test
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A10203DA5;
+        Tue, 20 Aug 2019 13:21:43 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 3/3] s390x: STSI tests
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com
 References: <20190820105550.4991-1-frankja@linux.ibm.com>
- <20190820105550.4991-3-frankja@linux.ibm.com>
- <6f25a51e-136e-1afb-215d-a2639fbd5510@redhat.com>
- <caf41bc6-6dcf-fa68-6b44-d8bcc1479acb@linux.ibm.com>
+ <20190820105550.4991-4-frankja@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
@@ -71,125 +69,217 @@ Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
  IQu4bBP2GxiRQ+NV3iV/KU3ebMRzqIC//DCOxzQNFNJAKldPe/bKZMCxEqtVoRkuJtNdp/5a
  yXFZ6TfE1hGKrDBYAm4vrnZ4CXFSBDllL59cFFOJCkn4Xboj/aVxxJxF30bn
 Organization: Red Hat
-Message-ID: <7e9f7043-14d9-8fc5-9302-cce8acdd5351@redhat.com>
-Date:   Tue, 20 Aug 2019 14:55:25 +0200
+Message-ID: <ef4faf31-e9db-f984-94ec-f3c332823b6f@redhat.com>
+Date:   Tue, 20 Aug 2019 15:21:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <caf41bc6-6dcf-fa68-6b44-d8bcc1479acb@linux.ibm.com>
+In-Reply-To: <20190820105550.4991-4-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 20 Aug 2019 12:55:30 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 20 Aug 2019 13:21:48 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 8/20/19 2:25 PM, Janosch Frank wrote:
-> On 8/20/19 1:59 PM, Thomas Huth wrote:
->> On 8/20/19 12:55 PM, Janosch Frank wrote:
->>> A small test for the watchdog via diag288.
->>>
->>> Minimum timer value is 15 (seconds) and the only supported action with
->>> QEMU is restart.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> ---
->>>  s390x/Makefile      |   1 +
->>>  s390x/diag288.c     | 111 ++++++++++++++++++++++++++++++++++++++++++++
->>>  s390x/unittests.cfg |   4 ++
->>>  3 files changed, 116 insertions(+)
->>>  create mode 100644 s390x/diag288.c
->>>
->>> diff --git a/s390x/Makefile b/s390x/Makefile
->>> index 1f21ddb..b654c56 100644
->>> --- a/s390x/Makefile
->>> +++ b/s390x/Makefile
->>> @@ -11,6 +11,7 @@ tests += $(TEST_DIR)/cmm.elf
->>>  tests += $(TEST_DIR)/vector.elf
->>>  tests += $(TEST_DIR)/gs.elf
->>>  tests += $(TEST_DIR)/iep.elf
->>> +tests += $(TEST_DIR)/diag288.elf
->>>  tests_binary = $(patsubst %.elf,%.bin,$(tests))
->>>  
->>>  all: directories test_cases test_cases_binary
->>> diff --git a/s390x/diag288.c b/s390x/diag288.c
->>> new file mode 100644
->>> index 0000000..5abcec4
->>> --- /dev/null
->>> +++ b/s390x/diag288.c
->>> @@ -0,0 +1,111 @@
->>> +/*
->>> + * Timer Event DIAG288 test
->>> + *
->>> + * Copyright (c) 2019 IBM Corp
->>> + *
->>> + * Authors:
->>> + *  Janosch Frank <frankja@linux.ibm.com>
->>> + *
->>> + * This code is free software; you can redistribute it and/or modify it
->>> + * under the terms of the GNU Library General Public License version 2.
->>> + */
->>> +
->>> +#include <libcflat.h>
->>> +#include <asm/asm-offsets.h>
->>> +#include <asm/interrupt.h>
->>> +
->>> +struct lowcore *lc = (void *)0x0;
->>
->> Maybe use "NULL" instead of "(void *)0x0" ?
+On 8/20/19 12:55 PM, Janosch Frank wrote:
+> For now let's concentrate on the error conditions.
 > 
-> Well I'd rather have:
-> struct lowcore *lc = (struct lowcore *)0x0;
-
-Fine for me, too.
-
->> ... maybe we could also introduce such a variable as a global variable
->> in lib/s390x/ since this is already the third or fourth time that we use
->> it in the kvm-unit-tests...
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  s390x/Makefile      |   1 +
+>  s390x/stsi.c        | 123 ++++++++++++++++++++++++++++++++++++++++++++
+>  s390x/unittests.cfg |   5 +-
+>  3 files changed, 128 insertions(+), 1 deletion(-)
+>  create mode 100644 s390x/stsi.c
 > 
-> Sure I also thought about that, any particular place?
+> diff --git a/s390x/Makefile b/s390x/Makefile
+> index b654c56..311ab77 100644
+> --- a/s390x/Makefile
+> +++ b/s390x/Makefile
+> @@ -12,6 +12,7 @@ tests += $(TEST_DIR)/vector.elf
+>  tests += $(TEST_DIR)/gs.elf
+>  tests += $(TEST_DIR)/iep.elf
+>  tests += $(TEST_DIR)/diag288.elf
+> +tests += $(TEST_DIR)/stsi.elf
+>  tests_binary = $(patsubst %.elf,%.bin,$(tests))
+>  
+>  all: directories test_cases test_cases_binary
+> diff --git a/s390x/stsi.c b/s390x/stsi.c
+> new file mode 100644
+> index 0000000..005f337
+> --- /dev/null
+> +++ b/s390x/stsi.c
+> @@ -0,0 +1,123 @@
+> +/*
+> + * Store System Information tests
+> + *
+> + * Copyright (c) 2019 IBM Corp
+> + *
+> + * Authors:
+> + *  Janosch Frank <frankja@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU Library General Public License version 2.
+> + */
+> +
+> +#include <libcflat.h>
+> +#include <asm/page.h>
+> +#include <asm/asm-offsets.h>
+> +#include <asm/interrupt.h>
+> +
+> +static uint8_t pagebuf[PAGE_SIZE * 2] __attribute__((aligned(PAGE_SIZE * 2)));
+> +
+> +static inline unsigned long stsi(unsigned long *addr,
+> +				 unsigned long fc, uint8_t sel1, uint8_t sel2)
 
-No clue. Maybe lib/s390x/mmu.c ? Or a new file called lowcore.c ?
+Return code should be "int", not "long".
 
->>> +static inline void diag288_uneven(void)
->>> +{
->>> +	register unsigned long fc asm("1") = 0;
->>> +	register unsigned long time asm("1") = 15;
->>
->> So you're setting register 1 twice? And "time" is not really used in the
->> inline assembly below? How's that supposed to work? Looks like a bug to
->> me... if not, please explain with a comment in the code here.
-> 
-> Well I'm waiting for a spec exception here, so it doesn't have to work.> I'll probably just remove the register variables and do a:
-> 
-> "diag %r1,%r2,0x288"
+I'd also suggest to use "void *addr" instead of "unsigned long *addr",
+then you don't have to cast the pagebuf when you're calling this function.
 
-Yes, I think that's easier to understand.
+> +{
+> +	register unsigned long r0 asm("0") = (fc << 28) | sel1;
+> +	register unsigned long r1 asm("1") = sel2;
+> +	int cc;
+> +
+> +	asm volatile("stsi	0(%3)\n"
+> +		     "ipm	 %[cc]\n"
+> +		     "srl	 %[cc],28\n"
+> +		     : "+d" (r0), [cc] "=d" (cc)
+> +		     : "d" (r1), "a" (addr)
+> +		     : "cc", "memory");
+> +	return cc;
+> +}
 
-BTW, is there another documentation of diag 288 beside the "CP
-programming services" manual? At least my version of that specification
-does not say that the fc register has to be even...
+Bonus points for putting that function into a header and re-use it in
+skey.c (maybe in a separate patch, though).
 
->>> +static void test_bite(void)
->>> +{
->>> +	if (lc->restart_old_psw.addr) {
->>> +		report("restart", true);
->>> +		return;
->>> +	}
->>> +	lc->restart_new_psw.addr = (uint64_t)test_bite;
->>> +	diag288(CODE_INIT, 15, ACTION_RESTART);
->>> +	while(1) {};
->>
->> Should this maybe timeout after a minute or so?
-> 
-> Well run_tests.sh does timeout externally.
-> Do you need it backed into the test?
+> +static inline void stsi_zero_r0(unsigned long *addr,
+> +				unsigned long fc, uint8_t sel1, uint8_t sel2)
+> +{
+> +	register unsigned long r0 asm("0") = (fc << 28) | (1 << 8) | sel1;
+> +	register unsigned long r1 asm("1") = sel2;
+> +
+> +
 
-I sometimes also run the tests without the wrapper script, so in that
-case it would be convenient ... but I can also quit QEMU manually in
-that case, so it's not a big issue.
+Please remove one empty line.
+
+> +	asm volatile("stsi	0(%2)"
+> +		     : "+d" (r0)
+> +		     : "d" (r1), "a" (addr)
+> +		     : "cc", "memory");
+> +}
+> +
+> +static inline void stsi_zero_r1(unsigned long *addr,
+> +				unsigned long fc, uint8_t sel1, uint8_t sel2)
+> +{
+> +	register unsigned long r0 asm("0") = (fc << 28) | sel1;
+> +	register unsigned long r1 asm("1") = (1 << 16) | sel2;
+> +
+> +
+
+dito
+
+> +	asm volatile("stsi	0(%2)"
+> +		     : "+d" (r0)
+> +		     : "d" (r1), "a" (addr)
+> +		     : "cc", "memory");
+> +}
+
+Also not sure whether you need separate functions for these tests ...
+you could also change the type of sel1 and sel2  from "uint8_t" to "int"
+in the stsi() function and then pass the invalid types to that function
+instead?
+
+> +static inline unsigned long stsi_get_fc(unsigned long *addr)
+> +{
+> +	register unsigned long r0 asm("0") = 0;
+> +	register unsigned long r1 asm("1") = 0;
+> +
+> +
+
+Superfluous empty line again.
+
+> +	asm volatile("stsi	0(%2)"
+> +		     : "+d" (r0)
+> +		     : "d" (r1), "a" (addr)
+> +		     : "cc", "memory");
+
+Maybe assert that the CC is 0 after the call?
+
+> +	return r0 >> 28;
+> +}
+> +
+> +static void test_specs(void)
+> +{
+> +	report_prefix_push("spec ex");
+
+s/spec ex/specification/ please
+
+> +	report_prefix_push("inv r0");
+> +	expect_pgm_int();
+> +	stsi_zero_r0((void *)pagebuf, 1, 0, 0);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("inv r1");
+> +	expect_pgm_int();
+> +	stsi_zero_r1((void *)pagebuf, 1, 0, 0);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("unaligned");
+> +	expect_pgm_int();
+> +	stsi((void *)pagebuf + 42, 1, 0, 0);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_pop();
+> +}
+> +
+> +static void test_priv(void)
+> +{
+> +	report_prefix_push("privileged");
+> +	expect_pgm_int();
+> +	enter_pstate();
+> +	stsi((void *)pagebuf, 0, 0, 0);
+> +	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
+> +	report_prefix_pop();
+> +}
+> +
+> +static void test_fc(void)
+> +{
+> +	report("cc == 3", stsi((void *)pagebuf, 7, 0, 0));
+
+Shouldn't that line look like this instead:
+
+    	report("cc == 3", stsi((void *)pagebuf, 7, 0, 0) == 3);
+
+?
+
+> +	report("r0 == 3", stsi_get_fc((void *)pagebuf));
+
+    report("r0 >= 3", stsi_get_fc((void *)pagebuf) >= 3);
+
+?
+
+> +}
+> +
+> +int main(void)
+> +{
+> +	report_prefix_push("stsi");
+> +	test_priv();
+> +	test_specs();
+> +	test_fc();
+> +	return report_summary();
+> +}
+
+How about adding another test for access exceptions? Activate low
+address protection, then store to address 4096 ... and/or check
+"stsi((void *)-0xdeadadd, 1, 0, 0);" ?
 
  Thomas
