@@ -2,252 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 229E796677
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Aug 2019 18:34:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 80FCA966A9
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Aug 2019 18:43:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbfHTQee (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Aug 2019 12:34:34 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:47987 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728682AbfHTQee (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 20 Aug 2019 12:34:34 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46Cbwl6LzXz9v4gL;
-        Tue, 20 Aug 2019 18:34:31 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=jcEk1qot; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id w-gSiBqPQhSj; Tue, 20 Aug 2019 18:34:31 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46Cbwl5Fhpz9v4gJ;
-        Tue, 20 Aug 2019 18:34:31 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1566318871; bh=M46pFD8QK6LkV0J4+q5kgptn6gTa2un+Xy7n4gfSJPo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=jcEk1qotdlZhd4zqaMYy/nnRZxUswz6Zjf6uiA0CprsgxuhYKzPoQxK7JnX4ANWNE
-         TGCbsNci+cp8RyBoGzF0YwhusQH1pyG2Qp3BdBbhS/e+I9kewM/A0J7qHn+J/VH5UU
-         9z/tMDOkjBWkNPObWfmtY1wE4BO2hHcU/XiEHLdk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 4467E8B7DA;
-        Tue, 20 Aug 2019 18:34:32 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id o9cmSMSFdq5C; Tue, 20 Aug 2019 18:34:32 +0200 (CEST)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id B55248B7D5;
-        Tue, 20 Aug 2019 18:34:31 +0200 (CEST)
-Subject: Re: [PATCH v2 2/2] powerpc: support KASAN instrumentation of bitops
-To:     Daniel Axtens <dja@axtens.net>, linux-s390@vger.kernel.org,
-        linux-arch@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc:     kasan-dev@googlegroups.com, Nicholas Piggin <npiggin@gmail.com>
-References: <20190820024941.12640-1-dja@axtens.net>
- <20190820024941.12640-2-dja@axtens.net>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <cb205dfa-bdea-8320-5aae-9d5d5bd98c91@c-s.fr>
-Date:   Tue, 20 Aug 2019 18:34:31 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730119AbfHTQnK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Aug 2019 12:43:10 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:44184 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727077AbfHTQnK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Aug 2019 12:43:10 -0400
+Received: by mail-pg1-f195.google.com with SMTP id i18so3543368pgl.11
+        for <linux-s390@vger.kernel.org>; Tue, 20 Aug 2019 09:43:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=LW7Np807JFXBPdceTJ4YMsWPKJJt2VUoFPmk4EchDJ4=;
+        b=DWqUjz7Sz+yih0xqXpFkLQQ+CT2h4rbqyp0wKeHt+Z+oShWylBFZCeBctZctW/ngYJ
+         1SPSJLyrMZYEwVvyG44ztncLLIps7lRlirLfaZw2mO7qnEmIUim2OD8Ixm1iyf1LZtBM
+         Mbg24jOgm+1m4/qq1oHyp2QW0qeR+qCDbK8yY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=LW7Np807JFXBPdceTJ4YMsWPKJJt2VUoFPmk4EchDJ4=;
+        b=e19KSRUZxOnRK5zj2zUPdA9dvX8hOQKvmtH62H9dz2F0hyuqbKovx4YSrVWKMRr+Yd
+         LPtqScqMyolaHPLuETkssUjtqw8lSc9CfW/CueO2HgUQYg5Vl2/VeBB3raOV9Rh1mons
+         W3sYtjE3EgwdgewwN/MUfCKrJQOQ5GIGbcjwnWGDZHZo7/8MdcfWpppvxHFRM/MyaBrP
+         y9x7VNUBxgwojIBg5LjCYdSjFa4YpqZWql/HAl/t8Yrf1seTrDYkKkn6JeLcLHd+GrFs
+         +HCzYf4SBsXamb0LvLAtCtT8tn2+XDcvKYtxW9EmxplRfcLsi16VxC1Vmst3YbG9ZxSi
+         LbMg==
+X-Gm-Message-State: APjAAAXJKoyocj/vXKK3N6buckDWg1IF72PB+Fi93ZzLytrnvpt/smkR
+        mTAo2tHaV8KaWDWa3j7Z/e0MhA==
+X-Google-Smtp-Source: APXvYqzvd+GzbIYYqMRO7YhQ4o8RQrhpByuzytC05pNE/nDMOXLzSTZujG3Dk1gGvv6drTwyXCh4KQ==
+X-Received: by 2002:a63:8f55:: with SMTP id r21mr25426981pgn.318.1566319389424;
+        Tue, 20 Aug 2019 09:43:09 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id u69sm23851408pgu.77.2019.08.20.09.43.08
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 20 Aug 2019 09:43:08 -0700 (PDT)
+Date:   Tue, 20 Aug 2019 09:43:07 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     jwi@linux.ibm.com, linux-s390@vger.kernel.org
+Subject: Re: [bug report] s390/qeth: streamline SNMP cmd code
+Message-ID: <201908200941.93D8BB7B@keescook>
+References: <20190820110504.GA1847@mwanda>
 MIME-Version: 1.0
-In-Reply-To: <20190820024941.12640-2-dja@axtens.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190820110504.GA1847@mwanda>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, Aug 20, 2019 at 02:05:04PM +0300, Dan Carpenter wrote:
+> [  Kees, could we make copy_from_user() just fail if size is more than
+>    INT_MAX? ]
 
+We already have similar limits in the VFS and other helpers. We might as
+well do it in copy_*_user() too. Let me put together a patch...
 
-Le 20/08/2019 à 04:49, Daniel Axtens a écrit :
-> The powerpc-specific bitops are not being picked up by the KASAN
-> test suite.
-> 
-> Instrumentation is done via the bitops/instrumented-{atomic,lock}.h
-> headers. They require that arch-specific versions of bitop functions
-> are renamed to arch_*. Do this renaming.
-> 
-> For clear_bit_unlock_is_negative_byte, the current implementation
-> uses the PG_waiters constant. This works because it's a preprocessor
-> macro - so it's only actually evaluated in contexts where PG_waiters
-> is defined. With instrumentation however, it becomes a static inline
-> function, and all of a sudden we need the actual value of PG_waiters.
-> Because of the order of header includes, it's not available and we
-> fail to compile. Instead, manually specify that we care about bit 7.
-> This is still correct: bit 7 is the bit that would mark a negative
-> byte.
-> 
-> While we're at it, replace __inline__ with inline across the file.
-> 
-> Cc: Nicholas Piggin <npiggin@gmail.com> # clear_bit_unlock_negative_byte
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
-
-Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-
-Now, I only have two KASAN tests which do not trigger any message:
-
-	kasan test: kasan_alloca_oob_left out-of-bounds to left on alloca
-	kasan test: kasan_alloca_oob_right out-of-bounds to right on alloca
-
-Christophe
+-Kees
 
 > 
-> --
-> v2: Address Christophe review
-> ---
->   arch/powerpc/include/asm/bitops.h | 51 ++++++++++++++++++-------------
->   1 file changed, 29 insertions(+), 22 deletions(-)
+> Hello Julian Wiedmann,
 > 
-> diff --git a/arch/powerpc/include/asm/bitops.h b/arch/powerpc/include/asm/bitops.h
-> index 603aed229af7..28dcf8222943 100644
-> --- a/arch/powerpc/include/asm/bitops.h
-> +++ b/arch/powerpc/include/asm/bitops.h
-> @@ -64,7 +64,7 @@
->   
->   /* Macro for generating the ***_bits() functions */
->   #define DEFINE_BITOP(fn, op, prefix)		\
-> -static __inline__ void fn(unsigned long mask,	\
-> +static inline void fn(unsigned long mask,	\
->   		volatile unsigned long *_p)	\
->   {						\
->   	unsigned long old;			\
-> @@ -86,22 +86,22 @@ DEFINE_BITOP(clear_bits, andc, "")
->   DEFINE_BITOP(clear_bits_unlock, andc, PPC_RELEASE_BARRIER)
->   DEFINE_BITOP(change_bits, xor, "")
->   
-> -static __inline__ void set_bit(int nr, volatile unsigned long *addr)
-> +static inline void arch_set_bit(int nr, volatile unsigned long *addr)
->   {
->   	set_bits(BIT_MASK(nr), addr + BIT_WORD(nr));
->   }
->   
-> -static __inline__ void clear_bit(int nr, volatile unsigned long *addr)
-> +static inline void arch_clear_bit(int nr, volatile unsigned long *addr)
->   {
->   	clear_bits(BIT_MASK(nr), addr + BIT_WORD(nr));
->   }
->   
-> -static __inline__ void clear_bit_unlock(int nr, volatile unsigned long *addr)
-> +static inline void arch_clear_bit_unlock(int nr, volatile unsigned long *addr)
->   {
->   	clear_bits_unlock(BIT_MASK(nr), addr + BIT_WORD(nr));
->   }
->   
-> -static __inline__ void change_bit(int nr, volatile unsigned long *addr)
-> +static inline void arch_change_bit(int nr, volatile unsigned long *addr)
->   {
->   	change_bits(BIT_MASK(nr), addr + BIT_WORD(nr));
->   }
-> @@ -109,7 +109,7 @@ static __inline__ void change_bit(int nr, volatile unsigned long *addr)
->   /* Like DEFINE_BITOP(), with changes to the arguments to 'op' and the output
->    * operands. */
->   #define DEFINE_TESTOP(fn, op, prefix, postfix, eh)	\
-> -static __inline__ unsigned long fn(			\
-> +static inline unsigned long fn(			\
->   		unsigned long mask,			\
->   		volatile unsigned long *_p)		\
->   {							\
-> @@ -138,34 +138,34 @@ DEFINE_TESTOP(test_and_clear_bits, andc, PPC_ATOMIC_ENTRY_BARRIER,
->   DEFINE_TESTOP(test_and_change_bits, xor, PPC_ATOMIC_ENTRY_BARRIER,
->   	      PPC_ATOMIC_EXIT_BARRIER, 0)
->   
-> -static __inline__ int test_and_set_bit(unsigned long nr,
-> -				       volatile unsigned long *addr)
-> +static inline int arch_test_and_set_bit(unsigned long nr,
-> +					volatile unsigned long *addr)
->   {
->   	return test_and_set_bits(BIT_MASK(nr), addr + BIT_WORD(nr)) != 0;
->   }
->   
-> -static __inline__ int test_and_set_bit_lock(unsigned long nr,
-> -				       volatile unsigned long *addr)
-> +static inline int arch_test_and_set_bit_lock(unsigned long nr,
-> +					     volatile unsigned long *addr)
->   {
->   	return test_and_set_bits_lock(BIT_MASK(nr),
->   				addr + BIT_WORD(nr)) != 0;
->   }
->   
-> -static __inline__ int test_and_clear_bit(unsigned long nr,
-> -					 volatile unsigned long *addr)
-> +static inline int arch_test_and_clear_bit(unsigned long nr,
-> +					  volatile unsigned long *addr)
->   {
->   	return test_and_clear_bits(BIT_MASK(nr), addr + BIT_WORD(nr)) != 0;
->   }
->   
-> -static __inline__ int test_and_change_bit(unsigned long nr,
-> -					  volatile unsigned long *addr)
-> +static inline int arch_test_and_change_bit(unsigned long nr,
-> +					   volatile unsigned long *addr)
->   {
->   	return test_and_change_bits(BIT_MASK(nr), addr + BIT_WORD(nr)) != 0;
->   }
->   
->   #ifdef CONFIG_PPC64
-> -static __inline__ unsigned long clear_bit_unlock_return_word(int nr,
-> -						volatile unsigned long *addr)
-> +static inline unsigned long
-> +clear_bit_unlock_return_word(int nr, volatile unsigned long *addr)
->   {
->   	unsigned long old, t;
->   	unsigned long *p = (unsigned long *)addr + BIT_WORD(nr);
-> @@ -185,15 +185,18 @@ static __inline__ unsigned long clear_bit_unlock_return_word(int nr,
->   	return old;
->   }
->   
-> -/* This is a special function for mm/filemap.c */
-> -#define clear_bit_unlock_is_negative_byte(nr, addr)			\
-> -	(clear_bit_unlock_return_word(nr, addr) & BIT_MASK(PG_waiters))
-> +/*
-> + * This is a special function for mm/filemap.c
-> + * Bit 7 corresponds to PG_waiters.
-> + */
-> +#define arch_clear_bit_unlock_is_negative_byte(nr, addr)		\
-> +	(clear_bit_unlock_return_word(nr, addr) & BIT_MASK(7))
->   
->   #endif /* CONFIG_PPC64 */
->   
->   #include <asm-generic/bitops/non-atomic.h>
->   
-> -static __inline__ void __clear_bit_unlock(int nr, volatile unsigned long *addr)
-> +static inline void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
->   {
->   	__asm__ __volatile__(PPC_RELEASE_BARRIER "" ::: "memory");
->   	__clear_bit(nr, addr);
-> @@ -215,14 +218,14 @@ static __inline__ void __clear_bit_unlock(int nr, volatile unsigned long *addr)
->    * fls: find last (most-significant) bit set.
->    * Note fls(0) = 0, fls(1) = 1, fls(0x80000000) = 32.
->    */
-> -static __inline__ int fls(unsigned int x)
-> +static inline int fls(unsigned int x)
->   {
->   	return 32 - __builtin_clz(x);
->   }
->   
->   #include <asm-generic/bitops/builtin-__fls.h>
->   
-> -static __inline__ int fls64(__u64 x)
-> +static inline int fls64(__u64 x)
->   {
->   	return 64 - __builtin_clzll(x);
->   }
-> @@ -239,6 +242,10 @@ unsigned long __arch_hweight64(__u64 w);
->   
->   #include <asm-generic/bitops/find.h>
->   
-> +/* wrappers that deal with KASAN instrumentation */
-> +#include <asm-generic/bitops/instrumented-atomic.h>
-> +#include <asm-generic/bitops/instrumented-lock.h>
-> +
->   /* Little-endian versions */
->   #include <asm-generic/bitops/le.h>
->   
+> The patch d4c08afafa04: "s390/qeth: streamline SNMP cmd code" from
+> Jun 27, 2019, leads to the following static checker warning:
 > 
+> 	drivers/s390/net/qeth_core_main.c:4381 qeth_snmp_command()
+> 	error: check that 'req_len' is capped
+> 
+> drivers/s390/net/qeth_core_main.c
+>   4355  static int qeth_snmp_command(struct qeth_card *card, char __user *udata)
+>   4356  {
+>   4357          struct qeth_snmp_ureq __user *ureq;
+>   4358          struct qeth_cmd_buffer *iob;
+>   4359          unsigned int req_len;
+>   4360          struct qeth_arp_query_info qinfo = {0, };
+>   4361          int rc = 0;
+>   4362  
+>   4363          QETH_CARD_TEXT(card, 3, "snmpcmd");
+>   4364  
+>   4365          if (IS_VM_NIC(card))
+>   4366                  return -EOPNOTSUPP;
+>   4367  
+>   4368          if ((!qeth_adp_supported(card, IPA_SETADP_SET_SNMP_CONTROL)) &&
+>   4369              IS_LAYER3(card))
+>   4370                  return -EOPNOTSUPP;
+>   4371  
+>   4372          ureq = (struct qeth_snmp_ureq __user *) udata;
+>   4373          if (get_user(qinfo.udata_len, &ureq->hdr.data_len) ||
+>   4374              get_user(req_len, &ureq->hdr.req_len))
+>   4375                  return -EFAULT;
+>   4376  
+>   4377          iob = qeth_get_adapter_cmd(card, IPA_SETADP_SET_SNMP_CONTROL, req_len);
+> 
+> The problem is that qeth_get_adapter_cmd() doesn't guard against integer
+> overflows if reg_len is >= UINT_MAX - offsetof(struct qeth_ipacmd_setadpparms,
+> data)).
+> 
+>   4378          if (!iob)
+>   4379                  return -ENOMEM;
+>   4380  
+>   4381          if (copy_from_user(&__ipa_cmd(iob)->data.setadapterparms.data.snmp,
+>   4382                             &ureq->cmd, req_len)) {
+> 
+> So then this copy_from_user() could overflow.  The original code had a
+> similar problem but it only affect 32 bit systems.  I'm not sure what is
+> a good upper bound for req_len.
+> 
+>   4383                  qeth_put_cmd(iob);
+>   4384                  return -EFAULT;
+>   4385          }
+>   4386  
+>   4387          qinfo.udata = kzalloc(qinfo.udata_len, GFP_KERNEL);
+> 
+> regards,
+> dan carpenter
+
+-- 
+Kees Cook
