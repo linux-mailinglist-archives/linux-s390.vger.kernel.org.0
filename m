@@ -2,86 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0533895BBC
-	for <lists+linux-s390@lfdr.de>; Tue, 20 Aug 2019 11:56:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DF5A295CB3
+	for <lists+linux-s390@lfdr.de>; Tue, 20 Aug 2019 12:56:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729395AbfHTJ4J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 20 Aug 2019 05:56:09 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:44539 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729374AbfHTJ4J (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 20 Aug 2019 05:56:09 -0400
-Received: by mail-oi1-f194.google.com with SMTP id k22so3615422oiw.11
-        for <linux-s390@vger.kernel.org>; Tue, 20 Aug 2019 02:56:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ERy6C+OfX7AwXRit4NjtghifEuheVTJjPNjjGxnVXl4=;
-        b=esBS8tvWjvw1oPPxWdzyE63jd94MRLnrUUg4cyouQEMyiYTKxPG+Md74XSdR0Hn9qm
-         u/yhAcDom21n1PFzSKCGDVRlC8bwdtOPV5Ga016Y3MfIx+qPtgAqq/l3ZdPMYmiQU647
-         6FOJ9xi1gsNq3LaPCHCLn+mUPV3cg7lHqbwFZk1uSrWhaPoT1t9n6MR3QtZbKyLxDSxS
-         yOOtBByzrdAPB/lhM3CHw0IMUBqHOuId43QVT2RwUl/2EzvVgf27h3OlZL30SdLIkmOF
-         KUilJjflda9G5h40sZPfyzC1FSzsAn8yoWXinP1SG4qMRUqYupzKNJdNoA/N8PfONPNJ
-         u4wA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ERy6C+OfX7AwXRit4NjtghifEuheVTJjPNjjGxnVXl4=;
-        b=lZMPn8gG6xta3cgchiUF3VHZ3xVUnBErZNicknqVaeP3Hg3WnheDtIweFLlhD7Bao4
-         9EOyQ7hDvgVVu3MtDOIn1d2DQK+1uT/ddoFXRlOt5MGCEijxen0MjLk4znye68ImNmJD
-         bnGssITgddCzOopcbDdlZtcdEhc98c0KkigCS4Ig9SuxPslq8kUOxjW7dAaxqqM5Wevq
-         sjEsrYlYT2gYY2KFHxffu3mmfKgeNM64rxZnFja27uTz+Xn6SebI0u23YPfsiVJKTjnj
-         aRT3UZWKx/U359ib4z0mue4F2DpQGVS97FfrIXKQEvtfHlQVEB4jBpjBdlTUtVJEsfxp
-         zoNg==
-X-Gm-Message-State: APjAAAWCeIjv6ep3alKRwaHbaipMz7jlMTxX72zLRvct+qmKTXddKZ/n
-        yiRFZTqrLB6L1iYFZdnOgIuemYUsK247glj6EJjuAA==
-X-Google-Smtp-Source: APXvYqyQ6eoEoVcpR/xbV96cbSTy0dNPpLdj0gQt1oJ++FGqgDPc8X6DViRqQ8kizDCDO6cg+XdDCeC8PkqVTf9p8Pg=
-X-Received: by 2002:aca:c396:: with SMTP id t144mr11367178oif.172.1566294967836;
- Tue, 20 Aug 2019 02:56:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190820024941.12640-1-dja@axtens.net>
-In-Reply-To: <20190820024941.12640-1-dja@axtens.net>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 20 Aug 2019 11:55:56 +0200
-Message-ID: <CANpmjNMpBAjX4G2GYmM6-z8TfXdbzLCuAMQ-fmGRwEDFMci4Ow@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] kasan: support instrumented bitops combined with
- generic bitops
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     christophe.leroy@c-s.fr, linux-s390@vger.kernel.org,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        kasan-dev <kasan-dev@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        id S1728545AbfHTK4N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 20 Aug 2019 06:56:13 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8970 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729246AbfHTK4M (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 20 Aug 2019 06:56:12 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7KArsrJ110055
+        for <linux-s390@vger.kernel.org>; Tue, 20 Aug 2019 06:56:11 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ugeb9kj83-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 20 Aug 2019 06:56:11 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Tue, 20 Aug 2019 11:56:09 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 20 Aug 2019 11:56:06 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7KAti1941091492
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 20 Aug 2019 10:55:44 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0BE334C04A;
+        Tue, 20 Aug 2019 10:56:05 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 494644C052;
+        Tue, 20 Aug 2019 10:56:04 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.152.224.131])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 20 Aug 2019 10:56:04 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
+Subject: [kvm-unit-tests PATCH 0/3] s390x: More emulation tests
+Date:   Tue, 20 Aug 2019 12:55:47 +0200
+X-Mailer: git-send-email 2.17.0
+X-TM-AS-GCONF: 00
+x-cbid: 19082010-0008-0000-0000-0000030B0346
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082010-0009-0000-0000-00004A292A06
+Message-Id: <20190820105550.4991-1-frankja@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-20_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=813 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908200114
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 20 Aug 2019 at 04:50, Daniel Axtens <dja@axtens.net> wrote:
->
-> Currently bitops-instrumented.h assumes that the architecture provides
-> atomic, non-atomic and locking bitops (e.g. both set_bit and __set_bit).
-> This is true on x86 and s390, but is not always true: there is a
-> generic bitops/non-atomic.h header that provides generic non-atomic
-> operations, and also a generic bitops/lock.h for locking operations.
->
-> powerpc uses the generic non-atomic version, so it does not have it's
-> own e.g. __set_bit that could be renamed arch___set_bit.
->
-> Split up bitops-instrumented.h to mirror the atomic/non-atomic/lock
-> split. This allows arches to only include the headers where they
-> have arch-specific versions to rename. Update x86 and s390.
->
-> (The generic operations are automatically instrumented because they're
-> written in C, not asm.)
->
-> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Reviewed-by: Christophe Leroy <christophe.leroy@c-s.fr>
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
+The first patch allows for CECSIM booting via PSW restart.
+The other ones add diag288 and STSI tests.
 
-Acked-by: Marco Elver <elver@google.com>
+I chose to start with these since they are low controversy. My queue
+still contains the sclp patches and a simple smp library with
+tests. They will follow later.
 
-Thanks!
+Janosch Frank (3):
+  s390x: Support PSW restart boot
+  s390x: Diag288 test
+  s390x: STSI tests
+
+ s390x/Makefile      |   2 +
+ s390x/diag288.c     | 111 +++++++++++++++++++++++++++++++++++++++
+ s390x/flat.lds      |  14 +++--
+ s390x/stsi.c        | 123 ++++++++++++++++++++++++++++++++++++++++++++
+ s390x/unittests.cfg |   7 +++
+ 5 files changed, 252 insertions(+), 5 deletions(-)
+ create mode 100644 s390x/diag288.c
+ create mode 100644 s390x/stsi.c
+
+-- 
+2.17.0
+
