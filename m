@@ -2,162 +2,267 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F1BE297ABE
-	for <lists+linux-s390@lfdr.de>; Wed, 21 Aug 2019 15:27:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 25B2297F75
+	for <lists+linux-s390@lfdr.de>; Wed, 21 Aug 2019 17:54:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728026AbfHUN1O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 21 Aug 2019 09:27:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1319 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727696AbfHUN1O (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 21 Aug 2019 09:27:14 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 506073003715;
-        Wed, 21 Aug 2019 13:27:14 +0000 (UTC)
-Received: from [10.36.118.29] (unknown [10.36.118.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4EA2B5D6B0;
-        Wed, 21 Aug 2019 13:27:13 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2 3/4] s390x: Move stsi to library
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com
-References: <20190821104736.1470-1-frankja@linux.ibm.com>
- <20190821104736.1470-4-frankja@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <3a5cc77f-8b2b-269e-3939-3280287b470a@redhat.com>
-Date:   Wed, 21 Aug 2019 15:27:12 +0200
+        id S1728299AbfHUPye (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 21 Aug 2019 11:54:34 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40650 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727558AbfHUPye (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 21 Aug 2019 11:54:34 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7LFrVmV058770
+        for <linux-s390@vger.kernel.org>; Wed, 21 Aug 2019 11:54:33 -0400
+Received: from e32.co.us.ibm.com (e32.co.us.ibm.com [32.97.110.150])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uh61thdyv-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 21 Aug 2019 11:54:32 -0400
+Received: from localhost
+        by e32.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
+        Wed, 21 Aug 2019 16:54:32 +0100
+Received: from b03cxnp08025.gho.boulder.ibm.com (9.17.130.17)
+        by e32.co.us.ibm.com (192.168.1.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 21 Aug 2019 16:54:29 +0100
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7LFsSS610224040
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 21 Aug 2019 15:54:28 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 45CD96A04D;
+        Wed, 21 Aug 2019 15:54:28 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 975DA6A047;
+        Wed, 21 Aug 2019 15:54:27 +0000 (GMT)
+Received: from [9.80.195.2] (unknown [9.80.195.2])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 21 Aug 2019 15:54:27 +0000 (GMT)
+Subject: Re: [PATCH RFC 1/1] vfio-ccw: add some logging
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org
+References: <20190816151505.9853-1-cohuck@redhat.com>
+ <20190816151505.9853-2-cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Date:   Wed, 21 Aug 2019 11:54:26 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190821104736.1470-4-frankja@linux.ibm.com>
+In-Reply-To: <20190816151505.9853-2-cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 21 Aug 2019 13:27:14 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19082115-0004-0000-0000-000015377574
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00011629; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000287; SDB=6.01250053; UDB=6.00659951; IPR=6.01031607;
+ MB=3.00028262; MTD=3.00000008; XFM=3.00000015; UTC=2019-08-21 15:54:30
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082115-0005-0000-0000-00008CF52513
+Message-Id: <81414605-c676-6e7e-4ee8-8dbfe7ae0a76@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-21_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908210165
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 21.08.19 12:47, Janosch Frank wrote:
-> It's needed in multiple tests now.
+
+
+On 8/16/19 11:15 AM, Cornelia Huck wrote:
+> Usually, the common I/O layer logs various things into the s390
+> cio debug feature, which has been very helpful in the past when
+> looking at crash dumps. As vfio-ccw devices unbind from the
+> standard I/O subchannel driver, we lose some information there.
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Let's introduce some vfio-ccw debug features and log some things
+> there. (Unfortunately we cannot reuse the cio debug feature from
+> a module.)
+
+Boo :(
+
+> 
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 > ---
->  lib/s390x/asm/arch_def.h | 16 ++++++++++++++++
->  s390x/skey.c             | 18 ------------------
->  2 files changed, 16 insertions(+), 18 deletions(-)
+>  drivers/s390/cio/vfio_ccw_drv.c     | 50 ++++++++++++++++++++++++++--
+>  drivers/s390/cio/vfio_ccw_fsm.c     | 51 ++++++++++++++++++++++++++++-
+>  drivers/s390/cio/vfio_ccw_ops.c     | 10 ++++++
+>  drivers/s390/cio/vfio_ccw_private.h | 17 ++++++++++
+>  4 files changed, 124 insertions(+), 4 deletions(-)
 > 
-> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index 4bbb428..5f8f45e 100644
-> --- a/lib/s390x/asm/arch_def.h
-> +++ b/lib/s390x/asm/arch_def.h
-> @@ -240,4 +240,20 @@ static inline void enter_pstate(void)
->  	load_psw_mask(mask);
+
+...snip...
+
+> diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
+> index 49d9d3da0282..4a1e727c62d9 100644
+> --- a/drivers/s390/cio/vfio_ccw_fsm.c
+> +++ b/drivers/s390/cio/vfio_ccw_fsm.c
+
+...snip...
+
+> @@ -239,18 +258,32 @@ static void fsm_io_request(struct vfio_ccw_private *private,
+>  		/* Don't try to build a cp if transport mode is specified. */
+>  		if (orb->tm.b) {
+>  			io_region->ret_code = -EOPNOTSUPP;
+> +			VFIO_CCW_MSG_EVENT(2,
+> +					   "%pUl (%x.%x.%04x): transport mode\n",
+> +					   mdev_uuid(mdev), schid.cssid,
+> +					   schid.ssid, schid.sch_no);
+>  			errstr = "transport mode";
+>  			goto err_out;
+>  		}
+>  		io_region->ret_code = cp_init(&private->cp, mdev_dev(mdev),
+>  					      orb);
+>  		if (io_region->ret_code) {
+> +			VFIO_CCW_MSG_EVENT(2,
+> +					   "%pUl (%x.%x.%04x): cp_init=%d\n",
+> +					   mdev_uuid(mdev), schid.cssid,
+> +					   schid.ssid, schid.sch_no,
+> +					   io_region->ret_code);
+>  			errstr = "cp init";
+>  			goto err_out;
+>  		}
+>  
+>  		io_region->ret_code = cp_prefetch(&private->cp);
+>  		if (io_region->ret_code) {
+> +			VFIO_CCW_MSG_EVENT(2,
+> +					   "%pUl (%x.%x.%04x): cp_prefetch=%d\n",
+> +					   mdev_uuid(mdev), schid.cssid,
+> +					   schid.ssid, schid.sch_no,
+> +					   io_region->ret_code);
+>  			errstr = "cp prefetch";
+>  			cp_free(&private->cp);
+>  			goto err_out;
+> @@ -259,23 +292,36 @@ static void fsm_io_request(struct vfio_ccw_private *private,
+>  		/* Start channel program and wait for I/O interrupt. */
+>  		io_region->ret_code = fsm_io_helper(private);
+>  		if (io_region->ret_code) {
+> +			VFIO_CCW_MSG_EVENT(2,
+> +					   "%pUl (%x.%x.%04x): fsm_io_helper=%d\n",
+> +					   mdev_uuid(mdev), schid.cssid,
+> +					   schid.ssid, schid.sch_no,
+> +					   io_region->ret_code);
+
+I suppose these ones could be squashed into err_out, and use errstr as
+substitution for the message text.  But this is fine.
+
+>  			errstr = "cp fsm_io_helper";
+>  			cp_free(&private->cp);
+>  			goto err_out;
+>  		}
+>  		return;
+>  	} else if (scsw->cmd.fctl & SCSW_FCTL_HALT_FUNC) {
+> +		VFIO_CCW_MSG_EVENT(2,
+> +				   "%pUl (%x.%x.%04x): halt on io_region\n",
+> +				   mdev_uuid(mdev), schid.cssid,
+> +				   schid.ssid, schid.sch_no);
+>  		/* halt is handled via the async cmd region */
+>  		io_region->ret_code = -EOPNOTSUPP;
+>  		goto err_out;
+>  	} else if (scsw->cmd.fctl & SCSW_FCTL_CLEAR_FUNC) {
+> +		VFIO_CCW_MSG_EVENT(2,
+> +				   "%pUl (%x.%x.%04x): clear on io_region\n",
+> +				   mdev_uuid(mdev), schid.cssid,
+> +				   schid.ssid, schid.sch_no);
+
+The above idea would need errstr to be set to something other than
+"request" here, which maybe isn't a bad thing anyway.  :)
+
+>  		/* clear is handled via the async cmd region */
+>  		io_region->ret_code = -EOPNOTSUPP;
+>  		goto err_out;
+>  	}
+>  
+>  err_out:
+> -	trace_vfio_ccw_io_fctl(scsw->cmd.fctl, get_schid(private),
+> +	trace_vfio_ccw_io_fctl(scsw->cmd.fctl, schid,
+>  			       io_region->ret_code, errstr);
 >  }
 >  
-> +static inline int stsi(void *addr, int fc, int sel1, int sel2)
-> +{
-> +	register int r0 asm("0") = (fc << 28) | sel1;
-> +	register int r1 asm("1") = sel2;
-> +	int cc;
+> @@ -308,6 +354,9 @@ static void fsm_irq(struct vfio_ccw_private *private,
+>  {
+>  	struct irb *irb = this_cpu_ptr(&cio_irb);
+>  
+> +	VFIO_CCW_TRACE_EVENT(6, "IRQ");
+> +	VFIO_CCW_TRACE_EVENT(6, dev_name(&private->sch->dev));
 > +
-> +	asm volatile(
-> +		"stsi	0(%3)\n"
-> +		"ipm	%[cc]\n"
-> +		"srl	%[cc],28\n"
-> +		: "+d" (r0), [cc] "=d" (cc)
-> +		: "d" (r1), "a" (addr)
-> +		: "cc", "memory");
-> +	return cc;
+>  	memcpy(&private->irb, irb, sizeof(*irb));
+>  
+>  	queue_work(vfio_ccw_work_q, &private->io_work);
+> diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
+> index 5eb61116ca6f..f0d71ab77c50 100644
+> --- a/drivers/s390/cio/vfio_ccw_ops.c
+> +++ b/drivers/s390/cio/vfio_ccw_ops.c
+> @@ -124,6 +124,11 @@ static int vfio_ccw_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>  	private->mdev = mdev;
+>  	private->state = VFIO_CCW_STATE_IDLE;
+>  
+> +	VFIO_CCW_MSG_EVENT(2, "mdev %pUl, sch %x.%x.%04x: create\n",
+> +			   mdev_uuid(mdev), private->sch->schid.cssid,
+> +			   private->sch->schid.ssid,
+> +			   private->sch->schid.sch_no);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -132,6 +137,11 @@ static int vfio_ccw_mdev_remove(struct mdev_device *mdev)
+>  	struct vfio_ccw_private *private =
+>  		dev_get_drvdata(mdev_parent_dev(mdev));
+>  
+> +	VFIO_CCW_MSG_EVENT(2, "mdev %pUl, sch %x.%x.%04x: remove\n",
+> +			   mdev_uuid(mdev), private->sch->schid.cssid,
+> +			   private->sch->schid.ssid,
+> +			   private->sch->schid.sch_no);
+> +
+>  	if ((private->state != VFIO_CCW_STATE_NOT_OPER) &&
+>  	    (private->state != VFIO_CCW_STATE_STANDBY)) {
+>  		if (!vfio_ccw_sch_quiesce(private->sch))
+> diff --git a/drivers/s390/cio/vfio_ccw_private.h b/drivers/s390/cio/vfio_ccw_private.h
+> index f1092c3dc1b1..bbe9babf767b 100644
+> --- a/drivers/s390/cio/vfio_ccw_private.h
+> +++ b/drivers/s390/cio/vfio_ccw_private.h
+> @@ -17,6 +17,7 @@
+>  #include <linux/eventfd.h>
+>  #include <linux/workqueue.h>
+>  #include <linux/vfio_ccw.h>
+> +#include <asm/debug.h>
+>  
+>  #include "css.h"
+>  #include "vfio_ccw_cp.h"
+> @@ -139,4 +140,20 @@ static inline void vfio_ccw_fsm_event(struct vfio_ccw_private *private,
+>  
+>  extern struct workqueue_struct *vfio_ccw_work_q;
+>  
+> +
+> +/* s390 debug feature, similar to base cio */
+> +extern debug_info_t *vfio_ccw_debug_msg_id;
+> +extern debug_info_t *vfio_ccw_debug_trace_id;
+> +
+> +#define VFIO_CCW_TRACE_EVENT(imp, txt) \
+> +		debug_text_event(vfio_ccw_debug_trace_id, imp, txt)
+> +
+> +#define VFIO_CCW_MSG_EVENT(imp, args...) \
+> +		debug_sprintf_event(vfio_ccw_debug_msg_id, imp, ##args)
+> +
+> +static inline void VFIO_CCW_HEX_EVENT(int level, void *data, int length)
+> +{
+> +	debug_event(vfio_ccw_debug_trace_id, level, data, length);
 > +}
 > +
 >  #endif
-> diff --git a/s390x/skey.c b/s390x/skey.c
-> index b1e11af..fd4fcc7 100644
-> --- a/s390x/skey.c
-> +++ b/s390x/skey.c
-> @@ -70,24 +70,6 @@ static void test_set(void)
->  	       skey.str.acc == ret.str.acc && skey.str.fp == ret.str.fp);
->  }
->  
-> -static inline int stsi(void *addr, int fc, int sel1, int sel2)
-> -{
-> -	register int r0 asm("0") = (fc << 28) | sel1;
-> -	register int r1 asm("1") = sel2;
-> -	int rc = 0;
-> -
-> -	asm volatile(
-> -		"	stsi	0(%3)\n"
-> -		"	jz	0f\n"
-> -		"	lhi	%1,-1\n"
-> -		"0:\n"
-> -		: "+d" (r0), "+d" (rc)
-> -		: "d" (r1), "a" (addr)
-> -		: "cc", "memory");
-> -
-> -	return rc;
-> -}
-> -
->  /* Returns true if we are running under z/VM 6.x */
->  static bool check_for_zvm6(void)
->  {
 > 
 
-You don't simply move, you also modify and change the return value from
-o/-1 to cc. AFAIKs, this should be fine.
+This all looks pretty standard compared to the existing cio stuff, and
+would be a good addition for vfio-ccw.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
 
--- 
-
-Thanks,
-
-David / dhildenb
