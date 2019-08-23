@@ -2,350 +2,256 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C040D9ABDD
-	for <lists+linux-s390@lfdr.de>; Fri, 23 Aug 2019 11:50:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BAD39AD26
+	for <lists+linux-s390@lfdr.de>; Fri, 23 Aug 2019 12:31:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390363AbfHWJtM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 23 Aug 2019 05:49:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29910 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2394193AbfHWJtD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 23 Aug 2019 05:49:03 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7N9kaqk106359
-        for <linux-s390@vger.kernel.org>; Fri, 23 Aug 2019 05:49:03 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ujch0k3gd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 23 Aug 2019 05:49:03 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Fri, 23 Aug 2019 10:49:01 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 23 Aug 2019 10:48:59 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7N9mvaN24576222
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Aug 2019 09:48:57 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 991CC4204D;
-        Fri, 23 Aug 2019 09:48:57 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 504DD42042;
-        Fri, 23 Aug 2019 09:48:57 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 23 Aug 2019 09:48:57 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 7/7] s390/qeth: add xmit_more support for IQD devices
-Date:   Fri, 23 Aug 2019 11:48:53 +0200
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190823094853.63814-1-jwi@linux.ibm.com>
-References: <20190823094853.63814-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19082309-0020-0000-0000-000003631945
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082309-0021-0000-0000-000021B858BC
-Message-Id: <20190823094853.63814-8-jwi@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-23_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908230102
+        id S2390548AbfHWKbC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 23 Aug 2019 06:31:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56766 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390545AbfHWKbB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 23 Aug 2019 06:31:01 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 698921801590;
+        Fri, 23 Aug 2019 10:31:01 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-236.ams2.redhat.com [10.36.116.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A23D6377B;
+        Fri, 23 Aug 2019 10:30:59 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v2 2/4] s390x: Diag288 test
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com
+References: <20190821104736.1470-1-frankja@linux.ibm.com>
+ <20190821104736.1470-3-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat
+Message-ID: <ac96277b-f2ae-3855-639e-9a4e7273aaba@redhat.com>
+Date:   Fri, 23 Aug 2019 12:30:58 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190821104736.1470-3-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Fri, 23 Aug 2019 10:31:01 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-IQD devices offer limited support for bulking: all frames in a TX buffer
-need to have the same target. qeth_iqd_may_bulk() implements this
-constraint, and allows us to defer the TX doorbell until
-(a) the buffer is full (since each buffer needs its own doorbell), or
-(b) the entire TX queue is full, or
-(b) we reached the BQL limit.
+On 8/21/19 12:47 PM, Janosch Frank wrote:
+> A small test for the watchdog via diag288.
+> 
+> Minimum timer value is 15 (seconds) and the only supported action with
+> QEMU is restart.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  lib/s390x/asm/arch_def.h |   1 +
+>  s390x/Makefile           |   1 +
+>  s390x/diag288.c          | 131 +++++++++++++++++++++++++++++++++++++++
+>  s390x/unittests.cfg      |   4 ++
+>  4 files changed, 137 insertions(+)
+>  create mode 100644 s390x/diag288.c
+> 
+> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> index d2cd727..4bbb428 100644
+> --- a/lib/s390x/asm/arch_def.h
+> +++ b/lib/s390x/asm/arch_def.h
+> @@ -15,6 +15,7 @@ struct psw {
+>  	uint64_t	addr;
+>  };
+>  
+> +#define PSW_MASK_EXT			0x0100000000000000UL
+>  #define PSW_MASK_DAT			0x0400000000000000UL
+>  #define PSW_MASK_PSTATE			0x0001000000000000UL
+>  
+> diff --git a/s390x/Makefile b/s390x/Makefile
+> index 574a9a2..3453373 100644
+> --- a/s390x/Makefile
+> +++ b/s390x/Makefile
+> @@ -12,6 +12,7 @@ tests += $(TEST_DIR)/vector.elf
+>  tests += $(TEST_DIR)/gs.elf
+>  tests += $(TEST_DIR)/iep.elf
+>  tests += $(TEST_DIR)/cpumodel.elf
+> +tests += $(TEST_DIR)/diag288.elf
+>  tests_binary = $(patsubst %.elf,%.bin,$(tests))
+>  
+>  all: directories test_cases test_cases_binary
+> diff --git a/s390x/diag288.c b/s390x/diag288.c
+> new file mode 100644
+> index 0000000..c129b6a
+> --- /dev/null
+> +++ b/s390x/diag288.c
+[...]
+> +static void test_specs(void)
+> +{
+> +	report_prefix_push("specification");
+> +
+> +	report_prefix_push("uneven");
+> +	expect_pgm_int();
+> +	asm volatile("diag %r1,%r2,0x288");
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core.h      |  24 ++++++
- drivers/s390/net/qeth_core_main.c | 128 ++++++++++++++++++++----------
- 2 files changed, 109 insertions(+), 43 deletions(-)
+Don't you have to use "%%" in that case? ... well, if it also works
+without, I don't mind, but in case you respin better play safe:
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index d5f796380cd0..e4b55f9aa062 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -378,6 +378,28 @@ enum qeth_header_ids {
- #define QETH_HDR_EXT_CSUM_TRANSP_REQ  0x20
- #define QETH_HDR_EXT_UDP	      0x40 /*bit off for TCP*/
- 
-+static inline bool qeth_l2_same_vlan(struct qeth_hdr_layer2 *h1,
-+				     struct qeth_hdr_layer2 *h2)
-+{
-+	return !((h1->flags[2] ^ h2->flags[2]) & QETH_LAYER2_FLAG_VLAN) &&
-+	       h1->vlan_id == h2->vlan_id;
-+}
-+
-+static inline bool qeth_l3_iqd_same_vlan(struct qeth_hdr_layer3 *h1,
-+					 struct qeth_hdr_layer3 *h2)
-+{
-+	return !((h1->ext_flags ^ h2->ext_flags) & QETH_HDR_EXT_VLAN_FRAME) &&
-+	       h1->vlan_id == h2->vlan_id;
-+}
-+
-+static inline bool qeth_l3_same_next_hop(struct qeth_hdr_layer3 *h1,
-+					 struct qeth_hdr_layer3 *h2)
-+{
-+	return !((h1->flags ^ h2->flags) & QETH_HDR_IPV6) &&
-+	       ipv6_addr_equal(&h1->next_hop.ipv6_addr,
-+			       &h2->next_hop.ipv6_addr);
-+}
-+
- enum qeth_qdio_info_states {
- 	QETH_QDIO_UNINITIALIZED,
- 	QETH_QDIO_ALLOCATED,
-@@ -508,6 +530,8 @@ struct qeth_qdio_out_q {
- 	atomic_t set_pci_flags_count;
- 	struct napi_struct napi;
- 	struct timer_list timer;
-+	struct qeth_hdr *prev_hdr;
-+	u8 bulk_start;
- };
- 
- #define qeth_for_each_output_queue(card, q, i)		\
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 4c7c7d320c9c..8b4ea5f2832b 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2671,6 +2671,8 @@ int qeth_init_qdio_queues(struct qeth_card *card)
- 		queue->max_elements = QETH_MAX_BUFFER_ELEMENTS(card);
- 		queue->next_buf_to_fill = 0;
- 		queue->do_pack = 0;
-+		queue->prev_hdr = NULL;
-+		queue->bulk_start = 0;
- 		atomic_set(&queue->used_buffers, 0);
- 		atomic_set(&queue->set_pci_flags_count, 0);
- 		atomic_set(&queue->state, QETH_OUT_Q_UNLOCKED);
-@@ -3314,6 +3316,14 @@ static void qeth_flush_buffers(struct qeth_qdio_out_q *queue, int index,
- 	}
- }
- 
-+static void qeth_flush_queue(struct qeth_qdio_out_q *queue)
-+{
-+	qeth_flush_buffers(queue, queue->bulk_start, 1);
-+
-+	queue->bulk_start = QDIO_BUFNR(queue->bulk_start + 1);
-+	queue->prev_hdr = NULL;
-+}
-+
- static void qeth_check_outbound_queue(struct qeth_qdio_out_q *queue)
- {
- 	int index;
-@@ -3669,9 +3679,32 @@ static int qeth_add_hw_header(struct qeth_qdio_out_q *queue,
- 	return 0;
- }
- 
--static void __qeth_fill_buffer(struct sk_buff *skb,
--			       struct qeth_qdio_out_buffer *buf,
--			       bool is_first_elem, unsigned int offset)
-+static bool qeth_iqd_may_bulk(struct qeth_qdio_out_q *queue,
-+			      struct qeth_qdio_out_buffer *buffer,
-+			      struct sk_buff *curr_skb,
-+			      struct qeth_hdr *curr_hdr)
-+{
-+	struct qeth_hdr *prev_hdr = queue->prev_hdr;
-+
-+	if (!prev_hdr)
-+		return true;
-+
-+	/* All packets must have the same target: */
-+	if (curr_hdr->hdr.l2.id == QETH_HEADER_TYPE_LAYER2) {
-+		struct sk_buff *prev_skb = skb_peek(&buffer->skb_list);
-+
-+		return ether_addr_equal(eth_hdr(prev_skb)->h_dest,
-+					eth_hdr(curr_skb)->h_dest) &&
-+		       qeth_l2_same_vlan(&prev_hdr->hdr.l2, &curr_hdr->hdr.l2);
-+	}
-+
-+	return qeth_l3_same_next_hop(&prev_hdr->hdr.l3, &curr_hdr->hdr.l3) &&
-+	       qeth_l3_iqd_same_vlan(&prev_hdr->hdr.l3, &curr_hdr->hdr.l3);
-+}
-+
-+static unsigned int __qeth_fill_buffer(struct sk_buff *skb,
-+				       struct qeth_qdio_out_buffer *buf,
-+				       bool is_first_elem, unsigned int offset)
- {
- 	struct qdio_buffer *buffer = buf->buffer;
- 	int element = buf->next_element_to_fill;
-@@ -3728,24 +3761,21 @@ static void __qeth_fill_buffer(struct sk_buff *skb,
- 	if (buffer->element[element - 1].eflags)
- 		buffer->element[element - 1].eflags = SBAL_EFLAGS_LAST_FRAG;
- 	buf->next_element_to_fill = element;
-+	return element;
- }
- 
- /**
-  * qeth_fill_buffer() - map skb into an output buffer
-- * @queue:	QDIO queue to submit the buffer on
-  * @buf:	buffer to transport the skb
-  * @skb:	skb to map into the buffer
-  * @hdr:	qeth_hdr for this skb. Either at skb->data, or allocated
-  *		from qeth_core_header_cache.
-  * @offset:	when mapping the skb, start at skb->data + offset
-  * @hd_len:	if > 0, build a dedicated header element of this size
-- * flush:	Prepare the buffer to be flushed, regardless of its fill level.
-  */
--static int qeth_fill_buffer(struct qeth_qdio_out_q *queue,
--			    struct qeth_qdio_out_buffer *buf,
--			    struct sk_buff *skb, struct qeth_hdr *hdr,
--			    unsigned int offset, unsigned int hd_len,
--			    bool flush)
-+static unsigned int qeth_fill_buffer(struct qeth_qdio_out_buffer *buf,
-+				     struct sk_buff *skb, struct qeth_hdr *hdr,
-+				     unsigned int offset, unsigned int hd_len)
- {
- 	struct qdio_buffer *buffer = buf->buffer;
- 	bool is_first_elem = true;
-@@ -3765,36 +3795,22 @@ static int qeth_fill_buffer(struct qeth_qdio_out_q *queue,
- 		buf->next_element_to_fill++;
- 	}
- 
--	__qeth_fill_buffer(skb, buf, is_first_elem, offset);
--
--	if (!queue->do_pack) {
--		QETH_CARD_TEXT(queue->card, 6, "fillbfnp");
--	} else {
--		QETH_CARD_TEXT(queue->card, 6, "fillbfpa");
--
--		QETH_TXQ_STAT_INC(queue, skbs_pack);
--		/* If the buffer still has free elements, keep using it. */
--		if (!flush &&
--		    buf->next_element_to_fill < queue->max_elements)
--			return 0;
--	}
--
--	/* flush out the buffer */
--	atomic_set(&buf->state, QETH_QDIO_BUF_PRIMED);
--	queue->next_buf_to_fill = (queue->next_buf_to_fill + 1) %
--				  QDIO_MAX_BUFFERS_PER_Q;
--	return 1;
-+	return __qeth_fill_buffer(skb, buf, is_first_elem, offset);
- }
- 
--static int qeth_do_send_packet_fast(struct qeth_qdio_out_q *queue,
--				    struct sk_buff *skb, struct qeth_hdr *hdr,
--				    unsigned int offset, unsigned int hd_len)
-+static int __qeth_xmit(struct qeth_card *card, struct qeth_qdio_out_q *queue,
-+		       struct sk_buff *skb, unsigned int elements,
-+		       struct qeth_hdr *hdr, unsigned int offset,
-+		       unsigned int hd_len)
- {
--	int index = queue->next_buf_to_fill;
--	struct qeth_qdio_out_buffer *buffer = queue->bufs[index];
-+	struct qeth_qdio_out_buffer *buffer = queue->bufs[queue->bulk_start];
- 	unsigned int bytes = qdisc_pkt_len(skb);
-+	unsigned int next_element;
- 	struct netdev_queue *txq;
- 	bool stopped = false;
-+	bool flush;
-+
-+	txq = netdev_get_tx_queue(card->dev, skb_get_queue_mapping(skb));
- 
- 	/* Just a sanity check, the wake/stop logic should ensure that we always
- 	 * get a free buffer.
-@@ -3802,9 +3818,19 @@ static int qeth_do_send_packet_fast(struct qeth_qdio_out_q *queue,
- 	if (atomic_read(&buffer->state) != QETH_QDIO_BUF_EMPTY)
- 		return -EBUSY;
- 
--	txq = netdev_get_tx_queue(queue->card->dev, skb_get_queue_mapping(skb));
-+	if ((buffer->next_element_to_fill + elements > queue->max_elements) ||
-+	    !qeth_iqd_may_bulk(queue, buffer, skb, hdr)) {
-+		atomic_set(&buffer->state, QETH_QDIO_BUF_PRIMED);
-+		qeth_flush_queue(queue);
-+		buffer = queue->bufs[queue->bulk_start];
- 
--	if (atomic_inc_return(&queue->used_buffers) >= QDIO_MAX_BUFFERS_PER_Q) {
-+		/* Sanity-check again: */
-+		if (atomic_read(&buffer->state) != QETH_QDIO_BUF_EMPTY)
-+			return -EBUSY;
-+	}
-+
-+	if (buffer->next_element_to_fill == 0 &&
-+	    atomic_inc_return(&queue->used_buffers) >= QDIO_MAX_BUFFERS_PER_Q) {
- 		/* If a TX completion happens right _here_ and misses to wake
- 		 * the txq, then our re-check below will catch the race.
- 		 */
-@@ -3813,11 +3839,17 @@ static int qeth_do_send_packet_fast(struct qeth_qdio_out_q *queue,
- 		stopped = true;
- 	}
- 
--	qeth_fill_buffer(queue, buffer, skb, hdr, offset, hd_len, stopped);
--	netdev_tx_sent_queue(txq, bytes);
-+	next_element = qeth_fill_buffer(buffer, skb, hdr, offset, hd_len);
- 	buffer->bytes += bytes;
-+	queue->prev_hdr = hdr;
- 
--	qeth_flush_buffers(queue, index, 1);
-+	flush = __netdev_tx_sent_queue(txq, bytes,
-+				       !stopped && netdev_xmit_more());
-+
-+	if (flush || next_element >= queue->max_elements) {
-+		atomic_set(&buffer->state, QETH_QDIO_BUF_PRIMED);
-+		qeth_flush_queue(queue);
-+	}
- 
- 	if (stopped && !qeth_out_queue_is_full(queue))
- 		netif_tx_start_queue(txq);
-@@ -3830,6 +3862,7 @@ int qeth_do_send_packet(struct qeth_card *card, struct qeth_qdio_out_q *queue,
- 			int elements_needed)
- {
- 	struct qeth_qdio_out_buffer *buffer;
-+	unsigned int next_element;
- 	struct netdev_queue *txq;
- 	bool stopped = false;
- 	int start_index;
-@@ -3892,8 +3925,17 @@ int qeth_do_send_packet(struct qeth_card *card, struct qeth_qdio_out_q *queue,
- 		stopped = true;
- 	}
- 
--	flush_count += qeth_fill_buffer(queue, buffer, skb, hdr, offset, hd_len,
--					stopped);
-+	next_element = qeth_fill_buffer(buffer, skb, hdr, offset, hd_len);
-+
-+	if (queue->do_pack)
-+		QETH_TXQ_STAT_INC(queue, skbs_pack);
-+	if (!queue->do_pack || stopped || next_element >= queue->max_elements) {
-+		flush_count++;
-+		atomic_set(&buffer->state, QETH_QDIO_BUF_PRIMED);
-+		queue->next_buf_to_fill = (queue->next_buf_to_fill + 1) %
-+					  QDIO_MAX_BUFFERS_PER_Q;
-+	}
-+
- 	if (flush_count)
- 		qeth_flush_buffers(queue, start_index, flush_count);
- 	else if (!atomic_read(&queue->set_pci_flags_count))
-@@ -3989,8 +4031,8 @@ int qeth_xmit(struct qeth_card *card, struct sk_buff *skb,
- 				  frame_len - proto_len, skb, proto_len);
- 
- 	if (IS_IQD(card)) {
--		rc = qeth_do_send_packet_fast(queue, skb, hdr, data_offset,
--					      hd_len);
-+		rc = __qeth_xmit(card, queue, skb, elements, hdr, data_offset,
-+				 hd_len);
- 	} else {
- 		/* TODO: drop skb_orphan() once TX completion is fast enough */
- 		skb_orphan(skb);
--- 
-2.17.1
+    asm volatile("diag %%r1,%%r2,0x288");
 
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("unsupported action");
+> +	expect_pgm_int();
+> +	diag288(CODE_INIT, 15, 42);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("unsupported function");
+> +	expect_pgm_int();
+> +	diag288(42, 15, ACTION_RESTART);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("no init");
+> +	expect_pgm_int();
+> +	diag288(CODE_CANCEL, 15, ACTION_RESTART);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("min timer");
+> +	expect_pgm_int();
+> +	diag288(CODE_INIT, 14, ACTION_RESTART);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_pop();
+> +}
+> +
+> +static void test_priv(void)
+> +{
+> +	report_prefix_push("privileged");
+> +	expect_pgm_int();
+> +	enter_pstate();
+> +	diag288(CODE_INIT, 15, ACTION_RESTART);
+> +	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
+> +	report_prefix_pop();
+> +}
+> +
+> +static inline void get_tod_clock_ext(char *clk)
+> +{
+> +	typedef struct { char _[16]; } addrtype;
+> +
+> +	asm volatile("stcke %0" : "=Q" (*(addrtype *) clk) : : "cc");
+> +}
+> +
+> +static inline unsigned long long get_tod_clock(void)
+> +{
+> +	char clk[16];
+> +
+> +	get_tod_clock_ext(clk);
+> +	return *((unsigned long long *)&clk[1]);
+
+You could use uint64_t instead of "unsigned long long".
+
+> +}
+> +
+> +static void test_bite(void)
+> +{
+> +	unsigned long time;
+> +	uint64_t mask;
+> +
+> +	/* If watchdog doesn't bite, the cpu timer does */
+> +	time = get_tod_clock();
+> +	time += (uint64_t)(16000 * 1000) << 12;
+> +	asm volatile("sckc %0" : : "Q" (time));
+> +	ctl_set_bit(0, 11);
+> +	mask = extract_psw_mask();
+> +	mask |= PSW_MASK_EXT;
+> +	load_psw_mask(mask);
+> +
+> +	/* Arm watchdog */
+> +	lc->restart_new_psw.mask = extract_psw_mask() & ~PSW_MASK_EXT;
+> +	diag288(CODE_INIT, 15, ACTION_RESTART);
+> +	asm volatile("		larl	%r0, 1f\n"
+> +		     "		stg	%r0, 424\n"
+> +		     "0:	nop\n"
+> +		     "		j	0b\n"
+> +		     "1:");
+> +	report("restart", true);
+> +	return;
+
+Superfluous return statement.
+
+> +}
+> +
+> +int main(void)
+> +{
+> +	report_prefix_push("diag288");
+> +	test_priv();
+> +	test_specs();
+> +	test_bite();
+> +	return report_summary();
+> +}
+> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+> index db58bad..9dd288a 100644
+> --- a/s390x/unittests.cfg
+> +++ b/s390x/unittests.cfg
+> @@ -64,3 +64,7 @@ file = iep.elf
+>  
+>  [cpumodel]
+>  file = cpumodel.elf
+> +
+> +[diag288]
+> +file = diag288.elf
+> +extra_params=-device diag288,id=watchdog0 --watchdog-action inject-nmi
+> 
+
+Apart from the cosmetic nits, looks fine to me.
+
+Reviewed-by: Thomas Huth <thuth@redhat.com>
