@@ -2,214 +2,157 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF28F9B24F
-	for <lists+linux-s390@lfdr.de>; Fri, 23 Aug 2019 16:41:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7EFF49BC6D
+	for <lists+linux-s390@lfdr.de>; Sat, 24 Aug 2019 09:57:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389691AbfHWOli (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 23 Aug 2019 10:41:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1960 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390829AbfHWOli (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 23 Aug 2019 10:41:38 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7NEdtqe016668
-        for <linux-s390@vger.kernel.org>; Fri, 23 Aug 2019 10:41:37 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ujghy4ne8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 23 Aug 2019 10:41:37 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Fri, 23 Aug 2019 15:41:34 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 23 Aug 2019 15:41:31 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7NEfUnK37224574
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 23 Aug 2019 14:41:30 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 25CD6A4060;
-        Fri, 23 Aug 2019 14:41:30 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D8DC4A405B;
-        Fri, 23 Aug 2019 14:41:29 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.28.218])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 23 Aug 2019 14:41:29 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH] s390x: Add diag308 subcode 0 testing
-To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com
-References: <20190821104736.1470-1-frankja@linux.ibm.com>
- <20190822111100.4444-1-frankja@linux.ibm.com>
- <ffc7de14-7960-5423-d984-c18ab1dfa4b2@redhat.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Fri, 23 Aug 2019 16:41:29 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+        id S1726416AbfHXH5M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 24 Aug 2019 03:57:12 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39874 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726072AbfHXH5M (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 24 Aug 2019 03:57:12 -0400
+Received: by mail-io1-f67.google.com with SMTP id l7so25573430ioj.6
+        for <linux-s390@vger.kernel.org>; Sat, 24 Aug 2019 00:57:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Rt7wtYCc1s5tor1o81jIoZmh+z8hgaSPweyus4OLaDI=;
+        b=K3z+flYVSNNSWoTBFmevj6fYPEM2G+divlFtL3oFGJ/e/x/iInhDr1dHK6vOFA/Sbp
+         0UBZ0ILyiMLYwgPhEtNbPrCfbqGmZtE/iabl81cCpUXQwu/WVEpKa5tCim0w1eCIh71t
+         eInx/aknxqQIs4gIxsdejGNRIx8xP+U2vTrq8ZHY1WRqCjxz80WNyH+rIwQ2mT6JfE1B
+         QwqIwtiPieUU8kHxEfuWEcHR8GIRvzO2XbMzcLUUBoaBKhzkgm+6/ek9kkwQndKDRlwN
+         Bo6V5oJZr/cP6fVAv0g7HenkS6s1hcn7PjRTIxgVGyzPH3mpyl52vEoa/RUroG5wsa33
+         XzSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Rt7wtYCc1s5tor1o81jIoZmh+z8hgaSPweyus4OLaDI=;
+        b=iN+r8LNiQNBcQToWDaiK19ZY/C1KCYKNbU/Ig7N88iWkSIms5RxENFEARLa6/TsPQW
+         6RU5Dw259juzcto5Vay3zXj1m0t1d/Khp098Gs99Iu1sGEcRzKfY1xhXORtW+H3z66uq
+         zyXkmuprj0mnswsHAuRbB8svMyo2duVTYpG1lvva4JL5fASD5TlY63CODzA8CpeP2uh6
+         fbU91CRk89tVuSNf8SY0zvd2WiYYh3ajphGybSTnSJk9dFOiV3Gcz4VOyJnW+Gdi8U2O
+         VxoOP9pI+NfM1tc5JC+1vw9sS7fBEXRWhvsX90s9KyYJfLhjOAhdFwSgar+dkX3JUKn8
+         Ch3A==
+X-Gm-Message-State: APjAAAX3gK2TvZhIs8avpy008sG+3/CfFsAWHHU7TK3m+0o54yaXQm1U
+        YuJ2sZfZAMPMrTQksnWO8ZF6NggXpy/nLROQRMUkbw==
+X-Google-Smtp-Source: APXvYqwxcXr8xhaFGFkwJobfl5gf6+4v9QSf+/e/XxuJihI8hsXlCsjVuqNrS0RHDZAcIleIWvUKgloQNh3YdFkKQX8=
+X-Received: by 2002:a6b:b8c4:: with SMTP id i187mr12749931iof.102.1566633430565;
+ Sat, 24 Aug 2019 00:57:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <ffc7de14-7960-5423-d984-c18ab1dfa4b2@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="hd4Z68GNr1YqiR6yL7gsHmq3N1XT8ukbZ"
-X-TM-AS-GCONF: 00
-x-cbid: 19082314-4275-0000-0000-0000035CA08D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082314-4276-0000-0000-0000386ECA74
-Message-Id: <137ffa8a-2a93-b31b-df47-6b27d566deef@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-23_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908230152
+References: <20190815110944.3579-1-murphyt7@tcd.ie> <20190815110944.3579-2-murphyt7@tcd.ie>
+ <20190820094143.GA24154@infradead.org>
+In-Reply-To: <20190820094143.GA24154@infradead.org>
+From:   Tom Murphy <murphyt7@tcd.ie>
+Date:   Sat, 24 Aug 2019 08:56:59 +0100
+Message-ID: <CALQxJussiGDzWFT1xhko6no5jZNOezWCFuJQUCr4XwH4NHri3Q@mail.gmail.com>
+Subject: Re: [PATCH V5 1/5] iommu/amd: Remove unnecessary locking from AMD
+ iommu driver
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        virtualization@lists.linux-foundation.org,
+        linux-tegra@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Will Deacon <will@kernel.org>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---hd4Z68GNr1YqiR6yL7gsHmq3N1XT8ukbZ
-Content-Type: multipart/mixed; boundary="WVpFpftxZvkmQYA0KfAMT0kCBRpV7oGWq";
- protected-headers="v1"
-From: Janosch Frank <frankja@linux.ibm.com>
-To: Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, david@redhat.com
-Message-ID: <137ffa8a-2a93-b31b-df47-6b27d566deef@linux.ibm.com>
-Subject: Re: [kvm-unit-tests PATCH] s390x: Add diag308 subcode 0 testing
-References: <20190821104736.1470-1-frankja@linux.ibm.com>
- <20190822111100.4444-1-frankja@linux.ibm.com>
- <ffc7de14-7960-5423-d984-c18ab1dfa4b2@redhat.com>
-In-Reply-To: <ffc7de14-7960-5423-d984-c18ab1dfa4b2@redhat.com>
+>I have to admit I don't fully understand the concurrency issues here, but =
+neither do I understand what the mutex you removed might have helped to sta=
+rt with.
 
---WVpFpftxZvkmQYA0KfAMT0kCBRpV7oGWq
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Each range in the page tables is protected by the IO virtual address
+allocator. The iommu driver allocates an IOVA range using locks before
+it writes to a page table range. The IOVA allocator acts like a lock
+on a specific range of the page tables. So we can handle most of the
+concurrency issues in the IOVA allocator and avoid locking while
+writing to a range in the page tables.
 
-On 8/23/19 4:12 PM, Thomas Huth wrote:
-> On 8/22/19 1:11 PM, Janosch Frank wrote:
->> By adding a load reset routine to cstart.S we can also test the clear
->> reset done by subcode 0, as we now can restore our registers again.
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> ---
->> I managed to extract this from another bigger test, so let's add it to=
- the bunch.
->> I'd be very happy about assembly review :-)
->=20
-> FWIW, the assembly code looks fine to me.
->=20
->> ---
->>  s390x/cstart64.S | 27 +++++++++++++++++++++++++++
->>  s390x/diag308.c  | 31 ++++++++++---------------------
->>  2 files changed, 37 insertions(+), 21 deletions(-)
->>
->> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
->> index dedfe80..47045e1 100644
->> --- a/s390x/cstart64.S
->> +++ b/s390x/cstart64.S
->> @@ -145,6 +145,33 @@ memsetxc:
->>  	.endm
->> =20
->>  .section .text
->> +/*
->> + * load_reset calling convention:
->> + * %r2 subcode (0 or 1)
->> + */
->> +.globl load_reset
->> +load_reset:
->=20
-> Maybe rather name the function diag308_load_reset so that it is clear
-> that it belongs to the diag308 test?
+However because we have multiple levels of pages we might have to
+allocate a middle page (a PMD) which covers more than the IOVA range
+we have allocated.
+To solve this we could use locks:
 
-Sure
+//pseudo code
+lock_page_table()
+if (we need to allocate middle pages) {
+ //allocate the page
+ //set the PMD value
+}
+unlock_page_table()
 
-> Or are you going to re-use this function in other tests later?
+but we can actually avoid having any locking by doing the following:
 
-I currently have no such plans
-But I'm thinking about a way to check the CPU registers in combination
-with smp. So it might be extended.
+//pseudo code
+if (we need to allocate middle pages) {
+ //allocate the page
+ //cmpxchg64 to set the PMD if it wasn't already set since we last checked
+ if (the PMD was set while since we last checked)
+   //free the page we just allocated
+}
 
->=20
-> Anyway,
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
->=20
+In this case we can end up doing a pointless page allocate and free
+but it's worth it to avoid using locks
 
-Thanks!
+You can see this in the intel iommu code here:
+https://github.com/torvalds/linux/blob/9140d8bdd4c5a04abe181bb300378355d569=
+90a4/drivers/iommu/intel-iommu.c#L904
 
+>what the mutex you removed might have helped to start with.
+The mutex I removed is arguably completely useless.
 
+In the dma ops path we handle the IOVA allocations in the driver so we
+can be sure a certain range is protected by the IOVA allocator.
 
---WVpFpftxZvkmQYA0KfAMT0kCBRpV7oGWq--
+Because the iommu ops path doesn't handle the IOVA allocations it
+seems reasonable to lock the page tables to avoid two writers writing
+to the same range at the same time. Without the lock it's complete
+chaos and all writers can be writing to the same range at the same
+time resulting in complete garbage.
+BUT the locking doesn't actually make any real difference. Even with
+locking we still have a race condition if two writers want to write to
+the same range at the same time, the race is just whoever gets the
+lock first, we still can't be sure what the result will be. So the
+result is still garbage, just slightly more usable garbage because at
+least the range is correct for one writer.
+It just makes no sense to ever have two writers writing to the same
+range and adding a lock doesn't fix that.
+Already the Intel iommu ops path doesn't use locks for it's page table
+so this isn't a new idea I'm just doing the same for the AMD iommu
+driver
 
---hd4Z68GNr1YqiR6yL7gsHmq3N1XT8ukbZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Does all that make sense?
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl1f+xkACgkQ41TmuOI4
-ufjwhg/9FHIFBTQAtWsg0n0Q0t9Mk9JSDpOX5N7qbD0FeW5z2MAX/cijuRCWoPVn
-ZHWyXKHxzrP4orIF/j6u2y7STyCV4o5CA03yMBU4G4GjbEyHgy6inBoM0WCjSvBO
-w20aZLv4UHMecdFCmIDkrLcAqENxnHz1GVgDVBdWJBCTcaE7D09/BPfiJ7Dj79/I
-s210XhX94MpCyUeTs9mGfirAxuRlNicA0rpvYcSulH15x2lEss5N3Os3nlYkxDhP
-0ffmm4glCmT27R4tJWYV3Bql5Yf69WjwpfBx/GptMwMrBVfIR4oIfz/jFyE5pTvw
-gL7oOSxfPLUNgVtfP+sIGZaJu4xbZHxvHsmfk1ymTMAKvMOPhmb+HLuVmGwhd5/y
-polclTNK6qgxRhwieRxwR98vwcPVe4aEy6Jr59shPv+1NxhZjwZs+xDtdm4awgO4
-pG126EPOhU5XGxom7zVfxU1r8Xv6ARp3MrCZgcIZmfjyiVkjGntmkc7B9LadXGjS
-8RQNbcfvnxsdHKSkf3wFRWjEdHvb+WN4dtV5c+ZrvCZ1EGK9uRvKVlpCkCmSrw3R
-+SF4whihsseBU1i8yYkElznTBFQbXvCckHP63JX74zG4T2hevkBVB1pKfQjh/Eu9
-yCoM+rfG8BM05y+ZgSCw0LkESE8ifUTahTQq1MqpsXhBrEi+occ=
-=9LVC
------END PGP SIGNATURE-----
-
---hd4Z68GNr1YqiR6yL7gsHmq3N1XT8ukbZ--
-
+On Tue, 20 Aug 2019 at 10:41, Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Thu, Aug 15, 2019 at 12:09:39PM +0100, Tom Murphy wrote:
+> > We can remove the mutex lock from amd_iommu_map and amd_iommu_unmap.
+> > iommu_map doesn=E2=80=99t lock while mapping and so no two calls should=
+ touch
+> > the same iova range. The AMD driver already handles the page table page
+> > allocations without locks so we can safely remove the locks.
+>
+> I've been looking over the code and trying to understand how the
+> synchronization works.  I gues we the cmpxchg64 in free_clear_pte
+> is the important point here?  I have to admit I don't fully understand
+> the concurrency issues here, but neither do I understand what the
+> mutex you removed might have helped to start with.
