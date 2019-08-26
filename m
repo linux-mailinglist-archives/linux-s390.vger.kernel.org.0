@@ -2,113 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 06D8A9D02F
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Aug 2019 15:13:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 50C849D417
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Aug 2019 18:35:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731592AbfHZNNt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Aug 2019 09:13:49 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59236 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731174AbfHZNNt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Aug 2019 09:13:49 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=urDTYQxxHpDLHKYV3DkLPJyBgIdOzd8vbZl6Cfapxyc=; b=S0Qm85v5u+mC94Z+1NTp3zLxy
-        RVikWlbB8+mD7D3i6pKW1vaRh6+mpvdmY0hZwt7QeNMOfDK4v1mKu4uLruFJY+80WEeNiclw0bMni
-        VgFWVa4FMxmnuDh4DG/NHs34XNaySiBjcLQotEzPIlKfk98LzJOfOfATotjcOvgRsK0BvJg1vvrY6
-        PC3VQkaRupcuqt52WqBPC5JvmCjmjjLmU1rbYgod7HJ/IZrUNwVg/kxESAnrEZvrP/71g/C/cTVL3
-        KSmHw9glYY9tQdIrKjhRnF9olVe6RlSSQh43S7mnoLe1VnIU+Q8j9tFnodpiFcOU1xeFxRbNIYZHd
-        4Bsb3y2yA==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1i2Eo0-0002Mw-Mf; Mon, 26 Aug 2019 13:13:08 +0000
-Date:   Mon, 26 Aug 2019 06:13:08 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
- table helpers
-Message-ID: <20190826131308.GA15933@bombadil.infradead.org>
-References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
- <20190809101632.GM5482@bombadil.infradead.org>
- <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
- <20190809135202.GN5482@bombadil.infradead.org>
- <7a88f6bb-e8c7-3ac7-2f92-1de752a01f33@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7a88f6bb-e8c7-3ac7-2f92-1de752a01f33@arm.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        id S1727261AbfHZQfU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Aug 2019 12:35:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:43852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728419AbfHZQfU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 26 Aug 2019 12:35:20 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7QGOjc1096446
+        for <linux-s390@vger.kernel.org>; Mon, 26 Aug 2019 12:35:19 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2umjwxrcpj-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 26 Aug 2019 12:35:19 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Mon, 26 Aug 2019 17:35:17 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 26 Aug 2019 17:35:14 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7QGZDem38338702
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 26 Aug 2019 16:35:13 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 379C111C04A;
+        Mon, 26 Aug 2019 16:35:13 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0663711C054;
+        Mon, 26 Aug 2019 16:35:12 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.27.33])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 26 Aug 2019 16:35:11 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
+Subject: [kvm-unit-tests PATCH v3 0/5] s390x: More emulation tests
+Date:   Mon, 26 Aug 2019 18:34:57 +0200
+X-Mailer: git-send-email 2.17.0
+X-TM-AS-GCONF: 00
+x-cbid: 19082616-0016-0000-0000-000002A32DF1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082616-0017-0000-0000-000033037537
+Message-Id: <20190826163502.1298-1-frankja@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=863 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908260162
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Aug 26, 2019 at 08:07:13AM +0530, Anshuman Khandual wrote:
-> On 08/09/2019 07:22 PM, Matthew Wilcox wrote:
-> > On Fri, Aug 09, 2019 at 04:05:07PM +0530, Anshuman Khandual wrote:
-> >> On 08/09/2019 03:46 PM, Matthew Wilcox wrote:
-> >>> On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
-> >>>> Should alloc_gigantic_page() be made available as an interface for general
-> >>>> use in the kernel. The test module here uses very similar implementation from
-> >>>> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
-> >>>> needs to be exported through a header.
-> >>>
-> >>> Why are you allocating memory at all instead of just using some
-> >>> known-to-exist PFNs like I suggested?
-> >>
-> >> We needed PFN to be PUD aligned for pfn_pud() and PMD aligned for mk_pmd().
-> >> Now walking the kernel page table for a known symbol like kernel_init()
-> > 
-> > I didn't say to walk the kernel page table.  I said to call virt_to_pfn()
-> > for a known symbol like kernel_init().
-> > 
-> >> as you had suggested earlier we might encounter page table page entries at PMD
-> >> and PUD which might not be PMD or PUD aligned respectively. It seemed to me
-> >> that alignment requirement is applicable only for mk_pmd() and pfn_pud()
-> >> which create large mappings at those levels but that requirement does not
-> >> exist for page table pages pointing to next level. Is not that correct ? Or
-> >> I am missing something here ?
-> > 
-> > Just clear the bottom bits off the PFN until you get a PMD or PUD aligned
-> > PFN.  It's really not hard.
-> 
-> As Mark pointed out earlier that might end up being just a synthetic PFN
-> which might not even exist on a given system.
+The first patch allows for CECSIM booting via PSW restart.
+The other ones add diag288 and STSI tests, as well as diag308 subcode 0.
 
-And why would that matter?
+v3:
+* Addressed review
+* Added review-bys
+
+v2:
+
+* Tested under TCG
+* Split out stsi into library
+* Addressed review
+
+Janosch Frank (5):
+  s390x: Support PSW restart boot
+  s390x: Diag288 test
+  s390x: Move stsi to library
+  s390x: STSI tests
+  s390x: Add diag308 subcode 0 testing
+
+ lib/s390x/asm/arch_def.h |  17 +++++
+ s390x/Makefile           |   2 +
+ s390x/cstart64.S         |  27 ++++++++
+ s390x/diag288.c          | 130 +++++++++++++++++++++++++++++++++++++++
+ s390x/diag308.c          |  31 +++-------
+ s390x/flat.lds           |  14 +++--
+ s390x/skey.c             |  18 ------
+ s390x/stsi.c             |  84 +++++++++++++++++++++++++
+ s390x/unittests.cfg      |   7 +++
+ 9 files changed, 286 insertions(+), 44 deletions(-)
+ create mode 100644 s390x/diag288.c
+ create mode 100644 s390x/stsi.c
+
+-- 
+2.17.0
+
