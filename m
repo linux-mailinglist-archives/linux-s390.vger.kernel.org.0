@@ -2,106 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B8339CAA4
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Aug 2019 09:34:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 172CC9CACD
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Aug 2019 09:43:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730037AbfHZHeT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Aug 2019 03:34:19 -0400
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:42827 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728168AbfHZHeT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Aug 2019 03:34:19 -0400
-X-Originating-IP: 81.250.144.103
-Received: from [10.30.1.20] (lneuilly-657-1-5-103.w81-250.abo.wanadoo.fr [81.250.144.103])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 49BD560003;
-        Mon, 26 Aug 2019 07:34:12 +0000 (UTC)
-Subject: Re: [PATCH RESEND 0/8] Fix mmap base in bottom-up mmap
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     "James E . J . Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-parisc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-mm@kvack.org
-References: <20190620050328.8942-1-alex@ghiti.fr>
-From:   Alexandre Ghiti <alex@ghiti.fr>
-Message-ID: <abc7ed75-0f51-7f21-5a74-d389f968ee55@ghiti.fr>
-Date:   Mon, 26 Aug 2019 09:34:11 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1730253AbfHZHmt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Aug 2019 03:42:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:55080 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728198AbfHZHms (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 26 Aug 2019 03:42:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lIut4B8w/K6qaNO5//JKDXgxZBzz15ddgNf2zVVfQ1E=; b=f6XJLfxeBVv9Hyb0B1vtj9oxL
+        i8iw5LMMkKhG+T6Xu47kb2+iCLpMrKBQjXS1NBw74AP7B3pgxUBsbndSWQGizhRtNCAgW99j5+OeI
+        c+T+1uJAk4oCoRSmOm0NE/wm6iL8VH+qSfESDzvXkGeSKy+GyCJWsD5r3LnItvz8EK4g8tAXBgRgi
+        JMSMaRtxN+OddwD4UaHD/oWS7Za8/f15E/5LTf3nBtMiL8X2OQpSYRhvIozCuZOKt/2bBeTu5XD5k
+        MSr7q1wHFvaw9hwCCzoDKZY0xDJWDWNsCSapSfqxfwjWoZuh5bxf2qBIOtw+RF3Jx2EN1us7T239k
+        nCed49xqA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i29dr-0004v1-6h; Mon, 26 Aug 2019 07:42:19 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3BB083075FE;
+        Mon, 26 Aug 2019 09:41:42 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9740120B33552; Mon, 26 Aug 2019 09:42:15 +0200 (CEST)
+Date:   Mon, 26 Aug 2019 09:42:15 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Changbin Du <changbin.du@gmail.com>
+Cc:     Steven Rostedt <rostedt@goodmis.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org
+Subject: Re: [PATCH 03/11] asm-generic: add generic dwarf definition
+Message-ID: <20190826074215.GL2369@hirez.programming.kicks-ass.net>
+References: <20190825132330.5015-1-changbin.du@gmail.com>
+ <20190825132330.5015-4-changbin.du@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190620050328.8942-1-alex@ghiti.fr>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: fr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190825132330.5015-4-changbin.du@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 6/20/19 7:03 AM, Alexandre Ghiti wrote:
-> This series fixes the fallback of the top-down mmap: in case of
-> failure, a bottom-up scheme can be tried as a last resort between
-> the top-down mmap base and the stack, hoping for a large unused stack
-> limit.
->
-> Lots of architectures and even mm code start this fallback
-> at TASK_UNMAPPED_BASE, which is useless since the top-down scheme
-> already failed on the whole address space: instead, simply use
-> mmap_base.
->
-> Along the way, it allows to get rid of of mmap_legacy_base and
-> mmap_compat_legacy_base from mm_struct.
->
-> Note that arm and mips already implement this behaviour.
->
-> Alexandre Ghiti (8):
->    s390: Start fallback of top-down mmap at mm->mmap_base
->    sh: Start fallback of top-down mmap at mm->mmap_base
->    sparc: Start fallback of top-down mmap at mm->mmap_base
->    x86, hugetlbpage: Start fallback of top-down mmap at mm->mmap_base
->    mm: Start fallback top-down mmap at mm->mmap_base
->    parisc: Use mmap_base, not mmap_legacy_base, as low_limit for
->      bottom-up mmap
->    x86: Use mmap_*base, not mmap_*legacy_base, as low_limit for bottom-up
->      mmap
->    mm: Remove mmap_legacy_base and mmap_compat_legacy_code fields from
->      mm_struct
->
->   arch/parisc/kernel/sys_parisc.c  |  8 +++-----
->   arch/s390/mm/mmap.c              |  2 +-
->   arch/sh/mm/mmap.c                |  2 +-
->   arch/sparc/kernel/sys_sparc_64.c |  2 +-
->   arch/sparc/mm/hugetlbpage.c      |  2 +-
->   arch/x86/include/asm/elf.h       |  2 +-
->   arch/x86/kernel/sys_x86_64.c     |  4 ++--
->   arch/x86/mm/hugetlbpage.c        |  7 ++++---
->   arch/x86/mm/mmap.c               | 20 +++++++++-----------
->   include/linux/mm_types.h         |  2 --
->   mm/debug.c                       |  4 ++--
->   mm/mmap.c                        |  2 +-
->   12 files changed, 26 insertions(+), 31 deletions(-)
->
+On Sun, Aug 25, 2019 at 09:23:22PM +0800, Changbin Du wrote:
+> Add generic DWARF constant definitions. We will use it later.
+> 
+> Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> ---
+>  include/asm-generic/dwarf.h | 199 ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 199 insertions(+)
+>  create mode 100644 include/asm-generic/dwarf.h
+> 
+> diff --git a/include/asm-generic/dwarf.h b/include/asm-generic/dwarf.h
+> new file mode 100644
+> index 000000000000..c705633c2a8f
+> --- /dev/null
+> +++ b/include/asm-generic/dwarf.h
+> @@ -0,0 +1,199 @@
+> +/* SPDX-License-Identifier: GPL-2.0
+> + *
+> + * Architecture independent definitions of DWARF.
+> + *
+> + * Copyright (C) 2019 Changbin Du <changbin.du@gmail.com>
 
-Hi everyone,
+You're claiming copyright on dwarf definitions? ;-)
 
-Any thoughts about that series ? As said before, this is just a 
-preparatory patchset in order to
-merge x86 mmap top down code with the generic version.
+I'm thinking only Oracle was daft enough to think stuff like that was
+copyrightable.
 
-Thanks for taking a look,
+Also; I think it would be very good to not use/depend on DWARF for this.
 
-Alex
+You really don't need all of DWARF; I'm thikning you only need a few
+types; for location we already have regs_get_kernel_argument() which
+has all the logic to find the n-th argument.
 
