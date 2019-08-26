@@ -2,171 +2,245 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C81879D422
-	for <lists+linux-s390@lfdr.de>; Mon, 26 Aug 2019 18:35:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9B909D4C5
+	for <lists+linux-s390@lfdr.de>; Mon, 26 Aug 2019 19:14:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732891AbfHZQf2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 26 Aug 2019 12:35:28 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:45838 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732865AbfHZQf1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 26 Aug 2019 12:35:27 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7QGOlVI078136
-        for <linux-s390@vger.kernel.org>; Mon, 26 Aug 2019 12:35:26 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2umgu95y51-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 26 Aug 2019 12:35:26 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Mon, 26 Aug 2019 17:35:24 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 26 Aug 2019 17:35:21 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7QGZKpE52363300
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 26 Aug 2019 16:35:20 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B4E6211C04C;
-        Mon, 26 Aug 2019 16:35:20 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7DB111C05B;
-        Mon, 26 Aug 2019 16:35:19 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.27.33])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 26 Aug 2019 16:35:19 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-Subject: [kvm-unit-tests PATCH v3 5/5] s390x: Add diag308 subcode 0 testing
-Date:   Mon, 26 Aug 2019 18:35:02 +0200
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190826163502.1298-1-frankja@linux.ibm.com>
+        id S1732338AbfHZROu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 26 Aug 2019 13:14:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33618 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731490AbfHZROu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 26 Aug 2019 13:14:50 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 43D93C02832B;
+        Mon, 26 Aug 2019 17:14:49 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-153.ams2.redhat.com [10.36.116.153])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F14D2600C8;
+        Mon, 26 Aug 2019 17:14:45 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v3 2/5] s390x: Diag288 test
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com
 References: <20190826163502.1298-1-frankja@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19082616-0020-0000-0000-000003642D90
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082616-0021-0000-0000-000021B976AF
-Message-Id: <20190826163502.1298-6-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-26_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=954 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908260162
+ <20190826163502.1298-3-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat
+Message-ID: <4855e0bd-2808-ff44-482e-ecc96c7e69ed@redhat.com>
+Date:   Mon, 26 Aug 2019 19:14:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20190826163502.1298-3-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 26 Aug 2019 17:14:49 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-By adding a load reset routine to cstart.S we can also test the clear
-reset done by subcode 0, as we now can restore our registers again.
+On 26/08/2019 18.34, Janosch Frank wrote:
+> A small test for the watchdog via diag288.
+> 
+> Minimum timer value is 15 (seconds) and the only supported action with
+> QEMU is restart.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  lib/s390x/asm/arch_def.h |   1 +
+>  s390x/Makefile           |   1 +
+>  s390x/diag288.c          | 130 +++++++++++++++++++++++++++++++++++++++
+>  s390x/unittests.cfg      |   4 ++
+>  4 files changed, 136 insertions(+)
+>  create mode 100644 s390x/diag288.c
+> 
+> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> index d2cd727..4bbb428 100644
+> --- a/lib/s390x/asm/arch_def.h
+> +++ b/lib/s390x/asm/arch_def.h
+> @@ -15,6 +15,7 @@ struct psw {
+>  	uint64_t	addr;
+>  };
+>  
+> +#define PSW_MASK_EXT			0x0100000000000000UL
+>  #define PSW_MASK_DAT			0x0400000000000000UL
+>  #define PSW_MASK_PSTATE			0x0001000000000000UL
+>  
+> diff --git a/s390x/Makefile b/s390x/Makefile
+> index 574a9a2..3453373 100644
+> --- a/s390x/Makefile
+> +++ b/s390x/Makefile
+> @@ -12,6 +12,7 @@ tests += $(TEST_DIR)/vector.elf
+>  tests += $(TEST_DIR)/gs.elf
+>  tests += $(TEST_DIR)/iep.elf
+>  tests += $(TEST_DIR)/cpumodel.elf
+> +tests += $(TEST_DIR)/diag288.elf
+>  tests_binary = $(patsubst %.elf,%.bin,$(tests))
+>  
+>  all: directories test_cases test_cases_binary
+> diff --git a/s390x/diag288.c b/s390x/diag288.c
+> new file mode 100644
+> index 0000000..a784338
+> --- /dev/null
+> +++ b/s390x/diag288.c
+> @@ -0,0 +1,130 @@
+> +/*
+> + * Timer Event DIAG288 test
+> + *
+> + * Copyright (c) 2019 IBM Corp
+> + *
+> + * Authors:
+> + *  Janosch Frank <frankja@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU Library General Public License version 2.
+> + */
+> +
+> +#include <libcflat.h>
+> +#include <asm/asm-offsets.h>
+> +#include <asm/interrupt.h>
+> +
+> +struct lowcore *lc = (struct lowcore *)0x0;
+> +
+> +#define CODE_INIT	0
+> +#define CODE_CHANGE	1
+> +#define CODE_CANCEL	2
+> +
+> +#define ACTION_RESTART	0
+> +
+> +static inline void diag288(unsigned long code, unsigned long time,
+> +			   unsigned long action)
+> +{
+> +	register unsigned long fc asm("0") = code;
+> +	register unsigned long tm asm("1") = time;
+> +	register unsigned long ac asm("2") = action;
+> +
+> +	asm volatile("diag %0,%2,0x288"
+> +		     : : "d" (fc), "d" (tm), "d" (ac));
+> +}
+> +
+> +static void test_specs(void)
+> +{
+> +	report_prefix_push("specification");
+> +
+> +	report_prefix_push("uneven");
+> +	expect_pgm_int();
+> +	asm volatile("diag 1,2,0x288");
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("unsupported action");
+> +	expect_pgm_int();
+> +	diag288(CODE_INIT, 15, 42);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("unsupported function");
+> +	expect_pgm_int();
+> +	diag288(42, 15, ACTION_RESTART);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("no init");
+> +	expect_pgm_int();
+> +	diag288(CODE_CANCEL, 15, ACTION_RESTART);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_push("min timer");
+> +	expect_pgm_int();
+> +	diag288(CODE_INIT, 14, ACTION_RESTART);
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+> +	report_prefix_pop();
+> +
+> +	report_prefix_pop();
+> +}
+> +
+> +static void test_priv(void)
+> +{
+> +	report_prefix_push("privileged");
+> +	expect_pgm_int();
+> +	enter_pstate();
+> +	diag288(CODE_INIT, 15, ACTION_RESTART);
+> +	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
+> +	report_prefix_pop();
+> +}
+> +
+> +static inline void get_tod_clock_ext(char *clk)
+> +{
+> +	typedef struct { char _[16]; } addrtype;
+> +
+> +	asm volatile("stcke %0" : "=Q" (*(addrtype *) clk) : : "cc");
+> +}
+> +
+> +static inline unsigned long long get_tod_clock(void)
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
----
- s390x/cstart64.S | 27 +++++++++++++++++++++++++++
- s390x/diag308.c  | 31 ++++++++++---------------------
- 2 files changed, 37 insertions(+), 21 deletions(-)
+Change the return type to uint64_t, too?
 
-diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-index dedfe80..36f7cab 100644
---- a/s390x/cstart64.S
-+++ b/s390x/cstart64.S
-@@ -145,6 +145,33 @@ memsetxc:
- 	.endm
- 
- .section .text
-+/*
-+ * load_reset calling convention:
-+ * %r2 subcode (0 or 1)
-+ */
-+.globl diag308_load_reset
-+diag308_load_reset:
-+	SAVE_REGS
-+	/* Save the first PSW word to the IPL PSW */
-+	epsw	%r0, %r1
-+	st	%r0, 0
-+	/* Store the address and the bit for 31 bit addressing */
-+	larl    %r0, 0f
-+	oilh    %r0, 0x8000
-+	st      %r0, 0x4
-+	/* Do the reset */
-+	diag    %r0,%r2,0x308
-+	/* Failure path */
-+	xgr	%r2, %r2
-+	br	%r14
-+	/* Success path */
-+	/* We lost cr0 due to the reset */
-+0:	larl	%r1, initial_cr0
-+	lctlg	%c0, %c0, 0(%r1)
-+	RESTORE_REGS
-+	lhi	%r2, 1
-+	br	%r14
-+
- pgm_int:
- 	SAVE_REGS
- 	brasl	%r14, handle_pgm_int
-diff --git a/s390x/diag308.c b/s390x/diag308.c
-index f085b1a..6b4ffa6 100644
---- a/s390x/diag308.c
-+++ b/s390x/diag308.c
-@@ -21,32 +21,20 @@ static void test_priv(void)
- 	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
- }
- 
-+
- /*
-- * Check that diag308 with subcode 1 loads the PSW at address 0, i.e.
-+ * Check that diag308 with subcode 0 and 1 loads the PSW at address 0, i.e.
-  * that we can put a pointer into address 4 which then gets executed.
-  */
-+extern int diag308_load_reset(u64);
-+static void test_subcode0(void)
-+{
-+	report("load modified clear done", diag308_load_reset(0));
-+}
-+
- static void test_subcode1(void)
- {
--	uint64_t saved_psw = *(uint64_t *)0;
--	long subcode = 1;
--	long ret, tmp;
--
--	asm volatile (
--		"	epsw	%0,%1\n"
--		"	st	%0,0\n"
--		"	larl	%0,0f\n"
--		"	oilh	%0,0x8000\n"
--		"	st	%0,4\n"
--		"	diag	0,%2,0x308\n"
--		"	lghi	%0,0\n"
--		"	j	1f\n"
--		"0:	lghi	%0,1\n"
--		"1:"
--		: "=&d"(ret), "=&d"(tmp) : "d"(subcode) : "memory");
--
--	*(uint64_t *)0 = saved_psw;
--
--	report("load normal reset done", ret == 1);
-+	report("load normal reset done", diag308_load_reset(1));
- }
- 
- /* Expect a specification exception when using an uneven register */
-@@ -107,6 +95,7 @@ static struct {
- 	void (*func)(void);
- } tests[] = {
- 	{ "privileged", test_priv },
-+	{ "subcode 0", test_subcode0 },
- 	{ "subcode 1", test_subcode1 },
- 	{ "subcode 5", test_subcode5 },
- 	{ "subcode 6", test_subcode6 },
--- 
-2.17.0
+> +{
+> +	char clk[16];
+> +
+> +	get_tod_clock_ext(clk);
+> +	return *((uint64_t *)&clk[1]);
+> +}
 
+While this code seems to compile fine with recent versions of GCC, the
+older version 4.8 complains here:
+
+s390x/diag288.c: In function ‘get_tod_clock’:
+s390x/diag288.c:95:2: error: dereferencing type-punned pointer will
+break strict-aliasing rules [-Werror=strict-aliasing]
+  return *((uint64_t *)&clk[1]);
+  ^
+
+Looking at the whole code again, I think it would be best to simply use
+"stck" here instead of "stcke", what do you think?
+
+ Thomas
