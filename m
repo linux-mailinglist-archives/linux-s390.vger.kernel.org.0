@@ -2,29 +2,29 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 700D79EC5C
-	for <lists+linux-s390@lfdr.de>; Tue, 27 Aug 2019 17:23:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 91FD39EC9C
+	for <lists+linux-s390@lfdr.de>; Tue, 27 Aug 2019 17:28:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727219AbfH0PXH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 27 Aug 2019 11:23:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51736 "EHLO mx1.redhat.com"
+        id S1727887AbfH0P2p (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 27 Aug 2019 11:28:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:57728 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727064AbfH0PXH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 27 Aug 2019 11:23:07 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        id S1726333AbfH0P2p (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 27 Aug 2019 11:28:45 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CE99710C6969;
-        Tue, 27 Aug 2019 15:23:06 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 59DEF307BCC7;
+        Tue, 27 Aug 2019 15:28:45 +0000 (UTC)
 Received: from thuth.remote.csb (ovpn-116-79.ams2.redhat.com [10.36.116.79])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EDD2C5D6B0;
-        Tue, 27 Aug 2019 15:23:04 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 1/3] s390x: Move pfmf to lib and make
- address void
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F21A85C219;
+        Tue, 27 Aug 2019 15:28:41 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 2/3] s390x: Storage key library functions
+ now take void ptr addresses
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com
 References: <20190827134936.1705-1-frankja@linux.ibm.com>
- <20190827134936.1705-2-frankja@linux.ibm.com>
+ <20190827134936.1705-3-frankja@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
@@ -70,100 +70,31 @@ Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
  IQu4bBP2GxiRQ+NV3iV/KU3ebMRzqIC//DCOxzQNFNJAKldPe/bKZMCxEqtVoRkuJtNdp/5a
  yXFZ6TfE1hGKrDBYAm4vrnZ4CXFSBDllL59cFFOJCkn4Xboj/aVxxJxF30bn
 Organization: Red Hat
-Message-ID: <e722fde9-d00a-ca65-91a3-9c7801c2352a@redhat.com>
-Date:   Tue, 27 Aug 2019 17:23:03 +0200
+Message-ID: <e3f761da-e6c3-f779-c41c-663c2d44a797@redhat.com>
+Date:   Tue, 27 Aug 2019 17:28:40 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190827134936.1705-2-frankja@linux.ibm.com>
+In-Reply-To: <20190827134936.1705-3-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.65]); Tue, 27 Aug 2019 15:23:06 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 27 Aug 2019 15:28:45 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 27/08/2019 15.49, Janosch Frank wrote:
-> It's needed by other tests soon.
+> Now all mem.h functions are consistent in how they take a memory
+> address. Also we have less casting in the future.
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
->  lib/s390x/asm/mem.h | 31 ++++++++++++++++++++++
->  s390x/pfmf.c        | 63 ++++++++++++++-------------------------------
->  2 files changed, 50 insertions(+), 44 deletions(-)
-[...]
-> @@ -80,15 +49,18 @@ static void test_1m_key(void)
->  {
->  	int i;
->  	bool rp = true;
-> -	union r1 r1;
-> +	union pfmf_r1 r1;
->  	union skey skey;
-> +	void *addr = pagebuf;
->  
->  	report_prefix_push("1M");
->  	r1.val = 0;
->  	r1.reg.sk = 1;
-> -	r1.reg.fsc = FSC_1M;
-> +	r1.reg.fsc = PFMF_FSC_1M;
->  	r1.reg.key = 0x30;
-> -	pfmf(r1.val, (unsigned long) pagebuf);
-> +	while (addr != pagebuf + 256 * PAGE_SIZE) {
-> +	       addr = pfmf(r1.val, addr);
-> +	}
+>  lib/s390x/asm/mem.h |  9 +++------
+>  s390x/pfmf.c        |  4 ++--
+>  s390x/skey.c        | 24 +++++++++++-------------
+>  3 files changed, 16 insertions(+), 21 deletions(-)
 
-Why this change? If PFMF gets interrupted, the PSW should still point to
-the PFMF instruction, so no need to loop here ... or do I miss something?
-
-(See PoP, chapter "Execution of Interruptible Instructions")
-
->  	for (i = 0; i < 256; i++) {
->  		skey.val = get_storage_key((unsigned long) pagebuf + i * PAGE_SIZE);
->  		skey.val &= SKEY_ACC | SKEY_FP;
-> @@ -103,15 +75,15 @@ static void test_1m_key(void)
->  
->  static void test_4k_clear(void)
->  {
-> -	union r1 r1;
-> +	union pfmf_r1 r1;
->  
->  	r1.val = 0;
->  	r1.reg.cf = 1;
-> -	r1.reg.fsc = FSC_4K;
-> +	r1.reg.fsc = PFMF_FSC_4K;
->  
->  	report_prefix_push("4K");
->  	memset(pagebuf, 42, PAGE_SIZE);
-> -	pfmf(r1.val, (unsigned long) pagebuf);
-> +	pfmf(r1.val, pagebuf);
->  	report("clear memory", !memcmp(pagebuf, pagebuf + PAGE_SIZE, PAGE_SIZE));
->  	report_prefix_pop();
->  }
-> @@ -119,16 +91,19 @@ static void test_4k_clear(void)
->  static void test_1m_clear(void)
->  {
->  	int i;
-> -	union r1 r1;
-> +	union pfmf_r1 r1;
->  	unsigned long sum = 0;
-> +	void *addr = pagebuf;
->  
->  	r1.val = 0;
->  	r1.reg.cf = 1;
-> -	r1.reg.fsc = FSC_1M;
-> +	r1.reg.fsc = PFMF_FSC_1M;
->  
->  	report_prefix_push("1M");
->  	memset(pagebuf, 42, PAGE_SIZE * 256);
-> -	pfmf(r1.val, (unsigned long) pagebuf);
-> +	while (addr != pagebuf + 256 * PAGE_SIZE) {
-> +	       addr = pfmf(r1.val, addr);
-> +	}
-
-dito.
-
- Thomas
-
+Reviewed-by: Thomas Huth <thuth@redhat.com>
