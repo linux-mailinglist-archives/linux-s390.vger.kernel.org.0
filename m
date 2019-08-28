@@ -2,372 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1E28A06CB
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 17:57:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1DADA0E5F
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 01:42:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfH1P5X (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Aug 2019 11:57:23 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34458 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726400AbfH1P5X (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Aug 2019 11:57:23 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8AFE8882EA;
-        Wed, 28 Aug 2019 15:57:22 +0000 (UTC)
-Received: from localhost (dhcp-192-222.str.redhat.com [10.33.192.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 148F05C1D6;
-        Wed, 28 Aug 2019 15:57:21 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>
-Subject: [PULL 1/1] vfio-ccw: add some logging
-Date:   Wed, 28 Aug 2019 17:57:16 +0200
-Message-Id: <20190828155716.22809-2-cohuck@redhat.com>
-In-Reply-To: <20190828155716.22809-1-cohuck@redhat.com>
-References: <20190828155716.22809-1-cohuck@redhat.com>
+        id S1727125AbfH1Xlu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Aug 2019 19:41:50 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33867 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727097AbfH1Xlu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 28 Aug 2019 19:41:50 -0400
+Received: by mail-pg1-f194.google.com with SMTP id n9so556255pgc.1;
+        Wed, 28 Aug 2019 16:41:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LEwbl1nqNHBHcJacD9dfeICHgcsBE/f/ceNiyU0uO2c=;
+        b=kWxS12FOGo7kRO8bUZisQdbdPaD7m90liBO1DJILGgor5och3M3Y8ixQUrLiOlvUAQ
+         KSCAKzPOIhK4qh4mkp723yecDQTzrNvHfSo5O2PLFMUzPr9tFIvttGdACmQk3GcLv9I5
+         cjYvi8Gr7ER3JMRMI2IeaYoSEzfDVilJaC9VvUum/aPr5t4C5xA5idz5lFsS5zANKFcg
+         337AY91x4TvIwnn1y9efIs3f4w9SNmURv9K2dvAIcHu0ypgbd+SQV2CIW7BfJIlZApXq
+         u8dQIG+K1EEA2/INmvvXiOQePA1oy0eoOgbrzRogC4V4vLfCANYJbRnPt4/hj/mnM9HJ
+         IDqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LEwbl1nqNHBHcJacD9dfeICHgcsBE/f/ceNiyU0uO2c=;
+        b=Dm6bK6YON5/uJ6yGcjawkadlawzzNOu4QZ/dxM4e/ZS6ZOM3weqTqSHAvvlNt+4cL7
+         bfMuHglY8fX44F7wMu5Uf+A2h+OmwcsvFW2+nAo0QTUypU2F05WBVXbfmfG12cdnTxLE
+         YxzDQVlpF3VYifP8YunGgnh/0FC5P4ztnlFbuVoVeoC8PBmvCF6NJhcEO/VLuKRH3jad
+         lW9WvNVzgtm1BzUDWfto0zH+/2zs7qlDbjLdIRqSGrZUaJcfUkoypEApUU3MDT7PmzEg
+         70pt2B7Lsp7vPBaA40BcYnebuANLTbT8ggelkPlPmEwP+BR2lzk7ji4HI2uDK82fopA3
+         MxXA==
+X-Gm-Message-State: APjAAAUYMvbDkleLX03ySndy5ert+il4kq9FkW6y9/LZBMEyqWPezMyX
+        nhDQRuq3AquMzIHDlmudKKjAzF9up37YUg==
+X-Google-Smtp-Source: APXvYqyltBUmIDPff9MzOKVsnLKdLLLDhQKStB24jbwVvtjezQpxtP9BLXnDENuon3HqazilZSGjqw==
+X-Received: by 2002:a17:90a:32a3:: with SMTP id l32mr7061863pjb.14.1567035708956;
+        Wed, 28 Aug 2019 16:41:48 -0700 (PDT)
+Received: from mail.google.com ([149.28.153.17])
+        by smtp.gmail.com with ESMTPSA id g1sm270497pgg.27.2019.08.28.16.41.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 28 Aug 2019 16:41:48 -0700 (PDT)
+Date:   Wed, 28 Aug 2019 23:41:34 +0000
+From:   Changbin Du <changbin.du@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Changbin Du <changbin.du@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>, Jessica Yu <jeyu@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-kbuild@vger.kernel.org,
+        "John F . Reiser" <jreiser@BitWagon.com>,
+        Matt Helsley <mhelsley@vmware.com>
+Subject: Re: [PATCH 01/11] ftrace: move recordmcount tools to scripts/ftrace
+Message-ID: <20190828234133.quir3ptl4kidnxud@mail.google.com>
+References: <20190825132330.5015-1-changbin.du@gmail.com>
+ <20190825132330.5015-2-changbin.du@gmail.com>
+ <20190826184444.09334ae9@gandalf.local.home>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Wed, 28 Aug 2019 15:57:22 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190826184444.09334ae9@gandalf.local.home>
+User-Agent: NeoMutt/20180716-508-7c9a6d
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Usually, the common I/O layer logs various things into the s390
-cio debug feature, which has been very helpful in the past when
-looking at crash dumps. As vfio-ccw devices unbind from the
-standard I/O subchannel driver, we lose some information there.
+On Mon, Aug 26, 2019 at 06:44:44PM -0400, Steven Rostedt wrote:
+> On Sun, 25 Aug 2019 21:23:20 +0800
+> Changbin Du <changbin.du@gmail.com> wrote:
+> 
+> > Move ftrace tools to its own directory. We will add another tool later.
+> > 
+> > Cc: John F. Reiser <jreiser@BitWagon.com>
+> > Signed-off-by: Changbin Du <changbin.du@gmail.com>
+> > ---
+> >  scripts/.gitignore                   |  1 -
+> >  scripts/Makefile                     |  2 +-
+> >  scripts/Makefile.build               | 10 +++++-----
+> >  scripts/ftrace/.gitignore            |  4 ++++
+> >  scripts/ftrace/Makefile              |  4 ++++
+> >  scripts/{ => ftrace}/recordmcount.c  |  0
+> >  scripts/{ => ftrace}/recordmcount.h  |  0
+> >  scripts/{ => ftrace}/recordmcount.pl |  0
+> >  8 files changed, 14 insertions(+), 7 deletions(-)
+> >  create mode 100644 scripts/ftrace/.gitignore
+> >  create mode 100644 scripts/ftrace/Makefile
+> >  rename scripts/{ => ftrace}/recordmcount.c (100%)
+> >  rename scripts/{ => ftrace}/recordmcount.h (100%)
+> >  rename scripts/{ => ftrace}/recordmcount.pl (100%)
+> >  mode change 100755 => 100644
+> 
+> Note, we are in the process of merging recordmcount with objtool. It
+> would be better to continue from that work.
+> 
+>  http://lkml.kernel.org/r/2767f55f4a5fbf30ba0635aed7a9c5ee92ac07dd.1563992889.git.mhelsley@vmware.com
+> 
+> -- Steve
+Thanks for reminding. Let me check if prototype tool can merge into
+objtool easily after above work.
 
-Let's introduce some vfio-ccw debug features and log some things
-there. (Unfortunately we cannot reuse the cio debug feature from
-a module.)
-
-Message-Id: <20190816151505.9853-2-cohuck@redhat.com>
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
----
- drivers/s390/cio/vfio_ccw_drv.c     | 50 ++++++++++++++++++++++++++--
- drivers/s390/cio/vfio_ccw_fsm.c     | 51 ++++++++++++++++++++++++++++-
- drivers/s390/cio/vfio_ccw_ops.c     | 10 ++++++
- drivers/s390/cio/vfio_ccw_private.h | 17 ++++++++++
- 4 files changed, 124 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index 9208c0e56c33..45e792f6afd0 100644
---- a/drivers/s390/cio/vfio_ccw_drv.c
-+++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -27,6 +27,9 @@ struct workqueue_struct *vfio_ccw_work_q;
- static struct kmem_cache *vfio_ccw_io_region;
- static struct kmem_cache *vfio_ccw_cmd_region;
- 
-+debug_info_t *vfio_ccw_debug_msg_id;
-+debug_info_t *vfio_ccw_debug_trace_id;
-+
- /*
-  * Helpers
-  */
-@@ -164,6 +167,9 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
- 	if (ret)
- 		goto out_disable;
- 
-+	VFIO_CCW_MSG_EVENT(4, "bound to subchannel %x.%x.%04x\n",
-+			   sch->schid.cssid, sch->schid.ssid,
-+			   sch->schid.sch_no);
- 	return 0;
- 
- out_disable:
-@@ -194,6 +200,9 @@ static int vfio_ccw_sch_remove(struct subchannel *sch)
- 	kfree(private->cp.guest_cp);
- 	kfree(private);
- 
-+	VFIO_CCW_MSG_EVENT(4, "unbound from subchannel %x.%x.%04x\n",
-+			   sch->schid.cssid, sch->schid.ssid,
-+			   sch->schid.sch_no);
- 	return 0;
- }
- 
-@@ -263,13 +272,46 @@ static struct css_driver vfio_ccw_sch_driver = {
- 	.sch_event = vfio_ccw_sch_event,
- };
- 
-+static int __init vfio_ccw_debug_init(void)
-+{
-+	vfio_ccw_debug_msg_id = debug_register("vfio_ccw_msg", 16, 1,
-+					       11 * sizeof(long));
-+	if (!vfio_ccw_debug_msg_id)
-+		goto out_unregister;
-+	debug_register_view(vfio_ccw_debug_msg_id, &debug_sprintf_view);
-+	debug_set_level(vfio_ccw_debug_msg_id, 2);
-+	vfio_ccw_debug_trace_id = debug_register("vfio_ccw_trace", 16, 1, 16);
-+	if (!vfio_ccw_debug_trace_id)
-+		goto out_unregister;
-+	debug_register_view(vfio_ccw_debug_trace_id, &debug_hex_ascii_view);
-+	debug_set_level(vfio_ccw_debug_trace_id, 2);
-+	return 0;
-+
-+out_unregister:
-+	debug_unregister(vfio_ccw_debug_msg_id);
-+	debug_unregister(vfio_ccw_debug_trace_id);
-+	return -1;
-+}
-+
-+static void vfio_ccw_debug_exit(void)
-+{
-+	debug_unregister(vfio_ccw_debug_msg_id);
-+	debug_unregister(vfio_ccw_debug_trace_id);
-+}
-+
- static int __init vfio_ccw_sch_init(void)
- {
--	int ret = -ENOMEM;
-+	int ret;
-+
-+	ret = vfio_ccw_debug_init();
-+	if (ret)
-+		return ret;
- 
- 	vfio_ccw_work_q = create_singlethread_workqueue("vfio-ccw");
--	if (!vfio_ccw_work_q)
--		return -ENOMEM;
-+	if (!vfio_ccw_work_q) {
-+		ret = -ENOMEM;
-+		goto out_err;
-+	}
- 
- 	vfio_ccw_io_region = kmem_cache_create_usercopy("vfio_ccw_io_region",
- 					sizeof(struct ccw_io_region), 0,
-@@ -298,6 +340,7 @@ static int __init vfio_ccw_sch_init(void)
- 	kmem_cache_destroy(vfio_ccw_cmd_region);
- 	kmem_cache_destroy(vfio_ccw_io_region);
- 	destroy_workqueue(vfio_ccw_work_q);
-+	vfio_ccw_debug_exit();
- 	return ret;
- }
- 
-@@ -308,6 +351,7 @@ static void __exit vfio_ccw_sch_exit(void)
- 	kmem_cache_destroy(vfio_ccw_io_region);
- 	kmem_cache_destroy(vfio_ccw_cmd_region);
- 	destroy_workqueue(vfio_ccw_work_q);
-+	vfio_ccw_debug_exit();
- }
- module_init(vfio_ccw_sch_init);
- module_exit(vfio_ccw_sch_exit);
-diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
-index 49d9d3da0282..4a1e727c62d9 100644
---- a/drivers/s390/cio/vfio_ccw_fsm.c
-+++ b/drivers/s390/cio/vfio_ccw_fsm.c
-@@ -37,9 +37,14 @@ static int fsm_io_helper(struct vfio_ccw_private *private)
- 		goto out;
- 	}
- 
-+	VFIO_CCW_TRACE_EVENT(5, "stIO");
-+	VFIO_CCW_TRACE_EVENT(5, dev_name(&sch->dev));
-+
- 	/* Issue "Start Subchannel" */
- 	ccode = ssch(sch->schid, orb);
- 
-+	VFIO_CCW_HEX_EVENT(5, &ccode, sizeof(ccode));
-+
- 	switch (ccode) {
- 	case 0:
- 		/*
-@@ -86,9 +91,14 @@ static int fsm_do_halt(struct vfio_ccw_private *private)
- 
- 	spin_lock_irqsave(sch->lock, flags);
- 
-+	VFIO_CCW_TRACE_EVENT(2, "haltIO");
-+	VFIO_CCW_TRACE_EVENT(2, dev_name(&sch->dev));
-+
- 	/* Issue "Halt Subchannel" */
- 	ccode = hsch(sch->schid);
- 
-+	VFIO_CCW_HEX_EVENT(2, &ccode, sizeof(ccode));
-+
- 	switch (ccode) {
- 	case 0:
- 		/*
-@@ -122,9 +132,14 @@ static int fsm_do_clear(struct vfio_ccw_private *private)
- 
- 	spin_lock_irqsave(sch->lock, flags);
- 
-+	VFIO_CCW_TRACE_EVENT(2, "clearIO");
-+	VFIO_CCW_TRACE_EVENT(2, dev_name(&sch->dev));
-+
- 	/* Issue "Clear Subchannel" */
- 	ccode = csch(sch->schid);
- 
-+	VFIO_CCW_HEX_EVENT(2, &ccode, sizeof(ccode));
-+
- 	switch (ccode) {
- 	case 0:
- 		/*
-@@ -149,6 +164,9 @@ static void fsm_notoper(struct vfio_ccw_private *private,
- {
- 	struct subchannel *sch = private->sch;
- 
-+	VFIO_CCW_TRACE_EVENT(2, "notoper");
-+	VFIO_CCW_TRACE_EVENT(2, dev_name(&sch->dev));
-+
- 	/*
- 	 * TODO:
- 	 * Probably we should send the machine check to the guest.
-@@ -229,6 +247,7 @@ static void fsm_io_request(struct vfio_ccw_private *private,
- 	struct ccw_io_region *io_region = private->io_region;
- 	struct mdev_device *mdev = private->mdev;
- 	char *errstr = "request";
-+	struct subchannel_id schid = get_schid(private);
- 
- 	private->state = VFIO_CCW_STATE_CP_PROCESSING;
- 	memcpy(scsw, io_region->scsw_area, sizeof(*scsw));
-@@ -239,18 +258,32 @@ static void fsm_io_request(struct vfio_ccw_private *private,
- 		/* Don't try to build a cp if transport mode is specified. */
- 		if (orb->tm.b) {
- 			io_region->ret_code = -EOPNOTSUPP;
-+			VFIO_CCW_MSG_EVENT(2,
-+					   "%pUl (%x.%x.%04x): transport mode\n",
-+					   mdev_uuid(mdev), schid.cssid,
-+					   schid.ssid, schid.sch_no);
- 			errstr = "transport mode";
- 			goto err_out;
- 		}
- 		io_region->ret_code = cp_init(&private->cp, mdev_dev(mdev),
- 					      orb);
- 		if (io_region->ret_code) {
-+			VFIO_CCW_MSG_EVENT(2,
-+					   "%pUl (%x.%x.%04x): cp_init=%d\n",
-+					   mdev_uuid(mdev), schid.cssid,
-+					   schid.ssid, schid.sch_no,
-+					   io_region->ret_code);
- 			errstr = "cp init";
- 			goto err_out;
- 		}
- 
- 		io_region->ret_code = cp_prefetch(&private->cp);
- 		if (io_region->ret_code) {
-+			VFIO_CCW_MSG_EVENT(2,
-+					   "%pUl (%x.%x.%04x): cp_prefetch=%d\n",
-+					   mdev_uuid(mdev), schid.cssid,
-+					   schid.ssid, schid.sch_no,
-+					   io_region->ret_code);
- 			errstr = "cp prefetch";
- 			cp_free(&private->cp);
- 			goto err_out;
-@@ -259,23 +292,36 @@ static void fsm_io_request(struct vfio_ccw_private *private,
- 		/* Start channel program and wait for I/O interrupt. */
- 		io_region->ret_code = fsm_io_helper(private);
- 		if (io_region->ret_code) {
-+			VFIO_CCW_MSG_EVENT(2,
-+					   "%pUl (%x.%x.%04x): fsm_io_helper=%d\n",
-+					   mdev_uuid(mdev), schid.cssid,
-+					   schid.ssid, schid.sch_no,
-+					   io_region->ret_code);
- 			errstr = "cp fsm_io_helper";
- 			cp_free(&private->cp);
- 			goto err_out;
- 		}
- 		return;
- 	} else if (scsw->cmd.fctl & SCSW_FCTL_HALT_FUNC) {
-+		VFIO_CCW_MSG_EVENT(2,
-+				   "%pUl (%x.%x.%04x): halt on io_region\n",
-+				   mdev_uuid(mdev), schid.cssid,
-+				   schid.ssid, schid.sch_no);
- 		/* halt is handled via the async cmd region */
- 		io_region->ret_code = -EOPNOTSUPP;
- 		goto err_out;
- 	} else if (scsw->cmd.fctl & SCSW_FCTL_CLEAR_FUNC) {
-+		VFIO_CCW_MSG_EVENT(2,
-+				   "%pUl (%x.%x.%04x): clear on io_region\n",
-+				   mdev_uuid(mdev), schid.cssid,
-+				   schid.ssid, schid.sch_no);
- 		/* clear is handled via the async cmd region */
- 		io_region->ret_code = -EOPNOTSUPP;
- 		goto err_out;
- 	}
- 
- err_out:
--	trace_vfio_ccw_io_fctl(scsw->cmd.fctl, get_schid(private),
-+	trace_vfio_ccw_io_fctl(scsw->cmd.fctl, schid,
- 			       io_region->ret_code, errstr);
- }
- 
-@@ -308,6 +354,9 @@ static void fsm_irq(struct vfio_ccw_private *private,
- {
- 	struct irb *irb = this_cpu_ptr(&cio_irb);
- 
-+	VFIO_CCW_TRACE_EVENT(6, "IRQ");
-+	VFIO_CCW_TRACE_EVENT(6, dev_name(&private->sch->dev));
-+
- 	memcpy(&private->irb, irb, sizeof(*irb));
- 
- 	queue_work(vfio_ccw_work_q, &private->io_work);
-diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-index 5eb61116ca6f..f0d71ab77c50 100644
---- a/drivers/s390/cio/vfio_ccw_ops.c
-+++ b/drivers/s390/cio/vfio_ccw_ops.c
-@@ -124,6 +124,11 @@ static int vfio_ccw_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
- 	private->mdev = mdev;
- 	private->state = VFIO_CCW_STATE_IDLE;
- 
-+	VFIO_CCW_MSG_EVENT(2, "mdev %pUl, sch %x.%x.%04x: create\n",
-+			   mdev_uuid(mdev), private->sch->schid.cssid,
-+			   private->sch->schid.ssid,
-+			   private->sch->schid.sch_no);
-+
- 	return 0;
- }
- 
-@@ -132,6 +137,11 @@ static int vfio_ccw_mdev_remove(struct mdev_device *mdev)
- 	struct vfio_ccw_private *private =
- 		dev_get_drvdata(mdev_parent_dev(mdev));
- 
-+	VFIO_CCW_MSG_EVENT(2, "mdev %pUl, sch %x.%x.%04x: remove\n",
-+			   mdev_uuid(mdev), private->sch->schid.cssid,
-+			   private->sch->schid.ssid,
-+			   private->sch->schid.sch_no);
-+
- 	if ((private->state != VFIO_CCW_STATE_NOT_OPER) &&
- 	    (private->state != VFIO_CCW_STATE_STANDBY)) {
- 		if (!vfio_ccw_sch_quiesce(private->sch))
-diff --git a/drivers/s390/cio/vfio_ccw_private.h b/drivers/s390/cio/vfio_ccw_private.h
-index f1092c3dc1b1..bbe9babf767b 100644
---- a/drivers/s390/cio/vfio_ccw_private.h
-+++ b/drivers/s390/cio/vfio_ccw_private.h
-@@ -17,6 +17,7 @@
- #include <linux/eventfd.h>
- #include <linux/workqueue.h>
- #include <linux/vfio_ccw.h>
-+#include <asm/debug.h>
- 
- #include "css.h"
- #include "vfio_ccw_cp.h"
-@@ -139,4 +140,20 @@ static inline void vfio_ccw_fsm_event(struct vfio_ccw_private *private,
- 
- extern struct workqueue_struct *vfio_ccw_work_q;
- 
-+
-+/* s390 debug feature, similar to base cio */
-+extern debug_info_t *vfio_ccw_debug_msg_id;
-+extern debug_info_t *vfio_ccw_debug_trace_id;
-+
-+#define VFIO_CCW_TRACE_EVENT(imp, txt) \
-+		debug_text_event(vfio_ccw_debug_trace_id, imp, txt)
-+
-+#define VFIO_CCW_MSG_EVENT(imp, args...) \
-+		debug_sprintf_event(vfio_ccw_debug_msg_id, imp, ##args)
-+
-+static inline void VFIO_CCW_HEX_EVENT(int level, void *data, int length)
-+{
-+	debug_event(vfio_ccw_debug_trace_id, level, data, length);
-+}
-+
- #endif
 -- 
-2.20.1
-
+Cheers,
+Changbin Du
