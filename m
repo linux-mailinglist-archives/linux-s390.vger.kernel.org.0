@@ -2,29 +2,28 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2C89A00D2
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 13:39:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 83628A00DC
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 13:41:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfH1Ljm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Aug 2019 07:39:42 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41796 "EHLO mx1.redhat.com"
+        id S1726407AbfH1Lla (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Aug 2019 07:41:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:48466 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbfH1Ljl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:39:41 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        id S1726339AbfH1Lla (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Aug 2019 07:41:30 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AD3458980EF;
-        Wed, 28 Aug 2019 11:39:41 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id D0443300B912;
+        Wed, 28 Aug 2019 11:41:29 +0000 (UTC)
 Received: from thuth.remote.csb (ovpn-116-90.ams2.redhat.com [10.36.116.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BAEB5D9E2;
-        Wed, 28 Aug 2019 11:39:37 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2 1/4] s390x: Move pfmf to lib and make
- address void
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78E675D6B0;
+        Wed, 28 Aug 2019 11:41:25 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v2 3/4] s390x: Bump march to zEC12
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com
 References: <20190828113615.4769-1-frankja@linux.ibm.com>
- <20190828113615.4769-2-frankja@linux.ibm.com>
+ <20190828113615.4769-4-frankja@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
@@ -70,29 +69,44 @@ Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
  IQu4bBP2GxiRQ+NV3iV/KU3ebMRzqIC//DCOxzQNFNJAKldPe/bKZMCxEqtVoRkuJtNdp/5a
  yXFZ6TfE1hGKrDBYAm4vrnZ4CXFSBDllL59cFFOJCkn4Xboj/aVxxJxF30bn
 Organization: Red Hat
-Message-ID: <5b0d11e3-32a3-0207-ca7d-359d246b1a41@redhat.com>
-Date:   Wed, 28 Aug 2019 13:39:37 +0200
+Message-ID: <6f206d2f-758b-6171-517c-a4e5648b3f3a@redhat.com>
+Date:   Wed, 28 Aug 2019 13:41:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190828113615.4769-2-frankja@linux.ibm.com>
+In-Reply-To: <20190828113615.4769-4-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Wed, 28 Aug 2019 11:39:41 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 28 Aug 2019 11:41:29 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 28/08/2019 13.36, Janosch Frank wrote:
-> It's needed by other tests soon.
+> TCG has majored a lot and can now support many newer instructions, so
+> there's no need to compile with the ancient march z900.
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
->  lib/s390x/asm/mem.h | 31 ++++++++++++++++++++++++
->  s390x/pfmf.c        | 57 +++++++++++----------------------------------
->  2 files changed, 44 insertions(+), 44 deletions(-)
+>  s390x/Makefile | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/s390x/Makefile b/s390x/Makefile
+> index 76db0bb..07bd353 100644
+> --- a/s390x/Makefile
+> +++ b/s390x/Makefile
+> @@ -25,7 +25,7 @@ CFLAGS += -std=gnu99
+>  CFLAGS += -ffreestanding
+>  CFLAGS += -I $(SRCDIR)/lib -I $(SRCDIR)/lib/s390x -I lib
+>  CFLAGS += -O2
+> -CFLAGS += -march=z900
+> +CFLAGS += -march=zEC12
+>  CFLAGS += -fno-delete-null-pointer-checks
+>  LDFLAGS += -nostdlib -Wl,--build-id=none
 
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+Works with the QEMU in the gitlab-ci, so:
+
+Tested-by: Thomas Huth <thuth@redhat.com>
