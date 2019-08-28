@@ -2,167 +2,132 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EE4049FC4A
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 09:56:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4D249FE63
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 11:23:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726272AbfH1H4O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Aug 2019 03:56:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59312 "EHLO mx1.redhat.com"
+        id S1726447AbfH1JXC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Aug 2019 05:23:02 -0400
+Received: from foss.arm.com ([217.140.110.172]:56132 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726232AbfH1H4O (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Aug 2019 03:56:14 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4F8DF30821C2;
-        Wed, 28 Aug 2019 07:56:14 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-116-90.ams2.redhat.com [10.36.116.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07DBB60CC0;
-        Wed, 28 Aug 2019 07:56:10 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 3/3] s390x: Add storage key removal
- facility
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com
-References: <20190827134936.1705-1-frankja@linux.ibm.com>
- <20190827134936.1705-4-frankja@linux.ibm.com>
- <ea6d114c-9025-2e15-89b8-52b938efc129@redhat.com>
- <f0cddac0-a574-1aeb-69c6-b9d67f2dfd97@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat
-Message-ID: <b0349845-b759-2b28-7ba3-d3fbf6515dda@redhat.com>
-Date:   Wed, 28 Aug 2019 09:56:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726310AbfH1JXB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Aug 2019 05:23:01 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC682337;
+        Wed, 28 Aug 2019 02:23:00 -0700 (PDT)
+Received: from [10.162.40.83] (p8cg001049571a15.blr.arm.com [10.162.40.83])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1BCFF3F59C;
+        Wed, 28 Aug 2019 02:22:50 -0700 (PDT)
+Subject: Re: [RFC V2 0/1] mm/debug: Add tests for architecture exported page
+ table helpers
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1565335998-22553-1-git-send-email-anshuman.khandual@arm.com>
+ <20190809101632.GM5482@bombadil.infradead.org>
+ <a5aab7ff-f7fd-9cc1-6e37-e4185eee65ac@arm.com>
+ <20190809135202.GN5482@bombadil.infradead.org>
+ <7a88f6bb-e8c7-3ac7-2f92-1de752a01f33@arm.com>
+ <20190826131308.GA15933@bombadil.infradead.org>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <504f891e-7346-7328-74b0-7df3acc230e8@arm.com>
+Date:   Wed, 28 Aug 2019 14:52:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <f0cddac0-a574-1aeb-69c6-b9d67f2dfd97@linux.ibm.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="lAkWFrPUpj7JIzAfSAVxW3cfqTXNRv8ND"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 28 Aug 2019 07:56:14 +0000 (UTC)
+In-Reply-To: <20190826131308.GA15933@bombadil.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---lAkWFrPUpj7JIzAfSAVxW3cfqTXNRv8ND
-Content-Type: multipart/mixed; boundary="4Ug9b7HK1I31AlMdcC4gl1BOzabphiKlO";
- protected-headers="v1"
-From: Thomas Huth <thuth@redhat.com>
-To: Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, david@redhat.com
-Message-ID: <b0349845-b759-2b28-7ba3-d3fbf6515dda@redhat.com>
-Subject: Re: [kvm-unit-tests PATCH 3/3] s390x: Add storage key removal
- facility
-References: <20190827134936.1705-1-frankja@linux.ibm.com>
- <20190827134936.1705-4-frankja@linux.ibm.com>
- <ea6d114c-9025-2e15-89b8-52b938efc129@redhat.com>
- <f0cddac0-a574-1aeb-69c6-b9d67f2dfd97@linux.ibm.com>
-In-Reply-To: <f0cddac0-a574-1aeb-69c6-b9d67f2dfd97@linux.ibm.com>
 
---4Ug9b7HK1I31AlMdcC4gl1BOzabphiKlO
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 
-On 28/08/2019 08.26, Janosch Frank wrote:
-> On 8/27/19 7:58 PM, Thomas Huth wrote:
-[...]
->> Anyway, I've now also checked this patch in the CI:
+On 08/26/2019 06:43 PM, Matthew Wilcox wrote:
+> On Mon, Aug 26, 2019 at 08:07:13AM +0530, Anshuman Khandual wrote:
+>> On 08/09/2019 07:22 PM, Matthew Wilcox wrote:
+>>> On Fri, Aug 09, 2019 at 04:05:07PM +0530, Anshuman Khandual wrote:
+>>>> On 08/09/2019 03:46 PM, Matthew Wilcox wrote:
+>>>>> On Fri, Aug 09, 2019 at 01:03:17PM +0530, Anshuman Khandual wrote:
+>>>>>> Should alloc_gigantic_page() be made available as an interface for general
+>>>>>> use in the kernel. The test module here uses very similar implementation from
+>>>>>> HugeTLB to allocate a PUD aligned memory block. Similar for mm_alloc() which
+>>>>>> needs to be exported through a header.
+>>>>>
+>>>>> Why are you allocating memory at all instead of just using some
+>>>>> known-to-exist PFNs like I suggested?
+>>>>
+>>>> We needed PFN to be PUD aligned for pfn_pud() and PMD aligned for mk_pmd().
+>>>> Now walking the kernel page table for a known symbol like kernel_init()
+>>>
+>>> I didn't say to walk the kernel page table.  I said to call virt_to_pfn()
+>>> for a known symbol like kernel_init().
+>>>
+>>>> as you had suggested earlier we might encounter page table page entries at PMD
+>>>> and PUD which might not be PMD or PUD aligned respectively. It seemed to me
+>>>> that alignment requirement is applicable only for mk_pmd() and pfn_pud()
+>>>> which create large mappings at those levels but that requirement does not
+>>>> exist for page table pages pointing to next level. Is not that correct ? Or
+>>>> I am missing something here ?
+>>>
+>>> Just clear the bottom bits off the PFN until you get a PMD or PUD aligned
+>>> PFN.  It's really not hard.
 >>
->> diff a/s390x/Makefile b/s390x/Makefile
->> --- a/s390x/Makefile
->> +++ b/s390x/Makefile
->> @@ -25,7 +25,7 @@ CFLAGS +=3D -std=3Dgnu99
->>  CFLAGS +=3D -ffreestanding
->>  CFLAGS +=3D -I $(SRCDIR)/lib -I $(SRCDIR)/lib/s390x -I lib
->>  CFLAGS +=3D -O2
->> -CFLAGS +=3D -march=3Dz900
->> +CFLAGS +=3D -march=3Dz10
->>  CFLAGS +=3D -fno-delete-null-pointer-checks
->>  LDFLAGS +=3D -nostdlib -Wl,--build-id=3Dnone
->>
->> ... and it also seems to work fine with the TCG there:
->>
->> https://gitlab.com/huth/kvm-unit-tests/-/jobs/281450598
->>
->> So I think you can simply change it in the Makefile instead.
->=20
-> z10 or directly something higher?
+>> As Mark pointed out earlier that might end up being just a synthetic PFN
+>> which might not even exist on a given system.
+> 
+> And why would that matter?
+> 
 
-zEC12 seems to work, too:
+To start with the test uses struct page with mk_pte() and mk_pmd() while
+pfn gets used in pfn_pud() during pXX_basic_tests(). So we will not be able
+to derive a valid struct page from a synthetic pfn. Also if synthetic pfn is
+going to be used anyway then why derive it from a real kernel symbol like
+kernel_init(). Could not one be just made up with right alignment ?
 
-https://gitlab.com/huth/kvm-unit-tests/-/jobs/281833366
+Currently the test allocates 'mm_struct' and other page table pages from real
+memory then why should it use synthetic pfn while creating actual page table
+entries ? Couple of benefits going with synthetic pfn will be..
 
- Thomas
+- It simplifies the test a bit removing PUD_SIZE allocation helpers
+- It might enable the test to be run on systems without adequate memory
 
+In the current proposal the allocation happens during boot making it much more
+likely to succeed than not and when it fails, respective tests will be skipped.
 
---4Ug9b7HK1I31AlMdcC4gl1BOzabphiKlO--
-
---lAkWFrPUpj7JIzAfSAVxW3cfqTXNRv8ND
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJ7iIR+7gJQEY8+q5LtnXdP5wLbUFAl1mM5kACgkQLtnXdP5w
-LbVwIBAAo0UyIwnQvKYm/yFMdni7unGlRLXkdtQhESAU+JClqh4NyRl1qd8Vlh77
-1dl0lzfLfo2jcZvvzVD3qjgI72ie43R0tsgrZBsehz3kxPXFkHS+8Pj9SqXFnOy5
-JfLTq4H0hVs0G4w5yO4FgctVbpAeQryLqrG95De6UfLkN0yRu/NfiFn2M14NUecB
-PAzhiccJOl8BtnTCNik589AmSYw6E74Hi1qSUsjm+tgqd8GISLUMlQPamQOUVgTE
-5cqbaqrJWFI6JHnSK0k5jKCmh/34uRtfHXdiecxhBfycJ+4QPTZe0ORSElNbCNXT
-fystxZp9RhZLQeO+fi90pmN+ERApuC71ejIclsTlowmVbOhes6AMVaI7QS4w3mUn
-mEY/jF1WlNAGuPUi67zk1dmfDHHyA5I+I2KaTDSVzaqA+B5nJiyXyVQz7MrKUwxW
-7WHfyGiz9JxhMXxJhmSfyHD+Xqc/BE0aA1pBN8W/zHvOEkXJDqmWYZpH/OtP48WN
-pTBYzxaIioGJRk2Re8/rLsKj4Y8SVd/rTR6TvYODNjzESyIXMI6LsM6TFzlE9kGG
-cpemx4vvyMWTdR3L/gTMkIfew3ww01NX2K085hXpJJh/LatKdiCa+8khCCX7StSw
-zXCXExe85994hjkSYk531BdEIf1o5DoMJLgVZRsgKr9ZB9lmbok=
-=Io3o
------END PGP SIGNATURE-----
-
---lAkWFrPUpj7JIzAfSAVxW3cfqTXNRv8ND--
+I am just wondering if being able to run complete set of tests on smaller
+systems with less memory weighs lot more in favor of going with synthetic
+pfn instead.
