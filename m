@@ -2,131 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A028E9FAA4
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 08:38:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE4049FC4A
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 09:56:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfH1GiH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Aug 2019 02:38:07 -0400
-Received: from mail-io1-f69.google.com ([209.85.166.69]:37093 "EHLO
-        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726563AbfH1GiH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 28 Aug 2019 02:38:07 -0400
-Received: by mail-io1-f69.google.com with SMTP id m7so2457481ioc.4
-        for <linux-s390@vger.kernel.org>; Tue, 27 Aug 2019 23:38:07 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=yCd41CNyR60VpDYw3udqbf0xP5cuEnDdTZQAfL1rzYM=;
-        b=I7vlGJlmxJpF7/WnN7/DNnUPm4JQZEbdUcrjAXrLtOVHWUmXx4STbIzYncvsfzaeIL
-         BijgP5a9bnrwv5y4zabyvQMrYeDavyfFnpuP9m7BR34505nP4QZ2iHT+7LQhz4o5QoXA
-         HKMESq7tfxl7OaNdQkIQQowlBBMIauanQ2GP0dCO/vf8Sx6jG1mVBJeHcyKRusboDqiw
-         VB003u2Pu4GVW3brMd3ZHrsmnohLmU0zxyXzumCJh82db/JxJYjlzMF2o3MHTXfOzYV4
-         ge6k0mNzaz4jFnD7oPRWVehWnIZhTaydtt3VjwLhTjolDURhXW18e+CQa8yrMtj68QZ7
-         hPTA==
-X-Gm-Message-State: APjAAAV3YX/9ViTFTRgImt5pzI+PqHqvEOckNiikxEynj6uqiWmbUjhW
-        TyQGB1sPDzDY3X2PlN/4s3KjqGjCCV6T8TjnFD74CtwDM08r
-X-Google-Smtp-Source: APXvYqx8FgeCT4z0Sh6kWHCipmMG+aA+vKVax/R/fpauuxDh94FISFhSgUVyrIa/NW5nkUPhsUAUYglzhkZwgT5Ipg6q6PIOkqJH
+        id S1726272AbfH1H4O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Aug 2019 03:56:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59312 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726232AbfH1H4O (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Aug 2019 03:56:14 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4F8DF30821C2;
+        Wed, 28 Aug 2019 07:56:14 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-90.ams2.redhat.com [10.36.116.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07DBB60CC0;
+        Wed, 28 Aug 2019 07:56:10 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 3/3] s390x: Add storage key removal
+ facility
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com
+References: <20190827134936.1705-1-frankja@linux.ibm.com>
+ <20190827134936.1705-4-frankja@linux.ibm.com>
+ <ea6d114c-9025-2e15-89b8-52b938efc129@redhat.com>
+ <f0cddac0-a574-1aeb-69c6-b9d67f2dfd97@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFH7eUwBEACzyOXKU+5Pcs6wNpKzrlJwzRl3VGZt95VCdb+FgoU9g11m7FWcOafrVRwU
+ yYkTm9+7zBUc0sW5AuPGR/dp3pSLX/yFWsA/UB4nJsHqgDvDU7BImSeiTrnpMOTXb7Arw2a2
+ 4CflIyFqjCpfDM4MuTmzTjXq4Uov1giGE9X6viNo1pxyEpd7PanlKNnf4PqEQp06X4IgUacW
+ tSGj6Gcns1bCuHV8OPWLkf4hkRnu8hdL6i60Yxz4E6TqlrpxsfYwLXgEeswPHOA6Mn4Cso9O
+ 0lewVYfFfsmokfAVMKWzOl1Sr0KGI5T9CpmRfAiSHpthhHWnECcJFwl72NTi6kUcUzG4se81
+ O6n9d/kTj7pzTmBdfwuOZ0YUSqcqs0W+l1NcASSYZQaDoD3/SLk+nqVeCBB4OnYOGhgmIHNW
+ 0CwMRO/GK+20alxzk//V9GmIM2ACElbfF8+Uug3pqiHkVnKqM7W9/S1NH2qmxB6zMiJUHlTH
+ gnVeZX0dgH27mzstcF786uPcdEqS0KJuxh2kk5IvUSL3Qn3ZgmgdxBMyCPciD/1cb7/Ahazr
+ 3ThHQXSHXkH/aDXdfLsKVuwDzHLVSkdSnZdt5HHh75/NFHxwaTlydgfHmFFwodK8y/TjyiGZ
+ zg2Kje38xnz8zKn9iesFBCcONXS7txENTzX0z80WKBhK+XSFJwARAQABtB5UaG9tYXMgSHV0
+ aCA8dGh1dGhAcmVkaGF0LmNvbT6JAjgEEwECACIFAlVgX6oCGwMGCwkIBwMCBhUIAgkKCwQW
+ AgMBAh4BAheAAAoJEC7Z13T+cC21EbIP/ii9cvT2HHGbFRl8HqGT6+7Wkb+XLMqJBMAIGiQK
+ QIP3xk1HPTsLfVG0ao4hy/oYkGNOP8+ubLnZen6Yq3zAFiMhQ44lvgigDYJo3Ve59gfe99KX
+ EbtB+X95ODARkq0McR6OAsPNJ7gpEUzfkQUUJTXRDQXfG/FX303Gvk+YU0spm2tsIKPl6AmV
+ 1CegDljzjycyfJbk418MQmMu2T82kjrkEofUO2a24ed3VGC0/Uz//XCR2ZTo+vBoBUQl41BD
+ eFFtoCSrzo3yPFS+w5fkH9NT8ChdpSlbNS32NhYQhJtr9zjWyFRf0Zk+T/1P7ECn6gTEkp5k
+ ofFIA4MFBc/fXbaDRtBmPB0N9pqTFApIUI4vuFPPO0JDrII9dLwZ6lO9EKiwuVlvr1wwzsgq
+ zJTPBU3qHaUO4d/8G+gD7AL/6T4zi8Jo/GmjBsnYaTzbm94lf0CjXjsOX3seMhaE6WAZOQQG
+ tZHAO1kAPWpaxne+wtgMKthyPLNwelLf+xzGvrIKvLX6QuLoWMnWldu22z2ICVnLQChlR9d6
+ WW8QFEpo/FK7omuS8KvvopFcOOdlbFMM8Y/8vBgVMSsK6fsYUhruny/PahprPbYGiNIhKqz7
+ UvgyZVl4pBFjTaz/SbimTk210vIlkDyy1WuS8Zsn0htv4+jQPgo9rqFE4mipJjy/iboDuQIN
+ BFH7eUwBEAC2nzfUeeI8dv0C4qrfCPze6NkryUflEut9WwHhfXCLjtvCjnoGqFelH/PE9NF4
+ 4VPSCdvD1SSmFVzu6T9qWdcwMSaC+e7G/z0/AhBfqTeosAF5XvKQlAb9ZPkdDr7YN0a1XDfa
+ +NgA+JZB4ROyBZFFAwNHT+HCnyzy0v9Sh3BgJJwfpXHH2l3LfncvV8rgFv0bvdr70U+On2XH
+ 5bApOyW1WpIG5KPJlDdzcQTyptOJ1dnEHfwnABEfzI3dNf63rlxsGouX/NFRRRNqkdClQR3K
+ gCwciaXfZ7ir7fF0u1N2UuLsWA8Ei1JrNypk+MRxhbvdQC4tyZCZ8mVDk+QOK6pyK2f4rMf/
+ WmqxNTtAVmNuZIwnJdjRMMSs4W4w6N/bRvpqtykSqx7VXcgqtv6eqoDZrNuhGbekQA0sAnCJ
+ VPArerAZGArm63o39me/bRUQeQVSxEBmg66yshF9HkcUPGVeC4B0TPwz+HFcVhheo6hoJjLq
+ knFOPLRj+0h+ZL+D0GenyqD3CyuyeTT5dGcNU9qT74bdSr20k/CklvI7S9yoQje8BeQAHtdV
+ cvO8XCLrpGuw9SgOS7OP5oI26a0548M4KldAY+kqX6XVphEw3/6U1KTf7WxW5zYLTtadjISB
+ X9xsRWSU+Yqs3C7oN5TIPSoj9tXMoxZkCIHWvnqGwZ7JhwARAQABiQIfBBgBAgAJBQJR+3lM
+ AhsMAAoJEC7Z13T+cC21hPAQAIsBL9MdGpdEpvXs9CYrBkd6tS9mbaSWj6XBDfA1AEdQkBOn
+ ZH1Qt7HJesk+qNSnLv6+jP4VwqK5AFMrKJ6IjE7jqgzGxtcZnvSjeDGPF1h2CKZQPpTw890k
+ fy18AvgFHkVk2Oylyexw3aOBsXg6ukN44vIFqPoc+YSU0+0QIdYJp/XFsgWxnFIMYwDpxSHS
+ 5fdDxUjsk3UBHZx+IhFjs2siVZi5wnHIqM7eK9abr2cK2weInTBwXwqVWjsXZ4tq5+jQrwDK
+ cvxIcwXdUTLGxc4/Z/VRH1PZSvfQxdxMGmNTGaXVNfdFZjm4fz0mz+OUi6AHC4CZpwnsliGV
+ ODqwX8Y1zic9viSTbKS01ZNp175POyWViUk9qisPZB7ypfSIVSEULrL347qY/hm9ahhqmn17
+ Ng255syASv3ehvX7iwWDfzXbA0/TVaqwa1YIkec+/8miicV0zMP9siRcYQkyTqSzaTFBBmqD
+ oiT+z+/E59qj/EKfyce3sbC9XLjXv3mHMrq1tKX4G7IJGnS989E/fg6crv6NHae9Ckm7+lSs
+ IQu4bBP2GxiRQ+NV3iV/KU3ebMRzqIC//DCOxzQNFNJAKldPe/bKZMCxEqtVoRkuJtNdp/5a
+ yXFZ6TfE1hGKrDBYAm4vrnZ4CXFSBDllL59cFFOJCkn4Xboj/aVxxJxF30bn
+Organization: Red Hat
+Message-ID: <b0349845-b759-2b28-7ba3-d3fbf6515dda@redhat.com>
+Date:   Wed, 28 Aug 2019 09:56:04 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9d89:: with SMTP id 9mr2471525ion.212.1566974286853;
- Tue, 27 Aug 2019 23:38:06 -0700 (PDT)
-Date:   Tue, 27 Aug 2019 23:38:06 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000bd9241059127a1eb@google.com>
-Subject: WARNING in smc_unhash_sk (3)
-From:   syzbot <syzbot+8488cc4cf1c9e09b8b86@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        ubraun@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+In-Reply-To: <f0cddac0-a574-1aeb-69c6-b9d67f2dfd97@linux.ibm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="lAkWFrPUpj7JIzAfSAVxW3cfqTXNRv8ND"
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 28 Aug 2019 07:56:14 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--lAkWFrPUpj7JIzAfSAVxW3cfqTXNRv8ND
+Content-Type: multipart/mixed; boundary="4Ug9b7HK1I31AlMdcC4gl1BOzabphiKlO";
+ protected-headers="v1"
+From: Thomas Huth <thuth@redhat.com>
+To: Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, david@redhat.com
+Message-ID: <b0349845-b759-2b28-7ba3-d3fbf6515dda@redhat.com>
+Subject: Re: [kvm-unit-tests PATCH 3/3] s390x: Add storage key removal
+ facility
+References: <20190827134936.1705-1-frankja@linux.ibm.com>
+ <20190827134936.1705-4-frankja@linux.ibm.com>
+ <ea6d114c-9025-2e15-89b8-52b938efc129@redhat.com>
+ <f0cddac0-a574-1aeb-69c6-b9d67f2dfd97@linux.ibm.com>
+In-Reply-To: <f0cddac0-a574-1aeb-69c6-b9d67f2dfd97@linux.ibm.com>
 
-syzbot found the following crash on:
+--4Ug9b7HK1I31AlMdcC4gl1BOzabphiKlO
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-HEAD commit:    a55aa89a Linux 5.3-rc6
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=112dd212600000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=58485246ad14eafe
-dashboard link: https://syzkaller.appspot.com/bug?extid=8488cc4cf1c9e09b8b86
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=15426ebc600000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=116aca7a600000
+On 28/08/2019 08.26, Janosch Frank wrote:
+> On 8/27/19 7:58 PM, Thomas Huth wrote:
+[...]
+>> Anyway, I've now also checked this patch in the CI:
+>>
+>> diff a/s390x/Makefile b/s390x/Makefile
+>> --- a/s390x/Makefile
+>> +++ b/s390x/Makefile
+>> @@ -25,7 +25,7 @@ CFLAGS +=3D -std=3Dgnu99
+>>  CFLAGS +=3D -ffreestanding
+>>  CFLAGS +=3D -I $(SRCDIR)/lib -I $(SRCDIR)/lib/s390x -I lib
+>>  CFLAGS +=3D -O2
+>> -CFLAGS +=3D -march=3Dz900
+>> +CFLAGS +=3D -march=3Dz10
+>>  CFLAGS +=3D -fno-delete-null-pointer-checks
+>>  LDFLAGS +=3D -nostdlib -Wl,--build-id=3Dnone
+>>
+>> ... and it also seems to work fine with the TCG there:
+>>
+>> https://gitlab.com/huth/kvm-unit-tests/-/jobs/281450598
+>>
+>> So I think you can simply change it in the Makefile instead.
+>=20
+> z10 or directly something higher?
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+8488cc4cf1c9e09b8b86@syzkaller.appspotmail.com
+zEC12 seems to work, too:
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 9198 at ./include/net/sock.h:666 sk_del_node_init  
-include/net/sock.h:666 [inline]
-WARNING: CPU: 0 PID: 9198 at ./include/net/sock.h:666  
-smc_unhash_sk+0x21b/0x240 net/smc/af_smc.c:96
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 9198 Comm: syz-executor057 Not tainted 5.3.0-rc6 #93
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-  panic+0x25c/0x799 kernel/panic.c:219
-  __warn+0x22f/0x230 kernel/panic.c:576
-  report_bug+0x190/0x290 lib/bug.c:186
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  do_error_trap+0xd7/0x440 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x36/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:sk_del_node_init include/net/sock.h:666 [inline]
-RIP: 0010:smc_unhash_sk+0x21b/0x240 net/smc/af_smc.c:96
-Code: 48 89 df e8 07 b1 39 00 48 83 c4 20 5b 41 5c 41 5d 41 5e 41 5f 5d c3  
-e8 03 d7 31 fa 48 c7 c7 f2 c3 3a 88 31 c0 e8 28 1d 1b fa <0f> 0b eb 85 44  
-89 f1 80 e1 07 80 c1 03 38 c1 0f 8c 5b ff ff ff 4c
-RSP: 0018:ffff888094177b68 EFLAGS: 00010246
-RAX: 0000000000000024 RBX: 0000000000000001 RCX: b964ece25f6b7c00
-RDX: 0000000000000000 RSI: 0000000000000201 RDI: 0000000000000000
-RBP: ffff888094177bb0 R08: ffffffff815cf7d4 R09: ffffed1015d46088
-R10: ffffed1015d46088 R11: 0000000000000000 R12: ffff888098ccb240
-R13: dffffc0000000000 R14: ffff888098ccb2c0 R15: ffff888098ccb268
-  __smc_release+0x1f8/0x3a0 net/smc/af_smc.c:146
-  smc_release+0x15b/0x2c0 net/smc/af_smc.c:185
-  __sock_release net/socket.c:590 [inline]
-  sock_close+0xe1/0x260 net/socket.c:1268
-  __fput+0x2e4/0x740 fs/file_table.c:280
-  ____fput+0x15/0x20 fs/file_table.c:313
-  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
-  exit_task_work include/linux/task_work.h:22 [inline]
-  do_exit+0x5e8/0x21a0 kernel/exit.c:879
-  do_group_exit+0x15c/0x2b0 kernel/exit.c:983
-  __do_sys_exit_group+0x17/0x20 kernel/exit.c:994
-  __se_sys_exit_group+0x14/0x20 kernel/exit.c:992
-  __x64_sys_exit_group+0x3b/0x40 kernel/exit.c:992
-  do_syscall_64+0xfe/0x140 arch/x86/entry/common.c:296
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x43ff28
-Code: 00 00 be 3c 00 00 00 eb 19 66 0f 1f 84 00 00 00 00 00 48 89 d7 89 f0  
-0f 05 48 3d 00 f0 ff ff 77 21 f4 48 89 d7 44 89 c0 0f 05 <48> 3d 00 f0 ff  
-ff 76 e0 f7 d8 64 41 89 01 eb d8 0f 1f 84 00 00 00
-RSP: 002b:00007ffefacce238 EFLAGS: 00000246 ORIG_RAX: 00000000000000e7
-RAX: ffffffffffffffda RBX: 0000000000000000 RCX: 000000000043ff28
-RDX: 0000000000000000 RSI: 000000000000003c RDI: 0000000000000000
-RBP: 00000000004bf750 R08: 00000000000000e7 R09: ffffffffffffffd0
-R10: 00000000200000c0 R11: 0000000000000246 R12: 0000000000000001
-R13: 00000000006d1180 R14: 0000000000000000 R15: 0000000000000000
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+https://gitlab.com/huth/kvm-unit-tests/-/jobs/281833366
+
+ Thomas
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+--4Ug9b7HK1I31AlMdcC4gl1BOzabphiKlO--
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+--lAkWFrPUpj7JIzAfSAVxW3cfqTXNRv8ND
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJ7iIR+7gJQEY8+q5LtnXdP5wLbUFAl1mM5kACgkQLtnXdP5w
+LbVwIBAAo0UyIwnQvKYm/yFMdni7unGlRLXkdtQhESAU+JClqh4NyRl1qd8Vlh77
+1dl0lzfLfo2jcZvvzVD3qjgI72ie43R0tsgrZBsehz3kxPXFkHS+8Pj9SqXFnOy5
+JfLTq4H0hVs0G4w5yO4FgctVbpAeQryLqrG95De6UfLkN0yRu/NfiFn2M14NUecB
+PAzhiccJOl8BtnTCNik589AmSYw6E74Hi1qSUsjm+tgqd8GISLUMlQPamQOUVgTE
+5cqbaqrJWFI6JHnSK0k5jKCmh/34uRtfHXdiecxhBfycJ+4QPTZe0ORSElNbCNXT
+fystxZp9RhZLQeO+fi90pmN+ERApuC71ejIclsTlowmVbOhes6AMVaI7QS4w3mUn
+mEY/jF1WlNAGuPUi67zk1dmfDHHyA5I+I2KaTDSVzaqA+B5nJiyXyVQz7MrKUwxW
+7WHfyGiz9JxhMXxJhmSfyHD+Xqc/BE0aA1pBN8W/zHvOEkXJDqmWYZpH/OtP48WN
+pTBYzxaIioGJRk2Re8/rLsKj4Y8SVd/rTR6TvYODNjzESyIXMI6LsM6TFzlE9kGG
+cpemx4vvyMWTdR3L/gTMkIfew3ww01NX2K085hXpJJh/LatKdiCa+8khCCX7StSw
+zXCXExe85994hjkSYk531BdEIf1o5DoMJLgVZRsgKr9ZB9lmbok=
+=Io3o
+-----END PGP SIGNATURE-----
+
+--lAkWFrPUpj7JIzAfSAVxW3cfqTXNRv8ND--
