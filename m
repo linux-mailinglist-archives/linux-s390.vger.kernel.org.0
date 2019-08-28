@@ -2,28 +2,29 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83628A00DC
-	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 13:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95A49A0137
+	for <lists+linux-s390@lfdr.de>; Wed, 28 Aug 2019 14:02:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726407AbfH1Lla (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 28 Aug 2019 07:41:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48466 "EHLO mx1.redhat.com"
+        id S1726254AbfH1MCr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 28 Aug 2019 08:02:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59608 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726339AbfH1Lla (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 28 Aug 2019 07:41:30 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        id S1726253AbfH1MCr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 28 Aug 2019 08:02:47 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D0443300B912;
-        Wed, 28 Aug 2019 11:41:29 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 19FC07EB88;
+        Wed, 28 Aug 2019 12:02:46 +0000 (UTC)
 Received: from thuth.remote.csb (ovpn-116-90.ams2.redhat.com [10.36.116.90])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 78E675D6B0;
-        Wed, 28 Aug 2019 11:41:25 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2 3/4] s390x: Bump march to zEC12
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D02B6600D1;
+        Wed, 28 Aug 2019 12:02:44 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v2 4/4] s390x: Add storage key removal
+ facility
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com
 References: <20190828113615.4769-1-frankja@linux.ibm.com>
- <20190828113615.4769-4-frankja@linux.ibm.com>
+ <20190828113615.4769-5-frankja@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
@@ -69,44 +70,109 @@ Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
  IQu4bBP2GxiRQ+NV3iV/KU3ebMRzqIC//DCOxzQNFNJAKldPe/bKZMCxEqtVoRkuJtNdp/5a
  yXFZ6TfE1hGKrDBYAm4vrnZ4CXFSBDllL59cFFOJCkn4Xboj/aVxxJxF30bn
 Organization: Red Hat
-Message-ID: <6f206d2f-758b-6171-517c-a4e5648b3f3a@redhat.com>
-Date:   Wed, 28 Aug 2019 13:41:25 +0200
+Message-ID: <3ea4cb74-4fe4-d2bd-7fe4-550df9c355e6@redhat.com>
+Date:   Wed, 28 Aug 2019 14:02:43 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190828113615.4769-4-frankja@linux.ibm.com>
+In-Reply-To: <20190828113615.4769-5-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 28 Aug 2019 11:41:29 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Wed, 28 Aug 2019 12:02:46 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 28/08/2019 13.36, Janosch Frank wrote:
-> TCG has majored a lot and can now support many newer instructions, so
-> there's no need to compile with the ancient march z900.
+> The storage key removal facility (stfle bit 169) makes all key related
+> instructions result in a special operation exception if they handle a
+> key.
+> 
+> Let's make sure that the skey and pfmf tests only run non key code
+> (pfmf) or not at all (skey).
+> 
+> Also let's test this new facility. As lots of instructions are
+> affected by this, only some of them are tested for now.
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
->  s390x/Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/s390x/Makefile b/s390x/Makefile
-> index 76db0bb..07bd353 100644
-> --- a/s390x/Makefile
-> +++ b/s390x/Makefile
-> @@ -25,7 +25,7 @@ CFLAGS += -std=gnu99
->  CFLAGS += -ffreestanding
->  CFLAGS += -I $(SRCDIR)/lib -I $(SRCDIR)/lib/s390x -I lib
->  CFLAGS += -O2
-> -CFLAGS += -march=z900
-> +CFLAGS += -march=zEC12
->  CFLAGS += -fno-delete-null-pointer-checks
->  LDFLAGS += -nostdlib -Wl,--build-id=none
+>  s390x/Makefile |   1 +
+>  s390x/pfmf.c   |  10 ++++
+>  s390x/skey.c   |   5 ++
+>  s390x/skrf.c   | 128 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  4 files changed, 144 insertions(+)
+>  create mode 100644 s390x/skrf.c
+[...]
+> +static void test_mvcos(void)
+> +{
+> +	uint64_t r3 = 64;
+> +	uint8_t *src = pagebuf;
+> +	uint8_t *dst = pagebuf + PAGE_SIZE;
+> +	/* K bit set, as well as keys */
+> +	register unsigned long oac asm("0") = 0xf002f002;
+> +
+> +	report_prefix_push("mvcos");
+> +	expect_pgm_int();
+> +	asm volatile("mvcos	%[dst],%[src],%[len]"
+> +		     : [dst] "+Q" (*(dst))
+> +		     : [src] "Q" (*(src)), [len] "d" (r3), "d" (oac)
 
-Works with the QEMU in the gitlab-ci, so:
+Just a nit: I think you could write "*dst" instead of "*(dst)" and
+"*src" instead of "*(src)".
 
-Tested-by: Thomas Huth <thuth@redhat.com>
+> +		     : "cc", "memory");
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIAL_OPERATION);
+> +	report_prefix_pop();
+> +}
+> +
+> +static void test_spka(void)
+> +{
+> +	report_prefix_push("spka");
+> +	expect_pgm_int();
+> +	asm volatile("spka	0xf0(0)\n");
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIAL_OPERATION);
+> +	report_prefix_pop();
+> +}
+> +
+> +static void test_tprot(void)
+> +{
+> +	report_prefix_push("tprot");
+> +	expect_pgm_int();
+> +	asm volatile("tprot	%[addr],0xf0(0)\n"
+> +		     : : [addr] "a" (pagebuf) : );
+> +	check_pgm_int_code(PGM_INT_CODE_SPECIAL_OPERATION);
+> +	report_prefix_pop();
+> +}
+> +
+> +int main(void)
+> +{
+> +	report_prefix_push("skrf");
+> +	if (!test_facility(169)) {
+> +		report_skip("storage key removal facility not available\n");
+> +		goto done;
+> +	}
+> +
+> +	test_facilities();
+> +	test_skey();
+> +	test_pfmf();
+> +	test_psw_key();
+> +	test_mvcos();
+> +	test_spka();
+> +	test_tprot();
+> +
+> +done:
+> +	report_prefix_pop();
+> +	return report_summary();
+> +}
+
+I can't say much about the technical details here (since I don't have
+the doc for that "removal facility"), but apart from that, the patch
+looks fine to me now.
+
+Acked-by: Thomas Huth <thuth@redhat.com>
+
+(and I'll wait one or two more days for additional reviews before
+queuing the patches)
