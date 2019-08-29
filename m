@@ -2,153 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83420A1969
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 13:56:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0155A19BD
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 14:15:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726979AbfH2L4d (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Aug 2019 07:56:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53654 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727017AbfH2L4d (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 29 Aug 2019 07:56:33 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6B2F43086202;
-        Thu, 29 Aug 2019 11:56:32 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-116-53.ams2.redhat.com [10.36.116.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CBA10608C1;
-        Thu, 29 Aug 2019 11:56:25 +0000 (UTC)
-Subject: Re: [PATCH] KVM: s390: Test for bad access register at the start of
- S390_MEM_OP
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        kvm@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190829105356.27805-1-thuth@redhat.com>
- <870234c7-47ed-6a96-0edf-66d9c2cd7ac0@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat
-Message-ID: <4b0ebaab-e287-9a2a-1696-5759f17cafef@redhat.com>
-Date:   Thu, 29 Aug 2019 13:56:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <870234c7-47ed-6a96-0edf-66d9c2cd7ac0@linux.ibm.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="Trx6kqpy5WJ0k5aw1kWN52k1y2o1CINuq"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Thu, 29 Aug 2019 11:56:32 +0000 (UTC)
+        id S1725782AbfH2MPW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Aug 2019 08:15:22 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61244 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727061AbfH2MPW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:15:22 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7TC77w5030985
+        for <linux-s390@vger.kernel.org>; Thu, 29 Aug 2019 08:15:21 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2upeaq0kv8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 29 Aug 2019 08:15:20 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Thu, 29 Aug 2019 13:15:18 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 29 Aug 2019 13:15:17 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7TCFGkK45088842
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 29 Aug 2019 12:15:16 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0C0AF52050;
+        Thu, 29 Aug 2019 12:15:16 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.55.105])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D2AA652057;
+        Thu, 29 Aug 2019 12:15:14 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
+Subject: [kvm-unit-tests PATCH 0/6] s390x: Add multiboot and smp
+Date:   Thu, 29 Aug 2019 14:14:53 +0200
+X-Mailer: git-send-email 2.17.0
+X-TM-AS-GCONF: 00
+x-cbid: 19082912-0012-0000-0000-000003443F0B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19082912-0013-0000-0000-0000217E7F8C
+Message-Id: <20190829121459.1708-1-frankja@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=781 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908290135
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Trx6kqpy5WJ0k5aw1kWN52k1y2o1CINuq
-Content-Type: multipart/mixed; boundary="QKFIlaPPmFxfhOjxUnC9rG6sazMpabRY6";
- protected-headers="v1"
-From: Thomas Huth <thuth@redhat.com>
-To: Janosch Frank <frankja@linux.ibm.com>,
- Christian Borntraeger <borntraeger@de.ibm.com>, kvm@vger.kernel.org
-Cc: David Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
- Heiko Carstens <heiko.carstens@de.ibm.com>, Vasily Gorbik
- <gor@linux.ibm.com>, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <4b0ebaab-e287-9a2a-1696-5759f17cafef@redhat.com>
-Subject: Re: [PATCH] KVM: s390: Test for bad access register at the start of
- S390_MEM_OP
-References: <20190829105356.27805-1-thuth@redhat.com>
- <870234c7-47ed-6a96-0edf-66d9c2cd7ac0@linux.ibm.com>
-In-Reply-To: <870234c7-47ed-6a96-0edf-66d9c2cd7ac0@linux.ibm.com>
+Cross testing emulated instructions has in the past brought up some
+issues on all available IBM Z hypervisors. So let's upstream the last
+part of multiboot: sclp interrupts and line mode console.
 
---QKFIlaPPmFxfhOjxUnC9rG6sazMpabRY6
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+SMP tests are a great way to excercise external interruptions, cpu
+resets and sigp. The smp library is always initialized and provides
+very rudimentary CPU management for now.
 
-On 29/08/2019 13.15, Janosch Frank wrote:
-[...]
-> By the way, I think we want to check mop->size for 0 before giving it t=
-o
-> vmalloc and working with it.
+Janosch Frank (6):
+  s390x: Use interrupts in SCLP and add locking
+  s390x: Add linemode console
+  s390x: Add linemode buffer to fix newline on every print
+  s390x: Add initial smp code
+  s390x: Prepare for external calls
+  s390x: SMP test
 
-You're right! This currently triggers a kernel warning message with a
-Call Trace! I'll add a check to my new memop selftest and send a patch...=
+ lib/s390x/asm/arch_def.h  |  13 ++
+ lib/s390x/asm/interrupt.h |   5 +
+ lib/s390x/asm/sigp.h      |  29 +++-
+ lib/s390x/interrupt.c     |  28 +++-
+ lib/s390x/io.c            |   5 +-
+ lib/s390x/sclp-console.c  | 243 +++++++++++++++++++++++++++++++---
+ lib/s390x/sclp.c          |  54 +++++++-
+ lib/s390x/sclp.h          |  59 ++++++++-
+ lib/s390x/smp.c           | 272 ++++++++++++++++++++++++++++++++++++++
+ lib/s390x/smp.h           |  51 +++++++
+ s390x/Makefile            |   2 +
+ s390x/cstart64.S          |   7 +
+ s390x/smp.c               | 242 +++++++++++++++++++++++++++++++++
+ 13 files changed, 983 insertions(+), 27 deletions(-)
+ create mode 100644 lib/s390x/smp.c
+ create mode 100644 lib/s390x/smp.h
+ create mode 100644 s390x/smp.c
 
+-- 
+2.17.0
 
- Thomas
-
-
---QKFIlaPPmFxfhOjxUnC9rG6sazMpabRY6--
-
---Trx6kqpy5WJ0k5aw1kWN52k1y2o1CINuq
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJ7iIR+7gJQEY8+q5LtnXdP5wLbUFAl1nvV8ACgkQLtnXdP5w
-LbUOSg/9HVqCYFJXy4Qnu370GW8nAlLmLQeoYNC/MNrIVyG98zDa5IercTJLsmzC
-qoLqi7rzgjIqaAdyfd/xKKeCfOceURDZw8Xcbz4Zjw62zsMRPzO4DQYhpR7Mh1o9
-XqXMQxjBIJrVPdAKmFOg48r5HfcjNsVkHzoVh4u3nbi64l/UrseF3iQXEBECnBTN
-XjUZxW9fd0kAttNtGy7I6Bkur88UQuHls+dmDsg4ugLlxLaNgsKMAX8XheQ3Yk2I
-F6ktUuvJtCHYgGGAS/iu8Umlx2t+/huWRiEKIlp/Ft96Nnh+IqEl2Ny8El4nqNCZ
-S4qGl6kNrUN1jhQMOVjOTLQSn4TZyJR5uMaJ4kknrPDeaRdNtrpz3e0YAgc0FufW
-LlJzUx6RWQiyfXJYAWqQG+Kdj3JJ7v6nJePzZAHfFdDwY8nd369W32zXJGvmoL2J
-3ieAUvxTTVjVKZzles17W8W/4jpvHj0QiaIx5RMRuLJXAmx4seGdB42vIHpviPbv
-QJLz9DDI9Aof1zUlXF01fSOIInXXj+KTeIMhjYKrfwVyDXvByG22kpgrrlEAWRQD
-cq0j7v2wAHJZ2vGHyTxpJLHruIjE5yGthAm8Nnfutey3Re70YKQ+VcdF0aYo3nMB
-kj5BsuXk0lm9A9C+craKbmnnhog3j4lHhnsVac3fsSdupm1TQlg=
-=GNZu
------END PGP SIGNATURE-----
-
---Trx6kqpy5WJ0k5aw1kWN52k1y2o1CINuq--
