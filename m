@@ -2,348 +2,176 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00C5EA19C8
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 14:15:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 532D5A19D5
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 14:16:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727827AbfH2MPd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Aug 2019 08:15:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58986 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727698AbfH2MPd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 29 Aug 2019 08:15:33 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7TC7Ph2122880
-        for <linux-s390@vger.kernel.org>; Thu, 29 Aug 2019 08:15:31 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2upbudx55d-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 29 Aug 2019 08:15:31 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 29 Aug 2019 13:15:29 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 29 Aug 2019 13:15:26 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7TCFPP961210742
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 12:15:25 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4B68A5204F;
-        Thu, 29 Aug 2019 12:15:25 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.55.105])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2C15E52051;
-        Thu, 29 Aug 2019 12:15:23 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-Subject: [kvm-unit-tests PATCH 6/6] s390x: SMP test
-Date:   Thu, 29 Aug 2019 14:14:59 +0200
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190829121459.1708-1-frankja@linux.ibm.com>
-References: <20190829121459.1708-1-frankja@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19082912-0012-0000-0000-000003443F0D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082912-0013-0000-0000-0000217E7F8E
-Message-Id: <20190829121459.1708-7-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290135
+        id S1727857AbfH2MQJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Aug 2019 08:16:09 -0400
+Received: from mx2.mailbox.org ([80.241.60.215]:28272 "EHLO mx2.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727174AbfH2MQI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 29 Aug 2019 08:16:08 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx2.mailbox.org (Postfix) with ESMTPS id 2ACB4A1069;
+        Thu, 29 Aug 2019 14:16:02 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
+        with ESMTP id WXJzDwa0kR9t; Thu, 29 Aug 2019 14:15:51 +0200 (CEST)
+Date:   Thu, 29 Aug 2019 22:15:27 +1000
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>, Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH RESEND v11 7/8] open: openat2(2) syscall
+Message-ID: <20190829121527.u2uvdyeatme5cgkb@yavin>
+References: <20190820033406.29796-1-cyphar@cyphar.com>
+ <20190820033406.29796-8-cyphar@cyphar.com>
+ <CAKOZuesfxRBJe314rkTKXtjXdz6ki3uAUBYVbu5Q2rd3=ADphQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ys4y6f5eyfdosi3x"
+Content-Disposition: inline
+In-Reply-To: <CAKOZuesfxRBJe314rkTKXtjXdz6ki3uAUBYVbu5Q2rd3=ADphQ@mail.gmail.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Testing SIGP emulation for the following order codes:
-* start
-* stop
-* restart
-* set prefix
-* store status
-* stop and store status
-* reset
-* initial reset
-* external call
-* emegergency call
 
-restart and set prefix are part of the library and needed to start
-other cpus.
+--ys4y6f5eyfdosi3x
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- s390x/Makefile |   1 +
- s390x/smp.c    | 242 +++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 243 insertions(+)
- create mode 100644 s390x/smp.c
+On 2019-08-24, Daniel Colascione <dancol@google.com> wrote:
+> On Mon, Aug 19, 2019 at 8:37 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> >
+> > The most obvious syscall to add support for the new LOOKUP_* scoping
+> > flags would be openat(2). However, there are a few reasons why this is
+> > not the best course of action:
+> >
+> >  * The new LOOKUP_* flags are intended to be security features, and
+> >    openat(2) will silently ignore all unknown flags. This means that
+> >    users would need to avoid foot-gunning themselves constantly when
+> >    using this interface if it were part of openat(2). This can be fixed
+> >    by having userspace libraries handle this for users[1], but should be
+> >    avoided if possible.
+> >
+> >  * Resolution scoping feels like a different operation to the existing
+> >    O_* flags. And since openat(2) has limited flag space, it seems to be
+> >    quite wasteful to clutter it with 5 flags that are all
+> >    resolution-related. Arguably O_NOFOLLOW is also a resolution flag but
+> >    its entire purpose is to error out if you encounter a trailing
+> >    symlink -- not to scope resolution.
+> >
+> >  * Other systems would be able to reimplement this syscall allowing for
+> >    cross-OS standardisation rather than being hidden amongst O_* flags
+> >    which may result in it not being used by all the parties that might
+> >    want to use it (file servers, web servers, container runtimes, etc).
+> >
+> >  * It gives us the opportunity to iterate on the O_PATH interface. In
+> >    particular, the new @how->upgrade_mask field for fd re-opening is
+> >    only possible because we have a clean slate without needing to re-use
+> >    the ACC_MODE flag design nor the existing openat(2) @mode semantics.
+> >
+> > To this end, we introduce the openat2(2) syscall. It provides all of the
+> > features of openat(2) through the @how->flags argument, but also
+> > also provides a new @how->resolve argument which exposes RESOLVE_* flags
+> > that map to our new LOOKUP_* flags. It also eliminates the long-standing
+> > ugliness of variadic-open(2) by embedding it in a struct.
+> >
+> > In order to allow for userspace to lock down their usage of file
+> > descriptor re-opening, openat2(2) has the ability for users to disallow
+> > certain re-opening modes through @how->upgrade_mask. At the moment,
+> > there is no UPGRADE_NOEXEC. The open_how struct is padded to 64 bytes
+> > for future extensions (all of the reserved bits must be zeroed).
+>=20
+> Why pad the structure when new functionality (perhaps accommodated via
+> a larger structure) could be signaled by passing a new flag? Adding
+> reserved fields to a structure with a size embedded in the ABI makes a
+> lot of sense --- e.g., pthread_mutex_t can't grow. But this structure
+> can grow, so the reservation seems needless to me.
 
-diff --git a/s390x/Makefile b/s390x/Makefile
-index d83dd0b..3744372 100644
---- a/s390x/Makefile
-+++ b/s390x/Makefile
-@@ -15,6 +15,7 @@ tests += $(TEST_DIR)/cpumodel.elf
- tests += $(TEST_DIR)/diag288.elf
- tests += $(TEST_DIR)/stsi.elf
- tests += $(TEST_DIR)/skrf.elf
-+tests += $(TEST_DIR)/smp.elf
- tests_binary = $(patsubst %.elf,%.bin,$(tests))
- 
- all: directories test_cases test_cases_binary
-diff --git a/s390x/smp.c b/s390x/smp.c
-new file mode 100644
-index 0000000..9363cd2
---- /dev/null
-+++ b/s390x/smp.c
-@@ -0,0 +1,242 @@
-+/*
-+ * Tests sigp emulation
-+ *
-+ * Copyright 2019 IBM Corp.
-+ *
-+ * Authors:
-+ *    Janosch Frank <frankja@linux.ibm.com>
-+ *
-+ * This code is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2.
-+ */
-+#include <libcflat.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/interrupt.h>
-+#include <asm/page.h>
-+#include <asm/facility.h>
-+#include <asm-generic/barrier.h>
-+#include <asm/sigp.h>
-+
-+#include <smp.h>
-+#include <alloc_page.h>
-+
-+static int t = 0;
-+
-+static void cpu_loop(void)
-+{
-+	for (;;) {}
-+}
-+
-+static void test_func(void)
-+{
-+	t = 1;
-+	cpu_loop();
-+}
-+
-+static void test_start(void)
-+{
-+	struct psw psw;
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)test_func;
-+
-+	smp_cpu_setup(1, psw);
-+	while (!t) {
-+		mb();
-+	}
-+	report("start", 1);
-+}
-+
-+static void test_stop(void)
-+{
-+	int i = 0;
-+
-+	smp_cpu_stop(1);
-+	/*
-+	 * The smp library waits for the CPU to shut down, but let's
-+	 * also do it here, so we don't rely on the library
-+	 * implementation
-+	 */
-+	while (!smp_cpu_stopped(1)) {}
-+	t = 0;
-+	/* Let's leave some time for cpu #2 to change t */
-+	for (; i < 0x100000; i++) {}
-+	report("stop", !t);
-+}
-+
-+static void test_stop_store_status(void)
-+{
-+	struct cpu *cpu = smp_cpu_from_addr(1);
-+	struct lowcore *lc = (void *)0x0;
-+
-+	smp_cpu_stop_store_status(1);
-+	mb();
-+	report("stop store status",
-+	       lc->prefix_sa == (uint32_t)(uintptr_t)cpu->lowcore);
-+}
-+
-+static void test_store_status(void)
-+{
-+	struct cpu_status *status = alloc_pages(0);
-+	uint32_t r;
-+
-+	report_prefix_push("status");
-+	memset(status, 0, PAGE_SIZE);
-+
-+	smp_cpu_restart(1);
-+	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, &r);
-+	report("not stopped", r == SIGP_STATUS_INCORRECT_STATE);
-+
-+	memset(status, 0, PAGE_SIZE);
-+	smp_cpu_stop(1);
-+	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
-+	while (!status->prefix) {}
-+	report("store status", 1);
-+	free_pages(status, PAGE_SIZE);
-+	report_prefix_pop();
-+}
-+
-+static void ecall(void)
-+{
-+	unsigned long mask;
-+	struct lowcore *lc = (void *)0x0;
-+
-+	ctl_set_bit(0, 13);
-+	mask = extract_psw_mask();
-+	mask |= PSW_MASK_EXT;
-+	load_psw_mask(mask);
-+	expect_ext_int();
-+	t = 1;
-+	while (lc->ext_int_code != 0x1202) {mb();}
-+	report("ecall", 1);
-+	t = 1;
-+}
-+
-+static void test_ecall(void)
-+{
-+	struct psw psw;
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)ecall;
-+
-+	report_prefix_push("ecall");
-+	t = 0;
-+	smp_cpu_destroy(1);
-+
-+	mb();
-+	smp_cpu_setup(1, psw);
-+	while (!t) {
-+		mb();
-+	}
-+	t = 0;
-+	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
-+	while(!t) {mb();}
-+	smp_cpu_stop(1);
-+	report_prefix_pop();
-+}
-+
-+static void emcall(void)
-+{
-+	unsigned long mask;
-+	struct lowcore *lc = (void *)0x0;
-+
-+	ctl_set_bit(0, 14);
-+	mask = extract_psw_mask();
-+	mask |= PSW_MASK_EXT;
-+	load_psw_mask(mask);
-+	expect_ext_int();
-+	t = 1;
-+	while (lc->ext_int_code != 0x1201) {mb();}
-+	report("ecall", 1);
-+	t = 1;
-+}
-+
-+static void test_emcall(void)
-+{
-+	struct psw psw;
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)emcall;
-+
-+	report_prefix_push("emcall");
-+	t = 0;
-+	smp_cpu_destroy(1);
-+
-+	mb();
-+	smp_cpu_setup(1, psw);
-+	while (!t) {
-+		mb();
-+	}
-+	t = 0;
-+	sigp(1, SIGP_EMERGENCY_SIGNAL, 0, NULL);
-+	while(!t) {mb();}
-+	smp_cpu_stop(1);
-+	report_prefix_pop();
-+}
-+
-+static void test_reset_initial(void)
-+{
-+	struct cpu_status *status = alloc_pages(0);
-+	struct psw psw;
-+
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)test_func;
-+
-+	report_prefix_push("reset initial");
-+	smp_cpu_setup(1, psw);
-+
-+	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
-+	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
-+
-+	report_prefix_push("clear");
-+	report("psw", !status->psw.mask && !status->psw.addr);
-+	report("prefix", !status->prefix);
-+	report("fpc", !status->fpc);
-+	report("cpu timer", !status->cputm);
-+	report("todpr", !status->todpr);
-+	report_prefix_pop();
-+
-+	report_prefix_push("initialized");
-+	report("cr0 == 0xE0", status->crs[0] == 0xE0UL);
-+	report("cr14 == 0xC2000000", status->crs[14] == 0xC2000000UL);
-+	report_prefix_pop();
-+
-+	report("cpu stopped", smp_cpu_stopped(1));
-+	free_pages(status, PAGE_SIZE);
-+	report_prefix_pop();
-+}
-+
-+static void test_reset(void)
-+{
-+	struct psw psw;
-+
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)test_func;
-+
-+	report_prefix_push("cpu reset");
-+	smp_cpu_setup(1, psw);
-+
-+	sigp_retry(1, SIGP_CPU_RESET, 0, NULL);
-+	report("cpu stopped", smp_cpu_stopped(1));
-+	report_prefix_pop();
-+}
-+
-+int main(void)
-+{
-+	report_prefix_push("smp");
-+
-+	if (smp_query_num_cpus() == 1) {
-+		report_abort("need at least 2 cpus for this test");
-+		goto done;
-+	}
-+
-+	test_start();
-+	test_stop();
-+	test_stop_store_status();
-+	test_store_status();
-+	test_ecall();
-+	test_emcall();
-+	test_reset();
-+	test_reset_initial();
-+
-+done:
-+	report_prefix_pop();
-+	return report_summary();
-+}
--- 
-2.17.0
+Quite a few folks have said that ->reserved is either unnecessary or
+too big. I will be changing this, though I am not clear what the best
+way of extending the structure is. If anyone has a strong opinion on
+this (or an alternative to the ones listed below), please chime in. I
+don't have any really strong attachment to this aspect of the API.
 
+There appear to be a few ways we can do it (that all have precedence
+with other syscalls):
+
+ 1. Use O_* flags to indicate extensions.
+ 2. A separate "version" field that is incremented when we change.
+ 3. Add a size_t argument to openat2(2).
+ 4. Reserve space (as in this patchset).
+
+(My personal preference would be (3), followed closely by (2).)
+
+The main problem with (1) is that it pollutes the open(2) and openat(2)
+syscalls with new O_* flags, which is probably not a good API decision
+(syscall flags are already "bad" enough, let's not throw a bunch of
+no-ops into the mix).
+
+(2) is mostly fine except for a slight issue of ergonomics (glibc would
+have to auto-fill the version field or make wrappers in order to make it
+easier to use sanely). But this does have the benefit that we could
+re-arrange fields (not that this is something we'd want to do anyway).
+
+Both (1) and (2) have the problem that the "struct version" is inside
+the struct so we'd need to copy_from_user() twice. This isn't the end of
+the world, it just feels a bit less clean than is ideal. (3) fixes that
+problem, at the cost of making the API slightly more cumbersome to use
+directly (though again glibc could wrap that away).
+
+And the downsides of (4) are pretty well discussed already.
+
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
+
+--ys4y6f5eyfdosi3x
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXWfB2wAKCRCdlLljIbnQ
+EljcAQC+BitddeHjv2a9yspU0gLaZB6nn8UBahZIqiE8+4xUoAEAuibGdlSM4ag8
+ZYal7PGiNelUZH1S6GPHj1bvVNNGOQ0=
+=OczH
+-----END PGP SIGNATURE-----
+
+--ys4y6f5eyfdosi3x--
