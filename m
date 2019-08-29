@@ -2,33 +2,32 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35572A1C12
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 15:57:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A86B6A1C24
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 15:58:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728442AbfH2N5d (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Aug 2019 09:57:33 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1515 "EHLO mx1.redhat.com"
+        id S1728061AbfH2N63 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Aug 2019 09:58:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34130 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728437AbfH2N5a (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 29 Aug 2019 09:57:30 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1728049AbfH2N62 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 29 Aug 2019 09:58:28 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 5BF2C190C027;
-        Thu, 29 Aug 2019 13:57:30 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 004308980E0;
+        Thu, 29 Aug 2019 13:58:28 +0000 (UTC)
 Received: from [10.36.117.243] (ovpn-117-243.ams2.redhat.com [10.36.117.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3AB1A6060D;
-        Thu, 29 Aug 2019 13:57:28 +0000 (UTC)
-Subject: Re: [PATCH v2] KVM: s390: Test for bad access register and size at
- the start of S390_MEM_OP
-To:     Thomas Huth <thuth@redhat.com>,
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D739860CD0;
+        Thu, 29 Aug 2019 13:58:25 +0000 (UTC)
+Subject: Re: [PATCH] KVM: s390: improve documentation for S390_MEM_OP
+To:     Cornelia Huck <cohuck@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Thomas Huth <thuth@redhat.com>, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190829122517.31042-1-thuth@redhat.com>
+References: <20190829124746.28665-1-cohuck@redhat.com>
 From:   David Hildenbrand <david@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
@@ -75,60 +74,59 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  +8Umfre0Xt4713VxMygW0PnQt5aSQdMD58jHFxTk092mU+yIHj5LeYgvwSgZN4airXk5yRXl
  SE+xAvmumFBY
 Organization: Red Hat GmbH
-Message-ID: <36ce3dc8-486b-05ce-b906-6ea6b5584bf7@redhat.com>
-Date:   Thu, 29 Aug 2019 15:57:27 +0200
+Message-ID: <3f67bea5-83d9-321a-62e0-c463287c04ba@redhat.com>
+Date:   Thu, 29 Aug 2019 15:58:24 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190829122517.31042-1-thuth@redhat.com>
+In-Reply-To: <20190829124746.28665-1-cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Thu, 29 Aug 2019 13:57:30 +0000 (UTC)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Thu, 29 Aug 2019 13:58:28 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29.08.19 14:25, Thomas Huth wrote:
-> If the KVM_S390_MEM_OP ioctl is called with an access register >= 16,
-> then there is certainly a bug in the calling userspace application.
-> We check for wrong access registers, but only if the vCPU was already
-> in the access register mode before (i.e. the SIE block has recorded
-> it). The check is also buried somewhere deep in the calling chain (in
-> the function ar_translation()), so this is somewhat hard to find.
+On 29.08.19 14:47, Cornelia Huck wrote:
+> Explicitly specify the valid ranges for size and ar, and reword
+> buf requirements a bit.
 > 
-> It's better to always report an error to the userspace in case this
-> field is set wrong, and it's safer in the KVM code if we block wrong
-> values here early instead of relying on a check somewhere deep down
-> the calling chain, so let's add another check to kvm_s390_guest_mem_op()
-> directly.
-> 
-> We also should check that the "size" is non-zero here (thanks to Janosch
-> Frank for the hint!). If we do not check the size, we could call vmalloc()
-> with this 0 value, and this will cause a kernel warning.
-> 
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 > ---
->  v2: Check mop->size to be non-zero
+> supposed to go on top of "KVM: s390: Test for bad access register and
+> size at the start of S390_MEM_OP" (<20190829122517.31042-1-thuth@redhat.com>)
+> ---
+>  Documentation/virt/kvm/api.txt | 14 ++++++++------
+>  1 file changed, 8 insertions(+), 6 deletions(-)
 > 
->  arch/s390/kvm/kvm-s390.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index f329dcb3f44c..49d7722229ae 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4255,7 +4255,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
->  	const u64 supported_flags = KVM_S390_MEMOP_F_INJECT_EXCEPTION
->  				    | KVM_S390_MEMOP_F_CHECK_ONLY;
+> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+> index 2d067767b617..76c9d6fdbfdb 100644
+> --- a/Documentation/virt/kvm/api.txt
+> +++ b/Documentation/virt/kvm/api.txt
+> @@ -3079,12 +3079,14 @@ This exception is also raised directly at the corresponding VCPU if the
+>  flag KVM_S390_MEMOP_F_INJECT_EXCEPTION is set in the "flags" field.
 >  
-> -	if (mop->flags & ~supported_flags)
-> +	if (mop->flags & ~supported_flags || mop->ar >= NUM_ACRS || !mop->size)
->  		return -EINVAL;
+>  The start address of the memory region has to be specified in the "gaddr"
+> -field, and the length of the region in the "size" field. "buf" is the buffer
+> -supplied by the userspace application where the read data should be written
+> -to for KVM_S390_MEMOP_LOGICAL_READ, or where the data that should be written
+> -is stored for a KVM_S390_MEMOP_LOGICAL_WRITE. "buf" is unused and can be NULL
+> -when KVM_S390_MEMOP_F_CHECK_ONLY is specified. "ar" designates the access
+> -register number to be used.
+> +field, and the length of the region in the "size" field (which must not
+> +be 0). The maximum value for "size" can be obtained by checking the
+> +KVM_CAP_S390_MEM_OP capability. "buf" is the buffer supplied by the
+> +userspace application where the read data should be written to for
+> +KVM_S390_MEMOP_LOGICAL_READ, or where the data that should be written is
+> +stored for a KVM_S390_MEMOP_LOGICAL_WRITE. When KVM_S390_MEMOP_F_CHECK_ONLY
+> +is specified, "buf" is unused and can be NULL. "ar" designates the access
+> +register number to be used; the valid range is 0..15.
 >  
->  	if (mop->size > MEM_OP_MAX_SIZE)
+>  The "reserved" field is meant for future extensions. It is not used by
+>  KVM with the currently defined set of flags.
 > 
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
