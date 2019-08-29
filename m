@@ -2,112 +2,137 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91767A2297
-	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 19:42:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C13DEA25E8
+	for <lists+linux-s390@lfdr.de>; Thu, 29 Aug 2019 20:33:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727500AbfH2RmH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 29 Aug 2019 13:42:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13978 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727410AbfH2RmH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 29 Aug 2019 13:42:07 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7THWDIq093040
-        for <linux-s390@vger.kernel.org>; Thu, 29 Aug 2019 13:42:06 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2upj1rk1em-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 29 Aug 2019 13:42:05 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Thu, 29 Aug 2019 18:42:03 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 29 Aug 2019 18:42:01 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7THg0RU19202112
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 29 Aug 2019 17:42:00 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1678052052;
-        Thu, 29 Aug 2019 17:42:00 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.193])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D936D5204F;
-        Thu, 29 Aug 2019 17:41:59 +0000 (GMT)
-Date:   Thu, 29 Aug 2019 19:41:58 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH RFC UNTESTED] vfio-ccw: indirect access to translated
- cps
-In-Reply-To: <20190828143947.1c6b88e4.cohuck@redhat.com>
-References: <20190726100617.19718-1-cohuck@redhat.com>
-        <20190730174910.47930494.pasic@linux.ibm.com>
-        <20190807132311.5238bc24.cohuck@redhat.com>
-        <20190807160136.178e69de.pasic@linux.ibm.com>
-        <20190808104306.2450bdcf.cohuck@redhat.com>
-        <20190816003402.2a52b863.pasic@linux.ibm.com>
-        <20190828143947.1c6b88e4.cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1728835AbfH2SdH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 29 Aug 2019 14:33:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55610 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728585AbfH2SNx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 29 Aug 2019 14:13:53 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 67529233FF;
+        Thu, 29 Aug 2019 18:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567102432;
+        bh=wpmruaQbL2KAE/UKd4qy1TFFndrVLSjSXyqVxwP3wFQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ZN2qb1PtZ7C9yXDqiRA/eKTYnWk8wb4NWLzSxjBLdDb4ANC6uP7xco/pVfO/fF0xm
+         6XcUoIjI4H0br9Iknqx+qeEnb0pTM9kRD3P2/adNaoWbDk0txCSpa9rIHH3sPUo/te
+         TwIcoe8vOxnzUNx3NYHA1QtSgRtpIu9KLKRJxwuQ=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 21/76] s390/qeth: serialize cmd reply with concurrent timeout
+Date:   Thu, 29 Aug 2019 14:12:16 -0400
+Message-Id: <20190829181311.7562-21-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190829181311.7562-1-sashal@kernel.org>
+References: <20190829181311.7562-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-stable: review
+X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19082917-0012-0000-0000-000003445AE7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19082917-0013-0000-0000-0000217E9C7C
-Message-Id: <20190829194158.094879b8.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-29_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1908290186
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 28 Aug 2019 14:39:47 +0200
-Cornelia Huck <cohuck@redhat.com> wrote:
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-> > > 
-> > > So we do have three states here, right? (I hope we're not talking past
-> > > each other again...)    
-> > 
-> > Right, AFAIR  and without any consideration to fine details the three
-> > states and two state transitions do make sense.  
-> 
-> If we translate the three states to today's states in the fsm, we get:
-> - "idle" -> VFIO_CCW_STATE_IDLE
-> - "doing translation" -> VFIO_CCW_STATE_CP_PROCESSING
-> - "submitted" -> VFIO_CCW_STATE_CP_PENDING
-> and the transitions between the three already look fine to me (modulo
-> locking). We also seem to handle async requests correctly (-EAGAIN if
-> _PROCESSING, else just go ahead).
-> 
-> So we can probably forget about the approach in this patch, and
-> concentrate on eliminating races in state transitions.
+[ Upstream commit 072f79400032f74917726cf76f4248367ea2b5b8 ]
 
-I agree.
+Callbacks for a cmd reply run outside the protection of card->lock, to
+allow for additional cmds to be issued & enqueued in parallel.
 
-> 
-> Not sure what the best approach is for tackling these: intermediate
-> transit state, a mutex or another lock, running locked and running
-> stuff that cannot be done locked on workqueues (and wait for all work
-> to finish while disallowing new work while doing the transition)?
-> 
-> Clever ideas wanted :)
+When qeth_send_control_data() bails out for a cmd without having
+received a reply (eg. due to timeout), its callback may concurrently be
+processing a reply that just arrived. In this case, the callback
+potentially accesses a stale reply->reply_param area that eg. was
+on-stack and has already been released.
 
-AFAIR Eric has this problem on his TODO list. I think we can resume the
-in depth discussion over his code :)
+To avoid this race, add some locking so that qeth_send_control_data()
+can (1) wait for a concurrently running callback, and (2) zap any
+pending callback that still wants to run.
 
-Regards,
-Halil
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/net/qeth_core.h      |  1 +
+ drivers/s390/net/qeth_core_main.c | 20 ++++++++++++++++++++
+ 2 files changed, 21 insertions(+)
+
+diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+index 784a2e76a1b04..c5f60f95e8db9 100644
+--- a/drivers/s390/net/qeth_core.h
++++ b/drivers/s390/net/qeth_core.h
+@@ -640,6 +640,7 @@ struct qeth_seqno {
+ struct qeth_reply {
+ 	struct list_head list;
+ 	struct completion received;
++	spinlock_t lock;
+ 	int (*callback)(struct qeth_card *, struct qeth_reply *,
+ 		unsigned long);
+ 	u32 seqno;
+diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
+index b1823d75dd35c..6b8f99e7d8a81 100644
+--- a/drivers/s390/net/qeth_core_main.c
++++ b/drivers/s390/net/qeth_core_main.c
+@@ -548,6 +548,7 @@ static struct qeth_reply *qeth_alloc_reply(struct qeth_card *card)
+ 	if (reply) {
+ 		refcount_set(&reply->refcnt, 1);
+ 		init_completion(&reply->received);
++		spin_lock_init(&reply->lock);
+ 	}
+ 	return reply;
+ }
+@@ -832,6 +833,13 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
+ 
+ 	if (!reply->callback) {
+ 		rc = 0;
++		goto no_callback;
++	}
++
++	spin_lock_irqsave(&reply->lock, flags);
++	if (reply->rc) {
++		/* Bail out when the requestor has already left: */
++		rc = reply->rc;
+ 	} else {
+ 		if (cmd) {
+ 			reply->offset = (u16)((char *)cmd - (char *)iob->data);
+@@ -840,7 +848,9 @@ static void qeth_issue_next_read_cb(struct qeth_card *card,
+ 			rc = reply->callback(card, reply, (unsigned long)iob);
+ 		}
+ 	}
++	spin_unlock_irqrestore(&reply->lock, flags);
+ 
++no_callback:
+ 	if (rc <= 0)
+ 		qeth_notify_reply(reply, rc);
+ 	qeth_put_reply(reply);
+@@ -1880,6 +1890,16 @@ static int qeth_send_control_data(struct qeth_card *card, int len,
+ 		rc = (timeout == -ERESTARTSYS) ? -EINTR : -ETIME;
+ 
+ 	qeth_dequeue_reply(card, reply);
++
++	if (reply_cb) {
++		/* Wait until the callback for a late reply has completed: */
++		spin_lock_irq(&reply->lock);
++		if (rc)
++			/* Zap any callback that's still pending: */
++			reply->rc = rc;
++		spin_unlock_irq(&reply->lock);
++	}
++
+ 	if (!rc)
+ 		rc = reply->rc;
+ 	qeth_put_reply(reply);
+-- 
+2.20.1
 
