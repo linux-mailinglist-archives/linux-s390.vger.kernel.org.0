@@ -2,310 +2,354 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D57E0A36AD
-	for <lists+linux-s390@lfdr.de>; Fri, 30 Aug 2019 14:21:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97130A3B39
+	for <lists+linux-s390@lfdr.de>; Fri, 30 Aug 2019 18:03:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727675AbfH3MVH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 30 Aug 2019 08:21:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36346 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727455AbfH3MVH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 30 Aug 2019 08:21:07 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7845D3083363;
-        Fri, 30 Aug 2019 12:21:06 +0000 (UTC)
-Received: from [10.36.117.243] (ovpn-117-243.ams2.redhat.com [10.36.117.243])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6A30E60C05;
-        Fri, 30 Aug 2019 12:21:05 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 1/6] s390x: Use interrupts in SCLP and add
- locking
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com
-References: <20190829121459.1708-1-frankja@linux.ibm.com>
- <20190829121459.1708-2-frankja@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <74d31bb9-4941-01f3-571b-8a89a05402c8@redhat.com>
-Date:   Fri, 30 Aug 2019 14:21:04 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727791AbfH3QDD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 30 Aug 2019 12:03:03 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41448 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727884AbfH3QDC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 30 Aug 2019 12:03:02 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x7UG0iFM065701
+        for <linux-s390@vger.kernel.org>; Fri, 30 Aug 2019 12:03:01 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uq5uf2mpg-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 30 Aug 2019 12:03:00 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 30 Aug 2019 17:02:59 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 30 Aug 2019 17:02:56 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x7UG2qw757475302
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 30 Aug 2019 16:02:53 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B5972AE056;
+        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 661AEAE061;
+        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.193])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 30 Aug 2019 16:02:52 +0000 (GMT)
+Date:   Fri, 30 Aug 2019 18:02:50 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        pasic@linux.vnet.ibm.com, frankja@linux.ibm.com,
+        jjherne@linux.ibm.com
+Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
+ queue interrupts
+In-Reply-To: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20190829121459.1708-2-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Fri, 30 Aug 2019 12:21:06 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19083016-0016-0000-0000-000002A4B685
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19083016-0017-0000-0000-000033051207
+Message-Id: <20190830180250.79804f76.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-08-30_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1908300159
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29.08.19 14:14, Janosch Frank wrote:
-> We need to properly implement interrupt handling for SCLP, because on
-> z/VM and LPAR SCLP calls are not synchronous!
+On Mon, 19 Aug 2019 13:48:49 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+
+> When an AP queue is reset (zeroized), interrupts are disabled. The queue
+> reset function currently tries to disable interrupts unnecessarily. This patch
+> removes the unnecessary calls to disable interrupts after queue reset.
 > 
-> Also with smp CPUs have to compete for sclp. Let's add some locking,
-> so they execute sclp calls in an orderly fashion and don't compete for
-> the data buffer.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
 > ---
->  lib/s390x/asm/interrupt.h |  2 ++
->  lib/s390x/interrupt.c     | 12 +++++++--
->  lib/s390x/sclp-console.c  |  2 ++
->  lib/s390x/sclp.c          | 54 +++++++++++++++++++++++++++++++++++++--
->  lib/s390x/sclp.h          |  3 +++
->  5 files changed, 69 insertions(+), 4 deletions(-)
+>  drivers/s390/crypto/vfio_ap_ops.c | 21 +++++++++++++++++----
+>  1 file changed, 17 insertions(+), 4 deletions(-)
 > 
-> diff --git a/lib/s390x/asm/interrupt.h b/lib/s390x/asm/interrupt.h
-> index 013709f..f485e96 100644
-> --- a/lib/s390x/asm/interrupt.h
-> +++ b/lib/s390x/asm/interrupt.h
-> @@ -11,6 +11,8 @@
->  #define _ASMS390X_IRQ_H_
->  #include <asm/arch_def.h>
->  
-> +#define EXT_IRQ_SERVICE_SIG	0x2401
-> +
->  void handle_pgm_int(void);
->  void handle_ext_int(void);
->  void handle_mcck_int(void);
-> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
-> index cf0a794..7832711 100644
-> --- a/lib/s390x/interrupt.c
-> +++ b/lib/s390x/interrupt.c
-> @@ -12,6 +12,7 @@
->  #include <libcflat.h>
->  #include <asm/interrupt.h>
->  #include <asm/barrier.h>
-> +#include <sclp.h>
->  
->  static bool pgm_int_expected;
->  static struct lowcore *lc;
-> @@ -107,8 +108,15 @@ void handle_pgm_int(void)
->  
->  void handle_ext_int(void)
->  {
-> -	report_abort("Unexpected external call interrupt: at %#lx",
-> -		     lc->ext_old_psw.addr);
-> +	if (lc->ext_int_code != EXT_IRQ_SERVICE_SIG) {
-> +		report_abort("Unexpected external call interrupt: at %#lx",
-> +			     lc->ext_old_psw.addr);
-> +	} else {
-> +		lc->ext_old_psw.mask &= ~PSW_MASK_EXT;
-> +		lc->sw_int_cr0 &= ~(1UL << 9);
-> +		sclp_handle_ext();
-> +		lc->ext_int_code = 0;
-> +	}
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 0604b49a4d32..e3bcb430e214 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -1114,18 +1114,19 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  	return NOTIFY_OK;
 >  }
 >  
->  void handle_mcck_int(void)
-> diff --git a/lib/s390x/sclp-console.c b/lib/s390x/sclp-console.c
-> index bc01f41..a5ef45f 100644
-> --- a/lib/s390x/sclp-console.c
-> +++ b/lib/s390x/sclp-console.c
-> @@ -17,6 +17,7 @@ static void sclp_set_write_mask(void)
+> -static void vfio_ap_irq_disable_apqn(int apqn)
+> +static struct vfio_ap_queue *vfio_ap_find_qdev(int apqn)
 >  {
->  	WriteEventMask *sccb = (void *)_sccb;
+>  	struct device *dev;
+> -	struct vfio_ap_queue *q;
+> +	struct vfio_ap_queue *q = NULL;
 >  
-> +	sclp_mark_busy();
->  	sccb->h.length = sizeof(WriteEventMask);
->  	sccb->mask_length = sizeof(unsigned int);
->  	sccb->receive_mask = SCLP_EVENT_MASK_MSG_ASCII;
-> @@ -37,6 +38,7 @@ void sclp_print(const char *str)
->  	int len = strlen(str);
->  	WriteEventData *sccb = (void *)_sccb;
->  
-> +	sclp_mark_busy();
->  	sccb->h.length = sizeof(WriteEventData) + len;
->  	sccb->h.function_code = SCLP_FC_NORMAL_WRITE;
->  	sccb->ebh.length = sizeof(EventBufferHeader) + len;
-> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
-> index b60f7a4..257eb02 100644
-> --- a/lib/s390x/sclp.c
-> +++ b/lib/s390x/sclp.c
-> @@ -14,6 +14,8 @@
->  #include <asm/page.h>
->  #include <asm/arch_def.h>
->  #include <asm/interrupt.h>
-> +#include <asm/barrier.h>
-> +#include <asm/spinlock.h>
->  #include "sclp.h"
->  #include <alloc_phys.h>
->  #include <alloc_page.h>
-> @@ -25,6 +27,8 @@ static uint64_t max_ram_size;
->  static uint64_t ram_size;
->  
->  char _sccb[PAGE_SIZE] __attribute__((__aligned__(4096)));
-> +static volatile bool sclp_busy;
-> +static struct spinlock sclp_lock;
->  
->  static void mem_init(phys_addr_t mem_end)
->  {
-> @@ -41,17 +45,61 @@ static void mem_init(phys_addr_t mem_end)
->  	page_alloc_ops_enable();
+>  	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
+>  				 &apqn, match_apqn);
+>  	if (dev) {
+>  		q = dev_get_drvdata(dev);
+> -		vfio_ap_irq_disable(q);
+>  		put_device(dev);
+>  	}
+> +
+> +	return q;
 >  }
 >  
-> +static void sclp_setup_int(void)
-> +{
-> +	uint64_t mask;
-> +
-> +	ctl_set_bit(0, 9);
-> +
-> +	mask = extract_psw_mask();
-> +	mask |= PSW_MASK_EXT;
-> +	load_psw_mask(mask);
-> +}
-> +
-> +void sclp_handle_ext(void)
-> +{
-> +	ctl_clear_bit(0, 9);
-> +	spin_lock(&sclp_lock);
-> +	sclp_busy = false;
-> +	spin_unlock(&sclp_lock);
-> +}
-> +
-> +void sclp_wait_busy(void)
-> +{
-> +	while (sclp_busy)
-> +		mb();
-> +}
-> +
-> +void sclp_mark_busy(void)
-> +{
-> +	/*
-> +	 * With multiple CPUs we might need to wait for another CPU's
-> +	 * request before grabbing the busy indication.
-> +	 */
-> +retry_wait:
-> +	sclp_wait_busy();
-> +	spin_lock(&sclp_lock);
-> +	if (sclp_busy) {
-> +		spin_unlock(&sclp_lock);
-> +		goto retry_wait;
-> +	}
-> +	sclp_busy = true;
-> +	spin_unlock(&sclp_lock);
-
-while (true) {
-	sclp_wait_busy();
-	spin_lock(&sclp_lock);
-	if (!sclp_busy) {
-		sclp_busy = true
-		spin_unlock(&sclp_lock);
-		break;
-	}
-	spin_unlock(&sclp_lock);
-}
-
-Or can we simply switch to an atomic_t for sclp_busy and implement
-cmpxchg using __sync_bool_compare_and_swap/ __sync_val_compare_and_swap ?
-
-I guess then we can drop the lock. But maybe I am missing something :)
-
-> +}
-> +
->  static void sclp_read_scp_info(ReadInfo *ri, int length)
->  {
->  	unsigned int commands[] = { SCLP_CMDW_READ_SCP_INFO_FORCED,
->  				    SCLP_CMDW_READ_SCP_INFO };
-> -	int i;
-> +	int i, cc;
+>  int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> @@ -1164,6 +1165,7 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  	int rc = 0;
+>  	unsigned long apid, apqi;
+>  	struct ap_matrix_mdev *matrix_mdev = mdev_get_drvdata(mdev);
+> +	struct vfio_ap_queue *q;
 >  
->  	for (i = 0; i < ARRAY_SIZE(commands); i++) {
-> +		sclp_mark_busy();
->  		memset(&ri->h, 0, sizeof(ri->h));
->  		ri->h.length = length;
->  
-> -		if (sclp_service_call(commands[i], ri))
-> +		cc = sclp_service_call(commands[i], ri);
-> +		if (cc)
->  			break;
->  		if (ri->h.response_code == SCLP_RC_NORMAL_READ_COMPLETION)
->  			return;
-> @@ -66,12 +114,14 @@ int sclp_service_call(unsigned int command, void *sccb)
->  {
->  	int cc;
->  
-> +	sclp_setup_int();
->  	asm volatile(
->  		"       .insn   rre,0xb2200000,%1,%2\n"  /* servc %1,%2 */
->  		"       ipm     %0\n"
->  		"       srl     %0,28"
->  		: "=&d" (cc) : "d" (command), "a" (__pa(sccb))
->  		: "cc", "memory");
-> +	sclp_wait_busy();
->  	if (cc == 3)
->  		return -1;
->  	if (cc == 2)
-> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
-> index 583c4e5..63cf609 100644
-> --- a/lib/s390x/sclp.h
-> +++ b/lib/s390x/sclp.h
-> @@ -213,6 +213,9 @@ typedef struct ReadEventData {
->  } __attribute__((packed)) ReadEventData;
->  
->  extern char _sccb[];
-> +void sclp_handle_ext(void);
-> +void sclp_wait_busy(void);
-> +void sclp_mark_busy(void);
+>  	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+>  			     matrix_mdev->matrix.apm_max + 1) {
+> @@ -1177,7 +1179,18 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+>  			 */
+>  			if (ret)
+>  				rc = ret;
+> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+> +
+> +			/*
+> +			 * Resetting a queue disables interrupts as a side
+> +			 * effect, so there is no need to disable interrupts
+> +			 * here. Note that an error on reset indicates the
+> +			 * queue is inaccessible, so an attempt to disable
+> +			 * interrupts would fail and is therefore unnecessary.
+> +			 * Just free up the resources used by IRQ processing.
+> +			 */
 
-I wonder if we can find better names ...
+I have some concerns about this patch. One thing we must ensure is that
+the machine does not poke freed memory (NIB, GISA). With the current
+design that means we must ensure that there won't be any interruption
+conditions indicated (and interrupts made pending) after this point.
 
-sclp_prepare()
-sclp_finalize()
+I'm not entirely convinced this is ensured after your change. The
+relevant bits of the  documentation are particularly hard to figure out.
+I could use some clarifications for sure.
 
-or sth like that.
+This hunk removes the wait implemented by vfio_ap_wait_for_irqclear()
+along with the hopefully overkill AQIC.
 
+Let me name some of the scenarios I'm concerned about, along with the
+code that is currently supposed to handle these.
+
+
+int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,              
+                             unsigned int retry)                                
+{                                                                               
+        struct ap_queue_status status;                                          
+        int retry2 = 2;                                                         
+        int apqn = AP_MKQID(apid, apqi);                                        
+                                                                                
+        do {                                                                    
+                status = ap_zapq(apqn);                                         
+                switch (status.response_code) {                                 
+                case AP_RESPONSE_NORMAL:                                        
+                        while (!status.queue_empty && retry2--) {               
+                                msleep(20);                                     
+                                status = ap_tapq(apqn, NULL);                   
+                        }                                                       
+                        WARN_ON_ONCE(retry <= 0);                              
+                        return 0;                                               
+                case AP_RESPONSE_RESET_IN_PROGRESS:                             
+                case AP_RESPONSE_BUSY:                                          
+                        msleep(20);                                             
+                        break;                                                  
+                default:                                                        
+                        /* things are really broken, give up */                 
+                        return -EIO;                                            
+                }                                                               
+        } while (retry--);                                                      
+                                                                                
+        return -EBUSY; 
+
+Scenario 1) 
+
+ap_zapq() returns status.response_code == AP_RESPONSE_RESET_IN_PROGRESS,
+because for example G2 did a ZAPQ before us.
+
+The current logic retries ap_zapq() once after 20 msec. I have no idea
+if that is sufficient under all circumstances. If we get a
+AP_RESPONSE_RESET_IN_PROGRESS again, we return with -EBUSY and do nothing
+about it if the whole process was triggered by vfio_ap_mdev_release().
+Not even a warning.
+
+Please notice that this was almost fine before IRQ support, because the
+queue will get reset ASAP, and ...
+
+Scenario 2)
+
+It takes longer than 40 msec for the reset to complete. I don't know if
+this is a possibility, but before your patch we used to wait of 1 sec.
+
+I guess the we need the timeouts because do this with matrix_dev->lock
+held. I'm not sure it's a good idea long term.
+
+Scenario 3)
+
+ap_zapq() returns status.response_code == AP_RESPONSE_DECONFIGURED. In
+this case we would give up right away. Again so that we don't even know
+we hit this case. There ain't much I can think about we could do here.
+
+I hope we are guaranteed to  not get any bits set at this point, but I could
+use some help.
+
+                                  *
+
+The good thing is I'm pretty sure that we are safe (i.e. no bits will be
+poked by the hardware) after seeing the queue empty after we issued a
+reset request.
+
+So my concerns basically boil down to are the cumulative timeouts big enough
+so we never time out (including are timeouts really the way to go)?
+
+We should probably take any discussion about from which point on is it safe
+to assume that NIB and GISA won't be poked by HW offline as the guys
+without documentation can't contribute.
+
+
+Two issues not directly related to your patch. I formulated those as two
+follow up patches on top of yours .please take a look at them.
+
+-------------------------------8<------------------------------------------
+From: Halil Pasic <pasic@linux.ibm.com>
+Date: Fri, 30 Aug 2019 16:03:42 +0200
+Subject: [PATCH 1/2] s390: vfio-ap: fix warning reset not completed
+
+The intention seems to be to warn once when we don't wait enough for the
+reset to complete. Let's use the right retry counter to accomplish that
+semantic.
+
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index e3bcb43..dd07ebf 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -1144,7 +1144,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+ 				msleep(20);
+ 				status = ap_tapq(apqn, NULL);
+ 			}
+-			WARN_ON_ONCE(retry <= 0);
++			WARN_ON_ONCE(retry2 <= 0);
+ 			return 0;
+ 		case AP_RESPONSE_RESET_IN_PROGRESS:
+ 		case AP_RESPONSE_BUSY:
 -- 
+2.5.5
 
-Thanks,
+-------------------------------8<----------------------------------------
+From: Halil Pasic <pasic@linux.ibm.com>
+Date: Fri, 30 Aug 2019 17:39:47 +0200
+Subject: [PATCH 2/2] s390: vfio-ap: don't wait after AQIC interpretation
 
-David / dhildenb
+Waiting for the asynchronous part of AQIC to complete as a part
+AQIC implementation is unnecessary and silly.
+
+Let's get rid of vfio_ap_wait_for_irqclear().
+
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+---
+ drivers/s390/crypto/vfio_ap_ops.c | 50 ++-------------------------------------
+ 1 file changed, 2 insertions(+), 48 deletions(-)
+
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+index dd07ebf..8d098f0 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -68,47 +68,6 @@ static struct vfio_ap_queue *vfio_ap_get_queue(
+ }
+ 
+ /**
+- * vfio_ap_wait_for_irqclear
+- * @apqn: The AP Queue number
+- *
+- * Checks the IRQ bit for the status of this APQN using ap_tapq.
+- * Returns if the ap_tapq function succeeded and the bit is clear.
+- * Returns if ap_tapq function failed with invalid, deconfigured or
+- * checkstopped AP.
+- * Otherwise retries up to 5 times after waiting 20ms.
+- *
+- */
+-static void vfio_ap_wait_for_irqclear(int apqn)
+-{
+-	struct ap_queue_status status;
+-	int retry = 5;
+-
+-	do {
+-		status = ap_tapq(apqn, NULL);
+-		switch (status.response_code) {
+-		case AP_RESPONSE_NORMAL:
+-		case AP_RESPONSE_RESET_IN_PROGRESS:
+-			if (!status.irq_enabled)
+-				return;
+-			/* Fall through */
+-		case AP_RESPONSE_BUSY:
+-			msleep(20);
+-			break;
+-		case AP_RESPONSE_Q_NOT_AVAIL:
+-		case AP_RESPONSE_DECONFIGURED:
+-		case AP_RESPONSE_CHECKSTOPPED:
+-		default:
+-			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
+-				  status.response_code, apqn);
+-			return;
+-		}
+-	} while (--retry);
+-
+-	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
+-		  __func__, status.response_code, apqn);
+-}
+-
+-/**
+  * vfio_ap_free_aqic_resources
+  * @q: The vfio_ap_queue
+  *
+@@ -133,14 +92,10 @@ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+  * @q: The vfio_ap_queue
+  *
+  * Uses ap_aqic to disable the interruption and in case of success, reset
+- * in progress or IRQ disable command already proceeded: calls
+- * vfio_ap_wait_for_irqclear() to check for the IRQ bit to be clear
+- * and calls vfio_ap_free_aqic_resources() to free the resources associated
++ * in progress or IRQ disable command already proceeded :calls
++ * vfio_ap_free_aqic_resources() to free the resources associated
+  * with the AP interrupt handling.
+  *
+- * In the case the AP is busy, or a reset is in progress,
+- * retries after 20ms, up to 5 times.
+- *
+  * Returns if ap_aqic function failed with invalid, deconfigured or
+  * checkstopped AP.
+  */
+@@ -155,7 +110,6 @@ struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+ 		switch (status.response_code) {
+ 		case AP_RESPONSE_OTHERWISE_CHANGED:
+ 		case AP_RESPONSE_NORMAL:
+-			vfio_ap_wait_for_irqclear(q->apqn);
+ 			goto end_free;
+ 		case AP_RESPONSE_RESET_IN_PROGRESS:
+ 		case AP_RESPONSE_BUSY:
+-- 
+2.5.5
+
