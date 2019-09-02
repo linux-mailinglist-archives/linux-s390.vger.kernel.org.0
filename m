@@ -2,346 +2,372 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3971BA5794
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Sep 2019 15:21:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2C6EA5865
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Sep 2019 15:51:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbfIBNVe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Sep 2019 09:21:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50006 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729571AbfIBNVe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 2 Sep 2019 09:21:34 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9749410A8136;
-        Mon,  2 Sep 2019 13:21:33 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-116-48.ams2.redhat.com [10.36.116.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45A455D6A7;
-        Mon,  2 Sep 2019 13:21:29 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 4/6] s390x: Add initial smp code
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com
-References: <20190829121459.1708-1-frankja@linux.ibm.com>
- <20190829121459.1708-5-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
+        id S1730418AbfIBNvs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Sep 2019 09:51:48 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44546 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730118AbfIBNvr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Sep 2019 09:51:47 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 30so3169224wrk.11
+        for <linux-s390@vger.kernel.org>; Mon, 02 Sep 2019 06:51:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
+        h=reply-to:subject:to:cc:references:from:openpgp:autocrypt:message-id
+         :date:user-agent:mime-version:in-reply-to;
+        bh=IJfZs1FIeN0qAS3R/QbMVOeaCNq5DoNpVOVfOw6okm0=;
+        b=LjKbeoJbg4FdihvJn9aDISNrO90EAmpGT1N3IKTy/vPuIl9FgEr7FCuBkpx4ho0tdL
+         T7rAzussmpl7KgYDWEOxZC+FxlErPA7lF45e1YB/+qfnNZe2D8R0ETPR+ROb2LSN+g3B
+         gdQINPvaILrMSVk0V2QyzpbifvgDNxaKx/2ShZwkONPuqvhdkaQ6Sr92SvvWplCLdS7q
+         tRGIf2/Ulw/Gz7niT9rAGPrWkRB6jwEkx8FF4iXhjtrScc3uEf//gKACByko0YG/H3yR
+         6ngOkv9IrvIXx9CPrADU8p3G7AKjkRZNMaC/jhbendK8PjUe0+YHJP3NSBXTcelnCsMN
+         r1IQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from:openpgp
+         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to;
+        bh=IJfZs1FIeN0qAS3R/QbMVOeaCNq5DoNpVOVfOw6okm0=;
+        b=NF/1ypWtjc8Y3cDzw8EdO/nVW4Ao7n3fc1Z7dIZ1Ei/niubt5YIP3TC/81JrUoi4vh
+         UxzlMPnDSeEitHy9p6qDYDQ/LY7OGaLQcXYLAHYsSZHsXBfRRK7WRMzb+otSdlmIwLyx
+         E6Yt9CaBjeuo6a7/tIrDPZ2H3/uVd6E+5OiCaUKyTNYiD1jkGfwFiYxg9I+rPFjfq1Qi
+         j2Om3L+BT0GppKe/djzfhRFvpWZwUf9vevjpWMiM1zsltzICNb2fxemuNAlWkQNHJaSc
+         JkrFqz05btKf9/+HBVVCclkQCSJl59u0AqOaDr+s7s8qwXkVPta3ziLa4ZV/VcbdQbw+
+         QGAg==
+X-Gm-Message-State: APjAAAWLw1zx2m64ovtiK5oQAPXDpSg59nLb1w7DdNMdr3obr6doUovR
+        P4XbpTDR1bs1x3uClpegIs8u8w==
+X-Google-Smtp-Source: APXvYqxcW49a6x+YhQqxvbGHM+GibrFicArRQj/wXOZ7QTjp7cICIxOo1d63cz0qIHCzwMOna+/+qg==
+X-Received: by 2002:adf:9050:: with SMTP id h74mr36008433wrh.191.1567432303286;
+        Mon, 02 Sep 2019 06:51:43 -0700 (PDT)
+Received: from [74.125.206.109] ([149.199.62.131])
+        by smtp.gmail.com with ESMTPSA id 20sm16082340wmj.45.2019.09.02.06.51.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 02 Sep 2019 06:51:42 -0700 (PDT)
+Reply-To: monstr@monstr.eu
+Subject: Re: microblaze HAVE_MEMBLOCK_NODE_MAP dependency (was Re: [PATCH v2
+ 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        Paul Mackerras <paulus@samba.org>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Will Deacon <will@kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "willy@infradead.org" <willy@infradead.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Hoan Tran OS <hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Open Source Submission <patches@amperecomputing.com>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Randy Dunlap <rdunlap@infradead.org>
+References: <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
+ <20190730081415.GN9330@dhcp22.suse.cz> <20190731062420.GC21422@rapoport-lnx>
+ <20190731080309.GZ9330@dhcp22.suse.cz> <20190731111422.GA14538@rapoport-lnx>
+ <20190731114016.GI9330@dhcp22.suse.cz> <20190731122631.GB14538@rapoport-lnx>
+ <20190731130037.GN9330@dhcp22.suse.cz> <20190731142129.GA24998@rapoport-lnx>
+ <20190731144114.GY9330@dhcp22.suse.cz> <20190731171510.GB24998@rapoport-lnx>
+From:   Michal Simek <monstr@monstr.eu>
 Openpgp: preference=signencrypt
-Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat
-Message-ID: <af43e842-9aee-9407-2a97-354efe2b81e1@redhat.com>
-Date:   Mon, 2 Sep 2019 15:21:28 +0200
+Autocrypt: addr=monstr@monstr.eu; prefer-encrypt=mutual; keydata=
+ mQINBFFuvDEBEAC9Amu3nk79+J+4xBOuM5XmDmljuukOc6mKB5bBYOa4SrWJZTjeGRf52VMc
+ howHe8Y9nSbG92obZMqsdt+d/hmRu3fgwRYiiU97YJjUkCN5paHXyBb+3IdrLNGt8I7C9RMy
+ svSoH4WcApYNqvB3rcMtJIna+HUhx8xOk+XCfyKJDnrSuKgx0Svj446qgM5fe7RyFOlGX/wF
+ Ae63Hs0RkFo3I/+hLLJP6kwPnOEo3lkvzm3FMMy0D9VxT9e6Y3afe1UTQuhkg8PbABxhowzj
+ SEnl0ICoqpBqqROV/w1fOlPrm4WSNlZJunYV4gTEustZf8j9FWncn3QzRhnQOSuzTPFbsbH5
+ WVxwDvgHLRTmBuMw1sqvCc7CofjsD1XM9bP3HOBwCxKaTyOxbPJh3D4AdD1u+cF/lj9Fj255
+ Es9aATHPvoDQmOzyyRNTQzupN8UtZ+/tB4mhgxWzorpbdItaSXWgdDPDtssJIC+d5+hskys8
+ B3jbv86lyM+4jh2URpnL1gqOPwnaf1zm/7sqoN3r64cml94q68jfY4lNTwjA/SnaS1DE9XXa
+ XQlkhHgjSLyRjjsMsz+2A4otRLrBbumEUtSMlPfhTi8xUsj9ZfPIUz3fji8vmxZG/Da6jx/c
+ a0UQdFFCL4Ay/EMSoGbQouzhC69OQLWNH3rMQbBvrRbiMJbEZwARAQABtB9NaWNoYWwgU2lt
+ ZWsgPG1vbnN0ckBtb25zdHIuZXU+iQJBBBMBAgArAhsDBgsJCAcDAgYVCAIJCgsEFgIDAQIe
+ AQIXgAIZAQUCWq+GEgUJDuRkWQAKCRA3fH8h/j0fkW9/D/9IBoykgOWah2BakL43PoHAyEKb
+ Wt3QxWZSgQjeV3pBys08uQDxByChT1ZW3wsb30GIQSTlzQ7juacoUosje1ygaLHR4xoFMAT9
+ L6F4YzZaPwW6aLI8pUJad63r50sWiGDN/UlhvPrHa3tinhReTEgSCoPCFg3TjjT4nI/NSxUS
+ 5DAbL9qpJyr+dZNDUNX/WnPSqMc4q5R1JqVUxw2xuKPtH0KI2YMoMZ4BC+qfIM+hz+FTQAzk
+ nAfA0/fbNi0gi4050wjouDJIN+EEtgqEewqXPxkJcFd3XHZAXcR7f5Q1oEm1fH3ecyiMJ3ye
+ Paim7npOoIB5+wL24BQ7IrMn3NLeFLdFMYZQDSBIUMe4NNyTfvrHPiwZzg2+9Z+OHvR9hv+r
+ +u/iQ5t5IJrnZQIHm4zEsW5TD7HaWLDx6Uq/DPUf2NjzKk8lPb1jgWbCUZ0ccecESwpgMg35
+ jRxodat/+RkFYBqj7dpxQ91T37RyYgSqKV9EhkIL6F7Whrt9o1cFxhlmTL86hlflPuSs+/Em
+ XwYVS+bO454yo7ksc54S+mKhyDQaBpLZBSh/soJTxB/nCOeJUji6HQBGXdWTPbnci1fnUhF0
+ iRNmR5lfyrLYKp3CWUrpKmjbfePnUfQS+njvNjQG+gds5qnIk2glCvDsuAM1YXlM5mm5Yh+v
+ z47oYKzXe7kCDQRRbrwxARAAl6ol+YeCANN3yTsIfvNmkFnh1QBA6Yw8yuYUkiWQxOeSj/G6
+ 9RWa4K470PTGu7YUrtZm6/snXiKqDtf4jH2QPgwz6b6OpLHI3qddWzYVWtCaR4cJzHxzU0hw
+ zKvTly/WWaZLv/jl7WqSEsyB99+qeGVFAeWrGnfFMe9IOIJiPdni1gcxRXZckeINVYrOddTZ
+ +PNZbAzvS2YSslnpW4n+xSir+KdxUT0mwbxIIe9VdzQwj5SSaIh4mGkvCDd7mrFf0tfnMVW8
+ M9lnFBGQqXh3GNqrEABKqeBjOzxdhuoLcyDgVDJO345LtZs5ceMz+7o/OyxiUzgMUFCdRx5c
+ dy4vsbtqBfVb9dNf37ApqbQAFDKOyoiYDy7vE7D9ZooKDqEmxlDEdI0KVHChdi9o2jVUurqX
+ bzY20ZhaIytsugPwXOlgCobXb/P3tP2W8olQO/xDeaYWdRroDCcTixydXqsOw0OQh3EkOWzs
+ dGI5oYOD0+qW1t5gdcPgpQJ8YQG8jLHwZ18b73I1iD5wVZQdmdGB/4IszA3TNEmvxyM/quyU
+ e15Bi+DGHgDNeZuju4ZAiXKBVeyzM5DSpDogmdxNCWA7DF75od0uBFVgBvm7gPvW3hJQplw3
+ FzyOD4pzD6qcJizXBIT1TEH7wGEakKdn4Nb0xMiufDLPtGvS9ZOTL72xYPUAEQEAAYkCJQQY
+ AQIADwIbDAUCWq+GZQUJDuRksQAKCRA3fH8h/j0fkfg6EACjlUQpjvO/rOASSebpxdxoBEcY
+ ffebTPWHC2OMt9XIuVrNqsPVUnv1GQqCq0AtR3Sf9PULCb40yn3b0iwE+kLlCXcWWBBCy88v
+ pKzYGeCGgOvjAdWr7SWxo8hEpxBQ44EqoppqB8bYvnNKvfCuX2UBnlhlNCYjiELJVpGn7H3+
+ Xd2Zr0brzNjl/DVpi6qmpKlXr7npAalv7hYMxRvQD+j5ee1H/89+cOyHUofjwAZ9t0pIwjzc
+ gl3dX43sVVHYFZTWtnwIUMUC5aPfvi2jwqKcLsGwmdCXHtzULPEHoe33c298tozJG2qBzti+
+ DZ8rI7/5fNg84cDBM8zjGuU6YIpk0jjOQ+V5V5ees+7JprwswaqMDnaA2xDmDetSSGnrUbDu
+ DzeuMMNmzm+BntDbHcJ0fSYutA/Da71Anwrw5WdcW2Iq3xAvcVq6RsIohw/eiAJxMcne3vmb
+ j6nAfnQwzXJB0WCq0vE+CuCfdTt9RVL3Hgw/I7nskMU84bihrQ5lfJ2VU/vCucl2LebwOeWP
+ HIic/FvF0oY3lecyr+v1jvS5FXJ6rCn3uwotd30azG5pKDtAkpRqW283+LueDVQ5P/Gwp5V1
+ 9e6oMggSVn53IRVPB4MzTXVm/Q03c5YXPqgP4bPIF624HAPRnUxCWY1yrZuE4zNPG5dfY0PN
+ RmzhqoTJlLkBogRRb3+lEQQAsBOQdv8t1nkdEdIXWuD6NPpFewqhTpoFrxUtLnyTb6B+gQ1+
+ /nXPT570UwNw58cXr3/HrDml3e3Iov9+SI771jZj9+wYoZiO2qop9xp0QyDNHMucNXiy265e
+ OAPA0r2eEAfxZCi8i5D9v9EdKsoQ9jbII8HVnis1Qu4rpuZVjW8AoJ6xN76kn8yT225eRVly
+ PnX9vTqjBACUlfoU6cvse3YMCsJuBnBenGYdxczU4WmNkiZ6R0MVYIeh9X0LqqbSPi0gF5/x
+ D4azPL01d7tbxmJpwft3FO9gpvDqq6n5l+XHtSfzP7Wgooo2rkuRJBntMCwZdymPwMChiZgh
+ kN/sEvsNnZcWyhw2dCcUekV/eu1CGq8+71bSFgP/WPaXAwXfYi541g8rLwBrgohJTE0AYbQD
+ q5GNF6sDG/rNQeDMFmr05H+XEbV24zeHABrFpzWKSfVy3+J/hE5eWt9Nf4dyto/S55cS9qGB
+ caiED4NXQouDXaSwcZ8hrT34xrf5PqEAW+3bn00RYPFNKzXRwZGQKRDte8aCds+GHueJAm0E
+ GAECAA8CGwIFAlqvhnkFCQ7joU8AUkcgBBkRAgAGBQJRb3+lAAoJEMpJZcspSgwhPOoAn10O
+ zjWCg+imNm7YC7vNxZF68o/2AKCM2Q17szEL0542e6nrM15MXS6n+QkQN3x/If49H5HEYw/9
+ Httigv2cYu0Q6jlftJ1zUAHadoqwChliMgsbJIQYvRpUYchv+11ZAjcWMlmW/QsS0arrkpA3
+ RnXpWg3/Y0kbm9dgqX3edGlBvPsw3gY4HohkwptSTE/h3UHS0hQivelmf4+qUTJZzGuE8TUN
+ obSIZOvB4meYv8z1CLy0EVsLIKrzC9N05gr+NP/6u2x0dw0WeLmVEZyTStExbYNiWSpp+SGh
+ MTyqDR/lExaRHDCVaveuKRFHBnVf9M5m2O0oFlZefzG5okU3lAvEioNCd2MJQaFNrNn0b0zl
+ SjbdfFQoc3m6e6bLtBPfgiA7jLuf5MdngdWaWGti9rfhVL/8FOjyG19agBKcnACYj3a3WCJS
+ oi6fQuNboKdTATDMfk9P4lgL94FD/Y769RtIvMHDi6FInfAYJVS7L+BgwTHu6wlkGtO9ZWJj
+ ktVy3CyxR0dycPwFPEwiRauKItv/AaYxf6hb5UKAPSE9kHGI4H1bK2R2k77gR2hR1jkooZxZ
+ UjICk2bNosqJ4Hidew1mjR0rwTq05m7Z8e8Q0FEQNwuw/GrvSKfKmJ+xpv0rQHLj32/OAvfH
+ L+sE5yV0kx0ZMMbEOl8LICs/PyNpx6SXnigRPNIUJH7Xd7LXQfRbSCb3BNRYpbey+zWqY2Wu
+ LHR1TS1UI9Qzj0+nOrVqrbV48K4Y78sajt65Ay4EUW69uBEIANCnLvoML+2NNnhly/RTGdgY
+ CMzPMiFQ1X/ldfwQj1hIDfalwg8/ix2il+PJK896cBVP3/Fahi/qEENj+AFr8RbLo6vr8fXg
+ x2kXzMdm6GUo+lbuehCEl/+GjdlosxW4Ml6B2F8TtbidI+1ce+sxa32t1+6Z/vUZ45sVqQr7
+ O6eQ2aDbaQGRlMBRykZqeWW0ssGhoS3XtCC2pCbQ08Z+0LwGsvoRAIE9xzCrC2VhVsXdG99w
+ FaltMl88vcNCoJaUgNI5ko5Z27YqDncQiaPcxSbJj+3cMsKTZRacx/Tk+hc5eOQ1l8ewGU4t
+ NLfkyDlQl+qgc9VuYtXZwjUyNJ8FMv8BAJZHkQDIpzfwxyVbEN0y8QDkGYxRv2y+1ePwZxqS
+ Nl0dCADM+Xp5RWOCCUqNKtttcNfWrzkhMSlOWWuQrxtfxLngMuRPnJocPdTdoCKGLUCq54d+
+ Haa0IM08EunwYrrkThvV4QsWwxntHpSm3KYwS6xIObiH89Tfj5zN5JmgP/Hu6eXpbR5UScgR
+ Tob2CgDukj1aHFx/M+u3iux2/pVPM8vF3DNT8P2/KXe5lz6CZNHqYRHlUAE7dFowhHamZEzM
+ FO5FK5xp6C1RDSARi9Mg7vZGcqdLS7kvBQlu0NLNw6fNK/vLZFyp9ngh41xve1p1XlHkOoxV
+ MHws3wBaSAJZnTINP9UC4Frwbwl1bWiza0Re//ve11SnP3u9WMzHCRuaEmsMCADCgPwbsg6Y
+ ++MqTj5gF7cy+X/sC2yoi2D1bOp9qzApnJMzrd6lKfnodvp6NfE1wEG9wyMAmTDFjgHxk72g
+ skymTvd5UreSjnBUqF6IxgRWuyhqU4jyx0qdCG40KC6SwWVReBbHaqW3j2jRx8lt5AnS36Ki
+ g000JD0An7909M3Q7brP23MVTfDdPOuAQ/ChjmNYgzmfODd0F186fDpnrMPHxLWMT8XdhIqc
+ 1X28fQpRE8JFZsH9bWXoaRKocAF8BMMtzTFEIskFaSuqm6UeUD4/0aUvHmaKfjfGXNjRwxqn
+ BuRLy09ed4VZ3CgzAuH5B5yZ8U6s1r0tmukyWdFeDmAsiQKFBBgBAgAPAhsCBQJar4aCBQkO
+ 5GNHAGpfIAQZEQgABgUCUW69uAAKCRALFwZ7/yqG3XbsAP9Fw6fg1SLY9xyszHJ2b5wY/LYu
+ eBGqL7/LnXN7j0ov0QD+I9ThUwZBY1yPv3DUpbtVchCPmE8BiUcPxlAmhNlyBmYJEDd8fyH+
+ PR+RtCwP/RiiOd4ycB+d9xfVSI7ixtWCiYVZjYGoCfodyUEm/KLXy/xZpRoQZrgaHGXBQ07d
+ XBsWQtFunQ5k9oyWzfntmlgw7OS2fEFyx7k973cvzTpgIodErrwoZaH3gj9NsflTP4Wmm2qj
+ riCRyjPVZfi9Ub4TN/P+YkDgIAGsWns1PsvyLvsc4OOOHO7cNbNs0AmNIihAm52IRpmkuFpj
+ 87GgTV/ZB/kVtKEKjyhvK9JlApnULIWme6WobNHUpHmIhM7t2KLly7chJ5at6RrfTr9Adasm
+ CO6Xn1wIXuMfyojv+ULAaZWFRL+CJjDuzdWLzgSTlMquOX3NkCCV2unW+As7Tld3H00CoCJB
+ 5WOlgSQVIdBK8lLEPJGJ8hT1lGS7p5/j1PBs+6i0yu9PTXgbidWIFgjBB9Wj9S2zwFRKoHaX
+ wQsNt9G6u8axwNqFb9UXIw+LZ0gL/cUAFouTtulm2LTGdrUNk6UhMBrM5ABqJG9fyMvZVX3P
+ EwIAdQuPb2h1QLk5KnknUNikjdIZa9yRC5OnUDwV3ffG4Gsb+xtEL7eTLlbFPgBRUmvy6QbE
+ 9GjRSSvlab6Mj5tocPBA0CSsonfLCiHlOLvjdMsdmX5NDUpDCo5QMSNEfHEmV3p+A/NOQ/Hk
+ Qg41tpHgK85MlNXw6MBWLgdXBSGdD0zVX4S4Gz+vwyY1
+Message-ID: <f57f15b5-dee7-c2be-5a34-192a9ecf0763@monstr.eu>
+Date:   Mon, 2 Sep 2019 15:51:25 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190829121459.1708-5-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Mon, 02 Sep 2019 13:21:33 +0000 (UTC)
+In-Reply-To: <20190731171510.GB24998@rapoport-lnx>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="D19tTfHRF2QuIUUzbbAPQ12tjJW2Zl1nR"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29/08/2019 14.14, Janosch Frank wrote:
-> Let's add a rudimentary SMP library, which will scan for cpus and has
-> helper functions that manage the cpu state.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  lib/s390x/asm/arch_def.h |   8 ++
->  lib/s390x/asm/sigp.h     |  29 ++++-
->  lib/s390x/io.c           |   5 +-
->  lib/s390x/sclp.h         |   1 +
->  lib/s390x/smp.c          | 272 +++++++++++++++++++++++++++++++++++++++
->  lib/s390x/smp.h          |  51 ++++++++
->  s390x/Makefile           |   1 +
->  s390x/cstart64.S         |   7 +
->  8 files changed, 368 insertions(+), 6 deletions(-)
->  create mode 100644 lib/s390x/smp.c
->  create mode 100644 lib/s390x/smp.h
-> 
-> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index 5f8f45e..d5a7f51 100644
-> --- a/lib/s390x/asm/arch_def.h
-> +++ b/lib/s390x/asm/arch_def.h
-> @@ -157,6 +157,14 @@ struct cpuid {
->  	uint64_t reserved : 15;
->  };
->  
-> +static inline unsigned short stap(void)
-> +{
-> +	unsigned short cpu_address;
-> +
-> +	asm volatile("stap %0" : "=Q" (cpu_address));
-> +	return cpu_address;
-> +}
-> +
->  static inline int tprot(unsigned long addr)
->  {
->  	int cc;
-> diff --git a/lib/s390x/asm/sigp.h b/lib/s390x/asm/sigp.h
-> index fbd94fc..ce85eb7 100644
-> --- a/lib/s390x/asm/sigp.h
-> +++ b/lib/s390x/asm/sigp.h
-> @@ -46,14 +46,33 @@
->  
->  #ifndef __ASSEMBLER__
->  
-> -static inline void sigp_stop(void)
-> +
-> +static inline int sigp(uint16_t addr, uint8_t order, unsigned long parm,
-> +		       uint32_t *status)
->  {
-> -	register unsigned long status asm ("1") = 0;
-> -	register unsigned long cpu asm ("2") = 0;
-> +	register unsigned long reg1 asm ("1") = parm;
-> +	int cc;
->  
->  	asm volatile(
-> -		"	sigp %0,%1,0(%2)\n"
-> -		: "+d" (status)  : "d" (cpu), "d" (SIGP_STOP) : "cc");
-> +		"	sigp	%1,%2,0(%3)\n"
-> +		"	ipm	%0\n"
-> +		"	srl	%0,28\n"
-> +		: "=d" (cc), "+d" (reg1) : "d" (addr), "a" (order) : "cc");
-> +	if (status)
-> +		*status = reg1;
-> +	return cc;
-> +}
-> +
-> +static inline int sigp_retry(uint16_t addr, uint8_t order, unsigned long parm,
-> +			     uint32_t *status)
-> +{
-> +	int cc;
-> +
-> +retry:
-> +	cc = sigp(addr, order, parm, status);
-> +	if (cc == 2)
-> +		goto retry;
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--D19tTfHRF2QuIUUzbbAPQ12tjJW2Zl1nR
+Content-Type: multipart/mixed; boundary="qZIZzQB7m0rVymNdwsbZ2zyiI1LguDOGl";
+ protected-headers="v1"
+From: Michal Simek <monstr@monstr.eu>
+Reply-To: monstr@monstr.eu
+To: Mike Rapoport <rppt@linux.ibm.com>, Michal Hocko <mhocko@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+ Heiko Carstens <heiko.carstens@de.ibm.com>,
+ "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+ Paul Mackerras <paulus@samba.org>, "H . Peter Anvin" <hpa@zytor.com>,
+ "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>,
+ Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+ Will Deacon <will@kernel.org>,
+ "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+ Michael Ellerman <mpe@ellerman.id.au>, "x86@kernel.org" <x86@kernel.org>,
+ "willy@infradead.org" <willy@infradead.org>,
+ Christian Borntraeger <borntraeger@de.ibm.com>,
+ Ingo Molnar <mingo@redhat.com>, Hoan Tran OS <hoan@os.amperecomputing.com>,
+ Catalin Marinas <catalin.marinas@arm.com>,
+ Open Source Submission <patches@amperecomputing.com>,
+ Pavel Tatashin <pavel.tatashin@microsoft.com>,
+ Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will.deacon@arm.com>,
+ Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>,
+ Vlastimil Babka <vbabka@suse.cz>, Oscar Salvador <osalvador@suse.de>,
+ "linux-arm-kernel@lists.infradead.org"
+ <linux-arm-kernel@lists.infradead.org>,
+ "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+ Andrew Morton <akpm@linux-foundation.org>,
+ "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+ "David S . Miller" <davem@davemloft.net>,
+ Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <f57f15b5-dee7-c2be-5a34-192a9ecf0763@monstr.eu>
+Subject: Re: microblaze HAVE_MEMBLOCK_NODE_MAP dependency (was Re: [PATCH v2
+ 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
+References: <730368c5-1711-89ae-e3ef-65418b17ddc9@os.amperecomputing.com>
+ <20190730081415.GN9330@dhcp22.suse.cz> <20190731062420.GC21422@rapoport-lnx>
+ <20190731080309.GZ9330@dhcp22.suse.cz> <20190731111422.GA14538@rapoport-lnx>
+ <20190731114016.GI9330@dhcp22.suse.cz> <20190731122631.GB14538@rapoport-lnx>
+ <20190731130037.GN9330@dhcp22.suse.cz> <20190731142129.GA24998@rapoport-lnx>
+ <20190731144114.GY9330@dhcp22.suse.cz> <20190731171510.GB24998@rapoport-lnx>
+In-Reply-To: <20190731171510.GB24998@rapoport-lnx>
 
-Please change to:
+--qZIZzQB7m0rVymNdwsbZ2zyiI1LguDOGl
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-	do {
-		cc = sigp(addr, order, parm, status);
-	} while (cc == 2);
+On 31. 07. 19 19:15, Mike Rapoport wrote:
+> On Wed, Jul 31, 2019 at 04:41:14PM +0200, Michal Hocko wrote:
+>> On Wed 31-07-19 17:21:29, Mike Rapoport wrote:
+>>> On Wed, Jul 31, 2019 at 03:00:37PM +0200, Michal Hocko wrote:
+>>>>
+>>>> I am sorry, but I still do not follow. Who is consuming that node id=
 
-> +	return cc;
->  }
->  
->  #endif /* __ASSEMBLER__ */
-[...]
-> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
-> new file mode 100644
-> index 0000000..b1b636a
-> --- /dev/null
-> +++ b/lib/s390x/smp.c
-[...]
-> +int smp_cpu_restart(uint16_t addr)
-> +{
-> +	int rc = 0;
-> +	struct cpu *cpu;
-> +
-> +	spin_lock(&lock);
-> +	cpu = smp_cpu_from_addr(addr);
-> +	if (!cpu) {
-> +		rc = -ENOENT;
-> +		goto out;
-> +	}
-> +
-> +	rc = sigp(cpu->addr, SIGP_RESTART, 0, NULL);
+>>>> information when NUMA=3Dn. In other words why cannot we simply do
+>>> =20
+>>> We can, I think nobody cared to change it.
+>>
+>> It would be great if somebody with the actual HW could try it out.
+>> I can throw a patch but I do not even have a cross compiler in my
+>> toolbox.
+>=20
+> Well, it compiles :)
+> =20
+>>>> diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
+>>>> index a015a951c8b7..3a47e8db8d1c 100644
+>>>> --- a/arch/microblaze/mm/init.c
+>>>> +++ b/arch/microblaze/mm/init.c
+>>>> @@ -175,14 +175,9 @@ void __init setup_memory(void)
+>>>> =20
+>>>>  		start_pfn =3D memblock_region_memory_base_pfn(reg);
+>>>>  		end_pfn =3D memblock_region_memory_end_pfn(reg);
+>>>> -		memblock_set_node(start_pfn << PAGE_SHIFT,
+>>>> -				  (end_pfn - start_pfn) << PAGE_SHIFT,
+>>>> -				  &memblock.memory, 0);
+>>>> +		memory_present(0, start_pfn << PAGE_SHIFT, end_pfn << PAGE_SHIFT)=
+;
+>>>
+>>> memory_present() expects pfns, the shift is not needed.
+>>
+>> Right.
 
-I think you could use "addr" instead of "cpu->addr" here.
+Sorry for slow response on this. In general regarding this topic.
+Microblaze is soft core CPU (now there are hardcore versions too but not
+running Linux). I believe there could be Numa system with
+microblaze/microblazes (SMP is not supported in mainline).
 
-> +	cpu->active = true;
-> +out:
-> +	spin_unlock(&lock);
-> +	return rc;
-> +}
-> +
-> +int smp_cpu_start(uint16_t addr, struct psw psw)
-> +{
-> +	int rc = 0;
-> +	struct cpu *cpu;
-> +	struct lowcore *lc;
-> +
-> +	spin_lock(&lock);
-> +	cpu = smp_cpu_from_addr(addr);
-> +	if (!cpu) {
-> +		rc = -ENOENT;
-> +		goto out;
-> +	}
-> +
-> +	lc = cpu->lowcore;
-> +	lc->restart_new_psw.mask = psw.mask;
-> +	lc->restart_new_psw.addr = psw.addr;
-> +	rc = sigp(cpu->addr, SIGP_RESTART, 0, NULL);
+This code was added in 2011 which is pretty hard to remember why it was
+done in this way.
 
-dito
+It compiles but not working on HW. Please take a look at log below.
 
-> +out:
-> +	spin_unlock(&lock);
-> +	return rc;
-> +}
-> +
-> +int smp_cpu_destroy(uint16_t addr)
-> +{
-> +	struct cpu *cpu;
-> +	int rc = 0;
-> +
-> +	spin_lock(&lock);
-> +	rc = smp_cpu_stop_nolock(addr, false);
-> +	if (rc)
-> +		goto out;
-> +
-> +	cpu = smp_cpu_from_addr(addr);
-> +	free_pages(cpu->lowcore, 2 * PAGE_SIZE);
-> +	free_pages(cpu->stack, 4 * PAGE_SIZE);
+Thanks,
+Michal
 
-Maybe do this afterwards to make sure that nobody uses a dangling pointer:
 
-	cpu->lowcore = cpu->stack = -1UL;
+[    0.000000] Linux version 5.3.0-rc6-00007-g54b01939182f-dirty
+(monstr@monstr-desktop3) (gcc version 8.2.0 (crosstool-NG 1.20.0)) #101
+Mon Sep 2 15:44:05 CEST 2019
+[    0.000000] setup_memory: max_mapnr: 0x40000
+[    0.000000] setup_memory: min_low_pfn: 0x80000
+[    0.000000] setup_memory: max_low_pfn: 0xb0000
+[    0.000000] setup_memory: max_pfn: 0xc0000
+[    0.000000] start pfn 0x80000
+[    0.000000] end pfn 0xc0000
+[    0.000000] Zone ranges:
+[    0.000000]   DMA      [mem 0x0000000080000000-0x00000000afffffff]
+[    0.000000]   Normal   empty
+[    0.000000]   HighMem  [mem 0x00000000b0000000-0x00000000bfffffff]
+[    0.000000] Movable zone start for each node
+[    0.000000] Early memory node ranges
+[    0.000000]   node   1: [mem 0x0000000080000000-0x00000000bfffffff]
+[    0.000000] Could not find start_pfn for node 0
+[    0.000000] Initmem setup node 0 [mem
+0x0000000000000000-0x0000000000000000]
+[    0.000000] earlycon: ns16550a0 at MMIO 0x44a01000 (options '115200n8'=
+)
+[    0.000000] printk: bootconsole [ns16550a0] enabled
+[    0.000000] setup_cpuinfo: initialising
+[    0.000000] setup_cpuinfo: Using full CPU PVR support
+[    0.000000] wt_msr_noirq
+[    0.000000] pcpu-alloc: s0 r0 d32768 u32768 alloc=3D1*32768
+[    0.000000] pcpu-alloc: [0] 0
+[    0.000000] Built 1 zonelists, mobility grouping off.  Total pages: 0
+[    0.000000] Kernel command line: earlycon
+[    0.000000] Dentry cache hash table entries: -2147483648 (order: -13,
+0 bytes, linear)
+[    0.000000] Inode-cache hash table entries: -2147483648 (order: -13,
+0 bytes, linear)
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] Oops: kernel access of bad area, sig: 11
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted
+5.3.0-rc6-00007-g54b01939182f-dirty #101
+[    0.000000]  Registers dump: mode=3D805B9EA8
+[    0.000000]  r1=3D000065A0, r2=3DC05B7AE6, r3=3D00000000, r4=3D0000000=
+0
+[    0.000000]  r5=3D00080000, r6=3D00080B50, r7=3D00000000, r8=3D0000000=
+4
+[    0.000000]  r9=3D00000000, r10=3D0000001F, r11=3D00000000, r12=3D0000=
+6666
+[    0.000000]  r13=3D4119DCC0, r14=3D00000000, r15=3DC05EFF8C, r16=3D000=
+00000
+[    0.000000]  r17=3DC0604408, r18=3DFFFC0000, r19=3DC05B9F6C, r20=3DBFF=
+EC168
+[    0.000000]  r21=3DBFFEC168, r22=3DEFFF9AC0, r23=3D00000001, r24=3DC06=
+06874
+[    0.000000]  r25=3DBFE6B74C, r26=3D80000000, r27=3D00000000, r28=3D900=
+00040
+[    0.000000]  r29=3D01000000, r30=3D00000380, r31=3DC05C02F0, rPC=3DC06=
+04408
+[    0.000000]  msr=3D000046A0, ear=3D00000004, esr=3D00000D12, fsr=3DFFF=
+FFFFF
+[    0.000000] Oops: kernel access of bad area, sig: 11
 
-?
 
-> +out:
-> +	spin_unlock(&lock);
-> +	return rc;
-> +}
-> +
-> +int smp_cpu_setup(uint16_t addr, struct psw psw)
-> +{
-> +	struct lowcore *lc;
-> +	struct cpu *cpu;
-> +	int rc = 0;
-> +
-> +	spin_lock(&lock);
-> +
-> +	if (!cpus) {
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	cpu = smp_cpu_from_addr(addr);
-> +
-> +	if (!cpu) {
-> +		rc = -ENOENT;
-> +		goto out;
-> +	}
-> +
-> +	if (cpu->active) {
-> +		rc = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	sigp_retry(cpu->addr, SIGP_INITIAL_CPU_RESET, 0, NULL);
-> +
-> +	lc = alloc_pages(1);
-> +	cpu->lowcore = lc;
-> +	memset(lc, 0, PAGE_SIZE * 2);
-> +	sigp_retry(cpu->addr, SIGP_SET_PREFIX, (unsigned long )lc, NULL);
-> +
-> +	/* Copy all exception psws. */
-> +	memcpy(lc, cpu0->lowcore, 512);
-> +
-> +	/* Setup stack */
-> +	cpu->stack = (uint64_t *)alloc_pages(2);
-> +
-> +	/* Start without DAT and any other mask bits. */
-> +	cpu->lowcore->sw_int_grs[14] = psw.addr;
-> +	cpu->lowcore->sw_int_grs[15] = (uint64_t)cpu->stack + (PAGE_SIZE * 4) / sizeof(cpu->stack);
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Xilinx Microblaze
+Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
+U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
 
-The end-of-stack calculation looks wrong to me. I think you either meant:
 
- ... = (uint64_t)(cpu->stack + (PAGE_SIZE * 4) / sizeof(*cpu->stack));
 
-or:
+--qZIZzQB7m0rVymNdwsbZ2zyiI1LguDOGl--
 
- ... = (uint64_t)cpu->stack + (PAGE_SIZE * 4);
+--D19tTfHRF2QuIUUzbbAPQ12tjJW2Zl1nR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-?
+-----BEGIN PGP SIGNATURE-----
 
-> +	lc->restart_new_psw.mask = 0x0000000180000000UL;
-> +	lc->restart_new_psw.addr = (unsigned long)smp_cpu_setup_state;
+iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXW0eXQAKCRDKSWXLKUoM
+IQSRAJ95LhdDRja4rjrT7nFf2urcLyUsawCgh/Ho29ldM07jS/qDcder85B3TdA=
+=d2ww
+-----END PGP SIGNATURE-----
 
-Maybe use "(uint64_t)" instead of "(unsigned long)"?
-
-> +	lc->sw_int_cr0 = 0x0000000000040000UL;
-> +
-> +	/* Start processing */
-> +	cpu->active = true;
-> +	rc = sigp_retry(cpu->addr, SIGP_RESTART, 0, NULL);
-
-Should cpu->active only be set to true if rc == 0 ?
-
-> +out:
-> +	spin_unlock(&lock);
-> +	return rc;
-> +}
-> +
-> +/*
-> + * Disregarding state, stop all cpus that once were online except for
-> + * calling cpu.
-> + */
-> +void smp_teardown(void)
-> +{
-> +	int i = 0;
-> +	uint16_t this_cpu = stap();
-> +	struct ReadCpuInfo *info = (void *)cpu_info_buffer;
-> +
-> +	spin_lock(&lock);
-> +	for (; i < info->nr_configured; i++) {
-> +		if (cpus[i].active &&
-> +		    cpus[i].addr != this_cpu) {
-> +			sigp_retry(cpus[i].addr, SIGP_STOP, 0, NULL);
-
-Maybe set cpus[i].active = false afterwards ?
-
-> +		}
-> +	}
-> +	spin_unlock(&lock);
-> +}
-
- Thomas
+--D19tTfHRF2QuIUUzbbAPQ12tjJW2Zl1nR--
