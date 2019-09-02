@@ -2,101 +2,147 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B7909A5569
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Sep 2019 13:59:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 77B44A55F6
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Sep 2019 14:27:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731008AbfIBL71 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Sep 2019 07:59:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45286 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730611AbfIBL70 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 2 Sep 2019 07:59:26 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 93A438980E1;
-        Mon,  2 Sep 2019 11:59:26 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-116-48.ams2.redhat.com [10.36.116.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4736660C18;
-        Mon,  2 Sep 2019 11:59:22 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 2/6] s390x: Add linemode console
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com
-References: <20190829121459.1708-1-frankja@linux.ibm.com>
- <20190829121459.1708-3-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat
-Message-ID: <5c639af9-fa34-9e42-0d6e-d4a9735b52c9@redhat.com>
-Date:   Mon, 2 Sep 2019 13:59:22 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1731544AbfIBM0M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Sep 2019 08:26:12 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5711 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729893AbfIBM0L (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 2 Sep 2019 08:26:11 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 17A6940E61A165018A38;
+        Mon,  2 Sep 2019 20:26:05 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Mon, 2 Sep 2019
+ 20:25:57 +0800
+Subject: Re: [PATCH v2 2/9] x86: numa: check the node id consistently for x86
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <dalias@libc.org>, <linux-sh@vger.kernel.org>,
+        <catalin.marinas@arm.com>, <dave.hansen@linux.intel.com>,
+        <heiko.carstens@de.ibm.com>, <linuxarm@huawei.com>,
+        <jiaxun.yang@flygoat.com>, <linux-kernel@vger.kernel.org>,
+        <mwb@linux.vnet.ibm.com>, <paulus@samba.org>, <hpa@zytor.com>,
+        <sparclinux@vger.kernel.org>, <chenhc@lemote.com>,
+        <will@kernel.org>, <linux-s390@vger.kernel.org>,
+        <ysato@users.sourceforge.jp>, <mpe@ellerman.id.au>,
+        <x86@kernel.org>, <rppt@linux.ibm.com>, <borntraeger@de.ibm.com>,
+        <dledford@redhat.com>, <mingo@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <benh@kernel.crashing.org>,
+        <jhogan@kernel.org>, <nfont@linux.vnet.ibm.com>,
+        <mattst88@gmail.com>, <len.brown@intel.com>, <gor@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <ink@jurassic.park.msu.ru>,
+        <cai@lca.pw>, <luto@kernel.org>, <tglx@linutronix.de>,
+        <naveen.n.rao@linux.vnet.ibm.com>,
+        <linux-arm-kernel@lists.infradead.org>, <rth@twiddle.net>,
+        <axboe@kernel.dk>, <robin.murphy@arm.com>,
+        <linux-mips@vger.kernel.org>, <ralf@linux-mips.org>,
+        <tbogendoerfer@suse.de>, <paul.burton@mips.com>,
+        <linux-alpha@vger.kernel.org>, <bp@alien8.de>,
+        <akpm@linux-foundation.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <davem@davemloft.net>
+References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
+ <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
+ <20190831085539.GG2369@hirez.programming.kicks-ass.net>
+ <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
+ <20190831161247.GM2369@hirez.programming.kicks-ass.net>
+ <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
+ <20190902072542.GN2369@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <5fa2aa99-89fa-cd41-b090-36a23cfdeb73@huawei.com>
+Date:   Mon, 2 Sep 2019 20:25:24 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-In-Reply-To: <20190829121459.1708-3-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190902072542.GN2369@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.67]); Mon, 02 Sep 2019 11:59:26 +0000 (UTC)
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29/08/2019 14.14, Janosch Frank wrote:
-> z/VM isn't fond of vt220, so we need line mode when running under
-> z/VM.
+On 2019/9/2 15:25, Peter Zijlstra wrote:
+> On Mon, Sep 02, 2019 at 01:46:51PM +0800, Yunsheng Lin wrote:
+>> On 2019/9/1 0:12, Peter Zijlstra wrote:
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Acked-by: David Hildenbrand <david@redhat.com>
-> ---
->  lib/s390x/sclp-console.c | 181 +++++++++++++++++++++++++++++++++++----
->  lib/s390x/sclp.h         |  55 +++++++++++-
->  2 files changed, 218 insertions(+), 18 deletions(-)
+>>> 1) because even it is not set, the device really does belong to a node.
+>>> It is impossible a device will have magic uniform access to memory when
+>>> CPUs cannot.
+>>
+>> So it means dev_to_node() will return either NUMA_NO_NODE or a
+>> valid node id?
+> 
+> NUMA_NO_NODE := -1, which is not a valid node number. It is also, like I
+> said, not a valid device location on a NUMA system.
+> 
+> Just because ACPI/BIOS is shit, doesn't mean the device doesn't have a
+> node association. It just means we don't know and might have to guess.
 
-Works also whith the sclplmconsole in QEMU (tested with "-chardev
-stdio,id=s1 -device sclplmconsole,chardev=s1"), thus:
+How do we guess the device's location when ACPI/BIOS does not set it?
 
-Tested-by: Thomas Huth <thuth@redhat.com>
+It seems dev_to_node() does not do anything about that and leave the
+job to the caller or whatever function that get called with its return
+value, such as cpumask_of_node().
+
+> 
+>>> 2) is already true today, cpumask_of_node() requires a valid node_id.
+>>
+>> Ok, most of the user does check node_id before calling
+>> cpumask_of_node(), but does a little different type of checking:
+>>
+>> 1) some does " < 0" check;
+>> 2) some does "== NUMA_NO_NODE" check;
+>> 3) some does ">= MAX_NUMNODES" check;
+>> 4) some does "< 0 || >= MAX_NUMNODES || !node_online(node)" check.
+> 
+> The one true way is:
+> 
+> 	'(unsigned)node_id >= nr_node_ids'
+
+I missed the magic of the "unsigned" in your previous reply.
+
+> 
+>>> 3) is just wrong and increases overhead for everyone.
+>>
+>> Ok, cpumask_of_node() is also used in some critical path such
+>> as scheduling, which may not need those checking, the overhead
+>> is unnecessary.
+>>
+>> But for non-critical path such as setup or configuration path,
+>> it better to have consistent checking, and also simplify the
+>> user code that calls cpumask_of_node().
+>>
+>> Do you think it is worth the trouble to add a new function
+>> such as cpumask_of_node_check(maybe some other name) to do
+>> consistent checking?
+>>
+>> Or caller just simply check if dev_to_node()'s return value is
+>> NUMA_NO_NODE before calling cpumask_of_node()?
+> 
+> It is not a matter of convenience. The function is called
+> cpumask_of_node(), when node < 0 || node >= nr_node_ids, it is not a
+> valid node, therefore the function shouldn't return anything except an
+> error.
+what do you mean by error? What I can think is three type of errors:
+1) return NULL, this way it seems cpumask_of_node() also leave the
+   job to the function that calls it.
+2) cpu_none_mask, I am not sure what this means, maybe it means there
+   is no cpu on the same node with the device?
+3) give a warning, stack dump, or even a BUG_ON?
+
+I would prefer the second one, and implement the third one when the
+CONFIG_DEBUG_PER_CPU_MAPS is selected.
+
+Any suggestion?
+
+> 
+> Also note that the CONFIG_DEBUG_PER_CPU_MAPS version of
+> cpumask_of_node() already does this (although it wants the below fix).
+
+Thanks for the note and example.
+
