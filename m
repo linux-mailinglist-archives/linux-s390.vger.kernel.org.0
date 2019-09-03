@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B0EAEA6F51
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 18:32:37 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23979A7096
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 18:41:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731417AbfICQcN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Sep 2019 12:32:13 -0400
-Received: from mail.kernel.org ([198.145.29.99]:55654 "EHLO mail.kernel.org"
+        id S1730277AbfICQZK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Sep 2019 12:25:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44900 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727069AbfICQcM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:32:12 -0400
+        id S1730261AbfICQZJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:25:09 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F155E2343A;
-        Tue,  3 Sep 2019 16:32:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 563FB23431;
+        Tue,  3 Sep 2019 16:25:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528332;
-        bh=WG6uoZmxjfAMieB1hpPCkzQG0SYx+aPlTDuHzoGfSrQ=;
+        s=default; t=1567527908;
+        bh=Yyh/X5Nvc/YP7vxCIa5rLB+CfoURSPuz+berxUZPKkE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFYVmPzOyQlXoAIe6NC0ZRfHzRXIYqZ7OMl666m40GM/YNLqY1AP4fd1LbRjjtiM+
-         eGJpduduePWnyNwKH70EngrkA5d5VjUMdWVbwZgpmb24B1+wtNG/sVdctENmdQFzPn
-         kIgPZHsdYBa0EZEjVt2P2XbNkEVlI2hs6NUrWiwE=
+        b=CNIu6XuvLUD45W/RvX78c9OI79KXl1MZlNNc5UC1XsvDWoSl0z+2scHqWiYxgi5yw
+         hoDyxgYjvaTjg8OriwMTXjyDvamN7BNFPGkNBGaC5dVjxKX4qg5D9wNTOlGNH3D5ol
+         orvGVMdxnN4ynX+ud9hG0ZdmlwOtIGG13fyIw1z0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Halil Pasic <pasic@linux.ibm.com>,
@@ -31,12 +31,12 @@ Cc:     Halil Pasic <pasic@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
         virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 162/167] virtio/s390: fix race on airq_areas[]
-Date:   Tue,  3 Sep 2019 12:25:14 -0400
-Message-Id: <20190903162519.7136-162-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.2 18/23] virtio/s390: fix race on airq_areas[]
+Date:   Tue,  3 Sep 2019 12:24:19 -0400
+Message-Id: <20190903162424.6877-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
-References: <20190903162519.7136-1-sashal@kernel.org>
+In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
+References: <20190903162424.6877-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -70,7 +70,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+)
 
 diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-index ec54538f7ae1c..67efdf25657f3 100644
+index 6a30768813219..8d47ad61bac3d 100644
 --- a/drivers/s390/virtio/virtio_ccw.c
 +++ b/drivers/s390/virtio/virtio_ccw.c
 @@ -132,6 +132,7 @@ struct airq_info {
