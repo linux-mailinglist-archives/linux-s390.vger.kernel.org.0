@@ -2,93 +2,198 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23852A69FD
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 15:36:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2FE8A703C
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 18:39:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727941AbfICNgx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Sep 2019 09:36:53 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:26784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728490AbfICNgx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Sep 2019 09:36:53 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x83DXMGH011977
-        for <linux-s390@vger.kernel.org>; Tue, 3 Sep 2019 09:36:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2usqvykqq5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 03 Sep 2019 09:36:52 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Tue, 3 Sep 2019 14:36:43 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Sep 2019 14:36:41 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x83Dad3F32768276
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Sep 2019 13:36:39 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7B661A4054;
-        Tue,  3 Sep 2019 13:36:39 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2E555A405F;
-        Tue,  3 Sep 2019 13:36:39 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  3 Sep 2019 13:36:39 +0000 (GMT)
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH 1/1] s390: vfio-ap: fix warning reset not completed
-Date:   Tue,  3 Sep 2019 15:36:18 +0200
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19090313-0016-0000-0000-000002A62061
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090313-0017-0000-0000-000033068869
-Message-Id: <20190903133618.9122-1-pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909030143
+        id S1730568AbfICQ0N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Sep 2019 12:26:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46874 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730564AbfICQ0M (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:26:12 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3890023878;
+        Tue,  3 Sep 2019 16:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567527971;
+        bh=7h0GwUcuFj8kFqDGbnXbHa4mZpakoW6rKf2uvV9vEos=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=FNCqhBY5TwHKxVmb+ZrH2ZyTmdlK5+jfcvZMY8hzeH4qduhsh1Gb72PYawNOITIwd
+         FFlbbU8JUxsEXlrSlVZ01ArHstGVa37673sczNCp0kMPXIpKdH8iEcUCIZMX1GYGV/
+         kzsUaJVspc3v9r/e1CyRrPtAyumVHkNUnYc+utw0=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 030/167] s390/zcrypt: reinit ap queue state machine during device probe
+Date:   Tue,  3 Sep 2019 12:23:02 -0400
+Message-Id: <20190903162519.7136-30-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
+References: <20190903162519.7136-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The intention seems to be to warn once when we don't wait enough for the
-reset to complete. Let's use the right retry counter to accomplish that
-semantic.
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+[ Upstream commit 104f708fd1241b22f808bdf066ab67dc5a051de5 ]
+
+Until the vfio-ap driver came into live there was a well known
+agreement about the way how ap devices are initialized and their
+states when the driver's probe function is called.
+
+However, the vfio device driver when receiving an ap queue device does
+additional resets thereby removing the registration for interrupts for
+the ap device done by the ap bus core code. So when later the vfio
+driver releases the device and one of the default zcrypt drivers takes
+care of the device the interrupt registration needs to get
+renewed. The current code does no renew and result is that requests
+send into such a queue will never see a reply processed - the
+application hangs.
+
+This patch adds a function which resets the aq queue state machine for
+the ap queue device and triggers the walk through the initial states
+(which are reset and registration for interrupts). This function is
+now called before the driver's probe function is invoked.
+
+When the association between driver and device is released, the
+driver's remove function is called. The current implementation calls a
+ap queue function ap_queue_remove(). This invokation has been moved to
+the ap bus function to make the probe / remove pair for ap bus and
+drivers more symmetric.
+
+Fixes: 7e0bdbe5c21c ("s390/zcrypt: AP bus support for alternate driver(s)")
+Cc: stable@vger.kernel.org # 4.19+
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Reviewd-by: Tony Krowiak <akrowiak@linux.ibm.com>
+Reviewd-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/crypto/vfio_ap_ops.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/s390/crypto/ap_bus.c        |  8 ++++----
+ drivers/s390/crypto/ap_bus.h        |  1 +
+ drivers/s390/crypto/ap_queue.c      | 15 +++++++++++++++
+ drivers/s390/crypto/zcrypt_cex2a.c  |  1 -
+ drivers/s390/crypto/zcrypt_cex4.c   |  1 -
+ drivers/s390/crypto/zcrypt_pcixcc.c |  1 -
+ 6 files changed, 20 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-index 0604b49a4d32..5c0f53c6dde7 100644
---- a/drivers/s390/crypto/vfio_ap_ops.c
-+++ b/drivers/s390/crypto/vfio_ap_ops.c
-@@ -1143,7 +1143,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
- 				msleep(20);
- 				status = ap_tapq(apqn, NULL);
- 			}
--			WARN_ON_ONCE(retry <= 0);
-+			WARN_ON_ONCE(retry2 <= 0);
- 			return 0;
- 		case AP_RESPONSE_RESET_IN_PROGRESS:
- 		case AP_RESPONSE_BUSY:
+diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+index a57b969b89733..3be54651698a3 100644
+--- a/drivers/s390/crypto/ap_bus.c
++++ b/drivers/s390/crypto/ap_bus.c
+@@ -777,6 +777,8 @@ static int ap_device_probe(struct device *dev)
+ 		drvres = ap_drv->flags & AP_DRIVER_FLAG_DEFAULT;
+ 		if (!!devres != !!drvres)
+ 			return -ENODEV;
++		/* (re-)init queue's state machine */
++		ap_queue_reinit_state(to_ap_queue(dev));
+ 	}
+ 
+ 	/* Add queue/card to list of active queues/cards */
+@@ -809,6 +811,8 @@ static int ap_device_remove(struct device *dev)
+ 	struct ap_device *ap_dev = to_ap_dev(dev);
+ 	struct ap_driver *ap_drv = ap_dev->drv;
+ 
++	if (is_queue_dev(dev))
++		ap_queue_remove(to_ap_queue(dev));
+ 	if (ap_drv->remove)
+ 		ap_drv->remove(ap_dev);
+ 
+@@ -1446,10 +1450,6 @@ static void ap_scan_bus(struct work_struct *unused)
+ 			aq->ap_dev.device.parent = &ac->ap_dev.device;
+ 			dev_set_name(&aq->ap_dev.device,
+ 				     "%02x.%04x", id, dom);
+-			/* Start with a device reset */
+-			spin_lock_bh(&aq->lock);
+-			ap_wait(ap_sm_event(aq, AP_EVENT_POLL));
+-			spin_unlock_bh(&aq->lock);
+ 			/* Register device */
+ 			rc = device_register(&aq->ap_dev.device);
+ 			if (rc) {
+diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
+index 5246cd8c16a60..7e85d238767ba 100644
+--- a/drivers/s390/crypto/ap_bus.h
++++ b/drivers/s390/crypto/ap_bus.h
+@@ -253,6 +253,7 @@ struct ap_queue *ap_queue_create(ap_qid_t qid, int device_type);
+ void ap_queue_remove(struct ap_queue *aq);
+ void ap_queue_suspend(struct ap_device *ap_dev);
+ void ap_queue_resume(struct ap_device *ap_dev);
++void ap_queue_reinit_state(struct ap_queue *aq);
+ 
+ struct ap_card *ap_card_create(int id, int queue_depth, int raw_device_type,
+ 			       int comp_device_type, unsigned int functions);
+diff --git a/drivers/s390/crypto/ap_queue.c b/drivers/s390/crypto/ap_queue.c
+index 66f7334bcb032..0aa4b3ccc948c 100644
+--- a/drivers/s390/crypto/ap_queue.c
++++ b/drivers/s390/crypto/ap_queue.c
+@@ -718,5 +718,20 @@ void ap_queue_remove(struct ap_queue *aq)
+ {
+ 	ap_flush_queue(aq);
+ 	del_timer_sync(&aq->timeout);
++
++	/* reset with zero, also clears irq registration */
++	spin_lock_bh(&aq->lock);
++	ap_zapq(aq->qid);
++	aq->state = AP_STATE_BORKED;
++	spin_unlock_bh(&aq->lock);
+ }
+ EXPORT_SYMBOL(ap_queue_remove);
++
++void ap_queue_reinit_state(struct ap_queue *aq)
++{
++	spin_lock_bh(&aq->lock);
++	aq->state = AP_STATE_RESET_START;
++	ap_wait(ap_sm_event(aq, AP_EVENT_POLL));
++	spin_unlock_bh(&aq->lock);
++}
++EXPORT_SYMBOL(ap_queue_reinit_state);
+diff --git a/drivers/s390/crypto/zcrypt_cex2a.c b/drivers/s390/crypto/zcrypt_cex2a.c
+index f4ae5fa30ec97..ff17a00273f77 100644
+--- a/drivers/s390/crypto/zcrypt_cex2a.c
++++ b/drivers/s390/crypto/zcrypt_cex2a.c
+@@ -198,7 +198,6 @@ static void zcrypt_cex2a_queue_remove(struct ap_device *ap_dev)
+ 	struct ap_queue *aq = to_ap_queue(&ap_dev->device);
+ 	struct zcrypt_queue *zq = aq->private;
+ 
+-	ap_queue_remove(aq);
+ 	if (zq)
+ 		zcrypt_queue_unregister(zq);
+ }
+diff --git a/drivers/s390/crypto/zcrypt_cex4.c b/drivers/s390/crypto/zcrypt_cex4.c
+index 35d58dbbc4da3..2a42e5962317a 100644
+--- a/drivers/s390/crypto/zcrypt_cex4.c
++++ b/drivers/s390/crypto/zcrypt_cex4.c
+@@ -273,7 +273,6 @@ static void zcrypt_cex4_queue_remove(struct ap_device *ap_dev)
+ 	struct ap_queue *aq = to_ap_queue(&ap_dev->device);
+ 	struct zcrypt_queue *zq = aq->private;
+ 
+-	ap_queue_remove(aq);
+ 	if (zq)
+ 		zcrypt_queue_unregister(zq);
+ }
+diff --git a/drivers/s390/crypto/zcrypt_pcixcc.c b/drivers/s390/crypto/zcrypt_pcixcc.c
+index 94d9f7224aea3..baa683c3f5d30 100644
+--- a/drivers/s390/crypto/zcrypt_pcixcc.c
++++ b/drivers/s390/crypto/zcrypt_pcixcc.c
+@@ -276,7 +276,6 @@ static void zcrypt_pcixcc_queue_remove(struct ap_device *ap_dev)
+ 	struct ap_queue *aq = to_ap_queue(&ap_dev->device);
+ 	struct zcrypt_queue *zq = aq->private;
+ 
+-	ap_queue_remove(aq);
+ 	if (zq)
+ 		zcrypt_queue_unregister(zq);
+ }
 -- 
-2.17.1
+2.20.1
 
