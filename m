@@ -2,74 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F5D7A70E8
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 18:46:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D5A3CA72DA
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 20:54:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730224AbfICQpr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Sep 2019 12:45:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47904 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730079AbfICQpr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:45:47 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 568788553F;
-        Tue,  3 Sep 2019 16:45:47 +0000 (UTC)
-Received: from gondolin (ovpn-116-176.ams2.redhat.com [10.36.116.176])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A2156012C;
-        Tue,  3 Sep 2019 16:45:45 +0000 (UTC)
-Date:   Tue, 3 Sep 2019 18:45:42 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Tony Krowiak <akrowiak@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [PATCH 1/1] s390: vfio-ap: fix warning reset not completed
-Message-ID: <20190903184542.2d955111.cohuck@redhat.com>
-In-Reply-To: <20190903133618.9122-1-pasic@linux.ibm.com>
-References: <20190903133618.9122-1-pasic@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726323AbfICSyi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Sep 2019 14:54:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6122 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726270AbfICSyh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Sep 2019 14:54:37 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x83IptcL025953;
+        Tue, 3 Sep 2019 14:54:04 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uswkc0h2c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 14:54:03 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x83IqpVo028192;
+        Tue, 3 Sep 2019 14:54:03 -0400
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uswkc0h1x-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 14:54:03 -0400
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+        by ppma01wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x83Ij4TZ023100;
+        Tue, 3 Sep 2019 18:54:02 GMT
+Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
+        by ppma01wdc.us.ibm.com with ESMTP id 2uqgh6mcvy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 03 Sep 2019 18:54:02 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x83Is2a954198674
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Sep 2019 18:54:02 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 01B8DAC059;
+        Tue,  3 Sep 2019 18:54:02 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A1607AC067;
+        Tue,  3 Sep 2019 18:53:57 +0000 (GMT)
+Received: from morokweng.localdomain (unknown [9.85.133.34])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Tue,  3 Sep 2019 18:53:57 +0000 (GMT)
+References: <20190806044919.10622-2-bauerman@linux.ibm.com> <46MFPW6NYNz9sDQ@ozlabs.org>
+User-agent: mu4e 1.2.0; emacs 26.2
+From:   Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To:     Michael Ellerman <patch-notifications@ellerman.id.au>
+Cc:     x86@kernel.org, linux-s390@vger.kernel.org,
+        Lianbo Jiang <lijiang@redhat.com>,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Mike Anderson <andmike@linux.ibm.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        iommu@lists.linux-foundation.org, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Lendacky <Thomas.Lendacky@amd.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-fsdevel@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linuxppc-dev@lists.ozlabs.org, Christoph Hellwig <hch@lst.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: Re: [PATCH v4 1/6] x86, s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig
+In-reply-to: <46MFPW6NYNz9sDQ@ozlabs.org>
+Date:   Tue, 03 Sep 2019 15:53:54 -0300
+Message-ID: <87k1apky7x.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 03 Sep 2019 16:45:47 +0000 (UTC)
+Content-Type: text/plain
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-03_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909030186
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  3 Sep 2019 15:36:18 +0200
-Halil Pasic <pasic@linux.ibm.com> wrote:
 
-"fix warning for not completed reset"?
+Michael Ellerman <patch-notifications@ellerman.id.au> writes:
 
-> The intention seems to be to warn once when we don't wait enough for the
-> reset to complete. Let's use the right retry counter to accomplish that
-> semantic.
-> 
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 0604b49a4d32..5c0f53c6dde7 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -1143,7 +1143,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
->  				msleep(20);
->  				status = ap_tapq(apqn, NULL);
->  			}
-> -			WARN_ON_ONCE(retry <= 0);
-> +			WARN_ON_ONCE(retry2 <= 0);
->  			return 0;
->  		case AP_RESPONSE_RESET_IN_PROGRESS:
->  		case AP_RESPONSE_BUSY:
+> On Tue, 2019-08-06 at 04:49:14 UTC, Thiago Jung Bauermann wrote:
+>> powerpc is also going to use this feature, so put it in a generic location.
+>> 
+>> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+>> Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
+>> Reviewed-by: Christoph Hellwig <hch@lst.de>
+>
+> Series applied to powerpc topic/mem-encrypt, thanks.
+>
+> https://git.kernel.org/powerpc/c/0c9c1d56397518eb823d458b00b06bcccd956794
 
-Makes sense.
+Thank you!
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+-- 
+Thiago Jung Bauermann
+IBM Linux Technology Center
