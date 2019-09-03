@@ -2,37 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD86BA6F2F
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 18:32:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B0EAEA6F51
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 18:32:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbfICQaY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Sep 2019 12:30:24 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51342 "EHLO mail.kernel.org"
+        id S1731417AbfICQcN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Sep 2019 12:32:13 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55654 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731196AbfICQ2y (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:28:54 -0400
+        id S1727069AbfICQcM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:32:12 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF2C5238CD;
-        Tue,  3 Sep 2019 16:28:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F155E2343A;
+        Tue,  3 Sep 2019 16:32:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567528133;
-        bh=GOQcnBgM/52LCuH+agl4jDfZHlMROPIp99AfKXZDnWA=;
+        s=default; t=1567528332;
+        bh=WG6uoZmxjfAMieB1hpPCkzQG0SYx+aPlTDuHzoGfSrQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HsNmK9VJBuGjtbq3quXykdTdhuS8x0UMTHl6o+D9L3reSv2r2jXK4tYiSFkZ8RK9X
-         RDcIXtFjVRy4WR7PGZhrRe2pOM6r3tiGnaV2cLwr6beLsTR8R//01wJvgibXx9V9Ej
-         t9jV89yma5MNB0qSmSNiWsXx+y0qrylVuRTLb/oo=
+        b=wFYVmPzOyQlXoAIe6NC0ZRfHzRXIYqZ7OMl666m40GM/YNLqY1AP4fd1LbRjjtiM+
+         eGJpduduePWnyNwKH70EngrkA5d5VjUMdWVbwZgpmb24B1+wtNG/sVdctENmdQFzPn
+         kIgPZHsdYBa0EZEjVt2P2XbNkEVlI2hs6NUrWiwE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 128/167] scsi: zfcp: fix request object use-after-free in send path causing wrong traces
-Date:   Tue,  3 Sep 2019 12:24:40 -0400
-Message-Id: <20190903162519.7136-128-sashal@kernel.org>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Marc Hartmayer <mhartmay@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 162/167] virtio/s390: fix race on airq_areas[]
+Date:   Tue,  3 Sep 2019 12:25:14 -0400
+Message-Id: <20190903162519.7136-162-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190903162519.7136-1-sashal@kernel.org>
 References: <20190903162519.7136-1-sashal@kernel.org>
@@ -45,90 +46,53 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Benjamin Block <bblock@linux.ibm.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-[ Upstream commit 106d45f350c7cac876844dc685845cba4ffdb70b ]
+[ Upstream commit 4f419eb14272e0698e8c55bb5f3f266cc2a21c81 ]
 
-When tracing instances where we open and close WKA ports, we also pass the
-request-ID of the respective FSF command.
+The access to airq_areas was racy ever since the adapter interrupts got
+introduced to virtio-ccw, but since commit 39c7dcb15892 ("virtio/s390:
+make airq summary indicators DMA") this became an issue in practice as
+well. Namely before that commit the airq_info that got overwritten was
+still functional. After that commit however the two infos share a
+summary_indicator, which aggravates the situation. Which means
+auto-online mechanism occasionally hangs the boot with virtio_blk.
 
-But after successfully sending the FSF command we must not use the
-request-object anymore, as this might result in an use-after-free (see
-"zfcp: fix request object use-after-free in send path causing seqno
-errors" ).
-
-To fix this add a new variable that caches the request-ID before sending
-the request. This won't change during the hand-off to the FCP channel,
-and so it's safe to trace this cached request-ID later, instead of using
-the request object.
-
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
-Fixes: d27a7cb91960 ("zfcp: trace on request for open and close of WKA port")
-Cc: <stable@vger.kernel.org> #2.6.38+
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Cc: stable@vger.kernel.org
+Fixes: 96b14536d935 ("virtio-ccw: virtio-ccw adapter interrupt support.")
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/scsi/zfcp_fsf.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/s390/virtio/virtio_ccw.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
-index 3c86e27f094de..aff073a5b52bf 100644
---- a/drivers/s390/scsi/zfcp_fsf.c
-+++ b/drivers/s390/scsi/zfcp_fsf.c
-@@ -1594,6 +1594,7 @@ int zfcp_fsf_open_wka_port(struct zfcp_fc_wka_port *wka_port)
- {
- 	struct zfcp_qdio *qdio = wka_port->adapter->qdio;
- 	struct zfcp_fsf_req *req;
-+	unsigned long req_id = 0;
- 	int retval = -EIO;
+diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
+index ec54538f7ae1c..67efdf25657f3 100644
+--- a/drivers/s390/virtio/virtio_ccw.c
++++ b/drivers/s390/virtio/virtio_ccw.c
+@@ -132,6 +132,7 @@ struct airq_info {
+ 	struct airq_iv *aiv;
+ };
+ static struct airq_info *airq_areas[MAX_AIRQ_AREAS];
++static DEFINE_MUTEX(airq_areas_lock);
  
- 	spin_lock_irq(&qdio->req_q_lock);
-@@ -1616,6 +1617,8 @@ int zfcp_fsf_open_wka_port(struct zfcp_fc_wka_port *wka_port)
- 	hton24(req->qtcb->bottom.support.d_id, wka_port->d_id);
- 	req->data = wka_port;
+ #define CCW_CMD_SET_VQ 0x13
+ #define CCW_CMD_VDEV_RESET 0x33
+@@ -244,9 +245,11 @@ static unsigned long get_airq_indicator(struct virtqueue *vqs[], int nvqs,
+ 	unsigned long bit, flags;
  
-+	req_id = req->req_id;
-+
- 	zfcp_fsf_start_timer(req, ZFCP_FSF_REQUEST_TIMEOUT);
- 	retval = zfcp_fsf_req_send(req);
- 	if (retval)
-@@ -1623,7 +1626,7 @@ int zfcp_fsf_open_wka_port(struct zfcp_fc_wka_port *wka_port)
- out:
- 	spin_unlock_irq(&qdio->req_q_lock);
- 	if (!retval)
--		zfcp_dbf_rec_run_wka("fsowp_1", wka_port, req->req_id);
-+		zfcp_dbf_rec_run_wka("fsowp_1", wka_port, req_id);
- 	return retval;
- }
- 
-@@ -1649,6 +1652,7 @@ int zfcp_fsf_close_wka_port(struct zfcp_fc_wka_port *wka_port)
- {
- 	struct zfcp_qdio *qdio = wka_port->adapter->qdio;
- 	struct zfcp_fsf_req *req;
-+	unsigned long req_id = 0;
- 	int retval = -EIO;
- 
- 	spin_lock_irq(&qdio->req_q_lock);
-@@ -1671,6 +1675,8 @@ int zfcp_fsf_close_wka_port(struct zfcp_fc_wka_port *wka_port)
- 	req->data = wka_port;
- 	req->qtcb->header.port_handle = wka_port->handle;
- 
-+	req_id = req->req_id;
-+
- 	zfcp_fsf_start_timer(req, ZFCP_FSF_REQUEST_TIMEOUT);
- 	retval = zfcp_fsf_req_send(req);
- 	if (retval)
-@@ -1678,7 +1684,7 @@ int zfcp_fsf_close_wka_port(struct zfcp_fc_wka_port *wka_port)
- out:
- 	spin_unlock_irq(&qdio->req_q_lock);
- 	if (!retval)
--		zfcp_dbf_rec_run_wka("fscwp_1", wka_port, req->req_id);
-+		zfcp_dbf_rec_run_wka("fscwp_1", wka_port, req_id);
- 	return retval;
- }
- 
+ 	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
++		mutex_lock(&airq_areas_lock);
+ 		if (!airq_areas[i])
+ 			airq_areas[i] = new_airq_info();
+ 		info = airq_areas[i];
++		mutex_unlock(&airq_areas_lock);
+ 		if (!info)
+ 			return 0;
+ 		write_lock_irqsave(&info->lock, flags);
 -- 
 2.20.1
 
