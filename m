@@ -2,107 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E27EAA6315
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 09:51:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 252C2A6323
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 09:55:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726946AbfICHvR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Sep 2019 03:51:17 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:34074 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726740AbfICHvR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 3 Sep 2019 03:51:17 -0400
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com [209.85.208.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 43CC785546
-        for <linux-s390@vger.kernel.org>; Tue,  3 Sep 2019 07:51:16 +0000 (UTC)
-Received: by mail-ed1-f72.google.com with SMTP id f5so1618921edr.19
-        for <linux-s390@vger.kernel.org>; Tue, 03 Sep 2019 00:51:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=w8HIPoxJeKQ6uWeXwaqzJnrwZeqZuyXyHwG4+Nh5f8I=;
-        b=emxGdGFwcsg7SNLtTUGWUdmsMf28BSMcG3T5Es6ZIRHSW8ilSQ9co61jbGSyOpu1w6
-         otndNpc1S64g+hysmt0zCCt7bKA4V8QS0o3s2Q2XTMEfANXiRfuYAqxdSkmF/jEUDAdy
-         sgKcf5ftlxi6xdglTPZqE6a6ZGxEVkh/PvmO5RRHJdumTCLYSgQUZP1oevjTM0SuoSzK
-         CLPzbzsTU54/DV8Bmn+pvXvbu1Uy+BhoQJqtuTJtsmpCB/VQsGfaSqWA6PdJkwybu5M6
-         5NhmFdxWFbB+lsgJ24rlZBUqLoB/WE5HsVQ/Eu+HlYZkQNgjy5o4Yc+bZU8T/5jd1shO
-         B5Tw==
-X-Gm-Message-State: APjAAAWPZeyXdXwRQd+Ej6CwybarGilpRjJFBR7sMrYPZrmtE8gfSYPO
-        CT1xpRxRBubEicLseQT4XWrtaluVQn0EQttR/PZV01L4E1s4ZQ/XMeBB2cb9bvDu53e4ZA1URrk
-        z0OSZnxJASeEj7mx4G2SAFg==
-X-Received: by 2002:a17:906:d7a3:: with SMTP id pk3mr13383202ejb.97.1567497075044;
-        Tue, 03 Sep 2019 00:51:15 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqxcWpjWCgHm7od0lS3pQcg6L6ajmTNeMv46O7wYLrV4SdnJWrI2Vv4mBF3X9ZIiqJr2V6QZKg==
-X-Received: by 2002:a17:906:d7a3:: with SMTP id pk3mr13383184ejb.97.1567497074920;
-        Tue, 03 Sep 2019 00:51:14 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id c1sm3244417edr.37.2019.09.03.00.51.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 03 Sep 2019 00:51:14 -0700 (PDT)
-Subject: Re: [PATCH 5/9] crypto: ccree - Rename arrays to avoid conflict with
- crypto/sha256.h
-To:     Gilad Ben-Yossef <gilad@benyossef.com>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Atul Gupta <atul.gupta@chelsio.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Linux Crypto Mailing List <linux-crypto@vger.kernel.org>,
-        x86@kernel.org, linux-s390@vger.kernel.org,
-        linux-efi@vger.kernel.org,
-        Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-References: <20190901203532.2615-1-hdegoede@redhat.com>
- <20190901203532.2615-6-hdegoede@redhat.com>
- <CAOtvUMdd+V5pesw+O-kk9_JB5YpxUM+hU+Uu=kiMvOL9d0AziQ@mail.gmail.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <0d55a6a7-9cca-38cb-97a2-558280fdc122@redhat.com>
-Date:   Tue, 3 Sep 2019 09:51:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1727845AbfICHy6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Sep 2019 03:54:58 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:34456 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfICHy5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Sep 2019 03:54:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=G28iE/deGPG0P4VQTMIwzwCBVO7DdIpw/n7sMkoDPlI=; b=Gx11pokC7ZUSl6Ij7jfDO7foa
+        BzXtIUvI7BsKuZKZpzM+5G7ZKYV2bgimYA3TvtJtVnJmrEnfKf4/DZYEwLbWECE1CXBm38zkHi+33
+        uAl73vaUfsiml7p5HmwBrZr7owO5zm1VQYk0wiXRzfwITffEOTqlRY2wp1pjlRiwzPUUqryDTiTVk
+        SaUovfNgliw3iF28YkNVvFDQ7BMk89W+Cy4V6ekrFWKmxau3LTU03Zy3bshbvteHJqKf62dyihpPN
+        8pJwTi952NtGpBG4HsfMuKd9nAW69xR2W9ZRvjh33aDIekkJwH93lq1b+vDAJoxE1OTiWvP+L+OnS
+        cx2bk6/1Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
+        id 1i53dU-0008BU-Bc; Tue, 03 Sep 2019 07:53:56 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6470330116F;
+        Tue,  3 Sep 2019 09:53:16 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 6EFC529C073C2; Tue,  3 Sep 2019 09:53:52 +0200 (CEST)
+Date:   Tue, 3 Sep 2019 09:53:52 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, dalias@libc.org,
+        linux-sh@vger.kernel.org, catalin.marinas@arm.com,
+        dave.hansen@linux.intel.com, heiko.carstens@de.ibm.com,
+        linuxarm@huawei.com, jiaxun.yang@flygoat.com,
+        linux-mips@vger.kernel.org, mwb@linux.vnet.ibm.com,
+        paulus@samba.org, hpa@zytor.com, sparclinux@vger.kernel.org,
+        chenhc@lemote.com, will@kernel.org, cai@lca.pw,
+        linux-s390@vger.kernel.org, ysato@users.sourceforge.jp,
+        mpe@ellerman.id.au, x86@kernel.org, rppt@linux.ibm.com,
+        borntraeger@de.ibm.com, dledford@redhat.com, mingo@redhat.com,
+        jeffrey.t.kirsher@intel.com, benh@kernel.crashing.org,
+        jhogan@kernel.org, nfont@linux.vnet.ibm.com, mattst88@gmail.com,
+        len.brown@intel.com, gor@linux.ibm.com, anshuman.khandual@arm.com,
+        bp@alien8.de, luto@kernel.org, tglx@linutronix.de,
+        naveen.n.rao@linux.vnet.ibm.com,
+        linux-arm-kernel@lists.infradead.org, rth@twiddle.net,
+        axboe@kernel.dk, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, ralf@linux-mips.org,
+        tbogendoerfer@suse.de, paul.burton@mips.com,
+        linux-alpha@vger.kernel.org, ink@jurassic.park.msu.ru,
+        akpm@linux-foundation.org, robin.murphy@arm.com,
+        davem@davemloft.net
+Subject: [PATCH] x86/mm: Fix cpumask_of_node() error condition
+Message-ID: <20190903075352.GY2369@hirez.programming.kicks-ass.net>
+References: <1567231103-13237-1-git-send-email-linyunsheng@huawei.com>
+ <1567231103-13237-3-git-send-email-linyunsheng@huawei.com>
+ <20190831085539.GG2369@hirez.programming.kicks-ass.net>
+ <4d89c688-49e4-a2aa-32ee-65e36edcd913@huawei.com>
+ <20190831161247.GM2369@hirez.programming.kicks-ass.net>
+ <ae64285f-5134-4147-7b02-34bb5d519e8c@huawei.com>
+ <20190902072542.GN2369@hirez.programming.kicks-ass.net>
+ <20190902181731.GB35858@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOtvUMdd+V5pesw+O-kk9_JB5YpxUM+hU+Uu=kiMvOL9d0AziQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902181731.GB35858@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi,
+On Mon, Sep 02, 2019 at 08:17:31PM +0200, Ingo Molnar wrote:
 
-On 03-09-19 09:45, Gilad Ben-Yossef wrote:
-> On Sun, Sep 1, 2019 at 11:36 PM Hans de Goede <hdegoede@redhat.com> wrote:
->>
->> Rename the algo_init arrays to cc_algo_init so that they do not conflict
->> with the functions declared in crypto/sha256.h.
->>
->> This is a preparation patch for folding crypto/sha256.h into crypto/sha.h.
-> 
-> I'm fine with the renaming.
-> 
-> Signed-off-by: Gilad Ben-Yossef <gilad@benyossef.com>
+> Nitpicking: please also fix the kernel message to say ">=".
 
-Your Signed-off-by is only used when the patches passes through your hands,
-since Herbert will likely apply this directly that is not the case.
+Full patch below.
 
-You want either Acked-by or Reviewed-by to signal that you are ok with this patch.
+---
+Subject: x86/mm: Fix cpumask_of_node() error condition
 
-Regards,
+When CONFIG_DEBUG_PER_CPU_MAPS we validate that the @node argument of
+cpumask_of_node() is a valid node_id. It however forgets to check for
+negative numbers. Fix this by explicitly casting to unsigned.
 
-Hans
+  (unsigned)node >= nr_node_ids
+
+verifies: 0 <= node < nr_node_ids
+
+Also ammend the error message to match the condition.
+
+Acked-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+ arch/x86/mm/numa.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index e6dad600614c..4123100e0eaf 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -861,9 +861,9 @@ void numa_remove_cpu(int cpu)
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
+-	if (node >= nr_node_ids) {
++	if ((unsigned)node >= nr_node_ids) {
+ 		printk(KERN_WARNING
+-			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
++			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+ 			node, nr_node_ids);
+ 		dump_stack();
+ 		return cpu_none_mask;
