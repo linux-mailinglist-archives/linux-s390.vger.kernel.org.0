@@ -2,97 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 23979A7096
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 18:41:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F5D7A70E8
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Sep 2019 18:46:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbfICQZK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Sep 2019 12:25:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44900 "EHLO mail.kernel.org"
+        id S1730224AbfICQpr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Sep 2019 12:45:47 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47904 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730261AbfICQZJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 3 Sep 2019 12:25:09 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730079AbfICQpr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Sep 2019 12:45:47 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 563FB23431;
-        Tue,  3 Sep 2019 16:25:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1567527908;
-        bh=Yyh/X5Nvc/YP7vxCIa5rLB+CfoURSPuz+berxUZPKkE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CNIu6XuvLUD45W/RvX78c9OI79KXl1MZlNNc5UC1XsvDWoSl0z+2scHqWiYxgi5yw
-         hoDyxgYjvaTjg8OriwMTXjyDvamN7BNFPGkNBGaC5dVjxKX4qg5D9wNTOlGNH3D5ol
-         orvGVMdxnN4ynX+ud9hG0ZdmlwOtIGG13fyIw1z0=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Marc Hartmayer <mhartmay@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 568788553F;
+        Tue,  3 Sep 2019 16:45:47 +0000 (UTC)
+Received: from gondolin (ovpn-116-176.ams2.redhat.com [10.36.116.176])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7A2156012C;
+        Tue,  3 Sep 2019 16:45:45 +0000 (UTC)
+Date:   Tue, 3 Sep 2019 18:45:42 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Tony Krowiak <akrowiak@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.2 18/23] virtio/s390: fix race on airq_areas[]
-Date:   Tue,  3 Sep 2019 12:24:19 -0400
-Message-Id: <20190903162424.6877-18-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190903162424.6877-1-sashal@kernel.org>
-References: <20190903162424.6877-1-sashal@kernel.org>
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: Re: [PATCH 1/1] s390: vfio-ap: fix warning reset not completed
+Message-ID: <20190903184542.2d955111.cohuck@redhat.com>
+In-Reply-To: <20190903133618.9122-1-pasic@linux.ibm.com>
+References: <20190903133618.9122-1-pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 03 Sep 2019 16:45:47 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+On Tue,  3 Sep 2019 15:36:18 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-[ Upstream commit 4f419eb14272e0698e8c55bb5f3f266cc2a21c81 ]
+"fix warning for not completed reset"?
 
-The access to airq_areas was racy ever since the adapter interrupts got
-introduced to virtio-ccw, but since commit 39c7dcb15892 ("virtio/s390:
-make airq summary indicators DMA") this became an issue in practice as
-well. Namely before that commit the airq_info that got overwritten was
-still functional. After that commit however the two infos share a
-summary_indicator, which aggravates the situation. Which means
-auto-online mechanism occasionally hangs the boot with virtio_blk.
+> The intention seems to be to warn once when we don't wait enough for the
+> reset to complete. Let's use the right retry counter to accomplish that
+> semantic.
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 0604b49a4d32..5c0f53c6dde7 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -1143,7 +1143,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+>  				msleep(20);
+>  				status = ap_tapq(apqn, NULL);
+>  			}
+> -			WARN_ON_ONCE(retry <= 0);
+> +			WARN_ON_ONCE(retry2 <= 0);
+>  			return 0;
+>  		case AP_RESPONSE_RESET_IN_PROGRESS:
+>  		case AP_RESPONSE_BUSY:
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+Makes sense.
+
 Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Cc: stable@vger.kernel.org
-Fixes: 96b14536d935 ("virtio-ccw: virtio-ccw adapter interrupt support.")
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/virtio/virtio_ccw.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/drivers/s390/virtio/virtio_ccw.c b/drivers/s390/virtio/virtio_ccw.c
-index 6a30768813219..8d47ad61bac3d 100644
---- a/drivers/s390/virtio/virtio_ccw.c
-+++ b/drivers/s390/virtio/virtio_ccw.c
-@@ -132,6 +132,7 @@ struct airq_info {
- 	struct airq_iv *aiv;
- };
- static struct airq_info *airq_areas[MAX_AIRQ_AREAS];
-+static DEFINE_MUTEX(airq_areas_lock);
- 
- #define CCW_CMD_SET_VQ 0x13
- #define CCW_CMD_VDEV_RESET 0x33
-@@ -244,9 +245,11 @@ static unsigned long get_airq_indicator(struct virtqueue *vqs[], int nvqs,
- 	unsigned long bit, flags;
- 
- 	for (i = 0; i < MAX_AIRQ_AREAS && !indicator_addr; i++) {
-+		mutex_lock(&airq_areas_lock);
- 		if (!airq_areas[i])
- 			airq_areas[i] = new_airq_info();
- 		info = airq_areas[i];
-+		mutex_unlock(&airq_areas_lock);
- 		if (!info)
- 			return 0;
- 		write_lock_irqsave(&info->lock, flags);
--- 
-2.20.1
-
