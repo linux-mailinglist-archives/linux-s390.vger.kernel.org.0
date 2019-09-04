@@ -2,265 +2,219 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DE55A7CD7
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Sep 2019 09:33:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A1FACA7CE0
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Sep 2019 09:35:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbfIDHdy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Sep 2019 03:33:54 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42150 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726033AbfIDHdy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Sep 2019 03:33:54 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x847WUeL108181
-        for <linux-s390@vger.kernel.org>; Wed, 4 Sep 2019 03:33:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2ut88w1hqy-1
+        id S1728209AbfIDHf6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Sep 2019 03:35:58 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64016 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726033AbfIDHf5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Sep 2019 03:35:57 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x847Y3Dw047672
+        for <linux-s390@vger.kernel.org>; Wed, 4 Sep 2019 03:35:56 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut7xaj6xt-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 04 Sep 2019 03:33:52 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 04 Sep 2019 03:35:56 -0400
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Wed, 4 Sep 2019 08:33:50 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 4 Sep 2019 08:35:53 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Sep 2019 08:33:48 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x847Xl2v44564858
+        Wed, 4 Sep 2019 08:35:52 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x847Zm4V31653940
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Sep 2019 07:33:47 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04E5952051;
-        Wed,  4 Sep 2019 07:33:47 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.155.72])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 881FA52050;
-        Wed,  4 Sep 2019 07:33:46 +0000 (GMT)
-Subject: Re: [PATCH] KVM: s390: Disallow invalid bits in kvm_valid_regs and
- kvm_dirty_regs
-To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190904071308.25683-1-thuth@redhat.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
+        Wed, 4 Sep 2019 07:35:48 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4E26E4C040;
+        Wed,  4 Sep 2019 07:35:48 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF01D4C05A;
+        Wed,  4 Sep 2019 07:35:47 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.122])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Sep 2019 07:35:47 +0000 (GMT)
+Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
+ queue interrupts
+To:     Halil Pasic <pasic@linux.ibm.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        freude@de.ibm.com, cohuck@redhat.com, pasic@linux.vnet.ibm.com,
+        frankja@linux.ibm.com, jjherne@linux.ibm.com
+References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+ <20190830180250.79804f76.pasic@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Openpgp: preference=signencrypt
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Wed, 4 Sep 2019 09:33:45 +0200
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Wed, 4 Sep 2019 09:35:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190904071308.25683-1-thuth@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="KCJXWAnzrD8uRwAanjK8DKax8UhWoz0bJ"
+In-Reply-To: <20190830180250.79804f76.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19090407-0016-0000-0000-000002A67A96
+x-cbid: 19090407-0012-0000-0000-0000034679AF
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090407-0017-0000-0000-00003306E66B
-Message-Id: <3b1666ee-0b7f-a775-3622-5ca7f938aeb0@linux.ibm.com>
+x-cbparentid: 19090407-0013-0000-0000-00002180CA8B
+Message-Id: <f3e8d65e-bad4-c639-c53e-57585b90986d@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=973 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1906280000 definitions=main-1909040078
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---KCJXWAnzrD8uRwAanjK8DKax8UhWoz0bJ
-Content-Type: multipart/mixed; boundary="xPn7lGCZnSVGl0FJB37AXdkF6Z4YI95iy";
- protected-headers="v1"
-From: Janosch Frank <frankja@linux.ibm.com>
-To: Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
- Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: David Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
- linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <3b1666ee-0b7f-a775-3622-5ca7f938aeb0@linux.ibm.com>
-Subject: Re: [PATCH] KVM: s390: Disallow invalid bits in kvm_valid_regs and
- kvm_dirty_regs
-References: <20190904071308.25683-1-thuth@redhat.com>
-In-Reply-To: <20190904071308.25683-1-thuth@redhat.com>
+Halil,
 
---xPn7lGCZnSVGl0FJB37AXdkF6Z4YI95iy
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+can you also send this patch as a separate mail. This also requires a much better
+patch description about the why and it certainly should also have an agreement from
+Anthony.
 
-On 9/4/19 9:13 AM, Thomas Huth wrote:
-> If unknown bits are set in kvm_valid_regs or kvm_dirty_regs, this
-> clearly indicates that something went wrong in the KVM userspace
-> application. The x86 variant of KVM already contains a check for
-> bad bits (and the corresponding kselftest checks this), so let's
-> do the same on s390x now, too.
->=20
-> Signed-off-by: Thomas Huth <thuth@redhat.com>
-
-I think it would make sense to split the kvm changes from the test.
-
-Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-
+On 30.08.19 18:02, Halil Pasic wrote:
+> From: Halil Pasic <pasic@linux.ibm.com>
+> Date: Fri, 30 Aug 2019 17:39:47 +0200
+> Subject: [PATCH 2/2] s390: vfio-ap: don't wait after AQIC interpretation
+> 
+> Waiting for the asynchronous part of AQIC to complete as a part
+> AQIC implementation is unnecessary and silly.
+> 
+> Let's get rid of vfio_ap_wait_for_irqclear().
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
 > ---
->  arch/s390/include/uapi/asm/kvm.h              |  6 ++++
->  arch/s390/kvm/kvm-s390.c                      |  4 +++
->  .../selftests/kvm/s390x/sync_regs_test.c      | 30 +++++++++++++++++++=
-
->  3 files changed, 40 insertions(+)
->=20
-> diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/=
-asm/kvm.h
-> index 47104e5b47fd..436ec7636927 100644
-> --- a/arch/s390/include/uapi/asm/kvm.h
-> +++ b/arch/s390/include/uapi/asm/kvm.h
-> @@ -231,6 +231,12 @@ struct kvm_guest_debug_arch {
->  #define KVM_SYNC_GSCB   (1UL << 9)
->  #define KVM_SYNC_BPBC   (1UL << 10)
->  #define KVM_SYNC_ETOKEN (1UL << 11)
-> +
-> +#define KVM_SYNC_S390_VALID_FIELDS \
-> +	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
-> +	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \=
-
-> +	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
-> +
->  /* length and alignment of the sdnx as a power of two */
->  #define SDNXC 8
->  #define SDNXL (1UL << SDNXC)
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 49d7722229ae..a7d7dedfe527 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -3998,6 +3998,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcp=
-u, struct kvm_run *kvm_run)
->  	if (kvm_run->immediate_exit)
->  		return -EINTR;
-> =20
-> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
-> +	    kvm_run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
-> +		return -EINVAL;
-> +
->  	vcpu_load(vcpu);
-> =20
->  	if (guestdbg_exit_pending(vcpu)) {
-> diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools=
-/testing/selftests/kvm/s390x/sync_regs_test.c
-> index bbc93094519b..d5290b4ad636 100644
-> --- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
-> +++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
-> @@ -85,6 +85,36 @@ int main(int argc, char *argv[])
-> =20
->  	run =3D vcpu_state(vm, VCPU_ID);
-> =20
-> +	/* Request reading invalid register set from VCPU. */
-> +	run->kvm_valid_regs =3D INVALID_SYNC_FIELD;
-> +	rv =3D _vcpu_run(vm, VCPU_ID);
-> +	TEST_ASSERT(rv < 0 && errno =3D=3D EINVAL,
-> +		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d=
-\n",
-> +		    rv);
-> +	vcpu_state(vm, VCPU_ID)->kvm_valid_regs =3D 0;
-> +
-> +	run->kvm_valid_regs =3D INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
-> +	rv =3D _vcpu_run(vm, VCPU_ID);
-> +	TEST_ASSERT(rv < 0 && errno =3D=3D EINVAL,
-> +		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d=
-\n",
-> +		    rv);
-> +	vcpu_state(vm, VCPU_ID)->kvm_valid_regs =3D 0;
-> +
-> +	/* Request setting invalid register set into VCPU. */
-> +	run->kvm_dirty_regs =3D INVALID_SYNC_FIELD;
-> +	rv =3D _vcpu_run(vm, VCPU_ID);
-> +	TEST_ASSERT(rv < 0 && errno =3D=3D EINVAL,
-> +		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d=
-\n",
-> +		    rv);
-> +	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs =3D 0;
-> +
-> +	run->kvm_dirty_regs =3D INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
-> +	rv =3D _vcpu_run(vm, VCPU_ID);
-> +	TEST_ASSERT(rv < 0 && errno =3D=3D EINVAL,
-> +		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d=
-\n",
-> +		    rv);
-> +	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs =3D 0;
-> +
->  	/* Request and verify all valid register sets. */
->  	run->kvm_valid_regs =3D TEST_SYNC_FIELDS;
->  	rv =3D _vcpu_run(vm, VCPU_ID);
->=20
-
-
-
---xPn7lGCZnSVGl0FJB37AXdkF6Z4YI95iy--
-
---KCJXWAnzrD8uRwAanjK8DKax8UhWoz0bJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl1vaNoACgkQ41TmuOI4
-ufjW5xAAqrwQio0Wlchvkb6AmqBKX2hwY0bGnw4oALIkbpoEMQIKLp1Ka88r55wt
-cZAk90yeT7AMHNpeerBsMqkXRn5FhWkCdGGcowmjPNLHImCCwq8YztzNmps+yvxR
-S25XUoTODXHPXZFVxUyvLsA2wQPuKuo1nt9jvT9Ecbfoi4IFs/Hr/9+cIBWb4Dx4
-Cci6QnW/dLpEkgZ195hgZOif+ENGbd7fod5y73zkCI/sVrUPWyhM/di3afS2pDOZ
-7+Ckf9ydQDbGP1dfEPK5tsi/bYmKpHHqH5ORhemKJRGgBjaLqEPBq5pzxvYkVM50
-TPP3SpukZmDHzFX7VvIWMuGApyxE+IEC3+u2zGBabZTE+hMIAlRDrW6LplmV42dt
-ZyhPr9tJCYRLiMdzBZLzL1lBPm9EqbBhV47/WM66iu7256ljJ03eN6KeBlBOT8PC
-KdpR7LmyB5EoNTYMZ6XgBmBefFKb/JTcigTtIaXNXIOrlbVT2kreYpp2KIN/lwif
-DAFiTJptZX9W+tIBV6A0b9SXQBeovLiDCBjMlSZy08Edm18dr5TVeUbhoQGtpYyY
-7/jf6WVewzjn4YO/1hX2a1uL5dkCDLoIhx18IuQ+V7MPlbELoYZQuB7+P074xR7e
-UiQmR8/qS29kOKEpaMx75rk9N2BRmyahWRjo7mCbjsNC0mB479Q=
-=bXog
------END PGP SIGNATURE-----
-
---KCJXWAnzrD8uRwAanjK8DKax8UhWoz0bJ--
+>  drivers/s390/crypto/vfio_ap_ops.c | 50 ++-------------------------------------
+>  1 file changed, 2 insertions(+), 48 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index dd07ebf..8d098f0 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -68,47 +68,6 @@ static struct vfio_ap_queue *vfio_ap_get_queue(
+>  }
+>  
+>  /**
+> - * vfio_ap_wait_for_irqclear
+> - * @apqn: The AP Queue number
+> - *
+> - * Checks the IRQ bit for the status of this APQN using ap_tapq.
+> - * Returns if the ap_tapq function succeeded and the bit is clear.
+> - * Returns if ap_tapq function failed with invalid, deconfigured or
+> - * checkstopped AP.
+> - * Otherwise retries up to 5 times after waiting 20ms.
+> - *
+> - */
+> -static void vfio_ap_wait_for_irqclear(int apqn)
+> -{
+> -	struct ap_queue_status status;
+> -	int retry = 5;
+> -
+> -	do {
+> -		status = ap_tapq(apqn, NULL);
+> -		switch (status.response_code) {
+> -		case AP_RESPONSE_NORMAL:
+> -		case AP_RESPONSE_RESET_IN_PROGRESS:
+> -			if (!status.irq_enabled)
+> -				return;
+> -			/* Fall through */
+> -		case AP_RESPONSE_BUSY:
+> -			msleep(20);
+> -			break;
+> -		case AP_RESPONSE_Q_NOT_AVAIL:
+> -		case AP_RESPONSE_DECONFIGURED:
+> -		case AP_RESPONSE_CHECKSTOPPED:
+> -		default:
+> -			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
+> -				  status.response_code, apqn);
+> -			return;
+> -		}
+> -	} while (--retry);
+> -
+> -	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
+> -		  __func__, status.response_code, apqn);
+> -}
+> -
+> -/**
+>   * vfio_ap_free_aqic_resources
+>   * @q: The vfio_ap_queue
+>   *
+> @@ -133,14 +92,10 @@ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
+>   * @q: The vfio_ap_queue
+>   *
+>   * Uses ap_aqic to disable the interruption and in case of success, reset
+> - * in progress or IRQ disable command already proceeded: calls
+> - * vfio_ap_wait_for_irqclear() to check for the IRQ bit to be clear
+> - * and calls vfio_ap_free_aqic_resources() to free the resources associated
+> + * in progress or IRQ disable command already proceeded :calls
+> + * vfio_ap_free_aqic_resources() to free the resources associated
+>   * with the AP interrupt handling.
+>   *
+> - * In the case the AP is busy, or a reset is in progress,
+> - * retries after 20ms, up to 5 times.
+> - *
+>   * Returns if ap_aqic function failed with invalid, deconfigured or
+>   * checkstopped AP.
+>   */
+> @@ -155,7 +110,6 @@ struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
+>  		switch (status.response_code) {
+>  		case AP_RESPONSE_OTHERWISE_CHANGED:
+>  		case AP_RESPONSE_NORMAL:
+> -			vfio_ap_wait_for_irqclear(q->apqn);
+>  			goto end_free;
+>  		case AP_RESPONSE_RESET_IN_PROGRESS:
+>  		case AP_RESPONSE_BUSY:
+> -- 2.5.5
 
