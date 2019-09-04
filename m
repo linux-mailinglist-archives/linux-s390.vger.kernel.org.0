@@ -2,115 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD1F5A8946
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Sep 2019 21:23:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D048A89ED
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Sep 2019 21:25:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730326AbfIDPJN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Sep 2019 11:09:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17392 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729944AbfIDPJN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Sep 2019 11:09:13 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x84F90d3041709;
-        Wed, 4 Sep 2019 11:09:11 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2utdrudc2s-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 11:09:06 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x84F95pW041840;
-        Wed, 4 Sep 2019 11:09:05 -0400
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2utdrudbhm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 11:09:04 -0400
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x84F5KDw007894;
-        Wed, 4 Sep 2019 15:08:21 GMT
-Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
-        by ppma04wdc.us.ibm.com with ESMTP id 2us9fn3hk2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 04 Sep 2019 15:08:21 +0000
-Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
-        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x84F8GRO54264292
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Sep 2019 15:08:16 GMT
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B845E6A04F;
-        Wed,  4 Sep 2019 15:08:16 +0000 (GMT)
-Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7DB86A04D;
-        Wed,  4 Sep 2019 15:08:15 +0000 (GMT)
-Received: from [9.80.231.166] (unknown [9.80.231.166])
-        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Sep 2019 15:08:15 +0000 (GMT)
-Subject: Re: [PATCH 1/1] s390: vfio-ap: fix warning reset not completed
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20190903133618.9122-1-pasic@linux.ibm.com>
- <20190903184542.2d955111.cohuck@redhat.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Message-ID: <633ff646-de9b-9d6b-2d35-b09a60d33eee@linux.ibm.com>
-Date:   Wed, 4 Sep 2019 11:08:14 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        id S1731687AbfIDP57 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Sep 2019 11:57:59 -0400
+Received: from mail.kernel.org ([198.145.29.99]:59688 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731676AbfIDP57 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 4 Sep 2019 11:57:59 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E5C9A2339D;
+        Wed,  4 Sep 2019 15:57:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567612677;
+        bh=YGUky5l4b/jTQwvCUKgf0yLafhrXcctKofNMlj9R7Ao=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=njD40NO5VII8q3Bwcr/8N0eljOmAa9T5kqgvD1iT0CVk+wVr/n5CzPb2TTeV18H4Z
+         td1ze3C75fYc24MOZxOc5jf/nVoLDbfsj4J/WCBqcGWq+A85U5XP4qtFHDYEoPCNOQ
+         ZPaSqIA+rHKBOjFClrJUigmLAJRO6C8GOaMxn+MY=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 10/94] s390/bpf: fix lcgr instruction encoding
+Date:   Wed,  4 Sep 2019 11:56:15 -0400
+Message-Id: <20190904155739.2816-10-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190904155739.2816-1-sashal@kernel.org>
+References: <20190904155739.2816-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190903184542.2d955111.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909040148
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 9/3/19 12:45 PM, Cornelia Huck wrote:
-> On Tue,  3 Sep 2019 15:36:18 +0200
-> Halil Pasic <pasic@linux.ibm.com> wrote:
-> 
-> "fix warning for not completed reset"?
-> 
->> The intention seems to be to warn once when we don't wait enough for the
->> reset to complete. Let's use the right retry counter to accomplish that
->> semantic.
->>
->> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/vfio_ap_ops.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
->> index 0604b49a4d32..5c0f53c6dde7 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -1143,7 +1143,7 @@ int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
->>   				msleep(20);
->>   				status = ap_tapq(apqn, NULL);
->>   			}
->> -			WARN_ON_ONCE(retry <= 0);
->> +			WARN_ON_ONCE(retry2 <= 0);
->>   			return 0;
->>   		case AP_RESPONSE_RESET_IN_PROGRESS:
->>   		case AP_RESPONSE_BUSY:
-> 
-> Makes sense.
-> 
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-Agreed:
-Reviewed-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> 
+[ Upstream commit bb2d267c448f4bc3a3389d97c56391cb779178ae ]
+
+"masking, test in bounds 3" fails on s390, because
+BPF_ALU64_IMM(BPF_NEG, BPF_REG_2, 0) ignores the top 32 bits of
+BPF_REG_2. The reason is that JIT emits lcgfr instead of lcgr.
+The associated comment indicates that the code was intended to
+emit lcgr in the first place, it's just that the wrong opcode
+was used.
+
+Fix by using the correct opcode.
+
+Fixes: 054623105728 ("s390/bpf: Add s390x eBPF JIT compiler backend")
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Acked-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/net/bpf_jit_comp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index 5e7c630331590..9a711472cbdc0 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -853,7 +853,7 @@ static noinline int bpf_jit_insn(struct bpf_jit *jit, struct bpf_prog *fp, int i
+ 		break;
+ 	case BPF_ALU64 | BPF_NEG: /* dst = -dst */
+ 		/* lcgr %dst,%dst */
+-		EMIT4(0xb9130000, dst_reg, dst_reg);
++		EMIT4(0xb9030000, dst_reg, dst_reg);
+ 		break;
+ 	/*
+ 	 * BPF_FROM_BE/LE
+-- 
+2.20.1
 
