@@ -2,52 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A1FACA7CE0
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Sep 2019 09:35:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 700BDA7CF9
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Sep 2019 09:46:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728209AbfIDHf6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Sep 2019 03:35:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64016 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726033AbfIDHf5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Sep 2019 03:35:57 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x847Y3Dw047672
-        for <linux-s390@vger.kernel.org>; Wed, 4 Sep 2019 03:35:56 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ut7xaj6xt-1
+        id S1728515AbfIDHqp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Sep 2019 03:46:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2898 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725267AbfIDHqp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Sep 2019 03:46:45 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x847bJsq121555
+        for <linux-s390@vger.kernel.org>; Wed, 4 Sep 2019 03:46:43 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ut88w1w1c-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 04 Sep 2019 03:35:56 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 04 Sep 2019 03:46:43 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 4 Sep 2019 08:35:53 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Wed, 4 Sep 2019 08:46:41 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Sep 2019 08:35:52 +0100
+        Wed, 4 Sep 2019 08:46:37 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x847Zm4V31653940
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x847kaJR61735120
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Sep 2019 07:35:48 GMT
+        Wed, 4 Sep 2019 07:46:36 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E26E4C040;
-        Wed,  4 Sep 2019 07:35:48 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 82D154C059;
+        Wed,  4 Sep 2019 07:46:36 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF01D4C05A;
-        Wed,  4 Sep 2019 07:35:47 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 36B954C062;
+        Wed,  4 Sep 2019 07:46:36 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.224.122])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Sep 2019 07:35:47 +0000 (GMT)
-Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
- queue interrupts
-To:     Halil Pasic <pasic@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        freude@de.ibm.com, cohuck@redhat.com, pasic@linux.vnet.ibm.com,
-        frankja@linux.ibm.com, jjherne@linux.ibm.com
-References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
- <20190830180250.79804f76.pasic@linux.ibm.com>
+        Wed,  4 Sep 2019 07:46:36 +0000 (GMT)
+Subject: Re: [PATCH] KVM: s390: Disallow invalid bits in kvm_valid_regs and
+ kvm_dirty_regs
+To:     Janosch Frank <frankja@linux.ibm.com>,
+        Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190904071308.25683-1-thuth@redhat.com>
+ <3b1666ee-0b7f-a775-3622-5ca7f938aeb0@linux.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
@@ -93,128 +93,132 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
  oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
  syiRa+UVlsKmx1hsEg==
-Date:   Wed, 4 Sep 2019 09:35:47 +0200
+Date:   Wed, 4 Sep 2019 09:46:36 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190830180250.79804f76.pasic@linux.ibm.com>
+In-Reply-To: <3b1666ee-0b7f-a775-3622-5ca7f938aeb0@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19090407-0012-0000-0000-0000034679AF
+x-cbid: 19090407-0016-0000-0000-000002A67BAE
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090407-0013-0000-0000-00002180CA8B
-Message-Id: <f3e8d65e-bad4-c639-c53e-57585b90986d@de.ibm.com>
+x-cbparentid: 19090407-0017-0000-0000-00003306E793
+Message-Id: <0d09984f-7fb5-4af6-b90c-e9dc726e1a0a@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-04_01:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909040078
+ mlxlogscore=731 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909040079
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Halil,
 
-can you also send this patch as a separate mail. This also requires a much better
-patch description about the why and it certainly should also have an agreement from
-Anthony.
 
-On 30.08.19 18:02, Halil Pasic wrote:
-> From: Halil Pasic <pasic@linux.ibm.com>
-> Date: Fri, 30 Aug 2019 17:39:47 +0200
-> Subject: [PATCH 2/2] s390: vfio-ap: don't wait after AQIC interpretation
+On 04.09.19 09:33, Janosch Frank wrote:
+> On 9/4/19 9:13 AM, Thomas Huth wrote:
+>> If unknown bits are set in kvm_valid_regs or kvm_dirty_regs, this
+>> clearly indicates that something went wrong in the KVM userspace
+>> application. The x86 variant of KVM already contains a check for
+>> bad bits (and the corresponding kselftest checks this), so let's
+>> do the same on s390x now, too.
+>>
+>> Signed-off-by: Thomas Huth <thuth@redhat.com>
 > 
-> Waiting for the asynchronous part of AQIC to complete as a part
-> AQIC implementation is unnecessary and silly.
+> I think it would make sense to split the kvm changes from the test.
+
+Yes, this would allow to backport the non-kselftest part if necessary.
+
+With that 
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
 > 
-> Let's get rid of vfio_ap_wait_for_irqclear().
+> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
 > 
-> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 50 ++-------------------------------------
->  1 file changed, 2 insertions(+), 48 deletions(-)
+>> ---
+>>  arch/s390/include/uapi/asm/kvm.h              |  6 ++++
+>>  arch/s390/kvm/kvm-s390.c                      |  4 +++
+>>  .../selftests/kvm/s390x/sync_regs_test.c      | 30 +++++++++++++++++++
+>>  3 files changed, 40 insertions(+)
+>>
+>> diff --git a/arch/s390/include/uapi/asm/kvm.h b/arch/s390/include/uapi/asm/kvm.h
+>> index 47104e5b47fd..436ec7636927 100644
+>> --- a/arch/s390/include/uapi/asm/kvm.h
+>> +++ b/arch/s390/include/uapi/asm/kvm.h
+>> @@ -231,6 +231,12 @@ struct kvm_guest_debug_arch {
+>>  #define KVM_SYNC_GSCB   (1UL << 9)
+>>  #define KVM_SYNC_BPBC   (1UL << 10)
+>>  #define KVM_SYNC_ETOKEN (1UL << 11)
+>> +
+>> +#define KVM_SYNC_S390_VALID_FIELDS \
+>> +	(KVM_SYNC_PREFIX | KVM_SYNC_GPRS | KVM_SYNC_ACRS | KVM_SYNC_CRS | \
+>> +	 KVM_SYNC_ARCH0 | KVM_SYNC_PFAULT | KVM_SYNC_VRS | KVM_SYNC_RICCB | \
+>> +	 KVM_SYNC_FPRS | KVM_SYNC_GSCB | KVM_SYNC_BPBC | KVM_SYNC_ETOKEN)
+>> +
+>>  /* length and alignment of the sdnx as a power of two */
+>>  #define SDNXC 8
+>>  #define SDNXL (1UL << SDNXC)
+>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>> index 49d7722229ae..a7d7dedfe527 100644
+>> --- a/arch/s390/kvm/kvm-s390.c
+>> +++ b/arch/s390/kvm/kvm-s390.c
+>> @@ -3998,6 +3998,10 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>>  	if (kvm_run->immediate_exit)
+>>  		return -EINTR;
+>>  
+>> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
+>> +	    kvm_run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
+>> +		return -EINVAL;
+>> +
+>>  	vcpu_load(vcpu);
+>>  
+>>  	if (guestdbg_exit_pending(vcpu)) {
+>> diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+>> index bbc93094519b..d5290b4ad636 100644
+>> --- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+>> +++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+>> @@ -85,6 +85,36 @@ int main(int argc, char *argv[])
+>>  
+>>  	run = vcpu_state(vm, VCPU_ID);
+>>  
+>> +	/* Request reading invalid register set from VCPU. */
+>> +	run->kvm_valid_regs = INVALID_SYNC_FIELD;
+>> +	rv = _vcpu_run(vm, VCPU_ID);
+>> +	TEST_ASSERT(rv < 0 && errno == EINVAL,
+>> +		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d\n",
+>> +		    rv);
+>> +	vcpu_state(vm, VCPU_ID)->kvm_valid_regs = 0;
+>> +
+>> +	run->kvm_valid_regs = INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
+>> +	rv = _vcpu_run(vm, VCPU_ID);
+>> +	TEST_ASSERT(rv < 0 && errno == EINVAL,
+>> +		    "Invalid kvm_valid_regs did not cause expected KVM_RUN error: %d\n",
+>> +		    rv);
+>> +	vcpu_state(vm, VCPU_ID)->kvm_valid_regs = 0;
+>> +
+>> +	/* Request setting invalid register set into VCPU. */
+>> +	run->kvm_dirty_regs = INVALID_SYNC_FIELD;
+>> +	rv = _vcpu_run(vm, VCPU_ID);
+>> +	TEST_ASSERT(rv < 0 && errno == EINVAL,
+>> +		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d\n",
+>> +		    rv);
+>> +	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs = 0;
+>> +
+>> +	run->kvm_dirty_regs = INVALID_SYNC_FIELD | TEST_SYNC_FIELDS;
+>> +	rv = _vcpu_run(vm, VCPU_ID);
+>> +	TEST_ASSERT(rv < 0 && errno == EINVAL,
+>> +		    "Invalid kvm_dirty_regs did not cause expected KVM_RUN error: %d\n",
+>> +		    rv);
+>> +	vcpu_state(vm, VCPU_ID)->kvm_dirty_regs = 0;
+>> +
+>>  	/* Request and verify all valid register sets. */
+>>  	run->kvm_valid_regs = TEST_SYNC_FIELDS;
+>>  	rv = _vcpu_run(vm, VCPU_ID);
+>>
 > 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index dd07ebf..8d098f0 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -68,47 +68,6 @@ static struct vfio_ap_queue *vfio_ap_get_queue(
->  }
->  
->  /**
-> - * vfio_ap_wait_for_irqclear
-> - * @apqn: The AP Queue number
-> - *
-> - * Checks the IRQ bit for the status of this APQN using ap_tapq.
-> - * Returns if the ap_tapq function succeeded and the bit is clear.
-> - * Returns if ap_tapq function failed with invalid, deconfigured or
-> - * checkstopped AP.
-> - * Otherwise retries up to 5 times after waiting 20ms.
-> - *
-> - */
-> -static void vfio_ap_wait_for_irqclear(int apqn)
-> -{
-> -	struct ap_queue_status status;
-> -	int retry = 5;
-> -
-> -	do {
-> -		status = ap_tapq(apqn, NULL);
-> -		switch (status.response_code) {
-> -		case AP_RESPONSE_NORMAL:
-> -		case AP_RESPONSE_RESET_IN_PROGRESS:
-> -			if (!status.irq_enabled)
-> -				return;
-> -			/* Fall through */
-> -		case AP_RESPONSE_BUSY:
-> -			msleep(20);
-> -			break;
-> -		case AP_RESPONSE_Q_NOT_AVAIL:
-> -		case AP_RESPONSE_DECONFIGURED:
-> -		case AP_RESPONSE_CHECKSTOPPED:
-> -		default:
-> -			WARN_ONCE(1, "%s: tapq rc %02x: %04x\n", __func__,
-> -				  status.response_code, apqn);
-> -			return;
-> -		}
-> -	} while (--retry);
-> -
-> -	WARN_ONCE(1, "%s: tapq rc %02x: %04x could not clear IR bit\n",
-> -		  __func__, status.response_code, apqn);
-> -}
-> -
-> -/**
->   * vfio_ap_free_aqic_resources
->   * @q: The vfio_ap_queue
->   *
-> @@ -133,14 +92,10 @@ static void vfio_ap_free_aqic_resources(struct vfio_ap_queue *q)
->   * @q: The vfio_ap_queue
->   *
->   * Uses ap_aqic to disable the interruption and in case of success, reset
-> - * in progress or IRQ disable command already proceeded: calls
-> - * vfio_ap_wait_for_irqclear() to check for the IRQ bit to be clear
-> - * and calls vfio_ap_free_aqic_resources() to free the resources associated
-> + * in progress or IRQ disable command already proceeded :calls
-> + * vfio_ap_free_aqic_resources() to free the resources associated
->   * with the AP interrupt handling.
->   *
-> - * In the case the AP is busy, or a reset is in progress,
-> - * retries after 20ms, up to 5 times.
-> - *
->   * Returns if ap_aqic function failed with invalid, deconfigured or
->   * checkstopped AP.
->   */
-> @@ -155,7 +110,6 @@ struct ap_queue_status vfio_ap_irq_disable(struct vfio_ap_queue *q)
->  		switch (status.response_code) {
->  		case AP_RESPONSE_OTHERWISE_CHANGED:
->  		case AP_RESPONSE_NORMAL:
-> -			vfio_ap_wait_for_irqclear(q->apqn);
->  			goto end_free;
->  		case AP_RESPONSE_RESET_IN_PROGRESS:
->  		case AP_RESPONSE_BUSY:
-> -- 2.5.5
+> 
 
