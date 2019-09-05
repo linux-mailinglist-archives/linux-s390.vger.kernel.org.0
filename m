@@ -2,78 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 60F0EA99DC
-	for <lists+linux-s390@lfdr.de>; Thu,  5 Sep 2019 06:56:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B7412A9A7D
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Sep 2019 08:18:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbfIEE4P (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Sep 2019 00:56:15 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:60560 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731099AbfIEE4P (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 5 Sep 2019 00:56:15 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1i5jnx-0006IZ-4w; Thu, 05 Sep 2019 14:55:34 +1000
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Thu, 05 Sep 2019 14:55:24 +1000
-Date:   Thu, 5 Sep 2019 14:55:24 +1000
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        id S1731251AbfIEGSa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Sep 2019 02:18:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:33172 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725921AbfIEGS3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Sep 2019 02:18:29 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=fTcSpA3ZHXId80EpTLogSujsoZ0WrK6Tdlrkg5U4n3U=; b=CoryMkzNMX3aDlJ+m7fw27+Y5
+        k6b2VLOXAy5PZZ2GtUk7b2Gg7Z+a62WBshvp2BBEqZkvIfsJQUOhgXRJTP2cSkkiV6UMawUgMAnnM
+        BPLyvE/okmSa6W3JyrHnd206HGUFLFCYGyDbkef1/pqS6w6FaTPpzQPIgX7h+a7yf6MIqFQviJlbh
+        O9sVQPNQ3kcpV6SSsFzZkzpahtly3RGBfCYsEwP3r7TlEl9q4+GYVY/KG/YPUjMI8iHQ3Ml2GypGJ
+        JtO9RtgEejTvKcuVSYanopJTNDvcYwgteHDAFFzgUHLNtasHSA48ajt+6LHbTDqmS8+IseRBdsc3B
+        jdCV6Qw4Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1i5l67-0000MK-7v; Thu, 05 Sep 2019 06:18:23 +0000
+Date:   Wed, 4 Sep 2019 23:18:23 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        virtualization@lists.linux-foundation.org,
+        linux-tegra@vger.kernel.org,
+        Thierry Reding <thierry.reding@gmail.com>,
         Will Deacon <will@kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Atul Gupta <atul.gupta@chelsio.com>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-crypto@vger.kernel.org, x86@kernel.org,
-        linux-s390@vger.kernel.org, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH 0/9] crypto: sha256 - Merge crypto/sha256.h into
- crypto/sha.h
-Message-ID: <20190905045524.GC32038@gondor.apana.org.au>
-References: <20190901203532.2615-1-hdegoede@redhat.com>
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        linux-rockchip@lists.infradead.org, Andy Gross <agross@kernel.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        David Woodhouse <dwmw2@infradead.org>,
+        linux-kernel@vger.kernel.org, Kukjin Kim <kgene@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH V5 0/5] iommu/amd: Convert the AMD iommu driver to the
+ dma-iommu api
+Message-ID: <20190905061823.GA813@infradead.org>
+References: <20190815110944.3579-1-murphyt7@tcd.ie>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190901203532.2615-1-hdegoede@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190815110944.3579-1-murphyt7@tcd.ie>
+User-Agent: Mutt/1.11.4 (2019-03-13)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, Sep 01, 2019 at 10:35:23PM +0200, Hans de Goede wrote:
-> Hi All,
-> 
-> As promised here is a follow-up series to my earlier sha256 series.
-> 
-> Note I have only compiled and tested this series on x86_64 !! 
-> 
-> All changes to architecture specific code on other archs have not even
-> been tested to compile! With that said most of these changes were done
-> using my editors search - replace function so things should be fine...
-> (and FWIW I did do a Kconfig hack to compile test the ccree change).
-> 
-> The first patch in this series rename various file local functions /
-> arrays to avoid conflicts with the new include/crypto/sha256.h, followed
-> by a patch merging include/crypto/sha256.h into include/crypto/sha.h.
-> 
-> The last patch makes use of this merging to remove a bit more code
-> duplication, making sha256_generic use sha256_init and sha224_init from
-> lib/crypto/sha256.c. An added advantage of this, is that this gives these
-> 2 functions coverage by the crypto selftests.
+Dave, Joerg, Robin:
 
-All applied.  Thanks.
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+is there any chance we could at least pick up patches 2 and 4 ASAP
+as they are clearly fixes for current deficits, even without the
+amd conversion?
