@@ -2,306 +2,146 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0DFBAAEF8
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Sep 2019 01:11:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 95E2BAAF5A
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Sep 2019 01:52:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729151AbfIEXLW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Sep 2019 19:11:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27328 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726008AbfIEXLV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Sep 2019 19:11:21 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85N3rtE064771
-        for <linux-s390@vger.kernel.org>; Thu, 5 Sep 2019 19:11:21 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uub0p1fa9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 05 Sep 2019 19:11:20 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 6 Sep 2019 00:11:18 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Sep 2019 00:11:15 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85NBB0H57933914
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Sep 2019 23:11:11 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 53CC8AE058;
-        Thu,  5 Sep 2019 23:11:11 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CD3A1AE053;
-        Thu,  5 Sep 2019 23:11:10 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.76.185])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  5 Sep 2019 23:11:10 +0000 (GMT)
-Date:   Fri, 6 Sep 2019 01:10:49 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        pasic@linux.vnet.ibm.com, frankja@linux.ibm.com,
-        jjherne@linux.ibm.com
-Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
- queue interrupts
-In-Reply-To: <839467aa-5743-3d56-44e2-05ba5533a31c@linux.ibm.com>
-References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
-        <20190830180250.79804f76.pasic@linux.ibm.com>
-        <839467aa-5743-3d56-44e2-05ba5533a31c@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S2390162AbfIEXwK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Sep 2019 19:52:10 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:44158 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389851AbfIEXwJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Sep 2019 19:52:09 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.1 #3 (Red Hat Linux))
+        id 1i61VY-0003aC-Me; Thu, 05 Sep 2019 23:49:44 +0000
+Date:   Fri, 6 Sep 2019 00:49:44 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
+ helpers
+Message-ID: <20190905234944.GT1131@ZenIV.linux.org.uk>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-2-cyphar@cyphar.com>
+ <20190905180750.GQ1131@ZenIV.linux.org.uk>
+ <20190905230003.bek7vqdvruzi4ybx@yavin.dot.cyphar.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19090523-0028-0000-0000-000003983B0A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090523-0029-0000-0000-0000245A923A
-Message-Id: <20190906011049.50d8a476.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_10:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909050215
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190905230003.bek7vqdvruzi4ybx@yavin.dot.cyphar.com>
+User-Agent: Mutt/1.12.0 (2019-05-25)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 5 Sep 2019 12:26:15 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> On 8/30/19 12:02 PM, Halil Pasic wrote:
-[..]
-> >> @@ -1177,7 +1179,18 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
-> >>   			 */
-> >>   			if (ret)
-> >>   				rc = ret;
-> >> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
-> >> +
-> >> +			/*
-> >> +			 * Resetting a queue disables interrupts as a side
-> >> +			 * effect, so there is no need to disable interrupts
-> >> +			 * here. Note that an error on reset indicates the
-> >> +			 * queue is inaccessible, so an attempt to disable
-> >> +			 * interrupts would fail and is therefore unnecessary.
-> >> +			 * Just free up the resources used by IRQ processing.
-> >> +			 */
+On Fri, Sep 06, 2019 at 09:00:03AM +1000, Aleksa Sarai wrote:
+> > > +			return -EFAULT;
+> > > +	}
+> > > +	/* Copy the interoperable parts of the struct. */
+> > > +	if (__copy_to_user(dst, src, size))
+> > > +		return -EFAULT;
 > > 
-> > I have some concerns about this patch. One thing we must ensure is that
-> > the machine does not poke freed memory (NIB, GISA). With the current
-> > design that means we must ensure that there won't be any interruption
-> > conditions indicated (and interrupts made pending) after this point.
+> > Why not simply clear_user() and copy_to_user()?
 > 
-> If reset disables interrupts, why would we need to turn around and
-> disable interrupts after completion of the reset, unless reset disables
-> interrupts only for the duration of the reset processing?
+> I'm not sure I understand what you mean -- are you asking why we need to
+> do memchr_inv(src + size, 0, rest) earlier?
 
-That a successful queue reset disables interrupts on the queue is beyond
-any doubt. My concern is about the fact that a part of the reset itself
-is done asynchronously with respect to the PQAP ZAPQ that asks for the
-reset.
+I'm asking why bother with __ and separate access_ok().
 
-> If interrupts
-> are disabled only for the duration of the reset, then I question whether
-> we need to be at all concerned about interrupts in the context of
-> resetting a queue.
+> > 	if ((unsigned long)addr & 1) {
+> > 		u8 v;
+> > 		if (get_user(v, (__u8 __user *)addr))
+> > 			return -EFAULT;
+> > 		if (v)
+> > 			return -E2BIG;
+> > 		addr++;
+> > 	}
+> > 	if ((unsigned long)addr & 2) {
+> > 		u16 v;
+> > 		if (get_user(v, (__u16 __user *)addr))
+> > 			return -EFAULT;
+> > 		if (v)
+> > 			return -E2BIG;
+> > 		addr +=2;
+> > 	}
+> > 	if ((unsigned long)addr & 4) {
+> > 		u32 v;
+> > 		if (get_user(v, (__u32 __user *)addr))
+> > 			return -EFAULT;
+> > 		if (v)
+> > 			return -E2BIG;
+> > 	}
+> > 	<read the rest like you currently do>
+
+Actually, this is a dumb way to do it - page size on anything
+is going to be a multiple of 8, so you could just as well
+read 8 bytes from an address aligned down.  Then mask the
+bytes you don't want to check out and see if there's anything
+left.
+
+You can have readability boundaries inside a page - it's either
+the entire page (let alone a single word) being readable, or
+it's EFAULT for all parts.
+
+> > would be saner, and things like x86 could trivially add an
+> > asm variant - it's not hard.  Incidentally, memchr_inv() is
+> > an overkill in this case...
 > 
+> Why is memchr_inv() overkill?
 
-We need to clean up the NIB. We must avoid use after free like stuff, so
-my concern is about the waits.
+Look at its implementation; you only care if there are
+non-zeroes, you don't give a damn where in the buffer
+the first one would be.  All you need is the same logics
+as in "from userland" case
+	if (!count)
+		return true;
+	offset = (unsigned long)from & 7
+	p = (u64 *)(from - offset);
+	v = *p++;
+	if (offset) {	// unaligned
+		count += offset;
+		v &= ~aligned_byte_mask(offset); // see strnlen_user.c
+	}
+	while (count > 8) {
+		if (v)
+			return false;
+		v = *p++;
+		count -= 8;
+	}
+	if (count != 8)
+		v &= aligned_byte_mask(count);
+	return v == 0;
 
-> > 
-> > I'm not entirely convinced this is ensured after your change. The
-> > relevant bits of the  documentation are particularly hard to figure out.
-> > I could use some clarifications for sure.
-> > 
-> > This hunk removes the wait implemented by vfio_ap_wait_for_irqclear()
-> > along with the hopefully overkill AQIC.
-> > 
-> > Let me name some of the scenarios I'm concerned about, along with the
-> > code that is currently supposed to handle these.
-> > 
-> > 
-> > int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
-> >                               unsigned int retry)
-> > {
-> >          struct ap_queue_status status;
-> >          int retry2 = 2;
-> >          int apqn = AP_MKQID(apid, apqi);
-> >                                                                                  
-> >          do {
-> >                  status = ap_zapq(apqn);
-> >                  switch (status.response_code) {
-> >                  case AP_RESPONSE_NORMAL:
-> >                          while (!status.queue_empty && retry2--) {
-> >                                  msleep(20);
-> >                                  status = ap_tapq(apqn, NULL);
-> >                          }
-> >                          WARN_ON_ONCE(retry <= 0);
-> >                          return 0;
-> >                  case AP_RESPONSE_RESET_IN_PROGRESS:
-> >                  case AP_RESPONSE_BUSY:
-> >                          msleep(20);
-> >                          break;
-> >                  default:
-> >                          /* things are really broken, give up */
-> >                          return -EIO;
-> >                  }
-> >          } while (retry--);
-> >                                                                                  
-> >          return -EBUSY;
-> > 
-> > Scenario 1)
-> > 
-> > ap_zapq() returns status.response_code == AP_RESPONSE_RESET_IN_PROGRESS,
-> > because for example G2 did a ZAPQ before us.
-> > 
-> > The current logic retries ap_zapq() once after 20 msec. I have no idea
-> > if that is sufficient under all circumstances. If we get a
-> > AP_RESPONSE_RESET_IN_PROGRESS again, we return with -EBUSY and do nothing
-> > about it if the whole process was triggered by vfio_ap_mdev_release().
-> > Not even a warning.
-> 
-> I'm not sure this is a major concern, If the response code is
-> AP_RESPONSE_RESET_IN_PROGRESS due to a ZAPQ issued by G2 before us,
-> then once that completes the queue will be reset which accomplishes
-> the goal anyway. Maybe what should be done in this case is to wait
-> for the queue to empty?
-> 
-
-Yes I'm concerned about do we wait long enough because we need to avoid
-HW poking memory that could be used for something else at that point
-(NIB, GISA.IPM).
-
-> > 
-> > Please notice that this was almost fine before IRQ support, because the
-> > queue will get reset ASAP, and ...
-> 
-> I'm not sure what IRQ support has to do with how soon the queue is
-> reset.
-> 
-
-If there is no IRQs AP HW won't just poke guest memory like it does with
-the NIB. And since the AP instructions are bound to get reset in progress
-response code even there is no danger of queue state leaking because the
-reset is not fully completed yet.
-
-> > 
-> > Scenario 2)
-> > 
-> > It takes longer than 40 msec for the reset to complete. I don't know if
-> > this is a possibility, but before your patch we used to wait of 1 sec.
-> 
-> Where are you coming up with 1 sec?
-
-My bad, it was supposed to be 0.1 sec == 5 X 20ms (wait after AQIC that
-got kicked by this patch). What I want to say is this patch
-substantially reduces the wait time.
-
-> The only thing my patch did was
-> remove the disable IRQ. Even if you include the the wait for IRQ disable
-> to complete, I don't see 1 second of wait time. By my calculations:
-> 
-> 5 x 20ms = 100ms  Max wait for ZAPQ response code 0
-> 2 x 20ms =  40ms  Max wait time for qempty
-> 5 x 20ms = 100ms  Max wait for AQIC response code 0
-> 5 x 20ms = 100ms  Max wait time for IRQ clear
-> ----------------
->             340ms  Max total wait time
-> 
-> > 
-> > I guess the we need the timeouts because do this with matrix_dev->lock
-> > held. I'm not sure it's a good idea long term.
-> 
-> It looks like your concern here is making sure we wait a
-> sufficient amount of time for the reset to complete. That may be
-> a question for the firmware folks.
-> 
-
-Yes, my concern is making sure we don't clean up/give up stuff
-prematurely. The current code seems to do the waits for this purpose.
-I'm not sure what is actually necessary. Clarifying stuff with firmware
-or somebody else that knows better than I do is probably a good idea.
-
-> > 
-> > Scenario 3)
-> > 
-> > ap_zapq() returns status.response_code == AP_RESPONSE_DECONFIGURED. In
-> > this case we would give up right away. Again so that we don't even know
-> > we hit this case. There ain't much I can think about we could do here.
-> 
-> The only thing I can think of is to log an error. I am introducing
-> logging in the dynamic configuration series if that helps.
-> 
-
-I don't think it is an error.
-
-> > 
-> > I hope we are guaranteed to  not get any bits set at this point, but I could
-> > use some help.
-> 
-> I don't know what your concern is here. If the card is not in the
-> configuration, then no activity can take place until it is reconfigured.
-> 
-
-Yes, I also think that is the only way this make sense. But I usually
-don't assume complex things happen atomically unless I have a guarantee
-they do. I will explain what I mean by this offline.
-
-> > 
-> >                                    *
-> > 
-> > The good thing is I'm pretty sure that we are safe (i.e. no bits will be
-> > poked by the hardware) after seeing the queue empty after we issued a
-> > reset request.
-> 
-> You expressed several concerns above, yet now you say you think we're
-> safe; I don't understand.
-
-We are safe after we see the E bit set to one (queue empty) after the
-reset. Above I describe the scenarios where we don't wait for that to
-happen (in scenario 3 because it won't happen because the card is gone,
-and in the other two because of the implemented timeouts).
-
-> 
-> > 
-> > So my concerns basically boil down to are the cumulative timeouts big enough
-> > so we never time out (including are timeouts really the way to go)?
-> > 
-> > We should probably take any discussion about from which point on is it safe
-> > to assume that NIB and GISA won't be poked by HW offline as the guys
-> > without documentation can't contribute.
-> 
-> Just a couple of thoughts. The only reason the vfio_ap driver is
-> concerned with interrupts is because it is intercepting the PQAP(AQIC)
-> instruction. Shouldn't enabling and disabling interrupts, therefore, be 
-> solely under the control of the guest? In other words, maybe the vfio_ap
-> driver should only allocate/deallocate the interrupt controls (i.e., the
-> NIB and GISA) in response to PQAP(AQIC) interception.
-
-GISA is a 1 per guest entity in the hypervisor. The NIB is a byte of the
-guest memory.
-
-> When the guest
-> shuts down, I assume that the PQAP(AQIC) will be executed to disable
-> interrupts. 
-
-I would not assume that.
-
-> The driver can do a final cleanup if the NIB and GISA when
-> the mdev fd is released by the guest if they are still hanging around.
-> 
-
-You have to also consider stuff like subsystem resets. Yes the last line
-of defense should be release(). This is what we do today AFAIU.
-
-Regards,
-Halil
-
+All there is to it...
