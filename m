@@ -2,360 +2,241 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07BD0AA009
-	for <lists+linux-s390@lfdr.de>; Thu,  5 Sep 2019 12:40:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 30404AA02A
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Sep 2019 12:46:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388002AbfIEKkP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Sep 2019 06:40:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16492 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388004AbfIEKkN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Sep 2019 06:40:13 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85AbMJx062549
-        for <linux-s390@vger.kernel.org>; Thu, 5 Sep 2019 06:40:11 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2utx8r6jk6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 05 Sep 2019 06:40:11 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 5 Sep 2019 11:40:10 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 5 Sep 2019 11:40:07 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85Ae6PE43450570
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 5 Sep 2019 10:40:06 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9A2585204E;
-        Thu,  5 Sep 2019 10:40:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.152.224.131])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 0731852051;
-        Thu,  5 Sep 2019 10:40:05 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-Subject: [kvm-unit-tests PATCH v2 6/6] s390x: SMP test
-Date:   Thu,  5 Sep 2019 12:39:51 +0200
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190905103951.36522-1-frankja@linux.ibm.com>
-References: <20190905103951.36522-1-frankja@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19090510-0008-0000-0000-00000311608C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090510-0009-0000-0000-00004A2FB9A8
-Message-Id: <20190905103951.36522-7-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909050106
+        id S2388048AbfIEKpu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Sep 2019 06:45:50 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:59369 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727900AbfIEKpt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Sep 2019 06:45:49 -0400
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1i5pGI-0007WW-Cl; Thu, 05 Sep 2019 10:45:10 +0000
+Date:   Thu, 5 Sep 2019 12:45:08 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
+ helpers
+Message-ID: <20190905104507.glbhzeke4p3cg3ti@wittgenstein>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-2-cyphar@cyphar.com>
+ <57ba3752-c4a6-d2a4-1a4d-a0e13bccd473@rasmusvillemoes.dk>
+ <20190905095026.gjemg2gqua2vufxb@yavin.dot.cyphar.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190905095026.gjemg2gqua2vufxb@yavin.dot.cyphar.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Testing SIGP emulation for the following order codes:
-* start
-* stop
-* restart
-* set prefix
-* store status
-* stop and store status
-* reset
-* initial reset
-* external call
-* emegergency call
+On Thu, Sep 05, 2019 at 07:50:26PM +1000, Aleksa Sarai wrote:
+> On 2019-09-05, Rasmus Villemoes <linux@rasmusvillemoes.dk> wrote:
+> > On 04/09/2019 22.19, Aleksa Sarai wrote:
+> > > A common pattern for syscall extensions is increasing the size of a
+> > > struct passed from userspace, such that the zero-value of the new fields
+> > > result in the old kernel behaviour (allowing for a mix of userspace and
+> > > kernel vintages to operate on one another in most cases). This is done
+> > > in both directions -- hence two helpers -- though it's more common to
+> > > have to copy user space structs into kernel space.
+> > > 
+> > > Previously there was no common lib/ function that implemented
+> > > the necessary extension-checking semantics (and different syscalls
+> > > implemented them slightly differently or incompletely[1]). A future
+> > > patch replaces all of the common uses of this pattern to use the new
+> > > copy_struct_{to,from}_user() helpers.
+> > > 
+> > > [1]: For instance {sched_setattr,perf_event_open,clone3}(2) all do do
+> > >      similar checks to copy_struct_from_user() while rt_sigprocmask(2)
+> > >      always rejects differently-sized struct arguments.
+> > > 
+> > > Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> > > Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> > > ---
+> > > diff --git a/lib/struct_user.c b/lib/struct_user.c
+> > > new file mode 100644
+> > > index 000000000000..7301ab1bbe98
+> > > --- /dev/null
+> > > +++ b/lib/struct_user.c
+> > > @@ -0,0 +1,182 @@
+> > > +// SPDX-License-Identifier: GPL-2.0-or-later
+> > > +/*
+> > > + * Copyright (C) 2019 SUSE LLC
+> > > + * Copyright (C) 2019 Aleksa Sarai <cyphar@cyphar.com>
+> > > + */
+> > > +
+> > > +#include <linux/types.h>
+> > > +#include <linux/export.h>
+> > > +#include <linux/uaccess.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/string.h>
+> > > +
+> > > +#define BUFFER_SIZE 64
+> > > +
+> > > +/*
+> > > + * "memset(p, 0, size)" but for user space buffers. Caller must have already
+> > > + * checked access_ok(p, size).
+> > > + */
+> > 
+> > Isn't this __clear_user() exactly (perhaps except for the return value)?
+> > Perhaps not every arch has that?
+> 
+> I didn't know about clear_user() -- I will switch to it.
+> 
+> > > +static int __memzero_user(void __user *p, size_t s)
+> > > +{
+> > > +	const char zeros[BUFFER_SIZE] = {};
+> > > +	while (s > 0) {
+> > > +		size_t n = min(s, sizeof(zeros));
+> > > +
+> > > +		if (__copy_to_user(p, zeros, n))
+> > > +			return -EFAULT;
+> > > +
+> > > +		p += n;
+> > > +		s -= n;
+> > > +	}
+> > > +	return 0;
+> > > +}
+> > > +
+> > > +/**
+> > > + * copy_struct_to_user: copy a struct to user space
+> > > + * @dst:   Destination address, in user space.
+> > > + * @usize: Size of @dst struct.
+> > > + * @src:   Source address, in kernel space.
+> > > + * @ksize: Size of @src struct.
+> > > + *
+> > > + * Returns (in all cases, some data may have been copied):
+> > > + *  * -EFBIG:  (@usize < @ksize) and there are non-zero trailing bytes in @src.
+> > > + *  * -EFAULT: access to user space failed.
+> > > + */
+> > > +int copy_struct_to_user(void __user *dst, size_t usize,
+> > > +			const void *src, size_t ksize)
+> > > +{
+> > > +	size_t size = min(ksize, usize);
+> > > +	size_t rest = abs(ksize - usize);
+> > 
+> > Eh, I'd avoid abs() here due to the funkiness of the implicit type
+> > conversions - ksize-usize has type size_t, then that's coerced to an int
+> > (or a long maybe?), the abs is applied which return an int/long (or
+> > unsigned versions?). Something like "rest = max(ksize, usize) - size;"
+> > is more obviously correct and doesn't fall into any
+> > narrowing/widening/sign extending traps.
+> 
+> Yeah, I originally used "max(ksize, usize) - size" for that reason but
+> was worried it looked too funky (and some quick tests showed that abs()
+> gives the right results in most cases -- though I just realised it would
+> probably not give the right results around SIZE_MAX). I'll switch back.
+> 
+> > > +	if (unlikely(usize > PAGE_SIZE))
+> > > +		return -EFAULT;
+> > 
+> > Please don't. That is a restriction on all future extensions - once a
+> > kernel is shipped with a syscall using this helper with that arbitrary
+> > restriction in place, that syscall is forever prevented from extending
+> > its arg struct beyond PAGE_SIZE (which is arch-dependent anyway). Sure,
+> > it's hard to imagine, but who'd have thought 32 O_* or CLONE_* bits
+> > weren't enough for everybody?
+> >
+> > This is only for future compatibility, and if someone runs an app
+> > compiled against 7.3 headers on a 5.4 kernel, they probably don't care
+> > about performance, but they would like their app to run.
+> 
+> I'm not sure I agree that the limit is in place *forever* -- it's
+> generally not a break in compatibility to convert an error into a
+> success (though, there are counterexamples such as mknod(2) -- but that
+> was a very specific case).
+> 
+> You're right that it would mean that some very new code won't run on
+> very ancient kernels (assuming we ever pass around structs that
+> massive), but there should be a reasonable trade-off here IMHO.
 
-restart and set prefix are part of the library and needed to start
-other cpus.
+Passing a struct larger than a PAGE_SIZE right now (at least for all
+those calls that would make use of this helper at the moment) is to be
+considered a bug.
+The PAGE_SIZE check is a reasonable heuristic. It's an assumption that
+is pretty common in the kernel in other places as well. Plus the
+possibility of DoS.
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- s390x/Makefile      |   1 +
- s390x/smp.c         | 242 ++++++++++++++++++++++++++++++++++++++++++++
- s390x/unittests.cfg |   4 +
- 3 files changed, 247 insertions(+)
- create mode 100644 s390x/smp.c
+> 
+> If we allow very large sizes, a program could probably DoS the kernel by
+> allocating a moderately-large block of memory and then spawning a bunch
+> of threads that all cause the kernel to re-check that the same 1GB block
+> of memory is zeroed. I haven't tried, but it seems like it's best to
+> avoid the possibility altogether.
+> 
+> > > +	}
+> > > +	/* Copy the interoperable parts of the struct. */
+> > > +	if (__copy_to_user(dst, src, size))
+> > > +		return -EFAULT;
+> > 
+> > I think I understand why you put this last instead of handling the
+> > buffer in the "natural" order. However,
+> > I'm wondering whether we should actually do this copy before checking
+> > that the extra kernel bytes are 0 - the user will still be told that
+> > there was some extra information via the -EFBIG/-E2BIG return, but maybe
+> > in some cases the part he understands is good enough. But I also guess
+> > we have to look to existing users to see whether that would prevent them
+> > from being converted to using this helper.
+> > 
+> > linux-api folks, WDYT?
+> 
+> Regarding the order, I just copied what sched and perf already do. I
+> wouldn't mind doing it the other way around -- though I am a little
+> cautious about implicitly making guarantees like that. The syscall that
+> uses copy_struct_to_user() might not want to make that guarantee (it
+> might not make sense for them), and there are some -E2BIG returns that
+> won't result in data being copied (usize > PAGE_SIZE).
+> 
+> As for feedback, this is syscall-dependent at the moment. The sched and
+> perf users explicitly return the size of the kernel structure (by
+> overwriting uattr->size if -E2BIG is returned) for copies in either
+> direction. So users arguably already have some kind of feedback about
+> size issues. clone3() on the other hand doesn't do that (though it
+> doesn't copy anything to user-space so this isn't relevant to this
+> particular question).
+> 
+> Effectively, I'd like to see someone argue that this is something that
+> they would personally want (before we do it).
 
-diff --git a/s390x/Makefile b/s390x/Makefile
-index d83dd0b..3744372 100644
---- a/s390x/Makefile
-+++ b/s390x/Makefile
-@@ -15,6 +15,7 @@ tests += $(TEST_DIR)/cpumodel.elf
- tests += $(TEST_DIR)/diag288.elf
- tests += $(TEST_DIR)/stsi.elf
- tests += $(TEST_DIR)/skrf.elf
-+tests += $(TEST_DIR)/smp.elf
- tests_binary = $(patsubst %.elf,%.bin,$(tests))
- 
- all: directories test_cases test_cases_binary
-diff --git a/s390x/smp.c b/s390x/smp.c
-new file mode 100644
-index 0000000..f91d367
---- /dev/null
-+++ b/s390x/smp.c
-@@ -0,0 +1,242 @@
-+/*
-+ * Tests sigp emulation
-+ *
-+ * Copyright 2019 IBM Corp.
-+ *
-+ * Authors:
-+ *    Janosch Frank <frankja@linux.ibm.com>
-+ *
-+ * This code is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2.
-+ */
-+#include <libcflat.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/interrupt.h>
-+#include <asm/page.h>
-+#include <asm/facility.h>
-+#include <asm-generic/barrier.h>
-+#include <asm/sigp.h>
-+
-+#include <smp.h>
-+#include <alloc_page.h>
-+
-+static int testflag = 0;
-+
-+static void cpu_loop(void)
-+{
-+	for (;;) {}
-+}
-+
-+static void test_func(void)
-+{
-+	testflag = 1;
-+	mb();
-+	cpu_loop();
-+}
-+
-+static void test_start(void)
-+{
-+	struct psw psw;
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)test_func;
-+
-+	smp_cpu_setup(1, psw);
-+	while (!testflag) {
-+		mb();
-+	}
-+	report("start", 1);
-+}
-+
-+static void test_stop(void)
-+{
-+	smp_cpu_stop(1);
-+	/*
-+	 * The smp library waits for the CPU to shut down, but let's
-+	 * also do it here, so we don't rely on the library
-+	 * implementation
-+	 */
-+	while (!smp_cpu_stopped(1)) {}
-+	report("stop", 1);
-+}
-+
-+static void test_stop_store_status(void)
-+{
-+	struct cpu *cpu = smp_cpu_from_addr(1);
-+	struct lowcore *lc = (void *)0x0;
-+
-+	report_prefix_push("stop store status");
-+	lc->prefix_sa = 0;
-+	lc->grs_sa[15] = 0;
-+	smp_cpu_stop_store_status(1);
-+	mb();
-+	report("prefix", lc->prefix_sa == (uint32_t)(uintptr_t)cpu->lowcore);
-+	report("stack", lc->grs_sa[15]);
-+	report_prefix_pop();
-+}
-+
-+static void test_store_status(void)
-+{
-+	struct cpu_status *status = alloc_pages(1);
-+	uint32_t r;
-+
-+	report_prefix_push("store status at address");
-+	memset(status, 0, PAGE_SIZE * 2);
-+
-+	report_prefix_push("running");
-+	smp_cpu_restart(1);
-+	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, &r);
-+	report("incorrect state", r == SIGP_STATUS_INCORRECT_STATE);
-+	report("status not written", !memcmp(status, (void*)status + PAGE_SIZE, PAGE_SIZE));
-+	report_prefix_pop();
-+
-+	memset(status, 0, PAGE_SIZE);
-+	report_prefix_push("stopped");
-+	smp_cpu_stop(1);
-+	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
-+	while (!status->prefix) { mb(); }
-+	report("status written", 1);
-+	free_pages(status, PAGE_SIZE);
-+	report_prefix_pop();
-+
-+	report_prefix_pop();
-+}
-+
-+static void ecall(void)
-+{
-+	unsigned long mask;
-+	struct lowcore *lc = (void *)0x0;
-+
-+	expect_ext_int();
-+	ctl_set_bit(0, 13);
-+	mask = extract_psw_mask();
-+	mask |= PSW_MASK_EXT;
-+	load_psw_mask(mask);
-+	testflag = 1;
-+	while (lc->ext_int_code != 0x1202) { mb(); }
-+	report("ecall", 1);
-+	testflag= 1;
-+}
-+
-+static void test_ecall(void)
-+{
-+	struct psw psw;
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)ecall;
-+
-+	report_prefix_push("ecall");
-+	testflag= 0;
-+	smp_cpu_destroy(1);
-+
-+	smp_cpu_setup(1, psw);
-+	while (!testflag) { mb(); }
-+	testflag= 0;
-+	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
-+	while(!testflag) {mb();}
-+	smp_cpu_stop(1);
-+	report_prefix_pop();
-+}
-+
-+static void emcall(void)
-+{
-+	unsigned long mask;
-+	struct lowcore *lc = (void *)0x0;
-+
-+	expect_ext_int();
-+	ctl_set_bit(0, 14);
-+	mask = extract_psw_mask();
-+	mask |= PSW_MASK_EXT;
-+	load_psw_mask(mask);
-+	testflag= 1;
-+	while (lc->ext_int_code != 0x1201) { mb(); }
-+	report("ecall", 1);
-+	testflag = 1;
-+}
-+
-+static void test_emcall(void)
-+{
-+	struct psw psw;
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)emcall;
-+
-+	report_prefix_push("emcall");
-+	testflag= 0;
-+	smp_cpu_destroy(1);
-+
-+	smp_cpu_setup(1, psw);
-+	while (!testflag) { mb(); }
-+	testflag= 0;
-+	sigp(1, SIGP_EMERGENCY_SIGNAL, 0, NULL);
-+	while(!testflag) { mb(); }
-+	smp_cpu_stop(1);
-+	report_prefix_pop();
-+}
-+
-+static void test_reset_initial(void)
-+{
-+	struct cpu_status *status = alloc_pages(0);
-+	struct psw psw;
-+
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)test_func;
-+
-+	report_prefix_push("reset initial");
-+	smp_cpu_setup(1, psw);
-+
-+	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
-+	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
-+
-+	report_prefix_push("clear");
-+	report("psw", !status->psw.mask && !status->psw.addr);
-+	report("prefix", !status->prefix);
-+	report("fpc", !status->fpc);
-+	report("cpu timer", !status->cputm);
-+	report("todpr", !status->todpr);
-+	report_prefix_pop();
-+
-+	report_prefix_push("initialized");
-+	report("cr0 == 0xE0", status->crs[0] == 0xE0UL);
-+	report("cr14 == 0xC2000000", status->crs[14] == 0xC2000000UL);
-+	report_prefix_pop();
-+
-+	report("cpu stopped", smp_cpu_stopped(1));
-+	free_pages(status, PAGE_SIZE);
-+	report_prefix_pop();
-+}
-+
-+static void test_reset(void)
-+{
-+	struct psw psw;
-+
-+	psw.mask =  extract_psw_mask();
-+	psw.addr = (unsigned long)test_func;
-+
-+	report_prefix_push("cpu reset");
-+	smp_cpu_setup(1, psw);
-+
-+	sigp_retry(1, SIGP_CPU_RESET, 0, NULL);
-+	report("cpu stopped", smp_cpu_stopped(1));
-+	report_prefix_pop();
-+}
-+
-+int main(void)
-+{
-+	report_prefix_push("smp");
-+
-+	if (smp_query_num_cpus() == 1) {
-+		report_abort("need at least 2 cpus for this test");
-+		goto done;
-+	}
-+
-+	test_start();
-+	test_stop();
-+	test_stop_store_status();
-+	test_store_status();
-+	test_ecall();
-+	test_emcall();
-+	test_reset();
-+	test_reset_initial();
-+
-+done:
-+	report_prefix_pop();
-+	return report_summary();
-+}
-diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
-index cc79a4e..f1b07cd 100644
---- a/s390x/unittests.cfg
-+++ b/s390x/unittests.cfg
-@@ -71,3 +71,7 @@ extra_params=-device diag288,id=watchdog0 --watchdog-action inject-nmi
- 
- [stsi]
- file = stsi.elf
-+
-+[smp]
-+file = smp.elf
-+extra_params =-smp 2
--- 
-2.17.0
-
+I think the order you have right now is fine. I don't see the point of
+doing work first before we have verified that things are sane.
