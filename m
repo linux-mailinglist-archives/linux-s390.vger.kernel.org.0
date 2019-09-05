@@ -2,232 +2,306 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0ABBAAECF
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Sep 2019 01:00:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A0DFBAAEF8
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Sep 2019 01:11:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388313AbfIEXAq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Sep 2019 19:00:46 -0400
-Received: from mx2.mailbox.org ([80.241.60.215]:63818 "EHLO mx2.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726635AbfIEXAq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 5 Sep 2019 19:00:46 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx2.mailbox.org (Postfix) with ESMTPS id B3C5CA0128;
-        Fri,  6 Sep 2019 01:00:38 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
-        with ESMTP id wlUb_R4_fkS3; Fri,  6 Sep 2019 01:00:32 +0200 (CEST)
-Date:   Fri, 6 Sep 2019 09:00:03 +1000
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905230003.bek7vqdvruzi4ybx@yavin.dot.cyphar.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
- <20190905180750.GQ1131@ZenIV.linux.org.uk>
+        id S1729151AbfIEXLW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Sep 2019 19:11:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27328 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726008AbfIEXLV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Sep 2019 19:11:21 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x85N3rtE064771
+        for <linux-s390@vger.kernel.org>; Thu, 5 Sep 2019 19:11:21 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uub0p1fa9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 05 Sep 2019 19:11:20 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 6 Sep 2019 00:11:18 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 6 Sep 2019 00:11:15 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x85NBB0H57933914
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 23:11:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 53CC8AE058;
+        Thu,  5 Sep 2019 23:11:11 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD3A1AE053;
+        Thu,  5 Sep 2019 23:11:10 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.145.76.185])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu,  5 Sep 2019 23:11:10 +0000 (GMT)
+Date:   Fri, 6 Sep 2019 01:10:49 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        freude@de.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        pasic@linux.vnet.ibm.com, frankja@linux.ibm.com,
+        jjherne@linux.ibm.com
+Subject: Re: [PATCH v2] s390: vfio-ap: remove unnecessary calls to disable
+ queue interrupts
+In-Reply-To: <839467aa-5743-3d56-44e2-05ba5533a31c@linux.ibm.com>
+References: <1566236929-18995-1-git-send-email-akrowiak@linux.ibm.com>
+        <20190830180250.79804f76.pasic@linux.ibm.com>
+        <839467aa-5743-3d56-44e2-05ba5533a31c@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="p5c7e3ucgw67wkfa"
-Content-Disposition: inline
-In-Reply-To: <20190905180750.GQ1131@ZenIV.linux.org.uk>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19090523-0028-0000-0000-000003983B0A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090523-0029-0000-0000-0000245A923A
+Message-Id: <20190906011049.50d8a476.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050215
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, 5 Sep 2019 12:26:15 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
---p5c7e3ucgw67wkfa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> On 8/30/19 12:02 PM, Halil Pasic wrote:
+[..]
+> >> @@ -1177,7 +1179,18 @@ static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev)
+> >>   			 */
+> >>   			if (ret)
+> >>   				rc = ret;
+> >> -			vfio_ap_irq_disable_apqn(AP_MKQID(apid, apqi));
+> >> +
+> >> +			/*
+> >> +			 * Resetting a queue disables interrupts as a side
+> >> +			 * effect, so there is no need to disable interrupts
+> >> +			 * here. Note that an error on reset indicates the
+> >> +			 * queue is inaccessible, so an attempt to disable
+> >> +			 * interrupts would fail and is therefore unnecessary.
+> >> +			 * Just free up the resources used by IRQ processing.
+> >> +			 */
+> > 
+> > I have some concerns about this patch. One thing we must ensure is that
+> > the machine does not poke freed memory (NIB, GISA). With the current
+> > design that means we must ensure that there won't be any interruption
+> > conditions indicated (and interrupts made pending) after this point.
+> 
+> If reset disables interrupts, why would we need to turn around and
+> disable interrupts after completion of the reset, unless reset disables
+> interrupts only for the duration of the reset processing?
 
-On 2019-09-05, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> > +/*
-> > + * "memset(p, 0, size)" but for user space buffers. Caller must have a=
-lready
-> > + * checked access_ok(p, size).
-> > + */
-> > +static int __memzero_user(void __user *p, size_t s)
-> > +{
-> > +	const char zeros[BUFFER_SIZE] =3D {};
-> > +	while (s > 0) {
-> > +		size_t n =3D min(s, sizeof(zeros));
-> > +
-> > +		if (__copy_to_user(p, zeros, n))
-> > +			return -EFAULT;
-> > +
-> > +		p +=3D n;
-> > +		s -=3D n;
-> > +	}
-> > +	return 0;
-> > +}
->=20
-> That's called clear_user().
+That a successful queue reset disables interrupts on the queue is beyond
+any doubt. My concern is about the fact that a part of the reset itself
+is done asynchronously with respect to the PQAP ZAPQ that asks for the
+reset.
 
-Already switched, I didn't know about clear_user() -- I assumed it
-would've been called bzero_user() or memzero_user() and didn't find it
-when looking.
+> If interrupts
+> are disabled only for the duration of the reset, then I question whether
+> we need to be at all concerned about interrupts in the context of
+> resetting a queue.
+> 
 
-> > +int copy_struct_to_user(void __user *dst, size_t usize,
-> > +			const void *src, size_t ksize)
-> > +{
-> > +	size_t size =3D min(ksize, usize);
-> > +	size_t rest =3D abs(ksize - usize);
-> > +
-> > +	if (unlikely(usize > PAGE_SIZE))
-> > +		return -EFAULT;
->=20
-> Why?
->=20
-> > +	} else if (usize > ksize) {
-> > +		if (__memzero_user(dst + size, rest))
-> > +			return -EFAULT;
-> > +	}
-> > +	/* Copy the interoperable parts of the struct. */
-> > +	if (__copy_to_user(dst, src, size))
-> > +		return -EFAULT;
->=20
-> Why not simply clear_user() and copy_to_user()?
+We need to clean up the NIB. We must avoid use after free like stuff, so
+my concern is about the waits.
 
-I'm not sure I understand what you mean -- are you asking why we need to
-do memchr_inv(src + size, 0, rest) earlier?
+> > 
+> > I'm not entirely convinced this is ensured after your change. The
+> > relevant bits of the  documentation are particularly hard to figure out.
+> > I could use some clarifications for sure.
+> > 
+> > This hunk removes the wait implemented by vfio_ap_wait_for_irqclear()
+> > along with the hopefully overkill AQIC.
+> > 
+> > Let me name some of the scenarios I'm concerned about, along with the
+> > code that is currently supposed to handle these.
+> > 
+> > 
+> > int vfio_ap_mdev_reset_queue(unsigned int apid, unsigned int apqi,
+> >                               unsigned int retry)
+> > {
+> >          struct ap_queue_status status;
+> >          int retry2 = 2;
+> >          int apqn = AP_MKQID(apid, apqi);
+> >                                                                                  
+> >          do {
+> >                  status = ap_zapq(apqn);
+> >                  switch (status.response_code) {
+> >                  case AP_RESPONSE_NORMAL:
+> >                          while (!status.queue_empty && retry2--) {
+> >                                  msleep(20);
+> >                                  status = ap_tapq(apqn, NULL);
+> >                          }
+> >                          WARN_ON_ONCE(retry <= 0);
+> >                          return 0;
+> >                  case AP_RESPONSE_RESET_IN_PROGRESS:
+> >                  case AP_RESPONSE_BUSY:
+> >                          msleep(20);
+> >                          break;
+> >                  default:
+> >                          /* things are really broken, give up */
+> >                          return -EIO;
+> >                  }
+> >          } while (retry--);
+> >                                                                                  
+> >          return -EBUSY;
+> > 
+> > Scenario 1)
+> > 
+> > ap_zapq() returns status.response_code == AP_RESPONSE_RESET_IN_PROGRESS,
+> > because for example G2 did a ZAPQ before us.
+> > 
+> > The current logic retries ap_zapq() once after 20 msec. I have no idea
+> > if that is sufficient under all circumstances. If we get a
+> > AP_RESPONSE_RESET_IN_PROGRESS again, we return with -EBUSY and do nothing
+> > about it if the whole process was triggered by vfio_ap_mdev_release().
+> > Not even a warning.
+> 
+> I'm not sure this is a major concern, If the response code is
+> AP_RESPONSE_RESET_IN_PROGRESS due to a ZAPQ issued by G2 before us,
+> then once that completes the queue will be reset which accomplishes
+> the goal anyway. Maybe what should be done in this case is to wait
+> for the queue to empty?
+> 
 
->=20
-> > +int copy_struct_from_user(void *dst, size_t ksize,
-> > +			  const void __user *src, size_t usize)
-> > +{
-> > +	size_t size =3D min(ksize, usize);
-> > +	size_t rest =3D abs(ksize - usize);
->=20
-> Cute, but... you would be just as well without that 'rest' thing.
+Yes I'm concerned about do we wait long enough because we need to avoid
+HW poking memory that could be used for something else at that point
+(NIB, GISA.IPM).
 
-I would argue it's harder to mess up using "rest" compared to getting
-"ksize - usize" and "usize - ksize" mixed up (and it's a bit more
-readable).
+> > 
+> > Please notice that this was almost fine before IRQ support, because the
+> > queue will get reset ASAP, and ...
+> 
+> I'm not sure what IRQ support has to do with how soon the queue is
+> reset.
+> 
 
-> > +
-> > +	if (unlikely(usize > PAGE_SIZE))
-> > +		return -EFAULT;
->=20
-> Again, why?
+If there is no IRQs AP HW won't just poke guest memory like it does with
+the NIB. And since the AP instructions are bound to get reset in progress
+response code even there is no danger of queue state leaking because the
+reset is not fully completed yet.
 
-As discussed in a sister thread, I will leave this in the callers
-(though I would argue callers should always do some kind of sanity check
-like this).
+> > 
+> > Scenario 2)
+> > 
+> > It takes longer than 40 msec for the reset to complete. I don't know if
+> > this is a possibility, but before your patch we used to wait of 1 sec.
+> 
+> Where are you coming up with 1 sec?
 
->=20
-> > +	if (unlikely(!access_ok(src, usize)))
-> > +		return -EFAULT;
->=20
-> Why not simply copy_from_user() here?
->=20
-> > +	/* Deal with trailing bytes. */
-> > +	if (usize < ksize)
-> > +		memset(dst + size, 0, rest);
-> > +	else if (usize > ksize) {
-> > +		const void __user *addr =3D src + size;
-> > +		char buffer[BUFFER_SIZE] =3D {};
-> > +
-> > +		while (rest > 0) {
-> > +			size_t bufsize =3D min(rest, sizeof(buffer));
-> > +
-> > +			if (__copy_from_user(buffer, addr, bufsize))
-> > +				return -EFAULT;
-> > +			if (memchr_inv(buffer, 0, bufsize))
-> > +				return -E2BIG;
->=20
-> Frankly, that looks like a candidate for is_all_zeroes_user().
-> With the loop like above serving as a dumb default.  And on
-> badly alighed address it _will_ be dumb.  Probably too much
-> so - something like
-> 	if ((unsigned long)addr & 1) {
-> 		u8 v;
-> 		if (get_user(v, (__u8 __user *)addr))
-> 			return -EFAULT;
-> 		if (v)
-> 			return -E2BIG;
-> 		addr++;
-> 	}
-> 	if ((unsigned long)addr & 2) {
-> 		u16 v;
-> 		if (get_user(v, (__u16 __user *)addr))
-> 			return -EFAULT;
-> 		if (v)
-> 			return -E2BIG;
-> 		addr +=3D2;
-> 	}
-> 	if ((unsigned long)addr & 4) {
-> 		u32 v;
-> 		if (get_user(v, (__u32 __user *)addr))
-> 			return -EFAULT;
-> 		if (v)
-> 			return -E2BIG;
-> 	}
-> 	<read the rest like you currently do>
-> would be saner, and things like x86 could trivially add an
-> asm variant - it's not hard.  Incidentally, memchr_inv() is
-> an overkill in this case...
+My bad, it was supposed to be 0.1 sec == 5 X 20ms (wait after AQIC that
+got kicked by this patch). What I want to say is this patch
+substantially reduces the wait time.
 
-Why is memchr_inv() overkill?
+> The only thing my patch did was
+> remove the disable IRQ. Even if you include the the wait for IRQ disable
+> to complete, I don't see 1 second of wait time. By my calculations:
+> 
+> 5 x 20ms = 100ms  Max wait for ZAPQ response code 0
+> 2 x 20ms =  40ms  Max wait time for qempty
+> 5 x 20ms = 100ms  Max wait for AQIC response code 0
+> 5 x 20ms = 100ms  Max wait time for IRQ clear
+> ----------------
+>             340ms  Max total wait time
+> 
+> > 
+> > I guess the we need the timeouts because do this with matrix_dev->lock
+> > held. I'm not sure it's a good idea long term.
+> 
+> It looks like your concern here is making sure we wait a
+> sufficient amount of time for the reset to complete. That may be
+> a question for the firmware folks.
+> 
 
-But yes, breaking this out to an asm-generic is_all_zeroes_user()
-wouldn't hurt -- and I'll put a cleaned-up version of the alignment
-handling there too. Should I drop it in asm-generic/uaccess.h, or
-somewhere else?
+Yes, my concern is making sure we don't clean up/give up stuff
+prematurely. The current code seems to do the waits for this purpose.
+I'm not sure what is actually necessary. Clarifying stuff with firmware
+or somebody else that knows better than I do is probably a good idea.
 
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
+> > 
+> > Scenario 3)
+> > 
+> > ap_zapq() returns status.response_code == AP_RESPONSE_DECONFIGURED. In
+> > this case we would give up right away. Again so that we don't even know
+> > we hit this case. There ain't much I can think about we could do here.
+> 
+> The only thing I can think of is to log an error. I am introducing
+> logging in the dynamic configuration series if that helps.
+> 
 
---p5c7e3ucgw67wkfa
-Content-Type: application/pgp-signature; name="signature.asc"
+I don't think it is an error.
 
------BEGIN PGP SIGNATURE-----
+> > 
+> > I hope we are guaranteed to  not get any bits set at this point, but I could
+> > use some help.
+> 
+> I don't know what your concern is here. If the card is not in the
+> configuration, then no activity can take place until it is reconfigured.
+> 
 
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXXGTcAAKCRCdlLljIbnQ
-ErrcAP4jP69XXagvV6A6fZ62FZE+PxzGL1xMstNZGHLRdqnO0wD9FZDD6+QiCq2T
-ReQjcKXuuyo3tBJtN7kYSwVg0ZE4dw8=
-=qRhr
------END PGP SIGNATURE-----
+Yes, I also think that is the only way this make sense. But I usually
+don't assume complex things happen atomically unless I have a guarantee
+they do. I will explain what I mean by this offline.
 
---p5c7e3ucgw67wkfa--
+> > 
+> >                                    *
+> > 
+> > The good thing is I'm pretty sure that we are safe (i.e. no bits will be
+> > poked by the hardware) after seeing the queue empty after we issued a
+> > reset request.
+> 
+> You expressed several concerns above, yet now you say you think we're
+> safe; I don't understand.
+
+We are safe after we see the E bit set to one (queue empty) after the
+reset. Above I describe the scenarios where we don't wait for that to
+happen (in scenario 3 because it won't happen because the card is gone,
+and in the other two because of the implemented timeouts).
+
+> 
+> > 
+> > So my concerns basically boil down to are the cumulative timeouts big enough
+> > so we never time out (including are timeouts really the way to go)?
+> > 
+> > We should probably take any discussion about from which point on is it safe
+> > to assume that NIB and GISA won't be poked by HW offline as the guys
+> > without documentation can't contribute.
+> 
+> Just a couple of thoughts. The only reason the vfio_ap driver is
+> concerned with interrupts is because it is intercepting the PQAP(AQIC)
+> instruction. Shouldn't enabling and disabling interrupts, therefore, be 
+> solely under the control of the guest? In other words, maybe the vfio_ap
+> driver should only allocate/deallocate the interrupt controls (i.e., the
+> NIB and GISA) in response to PQAP(AQIC) interception.
+
+GISA is a 1 per guest entity in the hypervisor. The NIB is a byte of the
+guest memory.
+
+> When the guest
+> shuts down, I assume that the PQAP(AQIC) will be executed to disable
+> interrupts. 
+
+I would not assume that.
+
+> The driver can do a final cleanup if the NIB and GISA when
+> the mdev fd is released by the guest if they are still hanging around.
+> 
+
+You have to also consider stuff like subsystem resets. Yes the last line
+of defense should be release(). This is what we do today AFAIU.
+
+Regards,
+Halil
+
