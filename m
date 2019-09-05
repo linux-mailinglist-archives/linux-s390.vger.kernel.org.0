@@ -2,258 +2,186 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 417C1A9BDE
-	for <lists+linux-s390@lfdr.de>; Thu,  5 Sep 2019 09:32:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2751DA9C7C
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Sep 2019 10:00:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731173AbfIEHci (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Sep 2019 03:32:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60790 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726032AbfIEHch (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Sep 2019 03:32:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4t74LAQ8HoNYAg0doAzYeg6TjlgtY7XOq8PTAR8Aews=; b=AJRabzewRFq+7OIffGLOihagu
-        Q6x11cx7vH4lTSeXsd4sAIih6IBnXO0V0QVaYKYPuOX5IyCWWNG/A5IpMM7XxnP5h6RLlcaHT7zAl
-        Fno/b6maUNUFsIFZfcSZQfkojE92I1guZML9x4l93b6YVf0uAT4pU5Fy9CwtrM/pmFvkV07Tl/NDH
-        UWkPdVlV3t+bv3MIvz+w7aolGCsHgXfQaMgu8S2KGM3coJTlVXl+SJRvUIqp+hXS+wtnXq+q3pBAn
-        iaVF6fnqduZ0Uuod15wKkSs509rKcOJZLU443oqaQooqsVuFFvY8MOtj86gBpYi+ToNnI/idUssy/
-        WNhx5pafw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92 #3 (Red Hat Linux))
-        id 1i5mFW-0005ul-GL; Thu, 05 Sep 2019 07:32:10 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 73B24306038;
-        Thu,  5 Sep 2019 09:31:28 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 550C129DE6C22; Thu,  5 Sep 2019 09:32:05 +0200 (CEST)
-Date:   Thu, 5 Sep 2019 09:32:05 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Christian Brauner <christian@brauner.io>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 01/12] lib: introduce copy_struct_{to,from}_user
- helpers
-Message-ID: <20190905073205.GY2332@hirez.programming.kicks-ass.net>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-2-cyphar@cyphar.com>
+        id S1731476AbfIEIA5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Sep 2019 04:00:57 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11492 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728072AbfIEIA5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Sep 2019 04:00:57 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x857w270126523
+        for <linux-s390@vger.kernel.org>; Thu, 5 Sep 2019 04:00:56 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2utx990j86-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 05 Sep 2019 04:00:56 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Thu, 5 Sep 2019 09:00:54 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 5 Sep 2019 09:00:51 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8580oab34472142
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 5 Sep 2019 08:00:50 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4ADC852073;
+        Thu,  5 Sep 2019 08:00:50 +0000 (GMT)
+Received: from dyn-9-152-224-131.boeblingen.de.ibm.com (unknown [9.152.224.131])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 1DA335205A;
+        Thu,  5 Sep 2019 08:00:50 +0000 (GMT)
+Subject: Re: [PATCH v2 0/2] KVM: s390: Check for invalid bits in
+ kvm_valid_regs and kvm_dirty_regs
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20190904085200.29021-1-thuth@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Thu, 5 Sep 2019 10:00:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190904201933.10736-2-cyphar@cyphar.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190904085200.29021-1-thuth@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I"
+X-TM-AS-GCONF: 00
+x-cbid: 19090508-0012-0000-0000-00000346F93C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19090508-0013-0000-0000-000021814E17
+Message-Id: <60703ff3-201d-23bd-3e9d-354e53b49252@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-05_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=794 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909050083
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Sep 05, 2019 at 06:19:22AM +1000, Aleksa Sarai wrote:
-> +/**
-> + * copy_struct_to_user: copy a struct to user space
-> + * @dst:   Destination address, in user space.
-> + * @usize: Size of @dst struct.
-> + * @src:   Source address, in kernel space.
-> + * @ksize: Size of @src struct.
-> + *
-> + * Copies a struct from kernel space to user space, in a way that guarantees
-> + * backwards-compatibility for struct syscall arguments (as long as future
-> + * struct extensions are made such that all new fields are *appended* to the
-> + * old struct, and zeroed-out new fields have the same meaning as the old
-> + * struct).
-> + *
-> + * @ksize is just sizeof(*dst), and @usize should've been passed by user space.
-> + * The recommended usage is something like the following:
-> + *
-> + *   SYSCALL_DEFINE2(foobar, struct foo __user *, uarg, size_t, usize)
-> + *   {
-> + *      int err;
-> + *      struct foo karg = {};
-> + *
-> + *      // do something with karg
-> + *
-> + *      err = copy_struct_to_user(uarg, usize, &karg, sizeof(karg));
-> + *      if (err)
-> + *        return err;
-> + *
-> + *      // ...
-> + *   }
-> + *
-> + * There are three cases to consider:
-> + *  * If @usize == @ksize, then it's copied verbatim.
-> + *  * If @usize < @ksize, then kernel space is "returning" a newer struct to an
-> + *    older user space. In order to avoid user space getting incomplete
-> + *    information (new fields might be important), all trailing bytes in @src
-> + *    (@ksize - @usize) must be zerored
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I
+Content-Type: multipart/mixed; boundary="TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS";
+ protected-headers="v1"
+From: Janosch Frank <frankja@linux.ibm.com>
+To: Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
+ Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: David Hildenbrand <david@redhat.com>, Cornelia Huck <cohuck@redhat.com>,
+ linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Message-ID: <60703ff3-201d-23bd-3e9d-354e53b49252@linux.ibm.com>
+Subject: Re: [PATCH v2 0/2] KVM: s390: Check for invalid bits in
+ kvm_valid_regs and kvm_dirty_regs
+References: <20190904085200.29021-1-thuth@redhat.com>
+In-Reply-To: <20190904085200.29021-1-thuth@redhat.com>
 
-s/zerored/zero/, right?
+--TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
->                                          , otherwise -EFBIG is returned.
+On 9/4/19 10:51 AM, Thomas Huth wrote:
+> Avoid invalid bits in kvm_valid_regs and kvm_dirty_regs on s390x.
+>=20
+> v2:
+>  - Split the single patch from v1 into two separate patches
+>    (I've kept the Reviewed-bys from v1, but if you don't agree with the=
 
-'Funny' that, copy_struct_from_user() below seems to use E2BIG.
+>     patch description of the 2nd patch, please complain)
+>=20
+> Thomas Huth (2):
+>   KVM: s390: Disallow invalid bits in kvm_valid_regs and kvm_dirty_regs=
 
-> + *  * If @usize > @ksize, then the kernel is "returning" an older struct to a
-> + *    newer user space. The trailing bytes in @dst (@usize - @ksize) will be
-> + *    zero-filled.
-> + *
-> + * Returns (in all cases, some data may have been copied):
-> + *  * -EFBIG:  (@usize < @ksize) and there are non-zero trailing bytes in @src.
-> + *  * -EFAULT: access to user space failed.
-> + */
-> +int copy_struct_to_user(void __user *dst, size_t usize,
-> +			const void *src, size_t ksize)
-> +{
-> +	size_t size = min(ksize, usize);
-> +	size_t rest = abs(ksize - usize);
-> +
-> +	if (unlikely(usize > PAGE_SIZE))
-> +		return -EFAULT;
+>   KVM: selftests: Test invalid bits in kvm_valid_regs and kvm_dirty_reg=
+s
+>     on s390x
+>=20
+>  arch/s390/include/uapi/asm/kvm.h              |  6 ++++
+>  arch/s390/kvm/kvm-s390.c                      |  4 +++
+>  .../selftests/kvm/s390x/sync_regs_test.c      | 30 +++++++++++++++++++=
 
-Not documented above. Implementation consistent with *from*, but see
-below.
+>  3 files changed, 40 insertions(+)
+>=20
 
-> +	if (unlikely(!access_ok(dst, usize)))
-> +		return -EFAULT;
-> +
-> +	/* Deal with trailing bytes. */
-> +	if (usize < ksize) {
-> +		if (memchr_inv(src + size, 0, rest))
-> +			return -EFBIG;
-> +	} else if (usize > ksize) {
-> +		if (__memzero_user(dst + size, rest))
-> +			return -EFAULT;
-> +	}
-> +	/* Copy the interoperable parts of the struct. */
-> +	if (__copy_to_user(dst, src, size))
-> +		return -EFAULT;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(copy_struct_to_user);
-> +
-> +/**
-> + * copy_struct_from_user: copy a struct from user space
-> + * @dst:   Destination address, in kernel space. This buffer must be @ksize
-> + *         bytes long.
-> + * @ksize: Size of @dst struct.
-> + * @src:   Source address, in user space.
-> + * @usize: (Alleged) size of @src struct.
-> + *
-> + * Copies a struct from user space to kernel space, in a way that guarantees
-> + * backwards-compatibility for struct syscall arguments (as long as future
-> + * struct extensions are made such that all new fields are *appended* to the
-> + * old struct, and zeroed-out new fields have the same meaning as the old
-> + * struct).
-> + *
-> + * @ksize is just sizeof(*dst), and @usize should've been passed by user space.
-> + * The recommended usage is something like the following:
-> + *
-> + *   SYSCALL_DEFINE2(foobar, const struct foo __user *, uarg, size_t, usize)
-> + *   {
-> + *      int err;
-> + *      struct foo karg = {};
-> + *
-> + *      err = copy_struct_from_user(&karg, sizeof(karg), uarg, size);
-> + *      if (err)
-> + *        return err;
-> + *
-> + *      // ...
-> + *   }
-> + *
-> + * There are three cases to consider:
-> + *  * If @usize == @ksize, then it's copied verbatim.
-> + *  * If @usize < @ksize, then the user space has passed an old struct to a
-> + *    newer kernel. The rest of the trailing bytes in @dst (@ksize - @usize)
-> + *    are to be zero-filled.
-> + *  * If @usize > @ksize, then the user space has passed a new struct to an
-> + *    older kernel. The trailing bytes unknown to the kernel (@usize - @ksize)
-> + *    are checked to ensure they are zeroed, otherwise -E2BIG is returned.
-> + *
-> + * Returns (in all cases, some data may have been copied):
-> + *  * -E2BIG:  (@usize > @ksize) and there are non-zero trailing bytes in @src.
-> + *  * -E2BIG:  @usize is "too big" (at time of writing, >PAGE_SIZE).
-> + *  * -EFAULT: access to user space failed.
-> + */
-> +int copy_struct_from_user(void *dst, size_t ksize,
-> +			  const void __user *src, size_t usize)
-> +{
-> +	size_t size = min(ksize, usize);
-> +	size_t rest = abs(ksize - usize);
-> +
-> +	if (unlikely(usize > PAGE_SIZE))
-> +		return -EFAULT;
+Thanks, both are picked
 
-Documented above as returning -E2BIG.
 
-> +	if (unlikely(!access_ok(src, usize)))
-> +		return -EFAULT;
-> +
-> +	/* Deal with trailing bytes. */
-> +	if (usize < ksize)
-> +		memset(dst + size, 0, rest);
-> +	else if (usize > ksize) {
-> +		const void __user *addr = src + size;
-> +		char buffer[BUFFER_SIZE] = {};
+--TQSoxuGeU5g53gbhIQUIOVsdkGjjKBeCS--
 
-Isn't that too big for on-stack?
+--gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-> +
-> +		while (rest > 0) {
-> +			size_t bufsize = min(rest, sizeof(buffer));
-> +
-> +			if (__copy_from_user(buffer, addr, bufsize))
-> +				return -EFAULT;
-> +			if (memchr_inv(buffer, 0, bufsize))
-> +				return -E2BIG;
-> +
-> +			addr += bufsize;
-> +			rest -= bufsize;
-> +		}
+-----BEGIN PGP SIGNATURE-----
 
-The perf implementation uses get_user(); but if that is too slow, surely
-we can do something with uaccess_try() here?
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl1wwLEACgkQ41TmuOI4
+ufixCA/+Odhx7Sghxgy98iYZjSMipxnr1NBPClrMVaRiiNkMWt27H1RPnXt3Y/4/
+/RG7rTZgrHaaRN0hMS9AXJHUsbqPunp67gdEeJc99NHYBIRtq5xZCW0zOxX4etXo
+TFhuGSSmJ7LUOTwtOotA+7bNvxJJfph1CdKNIbSVZmPjQw7GxY5gz7ax0fsFc5bM
+3v43lWsZTA2Ar/FnJvhgLiHhvD08ZJ15zFqowDMUvkNyK5c4BCYaNfwkCrRrhrxE
+mzMvGkbHadJnxhoSDkvG+OSuOSkIUDx5KCaDDG5RaLkOa2yTEpdo76uDLoa3AR+T
+jjlpyLyv+pGnxfQxOwqpMEq+AJbmtYVNF1dYGz/T/v3t8jvJ/v1Ux17Ze1dT4kIc
+SEWJu9jrIgdGjDfteLewVRX/DvsJBNHSCvXBeGnghfePQIskEtZPpcuANq32uU04
+KqozbsmuL6Oj5r0+TCSc5SzdMQ+6UYY+wIgitApJaRQXXlBr1RoMZ6arxFuGFTJg
+QAihxEzF2zMr2FtRTl8eAx3IQHP9KDQKa0+t4qYgmwvbePxj7gtOQFsUtupjyqAL
+z7rQ/21eW0bJl7ScRZV0M7et7AhIc/PCChTfJSrOTNUnE+XfDEEW3RZB60JPBUGM
+5FE+C3Oa2XDqkulzPgu5oGkHchNJptq3Vb8ug+aSOH6y1elAi6Y=
+=fh8O
+-----END PGP SIGNATURE-----
 
-> +	}
-> +	/* Copy the interoperable parts of the struct. */
-> +	if (__copy_from_user(dst, src, size))
-> +		return -EFAULT;
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL(copy_struct_from_user);
+--gWQIJdATOdynDAV4K9Mg2r9rVWfgCdA9I--
 
-And personally I'm not a big fan of EXPORT_SYMBOL().
