@@ -2,252 +2,229 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 96718AC395
-	for <lists+linux-s390@lfdr.de>; Sat,  7 Sep 2019 02:14:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1576EAC69F
+	for <lists+linux-s390@lfdr.de>; Sat,  7 Sep 2019 14:40:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393450AbfIGAOJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Sep 2019 20:14:09 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15460 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2393438AbfIGAOJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Sep 2019 20:14:09 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8707Hk5071220;
-        Fri, 6 Sep 2019 20:14:01 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uuvjq1tud-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Sep 2019 20:14:01 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8707Jne071333;
-        Fri, 6 Sep 2019 20:14:01 -0400
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uuvjq1ttt-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Fri, 06 Sep 2019 20:14:00 -0400
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8709NhY013987;
-        Sat, 7 Sep 2019 00:13:58 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma03dal.us.ibm.com with ESMTP id 2uqgh82ch1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 07 Sep 2019 00:13:58 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x870Duhh54526334
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 7 Sep 2019 00:13:56 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0521A124052;
-        Sat,  7 Sep 2019 00:13:56 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C6C7124053;
-        Sat,  7 Sep 2019 00:13:55 +0000 (GMT)
-Received: from oc4221205838.ibm.com (unknown [9.85.134.207])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Sat,  7 Sep 2019 00:13:55 +0000 (GMT)
-From:   Matthew Rosato <mjrosato@linux.ibm.com>
-To:     sebott@linux.ibm.com
-Cc:     gerald.schaefer@de.ibm.com, pasic@linux.ibm.com,
-        borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org,
-        alex.williamson@redhat.com, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
-        cohuck@redhat.com, pmorel@linux.ibm.com
-Subject: [PATCH v4 4/4] vfio: pci: Using a device region to retrieve zPCI information
-Date:   Fri,  6 Sep 2019 20:13:51 -0400
-Message-Id: <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
-References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-06_11:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909070000
+        id S2405923AbfIGMky (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 7 Sep 2019 08:40:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49340 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731870AbfIGMkx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 7 Sep 2019 08:40:53 -0400
+Received: from tleilax.poochiereds.net (68-20-15-154.lightspeed.rlghnc.sbcglobal.net [68.20.15.154])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6CE4A21871;
+        Sat,  7 Sep 2019 12:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1567860051;
+        bh=8CdC9s2J+EXRB9t2P5assmBfzpxHrY6X7806hW2vZbI=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=BMvFV1UX5X6Uy9Wv1qL/PSUiseB7R2rehCkF1jManrfGr8YI9PSHDWUn9L+S2pFuv
+         RCN9fVNO1dVgQYKSzjsx39Mxn3GBmfn+uxlg8EP9mU5AYcsQNbkdlUXvr6YJL1XW0i
+         aq/hmJ23hyXTE39ZyvTfy0uteQUqAjbcN+eR3HO4=
+Message-ID: <7236f382d72130f2afbbe8940e72cc67e5c6dce0.camel@kernel.org>
+Subject: Re: [PATCH v12 11/12] open: openat2(2) syscall
+From:   Jeff Layton <jlayton@kernel.org>
+To:     Aleksa Sarai <cyphar@cyphar.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>
+Cc:     Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Date:   Sat, 07 Sep 2019 08:40:47 -0400
+In-Reply-To: <20190904201933.10736-12-cyphar@cyphar.com>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+         <20190904201933.10736-12-cyphar@cyphar.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Pierre Morel <pmorel@linux.ibm.com>
+On Thu, 2019-09-05 at 06:19 +1000, Aleksa Sarai wrote:
+> The most obvious syscall to add support for the new LOOKUP_* scoping
+> flags would be openat(2). However, there are a few reasons why this is
+> not the best course of action:
+> 
+>  * The new LOOKUP_* flags are intended to be security features, and
+>    openat(2) will silently ignore all unknown flags. This means that
+>    users would need to avoid foot-gunning themselves constantly when
+>    using this interface if it were part of openat(2). This can be fixed
+>    by having userspace libraries handle this for users[1], but should be
+>    avoided if possible.
+> 
+>  * Resolution scoping feels like a different operation to the existing
+>    O_* flags. And since openat(2) has limited flag space, it seems to be
+>    quite wasteful to clutter it with 5 flags that are all
+>    resolution-related. Arguably O_NOFOLLOW is also a resolution flag but
+>    its entire purpose is to error out if you encounter a trailing
+>    symlink -- not to scope resolution.
+> 
+>  * Other systems would be able to reimplement this syscall allowing for
+>    cross-OS standardisation rather than being hidden amongst O_* flags
+>    which may result in it not being used by all the parties that might
+>    want to use it (file servers, web servers, container runtimes, etc).
+> 
+>  * It gives us the opportunity to iterate on the O_PATH interface. In
+>    particular, the new @how->upgrade_mask field for fd re-opening is
+>    only possible because we have a clean slate without needing to re-use
+>    the ACC_MODE flag design nor the existing openat(2) @mode semantics.
+> 
+> To this end, we introduce the openat2(2) syscall. It provides all of the
+> features of openat(2) through the @how->flags argument, but also
+> also provides a new @how->resolve argument which exposes RESOLVE_* flags
+> that map to our new LOOKUP_* flags. It also eliminates the long-standing
+> ugliness of variadic-open(2) by embedding it in a struct.
+> 
+> In order to allow for userspace to lock down their usage of file
+> descriptor re-opening, openat2(2) has the ability for users to disallow
+> certain re-opening modes through @how->upgrade_mask. At the moment,
+> there is no UPGRADE_NOEXEC.
+> 
+> [1]: https://github.com/openSUSE/libpathrs
+> 
+> Suggested-by: Christian Brauner <christian@brauner.io>
+> Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
+> ---
+>  arch/alpha/kernel/syscalls/syscall.tbl      |  1 +
+>  arch/arm/tools/syscall.tbl                  |  1 +
+>  arch/arm64/include/asm/unistd.h             |  2 +-
+>  arch/arm64/include/asm/unistd32.h           |  2 +
+>  arch/ia64/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/m68k/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/microblaze/kernel/syscalls/syscall.tbl |  1 +
+>  arch/mips/kernel/syscalls/syscall_n32.tbl   |  1 +
+>  arch/mips/kernel/syscalls/syscall_n64.tbl   |  1 +
+>  arch/mips/kernel/syscalls/syscall_o32.tbl   |  1 +
+>  arch/parisc/kernel/syscalls/syscall.tbl     |  1 +
+>  arch/powerpc/kernel/syscalls/syscall.tbl    |  1 +
+>  arch/s390/kernel/syscalls/syscall.tbl       |  1 +
+>  arch/sh/kernel/syscalls/syscall.tbl         |  1 +
+>  arch/sparc/kernel/syscalls/syscall.tbl      |  1 +
+>  arch/x86/entry/syscalls/syscall_32.tbl      |  1 +
+>  arch/x86/entry/syscalls/syscall_64.tbl      |  1 +
+>  arch/xtensa/kernel/syscalls/syscall.tbl     |  1 +
+>  fs/open.c                                   | 94 ++++++++++++++++-----
+>  include/linux/fcntl.h                       | 19 ++++-
+>  include/linux/fs.h                          |  4 +-
+>  include/linux/syscalls.h                    | 14 ++-
+>  include/uapi/asm-generic/unistd.h           |  5 +-
+>  include/uapi/linux/fcntl.h                  | 42 +++++++++
+>  24 files changed, 168 insertions(+), 30 deletions(-)
+> 
 
-We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
+[...]
 
-When the VFIO_PCI_ZDEV feature is configured we initialize
-a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
-the information from the ZPCI device the use
+> diff --git a/include/uapi/linux/fcntl.h b/include/uapi/linux/fcntl.h
+> index 1d338357df8a..479baf2da10e 100644
+> --- a/include/uapi/linux/fcntl.h
+> +++ b/include/uapi/linux/fcntl.h
+> @@ -93,5 +93,47 @@
+>  
+>  #define AT_RECURSIVE		0x8000	/* Apply to the entire subtree */
+>  
+> +/**
+> + * Arguments for how openat2(2) should open the target path. If @resolve is
+> + * zero, then openat2(2) operates identically to openat(2).
+> + *
+> + * However, unlike openat(2), unknown bits in @flags result in -EINVAL rather
+> + * than being silently ignored. In addition, @mode (or @upgrade_mask) must be
+> + * zero unless one of {O_CREAT, O_TMPFILE, O_PATH} are set.
+> + *
 
-Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
----
- drivers/vfio/pci/Kconfig            |  7 +++
- drivers/vfio/pci/Makefile           |  1 +
- drivers/vfio/pci/vfio_pci.c         |  9 ++++
- drivers/vfio/pci/vfio_pci_private.h | 10 +++++
- drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 112 insertions(+)
- create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
+After thinking about this a bit, I wonder if we might be better served
+with a new set of OA2_* flags instead of repurposing the O_* flags?
 
-diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-index ac3c1dd..d4562a8 100644
---- a/drivers/vfio/pci/Kconfig
-+++ b/drivers/vfio/pci/Kconfig
-@@ -45,3 +45,10 @@ config VFIO_PCI_NVLINK2
- 	depends on VFIO_PCI && PPC_POWERNV
- 	help
- 	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
-+
-+config VFIO_PCI_ZDEV
-+	bool "VFIO PCI Generic for ZPCI devices"
-+	depends on VFIO_PCI && S390
-+	default y
-+	help
-+	  VFIO PCI support for S390 Z-PCI devices
-diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-index f027f8a..781e080 100644
---- a/drivers/vfio/pci/Makefile
-+++ b/drivers/vfio/pci/Makefile
-@@ -3,5 +3,6 @@
- vfio-pci-y := vfio_pci.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
- vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
- vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
-+vfio-pci-$(CONFIG_VFIO_PCI_ZDEV) += vfio_pci_zdev.o
- 
- obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
-diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-index 703948c..b40544a 100644
---- a/drivers/vfio/pci/vfio_pci.c
-+++ b/drivers/vfio/pci/vfio_pci.c
-@@ -356,6 +356,15 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
- 		}
- 	}
- 
-+	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV)) {
-+		ret = vfio_pci_zdev_init(vdev);
-+		if (ret) {
-+			dev_warn(&vdev->pdev->dev,
-+				 "Failed to setup ZDEV regions\n");
-+			goto disable_exit;
-+		}
-+	}
-+
- 	vfio_pci_probe_mmaps(vdev);
- 
- 	return 0;
-diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-index ee6ee91..08e02f5 100644
---- a/drivers/vfio/pci/vfio_pci_private.h
-+++ b/drivers/vfio/pci/vfio_pci_private.h
-@@ -186,4 +186,14 @@ static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
- 	return -ENODEV;
- }
- #endif
-+
-+#ifdef CONFIG_VFIO_PCI_ZDEV
-+extern int vfio_pci_zdev_init(struct vfio_pci_device *vdev);
-+#else
-+static inline int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- #endif /* VFIO_PCI_PRIVATE_H */
-diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
-new file mode 100644
-index 0000000..22e2b60
---- /dev/null
-+++ b/drivers/vfio/pci/vfio_pci_zdev.c
-@@ -0,0 +1,85 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * VFIO ZPCI devices support
-+ *
-+ * Copyright (C) IBM Corp. 2019.  All rights reserved.
-+ *	Author: Pierre Morel <pmorel@linux.ibm.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#include <linux/io.h>
-+#include <linux/pci.h>
-+#include <linux/uaccess.h>
-+#include <linux/vfio.h>
-+#include <linux/vfio_zdev.h>
-+
-+#include "vfio_pci_private.h"
-+
-+static size_t vfio_pci_zdev_rw(struct vfio_pci_device *vdev,
-+			       char __user *buf, size_t count, loff_t *ppos,
-+			       bool iswrite)
-+{
-+	struct vfio_region_zpci_info *region;
-+	struct zpci_dev *zdev;
-+	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
-+	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
-+
-+	if (!vdev->pdev->bus)
-+		return -ENODEV;
-+
-+	zdev = vdev->pdev->bus->sysdata;
-+	if (!zdev)
-+		return -ENODEV;
-+
-+	if (pos >= sizeof(*region) || iswrite)
-+		return -EINVAL;
-+
-+	region = vdev->region[index - VFIO_PCI_NUM_REGIONS].data;
-+	region->dasm = zdev->dma_mask;
-+	region->start_dma = zdev->start_dma;
-+	region->end_dma = zdev->end_dma;
-+	region->msi_addr = zdev->msi_addr;
-+	region->flags = VFIO_PCI_ZDEV_FLAGS_REFRESH;
-+	region->gid = zdev->pfgid;
-+	region->mui = zdev->fmb_update;
-+	region->noi = zdev->max_msi;
-+	memcpy(region->util_str, zdev->util_str, CLP_UTIL_STR_LEN);
-+
-+	count = min(count, (size_t)(sizeof(*region) - pos));
-+	if (copy_to_user(buf, region, count))
-+		return -EFAULT;
-+
-+	return count;
-+}
-+
-+static void vfio_pci_zdev_release(struct vfio_pci_device *vdev,
-+				  struct vfio_pci_region *region)
-+{
-+	kfree(region->data);
-+}
-+
-+static const struct vfio_pci_regops vfio_pci_zdev_regops = {
-+	.rw		= vfio_pci_zdev_rw,
-+	.release	= vfio_pci_zdev_release,
-+};
-+
-+int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
-+{
-+	struct vfio_region_zpci_info *region;
-+	int ret;
-+
-+	region = kmalloc(sizeof(*region) + CLP_UTIL_STR_LEN, GFP_KERNEL);
-+	if (!region)
-+		return -ENOMEM;
-+
-+	ret = vfio_pci_register_dev_region(vdev,
-+		PCI_VENDOR_ID_IBM | VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
-+		VFIO_REGION_SUBTYPE_ZDEV_CLP,
-+		&vfio_pci_zdev_regops, sizeof(*region) + CLP_UTIL_STR_LEN,
-+		VFIO_REGION_INFO_FLAG_READ, region);
-+
-+	return ret;
-+}
+Yes, those flags are familiar, but this is an entirely new syscall. We
+have a chance to make a fresh start. Does something like O_LARGEFILE
+have any real place in openat2? I'd argue no.
+
+Also, once you want to add a new flag, then we get into the mess of how
+to document whether open/openat also support it. It'd be good to freeze
+changes on those syscalls and aim to only introduce new functionality in
+openat2.
+
+That would also allow us to drop some flags from openat2 that we really
+don't need, and maybe expand the flag space to 64 bits initially, to
+allow for expansion into the future.
+
+Thoughts?
+
+> + * @flags: O_* flags.
+> + * @mode: O_CREAT/O_TMPFILE file mode.
+> + * @upgrade_mask: UPGRADE_* flags (to restrict O_PATH re-opening).
+> + * @resolve: RESOLVE_* flags.
+> + */
+> +struct open_how {
+> +	__u32 flags;
+> +	union {
+> +		__u16 mode;
+> +		__u16 upgrade_mask;
+> +	};
+> +	__u16 resolve;
+> +};
+> +
+> +#define OPEN_HOW_SIZE_VER0	8 /* sizeof first published struct */
+> +
+
+Hmm, there is no version field. When you want to expand this in the
+future, what is the plan? Add a new flag to indicate that it's some
+length?
+
+
+> +/* how->resolve flags for openat2(2). */
+> +#define RESOLVE_NO_XDEV		0x01 /* Block mount-point crossings
+> +					(includes bind-mounts). */
+> +#define RESOLVE_NO_MAGICLINKS	0x02 /* Block traversal through procfs-style
+> +					"magic-links". */
+> +#define RESOLVE_NO_SYMLINKS	0x04 /* Block traversal through all symlinks
+> +					(implies OEXT_NO_MAGICLINKS) */
+> +#define RESOLVE_BENEATH		0x08 /* Block "lexical" trickery like
+> +					"..", symlinks, and absolute
+> +					paths which escape the dirfd. */
+> +#define RESOLVE_IN_ROOT		0x10 /* Make all jumps to "/" and ".."
+> +					be scoped inside the dirfd
+> +					(similar to chroot(2)). */
+> +
+> +/* how->upgrade flags for openat2(2). */
+> +/* First bit is reserved for a future UPGRADE_NOEXEC flag. */
+> +#define UPGRADE_NOREAD		0x02 /* Block re-opening with MAY_READ. */
+> +#define UPGRADE_NOWRITE		0x04 /* Block re-opening with MAY_WRITE. */
+>  
+>  #endif /* _UAPI_LINUX_FCNTL_H */
+
 -- 
-1.8.3.1
+Jeff Layton <jlayton@kernel.org>
 
