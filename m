@@ -2,216 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7B58BAC01B
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Sep 2019 21:04:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA2AAAC38C
+	for <lists+linux-s390@lfdr.de>; Sat,  7 Sep 2019 02:14:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406221AbfIFTEI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Sep 2019 15:04:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39960 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727768AbfIFTEI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Sep 2019 15:04:08 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x86J1lUJ181300
-        for <linux-s390@vger.kernel.org>; Fri, 6 Sep 2019 15:04:06 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uunksr05v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 06 Sep 2019 15:04:04 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
-        Fri, 6 Sep 2019 20:03:59 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Sep 2019 20:03:50 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x86J3nGp51839194
+        id S2393352AbfIGAOG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 Sep 2019 20:14:06 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6366 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1733029AbfIGAOF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Sep 2019 20:14:05 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8707cvU014844;
+        Fri, 6 Sep 2019 20:13:57 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uv1jrrden-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Sep 2019 20:13:57 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x87092bj017643;
+        Fri, 6 Sep 2019 20:13:56 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2uv1jrrdee-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 06 Sep 2019 20:13:56 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8709OHn006177;
+        Sat, 7 Sep 2019 00:13:56 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2uqgh7t8ya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Sat, 07 Sep 2019 00:13:56 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x870Drx652887816
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Sep 2019 19:03:49 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 20BAC42042;
-        Fri,  6 Sep 2019 19:03:49 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 047F842049;
-        Fri,  6 Sep 2019 19:03:48 +0000 (GMT)
-Received: from thinkpad (unknown [9.152.96.94])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  6 Sep 2019 19:03:47 +0000 (GMT)
-Date:   Fri, 6 Sep 2019 21:03:46 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
- page table helpers
-In-Reply-To: <3c609e33-afbb-ffaf-481a-6d225a06d1d0@arm.com>
-References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
-        <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
-        <20190904221618.1b624a98@thinkpad>
-        <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
-        <20190905190629.523bdb87@thinkpad>
-        <3c609e33-afbb-ffaf-481a-6d225a06d1d0@arm.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sat, 7 Sep 2019 00:13:53 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 427A8124053;
+        Sat,  7 Sep 2019 00:13:53 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B21D5124052;
+        Sat,  7 Sep 2019 00:13:52 +0000 (GMT)
+Received: from oc4221205838.ibm.com (unknown [9.85.134.207])
+        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+        Sat,  7 Sep 2019 00:13:52 +0000 (GMT)
+From:   Matthew Rosato <mjrosato@linux.ibm.com>
+To:     sebott@linux.ibm.com
+Cc:     gerald.schaefer@de.ibm.com, pasic@linux.ibm.com,
+        borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        cohuck@redhat.com, pmorel@linux.ibm.com
+Subject: [PATCH v4 0/4] Retrieving zPCI specific info with VFIO
+Date:   Fri,  6 Sep 2019 20:13:47 -0400
+Message-Id: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+X-Mailer: git-send-email 1.8.3.1
 X-TM-AS-GCONF: 00
-x-cbid: 19090619-0020-0000-0000-000003689871
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19090619-0021-0000-0000-000021BE1320
-Message-Id: <20190906210346.5ecbff01@thinkpad>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-06_07:,,
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-06_11:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909060198
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909070000
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 6 Sep 2019 11:58:59 +0530
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+Note: These patches by Pierre got lost in the ether a few months back
+as he has been unavailable to carry them forward.  I've made changes
+based upon comments received on his last version.
 
-> On 09/05/2019 10:36 PM, Gerald Schaefer wrote:
-> > On Thu, 5 Sep 2019 14:48:14 +0530
-> > Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> >   
-> >>> [...]    
-> >>>> +
-> >>>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
-> >>>> +static void pud_clear_tests(pud_t *pudp)
-> >>>> +{
-> >>>> +	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
-> >>>> +	pud_clear(pudp);
-> >>>> +	WARN_ON(!pud_none(READ_ONCE(*pudp)));
-> >>>> +}    
-> >>>
-> >>> For pgd/p4d/pud_clear(), we only clear if the page table level is present
-> >>> and not folded. The memset() here overwrites the table type bits, so
-> >>> pud_clear() will not clear anything on s390 and the pud_none() check will
-> >>> fail.
-> >>> Would it be possible to OR a (larger) random value into the table, so that
-> >>> the lower 12 bits would be preserved?    
-> >>
-> >> So the suggestion is instead of doing memset() on entry with RANDOM_NZVALUE,
-> >> it should OR a large random value preserving lower 12 bits. Hmm, this should
-> >> still do the trick for other platforms, they just need non zero value. So on
-> >> s390, the lower 12 bits on the page table entry already has valid value while
-> >> entering this function which would make sure that pud_clear() really does
-> >> clear the entry ?  
-> > 
-> > Yes, in theory the table entry on s390 would have the type set in the last
-> > 4 bits, so preserving those would be enough. If it does not conflict with
-> > others, I would still suggest preserving all 12 bits since those would contain
-> > arch-specific flags in general, just to be sure. For s390, the pte/pmd tests
-> > would also work with the memset, but for consistency I think the same logic
-> > should be used in all pxd_clear_tests.  
-> 
-> Makes sense but..
-> 
-> There is a small challenge with this. Modifying individual bits on a given
-> page table entry from generic code like this test case is bit tricky. That
-> is because there are not enough helpers to create entries with an absolute
-> value. This would have been easier if all the platforms provided functions
-> like __pxx() which is not the case now. Otherwise something like this should
-> have worked.
-> 
-> 
-> pud_t pud = READ_ONCE(*pudp);
-> pud = __pud(pud_val(pud) | RANDOM_VALUE (keeping lower 12 bits 0))
-> WRITE_ONCE(*pudp, pud);
-> 
-> But __pud() will fail to build in many platforms.
+We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
+to configure access to a zPCI region dedicated for retrieving
+zPCI features.
 
-Hmm, I simply used this on my system to make pud_clear_tests() work, not
-sure if it works on all archs:
+When the VFIO_PCI_ZDEV feature is configured we initialize
+a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
+the information from the ZPCI device the userland needs to
+give to a guest driving the zPCI function.
 
-pud_val(*pudp) |= RANDOM_NZVALUE;
 
-> 
-> The other alternative will be to make sure memset() happens on all other
-> bits except the lower 12 bits which will depend on endianness. If s390
-> has a fixed endianness, we can still use either of them which will hold
-> good for others as well.
-> 
-> memset(pudp, RANDOM_NZVALUE, sizeof(pud_t) - 3);
-> 
-> OR
-> 
-> memset(pudp + 3, RANDOM_NZVALUE, sizeof(pud_t) - 3);
-> 
-> > 
-> > However, there is another issue on s390 which will make this only work
-> > for pud_clear_tests(), and not for the p4d/pgd_tests. The problem is that
-> > mm_alloc() will only give you a 3-level page table initially on s390.
-> > This means that pudp == p4dp == pgdp, and so the p4d/pgd_tests will
-> > both see the pud level (of course this also affects other tests).  
-> 
-> Got it.
-> 
-> > 
-> > Not sure yet how to fix this, i.e. how to initialize/update the page table
-> > to 5 levels. We can handle 5 level page tables, and it would be good if
-> > all levels could be tested, but using mm_alloc() to establish the page
-> > tables might not work on s390. One option could be to provide an arch-hook
-> > or weak function to allocate/initialize the mm.  
-> 
-> Sure, got it. Though I plan to do add some arch specific tests or init sequence
-> like the above later on but for now the idea is to get the smallest possible set
-> of test cases which builds and runs on all platforms without requiring any arch
-> specific hooks or special casing (#ifdef) to be agreed upon broadly and accepted.
-> 
-> Do you think this is absolutely necessary on s390 for the very first set of test
-> cases or we can add this later on as an improvement ?
+Note that in the current state we do not use the CLP instructions
+to access the firmware but get the information directly from
+the zdev device.
 
-It can be added later, no problem. I did not expect this to work flawlessly
-on s390 right from the start anyway, with all our peculiarities, so don't
-let this hinder you. I might come up with an add-on patch later.
+-This means that the patch 1, "s390: pci: Exporting access to CLP PCI
+function and PCI group" is not used and can be let out of this series
+without denying the good working of the other patches.
+- But we will need this later, eventually in the next iteration
+  to retrieve values not being saved inside the zdev structure.
+  like maxstbl and the PCI supported version
 
-Actually, using get_unmapped_area() as suggested by Kirill could also
-solve this issue. We do create a new mm with 3-level page tables on s390,
-and the dynamic upgrade to 4 or 5 levels is then triggered exactly by
-arch_get_unmapped_area(), depending on the addr. But I currently don't
-see how / where arch_get_unmapped_area() is set up for such a dummy mm
-created by mm_alloc().
+To share the code with arch/s390/pci/pci_clp.c the original functions
+in pci_clp.c to query PCI functions and PCI functions group are
+modified so that they can be exported.
 
-Regards,
-Gerald
+A new function clp_query_pci() replaces clp_query_pci_fn() and
+the previous calls to clp_query_pci_fn() and clp_query_pci_fngrp()
+are replaced with calls to zdev_query_pci_fn() and zdev_query_pci_fngrp()
+using a zdev pointer as argument.
+
+Changes since v3:
+- New patch: define maxstbl
+- Remove CLP_UTIL_STR_LEN references from uapi header
+- Fix broken ifdef CONFIG_VFIO_PCI_ZDEV
+- Change Kconfig option from tristate to bool
+- Remove VFIO_REGION_TYPE_IBM_ZDEV, move VFIO_REGION_SUBTYPE_ZDEV_CLP to a 1014 subtype
+- reject iswrite in .rw callback
+- Remove rw restriction on identical buffer sizes
+- Allow arbitrary sized read
+
+Pierre Morel (4):
+  s390: pci: Exporting access to CLP PCI function and PCI group
+  s390: pci: Define the maxstbl CLP response entry
+  vfio: zpci: defining the VFIO headers
+  vfio: pci: Using a device region to retrieve zPCI information
+
+ arch/s390/include/asm/pci.h         |  3 ++
+ arch/s390/include/asm/pci_clp.h     |  2 +-
+ arch/s390/pci/pci_clp.c             | 71 ++++++++++++++++---------------
+ drivers/vfio/pci/Kconfig            |  7 +++
+ drivers/vfio/pci/Makefile           |  1 +
+ drivers/vfio/pci/vfio_pci.c         |  9 ++++
+ drivers/vfio/pci/vfio_pci_private.h | 10 +++++
+ drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
+ include/uapi/linux/vfio.h           |  1 +
+ include/uapi/linux/vfio_zdev.h      | 35 +++++++++++++++
+ 10 files changed, 189 insertions(+), 35 deletions(-)
+ create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
+ create mode 100644 include/uapi/linux/vfio_zdev.h
+
+-- 
+1.8.3.1
 
