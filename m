@@ -2,291 +2,223 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ACAAAD313
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Sep 2019 08:26:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2988AD538
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Sep 2019 11:02:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728077AbfIIG0z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Sep 2019 02:26:55 -0400
-Received: from foss.arm.com ([217.140.110.172]:45010 "EHLO foss.arm.com"
+        id S1726894AbfIIJCk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Sep 2019 05:02:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37550 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727983AbfIIG0y (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 9 Sep 2019 02:26:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84286337;
-        Sun,  8 Sep 2019 23:26:53 -0700 (PDT)
-Received: from [10.162.43.129] (p8cg001049571a15.blr.arm.com [10.162.43.129])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5676C3F67D;
-        Sun,  8 Sep 2019 23:29:08 -0700 (PDT)
-Subject: Re: [PATCH 1/1] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1567497706-8649-1-git-send-email-anshuman.khandual@arm.com>
- <1567497706-8649-2-git-send-email-anshuman.khandual@arm.com>
- <20190904221618.1b624a98@thinkpad>
- <20e3044d-2af5-b27b-7653-cec53bdec941@arm.com>
- <20190905190629.523bdb87@thinkpad>
- <3c609e33-afbb-ffaf-481a-6d225a06d1d0@arm.com>
- <20190906210346.5ecbff01@thinkpad>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <3d5de35f-8192-1c75-50a9-03e66e3b8e5c@arm.com>
-Date:   Mon, 9 Sep 2019 11:56:50 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1726847AbfIIJCj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 9 Sep 2019 05:02:39 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1B3A7191865B;
+        Mon,  9 Sep 2019 09:02:39 +0000 (UTC)
+Received: from [10.36.116.173] (ovpn-116-173.ams2.redhat.com [10.36.116.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 17A3D5DA5B;
+        Mon,  9 Sep 2019 09:02:37 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v2 3/6] s390x: Add linemode buffer to fix
+ newline on every print
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com
+References: <20190905103951.36522-1-frankja@linux.ibm.com>
+ <20190905103951.36522-4-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <d68e6371-e0a2-22d3-9443-0b54cb7337ca@redhat.com>
+Date:   Mon, 9 Sep 2019 11:02:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190906210346.5ecbff01@thinkpad>
+In-Reply-To: <20190905103951.36522-4-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.70]); Mon, 09 Sep 2019 09:02:39 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 09/07/2019 12:33 AM, Gerald Schaefer wrote:
-> On Fri, 6 Sep 2019 11:58:59 +0530
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+On 05.09.19 12:39, Janosch Frank wrote:
+> Linemode seems to add a newline for each sent message which makes
+> reading rather hard. Hence we add a small buffer and only print if
+> it's full or a newline is encountered. Except for when the string is
+> longer than the buffer, then we flush the buffer and print directly.
 > 
->> On 09/05/2019 10:36 PM, Gerald Schaefer wrote:
->>> On Thu, 5 Sep 2019 14:48:14 +0530
->>> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
->>>   
->>>>> [...]    
->>>>>> +
->>>>>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
->>>>>> +static void pud_clear_tests(pud_t *pudp)
->>>>>> +{
->>>>>> +	memset(pudp, RANDOM_NZVALUE, sizeof(pud_t));
->>>>>> +	pud_clear(pudp);
->>>>>> +	WARN_ON(!pud_none(READ_ONCE(*pudp)));
->>>>>> +}    
->>>>>
->>>>> For pgd/p4d/pud_clear(), we only clear if the page table level is present
->>>>> and not folded. The memset() here overwrites the table type bits, so
->>>>> pud_clear() will not clear anything on s390 and the pud_none() check will
->>>>> fail.
->>>>> Would it be possible to OR a (larger) random value into the table, so that
->>>>> the lower 12 bits would be preserved?    
->>>>
->>>> So the suggestion is instead of doing memset() on entry with RANDOM_NZVALUE,
->>>> it should OR a large random value preserving lower 12 bits. Hmm, this should
->>>> still do the trick for other platforms, they just need non zero value. So on
->>>> s390, the lower 12 bits on the page table entry already has valid value while
->>>> entering this function which would make sure that pud_clear() really does
->>>> clear the entry ?  
->>>
->>> Yes, in theory the table entry on s390 would have the type set in the last
->>> 4 bits, so preserving those would be enough. If it does not conflict with
->>> others, I would still suggest preserving all 12 bits since those would contain
->>> arch-specific flags in general, just to be sure. For s390, the pte/pmd tests
->>> would also work with the memset, but for consistency I think the same logic
->>> should be used in all pxd_clear_tests.  
->>
->> Makes sense but..
->>
->> There is a small challenge with this. Modifying individual bits on a given
->> page table entry from generic code like this test case is bit tricky. That
->> is because there are not enough helpers to create entries with an absolute
->> value. This would have been easier if all the platforms provided functions
->> like __pxx() which is not the case now. Otherwise something like this should
->> have worked.
->>
->>
->> pud_t pud = READ_ONCE(*pudp);
->> pud = __pud(pud_val(pud) | RANDOM_VALUE (keeping lower 12 bits 0))
->> WRITE_ONCE(*pudp, pud);
->>
->> But __pud() will fail to build in many platforms.
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: Thomas Huth <thuth@redhat.com>
+> ---
+>  lib/s390x/sclp-console.c | 70 +++++++++++++++++++++++++++++++++++++---
+>  1 file changed, 66 insertions(+), 4 deletions(-)
 > 
-> Hmm, I simply used this on my system to make pud_clear_tests() work, not
-> sure if it works on all archs:
+> diff --git a/lib/s390x/sclp-console.c b/lib/s390x/sclp-console.c
+> index 19416b5..7397dc1 100644
+> --- a/lib/s390x/sclp-console.c
+> +++ b/lib/s390x/sclp-console.c
+> @@ -13,6 +13,7 @@
+>  #include <asm/page.h>
+>  #include <asm/arch_def.h>
+>  #include <asm/io.h>
+> +#include <asm/spinlock.h>
+>  #include "sclp.h"
+>  
+>  /*
+> @@ -87,6 +88,10 @@ static uint8_t _ascebc[256] = {
+>       0x90, 0x3F, 0x3F, 0x3F, 0x3F, 0xEA, 0x3F, 0xFF
+>  };
+>  
+> +static char lm_buff[120];
+> +static unsigned char lm_buff_off;
+> +static struct spinlock lm_buff_lock;
+> +
+>  static void sclp_print_ascii(const char *str)
+>  {
+>  	int len = strlen(str);
+> @@ -103,10 +108,10 @@ static void sclp_print_ascii(const char *str)
+>  	sclp_service_call(SCLP_CMD_WRITE_EVENT_DATA, sccb);
+>  }
+>  
+> -static void sclp_print_lm(const char *str)
+> +static void lm_print(const char *buff, int len)
+>  {
+>  	unsigned char *ptr, *end, ch;
+> -	unsigned int count, offset, len;
+> +	unsigned int count, offset;
+>  	struct WriteEventData *sccb;
+>  	struct mdb *mdb;
+>  	struct mto *mto;
+> @@ -117,11 +122,10 @@ static void sclp_print_lm(const char *str)
+>  	end = (unsigned char *) sccb + 4096 - 1;
+>  	memset(sccb, 0, sizeof(*sccb));
+>  	ptr = (unsigned char *) &sccb->msg.mdb.mto;
+> -	len = strlen(str);
+>  	offset = 0;
+>  	do {
+>  		for (count = sizeof(*mto); offset < len; count++) {
+> -			ch = str[offset++];
+> +			ch = buff[offset++];
+>  			if (ch == 0x0a || ptr + count > end)
+>  				break;
+>  			ptr[count] = _ascebc[ch];
+> @@ -148,6 +152,64 @@ static void sclp_print_lm(const char *str)
+>  	sclp_service_call(SCLP_CMD_WRITE_EVENT_DATA, sccb);
+>  }
+>  
+> +
+> +/*
+> + * In contrast to the ascii console, linemode produces a new
+> + * line with every write of data. The report() function uses
+> + * several printf() calls to generate a line of data which
+> + * would all end up on different lines.
+> + *
+> + * Hence we buffer here until we encounter a \n or the buffer
+> + * is full. That means that linemode output can look a bit
+> + * different from ascii and that it takes a bit longer for
+> + * lines to appear.
+> + */
+> +static void sclp_print_lm(const char *str)
+> +{
+> +	int len;
+> +	char *nl;
+> +
+> +	spin_lock(&lm_buff_lock);
+> +
+> +	len = strlen(str);
+> +	/*
+> +	 * No use in copying into lm_buff, its time to flush the
+> +	 * buffer and print str until finished.
+> +	 */
+> +	if (len > sizeof(lm_buff)) {
+> +		if (lm_buff_off)
+> +			lm_print(lm_buff, lm_buff_off);
+> +		lm_print(str, len);
+> +		memset(lm_buff, 0 , sizeof(lm_buff));
+> +		lm_buff_off = 0;
+> +		goto out;
+> +	}
+> +
+> +fill:
+> +	len = len < (sizeof(lm_buff) - lm_buff_off) ? len : (sizeof(lm_buff) - lm_buff_off);
+> +	if ((lm_buff_off < sizeof(lm_buff) - 1)) {
+> +		memcpy(&lm_buff[lm_buff_off], str, len);
+> +		lm_buff_off += len;
+> +	}
+> +	/* Buffer not full and no newline */
+> +	nl = strchr(lm_buff, '\n');
+> +	if (lm_buff_off != sizeof(lm_buff) - 1 && !nl)
+> +		goto out;
+> +
+> +	lm_print(lm_buff, lm_buff_off);
+> +	memset(lm_buff, 0 , sizeof(lm_buff));
+> +	lm_buff_off = 0;
+> +
+> +	if (len < strlen(str)) {
+> +		str = &str[len];
+> +		len = strlen(str);
+> +		goto fill;
+> +	}
+> +
+> +out:
+> +	spin_unlock(&lm_buff_lock);
+> +}
+> +
+>  /*
+>   * SCLP needs to be initialized by setting a send and receive mask,
+>   * indicating which messages the control program (we) want(s) to
 > 
-> pud_val(*pudp) |= RANDOM_NZVALUE;
 
-Which compiles on arm64 but then fails on x86 because of the way pmd_val()
-has been defined there. on arm64 and s390 (with many others) pmd_val() is
-a macro which still got the variable that can be used as lvalue but that is
-not true for some other platforms like x86.
+Acked-by: David Hildenbrand <david@redhat.com>
 
-arch/arm64/include/asm/pgtable-types.h:	#define pmd_val(x)	((x).pmd)
-arch/s390/include/asm/page.h:		#define pmd_val(x)	((x).pmd)
-arch/x86/include/asm/pgtable.h:		#define pmd_val(x)       native_pmd_val(x)
+-- 
 
-static inline pmdval_t native_pmd_val(pmd_t pmd)
-{
-        return pmd.pmd;
-}
+Thanks,
 
-Unless I am mistaken, the return value from this function can not be used as
-lvalue for future assignments.
-
-mm/arch_pgtable_test.c: In function ‘pud_clear_tests’:
-mm/arch_pgtable_test.c:156:17: error: lvalue required as left operand of assignment
-  pud_val(*pudp) |= RANDOM_ORVALUE;
-                 ^~
-AFAICS pxx_val() were never intended to be used as lvalue and using it that way
-might just happen to work on all those platforms which define them as macros.
-They meant to just provide values for an entry as being determined by the platform.
-
-In principle pxx_val() on an entry was not supposed to be modified directly from
-generic code without going through (again) platform helpers for any specific state
-change (write, old, dirty, special, huge etc). The current use case is a deviation
-for that.
-
-I originally went with memset() just to load up the entries with non-zero value so
-that we know pxx_clear() are really doing the clearing. The same is being followed
-for all pxx_same() checks.
-
-Another way for fixing the problem would be to mark them with known attributes
-like write/young/huge etc instead which for sure will create non-zero entries.
-We can do that for pxx_clear() and pxx_same() tests and drop RANDOM_NZVALUE
-completely. Does that sound good ?
-
-> 
->>
->> The other alternative will be to make sure memset() happens on all other
->> bits except the lower 12 bits which will depend on endianness. If s390
->> has a fixed endianness, we can still use either of them which will hold
->> good for others as well.
->>
->> memset(pudp, RANDOM_NZVALUE, sizeof(pud_t) - 3);
->>
->> OR
->>
->> memset(pudp + 3, RANDOM_NZVALUE, sizeof(pud_t) - 3);
->>
->>>
->>> However, there is another issue on s390 which will make this only work
->>> for pud_clear_tests(), and not for the p4d/pgd_tests. The problem is that
->>> mm_alloc() will only give you a 3-level page table initially on s390.
->>> This means that pudp == p4dp == pgdp, and so the p4d/pgd_tests will
->>> both see the pud level (of course this also affects other tests).  
->>
->> Got it.
->>
->>>
->>> Not sure yet how to fix this, i.e. how to initialize/update the page table
->>> to 5 levels. We can handle 5 level page tables, and it would be good if
->>> all levels could be tested, but using mm_alloc() to establish the page
->>> tables might not work on s390. One option could be to provide an arch-hook
->>> or weak function to allocate/initialize the mm.  
->>
->> Sure, got it. Though I plan to do add some arch specific tests or init sequence
->> like the above later on but for now the idea is to get the smallest possible set
->> of test cases which builds and runs on all platforms without requiring any arch
->> specific hooks or special casing (#ifdef) to be agreed upon broadly and accepted.
->>
->> Do you think this is absolutely necessary on s390 for the very first set of test
->> cases or we can add this later on as an improvement ?
-> 
-> It can be added later, no problem. I did not expect this to work flawlessly
-> on s390 right from the start anyway, with all our peculiarities, so don't
-> let this hinder you. I might come up with an add-on patch later.
-
-Sure.
-
-> 
-> Actually, using get_unmapped_area() as suggested by Kirill could also
-> solve this issue. We do create a new mm with 3-level page tables on s390,
-> and the dynamic upgrade to 4 or 5 levels is then triggered exactly by
-> arch_get_unmapped_area(), depending on the addr. But I currently don't
-> see how / where arch_get_unmapped_area() is set up for such a dummy mm
-> created by mm_alloc().
-
-Normally they are set during program loading but we can set it up explicitly
-for the test mm_struct if we need to but there are some other challenges.
-
-load_[aout|elf|flat|..]_binary()
-	setup_new_exec()
-		arch_pick_mmap_layout().
-
-I did some initial experiments around get_unmapped_area(). Seems bit tricky
-to get it working on a pure 'test' mm_struct. It expects a real user context
-in the form of current->mm.
-
-get_unmapped_area()
-{
-	....
-	get_area = current->mm->get_unmapped_area;
-	....
-	addr = get_area(file, addr, len, pgoff, flags); {
-		....
-		struct mm_struct *mm = current->mm;
-		....
-		if (addr) {
-			...
-			vma = find_vma_prev(mm, addr, &prev);
-		}
-		....
-		vm_unmapped_area() {
-			struct mm_struct *mm = current->mm;
-			....
-			/* Walks across mm->mm_rb.rb_node */
-		}
-	}
-	....
-}	
-
-Simple call like get_unmapped_area(NULL, 0, PAGE_SIZE, 0, 0) to get an
-address fails right away on current->mm->get_unmapped_area which does
-not have a valid value in the kernel context.
-
-There might be two methods to get around this problem
-
-1) Write a custom get_unmapped_area() imitating the real one but going
-   around the problem by taking an appropriately initialized mm_struct
-   instead of current->mm.
-
-2) Create dummy user task with dummy mm, switch 'current' context before
-   calling into get_unmapped_area() and switch back again. Dont know if
-   this is even possible.
-
-Wondering if this might deviate too much from the original goal of
-testing the page table helpers.
-
-Looking back again at the proposed test vaddr, wondering what will be the
-real problem in case it goes beyond user address range ? Will pxx_alloc()
-fail to create page table ranges at required level ? Apart from skipping
-pgtable_page_ctor/dtor for page table pages, it might not really affect
-any helpers as such.
-
-VADDR_TEST (PGDIR_SIZE + [P4D_SIZE] + PUD_SIZE + PMD_SIZE + PAGE_SIZE)
-
-OR
-
-A random page aligned address in [FIRST_USER_ADDRESS..TASK_SIZE] range ?
+David / dhildenb
