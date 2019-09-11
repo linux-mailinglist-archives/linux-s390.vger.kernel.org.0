@@ -2,71 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91DADB00E8
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Sep 2019 18:06:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BFE9B01D2
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Sep 2019 18:41:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728926AbfIKQGs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Sep 2019 12:06:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53604 "EHLO mx1.redhat.com"
+        id S1729254AbfIKQlH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Sep 2019 12:41:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38798 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728921AbfIKQGs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:06:48 -0400
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728794AbfIKQlH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 11 Sep 2019 12:41:07 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0C31F3D966
-        for <linux-s390@vger.kernel.org>; Wed, 11 Sep 2019 16:06:48 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id j2so2453898wre.1
-        for <linux-s390@vger.kernel.org>; Wed, 11 Sep 2019 09:06:47 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uO053ChcA2C5+3QS5EI/icsqMGzSyFtb1MyaVKVNsOE=;
-        b=KJaK8TQUJfd3BeFBpp4WkRosEVfAExsO37fem/XaEymiw7RBM/K0QaxnhhGJDoYKmR
-         SxZ6NiPX2ydW1bDRpkO9bZwqfRRSP5xdvJ99IbCDQObcHbz44N/BWMqayZcbdSAqcfyv
-         Aitpo5T/puJ1EY5aZnxAcNSDaQB3diwnDU2uGaL77LupusFDtwo+Dk99N2U4j3JtkWMt
-         MX6VhC/cBWCCQJbg+pGS84StRamQbt3ttxiY4FzSuu0l+yTUXtgkEq3vtdgEGNSTelc4
-         gGdRHao6N5viLWORat4eiTYEcSl1vOevuUdPZpV5PFbA+5F2i6J907oJ13s3lgDHROLL
-         OgIA==
-X-Gm-Message-State: APjAAAVsfp3H2bWy0oM8qcdIzKpK6yRRo4F+3ToeplH98bcl6ySfhdei
-        CvFPtzcDRJD1MPGc26UUsrMgDK8OOeS0+FETflC72SEi8K0jNBt6aLMjzIXEkvUOhwKlJK+xw3C
-        1yvnFDcobIAvBMF1oJqgPtQ==
-X-Received: by 2002:adf:de8b:: with SMTP id w11mr3814001wrl.289.1568218006652;
-        Wed, 11 Sep 2019 09:06:46 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzyDutA8/SQ5xDAxvuoDWUoFeK4t3HnXaXS3EdtVC0nGgyM5yZ1MN1PF8PuvUdV/QQznRuu+Q==
-X-Received: by 2002:adf:de8b:: with SMTP id w11mr3813979wrl.289.1568218006429;
-        Wed, 11 Sep 2019 09:06:46 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:102b:3795:6714:7df6? ([2001:b07:6468:f312:102b:3795:6714:7df6])
-        by smtp.gmail.com with ESMTPSA id s12sm12857889wrn.90.2019.09.11.09.06.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 11 Sep 2019 09:06:45 -0700 (PDT)
-Subject: Re: [GIT PULL 0/8] KVM: s390: extend selftests add more input checks
-To:     Janosch Frank <frankja@linux.ibm.com>, rkrcmar@redhat.com
-Cc:     kvm@vger.kernel.org, cohuck@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, frankja@linux.vnet.ibm.com,
-        david@redhat.com, thuth@redhat.com
-References: <20190905084009.26106-1-frankja@linux.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <a4756c8c-6d1a-1006-206f-fe23efda996e@redhat.com>
-Date:   Wed, 11 Sep 2019 18:06:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mx1.redhat.com (Postfix) with ESMTPS id CDF7310C0931;
+        Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
+Received: from localhost (ovpn-116-29.ams2.redhat.com [10.36.116.29])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EC1519C6A;
+        Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Cornelia Huck <cohuck@redhat.com>
+Subject: [PATCH] s390/cio: fix intparm documentation
+Date:   Wed, 11 Sep 2019 18:41:03 +0200
+Message-Id: <20190911164103.16156-1-cohuck@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190905084009.26106-1-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 05/09/19 10:40, Janosch Frank wrote:
->   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git tags/kvm-s390-next-5.4-1
+The common I/O layer is maintaining an "intparm" inspired by
+the hardware intparm for driver usage. This "intparm" is not
+only applicaple for ssch, but also for hsch/csch. The kerneldoc
+states that it is only updated for hsch/csch if no prior request
+is pending; however, this is not what the code does (whether
+that would actually desireable is a different issue.)
 
-Pulled, thanks.
+Let's at least fix the kerneldoc for now.
 
-Paolo
+Fixes: b2ffd8e9a76e ("[S390] cio: Add docbook comments.")
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+---
+ drivers/s390/cio/device_ops.c | 23 +++++++++++++++++------
+ 1 file changed, 17 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
+index d722458c5928..65841af15748 100644
+--- a/drivers/s390/cio/device_ops.c
++++ b/drivers/s390/cio/device_ops.c
+@@ -124,9 +124,7 @@ EXPORT_SYMBOL(ccw_device_is_multipath);
+ /**
+  * ccw_device_clear() - terminate I/O request processing
+  * @cdev: target ccw device
+- * @intparm: interruption parameter; value is only used if no I/O is
+- *	     outstanding, otherwise the intparm associated with the I/O request
+- *	     is returned
++ * @intparm: interruption parameter to be returned upon conclusion of csch
+  *
+  * ccw_device_clear() calls csch on @cdev's subchannel.
+  * Returns:
+@@ -179,6 +177,9 @@ int ccw_device_clear(struct ccw_device *cdev, unsigned long intparm)
+  * completed during the time specified by @expires. If a timeout occurs, the
+  * channel program is terminated via xsch, hsch or csch, and the device's
+  * interrupt handler will be called with an irb containing ERR_PTR(-%ETIMEDOUT).
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_halt() or ccw_device_clear().
+  * Returns:
+  *  %0, if the operation was successful;
+  *  -%EBUSY, if the device is busy, or status pending;
+@@ -256,6 +257,9 @@ int ccw_device_start_timeout_key(struct ccw_device *cdev, struct ccw1 *cpa,
+  * Start a S/390 channel program. When the interrupt arrives, the
+  * IRQ handler is called, either immediately, delayed (dev-end missing,
+  * or sense required) or never (no IRQ handler registered).
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_halt() or ccw_device_clear().
+  * Returns:
+  *  %0, if the operation was successful;
+  *  -%EBUSY, if the device is busy, or status pending;
+@@ -287,6 +291,9 @@ int ccw_device_start_key(struct ccw_device *cdev, struct ccw1 *cpa,
+  * Start a S/390 channel program. When the interrupt arrives, the
+  * IRQ handler is called, either immediately, delayed (dev-end missing,
+  * or sense required) or never (no IRQ handler registered).
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_halt() or ccw_device_clear().
+  * Returns:
+  *  %0, if the operation was successful;
+  *  -%EBUSY, if the device is busy, or status pending;
+@@ -322,6 +329,9 @@ int ccw_device_start(struct ccw_device *cdev, struct ccw1 *cpa,
+  * completed during the time specified by @expires. If a timeout occurs, the
+  * channel program is terminated via xsch, hsch or csch, and the device's
+  * interrupt handler will be called with an irb containing ERR_PTR(-%ETIMEDOUT).
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_halt() or ccw_device_clear().
+  * Returns:
+  *  %0, if the operation was successful;
+  *  -%EBUSY, if the device is busy, or status pending;
+@@ -343,11 +353,12 @@ int ccw_device_start_timeout(struct ccw_device *cdev, struct ccw1 *cpa,
+ /**
+  * ccw_device_halt() - halt I/O request processing
+  * @cdev: target ccw device
+- * @intparm: interruption parameter; value is only used if no I/O is
+- *	     outstanding, otherwise the intparm associated with the I/O request
+- *	     is returned
++ * @intparm: interruption parameter to be returned upon conclusion of hsch
+  *
+  * ccw_device_halt() calls hsch on @cdev's subchannel.
++ * The interruption handler will echo back the @intparm specified here, unless
++ * another interruption parameter is specified by a subsequent invocation of
++ * ccw_device_clear().
+  * Returns:
+  *  %0 on success,
+  *  -%ENODEV on device not operational,
+-- 
+2.20.1
+
