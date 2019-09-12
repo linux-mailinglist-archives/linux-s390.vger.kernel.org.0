@@ -2,129 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BFE9B01D2
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Sep 2019 18:41:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6D1EB0843
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Sep 2019 07:27:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729254AbfIKQlH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Sep 2019 12:41:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38798 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728794AbfIKQlH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 11 Sep 2019 12:41:07 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CDF7310C0931;
-        Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
-Received: from localhost (ovpn-116-29.ams2.redhat.com [10.36.116.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5EC1519C6A;
-        Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1726215AbfILF1N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Sep 2019 01:27:13 -0400
+Received: from condef-08.nifty.com ([202.248.20.73]:54825 "EHLO
+        condef-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfILF1N (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Sep 2019 01:27:13 -0400
+Received: from conuserg-09.nifty.com ([10.126.8.72])by condef-08.nifty.com with ESMTP id x8C5OIEp028141
+        for <linux-s390@vger.kernel.org>; Thu, 12 Sep 2019 14:24:18 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id x8C5Nti6026272;
+        Thu, 12 Sep 2019 14:23:55 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com x8C5Nti6026272
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1568265836;
+        bh=JYvxGIDdbHIrCH6vXGu0q1ENkAtg1uD8iiUS3RqpBP8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=CiiNwjz9Px6G3Z6B062d7R59gGovBQLOYazKoATOz0dzPKkvSphYTtkyPjXf7hvX4
+         TODxaGWsU9En17KyEVtadbujJAMgiSTZ7Il6UmL4ZM1K4AO/HcgmH1U3IfrUdEev/Q
+         JRVGPJJ5PwMSSBz7pkvqMT4Sj+K9/myYFanCnVDSGkshiwNYR1js72Bv1JWLpaWjvt
+         6gzNcc3pP6yiIPs2/du+86Vb8BKXmo2hj4a+6tI6wrBUXRe0sN2JLx8H7eN5HDMVUy
+         uPqMtsUqz8rbGm4yihlP7ZwRf4JTNLJIQ2zq4mz/sQ5uip03H5cY6oBvPV/BA4nVDs
+         X+KuUSzcBZ4AA==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PATCH] s390/cio: fix intparm documentation
-Date:   Wed, 11 Sep 2019 18:41:03 +0200
-Message-Id: <20190911164103.16156-1-cohuck@redhat.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Wed, 11 Sep 2019 16:41:06 +0000 (UTC)
+        linux-s390@vger.kernel.org
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] s390: remove pointless drivers-y in drivers/s390/Makefile
+Date:   Thu, 12 Sep 2019 14:23:54 +0900
+Message-Id: <20190912052354.24829-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The common I/O layer is maintaining an "intparm" inspired by
-the hardware intparm for driver usage. This "intparm" is not
-only applicaple for ssch, but also for hsch/csch. The kerneldoc
-states that it is only updated for hsch/csch if no prior request
-is pending; however, this is not what the code does (whether
-that would actually desireable is a different issue.)
+This is unused.
 
-Let's at least fix the kerneldoc for now.
-
-Fixes: b2ffd8e9a76e ("[S390] cio: Add docbook comments.")
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
- drivers/s390/cio/device_ops.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/s390/cio/device_ops.c b/drivers/s390/cio/device_ops.c
-index d722458c5928..65841af15748 100644
---- a/drivers/s390/cio/device_ops.c
-+++ b/drivers/s390/cio/device_ops.c
-@@ -124,9 +124,7 @@ EXPORT_SYMBOL(ccw_device_is_multipath);
- /**
-  * ccw_device_clear() - terminate I/O request processing
-  * @cdev: target ccw device
-- * @intparm: interruption parameter; value is only used if no I/O is
-- *	     outstanding, otherwise the intparm associated with the I/O request
-- *	     is returned
-+ * @intparm: interruption parameter to be returned upon conclusion of csch
-  *
-  * ccw_device_clear() calls csch on @cdev's subchannel.
-  * Returns:
-@@ -179,6 +177,9 @@ int ccw_device_clear(struct ccw_device *cdev, unsigned long intparm)
-  * completed during the time specified by @expires. If a timeout occurs, the
-  * channel program is terminated via xsch, hsch or csch, and the device's
-  * interrupt handler will be called with an irb containing ERR_PTR(-%ETIMEDOUT).
-+ * The interruption handler will echo back the @intparm specified here, unless
-+ * another interruption parameter is specified by a subsequent invocation of
-+ * ccw_device_halt() or ccw_device_clear().
-  * Returns:
-  *  %0, if the operation was successful;
-  *  -%EBUSY, if the device is busy, or status pending;
-@@ -256,6 +257,9 @@ int ccw_device_start_timeout_key(struct ccw_device *cdev, struct ccw1 *cpa,
-  * Start a S/390 channel program. When the interrupt arrives, the
-  * IRQ handler is called, either immediately, delayed (dev-end missing,
-  * or sense required) or never (no IRQ handler registered).
-+ * The interruption handler will echo back the @intparm specified here, unless
-+ * another interruption parameter is specified by a subsequent invocation of
-+ * ccw_device_halt() or ccw_device_clear().
-  * Returns:
-  *  %0, if the operation was successful;
-  *  -%EBUSY, if the device is busy, or status pending;
-@@ -287,6 +291,9 @@ int ccw_device_start_key(struct ccw_device *cdev, struct ccw1 *cpa,
-  * Start a S/390 channel program. When the interrupt arrives, the
-  * IRQ handler is called, either immediately, delayed (dev-end missing,
-  * or sense required) or never (no IRQ handler registered).
-+ * The interruption handler will echo back the @intparm specified here, unless
-+ * another interruption parameter is specified by a subsequent invocation of
-+ * ccw_device_halt() or ccw_device_clear().
-  * Returns:
-  *  %0, if the operation was successful;
-  *  -%EBUSY, if the device is busy, or status pending;
-@@ -322,6 +329,9 @@ int ccw_device_start(struct ccw_device *cdev, struct ccw1 *cpa,
-  * completed during the time specified by @expires. If a timeout occurs, the
-  * channel program is terminated via xsch, hsch or csch, and the device's
-  * interrupt handler will be called with an irb containing ERR_PTR(-%ETIMEDOUT).
-+ * The interruption handler will echo back the @intparm specified here, unless
-+ * another interruption parameter is specified by a subsequent invocation of
-+ * ccw_device_halt() or ccw_device_clear().
-  * Returns:
-  *  %0, if the operation was successful;
-  *  -%EBUSY, if the device is busy, or status pending;
-@@ -343,11 +353,12 @@ int ccw_device_start_timeout(struct ccw_device *cdev, struct ccw1 *cpa,
- /**
-  * ccw_device_halt() - halt I/O request processing
-  * @cdev: target ccw device
-- * @intparm: interruption parameter; value is only used if no I/O is
-- *	     outstanding, otherwise the intparm associated with the I/O request
-- *	     is returned
-+ * @intparm: interruption parameter to be returned upon conclusion of hsch
-  *
-  * ccw_device_halt() calls hsch on @cdev's subchannel.
-+ * The interruption handler will echo back the @intparm specified here, unless
-+ * another interruption parameter is specified by a subsequent invocation of
-+ * ccw_device_clear().
-  * Returns:
-  *  %0 on success,
-  *  -%ENODEV on device not operational,
+ drivers/s390/Makefile | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/drivers/s390/Makefile b/drivers/s390/Makefile
+index a863b0462b43..cde73b6a9afb 100644
+--- a/drivers/s390/Makefile
++++ b/drivers/s390/Makefile
+@@ -4,6 +4,3 @@
+ #
+ 
+ obj-y += cio/ block/ char/ crypto/ net/ scsi/ virtio/
+-
+-drivers-y += drivers/s390/built-in.a
+-
 -- 
-2.20.1
+2.17.1
 
