@@ -2,52 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 351A4B0CC2
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Sep 2019 12:21:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DB144B0D27
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Sep 2019 12:47:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730923AbfILKUy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Sep 2019 06:20:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2756 "EHLO
+        id S1730680AbfILKrW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Sep 2019 06:47:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:30470 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731000AbfILKUx (ORCPT
+        by vger.kernel.org with ESMTP id S1730907AbfILKrW (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 12 Sep 2019 06:20:53 -0400
+        Thu, 12 Sep 2019 06:47:22 -0400
 Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CAHV1T145461
-        for <linux-s390@vger.kernel.org>; Thu, 12 Sep 2019 06:20:52 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyhn6p11v-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8CAhsiI081619
+        for <linux-s390@vger.kernel.org>; Thu, 12 Sep 2019 06:47:21 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2uyhn6px2j-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 12 Sep 2019 06:20:51 -0400
+        for <linux-s390@vger.kernel.org>; Thu, 12 Sep 2019 06:47:21 -0400
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 12 Sep 2019 11:20:49 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 12 Sep 2019 11:47:19 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Sep 2019 11:20:47 +0100
+        Thu, 12 Sep 2019 11:47:15 +0100
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CAKkxo52101228
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8CAlE2941549858
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Sep 2019 10:20:46 GMT
+        Thu, 12 Sep 2019 10:47:14 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C1AAA404D;
-        Thu, 12 Sep 2019 10:20:46 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 57DD8A4055;
+        Thu, 12 Sep 2019 10:47:14 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA671A4040;
-        Thu, 12 Sep 2019 10:20:45 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 14210A4040;
+        Thu, 12 Sep 2019 10:47:14 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.224.133])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Sep 2019 10:20:45 +0000 (GMT)
-Subject: Re: [PATCH] KVM: s390: Remove unused parameter from
- __inject_sigp_restart()
+        Thu, 12 Sep 2019 10:47:14 +0000 (GMT)
+Subject: Re: [PATCH] KVM: s390: Do not leak kernel stack data in the
+ KVM_S390_INTERRUPT ioctl
 To:     Thomas Huth <thuth@redhat.com>,
         Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     David Hildenbrand <david@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
         linux-kernel@vger.kernel.org
-References: <20190912070250.15131-1-thuth@redhat.com>
+References: <20190912090050.20295-1-thuth@redhat.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
@@ -93,64 +93,100 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
  oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
  syiRa+UVlsKmx1hsEg==
-Date:   Thu, 12 Sep 2019 12:20:45 +0200
+Date:   Thu, 12 Sep 2019 12:47:13 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20190912070250.15131-1-thuth@redhat.com>
+In-Reply-To: <20190912090050.20295-1-thuth@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19091210-0020-0000-0000-0000036B5FAF
+x-cbid: 19091210-0008-0000-0000-00000314BFB3
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091210-0021-0000-0000-000021C0F0D5
-Message-Id: <31218beb-f7e8-af61-2228-ee6f0727a4da@de.ibm.com>
+x-cbparentid: 19091210-0009-0000-0000-00004A332EBF
+Message-Id: <4ed0c815-c598-bb0f-9841-d579fc62877f@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-12_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1906280000 definitions=main-1909120109
+ scancount=1 engine=8.0.1-1906280000 definitions=main-1909120114
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12.09.19 09:02, Thomas Huth wrote:
-> It's not required, so drop it to make it clear that this interrupt
-> does not have any extra parameters.
+
+
+On 12.09.19 11:00, Thomas Huth wrote:
+> When the userspace program runs the KVM_S390_INTERRUPT ioctl to inject
+> an interrupt, we convert them from the legacy struct kvm_s390_interrupt
+> to the new struct kvm_s390_irq via the s390int_to_s390irq() function.
+> However, this function does not take care of all types of interrupts
+> that we can inject into the guest later (see do_inject_vcpu()). Since we
+> do not clear out the s390irq values before calling s390int_to_s390irq(),
+> there is a chance that we copy unwanted data from the kernel stack
+> into the guest memory later if the interrupt data has not been properly
+> initialized by s390int_to_s390irq().
+
+You mean by using the migration callbacks to get all interrupts back to 
+userspace?
+
+
+
+> 
+> Specifically, the problem exists with the KVM_S390_INT_PFAULT_INIT
+> interrupt: s390int_to_s390irq() does not handle it, but the function
+> __deliver_pfault_init() will later copy the uninitialized stack data
+> from the ext.ext_params2 into the guest memory.
+
+
+Shouldnt we add some more detailed description how this can happen?
+Something like
+"By using the KVM_S390_INTERRUPT ioctl with a KVM_S390_INT_PFAULT_INIT
+interrupt followed by the KVM_S390_GET_IRQ_STATE ioctl the user can
+extract a value from the kernel stack."
+
+
+> 
+> Fix it by handling that interrupt type in s390int_to_s390irq(), too.
+> And while we're at it, make sure that s390int_to_s390irq() now
+> directly returns -EINVAL for unknown interrupt types, so that we
+> do not run into this problem again in case we add more interrupt
+> types to do_inject_vcpu() sometime in the future.
 > 
 > Signed-off-by: Thomas Huth <thuth@redhat.com>
 
-makes sense. Thanks applied. 
+Cc: stable
+
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
 > ---
->  arch/s390/kvm/interrupt.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  arch/s390/kvm/interrupt.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
 > diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-> index b5fd6e85657c..3e7efdd9228a 100644
+> index 3e7efdd9228a..165dea4c7f19 100644
 > --- a/arch/s390/kvm/interrupt.c
 > +++ b/arch/s390/kvm/interrupt.c
-> @@ -1477,8 +1477,7 @@ static int __inject_sigp_stop(struct kvm_vcpu *vcpu, struct kvm_s390_irq *irq)
+> @@ -1960,6 +1960,16 @@ int s390int_to_s390irq(struct kvm_s390_interrupt *s390int,
+>  	case KVM_S390_MCHK:
+>  		irq->u.mchk.mcic = s390int->parm64;
+>  		break;
+> +	case KVM_S390_INT_PFAULT_INIT:
+> +		irq->u.ext.ext_params = s390int->parm;
+> +		irq->u.ext.ext_params2 = s390int->parm64;
+> +		break;
+> +	case KVM_S390_RESTART:
+> +	case KVM_S390_INT_CLOCK_COMP:
+> +	case KVM_S390_INT_CPU_TIMER:
+> +		break;
+> +	default:
+> +		return -EINVAL;
+>  	}
 >  	return 0;
 >  }
->  
-> -static int __inject_sigp_restart(struct kvm_vcpu *vcpu,
-> -				 struct kvm_s390_irq *irq)
-> +static int __inject_sigp_restart(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_s390_local_interrupt *li = &vcpu->arch.local_int;
->  
-> @@ -1997,7 +1996,7 @@ static int do_inject_vcpu(struct kvm_vcpu *vcpu, struct kvm_s390_irq *irq)
->  		rc = __inject_sigp_stop(vcpu, irq);
->  		break;
->  	case KVM_S390_RESTART:
-> -		rc = __inject_sigp_restart(vcpu, irq);
-> +		rc = __inject_sigp_restart(vcpu);
->  		break;
->  	case KVM_S390_INT_CLOCK_COMP:
->  		rc = __inject_ckc(vcpu);
 > 
 
