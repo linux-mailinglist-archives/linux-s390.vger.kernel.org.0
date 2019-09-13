@@ -2,140 +2,260 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9B01B1B4B
-	for <lists+linux-s390@lfdr.de>; Fri, 13 Sep 2019 12:01:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3953BB2734
+	for <lists+linux-s390@lfdr.de>; Fri, 13 Sep 2019 23:27:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387612AbfIMKBG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 13 Sep 2019 06:01:06 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:60145 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387427AbfIMKBG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 13 Sep 2019 06:01:06 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 46VB3f0pVyz9tyjW;
-        Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=Sqj8nI8N; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id wR-kri8FtY2Q; Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 46VB3d6fTQz9tyjG;
-        Fri, 13 Sep 2019 12:01:01 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1568368861; bh=2ALza02n3A6CEg96aj5aMUr3JRGvxRxQLYEMFbFE/UU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Sqj8nI8NzbdvtlrbtrCYNcrM/TyIHT3s84kxgzLuc1bHrWIX3+Flnk1NoUeSpiScl
-         UtPpympvmV9LviqGRUz/Z7JinvogKFhxB4Hnk01VKvvK3cYgxdyYZdocRhBX7zGS2q
-         RYCcqoehg9GVxm+zOPGaVX3kpe6owDPMAy/ACXJk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id F0DC88B982;
-        Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id fVVtef9u6zrS; Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
-Received: from [172.25.230.101] (po15451.idsi0.si.c-s.fr [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 95ADA8B958;
-        Fri, 13 Sep 2019 12:01:02 +0200 (CEST)
-Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
- <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
- <ab0ca38b-1e4f-b636-f8b4-007a15903984@c-s.fr>
- <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <95ed9d92-dd43-4c45-2e52-738aed7f2fb5@c-s.fr>
-Date:   Fri, 13 Sep 2019 12:01:00 +0200
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+        id S2389689AbfIMV1I (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 13 Sep 2019 17:27:08 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42064 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387554AbfIMV1I (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 13 Sep 2019 17:27:08 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8DLGuVw056454;
+        Fri, 13 Sep 2019 17:27:06 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v0ghxvwe7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Sep 2019 17:27:06 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x8DLR6FZ076030;
+        Fri, 13 Sep 2019 17:27:06 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v0ghxvwdp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Sep 2019 17:27:06 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x8DLK9a9017561;
+        Fri, 13 Sep 2019 21:27:05 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02wdc.us.ibm.com with ESMTP id 2uytdx9wf9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 13 Sep 2019 21:27:05 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8DLR3Zp53412204
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 13 Sep 2019 21:27:03 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A91C2805C;
+        Fri, 13 Sep 2019 21:27:03 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ADE6028058;
+        Fri, 13 Sep 2019 21:27:02 +0000 (GMT)
+Received: from akrowiak-ThinkPad-P50.ibm.com (unknown [9.85.152.57])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Fri, 13 Sep 2019 21:27:02 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: [PATCH v6 00/10] s390: vfio-ap: dynamic configuration support
+Date:   Fri, 13 Sep 2019 17:26:48 -0400
+Message-Id: <1568410018-10833-1-git-send-email-akrowiak@linux.ibm.com>
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-13_10:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909130213
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+The current design for AP pass-through does not support making dynamic
+changes to the AP matrix of a running guest resulting in three deficiencies
+this patch series is intended to mitigate:
 
+1. Adapters, domains and control domains can not be added to or removed
+   from a running guest. In order to modify a guest's AP configuration,
+   the guest must be terminated; only then can AP resources be assigned
+   to or unassigned from the guest's matrix mdev. The new AP configuration
+   becomes available to the guest when it is subsequently restarted.
 
-Le 13/09/2019 à 11:02, Anshuman Khandual a écrit :
-> 
->>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
->>
->> #ifdefs have to be avoided as much as possible, see below
-> 
-> Yeah but it has been bit difficult to avoid all these $ifdef because of the
-> availability (or lack of it) for all these pgtable helpers in various config
-> combinations on all platforms.
+2. The AP bus's /sys/bus/ap/apmask and /sys/bus/ap/aqmask interfaces can
+   be modified by a root user without any restrictions. A change to either
+   mask can result in AP queue devices being unbound from the vfio_ap
+   device driver and bound to a zcrypt device driver even if a guest is
+   using the queues, thus giving the host access to the guest's private
+   crypto data and vice versa.
 
-As far as I can see these pgtable helpers should exist everywhere at 
-least via asm-generic/ files.
+3. The APQNs derived from the Cartesian product of the APIDs of the
+   adapters and APQIs of the domains assigned to a matrix mdev must
+   reference an AP queue device bound to the vfio_ap device driver. 
 
-Can you spot a particular config which fails ?
+This patch series introduces the following changes to the current design
+to alleviate the shortcomings described above as well as to implement more
+of the AP architecture:
 
-> 
->>
+1. A root user will be prevented from making changes to the AP bus's
+   /sys/bus/ap/apmask or /sys/bus/ap/aqmask if the ownership of an APQN
+   changes from the vfio_ap device driver to a zcrypt driver when the APQN
+   is assigned to a matrix mdev.
 
-[...]
+2. The sysfs bind/unbind interfaces will be disabled for the vfio_ap
+   device driver.
 
->>> +#if !defined(__PAGETABLE_PUD_FOLDED) && !defined(__ARCH_HAS_5LEVEL_HACK)
->>
->> The same can be done here.
-> 
-> IIRC not only the page table helpers but there are data types (pxx_t) which
-> were not present on various configs and these wrappers help prevent build
-> failures. Any ways will try and see if this can be improved further. But
-> meanwhile if you have some suggestions, please do let me know.
+3. Allow AP resources to be assigned to or removed from a matrix mdev
+   while a guest is using it and hot plug the resource into or hot unplug
+   the resource from the running guest.
 
-pgt_t and pmd_t are everywhere I guess.
-then pud_t and p4d_t have fallbacks in asm-generic files.
+4. Allow assignment of an AP adapter or domain to a matrix mdev even if it
+   results in assignment of an APQN that does not reference an AP queue
+   device bound to the vfio_ap device driver, as long as the APQN is owned
+   by the vfio_ap driver. Allowing over-provisioning of AP resources
+   better models the architecture which does not preclude assigning AP
+   resources that are not yet available in the system. If/when the queue
+   becomes available to the host, it will immediately also become available
+   to the guest.
 
-So it shouldn't be an issue. Maybe if a couple of arches miss them, the 
-best would be to fix the arches, since that's the purpose of your 
-testsuite isn't it ?
+1. Rationale for changes to AP bus's apmask/aqmask interfaces:
+----------------------------------------------------------
+Due to the extremely sensitive nature of cryptographic data, it is
+imperative that great care be taken to ensure that such data is secured.
+Allowing a root user, either inadvertently or maliciously, to configure
+these masks such that a queue is shared between the host and a guest is
+not only avoidable, it is advisable. It was suggested that this scenario
+is better handled in user space with management software, but that does
+not preclude a malicious administrator from using the sysfs interfaces
+to gain access to a guest's crypto data. It was also suggested that this
+scenario could be avoided by taking access to the adapter away from the
+guest and zeroing out the queues prior to the vfio_ap driver releasing the
+device; however, stealing an adapter in use from a guest as a by-product
+of an operation is bad and will likely cause problems for the guest
+unnecessarily. It was decided that the most effective solution with the
+least number of negative side effects is to prevent the situation at the
+source.
 
+2. Rationale for disabling bind/unbind interfaces for vfio_ap driver:
+-----------------------------------------------------------------
+By disabling the bind/unbind interfaces for the vfio_ap device driver, 
+the user is forced to use the AP bus's apmask/aqmask interfaces to control
+the probing and removing of AP queues. There are two primary reasons for
+disabling the bind/unbind interfaces for the vfio_ap device driver:
 
-Christophe
+* The device architecture does not provide a means to prevent unbinding
+  a device from a device driver, so an AP queue device can be unbound
+  from the vfio_ap driver even when the queue is in use by a guest. By
+  disabling the unbind interface, the user is forced to use the AP bus's
+  apmask/aqmask interfaces which will prevent this.
+
+* Binding of AP queues is controlled by the AP bus /sys/bus/ap/apmask and
+  /sys/bus/ap/aqmask interfaces. If the masks indicate that an APQN is
+  owned by zcrypt, trying to bind it to the vfio_ap device driver will
+  fail; therefore, the bind interface is somewhat redundant and certainly
+  unnecessary.        
+  
+3. Rationale for hot plug/unplug using matrix mdev sysfs interfaces:
+----------------------------------------------------------------
+Allowing a user to hot plug/unplug AP resources using the matrix mdev
+sysfs interfaces circumvents the need to terminate the guest in order to
+modify its AP configuration. Allowing dynamic configuration makes 
+reconfiguring a guest's AP matrix much less disruptive.
+
+4. Rationale for allowing over-provisioning of AP resources:
+----------------------------------------------------------- 
+Allowing assignment of AP resources to a matrix mdev and ultimately to a
+guest better models the AP architecture. The architecture does not
+preclude assignment of unavailable AP resources. If a queue subsequently
+becomes available while a guest using the matrix mdev to which its APQN
+is assigned, the guest will automatically acquire access to it. If an APQN
+is dynamically unassigned from the underlying host system, it will 
+automatically become unavailable to the guest.
+
+Change log v5-v6:
+----------------
+* Fixed a bug in ap_bus.c introduced with patch 2/7 of the v5 
+  series. Harald Freudenberer pointed out that the mutex lock
+  for ap_perms_mutex in the apmask_store and aqmask_store functions
+  was not being freed. 
+
+* Removed patch 6/7 which added logging to the vfio_ap driver
+  to expedite acceptance of this series. The logging will be introduced
+  with a separate patch series to allow more time to explore options
+  such as DBF logging vs. tracepoints.
+
+* Added 3 patches related to ensuring that APQNs that do not reference
+  AP queue devices bound to the vfio_ap device driver are not assigned
+  to the guest CRYCB:
+
+  Patch 4: Filter CRYCB bits for unavailable queue devices
+  Patch 5: sysfs attribute to display the guest CRYCB
+  Patch 6: update guest CRYCB in vfio_ap probe and remove callbacks
+
+* Added a patch (Patch 9) to version the vfio_ap module.
+
+* Reshuffled patches to allow the in_use callback implementation to
+  invoke the vfio_ap_mdev_verify_no_sharing() function introduced in
+  patch 2.  
+
+Change log v4-v5:
+----------------
+* Added a patch to provide kernel s390dbf debug logs for VFIO AP
+
+Change log v3->v4:
+-----------------
+* Restored patches preventing root user from changing ownership of
+  APQNs from zcrypt drivers to the vfio_ap driver if the APQN is
+  assigned to an mdev.
+
+* No longer enforcing requirement restricting guest access to
+  queues represented by a queue device bound to the vfio_ap
+  device driver.
+
+* Removed shadow CRYCB and now directly updating the guest CRYCB
+  from the matrix mdev's matrix.
+
+* Rebased the patch series on top of 'vfio: ap: AP Queue Interrupt
+  Control' patches.
+
+* Disabled bind/unbind sysfs interfaces for vfio_ap driver
+
+Change log v2->v3:
+-----------------
+* Allow guest access to an AP queue only if the queue is bound to
+  the vfio_ap device driver.
+
+* Removed the patch to test CRYCB masks before taking the vCPUs
+  out of SIE. Now checking the shadow CRYCB in the vfio_ap driver.
+
+Change log v1->v2:
+-----------------
+* Removed patches preventing root user from unbinding AP queues from 
+  the vfio_ap device driver
+* Introduced a shadow CRYCB in the vfio_ap driver to manage dynamic 
+  changes to the AP guest configuration due to root user interventions
+  or hardware anomalies.
+
+Tony Krowiak (10):
+  s390: vfio-ap: Refactor vfio_ap driver probe and remove callbacks
+  s390: vfio-ap: allow assignment of unavailable AP resources to mdev
+    device
+  s390: vfio-ap: allow hot plug/unplug of AP resources using mdev device
+  s390: vfio-ap: filter CRYCB bits for unavailable queue devices
+  s390: vfio-ap: sysfs attribute to display the guest CRYCB
+  s390: vfio-ap: update guest CRYCB in vfio_ap probe and remove
+    callbacks
+  s390: zcrypt: driver callback to indicate resource in use
+  s390: vfio-ap: implement in-use callback for vfio_ap driver
+  s390: vfio-ap: added versioning to vfio_ap module
+  s390: vfio-ap: update documentation
+
+ Documentation/s390/vfio-ap.rst        | 899 +++++++++++++++++++++++++---------
+ drivers/s390/crypto/ap_bus.c          | 144 +++++-
+ drivers/s390/crypto/ap_bus.h          |   4 +
+ drivers/s390/crypto/vfio_ap_drv.c     |  27 +-
+ drivers/s390/crypto/vfio_ap_ops.c     | 610 ++++++++++++++---------
+ drivers/s390/crypto/vfio_ap_private.h |  12 +-
+ 6 files changed, 1200 insertions(+), 496 deletions(-)
+
+-- 
+2.7.4
+
