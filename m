@@ -2,260 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E25BEB2F33
-	for <lists+linux-s390@lfdr.de>; Sun, 15 Sep 2019 10:23:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AFCD5B3122
+	for <lists+linux-s390@lfdr.de>; Sun, 15 Sep 2019 19:21:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726869AbfIOIX2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 15 Sep 2019 04:23:28 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2222 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726146AbfIOIX2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 15 Sep 2019 04:23:28 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id AB7421CCDE4946DBBE9E;
-        Sun, 15 Sep 2019 16:23:22 +0800 (CST)
-Received: from localhost.localdomain (10.67.212.75) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.439.0; Sun, 15 Sep 2019 16:23:18 +0800
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
-CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
-Subject: [PATCH v4] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Date:   Sun, 15 Sep 2019 16:20:56 +0800
-Message-ID: <1568535656-158979-1-git-send-email-linyunsheng@huawei.com>
-X-Mailer: git-send-email 2.8.1
+        id S1726726AbfIORVO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 15 Sep 2019 13:21:14 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50722 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725536AbfIORVN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 15 Sep 2019 13:21:13 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8FHGxoD090782
+        for <linux-s390@vger.kernel.org>; Sun, 15 Sep 2019 13:21:12 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v0uus268v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Sun, 15 Sep 2019 13:21:12 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Sun, 15 Sep 2019 18:21:10 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sun, 15 Sep 2019 18:21:08 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8FHKfYb44171684
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sun, 15 Sep 2019 17:20:41 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37EF5A4054;
+        Sun, 15 Sep 2019 17:21:07 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA477A405B;
+        Sun, 15 Sep 2019 17:21:06 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sun, 15 Sep 2019 17:21:06 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Stefan Raspl <raspl@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Markus Elfring <elfring@users.sourceforge.net>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net-next] =?UTF-8?q?s390/ctcm:=20Delete=20unnecessary=20ch?= =?UTF-8?q?ecks=20before=20the=20macro=20call=20=E2=80=9Cdev=5Fkfree=5Fskb?= =?UTF-8?q?=E2=80=9D?=
+Date:   Sun, 15 Sep 2019 19:21:05 +0200
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.67.212.75]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091517-0008-0000-0000-000003166B7D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091517-0009-0000-0000-00004A34E229
+Message-Id: <20190915172105.42024-1-jwi@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-15_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=991 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909150188
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-When passing the return value of dev_to_node() to cpumask_of_node()
-without checking if the device's node id is NUMA_NO_NODE, there is
-global-out-of-bounds detected by KASAN.
+From: Markus Elfring <elfring@users.sourceforge.net>
 
-From the discussion [1], NUMA_NO_NODE really means no node affinity,
-which also means all cpus should be usable. So the cpumask_of_node()
-should always return all cpus online when user passes the node id as
-NUMA_NO_NODE, just like similar semantic that page allocator handles
-NUMA_NO_NODE.
+The dev_kfree_skb() function performs also input parameter validation.
+Thus the test around the shown calls is not needed.
 
-But we cannot really copy the page allocator logic. Simply because the
-page allocator doesn't enforce the near node affinity. It just picks it
-up as a preferred node but then it is free to fallback to any other numa
-node. This is not the case here and node_to_cpumask_map will only restrict
-to the particular node's cpus which would have really non deterministic
-behavior depending on where the code is executed. So in fact we really
-want to return cpu_online_mask for NUMA_NO_NODE.
+This issue was detected by using the Coccinelle software.
 
-Some arches were already NUMA_NO_NODE aware, so only change them to return
-cpu_online_mask and use NUMA_NO_NODE instead of "-1".
-
-Also there is a debugging version of node_to_cpumask_map() for x86 and
-arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
-patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
-And "fix" a sign "bug" since it is for debugging and should catch all the
-error cases.
-
-[1] https://lore.kernel.org/patchwork/patch/1125789/
-Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
-Suggested-by: Michal Hocko <mhocko@kernel.org>
+Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 ---
-V4: Have all these changes in a single patch.
-V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
-    for NUMA_NO_NODE case, and change the commit log to better justify
-    the change.
-V2: make the node id checking change to other arches too.
----
- arch/alpha/include/asm/topology.h                | 2 +-
- arch/arm64/include/asm/numa.h                    | 3 +++
- arch/arm64/mm/numa.c                             | 5 ++++-
- arch/mips/include/asm/mach-ip27/topology.h       | 4 ++--
- arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
- arch/powerpc/include/asm/topology.h              | 6 +++---
- arch/s390/include/asm/topology.h                 | 3 +++
- arch/sparc/include/asm/topology_64.h             | 6 +++---
- arch/x86/include/asm/topology.h                  | 3 +++
- arch/x86/mm/numa.c                               | 7 +++++--
- 10 files changed, 30 insertions(+), 13 deletions(-)
+ drivers/s390/net/ctcm_main.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
-index 5a77a40..836c9e2 100644
---- a/arch/alpha/include/asm/topology.h
-+++ b/arch/alpha/include/asm/topology.h
-@@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
- 	int cpu;
- 
- 	if (node == NUMA_NO_NODE)
--		return cpu_all_mask;
-+		return cpu_online_mask;
- 
- 	cpumask_clear(&node_to_cpumask_map[node]);
- 
-diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
-index 626ad01..c8a4b31 100644
---- a/arch/arm64/include/asm/numa.h
-+++ b/arch/arm64/include/asm/numa.h
-@@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-index 4f241cc..bef4bdd 100644
---- a/arch/arm64/mm/numa.c
-+++ b/arch/arm64/mm/numa.c
-@@ -46,7 +46,10 @@ EXPORT_SYMBOL(node_to_cpumask_map);
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
--	if (WARN_ON(node >= nr_node_ids))
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
-+	if (WARN_ON((unsigned int)node >= nr_node_ids))
- 		return cpu_none_mask;
- 
- 	if (WARN_ON(node_to_cpumask_map[node] == NULL))
-diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
-index 965f079..04505e6 100644
---- a/arch/mips/include/asm/mach-ip27/topology.h
-+++ b/arch/mips/include/asm/mach-ip27/topology.h
-@@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
- extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
- 
- #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
--#define cpumask_of_node(node)	((node) == -1 ?				\
--				 cpu_all_mask :				\
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
- 				 &hub_data(node)->h_cpus)
- struct pci_bus;
- extern int pcibus_to_node(struct pci_bus *);
-diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
-index 7ff819a..e78daa6 100644
---- a/arch/mips/include/asm/mach-loongson64/topology.h
-+++ b/arch/mips/include/asm/mach-loongson64/topology.h
-@@ -5,7 +5,9 @@
- #ifdef CONFIG_NUMA
- 
- #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
--#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
-+				 &__node_data[(node)]->cpumask)
- 
- struct pci_bus;
- extern int pcibus_to_node(struct pci_bus *);
-diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
-index 2f7e1ea..309f847 100644
---- a/arch/powerpc/include/asm/topology.h
-+++ b/arch/powerpc/include/asm/topology.h
-@@ -17,9 +17,9 @@ struct device_node;
- 
- #include <asm/mmzone.h>
- 
--#define cpumask_of_node(node) ((node) == -1 ?				\
--			       cpu_all_mask :				\
--			       node_to_cpumask_map[node])
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
-+				 node_to_cpumask_map[node])
- 
- struct pci_bus;
- #ifdef CONFIG_PCI
-diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
-index cca406f..1bd2e73 100644
---- a/arch/s390/include/asm/topology.h
-+++ b/arch/s390/include/asm/topology.h
-@@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
- #define cpumask_of_node cpumask_of_node
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return &node_to_cpumask_map[node];
- }
- 
-diff --git a/arch/sparc/include/asm/topology_64.h b/arch/sparc/include/asm/topology_64.h
-index 34c628a..8c29357 100644
---- a/arch/sparc/include/asm/topology_64.h
-+++ b/arch/sparc/include/asm/topology_64.h
-@@ -11,9 +11,9 @@ static inline int cpu_to_node(int cpu)
- 	return numa_cpu_lookup_table[cpu];
- }
- 
--#define cpumask_of_node(node) ((node) == -1 ?				\
--			       cpu_all_mask :				\
--			       &numa_cpumask_lookup_table[node])
-+#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
-+				 cpu_online_mask :			\
-+				 &numa_cpumask_lookup_table[node])
- 
- struct pci_bus;
- #ifdef CONFIG_PCI
-diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
-index 4b14d23..7fa82e1 100644
---- a/arch/x86/include/asm/topology.h
-+++ b/arch/x86/include/asm/topology.h
-@@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
- /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
- static inline const struct cpumask *cpumask_of_node(int node)
- {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
- 	return node_to_cpumask_map[node];
- }
- #endif
-diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-index e6dad60..c676ffb 100644
---- a/arch/x86/mm/numa.c
-+++ b/arch/x86/mm/numa.c
-@@ -861,9 +861,12 @@ void numa_remove_cpu(int cpu)
-  */
- const struct cpumask *cpumask_of_node(int node)
- {
--	if (node >= nr_node_ids) {
-+	if (node == NUMA_NO_NODE)
-+		return cpu_online_mask;
-+
-+	if ((unsigned int)node >= nr_node_ids) {
- 		printk(KERN_WARNING
--			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
-+			"cpumask_of_node(%d): node >= nr_node_ids(%u)\n",
- 			node, nr_node_ids);
- 		dump_stack();
- 		return cpu_none_mask;
+diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
+index 2117870ed855..437a6d822105 100644
+--- a/drivers/s390/net/ctcm_main.c
++++ b/drivers/s390/net/ctcm_main.c
+@@ -1072,10 +1072,8 @@ static void ctcm_free_netdevice(struct net_device *dev)
+ 		if (grp) {
+ 			if (grp->fsm)
+ 				kfree_fsm(grp->fsm);
+-			if (grp->xid_skb)
+-				dev_kfree_skb(grp->xid_skb);
+-			if (grp->rcvd_xid_skb)
+-				dev_kfree_skb(grp->rcvd_xid_skb);
++			dev_kfree_skb(grp->xid_skb);
++			dev_kfree_skb(grp->rcvd_xid_skb);
+ 			tasklet_kill(&grp->mpc_tasklet2);
+ 			kfree(grp);
+ 			priv->mpcg = NULL;
 -- 
-2.8.1
+2.17.1
 
