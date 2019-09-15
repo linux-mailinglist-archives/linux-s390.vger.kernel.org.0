@@ -2,105 +2,205 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFCD5B3122
-	for <lists+linux-s390@lfdr.de>; Sun, 15 Sep 2019 19:21:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C874B3137
+	for <lists+linux-s390@lfdr.de>; Sun, 15 Sep 2019 19:44:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726726AbfIORVO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 15 Sep 2019 13:21:14 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50722 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725536AbfIORVN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 15 Sep 2019 13:21:13 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8FHGxoD090782
-        for <linux-s390@vger.kernel.org>; Sun, 15 Sep 2019 13:21:12 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v0uus268v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Sun, 15 Sep 2019 13:21:12 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Sun, 15 Sep 2019 18:21:10 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sun, 15 Sep 2019 18:21:08 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8FHKfYb44171684
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sun, 15 Sep 2019 17:20:41 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 37EF5A4054;
-        Sun, 15 Sep 2019 17:21:07 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA477A405B;
-        Sun, 15 Sep 2019 17:21:06 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sun, 15 Sep 2019 17:21:06 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Markus Elfring <elfring@users.sourceforge.net>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next] =?UTF-8?q?s390/ctcm:=20Delete=20unnecessary=20ch?= =?UTF-8?q?ecks=20before=20the=20macro=20call=20=E2=80=9Cdev=5Fkfree=5Fskb?= =?UTF-8?q?=E2=80=9D?=
-Date:   Sun, 15 Sep 2019 19:21:05 +0200
-X-Mailer: git-send-email 2.17.1
+        id S1725874AbfIORn7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 15 Sep 2019 13:43:59 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43394 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725270AbfIORn7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 15 Sep 2019 13:43:59 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
+        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8GlbM0Gk56jQSQ6J7WUvwVe9z+NrK2oBzeQQBTaeJ3w=; b=hn8txgJNqujrZw8x6TUDgOO/G
+        bjqYEgB0bySzdXeyKyecfQZIphuxYpEmWb2EJKx/6z1fW4EoNbMtXA3pvMrywLWtA7TqEhpg2AgdE
+        KF63FI9P7KoIK4NL793jp7rnkoLZn8Ym30m4huYtZTkwCKR5CjHYR1RUQfUy9p7T/nHNs=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1i9YZ1-0000mg-WB; Sun, 15 Sep 2019 17:43:56 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 0AC0E274154D; Sun, 15 Sep 2019 18:43:54 +0100 (BST)
+Date:   Sun, 15 Sep 2019 18:43:54 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Joerg Schmidbauer <jschmidb@de.ibm.com>,
+        Ingo Franzki <ifranzki@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: linux-next: manual merge of the s390 tree with the s390-fixes tree
+Message-ID: <20190915174354.GB4352@sirena.co.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19091517-0008-0000-0000-000003166B7D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091517-0009-0000-0000-00004A34E229
-Message-Id: <20190915172105.42024-1-jwi@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-15_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=991 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909150188
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
+Content-Disposition: inline
+X-Cookie: Man and wife make one fool.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
 
-The dev_kfree_skb() function performs also input parameter validation.
-Thus the test around the shown calls is not needed.
+--8GpibOaaTibBMecb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This issue was detected by using the Coccinelle software.
+Hi all,
 
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/ctcm_main.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Today's linux-next merge of the s390 tree got a conflict in:
 
-diff --git a/drivers/s390/net/ctcm_main.c b/drivers/s390/net/ctcm_main.c
-index 2117870ed855..437a6d822105 100644
---- a/drivers/s390/net/ctcm_main.c
-+++ b/drivers/s390/net/ctcm_main.c
-@@ -1072,10 +1072,8 @@ static void ctcm_free_netdevice(struct net_device *dev)
- 		if (grp) {
- 			if (grp->fsm)
- 				kfree_fsm(grp->fsm);
--			if (grp->xid_skb)
--				dev_kfree_skb(grp->xid_skb);
--			if (grp->rcvd_xid_skb)
--				dev_kfree_skb(grp->rcvd_xid_skb);
-+			dev_kfree_skb(grp->xid_skb);
-+			dev_kfree_skb(grp->rcvd_xid_skb);
- 			tasklet_kill(&grp->mpc_tasklet2);
- 			kfree(grp);
- 			priv->mpcg = NULL;
--- 
-2.17.1
+  arch/s390/configs/debug_defconfig
 
+between commit:
+
+  3361f3193c747e8b ("s390: update configs")
+
+=66rom the s390-fixes tree and commit:
+
+  3c2eb6b76cabb7d9 ("s390/crypto: Support for SHA3 via CPACF (MSA6)")
+
+=66rom the s390 tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+diff --cc arch/s390/configs/debug_defconfig
+index 74e78ec5beb68,a08e3dcd3e9db..0000000000000
+--- a/arch/s390/configs/debug_defconfig
++++ b/arch/s390/configs/debug_defconfig
+@@@ -638,99 -580,6 +638,101 @@@ CONFIG_NLS_ISO8859_1=3D
+  CONFIG_NLS_ISO8859_15=3Dm
+  CONFIG_NLS_UTF8=3Dm
+  CONFIG_DLM=3Dm
+ +CONFIG_UNICODE=3Dy
+ +CONFIG_PERSISTENT_KEYRINGS=3Dy
+ +CONFIG_BIG_KEYS=3Dy
+ +CONFIG_ENCRYPTED_KEYS=3Dm
+ +CONFIG_SECURITY=3Dy
+ +CONFIG_SECURITY_NETWORK=3Dy
+ +CONFIG_FORTIFY_SOURCE=3Dy
+ +CONFIG_SECURITY_SELINUX=3Dy
+ +CONFIG_SECURITY_SELINUX_BOOTPARAM=3Dy
+ +CONFIG_SECURITY_SELINUX_DISABLE=3Dy
+ +CONFIG_INTEGRITY_SIGNATURE=3Dy
+ +CONFIG_INTEGRITY_ASYMMETRIC_KEYS=3Dy
+ +CONFIG_IMA=3Dy
+ +CONFIG_IMA_DEFAULT_HASH_SHA256=3Dy
+ +CONFIG_IMA_WRITE_POLICY=3Dy
+ +CONFIG_IMA_APPRAISE=3Dy
+ +CONFIG_CRYPTO_USER=3Dm
+ +# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+ +CONFIG_CRYPTO_PCRYPT=3Dm
+ +CONFIG_CRYPTO_CRYPTD=3Dm
+ +CONFIG_CRYPTO_TEST=3Dm
+ +CONFIG_CRYPTO_DH=3Dm
+ +CONFIG_CRYPTO_ECDH=3Dm
+ +CONFIG_CRYPTO_ECRDSA=3Dm
+ +CONFIG_CRYPTO_CHACHA20POLY1305=3Dm
+ +CONFIG_CRYPTO_AEGIS128=3Dm
+ +CONFIG_CRYPTO_AEGIS128L=3Dm
+ +CONFIG_CRYPTO_AEGIS256=3Dm
+ +CONFIG_CRYPTO_MORUS640=3Dm
+ +CONFIG_CRYPTO_MORUS1280=3Dm
+ +CONFIG_CRYPTO_CFB=3Dm
+ +CONFIG_CRYPTO_LRW=3Dm
+ +CONFIG_CRYPTO_PCBC=3Dm
+ +CONFIG_CRYPTO_KEYWRAP=3Dm
+ +CONFIG_CRYPTO_ADIANTUM=3Dm
+ +CONFIG_CRYPTO_XCBC=3Dm
+ +CONFIG_CRYPTO_VMAC=3Dm
+ +CONFIG_CRYPTO_CRC32=3Dm
+ +CONFIG_CRYPTO_XXHASH=3Dm
+ +CONFIG_CRYPTO_MICHAEL_MIC=3Dm
+ +CONFIG_CRYPTO_RMD128=3Dm
+ +CONFIG_CRYPTO_RMD160=3Dm
+ +CONFIG_CRYPTO_RMD256=3Dm
+ +CONFIG_CRYPTO_RMD320=3Dm
+ +CONFIG_CRYPTO_SHA3=3Dm
+ +CONFIG_CRYPTO_SM3=3Dm
+ +CONFIG_CRYPTO_TGR192=3Dm
+ +CONFIG_CRYPTO_WP512=3Dm
+ +CONFIG_CRYPTO_AES_TI=3Dm
+ +CONFIG_CRYPTO_ANUBIS=3Dm
+ +CONFIG_CRYPTO_ARC4=3Dm
+ +CONFIG_CRYPTO_BLOWFISH=3Dm
+ +CONFIG_CRYPTO_CAMELLIA=3Dm
+ +CONFIG_CRYPTO_CAST5=3Dm
+ +CONFIG_CRYPTO_CAST6=3Dm
+ +CONFIG_CRYPTO_FCRYPT=3Dm
+ +CONFIG_CRYPTO_KHAZAD=3Dm
+ +CONFIG_CRYPTO_SALSA20=3Dm
+ +CONFIG_CRYPTO_SEED=3Dm
+ +CONFIG_CRYPTO_SERPENT=3Dm
+ +CONFIG_CRYPTO_SM4=3Dm
+ +CONFIG_CRYPTO_TEA=3Dm
+ +CONFIG_CRYPTO_TWOFISH=3Dm
+ +CONFIG_CRYPTO_842=3Dm
+ +CONFIG_CRYPTO_LZ4=3Dm
+ +CONFIG_CRYPTO_LZ4HC=3Dm
+ +CONFIG_CRYPTO_ZSTD=3Dm
+ +CONFIG_CRYPTO_ANSI_CPRNG=3Dm
+ +CONFIG_CRYPTO_USER_API_HASH=3Dm
+ +CONFIG_CRYPTO_USER_API_SKCIPHER=3Dm
+ +CONFIG_CRYPTO_USER_API_RNG=3Dm
+ +CONFIG_CRYPTO_USER_API_AEAD=3Dm
+ +CONFIG_CRYPTO_STATS=3Dy
+ +CONFIG_ZCRYPT=3Dm
+ +CONFIG_PKEY=3Dm
+ +CONFIG_CRYPTO_PAES_S390=3Dm
+ +CONFIG_CRYPTO_SHA1_S390=3Dm
+ +CONFIG_CRYPTO_SHA256_S390=3Dm
+ +CONFIG_CRYPTO_SHA512_S390=3Dm
+++CONFIG_CRYPTO_SHA3_256_S390=3Dm
+++CONFIG_CRYPTO_SHA3_512_S390=3Dm
+ +CONFIG_CRYPTO_DES_S390=3Dm
+ +CONFIG_CRYPTO_AES_S390=3Dm
+ +CONFIG_CRYPTO_GHASH_S390=3Dm
+ +CONFIG_CRYPTO_CRC32_S390=3Dy
+ +CONFIG_CORDIC=3Dm
+ +CONFIG_CRC32_SELFTEST=3Dy
+ +CONFIG_CRC4=3Dm
+ +CONFIG_CRC7=3Dm
+ +CONFIG_CRC8=3Dm
+ +CONFIG_RANDOM32_SELFTEST=3Dy
+ +CONFIG_DMA_CMA=3Dy
+ +CONFIG_CMA_SIZE_MBYTES=3D0
+ +CONFIG_DMA_API_DEBUG=3Dy
+ +CONFIG_STRING_SELFTEST=3Dy
+  CONFIG_PRINTK_TIME=3Dy
+  CONFIG_DYNAMIC_DEBUG=3Dy
+  CONFIG_DEBUG_INFO=3Dy
+
+
+--8GpibOaaTibBMecb
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+eFoACgkQJNaLcl1U
+h9BG5Qf+Ilf94j76DDrh6oITbngx0+eU5Olh5IClqwEw0Lk5LpWZ/vPiE3EGG9Mg
+il35/uqoT2NfN5/cYsGCLCLkCKczWYcy4oWozOTo/MtwXEl2mvMmRhJBZw7Tqs/U
+IF8eIesaMIFYfDQO2QwN5Lf/4ObHyAZP6A43FS88JnCj7fVHJzGW2u3sXSAFF0Vh
+VmW7DVRwo8EFzfDUo5GmfmPv0Tk3MB27L2HUvHF5mytkIzpwnLGY31zNRRAAP6WF
+gw0oeBrbbt+IrYoCqQvCQ7LfuLG533wFyB8mGZk6ERSA8vVgoo1VJYVc81MEVsEl
+tJ9TkzfZI0X5qLz9EF/oNWbEkXQHDA==
+=oHnu
+-----END PGP SIGNATURE-----
+
+--8GpibOaaTibBMecb--
