@@ -2,205 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C874B3137
-	for <lists+linux-s390@lfdr.de>; Sun, 15 Sep 2019 19:44:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DBFF4B368C
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Sep 2019 10:43:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725874AbfIORn7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 15 Sep 2019 13:43:59 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43394 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725270AbfIORn7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 15 Sep 2019 13:43:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Content-Type:MIME-Version:
-        Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8GlbM0Gk56jQSQ6J7WUvwVe9z+NrK2oBzeQQBTaeJ3w=; b=hn8txgJNqujrZw8x6TUDgOO/G
-        bjqYEgB0bySzdXeyKyecfQZIphuxYpEmWb2EJKx/6z1fW4EoNbMtXA3pvMrywLWtA7TqEhpg2AgdE
-        KF63FI9P7KoIK4NL793jp7rnkoLZn8Ym30m4huYtZTkwCKR5CjHYR1RUQfUy9p7T/nHNs=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1i9YZ1-0000mg-WB; Sun, 15 Sep 2019 17:43:56 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 0AC0E274154D; Sun, 15 Sep 2019 18:43:54 +0100 (BST)
-Date:   Sun, 15 Sep 2019 18:43:54 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Joerg Schmidbauer <jschmidb@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: manual merge of the s390 tree with the s390-fixes tree
-Message-ID: <20190915174354.GB4352@sirena.co.uk>
+        id S1731251AbfIPInj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Sep 2019 04:43:39 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33136 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731218AbfIPInj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 16 Sep 2019 04:43:39 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 67640AE5E;
+        Mon, 16 Sep 2019 08:43:33 +0000 (UTC)
+Date:   Mon, 16 Sep 2019 10:43:29 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
+        bp@alien8.de, rth@twiddle.net, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
+        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
+        rafael@kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v4] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190916084328.GC10231@dhcp22.suse.cz>
+References: <1568535656-158979-1-git-send-email-linyunsheng@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="8GpibOaaTibBMecb"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-Cookie: Man and wife make one fool.
+In-Reply-To: <1568535656-158979-1-git-send-email-linyunsheng@huawei.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Sun 15-09-19 16:20:56, Yunsheng Lin wrote:
+> When passing the return value of dev_to_node() to cpumask_of_node()
+> without checking if the device's node id is NUMA_NO_NODE, there is
+> global-out-of-bounds detected by KASAN.
+> 
+> >From the discussion [1], NUMA_NO_NODE really means no node affinity,
+> which also means all cpus should be usable. So the cpumask_of_node()
+> should always return all cpus online when user passes the node id as
+> NUMA_NO_NODE, just like similar semantic that page allocator handles
+> NUMA_NO_NODE.
+> 
+> But we cannot really copy the page allocator logic. Simply because the
+> page allocator doesn't enforce the near node affinity. It just picks it
+> up as a preferred node but then it is free to fallback to any other numa
+> node. This is not the case here and node_to_cpumask_map will only restrict
+> to the particular node's cpus which would have really non deterministic
+> behavior depending on where the code is executed. So in fact we really
+> want to return cpu_online_mask for NUMA_NO_NODE.
+> 
+> Some arches were already NUMA_NO_NODE aware, so only change them to return
+> cpu_online_mask and use NUMA_NO_NODE instead of "-1".
+> 
+> Also there is a debugging version of node_to_cpumask_map() for x86 and
+> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+> And "fix" a sign "bug" since it is for debugging and should catch all the
+> error cases.
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1125789/
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
 
---8GpibOaaTibBMecb
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The change makes sense to me. I wish this particular thing wasn't
+duplicated so heavily - maybe we can unify all of them and use a common
+code? In a separate patch most likely...
 
-Hi all,
+I would also not change cpu_all_mask -> cpu_online_mask in this patch.
+That is worth a patch on its own with some explanation. I haven't
+checked but I would suspect that alpha simply doesn't support cpu
+hotplug so the two things are the same. But this needs some explanation.
 
-Today's linux-next merge of the s390 tree got a conflict in:
+Other than that the patch looks good to me. Feel free to add
+Acked-by: Michal Hocko <mhocko@suse.com>
 
-  arch/s390/configs/debug_defconfig
+[...]
+> diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
+> index 5a77a40..836c9e2 100644
+> --- a/arch/alpha/include/asm/topology.h
+> +++ b/arch/alpha/include/asm/topology.h
+> @@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
+>  	int cpu;
+>  
+>  	if (node == NUMA_NO_NODE)
+> -		return cpu_all_mask;
+> +		return cpu_online_mask;
+>  
+>  	cpumask_clear(&node_to_cpumask_map[node]);
+>  
+[...]
 
-between commit:
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index e6dad60..c676ffb 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -861,9 +861,12 @@ void numa_remove_cpu(int cpu)
+>   */
+>  const struct cpumask *cpumask_of_node(int node)
+>  {
+> -	if (node >= nr_node_ids) {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+> +	if ((unsigned int)node >= nr_node_ids) {
+>  		printk(KERN_WARNING
+> -			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
+> +			"cpumask_of_node(%d): node >= nr_node_ids(%u)\n",
+>  			node, nr_node_ids);
+>  		dump_stack();
+>  		return cpu_none_mask;
 
-  3361f3193c747e8b ("s390: update configs")
-
-=66rom the s390-fixes tree and commit:
-
-  3c2eb6b76cabb7d9 ("s390/crypto: Support for SHA3 via CPACF (MSA6)")
-
-=66rom the s390 tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
-diff --cc arch/s390/configs/debug_defconfig
-index 74e78ec5beb68,a08e3dcd3e9db..0000000000000
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@@ -638,99 -580,6 +638,101 @@@ CONFIG_NLS_ISO8859_1=3D
-  CONFIG_NLS_ISO8859_15=3Dm
-  CONFIG_NLS_UTF8=3Dm
-  CONFIG_DLM=3Dm
- +CONFIG_UNICODE=3Dy
- +CONFIG_PERSISTENT_KEYRINGS=3Dy
- +CONFIG_BIG_KEYS=3Dy
- +CONFIG_ENCRYPTED_KEYS=3Dm
- +CONFIG_SECURITY=3Dy
- +CONFIG_SECURITY_NETWORK=3Dy
- +CONFIG_FORTIFY_SOURCE=3Dy
- +CONFIG_SECURITY_SELINUX=3Dy
- +CONFIG_SECURITY_SELINUX_BOOTPARAM=3Dy
- +CONFIG_SECURITY_SELINUX_DISABLE=3Dy
- +CONFIG_INTEGRITY_SIGNATURE=3Dy
- +CONFIG_INTEGRITY_ASYMMETRIC_KEYS=3Dy
- +CONFIG_IMA=3Dy
- +CONFIG_IMA_DEFAULT_HASH_SHA256=3Dy
- +CONFIG_IMA_WRITE_POLICY=3Dy
- +CONFIG_IMA_APPRAISE=3Dy
- +CONFIG_CRYPTO_USER=3Dm
- +# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
- +CONFIG_CRYPTO_PCRYPT=3Dm
- +CONFIG_CRYPTO_CRYPTD=3Dm
- +CONFIG_CRYPTO_TEST=3Dm
- +CONFIG_CRYPTO_DH=3Dm
- +CONFIG_CRYPTO_ECDH=3Dm
- +CONFIG_CRYPTO_ECRDSA=3Dm
- +CONFIG_CRYPTO_CHACHA20POLY1305=3Dm
- +CONFIG_CRYPTO_AEGIS128=3Dm
- +CONFIG_CRYPTO_AEGIS128L=3Dm
- +CONFIG_CRYPTO_AEGIS256=3Dm
- +CONFIG_CRYPTO_MORUS640=3Dm
- +CONFIG_CRYPTO_MORUS1280=3Dm
- +CONFIG_CRYPTO_CFB=3Dm
- +CONFIG_CRYPTO_LRW=3Dm
- +CONFIG_CRYPTO_PCBC=3Dm
- +CONFIG_CRYPTO_KEYWRAP=3Dm
- +CONFIG_CRYPTO_ADIANTUM=3Dm
- +CONFIG_CRYPTO_XCBC=3Dm
- +CONFIG_CRYPTO_VMAC=3Dm
- +CONFIG_CRYPTO_CRC32=3Dm
- +CONFIG_CRYPTO_XXHASH=3Dm
- +CONFIG_CRYPTO_MICHAEL_MIC=3Dm
- +CONFIG_CRYPTO_RMD128=3Dm
- +CONFIG_CRYPTO_RMD160=3Dm
- +CONFIG_CRYPTO_RMD256=3Dm
- +CONFIG_CRYPTO_RMD320=3Dm
- +CONFIG_CRYPTO_SHA3=3Dm
- +CONFIG_CRYPTO_SM3=3Dm
- +CONFIG_CRYPTO_TGR192=3Dm
- +CONFIG_CRYPTO_WP512=3Dm
- +CONFIG_CRYPTO_AES_TI=3Dm
- +CONFIG_CRYPTO_ANUBIS=3Dm
- +CONFIG_CRYPTO_ARC4=3Dm
- +CONFIG_CRYPTO_BLOWFISH=3Dm
- +CONFIG_CRYPTO_CAMELLIA=3Dm
- +CONFIG_CRYPTO_CAST5=3Dm
- +CONFIG_CRYPTO_CAST6=3Dm
- +CONFIG_CRYPTO_FCRYPT=3Dm
- +CONFIG_CRYPTO_KHAZAD=3Dm
- +CONFIG_CRYPTO_SALSA20=3Dm
- +CONFIG_CRYPTO_SEED=3Dm
- +CONFIG_CRYPTO_SERPENT=3Dm
- +CONFIG_CRYPTO_SM4=3Dm
- +CONFIG_CRYPTO_TEA=3Dm
- +CONFIG_CRYPTO_TWOFISH=3Dm
- +CONFIG_CRYPTO_842=3Dm
- +CONFIG_CRYPTO_LZ4=3Dm
- +CONFIG_CRYPTO_LZ4HC=3Dm
- +CONFIG_CRYPTO_ZSTD=3Dm
- +CONFIG_CRYPTO_ANSI_CPRNG=3Dm
- +CONFIG_CRYPTO_USER_API_HASH=3Dm
- +CONFIG_CRYPTO_USER_API_SKCIPHER=3Dm
- +CONFIG_CRYPTO_USER_API_RNG=3Dm
- +CONFIG_CRYPTO_USER_API_AEAD=3Dm
- +CONFIG_CRYPTO_STATS=3Dy
- +CONFIG_ZCRYPT=3Dm
- +CONFIG_PKEY=3Dm
- +CONFIG_CRYPTO_PAES_S390=3Dm
- +CONFIG_CRYPTO_SHA1_S390=3Dm
- +CONFIG_CRYPTO_SHA256_S390=3Dm
- +CONFIG_CRYPTO_SHA512_S390=3Dm
-++CONFIG_CRYPTO_SHA3_256_S390=3Dm
-++CONFIG_CRYPTO_SHA3_512_S390=3Dm
- +CONFIG_CRYPTO_DES_S390=3Dm
- +CONFIG_CRYPTO_AES_S390=3Dm
- +CONFIG_CRYPTO_GHASH_S390=3Dm
- +CONFIG_CRYPTO_CRC32_S390=3Dy
- +CONFIG_CORDIC=3Dm
- +CONFIG_CRC32_SELFTEST=3Dy
- +CONFIG_CRC4=3Dm
- +CONFIG_CRC7=3Dm
- +CONFIG_CRC8=3Dm
- +CONFIG_RANDOM32_SELFTEST=3Dy
- +CONFIG_DMA_CMA=3Dy
- +CONFIG_CMA_SIZE_MBYTES=3D0
- +CONFIG_DMA_API_DEBUG=3Dy
- +CONFIG_STRING_SELFTEST=3Dy
-  CONFIG_PRINTK_TIME=3Dy
-  CONFIG_DYNAMIC_DEBUG=3Dy
-  CONFIG_DEBUG_INFO=3Dy
-
-
---8GpibOaaTibBMecb
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl1+eFoACgkQJNaLcl1U
-h9BG5Qf+Ilf94j76DDrh6oITbngx0+eU5Olh5IClqwEw0Lk5LpWZ/vPiE3EGG9Mg
-il35/uqoT2NfN5/cYsGCLCLkCKczWYcy4oWozOTo/MtwXEl2mvMmRhJBZw7Tqs/U
-IF8eIesaMIFYfDQO2QwN5Lf/4ObHyAZP6A43FS88JnCj7fVHJzGW2u3sXSAFF0Vh
-VmW7DVRwo8EFzfDUo5GmfmPv0Tk3MB27L2HUvHF5mytkIzpwnLGY31zNRRAAP6WF
-gw0oeBrbbt+IrYoCqQvCQ7LfuLG533wFyB8mGZk6ERSA8vVgoo1VJYVc81MEVsEl
-tJ9TkzfZI0X5qLz9EF/oNWbEkXQHDA==
-=oHnu
------END PGP SIGNATURE-----
-
---8GpibOaaTibBMecb--
+Why do we need this?
+-- 
+Michal Hocko
+SUSE Labs
