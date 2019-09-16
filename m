@@ -2,161 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D9B6B39FA
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Sep 2019 14:07:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EF32B3A21
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Sep 2019 14:18:38 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732350AbfIPMHh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Sep 2019 08:07:37 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:2225 "EHLO huawei.com"
+        id S1727783AbfIPMSi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Sep 2019 08:18:38 -0400
+Received: from mtax.cdmx.gob.mx ([187.141.35.197]:12093 "EHLO mtaw.cdmx.gob.mx"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727795AbfIPMHh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 16 Sep 2019 08:07:37 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 2EF0699DDD3E64D216AB;
-        Mon, 16 Sep 2019 20:07:27 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Mon, 16 Sep 2019
- 20:07:23 +0800
-Subject: Re: [PATCH v4] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
-        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <mpe@ellerman.id.au>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
-        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <gregkh@linuxfoundation.org>
-References: <1568535656-158979-1-git-send-email-linyunsheng@huawei.com>
- <20190916084328.GC10231@dhcp22.suse.cz>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <8df06e27-ad21-bf14-dbd6-cc8f5a274ec2@huawei.com>
-Date:   Mon, 16 Sep 2019 20:07:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        id S1727810AbfIPMSh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 16 Sep 2019 08:18:37 -0400
+X-NAI-Header: Modified by McAfee Email Gateway (4500)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cdmx.gob.mx; s=72359050-3965-11E6-920A-0192F7A2F08E;
+        t=1568626930; h=X-Virus-Scanned:Content-Type:
+         MIME-Version:Content-Transfer-Encoding:Content-Description:
+         Subject:To:From:Date:Reply-To:Message-Id:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
+         X-AnalysisOut:X-AnalysisOut:X-AnalysisOut:
+         X-SAAS-TrackingID:X-NAIMIME-Disclaimer:X-NAIMIME-Modified:
+         X-NAI-Spam-Flag:X-NAI-Spam-Threshold:X-NAI-Spam-Score:
+         X-NAI-Spam-Rules:X-NAI-Spam-Version; bh=6
+        /pZmFQC6AfQtx64WCm5mpv4OcL2DRwqn08dcLKFTI
+        w=; b=F7ysNqhCRz/J0PXaRczyjaWAn9+7Q09hNCv4XM3o+r35
+        R/gwnKYg5zoWIPmej0CotxhMC8Tytj9RxAMcySRUxWnBaw5hiy
+        NM5aadBHHI/TwArK/PTg4GyveYhx1Y6D5xjAAeEpuUv4l6q1fr
+        2bSqJCqkRVzc+oQ4axuZl7/eye8=
+Received: from correo.seciti.cdmx.gob.mx (gdf-correo.cdmx.gob.mx [10.250.102.17]) by mtaw.cdmx.gob.mx with smtp
+         id 0258_2bb7_9d436d48_b476_40a0_8bbd_7a8d971d2f40;
+        Mon, 16 Sep 2019 04:42:10 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 334AF13A8;
+        Mon, 16 Sep 2019 04:42:08 -0500 (CDT)
+Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
+        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id QC-rPLoI6Yna; Mon, 16 Sep 2019 04:42:07 -0500 (CDT)
+Received: from localhost (localhost [127.0.0.1])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTP id 9760913E0;
+        Mon, 16 Sep 2019 04:42:07 -0500 (CDT)
+X-Virus-Scanned: amavisd-new at gdf-correo.df.gob.mx
+Received: from correo.seciti.cdmx.gob.mx ([127.0.0.1])
+        by localhost (gdf-correo.df.gob.mx [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id zDTxKfL1frXB; Mon, 16 Sep 2019 04:42:07 -0500 (CDT)
+Received: from [100.88.209.140] (8ta-250-4-72.telkomadsl.co.za [102.250.4.72])
+        by gdf-correo.df.gob.mx (Postfix) with ESMTPSA id D9E9A1DB9;
+        Mon, 16 Sep 2019 04:41:43 -0500 (CDT)
+Content-Type: text/plain;
+  charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20190916084328.GC10231@dhcp22.suse.cz>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: base64
+Content-Description: Mail message body
+Subject: Spende von 5 Millionen Euro
+To:     Recipients <mramirezg@mexicocity.gob.mx>
+From:   "Shane Missler" <mramirezg@mexicocity.gob.mx>
+Date:   Mon, 16 Sep 2019 11:41:24 +0200
+Reply-To: shanemissler.spende1@gmail.com
+Message-Id: <20190916094143.D9E9A1DB9@gdf-correo.df.gob.mx>
+X-AnalysisOut: [v=2.2 cv=WMsPZjkR c=1 sm=1 tr=0 p=NAessOE28N0A:10 p=01NpVV]
+X-AnalysisOut: [4txKbuBquBCNIA:9 p=OPvaR162FBY78wYZ:21 p=wwp16yEzG9Fj4K8O:]
+X-AnalysisOut: [21 p=09-KjHS_CW8A:10 p=bEr4i4eggGkA:10 p=-7VjjQDN59lQbO9Es]
+X-AnalysisOut: [jZ6:22 p=Lyqu6MUUigPyaOuRX7ce:22 a=KsSCQl7LcZej77FuluUcQw=]
+X-AnalysisOut: [=:117 a=e+lCeTWI1jHVzFLzZf7TwA==:17 a=8nJEP1OIZ-IA:10 a=x7]
+X-AnalysisOut: [bEGLp0ZPQA:10 a=J70Eh1EUuV4A:10 a=pGLkceISAAAA:8 a=wPNLvfG]
+X-AnalysisOut: [TeEIA:10]
+X-SAAS-TrackingID: 2f85f7d5.0.78460991.00-2275.132035187.s12p02m005.mxlogic.net
+X-NAIMIME-Disclaimer: 1
+X-NAIMIME-Modified: 1
+X-NAI-Spam-Flag: NO
+X-NAI-Spam-Threshold: 3
+X-NAI-Spam-Score: -5000
+X-NAI-Spam-Rules: 1 Rules triggered
+        WHITELISTED=-5000
+X-NAI-Spam-Version: 2.3.0.9418 : core <6634> : inlines <7140> : streams
+ <1832911> : uri <2904404>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2019/9/16 16:43, Michal Hocko wrote:
-> On Sun 15-09-19 16:20:56, Yunsheng Lin wrote:
->> When passing the return value of dev_to_node() to cpumask_of_node()
->> without checking if the device's node id is NUMA_NO_NODE, there is
->> global-out-of-bounds detected by KASAN.
->>
->> >From the discussion [1], NUMA_NO_NODE really means no node affinity,
->> which also means all cpus should be usable. So the cpumask_of_node()
->> should always return all cpus online when user passes the node id as
->> NUMA_NO_NODE, just like similar semantic that page allocator handles
->> NUMA_NO_NODE.
->>
->> But we cannot really copy the page allocator logic. Simply because the
->> page allocator doesn't enforce the near node affinity. It just picks it
->> up as a preferred node but then it is free to fallback to any other numa
->> node. This is not the case here and node_to_cpumask_map will only restrict
->> to the particular node's cpus which would have really non deterministic
->> behavior depending on where the code is executed. So in fact we really
->> want to return cpu_online_mask for NUMA_NO_NODE.
->>
->> Some arches were already NUMA_NO_NODE aware, so only change them to return
->> cpu_online_mask and use NUMA_NO_NODE instead of "-1".
->>
->> Also there is a debugging version of node_to_cpumask_map() for x86 and
->> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
->> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
->> And "fix" a sign "bug" since it is for debugging and should catch all the
->> error cases.
->>
->> [1] https://lore.kernel.org/patchwork/patch/1125789/
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> Suggested-by: Michal Hocko <mhocko@kernel.org>
-> 
-> The change makes sense to me. I wish this particular thing wasn't
-> duplicated so heavily - maybe we can unify all of them and use a common
-> code? In a separate patch most likely...
-> 
-> I would also not change cpu_all_mask -> cpu_online_mask in this patch.
-> That is worth a patch on its own with some explanation. I haven't
-> checked but I would suspect that alpha simply doesn't support cpu
-> hotplug so the two things are the same. But this needs some explanation.
-
-In commit 44c36aed43b5 ("alpha: cpumask_of_node() should handle -1 as a node")
-and commit d797396f3387 ("MIPS: cpumask_of_node() should handle -1 as a node")
-mention below:
-"pcibus_to_node can return -1 if we cannot determine which node a pci bus
-is on. If passed -1, cpumask_of_node will negatively index the lookup array
-and pull in random data"
-
-From the cpu hotplug process: take_cpu_down() -> __cpu_disable().
-alpha does not define the __cpu_disable() function, so it seems alpha does not
-support HOTPLUG_CPU.
-
-> 
-> Other than that the patch looks good to me. Feel free to add
-> Acked-by: Michal Hocko <mhocko@suse.com>
-> 
-> [...]
->> diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
->> index 5a77a40..836c9e2 100644
->> --- a/arch/alpha/include/asm/topology.h
->> +++ b/arch/alpha/include/asm/topology.h
->> @@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
->>  	int cpu;
->>  
->>  	if (node == NUMA_NO_NODE)
->> -		return cpu_all_mask;
->> +		return cpu_online_mask;
->>  
->>  	cpumask_clear(&node_to_cpumask_map[node]);
->>  
-> [...]
-> 
->> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
->> index e6dad60..c676ffb 100644
->> --- a/arch/x86/mm/numa.c
->> +++ b/arch/x86/mm/numa.c
->> @@ -861,9 +861,12 @@ void numa_remove_cpu(int cpu)
->>   */
->>  const struct cpumask *cpumask_of_node(int node)
->>  {
->> -	if (node >= nr_node_ids) {
->> +	if (node == NUMA_NO_NODE)
->> +		return cpu_online_mask;
->> +
->> +	if ((unsigned int)node >= nr_node_ids) {
->>  		printk(KERN_WARNING
->> -			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
->> +			"cpumask_of_node(%d): node >= nr_node_ids(%u)\n",
->>  			node, nr_node_ids);
->>  		dump_stack();
->>  		return cpu_none_mask;
-> 
-> Why do we need this?
-
-As the commit log says, the above cpumask_of_node() is for debugging,
-it should catch other "node < 0" cases except NUMA_NO_NODE.
-
-Thanks for reviewing.
-
+RGllcyBpc3QgZWluZSBwZXJzw7ZubGljaGUgTWFpbCwgZGllIGljaCBhbiBTaWUgYWRyZXNzaWVy
+ZS4gSWNoIGJpbiBTSEFORSBNSVNTTEVSIGF1cyBGbG9yaWRhLCBVU0EuIFdpZSBTaWUgYmVyZWl0
+cyB3aXNzZW4sIGhhYmUgaWNoIGVpbmVuIExvdHRvLUphY2twb3QgaW4gSMO2aGUgdm9uIDQ1MSBN
+aW8uIFVTRCAoMzMwIE1pby4gR0JQKSBnZXdvbm5lbiB1bmQgZGFzIEdlbGQgaGF0IG1laW4gTGVi
+ZW4gdW5kIG1laW4gRmFtaWxpZW5sZWJlbiB2ZXLDpG5kZXJ0LCBhYmVyIGVzIHdpcmQgbWVpbiBI
+ZXJ6IG5pY2h0IHZlcsOkbmRlcm4sIHdpZSBpY2ggYW4gZGVtIFRhZyBzYWd0ZSwgYW4gZGVtIGlj
+aCBtZWluIEdlbGQgaGFiZSwgZGFzIGljaCB2ZXJ3ZW5kZW4gd2VyZGUgRGllc2VzIEdlbGQgZsO8
+ciBkaWUgSGlsZmUgZGVyIE1lbnNjaGhlaXQuIEljaCBoYWJlIGJlc2NobG9zc2VuLCBJaG5lbiB1
+bmQgSWhyZXIgR2VtZWluZGUgZWluZW4gQmV0cmFnIHZvbiA1IE1pbGxpb25lbiBFdXJvIHp1IHNw
+ZW5kZW4sIHVtIGRpZXNlIFNwZW5kZSBhbnp1Zm9yZGVybi4gRS1NYWlsOiAoc2hhbmVtaXNzbGVy
+MEBnbWFpbC5jb20pCgoKCgoKCgoKCgpMYSBpbmZvcm1hY2lvbiBjb250ZW5pZGEgZW4gZXN0ZSBj
+b3JyZW8sIGFzaSBjb21vIGxhIGNvbnRlbmlkYSBlbiBsb3MgZG9jdW1lbnRvcyBhbmV4b3MsIHB1
+ZWRlIGNvbnRlbmVyIGRhdG9zIHBlcnNvbmFsZXMsIHBvciBsbyBxdWUgc3UgZGlmdXNpb24gZXMg
+cmVzcG9uc2FiaWxpZGFkIGRlIHF1aWVuIGxvcyB0cmFuc21pdGUgeSBxdWllbiBsb3MgcmVjaWJl
+LCBlbiB0w6lybWlub3MgZGUgbG8gZGlzcHVlc3RvIHBvciBsYXMgZnJhY2Npb25lcyBJSSB5IFZJ
+SSBkZWwgYXJ0aWN1bG8gNCwgdWx0aW1vIHBhcnJhZm8gZGVsIGFydGljdWxvIDgsIGFydGljdWxv
+IDM2IHBhcnJhZm8gSUksIDM4IGZyYWNjaW9uIEkgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxhIExl
+eSBkZSBUcmFuc3BhcmVuY2lhIHkgQWNjZXNvIGEgbGEgSW5mb3JtYWNpb24gUHVibGljYSBkZWwg
+RGlzdHJpdG8gRmVkZXJhbC4NCkxvcyBEYXRvcyBQZXJzb25hbGVzIHNlIGVuY3VlbnRyYW4gcHJv
+dGVnaWRvcyBwb3IgbGEgTGV5IGRlIFByb3RlY2Npb24gZGUgRGF0b3MgUGVyc29uYWxlcyBkZWwg
+RGlzdHJpdG8gRmVkZXJhbCwgcG9yIGxvIHF1ZSBzdSBkaWZ1c2lvbiBzZSBlbmN1ZW50cmEgdHV0
+ZWxhZGEgZW4gc3VzIGFydGljdWxvcyAyLCA1LCAxNiwgMjEsIDQxIHkgZGVtYXMgcmVsYXRpdm9z
+IHkgYXBsaWNhYmxlcywgZGViaWVuZG8gc3VqZXRhcnNlIGVuIHN1IGNhc28sIGEgbGFzIGRpc3Bv
+c2ljaW9uZXMgcmVsYXRpdmFzIGEgbGEgY3JlYWNpb24sIG1vZGlmaWNhY2lvbiBvIHN1cHJlc2lv
+biBkZSBkYXRvcyBwZXJzb25hbGVzIHByZXZpc3Rvcy4gQXNpbWlzbW8sIGRlYmVyYSBlc3RhcnNl
+IGEgbG8gc2XDsWFsYWRvIGVuIGxvcyBudW1lcmFsZXMgMSAsIDMsIDEyLCAxOCwgMTksIDIwLCAy
+MSwgMjMsIDI0LCAyOSwgMzUgeSBkZW1hcyBhcGxpY2FibGVzIGRlIGxvcyBMaW5lYW1pZW50b3Mg
+cGFyYSBsYSBQcm90ZWNjaW9uIGRlIERhdG9zIFBlcnNvbmFsZXMgZW4gZWwgRGlzdHJpdG8gRmVk
+ZXJhbC4NCkVuIGVsIHVzbyBkZSBsYXMgdGVjbm9sb2dpYXMgZGUgbGEgaW5mb3JtYWNpb24geSBj
+b211bmljYWNpb25lcyBkZWwgR29iaWVybm8gZGVsIERpc3RyaXRvIEZlZGVyYWwsIGRlYmVyYSBv
+YnNlcnZhcnNlIHB1bnR1YWxtZW50ZSBsbyBkaXNwdWVzdG8gcG9yIGxhIExleSBHb2JpZXJubyBF
+bGVjdHJvbmljbyBkZWwgRGlzdHJpdG8gRmVkZXJhbCwgbGEgbGV5IHBhcmEgaGFjZXIgZGUgbGEg
+Q2l1ZGFkIGRlIE1leGljbyB1bmEgQ2l1ZGFkIE1hcyBBYmllcnRhLCBlbCBhcGFydGFkbyAxMCBk
+ZSBsYSBDaXJjdWxhciBVbm8gdmlnZW50ZSB5IGxhcyBOb3JtYXMgR2VuZXJhbGVzIHF1ZSBkZWJl
+cmFuIG9ic2VydmFyc2UgZW4gbWF0ZXJpYSBkZSBTZWd1cmlkYWQgZGUgbGEgSW5mb3JtYWNpb24g
+ZW4gbGEgQWRtaW5pc3RyYWNpb24gUHVibGljYSBkZWwgRGlzdHJpdG8gRmVkZXJhbC4K
