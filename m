@@ -2,98 +2,53 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B724DB3FC4
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Sep 2019 19:53:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 59407B414F
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Sep 2019 21:45:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388272AbfIPRxX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Sep 2019 13:53:23 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40046 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728932AbfIPRxW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 16 Sep 2019 13:53:22 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8GHe2n8081728
-        for <linux-s390@vger.kernel.org>; Mon, 16 Sep 2019 13:53:18 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v2djdbjq5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 16 Sep 2019 13:53:18 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <sebott@linux.ibm.com>;
-        Mon, 16 Sep 2019 18:53:15 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Sep 2019 18:53:13 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8GHrBpA49873034
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Sep 2019 17:53:12 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DF187A4053;
-        Mon, 16 Sep 2019 17:53:11 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 839A1A4051;
-        Mon, 16 Sep 2019 17:53:11 +0000 (GMT)
-Received: from sig-9-145-147-20.de.ibm.com (unknown [9.145.147.20])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 16 Sep 2019 17:53:11 +0000 (GMT)
-Date:   Mon, 16 Sep 2019 19:53:10 +0200 (CEST)
-From:   Sebastian Ott <sebott@linux.ibm.com>
-X-X-Sender: sebott@schleppi
-To:     Cornelia Huck <cohuck@redhat.com>
-cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] s390/cio: fix intparm documentation
-In-Reply-To: <20190911164103.16156-1-cohuck@redhat.com>
-References: <20190911164103.16156-1-cohuck@redhat.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
-Organization: =?ISO-8859-15?Q?=22IBM_Deutschland_Research_&_Development_GmbH?=
- =?ISO-8859-15?Q?_=2F_Vorsitzende_des_Aufsichtsrats=3A_Matthias?=
- =?ISO-8859-15?Q?_Hartmann_Gesch=E4ftsf=FChrung=3A_Dirk_Wittkopp?=
- =?ISO-8859-15?Q?_Sitz_der_Gesellschaft=3A_B=F6blingen_=2F_Reg?=
- =?ISO-8859-15?Q?istergericht=3A_Amtsgericht_Stuttgart=2C_HRB_2432?=
- =?ISO-8859-15?Q?94=22?=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-TM-AS-GCONF: 00
-x-cbid: 19091617-0012-0000-0000-0000034CB6E3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091617-0013-0000-0000-000021872E16
-Message-Id: <alpine.LFD.2.21.1909161946570.3883@schleppi>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-16_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=699 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909160175
+        id S2388405AbfIPTpw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Sep 2019 15:45:52 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:50616 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727920AbfIPTpw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Sep 2019 15:45:52 -0400
+Received: from localhost (80-167-222-154-cable.dk.customer.tdc.net [80.167.222.154])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id A4CB9153F4343;
+        Mon, 16 Sep 2019 12:45:50 -0700 (PDT)
+Date:   Mon, 16 Sep 2019 21:45:49 +0200 (CEST)
+Message-Id: <20190916.214549.77520800522293464.davem@davemloft.net>
+To:     jwi@linux.ibm.com
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com, elfring@users.sourceforge.net
+Subject: Re: [PATCH net-next] s390/ctcm: Delete unnecessary checks before
+ the macro call =?iso-2022-jp?B?GyRCIUgbKEJkZXZfa2ZyZWVfc2tiGyRCIUkbKEI=?=
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20190915172105.42024-1-jwi@linux.ibm.com>
+References: <20190915172105.42024-1-jwi@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.2
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Mon, 16 Sep 2019 12:45:52 -0700 (PDT)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 11 Sep 2019, Cornelia Huck wrote:
-> The common I/O layer is maintaining an "intparm" inspired by
-> the hardware intparm for driver usage. This "intparm" is not
-> only applicaple for ssch, but also for hsch/csch. The kerneldoc
-> states that it is only updated for hsch/csch if no prior request
-> is pending; however, this is not what the code does (whether
-> that would actually desireable is a different issue.)
+From: Julian Wiedmann <jwi@linux.ibm.com>
+Date: Sun, 15 Sep 2019 19:21:05 +0200
+
+> From: Markus Elfring <elfring@users.sourceforge.net>
 > 
-> Let's at least fix the kerneldoc for now.
+> The dev_kfree_skb() function performs also input parameter validation.
+> Thus the test around the shown calls is not needed.
 > 
-> Fixes: b2ffd8e9a76e ("[S390] cio: Add docbook comments.")
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+> This issue was detected by using the Coccinelle software.
+> 
+> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+> Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 
-I did a similar patch after a discusion with a colleague a couple of
-months ago but totally forgot about that... yours has better description
-and kdoc anyway ;-)
-
-Applied. Thanks!
-
+Applied.
