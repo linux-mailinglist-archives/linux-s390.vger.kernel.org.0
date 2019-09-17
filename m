@@ -2,181 +2,188 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC052B4E35
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Sep 2019 14:43:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A945B4E74
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Sep 2019 14:51:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728532AbfIQMm5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Sep 2019 08:42:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52494 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728117AbfIQMm5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 17 Sep 2019 08:42:57 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6C6F54E83C;
-        Tue, 17 Sep 2019 12:42:56 +0000 (UTC)
-Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CEC546012E;
-        Tue, 17 Sep 2019 12:42:42 +0000 (UTC)
-Date:   Tue, 17 Sep 2019 14:42:40 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
-        xiao.w.wang@intel.com, lingshan.zhu@intel.com
-Subject: Re: [RFC PATCH 2/2] mdev: introduce device specific ops
-Message-ID: <20190917144240.6a59b65f.cohuck@redhat.com>
-In-Reply-To: <20190912094012.29653-3-jasowang@redhat.com>
-References: <20190912094012.29653-1-jasowang@redhat.com>
-        <20190912094012.29653-3-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        id S1726211AbfIQMv1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Sep 2019 08:51:27 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:55622 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726131AbfIQMv0 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 17 Sep 2019 08:51:26 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 9DDFB6AEE488B1C6EA43;
+        Tue, 17 Sep 2019 20:51:23 +0800 (CST)
+Received: from localhost.localdomain (10.67.212.75) by
+ DGGEMS403-HUB.china.huawei.com (10.3.19.203) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 17 Sep 2019 20:51:18 +0800
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+To:     <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>
+CC:     <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
+        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
+        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
+        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
+        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
+        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
+        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
+        <mhocko@kernel.org>, <gregkh@linuxfoundation.org>
+Subject: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Date:   Tue, 17 Sep 2019 20:48:54 +0800
+Message-ID: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 17 Sep 2019 12:42:56 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.67.212.75]
+X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 12 Sep 2019 17:40:12 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+When passing the return value of dev_to_node() to cpumask_of_node()
+without checking if the device's node id is NUMA_NO_NODE, there is
+global-out-of-bounds detected by KASAN.
 
-> Currently, except for the crate and remove. The rest fields of
-> mdev_parent_ops is just designed for vfio-mdev driver and may not help
-> for kernel mdev driver. So follow the device id support by previous
-> patch, this patch introduces device specific ops which points to
-> device specific ops (e.g vfio ops). This allows the future drivers
-> like virtio-mdev to implement its own device specific ops.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/gpu/drm/i915/gvt/kvmgt.c  | 14 +++---
->  drivers/s390/cio/vfio_ccw_ops.c   | 14 +++---
->  drivers/s390/crypto/vfio_ap_ops.c | 10 +++--
->  drivers/vfio/mdev/vfio_mdev.c     | 30 +++++++------
->  include/linux/mdev.h              | 72 ++++++++++++++++++-------------
->  samples/vfio-mdev/mbochs.c        | 16 ++++---
->  samples/vfio-mdev/mdpy.c          | 16 ++++---
->  samples/vfio-mdev/mtty.c          | 14 +++---
->  8 files changed, 113 insertions(+), 73 deletions(-)
+From the discussion [1], NUMA_NO_NODE really means no node affinity,
+which also means all cpus should be usable. So the cpumask_of_node()
+should always return all cpus online when user passes the node id as
+NUMA_NO_NODE, just like similar semantic that page allocator handles
+NUMA_NO_NODE.
 
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index f85045392120..3b8a76bc69cf 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -27,27 +27,9 @@ int mdev_set_iommu_device(struct device *dev, struct device *iommu_device);
->  struct device *mdev_get_iommu_device(struct device *dev);
->  
->  /**
-> - * struct mdev_parent_ops - Structure to be registered for each parent device to
-> - * register the device to mdev module.
-> + * struct vfio_mdev_parent_ops - Structure to be registered for each
-> + * parent device to register the device to vfio-mdev module.
->   *
-> - * @owner:		The module owner.
-> - * @dev_attr_groups:	Attributes of the parent device.
-> - * @mdev_attr_groups:	Attributes of the mediated device.
-> - * @supported_type_groups: Attributes to define supported types. It is mandatory
-> - *			to provide supported types.
-> - * @create:		Called to allocate basic resources in parent device's
-> - *			driver for a particular mediated device. It is
-> - *			mandatory to provide create ops.
-> - *			@kobj: kobject of type for which 'create' is called.
-> - *			@mdev: mdev_device structure on of mediated device
-> - *			      that is being created
-> - *			Returns integer: success (0) or error (< 0)
-> - * @remove:		Called to free resources in parent device's driver for a
-> - *			a mediated device. It is mandatory to provide 'remove'
-> - *			ops.
-> - *			@mdev: mdev_device device structure which is being
-> - *			       destroyed
-> - *			Returns integer: success (0) or error (< 0)
->   * @open:		Open mediated device.
->   *			@mdev: mediated device.
->   *			Returns integer: success (0) or error (< 0)
-> @@ -72,6 +54,43 @@ struct device *mdev_get_iommu_device(struct device *dev);
->   * @mmap:		mmap callback
->   *			@mdev: mediated device structure
->   *			@vma: vma structure
-> + */
-> +struct vfio_mdev_parent_ops {
-> +	int     (*open)(struct mdev_device *mdev);
-> +	void    (*release)(struct mdev_device *mdev);
-> +	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> +			size_t count, loff_t *ppos);
-> +	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> +			 size_t count, loff_t *ppos);
-> +	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> +			 unsigned long arg);
-> +	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +};
-> +
-> +/**
-> + * struct mdev_parent_ops - Structure to be registered for each parent device to
-> + * register the device to mdev module.
-> + *
-> + * @owner:		The module owner.
-> + * @dev_attr_groups:	Attributes of the parent device.
-> + * @mdev_attr_groups:	Attributes of the mediated device.
-> + * @supported_type_groups: Attributes to define supported types. It is mandatory
-> + *			to provide supported types.
-> + * @create:		Called to allocate basic resources in parent device's
-> + *			driver for a particular mediated device. It is
-> + *			mandatory to provide create ops.
-> + *			@kobj: kobject of type for which 'create' is called.
-> + *			@mdev: mdev_device structure on of mediated device
-> + *			      that is being created
-> + *			Returns integer: success (0) or error (< 0)
-> + * @remove:		Called to free resources in parent device's driver for a
-> + *			a mediated device. It is mandatory to provide 'remove'
-> + *			ops.
-> + *			@mdev: mdev_device device structure which is being
-> + *			       destroyed
-> + *			Returns integer: success (0) or error (< 0)
-> + * @device_ops:         Device specific emulation callback.
-> + *
->   * Parent device that support mediated device should be registered with mdev
->   * module with mdev_parent_ops structure.
->   **/
-> @@ -83,15 +102,7 @@ struct mdev_parent_ops {
->  
->  	int     (*create)(struct kobject *kobj, struct mdev_device *mdev);
->  	int     (*remove)(struct mdev_device *mdev);
-> -	int     (*open)(struct mdev_device *mdev);
-> -	void    (*release)(struct mdev_device *mdev);
-> -	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> -			size_t count, loff_t *ppos);
-> -	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> -			 size_t count, loff_t *ppos);
-> -	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> -			 unsigned long arg);
-> -	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +	const void *device_ops;
->  };
->  
->  /* interface for exporting mdev supported type attributes */
+But we cannot really copy the page allocator logic. Simply because the
+page allocator doesn't enforce the near node affinity. It just picks it
+up as a preferred node but then it is free to fallback to any other numa
+node. This is not the case here and node_to_cpumask_map will only restrict
+to the particular node's cpus which would have really non deterministic
+behavior depending on where the code is executed. So in fact we really
+want to return cpu_online_mask for NUMA_NO_NODE.
 
-This basically looks like a split between stuff that is always
-triggered from userspace (create and the like) and stuff that is
-triggered from userspace for vfio mdevs, but not necessarily for other
-mdevs. Seems reasonable at a glance.
+Also there is a debugging version of node_to_cpumask_map() for x86 and
+arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
 
-If we decide to go forward with this, we should also update the
-documentation (split out stuff from driver-api/vfio-mediated-device.rst
-etc.)
+[1] https://lore.kernel.org/patchwork/patch/1125789/
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+Suggested-by: Michal Hocko <mhocko@kernel.org>
+Acked-by: Michal Hocko <mhocko@suse.com>
+---
+V6: Drop the cpu_all_mask -> cpu_online_mask change for it seems a
+    little controversial, may need deeper investigation, and rebased
+    on the latest linux-next.
+V5: Drop unsigned "fix" change for x86/arm64, and change comment log
+    according to Michal's comment.
+V4: Have all these changes in a single patch.
+V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
+    for NUMA_NO_NODE case, and change the commit log to better justify
+    the change.
+V2: make the node id checking change to other arches too.
+---
+ arch/arm64/include/asm/numa.h                    | 3 +++
+ arch/arm64/mm/numa.c                             | 3 +++
+ arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
+ arch/s390/include/asm/topology.h                 | 3 +++
+ arch/x86/include/asm/topology.h                  | 3 +++
+ arch/x86/mm/numa.c                               | 3 +++
+ 6 files changed, 18 insertions(+), 1 deletion(-)
+
+diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
+index 626ad01..c8a4b31 100644
+--- a/arch/arm64/include/asm/numa.h
++++ b/arch/arm64/include/asm/numa.h
+@@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
+ /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return node_to_cpumask_map[node];
+ }
+ #endif
+diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+index 4decf16..5ae7eea 100644
+--- a/arch/arm64/mm/numa.c
++++ b/arch/arm64/mm/numa.c
+@@ -46,6 +46,9 @@ EXPORT_SYMBOL(node_to_cpumask_map);
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	if (WARN_ON(node >= nr_node_ids))
+ 		return cpu_none_mask;
+ 
+diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
+index 7ff819a..e78daa6 100644
+--- a/arch/mips/include/asm/mach-loongson64/topology.h
++++ b/arch/mips/include/asm/mach-loongson64/topology.h
+@@ -5,7 +5,9 @@
+ #ifdef CONFIG_NUMA
+ 
+ #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
+-#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
++#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
++				 cpu_online_mask :			\
++				 &__node_data[(node)]->cpumask)
+ 
+ struct pci_bus;
+ extern int pcibus_to_node(struct pci_bus *);
+diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
+index cca406f..1bd2e73 100644
+--- a/arch/s390/include/asm/topology.h
++++ b/arch/s390/include/asm/topology.h
+@@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
+ #define cpumask_of_node cpumask_of_node
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return &node_to_cpumask_map[node];
+ }
+ 
+diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+index 4b14d23..7fa82e1 100644
+--- a/arch/x86/include/asm/topology.h
++++ b/arch/x86/include/asm/topology.h
+@@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
+ /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+ static inline const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	return node_to_cpumask_map[node];
+ }
+ #endif
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index 4123100e..9859acb 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
+  */
+ const struct cpumask *cpumask_of_node(int node)
+ {
++	if (node == NUMA_NO_NODE)
++		return cpu_online_mask;
++
+ 	if ((unsigned)node >= nr_node_ids) {
+ 		printk(KERN_WARNING
+ 			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+-- 
+2.8.1
+
