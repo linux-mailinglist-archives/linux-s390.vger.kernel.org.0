@@ -2,217 +2,279 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0CB83B4220
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Sep 2019 22:44:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E2034B46D4
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Sep 2019 07:28:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730600AbfIPUoS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Sep 2019 16:44:18 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:39957 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2403869AbfIPUoQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Sep 2019 16:44:16 -0400
-Received: by mail-wr1-f65.google.com with SMTP id l3so819726wru.7;
-        Mon, 16 Sep 2019 13:44:12 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=biVa5TWgIH4FdyTR1jPZk5xG6z3f1lKwc4R/y5Vwp40=;
-        b=neCadqbV+6Ucydna6nqAAffsAuEt2stH5cs3BuITYcqvWsfUnkcIc2qjRcyW2D9gBt
-         dA1W7HfALC21KSmRHQTF8Ea+0UnKrxxC6NfaYvY6AhzdyTY4nvAWI+KpX2Ra4gVKEKE/
-         ZmFfzE5qZ8vt2pTsieYSx6Kylz/bY+yWe50YVNJlekIK9r+5UHlR7RrWXQCfXL4hWNny
-         67Vckwid//pzBPptJqb0T6DpFUJW5ekjK/3RP4AKjj4m1G/parVGu2xWuHYFx2k0K1Nd
-         9m+1DK+kWFTbiB77ncwvZTkxQ47TIWXJba07xpcK9VXEREUjm2P4l9ZQz0cHS3n/7v9L
-         S3/A==
-X-Gm-Message-State: APjAAAV2WZXyEIxSHlgfvODfiGkPuNLfSqY+4kufsC5T2fmvq0k8jH1y
-        2h6/O2FhIu9LSmO9/IVY8c4=
-X-Google-Smtp-Source: APXvYqwQ+Y6pjVCuDeC+MNuztamBqM3ZAsuyCiViX+t2NCMqnz7fV09FxtTDS87WKdHM68MP9j2KfA==
-X-Received: by 2002:adf:e7c2:: with SMTP id e2mr157281wrn.319.1568666652077;
-        Mon, 16 Sep 2019 13:44:12 -0700 (PDT)
-Received: from black.home (broadband-188-32-48-208.ip.moscow.rt.ru. [188.32.48.208])
-        by smtp.googlemail.com with ESMTPSA id x6sm231437wmf.38.2019.09.16.13.44.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Sep 2019 13:44:11 -0700 (PDT)
-From:   Denis Efremov <efremov@linux.com>
-To:     Bjorn Helgaas <bhelgaas@google.com>
-Cc:     Denis Efremov <efremov@linux.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>,
-        linux-s390@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
-Date:   Mon, 16 Sep 2019 23:41:38 +0300
-Message-Id: <20190916204158.6889-7-efremov@linux.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190916204158.6889-1-efremov@linux.com>
-References: <20190916204158.6889-1-efremov@linux.com>
+        id S2392396AbfIQF2t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Sep 2019 01:28:49 -0400
+Received: from ozlabs.org ([203.11.71.1]:57447 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732712AbfIQF2t (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 17 Sep 2019 01:28:49 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 46XWqS6K4Cz9sNk;
+        Tue, 17 Sep 2019 15:28:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1568698124;
+        bh=aN50ZIFwgnpq9UgwoGTeDmA66UxmOVUz1V+DPk07KSI=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=JHFW7VzdOKGRMHcwPORPAFQRFQb9GgzjT3rqUdIhBrBak5TUzrKz7LvSJicBdUnSz
+         +lTsuCsim1mkACJ7AnCkM3JD4r9z1eoWvw2qLbgmHYzSrLSheAIhT7G4tZcnTgFn4y
+         Ot+r9Nvb74/peELR+d97R8N9wzEC72TFiDhOiLr8RbNIynB9xprM7lkiJlgjh4aFz+
+         ZR+I9qdp9kFj78/sznBtRl2z7btdTYvD8YFCgU5uS6aG0hmf2fN+JPU15Bd0ur9PrB
+         x98MOiDFHpwDEbLVm1DR4pLTEF8XPBSWCP3kuYFEaWRI1DexcVcDeSXFCHTjYsTiix
+         z7xt1QlKubw/Q==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com
+Cc:     akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        len.brown@intel.com, axboe@kernel.dk, dledford@redhat.com,
+        jeffrey.t.kirsher@intel.com, linux-alpha@vger.kernel.org,
+        naveen.n.rao@linux.vnet.ibm.com, mwb@linux.vnet.ibm.com,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        tbogendoerfer@suse.de, linux-mips@vger.kernel.org,
+        rafael@kernel.org, mhocko@kernel.org, gregkh@linuxfoundation.org
+Subject: Re: [PATCH v5] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+In-Reply-To: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
+References: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
+Date:   Tue, 17 Sep 2019 15:28:32 +1000
+Message-ID: <87pnjzsd8f.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
-global one PCI_STD_NUM_BARS instead.
+Yunsheng Lin <linyunsheng@huawei.com> writes:
+> When passing the return value of dev_to_node() to cpumask_of_node()
+> without checking if the device's node id is NUMA_NO_NODE, there is
+> global-out-of-bounds detected by KASAN.
+>
+> From the discussion [1], NUMA_NO_NODE really means no node affinity,
+> which also means all cpus should be usable. So the cpumask_of_node()
+> should always return all cpus online when user passes the node id as
+> NUMA_NO_NODE, just like similar semantic that page allocator handles
+> NUMA_NO_NODE.
+>
+> But we cannot really copy the page allocator logic. Simply because the
+> page allocator doesn't enforce the near node affinity. It just picks it
+> up as a preferred node but then it is free to fallback to any other numa
+> node. This is not the case here and node_to_cpumask_map will only restrict
+> to the particular node's cpus which would have really non deterministic
+> behavior depending on where the code is executed. So in fact we really
+> want to return cpu_online_mask for NUMA_NO_NODE.
+>
+> Some arches were already NUMA_NO_NODE aware, but they return cpu_all_mask,
+> which should be identical with cpu_online_mask when those arches do not
+> support cpu hotplug, this patch also changes them to return cpu_online_mask
+> in order to be consistent and use NUMA_NO_NODE instead of "-1".
 
-Acked-by: Sebastian Ott <sebott@linux.ibm.com>
-Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Denis Efremov <efremov@linux.com>
----
- arch/s390/include/asm/pci.h     |  5 +----
- arch/s390/include/asm/pci_clp.h |  6 +++---
- arch/s390/pci/pci.c             | 16 ++++++++--------
- arch/s390/pci/pci_clp.c         |  6 +++---
- 4 files changed, 15 insertions(+), 18 deletions(-)
+Except some of those arches *do* support CPU hotplug, powerpc and sparc
+at least. So switching from cpu_all_mask to cpu_online_mask is a
+meaningful change.
 
-diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-index a2399eff84ca..3a06c264ea53 100644
---- a/arch/s390/include/asm/pci.h
-+++ b/arch/s390/include/asm/pci.h
-@@ -2,9 +2,6 @@
- #ifndef __ASM_S390_PCI_H
- #define __ASM_S390_PCI_H
- 
--/* must be set before including pci_clp.h */
--#define PCI_BAR_COUNT	6
--
- #include <linux/pci.h>
- #include <linux/mutex.h>
- #include <linux/iommu.h>
-@@ -138,7 +135,7 @@ struct zpci_dev {
- 
- 	char res_name[16];
- 	bool mio_capable;
--	struct zpci_bar_struct bars[PCI_BAR_COUNT];
-+	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
- 
- 	u64		start_dma;	/* Start of available DMA addresses */
- 	u64		end_dma;	/* End of available DMA addresses */
-diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
-index 50359172cc48..bd2cb4ea7d93 100644
---- a/arch/s390/include/asm/pci_clp.h
-+++ b/arch/s390/include/asm/pci_clp.h
-@@ -77,7 +77,7 @@ struct mio_info {
- 	struct {
- 		u64 wb;
- 		u64 wt;
--	} addr[PCI_BAR_COUNT];
-+	} addr[PCI_STD_NUM_BARS];
- 	u32 reserved[6];
- } __packed;
- 
-@@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
- 	u16 util_str_avail	:  1;	/* utility string available? */
- 	u16 pfgid		:  8;	/* pci function group id */
- 	u32 fid;			/* pci function id */
--	u8 bar_size[PCI_BAR_COUNT];
-+	u8 bar_size[PCI_STD_NUM_BARS];
- 	u16 pchid;
--	__le32 bar[PCI_BAR_COUNT];
-+	__le32 bar[PCI_STD_NUM_BARS];
- 	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
- 	u32			: 16;
- 	u8 fmb_len;
-diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-index b0e3b9a0e488..aca372c8e34f 100644
---- a/arch/s390/pci/pci.c
-+++ b/arch/s390/pci/pci.c
-@@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
- static DEFINE_SPINLOCK(zpci_domain_lock);
- 
- #define ZPCI_IOMAP_ENTRIES						\
--	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
-+	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
- 	    ZPCI_IOMAP_MAX_ENTRIES)
- 
- static DEFINE_SPINLOCK(zpci_iomap_lock);
-@@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
- void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
- 			      unsigned long offset, unsigned long max)
- {
--	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-+	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
- 		return NULL;
- 
- 	if (static_branch_likely(&have_mio))
-@@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
- void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
- 				 unsigned long offset, unsigned long max)
- {
--	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-+	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
- 		return NULL;
- 
- 	if (static_branch_likely(&have_mio))
-@@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
- 	resource_size_t len;
- 	int i;
- 
--	for (i = 0; i < PCI_BAR_COUNT; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		len = pci_resource_len(pdev, i);
- 		if (!len)
- 			continue;
-@@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
- 	if (zpci_use_mio(zdev))
- 		return;
- 
--	for (i = 0; i < PCI_BAR_COUNT; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		len = pci_resource_len(pdev, i);
- 		if (!len)
- 			continue;
-@@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
- 	snprintf(zdev->res_name, sizeof(zdev->res_name),
- 		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
- 
--	for (i = 0; i < PCI_BAR_COUNT; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (!zdev->bars[i].size)
- 			continue;
- 		entry = zpci_alloc_iomap(zdev);
-@@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
- {
- 	int i;
- 
--	for (i = 0; i < PCI_BAR_COUNT; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		if (!zdev->bars[i].size || !zdev->bars[i].res)
- 			continue;
- 
-@@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
- 	pdev->dev.dma_ops = &s390_pci_dma_ops;
- 	zpci_map_resources(pdev);
- 
--	for (i = 0; i < PCI_BAR_COUNT; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		res = &pdev->resource[i];
- 		if (res->parent || !res->flags)
- 			continue;
-diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-index 9bdff4defef1..8b729b5f2972 100644
---- a/arch/s390/pci/pci_clp.c
-+++ b/arch/s390/pci/pci_clp.c
-@@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
- {
- 	int i;
- 
--	for (i = 0; i < PCI_BAR_COUNT; i++) {
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
- 		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
- 		zdev->bars[i].size = response->bar_size[i];
- 	}
-@@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
- 		       sizeof(zdev->util_str));
- 	}
- 	zdev->mio_capable = response->mio_addr_avail;
--	for (i = 0; i < PCI_BAR_COUNT; i++) {
--		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
-+	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-+		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
- 			continue;
- 
- 		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
--- 
-2.21.0
+That doesn't mean it's wrong, but you need to explain why it's the right
+change.
 
+
+> Also there is a debugging version of node_to_cpumask_map() for x86 and
+> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+>
+> [1] https://lore.kernel.org/patchwork/patch/1125789/
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+> ---
+> V5: Drop unsigned "fix" change for x86/arm64, and change comment log
+>     according to Michal's comment.
+> V4: Have all these changes in a single patch.
+
+This makes it much harder to get the patch merged, you basically have to
+get Andrew Morton to merge it now. Sending individual patches for each
+arch means each arch maintainer can merge them separately.
+
+cheers
+
+> V3: Change to only handle NUMA_NO_NODE, and return cpu_online_mask
+>     for NUMA_NO_NODE case, and change the commit log to better justify
+>     the change.
+> V2: make the node id checking change to other arches too.
+> ---
+>  arch/alpha/include/asm/topology.h                | 2 +-
+>  arch/arm64/include/asm/numa.h                    | 3 +++
+>  arch/arm64/mm/numa.c                             | 3 +++
+>  arch/mips/include/asm/mach-ip27/topology.h       | 4 ++--
+>  arch/mips/include/asm/mach-loongson64/topology.h | 4 +++-
+>  arch/powerpc/include/asm/topology.h              | 6 +++---
+>  arch/s390/include/asm/topology.h                 | 3 +++
+>  arch/sparc/include/asm/topology_64.h             | 6 +++---
+>  arch/x86/include/asm/topology.h                  | 3 +++
+>  arch/x86/mm/numa.c                               | 3 +++
+>  10 files changed, 27 insertions(+), 10 deletions(-)
+>
+> diff --git a/arch/alpha/include/asm/topology.h b/arch/alpha/include/asm/topology.h
+> index 5a77a40..836c9e2 100644
+> --- a/arch/alpha/include/asm/topology.h
+> +++ b/arch/alpha/include/asm/topology.h
+> @@ -31,7 +31,7 @@ static const struct cpumask *cpumask_of_node(int node)
+>  	int cpu;
+>  
+>  	if (node == NUMA_NO_NODE)
+> -		return cpu_all_mask;
+> +		return cpu_online_mask;
+>  
+>  	cpumask_clear(&node_to_cpumask_map[node]);
+>  
+> diff --git a/arch/arm64/include/asm/numa.h b/arch/arm64/include/asm/numa.h
+> index 626ad01..c8a4b31 100644
+> --- a/arch/arm64/include/asm/numa.h
+> +++ b/arch/arm64/include/asm/numa.h
+> @@ -25,6 +25,9 @@ const struct cpumask *cpumask_of_node(int node);
+>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+>  static inline const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	return node_to_cpumask_map[node];
+>  }
+>  #endif
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index 4f241cc..f57202d 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -46,6 +46,9 @@ EXPORT_SYMBOL(node_to_cpumask_map);
+>   */
+>  const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	if (WARN_ON(node >= nr_node_ids))
+>  		return cpu_none_mask;
+>  
+> diff --git a/arch/mips/include/asm/mach-ip27/topology.h b/arch/mips/include/asm/mach-ip27/topology.h
+> index 965f079..04505e6 100644
+> --- a/arch/mips/include/asm/mach-ip27/topology.h
+> +++ b/arch/mips/include/asm/mach-ip27/topology.h
+> @@ -15,8 +15,8 @@ struct cpuinfo_ip27 {
+>  extern struct cpuinfo_ip27 sn_cpu_info[NR_CPUS];
+>  
+>  #define cpu_to_node(cpu)	(sn_cpu_info[(cpu)].p_nodeid)
+> -#define cpumask_of_node(node)	((node) == -1 ?				\
+> -				 cpu_all_mask :				\
+> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
+> +				 cpu_online_mask :			\
+>  				 &hub_data(node)->h_cpus)
+>  struct pci_bus;
+>  extern int pcibus_to_node(struct pci_bus *);
+> diff --git a/arch/mips/include/asm/mach-loongson64/topology.h b/arch/mips/include/asm/mach-loongson64/topology.h
+> index 7ff819a..e78daa6 100644
+> --- a/arch/mips/include/asm/mach-loongson64/topology.h
+> +++ b/arch/mips/include/asm/mach-loongson64/topology.h
+> @@ -5,7 +5,9 @@
+>  #ifdef CONFIG_NUMA
+>  
+>  #define cpu_to_node(cpu)	(cpu_logical_map(cpu) >> 2)
+> -#define cpumask_of_node(node)	(&__node_data[(node)]->cpumask)
+> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
+> +				 cpu_online_mask :			\
+> +				 &__node_data[(node)]->cpumask)
+>  
+>  struct pci_bus;
+>  extern int pcibus_to_node(struct pci_bus *);
+> diff --git a/arch/powerpc/include/asm/topology.h b/arch/powerpc/include/asm/topology.h
+> index 2f7e1ea..309f847 100644
+> --- a/arch/powerpc/include/asm/topology.h
+> +++ b/arch/powerpc/include/asm/topology.h
+> @@ -17,9 +17,9 @@ struct device_node;
+>  
+>  #include <asm/mmzone.h>
+>  
+> -#define cpumask_of_node(node) ((node) == -1 ?				\
+> -			       cpu_all_mask :				\
+> -			       node_to_cpumask_map[node])
+> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
+> +				 cpu_online_mask :			\
+> +				 node_to_cpumask_map[node])
+>  
+>  struct pci_bus;
+>  #ifdef CONFIG_PCI
+> diff --git a/arch/s390/include/asm/topology.h b/arch/s390/include/asm/topology.h
+> index cca406f..1bd2e73 100644
+> --- a/arch/s390/include/asm/topology.h
+> +++ b/arch/s390/include/asm/topology.h
+> @@ -78,6 +78,9 @@ static inline int cpu_to_node(int cpu)
+>  #define cpumask_of_node cpumask_of_node
+>  static inline const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	return &node_to_cpumask_map[node];
+>  }
+>  
+> diff --git a/arch/sparc/include/asm/topology_64.h b/arch/sparc/include/asm/topology_64.h
+> index 34c628a..8c29357 100644
+> --- a/arch/sparc/include/asm/topology_64.h
+> +++ b/arch/sparc/include/asm/topology_64.h
+> @@ -11,9 +11,9 @@ static inline int cpu_to_node(int cpu)
+>  	return numa_cpu_lookup_table[cpu];
+>  }
+>  
+> -#define cpumask_of_node(node) ((node) == -1 ?				\
+> -			       cpu_all_mask :				\
+> -			       &numa_cpumask_lookup_table[node])
+> +#define cpumask_of_node(node)	((node) == NUMA_NO_NODE ?		\
+> +				 cpu_online_mask :			\
+> +				 &numa_cpumask_lookup_table[node])
+>  
+>  struct pci_bus;
+>  #ifdef CONFIG_PCI
+> diff --git a/arch/x86/include/asm/topology.h b/arch/x86/include/asm/topology.h
+> index 4b14d23..7fa82e1 100644
+> --- a/arch/x86/include/asm/topology.h
+> +++ b/arch/x86/include/asm/topology.h
+> @@ -69,6 +69,9 @@ extern const struct cpumask *cpumask_of_node(int node);
+>  /* Returns a pointer to the cpumask of CPUs on Node 'node'. */
+>  static inline const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	return node_to_cpumask_map[node];
+>  }
+>  #endif
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index e6dad60..84b28ef 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
+>   */
+>  const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+> +
+>  	if (node >= nr_node_ids) {
+>  		printk(KERN_WARNING
+>  			"cpumask_of_node(%d): node > nr_node_ids(%u)\n",
+> -- 
+> 2.8.1
