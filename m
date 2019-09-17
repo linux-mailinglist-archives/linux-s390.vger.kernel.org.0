@@ -2,131 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 47141B4CFB
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Sep 2019 13:36:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EB2DFB4D70
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Sep 2019 14:07:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727040AbfIQLgs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Sep 2019 07:36:48 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:33066 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726230AbfIQLgs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 17 Sep 2019 07:36:48 -0400
-Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 9830C216968499FA6070;
-        Tue, 17 Sep 2019 19:36:44 +0800 (CST)
-Received: from [127.0.0.1] (10.74.191.121) by DGGEMS412-HUB.china.huawei.com
- (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Tue, 17 Sep 2019
- 19:36:39 +0800
-Subject: Re: [PATCH v5] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Michal Hocko <mhocko@kernel.org>
-CC:     Michael Ellerman <mpe@ellerman.id.au>, <catalin.marinas@arm.com>,
-        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
-        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
-        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
-        <paulus@samba.org>, <heiko.carstens@de.ibm.com>,
-        <gor@linux.ibm.com>, <borntraeger@de.ibm.com>,
-        <ysato@users.sourceforge.jp>, <dalias@libc.org>,
-        <davem@davemloft.net>, <ralf@linux-mips.org>,
-        <paul.burton@mips.com>, <jhogan@kernel.org>,
-        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
-        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
-        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
-        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
-        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
-        <peterz@infradead.org>, <len.brown@intel.com>, <axboe@kernel.dk>,
-        <dledford@redhat.com>, <jeffrey.t.kirsher@intel.com>,
-        <linux-alpha@vger.kernel.org>, <naveen.n.rao@linux.vnet.ibm.com>,
-        <mwb@linux.vnet.ibm.com>, <linuxppc-dev@lists.ozlabs.org>,
-        <linux-s390@vger.kernel.org>, <linux-sh@vger.kernel.org>,
-        <sparclinux@vger.kernel.org>, <tbogendoerfer@suse.de>,
-        <linux-mips@vger.kernel.org>, <rafael@kernel.org>,
-        <gregkh@linuxfoundation.org>
-References: <1568640481-133352-1-git-send-email-linyunsheng@huawei.com>
- <87pnjzsd8f.fsf@mpe.ellerman.id.au>
- <d748aae4-4d48-6f8a-2f6d-67fad5224ba9@huawei.com>
- <20190917093655.GA1872@dhcp22.suse.cz>
- <07c78b6c-277e-eec0-a6cd-46beab1f1547@huawei.com>
- <20190917100854.GC1872@dhcp22.suse.cz>
-From:   Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <7fe82a6a-2183-3d9d-2740-0d4fe123b813@huawei.com>
-Date:   Tue, 17 Sep 2019 19:36:39 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+        id S1726959AbfIQMHh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Sep 2019 08:07:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56592 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726918AbfIQMHg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 17 Sep 2019 08:07:36 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 20D9A30820C9;
+        Tue, 17 Sep 2019 12:07:36 +0000 (UTC)
+Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F455100197A;
+        Tue, 17 Sep 2019 12:07:22 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 14:07:20 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
+        xiao.w.wang@intel.com, lingshan.zhu@intel.com
+Subject: Re: [RFC PATCH 1/2] mdev: device id support
+Message-ID: <20190917140720.3686e0cc.cohuck@redhat.com>
+In-Reply-To: <20190912094012.29653-2-jasowang@redhat.com>
+References: <20190912094012.29653-1-jasowang@redhat.com>
+        <20190912094012.29653-2-jasowang@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20190917100854.GC1872@dhcp22.suse.cz>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.191.121]
-X-CFilter-Loop: Reflected
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 17 Sep 2019 12:07:36 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2019/9/17 18:08, Michal Hocko wrote:
-> On Tue 17-09-19 17:53:57, Yunsheng Lin wrote:
->> On 2019/9/17 17:36, Michal Hocko wrote:
->>> On Tue 17-09-19 14:20:11, Yunsheng Lin wrote:
->>>> On 2019/9/17 13:28, Michael Ellerman wrote:
->>>>> Yunsheng Lin <linyunsheng@huawei.com> writes:
->>> [...]
->>>>>> But we cannot really copy the page allocator logic. Simply because the
->>>>>> page allocator doesn't enforce the near node affinity. It just picks it
->>>>>> up as a preferred node but then it is free to fallback to any other numa
->>>>>> node. This is not the case here and node_to_cpumask_map will only restrict
->>>>>> to the particular node's cpus which would have really non deterministic
->>>>>> behavior depending on where the code is executed. So in fact we really
->>>>>> want to return cpu_online_mask for NUMA_NO_NODE.
->>>>>>
->>>>>> Some arches were already NUMA_NO_NODE aware, but they return cpu_all_mask,
->>>>>> which should be identical with cpu_online_mask when those arches do not
->>>>>> support cpu hotplug, this patch also changes them to return cpu_online_mask
->>>>>> in order to be consistent and use NUMA_NO_NODE instead of "-1".
->>>>>
->>>>> Except some of those arches *do* support CPU hotplug, powerpc and sparc
->>>>> at least. So switching from cpu_all_mask to cpu_online_mask is a
->>>>> meaningful change.
->>>>
->>>> Yes, thanks for pointing out.
->>>>
->>>>>
->>>>> That doesn't mean it's wrong, but you need to explain why it's the right
->>>>> change.
->>>>
->>>> How about adding the below to the commit log:
->>>> Even if some of the arches do support CPU hotplug, it does not make sense
->>>> to return the cpu that has been hotplugged.
->>>>
->>>> Any suggestion?
->>>
->>> Again, for the third time, I believe. Make it a separate patch please.
->>> There is absolutely no reason to conflate those two things.
->>
->> Ok, thanks.
->> Will make the cpu_all_mask -> cpu_online_mask change a separate patch.
-> 
-> Thanks. This really needs per arch maintainer to check closely.
-> 
->> Also, do you think it is better to resend this as individual patches for each arch
->> or have all these changes in a single patch? I am not sure which is the common
->> practice for a multi-arches changes like this.
-> 
-> It really depends on arch maintainers. Both approaches have some pros
-> and cons. A single patch is more compact and and parts are not going to
-> get lost in noise. They might generate some conflicts with parallel
-> changes. I suspect a conflict risk is quite low in this code considering
-> from a recent activity. A follow up arch specific patch would have to be
-> routed via Andrew as well.
-> 
-> If Andrew is ok routing it through his tree and none of the arch
-> maintainers is opposed then I would go with a single patch.
+On Thu, 12 Sep 2019 17:40:11 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-Ok, I will try a single patch for NUMA_NO_NODE aware change first.
-"cpu_all_mask -> cpu_online_mask" change seems a little controversial,
-and may need deeper investigation.
+> Mdev bus only support vfio driver right now, so it doesn't implement
+> match method. But in the future, we may add drivers other than vfio,
+> one example is virtio-mdev[1] driver. This means we need to add device
+> id support in bus match method to pair the mdev device and mdev driver
+> correctly.
 
+Sounds reasonable.
 
 > 
+> So this patch add id_table to mdev_driver and id for mdev parent, and
+> implement the match method for mdev bus.
+> 
+> [1] https://lkml.org/lkml/2019/9/10/135
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/gpu/drm/i915/gvt/kvmgt.c  |  2 +-
+>  drivers/s390/cio/vfio_ccw_ops.c   |  2 +-
+>  drivers/s390/crypto/vfio_ap_ops.c |  3 ++-
+>  drivers/vfio/mdev/mdev_core.c     | 14 ++++++++++++--
+>  drivers/vfio/mdev/mdev_driver.c   | 14 ++++++++++++++
+>  drivers/vfio/mdev/mdev_private.h  |  1 +
+>  drivers/vfio/mdev/vfio_mdev.c     |  6 ++++++
+>  include/linux/mdev.h              |  6 +++++-
+>  include/linux/mod_devicetable.h   |  6 ++++++
+>  samples/vfio-mdev/mbochs.c        |  2 +-
+>  samples/vfio-mdev/mdpy.c          |  2 +-
+>  samples/vfio-mdev/mtty.c          |  2 +-
+>  12 files changed, 51 insertions(+), 9 deletions(-)
 
+(...)
+
+The transformations of the vendor drivers and the new interface look
+sane.
+
+(...)
+
+> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+> index 5714fd35a83c..f1fc143df042 100644
+> --- a/include/linux/mod_devicetable.h
+> +++ b/include/linux/mod_devicetable.h
+> @@ -821,4 +821,10 @@ struct wmi_device_id {
+>  	const void *context;
+>  };
+>  
+> +/* MDEV */
+> +
+
+Maybe add some kerneldoc and give vfio as an example of what we're
+matching here?
+
+> +struct mdev_device_id {
+> +	__u8 id;
+
+I agree with the suggestion to rename this to 'class_id'.
+
+> +};
+> +
+>  #endif /* LINUX_MOD_DEVICETABLE_H */
