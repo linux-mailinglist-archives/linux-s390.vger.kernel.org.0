@@ -2,417 +2,104 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ECC5B5055
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Sep 2019 16:27:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A6052B544B
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Sep 2019 19:32:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727074AbfIQO1Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Sep 2019 10:27:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19774 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725922AbfIQO1Y (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 17 Sep 2019 10:27:24 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8HEQqp3032066
-        for <linux-s390@vger.kernel.org>; Tue, 17 Sep 2019 10:27:23 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v2yw1d3ye-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 17 Sep 2019 10:27:22 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Tue, 17 Sep 2019 15:27:21 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 17 Sep 2019 15:27:18 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8HERG9p24445110
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 17 Sep 2019 14:27:17 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D89C7A405C;
-        Tue, 17 Sep 2019 14:27:16 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 766C5A4054;
-        Tue, 17 Sep 2019 14:27:15 +0000 (GMT)
-Received: from localhost (unknown [9.145.72.67])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 17 Sep 2019 14:27:15 +0000 (GMT)
-Date:   Tue, 17 Sep 2019 16:27:14 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] s390 patches for the 5.4 merge window
+        id S1731195AbfIQRbf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Sep 2019 13:31:35 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41468 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726125AbfIQRbf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 17 Sep 2019 13:31:35 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 88C9E10C0932;
+        Tue, 17 Sep 2019 17:31:34 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3ABBC60852;
+        Tue, 17 Sep 2019 17:31:26 +0000 (UTC)
+Date:   Tue, 17 Sep 2019 11:31:25 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        cohuck@redhat.com, farman@linux.ibm.com, pasic@linux.ibm.com,
+        sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
+        xiao.w.wang@intel.com, lingshan.zhu@intel.com,
+        Parav Pandit <parav@mellanox.com>
+Subject: Re: [RFC PATCH 0/2] Mdev: support mutiple kinds of devices
+Message-ID: <20190917113125.6b2970e5@x1.home>
+In-Reply-To: <20190912094012.29653-1-jasowang@redhat.com>
+References: <20190912094012.29653-1-jasowang@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19091714-4275-0000-0000-000003679FAC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091714-4276-0000-0000-0000387A05B3
-Message-Id: <your-ad-here.call-01568730434-ext-0126@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-17_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909170139
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.66]); Tue, 17 Sep 2019 17:31:35 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Linus,
+[cc +Parav]
 
-please pull s390 fixes and features for 5.4.
+On Thu, 12 Sep 2019 17:40:10 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-The following changes since commit 609488bc979f99f805f34e9a32c1e3b71179d10b:
+> Hi all:
+> 
+> During the development of virtio-mdev[1]. I find that mdev needs to be
+> extended to support devices other than vfio mdev device. So this
+> series tries to extend the mdev to be able to differ from different
+> devices by:
+> 
+> - device id and matching for mdev bus
+> - device speicfic callbacks and move vfio callbacks there
+> 
+> Sent for early reivew, compile test only!
+> 
+> Thanks
+> 
+> [1] https://lkml.org/lkml/2019/9/10/135
 
-  Linux 5.3-rc2 (2019-07-28 12:47:02 -0700)
+I expect Parav must have something similar in the works for their
+in-kernel networking mdev support.  Link to discussion so far:
 
-are available in the Git repository at:
+https://lore.kernel.org/kvm/20190912094012.29653-1-jasowang@redhat.com/T/#t
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-1
+Thanks,
+Alex
 
-for you to fetch changes up to 2735913c1079b7dd7ec1d746c13a84ec1b5ea276:
 
-  s390: remove pointless drivers-y in drivers/s390/Makefile (2019-09-16 13:21:51 +0200)
-
-Please note the following easy to resolve merge conflict:
-
-diff --cc arch/s390/configs/debug_defconfig
-index 74e78ec5beb6,a08e3dcd3e9d..347f48702edb
---- a/arch/s390/configs/debug_defconfig
-+++ b/arch/s390/configs/debug_defconfig
-@@@ -638,99 -580,6 +638,101 @@@ CONFIG_NLS_ISO8859_1=
-  CONFIG_NLS_ISO8859_15=m
-  CONFIG_NLS_UTF8=m
-  CONFIG_DLM=m
- +CONFIG_UNICODE=y
- +CONFIG_PERSISTENT_KEYRINGS=y
- +CONFIG_BIG_KEYS=y
- +CONFIG_ENCRYPTED_KEYS=m
- +CONFIG_SECURITY=y
- +CONFIG_SECURITY_NETWORK=y
- +CONFIG_FORTIFY_SOURCE=y
- +CONFIG_SECURITY_SELINUX=y
- +CONFIG_SECURITY_SELINUX_BOOTPARAM=y
- +CONFIG_SECURITY_SELINUX_DISABLE=y
- +CONFIG_INTEGRITY_SIGNATURE=y
- +CONFIG_INTEGRITY_ASYMMETRIC_KEYS=y
- +CONFIG_IMA=y
- +CONFIG_IMA_DEFAULT_HASH_SHA256=y
- +CONFIG_IMA_WRITE_POLICY=y
- +CONFIG_IMA_APPRAISE=y
- +CONFIG_CRYPTO_USER=m
- +# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
- +CONFIG_CRYPTO_PCRYPT=m
- +CONFIG_CRYPTO_CRYPTD=m
- +CONFIG_CRYPTO_TEST=m
- +CONFIG_CRYPTO_DH=m
- +CONFIG_CRYPTO_ECDH=m
- +CONFIG_CRYPTO_ECRDSA=m
- +CONFIG_CRYPTO_CHACHA20POLY1305=m
- +CONFIG_CRYPTO_AEGIS128=m
- +CONFIG_CRYPTO_AEGIS128L=m
- +CONFIG_CRYPTO_AEGIS256=m
- +CONFIG_CRYPTO_MORUS640=m
- +CONFIG_CRYPTO_MORUS1280=m
- +CONFIG_CRYPTO_CFB=m
- +CONFIG_CRYPTO_LRW=m
- +CONFIG_CRYPTO_PCBC=m
- +CONFIG_CRYPTO_KEYWRAP=m
- +CONFIG_CRYPTO_ADIANTUM=m
- +CONFIG_CRYPTO_XCBC=m
- +CONFIG_CRYPTO_VMAC=m
- +CONFIG_CRYPTO_CRC32=m
- +CONFIG_CRYPTO_XXHASH=m
- +CONFIG_CRYPTO_MICHAEL_MIC=m
- +CONFIG_CRYPTO_RMD128=m
- +CONFIG_CRYPTO_RMD160=m
- +CONFIG_CRYPTO_RMD256=m
- +CONFIG_CRYPTO_RMD320=m
- +CONFIG_CRYPTO_SHA3=m
- +CONFIG_CRYPTO_SM3=m
- +CONFIG_CRYPTO_TGR192=m
- +CONFIG_CRYPTO_WP512=m
- +CONFIG_CRYPTO_AES_TI=m
- +CONFIG_CRYPTO_ANUBIS=m
- +CONFIG_CRYPTO_ARC4=m
- +CONFIG_CRYPTO_BLOWFISH=m
- +CONFIG_CRYPTO_CAMELLIA=m
- +CONFIG_CRYPTO_CAST5=m
- +CONFIG_CRYPTO_CAST6=m
- +CONFIG_CRYPTO_FCRYPT=m
- +CONFIG_CRYPTO_KHAZAD=m
- +CONFIG_CRYPTO_SALSA20=m
- +CONFIG_CRYPTO_SEED=m
- +CONFIG_CRYPTO_SERPENT=m
- +CONFIG_CRYPTO_SM4=m
- +CONFIG_CRYPTO_TEA=m
- +CONFIG_CRYPTO_TWOFISH=m
- +CONFIG_CRYPTO_842=m
- +CONFIG_CRYPTO_LZ4=m
- +CONFIG_CRYPTO_LZ4HC=m
- +CONFIG_CRYPTO_ZSTD=m
- +CONFIG_CRYPTO_ANSI_CPRNG=m
- +CONFIG_CRYPTO_USER_API_HASH=m
- +CONFIG_CRYPTO_USER_API_SKCIPHER=m
- +CONFIG_CRYPTO_USER_API_RNG=m
- +CONFIG_CRYPTO_USER_API_AEAD=m
- +CONFIG_CRYPTO_STATS=y
- +CONFIG_ZCRYPT=m
- +CONFIG_PKEY=m
- +CONFIG_CRYPTO_PAES_S390=m
- +CONFIG_CRYPTO_SHA1_S390=m
- +CONFIG_CRYPTO_SHA256_S390=m
- +CONFIG_CRYPTO_SHA512_S390=m
-++CONFIG_CRYPTO_SHA3_256_S390=m
-++CONFIG_CRYPTO_SHA3_512_S390=m
- +CONFIG_CRYPTO_DES_S390=m
- +CONFIG_CRYPTO_AES_S390=m
- +CONFIG_CRYPTO_GHASH_S390=m
- +CONFIG_CRYPTO_CRC32_S390=y
- +CONFIG_CORDIC=m
- +CONFIG_CRC32_SELFTEST=y
- +CONFIG_CRC4=m
- +CONFIG_CRC7=m
- +CONFIG_CRC8=m
- +CONFIG_RANDOM32_SELFTEST=y
- +CONFIG_DMA_CMA=y
- +CONFIG_CMA_SIZE_MBYTES=0
- +CONFIG_DMA_API_DEBUG=y
- +CONFIG_STRING_SELFTEST=y
-  CONFIG_PRINTK_TIME=y
-  CONFIG_DYNAMIC_DEBUG=y
-  CONFIG_DEBUG_INFO=y
-
-And another one with the crypto tree if you pull it first:
-
-diff --cc arch/s390/crypto/aes_s390.c
-index d4f6fd42a105,6d2dbb5089d5..9803e96d2924
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@@ -586,7 -586,10 +586,10 @@@ static int xts_aes_encrypt(struct blkci
-  	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
-  	struct blkcipher_walk walk;
-  
-+ 	if (!nbytes)
-+ 		return -EINVAL;
-+ 
- -	if (unlikely(!xts_ctx->fc))
- +	if (unlikely(!xts_ctx->fc || (nbytes % XTS_BLOCK_SIZE) != 0))
-  		return xts_fallback_encrypt(desc, dst, src, nbytes);
-  
-  	blkcipher_walk_init(&walk, dst, src, nbytes);
-@@@ -600,7 -603,10 +603,10 @@@ static int xts_aes_decrypt(struct blkci
-  	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
-  	struct blkcipher_walk walk;
-  
-+ 	if (!nbytes)
-+ 		return -EINVAL;
-+ 
- -	if (unlikely(!xts_ctx->fc))
- +	if (unlikely(!xts_ctx->fc || (nbytes % XTS_BLOCK_SIZE) != 0))
-  		return xts_fallback_decrypt(desc, dst, src, nbytes);
-  
-  	blkcipher_walk_init(&walk, dst, src, nbytes);
-
-Thank you,
-Vasily
-----------------------------------------------------------------
-s390 updates for the 5.4 merge window
-
-- Add support for IBM z15 machines.
-
-- Add SHA3 and CCA AES cipher key support in zcrypt and pkey refactoring.
-
-- Move to arch_stack_walk infrastructure for the stack unwinder.
-
-- Various kasan fixes and improvements.
-
-- Various command line parsing fixes.
-
-- Improve decompressor phase debuggability.
-
-- Lift no bss usage restriction for the early code.
-
-- Use refcount_t for reference counters for couple of places in
-  mm code.
-
-- Logging improvements and return code fix in vfio-ccw code.
-
-- Couple of zpci fixes and minor refactoring.
-
-- Remove some outdated documentation.
-
-- Fix secure boot detection.
-
-- Other various minor code clean ups.
-
-----------------------------------------------------------------
-Chuhong Yuan (2):
-      s390/extmem: use refcount_t for refcount
-      s390/mm: use refcount_t for refcount
-
-Cornelia Huck (1):
-      vfio-ccw: add some logging
-
-Denis Efremov (1):
-      s390/pci: PCI_IOV_RESOURCES loop refactoring in zpci_map_resources
-
-Halil Pasic (1):
-      s390: vfio-ap: fix warning reset not completed
-
-Harald Freudenberger (10):
-      s390/zcrypt: move cca misc functions to new code file
-      s390/zcrypt: add base code for cca crypto card info support
-      s390/zcrypt: new sysfs attributes serialnr and mkvps
-      s390/pkey: pkey cleanup: narrow in-kernel API, fix some variable types
-      s390/zcrypt: extend cca_findcard function and helper
-      s390/zcrypt: Add low level functions for CCA AES cipher keys
-      s390/pkey: add CCA AES cipher key support
-      s390/paes: Prepare paes functions for large key blobs
-      s390/zcrypt: fix wrong handling of cca cipher keygenflags
-      s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
-
-Heiko Carstens (2):
-      Documentation/s390: remove outdated dasd documentation
-      Documentation/s390: remove outdated debugging390 documentation
-
-Joerg Schmidbauer (1):
-      s390/crypto: Support for SHA3 via CPACF (MSA6)
-
-Martin Schwidefsky (1):
-      s390: add support for IBM z15 machines
-
-Masahiro Yamada (1):
-      s390: remove pointless drivers-y in drivers/s390/Makefile
-
-Philipp Rudo (1):
-      s390/sclp: Fix bit checked for has_sipl
-
-Sebastian Ott (1):
-      s390/pci: fix MSI message data
-
-Thomas Richter (1):
-      s390/cpum_sf: Fix line length and format string
-
-Vasily Gorbik (25):
-      s390: move vmalloc option parsing to startup code
-      s390/startup: add initial pgm check handler
-      s390/startup: purge obsolete .gitignore patterns
-      s390: clean .bss before running uncompressed kernel
-      s390/kasan: provide uninstrumented __strlen
-      s390/process: avoid potential reading of freed stack
-      s390/kasan: avoid report in get_wchan
-      s390/stacktrace: use common arch_stack_walk infrastructure
-      s390/startup: adjust _sdma and _edma to page boundaries
-      s390/startup: round down "mem" option to page boundary
-      s390/numa: correct early_param handling
-      s390/vmcp: correct early_param handling
-      s390/startup: correct command line options parsing
-      s390/vdso: reuse kstrtobool for option value parsing
-      s390/cmma: reuse kstrtobool for option value parsing
-      s390/mem_detect: provide single get_mem_detect_end
-      s390/kaslr: reserve memory for kasan usage
-      s390/pci: avoid using strncmp with hardcoded length
-      s390/module: avoid using strncmp with hardcoded length
-      s390/sclp: avoid using strncmp with hardcoded length
-      s390/setup: avoid using strncmp with hardcoded length
-      s390/kasan: add kdump support
-      Merge tag 'vfio-ccw-20190828' of https://git.kernel.org/.../kvms390/vfio-ccw into features
-      s390/base: remove unused s390_base_mcck_handler
-      s390/startup: add pgm check info printing
-
-Wei Yongjun (1):
-      vfio-ccw: fix error return code in vfio_ccw_sch_init()
-
- Documentation/s390/dasd.rst             |   84 -
- Documentation/s390/debugging390.rst     | 2613 -------------------------------
- Documentation/s390/index.rst            |    2 -
- arch/s390/Kconfig                       |   19 +
- arch/s390/Makefile                      |    2 +
- arch/s390/boot/Makefile                 |    2 +-
- arch/s390/boot/boot.h                   |    1 +
- arch/s390/boot/compressed/.gitignore    |    3 -
- arch/s390/boot/compressed/vmlinux.lds.S |    3 +-
- arch/s390/boot/head.S                   |   32 +-
- arch/s390/boot/ipl_parm.c               |   11 +-
- arch/s390/boot/kaslr.c                  |   41 +-
- arch/s390/boot/mem_detect.c             |    7 -
- arch/s390/boot/pgm_check_info.c         |   90 ++
- arch/s390/boot/startup.c                |    6 +
- arch/s390/configs/debug_defconfig       |    2 +
- arch/s390/configs/defconfig             |    2 +
- arch/s390/crypto/Makefile               |    2 +
- arch/s390/crypto/aes_s390.c             |    6 +
- arch/s390/crypto/paes_s390.c            |  184 ++-
- arch/s390/crypto/sha.h                  |   12 +-
- arch/s390/crypto/sha3_256_s390.c        |  147 ++
- arch/s390/crypto/sha3_512_s390.c        |  155 ++
- arch/s390/crypto/sha_common.c           |   75 +-
- arch/s390/include/asm/cpacf.h           |    8 +
- arch/s390/include/asm/gmap.h            |    4 +-
- arch/s390/include/asm/mem_detect.h      |   12 +
- arch/s390/include/asm/pgtable.h         |    1 +
- arch/s390/include/asm/pkey.h            |  114 +-
- arch/s390/include/asm/processor.h       |    2 -
- arch/s390/include/asm/setup.h           |    1 +
- arch/s390/include/asm/string.h          |    9 +-
- arch/s390/include/uapi/asm/pkey.h       |  257 ++-
- arch/s390/kernel/Makefile               |   13 +-
- arch/s390/kernel/base.S                 |   21 -
- arch/s390/kernel/early.c                |   16 +
- arch/s390/kernel/early_nobss.c          |   45 -
- arch/s390/kernel/early_printk.c         |    2 +-
- arch/s390/kernel/head64.S               |    8 +-
- arch/s390/kernel/module.c               |    4 +-
- arch/s390/kernel/perf_cpum_sf.c         |   20 +-
- arch/s390/kernel/process.c              |   26 +-
- arch/s390/kernel/setup.c                |   27 +-
- arch/s390/kernel/stacktrace.c           |   50 +-
- arch/s390/kernel/vdso.c                 |   18 +-
- arch/s390/lib/Makefile                  |    3 -
- arch/s390/mm/extmem.c                   |   11 +-
- arch/s390/mm/gmap.c                     |   10 +-
- arch/s390/mm/kasan_init.c               |   14 +-
- arch/s390/mm/page-states.c              |   14 +-
- arch/s390/numa/mode_emu.c               |    7 +-
- arch/s390/numa/numa.c                   |    2 +
- arch/s390/pci/pci.c                     |    8 +-
- arch/s390/pci/pci_dma.c                 |    4 +-
- arch/s390/pci/pci_irq.c                 |    2 +-
- arch/s390/tools/gen_facilities.c        |    3 +
- drivers/crypto/Kconfig                  |   20 +
- drivers/s390/Makefile                   |    3 -
- drivers/s390/char/Makefile              |    3 -
- drivers/s390/char/sclp_early.c          |    2 +-
- drivers/s390/char/vmcp.c                |    2 +
- drivers/s390/cio/vfio_ccw_drv.c         |   58 +-
- drivers/s390/cio/vfio_ccw_fsm.c         |   51 +-
- drivers/s390/cio/vfio_ccw_ops.c         |   10 +
- drivers/s390/cio/vfio_ccw_private.h     |   17 +
- drivers/s390/crypto/Makefile            |    2 +-
- drivers/s390/crypto/pkey_api.c          | 1638 ++++++++-----------
- drivers/s390/crypto/vfio_ap_ops.c       |    2 +-
- drivers/s390/crypto/zcrypt_api.c        |   30 +
- drivers/s390/crypto/zcrypt_api.h        |    7 +-
- drivers/s390/crypto/zcrypt_ccamisc.c    | 1765 +++++++++++++++++++++
- drivers/s390/crypto/zcrypt_ccamisc.h    |  217 +++
- drivers/s390/crypto/zcrypt_cex4.c       |  106 +-
- 73 files changed, 4047 insertions(+), 4123 deletions(-)
- delete mode 100644 Documentation/s390/dasd.rst
- delete mode 100644 Documentation/s390/debugging390.rst
- create mode 100644 arch/s390/boot/pgm_check_info.c
- create mode 100644 arch/s390/crypto/sha3_256_s390.c
- create mode 100644 arch/s390/crypto/sha3_512_s390.c
- delete mode 100644 arch/s390/kernel/early_nobss.c
- create mode 100644 drivers/s390/crypto/zcrypt_ccamisc.c
- create mode 100644 drivers/s390/crypto/zcrypt_ccamisc.h
+> Jason Wang (2):
+>   mdev: device id support
+>   mdev: introduce device specific ops
+> 
+>  drivers/gpu/drm/i915/gvt/kvmgt.c  | 16 ++++---
+>  drivers/s390/cio/vfio_ccw_ops.c   | 16 ++++---
+>  drivers/s390/crypto/vfio_ap_ops.c | 13 ++++--
+>  drivers/vfio/mdev/mdev_core.c     | 14 +++++-
+>  drivers/vfio/mdev/mdev_driver.c   | 14 ++++++
+>  drivers/vfio/mdev/mdev_private.h  |  1 +
+>  drivers/vfio/mdev/vfio_mdev.c     | 36 ++++++++++-----
+>  include/linux/mdev.h              | 76 +++++++++++++++++++------------
+>  include/linux/mod_devicetable.h   |  6 +++
+>  samples/vfio-mdev/mbochs.c        | 18 +++++---
+>  samples/vfio-mdev/mdpy.c          | 18 +++++---
+>  samples/vfio-mdev/mtty.c          | 16 ++++---
+>  12 files changed, 163 insertions(+), 81 deletions(-)
+> 
 
