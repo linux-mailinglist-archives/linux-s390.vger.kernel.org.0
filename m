@@ -2,185 +2,241 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E4988B650C
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Sep 2019 15:51:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FF71B660D
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Sep 2019 16:27:08 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfIRNvX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Sep 2019 09:51:23 -0400
-Received: from mx1.mailbox.org ([80.241.60.212]:21992 "EHLO mx1.mailbox.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726562AbfIRNvV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Sep 2019 09:51:21 -0400
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
-        (No client certificate requested)
-        by mx1.mailbox.org (Postfix) with ESMTPS id 4C49450BA7;
-        Wed, 18 Sep 2019 15:51:15 +0200 (CEST)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by hefe.heinlein-support.de (hefe.heinlein-support.de [91.198.250.172]) (amavisd-new, port 10030)
-        with ESMTP id LF0_75sV9oFp; Wed, 18 Sep 2019 15:51:08 +0200 (CEST)
-Date:   Wed, 18 Sep 2019 15:51:00 +0200
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Jann Horn <jannh@google.com>
-Cc:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian@brauner.io>,
-        Andy Lutomirski <luto@kernel.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux Containers <containers@lists.linux-foundation.org>,
-        linux-alpha@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-ia64@vger.kernel.org,
-        kernel list <linux-kernel@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>, linux-m68k@lists.linux-m68k.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH v12 05/12] namei: obey trailing magic-link DAC permissions
-Message-ID: <20190918135100.sdxdmdluq6wlwryv@yavin.microfocus.com>
-References: <20190904201933.10736-1-cyphar@cyphar.com>
- <20190904201933.10736-6-cyphar@cyphar.com>
- <CAG48ez1_64249RdX6Nj_32YS+jhuXZBAd_ZL9ozggbSQy+cc-A@mail.gmail.com>
+        id S1726421AbfIRO1D (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Sep 2019 10:27:03 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:38951 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727273AbfIRO1D (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 Sep 2019 10:27:03 -0400
+Received: by mail-ed1-f67.google.com with SMTP id g12so169063eds.6;
+        Wed, 18 Sep 2019 07:27:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=400pvBocvt0a62SbRKwLyz08gWO35MVfJMPe2DLlqA0=;
+        b=fnSwKR1VJeE3F4JaJydrKtOeTPqp12dpwM77BCPXUDdhvzgmHccXKrq/oCsmCq1FLG
+         U+mYI5xbw8JaZlT8Qg9Mp/FaMkYY3gQ/Wu+ZEBiBxtifdCyrqD28gXbMnesNP9VARrRN
+         0gVzbNehBj9OquvfHZl39p101gmIvuyvvUBW9S03klJuoyBTwJ/dR9gBVYotIhxIXTcU
+         tmc+VareCVxtjos5vNuGij/Eq+QSJAdUJnjTPJN3i1++vBt3tf2FH8m4m+TQT7qBpi09
+         PRNw6ZMrcGqXD740MgcdBjYDVIRDyT8o9Iy30OpiENexqd0HasM8c3XGR8Gpavjouu9p
+         BJ1Q==
+X-Gm-Message-State: APjAAAV3IIUAZgB/qHmtN5XuMfpK0KewUSoFlIIv/aRuvRdzArrQG2cm
+        NUHNX73V9DShikFFPsLm2U0=
+X-Google-Smtp-Source: APXvYqzaqGgg6lGItFTRHXIHvJvgJImWaglUXeJ4fzHPGSK/ke3TXsUH8vLlYYf5nYcHTun3x2qjAg==
+X-Received: by 2002:a17:906:493:: with SMTP id f19mr9629887eja.285.1568816821022;
+        Wed, 18 Sep 2019 07:27:01 -0700 (PDT)
+Received: from [10.10.2.174] (bran.ispras.ru. [83.149.199.196])
+        by smtp.gmail.com with ESMTPSA id ci8sm245279ejb.71.2019.09.18.07.27.00
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 18 Sep 2019 07:27:00 -0700 (PDT)
+Reply-To: efremov@linux.com
+Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
+To:     Andrew Murray <andrew.murray@arm.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
+        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+References: <20190916204158.6889-1-efremov@linux.com>
+ <20190916204158.6889-7-efremov@linux.com>
+ <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
+From:   Denis Efremov <efremov@linux.com>
+Message-ID: <c4496d3d-14c1-ffe7-fa38-0caffe81db54@linux.com>
+Date:   Wed, 18 Sep 2019 17:26:59 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="gouyu6bptahztw3s"
-Content-Disposition: inline
-In-Reply-To: <CAG48ez1_64249RdX6Nj_32YS+jhuXZBAd_ZL9ozggbSQy+cc-A@mail.gmail.com>
+In-Reply-To: <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 9/18/19 11:58 AM, Andrew Murray wrote:
+> On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
+>> Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
+>> global one PCI_STD_NUM_BARS instead.
+>>
+>> Acked-by: Sebastian Ott <sebott@linux.ibm.com>
+>> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+>> Signed-off-by: Denis Efremov <efremov@linux.com>
+>> ---
+>>  arch/s390/include/asm/pci.h     |  5 +----
+>>  arch/s390/include/asm/pci_clp.h |  6 +++---
+>>  arch/s390/pci/pci.c             | 16 ++++++++--------
+>>  arch/s390/pci/pci_clp.c         |  6 +++---
+>>  4 files changed, 15 insertions(+), 18 deletions(-)
+>>
+>> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
+>> index a2399eff84ca..3a06c264ea53 100644
+>> --- a/arch/s390/include/asm/pci.h
+>> +++ b/arch/s390/include/asm/pci.h
+>> @@ -2,9 +2,6 @@
+>>  #ifndef __ASM_S390_PCI_H
+>>  #define __ASM_S390_PCI_H
+>>  
+>> -/* must be set before including pci_clp.h */
+>> -#define PCI_BAR_COUNT	6
+>> -
+>>  #include <linux/pci.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/iommu.h>
+>> @@ -138,7 +135,7 @@ struct zpci_dev {
+>>  
+>>  	char res_name[16];
+>>  	bool mio_capable;
+>> -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
+>> +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
+>>  
+>>  	u64		start_dma;	/* Start of available DMA addresses */
+>>  	u64		end_dma;	/* End of available DMA addresses */
+>> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
+>> index 50359172cc48..bd2cb4ea7d93 100644
+>> --- a/arch/s390/include/asm/pci_clp.h
+>> +++ b/arch/s390/include/asm/pci_clp.h
+>> @@ -77,7 +77,7 @@ struct mio_info {
+>>  	struct {
+>>  		u64 wb;
+>>  		u64 wt;
+>> -	} addr[PCI_BAR_COUNT];
+>> +	} addr[PCI_STD_NUM_BARS];
+>>  	u32 reserved[6];
+>>  } __packed;
+>>  
+>> @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
+>>  	u16 util_str_avail	:  1;	/* utility string available? */
+>>  	u16 pfgid		:  8;	/* pci function group id */
+>>  	u32 fid;			/* pci function id */
+>> -	u8 bar_size[PCI_BAR_COUNT];
+>> +	u8 bar_size[PCI_STD_NUM_BARS];
+>>  	u16 pchid;
+>> -	__le32 bar[PCI_BAR_COUNT];
+>> +	__le32 bar[PCI_STD_NUM_BARS];
+>>  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
+>>  	u32			: 16;
+>>  	u8 fmb_len;
+>> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
+>> index b0e3b9a0e488..aca372c8e34f 100644
+>> --- a/arch/s390/pci/pci.c
+>> +++ b/arch/s390/pci/pci.c
+>> @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
+>>  static DEFINE_SPINLOCK(zpci_domain_lock);
+>>  
+>>  #define ZPCI_IOMAP_ENTRIES						\
+>> -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
+>> +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
+>>  	    ZPCI_IOMAP_MAX_ENTRIES)
+>>  
+>>  static DEFINE_SPINLOCK(zpci_iomap_lock);
+>> @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
+>>  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
+>>  			      unsigned long offset, unsigned long max)
+>>  {
+>> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+>> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>>  		return NULL;
+>>  
+>>  	if (static_branch_likely(&have_mio))
+>> @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
+>>  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
+>>  				 unsigned long offset, unsigned long max)
+>>  {
+>> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
+>> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
+>>  		return NULL;
+> 
+> This looks like a latent bug fix here. If 'bar' is out of range we return
+> NULL instead accessing an invalid item of an array. Should this not be
+> a separate patch and tagged as stable?
+> 
 
---gouyu6bptahztw3s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This fix was suggested by Bjorn in v1 review:
+https://lkml.org/lkml/2019/8/12/997
 
-On 2019-09-17, Jann Horn <jannh@google.com> wrote:
-> On Wed, Sep 4, 2019 at 10:21 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
-> > The ability for userspace to "re-open" file descriptors through
-> > /proc/self/fd has been a very useful tool for all sorts of usecases
-> > (container runtimes are one common example). However, the current
-> > interface for doing this has resulted in some pretty subtle security
-> > holes. Userspace can re-open a file descriptor with more permissions
-> > than the original, which can result in cases such as /proc/$pid/exe
-> > being re-opened O_RDWR at a later date even though (by definition)
-> > /proc/$pid/exe cannot be opened for writing. When combined with O_PATH
-> > the results can get even more confusing.
-> [...]
-> > Instead we have to restrict it in such a way that it doesn't break
-> > (good) users but does block potential attackers. The solution applied in
-> > this patch is to restrict *re-opening* (not resolution through)
-> > magic-links by requiring that mode of the link be obeyed. Normal
-> > symlinks have modes of a+rwx but magic-links have other modes. These
-> > magic-link modes were historically ignored during path resolution, but
-> > they've now been re-purposed for more useful ends.
->=20
-> Thanks for dealing with this issue!
->=20
-> [...]
-> > diff --git a/fs/namei.c b/fs/namei.c
-> > index 209c51a5226c..54d57dad0f91 100644
-> > --- a/fs/namei.c
-> > +++ b/fs/namei.c
-> > @@ -872,7 +872,7 @@ void nd_jump_link(struct path *path)
-> >
-> >         nd->path =3D *path;
-> >         nd->inode =3D nd->path.dentry->d_inode;
-> > -       nd->flags |=3D LOOKUP_JUMPED;
-> > +       nd->flags |=3D LOOKUP_JUMPED | LOOKUP_MAGICLINK_JUMPED;
-> >  }
-> [...]
-> > +static int trailing_magiclink(struct nameidata *nd, int acc_mode,
-> > +                             fmode_t *opath_mask)
-> > +{
-> > +       struct inode *inode =3D nd->link_inode;
-> > +       fmode_t upgrade_mask =3D 0;
-> > +
-> > +       /* Was the trailing_symlink() a magic-link? */
-> > +       if (!(nd->flags & LOOKUP_MAGICLINK_JUMPED))
-> > +               return 0;
-> > +
-> > +       /*
-> > +        * Figure out the upgrade-mask of the link_inode. Since these a=
-ren't
-> > +        * strictly POSIX semantics we don't do an acl_permission_check=
-() here,
-> > +        * so we only care that at least one bit is set for each upgrad=
-e-mode.
-> > +        */
-> > +       if (inode->i_mode & S_IRUGO)
-> > +               upgrade_mask |=3D FMODE_PATH_READ;
-> > +       if (inode->i_mode & S_IWUGO)
-> > +               upgrade_mask |=3D FMODE_PATH_WRITE;
-> > +       /* Restrict the O_PATH upgrade-mask of the caller. */
-> > +       if (opath_mask)
-> > +               *opath_mask &=3D upgrade_mask;
-> > +       return may_open_magiclink(upgrade_mask, acc_mode);
-> >  }
->=20
-> This looks racy because entries in the file descriptor table can be
-> switched out as long as task->files->file_lock isn't held. Unless I'm
-> missing something, something like the following (untested) would
-> bypass this restriction:
 
-You're absolutely right -- good catch!
+> Thanks,
+> 
+> Andrew Murray
+> 
+>>  
+>>  	if (static_branch_likely(&have_mio))
+>> @@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
+>>  	resource_size_t len;
+>>  	int i;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		len = pci_resource_len(pdev, i);
+>>  		if (!len)
+>>  			continue;
+>> @@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
+>>  	if (zpci_use_mio(zdev))
+>>  		return;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		len = pci_resource_len(pdev, i);
+>>  		if (!len)
+>>  			continue;
+>> @@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
+>>  	snprintf(zdev->res_name, sizeof(zdev->res_name),
+>>  		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		if (!zdev->bars[i].size)
+>>  			continue;
+>>  		entry = zpci_alloc_iomap(zdev);
+>> @@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
+>>  {
+>>  	int i;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		if (!zdev->bars[i].size || !zdev->bars[i].res)
+>>  			continue;
+>>  
+>> @@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
+>>  	pdev->dev.dma_ops = &s390_pci_dma_ops;
+>>  	zpci_map_resources(pdev);
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		res = &pdev->resource[i];
+>>  		if (res->parent || !res->flags)
+>>  			continue;
+>> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
+>> index 9bdff4defef1..8b729b5f2972 100644
+>> --- a/arch/s390/pci/pci_clp.c
+>> +++ b/arch/s390/pci/pci_clp.c
+>> @@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>>  {
+>>  	int i;
+>>  
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>>  		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
+>>  		zdev->bars[i].size = response->bar_size[i];
+>>  	}
+>> @@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
+>>  		       sizeof(zdev->util_str));
+>>  	}
+>>  	zdev->mio_capable = response->mio_addr_avail;
+>> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
+>> -		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
+>> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
+>> +		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
+>>  			continue;
+>>  
+>>  		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
+>> -- 
+>> 2.21.0
+>>
 
-> Perhaps you could change nd_jump_link() to "void nd_jump_link(struct
-> path *path, umode_t link_mode)", and let proc_pid_get_link() pass the
-> link_mode through from an out-argument of .proc_get_link()? Then
-> proc_fd_link() could grab the proper mode in a race-free manner. And
-> nd_jump_link() could stash the mode in the nameidata.
-
-This indeed does appear to be the simplest solution -- I'm currently
-testing a variation of the patch you proposed (with a few extra bits to
-deal with nd_jump_link and proc_get_link being used elsewhere).
-
-I'll include this change (assuming it fixes the flaw you found) in the
-v13 series I'll send around next week. Thanks, Jann!
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---gouyu6bptahztw3s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXYI2QQAKCRCdlLljIbnQ
-EmFyAQDaPj8ZCZBcO2zL0gyE8hzxrvDfq7RVsdmeagxmIbg+wQD+JIZBdpjvnXYQ
-ZNsb7Dh/C5zkird/0LE1VGr7KfjKnQU=
-=4db+
------END PGP SIGNATURE-----
-
---gouyu6bptahztw3s--
