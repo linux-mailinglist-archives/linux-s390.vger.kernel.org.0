@@ -2,132 +2,197 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DCC0B6738
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Sep 2019 17:35:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 61CC2B6763
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Sep 2019 17:46:53 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731668AbfIRPfX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Sep 2019 11:35:23 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51462 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731657AbfIRPfX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Sep 2019 11:35:23 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8IFYIC7008380
-        for <linux-s390@vger.kernel.org>; Wed, 18 Sep 2019 11:35:22 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3m8mfq6p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 18 Sep 2019 11:35:21 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <maier@linux.ibm.com>;
-        Wed, 18 Sep 2019 16:35:14 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Sep 2019 16:35:08 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8IFZ7e259703518
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Sep 2019 15:35:07 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAD8E5205A;
-        Wed, 18 Sep 2019 15:35:06 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 458B352063;
-        Wed, 18 Sep 2019 15:35:06 +0000 (GMT)
-From:   Steffen Maier <maier@linux.ibm.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Doug Gilbert <dgilbert@interlog.com>
-Cc:     linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Jens Axboe <axboe@kernel.dk>,
-        viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Omar Sandoval <osandov@fb.com>, linux-block@vger.kernel.org,
-        linux-next@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        dm-devel@redhat.com
-Subject: [PATCH] compat_ioctl: fix reimplemented SG_IO handling causing -EINVAL from sg_io()
-Date:   Wed, 18 Sep 2019 17:34:45 +0200
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19091815-0020-0000-0000-0000036E9CA7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19091815-0021-0000-0000-000021C4468C
-Message-Id: <20190918153445.1241-1-maier@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-18_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909180152
+        id S1731750AbfIRPqh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Sep 2019 11:46:37 -0400
+Received: from mx1.mailbox.org ([80.241.60.212]:18286 "EHLO mx1.mailbox.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726676AbfIRPqg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 18 Sep 2019 11:46:36 -0400
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [80.241.60.240])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        (No client certificate requested)
+        by mx1.mailbox.org (Postfix) with ESMTPS id A4F6050D4B;
+        Wed, 18 Sep 2019 17:46:30 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter06.heinlein-hosting.de (spamfilter06.heinlein-hosting.de [80.241.56.125]) (amavisd-new, port 10030)
+        with ESMTP id ZgCJrYNr5TyO; Wed, 18 Sep 2019 17:46:22 +0200 (CEST)
+Date:   Wed, 18 Sep 2019 17:46:15 +0200
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Jann Horn <jannh@google.com>
+Cc:     Al Viro <viro@zeniv.linux.org.uk>,
+        Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian@brauner.io>,
+        Andy Lutomirski <luto@kernel.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux Containers <containers@lists.linux-foundation.org>,
+        linux-alpha@vger.kernel.org, Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-ia64@vger.kernel.org,
+        kernel list <linux-kernel@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>, linux-m68k@lists.linux-m68k.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-sh@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        sparclinux@vger.kernel.org
+Subject: Re: [PATCH v12 05/12] namei: obey trailing magic-link DAC permissions
+Message-ID: <20190918154615.suruy5v5xjftfwyl@yavin.microfocus.com>
+References: <20190904201933.10736-1-cyphar@cyphar.com>
+ <20190904201933.10736-6-cyphar@cyphar.com>
+ <CAG48ez1_64249RdX6Nj_32YS+jhuXZBAd_ZL9ozggbSQy+cc-A@mail.gmail.com>
+ <20190918135100.sdxdmdluq6wlwryv@yavin.microfocus.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="blplt4ksioniygek"
+Content-Disposition: inline
+In-Reply-To: <20190918135100.sdxdmdluq6wlwryv@yavin.microfocus.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-scsi_cmd_ioctl() had hdr as on stack auto variable and called
-copy_{from,to}_user with the address operator &hdr and sizeof(hdr).
 
-After the refactoring, {get,put}_sg_io_hdr() takes a pointer &hdr.
-So the copy_{from,to}_user within the new helper functions should
-just take the given pointer argument hdr and sizeof(*hdr).
+--blplt4ksioniygek
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I saw -EINVAL from sg_io() done by /usr/lib/udev/scsi_id which could
-in turn no longer whitelist SCSI disks for devicemapper multipath.
+On 2019-09-18, Aleksa Sarai <cyphar@cyphar.com> wrote:
+> On 2019-09-17, Jann Horn <jannh@google.com> wrote:
+> > On Wed, Sep 4, 2019 at 10:21 PM Aleksa Sarai <cyphar@cyphar.com> wrote:
+> > > The ability for userspace to "re-open" file descriptors through
+> > > /proc/self/fd has been a very useful tool for all sorts of usecases
+> > > (container runtimes are one common example). However, the current
+> > > interface for doing this has resulted in some pretty subtle security
+> > > holes. Userspace can re-open a file descriptor with more permissions
+> > > than the original, which can result in cases such as /proc/$pid/exe
+> > > being re-opened O_RDWR at a later date even though (by definition)
+> > > /proc/$pid/exe cannot be opened for writing. When combined with O_PATH
+> > > the results can get even more confusing.
+> > [...]
+> > > Instead we have to restrict it in such a way that it doesn't break
+> > > (good) users but does block potential attackers. The solution applied=
+ in
+> > > this patch is to restrict *re-opening* (not resolution through)
+> > > magic-links by requiring that mode of the link be obeyed. Normal
+> > > symlinks have modes of a+rwx but magic-links have other modes. These
+> > > magic-link modes were historically ignored during path resolution, but
+> > > they've now been re-purposed for more useful ends.
+> >=20
+> > Thanks for dealing with this issue!
+> >=20
+> > [...]
+> > > diff --git a/fs/namei.c b/fs/namei.c
+> > > index 209c51a5226c..54d57dad0f91 100644
+> > > --- a/fs/namei.c
+> > > +++ b/fs/namei.c
+> > > @@ -872,7 +872,7 @@ void nd_jump_link(struct path *path)
+> > >
+> > >         nd->path =3D *path;
+> > >         nd->inode =3D nd->path.dentry->d_inode;
+> > > -       nd->flags |=3D LOOKUP_JUMPED;
+> > > +       nd->flags |=3D LOOKUP_JUMPED | LOOKUP_MAGICLINK_JUMPED;
+> > >  }
+> > [...]
+> > > +static int trailing_magiclink(struct nameidata *nd, int acc_mode,
+> > > +                             fmode_t *opath_mask)
+> > > +{
+> > > +       struct inode *inode =3D nd->link_inode;
+> > > +       fmode_t upgrade_mask =3D 0;
+> > > +
+> > > +       /* Was the trailing_symlink() a magic-link? */
+> > > +       if (!(nd->flags & LOOKUP_MAGICLINK_JUMPED))
+> > > +               return 0;
+> > > +
+> > > +       /*
+> > > +        * Figure out the upgrade-mask of the link_inode. Since these=
+ aren't
+> > > +        * strictly POSIX semantics we don't do an acl_permission_che=
+ck() here,
+> > > +        * so we only care that at least one bit is set for each upgr=
+ade-mode.
+> > > +        */
+> > > +       if (inode->i_mode & S_IRUGO)
+> > > +               upgrade_mask |=3D FMODE_PATH_READ;
+> > > +       if (inode->i_mode & S_IWUGO)
+> > > +               upgrade_mask |=3D FMODE_PATH_WRITE;
+> > > +       /* Restrict the O_PATH upgrade-mask of the caller. */
+> > > +       if (opath_mask)
+> > > +               *opath_mask &=3D upgrade_mask;
+> > > +       return may_open_magiclink(upgrade_mask, acc_mode);
+> > >  }
+> >=20
+> > This looks racy because entries in the file descriptor table can be
+> > switched out as long as task->files->file_lock isn't held. Unless I'm
+> > missing something, something like the following (untested) would
+> > bypass this restriction:
+>=20
+> You're absolutely right -- good catch!
+>=20
+> > Perhaps you could change nd_jump_link() to "void nd_jump_link(struct
+> > path *path, umode_t link_mode)", and let proc_pid_get_link() pass the
+> > link_mode through from an out-argument of .proc_get_link()? Then
+> > proc_fd_link() could grab the proper mode in a race-free manner. And
+> > nd_jump_link() could stash the mode in the nameidata.
+>=20
+> This indeed does appear to be the simplest solution -- I'm currently
+> testing a variation of the patch you proposed (with a few extra bits to
+> deal with nd_jump_link and proc_get_link being used elsewhere).
+>=20
+> I'll include this change (assuming it fixes the flaw you found) in the
+> v13 series I'll send around next week. Thanks, Jann!
 
-Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-Fixes: 4f45155c29fd ("compat_ioctl: reimplement SG_IO handling")
----
+In case you're interested -- I've also included a selftest based on this
+attack in my series (though it uses CLONE_FILES so that we could also
+test O_EMPTYPATH, which wasn't affected because it didn't go through
+procfs and thus couldn't hit the "outdated inode->i_mode" problem).
 
-Arnd, I'm not sure about the sizeof(hdr32) change in the compat part in
-put_sg_io_hdr().
+The attack script succeeds around 20% of the time on the original
+patchset, and with the updated patchset it doesn't succeed in several
+hundred thousand attempts (which I've repeated a few times).
 
-This is for next, probably via Arnd's y2038/y2038,
-and it fixes next-20190917 for me regarding SCSI generic.
+--=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
- block/scsi_ioctl.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+--blplt4ksioniygek
+Content-Type: application/pgp-signature; name="signature.asc"
 
-diff --git a/block/scsi_ioctl.c b/block/scsi_ioctl.c
-index cbeb629ee917..650bade5ea5a 100644
---- a/block/scsi_ioctl.c
-+++ b/block/scsi_ioctl.c
-@@ -607,14 +607,14 @@ int put_sg_io_hdr(const struct sg_io_hdr *hdr, void __user *argp)
- 			.info		 = hdr->info,
- 		};
- 
--		if (copy_to_user(argp, &hdr32, sizeof(hdr)))
-+		if (copy_to_user(argp, &hdr32, sizeof(hdr32)))
- 			return -EFAULT;
- 
- 		return 0;
- 	}
- #endif
- 
--	if (copy_to_user(argp, &hdr, sizeof(hdr)))
-+	if (copy_to_user(argp, hdr, sizeof(*hdr)))
- 		return -EFAULT;
- 
- 	return 0;
-@@ -659,7 +659,7 @@ int get_sg_io_hdr(struct sg_io_hdr *hdr, const void __user *argp)
- 	}
- #endif
- 
--	if (copy_from_user(&hdr, argp, sizeof(hdr)))
-+	if (copy_from_user(hdr, argp, sizeof(*hdr)))
- 		return -EFAULT;
- 
- 	return 0;
--- 
-2.17.1
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXYJRRAAKCRCdlLljIbnQ
+Ep3WAP0cvG8YTD9aS1zuiIbFfMQLKt1nuxBciHwn7LaCHk9Z0QEAtNdPaxztVO/p
+utsBd24Q6vZYzx6vj8OnW5nGpjaLpQA=
+=rL8c
+-----END PGP SIGNATURE-----
+
+--blplt4ksioniygek--
