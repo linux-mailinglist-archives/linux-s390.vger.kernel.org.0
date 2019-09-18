@@ -2,276 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE426B5A9E
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Sep 2019 07:04:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B4DCB5B4F
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Sep 2019 07:52:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727105AbfIRFEH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Sep 2019 01:04:07 -0400
-Received: from foss.arm.com ([217.140.110.172]:34940 "EHLO foss.arm.com"
+        id S1726427AbfIRFwn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Sep 2019 01:52:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59378 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726444AbfIRFEG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Sep 2019 01:04:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7351F1000;
-        Tue, 17 Sep 2019 22:04:05 -0700 (PDT)
-Received: from [10.162.40.136] (p8cg001049571a15.blr.arm.com [10.162.40.136])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B280D3F575;
-        Tue, 17 Sep 2019 22:03:54 -0700 (PDT)
-Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
- <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
- <ab0ca38b-1e4f-b636-f8b4-007a15903984@c-s.fr>
- <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
- <95ed9d92-dd43-4c45-2e52-738aed7f2fb5@c-s.fr>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f872e6f4-a5cb-069d-2034-78961930cb9f@arm.com>
-Date:   Wed, 18 Sep 2019 10:34:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1725904AbfIRFwn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 18 Sep 2019 01:52:43 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B33AE30821BF;
+        Wed, 18 Sep 2019 05:52:42 +0000 (UTC)
+Received: from [10.72.12.111] (ovpn-12-111.pek2.redhat.com [10.72.12.111])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E3BAA60872;
+        Wed, 18 Sep 2019 05:52:18 +0000 (UTC)
+Subject: Re: [RFC PATCH 1/2] mdev: device id support
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        pmorel@linux.ibm.com, freude@linux.ibm.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com, idos@mellanox.com,
+        xiao.w.wang@intel.com, lingshan.zhu@intel.com
+References: <20190912094012.29653-1-jasowang@redhat.com>
+ <20190912094012.29653-2-jasowang@redhat.com>
+ <20190917140720.3686e0cc.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <e53b38be-bc2a-785f-12d2-951805f3395f@redhat.com>
+Date:   Wed, 18 Sep 2019 13:52:17 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <95ed9d92-dd43-4c45-2e52-738aed7f2fb5@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20190917140720.3686e0cc.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Wed, 18 Sep 2019 05:52:43 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-
-On 09/13/2019 03:31 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 13/09/2019 à 11:02, Anshuman Khandual a écrit :
+On 2019/9/17 下午8:07, Cornelia Huck wrote:
+> On Thu, 12 Sep 2019 17:40:11 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> Mdev bus only support vfio driver right now, so it doesn't implement
+>> match method. But in the future, we may add drivers other than vfio,
+>> one example is virtio-mdev[1] driver. This means we need to add device
+>> id support in bus match method to pair the mdev device and mdev driver
+>> correctly.
+> Sounds reasonable.
+>
+>> So this patch add id_table to mdev_driver and id for mdev parent, and
+>> implement the match method for mdev bus.
 >>
->>>> +#if !defined(__PAGETABLE_PMD_FOLDED) && !defined(__ARCH_HAS_4LEVEL_HACK)
->>>
->>> #ifdefs have to be avoided as much as possible, see below
+>> [1] https://lkml.org/lkml/2019/9/10/135
 >>
->> Yeah but it has been bit difficult to avoid all these $ifdef because of the
->> availability (or lack of it) for all these pgtable helpers in various config
->> combinations on all platforms.
-> 
-> As far as I can see these pgtable helpers should exist everywhere at least via asm-generic/ files.
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   drivers/gpu/drm/i915/gvt/kvmgt.c  |  2 +-
+>>   drivers/s390/cio/vfio_ccw_ops.c   |  2 +-
+>>   drivers/s390/crypto/vfio_ap_ops.c |  3 ++-
+>>   drivers/vfio/mdev/mdev_core.c     | 14 ++++++++++++--
+>>   drivers/vfio/mdev/mdev_driver.c   | 14 ++++++++++++++
+>>   drivers/vfio/mdev/mdev_private.h  |  1 +
+>>   drivers/vfio/mdev/vfio_mdev.c     |  6 ++++++
+>>   include/linux/mdev.h              |  6 +++++-
+>>   include/linux/mod_devicetable.h   |  6 ++++++
+>>   samples/vfio-mdev/mbochs.c        |  2 +-
+>>   samples/vfio-mdev/mdpy.c          |  2 +-
+>>   samples/vfio-mdev/mtty.c          |  2 +-
+>>   12 files changed, 51 insertions(+), 9 deletions(-)
+> (...)
+>
+> The transformations of the vendor drivers and the new interface look
+> sane.
+>
+> (...)
+>
+>> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+>> index 5714fd35a83c..f1fc143df042 100644
+>> --- a/include/linux/mod_devicetable.h
+>> +++ b/include/linux/mod_devicetable.h
+>> @@ -821,4 +821,10 @@ struct wmi_device_id {
+>>   	const void *context;
+>>   };
+>>   
+>> +/* MDEV */
+>> +
+> Maybe add some kerneldoc and give vfio as an example of what we're
+> matching here?
 
-But they might not actually do the right thing.
 
-> 
-> Can you spot a particular config which fails ?
+Will add when posting a non RFC patch.
 
-Lets consider the following example (after removing the $ifdefs around it)
-which though builds successfully but fails to pass the intended test. This
-is with arm64 config 4K pages sizes with 39 bits VA space which ends up
-with a 3 level page table arrangement.
 
-static void __init p4d_clear_tests(p4d_t *p4dp)
-{
-        p4d_t p4d = READ_ONCE(*p4dp);
+>
+>> +struct mdev_device_id {
+>> +	__u8 id;
+> I agree with the suggestion to rename this to 'class_id'.
+>
 
-        p4d = __p4d(p4d_val(p4d) | RANDOM_ORVALUE);
-        WRITE_ONCE(*p4dp, p4d);
-        p4d_clear(p4dp);
-        p4d = READ_ONCE(*p4dp);
-        WARN_ON(!p4d_none(p4d));
-}
+Let me change it.
 
-The following test hits an error at WARN_ON(!p4d_none(p4d))
+Thanks
 
-[   16.757333] ------------[ cut here ]------------
-[   16.758019] WARNING: CPU: 11 PID: 1 at mm/arch_pgtable_test.c:187 arch_pgtable_tests_init+0x24c/0x474
-[   16.759455] Modules linked in:
-[   16.759952] CPU: 11 PID: 1 Comm: swapper/0 Not tainted 5.3.0-next-20190916-00005-g61c218153bb8-dirty #222
-[   16.761449] Hardware name: linux,dummy-virt (DT)
-[   16.762185] pstate: 00400005 (nzcv daif +PAN -UAO)
-[   16.762964] pc : arch_pgtable_tests_init+0x24c/0x474
-[   16.763750] lr : arch_pgtable_tests_init+0x174/0x474
-[   16.764534] sp : ffffffc011d7bd50
-[   16.765065] x29: ffffffc011d7bd50 x28: ffffffff1756bac0 
-[   16.765908] x27: ffffff85ddaf3000 x26: 00000000000002e8 
-[   16.766767] x25: ffffffc0111ce000 x24: ffffff85ddaf32e8 
-[   16.767606] x23: ffffff85ddaef278 x22: 00000045cc844000 
-[   16.768445] x21: 000000065daef003 x20: ffffffff17540000 
-[   16.769283] x19: ffffff85ddb60000 x18: 0000000000000014 
-[   16.770122] x17: 00000000980426bb x16: 00000000698594c6 
-[   16.770976] x15: 0000000066e25a88 x14: 0000000000000000 
-[   16.771813] x13: ffffffff17540000 x12: 000000000000000a 
-[   16.772651] x11: ffffff85fcfd0a40 x10: 0000000000000001 
-[   16.773488] x9 : 0000000000000008 x8 : ffffffc01143ab26 
-[   16.774336] x7 : 0000000000000000 x6 : 0000000000000000 
-[   16.775180] x5 : 0000000000000000 x4 : 0000000000000000 
-[   16.776018] x3 : ffffffff1756bbe8 x2 : 000000065daeb003 
-[   16.776856] x1 : 000000000065daeb x0 : fffffffffffff000 
-[   16.777693] Call trace:
-[   16.778092]  arch_pgtable_tests_init+0x24c/0x474
-[   16.778843]  do_one_initcall+0x74/0x1b0
-[   16.779458]  kernel_init_freeable+0x1cc/0x290
-[   16.780151]  kernel_init+0x10/0x100
-[   16.780710]  ret_from_fork+0x10/0x18
-[   16.781282] ---[ end trace 042e6c40c0a3b038 ]---
 
-On arm64 (4K page size|39 bits VA|3 level page table)
-
-#elif CONFIG_PGTABLE_LEVELS == 3	/* Applicable here */
-#define __ARCH_USE_5LEVEL_HACK
-#include <asm-generic/pgtable-nopud.h>
-
-Which pulls in 
-
-#include <asm-generic/pgtable-nop4d-hack.h>
-
-which pulls in
-
-#include <asm-generic/5level-fixup.h>
-
-which defines
-
-static inline int p4d_none(p4d_t p4d)
-{
-        return 0;
-}
-
-which will invariably trigger WARN_ON(!p4d_none(p4d)).
-
-Similarly for next test p4d_populate_tests() which will always be
-successful because p4d_bad() invariably returns negative.
-
-static inline int p4d_bad(p4d_t p4d)
-{
-        return 0;
-}
-
-static void __init p4d_populate_tests(struct mm_struct *mm, p4d_t *p4dp,
-                                      pud_t *pudp)
-{
-        p4d_t p4d;
-
-        /*
-         * This entry points to next level page table page.
-         * Hence this must not qualify as p4d_bad().
-         */
-        pud_clear(pudp);
-        p4d_clear(p4dp);
-        p4d_populate(mm, p4dp, pudp);
-        p4d = READ_ONCE(*p4dp);
-        WARN_ON(p4d_bad(p4d));
-}
-
-We should not run these tests for the above config because they are
-not applicable and will invariably produce same result.
-
-> 
->>
->>>
-> 
-> [...]
-> 
->>>> +#if !defined(__PAGETABLE_PUD_FOLDED) && !defined(__ARCH_HAS_5LEVEL_HACK)
->>>
->>> The same can be done here.
->>
->> IIRC not only the page table helpers but there are data types (pxx_t) which
->> were not present on various configs and these wrappers help prevent build
->> failures. Any ways will try and see if this can be improved further. But
->> meanwhile if you have some suggestions, please do let me know.
-> 
-> pgt_t and pmd_t are everywhere I guess.
-> then pud_t and p4d_t have fallbacks in asm-generic files.
-
-Lets take another example where it fails to compile. On arm64 with 16K
-page size, 48 bits VA, 4 level page table arrangement in the following
-test, pgd_populate() does not have the required signature.
-
-static void pgd_populate_tests(struct mm_struct *mm, pgd_t *pgdp, p4d_t *p4dp)
-{
-        pgd_t pgd;
-
-        if (mm_p4d_folded(mm))
-                return;
-
-       /*
-         * This entry points to next level page table page.
-         * Hence this must not qualify as pgd_bad().
-         */
-        p4d_clear(p4dp);
-        pgd_clear(pgdp);
-        pgd_populate(mm, pgdp, p4dp);
-        pgd = READ_ONCE(*pgdp);
-        WARN_ON(pgd_bad(pgd));
-}
-
-mm/arch_pgtable_test.c: In function ‘pgd_populate_tests’:
-mm/arch_pgtable_test.c:254:25: error: passing argument 3 of ‘pgd_populate’ from incompatible pointer type [-Werror=incompatible-pointer-types]
-  pgd_populate(mm, pgdp, p4dp);
-                         ^~~~
-In file included from mm/arch_pgtable_test.c:27:0:
-./arch/arm64/include/asm/pgalloc.h:81:20: note: expected ‘pud_t * {aka struct <anonymous> *}’ but argument is of type ‘pgd_t * {aka struct <anonymous> *}’
- static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgdp, pud_t *pudp)
-
-The build failure is because p4d_t * maps to pgd_t * but the applicable
-(it does not fallback on generic ones) pgd_populate() expects a pud_t *.
-
-Except for archs which have 5 level page able, pgd_populate() always accepts
-lower level page table pointers as the last argument as they dont have that
-many levels.
-
-arch/x86/include/asm/pgalloc.h:static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgd, p4d_t *p4d)
-arch/s390/include/asm/pgalloc.h:static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgd, p4d_t *p4d)
-
-But others
-
-arch/arm64/include/asm/pgalloc.h:static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgdp, pud_t *pudp)
-arch/m68k/include/asm/motorola_pgalloc.h:static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmd)
-arch/mips/include/asm/pgalloc.h:static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgd, pud_t *pud)
-arch/powerpc/include/asm/book3s/64/pgalloc.h:static inline void pgd_populate(struct mm_struct *mm, pgd_t *pgd, pud_t *pud)
-
-I remember going through all these combinations before arriving at the
-current state of #ifdef exclusions. Probably, to solved this all platforms
-have to define pxx_populate() helpers assuming they support 5 level page
-table.
-
-> 
-> So it shouldn't be an issue. Maybe if a couple of arches miss them, the best would be to fix the arches, since that's the purpose of your testsuite isn't it ?
-
-The run time failures as explained previously is because of the folding which
-needs to be protected as they are not even applicable. The compile time
-failures are because pxx_populate() signatures are platform specific depending
-on how many page table levels they really support.
+>> +};
+>> +
+>>   #endif /* LINUX_MOD_DEVICETABLE_H */
