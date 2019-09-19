@@ -2,230 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2AB6CB748D
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Sep 2019 10:00:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B8537B7786
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Sep 2019 12:34:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388129AbfISIAM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 19 Sep 2019 04:00:12 -0400
-Received: from foss.arm.com ([217.140.110.172]:53186 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388127AbfISIAM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 19 Sep 2019 04:00:12 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 52AE91000;
-        Thu, 19 Sep 2019 01:00:11 -0700 (PDT)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BD84C3F575;
-        Thu, 19 Sep 2019 01:00:10 -0700 (PDT)
-Date:   Thu, 19 Sep 2019 09:00:09 +0100
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Denis Efremov <efremov@linux.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>, linux-kernel@vger.kernel.org,
-        linux-pci@vger.kernel.org, linux-s390@vger.kernel.org,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH v3 06/26] s390/pci: Use PCI_STD_NUM_BARS
-Message-ID: <20190919080008.GG9720@e119886-lin.cambridge.arm.com>
-References: <20190916204158.6889-1-efremov@linux.com>
- <20190916204158.6889-7-efremov@linux.com>
- <20190918085805.GY9720@e119886-lin.cambridge.arm.com>
- <c4496d3d-14c1-ffe7-fa38-0caffe81db54@linux.com>
+        id S2387560AbfISKeq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 19 Sep 2019 06:34:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46434 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732026AbfISKeq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 19 Sep 2019 06:34:46 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8JASepI005174
+        for <linux-s390@vger.kernel.org>; Thu, 19 Sep 2019 06:34:44 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v3vdf2jr3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 19 Sep 2019 06:34:44 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 19 Sep 2019 11:34:41 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 19 Sep 2019 11:34:39 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8JAYaka51773498
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 19 Sep 2019 10:34:36 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 870784C04E;
+        Thu, 19 Sep 2019 10:34:36 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1AB414C04A;
+        Thu, 19 Sep 2019 10:34:36 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.63])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 19 Sep 2019 10:34:36 +0000 (GMT)
+Date:   Thu, 19 Sep 2019 12:34:34 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, mjrosato@linux.ibm.com, pmorel@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com
+Subject: Re: [PATCH v6 04/10] s390: vfio-ap: filter CRYCB bits for
+ unavailable queue devices
+In-Reply-To: <1568410018-10833-5-git-send-email-akrowiak@linux.ibm.com>
+References: <1568410018-10833-1-git-send-email-akrowiak@linux.ibm.com>
+        <1568410018-10833-5-git-send-email-akrowiak@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c4496d3d-14c1-ffe7-fa38-0caffe81db54@linux.com>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19091910-0008-0000-0000-000003186382
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19091910-0009-0000-0000-00004A36E85C
+Message-Id: <20190919123434.28a29c00.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-19_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=950 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909190099
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 05:26:59PM +0300, Denis Efremov wrote:
-> On 9/18/19 11:58 AM, Andrew Murray wrote:
-> > On Mon, Sep 16, 2019 at 11:41:38PM +0300, Denis Efremov wrote:
-> >> Remove local definition PCI_BAR_COUNT for the number of PCI BARs and use
-> >> global one PCI_STD_NUM_BARS instead.
-> >>
-> >> Acked-by: Sebastian Ott <sebott@linux.ibm.com>
-> >> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-> >> Signed-off-by: Denis Efremov <efremov@linux.com>
-> >> ---
-> >>  arch/s390/include/asm/pci.h     |  5 +----
-> >>  arch/s390/include/asm/pci_clp.h |  6 +++---
-> >>  arch/s390/pci/pci.c             | 16 ++++++++--------
-> >>  arch/s390/pci/pci_clp.c         |  6 +++---
-> >>  4 files changed, 15 insertions(+), 18 deletions(-)
-> >>
-> >> diff --git a/arch/s390/include/asm/pci.h b/arch/s390/include/asm/pci.h
-> >> index a2399eff84ca..3a06c264ea53 100644
-> >> --- a/arch/s390/include/asm/pci.h
-> >> +++ b/arch/s390/include/asm/pci.h
-> >> @@ -2,9 +2,6 @@
-> >>  #ifndef __ASM_S390_PCI_H
-> >>  #define __ASM_S390_PCI_H
-> >>  
-> >> -/* must be set before including pci_clp.h */
-> >> -#define PCI_BAR_COUNT	6
-> >> -
-> >>  #include <linux/pci.h>
-> >>  #include <linux/mutex.h>
-> >>  #include <linux/iommu.h>
-> >> @@ -138,7 +135,7 @@ struct zpci_dev {
-> >>  
-> >>  	char res_name[16];
-> >>  	bool mio_capable;
-> >> -	struct zpci_bar_struct bars[PCI_BAR_COUNT];
-> >> +	struct zpci_bar_struct bars[PCI_STD_NUM_BARS];
-> >>  
-> >>  	u64		start_dma;	/* Start of available DMA addresses */
-> >>  	u64		end_dma;	/* End of available DMA addresses */
-> >> diff --git a/arch/s390/include/asm/pci_clp.h b/arch/s390/include/asm/pci_clp.h
-> >> index 50359172cc48..bd2cb4ea7d93 100644
-> >> --- a/arch/s390/include/asm/pci_clp.h
-> >> +++ b/arch/s390/include/asm/pci_clp.h
-> >> @@ -77,7 +77,7 @@ struct mio_info {
-> >>  	struct {
-> >>  		u64 wb;
-> >>  		u64 wt;
-> >> -	} addr[PCI_BAR_COUNT];
-> >> +	} addr[PCI_STD_NUM_BARS];
-> >>  	u32 reserved[6];
-> >>  } __packed;
-> >>  
-> >> @@ -98,9 +98,9 @@ struct clp_rsp_query_pci {
-> >>  	u16 util_str_avail	:  1;	/* utility string available? */
-> >>  	u16 pfgid		:  8;	/* pci function group id */
-> >>  	u32 fid;			/* pci function id */
-> >> -	u8 bar_size[PCI_BAR_COUNT];
-> >> +	u8 bar_size[PCI_STD_NUM_BARS];
-> >>  	u16 pchid;
-> >> -	__le32 bar[PCI_BAR_COUNT];
-> >> +	__le32 bar[PCI_STD_NUM_BARS];
-> >>  	u8 pfip[CLP_PFIP_NR_SEGMENTS];	/* pci function internal path */
-> >>  	u32			: 16;
-> >>  	u8 fmb_len;
-> >> diff --git a/arch/s390/pci/pci.c b/arch/s390/pci/pci.c
-> >> index b0e3b9a0e488..aca372c8e34f 100644
-> >> --- a/arch/s390/pci/pci.c
-> >> +++ b/arch/s390/pci/pci.c
-> >> @@ -43,7 +43,7 @@ static DECLARE_BITMAP(zpci_domain, ZPCI_NR_DEVICES);
-> >>  static DEFINE_SPINLOCK(zpci_domain_lock);
-> >>  
-> >>  #define ZPCI_IOMAP_ENTRIES						\
-> >> -	min(((unsigned long) ZPCI_NR_DEVICES * PCI_BAR_COUNT / 2),	\
-> >> +	min(((unsigned long) ZPCI_NR_DEVICES * PCI_STD_NUM_BARS / 2),	\
-> >>  	    ZPCI_IOMAP_MAX_ENTRIES)
-> >>  
-> >>  static DEFINE_SPINLOCK(zpci_iomap_lock);
-> >> @@ -294,7 +294,7 @@ static void __iomem *pci_iomap_range_mio(struct pci_dev *pdev, int bar,
-> >>  void __iomem *pci_iomap_range(struct pci_dev *pdev, int bar,
-> >>  			      unsigned long offset, unsigned long max)
-> >>  {
-> >> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-> >> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
-> >>  		return NULL;
-> >>  
-> >>  	if (static_branch_likely(&have_mio))
-> >> @@ -324,7 +324,7 @@ static void __iomem *pci_iomap_wc_range_mio(struct pci_dev *pdev, int bar,
-> >>  void __iomem *pci_iomap_wc_range(struct pci_dev *pdev, int bar,
-> >>  				 unsigned long offset, unsigned long max)
-> >>  {
-> >> -	if (!pci_resource_len(pdev, bar) || bar >= PCI_BAR_COUNT)
-> >> +	if (bar >= PCI_STD_NUM_BARS || !pci_resource_len(pdev, bar))
-> >>  		return NULL;
-> > 
-> > This looks like a latent bug fix here. If 'bar' is out of range we return
-> > NULL instead accessing an invalid item of an array. Should this not be
-> > a separate patch and tagged as stable?
-> > 
-> 
-> This fix was suggested by Bjorn in v1 review:
-> https://lkml.org/lkml/2019/8/12/997
-> 
+On Fri, 13 Sep 2019 17:26:52 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-Ah yes, apologies - I'll re-read the previous threads next time.
+> +static void vfio_ap_mdev_get_crycb_matrix(struct ap_matrix_mdev *matrix_mdev)
+> +{
+> +	unsigned long apid, apqi;
+> +	unsigned long masksz = BITS_TO_LONGS(AP_DEVICES) *
+> +			       sizeof(unsigned long);
+> +
+> +	memset(matrix_mdev->crycb.apm, 0, masksz);
+> +	memset(matrix_mdev->crycb.apm, 0, masksz);
+> +	memcpy(matrix_mdev->crycb.adm, matrix_mdev->matrix.adm, masksz);
+> +
+> +	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+> +			     matrix_mdev->matrix.apm_max + 1) {
+> +		for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+> +				     matrix_mdev->matrix.aqm_max + 1) {
+> +			if (vfio_ap_find_queue(AP_MKQID(apid, apqi))) {
+> +				if (!test_bit_inv(apid, matrix_mdev->crycb.apm))
+> +					set_bit_inv(apid,
+> +						    matrix_mdev->crycb.apm);
+> +				if (!test_bit_inv(apqi, matrix_mdev->crycb.aqm))
+> +					set_bit_inv(apqi,
+> +						    matrix_mdev->crycb.aqm);
+> +			}
+> +		}
+> +	}
+> +}
 
-Thanks,
+Even with the discussed typo fixed (zero crycb.aqm) this procedure does
+not make sense to me. :(
 
-Andrew Murray
+If in doubt please consider the following example:
+matrix_mdev->matrix.apm and matrix_mdev->matrix.aqm have both just bits
+0 and 1 set (i.e. first byte 0xC0 the rest of the bytes 0x0). Queues
+bound to the vfio_ap driver (0,0), (0,1), (1,0); not bound to vfio_ap is
+however (1,1). If I read this correctly this filtering logic would grant
+access to (1,1) which seems to contradict with the stated intention.
 
-> 
-> > Thanks,
-> > 
-> > Andrew Murray
-> > 
-> >>  
-> >>  	if (static_branch_likely(&have_mio))
-> >> @@ -416,7 +416,7 @@ static void zpci_map_resources(struct pci_dev *pdev)
-> >>  	resource_size_t len;
-> >>  	int i;
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		len = pci_resource_len(pdev, i);
-> >>  		if (!len)
-> >>  			continue;
-> >> @@ -451,7 +451,7 @@ static void zpci_unmap_resources(struct pci_dev *pdev)
-> >>  	if (zpci_use_mio(zdev))
-> >>  		return;
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		len = pci_resource_len(pdev, i);
-> >>  		if (!len)
-> >>  			continue;
-> >> @@ -514,7 +514,7 @@ static int zpci_setup_bus_resources(struct zpci_dev *zdev,
-> >>  	snprintf(zdev->res_name, sizeof(zdev->res_name),
-> >>  		 "PCI Bus %04x:%02x", zdev->domain, ZPCI_BUS_NR);
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		if (!zdev->bars[i].size)
-> >>  			continue;
-> >>  		entry = zpci_alloc_iomap(zdev);
-> >> @@ -551,7 +551,7 @@ static void zpci_cleanup_bus_resources(struct zpci_dev *zdev)
-> >>  {
-> >>  	int i;
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		if (!zdev->bars[i].size || !zdev->bars[i].res)
-> >>  			continue;
-> >>  
-> >> @@ -573,7 +573,7 @@ int pcibios_add_device(struct pci_dev *pdev)
-> >>  	pdev->dev.dma_ops = &s390_pci_dma_ops;
-> >>  	zpci_map_resources(pdev);
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		res = &pdev->resource[i];
-> >>  		if (res->parent || !res->flags)
-> >>  			continue;
-> >> diff --git a/arch/s390/pci/pci_clp.c b/arch/s390/pci/pci_clp.c
-> >> index 9bdff4defef1..8b729b5f2972 100644
-> >> --- a/arch/s390/pci/pci_clp.c
-> >> +++ b/arch/s390/pci/pci_clp.c
-> >> @@ -145,7 +145,7 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
-> >>  {
-> >>  	int i;
-> >>  
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >>  		zdev->bars[i].val = le32_to_cpu(response->bar[i]);
-> >>  		zdev->bars[i].size = response->bar_size[i];
-> >>  	}
-> >> @@ -164,8 +164,8 @@ static int clp_store_query_pci_fn(struct zpci_dev *zdev,
-> >>  		       sizeof(zdev->util_str));
-> >>  	}
-> >>  	zdev->mio_capable = response->mio_addr_avail;
-> >> -	for (i = 0; i < PCI_BAR_COUNT; i++) {
-> >> -		if (!(response->mio.valid & (1 << (PCI_BAR_COUNT - i - 1))))
-> >> +	for (i = 0; i < PCI_STD_NUM_BARS; i++) {
-> >> +		if (!(response->mio.valid & (1 << (PCI_STD_NUM_BARS - i - 1))))
-> >>  			continue;
-> >>  
-> >>  		zdev->bars[i].mio_wb = (void __iomem *) response->mio.addr[i].wb;
-> >> -- 
-> >> 2.21.0
-> >>
-> 
+Regards,
+Halil
+
+
+
