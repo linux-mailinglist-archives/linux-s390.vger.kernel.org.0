@@ -2,167 +2,181 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBD58B8EEE
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Sep 2019 13:24:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 18A94B908A
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Sep 2019 15:20:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2438174AbfITLYC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 20 Sep 2019 07:24:02 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25402 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2438172AbfITLYB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 20 Sep 2019 07:24:01 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8KBMZEI174408
-        for <linux-s390@vger.kernel.org>; Fri, 20 Sep 2019 07:24:00 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2v4ufdw0fd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 20 Sep 2019 07:24:00 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Fri, 20 Sep 2019 12:23:58 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 20 Sep 2019 12:23:55 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8KBNsCu51511386
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 20 Sep 2019 11:23:54 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2DDF7A4053;
-        Fri, 20 Sep 2019 11:23:54 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 09A37A405D;
-        Fri, 20 Sep 2019 11:23:53 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.165.207])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 20 Sep 2019 11:23:52 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-Subject: [kvm-unit-tests PATCH] s390x: Add linemode buffer to fix newline on every print
-Date:   Fri, 20 Sep 2019 13:23:45 +0200
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <43bb9ff6-4233-3f6f-8cdb-3a00d1662d4d@redhat.com>
-References: <43bb9ff6-4233-3f6f-8cdb-3a00d1662d4d@redhat.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19092011-0016-0000-0000-000002AE8588
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092011-0017-0000-0000-0000330F39D3
-Message-Id: <20190920112345.2359-1-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-20_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909200107
+        id S1727445AbfITNUn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 Sep 2019 09:20:43 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:49851 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726407AbfITNUn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 20 Sep 2019 09:20:43 -0400
+Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=localhost.localdomain)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iBIq1-0002KN-07; Fri, 20 Sep 2019 13:20:41 +0000
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Kees Cook <keescook@chromium.org>,
+        Will Drewry <wad@chromium.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        x86@kernel.org
+Subject: [PATCH] seccomp: remove unused arg from secure_computing()
+Date:   Fri, 20 Sep 2019 15:19:09 +0200
+Message-Id: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Linemode seems to add a newline for each sent message which makes
-reading rather hard. Hence we add a small buffer and only print if
-it's full or a newline is encountered.
+While touching seccomp code I realized that the struct seccomp_data
+argument to secure_computing() seems to be unused by all current
+callers. So let's remove it unless there is some subtlety I missed.
+Note, I only tested this on x86.
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-Acked-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Will Drewry <wad@chromium.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-um@lists.infradead.org
+Cc: x86@kernel.org
 ---
- lib/s390x/sclp-console.c | 43 ++++++++++++++++++++++++++++++++++++----
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ arch/arm/kernel/ptrace.c              | 2 +-
+ arch/arm64/kernel/ptrace.c            | 2 +-
+ arch/parisc/kernel/ptrace.c           | 2 +-
+ arch/s390/kernel/ptrace.c             | 4 ++--
+ arch/um/kernel/skas/syscall.c         | 2 +-
+ arch/x86/entry/vsyscall/vsyscall_64.c | 2 +-
+ include/linux/seccomp.h               | 6 +++---
+ 7 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/lib/s390x/sclp-console.c b/lib/s390x/sclp-console.c
-index 19416b5..6067a1a 100644
---- a/lib/s390x/sclp-console.c
-+++ b/lib/s390x/sclp-console.c
-@@ -13,6 +13,7 @@
- #include <asm/page.h>
- #include <asm/arch_def.h>
- #include <asm/io.h>
-+#include <asm/spinlock.h>
- #include "sclp.h"
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index 324352787aea..b606cded90cd 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -923,7 +923,7 @@ asmlinkage int syscall_trace_enter(struct pt_regs *regs, int scno)
  
- /*
-@@ -87,6 +88,10 @@ static uint8_t _ascebc[256] = {
-      0x90, 0x3F, 0x3F, 0x3F, 0x3F, 0xEA, 0x3F, 0xFF
- };
+ 	/* Do seccomp after ptrace; syscall may have changed. */
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ #else
+ 	/* XXX: remove this once OABI gets fixed */
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 3cf3b135027e..010a835302d3 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1816,7 +1816,7 @@ int syscall_trace_enter(struct pt_regs *regs)
+ 	}
  
-+static char lm_buff[120];
-+static unsigned char lm_buff_off;
-+static struct spinlock lm_buff_lock;
-+
- static void sclp_print_ascii(const char *str)
+ 	/* Do the secure computing after ptrace; failures should be fast. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ 
+ 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+diff --git a/arch/parisc/kernel/ptrace.c b/arch/parisc/kernel/ptrace.c
+index 9f6ff7bc06f9..f8c07dcbfb49 100644
+--- a/arch/parisc/kernel/ptrace.c
++++ b/arch/parisc/kernel/ptrace.c
+@@ -342,7 +342,7 @@ long do_syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ 
+ #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index ad71132374f0..ed80bdfbf5fe 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ long arch_ptrace(struct task_struct *child, long request,
+ 		 unsigned long addr, unsigned long data)
  {
- 	int len = strlen(str);
-@@ -103,10 +108,10 @@ static void sclp_print_ascii(const char *str)
- 	sclp_service_call(SCLP_CMD_WRITE_EVENT_DATA, sccb);
- }
+-	ptrace_area parea; 
++	ptrace_area parea;
+ 	int copied, ret;
  
--static void sclp_print_lm(const char *str)
-+static void lm_print(const char *buff, int len)
+ 	switch (request) {
+@@ -856,7 +856,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing(NULL)) {
++	if (secure_computing()) {
+ 		/* seccomp failures shouldn't expose any additional code. */
+ 		return -1;
+ 	}
+diff --git a/arch/um/kernel/skas/syscall.c b/arch/um/kernel/skas/syscall.c
+index 44bb10785075..fc37259d5971 100644
+--- a/arch/um/kernel/skas/syscall.c
++++ b/arch/um/kernel/skas/syscall.c
+@@ -35,7 +35,7 @@ void handle_syscall(struct uml_pt_regs *r)
+ 		goto out;
+ 
+ 	/* Do the seccomp check after ptrace; failures should be fast. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		goto out;
+ 
+ 	syscall = UPT_SYSCALL_NR(r);
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index e7c596dea947..b10cbf71a8cc 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -222,7 +222,7 @@ bool emulate_vsyscall(unsigned long error_code,
+ 	 */
+ 	regs->orig_ax = syscall_nr;
+ 	regs->ax = -ENOSYS;
+-	tmp = secure_computing(NULL);
++	tmp = secure_computing();
+ 	if ((!tmp && regs->orig_ax != syscall_nr) || regs->ip != address) {
+ 		warn_bad_vsyscall(KERN_DEBUG, regs,
+ 				  "seccomp tried to change syscall nr or ip");
+diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
+index 84868d37b35d..03583b6d1416 100644
+--- a/include/linux/seccomp.h
++++ b/include/linux/seccomp.h
+@@ -33,10 +33,10 @@ struct seccomp {
+ 
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+ extern int __secure_computing(const struct seccomp_data *sd);
+-static inline int secure_computing(const struct seccomp_data *sd)
++static inline int secure_computing(void)
  {
- 	unsigned char *ptr, *end, ch;
--	unsigned int count, offset, len;
-+	unsigned int count, offset;
- 	struct WriteEventData *sccb;
- 	struct mdb *mdb;
- 	struct mto *mto;
-@@ -117,11 +122,10 @@ static void sclp_print_lm(const char *str)
- 	end = (unsigned char *) sccb + 4096 - 1;
- 	memset(sccb, 0, sizeof(*sccb));
- 	ptr = (unsigned char *) &sccb->msg.mdb.mto;
--	len = strlen(str);
- 	offset = 0;
- 	do {
- 		for (count = sizeof(*mto); offset < len; count++) {
--			ch = str[offset++];
-+			ch = buff[offset++];
- 			if (ch == 0x0a || ptr + count > end)
- 				break;
- 			ptr[count] = _ascebc[ch];
-@@ -148,6 +152,37 @@ static void sclp_print_lm(const char *str)
- 	sclp_service_call(SCLP_CMD_WRITE_EVENT_DATA, sccb);
+ 	if (unlikely(test_thread_flag(TIF_SECCOMP)))
+-		return  __secure_computing(sd);
++		return  __secure_computing(NULL);
+ 	return 0;
  }
+ #else
+@@ -59,7 +59,7 @@ struct seccomp { };
+ struct seccomp_filter { };
  
-+
-+/*
-+ * In contrast to the ascii console, linemode produces a new
-+ * line with every write of data. The report() function uses
-+ * several printf() calls to generate a line of data which
-+ * would all end up on different lines.
-+ *
-+ * Hence we buffer here until we encounter a \n or the buffer
-+ * is full. That means that linemode output can look a bit
-+ * different from ascii and that it takes a bit longer for
-+ * lines to appear.
-+ */
-+static void sclp_print_lm(const char *str)
-+{
-+	int i;
-+	const int len = strlen(str);
-+
-+	spin_lock(&lm_buff_lock);
-+
-+	for (i = 0; i < len; i++) {
-+		lm_buff[lm_buff_off++] = str[i];
-+
-+		/* Buffer full or newline? */
-+		if (str[i] == '\n' || lm_buff_off == (ARRAY_SIZE(lm_buff) - 1)) {
-+			lm_print(lm_buff, lm_buff_off);
-+			lm_buff_off = 0;
-+		}
-+	}
-+	spin_unlock(&lm_buff_lock);
-+}
-+
- /*
-  * SCLP needs to be initialized by setting a send and receive mask,
-  * indicating which messages the control program (we) want(s) to
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-static inline int secure_computing(struct seccomp_data *sd) { return 0; }
++static inline int secure_computing(void) { return 0; }
+ #else
+ static inline void secure_computing_strict(int this_syscall) { return; }
+ #endif
 -- 
-2.17.2
+2.23.0
 
