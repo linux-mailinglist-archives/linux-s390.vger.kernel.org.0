@@ -2,238 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C2318B87DE
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Sep 2019 00:57:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 845F2B89E0
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Sep 2019 06:06:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389600AbfISW5w (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 19 Sep 2019 18:57:52 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43040 "EHLO mx1.redhat.com"
+        id S1726518AbfITEGL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 Sep 2019 00:06:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:40678 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389376AbfISW5w (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 19 Sep 2019 18:57:52 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 96E313DE04;
-        Thu, 19 Sep 2019 22:57:51 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 84E775D6B2;
-        Thu, 19 Sep 2019 22:57:50 +0000 (UTC)
-Date:   Thu, 19 Sep 2019 16:57:50 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Matthew Rosato <mjrosato@linux.ibm.com>
-Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
-        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        joro@8bytes.org, linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
-        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
-        cohuck@redhat.com, pmorel@linux.ibm.com
-Subject: Re: [PATCH v4 4/4] vfio: pci: Using a device region to retrieve
- zPCI information
-Message-ID: <20190919165750.73675997@x1.home>
-In-Reply-To: <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
-References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
-        <1567815231-17940-5-git-send-email-mjrosato@linux.ibm.com>
-Organization: Red Hat
+        id S1726464AbfITEGL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 20 Sep 2019 00:06:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 08718337;
+        Thu, 19 Sep 2019 21:06:10 -0700 (PDT)
+Received: from [10.162.40.137] (p8cg001049571a15.blr.arm.com [10.162.40.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 85C4F3F67D;
+        Thu, 19 Sep 2019 21:05:57 -0700 (PDT)
+Subject: Re: [PATCH V2 2/2] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1568268173-31302-1-git-send-email-anshuman.khandual@arm.com>
+ <1568268173-31302-3-git-send-email-anshuman.khandual@arm.com>
+ <ab0ca38b-1e4f-b636-f8b4-007a15903984@c-s.fr>
+ <502c497a-9bf1-7d2e-95f2-cfebcd9cf1d9@arm.com>
+ <95ed9d92-dd43-4c45-2e52-738aed7f2fb5@c-s.fr>
+ <f872e6f4-a5cb-069d-2034-78961930cb9f@arm.com>
+ <64504101-d9dd-f273-02f9-e9a8b178eecc@c-s.fr>
+ <20190918202243.37e709df@thinkpad>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <5a6045af-bcfb-12c2-0f4a-3b49a905ec4d@arm.com>
+Date:   Fri, 20 Sep 2019 09:36:12 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190918202243.37e709df@thinkpad>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Thu, 19 Sep 2019 22:57:51 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri,  6 Sep 2019 20:13:51 -0400
-Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-> From: Pierre Morel <pmorel@linux.ibm.com>
+
+On 09/18/2019 11:52 PM, Gerald Schaefer wrote:
+> On Wed, 18 Sep 2019 18:26:03 +0200
+> Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 > 
-> We define a new configuration entry for VFIO/PCI, VFIO_PCI_ZDEV
+> [..] 
+>> My suggestion was not to completely drop the #ifdef but to do like you 
+>> did in pgd_clear_tests() for instance, ie to add the following test on 
+>> top of the function:
+>>
+>> 	if (mm_pud_folded(mm) || is_defined(__ARCH_HAS_5LEVEL_HACK))
+>> 		return;
+>>
 > 
-> When the VFIO_PCI_ZDEV feature is configured we initialize
-> a new device region, VFIO_REGION_SUBTYPE_ZDEV_CLP, to hold
-> the information from the ZPCI device the use
+> Ah, very nice, this would also fix the remaining issues for s390. Since
+> we have dynamic page table folding, neither __PAGETABLE_PXX_FOLDED nor
+> __ARCH_HAS_XLEVEL_HACK is defined, but mm_pxx_folded() will work.
+
+Like Christophe mentioned earlier on the other thread, we will convert
+all __PGTABLE_PXX_FOLDED checks as mm_pxx_folded() but looks like 
+ARCH_HAS_[4 and 5]LEVEL_HACK macros will still be around. Will respin
+the series with all agreed upon changes first and probably we can then
+discuss pending issues from there.
+
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
-> ---
->  drivers/vfio/pci/Kconfig            |  7 +++
->  drivers/vfio/pci/Makefile           |  1 +
->  drivers/vfio/pci/vfio_pci.c         |  9 ++++
->  drivers/vfio/pci/vfio_pci_private.h | 10 +++++
->  drivers/vfio/pci/vfio_pci_zdev.c    | 85 +++++++++++++++++++++++++++++++++++++
->  5 files changed, 112 insertions(+)
->  create mode 100644 drivers/vfio/pci/vfio_pci_zdev.c
+> mm_alloc() returns with a 3-level page table by default on s390, so we
+> will run into issues in p4d_clear/populate_tests(), and also at the end
+> with p4d/pud_free() (double free).
 > 
-> diff --git a/drivers/vfio/pci/Kconfig b/drivers/vfio/pci/Kconfig
-> index ac3c1dd..d4562a8 100644
-> --- a/drivers/vfio/pci/Kconfig
-> +++ b/drivers/vfio/pci/Kconfig
-> @@ -45,3 +45,10 @@ config VFIO_PCI_NVLINK2
->  	depends on VFIO_PCI && PPC_POWERNV
->  	help
->  	  VFIO PCI support for P9 Witherspoon machine with NVIDIA V100 GPUs
-> +
-> +config VFIO_PCI_ZDEV
-> +	bool "VFIO PCI Generic for ZPCI devices"
-> +	depends on VFIO_PCI && S390
-> +	default y
-> +	help
-> +	  VFIO PCI support for S390 Z-PCI devices
-> diff --git a/drivers/vfio/pci/Makefile b/drivers/vfio/pci/Makefile
-> index f027f8a..781e080 100644
-> --- a/drivers/vfio/pci/Makefile
-> +++ b/drivers/vfio/pci/Makefile
-> @@ -3,5 +3,6 @@
->  vfio-pci-y := vfio_pci.o vfio_pci_intrs.o vfio_pci_rdwr.o vfio_pci_config.o
->  vfio-pci-$(CONFIG_VFIO_PCI_IGD) += vfio_pci_igd.o
->  vfio-pci-$(CONFIG_VFIO_PCI_NVLINK2) += vfio_pci_nvlink2.o
-> +vfio-pci-$(CONFIG_VFIO_PCI_ZDEV) += vfio_pci_zdev.o
->  
->  obj-$(CONFIG_VFIO_PCI) += vfio-pci.o
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 703948c..b40544a 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -356,6 +356,15 @@ static int vfio_pci_enable(struct vfio_pci_device *vdev)
->  		}
->  	}
->  
-> +	if (IS_ENABLED(CONFIG_VFIO_PCI_ZDEV)) {
-> +		ret = vfio_pci_zdev_init(vdev);
-> +		if (ret) {
-> +			dev_warn(&vdev->pdev->dev,
-> +				 "Failed to setup ZDEV regions\n");
-> +			goto disable_exit;
-> +		}
-> +	}
-> +
->  	vfio_pci_probe_mmaps(vdev);
->  
->  	return 0;
-> diff --git a/drivers/vfio/pci/vfio_pci_private.h b/drivers/vfio/pci/vfio_pci_private.h
-> index ee6ee91..08e02f5 100644
-> --- a/drivers/vfio/pci/vfio_pci_private.h
-> +++ b/drivers/vfio/pci/vfio_pci_private.h
-> @@ -186,4 +186,14 @@ static inline int vfio_pci_ibm_npu2_init(struct vfio_pci_device *vdev)
->  	return -ENODEV;
->  }
->  #endif
-> +
-> +#ifdef CONFIG_VFIO_PCI_ZDEV
-> +extern int vfio_pci_zdev_init(struct vfio_pci_device *vdev);
-> +#else
-> +static inline int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
-> +{
-> +	return -ENODEV;
-> +}
-> +#endif
-> +
->  #endif /* VFIO_PCI_PRIVATE_H */
-> diff --git a/drivers/vfio/pci/vfio_pci_zdev.c b/drivers/vfio/pci/vfio_pci_zdev.c
-> new file mode 100644
-> index 0000000..22e2b60
-> --- /dev/null
-> +++ b/drivers/vfio/pci/vfio_pci_zdev.c
-> @@ -0,0 +1,85 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +/*
-> + * VFIO ZPCI devices support
-> + *
-> + * Copyright (C) IBM Corp. 2019.  All rights reserved.
-> + *	Author: Pierre Morel <pmorel@linux.ibm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + */
-> +#include <linux/io.h>
-> +#include <linux/pci.h>
-> +#include <linux/uaccess.h>
-> +#include <linux/vfio.h>
-> +#include <linux/vfio_zdev.h>
-> +
-> +#include "vfio_pci_private.h"
-> +
-> +static size_t vfio_pci_zdev_rw(struct vfio_pci_device *vdev,
-> +			       char __user *buf, size_t count, loff_t *ppos,
-> +			       bool iswrite)
-> +{
-> +	struct vfio_region_zpci_info *region;
-> +	struct zpci_dev *zdev;
-> +	unsigned int index = VFIO_PCI_OFFSET_TO_INDEX(*ppos);
-> +	loff_t pos = *ppos & VFIO_PCI_OFFSET_MASK;
-> +
-> +	if (!vdev->pdev->bus)
-> +		return -ENODEV;
-> +
-> +	zdev = vdev->pdev->bus->sysdata;
-> +	if (!zdev)
-> +		return -ENODEV;
-> +
-> +	if (pos >= sizeof(*region) || iswrite)
-> +		return -EINVAL;
-> +
-> +	region = vdev->region[index - VFIO_PCI_NUM_REGIONS].data;
-> +	region->dasm = zdev->dma_mask;
-> +	region->start_dma = zdev->start_dma;
-> +	region->end_dma = zdev->end_dma;
-> +	region->msi_addr = zdev->msi_addr;
-> +	region->flags = VFIO_PCI_ZDEV_FLAGS_REFRESH;
+> So, adding the mm_pud_folded() check to p4d_clear/populate_tests(),
+> and also adding mm_p4d/pud_folded() checks at the end before calling> p4d/pud_free(), would make it all work on s390.
 
-Even more curious what this means, why do we need a flag that's always
-set?  Maybe NOREFRESH if it were ever to exist.
+Atleast p4d_clear/populate_tests() tests will be taken care.
 
-> +	region->gid = zdev->pfgid;
-> +	region->mui = zdev->fmb_update;
-> +	region->noi = zdev->max_msi;
-> +	memcpy(region->util_str, zdev->util_str, CLP_UTIL_STR_LEN);
-
-Just checking, I assume this is dynamic based on it being recreated
-every time, otherwise you'd have created it in the init function and
-just do the below on read, right?  The fields that I can guess what they
-might be don't seem like they'd change.  Comments would be good.
-Thanks,
-
-Alex
-
-> +
-> +	count = min(count, (size_t)(sizeof(*region) - pos));
-> +	if (copy_to_user(buf, region, count))
-> +		return -EFAULT;
-> +
-> +	return count;
-> +}
-> +
-> +static void vfio_pci_zdev_release(struct vfio_pci_device *vdev,
-> +				  struct vfio_pci_region *region)
-> +{
-> +	kfree(region->data);
-> +}
-> +
-> +static const struct vfio_pci_regops vfio_pci_zdev_regops = {
-> +	.rw		= vfio_pci_zdev_rw,
-> +	.release	= vfio_pci_zdev_release,
-> +};
-> +
-> +int vfio_pci_zdev_init(struct vfio_pci_device *vdev)
-> +{
-> +	struct vfio_region_zpci_info *region;
-> +	int ret;
-> +
-> +	region = kmalloc(sizeof(*region) + CLP_UTIL_STR_LEN, GFP_KERNEL);
-> +	if (!region)
-> +		return -ENOMEM;
-> +
-> +	ret = vfio_pci_register_dev_region(vdev,
-> +		PCI_VENDOR_ID_IBM | VFIO_REGION_TYPE_PCI_VENDOR_TYPE,
-> +		VFIO_REGION_SUBTYPE_ZDEV_CLP,
-> +		&vfio_pci_zdev_regops, sizeof(*region) + CLP_UTIL_STR_LEN,
-> +		VFIO_REGION_INFO_FLAG_READ, region);
-> +
-> +	return ret;
-> +}
-
+> 
+> BTW, regarding p4d/pud_free(), I'm not sure if we should rather check
+> the folding inside our s390 functions, similar to how we do it for
+> p4d/pud_free_tlb(), instead of relying on not being called for folded
+> p4d/pud. So far, I see no problem with this behavior, all callers of
+> p4d/pud_free() should be fine because of our folding check within
+> p4d/pud_present/none(). But that doesn't mean that it is correct not
+> to check for the folding inside p4d/pud_free(). At least, with this
+> test module we do now have a caller of p4d/pud_free() on potentially
+> folded entries, so instead of adding pxx_folded() checks to this
+> test module, we could add them to our p4d/pud_free() functions.
+> Any thoughts on this?
+Agreed, it seems better to do the check inside p4d/pud_free() functions.
