@@ -2,181 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18A94B908A
-	for <lists+linux-s390@lfdr.de>; Fri, 20 Sep 2019 15:20:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6DD67B914D
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Sep 2019 16:03:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727445AbfITNUn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 20 Sep 2019 09:20:43 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:49851 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726407AbfITNUn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 20 Sep 2019 09:20:43 -0400
-Received: from static-dcd-cqq-121001.business.bouyguestelecom.com ([212.194.121.1] helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iBIq1-0002KN-07; Fri, 20 Sep 2019 13:20:41 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel@lists.infradead.org, linux-parisc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
-        x86@kernel.org
-Subject: [PATCH] seccomp: remove unused arg from secure_computing()
-Date:   Fri, 20 Sep 2019 15:19:09 +0200
-Message-Id: <20190920131907.6886-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
+        id S1728097AbfITODK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 Sep 2019 10:03:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54170 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727904AbfITODJ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 20 Sep 2019 10:03:09 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id F3067C047B68;
+        Fri, 20 Sep 2019 14:03:08 +0000 (UTC)
+Received: from gondolin (dhcp-192-230.str.redhat.com [10.33.192.230])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 485445C1B5;
+        Fri, 20 Sep 2019 14:03:01 +0000 (UTC)
+Date:   Fri, 20 Sep 2019 16:02:58 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Matthew Rosato <mjrosato@linux.ibm.com>
+Cc:     sebott@linux.ibm.com, gerald.schaefer@de.ibm.com,
+        pasic@linux.ibm.com, borntraeger@de.ibm.com, walling@linux.ibm.com,
+        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
+        joro@8bytes.org, linux-kernel@vger.kernel.org,
+        alex.williamson@redhat.com, kvm@vger.kernel.org,
+        heiko.carstens@de.ibm.com, robin.murphy@arm.com, gor@linux.ibm.com,
+        pmorel@linux.ibm.com
+Subject: Re: [PATCH v4 3/4] vfio: zpci: defining the VFIO headers
+Message-ID: <20190920160258.70631905.cohuck@redhat.com>
+In-Reply-To: <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
+References: <1567815231-17940-1-git-send-email-mjrosato@linux.ibm.com>
+        <1567815231-17940-4-git-send-email-mjrosato@linux.ibm.com>
+        <20190919172009.71b1c246.cohuck@redhat.com>
+        <0a62aba7-578a-6875-da4d-13e8b145cf9b@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Fri, 20 Sep 2019 14:03:09 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-While touching seccomp code I realized that the struct seccomp_data
-argument to secure_computing() seems to be unused by all current
-callers. So let's remove it unless there is some subtlety I missed.
-Note, I only tested this on x86.
+On Thu, 19 Sep 2019 16:55:57 -0400
+Matthew Rosato <mjrosato@linux.ibm.com> wrote:
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Will Drewry <wad@chromium.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-parisc@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-um@lists.infradead.org
-Cc: x86@kernel.org
----
- arch/arm/kernel/ptrace.c              | 2 +-
- arch/arm64/kernel/ptrace.c            | 2 +-
- arch/parisc/kernel/ptrace.c           | 2 +-
- arch/s390/kernel/ptrace.c             | 4 ++--
- arch/um/kernel/skas/syscall.c         | 2 +-
- arch/x86/entry/vsyscall/vsyscall_64.c | 2 +-
- include/linux/seccomp.h               | 6 +++---
- 7 files changed, 10 insertions(+), 10 deletions(-)
+> On 9/19/19 11:20 AM, Cornelia Huck wrote:
+> > On Fri,  6 Sep 2019 20:13:50 -0400
+> > Matthew Rosato <mjrosato@linux.ibm.com> wrote:
+> >   
+> >> From: Pierre Morel <pmorel@linux.ibm.com>
+> >>
+> >> We define a new device region in vfio.h to be able to
+> >> get the ZPCI CLP information by reading this region from
+> >> userland.
+> >>
+> >> We create a new file, vfio_zdev.h to define the structure
+> >> of the new region we defined in vfio.h
+> >>
+> >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> >> Signed-off-by: Matthew Rosato <mjrosato@linux.ibm.com>
+> >> ---
+> >>  include/uapi/linux/vfio.h      |  1 +
+> >>  include/uapi/linux/vfio_zdev.h | 35 +++++++++++++++++++++++++++++++++++
+> >>  2 files changed, 36 insertions(+)
+> >>  create mode 100644 include/uapi/linux/vfio_zdev.h
 
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index 324352787aea..b606cded90cd 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -923,7 +923,7 @@ asmlinkage int syscall_trace_enter(struct pt_regs *regs, int scno)
- 
- 	/* Do seccomp after ptrace; syscall may have changed. */
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- #else
- 	/* XXX: remove this once OABI gets fixed */
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 3cf3b135027e..010a835302d3 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1816,7 +1816,7 @@ int syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing after ptrace; failures should be fast. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- 
- 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
-diff --git a/arch/parisc/kernel/ptrace.c b/arch/parisc/kernel/ptrace.c
-index 9f6ff7bc06f9..f8c07dcbfb49 100644
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -342,7 +342,7 @@ long do_syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing check after ptrace. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- 
- #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index ad71132374f0..ed80bdfbf5fe 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
- long arch_ptrace(struct task_struct *child, long request,
- 		 unsigned long addr, unsigned long data)
- {
--	ptrace_area parea; 
-+	ptrace_area parea;
- 	int copied, ret;
- 
- 	switch (request) {
-@@ -856,7 +856,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing check after ptrace. */
--	if (secure_computing(NULL)) {
-+	if (secure_computing()) {
- 		/* seccomp failures shouldn't expose any additional code. */
- 		return -1;
- 	}
-diff --git a/arch/um/kernel/skas/syscall.c b/arch/um/kernel/skas/syscall.c
-index 44bb10785075..fc37259d5971 100644
---- a/arch/um/kernel/skas/syscall.c
-+++ b/arch/um/kernel/skas/syscall.c
-@@ -35,7 +35,7 @@ void handle_syscall(struct uml_pt_regs *r)
- 		goto out;
- 
- 	/* Do the seccomp check after ptrace; failures should be fast. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		goto out;
- 
- 	syscall = UPT_SYSCALL_NR(r);
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index e7c596dea947..b10cbf71a8cc 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -222,7 +222,7 @@ bool emulate_vsyscall(unsigned long error_code,
- 	 */
- 	regs->orig_ax = syscall_nr;
- 	regs->ax = -ENOSYS;
--	tmp = secure_computing(NULL);
-+	tmp = secure_computing();
- 	if ((!tmp && regs->orig_ax != syscall_nr) || regs->ip != address) {
- 		warn_bad_vsyscall(KERN_DEBUG, regs,
- 				  "seccomp tried to change syscall nr or ip");
-diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
-index 84868d37b35d..03583b6d1416 100644
---- a/include/linux/seccomp.h
-+++ b/include/linux/seccomp.h
-@@ -33,10 +33,10 @@ struct seccomp {
- 
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
- extern int __secure_computing(const struct seccomp_data *sd);
--static inline int secure_computing(const struct seccomp_data *sd)
-+static inline int secure_computing(void)
- {
- 	if (unlikely(test_thread_flag(TIF_SECCOMP)))
--		return  __secure_computing(sd);
-+		return  __secure_computing(NULL);
- 	return 0;
- }
- #else
-@@ -59,7 +59,7 @@ struct seccomp { };
- struct seccomp_filter { };
- 
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
--static inline int secure_computing(struct seccomp_data *sd) { return 0; }
-+static inline int secure_computing(void) { return 0; }
- #else
- static inline void secure_computing_strict(int this_syscall) { return; }
- #endif
--- 
-2.23.0
+> >> diff --git a/include/uapi/linux/vfio_zdev.h b/include/uapi/linux/vfio_zdev.h
+> >> new file mode 100644
+> >> index 0000000..55e0d6d
+> >> --- /dev/null
+> >> +++ b/include/uapi/linux/vfio_zdev.h
+> >> @@ -0,0 +1,35 @@
+> >> +/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+> >> +/*
+> >> + * Region definition for ZPCI devices
+> >> + *
+> >> + * Copyright IBM Corp. 2019
+> >> + *
+> >> + * Author(s): Pierre Morel <pmorel@linux.ibm.com>
+> >> + */
+> >> +
+> >> +#ifndef _VFIO_ZDEV_H_
+> >> +#define _VFIO_ZDEV_H_
+> >> +
+> >> +#include <linux/types.h>
+> >> +
+> >> +/**
+> >> + * struct vfio_region_zpci_info - ZPCI information.  
+> > 
+> > Hm... probably should also get some more explanation. E.g. is that
+> > derived from a hardware structure?
+> >   
+> 
+> The structure itself is not mapped 1:1 to a hardware structure, but it
+> does serve as a collection of information that was derived from other
+> hardware structures.
+> 
+> "Used for passing hardware feature information about a zpci device
+> between the host and guest" ?
+
+"zPCI specific hardware feature information for a device"?
+
+Are we reasonably sure that this is complete for now? I'm not sure if
+expanding this structure would work; adding another should always be
+possible, though (if a bit annoying).
+
+> 
+> >> + *
+> >> + */
+> >> +struct vfio_region_zpci_info {
+> >> +	__u64 dasm;
+> >> +	__u64 start_dma;
+> >> +	__u64 end_dma;
+> >> +	__u64 msi_addr;
+> >> +	__u64 flags;
+> >> +	__u16 pchid;
+> >> +	__u16 mui;
+> >> +	__u16 noi;
+> >> +	__u16 maxstbl;
+> >> +	__u8 version;
+> >> +	__u8 gid;
+> >> +#define VFIO_PCI_ZDEV_FLAGS_REFRESH 1
+> >> +	__u8 util_str[];
+> >> +} __packed;
+> >> +
+> >> +#endif  
+> > 
+> >   
+> 
 
