@@ -2,39 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 93C74BA63A
-	for <lists+linux-s390@lfdr.de>; Sun, 22 Sep 2019 21:46:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C0C69BA6AD
+	for <lists+linux-s390@lfdr.de>; Sun, 22 Sep 2019 21:46:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391624AbfIVSs3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 22 Sep 2019 14:48:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45314 "EHLO mail.kernel.org"
+        id S2405100AbfIVSwP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 22 Sep 2019 14:52:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51002 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391601AbfIVSs2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 22 Sep 2019 14:48:28 -0400
+        id S2407718AbfIVSwO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 22 Sep 2019 14:52:14 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 37B602190F;
-        Sun, 22 Sep 2019 18:48:26 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B40C221479;
+        Sun, 22 Sep 2019 18:52:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569178107;
-        bh=gVJ5XNv35Wj2YquIGuUHJ24XMfhRoDYe2lPrgEnThQ8=;
+        s=default; t=1569178333;
+        bh=FhMqtDm73GhvjtyVWDtKRVY17JuvvD8eg/8rpvN6FjU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EWS9FR1GqnQGVrkOLEwiCyVcqCMDJjSQ1D7hv/7/KFCPBtAquAkL4GWc1jyZJOc7D
-         Z3zP8aNYGxCSq9LOTYrMP92XcRrIq4rXcgd+po+6Fkf3ksv+96rxFJ8namywXr2Hoo
-         +AjhBGqgfLGYiOMiVF3iI7p7bc4riLaXpqZFsGDM=
+        b=eAljFacNAWxYB1+dErbQAYMIEzNjNynDRv0RNvgErY87dIGlpBQ2Oe/2CsNbp6yKt
+         XMw5+uHMFIXRuFPLgPW2/lS3MskAmBOau5IucyPuu5EVW8NBk+imNHKIjIRxF1ZPrP
+         MejWDkAiFAjXpuaVINFll0U0G8a3yWNWvtYwBtWI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 167/203] s390/crypto: xts-aes-s390 fix extra run-time crypto self tests finding
-Date:   Sun, 22 Sep 2019 14:43:13 -0400
-Message-Id: <20190922184350.30563-167-sashal@kernel.org>
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.2 096/185] s390/kasan: provide uninstrumented __strlen
+Date:   Sun, 22 Sep 2019 14:47:54 -0400
+Message-Id: <20190922184924.32534-96-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190922184350.30563-1-sashal@kernel.org>
-References: <20190922184350.30563-1-sashal@kernel.org>
+In-Reply-To: <20190922184924.32534-1-sashal@kernel.org>
+References: <20190922184924.32534-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,53 +43,63 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 9e323d45ba94262620a073a3f9945ca927c07c71 ]
+[ Upstream commit f45f7b5bdaa4828ce871cf03f7c01599a0de57a5 ]
 
-With 'extra run-time crypto self tests' enabled, the selftest
-for s390-xts fails with
+s390 kasan code uses sclp_early_printk to report initialization
+failures. The code doing that should not be instrumented, because kasan
+shadow memory has not been set up yet. Even though sclp_early_core.c is
+compiled with instrumentation disabled it uses strlen function, which
+is instrumented and would produce shadow memory access if used. To
+avoid that, introduce uninstrumented __strlen function to be used
+instead.
 
-  alg: skcipher: xts-aes-s390 encryption unexpectedly succeeded on
-  test vector "random: len=0 klen=64"; expected_error=-22,
-  cfg="random: inplace use_digest nosimd src_divs=[2.61%@+4006,
-  84.44%@+21, 1.55%@+13, 4.50%@+344, 4.26%@+21, 2.64%@+27]"
+Before commit 7e0d92f00246 ("s390/kasan: improve string/memory functions
+checks") few string functions (including strlen) were escaping kasan
+instrumentation due to usage of platform specific versions which are
+implemented in inline assembly.
 
-This special case with nbytes=0 is not handled correctly and this
-fix now makes sure that -EINVAL is returned when there is en/decrypt
-called with 0 bytes to en/decrypt.
-
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Fixes: 7e0d92f00246 ("s390/kasan: improve string/memory functions checks")
+Acked-by: Ilya Leoshkevich <iii@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/aes_s390.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/s390/include/asm/string.h | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index d00f84add5f4c..6d2dbb5089d5c 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -586,6 +586,9 @@ static int xts_aes_encrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
- 
-+	if (!nbytes)
-+		return -EINVAL;
+diff --git a/arch/s390/include/asm/string.h b/arch/s390/include/asm/string.h
+index 70d87db54e627..4c0690fc5167e 100644
+--- a/arch/s390/include/asm/string.h
++++ b/arch/s390/include/asm/string.h
+@@ -71,11 +71,16 @@ extern void *__memmove(void *dest, const void *src, size_t n);
+ #define memcpy(dst, src, len) __memcpy(dst, src, len)
+ #define memmove(dst, src, len) __memmove(dst, src, len)
+ #define memset(s, c, n) __memset(s, c, n)
++#define strlen(s) __strlen(s)
 +
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_encrypt(desc, dst, src, nbytes);
++#define __no_sanitize_prefix_strfunc(x) __##x
  
-@@ -600,6 +603,9 @@ static int xts_aes_decrypt(struct blkcipher_desc *desc,
- 	struct s390_xts_ctx *xts_ctx = crypto_blkcipher_ctx(desc->tfm);
- 	struct blkcipher_walk walk;
+ #ifndef __NO_FORTIFY
+ #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
+ #endif
  
-+	if (!nbytes)
-+		return -EINVAL;
-+
- 	if (unlikely(!xts_ctx->fc))
- 		return xts_fallback_decrypt(desc, dst, src, nbytes);
++#else
++#define __no_sanitize_prefix_strfunc(x) x
+ #endif /* defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__) */
  
+ void *__memset16(uint16_t *s, uint16_t v, size_t count);
+@@ -163,8 +168,8 @@ static inline char *strcpy(char *dst, const char *src)
+ }
+ #endif
+ 
+-#ifdef __HAVE_ARCH_STRLEN
+-static inline size_t strlen(const char *s)
++#if defined(__HAVE_ARCH_STRLEN) || (defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__))
++static inline size_t __no_sanitize_prefix_strfunc(strlen)(const char *s)
+ {
+ 	register unsigned long r0 asm("0") = 0;
+ 	const char *tmp = s;
 -- 
 2.20.1
 
