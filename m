@@ -2,144 +2,137 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AD0CBAC4A
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 03:07:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A5458BADC7
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 08:27:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389406AbfIWBHB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 22 Sep 2019 21:07:01 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54896 "EHLO mx1.redhat.com"
+        id S2393094AbfIWG1Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Sep 2019 02:27:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:37482 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388986AbfIWBHB (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 22 Sep 2019 21:07:01 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 90431C051688;
-        Mon, 23 Sep 2019 01:06:59 +0000 (UTC)
-Received: from [10.72.12.112] (ovpn-12-112.pek2.redhat.com [10.72.12.112])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A96FC6092F;
-        Mon, 23 Sep 2019 01:06:38 +0000 (UTC)
-Subject: Re: [RFC PATCH V2 0/6] mdev based hardware virtio offloading support
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        pmorel@linux.ibm.com, freude@linux.ibm.com, lingshan.zhu@intel.com,
-        idos@mellanox.com, eperezma@redhat.com, lulu@redhat.com,
-        parav@mellanox.com
-References: <20190920082050.19352-1-jasowang@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0cea96a3-f941-3181-d320-7c15b33ad552@redhat.com>
-Date:   Mon, 23 Sep 2019 09:06:36 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2387519AbfIWG1X (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 23 Sep 2019 02:27:23 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86A51337;
+        Sun, 22 Sep 2019 23:27:22 -0700 (PDT)
+Received: from [10.162.40.137] (p8cg001049571a15.blr.arm.com [10.162.40.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7248C3F59C;
+        Sun, 22 Sep 2019 23:29:45 -0700 (PDT)
+Subject: Re: [PATCH V3 2/2] mm/pgtable/debug: Add test validating architecture
+ page table helpers
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
+        linux-sh@vger.kernel.org,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        James Hogan <jhogan@kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Paul Burton <paul.burton@mips.com>, kbuild-all@01.org,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+References: <20190921160049.GB13569@xsang-OptiPlex-9020>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <ab7c36ae-0942-d2e3-2a46-924c13a3d999@arm.com>
+Date:   Mon, 23 Sep 2019 11:57:29 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20190920082050.19352-1-jasowang@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190921160049.GB13569@xsang-OptiPlex-9020>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 23 Sep 2019 01:07:00 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-On 2019/9/20 下午4:20, Jason Wang wrote:
-> Hi all:
->
-> There are hardware that can do virtio datapath offloading while having
-> its own control path. This path tries to implement a mdev based
-> unified API to support using kernel virtio driver to drive those
-> devices. This is done by introducing a new mdev transport for virtio
-> (virtio_mdev) and register itself as a new kind of mdev driver. Then
-> it provides a unified way for kernel virtio driver to talk with mdev
-> device implementation.
->
-> Though the series only contain kernel driver support, the goal is to
-> make the transport generic enough to support userspace drivers. This
-> means vhost-mdev[1] could be built on top as well by resuing the
-> transport.
->
-> A sample driver is also implemented which simulate a virito-net
-> loopback ethernet device on top of vringh + workqueue. This could be
-> used as a reference implementation for real hardware driver.
->
-> Consider mdev framework only support VFIO device and driver right now,
-> this series also extend it to support other types. This is done
-> through introducing class id to the device and pairing it with
-> id_talbe claimed by the driver. On top, this seris also decouple
-> device specific parents ops out of the common ones.
->
-> Pktgen test was done with virito-net + mvnet loop back device.
->
-> Please review.
 
+On 09/21/2019 09:30 PM, kbuild test robot wrote:
+> Hi Anshuman,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on linus/master]
+> [cannot apply to v5.3 next-20190919]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Anshuman-Khandual/mm-debug-Add-tests-for-architecture-exported-page-table-helpers/20190920-143746
+> config: ia64-allmodconfig (attached as .config)
+> compiler: ia64-linux-gcc (GCC) 7.4.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.4.0 make.cross ARCH=ia64 
+> :::::: branch date: 3 hours ago
+> :::::: commit date: 3 hours ago
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All error/warnings (new ones prefixed by >>):
+> 
+>    In file included from include/asm-generic/pgtable-nopud.h:8:0,
+>                     from arch/ia64/include/asm/pgtable.h:591,
+>                     from include/linux/mm.h:99,
+>                     from include/linux/highmem.h:8,
+>                     from mm/arch_pgtable_test.c:14:
+>    mm/arch_pgtable_test.c: In function 'pud_clear_tests':
+>>> include/asm-generic/pgtable-nop4d-hack.h:47:32: error: implicit declaration of function '__pgd'; did you mean '__p4d'? [-Werror=implicit-function-declaration]
+>     #define __pud(x)    ((pud_t) { __pgd(x) })
+>                                    ^
+>>> mm/arch_pgtable_test.c:162:8: note: in expansion of macro '__pud'
+>      pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
+>            ^~~~~
+>>> include/asm-generic/pgtable-nop4d-hack.h:47:22: warning: missing braces around initializer [-Wmissing-braces]
+>     #define __pud(x)    ((pud_t) { __pgd(x) })
+>                          ^
+>>> mm/arch_pgtable_test.c:162:8: note: in expansion of macro '__pud'
+>      pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
+>            ^~~~~
+>    cc1: some warnings being treated as errors
+> 
+> # https://github.com/0day-ci/linux/commit/49047f93b076974eefa5b019311bd3b734d61f8c
+> git remote add linux-review https://github.com/0day-ci/linux
+> git remote update linux-review
+> git checkout 49047f93b076974eefa5b019311bd3b734d61f8c
+> vim +47 include/asm-generic/pgtable-nop4d-hack.h
+> 
+> 30ec842660bd0d Kirill A. Shutemov 2017-03-09  45  
+> 30ec842660bd0d Kirill A. Shutemov 2017-03-09  46  #define pud_val(x)				(pgd_val((x).pgd))
+> 30ec842660bd0d Kirill A. Shutemov 2017-03-09 @47  #define __pud(x)				((pud_t) { __pgd(x) })
 
-CC Parav.
+I had mentioned about this build failure in the cover letter. The same
+problem also exists on arm32 platform.
 
-Thanks
-
-
->
-> Changes from V1:
->
-> - rename device id to class id
-> - add docs for class id and device specific ops (device_ops)
-> - split device_ops into seperate headers
-> - drop the mdev_set_dma_ops()
-> - use device_ops to implement the transport API, then it's not a part
->    of UAPI any more
-> - use GFP_ATOMIC in mvnet sample device and other tweaks
-> - set_vring_base/get_vring_base support for mvnet device
->
-> Jason Wang (6):
->    mdev: class id support
->    mdev: introduce device specific ops
->    mdev: introduce virtio device and its device ops
->    virtio: introudce a mdev based transport
->    vringh: fix copy direction of vringh_iov_push_kern()
->    docs: Sample driver to demonstrate how to implement virtio-mdev
->      framework
->
->   .../driver-api/vfio-mediated-device.rst       |  11 +-
->   drivers/gpu/drm/i915/gvt/kvmgt.c              |  17 +-
->   drivers/s390/cio/vfio_ccw_ops.c               |  17 +-
->   drivers/s390/crypto/vfio_ap_ops.c             |  14 +-
->   drivers/vfio/mdev/Kconfig                     |   7 +
->   drivers/vfio/mdev/Makefile                    |   1 +
->   drivers/vfio/mdev/mdev_core.c                 |  21 +-
->   drivers/vfio/mdev/mdev_driver.c               |  14 +
->   drivers/vfio/mdev/mdev_private.h              |   1 +
->   drivers/vfio/mdev/vfio_mdev.c                 |  37 +-
->   drivers/vfio/mdev/virtio_mdev.c               | 418 +++++++++++
->   drivers/vhost/vringh.c                        |   8 +-
->   include/linux/mdev.h                          |  46 +-
->   include/linux/mod_devicetable.h               |   8 +
->   include/linux/vfio_mdev.h                     |  50 ++
->   include/linux/virtio_mdev.h                   | 141 ++++
->   samples/Kconfig                               |   7 +
->   samples/vfio-mdev/Makefile                    |   1 +
->   samples/vfio-mdev/mbochs.c                    |  19 +-
->   samples/vfio-mdev/mdpy.c                      |  19 +-
->   samples/vfio-mdev/mtty.c                      |  17 +-
->   samples/vfio-mdev/mvnet.c                     | 688 ++++++++++++++++++
->   22 files changed, 1473 insertions(+), 89 deletions(-)
->   create mode 100644 drivers/vfio/mdev/virtio_mdev.c
->   create mode 100644 include/linux/vfio_mdev.h
->   create mode 100644 include/linux/virtio_mdev.h
->   create mode 100644 samples/vfio-mdev/mvnet.c
->
+- Anshuman
