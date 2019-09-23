@@ -2,537 +2,137 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CEFDBB67D
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 16:18:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B986EBB7AD
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 17:17:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730669AbfIWOSQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Sep 2019 10:18:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8144 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732659AbfIWOSQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Sep 2019 10:18:16 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8NEIBWT116010
-        for <linux-s390@vger.kernel.org>; Mon, 23 Sep 2019 10:18:14 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v6wq3dbbm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 23 Sep 2019 10:17:22 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Mon, 23 Sep 2019 15:16:09 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 23 Sep 2019 15:16:05 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8NEFbJ930343512
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Sep 2019 14:15:37 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3056A4051;
-        Mon, 23 Sep 2019 14:16:04 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C1A77A4040;
-        Mon, 23 Sep 2019 14:16:03 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.36.175])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 23 Sep 2019 14:16:03 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-Subject: [kvm-unit-tests PATCH] s390x: Add initial smp code
-Date:   Mon, 23 Sep 2019 16:15:58 +0200
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <b60eee55-f013-411a-0e52-3f40a990b1c4@redhat.com>
-References: <b60eee55-f013-411a-0e52-3f40a990b1c4@redhat.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19092314-0008-0000-0000-00000319F784
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092314-0009-0000-0000-00004A38876B
-Message-Id: <20190923141558.3032-1-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-23_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909230140
+        id S1726584AbfIWPRR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Sep 2019 11:17:17 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:43144 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfIWPRQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 Sep 2019 11:17:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=BQxmWDdzGIFE7S88Yi92UG2auB0mbgTz3kRl3Taa3FI=; b=t8VS6tSnmrlzM+Dk9CyzGPLMt
+        N8isqB9JLD9XPobqT8fc3dfzorxqXbSBbiePOLH9slgkt7c8/x6l847kAc6lrKnV82aAO5bDorIMu
+        YjjxsscQB6tQ50zT9SFofb+NFESL297iEmmU8/JL29dFjRYomSrEu+QShhTIPw86PoSsMyCz+N/PP
+        LCH1puLwbn+9Vw8dPbpuqmsdVuBEbsqqLtzmB4pFdqhwkPpTebf2j/lYsEMVsp/CuFdG7Po9RBYan
+        uhdIMZv8znk6MUH0UjYoAWnErPz6C7zS3yuGzEh25kpJXJFr0fXRrE7G8EnTUy9x8JgpkFEGhRUbf
+        J3QKktDWQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCQ3h-0004cS-VH; Mon, 23 Sep 2019 15:15:26 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id A8633303DFD;
+        Mon, 23 Sep 2019 17:14:34 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id D4E7C20C3E176; Mon, 23 Sep 2019 17:15:19 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 17:15:19 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     catalin.marinas@arm.com, will@kernel.org, mingo@redhat.com,
+        bp@alien8.de, rth@twiddle.net, ink@jurassic.park.msu.ru,
+        mattst88@gmail.com, benh@kernel.crashing.org, paulus@samba.org,
+        mpe@ellerman.id.au, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org, mhocko@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's add a rudimentary SMP library, which will scan for cpus and has
-helper functions that manage the cpu state.
+On Tue, Sep 17, 2019 at 08:48:54PM +0800, Yunsheng Lin wrote:
+> When passing the return value of dev_to_node() to cpumask_of_node()
+> without checking if the device's node id is NUMA_NO_NODE, there is
+> global-out-of-bounds detected by KASAN.
+> 
+> From the discussion [1], NUMA_NO_NODE really means no node affinity,
+> which also means all cpus should be usable. So the cpumask_of_node()
+> should always return all cpus online when user passes the node id as
+> NUMA_NO_NODE, just like similar semantic that page allocator handles
+> NUMA_NO_NODE.
+> 
+> But we cannot really copy the page allocator logic. Simply because the
+> page allocator doesn't enforce the near node affinity. It just picks it
+> up as a preferred node but then it is free to fallback to any other numa
+> node. This is not the case here and node_to_cpumask_map will only restrict
+> to the particular node's cpus which would have really non deterministic
+> behavior depending on where the code is executed. So in fact we really
+> want to return cpu_online_mask for NUMA_NO_NODE.
+> 
+> Also there is a debugging version of node_to_cpumask_map() for x86 and
+> arm64, which is only used when CONFIG_DEBUG_PER_CPU_MAPS is defined, this
+> patch changes it to handle NUMA_NO_NODE as normal node_to_cpumask_map().
+> 
+> [1] https://lore.kernel.org/patchwork/patch/1125789/
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
+That is bloody unusable, don't do that. Use:
 
-I left the setup code untouched, as I didn't want to indent too many
-lines.
+  https://lkml.kernel.org/r/$MSGID
 
----
- lib/s390x/asm/arch_def.h |   8 ++
- lib/s390x/asm/sigp.h     |  28 ++++-
- lib/s390x/io.c           |   5 +-
- lib/s390x/sclp.h         |   1 +
- lib/s390x/smp.c          | 252 +++++++++++++++++++++++++++++++++++++++
- lib/s390x/smp.h          |  51 ++++++++
- s390x/Makefile           |   1 +
- s390x/cstart64.S         |   7 ++
- 8 files changed, 347 insertions(+), 6 deletions(-)
- create mode 100644 lib/s390x/smp.c
- create mode 100644 lib/s390x/smp.h
+if anything. Then I can find it in my local mbox without having to
+resort to touching a mouse and shitty browser software.
 
-diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-index 5f8f45e..d5a7f51 100644
---- a/lib/s390x/asm/arch_def.h
-+++ b/lib/s390x/asm/arch_def.h
-@@ -157,6 +157,14 @@ struct cpuid {
- 	uint64_t reserved : 15;
- };
- 
-+static inline unsigned short stap(void)
-+{
-+	unsigned short cpu_address;
-+
-+	asm volatile("stap %0" : "=Q" (cpu_address));
-+	return cpu_address;
-+}
-+
- static inline int tprot(unsigned long addr)
- {
- 	int cc;
-diff --git a/lib/s390x/asm/sigp.h b/lib/s390x/asm/sigp.h
-index fbd94fc..2d52313 100644
---- a/lib/s390x/asm/sigp.h
-+++ b/lib/s390x/asm/sigp.h
-@@ -46,14 +46,32 @@
- 
- #ifndef __ASSEMBLER__
- 
--static inline void sigp_stop(void)
-+
-+static inline int sigp(uint16_t addr, uint8_t order, unsigned long parm,
-+		       uint32_t *status)
- {
--	register unsigned long status asm ("1") = 0;
--	register unsigned long cpu asm ("2") = 0;
-+	register unsigned long reg1 asm ("1") = parm;
-+	int cc;
- 
- 	asm volatile(
--		"	sigp %0,%1,0(%2)\n"
--		: "+d" (status)  : "d" (cpu), "d" (SIGP_STOP) : "cc");
-+		"	sigp	%1,%2,0(%3)\n"
-+		"	ipm	%0\n"
-+		"	srl	%0,28\n"
-+		: "=d" (cc), "+d" (reg1) : "d" (addr), "a" (order) : "cc");
-+	if (status)
-+		*status = reg1;
-+	return cc;
-+}
-+
-+static inline int sigp_retry(uint16_t addr, uint8_t order, unsigned long parm,
-+			     uint32_t *status)
-+{
-+	int cc;
-+
-+	do {
-+		cc = sigp(addr, order, parm, status);
-+	} while (cc == 2);
-+	return cc;
- }
- 
- #endif /* __ASSEMBLER__ */
-diff --git a/lib/s390x/io.c b/lib/s390x/io.c
-index becadfc..32f09b5 100644
---- a/lib/s390x/io.c
-+++ b/lib/s390x/io.c
-@@ -16,6 +16,7 @@
- #include <asm/facility.h>
- #include <asm/sigp.h>
- #include "sclp.h"
-+#include "smp.h"
- 
- extern char ipl_args[];
- uint8_t stfl_bytes[NR_STFL_BYTES] __attribute__((aligned(8)));
-@@ -37,12 +38,14 @@ void setup(void)
- 	setup_facilities();
- 	sclp_console_setup();
- 	sclp_memory_setup();
-+	smp_setup();
- }
- 
- void exit(int code)
- {
-+	smp_teardown();
- 	printf("\nEXIT: STATUS=%d\n", ((code) << 1) | 1);
- 	while (1) {
--		sigp_stop();
-+		sigp(0, SIGP_STOP, 0, NULL);
- 	}
- }
-diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
-index 98c482a..4e69845 100644
---- a/lib/s390x/sclp.h
-+++ b/lib/s390x/sclp.h
-@@ -19,6 +19,7 @@
- #define SCLP_CMD_CODE_MASK                      0xffff00ff
- 
- /* SCLP command codes */
-+#define SCLP_READ_CPU_INFO			0x00010001
- #define SCLP_CMDW_READ_SCP_INFO                 0x00020001
- #define SCLP_CMDW_READ_SCP_INFO_FORCED          0x00120001
- #define SCLP_READ_STORAGE_ELEMENT_INFO          0x00040001
-diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
-new file mode 100644
-index 0000000..7602886
---- /dev/null
-+++ b/lib/s390x/smp.c
-@@ -0,0 +1,252 @@
-+/*
-+ * s390x smp
-+ * Based on Linux's arch/s390/kernel/smp.c and
-+ * arch/s390/include/asm/sigp.h
-+ *
-+ * Copyright (c) 2019 IBM Corp
-+ *
-+ * Authors:
-+ *  Janosch Frank <frankja@linux.ibm.com>
-+ *
-+ * This code is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2.
-+ */
-+#include <libcflat.h>
-+#include <asm/arch_def.h>
-+#include <asm/sigp.h>
-+#include <asm/page.h>
-+#include <asm/barrier.h>
-+#include <asm/spinlock.h>
-+#include <asm/asm-offsets.h>
-+
-+#include <alloc.h>
-+#include <alloc_page.h>
-+
-+#include "smp.h"
-+#include "sclp.h"
-+
-+static char cpu_info_buffer[PAGE_SIZE] __attribute__((__aligned__(4096)));
-+static struct cpu *cpus;
-+static struct cpu *cpu0;
-+static struct spinlock lock;
-+
-+extern void smp_cpu_setup_state(void);
-+
-+int smp_query_num_cpus(void)
-+{
-+	struct ReadCpuInfo *info = (void *)cpu_info_buffer;
-+	return info->nr_configured;
-+}
-+
-+struct cpu *smp_cpu_from_addr(uint16_t addr)
-+{
-+	int i, num = smp_query_num_cpus();
-+
-+	for (i = 0; i < num; i++) {
-+		if (cpus[i].addr == addr)
-+			return &cpus[i];
-+	}
-+	return NULL;
-+}
-+
-+bool smp_cpu_stopped(uint16_t addr)
-+{
-+	uint32_t status;
-+
-+	if (sigp(addr, SIGP_SENSE, 0, &status) != SIGP_CC_STATUS_STORED)
-+		return false;
-+	return !!(status & (SIGP_STATUS_CHECK_STOP|SIGP_STATUS_STOPPED));
-+}
-+
-+bool smp_cpu_running(uint16_t addr)
-+{
-+	if (sigp(addr, SIGP_SENSE_RUNNING, 0, NULL) != SIGP_CC_STATUS_STORED)
-+		return true;
-+	/* Status stored condition code is equivalent to cpu not running. */
-+	return false;
-+}
-+
-+static int smp_cpu_stop_nolock(uint16_t addr, bool store)
-+{
-+	struct cpu *cpu;
-+	uint8_t order = store ? SIGP_STOP_AND_STORE_STATUS : SIGP_STOP;
-+
-+	cpu = smp_cpu_from_addr(addr);
-+	if (!cpu || cpu == cpu0)
-+		return -1;
-+
-+	if (sigp_retry(addr, order, 0, NULL))
-+		return -1;
-+
-+	while (!smp_cpu_stopped(addr))
-+		mb();
-+	cpu->active = false;
-+	return 0;
-+}
-+
-+int smp_cpu_stop(uint16_t addr)
-+{
-+	int rc;
-+
-+	spin_lock(&lock);
-+	rc = smp_cpu_stop_nolock(addr, false);
-+	spin_unlock(&lock);
-+	return rc;
-+}
-+
-+int smp_cpu_stop_store_status(uint16_t addr)
-+{
-+	int rc;
-+
-+	spin_lock(&lock);
-+	rc = smp_cpu_stop_nolock(addr, true);
-+	spin_unlock(&lock);
-+	return rc;
-+}
-+
-+int smp_cpu_restart(uint16_t addr)
-+{
-+	int rc = -1;
-+	struct cpu *cpu;
-+
-+	spin_lock(&lock);
-+	cpu = smp_cpu_from_addr(addr);
-+	if (cpu) {
-+		rc = sigp(addr, SIGP_RESTART, 0, NULL);
-+		cpu->active = true;
-+	}
-+	spin_unlock(&lock);
-+	return rc;
-+}
-+
-+int smp_cpu_start(uint16_t addr, struct psw psw)
-+{
-+	int rc = -1;
-+	struct cpu *cpu;
-+	struct lowcore *lc;
-+
-+	spin_lock(&lock);
-+	cpu = smp_cpu_from_addr(addr);
-+	if (cpu) {
-+		lc = cpu->lowcore;
-+		lc->restart_new_psw.mask = psw.mask;
-+		lc->restart_new_psw.addr = psw.addr;
-+		rc = sigp(addr, SIGP_RESTART, 0, NULL);
-+	}
-+	spin_unlock(&lock);
-+	return rc;
-+}
-+
-+int smp_cpu_destroy(uint16_t addr)
-+{
-+	struct cpu *cpu;
-+	int rc;
-+
-+	spin_lock(&lock);
-+	rc = smp_cpu_stop_nolock(addr, false);
-+	if (!rc) {
-+		cpu = smp_cpu_from_addr(addr);
-+		free_pages(cpu->lowcore, 2 * PAGE_SIZE);
-+		free_pages(cpu->stack, 4 * PAGE_SIZE);
-+		cpu->lowcore = (void *)-1UL;
-+		cpu->stack = (void *)-1UL;
-+	}
-+	spin_unlock(&lock);
-+	return rc;
-+}
-+
-+int smp_cpu_setup(uint16_t addr, struct psw psw)
-+{
-+	struct lowcore *lc;
-+	struct cpu *cpu;
-+	int rc = -1;
-+
-+	spin_lock(&lock);
-+
-+	if (!cpus)
-+		goto out;
-+
-+	cpu = smp_cpu_from_addr(addr);
-+
-+	if (!cpu || cpu->active)
-+		goto out;
-+
-+	sigp_retry(cpu->addr, SIGP_INITIAL_CPU_RESET, 0, NULL);
-+
-+	lc = alloc_pages(1);
-+	cpu->lowcore = lc;
-+	memset(lc, 0, PAGE_SIZE * 2);
-+	sigp_retry(cpu->addr, SIGP_SET_PREFIX, (unsigned long )lc, NULL);
-+
-+	/* Copy all exception psws. */
-+	memcpy(lc, cpu0->lowcore, 512);
-+
-+	/* Setup stack */
-+	cpu->stack = (uint64_t *)alloc_pages(2);
-+
-+	/* Start without DAT and any other mask bits. */
-+	cpu->lowcore->sw_int_grs[14] = psw.addr;
-+	cpu->lowcore->sw_int_grs[15] = (uint64_t)cpu->stack + (PAGE_SIZE * 4);
-+	lc->restart_new_psw.mask = 0x0000000180000000UL;
-+	lc->restart_new_psw.addr = (uint64_t)smp_cpu_setup_state;
-+	lc->sw_int_cr0 = 0x0000000000040000UL;
-+
-+	/* Start processing */
-+	rc = sigp_retry(cpu->addr, SIGP_RESTART, 0, NULL);
-+	if (!rc)
-+		cpu->active = true;
-+
-+out:
-+	spin_unlock(&lock);
-+	return rc;
-+}
-+
-+/*
-+ * Disregarding state, stop all cpus that once were online except for
-+ * calling cpu.
-+ */
-+void smp_teardown(void)
-+{
-+	int i = 0;
-+	uint16_t this_cpu = stap();
-+	struct ReadCpuInfo *info = (void *)cpu_info_buffer;
-+
-+	spin_lock(&lock);
-+	for (; i < info->nr_configured; i++) {
-+		if (cpus[i].active &&
-+		    cpus[i].addr != this_cpu) {
-+			sigp_retry(cpus[i].addr, SIGP_STOP, 0, NULL);
-+		}
-+	}
-+	spin_unlock(&lock);
-+}
-+
-+/*Expected to be called from boot cpu */
-+extern uint64_t *stackptr;
-+void smp_setup(void)
-+{
-+	int i = 0;
-+	unsigned short cpu0_addr = stap();
-+	struct ReadCpuInfo *info = (void *)cpu_info_buffer;
-+
-+	spin_lock(&lock);
-+	sclp_mark_busy();
-+	info->h.length = PAGE_SIZE;
-+	sclp_service_call(SCLP_READ_CPU_INFO, cpu_info_buffer);
-+
-+	if (smp_query_num_cpus() > 1)
-+		printf("SMP: Initializing, found %d cpus\n", info->nr_configured);
-+
-+	cpus = calloc(info->nr_configured, sizeof(cpus));
-+	for (i = 0; i < info->nr_configured; i++) {
-+		cpus[i].addr = info->entries[i].address;
-+		cpus[i].active = false;
-+		if (info->entries[i].address == cpu0_addr) {
-+			cpu0 = &cpus[i];
-+			cpu0->stack = stackptr;
-+			cpu0->lowcore = (void *)0;
-+			cpu0->active = true;
-+		}
-+	}
-+	spin_unlock(&lock);
-+}
-diff --git a/lib/s390x/smp.h b/lib/s390x/smp.h
-new file mode 100644
-index 0000000..4476c31
---- /dev/null
-+++ b/lib/s390x/smp.h
-@@ -0,0 +1,51 @@
-+/*
-+ * s390x smp
-+ *
-+ * Copyright (c) 2019 IBM Corp
-+ *
-+ * Authors:
-+ *  Janosch Frank <frankja@linux.ibm.com>
-+ *
-+ * This code is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2.
-+ */
-+#ifndef SMP_H
-+#define SMP_H
-+
-+struct cpu {
-+	struct lowcore *lowcore;
-+	uint64_t *stack;
-+	uint16_t addr;
-+	bool active;
-+};
-+
-+struct cpu_status {
-+    uint64_t    fprs[16];                       /* 0x0000 */
-+    uint64_t    grs[16];                        /* 0x0080 */
-+    struct psw  psw;                            /* 0x0100 */
-+    uint8_t     pad_0x0110[0x0118 - 0x0110];    /* 0x0110 */
-+    uint32_t    prefix;                         /* 0x0118 */
-+    uint32_t    fpc;                            /* 0x011c */
-+    uint8_t     pad_0x0120[0x0124 - 0x0120];    /* 0x0120 */
-+    uint32_t    todpr;                          /* 0x0124 */
-+    uint64_t    cputm;                          /* 0x0128 */
-+    uint64_t    ckc;                            /* 0x0130 */
-+    uint8_t     pad_0x0138[0x0140 - 0x0138];    /* 0x0138 */
-+    uint32_t    ars[16];                        /* 0x0140 */
-+    uint64_t    crs[16];                        /* 0x0384 */
-+};
-+
-+int smp_query_num_cpus(void);
-+struct cpu *smp_cpu_from_addr(uint16_t addr);
-+bool smp_cpu_stopped(uint16_t addr);
-+bool smp_cpu_running(uint16_t addr);
-+int smp_cpu_restart(uint16_t addr);
-+int smp_cpu_start(uint16_t addr, struct psw psw);
-+int smp_cpu_stop(uint16_t addr);
-+int smp_cpu_stop_store_status(uint16_t addr);
-+int smp_cpu_destroy(uint16_t addr);
-+int smp_cpu_setup(uint16_t addr, struct psw psw);
-+void smp_teardown(void);
-+void smp_setup(void);
-+
-+#endif
-diff --git a/s390x/Makefile b/s390x/Makefile
-index 96033dd..d83dd0b 100644
---- a/s390x/Makefile
-+++ b/s390x/Makefile
-@@ -48,6 +48,7 @@ cflatobjs += lib/s390x/sclp.o
- cflatobjs += lib/s390x/sclp-console.o
- cflatobjs += lib/s390x/interrupt.o
- cflatobjs += lib/s390x/mmu.o
-+cflatobjs += lib/s390x/smp.o
- 
- OBJDIRS += lib/s390x
- 
-diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-index 36f7cab..5dc1577 100644
---- a/s390x/cstart64.S
-+++ b/s390x/cstart64.S
-@@ -172,6 +172,13 @@ diag308_load_reset:
- 	lhi	%r2, 1
- 	br	%r14
- 
-+.globl smp_cpu_setup_state
-+smp_cpu_setup_state:
-+	xgr	%r1, %r1
-+	lmg     %r0, %r15, GEN_LC_SW_INT_GRS
-+	lctlg   %c0, %c0, GEN_LC_SW_INT_CR0
-+	br	%r14
-+
- pgm_int:
- 	SAVE_REGS
- 	brasl	%r14, handle_pgm_int
--- 
-2.17.2
+(also patchwork is absolute crap for reading email threads)
 
+Anyway, I found it -- I think, I refused to click the link. I replied
+there.
+
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> Suggested-by: Michal Hocko <mhocko@kernel.org>
+> Acked-by: Michal Hocko <mhocko@suse.com>
+
+
+
+> diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+> index 4123100e..9859acb 100644
+> --- a/arch/x86/mm/numa.c
+> +++ b/arch/x86/mm/numa.c
+> @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
+>   */
+>  const struct cpumask *cpumask_of_node(int node)
+>  {
+> +	if (node == NUMA_NO_NODE)
+> +		return cpu_online_mask;
+
+This mandates the caller holds cpus_read_lock() or something, I'm pretty
+sure that if I put:
+
+	lockdep_assert_cpus_held();
+
+here, it comes apart real quick. Without holding the cpu hotplug lock,
+the online mask is gibberish.
+
+> +
+>  	if ((unsigned)node >= nr_node_ids) {
+>  		printk(KERN_WARNING
+>  			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+
+I still think this makes absolutely no sense what so ever.
