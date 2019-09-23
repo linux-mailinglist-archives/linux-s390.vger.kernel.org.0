@@ -2,32 +2,28 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D13B6BB1CB
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 12:00:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 440F1BB25F
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 12:43:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2407480AbfIWKAN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Sep 2019 06:00:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40136 "EHLO mx1.redhat.com"
+        id S2436836AbfIWKnO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Sep 2019 06:43:14 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38470 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2407478AbfIWKAM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Sep 2019 06:00:12 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        id S2436612AbfIWKnO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 23 Sep 2019 06:43:14 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 324D6301D67F;
-        Mon, 23 Sep 2019 10:00:12 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 93ECE756;
+        Mon, 23 Sep 2019 10:43:13 +0000 (UTC)
 Received: from thuth.remote.csb (ovpn-116-120.ams2.redhat.com [10.36.116.120])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 53D215C1B2;
-        Mon, 23 Sep 2019 10:00:03 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH] s390x: Fix stsi unaligned test and add
- selector tests
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org
-References: <20190920075020.1698-1-frankja@linux.ibm.com>
- <9dd9362d-f8e2-a573-3833-376039dbc570@redhat.com>
- <97e39625-6675-6d01-b1da-dd6d0758c943@redhat.com>
- <b78fcfa7-7c80-b1c2-aecb-e72b6df91dbc@linux.ibm.com>
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 507365D71C;
+        Mon, 23 Sep 2019 10:43:09 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v3 4/6] s390x: Add initial smp code
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com
+References: <20190920080356.1948-1-frankja@linux.ibm.com>
+ <20190920080356.1948-5-frankja@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
@@ -73,114 +69,225 @@ Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
  IQu4bBP2GxiRQ+NV3iV/KU3ebMRzqIC//DCOxzQNFNJAKldPe/bKZMCxEqtVoRkuJtNdp/5a
  yXFZ6TfE1hGKrDBYAm4vrnZ4CXFSBDllL59cFFOJCkn4Xboj/aVxxJxF30bn
 Organization: Red Hat
-Message-ID: <db5878e4-96a6-0937-852d-b7b98f40e77c@redhat.com>
-Date:   Mon, 23 Sep 2019 11:59:57 +0200
+Message-ID: <b60eee55-f013-411a-0e52-3f40a990b1c4@redhat.com>
+Date:   Mon, 23 Sep 2019 12:43:08 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <b78fcfa7-7c80-b1c2-aecb-e72b6df91dbc@linux.ibm.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="ldgZ45SAN2yODzH2ORLoxHZtVps224aLj"
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 23 Sep 2019 10:00:12 +0000 (UTC)
+In-Reply-To: <20190920080356.1948-5-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Mon, 23 Sep 2019 10:43:13 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---ldgZ45SAN2yODzH2ORLoxHZtVps224aLj
-Content-Type: multipart/mixed; boundary="clfnqYnxDuNN2lgCgKy4li4dBro6hvCwQ";
- protected-headers="v1"
-From: Thomas Huth <thuth@redhat.com>
-To: Janosch Frank <frankja@linux.ibm.com>,
- David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
-Message-ID: <db5878e4-96a6-0937-852d-b7b98f40e77c@redhat.com>
-Subject: Re: [kvm-unit-tests PATCH] s390x: Fix stsi unaligned test and add
- selector tests
-References: <20190920075020.1698-1-frankja@linux.ibm.com>
- <9dd9362d-f8e2-a573-3833-376039dbc570@redhat.com>
- <97e39625-6675-6d01-b1da-dd6d0758c943@redhat.com>
- <b78fcfa7-7c80-b1c2-aecb-e72b6df91dbc@linux.ibm.com>
-In-Reply-To: <b78fcfa7-7c80-b1c2-aecb-e72b6df91dbc@linux.ibm.com>
+On 20/09/2019 10.03, Janosch Frank wrote:
+> Let's add a rudimentary SMP library, which will scan for cpus and has
+> helper functions that manage the cpu state.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+[...]
+> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
+> new file mode 100644
+> index 0000000..05379b0
+> --- /dev/null
+> +++ b/lib/s390x/smp.c
+> @@ -0,0 +1,263 @@
+> +/*
+> + * s390x smp
+> + * Based on Linux's arch/s390/kernel/smp.c and
+> + * arch/s390/include/asm/sigp.h
+> + *
+> + * Copyright (c) 2019 IBM Corp
+> + *
+> + * Authors:
+> + *  Janosch Frank <frankja@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2.
+> + */
+> +#include <libcflat.h>
+> +#include <asm/arch_def.h>
+> +#include <asm/sigp.h>
+> +#include <asm/page.h>
+> +#include <asm/barrier.h>
+> +#include <asm/spinlock.h>
+> +#include <asm/asm-offsets.h>
+> +
+> +#include <alloc.h>
+> +#include <alloc_page.h>
+> +
+> +#include "smp.h"
+> +#include "sclp.h"
+> +
+> +static char cpu_info_buffer[PAGE_SIZE] __attribute__((__aligned__(4096)));
+> +static struct cpu *cpus;
+> +static struct cpu *cpu0;
+> +static struct spinlock lock;
+> +
+> +extern void smp_cpu_setup_state(void);
+> +
+> +int smp_query_num_cpus(void)
+> +{
+> +	struct ReadCpuInfo *info = (void *)cpu_info_buffer;
+> +	return info->nr_configured;
+> +}
+> +
+> +struct cpu *smp_cpu_from_addr(uint16_t addr)
+> +{
+> +	int i, num = smp_query_num_cpus();
+> +	struct cpu *cpu = NULL;
+> +
+> +	for (i = 0; i < num; i++) {
+> +		if (cpus[i].addr == addr)
+> +			cpu = &cpus[i];
 
---clfnqYnxDuNN2lgCgKy4li4dBro6hvCwQ
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Small optimization: Add a "break" here. Or "return &cpus[i]" directly
+and "return NULL" after the loop, getting rid of the "cpu" variable.
 
-On 23/09/2019 11.48, Janosch Frank wrote:
-> On 9/23/19 10:10 AM, Thomas Huth wrote:
->> On 20/09/2019 10.10, David Hildenbrand wrote:
->>> On 20.09.19 09:50, Janosch Frank wrote:
->>>> Alignment and selectors test order is not specified and so, if you
->>>> have an unaligned address and invalid selectors it's up to the
->>>> hypervisor to decide which error is presented.
->>>>
->>>> Let's add valid selectors to the unaligned test and add selector
->>>> tests.
->>>>
->>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>>> ---
->>>>  s390x/stsi.c | 4 +++-
->>>>  1 file changed, 3 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/s390x/stsi.c b/s390x/stsi.c
->>>> index 7232cb0..c5bd0a2 100644
->>>> --- a/s390x/stsi.c
->>>> +++ b/s390x/stsi.c
->>>> @@ -35,7 +35,7 @@ static void test_specs(void)
->>>> =20
->>>>  	report_prefix_push("unaligned");
->>>>  	expect_pgm_int();
->>>> -	stsi(pagebuf + 42, 1, 0, 0);
->>>> +	stsi(pagebuf + 42, 1, 1, 1);
->>>>  	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
->>>>  	report_prefix_pop();
->>>> =20
->>>> @@ -71,6 +71,8 @@ static inline unsigned long stsi_get_fc(void *addr=
-)
->>>>  static void test_fc(void)
->>>>  {
->>>>  	report("invalid fc",  stsi(pagebuf, 7, 0, 0) =3D=3D 3);
->>
->> While you're at it, wouldn't it be better to use "(pagebuf, 7, 1, 1)" =
-here?
->=20
-> The selectors depend on the command, so they need to be checked after
-> the command. I don't think it would make much sense to change the zeroe=
-s
-> here.
+> +	}
+> +	return cpu;
+> +}
+> +
+> +bool smp_cpu_stopped(uint16_t addr)
+> +{
+> +	uint32_t status;
+> +
+> +	if (sigp(addr, SIGP_SENSE, 0, &status) != SIGP_CC_STATUS_STORED)
+> +		return false;
+> +	return !!(status & (SIGP_STATUS_CHECK_STOP|SIGP_STATUS_STOPPED));
+> +}
+> +
+> +bool smp_cpu_running(uint16_t addr)
+> +{
+> +	if (sigp(addr, SIGP_SENSE_RUNNING, 0, NULL) != SIGP_CC_STATUS_STORED)
+> +		return true;
+> +	/* Status stored condition code is equivalent to cpu not running. */
+> +	return false;
+> +}
+> +
+> +static int smp_cpu_stop_nolock(uint16_t addr, bool store)
+> +{
+> +	struct cpu *cpu;
+> +	uint8_t order = store ? SIGP_STOP_AND_STORE_STATUS : SIGP_STOP;
+> +
+> +	cpu = smp_cpu_from_addr(addr);
+> +	if (!cpu || cpu == cpu0)
+> +		return -1;
+> +
+> +	if (sigp_retry(addr, order, 0, NULL))
+> +		return -1;
+> +
+> +	while (!smp_cpu_stopped(addr))
+> +		mb();
+> +	cpu->active = false;
+> +	return 0;
+> +}
+> +
+> +int smp_cpu_stop(uint16_t addr)
+> +{
+> +	int rc = 0;
 
-OK, fair. Patche queued.
+You could drop the "= 0" here.
 
- Thomas
+> +	spin_lock(&lock);
+> +	rc = smp_cpu_stop_nolock(addr, false);
+> +	spin_unlock(&lock);
+> +	return rc;
+> +}
+> +
+> +int smp_cpu_stop_store_status(uint16_t addr)
+> +{
+> +	int rc = 0;
 
+dito.
 
---clfnqYnxDuNN2lgCgKy4li4dBro6hvCwQ--
+> +	spin_lock(&lock);
+> +	rc = smp_cpu_stop_nolock(addr, true);
+> +	spin_unlock(&lock);
+> +	return rc;
+> +}
+> +
+> +int smp_cpu_restart(uint16_t addr)
+> +{
+> +	int rc = -1;
+> +	struct cpu *cpu;
+> +
+> +	spin_lock(&lock);
+> +	cpu = smp_cpu_from_addr(addr);
+> +	if (!cpu)
+> +		goto out;
+> +
+> +	rc = sigp(addr, SIGP_RESTART, 0, NULL);
+> +	cpu->active = true;
+> +out:
 
---ldgZ45SAN2yODzH2ORLoxHZtVps224aLj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+For such simple code, I'd prefer:
 
------BEGIN PGP SIGNATURE-----
+	if (cpu) {
+		rc = sigp(addr, SIGP_RESTART, 0, NULL);
+		cpu->active = true;
+	}
 
-iQIzBAEBCAAdFiEEJ7iIR+7gJQEY8+q5LtnXdP5wLbUFAl2Il6IACgkQLtnXdP5w
-LbUSmBAAoWevoCJxjRUxD4eXfO0J5ZslKukVj3NSYhh0yBdRmwjRNQnF3AeGVDTv
-hAnzpFB69kFfiR1IlMpf2szliyeOFqbfq10miEzlN5oom0pRt6Jk6T+aV1iHRTaV
-olEiBTay37O+mTlmjPokc22DHHyMc9bRIwS7PAA2hCHcWDbZvBqYkuEMxdcL0QyC
-7r5T7Q7eg1+qWt1+a7k1OrlzGqrqXM+p0ltZFFUbA5Z3KrA2uCwtDxhsSFIP8o56
-YEhsoCD8FOC5jsUqhzYivo7hM4ol5pOl/yMFeeaCgVmK/VK9VfdUVRNj8imk2kfR
-m8mPkzcN8hzNF/uBOagNFW9gc66rdZBr6eWVCkKFSyoZaUsN+AjfwYhkGqyuLFLw
-Hx6mCHLryDr+oajOtmPO/Tm723zubBqSj9IXxYb+IJy4TPsqBPdnYA0URvVHLBxH
-Eozkx89t0BsfLQ6/WOlbVVheUkwBXDwSRSKYQ7cyKhUpEBKYck04jVL7cRDDxtnd
-UP2+nxvr1ILWcRhNYT9bs1TAt71cf2jiyp/jyp2kednCnKNNuwRGTOITd9NtLc+j
-ne15RPO2cX2lCGVt+01IDSwqZks6mu3TOwOpoF7R58YRokPAqKZ0BI5VYaMvFf9j
-fv01MoibPD7W+F3vIFkP2ATd2mAmtOLvbZvC1yPiHPqDi45+/Pc=
-=/T/G
------END PGP SIGNATURE-----
+instead of using a "goto" ... anyway, just my 0.02 €.
 
---ldgZ45SAN2yODzH2ORLoxHZtVps224aLj--
+> +	spin_unlock(&lock);
+> +	return rc;
+> +}
+> +
+> +int smp_cpu_start(uint16_t addr, struct psw psw)
+> +{
+> +	int rc = -1;
+> +	struct cpu *cpu;
+> +	struct lowcore *lc;
+> +
+> +	spin_lock(&lock);
+> +	cpu = smp_cpu_from_addr(addr);
+> +	if (!cpu)
+> +		goto out;
+> +
+> +	lc = cpu->lowcore;
+> +	lc->restart_new_psw.mask = psw.mask;
+> +	lc->restart_new_psw.addr = psw.addr;
+> +	rc = sigp(addr, SIGP_RESTART, 0, NULL);
+> +out:
+
+dito, could be done without "goto".
+
+> +	spin_unlock(&lock);
+> +	return rc;
+> +}
+> +
+> +int smp_cpu_destroy(uint16_t addr)
+> +{
+> +	struct cpu *cpu;
+> +	int rc = 0;
+> +
+> +	spin_lock(&lock);
+> +	rc = smp_cpu_stop_nolock(addr, false);
+> +	if (rc)
+> +		goto out;
+> +
+> +	cpu = smp_cpu_from_addr(addr);
+> +	free_pages(cpu->lowcore, 2 * PAGE_SIZE);
+> +	free_pages(cpu->stack, 4 * PAGE_SIZE);
+> +	cpu->lowcore = (void *)-1UL;
+> +	cpu->stack = (void *)-1UL;
+> +
+> +out:
+
+dito. Well, it's just a matter of taste, I think. I'm also fine if you
+want to keep it this way.
+
+> +	spin_unlock(&lock);
+> +	return rc;
+> +}
+
+... just cosmetic nits, patch looks fine to me now, so feel free to add:
+
+Reviewed-by: Thomas Huth <thuth@redhat.com>
