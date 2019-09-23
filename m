@@ -2,115 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E709EBB880
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 17:51:09 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 60DCFBB8D3
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 18:00:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728989AbfIWPvG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Sep 2019 11:51:06 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40272 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728720AbfIWPvF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 Sep 2019 11:51:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0RDd3iHkouZU1pRFRB48/lD4Y4fOddJfRH7mBxc6Vao=; b=NXlQx8HeAqeDb6yqEaTk/519B
-        dPw5dQx+43R/Xql9eX//W6l/1vbSDqJBsSKbX0+GgxGyR/lMzRBIJJLwaiBlYUPovHMUeZ4WuI2U9
-        pqR/T7IrCuH324g5O+5uhidav3oL5K11yioHiIVa88PxC9Lhl8Af25UBQiNsPQjgWAv5dhal7H8Pm
-        kjjT0b4sbkwdVtooJ5V/S1z3/O080RdL39Z8BxDGhymwdoNXrZ7KMaQqR08JJFpuEuA5JxPauwCNC
-        NwI5i96tju02O7rB8oB1RofYv2QQUL82ESd4By1d+WKKUSotGlAN05bG1WBwAaFYH+M7oRF/I/hUL
-        8rRYpfeYg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iCQa9-0006CY-8C; Mon, 23 Sep 2019 15:49:02 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id CEBBA303DFD;
-        Mon, 23 Sep 2019 17:48:07 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 0AF5F20D80D41; Mon, 23 Sep 2019 17:48:53 +0200 (CEST)
-Date:   Mon, 23 Sep 2019 17:48:52 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190923154852.GG2369@hirez.programming.kicks-ass.net>
-References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
- <20190923151519.GE2369@hirez.programming.kicks-ass.net>
- <20190923152856.GB17206@dhcp22.suse.cz>
+        id S2387442AbfIWQAz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Sep 2019 12:00:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54458 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732861AbfIWQAz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 23 Sep 2019 12:00:55 -0400
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8FBCD3D955
+        for <linux-s390@vger.kernel.org>; Mon, 23 Sep 2019 16:00:54 +0000 (UTC)
+Received: by mail-qk1-f199.google.com with SMTP id y189so18222969qkb.14
+        for <linux-s390@vger.kernel.org>; Mon, 23 Sep 2019 09:00:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=FnrZlG9onHbzoUOas395WBpQBkqdPWiXJrz3kgJAMNs=;
+        b=cen5/YlSfXCyEPknr5VHXRO5us2Osf/FOChE3QED7+4SOo12bDW3IDj9KA0/y3Ta0d
+         YvRwYhdVrXvLyxlN83qFzdq/7MEOoeYYfQHNWwDPgS6C9vkcQvzUBu20tB0Hl+ZpjwSj
+         9iJPWJXG8wKTFUUJdRCLav+osTF3AYLPCVJQEfL6GeN3D6KM/fRME516apgq9gBuPFTd
+         uPIVHS/UAEmAgQ1zrqFr2ZI0NTB6nYN9uazkpef7iKQ4BhXTC1JqJDn+SzHcx2PE1gdX
+         Jfv+VaMMNfbO5wM5CVC3C2fJfLg8r8Z8zStaW8YuzfzJiqowsRvKSCnje3Xx6YwF48Xo
+         W69g==
+X-Gm-Message-State: APjAAAVlUZ1mc8oGKGShKIqEEzDzJLRbPQ8Ec5r6cBRmRP/dKEerF4Vj
+        IvhXAL70dvpobDsnui6crcr5U80LY1dW57BsFJvu++oxeBIwYOCHZzGCXWaSNwv6yXNplatrzkS
+        2uAXeWY9PNMeBmVLcJg5K0A==
+X-Received: by 2002:a0c:e48b:: with SMTP id n11mr25662881qvl.38.1569254453757;
+        Mon, 23 Sep 2019 09:00:53 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzeS0qH7VWztyzQkjfFK33LHuBL/0r9aVYJeACu8zWG4i5I+VaFWBP3hOAewtn9oF8WJysLNw==
+X-Received: by 2002:a0c:e48b:: with SMTP id n11mr25662820qvl.38.1569254453463;
+        Mon, 23 Sep 2019 09:00:53 -0700 (PDT)
+Received: from redhat.com (bzq-79-176-40-226.red.bezeqint.net. [79.176.40.226])
+        by smtp.gmail.com with ESMTPSA id m125sm5840827qkd.3.2019.09.23.09.00.43
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Sep 2019 09:00:52 -0700 (PDT)
+Date:   Mon, 23 Sep 2019 12:00:41 -0400
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com
+Subject: Re: [PATCH 5/6] vringh: fix copy direction of vringh_iov_push_kern()
+Message-ID: <20190923115930-mutt-send-email-mst@kernel.org>
+References: <20190923130331.29324-1-jasowang@redhat.com>
+ <20190923130331.29324-6-jasowang@redhat.com>
+ <20190923094559.765da494@x1.home>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190923152856.GB17206@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190923094559.765da494@x1.home>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 05:28:56PM +0200, Michal Hocko wrote:
-> On Mon 23-09-19 17:15:19, Peter Zijlstra wrote:
-
-> > > diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
-> > > index 4123100e..9859acb 100644
-> > > --- a/arch/x86/mm/numa.c
-> > > +++ b/arch/x86/mm/numa.c
-> > > @@ -861,6 +861,9 @@ void numa_remove_cpu(int cpu)
-> > >   */
-> > >  const struct cpumask *cpumask_of_node(int node)
-> > >  {
-> > > +	if (node == NUMA_NO_NODE)
-> > > +		return cpu_online_mask;
-> > 
-> > This mandates the caller holds cpus_read_lock() or something, I'm pretty
-> > sure that if I put:
-> > 
-> > 	lockdep_assert_cpus_held();
+On Mon, Sep 23, 2019 at 09:45:59AM -0600, Alex Williamson wrote:
+> On Mon, 23 Sep 2019 21:03:30 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
 > 
-> Is this documented somewhere?
-
-No idea... common sense :-)
-
-> Also how does that differ from a normal
-> case when a proper node is used? The cpumask will always be dynamic in
-> the cpu hotplug presence, right?
-
-As per normal yes, and I'm fairly sure there's a ton of bugs. Any
-'online' state is subject to change except when you're holding
-sufficient locks to stop it.
-
-Disabling preemption also stabilizes it, because cpu unplug relies on
-stop-machine.
-
-> > here, it comes apart real quick. Without holding the cpu hotplug lock,
-> > the online mask is gibberish.
+> > We want to copy from iov to buf, so the direction was wrong.
+> > 
+> > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > ---
+> >  drivers/vhost/vringh.c | 8 +++++++-
+> >  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
-> Can the returned cpu mask go away?
+> 
+> Why is this included in the series?  Seems like an unrelated fix being
+> held up within a proposal for a new feature.  Thanks,
+> 
+> Alex
 
-No, the cpu_online_mask itself has static storage, the contents OTOH can
-change at will. Very little practical difference :-)
+It's better to have it as patch 1/6, but it's a dependency of the
+example driver in the series. I can reorder when I apply.
 
 
+> > diff --git a/drivers/vhost/vringh.c b/drivers/vhost/vringh.c
+> > index 08ad0d1f0476..a0a2d74967ef 100644
+> > --- a/drivers/vhost/vringh.c
+> > +++ b/drivers/vhost/vringh.c
+> > @@ -852,6 +852,12 @@ static inline int xfer_kern(void *src, void *dst, size_t len)
+> >  	return 0;
+> >  }
+> >  
+> > +static inline int kern_xfer(void *dst, void *src, size_t len)
+> > +{
+> > +	memcpy(dst, src, len);
+> > +	return 0;
+> > +}
+> > +
+> >  /**
+> >   * vringh_init_kern - initialize a vringh for a kernelspace vring.
+> >   * @vrh: the vringh to initialize.
+> > @@ -958,7 +964,7 @@ EXPORT_SYMBOL(vringh_iov_pull_kern);
+> >  ssize_t vringh_iov_push_kern(struct vringh_kiov *wiov,
+> >  			     const void *src, size_t len)
+> >  {
+> > -	return vringh_iov_xfer(wiov, (void *)src, len, xfer_kern);
+> > +	return vringh_iov_xfer(wiov, (void *)src, len, kern_xfer);
+> >  }
+> >  EXPORT_SYMBOL(vringh_iov_push_kern);
+> >  
