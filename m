@@ -2,137 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5458BADC7
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 08:27:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E68D6BAEEF
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 10:10:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393094AbfIWG1Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Sep 2019 02:27:24 -0400
-Received: from foss.arm.com ([217.140.110.172]:37482 "EHLO foss.arm.com"
+        id S2389831AbfIWIKv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Sep 2019 04:10:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38104 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387519AbfIWG1X (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Sep 2019 02:27:23 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 86A51337;
-        Sun, 22 Sep 2019 23:27:22 -0700 (PDT)
-Received: from [10.162.40.137] (p8cg001049571a15.blr.arm.com [10.162.40.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7248C3F59C;
-        Sun, 22 Sep 2019 23:29:45 -0700 (PDT)
-Subject: Re: [PATCH V3 2/2] mm/pgtable/debug: Add test validating architecture
- page table helpers
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Mark Rutland <mark.rutland@arm.com>, linux-ia64@vger.kernel.org,
-        linux-sh@vger.kernel.org,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org,
-        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
-        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Kees Cook <keescook@chromium.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dave Hansen <dave.hansen@intel.com>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Paul Burton <paul.burton@mips.com>, kbuild-all@01.org,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-References: <20190921160049.GB13569@xsang-OptiPlex-9020>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <ab7c36ae-0942-d2e3-2a46-924c13a3d999@arm.com>
-Date:   Mon, 23 Sep 2019 11:57:29 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S2388953AbfIWIKu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 23 Sep 2019 04:10:50 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6C19430833C1;
+        Mon, 23 Sep 2019 08:10:50 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-120.ams2.redhat.com [10.36.116.120])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C7A5A5DAAE;
+        Mon, 23 Sep 2019 08:10:46 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH] s390x: Fix stsi unaligned test and add
+ selector tests
+To:     David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org
+References: <20190920075020.1698-1-frankja@linux.ibm.com>
+ <9dd9362d-f8e2-a573-3833-376039dbc570@redhat.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat
+Message-ID: <97e39625-6675-6d01-b1da-dd6d0758c943@redhat.com>
+Date:   Mon, 23 Sep 2019 10:10:45 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20190921160049.GB13569@xsang-OptiPlex-9020>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <9dd9362d-f8e2-a573-3833-376039dbc570@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Mon, 23 Sep 2019 08:10:50 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 20/09/2019 10.10, David Hildenbrand wrote:
+> On 20.09.19 09:50, Janosch Frank wrote:
+>> Alignment and selectors test order is not specified and so, if you
+>> have an unaligned address and invalid selectors it's up to the
+>> hypervisor to decide which error is presented.
+>>
+>> Let's add valid selectors to the unalignmnet test and add selector
+>> tests.
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> ---
+>>  s390x/stsi.c | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/s390x/stsi.c b/s390x/stsi.c
+>> index 7232cb0..c5bd0a2 100644
+>> --- a/s390x/stsi.c
+>> +++ b/s390x/stsi.c
+>> @@ -35,7 +35,7 @@ static void test_specs(void)
+>>  
+>>  	report_prefix_push("unaligned");
+>>  	expect_pgm_int();
+>> -	stsi(pagebuf + 42, 1, 0, 0);
+>> +	stsi(pagebuf + 42, 1, 1, 1);
+>>  	check_pgm_int_code(PGM_INT_CODE_SPECIFICATION);
+>>  	report_prefix_pop();
+>>  
+>> @@ -71,6 +71,8 @@ static inline unsigned long stsi_get_fc(void *addr)
+>>  static void test_fc(void)
+>>  {
+>>  	report("invalid fc",  stsi(pagebuf, 7, 0, 0) == 3);
+
+While you're at it, wouldn't it be better to use "(pagebuf, 7, 1, 1)" here?
+
+ Thomas
 
 
-On 09/21/2019 09:30 PM, kbuild test robot wrote:
-> Hi Anshuman,
+>> +	report("invalid selector 1", stsi(pagebuf, 1, 0, 1) == 3);
+>> +	report("invalid selector 2", stsi(pagebuf, 1, 1, 0) == 3);
+>>  	report("query fc >= 2",  stsi_get_fc(pagebuf) >= 2);
+>>  }
+>>  
+>>
 > 
-> Thank you for the patch! Yet something to improve:
+> Acked-by: David Hildenbrand <david@redhat.com>
 > 
-> [auto build test ERROR on linus/master]
-> [cannot apply to v5.3 next-20190919]
-> [if your patch is applied to the wrong git tree, please drop us a note to help
-> improve the system. BTW, we also suggest to use '--base' option to specify the
-> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
-> 
-> url:    https://github.com/0day-ci/linux/commits/Anshuman-Khandual/mm-debug-Add-tests-for-architecture-exported-page-table-helpers/20190920-143746
-> config: ia64-allmodconfig (attached as .config)
-> compiler: ia64-linux-gcc (GCC) 7.4.0
-> reproduce:
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # save the attached .config to linux build tree
->         GCC_VERSION=7.4.0 make.cross ARCH=ia64 
-> :::::: branch date: 3 hours ago
-> :::::: commit date: 3 hours ago
-> 
-> If you fix the issue, kindly add following tag
-> Reported-by: kbuild test robot <lkp@intel.com>
-> 
-> All error/warnings (new ones prefixed by >>):
-> 
->    In file included from include/asm-generic/pgtable-nopud.h:8:0,
->                     from arch/ia64/include/asm/pgtable.h:591,
->                     from include/linux/mm.h:99,
->                     from include/linux/highmem.h:8,
->                     from mm/arch_pgtable_test.c:14:
->    mm/arch_pgtable_test.c: In function 'pud_clear_tests':
->>> include/asm-generic/pgtable-nop4d-hack.h:47:32: error: implicit declaration of function '__pgd'; did you mean '__p4d'? [-Werror=implicit-function-declaration]
->     #define __pud(x)    ((pud_t) { __pgd(x) })
->                                    ^
->>> mm/arch_pgtable_test.c:162:8: note: in expansion of macro '__pud'
->      pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
->            ^~~~~
->>> include/asm-generic/pgtable-nop4d-hack.h:47:22: warning: missing braces around initializer [-Wmissing-braces]
->     #define __pud(x)    ((pud_t) { __pgd(x) })
->                          ^
->>> mm/arch_pgtable_test.c:162:8: note: in expansion of macro '__pud'
->      pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
->            ^~~~~
->    cc1: some warnings being treated as errors
-> 
-> # https://github.com/0day-ci/linux/commit/49047f93b076974eefa5b019311bd3b734d61f8c
-> git remote add linux-review https://github.com/0day-ci/linux
-> git remote update linux-review
-> git checkout 49047f93b076974eefa5b019311bd3b734d61f8c
-> vim +47 include/asm-generic/pgtable-nop4d-hack.h
-> 
-> 30ec842660bd0d Kirill A. Shutemov 2017-03-09  45  
-> 30ec842660bd0d Kirill A. Shutemov 2017-03-09  46  #define pud_val(x)				(pgd_val((x).pgd))
-> 30ec842660bd0d Kirill A. Shutemov 2017-03-09 @47  #define __pud(x)				((pud_t) { __pgd(x) })
 
-I had mentioned about this build failure in the cover letter. The same
-problem also exists on arm32 platform.
-
-- Anshuman
