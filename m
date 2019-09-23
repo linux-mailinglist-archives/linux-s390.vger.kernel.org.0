@@ -2,83 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E5CABBC48
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 21:34:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C0A3BBD00
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Sep 2019 22:35:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728396AbfIWTen (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Sep 2019 15:34:43 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55662 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727981AbfIWTen (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Sep 2019 15:34:43 -0400
-Received: from zn.tnic (p200300EC2F060400F036B51F4D309BFC.dip0.t-ipconnect.de [IPv6:2003:ec:2f06:400:f036:b51f:4d30:9bfc])
+        id S2502760AbfIWUfF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Sep 2019 16:35:05 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:56884 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2502755AbfIWUfE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 Sep 2019 16:35:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jeUp5+lKmcF/04ueHLJZUYIvt6Ip7WoukEyBumn2fVY=; b=Rp7KwCGBA1u0fTRuTtn353Iqg
+        U1m+WAQt9nn2fAGVujebKUGETSc3lGylxo6ybOFrC6OjqOh6jQ3v/DS5f3WAkIPyz8mslZ534nPPF
+        w/unipekNmfUEpWS+8sKsDNny4hh/TUmdhJAPIZWH2ZRICzTYlxFR1ynoVzBW1pYsSzPlTXy9kFo8
+        Isg6dRFXpBOi7a6PiA7uGzWX65FTAfllSiv/KpO5JJ5OOAofnU1CPXj0xiiTFQerXgpuCzvcT/6/Q
+        SuqnTR2lR5rXkZN2iOh+yxAo8ns7Qujb+vZw/+amd8qwDo2R1+BLFhPLMDyxnUTx5OlVv5h2LyDch
+        CDhZ19tzw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iCV2F-0002BC-Is; Mon, 23 Sep 2019 20:34:15 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 743B11EC06F3;
-        Mon, 23 Sep 2019 21:34:41 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1569267281;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=cOtIH+ThVHQpxFENK80/GDkwsFcGH4JpmGhb1RD1kuE=;
-        b=sXcWlOo1Cf6BR+lWrajtGnsDDTS9hIUvKwljeKpj+Nm0t85WnvDMx+6rvJziYTomTou4ZU
-        KJLHPsr3OayePY/9EaXJutOEAxwUyYEMBQhiKuIXOj1m1wxS4/oVgmW1g7TaW7gHxxULSV
-        12ky9HQnuiXhbMI4N6FQqTBFzrVrbF0=
-Date:   Mon, 23 Sep 2019 21:34:46 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-um@lists.infradead.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH] seccomp: remove unused arg from secure_computing()
-Message-ID: <20190923193446.GL15355@zn.tnic>
-References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
- <20190923094916.GB15355@zn.tnic>
- <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C0BAA301A7A;
+        Mon, 23 Sep 2019 22:33:25 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0BAD120D80D4E; Mon, 23 Sep 2019 22:34:11 +0200 (CEST)
+Date:   Mon, 23 Sep 2019 22:34:10 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+ <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+ <20190923165235.GD17206@dhcp22.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
+In-Reply-To: <20190923165235.GD17206@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 11:41:59AM -0700, Andy Lutomirski wrote:
-> On Mon, Sep 23, 2019 at 2:49 AM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Fri, Sep 20, 2019 at 03:19:09PM +0200, Christian Brauner wrote:
-> > > While touching seccomp code I realized that the struct seccomp_data
-> > > argument to secure_computing() seems to be unused by all current
-> > > callers. So let's remove it unless there is some subtlety I missed.
-> > > Note, I only tested this on x86.
-> >
-> > What was amluto thinking in
-> >
-> > 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
+On Mon, Sep 23, 2019 at 06:52:35PM +0200, Michal Hocko wrote:
+> On Mon 23-09-19 17:48:52, Peter Zijlstra wrote:
+
+> To the NUMA_NO_NODE itself. Your earlier email noted:
+> : > +
+> : >  	if ((unsigned)node >= nr_node_ids) {
+> : >  		printk(KERN_WARNING
+> : >  			"cpumask_of_node(%d): (unsigned)node >= nr_node_ids(%u)\n",
+> : 
+> : I still think this makes absolutely no sense what so ever.
 > 
-> IIRC there was a period of time in which x86 used secure_computing()
-> for normal syscalls, and it was a good deal faster to have the arch
-> code supply seccomp_data.  x86 no longer works like this, and syscalls
-> aren't fast anymore ayway :(
+> Did you mean the NUMA_NO_NODE handling or the specific node >= nr_node_ids
+> check?
 
-Uhuh, thanks Andy.
+The NUMA_NO_NODE thing. It's is physical impossibility. And if the
+device description doesn't give us a node, then the description is
+incomplete and wrong and we should bloody well complain about it.
 
-Christian, pls add that piece of history to the commit message.
+> Because as to NUMA_NO_NODE I believe this makes sense because this is
+> the only way that a device is not bound to any numa node.
 
-Thx.
+Which is a physical impossibility.
 
--- 
-Regards/Gruss,
-    Boris.
+> I even the
+> ACPI standard is considering this optional. Yunsheng Lin has referred to
+> the specific part of the standard in one of the earlier discussions.
+> Trying to guess the node affinity is worse than providing all CPUs IMHO.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+I'm saying the ACPI standard is wrong. Explain to me how it is
+physically possible to have a device without NUMA affinity in a NUMA
+system?
+
+ 1) The fundamental interconnect is not uniform.
+ 2) The device needs to actually be somewhere.
+
+From these it seems to follow that access to the device is subject to
+NUMA.
+
