@@ -2,194 +2,161 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 39B89BC1F4
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Sep 2019 08:44:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4C05BC20B
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Sep 2019 08:50:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2394491AbfIXGo2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Sep 2019 02:44:28 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37201 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393206AbfIXGo2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Sep 2019 02:44:28 -0400
-Received: from [89.27.154.14] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iCeYj-0000tF-CA; Tue, 24 Sep 2019 06:44:25 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     christian.brauner@ubuntu.com
-Cc:     keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
-        luto@kernel.org, oleg@redhat.com, tglx@linutronix.de,
-        wad@chromium.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v1] seccomp: simplify secure_computing()
-Date:   Tue, 24 Sep 2019 08:44:20 +0200
-Message-Id: <20190924064420.6353-1-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20190920131907.6886-1-christian.brauner@ubuntu.com>
-References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+        id S1727332AbfIXGua (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Sep 2019 02:50:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64282 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727505AbfIXGua (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 24 Sep 2019 02:50:30 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8O6lpmq100628
+        for <linux-s390@vger.kernel.org>; Tue, 24 Sep 2019 02:50:29 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v7cpu2q1d-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 24 Sep 2019 02:50:29 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 24 Sep 2019 07:50:26 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 24 Sep 2019 07:50:22 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8O6oLmx56557688
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Sep 2019 06:50:21 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9216AE04D;
+        Tue, 24 Sep 2019 06:50:21 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 35940AE053;
+        Tue, 24 Sep 2019 06:50:21 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.146])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 24 Sep 2019 06:50:21 +0000 (GMT)
+Subject: Re: [RFC patch 00/15] entry: Provide generic implementation for host
+ and guest entry/exit work
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-s390 <linux-s390@vger.kernel.org>
+References: <20190919150314.054351477@linutronix.de>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Tue, 24 Sep 2019 08:50:20 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20190919150314.054351477@linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092406-0012-0000-0000-0000034FDE95
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092406-0013-0000-0000-0000218A6D23
+Message-Id: <ae5c6329-4ddf-2243-3a86-fbfdfd029918@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-24_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909240067
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Afaict, the struct seccomp_data argument to secure_computing() is unused
-by all current callers. So let's remove it.
-The argument was added in [1]. It was added because having the arch
-supply the syscall arguments used to be faster than having it done by
-secure_computing() (cf. Andy's comment in [2]). This is not true anymore
-though.
 
-/* References */
-[1]: 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
-[2]: https://lore.kernel.org/r/CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com
 
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Will Drewry <wad@chromium.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-parisc@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-um@lists.infradead.org
-Cc: x86@kernel.org
----
-/* v1 */
-- Borislav Petkov <bp@alien8.de>:
-  - provide context for the arg addition to secure_computing() in the
-    commit message
+On 19.09.19 17:03, Thomas Gleixner wrote:
+> When working on a way to move out the posix cpu timer expiry out of the
+> timer interrupt context, I noticed that KVM is not handling pending task
+> work before entering a guest. A quick hack was to add that to the x86 KVM
+> handling loop. The discussion ended with a request to make this a generic
+> infrastructure possible with also moving the per arch implementations of
+> the enter from and return to user space handling generic.
+> 
+>   https://lore.kernel.org/r/89E42BCC-47A8-458B-B06A-D6A20D20512C@amacapital.net
+> 
+> You asked for it, so don't complain that you have to review it :)
+> 
+> The series implements the syscall enter/exit and the general exit to
+> userspace work handling along with the pre guest enter functionality.
+> 
+> The series converts x86 and ARM64. x86 is fully tested including selftests
+> etc. ARM64 is only compile tested for now as my only ARM64 testbox is not
+> available right now.
 
-/* v0 */
-Link: https://lore.kernel.org/r/20190920131907.6886-1-christian.brauner@ubuntu.com
----
- arch/arm/kernel/ptrace.c              | 2 +-
- arch/arm64/kernel/ptrace.c            | 2 +-
- arch/parisc/kernel/ptrace.c           | 2 +-
- arch/s390/kernel/ptrace.c             | 4 ++--
- arch/um/kernel/skas/syscall.c         | 2 +-
- arch/x86/entry/vsyscall/vsyscall_64.c | 2 +-
- include/linux/seccomp.h               | 6 +++---
- 7 files changed, 10 insertions(+), 10 deletions(-)
+It seems that s390x would also need to look into TIF_NOTIFY_PENDING before
+entering a KVM guest. Given that the s390x entry path is still in assembler
+this might not be something to do quickly.
 
-diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
-index 324352787aea..b606cded90cd 100644
---- a/arch/arm/kernel/ptrace.c
-+++ b/arch/arm/kernel/ptrace.c
-@@ -923,7 +923,7 @@ asmlinkage int syscall_trace_enter(struct pt_regs *regs, int scno)
- 
- 	/* Do seccomp after ptrace; syscall may have changed. */
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- #else
- 	/* XXX: remove this once OABI gets fixed */
-diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
-index 3cf3b135027e..010a835302d3 100644
---- a/arch/arm64/kernel/ptrace.c
-+++ b/arch/arm64/kernel/ptrace.c
-@@ -1816,7 +1816,7 @@ int syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing after ptrace; failures should be fast. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- 
- 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
-diff --git a/arch/parisc/kernel/ptrace.c b/arch/parisc/kernel/ptrace.c
-index 9f6ff7bc06f9..f8c07dcbfb49 100644
---- a/arch/parisc/kernel/ptrace.c
-+++ b/arch/parisc/kernel/ptrace.c
-@@ -342,7 +342,7 @@ long do_syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing check after ptrace. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		return -1;
- 
- #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index ad71132374f0..ed80bdfbf5fe 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
- long arch_ptrace(struct task_struct *child, long request,
- 		 unsigned long addr, unsigned long data)
- {
--	ptrace_area parea; 
-+	ptrace_area parea;
- 	int copied, ret;
- 
- 	switch (request) {
-@@ -856,7 +856,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
- 	}
- 
- 	/* Do the secure computing check after ptrace. */
--	if (secure_computing(NULL)) {
-+	if (secure_computing()) {
- 		/* seccomp failures shouldn't expose any additional code. */
- 		return -1;
- 	}
-diff --git a/arch/um/kernel/skas/syscall.c b/arch/um/kernel/skas/syscall.c
-index 44bb10785075..fc37259d5971 100644
---- a/arch/um/kernel/skas/syscall.c
-+++ b/arch/um/kernel/skas/syscall.c
-@@ -35,7 +35,7 @@ void handle_syscall(struct uml_pt_regs *r)
- 		goto out;
- 
- 	/* Do the seccomp check after ptrace; failures should be fast. */
--	if (secure_computing(NULL) == -1)
-+	if (secure_computing() == -1)
- 		goto out;
- 
- 	syscall = UPT_SYSCALL_NR(r);
-diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
-index e7c596dea947..b10cbf71a8cc 100644
---- a/arch/x86/entry/vsyscall/vsyscall_64.c
-+++ b/arch/x86/entry/vsyscall/vsyscall_64.c
-@@ -222,7 +222,7 @@ bool emulate_vsyscall(unsigned long error_code,
- 	 */
- 	regs->orig_ax = syscall_nr;
- 	regs->ax = -ENOSYS;
--	tmp = secure_computing(NULL);
-+	tmp = secure_computing();
- 	if ((!tmp && regs->orig_ax != syscall_nr) || regs->ip != address) {
- 		warn_bad_vsyscall(KERN_DEBUG, regs,
- 				  "seccomp tried to change syscall nr or ip");
-diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
-index 84868d37b35d..03583b6d1416 100644
---- a/include/linux/seccomp.h
-+++ b/include/linux/seccomp.h
-@@ -33,10 +33,10 @@ struct seccomp {
- 
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
- extern int __secure_computing(const struct seccomp_data *sd);
--static inline int secure_computing(const struct seccomp_data *sd)
-+static inline int secure_computing(void)
- {
- 	if (unlikely(test_thread_flag(TIF_SECCOMP)))
--		return  __secure_computing(sd);
-+		return  __secure_computing(NULL);
- 	return 0;
- }
- #else
-@@ -59,7 +59,7 @@ struct seccomp { };
- struct seccomp_filter { };
- 
- #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
--static inline int secure_computing(struct seccomp_data *sd) { return 0; }
-+static inline int secure_computing(void) { return 0; }
- #else
- static inline void secure_computing_strict(int this_syscall) { return; }
- #endif
--- 
-2.23.0
+Would it make sense to actually start with a minimal solution (e.g. one that
+provides notify_resume_pending like your original patch) as a fix. That would
+also be simple to backport. And then we can do the proper rework on top.
+
+Or do we consider anything that depends on TIF_NOTIFY_PENDING before entering
+a guest as not important enough for stable?
+After all the vcpu_run ioctl almost never returns to userspace and nothing 
+was obviously broken.
+
+Another question: Are there callbacks due to TIF_NOTIFY_PENDING that should
+NOT happen as long as we stay in the vpcu loop?
 
