@@ -2,130 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1456BBC72E
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Sep 2019 13:51:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 34548BC745
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Sep 2019 13:54:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440852AbfIXLvC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Sep 2019 07:51:02 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39569 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440849AbfIXLvC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Sep 2019 07:51:02 -0400
-Received: by mail-ed1-f67.google.com with SMTP id a15so1549535edt.6
-        for <linux-s390@vger.kernel.org>; Tue, 24 Sep 2019 04:51:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=shutemov-name.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=/6kM5ATWnIRmId0RwOcRfnLcpIWKP734aWDaVWhsGUo=;
-        b=ga2DmRzWY94J19ywTXc7aJlINJ/KRYQ8PGtndpIW2otrRhhwz0vdOk+0aZyvFf12zM
-         XpRveudYGeGkFKJSHG8HcySuK12YIGpCUEC2wkOTV45q1k8LT1ifI5j18tohQF7m/PA+
-         6K8RlpcUkVPR9/+LLhQ4mzvuJBoUuyuUhlcKKiXhgp+n7PTRkv6s71hrNtmrwMJbpl7m
-         e1KH2/aooSfrmq/GY1oql/dqAZBTTajifnl7uEJSb86NOqby7WFhLm7p3odLbtelzM4m
-         ZVwvJJ/+RmqA5b79C+mbE04M3aieJOA2xjgY+3pjxmiSzVw2GC4lYm0cvsm1rZytvgPU
-         ruog==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/6kM5ATWnIRmId0RwOcRfnLcpIWKP734aWDaVWhsGUo=;
-        b=hG6RH8x5msQnf8WTRktgWfSkPsSaeoWkbQU7D5llXxeFoXOx3yhhZp75Axxxub3Atr
-         ZLsaJff+wsyzGAzZQSeqPlp1ll8i7EwuKKFi6Fnf64usCVGw7Y2OjUWb3sxzA6A/sGD/
-         yFMcoZeNzs9lT6jiXadrwThzPg3AlEbdgeS3NHiYR1WUJ065fnK0n+P8BcDm4qamCm4q
-         Mlr5wew1tNij3285Om2ksRr5JVE70d9ru+CQzm1KftyEmA6pTqrfowY9AdKrrZ5dgIKE
-         cyB9DvJjF5uv+pgWvb9DKig5vKgUOwMkWGWbIWBPuCvRc5qg1D8J4b2ST3zmplubPBhw
-         C7XQ==
-X-Gm-Message-State: APjAAAUQftWmhpg11rWILFgsQtX5V/rSMaglV1qwYX4Zz54DFjcYtiyd
-        r5Seo8fwmjta1cp4inbnBq88tQ==
-X-Google-Smtp-Source: APXvYqxJMR8XXzMM+ktrv2ws01Rr8qKWI/iP6Q9Wd6fsMeCMuUxQBVCNuUcjqBIbwcds2k2WtfZxLA==
-X-Received: by 2002:a50:9fe5:: with SMTP id c92mr2202655edf.280.1569325860692;
-        Tue, 24 Sep 2019 04:51:00 -0700 (PDT)
-Received: from box.localdomain ([86.57.175.117])
-        by smtp.gmail.com with ESMTPSA id r18sm319556edx.94.2019.09.24.04.50.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 24 Sep 2019 04:51:00 -0700 (PDT)
-Received: by box.localdomain (Postfix, from userid 1000)
-        id 60C621022A6; Tue, 24 Sep 2019 14:51:01 +0300 (+03)
-Date:   Tue, 24 Sep 2019 14:51:01 +0300
-From:   "Kirill A. Shutemov" <kirill@shutemov.name>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V3 0/2] mm/debug: Add tests for architecture exported
- page table helpers
-Message-ID: <20190924115101.p6y7vpbtgmj5qjku@box>
-References: <1568961203-18660-1-git-send-email-anshuman.khandual@arm.com>
+        id S2440897AbfIXLyG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Sep 2019 07:54:06 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37390 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2440891AbfIXLyF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:54:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D4E24AE6E;
+        Tue, 24 Sep 2019 11:54:02 +0000 (UTC)
+Date:   Tue, 24 Sep 2019 13:54:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190924115401.GM23050@dhcp22.suse.cz>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+ <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+ <20190923165235.GD17206@dhcp22.suse.cz>
+ <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <20190924074751.GB23050@dhcp22.suse.cz>
+ <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
+ <20190924105622.GH23050@dhcp22.suse.cz>
+ <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1568961203-18660-1-git-send-email-anshuman.khandual@arm.com>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Sep 20, 2019 at 12:03:21PM +0530, Anshuman Khandual wrote:
-> This series adds a test validation for architecture exported page table
-> helpers. Patch in the series adds basic transformation tests at various
-> levels of the page table. Before that it exports gigantic page allocation
-> function from HugeTLB.
+On Tue 24-09-19 13:23:49, Peter Zijlstra wrote:
+> On Tue, Sep 24, 2019 at 12:56:22PM +0200, Michal Hocko wrote:
+[...]
+> > To be honest I really fail to see why to object to a simple semantic
+> > that NUMA_NO_NODE imply all usable cpus. Could you explain that please?
 > 
-> This test was originally suggested by Catalin during arm64 THP migration
-> RFC discussion earlier. Going forward it can include more specific tests
-> with respect to various generic MM functions like THP, HugeTLB etc and
-> platform specific tests.
-> 
-> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
-> 
-> Testing:
-> 
-> Successfully build and boot tested on both arm64 and x86 platforms without
-> any test failing. Only build tested on some other platforms. Build failed
-> on some platforms (known) in pud_clear_tests() as there were no available
-> __pgd() definitions.
-> 
-> - ARM32
-> - IA64
+> Because it feels wrong. The device needs to be _somewhere_. It simply
+> cannot be node-less.
 
-Hm. Grep shows __pgd() definitions for both of them. Is it for specific
-config?
+What if it doesn't have any numa preference for what ever reason? There
+is no other way to express that than NUMA_NO_NODE.
 
+Anyway, I am not going to argue more about this because it seems more of
+a discussion about "HW shouldn't be doing that although the specification
+allows that" which cannot really have any outcome except of "feels
+correct/wrong".
 
+If you really feel strongly about this then we should think of a proper
+way to prevent this to happen because an out-of-bound access is
+certainly not something we really want, right?
 -- 
- Kirill A. Shutemov
+Michal Hocko
+SUSE Labs
