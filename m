@@ -2,86 +2,194 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80AE5BC1C4
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Sep 2019 08:30:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39B89BC1F4
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Sep 2019 08:44:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2440538AbfIXGal (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Sep 2019 02:30:41 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:37073 "EHLO
+        id S2394491AbfIXGo2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Sep 2019 02:44:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37201 "EHLO
         youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440525AbfIXGal (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Sep 2019 02:30:41 -0400
-Received: from [89.27.154.14] (helo=wittgenstein)
+        with ESMTP id S2393206AbfIXGo2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Sep 2019 02:44:28 -0400
+Received: from [89.27.154.14] (helo=localhost.localdomain)
         by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
         (Exim 4.86_2)
         (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iCeLN-0008Ni-0B; Tue, 24 Sep 2019 06:30:37 +0000
-Date:   Tue, 24 Sep 2019 08:30:36 +0200
+        id 1iCeYj-0000tF-CA; Tue, 24 Sep 2019 06:44:25 +0000
 From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kees Cook <keescook@chromium.org>,
-        Will Drewry <wad@chromium.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-um@lists.infradead.org, X86 ML <x86@kernel.org>
-Subject: Re: [PATCH] seccomp: remove unused arg from secure_computing()
-Message-ID: <20190924063035.n3dmryhn6cb52ida@wittgenstein>
+To:     christian.brauner@ubuntu.com
+Cc:     keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-um@lists.infradead.org,
+        luto@kernel.org, oleg@redhat.com, tglx@linutronix.de,
+        wad@chromium.org, x86@kernel.org, Borislav Petkov <bp@alien8.de>
+Subject: [PATCH v1] seccomp: simplify secure_computing()
+Date:   Tue, 24 Sep 2019 08:44:20 +0200
+Message-Id: <20190924064420.6353-1-christian.brauner@ubuntu.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20190920131907.6886-1-christian.brauner@ubuntu.com>
 References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
- <20190923094916.GB15355@zn.tnic>
- <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Sep 23, 2019 at 11:41:59AM -0700, Andy Lutomirski wrote:
-> On Mon, Sep 23, 2019 at 2:49 AM Borislav Petkov <bp@alien8.de> wrote:
-> >
-> > On Fri, Sep 20, 2019 at 03:19:09PM +0200, Christian Brauner wrote:
-> > > While touching seccomp code I realized that the struct seccomp_data
-> > > argument to secure_computing() seems to be unused by all current
-> > > callers. So let's remove it unless there is some subtlety I missed.
-> > > Note, I only tested this on x86.
-> >
-> > What was amluto thinking in
-> >
-> > 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
-> 
-> IIRC there was a period of time in which x86 used secure_computing()
-> for normal syscalls, and it was a good deal faster to have the arch
-> code supply seccomp_data.  x86 no longer works like this, and syscalls
-> aren't fast anymore ayway :(
+Afaict, the struct seccomp_data argument to secure_computing() is unused
+by all current callers. So let's remove it.
+The argument was added in [1]. It was added because having the arch
+supply the syscall arguments used to be faster than having it done by
+secure_computing() (cf. Andy's comment in [2]). This is not true anymore
+though.
 
-I started looking at this and actually had a slightly bigger cleanup in
-mind. It seems odd that we have secure_computing() and
-__secure_computing(). Especially in the mips and x86 case. From what I
-can tell they could both rely on secure_computing() and don't need
-__secure_computing().
-If I can make those changes, we can make __secure_computing() static and
-have only a single function secure_computing() that is used by all
-arches which would make this code simpler.
-Apparenly mips once switched from secure_computing() to
-__secure_computing() because of bpf and tracepoints. The last change to
-this was:
+/* References */
+[1]: 2f275de5d1ed ("seccomp: Add a seccomp_data parameter secure_computing()")
+[2]: https://lore.kernel.org/r/CALCETrU_fs_At-hTpr231kpaAd0z7xJN4ku-DvzhRU6cvcJA_w@mail.gmail.com
 
-commit 3d729deaf287c43e415c5d791c9ac8414dbeff70
-Author: James Hogan <jhogan@kernel.org>
-Date:   Fri Aug 11 21:56:50 2017 +0100
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Will Drewry <wad@chromium.org>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-um@lists.infradead.org
+Cc: x86@kernel.org
+---
+/* v1 */
+- Borislav Petkov <bp@alien8.de>:
+  - provide context for the arg addition to secure_computing() in the
+    commit message
 
-    MIPS: seccomp: Fix indirect syscall args
+/* v0 */
+Link: https://lore.kernel.org/r/20190920131907.6886-1-christian.brauner@ubuntu.com
+---
+ arch/arm/kernel/ptrace.c              | 2 +-
+ arch/arm64/kernel/ptrace.c            | 2 +-
+ arch/parisc/kernel/ptrace.c           | 2 +-
+ arch/s390/kernel/ptrace.c             | 4 ++--
+ arch/um/kernel/skas/syscall.c         | 2 +-
+ arch/x86/entry/vsyscall/vsyscall_64.c | 2 +-
+ include/linux/seccomp.h               | 6 +++---
+ 7 files changed, 10 insertions(+), 10 deletions(-)
 
-which references a broken samples/bpf/tracex5 test. But in the thread to
-this last change Kees and others were less than sure that this makes
-sense. So I'm not sure. Maybe I should just try and send it out...
+diff --git a/arch/arm/kernel/ptrace.c b/arch/arm/kernel/ptrace.c
+index 324352787aea..b606cded90cd 100644
+--- a/arch/arm/kernel/ptrace.c
++++ b/arch/arm/kernel/ptrace.c
+@@ -923,7 +923,7 @@ asmlinkage int syscall_trace_enter(struct pt_regs *regs, int scno)
+ 
+ 	/* Do seccomp after ptrace; syscall may have changed. */
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ #else
+ 	/* XXX: remove this once OABI gets fixed */
+diff --git a/arch/arm64/kernel/ptrace.c b/arch/arm64/kernel/ptrace.c
+index 3cf3b135027e..010a835302d3 100644
+--- a/arch/arm64/kernel/ptrace.c
++++ b/arch/arm64/kernel/ptrace.c
+@@ -1816,7 +1816,7 @@ int syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing after ptrace; failures should be fast. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ 
+ 	if (test_thread_flag(TIF_SYSCALL_TRACEPOINT))
+diff --git a/arch/parisc/kernel/ptrace.c b/arch/parisc/kernel/ptrace.c
+index 9f6ff7bc06f9..f8c07dcbfb49 100644
+--- a/arch/parisc/kernel/ptrace.c
++++ b/arch/parisc/kernel/ptrace.c
+@@ -342,7 +342,7 @@ long do_syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		return -1;
+ 
+ #ifdef CONFIG_HAVE_SYSCALL_TRACEPOINTS
+diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+index ad71132374f0..ed80bdfbf5fe 100644
+--- a/arch/s390/kernel/ptrace.c
++++ b/arch/s390/kernel/ptrace.c
+@@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
+ long arch_ptrace(struct task_struct *child, long request,
+ 		 unsigned long addr, unsigned long data)
+ {
+-	ptrace_area parea; 
++	ptrace_area parea;
+ 	int copied, ret;
+ 
+ 	switch (request) {
+@@ -856,7 +856,7 @@ asmlinkage long do_syscall_trace_enter(struct pt_regs *regs)
+ 	}
+ 
+ 	/* Do the secure computing check after ptrace. */
+-	if (secure_computing(NULL)) {
++	if (secure_computing()) {
+ 		/* seccomp failures shouldn't expose any additional code. */
+ 		return -1;
+ 	}
+diff --git a/arch/um/kernel/skas/syscall.c b/arch/um/kernel/skas/syscall.c
+index 44bb10785075..fc37259d5971 100644
+--- a/arch/um/kernel/skas/syscall.c
++++ b/arch/um/kernel/skas/syscall.c
+@@ -35,7 +35,7 @@ void handle_syscall(struct uml_pt_regs *r)
+ 		goto out;
+ 
+ 	/* Do the seccomp check after ptrace; failures should be fast. */
+-	if (secure_computing(NULL) == -1)
++	if (secure_computing() == -1)
+ 		goto out;
+ 
+ 	syscall = UPT_SYSCALL_NR(r);
+diff --git a/arch/x86/entry/vsyscall/vsyscall_64.c b/arch/x86/entry/vsyscall/vsyscall_64.c
+index e7c596dea947..b10cbf71a8cc 100644
+--- a/arch/x86/entry/vsyscall/vsyscall_64.c
++++ b/arch/x86/entry/vsyscall/vsyscall_64.c
+@@ -222,7 +222,7 @@ bool emulate_vsyscall(unsigned long error_code,
+ 	 */
+ 	regs->orig_ax = syscall_nr;
+ 	regs->ax = -ENOSYS;
+-	tmp = secure_computing(NULL);
++	tmp = secure_computing();
+ 	if ((!tmp && regs->orig_ax != syscall_nr) || regs->ip != address) {
+ 		warn_bad_vsyscall(KERN_DEBUG, regs,
+ 				  "seccomp tried to change syscall nr or ip");
+diff --git a/include/linux/seccomp.h b/include/linux/seccomp.h
+index 84868d37b35d..03583b6d1416 100644
+--- a/include/linux/seccomp.h
++++ b/include/linux/seccomp.h
+@@ -33,10 +33,10 @@ struct seccomp {
+ 
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+ extern int __secure_computing(const struct seccomp_data *sd);
+-static inline int secure_computing(const struct seccomp_data *sd)
++static inline int secure_computing(void)
+ {
+ 	if (unlikely(test_thread_flag(TIF_SECCOMP)))
+-		return  __secure_computing(sd);
++		return  __secure_computing(NULL);
+ 	return 0;
+ }
+ #else
+@@ -59,7 +59,7 @@ struct seccomp { };
+ struct seccomp_filter { };
+ 
+ #ifdef CONFIG_HAVE_ARCH_SECCOMP_FILTER
+-static inline int secure_computing(struct seccomp_data *sd) { return 0; }
++static inline int secure_computing(void) { return 0; }
+ #else
+ static inline void secure_computing_strict(int this_syscall) { return; }
+ #endif
+-- 
+2.23.0
 
-Christian
