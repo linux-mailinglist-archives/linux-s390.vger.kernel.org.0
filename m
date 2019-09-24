@@ -2,625 +2,155 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8E2FBC6DF
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Sep 2019 13:30:42 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FEFBBC710
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Sep 2019 13:44:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409620AbfIXLab (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Sep 2019 07:30:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45786 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389832AbfIXLaa (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 24 Sep 2019 07:30:30 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 70CE410DCC8E;
-        Tue, 24 Sep 2019 11:30:29 +0000 (UTC)
-Received: from [10.72.12.44] (ovpn-12-44.pek2.redhat.com [10.72.12.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2E34F608C0;
-        Tue, 24 Sep 2019 11:30:05 +0000 (UTC)
-Subject: Re: [PATCH 4/6] virtio: introduce a mdev based transport
-To:     Parav Pandit <parav@mellanox.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        Ido Shamay <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>
-References: <20190923130331.29324-1-jasowang@redhat.com>
- <20190923130331.29324-5-jasowang@redhat.com>
- <AM0PR05MB4866178BECC3C96DA7046590D1850@AM0PR05MB4866.eurprd05.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <eadc013a-a7dd-73f6-c82e-4c9a34c35468@redhat.com>
-Date:   Tue, 24 Sep 2019 19:30:04 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2504769AbfIXLoi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Sep 2019 07:44:38 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:51820 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2504767AbfIXLoi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 24 Sep 2019 07:44:38 -0400
+Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6B5D69C88CB7E7D0C7CE;
+        Tue, 24 Sep 2019 19:44:35 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS410-HUB.china.huawei.com
+ (10.3.19.210) with Microsoft SMTP Server id 14.3.439.0; Tue, 24 Sep 2019
+ 19:44:29 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Michal Hocko <mhocko@kernel.org>, <catalin.marinas@arm.com>,
+        <will@kernel.org>, <mingo@redhat.com>, <bp@alien8.de>,
+        <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <robin.murphy@arm.com>, <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
+References: <1568724534-146242-1-git-send-email-linyunsheng@huawei.com>
+ <20190923151519.GE2369@hirez.programming.kicks-ass.net>
+ <20190923152856.GB17206@dhcp22.suse.cz>
+ <20190923154852.GG2369@hirez.programming.kicks-ass.net>
+ <20190923165235.GD17206@dhcp22.suse.cz>
+ <20190923203410.GI2369@hirez.programming.kicks-ass.net>
+ <f1362dbb-ad31-51a8-2b06-16c9d928b876@huawei.com>
+ <20190924092551.GK2369@hirez.programming.kicks-ass.net>
+ <c816abbe-155b-504b-cef1-6413f7cdd20c@huawei.com>
+ <20190924112811.GK2332@hirez.programming.kicks-ass.net>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <8cff8350-311e-3817-0c42-b6f98de589a3@huawei.com>
+Date:   Tue, 24 Sep 2019 19:44:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-In-Reply-To: <AM0PR05MB4866178BECC3C96DA7046590D1850@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190924112811.GK2332@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Tue, 24 Sep 2019 11:30:29 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-On 2019/9/24 上午6:28, Parav Pandit wrote:
->
->> -----Original Message-----
->> From: Jason Wang <jasowang@redhat.com>
->> Sent: Monday, September 23, 2019 8:03 AM
->> To: kvm@vger.kernel.org; linux-s390@vger.kernel.org; linux-
->> kernel@vger.kernel.org; dri-devel@lists.freedesktop.org; intel-
->> gfx@lists.freedesktop.org; intel-gvt-dev@lists.freedesktop.org;
->> kwankhede@nvidia.com; alex.williamson@redhat.com; mst@redhat.com;
->> tiwei.bie@intel.com
->> Cc: virtualization@lists.linux-foundation.org; netdev@vger.kernel.org;
->> cohuck@redhat.com; maxime.coquelin@redhat.com;
->> cunming.liang@intel.com; zhihong.wang@intel.com;
->> rob.miller@broadcom.com; xiao.w.wang@intel.com;
->> haotian.wang@sifive.com; zhenyuw@linux.intel.com; zhi.a.wang@intel.com;
->> jani.nikula@linux.intel.com; joonas.lahtinen@linux.intel.com;
->> rodrigo.vivi@intel.com; airlied@linux.ie; daniel@ffwll.ch;
->> farman@linux.ibm.com; pasic@linux.ibm.com; sebott@linux.ibm.com;
->> oberpar@linux.ibm.com; heiko.carstens@de.ibm.com; gor@linux.ibm.com;
->> borntraeger@de.ibm.com; akrowiak@linux.ibm.com; freude@linux.ibm.com;
->> lingshan.zhu@intel.com; Ido Shamay <idos@mellanox.com>;
->> eperezma@redhat.com; lulu@redhat.com; Parav Pandit
->> <parav@mellanox.com>; Jason Wang <jasowang@redhat.com>
->> Subject: [PATCH 4/6] virtio: introduce a mdev based transport
+On 2019/9/24 19:28, Peter Zijlstra wrote:
+> On Tue, Sep 24, 2019 at 07:07:36PM +0800, Yunsheng Lin wrote:
+>> On 2019/9/24 17:25, Peter Zijlstra wrote:
+>>> On Tue, Sep 24, 2019 at 09:29:50AM +0800, Yunsheng Lin wrote:
+>>>> On 2019/9/24 4:34, Peter Zijlstra wrote:
+>>>
+>>>>> I'm saying the ACPI standard is wrong. Explain to me how it is
+>>>>> physically possible to have a device without NUMA affinity in a NUMA
+>>>>> system?
+>>>>>
+>>>>>  1) The fundamental interconnect is not uniform.
+>>>>>  2) The device needs to actually be somewhere.
+>>>>>
+>>>>
+>>>> From what I can see, NUMA_NO_NODE may make sense in the below case:
+>>>>
+>>>> 1) Theoretically, there would be a device that can access all the memory
+>>>> uniformly and can be accessed by all cpus uniformly even in a NUMA system.
+>>>> Suppose we have two nodes, and the device just sit in the middle of the
+>>>> interconnect between the two nodes.
+>>>>
+>>>> Even we define a third node solely for the device, we may need to look at
+>>>> the node distance to decide the device can be accessed uniformly.
+>>>>
+>>>> Or we can decide that the device can be accessed uniformly by setting
+>>>> it's node to NUMA_NO_NODE.
+>>>
+>>> This is indeed a theoretical case; it doesn't scale. The moment you're
+>>> adding multiple sockets or even board interconnects this all goes out
+>>> the window.
+>>>
+>>> And in this case, forcing the device to either node is fine.
 >>
->> This patch introduces a new mdev transport for virtio. This is used to use kernel
->> virtio driver to drive the mediated device that is capable of populating
->> virtqueue directly.
+>> Not really.
+>> For packet sending and receiving, the buffer memory may be allocated
+>> dynamically. Node of tx buffer memory is mainly based on the cpu
+>> that is sending sending, node of rx buffer memory is mainly based on
+>> the cpu the interrupt handler of the device is running on, and the
+>> device' interrupt affinity is mainly based on node id of the device.
 >>
->> A new virtio-mdev driver will be registered to the mdev bus, when a new virtio-
->> mdev device is probed, it will register the device with mdev based config ops.
->> This means it is a software transport between mdev driver and mdev device.
->> The transport was implemented through device specific opswhich is a part of
->> mdev_parent_ops now.
+>> We can bind the processes that are using the device to both nodes
+>> in order to utilize memory on both nodes for packet sending.
 >>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>  MAINTAINERS                     |   1 +
->>  drivers/vfio/mdev/Kconfig       |   7 +
->>  drivers/vfio/mdev/Makefile      |   1 +
->>  drivers/vfio/mdev/virtio_mdev.c | 416 ++++++++++++++++++++++++++++++++
->>  4 files changed, 425 insertions(+)
->>  create mode 100644 drivers/vfio/mdev/virtio_mdev.c
+>> But for packet receiving, the node1 may not be used becuase the node
+>> id of device is forced to node 0, which is the default way to bind
+>> the interrupt to the cpu of the same node.
 >>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 89832b316500..820ec250cc52 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -17202,6 +17202,7 @@ F:	include/linux/virtio*.h
->>  F:	include/uapi/linux/virtio_*.h
->>  F:	drivers/crypto/virtio/
->>  F:	mm/balloon_compaction.c
->> +F:	drivers/vfio/mdev/virtio_mdev.c
+>> If node_to_cpumask_map() returns all usable cpus when the device's node
+>> id is NUMA_NO_NODE, then interrupt can be binded to the cpus on both nodes.
+> 
+> s/binded/bound/
+> 
+> Sure; the data can be allocated wherever, but the control structures are
+> not dynamically allocated every time. They are persistent, and they will
+> be local to some node.
+> 
+> Anyway, are you saying this stupid corner case is actually relevant?
+> Because how does it scale out? What if you have 8 sockets, with each
+> socket having 2 nodes and 1 such magic device. Then returning all CPUs
+> is just plain wrong.
+
+Yes, the hardware may not scale out, but what about the virtual device?
+
+> 
+>>>> 2) For many virtual deivces, such as tun or loopback netdevice, they
+>>>> are also accessed uniformly by all cpus.
+>>>
+>>> Not true; the virtual device will sit in memory local to some node.
+>>>
+>>> And as with physical devices, you probably want at least one (virtual)
+>>> queue per node.
 >>
->>  VIRTIO BLOCK AND SCSI DRIVERS
->>  M:	"Michael S. Tsirkin" <mst@redhat.com>
->> diff --git a/drivers/vfio/mdev/Kconfig b/drivers/vfio/mdev/Kconfig index
->> 5da27f2100f9..c488c31fc137 100644
->> --- a/drivers/vfio/mdev/Kconfig
->> +++ b/drivers/vfio/mdev/Kconfig
->> @@ -16,3 +16,10 @@ config VFIO_MDEV_DEVICE
->>  	default n
->>  	help
->>  	  VFIO based driver for Mediated devices.
->> +
->> +config VIRTIO_MDEV_DEVICE
->> +	tristate "VIRTIO driver for Mediated devices"
->> +	depends on VFIO_MDEV && VIRTIO
->> +	default n
->> +	help
->> +	  VIRTIO based driver for Mediated devices.
->> diff --git a/drivers/vfio/mdev/Makefile b/drivers/vfio/mdev/Makefile index
->> 101516fdf375..99d31e29c23e 100644
->> --- a/drivers/vfio/mdev/Makefile
->> +++ b/drivers/vfio/mdev/Makefile
->> @@ -4,3 +4,4 @@ mdev-y := mdev_core.o mdev_sysfs.o mdev_driver.o
->>
->>  obj-$(CONFIG_VFIO_MDEV) += mdev.o
->>  obj-$(CONFIG_VFIO_MDEV_DEVICE) += vfio_mdev.o
->> +obj-$(CONFIG_VIRTIO_MDEV_DEVICE) += virtio_mdev.o
->> diff --git a/drivers/vfio/mdev/virtio_mdev.c b/drivers/vfio/mdev/virtio_mdev.c
->> new file mode 100644 index 000000000000..919a082adc9c
->> --- /dev/null
->> +++ b/drivers/vfio/mdev/virtio_mdev.c
->> @@ -0,0 +1,416 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * VIRTIO based driver for Mediated device
->> + *
->> + * Copyright (c) 2019, Red Hat. All rights reserved.
->> + *     Author: Jason Wang <jasowang@redhat.com>
->> + *
->> + */
->> +
->> +#include <linux/init.h>
->> +#include <linux/module.h>
->> +#include <linux/device.h>
->> +#include <linux/kernel.h>
->> +#include <linux/slab.h>
->> +#include <linux/uuid.h>
->> +#include <linux/mdev.h>
->> +#include <linux/virtio_mdev.h>
->> +#include <linux/virtio.h>
->> +#include <linux/virtio_config.h>
->> +#include <linux/virtio_ring.h>
->> +#include "mdev_private.h"
->> +
->> +#define DRIVER_VERSION  "0.1"
->> +#define DRIVER_AUTHOR   "Red Hat Corporation"
->> +#define DRIVER_DESC     "VIRTIO based driver for Mediated device"
->> +
->> +#define to_virtio_mdev_device(dev) \
->> +	container_of(dev, struct virtio_mdev_device, vdev)
->> +
->> +struct virtio_mdev_device {
->> +	struct virtio_device vdev;
->> +	struct mdev_device *mdev;
->> +	unsigned long version;
->> +
->> +	struct virtqueue **vqs;
-> Every lock must need a comment to describe what it locks.
-> I don't see this lock is used in this patch. Please introduce in the patch that uses it.
+>> There may be similar handling as above for virtual device too.
+> 
+> And it'd be similarly broken.
+
+From [1], there is a lot of devices with node id of NUMA_NO_NODE with the
+FW_BUG.
+
+[1] https://lore.kernel.org/lkml/5a188e2b-6c07-a9db-fbaa-561e9362d3ba@huawei.com/
 
 
-Actually, it is used to sync the virtqueue list add and remove, but the
-logic is missed in this patch.
+> 
+> .
+> 
 
-Will fix it in next version.
-
-
->> +	spinlock_t lock;
->> +};
->> +
->> +struct virtio_mdev_vq_info {
->> +	/* the actual virtqueue */
->> +	struct virtqueue *vq;
->> +
->> +	/* the list node for the virtqueues list */
->> +	struct list_head node;
->> +};
->> +
->> +static struct mdev_device *vm_get_mdev(struct virtio_device *vdev) {
->> +	struct virtio_mdev_device *vm_dev = to_virtio_mdev_device(vdev);
->> +	struct mdev_device *mdev = vm_dev->mdev;
->> +
->> +	return mdev;
->> +}
->> +
->> +static const struct virtio_mdev_parent_ops *mdev_get_parent_ops(struct
->> +mdev_device *mdev) {
->> +	struct mdev_parent *parent = mdev->parent;
->> +
->> +	return parent->ops->device_ops;
->> +}
->> +
->> +static void virtio_mdev_get(struct virtio_device *vdev, unsigned offset,
->> +			    void *buf, unsigned len)
->> +{
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	ops->get_config(mdev, offset, buf, len); }
->> +
->> +static void virtio_mdev_set(struct virtio_device *vdev, unsigned offset,
->> +			    const void *buf, unsigned len)
->> +{
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	ops->set_config(mdev, offset, buf, len); }
->> +
->> +static u32 virtio_mdev_generation(struct virtio_device *vdev) {
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	return ops->get_generation(mdev);
->> +}
->> +
->> +static u8 virtio_mdev_get_status(struct virtio_device *vdev) {
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	return ops->get_status(mdev);
->> +}
->> +
->> +static void virtio_mdev_set_status(struct virtio_device *vdev, u8
->> +status) {
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	return ops->set_status(mdev, status);
->> +}
->> +
->> +static void virtio_mdev_reset(struct virtio_device *vdev) {
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	return ops->set_status(mdev, 0);
->> +}
->> +
->> +static bool virtio_mdev_notify(struct virtqueue *vq) {
->> +	struct mdev_device *mdev = vm_get_mdev(vq->vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	ops->kick_vq(mdev, vq->index);
->> +
->> +	return true;
->> +}
->> +
->> +static irqreturn_t virtio_mdev_config_cb(void *private) {
->> +	struct virtio_mdev_device *vm_dev = private;
->> +
->> +	virtio_config_changed(&vm_dev->vdev);
->> +
->> +	return IRQ_HANDLED;
->> +}
->> +
->> +static irqreturn_t virtio_mdev_virtqueue_cb(void *private) {
->> +	struct virtio_mdev_vq_info *info = private;
->> +
->> +	return vring_interrupt(0, info->vq);
->> +}
->> +
->> +static struct virtqueue *
->> +virtio_mdev_setup_vq(struct virtio_device *vdev, unsigned index,
->> +		     void (*callback)(struct virtqueue *vq),
->> +		     const char *name, bool ctx)
->> +{
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +	struct virtio_mdev_vq_info *info;
->> +	struct virtio_mdev_callback cb;
->> +	struct virtqueue *vq;
->> +	u32 align, num;
->> +	u64 desc_addr, driver_addr, device_addr;
->> +	int err;
->> +
->> +	if (!name)
->> +		return NULL;
->> +
->> +	/* Queue shouldn't already be set up. */
->> +	if (ops->get_vq_ready(mdev, index)) {
->> +		err = -ENOENT;
->> +		goto error_available;
->> +	}
->> +
-> No need for a goto, to single return done later.
-> Just do 
-> 	if (ops->get_vq_ready(mdev, index))
-> 		return -ENOENT;
-
-
-Ok, will fix.
-
-
->
->> +	/* Allocate and fill out our active queue description */
->> +	info = kmalloc(sizeof(*info), GFP_KERNEL);
->> +	if (!info) {
->> +		err = -ENOMEM;
->> +		goto error_kmalloc;
->> +	}
->> +
-> Similar to above one.
-
-
-Ok.
-
-
->
->> +	num = ops->get_queue_max(mdev);
->> +	if (num == 0) {
->> +		err = -ENOENT;
->> +		goto error_new_virtqueue;
->> +	}
->> +
->> +	/* Create the vring */
->> +	align = ops->get_vq_align(mdev);
->> +	vq = vring_create_virtqueue(index, num, align, vdev,
->> +				    true, true, ctx,
->> +				    virtio_mdev_notify, callback, name);
->> +	if (!vq) {
->> +		err = -ENOMEM;
->> +		goto error_new_virtqueue;
->> +	}
->> +
->> +	/* Setup virtqueue callback */
->> +	cb.callback = virtio_mdev_virtqueue_cb;
->> +	cb.private = info;
->> +	ops->set_vq_cb(mdev, index, &cb);
->> +	ops->set_vq_num(mdev, index, virtqueue_get_vring_size(vq));
->> +
->> +	desc_addr = virtqueue_get_desc_addr(vq);
->> +	driver_addr = virtqueue_get_avail_addr(vq);
->> +	device_addr = virtqueue_get_used_addr(vq);
->> +
->> +	if (ops->set_vq_address(mdev, index,
->> +				desc_addr, driver_addr,
->> +				device_addr)) {
->> +		err = -EINVAL;
->> +		goto err_vq;
->> +	}
->> +
->> +	ops->set_vq_ready(mdev, index, 1);
->> +
->> +	vq->priv = info;
->> +	info->vq = vq;
->> +
->> +	return vq;
->> +
->> +err_vq:
->> +	vring_del_virtqueue(vq);
->> +error_new_virtqueue:
->> +	ops->set_vq_ready(mdev, index, 0);
->> +	WARN_ON(ops->get_vq_ready(mdev, index));
->> +	kfree(info);
->> +error_kmalloc:
->> +error_available:
->> +	return ERR_PTR(err);
->> +
->> +}
->> +
->> +static void virtio_mdev_del_vq(struct virtqueue *vq) {
->> +	struct mdev_device *mdev = vm_get_mdev(vq->vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +	struct virtio_mdev_vq_info *info = vq->priv;
->> +	unsigned int index = vq->index;
->> +
->> +	/* Select and deactivate the queue */
->> +	ops->set_vq_ready(mdev, index, 0);
->> +	WARN_ON(ops->get_vq_ready(mdev, index));
->> +
->> +	vring_del_virtqueue(vq);
->> +
->> +	kfree(info);
->> +}
->> +
->> +static void virtio_mdev_del_vqs(struct virtio_device *vdev) {
->> +	struct virtqueue *vq, *n;
->> +
->> +	list_for_each_entry_safe(vq, n, &vdev->vqs, list)
->> +		virtio_mdev_del_vq(vq);
->> +}
->> +
->> +static int virtio_mdev_find_vqs(struct virtio_device *vdev, unsigned nvqs,
->> +				struct virtqueue *vqs[],
->> +				vq_callback_t *callbacks[],
->> +				const char * const names[],
->> +				const bool *ctx,
->> +				struct irq_affinity *desc)
->> +{
->> +	struct virtio_mdev_device *vm_dev = to_virtio_mdev_device(vdev);
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +	struct virtio_mdev_callback cb;
->> +	int i, err, queue_idx = 0;
->> +
->> +	vm_dev->vqs = kmalloc_array(queue_idx, sizeof(*vm_dev->vqs),
->> +				    GFP_KERNEL);
->> +	if (!vm_dev->vqs)
->> +		return -ENOMEM;
->> +
->> +	for (i = 0; i < nvqs; ++i) {
->> +		if (!names[i]) {
->> +			vqs[i] = NULL;
->> +			continue;
->> +		}
->> +
->> +		vqs[i] = virtio_mdev_setup_vq(vdev, queue_idx++,
->> +					      callbacks[i], names[i], ctx ?
->> +					      ctx[i] : false);
->> +		if (IS_ERR(vqs[i])) {
->> +			err = PTR_ERR(vqs[i]);
->> +			goto err_setup_vq;
->> +		}
->> +	}
->> +
->> +	cb.callback = virtio_mdev_config_cb;
->> +	cb.private = vm_dev;
->> +	ops->set_config_cb(mdev, &cb);
->> +
->> +	return 0;
->> +
->> +err_setup_vq:
->> +	kfree(vm_dev->vqs);
->> +	virtio_mdev_del_vqs(vdev);
->> +	return err;
->> +}
->> +
->> +static u64 virtio_mdev_get_features(struct virtio_device *vdev) {
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	return ops->get_features(mdev);
->> +}
->> +
->> +static int virtio_mdev_finalize_features(struct virtio_device *vdev) {
->> +	struct mdev_device *mdev = vm_get_mdev(vdev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +
->> +	/* Give virtio_ring a chance to accept features. */
->> +	vring_transport_features(vdev);
->> +
->> +	return ops->set_features(mdev, vdev->features); }
->> +
->> +static const char *virtio_mdev_bus_name(struct virtio_device *vdev) {
->> +	struct virtio_mdev_device *vm_dev = to_virtio_mdev_device(vdev);
->> +	struct mdev_device *mdev = vm_dev->mdev;
->> +
->> +	return dev_name(&mdev->dev);
->> +}
->> +
->> +static const struct virtio_config_ops virtio_mdev_config_ops = {
->> +	.get		= virtio_mdev_get,
->> +	.set		= virtio_mdev_set,
->> +	.generation	= virtio_mdev_generation,
->> +	.get_status	= virtio_mdev_get_status,
->> +	.set_status	= virtio_mdev_set_status,
->> +	.reset		= virtio_mdev_reset,
->> +	.find_vqs	= virtio_mdev_find_vqs,
->> +	.del_vqs	= virtio_mdev_del_vqs,
->> +	.get_features	= virtio_mdev_get_features,
->> +	.finalize_features = virtio_mdev_finalize_features,
->> +	.bus_name	= virtio_mdev_bus_name,
->> +};
->> +
->> +static void virtio_mdev_release_dev(struct device *_d) {
->> +	struct virtio_device *vdev =
->> +	       container_of(_d, struct virtio_device, dev);
->> +	struct virtio_mdev_device *vm_dev =
->> +	       container_of(vdev, struct virtio_mdev_device, vdev);
->> +
->> +	devm_kfree(_d, vm_dev);
->> +}
->> +
->> +static int virtio_mdev_probe(struct device *dev) {
->> +	struct mdev_device *mdev = to_mdev_device(dev);
->> +	const struct virtio_mdev_parent_ops *ops =
->> mdev_get_parent_ops(mdev);
->> +	struct virtio_mdev_device *vm_dev;
->> +	int rc;
->> +
->> +	vm_dev = devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
->> +	if (!vm_dev)
->> +		return -ENOMEM;
->> +
->> +	vm_dev->vdev.dev.parent = dev;
->> +	vm_dev->vdev.dev.release = virtio_mdev_release_dev;
->> +	vm_dev->vdev.config = &virtio_mdev_config_ops;
->> +	vm_dev->mdev = mdev;
->> +	vm_dev->vqs = NULL;
->> +	spin_lock_init(&vm_dev->lock);
->> +
->> +	vm_dev->version = ops->get_version(mdev);
->> +	if (vm_dev->version != 1) {
->> +		dev_err(dev, "Version %ld not supported!\n",
->> +			vm_dev->version);
->> +		return -ENXIO;
->> +	}
->> +
->> +	vm_dev->vdev.id.device = ops->get_device_id(mdev);
->> +	if (vm_dev->vdev.id.device == 0)
->> +		return -ENODEV;
->> +
->> +	vm_dev->vdev.id.vendor = ops->get_vendor_id(mdev);
->> +	rc = register_virtio_device(&vm_dev->vdev);
->> +	if (rc)
->> +		put_device(dev);
->> +
->> +	dev_set_drvdata(dev, vm_dev);
-> No need to set drvdata when there is error returned from register_virtio_device().
->
-
-Fixed in V2.
-
-
->> +
->> +	return rc;
->> +
-> Extra line not needed.
->> +}
-
-
-Fixed.
-
-
->> +
->> +static void virtio_mdev_remove(struct device *dev) {
->> +	struct virtio_mdev_device *vm_dev = dev_get_drvdata(dev);
->> +
->> +	unregister_virtio_device(&vm_dev->vdev);
->> +}
->> +
->> +static struct mdev_class_id id_table[] = {
->> +	{ MDEV_ID_VIRTIO },
->> +	{ 0 },
->> +};
->> +
->> +static struct mdev_driver virtio_mdev_driver = {
->> +	.name	= "virtio_mdev",
->> +	.probe	= virtio_mdev_probe,
->> +	.remove	= virtio_mdev_remove,
-> No need for tab, just do single white space.
-
-
-Yes, fixed.
-
-Thanks
-
-
->> +	.id_table = id_table,
->> +};
->> +
->> +static int __init virtio_mdev_init(void) {
->> +	return mdev_register_driver(&virtio_mdev_driver, THIS_MODULE); }
->> +
->> +static void __exit virtio_mdev_exit(void) {
->> +	mdev_unregister_driver(&virtio_mdev_driver);
->> +}
->> +
->> +module_init(virtio_mdev_init)
->> +module_exit(virtio_mdev_exit)
->> +
->> +MODULE_VERSION(DRIVER_VERSION);
->> +MODULE_LICENSE("GPL v2");
->> +MODULE_AUTHOR(DRIVER_AUTHOR);
->> +MODULE_DESCRIPTION(DRIVER_DESC);
->> --
->> 2.19.1
