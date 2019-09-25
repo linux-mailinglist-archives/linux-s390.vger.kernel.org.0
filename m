@@ -2,243 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DB6C3BD551
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Sep 2019 01:07:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C89D9BD6C3
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Sep 2019 05:36:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731756AbfIXXHN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Sep 2019 19:07:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:38746 "EHLO mx1.redhat.com"
+        id S2411574AbfIYDgS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Sep 2019 23:36:18 -0400
+Received: from foss.arm.com ([217.140.110.172]:40906 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731418AbfIXXHM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 24 Sep 2019 19:07:12 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AB6B830C7C71;
-        Tue, 24 Sep 2019 23:07:11 +0000 (UTC)
-Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5F01219C7F;
-        Tue, 24 Sep 2019 23:07:04 +0000 (UTC)
-Date:   Tue, 24 Sep 2019 17:06:40 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-Subject: Re: [PATCH V2 6/8] mdev: introduce virtio device and its device ops
-Message-ID: <20190924170640.1da03bae@x1.home>
-In-Reply-To: <20190924135332.14160-7-jasowang@redhat.com>
-References: <20190924135332.14160-1-jasowang@redhat.com>
-        <20190924135332.14160-7-jasowang@redhat.com>
-Organization: Red Hat
+        id S2404947AbfIYDgS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 24 Sep 2019 23:36:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 06DD8337;
+        Tue, 24 Sep 2019 20:36:17 -0700 (PDT)
+Received: from [10.162.41.120] (p8cg001049571a15.blr.arm.com [10.162.41.120])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DB6CB3F694;
+        Tue, 24 Sep 2019 20:36:05 -0700 (PDT)
+Subject: Re: [PATCH V3 0/2] mm/debug: Add tests for architecture exported page
+ table helpers
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1568961203-18660-1-git-send-email-anshuman.khandual@arm.com>
+ <20190924115101.p6y7vpbtgmj5qjku@box> <20190924123146.GC5202@linux.ibm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <a5acc1cc-d046-e1d8-f39b-e3e785588d5e@arm.com>
+Date:   Wed, 25 Sep 2019 09:06:23 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190924123146.GC5202@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Tue, 24 Sep 2019 23:07:12 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 24 Sep 2019 21:53:30 +0800
-Jason Wang <jasowang@redhat.com> wrote:
 
-> This patch implements basic support for mdev driver that supports
-> virtio transport for kernel virtio driver.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  include/linux/mdev.h        |   2 +
->  include/linux/virtio_mdev.h | 145 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 147 insertions(+)
->  create mode 100644 include/linux/virtio_mdev.h
-> 
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 3414307311f1..73ac27b3b868 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -126,6 +126,8 @@ struct mdev_device *mdev_from_dev(struct device *dev);
+
+On 09/24/2019 06:01 PM, Mike Rapoport wrote:
+> On Tue, Sep 24, 2019 at 02:51:01PM +0300, Kirill A. Shutemov wrote:
+>> On Fri, Sep 20, 2019 at 12:03:21PM +0530, Anshuman Khandual wrote:
+>>> This series adds a test validation for architecture exported page table
+>>> helpers. Patch in the series adds basic transformation tests at various
+>>> levels of the page table. Before that it exports gigantic page allocation
+>>> function from HugeTLB.
+>>>
+>>> This test was originally suggested by Catalin during arm64 THP migration
+>>> RFC discussion earlier. Going forward it can include more specific tests
+>>> with respect to various generic MM functions like THP, HugeTLB etc and
+>>> platform specific tests.
+>>>
+>>> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
+>>>
+>>> Testing:
+>>>
+>>> Successfully build and boot tested on both arm64 and x86 platforms without
+>>> any test failing. Only build tested on some other platforms. Build failed
+>>> on some platforms (known) in pud_clear_tests() as there were no available
+>>> __pgd() definitions.
+>>>
+>>> - ARM32
+>>> - IA64
+>>
+>> Hm. Grep shows __pgd() definitions for both of them. Is it for specific
+>> config?
 >  
->  enum {
->  	MDEV_ID_VFIO = 1,
-> +	MDEV_ID_VIRTIO = 2,
-> +	MDEV_ID_VHOST = 3,
+> For ARM32 it's defined only for 3-lelel page tables, i.e with LPAE on.
+> For IA64 it's defined for !STRICT_MM_TYPECHECKS which is even not a config
+> option, but a define in arch/ia64/include/asm/page.h
 
-MDEV_ID_VHOST isn't used yet here.  Also, given the strong
-interdependence between the class_id and the ops structure, we might
-wand to define them in the same place.  Thanks,
+Right. So now where we go from here ! We will need help from platform folks to
+fix this unless its trivial. I did propose this on last thread (v2), wondering if
+it will be a better idea to restrict DEBUG_ARCH_PGTABLE_TEST among architectures
+which have fixed all pending issues whether build or run time. Though enabling all
+platforms where the test builds at the least might make more sense, we might have
+to just exclude arm32 and ia64 for now. Then run time problems can be fixed later
+platform by platform. Any thoughts ?
 
-Alex
+BTW the test is known to run successfully on arm64, x86, ppc32 platforms. Gerald
+has been trying to get it working on s390. in the meantime., if there are other
+volunteers to test this on ppc64, sparc, riscv, mips, m68k etc platforms, it will
+be really helpful.
 
->  	/* New entries must be added here */
->  };
->  
-> diff --git a/include/linux/virtio_mdev.h b/include/linux/virtio_mdev.h
-> new file mode 100644
-> index 000000000000..d1a40a739266
-> --- /dev/null
-> +++ b/include/linux/virtio_mdev.h
-> @@ -0,0 +1,145 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Virtio mediated device driver
-> + *
-> + * Copyright 2019, Red Hat Corp.
-> + *     Author: Jason Wang <jasowang@redhat.com>
-> + */
-> +#ifndef _LINUX_VIRTIO_MDEV_H
-> +#define _LINUX_VIRTIO_MDEV_H
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/mdev.h>
-> +#include <uapi/linux/vhost.h>
-> +
-> +#define VIRTIO_MDEV_DEVICE_API_STRING		"virtio-mdev"
-> +#define VIRTIO_MDEV_VERSION 0x1
-> +
-> +struct virtio_mdev_callback {
-> +	irqreturn_t (*callback)(void *data);
-> +	void *private;
-> +};
-> +
-> +/**
-> + * struct vfio_mdev_device_ops - Structure to be registered for each
-> + * mdev device to register the device to virtio-mdev module.
-> + *
-> + * @set_vq_address:		Set the address of virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@desc_area: address of desc area
-> + *				@driver_area: address of driver area
-> + *				@device_area: address of device area
-> + *				Returns integer: success (0) or error (< 0)
-> + * @set_vq_num:		Set the size of virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@num: the size of virtqueue
-> + * @kick_vq:			Kick the virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + * @set_vq_cb:			Set the interrut calback function for
-> + *				a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@cb: virtio-mdev interrupt callback structure
-> + * @set_vq_ready:		Set ready status for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@ready: ready (true) not ready(false)
-> + * @get_vq_ready:		Get ready status for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				Returns boolean: ready (true) or not (false)
-> + * @set_vq_state:		Set the state for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				@state: virtqueue state (last_avail_idx)
-> + *				Returns integer: success (0) or error (< 0)
-> + * @get_vq_state:		Get the state for a virtqueue
-> + *				@mdev: mediated device
-> + *				@idx: virtqueue index
-> + *				Returns virtqueue state (last_avail_idx)
-> + * @get_vq_align:		Get the virtqueue align requirement
-> + *				for the device
-> + *				@mdev: mediated device
-> + *				Returns virtqueue algin requirement
-> + * @get_features:		Get virtio features supported by the device
-> + *				@mdev: mediated device
-> + *				Returns the features support by the
-> + *				device
-> + * @get_features:		Set virtio features supported by the driver
-> + *				@mdev: mediated device
-> + *				@features: feature support by the driver
-> + *				Returns integer: success (0) or error (< 0)
-> + * @set_config_cb:		Set the config interrupt callback
-> + *				@mdev: mediated device
-> + *				@cb: virtio-mdev interrupt callback structure
-> + * @get_device_id:		Get virtio device id
-> + *				@mdev: mediated device
-> + *				Returns u32: virtio device id
-> + * @get_vendor_id:		Get virtio vendor id
-> + *				@mdev: mediated device
-> + *				Returns u32: virtio vendor id
-> + * @get_status:		Get the device status
-> + *				@mdev: mediated device
-> + *				Returns u8: virtio device status
-> + * @set_status:		Set the device status
-> + *				@mdev: mediated device
-> + *				@status: virtio device status
-> + * @get_config:		Read from device specific confiugration space
-> + *				@mdev: mediated device
-> + *				@offset: offset from the beginning of
-> + *				configuration space
-> + *				@buf: buffer used to read to
-> + *				@len: the length to read from
-> + *				configration space
-> + * @set_config:		Write to device specific confiugration space
-> + *				@mdev: mediated device
-> + *				@offset: offset from the beginning of
-> + *				configuration space
-> + *				@buf: buffer used to write from
-> + *				@len: the length to write to
-> + *				configration space
-> + * @get_version:		Get the version of virtio mdev device
-> + *				@mdev: mediated device
-> + *				Returns integer: version of the device
-> + * @get_generation:		Get device generaton
-> + *				@mdev: mediated device
-> + *				Returns u32: device generation
-> + */
-> +struct virtio_mdev_device_ops {
-> +	/* Virtqueue ops */
-> +	int (*set_vq_address)(struct mdev_device *mdev,
-> +			      u16 idx, u64 desc_area, u64 driver_area,
-> +			      u64 device_area);
-> +	void (*set_vq_num)(struct mdev_device *mdev, u16 idx, u32 num);
-> +	void (*kick_vq)(struct mdev_device *mdev, u16 idx);
-> +	void (*set_vq_cb)(struct mdev_device *mdev, u16 idx,
-> +			  struct virtio_mdev_callback *cb);
-> +	void (*set_vq_ready)(struct mdev_device *mdev, u16 idx, bool ready);
-> +	bool (*get_vq_ready)(struct mdev_device *mdev, u16 idx);
-> +	int (*set_vq_state)(struct mdev_device *mdev, u16 idx, u64 state);
-> +	u64 (*get_vq_state)(struct mdev_device *mdev, u16 idx);
-> +
-> +	/* Device ops */
-> +	u16 (*get_vq_align)(struct mdev_device *mdev);
-> +	u64 (*get_features)(struct mdev_device *mdev);
-> +	int (*set_features)(struct mdev_device *mdev, u64 features);
-> +	void (*set_config_cb)(struct mdev_device *mdev,
-> +			      struct virtio_mdev_callback *cb);
-> +	u16 (*get_queue_max)(struct mdev_device *mdev);
-> +	u32 (*get_device_id)(struct mdev_device *mdev);
-> +	u32 (*get_vendor_id)(struct mdev_device *mdev);
-> +	u8 (*get_status)(struct mdev_device *mdev);
-> +	void (*set_status)(struct mdev_device *mdev, u8 status);
-> +	void (*get_config)(struct mdev_device *mdev, unsigned int offset,
-> +			   void *buf, unsigned int len);
-> +	void (*set_config)(struct mdev_device *mdev, unsigned int offset,
-> +			   const void *buf, unsigned int len);
-> +	int (*get_version)(struct mdev_device *mdev);
-> +	u32 (*get_generation)(struct mdev_device *mdev);
-> +};
-> +
-> +#endif
-> +
-
+- Anshuman
