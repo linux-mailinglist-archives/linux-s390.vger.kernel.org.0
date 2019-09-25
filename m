@@ -2,84 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 713A6BDC56
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Sep 2019 12:42:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E8E9BDD83
+	for <lists+linux-s390@lfdr.de>; Wed, 25 Sep 2019 13:57:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390320AbfIYKm3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 25 Sep 2019 06:42:29 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:57890 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729957AbfIYKm3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 Sep 2019 06:42:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=0Xzp59C8xKNyh+U8Qud14/70WNs6y325rcjbmtOidxU=; b=aXUsMKYpfOb3FPPbgd/TAHNiL
-        bTXQ49tLPqyPnKQVRKsQzoZSscHnatloUve9V3s4tVbRrhqqQhq98tiDM0LkP7NYmVZGtzMvrCdAU
-        SnUFLpWdrtPv4sW42rfTPvnJxNqA0L+lM4yqoLOECQQAV2ZWzUSJRJ4I9NKRa7TBU+23PmHHUHj3O
-        0Jvxr04Jk7UWjG5sBW3EmhpK6o9EjjBHHXjK86V5MMjYOAgG0/nxkxrERd+ejYlg0LXYI6ITEbkDU
-        FktV5nxM9kPBr53dPzVbPbOj02nX2zNN3XtmOxmAGgqbQKmhuisCuv0A1Mj/L64UJ4C+cp2nOla/M
-        2t5lgJ0Ew==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iD4jS-0000EB-HI; Wed, 25 Sep 2019 10:41:15 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id BCFFF305E42;
-        Wed, 25 Sep 2019 12:40:22 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id B179920292D27; Wed, 25 Sep 2019 12:41:08 +0200 (CEST)
-Date:   Wed, 25 Sep 2019 12:41:08 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Michal Hocko <mhocko@kernel.org>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190925104108.GE4553@hirez.programming.kicks-ass.net>
-References: <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
- <20190924105622.GH23050@dhcp22.suse.cz>
- <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
- <20190924115401.GM23050@dhcp22.suse.cz>
- <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
+        id S2404047AbfIYL5e (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 25 Sep 2019 07:57:34 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55054 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727569AbfIYL5d (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 25 Sep 2019 07:57:33 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 116A256F9;
+        Wed, 25 Sep 2019 11:57:33 +0000 (UTC)
+Received: from [10.72.12.148] (ovpn-12-148.pek2.redhat.com [10.72.12.148])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CC7305C21F;
+        Wed, 25 Sep 2019 11:56:40 +0000 (UTC)
+Subject: Re: [PATCH 5/6] vringh: fix copy direction of vringh_iov_push_kern()
+To:     Alex Williamson <alex.williamson@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, cohuck@redhat.com,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com
+References: <20190923130331.29324-1-jasowang@redhat.com>
+ <20190923130331.29324-6-jasowang@redhat.com>
+ <20190923094559.765da494@x1.home>
+ <20190923115930-mutt-send-email-mst@kernel.org>
+ <20190924080413.0cc875c5@x1.home>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <2f145744-cbfb-5bc3-0e2c-e8c23c20b42d@redhat.com>
+Date:   Wed, 25 Sep 2019 19:56:33 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190924080413.0cc875c5@x1.home>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Wed, 25 Sep 2019 11:57:33 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 05:14:20PM +0800, Yunsheng Lin wrote:
-> From the discussion above, It seems making the node_to_cpumask_map()
-> NUMA_NO_NODE aware is the most feasible way to move forwad.
 
-That's still wrong.
+On 2019/9/24 下午10:04, Alex Williamson wrote:
+> On Mon, 23 Sep 2019 12:00:41 -0400
+> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+>
+>> On Mon, Sep 23, 2019 at 09:45:59AM -0600, Alex Williamson wrote:
+>>> On Mon, 23 Sep 2019 21:03:30 +0800
+>>> Jason Wang <jasowang@redhat.com> wrote:
+>>>   
+>>>> We want to copy from iov to buf, so the direction was wrong.
+>>>>
+>>>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>>>> ---
+>>>>  drivers/vhost/vringh.c | 8 +++++++-
+>>>>  1 file changed, 7 insertions(+), 1 deletion(-)  
+>>> Why is this included in the series?  Seems like an unrelated fix being
+>>> held up within a proposal for a new feature.  Thanks,
+>>>
+>>> Alex  
+>> It's better to have it as patch 1/6, but it's a dependency of the
+>> example driver in the series. I can reorder when I apply.
+> It's a fix, please submit it separately through virtio/vhost channels,
+> then it will already be in the base kernel we use for the rest of the
+> series.  The remainder of the series certainly suggests a workflow
+> through the vfio tree rather than virtio/vhost.  Thanks,
+>
+> Alex
+
+
+Ok.
+
+Thanks
+
