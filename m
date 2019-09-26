@@ -2,95 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF1F1BF294
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 14:12:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A4686BF31E
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 14:37:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725939AbfIZMMD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Sep 2019 08:12:03 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:35780 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725815AbfIZMMC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Sep 2019 08:12:02 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QmSB+iJQpid0KK6OgKLqID3ggufRi3prpqIsy8HQWNc=; b=KVBm0ALWj1UZADG6S1S003WTm
-        6Y/Z2mNgsSiMdagtvJlukp3nGNsy545VNOD+MXDGI+CgrWveZsq3kwIiK+W1LpQFSlw2FO8gUGdVM
-        W2VBJT0Xlb+/aHD/PsZOmPJdK4xvYogq73w0VV+DZOF+NK+Pw3EhlTl3L/B56oc0gDiH5L7IOTOmh
-        9SS8hCDwrkF/LGwTT8i48Krgh9Vh7dcBpmex2wkYQ8Bfn7Fuyfe20YRVwniKWyJcj4Nza9/eRfeAA
-        s7HghavBEgLci7cWRly+tTQOqfAmcSTvyTWhdg9bVpOtanHW5Wossu0KBHPpav8mRaq/Jr31Cr0YE
-        u4u0ZZw0Q==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDSb7-00059a-Ne; Thu, 26 Sep 2019 12:10:14 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 77211305BD3;
-        Thu, 26 Sep 2019 14:09:21 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id C40552013B759; Thu, 26 Sep 2019 14:10:07 +0200 (CEST)
-Date:   Thu, 26 Sep 2019 14:10:07 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190926121007.GB4581@hirez.programming.kicks-ass.net>
-References: <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <20190925104040.GD4553@hirez.programming.kicks-ass.net>
- <20190925132544.GL23050@dhcp22.suse.cz>
- <20190925163154.GF4553@hirez.programming.kicks-ass.net>
- <20190925214526.GA4643@worktop.programming.kicks-ass.net>
- <20190926090559.GA4581@hirez.programming.kicks-ass.net>
+        id S1726177AbfIZMhz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Sep 2019 08:37:55 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58372 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726170AbfIZMhy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 26 Sep 2019 08:37:54 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8QCXs4o073801
+        for <linux-s390@vger.kernel.org>; Thu, 26 Sep 2019 08:37:53 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8ur5w77j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 26 Sep 2019 08:37:52 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 26 Sep 2019 13:37:51 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 26 Sep 2019 13:37:48 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8QCblR030081378
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 12:37:47 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DB7C5204F;
+        Thu, 26 Sep 2019 12:37:47 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.110])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B682D5204E;
+        Thu, 26 Sep 2019 12:37:46 +0000 (GMT)
+Date:   Thu, 26 Sep 2019 14:37:45 +0200
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
+Subject: Re: [RFC PATCH 1/3] dma-mapping: make overriding GFP_* flags arch
+ customizable
+In-Reply-To: <20190923152117.GA2767@lst.de>
+References: <20190923123418.22695-1-pasic@linux.ibm.com>
+        <20190923123418.22695-2-pasic@linux.ibm.com>
+        <20190923152117.GA2767@lst.de>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190926090559.GA4581@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19092612-0020-0000-0000-00000371F6A1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092612-0021-0000-0000-000021C7C21D
+Message-Id: <20190926143745.68bdd082.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909260119
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Sep 26, 2019 at 11:05:59AM +0200, Peter Zijlstra wrote:
-> On Wed, Sep 25, 2019 at 11:45:26PM +0200, Peter Zijlstra wrote:
-> > [    7.149889] [Firmware Bug]: device: 'pci0000:7f': no node assigned on NUMA capable HW
-> > [    7.882888] [Firmware Bug]: device: 'pci0000:ff': no node assigned on NUMA capable HW
-> 
-> Going by the limited number of intel numa boxes I have, it looks like:
-> 
->   socket = (~busid) >> (8-n)
+On Mon, 23 Sep 2019 17:21:17 +0200
+Christoph Hellwig <hch@lst.de> wrote:
 
-Bah, I got my notes mixed up, it should be: busid >> (8-n)
-
-> where 'n' is the number of bits required to encode the largest socket
-> id, ie 1 for 2-socket and 2 for 4 socket.
+> On Mon, Sep 23, 2019 at 02:34:16PM +0200, Halil Pasic wrote:
+> > Before commit 57bf5a8963f8 ("dma-mapping: clear harmful GFP_* flags in
+> > common code") tweaking the client code supplied GFP_* flags used to be
+> > an issue handled in the architecture specific code. The commit message
+> > suggests, that fixing the client code would actually be a better way
+> > of dealing with this.
+> > 
+> > On s390 common I/O devices are generally capable of using the full 64
+> > bit address space for DMA I/O, but some chunks of the DMA memory need to
+> > be 31 bit addressable (in physical address space) because the
+> > instructions involved mandate it. Before switching to DMA API this used
+> > to be a non-issue, we used to allocate those chunks from ZONE_DMA.
+> > Currently our only option with the DMA API is to restrict the devices to
+> > (via dma_mask and dma_mask_coherent) to 31 bit, which is sub-optimal.
+> > 
+> > Thus s390 we would benefit form having control over what flags are
+> > dropped.
 > 
-> For 8 socket systems we start using pci domains, and things get more
-> 'interesting' :/
+> No way, sorry.  You need to express that using a dma mask instead of
+> overloading the GFP flags.
+
+Thanks for your feedback and sorry for the delay. Can you help me figure
+out how can I express that using a dma mask? 
+
+IMHO what you ask from me is frankly impossible.
+
+What I need is the ability to ask for  (considering the physical
+address) 31 bit addressable DMA memory if the chunk is supposed to host
+control-type data that needs to be 31 bit addressable because that is
+how the architecture is, without affecting the normal data-path. So
+normally 64 bit mask is fine but occasionally (control) we would need
+a 31 bit mask.
+
+Regards,
+Halil
+
