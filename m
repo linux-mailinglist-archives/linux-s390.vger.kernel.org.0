@@ -2,587 +2,262 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 01C3DBE7D9
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Sep 2019 23:47:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ED03BE9C7
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 02:48:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727053AbfIYVr2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 25 Sep 2019 17:47:28 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:58412 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726941AbfIYVr2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 Sep 2019 17:47:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=ZBvcjF7zDDxpnQNxilxomsaKbhuVkdJJJLolhmHxeds=; b=a0gOZH8QPRAVwGfE0sU/Xp6s4
-        8eK4FqO9HNDsI/FSg3GHxkg/XXyIS/W7mu3cEgy1vGjGhHQeSO7vNQoqyj6rPg8OYdNr1cZ0APVHq
-        H6Fmlj//gmirtVogemTFDzKvO0GURtNZjas80D0cmjapUQfNAQLOImLW3WIcphjy7y/Ugabg7wtks
-        3Re2oF5IJ73PPMvqfCgAFtq+z7OlQClV1TK4ENdQfxwb4VZgJFcU4FIj56FGNI6DGWdCh7GNNYKG+
-        00kk2Ji/KuNBt/dIQ8CAJt9T+2SO4QhTUD7g5R8ehYnn+23wSH8FEgluu2UEbWgpLpoc+z4Ieocp4
-        9LlLCWMDA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iDF6H-0007v7-QN; Wed, 25 Sep 2019 21:45:30 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 86F40980189; Wed, 25 Sep 2019 23:45:26 +0200 (CEST)
-Date:   Wed, 25 Sep 2019 23:45:26 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
-        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
-        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20190925214526.GA4643@worktop.programming.kicks-ass.net>
-References: <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
- <20190924115401.GM23050@dhcp22.suse.cz>
- <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <20190925104040.GD4553@hirez.programming.kicks-ass.net>
- <20190925132544.GL23050@dhcp22.suse.cz>
- <20190925163154.GF4553@hirez.programming.kicks-ass.net>
+        id S1726981AbfIZAsi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 25 Sep 2019 20:48:38 -0400
+Received: from mga18.intel.com ([134.134.136.126]:29490 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726961AbfIZAsi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 25 Sep 2019 20:48:38 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 25 Sep 2019 17:48:36 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.64,549,1559545200"; 
+   d="scan'208";a="214235078"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by fmsmga004.fm.intel.com with ESMTP; 25 Sep 2019 17:48:36 -0700
+Received: from fmsmsx118.amr.corp.intel.com (10.18.116.18) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 25 Sep 2019 17:48:35 -0700
+Received: from shsmsx106.ccr.corp.intel.com (10.239.4.159) by
+ fmsmsx118.amr.corp.intel.com (10.18.116.18) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Wed, 25 Sep 2019 17:48:35 -0700
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.32]) by
+ SHSMSX106.ccr.corp.intel.com ([169.254.10.86]) with mapi id 14.03.0439.000;
+ Thu, 26 Sep 2019 08:48:33 +0800
+From:   "Tian, Kevin" <kevin.tian@intel.com>
+To:     Jason Wang <jasowang@redhat.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "Bie, Tiwei" <tiwei.bie@intel.com>
+CC:     "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>,
+        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "Wang, Zhi A" <zhi.a.wang@intel.com>,
+        "farman@linux.ibm.com" <farman@linux.ibm.com>,
+        "idos@mellanox.com" <idos@mellanox.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "Liang, Cunming" <cunming.liang@intel.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
+        "Wang, Xiao W" <xiao.w.wang@intel.com>,
+        "freude@linux.ibm.com" <freude@linux.ibm.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "parav@mellanox.com" <parav@mellanox.com>,
+        "Wang, Zhihong" <zhihong.wang@intel.com>,
+        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "Zhu, Lingshan" <lingshan.zhu@intel.com>
+Subject: RE: [PATCH V2 6/8] mdev: introduce virtio device and its device ops
+Thread-Topic: [PATCH V2 6/8] mdev: introduce virtio device and its device ops
+Thread-Index: AQHVct/nWfANpdabEEm3hvDI5WX0fqc8F18A//+69ICAAU1IIA==
+Date:   Thu, 26 Sep 2019 00:48:32 +0000
+Message-ID: <AADFC41AFE54684AB9EE6CBC0274A5D19D590FE4@SHSMSX104.ccr.corp.intel.com>
+References: <20190924135332.14160-1-jasowang@redhat.com>
+ <20190924135332.14160-7-jasowang@redhat.com>
+ <AADFC41AFE54684AB9EE6CBC0274A5D19D58F7DA@SHSMSX104.ccr.corp.intel.com>
+ <2210d23d-38e4-e654-e53d-7867348de86a@redhat.com>
+In-Reply-To: <2210d23d-38e4-e654-e53d-7867348de86a@redhat.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjBmZWE3NDEtODAyMC00YWM5LTgwMzctNGMzY2M1MTgxNWJhIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNVQ5cWRBeUpYbWtWc3JLNmNDVmxOMlBReEVnMW5YZVFmQU5SaTB1SWd5V29IVWJuMlhyU0VkY1BVd3FORFpHUiJ9
+dlp-product: dlpe-windows
+dlp-version: 11.0.400.15
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190925163154.GF4553@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Sep 25, 2019 at 06:31:54PM +0200, Peter Zijlstra wrote:
-> On Wed, Sep 25, 2019 at 03:25:44PM +0200, Michal Hocko wrote:
-> > I am sorry but I still do not understand why you consider this whack a
-> > mole better then simply live with the fact that NUMA_NO_NODE is a
-> > reality and that using the full cpu mask is a reasonable answer to that.
-> 
-> Because it doesn't make physical sense. A device _cannot_ be local to
-> all CPUs in a NUMA system.
-
-The below patch still gives a fair amount of noise on my fairly old and
-cruft IVB-EP, but it gets rid of most of the simple stuff.
-
-[    2.890739] [Firmware Bug]: device: 'platform': no node assigned on NUMA capable HW
-[    2.901855] [Firmware Bug]: device: 'vtcon0': no node assigned on NUMA capable HW
-[    2.911804] [Firmware Bug]: device: 'id': no node assigned on NUMA capable HW
-[    3.800832] [Firmware Bug]: device: 'fbcon': no node assigned on NUMA capable HW
-[    4.824808] [Firmware Bug]: device: 'LNXSYSTM:00': no node assigned on NUMA capable HW
-[    5.112739] [Firmware Bug]: device: 'pci0000:00': no node assigned on NUMA capable HW
-[    6.703425] [Firmware Bug]: device: 'pci0000:80': no node assigned on NUMA capable HW
-[    7.049515] [Firmware Bug]: device: 'ACPI0004:00': no node assigned on NUMA capable HW
-[    7.078823] [Firmware Bug]: device: 'ACPI0004:01': no node assigned on NUMA capable HW
-[    7.149889] [Firmware Bug]: device: 'pci0000:7f': no node assigned on NUMA capable HW
-[    7.158798] [Firmware Bug]: device: '0000:7f': no node assigned on NUMA capable HW
-[    7.183796] [Firmware Bug]: device: '0000:7f:08.0': no node assigned on NUMA capable HW
-[    7.199796] [Firmware Bug]: device: '0000:7f:09.0': no node assigned on NUMA capable HW
-[    7.215792] [Firmware Bug]: device: '0000:7f:0a.0': no node assigned on NUMA capable HW
-[    7.231791] [Firmware Bug]: device: '0000:7f:0a.1': no node assigned on NUMA capable HW
-[    7.247793] [Firmware Bug]: device: '0000:7f:0a.2': no node assigned on NUMA capable HW
-[    7.262794] [Firmware Bug]: device: '0000:7f:0a.3': no node assigned on NUMA capable HW
-[    7.278789] [Firmware Bug]: device: '0000:7f:0b.0': no node assigned on NUMA capable HW
-[    7.294787] [Firmware Bug]: device: '0000:7f:0b.3': no node assigned on NUMA capable HW
-[    7.310794] [Firmware Bug]: device: '0000:7f:0c.0': no node assigned on NUMA capable HW
-[    7.325796] [Firmware Bug]: device: '0000:7f:0c.1': no node assigned on NUMA capable HW
-[    7.341790] [Firmware Bug]: device: '0000:7f:0c.2': no node assigned on NUMA capable HW
-[    7.357789] [Firmware Bug]: device: '0000:7f:0c.3': no node assigned on NUMA capable HW
-[    7.373789] [Firmware Bug]: device: '0000:7f:0c.4': no node assigned on NUMA capable HW
-[    7.388789] [Firmware Bug]: device: '0000:7f:0d.0': no node assigned on NUMA capable HW
-[    7.404791] [Firmware Bug]: device: '0000:7f:0d.1': no node assigned on NUMA capable HW
-[    7.420789] [Firmware Bug]: device: '0000:7f:0d.2': no node assigned on NUMA capable HW
-[    7.436790] [Firmware Bug]: device: '0000:7f:0d.3': no node assigned on NUMA capable HW
-[    7.451789] [Firmware Bug]: device: '0000:7f:0d.4': no node assigned on NUMA capable HW
-[    7.467799] [Firmware Bug]: device: '0000:7f:0e.0': no node assigned on NUMA capable HW
-[    7.483797] [Firmware Bug]: device: '0000:7f:0e.1': no node assigned on NUMA capable HW
-[    7.499830] [Firmware Bug]: device: '0000:7f:0f.0': no node assigned on NUMA capable HW
-[    7.515825] [Firmware Bug]: device: '0000:7f:0f.1': no node assigned on NUMA capable HW
-[    7.530823] [Firmware Bug]: device: '0000:7f:0f.2': no node assigned on NUMA capable HW
-[    7.546824] [Firmware Bug]: device: '0000:7f:0f.3': no node assigned on NUMA capable HW
-[    7.562823] [Firmware Bug]: device: '0000:7f:0f.4': no node assigned on NUMA capable HW
-[    7.578822] [Firmware Bug]: device: '0000:7f:0f.5': no node assigned on NUMA capable HW
-[    7.594830] [Firmware Bug]: device: '0000:7f:10.0': no node assigned on NUMA capable HW
-[    7.609834] [Firmware Bug]: device: '0000:7f:10.1': no node assigned on NUMA capable HW
-[    7.625825] [Firmware Bug]: device: '0000:7f:10.2': no node assigned on NUMA capable HW
-[    7.641824] [Firmware Bug]: device: '0000:7f:10.3': no node assigned on NUMA capable HW
-[    7.657825] [Firmware Bug]: device: '0000:7f:10.4': no node assigned on NUMA capable HW
-[    7.673824] [Firmware Bug]: device: '0000:7f:10.5': no node assigned on NUMA capable HW
-[    7.689792] [Firmware Bug]: device: '0000:7f:10.6': no node assigned on NUMA capable HW
-[    7.704825] [Firmware Bug]: device: '0000:7f:10.7': no node assigned on NUMA capable HW
-[    7.720791] [Firmware Bug]: device: '0000:7f:13.0': no node assigned on NUMA capable HW
-[    7.736793] [Firmware Bug]: device: '0000:7f:13.1': no node assigned on NUMA capable HW
-[    7.752791] [Firmware Bug]: device: '0000:7f:13.4': no node assigned on NUMA capable HW
-[    7.767780] [Firmware Bug]: device: '0000:7f:13.5': no node assigned on NUMA capable HW
-[    7.783793] [Firmware Bug]: device: '0000:7f:13.6': no node assigned on NUMA capable HW
-[    7.799790] [Firmware Bug]: device: '0000:7f:16.0': no node assigned on NUMA capable HW
-[    7.815789] [Firmware Bug]: device: '0000:7f:16.1': no node assigned on NUMA capable HW
-[    7.831795] [Firmware Bug]: device: '0000:7f:16.2': no node assigned on NUMA capable HW
-[    7.882888] [Firmware Bug]: device: 'pci0000:ff': no node assigned on NUMA capable HW
-[    7.891785] [Firmware Bug]: device: '0000:ff': no node assigned on NUMA capable HW
-[    7.916800] [Firmware Bug]: device: '0000:ff:08.0': no node assigned on NUMA capable HW
-[    7.932798] [Firmware Bug]: device: '0000:ff:09.0': no node assigned on NUMA capable HW
-[    7.948795] [Firmware Bug]: device: '0000:ff:0a.0': no node assigned on NUMA capable HW
-[    7.964800] [Firmware Bug]: device: '0000:ff:0a.1': no node assigned on NUMA capable HW
-[    7.979794] [Firmware Bug]: device: '0000:ff:0a.2': no node assigned on NUMA capable HW
-[    7.995799] [Firmware Bug]: device: '0000:ff:0a.3': no node assigned on NUMA capable HW
-[    8.011809] [Firmware Bug]: device: '0000:ff:0b.0': no node assigned on NUMA capable HW
-[    8.027793] [Firmware Bug]: device: '0000:ff:0b.3': no node assigned on NUMA capable HW
-[    8.042793] [Firmware Bug]: device: '0000:ff:0c.0': no node assigned on NUMA capable HW
-[    8.058793] [Firmware Bug]: device: '0000:ff:0c.1': no node assigned on NUMA capable HW
-[    8.074804] [Firmware Bug]: device: '0000:ff:0c.2': no node assigned on NUMA capable HW
-[    8.090794] [Firmware Bug]: device: '0000:ff:0c.3': no node assigned on NUMA capable HW
-[    8.105793] [Firmware Bug]: device: '0000:ff:0c.4': no node assigned on NUMA capable HW
-[    8.121800] [Firmware Bug]: device: '0000:ff:0d.0': no node assigned on NUMA capable HW
-[    8.137805] [Firmware Bug]: device: '0000:ff:0d.1': no node assigned on NUMA capable HW
-[    8.153795] [Firmware Bug]: device: '0000:ff:0d.2': no node assigned on NUMA capable HW
-[    8.169797] [Firmware Bug]: device: '0000:ff:0d.3': no node assigned on NUMA capable HW
-[    8.184796] [Firmware Bug]: device: '0000:ff:0d.4': no node assigned on NUMA capable HW
-[    8.200802] [Firmware Bug]: device: '0000:ff:0e.0': no node assigned on NUMA capable HW
-[    8.216803] [Firmware Bug]: device: '0000:ff:0e.1': no node assigned on NUMA capable HW
-[    8.232832] [Firmware Bug]: device: '0000:ff:0f.0': no node assigned on NUMA capable HW
-[    8.248821] [Firmware Bug]: device: '0000:ff:0f.1': no node assigned on NUMA capable HW
-[    8.263833] [Firmware Bug]: device: '0000:ff:0f.2': no node assigned on NUMA capable HW
-[    8.279830] [Firmware Bug]: device: '0000:ff:0f.3': no node assigned on NUMA capable HW
-[    8.295829] [Firmware Bug]: device: '0000:ff:0f.4': no node assigned on NUMA capable HW
-[    8.311830] [Firmware Bug]: device: '0000:ff:0f.5': no node assigned on NUMA capable HW
-[    8.327834] [Firmware Bug]: device: '0000:ff:10.0': no node assigned on NUMA capable HW
-[    8.342830] [Firmware Bug]: device: '0000:ff:10.1': no node assigned on NUMA capable HW
-[    8.358829] [Firmware Bug]: device: '0000:ff:10.2': no node assigned on NUMA capable HW
-[    8.374830] [Firmware Bug]: device: '0000:ff:10.3': no node assigned on NUMA capable HW
-[    8.390837] [Firmware Bug]: device: '0000:ff:10.4': no node assigned on NUMA capable HW
-[    8.406831] [Firmware Bug]: device: '0000:ff:10.5': no node assigned on NUMA capable HW
-[    8.421842] [Firmware Bug]: device: '0000:ff:10.6': no node assigned on NUMA capable HW
-[    8.437830] [Firmware Bug]: device: '0000:ff:10.7': no node assigned on NUMA capable HW
-[    8.453795] [Firmware Bug]: device: '0000:ff:13.0': no node assigned on NUMA capable HW
-[    8.469794] [Firmware Bug]: device: '0000:ff:13.1': no node assigned on NUMA capable HW
-[    8.485796] [Firmware Bug]: device: '0000:ff:13.4': no node assigned on NUMA capable HW
-[    8.500797] [Firmware Bug]: device: '0000:ff:13.5': no node assigned on NUMA capable HW
-[    8.516795] [Firmware Bug]: device: '0000:ff:13.6': no node assigned on NUMA capable HW
-[    8.532794] [Firmware Bug]: device: '0000:ff:16.0': no node assigned on NUMA capable HW
-[    8.548794] [Firmware Bug]: device: '0000:ff:16.1': no node assigned on NUMA capable HW
-[    8.563777] [Firmware Bug]: device: '0000:ff:16.2': no node assigned on NUMA capable HW
-[    8.668308] [Firmware Bug]: device: 'mc': no node assigned on NUMA capable HW
-[    8.758913] [Firmware Bug]: device: 'lo': no node assigned on NUMA capable HW
-[    8.767975] [Firmware Bug]: device: 'wmi_bus-PNP0C14:00': no node assigned on NUMA capable HW
-[    9.065753] [Firmware Bug]: device: 'pnp0': no node assigned on NUMA capable HW
-[   11.220722] [Firmware Bug]: device: 'cooling_device0': no node assigned on NUMA capable HW
-[   11.240495] [Firmware Bug]: device: 'cooling_device1': no node assigned on NUMA capable HW
-[   11.260546] [Firmware Bug]: device: 'cooling_device2': no node assigned on NUMA capable HW
-[   11.280271] [Firmware Bug]: device: 'cooling_device3': no node assigned on NUMA capable HW
-[   11.300384] [Firmware Bug]: device: 'cooling_device4': no node assigned on NUMA capable HW
-[   11.320479] [Firmware Bug]: device: 'cooling_device5': no node assigned on NUMA capable HW
-[   11.340206] [Firmware Bug]: device: 'cooling_device6': no node assigned on NUMA capable HW
-[   11.360185] [Firmware Bug]: device: 'cooling_device7': no node assigned on NUMA capable HW
-[   11.379938] [Firmware Bug]: device: 'cooling_device8': no node assigned on NUMA capable HW
-[   11.399969] [Firmware Bug]: device: 'cooling_device9': no node assigned on NUMA capable HW
-[   11.419789] [Firmware Bug]: device: 'cooling_device10': no node assigned on NUMA capable HW
-[   11.440004] [Firmware Bug]: device: 'cooling_device11': no node assigned on NUMA capable HW
-[   11.464025] [Firmware Bug]: device: 'cooling_device12': no node assigned on NUMA capable HW
-[   11.484837] [Firmware Bug]: device: 'cooling_device13': no node assigned on NUMA capable HW
-[   11.505052] [Firmware Bug]: device: 'cooling_device14': no node assigned on NUMA capable HW
-[   11.524997] [Firmware Bug]: device: 'cooling_device15': no node assigned on NUMA capable HW
-[   11.545174] [Firmware Bug]: device: 'cooling_device16': no node assigned on NUMA capable HW
-[   11.565095] [Firmware Bug]: device: 'cooling_device17': no node assigned on NUMA capable HW
-[   11.585328] [Firmware Bug]: device: 'cooling_device18': no node assigned on NUMA capable HW
-[   11.605273] [Firmware Bug]: device: 'cooling_device19': no node assigned on NUMA capable HW
-[   11.625487] [Firmware Bug]: device: 'cooling_device20': no node assigned on NUMA capable HW
-[   11.645382] [Firmware Bug]: device: 'cooling_device21': no node assigned on NUMA capable HW
-[   11.665511] [Firmware Bug]: device: 'cooling_device22': no node assigned on NUMA capable HW
-[   11.685326] [Firmware Bug]: device: 'cooling_device23': no node assigned on NUMA capable HW
-[   11.705528] [Firmware Bug]: device: 'cooling_device24': no node assigned on NUMA capable HW
-[   11.725422] [Firmware Bug]: device: 'cooling_device25': no node assigned on NUMA capable HW
-[   11.745623] [Firmware Bug]: device: 'cooling_device26': no node assigned on NUMA capable HW
-[   11.765454] [Firmware Bug]: device: 'cooling_device27': no node assigned on NUMA capable HW
-[   11.785643] [Firmware Bug]: device: 'cooling_device28': no node assigned on NUMA capable HW
-[   11.805595] [Firmware Bug]: device: 'cooling_device29': no node assigned on NUMA capable HW
-[   11.825786] [Firmware Bug]: device: 'cooling_device30': no node assigned on NUMA capable HW
-[   11.845675] [Firmware Bug]: device: 'cooling_device31': no node assigned on NUMA capable HW
-[   11.865875] [Firmware Bug]: device: 'cooling_device32': no node assigned on NUMA capable HW
-[   11.885853] [Firmware Bug]: device: 'cooling_device33': no node assigned on NUMA capable HW
-[   11.906039] [Firmware Bug]: device: 'cooling_device34': no node assigned on NUMA capable HW
-[   11.925978] [Firmware Bug]: device: 'cooling_device35': no node assigned on NUMA capable HW
-[   11.946160] [Firmware Bug]: device: 'cooling_device36': no node assigned on NUMA capable HW
-[   11.966030] [Firmware Bug]: device: 'cooling_device37': no node assigned on NUMA capable HW
-[   11.986297] [Firmware Bug]: device: 'cooling_device38': no node assigned on NUMA capable HW
-[   12.006158] [Firmware Bug]: device: 'cooling_device39': no node assigned on NUMA capable HW
-[   12.443956] [Firmware Bug]: device: 'ttm': no node assigned on NUMA capable HW
-[   12.490234] [Firmware Bug]: device: 'vtcon1': no node assigned on NUMA capable HW
-[   12.585094] [Firmware Bug]: device: 'vtcon0': no node assigned on NUMA capable HW
-[   12.889374] [Firmware Bug]: device: 'loop0': no node assigned on NUMA capable HW
-[   12.902623] [Firmware Bug]: device: 'loop1': no node assigned on NUMA capable HW
-[   12.915193] [Firmware Bug]: device: 'loop2': no node assigned on NUMA capable HW
-[   12.928095] [Firmware Bug]: device: 'loop3': no node assigned on NUMA capable HW
-[   12.941188] [Firmware Bug]: device: 'loop4': no node assigned on NUMA capable HW
-[   12.953799] [Firmware Bug]: device: 'loop5': no node assigned on NUMA capable HW
-[   12.966731] [Firmware Bug]: device: 'loop6': no node assigned on NUMA capable HW
-[   12.979575] [Firmware Bug]: device: 'loop7': no node assigned on NUMA capable HW
-[   13.857948] [Firmware Bug]: device: 'mice': no node assigned on NUMA capable HW
-[   13.997228] [Firmware Bug]: device: 'cooling_device40': no node assigned on NUMA capable HW
-[   14.006845] [Firmware Bug]: device: 'thermal_zone0': no node assigned on NUMA capable HW
-[   14.016649] [Firmware Bug]: device: 'thermal_zone1': no node assigned on NUMA capable HW
-[   14.641660] [Firmware Bug]: device: 'timer': no node assigned on NUMA capable HW
-
-The PCI bits indicate my BIOS is shit, I suspect 7f is socket-0 and ff
-is socket-1, but I'm not sure how to tie that back up sanely, I _really_
-don't know anything about PCI :/
-
-The thermal crud is just that, crud that needs an overhaul. It creates a
-'cooling_device' per CPU, but in the process looses all actual
-association to the actual CPU number and so we cannot sanely set right
-node information, even though thermal does use the devm_ APIs and thus
-setting the node number is 'required'. Idem for the 'thermal_zone' ones,
-those are the sockets but loose all relation to them in the process.
-
-See how nice it is to be strict? You find bugs everywhere you look. Now
-we get to fix them :-)
-
----
- arch/x86/kernel/cpu/mce/core.c |  1 +
- arch/x86/kernel/cpuid.c        |  1 +
- arch/x86/kernel/msr.c          |  1 +
- drivers/base/bus.c             |  4 +++-
- drivers/base/core.c            | 23 +++++++++++++++++++----
- drivers/base/cpu.c             |  4 +++-
- drivers/base/node.c            |  4 +++-
- drivers/char/mem.c             |  1 +
- drivers/char/misc.c            |  2 ++
- drivers/tty/tty_io.c           |  1 +
- drivers/tty/vt/vc_screen.c     |  3 +++
- drivers/tty/vt/vt.c            |  1 +
- include/linux/device.h         | 10 ++++++++--
- include/linux/numa.h           |  1 +
- kernel/events/core.c           |  1 +
- kernel/time/clockevents.c      |  2 +-
- kernel/time/clocksource.c      |  1 +
- kernel/workqueue.c             |  1 +
- mm/backing-dev.c               |  1 +
- 19 files changed, 53 insertions(+), 10 deletions(-)
-
-diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-index 743370ee4983..ce09413b7c39 100644
---- a/arch/x86/kernel/cpu/mce/core.c
-+++ b/arch/x86/kernel/cpu/mce/core.c
-@@ -2098,6 +2098,7 @@ static void mce_enable_ce(void *all)
- static struct bus_type mce_subsys = {
- 	.name		= "machinecheck",
- 	.dev_name	= "machinecheck",
-+	.no_devm	= true,
- };
- 
- DEFINE_PER_CPU(struct device *, mce_device);
-diff --git a/arch/x86/kernel/cpuid.c b/arch/x86/kernel/cpuid.c
-index 3492aa36bf09..6d7d2a35e911 100644
---- a/arch/x86/kernel/cpuid.c
-+++ b/arch/x86/kernel/cpuid.c
-@@ -161,6 +161,7 @@ static int __init cpuid_init(void)
- 		goto out_chrdev;
- 	}
- 	cpuid_class->devnode = cpuid_devnode;
-+	cpuid_class->no_devm = true;
- 
- 	err = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/cpuid:online",
- 				cpuid_device_create, cpuid_device_destroy);
-diff --git a/arch/x86/kernel/msr.c b/arch/x86/kernel/msr.c
-index 3db2252b958d..e41add671596 100644
---- a/arch/x86/kernel/msr.c
-+++ b/arch/x86/kernel/msr.c
-@@ -210,6 +210,7 @@ static int __init msr_init(void)
- 		goto out_chrdev;
- 	}
- 	msr_class->devnode = msr_devnode;
-+	msr_class->no_devm = true;
- 
- 	err  = cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "x86/msr:online",
- 				 msr_device_create, msr_device_destroy);
-diff --git a/drivers/base/bus.c b/drivers/base/bus.c
-index df3cac739813..96ee8c50ab8a 100644
---- a/drivers/base/bus.c
-+++ b/drivers/base/bus.c
-@@ -1142,7 +1142,9 @@ static int subsys_register(struct bus_type *subsys,
- 	dev->groups = groups;
- 	dev->release = system_root_device_release;
- 
--	err = device_register(dev);
-+	device_initialize(dev);
-+	set_dev_node(dev, NUMA_INVALID_NODE);
-+	err = device_add(dev);
- 	if (err < 0)
- 		goto err_dev_reg;
- 
-diff --git a/drivers/base/core.c b/drivers/base/core.c
-index 636058bbf48a..049f3c7dbdcb 100644
---- a/drivers/base/core.c
-+++ b/drivers/base/core.c
-@@ -1670,7 +1670,7 @@ void device_initialize(struct device *dev)
- 	spin_lock_init(&dev->devres_lock);
- 	INIT_LIST_HEAD(&dev->devres_head);
- 	device_pm_init(dev);
--	set_dev_node(dev, -1);
-+	set_dev_node(dev, NUMA_NO_NODE);
- #ifdef CONFIG_GENERIC_MSI_IRQ
- 	INIT_LIST_HEAD(&dev->msi_list);
- #endif
-@@ -2056,9 +2056,24 @@ int device_add(struct device *dev)
- 	if (kobj)
- 		dev->kobj.parent = kobj;
- 
--	/* use parent numa_node */
--	if (parent && (dev_to_node(dev) == NUMA_NO_NODE))
--		set_dev_node(dev, dev_to_node(parent));
-+#ifdef CONFIG_NUMA
-+	/* use parent node */
-+	if (dev->numa_node == NUMA_NO_NODE && parent)
-+		set_dev_node(dev, parent->numa_node);
-+
-+	if (dev->numa_node == NUMA_NO_NODE && dev->class && dev->class->no_devm)
-+		set_dev_node(dev, NUMA_INVALID_NODE);
-+
-+	if (dev->numa_node == NUMA_NO_NODE && dev->bus && dev->bus->no_devm)
-+		set_dev_node(dev, NUMA_INVALID_NODE);
-+
-+	/* verify 'real' devices have a node assigned on NUMA capable hardware */
-+	if (nr_node_ids > 1 && dev->numa_node == NUMA_NO_NODE) {
-+		pr_warn(FW_BUG "device: '%s': no node assigned on NUMA capable HW\n",
-+				dev_name(dev));
-+		set_dev_node(dev, 0); // assign 'random' valid node
-+	}
-+#endif
- 
- 	/* first, register with generic layer. */
- 	/* we require the name to be set before, and pass NULL */
-diff --git a/drivers/base/cpu.c b/drivers/base/cpu.c
-index cc37511de866..6613aed4de17 100644
---- a/drivers/base/cpu.c
-+++ b/drivers/base/cpu.c
-@@ -381,7 +381,9 @@ int register_cpu(struct cpu *cpu, int num)
- 	cpu->dev.groups = common_cpu_attr_groups;
- 	if (cpu->hotpluggable)
- 		cpu->dev.groups = hotplugable_cpu_attr_groups;
--	error = device_register(&cpu->dev);
-+	device_initialize(&cpu->dev);
-+	set_dev_node(&cpu->dev, cpu->node_id);
-+	error = device_add(&cpu->dev);
- 	if (error) {
- 		put_device(&cpu->dev);
- 		return error;
-diff --git a/drivers/base/node.c b/drivers/base/node.c
-index 75b7e6f6535b..153bf21cf7ce 100644
---- a/drivers/base/node.c
-+++ b/drivers/base/node.c
-@@ -616,7 +616,9 @@ static int register_node(struct node *node, int num)
- 	node->dev.bus = &node_subsys;
- 	node->dev.release = node_device_release;
- 	node->dev.groups = node_dev_groups;
--	error = device_register(&node->dev);
-+	device_initialize(&node->dev);
-+	set_dev_node(&node->dev, num);
-+	error = device_add(&node->dev);
- 
- 	if (error)
- 		put_device(&node->dev);
-diff --git a/drivers/char/mem.c b/drivers/char/mem.c
-index b08dc50f9f26..848d704839f0 100644
---- a/drivers/char/mem.c
-+++ b/drivers/char/mem.c
-@@ -927,6 +927,7 @@ static int __init chr_dev_init(void)
- 		return PTR_ERR(mem_class);
- 
- 	mem_class->devnode = mem_devnode;
-+	mem_class->no_devm = true;
- 	for (minor = 1; minor < ARRAY_SIZE(devlist); minor++) {
- 		if (!devlist[minor].name)
- 			continue;
-diff --git a/drivers/char/misc.c b/drivers/char/misc.c
-index f6a147427029..14ced3adfaad 100644
---- a/drivers/char/misc.c
-+++ b/drivers/char/misc.c
-@@ -274,6 +274,8 @@ static int __init misc_init(void)
- 	if (IS_ERR(misc_class))
- 		goto fail_remove;
- 
-+	misc_class->no_devm = true;
-+
- 	err = -EIO;
- 	if (register_chrdev(MISC_MAJOR, "misc", &misc_fops))
- 		goto fail_printk;
-diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
-index 566728fbaf3c..28e4d531595f 100644
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -3419,6 +3419,7 @@ static int __init tty_class_init(void)
- 	if (IS_ERR(tty_class))
- 		return PTR_ERR(tty_class);
- 	tty_class->devnode = tty_devnode;
-+	tty_class->no_devm = true;
- 	return 0;
- }
- 
-diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-index 1f042346e722..b8fa9e6c0b71 100644
---- a/drivers/tty/vt/vc_screen.c
-+++ b/drivers/tty/vt/vc_screen.c
-@@ -735,6 +735,9 @@ int __init vcs_init(void)
- 		panic("unable to get major %d for vcs device", VCS_MAJOR);
- 	vc_class = class_create(THIS_MODULE, "vc");
- 
-+	if (vc_class)
-+		vc_class->no_devm = true;
-+
- 	device_create(vc_class, NULL, MKDEV(VCS_MAJOR, 0), NULL, "vcs");
- 	device_create(vc_class, NULL, MKDEV(VCS_MAJOR, 64), NULL, "vcsu");
- 	device_create(vc_class, NULL, MKDEV(VCS_MAJOR, 128), NULL, "vcsa");
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 34aa39d1aed9..15add0f1b0d0 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -4138,6 +4138,7 @@ static int __init vtconsole_class_init(void)
- 			PTR_ERR(vtconsole_class));
- 		vtconsole_class = NULL;
- 	}
-+	vtconsole_class->no_devm = true;
- 
- 	/* Add system drivers to sysfs */
- 	for (i = 0; i < MAX_NR_CON_DRIVER; i++) {
-diff --git a/include/linux/device.h b/include/linux/device.h
-index 6717adee33f0..6414788e642e 100644
---- a/include/linux/device.h
-+++ b/include/linux/device.h
-@@ -144,6 +144,7 @@ struct bus_type {
- 	struct lock_class_key lock_key;
- 
- 	bool need_parent_lock;
-+	bool no_devm;
- };
- 
- extern int __must_check bus_register(struct bus_type *bus);
-@@ -428,6 +429,8 @@ struct class {
- 	const struct dev_pm_ops *pm;
- 
- 	struct subsys_private *p;
-+
-+	bool no_devm;
- };
- 
- struct class_dev_iter {
-@@ -1109,7 +1112,10 @@ int dev_set_name(struct device *dev, const char *name, ...);
- #ifdef CONFIG_NUMA
- static inline int dev_to_node(struct device *dev)
- {
--	return dev->numa_node;
-+	int node = dev->numa_node;
-+	if (WARN_ON(node == NUMA_INVALID_NODE))
-+		node = 0; // 'random' valid node
-+	return node;
- }
- static inline void set_dev_node(struct device *dev, int node)
- {
-@@ -1118,7 +1124,7 @@ static inline void set_dev_node(struct device *dev, int node)
- #else
- static inline int dev_to_node(struct device *dev)
- {
--	return NUMA_NO_NODE;
-+	return 0;
- }
- static inline void set_dev_node(struct device *dev, int node)
- {
-diff --git a/include/linux/numa.h b/include/linux/numa.h
-index 110b0e5d0fb0..7d8597f1d73a 100644
---- a/include/linux/numa.h
-+++ b/include/linux/numa.h
-@@ -12,5 +12,6 @@
- #define MAX_NUMNODES    (1 << NODES_SHIFT)
- 
- #define	NUMA_NO_NODE	(-1)
-+#define NUMA_INVALID_NODE (-2)
- 
- #endif /* _LINUX_NUMA_H */
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index caae4b7743b4..3bc081bfbb3f 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -9865,6 +9865,7 @@ static int pmu_bus_running;
- static struct bus_type pmu_bus = {
- 	.name		= "event_source",
- 	.dev_groups	= pmu_dev_groups,
-+	.no_devm	= true,
- };
- 
- static void pmu_dev_release(struct device *dev)
-diff --git a/kernel/time/clockevents.c b/kernel/time/clockevents.c
-index f5490222e134..27ce96638b96 100644
---- a/kernel/time/clockevents.c
-+++ b/kernel/time/clockevents.c
-@@ -663,6 +663,7 @@ void tick_cleanup_dead_cpu(int cpu)
- static struct bus_type clockevents_subsys = {
- 	.name		= "clockevents",
- 	.dev_name       = "clockevent",
-+	.no_devm	= true,
- };
- 
- static DEFINE_PER_CPU(struct device, tick_percpu_dev);
-@@ -732,7 +733,6 @@ static struct tick_device *tick_get_tick_dev(struct device *dev)
- static __init int tick_broadcast_init_sysfs(void)
- {
- 	int err = device_register(&tick_bc_dev);
--
- 	if (!err)
- 		err = device_create_file(&tick_bc_dev, &dev_attr_current_device);
- 	return err;
-diff --git a/kernel/time/clocksource.c b/kernel/time/clocksource.c
-index fff5f64981c6..a6809106750d 100644
---- a/kernel/time/clocksource.c
-+++ b/kernel/time/clocksource.c
-@@ -1171,6 +1171,7 @@ ATTRIBUTE_GROUPS(clocksource);
- static struct bus_type clocksource_subsys = {
- 	.name = "clocksource",
- 	.dev_name = "clocksource",
-+	.no_devm = true,
- };
- 
- static struct device device_clocksource = {
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index 601d61150b65..bd1e48239dfd 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -5513,6 +5513,7 @@ static struct device_attribute wq_sysfs_unbound_attrs[] = {
- static struct bus_type wq_subsys = {
- 	.name				= "workqueue",
- 	.dev_groups			= wq_sysfs_groups,
-+	.no_devm			= true,
- };
- 
- static ssize_t wq_unbound_cpumask_show(struct device *dev,
-diff --git a/mm/backing-dev.c b/mm/backing-dev.c
-index e8e89158adec..2f4473c74c5c 100644
---- a/mm/backing-dev.c
-+++ b/mm/backing-dev.c
-@@ -224,6 +224,7 @@ static __init int bdi_class_init(void)
- 		return PTR_ERR(bdi_class);
- 
- 	bdi_class->dev_groups = bdi_dev_groups;
-+	bdi_class->no_devm = true;
- 	bdi_debug_init();
- 
- 	return 0;
-
+PiBGcm9tOiBKYXNvbiBXYW5nDQo+IFNlbnQ6IFdlZG5lc2RheSwgU2VwdGVtYmVyIDI1LCAyMDE5
+IDg6NDUgUE0NCj4gDQo+IA0KPiBPbiAyMDE5LzkvMjUg5LiL5Y2INTowOSwgVGlhbiwgS2V2aW4g
+d3JvdGU6DQo+ID4+IEZyb206IEphc29uIFdhbmcgW21haWx0bzpqYXNvd2FuZ0ByZWRoYXQuY29t
+XQ0KPiA+PiBTZW50OiBUdWVzZGF5LCBTZXB0ZW1iZXIgMjQsIDIwMTkgOTo1NCBQTQ0KPiA+Pg0K
+PiA+PiBUaGlzIHBhdGNoIGltcGxlbWVudHMgYmFzaWMgc3VwcG9ydCBmb3IgbWRldiBkcml2ZXIg
+dGhhdCBzdXBwb3J0cw0KPiA+PiB2aXJ0aW8gdHJhbnNwb3J0IGZvciBrZXJuZWwgdmlydGlvIGRy
+aXZlci4NCj4gPj4NCj4gPj4gU2lnbmVkLW9mZi1ieTogSmFzb24gV2FuZyA8amFzb3dhbmdAcmVk
+aGF0LmNvbT4NCj4gPj4gLS0tDQo+ID4+ICAgaW5jbHVkZS9saW51eC9tZGV2LmggICAgICAgIHwg
+ICAyICsNCj4gPj4gICBpbmNsdWRlL2xpbnV4L3ZpcnRpb19tZGV2LmggfCAxNDUNCj4gPj4gKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4+ICAgMiBmaWxlcyBjaGFuZ2Vk
+LCAxNDcgaW5zZXJ0aW9ucygrKQ0KPiA+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBpbmNsdWRlL2xp
+bnV4L3ZpcnRpb19tZGV2LmgNCj4gPj4NCj4gPj4gZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgv
+bWRldi5oIGIvaW5jbHVkZS9saW51eC9tZGV2LmgNCj4gPj4gaW5kZXggMzQxNDMwNzMxMWYxLi43
+M2FjMjdiM2I4NjggMTAwNjQ0DQo+ID4+IC0tLSBhL2luY2x1ZGUvbGludXgvbWRldi5oDQo+ID4+
+ICsrKyBiL2luY2x1ZGUvbGludXgvbWRldi5oDQo+ID4+IEBAIC0xMjYsNiArMTI2LDggQEAgc3Ry
+dWN0IG1kZXZfZGV2aWNlICptZGV2X2Zyb21fZGV2KHN0cnVjdA0KPiBkZXZpY2UNCj4gPj4gKmRl
+dik7DQo+ID4+DQo+ID4+ICAgZW51bSB7DQo+ID4+ICAgCU1ERVZfSURfVkZJTyA9IDEsDQo+ID4+
+ICsJTURFVl9JRF9WSVJUSU8gPSAyLA0KPiA+PiArCU1ERVZfSURfVkhPU1QgPSAzLA0KPiA+PiAg
+IAkvKiBOZXcgZW50cmllcyBtdXN0IGJlIGFkZGVkIGhlcmUgKi8NCj4gPj4gICB9Ow0KPiA+Pg0K
+PiA+PiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC92aXJ0aW9fbWRldi5oIGIvaW5jbHVkZS9s
+aW51eC92aXJ0aW9fbWRldi5oDQo+ID4+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4+IGluZGV4
+IDAwMDAwMDAwMDAwMC4uZDFhNDBhNzM5MjY2DQo+ID4+IC0tLSAvZGV2L251bGwNCj4gPj4gKysr
+IGIvaW5jbHVkZS9saW51eC92aXJ0aW9fbWRldi5oDQo+ID4+IEBAIC0wLDAgKzEsMTQ1IEBADQo+
+ID4+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1vbmx5ICovDQo+ID4+ICsv
+Kg0KPiA+PiArICogVmlydGlvIG1lZGlhdGVkIGRldmljZSBkcml2ZXINCj4gPj4gKyAqDQo+ID4+
+ICsgKiBDb3B5cmlnaHQgMjAxOSwgUmVkIEhhdCBDb3JwLg0KPiA+PiArICogICAgIEF1dGhvcjog
+SmFzb24gV2FuZyA8amFzb3dhbmdAcmVkaGF0LmNvbT4NCj4gPj4gKyAqLw0KPiA+PiArI2lmbmRl
+ZiBfTElOVVhfVklSVElPX01ERVZfSA0KPiA+PiArI2RlZmluZSBfTElOVVhfVklSVElPX01ERVZf
+SA0KPiA+PiArDQo+ID4+ICsjaW5jbHVkZSA8bGludXgvaW50ZXJydXB0Lmg+DQo+ID4+ICsjaW5j
+bHVkZSA8bGludXgvbWRldi5oPg0KPiA+PiArI2luY2x1ZGUgPHVhcGkvbGludXgvdmhvc3QuaD4N
+Cj4gPj4gKw0KPiA+PiArI2RlZmluZSBWSVJUSU9fTURFVl9ERVZJQ0VfQVBJX1NUUklORwkJInZp
+cnRpby0NCj4gbWRldiINCj4gPj4gKyNkZWZpbmUgVklSVElPX01ERVZfVkVSU0lPTiAweDENCj4g
+PiBKdXN0IGJlIGN1cmlvdXMuIGlzIHRoaXMgdmVyc2lvbiBpZGVudGljYWwgdG8gdmlydGlvIHNw
+ZWMgdmVyc2lvbiB0aGF0IGJlbG93DQo+ID4gY2FsbGJhY2tzIGFyZSBjcmVhdGVkIGZvciwgb3Ig
+anVzdCBpcnJlbGV2YW50Pw0KPiANCj4gDQo+IEl0IGNvdWxkIGJlIGEgaGludCBidXQgYmFzaWNh
+bGx5IGl0J3MgYSB3YXkgZm9yIHVzZXJzcGFjZSBkcml2ZXINCj4gY29tcGF0aWJpbGl0eS4gRm9y
+IGtlcm5lbCB3ZSBkb24ndCBuZWVkIHRoaXMuDQo+IA0KPiANCj4gPg0KPiA+PiArDQo+ID4+ICtz
+dHJ1Y3QgdmlydGlvX21kZXZfY2FsbGJhY2sgew0KPiA+PiArCWlycXJldHVybl90ICgqY2FsbGJh
+Y2spKHZvaWQgKmRhdGEpOw0KPiA+PiArCXZvaWQgKnByaXZhdGU7DQo+ID4+ICt9Ow0KPiA+PiAr
+DQo+ID4+ICsvKioNCj4gPj4gKyAqIHN0cnVjdCB2ZmlvX21kZXZfZGV2aWNlX29wcyAtIFN0cnVj
+dHVyZSB0byBiZSByZWdpc3RlcmVkIGZvciBlYWNoDQo+ID4+ICsgKiBtZGV2IGRldmljZSB0byBy
+ZWdpc3RlciB0aGUgZGV2aWNlIHRvIHZpcnRpby1tZGV2IG1vZHVsZS4NCj4gPj4gKyAqDQo+ID4+
+ICsgKiBAc2V0X3ZxX2FkZHJlc3M6CQlTZXQgdGhlIGFkZHJlc3Mgb2YgdmlydHF1ZXVlDQo+ID4+
+ICsgKgkJCQlAbWRldjogbWVkaWF0ZWQgZGV2aWNlDQo+ID4+ICsgKgkJCQlAaWR4OiB2aXJ0cXVl
+dWUgaW5kZXgNCj4gPj4gKyAqCQkJCUBkZXNjX2FyZWE6IGFkZHJlc3Mgb2YgZGVzYyBhcmVhDQo+
+ID4+ICsgKgkJCQlAZHJpdmVyX2FyZWE6IGFkZHJlc3Mgb2YgZHJpdmVyIGFyZWENCj4gPj4gKyAq
+CQkJCUBkZXZpY2VfYXJlYTogYWRkcmVzcyBvZiBkZXZpY2UgYXJlYQ0KPiA+PiArICoJCQkJUmV0
+dXJucyBpbnRlZ2VyOiBzdWNjZXNzICgwKSBvciBlcnJvciAoPCAwKQ0KPiA+PiArICogQHNldF92
+cV9udW06CQlTZXQgdGhlIHNpemUgb2YgdmlydHF1ZXVlDQo+ID4+ICsgKgkJCQlAbWRldjogbWVk
+aWF0ZWQgZGV2aWNlDQo+ID4+ICsgKgkJCQlAaWR4OiB2aXJ0cXVldWUgaW5kZXgNCj4gPj4gKyAq
+CQkJCUBudW06IHRoZSBzaXplIG9mIHZpcnRxdWV1ZQ0KPiA+PiArICogQGtpY2tfdnE6CQkJS2lj
+ayB0aGUgdmlydHF1ZXVlDQo+ID4+ICsgKgkJCQlAbWRldjogbWVkaWF0ZWQgZGV2aWNlDQo+ID4+
+ICsgKgkJCQlAaWR4OiB2aXJ0cXVldWUgaW5kZXgNCj4gPj4gKyAqIEBzZXRfdnFfY2I6CQkJU2V0
+IHRoZSBpbnRlcnJ1dCBjYWxiYWNrIGZ1bmN0aW9uIGZvcg0KPiA+PiArICoJCQkJYSB2aXJ0cXVl
+dWUNCj4gPj4gKyAqCQkJCUBtZGV2OiBtZWRpYXRlZCBkZXZpY2UNCj4gPj4gKyAqCQkJCUBpZHg6
+IHZpcnRxdWV1ZSBpbmRleA0KPiA+PiArICoJCQkJQGNiOiB2aXJ0aW8tbWRldiBpbnRlcnJ1cHQg
+Y2FsbGJhY2sNCj4gPj4gc3RydWN0dXJlDQo+ID4+ICsgKiBAc2V0X3ZxX3JlYWR5OgkJU2V0IHJl
+YWR5IHN0YXR1cyBmb3IgYSB2aXJ0cXVldWUNCj4gPj4gKyAqCQkJCUBtZGV2OiBtZWRpYXRlZCBk
+ZXZpY2UNCj4gPj4gKyAqCQkJCUBpZHg6IHZpcnRxdWV1ZSBpbmRleA0KPiA+PiArICoJCQkJQHJl
+YWR5OiByZWFkeSAodHJ1ZSkgbm90IHJlYWR5KGZhbHNlKQ0KPiA+PiArICogQGdldF92cV9yZWFk
+eToJCUdldCByZWFkeSBzdGF0dXMgZm9yIGEgdmlydHF1ZXVlDQo+ID4+ICsgKgkJCQlAbWRldjog
+bWVkaWF0ZWQgZGV2aWNlDQo+ID4+ICsgKgkJCQlAaWR4OiB2aXJ0cXVldWUgaW5kZXgNCj4gPj4g
+KyAqCQkJCVJldHVybnMgYm9vbGVhbjogcmVhZHkgKHRydWUpIG9yIG5vdCAoZmFsc2UpDQo+ID4+
+ICsgKiBAc2V0X3ZxX3N0YXRlOgkJU2V0IHRoZSBzdGF0ZSBmb3IgYSB2aXJ0cXVldWUNCj4gPj4g
+KyAqCQkJCUBtZGV2OiBtZWRpYXRlZCBkZXZpY2UNCj4gPj4gKyAqCQkJCUBpZHg6IHZpcnRxdWV1
+ZSBpbmRleA0KPiA+PiArICoJCQkJQHN0YXRlOiB2aXJ0cXVldWUgc3RhdGUgKGxhc3RfYXZhaWxf
+aWR4KQ0KPiA+PiArICoJCQkJUmV0dXJucyBpbnRlZ2VyOiBzdWNjZXNzICgwKSBvciBlcnJvciAo
+PCAwKQ0KPiA+PiArICogQGdldF92cV9zdGF0ZToJCUdldCB0aGUgc3RhdGUgZm9yIGEgdmlydHF1
+ZXVlDQo+ID4+ICsgKgkJCQlAbWRldjogbWVkaWF0ZWQgZGV2aWNlDQo+ID4+ICsgKgkJCQlAaWR4
+OiB2aXJ0cXVldWUgaW5kZXgNCj4gPj4gKyAqCQkJCVJldHVybnMgdmlydHF1ZXVlIHN0YXRlIChs
+YXN0X2F2YWlsX2lkeCkNCj4gPj4gKyAqIEBnZXRfdnFfYWxpZ246CQlHZXQgdGhlIHZpcnRxdWV1
+ZSBhbGlnbiByZXF1aXJlbWVudA0KPiA+PiArICoJCQkJZm9yIHRoZSBkZXZpY2UNCj4gPj4gKyAq
+CQkJCUBtZGV2OiBtZWRpYXRlZCBkZXZpY2UNCj4gPj4gKyAqCQkJCVJldHVybnMgdmlydHF1ZXVl
+IGFsZ2luIHJlcXVpcmVtZW50DQo+ID4+ICsgKiBAZ2V0X2ZlYXR1cmVzOgkJR2V0IHZpcnRpbyBm
+ZWF0dXJlcyBzdXBwb3J0ZWQgYnkgdGhlIGRldmljZQ0KPiA+PiArICoJCQkJQG1kZXY6IG1lZGlh
+dGVkIGRldmljZQ0KPiA+PiArICoJCQkJUmV0dXJucyB0aGUgZmVhdHVyZXMgc3VwcG9ydCBieSB0
+aGUNCj4gPj4gKyAqCQkJCWRldmljZQ0KPiA+PiArICogQGdldF9mZWF0dXJlczoJCVNldCB2aXJ0
+aW8gZmVhdHVyZXMgc3VwcG9ydGVkIGJ5IHRoZSBkcml2ZXINCj4gPj4gKyAqCQkJCUBtZGV2OiBt
+ZWRpYXRlZCBkZXZpY2UNCj4gPj4gKyAqCQkJCUBmZWF0dXJlczogZmVhdHVyZSBzdXBwb3J0IGJ5
+IHRoZSBkcml2ZXINCj4gPj4gKyAqCQkJCVJldHVybnMgaW50ZWdlcjogc3VjY2VzcyAoMCkgb3Ig
+ZXJyb3IgKDwgMCkNCj4gPj4gKyAqIEBzZXRfY29uZmlnX2NiOgkJU2V0IHRoZSBjb25maWcgaW50
+ZXJydXB0IGNhbGxiYWNrDQo+ID4+ICsgKgkJCQlAbWRldjogbWVkaWF0ZWQgZGV2aWNlDQo+ID4+
+ICsgKgkJCQlAY2I6IHZpcnRpby1tZGV2IGludGVycnVwdCBjYWxsYmFjaw0KPiA+PiBzdHJ1Y3R1
+cmUNCj4gPj4gKyAqIEBnZXRfZGV2aWNlX2lkOgkJR2V0IHZpcnRpbyBkZXZpY2UgaWQNCj4gPj4g
+KyAqCQkJCUBtZGV2OiBtZWRpYXRlZCBkZXZpY2UNCj4gPj4gKyAqCQkJCVJldHVybnMgdTMyOiB2
+aXJ0aW8gZGV2aWNlIGlkDQo+ID4+ICsgKiBAZ2V0X3ZlbmRvcl9pZDoJCUdldCB2aXJ0aW8gdmVu
+ZG9yIGlkDQo+ID4+ICsgKgkJCQlAbWRldjogbWVkaWF0ZWQgZGV2aWNlDQo+ID4+ICsgKgkJCQlS
+ZXR1cm5zIHUzMjogdmlydGlvIHZlbmRvciBpZA0KPiA+PiArICogQGdldF9zdGF0dXM6CQlHZXQg
+dGhlIGRldmljZSBzdGF0dXMNCj4gPj4gKyAqCQkJCUBtZGV2OiBtZWRpYXRlZCBkZXZpY2UNCj4g
+Pj4gKyAqCQkJCVJldHVybnMgdTg6IHZpcnRpbyBkZXZpY2Ugc3RhdHVzDQo+ID4+ICsgKiBAc2V0
+X3N0YXR1czoJCVNldCB0aGUgZGV2aWNlIHN0YXR1cw0KPiA+PiArICoJCQkJQG1kZXY6IG1lZGlh
+dGVkIGRldmljZQ0KPiA+PiArICoJCQkJQHN0YXR1czogdmlydGlvIGRldmljZSBzdGF0dXMNCj4g
+Pj4gKyAqIEBnZXRfY29uZmlnOgkJUmVhZCBmcm9tIGRldmljZSBzcGVjaWZpYyBjb25maXVncmF0
+aW9uDQo+ID4+IHNwYWNlDQo+ID4gY29uZmlndXJhdGlvbiAoYW5kIHNpbWlsYXIgdHlwb3MgZG93
+bndhcmQpDQo+IA0KPiANCj4gTGV0IG1lIGZpeC4NCj4gDQo+IA0KPiA+DQo+ID4+ICsgKgkJCQlA
+bWRldjogbWVkaWF0ZWQgZGV2aWNlDQo+ID4+ICsgKgkJCQlAb2Zmc2V0OiBvZmZzZXQgZnJvbSB0
+aGUgYmVnaW5uaW5nIG9mDQo+ID4+ICsgKgkJCQljb25maWd1cmF0aW9uIHNwYWNlDQo+ID4+ICsg
+KgkJCQlAYnVmOiBidWZmZXIgdXNlZCB0byByZWFkIHRvDQo+ID4+ICsgKgkJCQlAbGVuOiB0aGUg
+bGVuZ3RoIHRvIHJlYWQgZnJvbQ0KPiA+PiArICoJCQkJY29uZmlncmF0aW9uIHNwYWNlDQo+ID4+
+ICsgKiBAc2V0X2NvbmZpZzoJCVdyaXRlIHRvIGRldmljZSBzcGVjaWZpYyBjb25maXVncmF0aW9u
+IHNwYWNlDQo+ID4+ICsgKgkJCQlAbWRldjogbWVkaWF0ZWQgZGV2aWNlDQo+ID4+ICsgKgkJCQlA
+b2Zmc2V0OiBvZmZzZXQgZnJvbSB0aGUgYmVnaW5uaW5nIG9mDQo+ID4+ICsgKgkJCQljb25maWd1
+cmF0aW9uIHNwYWNlDQo+ID4+ICsgKgkJCQlAYnVmOiBidWZmZXIgdXNlZCB0byB3cml0ZSBmcm9t
+DQo+ID4+ICsgKgkJCQlAbGVuOiB0aGUgbGVuZ3RoIHRvIHdyaXRlIHRvDQo+ID4+ICsgKgkJCQlj
+b25maWdyYXRpb24gc3BhY2UNCj4gPj4gKyAqIEBnZXRfdmVyc2lvbjoJCUdldCB0aGUgdmVyc2lv
+biBvZiB2aXJ0aW8gbWRldiBkZXZpY2UNCj4gPj4gKyAqCQkJCUBtZGV2OiBtZWRpYXRlZCBkZXZp
+Y2UNCj4gPj4gKyAqCQkJCVJldHVybnMgaW50ZWdlcjogdmVyc2lvbiBvZiB0aGUgZGV2aWNlDQo+
+ID4+ICsgKiBAZ2V0X2dlbmVyYXRpb246CQlHZXQgZGV2aWNlIGdlbmVyYXRvbg0KPiA+PiArICoJ
+CQkJQG1kZXY6IG1lZGlhdGVkIGRldmljZQ0KPiA+PiArICoJCQkJUmV0dXJucyB1MzI6IGRldmlj
+ZSBnZW5lcmF0aW9uDQo+ID4+ICsgKi8NCj4gPj4gK3N0cnVjdCB2aXJ0aW9fbWRldl9kZXZpY2Vf
+b3BzIHsNCj4gPj4gKwkvKiBWaXJ0cXVldWUgb3BzICovDQo+ID4+ICsJaW50ICgqc2V0X3ZxX2Fk
+ZHJlc3MpKHN0cnVjdCBtZGV2X2RldmljZSAqbWRldiwNCj4gPj4gKwkJCSAgICAgIHUxNiBpZHgs
+IHU2NCBkZXNjX2FyZWEsIHU2NCBkcml2ZXJfYXJlYSwNCj4gPj4gKwkJCSAgICAgIHU2NCBkZXZp
+Y2VfYXJlYSk7DQo+ID4+ICsJdm9pZCAoKnNldF92cV9udW0pKHN0cnVjdCBtZGV2X2RldmljZSAq
+bWRldiwgdTE2IGlkeCwgdTMyIG51bSk7DQo+ID4+ICsJdm9pZCAoKmtpY2tfdnEpKHN0cnVjdCBt
+ZGV2X2RldmljZSAqbWRldiwgdTE2IGlkeCk7DQo+ID4+ICsJdm9pZCAoKnNldF92cV9jYikoc3Ry
+dWN0IG1kZXZfZGV2aWNlICptZGV2LCB1MTYgaWR4LA0KPiA+PiArCQkJICBzdHJ1Y3QgdmlydGlv
+X21kZXZfY2FsbGJhY2sgKmNiKTsNCj4gPj4gKwl2b2lkICgqc2V0X3ZxX3JlYWR5KShzdHJ1Y3Qg
+bWRldl9kZXZpY2UgKm1kZXYsIHUxNiBpZHgsIGJvb2wNCj4gPj4gcmVhZHkpOw0KPiA+PiArCWJv
+b2wgKCpnZXRfdnFfcmVhZHkpKHN0cnVjdCBtZGV2X2RldmljZSAqbWRldiwgdTE2IGlkeCk7DQo+
+ID4+ICsJaW50ICgqc2V0X3ZxX3N0YXRlKShzdHJ1Y3QgbWRldl9kZXZpY2UgKm1kZXYsIHUxNiBp
+ZHgsIHU2NCBzdGF0ZSk7DQo+ID4+ICsJdTY0ICgqZ2V0X3ZxX3N0YXRlKShzdHJ1Y3QgbWRldl9k
+ZXZpY2UgKm1kZXYsIHUxNiBpZHgpOw0KPiA+PiArDQo+ID4+ICsJLyogRGV2aWNlIG9wcyAqLw0K
+PiA+PiArCXUxNiAoKmdldF92cV9hbGlnbikoc3RydWN0IG1kZXZfZGV2aWNlICptZGV2KTsNCj4g
+Pj4gKwl1NjQgKCpnZXRfZmVhdHVyZXMpKHN0cnVjdCBtZGV2X2RldmljZSAqbWRldik7DQo+ID4+
+ICsJaW50ICgqc2V0X2ZlYXR1cmVzKShzdHJ1Y3QgbWRldl9kZXZpY2UgKm1kZXYsIHU2NCBmZWF0
+dXJlcyk7DQo+ID4+ICsJdm9pZCAoKnNldF9jb25maWdfY2IpKHN0cnVjdCBtZGV2X2RldmljZSAq
+bWRldiwNCj4gPj4gKwkJCSAgICAgIHN0cnVjdCB2aXJ0aW9fbWRldl9jYWxsYmFjayAqY2IpOw0K
+PiA+PiArCXUxNiAoKmdldF9xdWV1ZV9tYXgpKHN0cnVjdCBtZGV2X2RldmljZSAqbWRldik7DQo+
+ID4+ICsJdTMyICgqZ2V0X2RldmljZV9pZCkoc3RydWN0IG1kZXZfZGV2aWNlICptZGV2KTsNCj4g
+Pj4gKwl1MzIgKCpnZXRfdmVuZG9yX2lkKShzdHJ1Y3QgbWRldl9kZXZpY2UgKm1kZXYpOw0KPiA+
+PiArCXU4ICgqZ2V0X3N0YXR1cykoc3RydWN0IG1kZXZfZGV2aWNlICptZGV2KTsNCj4gPj4gKwl2
+b2lkICgqc2V0X3N0YXR1cykoc3RydWN0IG1kZXZfZGV2aWNlICptZGV2LCB1OCBzdGF0dXMpOw0K
+PiA+PiArCXZvaWQgKCpnZXRfY29uZmlnKShzdHJ1Y3QgbWRldl9kZXZpY2UgKm1kZXYsIHVuc2ln
+bmVkIGludCBvZmZzZXQsDQo+ID4+ICsJCQkgICB2b2lkICpidWYsIHVuc2lnbmVkIGludCBsZW4p
+Ow0KPiA+PiArCXZvaWQgKCpzZXRfY29uZmlnKShzdHJ1Y3QgbWRldl9kZXZpY2UgKm1kZXYsIHVu
+c2lnbmVkIGludCBvZmZzZXQsDQo+ID4+ICsJCQkgICBjb25zdCB2b2lkICpidWYsIHVuc2lnbmVk
+IGludCBsZW4pOw0KPiA+PiArCWludCAoKmdldF92ZXJzaW9uKShzdHJ1Y3QgbWRldl9kZXZpY2Ug
+Km1kZXYpOw0KPiA+PiArCXUzMiAoKmdldF9nZW5lcmF0aW9uKShzdHJ1Y3QgbWRldl9kZXZpY2Ug
+Km1kZXYpOw0KPiA+PiArfTsNCj4gPiBJJ20gbm90IHN1cmUgaG93IHN0YWJsZSBhYm92ZSBvcHMg
+YXJlLg0KPiANCj4gDQo+IEl0J3MgdGhlIGtlcm5lbCBpbnRlcm5hbCBBUEksIHNvIHRoZXJlJ3Mg
+bm8gc3RyaWN0IHJlcXVpcmVtZW50IGZvciB0aGlzLg0KPiBXZSB3aWxsIGV4cG9ydCBhIHZlcnNp
+b24gdmFsdWUgZm9yIHVzZXJzcGFjZSBmb3IgY29tcGF0aWJpbGl0eS4NCj4gDQo+IA0KPiA+IERv
+ZXMgaXQgbWFrZSBzZW5zZSBpZiBkZWZpbmluZw0KPiA+IGp1c3QgdHdvIGNhbGxiYWNrcyBoZXJl
+LCBlLmcuIHZxX2N0cmwgYW5kIGRldmljZV9jdHJsLCBhbmQgdGhlbiBsZXQgdGhlDQo+ID4gdmVu
+ZG9yIGRyaXZlciB0byBoYW5kbGUgc3BlY2lmaWMgb3BzIGluIGVhY2ggY2F0ZWdvcnkgKHNpbWls
+YXIgdG8gaG93DQo+ID4gaW9jdGwgd29ya3MpPw0KPiANCj4gDQo+IE15IHVuZGVyc3RhbmRpbmcg
+aXMgdGhhdCBpdCBpbnRyb2R1Y2UgYW5vdGhlciBpbmRpcmVjdGlvbiwgeW91IHN0aWxsDQo+IG5l
+ZWQgdG8gZGlmZmVyIGZyb20gZGlmZmVyZW50IGNvbW1hbmQsIGFuZCBpdCdzIGxlc3MgZmxleGli
+bGUgdGhhbg0KPiBkaXJlY3QgY2FsbGJhY2suDQo+IA0KPiBXaGF0J3MgdGhlIHZhbHVlIG9mIGRv
+aW5nIHRoaXM/DQo+IA0KDQpJIGp1c3QgdGhvdWdodCBkb2luZyBzbyBtYXkgcHJvdmlkZSBiZXR0
+ZXIgY29tcGF0aWJpbGl0eSB0byB0aGUNCnBhcmVudCBkcml2ZXIuIEV2ZW4gd2hlbiBuZXcgb3Ag
+aXMgaW50cm9kdWNlZCwgYSBwYXJlbnQgZHJpdmVyDQp0aGF0IHdhcyBkZXZlbG9wZWQgYWdhaW5z
+dCB0aGUgb2xkIHNldCBjYW4gc3RpbGwgYmUgbG9hZGVkIGluIHRoZQ0KbmV3IGtlcm5lbC4gSXQg
+anVzdCByZXR1cm5zIGVycm9yIHdoZW4gdW5yZWNvZ25pemVkIG9wcyBhcmUNCnJvdXRlZCB0aHJv
+dWdoIHZxX2N0cmwgYW5kIGRldmljZV9jdHJsLCBpZiB0aGUgdXNlcnNwYWNlIGRvZXNuJ3QNCmZh
+dm9yIHRoZSBleHBvc2VkIHZlcnNpb24gdmFsdWUuIEJ1dCBpZiBhYm92ZSBvcHMgc2V0IGlzIHBy
+ZXR0eQ0Kc3RhYmxlLCB0aGVuIHRoaXMgY29tbWVudCBjYW4gYmUgaWdub3JlZC4NCg0KVGhhbmtz
+DQpLZXZpbg0K
