@@ -2,90 +2,134 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0669BF3A5
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 15:04:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D335BF557
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 16:58:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbfIZNEU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Sep 2019 09:04:20 -0400
-Received: from foss.arm.com ([217.140.110.172]:49108 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725946AbfIZNEU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 26 Sep 2019 09:04:20 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id F2826142F;
-        Thu, 26 Sep 2019 06:04:19 -0700 (PDT)
-Received: from [10.1.197.57] (e110467-lin.cambridge.arm.com [10.1.197.57])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7D7E53F763;
-        Thu, 26 Sep 2019 06:04:18 -0700 (PDT)
-Subject: Re: [RFC PATCH 1/3] dma-mapping: make overriding GFP_* flags arch
- customizable
-To:     Halil Pasic <pasic@linux.ibm.com>, Christoph Hellwig <hch@lst.de>
-Cc:     linux-s390@vger.kernel.org, Janosch Frank <frankja@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
+        id S1725884AbfIZO6o (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Sep 2019 10:58:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60508 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725813AbfIZO6o (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 26 Sep 2019 10:58:44 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8QEqR95118380
+        for <linux-s390@vger.kernel.org>; Thu, 26 Sep 2019 10:58:43 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8x0dn8kq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 26 Sep 2019 10:58:43 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
+        Thu, 26 Sep 2019 15:58:41 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 26 Sep 2019 15:58:37 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8QEwaLT41746886
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Sep 2019 14:58:36 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 261974C04A;
+        Thu, 26 Sep 2019 14:58:36 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E2AFE4C044;
+        Thu, 26 Sep 2019 14:58:35 +0000 (GMT)
+Received: from localhost (unknown [9.145.74.47])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 26 Sep 2019 14:58:35 +0000 (GMT)
+Date:   Thu, 26 Sep 2019 16:58:34 +0200
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        iommu@lists.linux-foundation.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-References: <20190923123418.22695-1-pasic@linux.ibm.com>
- <20190923123418.22695-2-pasic@linux.ibm.com> <20190923152117.GA2767@lst.de>
- <20190926143745.68bdd082.pasic@linux.ibm.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <6c62da57-c94c-8078-957c-b6832ed7fd1b@arm.com>
-Date:   Thu, 26 Sep 2019 14:04:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [GIT PULL] s390 patches for the 5.4 merge window #2
 MIME-Version: 1.0
-In-Reply-To: <20190926143745.68bdd082.pasic@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 19092614-0016-0000-0000-000002B1034E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19092614-0017-0000-0000-00003311D0FF
+Message-Id: <your-ad-here.call-01569509914-ext-6285@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=923 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1909260138
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 26/09/2019 13:37, Halil Pasic wrote:
-> On Mon, 23 Sep 2019 17:21:17 +0200
-> Christoph Hellwig <hch@lst.de> wrote:
-> 
->> On Mon, Sep 23, 2019 at 02:34:16PM +0200, Halil Pasic wrote:
->>> Before commit 57bf5a8963f8 ("dma-mapping: clear harmful GFP_* flags in
->>> common code") tweaking the client code supplied GFP_* flags used to be
->>> an issue handled in the architecture specific code. The commit message
->>> suggests, that fixing the client code would actually be a better way
->>> of dealing with this.
->>>
->>> On s390 common I/O devices are generally capable of using the full 64
->>> bit address space for DMA I/O, but some chunks of the DMA memory need to
->>> be 31 bit addressable (in physical address space) because the
->>> instructions involved mandate it. Before switching to DMA API this used
->>> to be a non-issue, we used to allocate those chunks from ZONE_DMA.
->>> Currently our only option with the DMA API is to restrict the devices to
->>> (via dma_mask and dma_mask_coherent) to 31 bit, which is sub-optimal.
->>>
->>> Thus s390 we would benefit form having control over what flags are
->>> dropped.
->>
->> No way, sorry.  You need to express that using a dma mask instead of
->> overloading the GFP flags.
-> 
-> Thanks for your feedback and sorry for the delay. Can you help me figure
-> out how can I express that using a dma mask?
-> 
-> IMHO what you ask from me is frankly impossible.
-> 
-> What I need is the ability to ask for  (considering the physical
-> address) 31 bit addressable DMA memory if the chunk is supposed to host
-> control-type data that needs to be 31 bit addressable because that is
-> how the architecture is, without affecting the normal data-path. So
-> normally 64 bit mask is fine but occasionally (control) we would need
-> a 31 bit mask.
+Hello Linus,
 
-If it's possible to rework the "data" path to use streaming mappings 
-instead of coherent allocations, you could potentially mimic what virtio 
-does for a similar situation - see commit a0be1db4304f.
+please pull the second round of s390 fixes and features for 5.4.
 
-Robin.
+Thank you,
+Vasily
+
+The following changes since commit d590284419b1d7cc2dc646e9bdde4da19061cf0f:
+
+  Merge tag 's390-5.4-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux (2019-09-17 14:04:43 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-2
+
+for you to fetch changes up to ab5758848039de9a4b249d46e4ab591197eebaf2:
+
+  s390/cio: exclude subchannels with no parent from pseudo check (2019-09-23 23:27:53 +0200)
+
+----------------------------------------------------------------
+s390 updates for the 5.4 merge window #2
+
+ - Fix 3 kasan findings.
+
+ - Add PERF_EVENT_IOC_PERIOD ioctl support.
+
+ - Add Crypto Express7S support and extend sysfs attributes for pkey.
+
+ - Minor common I/O layer documentation corrections.
+
+----------------------------------------------------------------
+Cornelia Huck (1):
+      s390/cio: fix intparm documentation
+
+Harald Freudenberger (1):
+      s390/zcrypt: CEX7S exploitation support
+
+Ingo Franzki (1):
+      s390/pkey: Add sysfs attributes to emit AES CIPHER key blobs
+
+Thomas Richter (2):
+      s390/cpum_sf: Support ioctl PERF_EVENT_IOC_PERIOD
+      s390/cpumf: Remove mixed white space
+
+Vasily Gorbik (3):
+      s390/topology: avoid firing events before kobjs are created
+      s390/cio: avoid calling strlen on null pointer
+      s390/cio: exclude subchannels with no parent from pseudo check
+
+ arch/s390/include/asm/cpu_mf.h      |  10 +--
+ arch/s390/include/asm/perf_event.h  |   2 +
+ arch/s390/include/uapi/asm/zcrypt.h |   4 +-
+ arch/s390/kernel/perf_cpum_sf.c     | 165 +++++++++++++++++++++++++++---------
+ arch/s390/kernel/topology.c         |   3 +-
+ drivers/s390/cio/ccwgroup.c         |   2 +-
+ drivers/s390/cio/css.c              |   2 +
+ drivers/s390/cio/device_ops.c       |  23 +++--
+ drivers/s390/crypto/ap_bus.c        |  12 +--
+ drivers/s390/crypto/ap_bus.h        |   3 +-
+ drivers/s390/crypto/pkey_api.c      | 113 ++++++++++++++++++++++++
+ drivers/s390/crypto/vfio_ap_drv.c   |   2 +
+ drivers/s390/crypto/zcrypt_api.h    |   3 +-
+ drivers/s390/crypto/zcrypt_cex4.c   |  72 +++++++++++-----
+ 14 files changed, 334 insertions(+), 82 deletions(-)
+
