@@ -2,125 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0A562BF0B8
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 13:01:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CF1F1BF294
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 14:12:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725280AbfIZLBC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Sep 2019 07:01:02 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51128 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725554AbfIZLBB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 26 Sep 2019 07:01:01 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8QAwpmO088887
-        for <linux-s390@vger.kernel.org>; Thu, 26 Sep 2019 07:01:00 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v8sxx6rfc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 26 Sep 2019 07:01:00 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <maier@linux.ibm.com>;
-        Thu, 26 Sep 2019 12:00:58 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 26 Sep 2019 12:00:56 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8QB0sUN19529884
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Sep 2019 11:00:54 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C666A4059;
-        Thu, 26 Sep 2019 11:00:54 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1EA52A4053;
-        Thu, 26 Sep 2019 11:00:54 +0000 (GMT)
-Received: from oc4120165700.ibm.com (unknown [9.152.96.183])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Sep 2019 11:00:54 +0000 (GMT)
-Subject: Re: [PATCH] zfcp: fix reaction on bit error theshold notification
- with adapter close
-To:     Sasha Levin <sashal@kernel.org>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>
-Cc:     linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        stable@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>
-References: <20190924160616.15301-1-maier@linux.ibm.com>
- <20190925224305.00183208C3@mail.kernel.org>
-From:   Steffen Maier <maier@linux.ibm.com>
-Date:   Thu, 26 Sep 2019 13:00:53 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1725939AbfIZMMD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Sep 2019 08:12:03 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35780 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725815AbfIZMMC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Sep 2019 08:12:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=QmSB+iJQpid0KK6OgKLqID3ggufRi3prpqIsy8HQWNc=; b=KVBm0ALWj1UZADG6S1S003WTm
+        6Y/Z2mNgsSiMdagtvJlukp3nGNsy545VNOD+MXDGI+CgrWveZsq3kwIiK+W1LpQFSlw2FO8gUGdVM
+        W2VBJT0Xlb+/aHD/PsZOmPJdK4xvYogq73w0VV+DZOF+NK+Pw3EhlTl3L/B56oc0gDiH5L7IOTOmh
+        9SS8hCDwrkF/LGwTT8i48Krgh9Vh7dcBpmex2wkYQ8Bfn7Fuyfe20YRVwniKWyJcj4Nza9/eRfeAA
+        s7HghavBEgLci7cWRly+tTQOqfAmcSTvyTWhdg9bVpOtanHW5Wossu0KBHPpav8mRaq/Jr31Cr0YE
+        u4u0ZZw0Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDSb7-00059a-Ne; Thu, 26 Sep 2019 12:10:14 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 77211305BD3;
+        Thu, 26 Sep 2019 14:09:21 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C40552013B759; Thu, 26 Sep 2019 14:10:07 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 14:10:07 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190926121007.GB4581@hirez.programming.kicks-ass.net>
+References: <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+ <20190924122500.GP23050@dhcp22.suse.cz>
+ <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+ <20190924131939.GS23050@dhcp22.suse.cz>
+ <20190925104040.GD4553@hirez.programming.kicks-ass.net>
+ <20190925132544.GL23050@dhcp22.suse.cz>
+ <20190925163154.GF4553@hirez.programming.kicks-ass.net>
+ <20190925214526.GA4643@worktop.programming.kicks-ass.net>
+ <20190926090559.GA4581@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190925224305.00183208C3@mail.kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19092611-0008-0000-0000-0000031B4CA5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092611-0009-0000-0000-00004A39E7AD
-Message-Id: <77d90d91-68a3-187e-7d5a-114f02a05dea@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909260104
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190926090559.GA4581@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 9/26/19 12:43 AM, Sasha Levin wrote:
-> [This is an automated email]
+On Thu, Sep 26, 2019 at 11:05:59AM +0200, Peter Zijlstra wrote:
+> On Wed, Sep 25, 2019 at 11:45:26PM +0200, Peter Zijlstra wrote:
+> > [    7.149889] [Firmware Bug]: device: 'pci0000:7f': no node assigned on NUMA capable HW
+> > [    7.882888] [Firmware Bug]: device: 'pci0000:ff': no node assigned on NUMA capable HW
 > 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: 1da177e4c3f4 Linux-2.6.12-rc2.
+> Going by the limited number of intel numa boxes I have, it looks like:
 > 
-> The bot has tested the following trees: v5.3.1, v5.2.17, v4.19.75, v4.14.146, v4.9.194, v4.4.194.
+>   socket = (~busid) >> (8-n)
+
+Bah, I got my notes mixed up, it should be: busid >> (8-n)
+
+> where 'n' is the number of bits required to encode the largest socket
+> id, ie 1 for 2-socket and 2 for 4 socket.
 > 
-> v5.3.1: Build OK!
-> v5.2.17: Build OK!
-> v4.19.75: Build OK!
-> v4.14.146: Failed to apply! Possible dependencies:
->      75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
-> 
-> v4.9.194: Failed to apply! Possible dependencies:
->      75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
->      bc46427e807e ("scsi: zfcp: use setup_timer instead of init_timer")
-> 
-> v4.4.194: Failed to apply! Possible dependencies:
->      75492a51568b ("s390/scsi: Convert timers to use timer_setup()")
->      bc46427e807e ("scsi: zfcp: use setup_timer instead of init_timer")
-> 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
-
-It's sufficient to have the fix in those more recent stable trees where it 
-applies (and builds). My fixes tag formally indicates since when it was at 
-least broken but I don't expect all stable or longterm kernels to get the fix. 
-If I happen to find out we need the fix in a kernel where it does not apply, 
-I'll send a backport to stable when the time is right.
-
-
-Showing the possible dependencies is awesome!
-
-
--- 
-Mit freundlichen Gruessen / Kind regards
-Steffen Maier
-
-Linux on IBM Z Development
-
-https://www.ibm.com/privacy/us/en/
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschaeftsfuehrung: Dirk Wittkopp
-Sitz der Gesellschaft: Boeblingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+> For 8 socket systems we start using pci domains, and things get more
+> 'interesting' :/
