@@ -2,124 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F37C8BED1E
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 10:12:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F659BEE0A
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Sep 2019 11:07:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729411AbfIZIMx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Sep 2019 04:12:53 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60708 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726252AbfIZIMx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 26 Sep 2019 04:12:53 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id EDECB10DCC92;
-        Thu, 26 Sep 2019 08:12:51 +0000 (UTC)
-Received: from [10.72.12.101] (ovpn-12-101.pek2.redhat.com [10.72.12.101])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5601D60C80;
-        Thu, 26 Sep 2019 08:12:23 +0000 (UTC)
-Subject: Re: [PATCH V2 6/8] mdev: introduce virtio device and its device ops
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "Bie, Tiwei" <tiwei.bie@intel.com>
-Cc:     "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "Wang, Zhi A" <zhi.a.wang@intel.com>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "idos@mellanox.com" <idos@mellanox.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "Liang, Cunming" <cunming.liang@intel.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "Vivi, Rodrigo" <rodrigo.vivi@intel.com>,
-        "Wang, Xiao W" <xiao.w.wang@intel.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "parav@mellanox.com" <parav@mellanox.com>,
-        "Wang, Zhihong" <zhihong.wang@intel.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "Zhu, Lingshan" <lingshan.zhu@intel.com>
-References: <20190924135332.14160-1-jasowang@redhat.com>
- <20190924135332.14160-7-jasowang@redhat.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D58F7DA@SHSMSX104.ccr.corp.intel.com>
- <2210d23d-38e4-e654-e53d-7867348de86a@redhat.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D590FE4@SHSMSX104.ccr.corp.intel.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <6ba16bf8-8e8a-343a-335d-ab77d7cda195@redhat.com>
-Date:   Thu, 26 Sep 2019 16:12:07 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1729223AbfIZJHp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Sep 2019 05:07:45 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:33194 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729018AbfIZJHp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Sep 2019 05:07:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=T6V6sHrSOqc/+UxTCdyudq0YVOaWNkuCBPZFUY0n27I=; b=BgHKnk2vgdUwt+yhXHlGCcsjP
+        WK1sr0QG/j8kkdNDc8VLtgKtd0D2pUEqo+NBXzQKHsyc4AvbsI1zGCPuoE4cG9A7zIyMc6/MzRInU
+        uVsmsR1b746rjHsQ2cwRIdmOxlkyD4sHP61LexMMYLPN86L8vm+2YbELkbJZr01XMxmz53SP969jp
+        Aq2q8+MqqX3ZQepkJUFdBzKYB+wV986kA1457En35eQQdUwiiTZCobuDkWHkS1QGKY3o8q5yGiKl9
+        rCpvAat06QhNHwdZQhvMB976R4uqvhgCSiw4BqgCNNmDQjCCB+WD6HjfeQFtFCeXvlLkZNk97ZA/R
+        6ALfUnX/Q==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iDPiv-00039o-SN; Thu, 26 Sep 2019 09:06:06 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id D8A0F302A71;
+        Thu, 26 Sep 2019 11:05:12 +0200 (CEST)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2F69720138CC0; Thu, 26 Sep 2019 11:05:59 +0200 (CEST)
+Date:   Thu, 26 Sep 2019 11:05:59 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yunsheng Lin <linyunsheng@huawei.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, hpa@zytor.com, x86@kernel.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, len.brown@intel.com,
+        axboe@kernel.dk, dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20190926090559.GA4581@hirez.programming.kicks-ass.net>
+References: <20190924115401.GM23050@dhcp22.suse.cz>
+ <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+ <20190924122500.GP23050@dhcp22.suse.cz>
+ <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+ <20190924131939.GS23050@dhcp22.suse.cz>
+ <20190925104040.GD4553@hirez.programming.kicks-ass.net>
+ <20190925132544.GL23050@dhcp22.suse.cz>
+ <20190925163154.GF4553@hirez.programming.kicks-ass.net>
+ <20190925214526.GA4643@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D590FE4@SHSMSX104.ccr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Thu, 26 Sep 2019 08:12:52 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190925214526.GA4643@worktop.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, Sep 25, 2019 at 11:45:26PM +0200, Peter Zijlstra wrote:
+> [    7.149889] [Firmware Bug]: device: 'pci0000:7f': no node assigned on NUMA capable HW
+> [    7.882888] [Firmware Bug]: device: 'pci0000:ff': no node assigned on NUMA capable HW
 
-On 2019/9/26 上午8:48, Tian, Kevin wrote:
->>>> +};
->>> I'm not sure how stable above ops are.
->> It's the kernel internal API, so there's no strict requirement for this.
->> We will export a version value for userspace for compatibility.
->>
->>
->>> Does it make sense if defining
->>> just two callbacks here, e.g. vq_ctrl and device_ctrl, and then let the
->>> vendor driver to handle specific ops in each category (similar to how
->>> ioctl works)?
->> My understanding is that it introduce another indirection, you still
->> need to differ from different command, and it's less flexible than
->> direct callback.
->>
->> What's the value of doing this?
->>
-> I just thought doing so may provide better compatibility to the
-> parent driver. Even when new op is introduced, a parent driver
-> that was developed against the old set can still be loaded in the
-> new kernel. It just returns error when unrecognized ops are
-> routed through vq_ctrl and device_ctrl, if the userspace doesn't
-> favor the exposed version value. But if above ops set is pretty
-> stable, then this comment can be ignored.
+Going by the limited number of intel numa boxes I have, it looks like:
 
+  socket = (~busid) >> (8-n)
 
-This is really good point, we should keep it stable as a real transport. 
-And when there's major changes, we should advertise through version then 
-we can provide a new set of functions.
+where 'n' is the number of bits required to encode the largest socket
+id, ie 1 for 2-socket and 2 for 4 socket.
 
-Thanks
-
-
->
-> Thanks
-> Kevin
+For 8 socket systems we start using pci domains, and things get more
+'interesting' :/
