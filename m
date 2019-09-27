@@ -2,247 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7E02CBFC70
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Sep 2019 02:33:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C4232C0149
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Sep 2019 10:37:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727516AbfI0AdY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Sep 2019 20:33:24 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727463AbfI0AdY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 26 Sep 2019 20:33:24 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x8R0WlWB001535
-        for <linux-s390@vger.kernel.org>; Thu, 26 Sep 2019 20:33:23 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2v93dc7mde-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 26 Sep 2019 20:33:22 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 27 Sep 2019 01:33:21 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 27 Sep 2019 01:33:18 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x8R0XGjn55181528
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 27 Sep 2019 00:33:17 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D586F52057;
-        Fri, 27 Sep 2019 00:33:16 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.145.93.29])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3B08B5204E;
-        Fri, 27 Sep 2019 00:33:16 +0000 (GMT)
-Date:   Fri, 27 Sep 2019 02:33:14 +0200
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-kernel@vger.kernel.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        iommu@lists.linux-foundation.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [RFC PATCH 1/3] dma-mapping: make overriding GFP_* flags arch
- customizable
-In-Reply-To: <6c62da57-c94c-8078-957c-b6832ed7fd1b@arm.com>
-References: <20190923123418.22695-1-pasic@linux.ibm.com>
- <20190923123418.22695-2-pasic@linux.ibm.com>
- <20190923152117.GA2767@lst.de>
- <20190926143745.68bdd082.pasic@linux.ibm.com>
- <6c62da57-c94c-8078-957c-b6832ed7fd1b@arm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1725992AbfI0Ihh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 27 Sep 2019 04:37:37 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33376 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725946AbfI0Ihg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 27 Sep 2019 04:37:36 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 38C8EC05AA52;
+        Fri, 27 Sep 2019 08:37:36 +0000 (UTC)
+Received: from [10.72.12.30] (ovpn-12-30.pek2.redhat.com [10.72.12.30])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 18629600C6;
+        Fri, 27 Sep 2019 08:37:08 +0000 (UTC)
+Subject: Re: [PATCH V2 6/8] mdev: introduce virtio device and its device ops
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+References: <20190924135332.14160-1-jasowang@redhat.com>
+ <20190924135332.14160-7-jasowang@redhat.com>
+ <20190924170640.1da03bae@x1.home>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <baa742f5-8d4e-f1f1-1194-f362cdf51fea@redhat.com>
+Date:   Fri, 27 Sep 2019 16:37:06 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190924170640.1da03bae@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19092700-0028-0000-0000-000003A30C9F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19092700-0029-0000-0000-000024652C45
-Message-Id: <20190927023314.3e5c8324.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-09-26_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1909270004
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 27 Sep 2019 08:37:36 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 26 Sep 2019 14:04:13 +0100
-Robin Murphy <robin.murphy@arm.com> wrote:
 
-> On 26/09/2019 13:37, Halil Pasic wrote:
-> > On Mon, 23 Sep 2019 17:21:17 +0200
-> > Christoph Hellwig <hch@lst.de> wrote:
-> > 
-> >> On Mon, Sep 23, 2019 at 02:34:16PM +0200, Halil Pasic wrote:
-> >>> Before commit 57bf5a8963f8 ("dma-mapping: clear harmful GFP_* flags in
-> >>> common code") tweaking the client code supplied GFP_* flags used to be
-> >>> an issue handled in the architecture specific code. The commit message
-> >>> suggests, that fixing the client code would actually be a better way
-> >>> of dealing with this.
-> >>>
-> >>> On s390 common I/O devices are generally capable of using the full 64
-> >>> bit address space for DMA I/O, but some chunks of the DMA memory need to
-> >>> be 31 bit addressable (in physical address space) because the
-> >>> instructions involved mandate it. Before switching to DMA API this used
-> >>> to be a non-issue, we used to allocate those chunks from ZONE_DMA.
-> >>> Currently our only option with the DMA API is to restrict the devices to
-> >>> (via dma_mask and coherent_dma_mask) to 31 bit, which is sub-optimal.
-> >>>
-> >>> Thus s390 we would benefit form having control over what flags are
-> >>> dropped.
-> >>
-> >> No way, sorry.  You need to express that using a dma mask instead of
-> >> overloading the GFP flags.
-> > 
-> > Thanks for your feedback and sorry for the delay. Can you help me figure
-> > out how can I express that using a dma mask?
-> > 
-> > IMHO what you ask from me is frankly impossible.
-> > 
-> > What I need is the ability to ask for  (considering the physical
-> > address) 31 bit addressable DMA memory if the chunk is supposed to host
-> > control-type data that needs to be 31 bit addressable because that is
-> > how the architecture is, without affecting the normal data-path. So
-> > normally 64 bit mask is fine but occasionally (control) we would need
-> > a 31 bit mask.
-> 
-> If it's possible to rework the "data" path to use streaming mappings 
-> instead of coherent allocations, you could potentially mimic what virtio 
-> does for a similar situation - see commit a0be1db4304f.
-> 
+On 2019/9/25 上午7:06, Alex Williamson wrote:
+> On Tue, 24 Sep 2019 21:53:30 +0800
+> Jason Wang<jasowang@redhat.com>  wrote:
+>
+>> This patch implements basic support for mdev driver that supports
+>> virtio transport for kernel virtio driver.
+>>
+>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>> ---
+>>   include/linux/mdev.h        |   2 +
+>>   include/linux/virtio_mdev.h | 145 ++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 147 insertions(+)
+>>   create mode 100644 include/linux/virtio_mdev.h
+>>
+>> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+>> index 3414307311f1..73ac27b3b868 100644
+>> --- a/include/linux/mdev.h
+>> +++ b/include/linux/mdev.h
+>> @@ -126,6 +126,8 @@ struct mdev_device *mdev_from_dev(struct device *dev);
+>>   
+>>   enum {
+>>   	MDEV_ID_VFIO = 1,
+>> +	MDEV_ID_VIRTIO = 2,
+>> +	MDEV_ID_VHOST = 3,
+> MDEV_ID_VHOST isn't used yet here.  Also, given the strong
+> interdependence between the class_id and the ops structure, we might
+> wand to define them in the same place.  Thanks,
+>
+> Alex
+>
 
-Thank you for your feedback. Just to be sure we are on the same pager, I
-read commit a0be1db4304f like this:
-1) virtio_pci_legacy needs to allocate the virtqueues so that the base
-address fits 44 bits
-2) if 64 bit dma is possible they set coherent_dma_mask to
-  DMA_BIT_MASK(44) and dma_mask to DMA_BIT_MASK(64)
-3) since the queues get allocated with coherent allocations 1) is
-satisfied
-4) when the streaming mappings see a buffer that is beyond
-  DMA_BIT_MASK(44) then it has to treat it as not coherent memory
-  and do the syncing magic (which isn't actually required, just
-  a side effect of the workaround.
+Rethink about this,  I believe it's better to define the device ops in 
+their own headers, and one set of device ops could be used for two 
+classes (e.g both virtio and vhost). And to avoid a duplicated ID 
+definition. I tend to keep this in the common mdev.h header.
 
-I'm actually trying to get virtio_ccw working nice with Protected
-Virtualization (best think of encrypted memory). So the "data" path
-is mostly the same as for virtio_pci.
-
-But unlike virtio_pci_legacy we are perfectly fine with virtqueues at
-an arbitrary address.
-
-We can make
-coherent_dma_mask == DMA_BIT_MASK(31) != dma_mask == DMA_BIT_MASK(64)
-but that affects all dma coherent allocations and needlessly force
-the virtio control structures into the  [0..2G] range. Furthermore this
-whole issue has nothing to do with memory coherence. For ccw devices
-memory at addresses above 2G is no less coherent for ccw devices than
-memory at addresses below 2G.
-
-I've already implemented a patch (see after the scissors line) that
-takes a similar route as commit a0be1db4304f, but I consider that a
-workaround at best. But if that is what the community wants... I have to
-get the job done one way or the other.
-
-Many thanks for your help and your time.
-
--------------------------------8<------------------------------------
-
-From: Halil Pasic <pasic@linux.ibm.com>
-Date: Thu, 25 Jul 2019 18:44:21 +0200
-Subject: [PATCH 1/1] s390/cio: fix virtio-ccw DMA without PV
-
-Commit 37db8985b211 ("s390/cio: add basic protected virtualization
-support") breaks virtio-ccw devices with VIRTIO_F_IOMMU_PLATFORM for non
-Protected Virtualization (PV) guests. The problem is that the dma_mask
-of the ccw device, which is used by virtio core, gets changed from 64 to
-31 bit, because some of the DMA allocations do require 31 bit
-addressable memory. For PV the only drawback is that some of the virtio
-structures must end up in ZONE_DMA because we have the bounce the
-buffers mapped via DMA API anyway.
-
-But for non PV guests we have a problem: because of the 31 bit mask
-guests bigger than 2G are likely to try bouncing buffers. The swiotlb
-however is only initialized for PV guests, because we don't want to
-bounce anything for non PV guests. The first such map kills the guest.
-
-Since the DMA API won't allow us to specify for each allocating whether
-we need memory from ZONE_DMA (31 bit addressable) or any DMA capable
-memory will do, let us abuse coherent_dma_mask (which is used for
-allocations) to force allocating form ZONE_DMA while changing dma_mask
-to DMA_BIT_MASK(64).
-
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
----
- drivers/s390/cio/cio.h    | 1 +
- drivers/s390/cio/css.c    | 8 +++++++-
- drivers/s390/cio/device.c | 2 +-
- 3 files changed, 9 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-index ba7d248..dcdaba6 100644
---- a/drivers/s390/cio/cio.h
-+++ b/drivers/s390/cio/cio.h
-@@ -113,6 +113,7 @@ struct subchannel {
- 	enum sch_todo todo;
- 	struct work_struct todo_work;
- 	struct schib_config config;
-+	u64 dma_mask;
- 	char *driver_override; /* Driver name to force a match */
- } __attribute__ ((aligned(8)));
- 
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 22c5581..d63e80a 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -232,7 +232,13 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
- 	 * belong to a subchannel need to fit 31 bit width (e.g. ccw).
- 	 */
- 	sch->dev.coherent_dma_mask = DMA_BIT_MASK(31);
--	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
-+	/*
-+	 * But we don't have such restrictions imposed on the stuff that
-+	 * is handled by the streaming API. Using coherent_dma_mask != dma_mask
-+	 * is just a workaround.
-+	 */
-+	sch->dma_mask = DMA_BIT_MASK(64);
-+	sch->dev.dma_mask = &sch->dma_mask;
- 	return sch;
- 
- err:
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 131430b..0c6245f 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -710,7 +710,7 @@ static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
- 	if (!cdev->private)
- 		goto err_priv;
- 	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
--	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
-+	cdev->dev.dma_mask = sch->dev.dma_mask;
- 	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
- 	if (!dma_pool)
- 		goto err_dma_pool;
--- 
-2.5.5
-
-
-
+Thanks
 
