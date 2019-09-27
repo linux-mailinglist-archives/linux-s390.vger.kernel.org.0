@@ -2,35 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B8B6AC0CD6
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Sep 2019 22:49:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 97098C0D03
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Sep 2019 23:02:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728191AbfI0UtC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 27 Sep 2019 16:49:02 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54938 "EHLO mail.kernel.org"
+        id S1726033AbfI0VCZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 27 Sep 2019 17:02:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35342 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725789AbfI0UtC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 27 Sep 2019 16:49:02 -0400
+        id S1725306AbfI0VCY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 27 Sep 2019 17:02:24 -0400
 Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D45A5207E0;
-        Fri, 27 Sep 2019 20:48:59 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C58B2053B;
+        Fri, 27 Sep 2019 21:02:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569617340;
-        bh=/LxiqU/b/j+I7hCRMjEaNqQg9YaNjP1fvBEpmF99JtU=;
+        s=default; t=1569618143;
+        bh=zX6oPbM0fW6APYZ3FsSQjJtIVUWT7o+JdPoDwv7x/WI=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=xlw9ya6oxlZVRcN6AFBx0LWPK5vgX8BvMWLyuVeg0E46ZTK6BzOp+myjNqEyzri8z
-         VVZWVb/UPdmtJWE+1imHt+BOqXTLh3O7F1lFTLEOSD4EUFeW4S1ZCeZPdaC7GB4jNr
-         E7sXf+nkDLAvnj7w80Wrs/Vymgby+HGdmEyamnus=
-Date:   Fri, 27 Sep 2019 13:48:59 -0700
+        b=y3NNiz6ca+F2wYq7ZqsgVlamYJXTCg2YPWBTdZoEasLCv5IP0PDKN1oC/6rMoJkFF
+         s+e0C1UMhePT257z8zfdcgwVkIcLX3LWyUNQAmrPmjavMtScKVvHKg6t9Gs9aK9M5p
+         6X1/IaJuTSeG4ZAgzuoscFgUV329FLKcuGjSF98E=
+Date:   Fri, 27 Sep 2019 14:02:22 -0700
 From:   Andrew Morton <akpm@linux-foundation.org>
 To:     Qian Cai <cai@lca.pw>
 Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
         borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
         linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH] mm/page_alloc: fix a crash in free_pages_prepare()
-Message-Id: <20190927134859.95a2f4908bdcea30df0184ed@linux-foundation.org>
+Message-Id: <20190927140222.6f7d0a41b9e734053ee911b9@linux-foundation.org>
 In-Reply-To: <1569613623-16820-1-git-send-email-cai@lca.pw>
 References: <1569613623-16820-1-git-send-email-cai@lca.pw>
 X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
@@ -98,7 +98,10 @@ On Fri, 27 Sep 2019 15:47:03 -0400 Qian Cai <cai@lca.pw> wrote:
 >  	if (debug_pagealloc_enabled())
 >  		kernel_map_pages(page, 1 << order, 0);
 
-This is all fairly mature code, isn't it?  What happened to make this
-problem pop up now?
+AFAICT the meticulously undocumented s390 set_page_unused() will cause
+there to be a fault if anyone tries to access the page contents, yes?
 
-IOW, is a -stable backport needed?
+So I think you've moved the arch_free_page() to be after the final
+thing which can access page contents, yes?  If so, we should have a
+comment in free_pages_prepare() to attmept to prevent this problem from
+reoccurring as the code evolves?
