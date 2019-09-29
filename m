@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B3F4C1771
-	for <lists+linux-s390@lfdr.de>; Sun, 29 Sep 2019 19:38:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1FA9FC1750
+	for <lists+linux-s390@lfdr.de>; Sun, 29 Sep 2019 19:37:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730786AbfI2RgQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 29 Sep 2019 13:36:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48696 "EHLO mail.kernel.org"
+        id S1730007AbfI2Rgt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 29 Sep 2019 13:36:49 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730759AbfI2RgP (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 29 Sep 2019 13:36:15 -0400
+        id S1729999AbfI2Rgt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 29 Sep 2019 13:36:49 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ED59A21906;
-        Sun, 29 Sep 2019 17:36:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4549D21925;
+        Sun, 29 Sep 2019 17:36:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1569778574;
-        bh=CZ9cCbOXBPrhHs4OeUR95IOMxTutnCR8uQ3Lcew8luw=;
+        s=default; t=1569778608;
+        bh=1xmyzwQAzoyVvQOqY0GRDWplegq/1md/Px3CgQEdzOE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2Wx9vYxaDVxVF/ryku0sy3tWUkwvP9ym9it5fonU8qgbUYktwLz2wAin0sNUQfQ3J
-         u8k3LmFhiq29QtnBRZ92fVwtpmCANpMM/9i67LhP4CKzXU35KT+UFemiEcbVD2WqMB
-         F9AzYOC+Y6homqUOHmS4qNoQ1Rs7LwNl788Jij3w=
+        b=yht8BfqetXoLOtXv+ha5RvsSZI0pZSqxEa7bUbw5rGGylUcwgMMfXm5ll6NaWwaa6
+         WIzSf+PtpPGVCj53pfxmMn5KzSQtWyciDw/siKQskjeLPUkgaeA2xL80cuKnbuy3+4
+         aBIszCeUyP4oR2eQ0A5gf3R5WgkjxqanP4ZwNEEM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     David Howells <dhowells@redhat.com>,
@@ -30,12 +30,12 @@ Cc:     David Howells <dhowells@redhat.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         linux-s390@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 20/23] hypfs: Fix error number left in struct pointer member
-Date:   Sun, 29 Sep 2019 13:35:30 -0400
-Message-Id: <20190929173535.9744-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 11/13] hypfs: Fix error number left in struct pointer member
+Date:   Sun, 29 Sep 2019 13:36:21 -0400
+Message-Id: <20190929173625.10003-11-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190929173535.9744-1-sashal@kernel.org>
-References: <20190929173535.9744-1-sashal@kernel.org>
+In-Reply-To: <20190929173625.10003-1-sashal@kernel.org>
+References: <20190929173625.10003-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/arch/s390/hypfs/inode.c b/arch/s390/hypfs/inode.c
-index 45eb5999110be..32f5b3fb069f3 100644
+index 2a17123130d30..224aeda1e8ccf 100644
 --- a/arch/s390/hypfs/inode.c
 +++ b/arch/s390/hypfs/inode.c
-@@ -269,7 +269,7 @@ static int hypfs_show_options(struct seq_file *s, struct dentry *root)
+@@ -267,7 +267,7 @@ static int hypfs_show_options(struct seq_file *s, struct dentry *root)
  static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
  {
  	struct inode *root_inode;
@@ -80,7 +80,7 @@ index 45eb5999110be..32f5b3fb069f3 100644
  	int rc = 0;
  	struct hypfs_sb_info *sbi;
  
-@@ -300,9 +300,10 @@ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+@@ -298,9 +298,10 @@ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
  		rc = hypfs_diag_create_files(root_dentry);
  	if (rc)
  		return rc;
