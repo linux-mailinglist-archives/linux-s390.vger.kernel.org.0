@@ -2,199 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2ED5FC3870
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Oct 2019 17:03:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F1BE4C3892
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Oct 2019 17:08:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389379AbfJAPDS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Oct 2019 11:03:18 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58798 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726987AbfJAPDS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 1 Oct 2019 11:03:18 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 61E713058359;
-        Tue,  1 Oct 2019 15:03:17 +0000 (UTC)
-Received: from [10.36.116.54] (ovpn-116-54.ams2.redhat.com [10.36.116.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A669C19C7F;
-        Tue,  1 Oct 2019 15:03:14 +0000 (UTC)
-Subject: Re: [PATCH v5 01/10] mm/memunmap: Use the correct start and end pfn
- when removing pages from zone
-From:   David Hildenbrand <david@redhat.com>
-To:     linux-kernel@vger.kernel.org,
-        Dan Williams <dan.j.williams@intel.com>
-Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Pankaj Gupta <pagupta@redhat.com>
-References: <20191001144011.3801-1-david@redhat.com>
- <20191001144011.3801-2-david@redhat.com>
- <933f9cd8-9a32-8566-bd97-7e475a009275@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <09b61ab1-6099-d825-8e04-fbfb43abe4d2@redhat.com>
-Date:   Tue, 1 Oct 2019 17:03:13 +0200
+        id S2389383AbfJAPIA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Oct 2019 11:08:00 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:6982 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726309AbfJAPIA (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Oct 2019 11:08:00 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x91F3EIU013280
+        for <linux-s390@vger.kernel.org>; Tue, 1 Oct 2019 11:07:57 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vc8h91ttt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 01 Oct 2019 11:07:57 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <maier@linux.ibm.com>;
+        Tue, 1 Oct 2019 16:07:55 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 1 Oct 2019 16:07:52 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x91F7MEq29819342
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 1 Oct 2019 15:07:22 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D55EBA4055;
+        Tue,  1 Oct 2019 15:07:50 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8033EA4051;
+        Tue,  1 Oct 2019 15:07:50 +0000 (GMT)
+Received: from oc4120165700.ibm.com (unknown [9.152.98.61])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  1 Oct 2019 15:07:50 +0000 (GMT)
+From:   Steffen Maier <maier@linux.ibm.com>
+Subject: Re: [PATCH v2] zfcp: fix reaction on bit error theshold notification
+ with adapter close
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, stable@vger.kernel.org
+References: <yq1d0fhw2ex.fsf@oracle.com>
+ <20191001104949.42810-1-maier@linux.ibm.com>
+ <20191001141408.GB3129841@kroah.com>
+Date:   Tue, 1 Oct 2019 17:07:50 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <933f9cd8-9a32-8566-bd97-7e475a009275@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191001141408.GB3129841@kroah.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 01 Oct 2019 15:03:17 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19100115-0020-0000-0000-000003740055
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100115-0021-0000-0000-000021CA0046
+Message-Id: <71b8fc68-23a8-a591-1018-f290d6e3312a@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-01_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910010136
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 01.10.19 16:57, David Hildenbrand wrote:
-> On 01.10.19 16:40, David Hildenbrand wrote:
->> From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
->>
->> With altmap, all the resource pfns are not initialized. While initializing
->> pfn, altmap reserve space is skipped. Hence when removing pfn from zone
->> skip pfns that were never initialized.
->>
->> Update memunmap_pages to calculate start and end pfn based on altmap
->> values. This fixes a kernel crash that is observed when destroying
->> a namespace.
->>
->> [   81.356173] kernel BUG at include/linux/mm.h:1107!
->> cpu 0x1: Vector: 700 (Program Check) at [c000000274087890]
->>     pc: c0000000004b9728: memunmap_pages+0x238/0x340
->>     lr: c0000000004b9724: memunmap_pages+0x234/0x340
->> ...
->>     pid   = 3669, comm = ndctl
->> kernel BUG at include/linux/mm.h:1107!
->> [c000000274087ba0] c0000000009e3500 devm_action_release+0x30/0x50
->> [c000000274087bc0] c0000000009e4758 release_nodes+0x268/0x2d0
->> [c000000274087c30] c0000000009dd144 device_release_driver_internal+0x174/0x240
->> [c000000274087c70] c0000000009d9dfc unbind_store+0x13c/0x190
->> [c000000274087cb0] c0000000009d8a24 drv_attr_store+0x44/0x60
->> [c000000274087cd0] c0000000005a7470 sysfs_kf_write+0x70/0xa0
->> [c000000274087d10] c0000000005a5cac kernfs_fop_write+0x1ac/0x290
->> [c000000274087d60] c0000000004be45c __vfs_write+0x3c/0x70
->> [c000000274087d80] c0000000004c26e4 vfs_write+0xe4/0x200
->> [c000000274087dd0] c0000000004c2a6c ksys_write+0x7c/0x140
->> [c000000274087e20] c00000000000bbd0 system_call+0x5c/0x68
->>
->> Cc: Dan Williams <dan.j.williams@intel.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> Cc: Logan Gunthorpe <logang@deltatee.com>
->> Cc: Ira Weiny <ira.weiny@intel.com>
->> Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
->> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
->> [ move all pfn-realted declarations into a single line ]
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  mm/memremap.c | 13 ++++++++-----
->>  1 file changed, 8 insertions(+), 5 deletions(-)
->>
->> diff --git a/mm/memremap.c b/mm/memremap.c
->> index 557e53c6fb46..026788b2ac69 100644
->> --- a/mm/memremap.c
->> +++ b/mm/memremap.c
->> @@ -123,7 +123,7 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
->>  void memunmap_pages(struct dev_pagemap *pgmap)
->>  {
->>  	struct resource *res = &pgmap->res;
->> -	unsigned long pfn;
->> +	unsigned long pfn, nr_pages, start_pfn, end_pfn;
->>  	int nid;
->>  
->>  	dev_pagemap_kill(pgmap);
->> @@ -131,14 +131,17 @@ void memunmap_pages(struct dev_pagemap *pgmap)
->>  		put_page(pfn_to_page(pfn));
->>  	dev_pagemap_cleanup(pgmap);
->>  
->> +	start_pfn = pfn_first(pgmap);
->> +	end_pfn = pfn_end(pgmap);
->> +	nr_pages = end_pfn - start_pfn;
->> +
->>  	/* pages are dead and unused, undo the arch mapping */
->> -	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
->> +	nid = page_to_nid(pfn_to_page(start_pfn));
->>  
->>  	mem_hotplug_begin();
->>  	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
->> -		pfn = PHYS_PFN(res->start);
->> -		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
->> -				 PHYS_PFN(resource_size(res)), NULL);
->> +		__remove_pages(page_zone(pfn_to_page(start_pfn)), start_pfn,
->> +			       nr_pages, NULL);
->>  	} else {
->>  		arch_remove_memory(nid, res->start, resource_size(res),
->>  				pgmap_altmap(pgmap));
->>
+On 10/1/19 4:14 PM, Greg KH wrote:
+> On Tue, Oct 01, 2019 at 12:49:49PM +0200, Steffen Maier wrote:
+>> On excessive bit errors for the FCP channel ingress fibre path, the channel
+>> notifies us. Previously, we only emitted a kernel message and a trace record.
+>> Since performance can become suboptimal with I/O timeouts due to
+>> bit errors, we now stop using an FCP device by default on channel
+>> notification so multipath on top can timely failover to other paths.
+>> A new module parameter zfcp.ber_stop can be used to get zfcp old behavior.
 > 
-> Aneesh, I was wondering why the use of "res->start" is correct (and we
-> shouldn't also witch to start_pfn/nr_pages here. It would be good if Dan
-> could review.
+> Ugh, module parameters?  This isn't the 1990's anymore :(
 > 
+> Why not just make this a dynamic sysfs variable, that way you properly
+> can set this on whatever device you want, not just "all or nothing"?
 
-To be more precise, I wonder if it should actually be
+Since we can see many more (virtual) FCP devices than we want to actually use, 
+we defer probing. It means, we only start allocating structures and sysfs 
+entries on setting an FCP "online" for the first time. Setting online works 
+through another sysfs attribute owned by our ccw bus code component called 
+"cio". IIRC, setting online does not emit a uevent. On setting online, the 
+(add) uevent of hot-/coldplug of an FCP device had already happened, so we 
+could not easily have end users craft udev rules to automatically/persistently 
+configure a new sysfs attribute (which is FCP-device-specific and appears late) 
+to disable the new code behavior.
 
-__remove_pages(page_zone(pfn_to_page(start_pfn)), res->start,
-               resource_size(res))
+Not sure if that could ever become a problem for end users: Even if we were to 
+write into a new sysfs attribute, the attribute only appears during setting 
+online so this might race with starting to actually use the FCP device with the 
+new default behavior and could potentially disable I/O paths before the sysfs 
+attribute write could become effective to disable the new behavor.
 
-IOW, keep calling __remove_pages() with the same parameters but read
-nid/zone from the offset one.
-
-Hope some memunmap_pages() expert can clarify.
 
 -- 
+Mit freundlichen Gruessen / Kind regards
+Steffen Maier
 
-Thanks,
+Linux on IBM Z Development
 
-David / dhildenb
+https://www.ibm.com/privacy/us/en/
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschaeftsfuehrung: Dirk Wittkopp
+Sitz der Gesellschaft: Boeblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
+
