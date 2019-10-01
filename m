@@ -2,95 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 89A5AC3FD1
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Oct 2019 20:27:01 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AAEF6C4194
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Oct 2019 22:08:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731034AbfJAS1B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Oct 2019 14:27:01 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:51768 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729444AbfJAS1B (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Oct 2019 14:27:01 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91IJA5v137656;
-        Tue, 1 Oct 2019 18:26:57 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type; s=corp-2019-08-05;
- bh=Bp0nYLDxS7dpUSfySpK5uXb+Schf0NiemjtVBNnZ9Xg=;
- b=i7IknPeHLhRI9uKkAxm7LguR7q5cqhYTANRQJ4IULI8cOGFFMlSZQosnwOHd8SHHH1LE
- euvFVY8aZDqVezxFb0tzrG39WRoS4RA1uTAoQxzpVgrdU5szTsCiuSKhgzLAXXhSK1Ij
- FKSpgSW3JyhcfvkPk1DIb3enK1maJx6Qw+HnUMQ5NGSjsQZi1D3iGJRh+yvh0Mr8jAKX
- /aHUeB5XFhlvdveSe7kV9rqP47SaAZ5FekCkVQz9r6/jC61GONxc2l7vttmdMl+M/COU
- bC4I4qajL2u3396sP+O69QWu+PGA5yM/tjePRYr1A/H7SZA1pWDZ/3PGb8NZh3C0CJTP JA== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2va05rqxmf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 18:26:57 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91IMdZG118288;
-        Tue, 1 Oct 2019 18:26:56 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3020.oracle.com with ESMTP id 2vbqd1am21-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 01 Oct 2019 18:26:56 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91IQtge000586;
-        Tue, 1 Oct 2019 18:26:55 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 01 Oct 2019 11:26:54 -0700
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Steffen Maier <maier@linux.ibm.com>,
-        "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, stable@vger.kernel.org
-Subject: Re: [PATCH v2] zfcp: fix reaction on bit error theshold notification with adapter close
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <yq1d0fhw2ex.fsf@oracle.com>
-        <20191001104949.42810-1-maier@linux.ibm.com>
-        <20191001141408.GB3129841@kroah.com>
-        <71b8fc68-23a8-a591-1018-f290d6e3312a@linux.ibm.com>
-        <20191001154208.GB3523275@kroah.com>
-Date:   Tue, 01 Oct 2019 14:26:48 -0400
-In-Reply-To: <20191001154208.GB3523275@kroah.com> (Greg KH's message of "Tue,
-        1 Oct 2019 17:42:08 +0200")
-Message-ID: <yq1tv8stj87.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        id S1726856AbfJAUI3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Oct 2019 16:08:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33428 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726186AbfJAUI2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 1 Oct 2019 16:08:28 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 860652133F;
+        Tue,  1 Oct 2019 20:08:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1569960508;
+        bh=uYjcTl7drtwxzzmVd3X+UEiDXfBtSzTArbtfWsMZmVI=;
+        h=Date:From:To:cc:Subject:From;
+        b=i76blzw6W879H/mTIUJvz7MiAfUeMdzqtm79UsbyS8EAArGfR0I8H4l5XVvnXyXsX
+         Vr9dAjUAq2p3qk+GdCe7NLU7nsdbfds5OFQO2Zsagkhf1uGzb8AJWLJdmqlJaUAr3g
+         TPDqJZLnMRspY9k6MvyiZLcn9fj8Nyg2K746sW60=
+Date:   Tue, 1 Oct 2019 22:08:01 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+cc:     linux-s390@vger.kernel.org, Michal Kubecek <mkubecek@suse.cz>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 5.4-rc1 BUILD FIX] s390: mark __cpacf_query() as
+ __always_inline
+Message-ID: <nycvar.YFH.7.76.1910012203010.13160@cbobk.fhfr.pm>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=755
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1910010148
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=837 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1910010148
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+arch/s390/kvm/kvm-s390.c calls on several places __cpacf_query() directly, 
+which makes it impossible to meet the "i" constraint for the asm operands 
+(opcode in this case).
 
-Greg,
+As we are now force-enabling CONFIG_OPTIMIZE_INLINING on all 
+architectures, this causes a build failure on s390:
 
-> Ok, then why make this a module option that you will have to support
-> for the next 20+ years anyway if you feel this fix is the correct way
-> that it should be done instead?
+   In file included from arch/s390/kvm/kvm-s390.c:44:
+   ./arch/s390/include/asm/cpacf.h: In function '__cpacf_query':
+   ./arch/s390/include/asm/cpacf.h:179:2: warning: asm operand 3 probably doesn't match constraints
+     179 |  asm volatile(
+         |  ^~~
+   ./arch/s390/include/asm/cpacf.h:179:2: error: impossible constraint in 'asm'
 
-I agree.
+Mark __cpacf_query() as __always_inline in order to fix that, analogically 
+how we fixes __cpacf_check_opcode(), cpacf_query_func() and scpacf_query() 
+already.
 
-Why not just shut FCP down unconditionally on excessive bit errors?
-What's the benefit of allowing things to continue? Are you hoping things
-will eventually recover in a single-path scenario?
+Reported-and-tested-by: Michal Kubecek <mkubecek@suse.cz>
+Fixes: d83623c5eab2 ("s390: mark __cpacf_check_opcode() and cpacf_query_func() as __always_inline")
+Fixes: e60fb8bf68d4 ("s390/cpacf: mark scpacf_query() as __always_inline")
+Fixes: ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING forcibly")
+Fixes: 9012d011660e ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+---
+
+I am wondering how is it possible that none of the build-testing 
+infrastructure we have running against linux-next caught this? Not enough 
+non-x86 coverage?
+
+ arch/s390/include/asm/cpacf.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/s390/include/asm/cpacf.h b/arch/s390/include/asm/cpacf.h
+index a092f63aac6a..c0f3bfeddcbe 100644
+--- a/arch/s390/include/asm/cpacf.h
++++ b/arch/s390/include/asm/cpacf.h
+@@ -171,7 +171,7 @@ typedef struct { unsigned char bytes[16]; } cpacf_mask_t;
+  *
+  * Returns 1 if @func is available for @opcode, 0 otherwise
+  */
+-static inline void __cpacf_query(unsigned int opcode, cpacf_mask_t *mask)
++static __always_inline void __cpacf_query(unsigned int opcode, cpacf_mask_t *mask)
+ {
+ 	register unsigned long r0 asm("0") = 0;	/* query function */
+ 	register unsigned long r1 asm("1") = (unsigned long) mask;
 
 -- 
-Martin K. Petersen	Oracle Linux Engineering
+Jiri Kosina
+SUSE Labs
+
