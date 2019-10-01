@@ -2,80 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C1B7C3960
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Oct 2019 17:45:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F117C396F
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Oct 2019 17:48:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389652AbfJAPpE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Oct 2019 11:45:04 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:40085 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727299AbfJAPpD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Oct 2019 11:45:03 -0400
-Received: by mail-io1-f66.google.com with SMTP id h144so49084224iof.7
-        for <linux-s390@vger.kernel.org>; Tue, 01 Oct 2019 08:45:03 -0700 (PDT)
+        id S1726309AbfJAPsO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Oct 2019 11:48:14 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34863 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfJAPsO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Oct 2019 11:48:14 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 205so8298540pfw.2
+        for <linux-s390@vger.kernel.org>; Tue, 01 Oct 2019 08:48:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=2FQ7h8PlUPexVQ4SErsdRg9fch/Ili1SumdwNo+CuGE=;
-        b=PGOhX1typrW/DdFt1VNA8LXSgPONjgn/VwRLwa1RzrzsQdisUP04uuJIh89CFHHtgy
-         AiK6BpvaD67feenvq/RC3zuCeeYbibmlO7sOY2nofS2Pks78qHwPoCI2l+SRELBoZ3pG
-         FM//74+r/TwVUnKTQNhYWS78tduKtq3Jh9hNBx4FZ5fD54pcP3gIMly7ekPX9Mms0fCI
-         tbR4LPDdNL7LszIbySMBHm7XLr2Nw8Zj/Jzzk380brULZeqrRLmN6BOi0NQ9dnHcCGIz
-         oMHDsQspidge6DRWf/bGKDpDdID0ymutZ5qpcgdr8ZoYeT4d0j7JMgC4FLOf/fK8Itb/
-         NrBg==
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=aHMpO9J+CUbgrwJq2FPC5hQWPjIgrqNx/lVINe55yAg=;
+        b=jpLjP0sVOqJ1io2GkUXKgc45cxfb7B1taqxOFsmCAMNJmlj5/fV9ZG/T16NITs4W9q
+         cvbqYDNjPkgubuNgZtxJd+JdNRYNQcuTsRwBP+njU1INPXE7gYMZOi6b7xlFMKDrD14J
+         DKcbIR540vNINUnM0FJ0c/BvYD5Gp0RtEXiDQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=2FQ7h8PlUPexVQ4SErsdRg9fch/Ili1SumdwNo+CuGE=;
-        b=uKVcC4wjUwckPzxN947pAIs9/vdnX8PGv91WSCHvrs4vSFvXvIVqpzX4wIoqxOa1ck
-         WNPyTnlcXqZ828iLod5d/VBAy/w97WERYs3TSWnVRGeooYS1etdQBQzcWXE0dcrQaI/t
-         INUBBqWIQ3k3irA2s387r0jjKLTUMQAaaXrSu3JypEyCDvFb7nOS8sa/R/cYnVcyGbv+
-         sMGZn5Y5FRsp/gaCR14ER9lEOH4Gu4rvFvOc4oqRc2W2hUNBGDDsGSb5WDxXi0qcmjPZ
-         tIGTw5tGi8GYNote8PVXQ5tju0n+IvWossO6ebuaXysEu+vPeYPdqm/ot7Mzd0gsictB
-         dmNw==
-X-Gm-Message-State: APjAAAVM2EOVLbqILS0+VmyeXRGaviv1z9Fvwq+NtVjjMKWDZSHPVI/a
-        caMgsO3RdA5jmHBWvNLt/UtTrr0Qe5SPjw==
-X-Google-Smtp-Source: APXvYqzVLqLxf6IrL3xdLHLHlgtql0RK4SaTmUAx7AzwBBaPfe4GaXN28iewATx8LVZ9doiakpovVQ==
-X-Received: by 2002:a6b:8e82:: with SMTP id q124mr3144396iod.267.1569944702907;
-        Tue, 01 Oct 2019 08:45:02 -0700 (PDT)
-Received: from [192.168.1.50] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id l21sm6851713iok.87.2019.10.01.08.45.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 01 Oct 2019 08:45:02 -0700 (PDT)
-Subject: Re: [PATCH 0/2] s390/dasd: fixes for thin provisioning support
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com
-References: <20191001153439.62672-1-sth@linux.ibm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <deaa7dff-5b1a-851f-4f08-74ab369e58b8@kernel.dk>
-Date:   Tue, 1 Oct 2019 09:45:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=aHMpO9J+CUbgrwJq2FPC5hQWPjIgrqNx/lVINe55yAg=;
+        b=jqFgCM8EdHp6hGjFzoK9VD/rlnY38YIfBWu0PPp7Gek+gdmbR+73v2hERA5RRxsb7D
+         AHkDVgJ0BVKa3qxffq0nN0ZkmxtxMvrogkd1+iFxbvAMlgLbbXvUkO7IzBOM7G5gkC9G
+         DDXwKfIg4fPBEgAo3suLARgNJm99OtzKXuI+M3TERvT1DT7a70nIgZP7FeMkaJyjYGuC
+         vQDS48PL3OYWnMZcZB69+t8RYQiDVNbipbDauQq59mRhWyKrtjcHrsG8cT/g3YdHQXf+
+         RVghzri3kWiWljLAYJlRxl+5HgmOBUyaQ+HwJV7fqu9nleGYZEHrCHYagK9aQpz8rFwH
+         dg9w==
+X-Gm-Message-State: APjAAAVaWsKY2+p+O1GtEMgF8lL4PHpzTtb1BwpDo/C3BUd2dIXha+Kq
+        YdYiZyuTJ8cEYrPPW3F2NwBJ1g==
+X-Google-Smtp-Source: APXvYqyO5jsKdDXhDO3bZGk1Keogaj2M/8EIIuQkcNmk5YSzFsJ5w0LY+0szmD2PzpB1320gFGeS9A==
+X-Received: by 2002:a62:14c2:: with SMTP id 185mr27818394pfu.47.1569944893417;
+        Tue, 01 Oct 2019 08:48:13 -0700 (PDT)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id x18sm1559678pge.76.2019.10.01.08.48.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Oct 2019 08:48:12 -0700 (PDT)
+Date:   Tue, 1 Oct 2019 08:48:11 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 18/29] arm64: Move EXCEPTION_TABLE to RO_DATA segment
+Message-ID: <201910010846.D0712C1@keescook>
+References: <20190926175602.33098-1-keescook@chromium.org>
+ <20190926175602.33098-19-keescook@chromium.org>
+ <20191001090355.blnaqlf4rfzucpb2@willie-the-truck>
 MIME-Version: 1.0
-In-Reply-To: <20191001153439.62672-1-sth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191001090355.blnaqlf4rfzucpb2@willie-the-truck>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/1/19 9:34 AM, Stefan Haberland wrote:
-> Hi Jens,
+On Tue, Oct 01, 2019 at 10:03:56AM +0100, Will Deacon wrote:
+> Hi Kees,
 > 
-> please see the following two patches that
+> On Thu, Sep 26, 2019 at 10:55:51AM -0700, Kees Cook wrote:
+> > The EXCEPTION_TABLE is read-only, so collapse it into RO_DATA.
+> > 
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/arm64/kernel/vmlinux.lds.S | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+> > index 81d94e371c95..c6ba2eee0ee8 100644
+> > --- a/arch/arm64/kernel/vmlinux.lds.S
+> > +++ b/arch/arm64/kernel/vmlinux.lds.S
+> > @@ -5,6 +5,8 @@
+> >   * Written by Martin Mares <mj@atrey.karlin.mff.cuni.cz>
+> >   */
+> >  
+> > +#define RO_DATA_EXCEPTION_TABLE_ALIGN	8
+> > +
+> >  #include <asm-generic/vmlinux.lds.h>
+> >  #include <asm/cache.h>
+> >  #include <asm/kernel-pgtable.h>
+> > @@ -135,8 +137,8 @@ SECTIONS
+> >  	. = ALIGN(SEGMENT_ALIGN);
+> >  	_etext = .;			/* End of text section */
+> >  
+> > -	RO_DATA(PAGE_SIZE)		/* everything from this point to     */
+> > -	EXCEPTION_TABLE(8)		/* __init_begin will be marked RO NX */
+> > +	/* everything from this point to __init_begin will be marked RO NX */
+> > +	RO_DATA(PAGE_SIZE)
+> >  
+> >  	. = ALIGN(PAGE_SIZE);
 > 
-> - fix a bug in the thin provisioning base support
-> - revert a commit because of possible data corruption
+> Do you reckon it would be worth merging this last ALIGN directive into the
+> RO_DATA definition too? Given that we want to map the thing read-only, it
+> really has to be aligned either side.
 
-Applied, thanks Stefan.
+Actually, taking a closer look, this appears to be redundant: RO_DATA()
+ends with:
+
+	. = ALIGN(align)
+
+(where "align" is the "PAGE_SIZE" argument to RO_DATA())
+
+> Anyway, that's only a nit, so:
+> 
+> Acked-by: Will Deacon <will@kernel.org>
+
+Thanks!
+
+> P.S. Please CC the arm64 maintainers on arm64 patches -- I nearly missed
+> this one!
+
+Okay, I can re-expand my list. I originally had done this but it was
+getting to be a rather large set of people. :)
 
 -- 
-Jens Axboe
-
+Kees Cook
