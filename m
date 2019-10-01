@@ -2,133 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F117C396F
-	for <lists+linux-s390@lfdr.de>; Tue,  1 Oct 2019 17:48:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 89A5AC3FD1
+	for <lists+linux-s390@lfdr.de>; Tue,  1 Oct 2019 20:27:01 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726309AbfJAPsO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 1 Oct 2019 11:48:14 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34863 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfJAPsO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Oct 2019 11:48:14 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 205so8298540pfw.2
-        for <linux-s390@vger.kernel.org>; Tue, 01 Oct 2019 08:48:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=aHMpO9J+CUbgrwJq2FPC5hQWPjIgrqNx/lVINe55yAg=;
-        b=jpLjP0sVOqJ1io2GkUXKgc45cxfb7B1taqxOFsmCAMNJmlj5/fV9ZG/T16NITs4W9q
-         cvbqYDNjPkgubuNgZtxJd+JdNRYNQcuTsRwBP+njU1INPXE7gYMZOi6b7xlFMKDrD14J
-         DKcbIR540vNINUnM0FJ0c/BvYD5Gp0RtEXiDQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=aHMpO9J+CUbgrwJq2FPC5hQWPjIgrqNx/lVINe55yAg=;
-        b=jqFgCM8EdHp6hGjFzoK9VD/rlnY38YIfBWu0PPp7Gek+gdmbR+73v2hERA5RRxsb7D
-         AHkDVgJ0BVKa3qxffq0nN0ZkmxtxMvrogkd1+iFxbvAMlgLbbXvUkO7IzBOM7G5gkC9G
-         DDXwKfIg4fPBEgAo3suLARgNJm99OtzKXuI+M3TERvT1DT7a70nIgZP7FeMkaJyjYGuC
-         vQDS48PL3OYWnMZcZB69+t8RYQiDVNbipbDauQq59mRhWyKrtjcHrsG8cT/g3YdHQXf+
-         RVghzri3kWiWljLAYJlRxl+5HgmOBUyaQ+HwJV7fqu9nleGYZEHrCHYagK9aQpz8rFwH
-         dg9w==
-X-Gm-Message-State: APjAAAVaWsKY2+p+O1GtEMgF8lL4PHpzTtb1BwpDo/C3BUd2dIXha+Kq
-        YdYiZyuTJ8cEYrPPW3F2NwBJ1g==
-X-Google-Smtp-Source: APXvYqyO5jsKdDXhDO3bZGk1Keogaj2M/8EIIuQkcNmk5YSzFsJ5w0LY+0szmD2PzpB1320gFGeS9A==
-X-Received: by 2002:a62:14c2:: with SMTP id 185mr27818394pfu.47.1569944893417;
-        Tue, 01 Oct 2019 08:48:13 -0700 (PDT)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x18sm1559678pge.76.2019.10.01.08.48.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 01 Oct 2019 08:48:12 -0700 (PDT)
-Date:   Tue, 1 Oct 2019 08:48:11 -0700
-From:   Kees Cook <keescook@chromium.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 18/29] arm64: Move EXCEPTION_TABLE to RO_DATA segment
-Message-ID: <201910010846.D0712C1@keescook>
-References: <20190926175602.33098-1-keescook@chromium.org>
- <20190926175602.33098-19-keescook@chromium.org>
- <20191001090355.blnaqlf4rfzucpb2@willie-the-truck>
+        id S1731034AbfJAS1B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 1 Oct 2019 14:27:01 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:51768 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729444AbfJAS1B (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 1 Oct 2019 14:27:01 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91IJA5v137656;
+        Tue, 1 Oct 2019 18:26:57 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=Bp0nYLDxS7dpUSfySpK5uXb+Schf0NiemjtVBNnZ9Xg=;
+ b=i7IknPeHLhRI9uKkAxm7LguR7q5cqhYTANRQJ4IULI8cOGFFMlSZQosnwOHd8SHHH1LE
+ euvFVY8aZDqVezxFb0tzrG39WRoS4RA1uTAoQxzpVgrdU5szTsCiuSKhgzLAXXhSK1Ij
+ FKSpgSW3JyhcfvkPk1DIb3enK1maJx6Qw+HnUMQ5NGSjsQZi1D3iGJRh+yvh0Mr8jAKX
+ /aHUeB5XFhlvdveSe7kV9rqP47SaAZ5FekCkVQz9r6/jC61GONxc2l7vttmdMl+M/COU
+ bC4I4qajL2u3396sP+O69QWu+PGA5yM/tjePRYr1A/H7SZA1pWDZ/3PGb8NZh3C0CJTP JA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2va05rqxmf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 18:26:57 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x91IMdZG118288;
+        Tue, 1 Oct 2019 18:26:56 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3020.oracle.com with ESMTP id 2vbqd1am21-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 01 Oct 2019 18:26:56 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x91IQtge000586;
+        Tue, 1 Oct 2019 18:26:55 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 01 Oct 2019 11:26:54 -0700
+To:     Greg KH <gregkh@linuxfoundation.org>
+Cc:     Steffen Maier <maier@linux.ibm.com>,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] zfcp: fix reaction on bit error theshold notification with adapter close
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <yq1d0fhw2ex.fsf@oracle.com>
+        <20191001104949.42810-1-maier@linux.ibm.com>
+        <20191001141408.GB3129841@kroah.com>
+        <71b8fc68-23a8-a591-1018-f290d6e3312a@linux.ibm.com>
+        <20191001154208.GB3523275@kroah.com>
+Date:   Tue, 01 Oct 2019 14:26:48 -0400
+In-Reply-To: <20191001154208.GB3523275@kroah.com> (Greg KH's message of "Tue,
+        1 Oct 2019 17:42:08 +0200")
+Message-ID: <yq1tv8stj87.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191001090355.blnaqlf4rfzucpb2@willie-the-truck>
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=755
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910010148
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9397 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=837 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910010148
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Oct 01, 2019 at 10:03:56AM +0100, Will Deacon wrote:
-> Hi Kees,
-> 
-> On Thu, Sep 26, 2019 at 10:55:51AM -0700, Kees Cook wrote:
-> > The EXCEPTION_TABLE is read-only, so collapse it into RO_DATA.
-> > 
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
-> > ---
-> >  arch/arm64/kernel/vmlinux.lds.S | 6 ++++--
-> >  1 file changed, 4 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
-> > index 81d94e371c95..c6ba2eee0ee8 100644
-> > --- a/arch/arm64/kernel/vmlinux.lds.S
-> > +++ b/arch/arm64/kernel/vmlinux.lds.S
-> > @@ -5,6 +5,8 @@
-> >   * Written by Martin Mares <mj@atrey.karlin.mff.cuni.cz>
-> >   */
-> >  
-> > +#define RO_DATA_EXCEPTION_TABLE_ALIGN	8
-> > +
-> >  #include <asm-generic/vmlinux.lds.h>
-> >  #include <asm/cache.h>
-> >  #include <asm/kernel-pgtable.h>
-> > @@ -135,8 +137,8 @@ SECTIONS
-> >  	. = ALIGN(SEGMENT_ALIGN);
-> >  	_etext = .;			/* End of text section */
-> >  
-> > -	RO_DATA(PAGE_SIZE)		/* everything from this point to     */
-> > -	EXCEPTION_TABLE(8)		/* __init_begin will be marked RO NX */
-> > +	/* everything from this point to __init_begin will be marked RO NX */
-> > +	RO_DATA(PAGE_SIZE)
-> >  
-> >  	. = ALIGN(PAGE_SIZE);
-> 
-> Do you reckon it would be worth merging this last ALIGN directive into the
-> RO_DATA definition too? Given that we want to map the thing read-only, it
-> really has to be aligned either side.
 
-Actually, taking a closer look, this appears to be redundant: RO_DATA()
-ends with:
+Greg,
 
-	. = ALIGN(align)
+> Ok, then why make this a module option that you will have to support
+> for the next 20+ years anyway if you feel this fix is the correct way
+> that it should be done instead?
 
-(where "align" is the "PAGE_SIZE" argument to RO_DATA())
+I agree.
 
-> Anyway, that's only a nit, so:
-> 
-> Acked-by: Will Deacon <will@kernel.org>
-
-Thanks!
-
-> P.S. Please CC the arm64 maintainers on arm64 patches -- I nearly missed
-> this one!
-
-Okay, I can re-expand my list. I originally had done this but it was
-getting to be a rather large set of people. :)
+Why not just shut FCP down unconditionally on excessive bit errors?
+What's the benefit of allowing things to continue? Are you hoping things
+will eventually recover in a single-path scenario?
 
 -- 
-Kees Cook
+Martin K. Petersen	Oracle Linux Engineering
