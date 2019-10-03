@@ -2,114 +2,190 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D0FDAC9269
-	for <lists+linux-s390@lfdr.de>; Wed,  2 Oct 2019 21:33:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 768DBCA6EC
+	for <lists+linux-s390@lfdr.de>; Thu,  3 Oct 2019 18:56:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728954AbfJBTd1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 2 Oct 2019 15:33:27 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44484 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726076AbfJBTd0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 2 Oct 2019 15:33:26 -0400
-Received: by mail-qk1-f193.google.com with SMTP id u22so16236925qkk.11
-        for <linux-s390@vger.kernel.org>; Wed, 02 Oct 2019 12:33:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=vC99SaJEojFpNSx9KA2t2PR97mfI8j+nfD/zaFcYgk8=;
-        b=JYh8Db+2QTBY9rKv5L25450HMvrJjFA2tYqCwFDaszPOQDRaANQ9TkqgFL1MhfgPJ+
-         C98NdRhYduhWEQil4UzG+el8NGez7EaIqslNx+xy9owBLsZc8AbvIn2QRqUjimnSVBxn
-         qbjJhLOn7YjDar0133MpbxFRt4XsXM6eRTs2C3a/KIVBfIUZdIo8Rupzm1s6YEMKQuQo
-         uWeNI4ZhoP6+3+5v0ldelLcgykAfwMNdLmXC4Q1jKxTt02Y9Ki9b0lXrLL9fuAyq5y4M
-         DknFhN7TJx6uR0n/VDB3H/OINuRofSm2uV2JT7/PrNsUYCHbe1ftpDrn1djKqjfl2Dio
-         dM6g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:mime-version
-         :content-transfer-encoding;
-        bh=vC99SaJEojFpNSx9KA2t2PR97mfI8j+nfD/zaFcYgk8=;
-        b=AGlmmkO9hCxOdlN+E+YQmpw6eoCPa/sJWpHRgoWtD627b8pq+HSc13knoK5msJoajr
-         E9sEvRfjuUlFzlHAkYenqA7Rrd06KxWQ2cXim2hyGVBlivkqWhi25aAi0WqBcaVnDHVX
-         Vs2x+2gXUAp2UbSHkXpFZWC7h8y+hXfGUOIDweGTSuZC7MGEsUhKpg0m0UwRHjBSDww0
-         WqNdJ7FvBNa7DjfoONgcIGOw9l3rqiVw7hVrN2iQnRxBEHexqjc51rQw0seQf7N2HtLy
-         YhfCYRn9AtoFf7kDWYRL6z9s/sZBY2fTzW/zncm/EkkgbWFIUlBsTb8Wvw16flb8K/xu
-         l/bg==
-X-Gm-Message-State: APjAAAXff9z7FDAVrJ98VYEuu60UJqDW6FTUhnDFqhsMMBwySXL1ywqb
-        UmLXXy68+Ua561r9ugZPmhFXzg==
-X-Google-Smtp-Source: APXvYqxPp6gdC4RYIABsqCcymYFIXs3Xolh8BO7qCvOBUjC+VQw30JHxCyutLj8ijAq6UEv2W3vJHg==
-X-Received: by 2002:a05:620a:13c7:: with SMTP id g7mr460370qkl.21.1570044803983;
-        Wed, 02 Oct 2019 12:33:23 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id z72sm61363qka.115.2019.10.02.12.33.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 02 Oct 2019 12:33:23 -0700 (PDT)
-Message-ID: <1570044801.5576.262.camel@lca.pw>
-Subject: memory leaks in dasd_eckd_check_characteristics() error paths
-From:   Qian Cai <cai@lca.pw>
-To:     Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 02 Oct 2019 15:33:21 -0400
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S2405718AbfJCQsl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 3 Oct 2019 12:48:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27952 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405711AbfJCQsk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 3 Oct 2019 12:48:40 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x93GkLBj076306;
+        Thu, 3 Oct 2019 12:48:20 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdm7ksfkn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Oct 2019 12:48:19 -0400
+Received: from m0098394.ppops.net (m0098394.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x93GkUCH077867;
+        Thu, 3 Oct 2019 12:48:19 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vdm7ksfjy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Oct 2019 12:48:19 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x93GlTUY018767;
+        Thu, 3 Oct 2019 16:48:18 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma02dal.us.ibm.com with ESMTP id 2v9y589719-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 03 Oct 2019 16:48:17 +0000
+Received: from b03ledav003.gho.boulder.ibm.com (b03ledav003.gho.boulder.ibm.com [9.17.130.234])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x93GmGHr44695846
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 3 Oct 2019 16:48:16 GMT
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 999B06A05D;
+        Thu,  3 Oct 2019 16:48:16 +0000 (GMT)
+Received: from b03ledav003.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 011646A047;
+        Thu,  3 Oct 2019 16:48:11 +0000 (GMT)
+Received: from [9.199.43.217] (unknown [9.199.43.217])
+        by b03ledav003.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Thu,  3 Oct 2019 16:48:11 +0000 (GMT)
+Subject: Re: [PATCH v5 01/10] mm/memunmap: Use the correct start and end pfn
+ when removing pages from zone
+To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        Dan Williams <dan.j.williams@intel.com>
+Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Pankaj Gupta <pagupta@redhat.com>
+References: <20191001144011.3801-1-david@redhat.com>
+ <20191001144011.3801-2-david@redhat.com>
+ <933f9cd8-9a32-8566-bd97-7e475a009275@redhat.com>
+ <09b61ab1-6099-d825-8e04-fbfb43abe4d2@redhat.com>
+From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+Message-ID: <cb6807a4-93c8-3964-bd65-e7087a0c7bf1@linux.ibm.com>
+Date:   Thu, 3 Oct 2019 22:18:10 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <09b61ab1-6099-d825-8e04-fbfb43abe4d2@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-03_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910030146
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-For some reasons, dasd_eckd_check_characteristics() received -ENOMEM and then
-dasd_generic_set_online() emits this message,
+On 10/1/19 8:33 PM, David Hildenbrand wrote:
+> On 01.10.19 16:57, David Hildenbrand wrote:
+>> On 01.10.19 16:40, David Hildenbrand wrote:
+>>> From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+>>>
+>>> With altmap, all the resource pfns are not initialized. While initializing
+>>> pfn, altmap reserve space is skipped. Hence when removing pfn from zone
+>>> skip pfns that were never initialized.
+>>>
+>>> Update memunmap_pages to calculate start and end pfn based on altmap
+>>> values. This fixes a kernel crash that is observed when destroying
+>>> a namespace.
+>>>
+>>> [   81.356173] kernel BUG at include/linux/mm.h:1107!
+>>> cpu 0x1: Vector: 700 (Program Check) at [c000000274087890]
+>>>      pc: c0000000004b9728: memunmap_pages+0x238/0x340
+>>>      lr: c0000000004b9724: memunmap_pages+0x234/0x340
+>>> ...
+>>>      pid   = 3669, comm = ndctl
+>>> kernel BUG at include/linux/mm.h:1107!
+>>> [c000000274087ba0] c0000000009e3500 devm_action_release+0x30/0x50
+>>> [c000000274087bc0] c0000000009e4758 release_nodes+0x268/0x2d0
+>>> [c000000274087c30] c0000000009dd144 device_release_driver_internal+0x174/0x240
+>>> [c000000274087c70] c0000000009d9dfc unbind_store+0x13c/0x190
+>>> [c000000274087cb0] c0000000009d8a24 drv_attr_store+0x44/0x60
+>>> [c000000274087cd0] c0000000005a7470 sysfs_kf_write+0x70/0xa0
+>>> [c000000274087d10] c0000000005a5cac kernfs_fop_write+0x1ac/0x290
+>>> [c000000274087d60] c0000000004be45c __vfs_write+0x3c/0x70
+>>> [c000000274087d80] c0000000004c26e4 vfs_write+0xe4/0x200
+>>> [c000000274087dd0] c0000000004c2a6c ksys_write+0x7c/0x140
+>>> [c000000274087e20] c00000000000bbd0 system_call+0x5c/0x68
+>>>
+>>> Cc: Dan Williams <dan.j.williams@intel.com>
+>>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>>> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>>> Cc: Logan Gunthorpe <logang@deltatee.com>
+>>> Cc: Ira Weiny <ira.weiny@intel.com>
+>>> Reviewed-by: Pankaj Gupta <pagupta@redhat.com>
+>>> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+>>> [ move all pfn-realted declarations into a single line ]
+>>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>>> ---
+>>>   mm/memremap.c | 13 ++++++++-----
+>>>   1 file changed, 8 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/mm/memremap.c b/mm/memremap.c
+>>> index 557e53c6fb46..026788b2ac69 100644
+>>> --- a/mm/memremap.c
+>>> +++ b/mm/memremap.c
+>>> @@ -123,7 +123,7 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+>>>   void memunmap_pages(struct dev_pagemap *pgmap)
+>>>   {
+>>>   	struct resource *res = &pgmap->res;
+>>> -	unsigned long pfn;
+>>> +	unsigned long pfn, nr_pages, start_pfn, end_pfn;
+>>>   	int nid;
+>>>   
+>>>   	dev_pagemap_kill(pgmap);
+>>> @@ -131,14 +131,17 @@ void memunmap_pages(struct dev_pagemap *pgmap)
+>>>   		put_page(pfn_to_page(pfn));
+>>>   	dev_pagemap_cleanup(pgmap);
+>>>   
+>>> +	start_pfn = pfn_first(pgmap);
+>>> +	end_pfn = pfn_end(pgmap);
+>>> +	nr_pages = end_pfn - start_pfn;
+>>> +
+>>>   	/* pages are dead and unused, undo the arch mapping */
+>>> -	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
+>>> +	nid = page_to_nid(pfn_to_page(start_pfn));
+>>>   
+>>>   	mem_hotplug_begin();
+>>>   	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+>>> -		pfn = PHYS_PFN(res->start);
+>>> -		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+>>> -				 PHYS_PFN(resource_size(res)), NULL);
+>>> +		__remove_pages(page_zone(pfn_to_page(start_pfn)), start_pfn,
+>>> +			       nr_pages, NULL);
+>>>   	} else {
+>>>   		arch_remove_memory(nid, res->start, resource_size(res),
+>>>   				pgmap_altmap(pgmap));
+>>>
+>>
+>> Aneesh, I was wondering why the use of "res->start" is correct (and we
+>> shouldn't also witch to start_pfn/nr_pages here. It would be good if Dan
+>> could review.
+>>
+> 
+> To be more precise, I wonder if it should actually be
+> 
+> __remove_pages(page_zone(pfn_to_page(start_pfn)), res->start,
+>                 resource_size(res))
+> 
 
-dasd: 0.0.0122 Setting the DASD online with discipline ECKD failed with rc=-12
+yes, that would be make it much clear.
 
-After that, there are several memory leaks below. There are "config_data" and
-then stored as,
-
-/* store per path conf_data */
-device->path[pos].conf_data = conf_data;
-
-When it processes the error path in  dasd_generic_set_online(), it calls
-dasd_delete_device() which nuke the whole "struct dasd_device" without freeing
-the device->path[].conf_data first. Is it safe to free those in
-dasd_free_device() without worrying about the double-free? Or, is it better to
-free those in dasd_eckd_check_characteristics()'s goto error handling, i.e.,
-out_err*?
-
---- a/drivers/s390/block/dasd.c
-+++ b/drivers/s390/block/dasd.c
-@@ -153,6 +153,9 @@ struct dasd_device *dasd_alloc_device(void)
-  */
- void dasd_free_device(struct dasd_device *device)
- {
-+       for (int i = 0; i < 8; i++)
-+               kfree(device->path[i].conf_data);
-+
-        kfree(device->private);
-        free_pages((unsigned long) device->ese_mem, 1);
-        free_page((unsigned long) device->erp_mem);
+But for MEMORY_DEVICE_PRIVATE start_pfn and pfn should be same?
 
 
-unreferenced object 0x0fcee900 (size 256):
-  comm "dasdconf.sh", pid 446, jiffies 4294940081 (age 170.340s)
-  hex dump (first 32 bytes):
-    dc 01 01 00 f0 f0 f2 f1 f0 f7 f9 f0 f0 c9 c2 d4  ................
-    f7 f5 f0 f0 f0 f0 f0 f0 f0 c6 d9 c2 f7 f1 62 33  ..............b3
-  backtrace:
-    [<00000000a83b1992>] kmem_cache_alloc_trace+0x200/0x388
-    [<00000000048ef3e2>] dasd_eckd_read_conf+0x408/0x1400 [dasd_eckd_mod]
-    [<00000000ce31f195>] dasd_eckd_check_characteristics+0x3cc/0x938
-[dasd_eckd_mod]
-    [<00000000f6f1759b>] dasd_generic_set_online+0x150/0x4c0
-    [<00000000efca1efa>] ccw_device_set_online+0x324/0x808
-    [<00000000f9779774>] online_store_recog_and_online+0xe8/0x220
-    [<00000000349a5446>] online_store+0x2ce/0x420
-    [<000000005bd145f8>] kernfs_fop_write+0x1bc/0x270
-    [<0000000005664197>] vfs_write+0xce/0x220
-    [<0000000044a8bccb>] ksys_write+0xea/0x190
-    [<0000000037335938>] system_call+0x296/0x2b4
+> IOW, keep calling __remove_pages() with the same parameters but read
+> nid/zone from the offset one.
+> 
+> Hope some memunmap_pages() expert can clarify.
+> 
+
+-aneesh
