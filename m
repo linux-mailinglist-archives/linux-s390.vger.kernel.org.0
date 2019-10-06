@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9DCF3CD5A2
-	for <lists+linux-s390@lfdr.de>; Sun,  6 Oct 2019 19:38:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 23B81CD661
+	for <lists+linux-s390@lfdr.de>; Sun,  6 Oct 2019 19:48:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729972AbfJFRiI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 6 Oct 2019 13:38:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37250 "EHLO mail.kernel.org"
+        id S1731625AbfJFRoL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 6 Oct 2019 13:44:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730557AbfJFRiE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:38:04 -0400
+        id S1731624AbfJFRoK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:44:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 830182053B;
-        Sun,  6 Oct 2019 17:38:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A78F220700;
+        Sun,  6 Oct 2019 17:44:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383484;
+        s=default; t=1570383849;
         bh=9DqCLIXw3OgaPQz/yyOp5nMdkQ0mojVShjTJc+3CrmU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z39meW+6e1hITZl65VN3aUSDnDOkwGrJJV75nF+E49kAVGt2uHcVYrFiLBQQ9pQoe
-         eoDe8KtWaiPL8bdUyhOmFiombT9WsUFLzpXHbnk4L0GP4aXGFzYC+5s5iqA+SPNfaA
-         2tNzAxqGyLTX3tyrxtYjNRjLrBZr7pLij5opHvMY=
+        b=NZvYQ+xd7yNiV+cJZdpdZjqaEN0nILK2/a32FYsI3ugUHTDDTwPjNfA9VlbZ7dswZ
+         ag0ecM+euftLlK4MfdrnH8n9Vy2os+jW6RaJLDfS4A6GwavmE8WvkwLoQdhte59t8I
+         XupCLOmQ6tdytDeVYMcPNZtXaQPTRoJvLnMBTLAc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -31,12 +31,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         linux-s390@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.2 120/137] hypfs: Fix error number left in struct pointer member
-Date:   Sun,  6 Oct 2019 19:21:44 +0200
-Message-Id: <20191006171219.261730265@linuxfoundation.org>
+Subject: [PATCH 5.3 117/166] hypfs: Fix error number left in struct pointer member
+Date:   Sun,  6 Oct 2019 19:21:23 +0200
+Message-Id: <20191006171223.153871377@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171209.403038733@linuxfoundation.org>
-References: <20191006171209.403038733@linuxfoundation.org>
+In-Reply-To: <20191006171212.850660298@linuxfoundation.org>
+References: <20191006171212.850660298@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
