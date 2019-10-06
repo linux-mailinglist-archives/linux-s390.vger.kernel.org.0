@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2521ACD787
-	for <lists+linux-s390@lfdr.de>; Sun,  6 Oct 2019 20:02:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 15D6ACD760
+	for <lists+linux-s390@lfdr.de>; Sun,  6 Oct 2019 20:02:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729328AbfJFRa7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 6 Oct 2019 13:30:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57018 "EHLO mail.kernel.org"
+        id S1728648AbfJFR2C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 6 Oct 2019 13:28:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:53590 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727403AbfJFRa6 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 6 Oct 2019 13:30:58 -0400
+        id S1728643AbfJFR2C (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:28:02 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FBCA2133F;
-        Sun,  6 Oct 2019 17:30:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CF9912087E;
+        Sun,  6 Oct 2019 17:28:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570383056;
-        bh=NW/m6R8uPelyLkG1YSOb/QZBuuaoEuyf1FdlJras63U=;
+        s=default; t=1570382881;
+        bh=CZ9cCbOXBPrhHs4OeUR95IOMxTutnCR8uQ3Lcew8luw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WCYORMYd4Oo5bB3xwq8dn2vinnRUzJ4i6zYfT2Hf0RvExe2doWQboimw/Sc36vuwZ
-         mfCXIF0wvwDOiuJxN0e6B1bikoffxWvgpo8JgIdQgorbsdtYfVxWSS1I0CbpxRtwcR
-         Tti+4GX9kqaiT5E/IL1Qi1VWSsYK/TVf1Tr8M4OU=
+        b=TC2octW64266c4Dlo0zFhkJ8Q4HdrcUdcoksDdDZ+FDRwX79iCw9fuhLrZ1LtVcm/
+         kpje4e/SeyS3UXKw4JFB27roFoMSj2ezbjxlvV89iGD4x4PsCPbo7sFPEzu6knSxOx
+         pO3zP1ZinbdkVLmFKztzTosoA3WmGq5fQ4kj7KO8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -31,12 +31,12 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         linux-s390@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 069/106] hypfs: Fix error number left in struct pointer member
-Date:   Sun,  6 Oct 2019 19:21:15 +0200
-Message-Id: <20191006171152.503987621@linuxfoundation.org>
+Subject: [PATCH 4.14 44/68] hypfs: Fix error number left in struct pointer member
+Date:   Sun,  6 Oct 2019 19:21:20 +0200
+Message-Id: <20191006171129.378600792@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191006171124.641144086@linuxfoundation.org>
-References: <20191006171124.641144086@linuxfoundation.org>
+In-Reply-To: <20191006171108.150129403@linuxfoundation.org>
+References: <20191006171108.150129403@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -69,7 +69,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 5 insertions(+), 4 deletions(-)
 
 diff --git a/arch/s390/hypfs/inode.c b/arch/s390/hypfs/inode.c
-index c681329fdeec6..e4d17d9ea93d8 100644
+index 45eb5999110be..32f5b3fb069f3 100644
 --- a/arch/s390/hypfs/inode.c
 +++ b/arch/s390/hypfs/inode.c
 @@ -269,7 +269,7 @@ static int hypfs_show_options(struct seq_file *s, struct dentry *root)
