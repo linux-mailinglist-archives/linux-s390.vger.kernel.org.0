@@ -2,101 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55797CCFB1
-	for <lists+linux-s390@lfdr.de>; Sun,  6 Oct 2019 10:58:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EE226CD3DF
+	for <lists+linux-s390@lfdr.de>; Sun,  6 Oct 2019 19:20:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfJFI5q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 6 Oct 2019 04:57:46 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:52152 "EHLO mx1.redhat.com"
+        id S1727011AbfJFRUH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 6 Oct 2019 13:20:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44964 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726185AbfJFI5p (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 6 Oct 2019 04:57:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726992AbfJFRT6 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 6 Oct 2019 13:19:58 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 75465368CF;
-        Sun,  6 Oct 2019 08:57:45 +0000 (UTC)
-Received: from t460s.redhat.com (ovpn-116-58.ams2.redhat.com [10.36.116.58])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ABE055EE1D;
-        Sun,  6 Oct 2019 08:57:42 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 908C220835;
+        Sun,  6 Oct 2019 17:19:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570382398;
+        bh=A7GZAnfAyDSBIRqcMyz/rqC9/Sv2BmrCZAvB7h4kXBI=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=RG3Fq4nAJ6QQxm859k6y6w7KmOsVUlYDTt8gIwTicg6kkdZPE5oWuabUF9BbZKQZ8
+         CGKuLew4jxQDUA0MCQhhKbHp30WBKJfpBf+IqH8y9qrqWLH6Ftg+yZHTKISLfh2cmg
+         ZTnIMYYAdnZDZxFhoSKSHJiHtfsOHseATycQD0kg=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
-Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        x86@kernel.org, David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: [PATCH v6 10/10] mm/memory_hotplug: Cleanup __remove_pages()
-Date:   Sun,  6 Oct 2019 10:56:46 +0200
-Message-Id: <20191006085646.5768-11-david@redhat.com>
-In-Reply-To: <20191006085646.5768-1-david@redhat.com>
-References: <20191006085646.5768-1-david@redhat.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, David Howells <dhowells@redhat.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.4 20/36] hypfs: Fix error number left in struct pointer member
+Date:   Sun,  6 Oct 2019 19:19:02 +0200
+Message-Id: <20191006171053.385844992@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191006171038.266461022@linuxfoundation.org>
+References: <20191006171038.266461022@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Sun, 06 Oct 2019 08:57:45 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's drop the basically unused section stuff and simplify.
+From: David Howells <dhowells@redhat.com>
 
-Also, let's use a shorter variant to calculate the number of pages to
-the next section boundary.
+[ Upstream commit b54c64f7adeb241423cd46598f458b5486b0375e ]
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oscar Salvador <osalvador@suse.de>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Signed-off-by: David Hildenbrand <david@redhat.com>
+In hypfs_fill_super(), if hypfs_create_update_file() fails,
+sbi->update_file is left holding an error number.  This is passed to
+hypfs_kill_super() which doesn't check for this.
+
+Fix this by not setting sbi->update_value until after we've checked for
+error.
+
+Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+cc: linux-s390@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- mm/memory_hotplug.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
+ arch/s390/hypfs/inode.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 843481bd507d..2275240cfa10 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -490,25 +490,20 @@ static void __remove_section(unsigned long pfn, unsigned long nr_pages,
- void __remove_pages(unsigned long pfn, unsigned long nr_pages,
- 		    struct vmem_altmap *altmap)
+diff --git a/arch/s390/hypfs/inode.c b/arch/s390/hypfs/inode.c
+index c670279b33f0c..1de3fdfc35378 100644
+--- a/arch/s390/hypfs/inode.c
++++ b/arch/s390/hypfs/inode.c
+@@ -267,7 +267,7 @@ static int hypfs_show_options(struct seq_file *s, struct dentry *root)
+ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
  {
-+	const unsigned long end_pfn = pfn + nr_pages;
-+	unsigned long cur_nr_pages;
- 	unsigned long map_offset = 0;
--	unsigned long nr, start_sec, end_sec;
+ 	struct inode *root_inode;
+-	struct dentry *root_dentry;
++	struct dentry *root_dentry, *update_file;
+ 	int rc = 0;
+ 	struct hypfs_sb_info *sbi;
  
- 	map_offset = vmem_altmap_offset(altmap);
- 
- 	if (check_pfn_span(pfn, nr_pages, "remove"))
- 		return;
- 
--	start_sec = pfn_to_section_nr(pfn);
--	end_sec = pfn_to_section_nr(pfn + nr_pages - 1);
--	for (nr = start_sec; nr <= end_sec; nr++) {
--		unsigned long pfns;
--
-+	for (; pfn < end_pfn; pfn += cur_nr_pages) {
- 		cond_resched();
--		pfns = min(nr_pages, PAGES_PER_SECTION
--				- (pfn & ~PAGE_SECTION_MASK));
--		__remove_section(pfn, pfns, map_offset, altmap);
--		pfn += pfns;
--		nr_pages -= pfns;
-+		/* Select all remaining pages up to the next section boundary */
-+		cur_nr_pages = min(end_pfn - pfn, -(pfn | PAGE_SECTION_MASK));
-+		__remove_section(pfn, cur_nr_pages, map_offset, altmap);
- 		map_offset = 0;
- 	}
- }
+@@ -298,9 +298,10 @@ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ 		rc = hypfs_diag_create_files(root_dentry);
+ 	if (rc)
+ 		return rc;
+-	sbi->update_file = hypfs_create_update_file(root_dentry);
+-	if (IS_ERR(sbi->update_file))
+-		return PTR_ERR(sbi->update_file);
++	update_file = hypfs_create_update_file(root_dentry);
++	if (IS_ERR(update_file))
++		return PTR_ERR(update_file);
++	sbi->update_file = update_file;
+ 	hypfs_update_update(sb);
+ 	pr_info("Hypervisor filesystem mounted\n");
+ 	return 0;
 -- 
-2.21.0
+2.20.1
+
+
 
