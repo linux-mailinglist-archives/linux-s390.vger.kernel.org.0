@@ -2,87 +2,202 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A8C7DCEB6F
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Oct 2019 20:07:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF498CEC12
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Oct 2019 20:42:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729237AbfJGSHI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Oct 2019 14:07:08 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59154 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728031AbfJGSHH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 7 Oct 2019 14:07:07 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 74282316D796;
-        Mon,  7 Oct 2019 18:07:07 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-116-119.ams2.redhat.com [10.36.116.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0CF4A1001DE1;
-        Mon,  7 Oct 2019 18:07:05 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC] s390/purgatory: Make sure we fail the build if purgatory has missing symbols
-Date:   Mon,  7 Oct 2019 20:07:03 +0200
-Message-Id: <20191007180703.3678-2-hdegoede@redhat.com>
-In-Reply-To: <20191007180703.3678-1-hdegoede@redhat.com>
-References: <20191007180703.3678-1-hdegoede@redhat.com>
+        id S1728250AbfJGSml (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 7 Oct 2019 14:42:41 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42423 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728079AbfJGSml (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 7 Oct 2019 14:42:41 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w14so20665585qto.9;
+        Mon, 07 Oct 2019 11:42:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7eEfovKGT46NPkty4JePi34eFTOmFxf7gPHZxEXtsdU=;
+        b=IBXC2WwKi3QN6sBAJ4L5gDIFg5ktB2q/zo2DunyriDZv+n6ba3AO8GILev10cvpUmc
+         GCns9+0/8VqT/aE0c31pKZOF1HX8ww/6RQeg8CCpOggrROsRwvL0LdhyQ99PelDY86dZ
+         zSYRlTxKU+Pza259j89of/6t+yrHKOkP2dN1FKi4S5/8bxSxfvAib3sr6WfU5DrDw2bx
+         A3n40ODFVKqYcPP08aDweYEv3XYow3AwkA6rvuU73RWjVdzYDaRY0gS+8gagEnNFPFl2
+         vGFgB3WNO8DFmKny0/PbUskjIboj8ZjGn+S4Nn6kGmD18iLA8kzodx7d8xy6XXXfxtsL
+         yCrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:date:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=7eEfovKGT46NPkty4JePi34eFTOmFxf7gPHZxEXtsdU=;
+        b=tF/SXJveKLf8zqj/xwGp12fHoASvHvFldKz/7LIN0EyAQY59cmFg+W+3nfBpjt4dZL
+         k1BC6Kf7chmN2TAqw8mmP2GygdOLDXotsi6mCRrFwC4csiDyPYOkRRvfpQjJpOwGW2Ts
+         qeJ9qf/EBeWrOr/E3/fP8BGp3NDq0jX8yjS3BPdI/YzHEU79oicH8u77kJbn1p9Y9LG9
+         GLWmKVDS6hOduU/GZsuYlAOvn8OwapBDJJ8MDf/OC5GkyOSd3htxxTU06LWLBsKXFJ28
+         VzjYFJOM6Y+MFSGIuQcj2f9G44p86fhLEA/l+eziroL8ZFs05+qvfw3LXRuL0jufCjiZ
+         FzPg==
+X-Gm-Message-State: APjAAAXPWP4chCR1iXI43IPcTuRgsqA3RJtSPzw7WaacyuaWz/9gqg10
+        zDuUjd/NtBIvQKCAB904xGM=
+X-Google-Smtp-Source: APXvYqzbbgBi/bv0ZZ7NWkBJeVKwGJFA/yXvlLTha+iFhjktc/Zk/+4t9LOdiKeNsu18ePInaRnizg==
+X-Received: by 2002:aed:3522:: with SMTP id a31mr32079589qte.69.1570473759713;
+        Mon, 07 Oct 2019 11:42:39 -0700 (PDT)
+Received: from rani.riverdale.lan ([2001:470:1f07:5f3::b55f])
+        by smtp.gmail.com with ESMTPSA id 200sm8302542qkf.65.2019.10.07.11.42.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 07 Oct 2019 11:42:39 -0700 (PDT)
+From:   Arvind Sankar <nivedita@alum.mit.edu>
+X-Google-Original-From: Arvind Sankar <arvind@rani.riverdale.lan>
+Date:   Mon, 7 Oct 2019 14:42:37 -0400
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Arvind Sankar <nivedita@alum.mit.edu>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-crypto@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org,
+        Stephan Mueller <smueller@chronox.de>,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit
+Message-ID: <20191007184237.GB13589@rani.riverdale.lan>
+References: <20191007134724.4019-1-hdegoede@redhat.com>
+ <20191007140022.GA29008@gmail.com>
+ <1dc3c53d-785e-f9a4-1b4c-3374c94ae0a7@redhat.com>
+ <20191007142230.GA117630@gmail.com>
+ <2982b666-e310-afb7-40eb-e536ce95e23d@redhat.com>
+ <20191007144600.GB59713@gmail.com>
+ <20191007152049.GA384920@rani.riverdale.lan>
+ <20191007154007.GA96929@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 07 Oct 2019 18:07:07 +0000 (UTC)
+Content-Type: multipart/mixed; boundary="H+4ONPRPur6+Ovig"
+Content-Disposition: inline
+In-Reply-To: <20191007154007.GA96929@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Since we link purgatory with -r aka we enable "incremental linking"
-no checks for unresolved symbols are done while linking the purgatory.
 
-This commit adds an extra check for unresolved symbols by calling ld
-without -r before running objcopy to generate purgatory.ro.
+--H+4ONPRPur6+Ovig
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 
-This will help us catch missing symbols in the purgatory sooner.
+On Mon, Oct 07, 2019 at 05:40:07PM +0200, Ingo Molnar wrote:
+> 
+> * Arvind Sankar <nivedita@alum.mit.edu> wrote:
+> 
+> > With the barrier in there, is there any reason to *not* inline the
+> > function? barrier_data() is an asm statement that tells the compiler
+> > that the asm uses the memory that was set to zero, thus preventing it
+> > from removing the memset even if nothing else uses that memory later. A
+> > more detailed comment is there in compiler-gcc.h. I can't see why it
+> > wouldn't work even if it were inlined.
+> > 
+> > If the function can indeed be inlined, we could just make the common
+> > implementation a macro and avoid duplicating it? As mentioned in another
+> > mail, we otherwise will likely need another duplicate implementation for
+> > arch/s390/purgatory as well.
+> 
+> I suspect macro would be justified in this case. Mind sending a v3 patch 
+> to demonstrate how it would all look like?
+> 
+> I'll zap v2 if the macro solution looks better.
+> 
+> Thanks,
+> 
+> 	Ingo
 
-Note this commit also removes --no-undefined from LDFLAGS_purgatory.ro
-as that has no effect.
+Patch attached to turn memzero_explicit into inline function.
 
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+--H+4ONPRPur6+Ovig
+Content-Type: text/x-diff; charset=utf-8
+Content-Disposition: attachment; filename="0001-lib-string-make-memzero_explicit-inline-instead-of-e.patch"
+
+From 25834b8040eff72478489be0bd8a2ff549af7f94 Mon Sep 17 00:00:00 2001
+From: Arvind Sankar <nivedita@alum.mit.edu>
+Date: Mon, 7 Oct 2019 14:34:24 -0400
+Subject: [PATCH] lib/string: make memzero_explicit inline instead of external
+
+With the use of the barrier implied by barrier_data(), there is no need
+for memzero_explicit to be extern. Making it inline saves the overhead
+of a function call, and allows the code to be reused in arch/*/purgatory
+without having to duplicate the implementation.
+
+Fixes: 906a4bb97f5d ("crypto: sha256 - Use get/put_unaligned_be32 to get input, memzero_explicit")
+Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
 ---
- arch/s390/purgatory/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ include/linux/string.h | 21 ++++++++++++++++++++-
+ lib/string.c           | 21 ---------------------
+ 2 files changed, 20 insertions(+), 22 deletions(-)
 
-diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-index bc0d7a0d0394..d5405fe7b2e2 100644
---- a/arch/s390/purgatory/Makefile
-+++ b/arch/s390/purgatory/Makefile
-@@ -26,15 +26,21 @@ KBUILD_CFLAGS += $(CLANG_FLAGS)
- KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
- KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
+diff --git a/include/linux/string.h b/include/linux/string.h
+index b2f9df7f0761..b6ccdc2c7f02 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -227,7 +227,26 @@ static inline bool strstarts(const char *str, const char *prefix)
+ }
  
--LDFLAGS_purgatory := -r --no-undefined -nostdlib -z nodefaultlib -T
-+LDFLAGS_purgatory := -r -nostdlib -z nodefaultlib -T
- $(obj)/purgatory: $(obj)/purgatory.lds $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
- 
-+# Since we link purgatory with -r unresolved symbols are not checked,
-+# so we check this before generating purgatory.ro instead
-+quiet_cmd_check_purgatory = CHK     $<
-+      cmd_check_purgatory = ld -e purgatory_start $<
+ size_t memweight(const void *ptr, size_t bytes);
+-void memzero_explicit(void *s, size_t count);
 +
- OBJCOPYFLAGS_purgatory.ro := -O elf64-s390
- OBJCOPYFLAGS_purgatory.ro += --remove-section='*debug*'
- OBJCOPYFLAGS_purgatory.ro += --remove-section='.comment'
- OBJCOPYFLAGS_purgatory.ro += --remove-section='.note.*'
- $(obj)/purgatory.ro: $(obj)/purgatory FORCE
-+		$(call if_changed,check_purgatory)
- 		$(call if_changed,objcopy)
++/**
++ * memzero_explicit - Fill a region of memory (e.g. sensitive
++ *		      keying data) with 0s.
++ * @s: Pointer to the start of the area.
++ * @count: The size of the area.
++ *
++ * Note: usually using memset() is just fine (!), but in cases
++ * where clearing out _local_ data at the end of a scope is
++ * necessary, memzero_explicit() should be used instead in
++ * order to prevent the compiler from optimising away zeroing.
++ *
++ * memzero_explicit() doesn't need an arch-specific version as
++ * it just invokes the one of memset() implicitly.
++ */
++static inline void memzero_explicit(void *s, size_t count)
++{
++	memset(s, 0, count);
++	barrier_data(s);
++}
  
- $(obj)/kexec-purgatory.o: $(obj)/kexec-purgatory.S $(obj)/purgatory.ro FORCE
+ /**
+  * kbasename - return the last part of a pathname.
+diff --git a/lib/string.c b/lib/string.c
+index cd7a10c19210..08ec58cc673b 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -748,27 +748,6 @@ void *memset(void *s, int c, size_t count)
+ EXPORT_SYMBOL(memset);
+ #endif
+ 
+-/**
+- * memzero_explicit - Fill a region of memory (e.g. sensitive
+- *		      keying data) with 0s.
+- * @s: Pointer to the start of the area.
+- * @count: The size of the area.
+- *
+- * Note: usually using memset() is just fine (!), but in cases
+- * where clearing out _local_ data at the end of a scope is
+- * necessary, memzero_explicit() should be used instead in
+- * order to prevent the compiler from optimising away zeroing.
+- *
+- * memzero_explicit() doesn't need an arch-specific version as
+- * it just invokes the one of memset() implicitly.
+- */
+-void memzero_explicit(void *s, size_t count)
+-{
+-	memset(s, 0, count);
+-	barrier_data(s);
+-}
+-EXPORT_SYMBOL(memzero_explicit);
+-
+ #ifndef __HAVE_ARCH_MEMSET16
+ /**
+  * memset16() - Fill a memory area with a uint16_t
 -- 
-2.23.0
+2.21.0
 
+
+--H+4ONPRPur6+Ovig--
