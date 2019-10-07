@@ -2,95 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7FC47CE7F2
-	for <lists+linux-s390@lfdr.de>; Mon,  7 Oct 2019 17:40:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D541ECE8A2
+	for <lists+linux-s390@lfdr.de>; Mon,  7 Oct 2019 18:07:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727745AbfJGPjI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 7 Oct 2019 11:39:08 -0400
-Received: from foss.arm.com ([217.140.110.172]:38470 "EHLO foss.arm.com"
+        id S1727876AbfJGQHj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 7 Oct 2019 12:07:39 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41102 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728390AbfJGPjG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 7 Oct 2019 11:39:06 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E680E1684;
-        Mon,  7 Oct 2019 08:39:05 -0700 (PDT)
-Received: from e112269-lin.arm.com (unknown [10.1.197.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E2EFE3F6C4;
-        Mon,  7 Oct 2019 08:39:02 -0700 (PDT)
-From:   Steven Price <steven.price@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Steven Price <steven.price@arm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Morse <james.morse@arm.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>, x86@kernel.org,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        "Liang, Kan" <kan.liang@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        id S1727711AbfJGQHj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 7 Oct 2019 12:07:39 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 92F211895A40;
+        Mon,  7 Oct 2019 16:07:38 +0000 (UTC)
+Received: from gondolin (ovpn-116-231.ams2.redhat.com [10.36.116.231])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DDC9B6012A;
+        Mon,  7 Oct 2019 16:07:35 +0000 (UTC)
+Date:   Mon, 7 Oct 2019 18:07:32 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v11 08/22] s390: mm: Add p?d_leaf() definitions
-Date:   Mon,  7 Oct 2019 16:38:08 +0100
-Message-Id: <20191007153822.16518-9-steven.price@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191007153822.16518-1-steven.price@arm.com>
-References: <20191007153822.16518-1-steven.price@arm.com>
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH v2 1/1] s390/cio: fix virtio-ccw DMA without PV
+Message-ID: <20191007180732.7a38ff0b.cohuck@redhat.com>
+In-Reply-To: <20190930153803.7958-1-pasic@linux.ibm.com>
+References: <20190930153803.7958-1-pasic@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Mon, 07 Oct 2019 16:07:38 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-walk_page_range() is going to be allowed to walk page tables other than
-those of user space. For this it needs to know when it has reached a
-'leaf' entry in the page tables. This information is provided by the
-p?d_leaf() functions/macros.
+On Mon, 30 Sep 2019 17:38:02 +0200
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-For s390, pud_large() and pmd_large() are already implemented as static
-inline functions. Add a macro to provide the p?d_leaf names for the
-generic code to use.
+> Commit 37db8985b211 ("s390/cio: add basic protected virtualization
+> support") breaks virtio-ccw devices with VIRTIO_F_IOMMU_PLATFORM for non
+> Protected Virtualization (PV) guests. The problem is that the dma_mask
 
-CC: Heiko Carstens <heiko.carstens@de.ibm.com>
-CC: Vasily Gorbik <gor@linux.ibm.com>
-CC: Christian Borntraeger <borntraeger@de.ibm.com>
-CC: linux-s390@vger.kernel.org
-Signed-off-by: Steven Price <steven.price@arm.com>
----
- arch/s390/include/asm/pgtable.h | 2 ++
- 1 file changed, 2 insertions(+)
+Hm, I should probably add that to my test configs.
 
-diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
-index 36c578c0ff96..acab5a455490 100644
---- a/arch/s390/include/asm/pgtable.h
-+++ b/arch/s390/include/asm/pgtable.h
-@@ -675,6 +675,7 @@ static inline int pud_none(pud_t pud)
- 	return pud_val(pud) == _REGION3_ENTRY_EMPTY;
- }
- 
-+#define pud_leaf	pud_large
- static inline int pud_large(pud_t pud)
- {
- 	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
-@@ -692,6 +693,7 @@ static inline unsigned long pud_pfn(pud_t pud)
- 	return (pud_val(pud) & origin_mask) >> PAGE_SHIFT;
- }
- 
-+#define pmd_leaf	pmd_large
- static inline int pmd_large(pmd_t pmd)
- {
- 	return (pmd_val(pmd) & _SEGMENT_ENTRY_LARGE) != 0;
--- 
-2.20.1
+> of the ccw device, which is used by virtio core, gets changed from 64 to
+> 31 bit, because some of the DMA allocations do require 31 bit
+> addressable memory. For PV the only drawback is that some of the virtio
+> structures must end up in ZONE_DMA because we have the bounce the
+> buffers mapped via DMA API anyway.
+> 
+> But for non PV guests we have a problem: because of the 31 bit mask
+> guests bigger than 2G are likely to try bouncing buffers. The swiotlb
+> however is only initialized for PV guests, because we don't want to
+> bounce anything for non PV guests. The first such map kills the guest.
+> 
+> Since the DMA API won't allow us to specify for each allocation whether
+> we need memory from ZONE_DMA (31 bit addressable) or any DMA capable
+> memory will do, let us use coherent_dma_mask (which is used for
+> allocations) to force allocating form ZONE_DMA while changing dma_mask
+> to DMA_BIT_MASK(64) so that at least the streaming API will regard
+> the whole memory DMA capable.
+> 
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+> Suggested-by: Robin Murphy <robin.murphy@arm.com>
+> Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
+> ---
+> 
+> v1 --> v2:
+> * Fixed comment: dropped the sentence with workaround.
+> 
+> The idea of enabling the client code to specify on s390 whether a chunk
+> of allocated DMA memory is to be allocated form ZONE_DMA for each
+> allocation was not well received [1]. 
+> 
+> Making the streaming API threat all addresses as DMA capable, while
+> restricting the DMA API allocations to  ZONE_DMA (regardless of needed
+> or not) is the next best thing we can do (from s390 perspective).
+> 
+> [1] https://lkml.org/lkml/2019/9/23/531 
+> ---
+> ---
+>  drivers/s390/cio/cio.h    | 1 +
+>  drivers/s390/cio/css.c    | 7 ++++++-
+>  drivers/s390/cio/device.c | 2 +-
+>  3 files changed, 8 insertions(+), 2 deletions(-)
 
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
