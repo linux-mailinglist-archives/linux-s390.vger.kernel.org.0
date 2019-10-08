@@ -2,116 +2,57 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FF77CF556
-	for <lists+linux-s390@lfdr.de>; Tue,  8 Oct 2019 10:54:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2284DCF5A8
+	for <lists+linux-s390@lfdr.de>; Tue,  8 Oct 2019 11:08:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730188AbfJHIy0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 8 Oct 2019 04:54:26 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56086 "EHLO mx1.redhat.com"
+        id S1729989AbfJHJIQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 8 Oct 2019 05:08:16 -0400
+Received: from 8bytes.org ([81.169.241.247]:46464 "EHLO theia.8bytes.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728866AbfJHIy0 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 8 Oct 2019 04:54:26 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0979F18C4284;
-        Tue,  8 Oct 2019 08:54:26 +0000 (UTC)
-Received: from shalem.localdomain.com (ovpn-117-197.ams2.redhat.com [10.36.117.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 762F419C68;
-        Tue,  8 Oct 2019 08:54:24 +0000 (UTC)
-From:   Hans de Goede <hdegoede@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Hans de Goede <hdegoede@redhat.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC v2] s390/purgatory: Make sure we fail the build if purgatory has missing symbols
-Date:   Tue,  8 Oct 2019 10:54:21 +0200
-Message-Id: <20191008085421.11011-2-hdegoede@redhat.com>
-In-Reply-To: <20191008085421.11011-1-hdegoede@redhat.com>
-References: <20191008085421.11011-1-hdegoede@redhat.com>
+        id S1729799AbfJHJIP (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 8 Oct 2019 05:08:15 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 51E203D0; Tue,  8 Oct 2019 11:08:13 +0200 (CEST)
+Date:   Tue, 8 Oct 2019 11:08:13 +0200
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Tom Murphy <murphyt7@tcd.ie>
+Cc:     iommu@lists.linux-foundation.org, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v6 0/5] iommu/amd: Convert the AMD iommu driver to the
+ dma-iommu api
+Message-ID: <20191008090813.GB2514@8bytes.org>
+References: <20190908165642.22253-1-murphyt7@tcd.ie>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.62]); Tue, 08 Oct 2019 08:54:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190908165642.22253-1-murphyt7@tcd.ie>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Since we link purgatory with -r aka we enable "incremental linking"
-no checks for unresolved symbols are done while linking the purgatory.
+On Sun, Sep 08, 2019 at 09:56:36AM -0700, Tom Murphy wrote:
+> Convert the AMD iommu driver to the dma-iommu api. Remove the iova
+> handling and reserve region code from the AMD iommu driver.
 
-This commit adds an extra check for unresolved symbols by calling ld
-without -r before running objcopy to generate purgatory.ro.
-
-This will help us catch missing symbols in the purgatory sooner.
-
-Note this commit also removes --no-undefined from LDFLAGS_purgatory
-as that has no effect.
-
-Signed-off-by: Hans de Goede <hdegoede@redhat.com>
----
-Changes in v2:
-- Using 2 if_changed lines under a single rule does not work, then
-  1 of the 2 will always execute each build.
-  Instead add a new (unused) purgatory.chk intermediate which gets
-  linked from purgatory.ro without -r to do the missing symbols check
-- This also fixes the check generating an a.out file (oops)
----
- arch/s390/purgatory/.gitignore |  1 +
- arch/s390/purgatory/Makefile   | 13 ++++++++++---
- 2 files changed, 11 insertions(+), 3 deletions(-)
-
-diff --git a/arch/s390/purgatory/.gitignore b/arch/s390/purgatory/.gitignore
-index 04a03433c720..c82157f46b18 100644
---- a/arch/s390/purgatory/.gitignore
-+++ b/arch/s390/purgatory/.gitignore
-@@ -1,3 +1,4 @@
- purgatory
-+purgatory.chk
- purgatory.lds
- purgatory.ro
-diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-index bc0d7a0d0394..13e9a5dc0a07 100644
---- a/arch/s390/purgatory/Makefile
-+++ b/arch/s390/purgatory/Makefile
-@@ -4,7 +4,7 @@ OBJECT_FILES_NON_STANDARD := y
- 
- purgatory-y := head.o purgatory.o string.o sha256.o mem.o
- 
--targets += $(purgatory-y) purgatory.lds purgatory purgatory.ro
-+targets += $(purgatory-y) purgatory.lds purgatory purgatory.chk purgatory.ro
- PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
- 
- $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
-@@ -26,15 +26,22 @@ KBUILD_CFLAGS += $(CLANG_FLAGS)
- KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
- KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
- 
--LDFLAGS_purgatory := -r --no-undefined -nostdlib -z nodefaultlib -T
-+# Since we link purgatory with -r unresolved symbols are not checked, so we
-+# also link a purgatory.chk binary without -r to check for unresolved symbols.
-+PURGATORY_LDFLAGS := -nostdlib -z nodefaultlib
-+LDFLAGS_purgatory := -r $(PURGATORY_LDFLAGS) -T
-+LDFLAGS_purgatory.chk := -e purgatory_start $(PURGATORY_LDFLAGS)
- $(obj)/purgatory: $(obj)/purgatory.lds $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
- 
-+$(obj)/purgatory.chk: $(obj)/purgatory FORCE
-+		$(call if_changed,ld)
-+
- OBJCOPYFLAGS_purgatory.ro := -O elf64-s390
- OBJCOPYFLAGS_purgatory.ro += --remove-section='*debug*'
- OBJCOPYFLAGS_purgatory.ro += --remove-section='.comment'
- OBJCOPYFLAGS_purgatory.ro += --remove-section='.note.*'
--$(obj)/purgatory.ro: $(obj)/purgatory FORCE
-+$(obj)/purgatory.ro: $(obj)/purgatory $(obj)/purgatory.chk FORCE
- 		$(call if_changed,objcopy)
- 
- $(obj)/kexec-purgatory.o: $(obj)/kexec-purgatory.S $(obj)/purgatory.ro FORCE
--- 
-2.23.0
-
+Applied, thanks. Note that it will not show up in linux-next before
+-rc3.
