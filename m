@@ -2,96 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BD9A1D1371
-	for <lists+linux-s390@lfdr.de>; Wed,  9 Oct 2019 18:01:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62A9CD1717
+	for <lists+linux-s390@lfdr.de>; Wed,  9 Oct 2019 19:52:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfJIQBr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 9 Oct 2019 12:01:47 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:33784 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730708AbfJIQBr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Oct 2019 12:01:47 -0400
-Received: by mail-qt1-f195.google.com with SMTP id r5so4199294qtd.0;
-        Wed, 09 Oct 2019 09:01:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZWFHkd6ek0BtHyg9BV3fh9tCSDHEofWpBNJTTKARQwo=;
-        b=kaUhu2nWdn12oM/CzR/8uNlhivq7ptWPXCXwRV3MGgWwJR6U9CGEs7zcoDFHQLrjfM
-         RGN1nv86kty9QqzmMzZ0N2YAIUwOvwN3/InyILq43nJrkKuxeOPBTha0vhaT4Oi1XqN7
-         LQkULD5xSeQas+PY9+ar+ebSOqsDKz91t+uhqF+hqdsgyt+me9kVj3ubn2v9Mp1Pl6j9
-         izL7CG0HJTYxVVVw+u+2fQrPrONiiiTIjUIPnCsNKEfLfTArt/LUnuPp4iDhxCwau3dB
-         kDiaVq3L6dzuDx0aNcR2w+XxmlJ3/YL/u0H6M83QXyTV3Lzn/B+pwj3rYwMAIkJdmKgJ
-         IzCg==
-X-Gm-Message-State: APjAAAWuhvpsq7iUgR+XO/mgZbRe/VAe3ux21SFZVYtoSmpOzo+KSft2
-        XBDxl2R31/iDGgNlD5dKynHEsbJpPWvOxWG48Co=
-X-Google-Smtp-Source: APXvYqxJLyCeHAUAU1azpG4v5iXs9SXOmBMoaRvC78sbGAuHi5eUtVSvqkcf9ThEOBLk2iBn+of79sDp2hHG8oqoBW0=
-X-Received: by 2002:ac8:729a:: with SMTP id v26mr4380259qto.18.1570636905814;
- Wed, 09 Oct 2019 09:01:45 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190918153445.1241-1-maier@linux.ibm.com>
-In-Reply-To: <20190918153445.1241-1-maier@linux.ibm.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 9 Oct 2019 18:01:29 +0200
-Message-ID: <CAK8P3a1HBog84Wvdgm1ccz1gRJRxHm8ucsxwUTTqh02gOt9WbQ@mail.gmail.com>
-Subject: Re: [PATCH] compat_ioctl: fix reimplemented SG_IO handling causing
- -EINVAL from sg_io()
-To:     Steffen Maier <maier@linux.ibm.com>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        "Martin K . Petersen" <martin.petersen@oracle.com>,
-        Doug Gilbert <dgilbert@interlog.com>,
-        linux-scsi <linux-scsi@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Benjamin Block <bblock@linux.ibm.com>,
+        id S1729865AbfJIRw1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Oct 2019 13:52:27 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:53930 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728804AbfJIRw1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Oct 2019 13:52:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=PSn13oxF1UKczQrMvsfZpMiSrhunC9qsLBVGsQ7Tqig=; b=k5CIuaOdffDt+qOqubPEs3YjO
+        04Lm9Op0nHnYX2SLaNFPReScjyHgiAA/mQLYIA4gCDv/LwArZ0GcJDNvFtd+btvyj1kPscQR/LXE3
+        fgcRigi0bM+f3rxFyvzjsWL4lc1kHP9zmzzkSeSJyQ6u/NfqrCnspNu9O/wlEeZG25StjbklYoz5O
+        Kouz/QfmWHmeSlh3RKHp6oqK2wFUgoIz9PrL5/kY84aFqzIh8hWfstrji680e1n4CXBWRK+PGumrK
+        IyCU+5cfFBMYjWCJH4Ldgb0HzlbErtSy3r11IroMj4iWTTT5teAIt/sNT9SFbiDvudNZwe1Vu8EfO
+        aaL1rAfHA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.2 #3 (Red Hat Linux))
+        id 1iIG7p-0000JD-TI; Wed, 09 Oct 2019 17:51:49 +0000
+Date:   Wed, 9 Oct 2019 10:51:49 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Ben Dooks <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Omar Sandoval <osandov@fb.com>,
-        linux-block <linux-block@vger.kernel.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Mark Brown <broonie@kernel.org>, dm-devel@redhat.com
-Content-Type: text/plain; charset="UTF-8"
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH] proc: centralise declaration of cpuinfo_op
+Message-ID: <20191009175149.GA28540@infradead.org>
+References: <20191009113930.13236-1-ben.dooks@codethink.co.uk>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191009113930.13236-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Sep 18, 2019 at 5:35 PM Steffen Maier <maier@linux.ibm.com> wrote:
->
-> scsi_cmd_ioctl() had hdr as on stack auto variable and called
-> copy_{from,to}_user with the address operator &hdr and sizeof(hdr).
->
-> After the refactoring, {get,put}_sg_io_hdr() takes a pointer &hdr.
-> So the copy_{from,to}_user within the new helper functions should
-> just take the given pointer argument hdr and sizeof(*hdr).
->
-> I saw -EINVAL from sg_io() done by /usr/lib/udev/scsi_id which could
-> in turn no longer whitelist SCSI disks for devicemapper multipath.
->
-> Signed-off-by: Steffen Maier <maier@linux.ibm.com>
-> Fixes: 4f45155c29fd ("compat_ioctl: reimplement SG_IO handling")
-> ---
->
-> Arnd, I'm not sure about the sizeof(hdr32) change in the compat part in
-> put_sg_io_hdr().
->
-> This is for next, probably via Arnd's y2038/y2038,
-> and it fixes next-20190917 for me regarding SCSI generic.
+On Wed, Oct 09, 2019 at 12:39:30PM +0100, Ben Dooks wrote:
+> When building for arm, cpuinfo_op generates a warning due
+> to no declaration. Since this is used in fs/proc/cpuinfo.c
+> and inconsitently declared across archiectures move the
+> declaration info <linux/seq_file.h>. This means that the
+> cpuinfo_op will have a declaration any place it is used.
+> 
+> Removes the following sparse warning:
+> 
+> arch/arm/kernel/setup.c:1320:29: warning: symbol 'cpuinfo_op' was not declared. Should it be static?
 
-Hi Steffen,
-
-Sorry for the long delay. I ended up not sending my pull request for
-v5.4, so the bug is not there. I have now rebased my branch
-on top of v5.4-rc2 and plan to send it for the v5.5 merge window.
-
-I have folded your bugfix into my original patch, hope that's ok with
-you. Tomorrow's linux-next should be fixed.
-
-    Arnd
+I like the consolidation, but I don't think seq_file.h is the right
+place.  A procfs or cpu topology related header seems like the better
+choice.
