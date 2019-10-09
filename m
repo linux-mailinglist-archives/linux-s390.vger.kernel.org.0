@@ -2,155 +2,178 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EAF49D0B77
-	for <lists+linux-s390@lfdr.de>; Wed,  9 Oct 2019 11:40:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0831BD0DC9
+	for <lists+linux-s390@lfdr.de>; Wed,  9 Oct 2019 13:40:14 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbfJIJji (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 9 Oct 2019 05:39:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44482 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726734AbfJIJji (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Oct 2019 05:39:38 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x999bLGr106874
-        for <linux-s390@vger.kernel.org>; Wed, 9 Oct 2019 05:39:32 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vha0bdfws-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 09 Oct 2019 05:39:29 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <prudo@linux.ibm.com>;
-        Wed, 9 Oct 2019 10:39:23 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 9 Oct 2019 10:39:21 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x999dJ6K50135240
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 9 Oct 2019 09:39:19 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 51B95AE051;
-        Wed,  9 Oct 2019 09:39:19 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 03B9FAE056;
-        Wed,  9 Oct 2019 09:39:19 +0000 (GMT)
-Received: from laptop-ibm (unknown [9.152.212.222])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  9 Oct 2019 09:39:18 +0000 (GMT)
-Date:   Wed, 9 Oct 2019 11:39:17 +0200
-From:   Philipp Rudo <prudo@linux.ibm.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Arvind Sankar <nivedita@alum.mit.edu>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>
-Subject: Re: [RFC v2 0/1] s390/purgatory: Make sure we fail the build if
- purgatory has missing symbols
-In-Reply-To: <20191008085421.11011-1-hdegoede@redhat.com>
-References: <20191008085421.11011-1-hdegoede@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1730618AbfJILkN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Oct 2019 07:40:13 -0400
+Received: from imap1.codethink.co.uk ([176.9.8.82]:54905 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725962AbfJILkN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Oct 2019 07:40:13 -0400
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iIAJZ-0004IN-3h; Wed, 09 Oct 2019 12:39:33 +0100
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.2)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iIAJY-0003WT-8z; Wed, 09 Oct 2019 12:39:32 +0100
+From:   Ben Dooks <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     Ben Dooks <ben.dooks@codethink.co.uk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH] proc: centralise declaration of cpuinfo_op
+Date:   Wed,  9 Oct 2019 12:39:30 +0100
+Message-Id: <20191009113930.13236-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19100909-4275-0000-0000-0000037065B2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19100909-4276-0000-0000-000038836965
-Message-Id: <20191009113917.47ef6eda@laptop-ibm>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-09_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910090090
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Hans,
+When building for arm, cpuinfo_op generates a warning due
+to no declaration. Since this is used in fs/proc/cpuinfo.c
+and inconsitently declared across archiectures move the
+declaration info <linux/seq_file.h>. This means that the
+cpuinfo_op will have a declaration any place it is used.
 
-also adding Ingo on Cc.
+Removes the following sparse warning:
 
-I tested you patch on s390 and it does what it's supposed to do. The build now
-fails with 
+arch/arm/kernel/setup.c:1320:29: warning: symbol 'cpuinfo_op' was not declared. Should it be static?
 
-  LD      arch/s390/purgatory/purgatory.chk
-arch/s390/purgatory/purgatory: In function `sha256_update':
-(.text+0x3bc2): undefined reference to `memzero_explicit'
-/home/prudo/git/linux/linux/arch/s390/purgatory/Makefile:38: recipe for target 'arch/s390/purgatory/purgatory.chk' failed
-make[3]: *** [arch/s390/purgatory/purgatory.chk] Error 1
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+---
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: Rich Felker <dalias@libc.org>
+Cc: "David S. Miller" <davem@davemloft.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: x86@kernel.org
+Cc: linux-c6x-dev@linux-c6x.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+---
+ arch/c6x/include/asm/processor.h        | 2 --
+ arch/microblaze/include/asm/processor.h | 3 ---
+ arch/s390/include/asm/processor.h       | 1 -
+ arch/sh/include/asm/processor.h         | 1 -
+ arch/sparc/include/asm/cpudata.h        | 2 --
+ arch/x86/include/asm/processor.h        | 2 --
+ include/linux/seq_file.h                | 2 ++
+ 7 files changed, 2 insertions(+), 11 deletions(-)
 
-After applying Arvid's memzero_explizit fix ("[PATCH] lib/string: make
-memzero_explicit inline instead of external") as well the build works again.
-
-My only problem is how to uptream your patch. Just adding it to our branch
-would cause a (intentional) build breakage until Ingo's branch is merged.
-
-@Vasliy & Ingo: Can you please find a solution for this.
-
-Thanks
-Philipp
-
-On Tue,  8 Oct 2019 10:54:20 +0200[PATCH] lib/string: make memzero_explicit
-inline instead of external Hans de Goede <hdegoede@redhat.com> wrote:
-
-> Hi s390 maintainers,
-> 
-> Here is a second RFC version of my patch for $subject, mirroring the
-> changes in v2 of the x86 patch.
-> 
-> As last time this patch is completely UNTESTED.
-> 
-> Changes in v2:
-> - Using 2 if_changed lines under a single rule does not work, then
->   1 of the 2 will always execute each build.
->   Instead add a new (unused) purgatory.chk intermediate which gets
->   linked from purgatory.ro without -r to do the missing symbols check
-> - This also fixes the check generating an a.out file (oops)
-> 
-> Relevant part of the cover letter from v1:
-> 
-> In 5.4-rc1 the 2 different sha256 implementations for the purgatory resp.
-> for crypto/sha256_generic.c have been consolidated into 1 single shared
-> implementation under lib/crypto/sha256.c .
-> 
-> At least on x86 this was causing silent corruption of the purgatory due
-> to a missing memzero_explicit symbol in the purgatory string.c/.o file.
-> 
-> With the x86 equivalent of this patch applied a x86 build of 5.4-rc1 now
-> correctly fails:
-> 
->   CHK     arch/x86/purgatory/purgatory.ro
-> ld: arch/x86/purgatory/purgatory.ro: in function `sha256_transform':
-> sha256.c:(.text+0x1c0c): undefined reference to `memzero_explicit'
-> make[2]: *** [arch/x86/purgatory/Makefile:72:
->     arch/x86/purgatory/kexec-purgatory.c] Error 1
-> make[1]: *** [scripts/Makefile.build:509: arch/x86/purgatory] Error 2
-> make: *** [Makefile:1650: arch/x86] Error 2
-> 
-> It would be great if the s390 maintainers can test this equivalent patch
-> on s390.
-> 
-> As for fixing the missing memzero_explicit symbol, we are currently
-> discussing making memzero_explicit a static inline wrapper of memset
-> in string.h, so that we do not need to implement it in multiple places.
-> 
-> This discussion is Cc-ed to the generic linux-kernel@vger.kernel.org list,
-> it is happening in the
-> "[PATCH v2 5.4 regression fix] x86/boot: Provide memzero_explicit" thread.
-> 
-> Regards,
-> 
-> Hans
-> 
-> 
-> 
+diff --git a/arch/c6x/include/asm/processor.h b/arch/c6x/include/asm/processor.h
+index 1456f5e11de3..ecc906854b6a 100644
+--- a/arch/c6x/include/asm/processor.h
++++ b/arch/c6x/include/asm/processor.h
+@@ -100,8 +100,6 @@ extern unsigned long get_wchan(struct task_struct *p);
+ 
+ #define cpu_relax()		do { } while (0)
+ 
+-extern const struct seq_operations cpuinfo_op;
+-
+ /* Reset the board */
+ #define HARD_RESET_NOW()
+ 
+diff --git a/arch/microblaze/include/asm/processor.h b/arch/microblaze/include/asm/processor.h
+index 66b537b8d138..8ab09e94b8ae 100644
+--- a/arch/microblaze/include/asm/processor.h
++++ b/arch/microblaze/include/asm/processor.h
+@@ -18,9 +18,6 @@
+ #include <asm/current.h>
+ 
+ # ifndef __ASSEMBLY__
+-/* from kernel/cpu/mb.c */
+-extern const struct seq_operations cpuinfo_op;
+-
+ # define cpu_relax()		barrier()
+ 
+ #define task_pt_regs(tsk) \
+diff --git a/arch/s390/include/asm/processor.h b/arch/s390/include/asm/processor.h
+index 51a0e4a2dc96..813d2bfc63ac 100644
+--- a/arch/s390/include/asm/processor.h
++++ b/arch/s390/include/asm/processor.h
+@@ -83,7 +83,6 @@ void s390_adjust_jiffies(void);
+ void s390_update_cpu_mhz(void);
+ void cpu_detect_mhz_feature(void);
+ 
+-extern const struct seq_operations cpuinfo_op;
+ extern int sysctl_ieee_emulation_warnings;
+ extern void execve_tail(void);
+ extern void __bpon(void);
+diff --git a/arch/sh/include/asm/processor.h b/arch/sh/include/asm/processor.h
+index 6fbf8c80e498..25ddb34f31d9 100644
+--- a/arch/sh/include/asm/processor.h
++++ b/arch/sh/include/asm/processor.h
+@@ -128,7 +128,6 @@ extern unsigned int mem_init_done;
+ 
+ /* arch/sh/kernel/setup.c */
+ const char *get_cpu_subtype(struct sh_cpuinfo *c);
+-extern const struct seq_operations cpuinfo_op;
+ 
+ /* thread_struct flags */
+ #define SH_THREAD_UAC_NOPRINT	(1 << 0)
+diff --git a/arch/sparc/include/asm/cpudata.h b/arch/sparc/include/asm/cpudata.h
+index d213165ee713..f7e690a7860b 100644
+--- a/arch/sparc/include/asm/cpudata.h
++++ b/arch/sparc/include/asm/cpudata.h
+@@ -7,8 +7,6 @@
+ #include <linux/threads.h>
+ #include <linux/percpu.h>
+ 
+-extern const struct seq_operations cpuinfo_op;
+-
+ #endif /* !(__ASSEMBLY__) */
+ 
+ #if defined(__sparc__) && defined(__arch64__)
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 6e0a3b43d027..6f22daf892ea 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -169,8 +169,6 @@ DECLARE_PER_CPU_READ_MOSTLY(struct cpuinfo_x86, cpu_info);
+ #define cpu_data(cpu)		boot_cpu_data
+ #endif
+ 
+-extern const struct seq_operations cpuinfo_op;
+-
+ #define cache_line_size()	(boot_cpu_data.x86_cache_alignment)
+ 
+ extern void cpu_detect(struct cpuinfo_x86 *c);
+diff --git a/include/linux/seq_file.h b/include/linux/seq_file.h
+index 5998e1f4ff06..629b0d8302e8 100644
+--- a/include/linux/seq_file.h
++++ b/include/linux/seq_file.h
+@@ -36,6 +36,8 @@ struct seq_operations {
+ 	int (*show) (struct seq_file *m, void *v);
+ };
+ 
++extern const struct seq_operations cpuinfo_op;
++
+ #define SEQ_SKIP 1
+ 
+ /**
+-- 
+2.23.0
 
