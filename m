@@ -2,118 +2,152 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5087DD0EA1
-	for <lists+linux-s390@lfdr.de>; Wed,  9 Oct 2019 14:25:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D8B5FD11B9
+	for <lists+linux-s390@lfdr.de>; Wed,  9 Oct 2019 16:50:32 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730950AbfJIMZ0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 9 Oct 2019 08:25:26 -0400
-Received: from foss.arm.com ([217.140.110.172]:33288 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730861AbfJIMZ0 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 9 Oct 2019 08:25:26 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF15D142F;
-        Wed,  9 Oct 2019 05:25:24 -0700 (PDT)
-Received: from [10.37.12.37] (unknown [10.37.12.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E022B3F703;
-        Wed,  9 Oct 2019 05:25:16 -0700 (PDT)
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-To:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Michal Hocko <mhocko@kernel.org>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
-        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-References: <20190924091714.GJ2369@hirez.programming.kicks-ass.net>
- <20190924105622.GH23050@dhcp22.suse.cz>
- <20190924112349.GJ2332@hirez.programming.kicks-ass.net>
- <20190924115401.GM23050@dhcp22.suse.cz>
- <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
- <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
-Date:   Wed, 9 Oct 2019 13:25:14 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1728019AbfJIOub (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 9 Oct 2019 10:50:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52212 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731083AbfJIOua (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 9 Oct 2019 10:50:30 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x99EmUFT124745
+        for <linux-s390@vger.kernel.org>; Wed, 9 Oct 2019 10:50:29 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vhf376svk-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 09 Oct 2019 10:50:29 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 9 Oct 2019 15:50:26 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 9 Oct 2019 15:50:24 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x99EoMoF46989584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 9 Oct 2019 14:50:22 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9236C5204E;
+        Wed,  9 Oct 2019 14:50:22 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.44])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4837152050;
+        Wed,  9 Oct 2019 14:50:22 +0000 (GMT)
+Subject: Re: [RFC v2 0/1] s390/purgatory: Make sure we fail the build if
+ purgatory has missing symbols
+To:     Philipp Rudo <prudo@linux.ibm.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Arvind Sankar <nivedita@alum.mit.edu>,
+        Nathan Chancellor <natechancellor@gmail.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191008085421.11011-1-hdegoede@redhat.com>
+ <20191009113917.47ef6eda@laptop-ibm>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Wed, 9 Oct 2019 16:50:22 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191009113917.47ef6eda@laptop-ibm>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19100914-0008-0000-0000-000003208326
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19100914-0009-0000-0000-00004A3F888A
+Message-Id: <ee1e9da7-2f5a-8651-78ba-15398c4ceab6@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-09_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=907 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910090141
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2019-10-08 9:38 am, Yunsheng Lin wrote:
-> On 2019/9/25 18:41, Peter Zijlstra wrote:
->> On Wed, Sep 25, 2019 at 05:14:20PM +0800, Yunsheng Lin wrote:
->>>  From the discussion above, It seems making the node_to_cpumask_map()
->>> NUMA_NO_NODE aware is the most feasible way to move forwad.
->>
->> That's still wrong.
+On 09.10.19 11:39, Philipp Rudo wrote:
+> Hi Hans,
 > 
-> Hi, Peter
+> also adding Ingo on Cc.
 > 
-> It seems this has trapped in the dead circle.
+> I tested you patch on s390 and it does what it's supposed to do. The build now
+> fails with 
 > 
->  From my understanding, NUMA_NO_NODE which means not node numa preference
-> is the state to describe the node of virtual device or the physical device
-> that has equal distance to all cpu.
+>   LD      arch/s390/purgatory/purgatory.chk
+> arch/s390/purgatory/purgatory: In function `sha256_update':
+> (.text+0x3bc2): undefined reference to `memzero_explicit'
+> /home/prudo/git/linux/linux/arch/s390/purgatory/Makefile:38: recipe for target 'arch/s390/purgatory/purgatory.chk' failed
+> make[3]: *** [arch/s390/purgatory/purgatory.chk] Error 1
 > 
-> We can be stricter if the device does have a nearer node, but we can not
-> deny that a device does not have a node numa preference or node affinity,
-> which also means the control or data buffer can be allocated at the node where
-> the process is running.
+> After applying Arvid's memzero_explizit fix ("[PATCH] lib/string: make
+> memzero_explicit inline instead of external") as well the build works again.
 > 
-> As you has proposed, making it -2 and have dev_to_node() warn if the device does
-> have a nearer node and not set by the fw is a way to be stricter.
+> My only problem is how to uptream your patch. Just adding it to our branch
+> would cause a (intentional) build breakage until Ingo's branch is merged.
 > 
-> But I think maybe being stricter is not really relevant to NUMA_NO_NODE, because
-> we does need a state to describe the device that have equal distance to all node,
-> even if it is not physically scalable.
-> 
-> Any better suggestion to move this forward?
+> @Vasliy & Ingo: Can you please find a solution for this.
 
-FWIW (since this is in my inbox), it sounds like the fundamental issue 
-is that NUMA_NO_NODE is conflated for at least two different purposes, 
-so trying to sort that out would be a good first step. AFAICS we have 
-genuine "don't care" cases like alloc_pages_node(), where if the 
-producer says it doesn't matter then the consumer is free to make its 
-own judgement on what to do, and fundamentally different "we expect this 
-thing to have an affinity but it doesn't, so we can't say what's 
-appropriate" cases which could really do with some separate indicator 
-like "NUMA_INVALID_NODE".
 
-The tricky part is then bestowed on the producers to decide whether they 
-can downgrade "invalid" to "don't care". You can technically build 'a 
-device' whose internal logic is distributed between nodes and thus 
-appears to have equal affinity - interrupt controllers, for example, may 
-have per-CPU or per-node interfaces that end up looking like that - so 
-although it's unlikely it's not outright nonsensical. Similarly a 
-'device' that's actually emulated behind a firmware call interface may 
-well effectively have no real affinity.
+I talked quickly to Vasily. The best solution is likely to carry that
+patch in the tree that contains the fix. Ingo, can you carry the s390
+patch in your tip tree as well?
 
-Robin.
+With my s390 co-maintainer hat on:
+
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+Please also consider Philipps mail as "Tested-by:"
+
