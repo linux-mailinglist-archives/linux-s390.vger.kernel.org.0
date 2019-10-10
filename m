@@ -2,166 +2,195 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3593FD2552
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 11:01:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A2300D25FC
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 11:13:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389452AbfJJI5o (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Oct 2019 04:57:44 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57860 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389496AbfJJI5m (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Oct 2019 04:57:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=rb2GpQEK1mzik7VDpp+Q0B0w/sBe3+HggdUz3hckVXc=; b=GheWtHyuaOnqUCnRP+8IuZIby
-        4L30bGsje9ocd5iUH8NVIyCuSMdmhnrmZrWz4CqW+5c5ARUagEFX1CvM76na3juS0ZJgeA2iYqwk/
-        vwGspjDN5aU24+JGaDMCixz3MgBW377tOmmXo2TWuT0UuPWw0cRhImx8n6XpmynMtaPKIAN3DBxTa
-        0KYATEHfwUVLJhVPmXdgaiKw32BBuEEZNOhzsRv1MWaogEY/OvQauPZeduJb2hzhIlP3nOAsoN5Rl
-        /qvf5mbxvb8slIP6EE8OU3wON/t6u1zPMDLdVuSRCezXRpuRyx1ogUaXW7AVDphTfQVYCd6ZMVuiy
-        IrIgGZokA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.2 #3 (Red Hat Linux))
-        id 1iIUFD-0000dI-8N; Thu, 10 Oct 2019 08:56:23 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B86223074EB;
-        Thu, 10 Oct 2019 10:55:24 +0200 (CEST)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id DBA9E202F4F50; Thu, 10 Oct 2019 10:56:16 +0200 (CEST)
-Date:   Thu, 10 Oct 2019 10:56:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Yunsheng Lin <linyunsheng@huawei.com>,
-        Michal Hocko <mhocko@kernel.org>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
-        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20191010085616.GQ2311@hirez.programming.kicks-ass.net>
-References: <20190924115401.GM23050@dhcp22.suse.cz>
- <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
- <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+        id S1733254AbfJJJMt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Oct 2019 05:12:49 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34068 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733250AbfJJJMs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 10 Oct 2019 05:12:48 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9A9CMMI017357
+        for <linux-s390@vger.kernel.org>; Thu, 10 Oct 2019 05:12:47 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vhynam7qe-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 10 Oct 2019 05:12:47 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Thu, 10 Oct 2019 10:12:45 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 10 Oct 2019 10:12:42 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9A9CBFR25035166
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 09:12:11 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5FB54AE04D;
+        Thu, 10 Oct 2019 09:12:41 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 16FC3AE053;
+        Thu, 10 Oct 2019 09:12:41 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.44])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 10 Oct 2019 09:12:41 +0000 (GMT)
+Subject: Re: [PATCH] selftests: kvm: make syncregs more reliable on s390
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <20191010075236.100247-1-borntraeger@de.ibm.com>
+ <8c8235e0-7502-c2be-179e-ba0303cb2ca9@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Thu, 10 Oct 2019 11:12:40 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8c8235e0-7502-c2be-179e-ba0303cb2ca9@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101009-4275-0000-0000-00000370CC3E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101009-4276-0000-0000-00003883D303
+Message-Id: <c2555ca7-62b2-ee81-fc32-689740754f98@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-10_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910100083
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 09, 2019 at 01:25:14PM +0100, Robin Murphy wrote:
-> On 2019-10-08 9:38 am, Yunsheng Lin wrote:
-> > On 2019/9/25 18:41, Peter Zijlstra wrote:
-> > > On Wed, Sep 25, 2019 at 05:14:20PM +0800, Yunsheng Lin wrote:
-> > > >  From the discussion above, It seems making the node_to_cpumask_map()
-> > > > NUMA_NO_NODE aware is the most feasible way to move forwad.
-> > > 
-> > > That's still wrong.
-> > 
-> > Hi, Peter
-> > 
-> > It seems this has trapped in the dead circle.
-> > 
-> >  From my understanding, NUMA_NO_NODE which means not node numa preference
-> > is the state to describe the node of virtual device or the physical device
-> > that has equal distance to all cpu.
 
-So I _really_ don't believe in the equidistant physical device. Physics
-just doesn't allow that. Or rather, you can, but then it'll be so slow
-it doesn't matter.
 
-The only possible option is equidistant to a _small_ number of nodes,
-and if that is a reality, then we should look at that. So far however
-it's purely been a hypothetical device.
-
-> > We can be stricter if the device does have a nearer node, but we can not
-> > deny that a device does not have a node numa preference or node affinity,
-> > which also means the control or data buffer can be allocated at the node where
-> > the process is running.
-> > 
-> > As you has proposed, making it -2 and have dev_to_node() warn if the device does
-> > have a nearer node and not set by the fw is a way to be stricter.
-
-Because it is 100% guaranteed (we have proof) that BIOS is shit and
-doesn't set node affinity for devices that really should have it.
-
-So we're trading a hypothetical shared device vs not reporting actual
-BIOS bugs. That's no contest.
-
-Worse, we have virtual devices that have clear node affinity without it
-set.
-
-So we're growing shit, allowing bugs, and what do we get in return? Warm
-fuzzies is not it.
-
-> > Any better suggestion to move this forward?
+On 10.10.19 10:20, Thomas Huth wrote:
+> On 10/10/2019 09.52, Christian Borntraeger wrote:
+>> similar to commit 2c57da356800 ("selftests: kvm: fix sync_regs_test with
+>> newer gccs") and commit 204c91eff798a ("KVM: selftests: do not blindly
+>> clobber registers in guest asm") we better do not rely on gcc leaving
+>> r11 untouched.  We can write the simple ucall inline and have the guest
+>> code completely as small assembler function.
+>>
+>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>> Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+>> ---
+>>  .../testing/selftests/kvm/s390x/sync_regs_test.c  | 15 +++++++++------
+>>  1 file changed, 9 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+>> index d5290b4ad636..04d6abe68961 100644
+>> --- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+>> +++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+>> @@ -25,12 +25,15 @@
+>>  
+>>  static void guest_code(void)
+>>  {
+>> -	register u64 stage asm("11") = 0;
+>> -
+>> -	for (;;) {
+>> -		GUEST_SYNC(0);
+>> -		asm volatile ("ahi %0,1" : : "r"(stage));
+>> -	}
+>> +	/*
+>> +	 * we embed diag 501 here instead of a ucall as the called function
+>> +	 * could mess with the content of r11 when doing the hypercall
 > 
-> FWIW (since this is in my inbox), it sounds like the fundamental issue is
-> that NUMA_NO_NODE is conflated for at least two different purposes, so
-> trying to sort that out would be a good first step. AFAICS we have genuine
-> "don't care" cases like alloc_pages_node(), where if the producer says it
-> doesn't matter then the consumer is free to make its own judgement on what
-> to do, and fundamentally different "we expect this thing to have an affinity
-> but it doesn't, so we can't say what's appropriate" cases which could really
-> do with some separate indicator like "NUMA_INVALID_NODE".
+> As far as I understood the issue on x86, it's not the called function
+> that is messing with the counter register (since r11 is not volatile
+> between function calls), but the compiler shuffled it around here
+> between the GUEST_SYNC and the inline assembler code. So I'd prefer a
+> comment like in the x86 version:
 
-It can possible be a 3 state:
+It is actually both.
+The called function is GUEST_SYNC  (which is ucall). 
+r11 is call-saved, so when we return from GUEST_SYNC r11 is as it is supposed
+to be. The problem is that this function (ucall) is allowed to use r11 for anything
+as long as it restores it before returning. As we do the guest exit in ucall
+then the test code could see some random value for r11.
+> 
+>  /*
+>   * We embed diag 501 here instead of doing a ucall to avoid that
+>   * the compiler reshuffles registers before calling the function.
+>   */
+> 
+> ?
 
- - UNKNON; overridden by parent/bus/etc..
-   ERROR when still UNKNOWN on register.
+What about
+>  /*
+>   * We embed diag 501 here instead of doing a ucall to avoid that
+>   * the compiler has messed with r11 at the time of the ucall.
+>   */
 
- - INVALID; ERROR on devm usage.
-   for virtual devices / pure sysfs nodes
 
- - NO_NODE; may only be set on virtual devices (we can check against PCI
-   bus etc..) when there really is no better option.
+> 
+> With such an updated comment:
+> 
+> Reviewed-by: Thomas Huth <thuth@redhat.com>
+>   > +	 */
+>> +	asm volatile (
+>> +		"0:	diag 0,0,0x501\n"
+>> +		"	ahi 11,1\n"
+>> +		"	j 0b\n"
+>> +	);
+>>  }
+> 
 
-But I only want to see the NO_NODE crap at the end, after all other
-possible avenues have been done.
-
-> The tricky part is then bestowed on the producers to decide whether they can
-> downgrade "invalid" to "don't care". You can technically build 'a device'
-> whose internal logic is distributed between nodes and thus appears to have
-> equal affinity - interrupt controllers, for example, may have per-CPU or
-> per-node interfaces that end up looking like that - so although it's
-> unlikely it's not outright nonsensical.
-
-I'm thinking we should/do create per cpu/node devices for such
-distributed stuff. For instance, we create per-cpu clockevent devices
-(where appropriate).
-
-> Similarly a 'device' that's actually emulated behind a firmware call
-> interface may well effectively have no real affinity.
-
-Emulated devices are typically slow as heck and should be avoided if at
-all possible. I don't see NUMA affinity being important for them.
