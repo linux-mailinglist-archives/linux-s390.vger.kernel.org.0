@@ -2,116 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 402DED290F
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 14:14:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 19C5CD2AAB
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 15:15:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733173AbfJJMOX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Oct 2019 08:14:23 -0400
-Received: from mga01.intel.com ([192.55.52.88]:37689 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728030AbfJJMOX (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 10 Oct 2019 08:14:23 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 05:14:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.67,280,1566889200"; 
-   d="scan'208";a="198330411"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by orsmga006.jf.intel.com with ESMTP; 10 Oct 2019 05:14:20 -0700
-Date:   Thu, 10 Oct 2019 20:14:03 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        Shakeel Butt <shakeelb@google.com>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Rik van Riel <riel@surriel.com>,
-        Linux MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
+        id S2388124AbfJJNOk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Oct 2019 09:14:40 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42079 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387664AbfJJNOi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Oct 2019 09:14:38 -0400
+Received: by mail-lj1-f193.google.com with SMTP id y23so6131147lje.9;
+        Thu, 10 Oct 2019 06:14:36 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XOswBCNwFK4RZCMtfErG3cL4H6/5uv1kqEZjdrVfyDI=;
+        b=HLo6Ayw2rkNVKVoy7Pan31CNGp9CBzZlzVzREmj3C9pGCjZEGM6sjQYAq6M/uFkFLQ
+         R9a4byOUYpmkWsLMlKCSRa3brpyD/6lbeG+LDTPfuYSYGQc0BbxeNm4RI5JdsTbufWge
+         9Z4nTuko2xFifRsaBIH2vfKjaBimCPoDEuuw/gv94Qk42D+Qozv5Bf2M4E/DmDPuQKRq
+         C9DEDP/K/WKzCATI18RcHpMfvCkyMyJCkYlyQnu6NhkBiH8bW7tmIyJLZXRcvlHpsYai
+         z3eO3G9pWRjIne6ppqvWlDr7Vg3RhWwZJzJ/1NwoNv7UcGQ5n+lg0ob25FKzqIQF7GxB
+         Qy5A==
+X-Gm-Message-State: APjAAAXgJgiYfs52kO8sNkKkyrrcINO8UQUzMZo9R/6Pvakat5KZDo6P
+        GPPTFn2F5fHCsL+K89k9+ak=
+X-Google-Smtp-Source: APXvYqx7rWr//j0nU72LF17c2ZHHfzLol9DG9rI4kOgM1l87fAOHIVImVINHKm3kJUnYijQABR42Bg==
+X-Received: by 2002:a05:651c:120b:: with SMTP id i11mr2535790lja.123.1570713275622;
+        Thu, 10 Oct 2019 06:14:35 -0700 (PDT)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id j17sm1243951lfb.11.2019.10.10.06.14.34
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 10 Oct 2019 06:14:34 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.92.2)
+        (envelope-from <johan@xi.terra>)
+        id 1iIYHE-0006Ag-JH; Thu, 10 Oct 2019 15:14:45 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Subject: Re: "reuse mergeable anon_vma as parent when fork" causes a crash on
- s390
-Message-ID: <20191010121403.GA13088@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <1570656570.5937.24.camel@lca.pw>
- <CALvZod4psOEyYwPOF1UcJoK96LbYBccYhsG0DrKD+CCf8Sc-Yg@mail.gmail.com>
- <20191010023601.GA4793@richard>
- <20191010031516.GA5060@richard>
- <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/4] treewide: fix interrupted release
+Date:   Thu, 10 Oct 2019 15:13:29 +0200
+Message-Id: <20191010131333.23635-1-johan@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 11:29:44AM +0300, Konstantin Khlebnikov wrote:
->On 10/10/2019 06.15, Wei Yang wrote:
->> On Thu, Oct 10, 2019 at 10:36:01AM +0800, Wei Yang wrote:
->> > Hi, Qian, Shakeel
->> > 
->> > Thanks for testing.
->> > 
->> > Sounds I missed some case to handle. anon_vma_clone() now would be called in
->> > vma_adjust, which is a different case when it is introduced.
->> > 
->> 
->> Well, I have to correct my statement. The reason is we may did something more
->> in anon_vma_clone().
->> 
->> Here is a quick fix, while I need to go through all the cases carefully.
->
->Oops, I've overlooked this case too.
->
->You have to check src->anon_vma
->otherwise in  __split_vma or copy_vma dst could pick completely random anon_vma.
->
->Also checking prev will not hurt, just to be sure.
->
->So, something like this should work:
->
->if (!dst->anon_vma && src->anon_vma &&
->    prev && pprev && pprev->anon_vma == src->anon_vma)
->      dst->anon_vma = prev->anon_vma;
->
+Two old USB drivers had a bug in them which could lead to memory leaks
+if an interrupted process raced with a disconnect event.
 
-This may not be the root cause, I found another problem of it.
+Turns out we had a few more driver in other subsystems with the same
+kind of bug in them.
 
-Let me prepare a patch to fix it.
+Note that all but the s390 patch have only been compile tested, while
+the s390 one has not even been built.
 
->> 
->> diff --git a/mm/rmap.c b/mm/rmap.c
->> index 12f6c3d7fd9d..2844f442208d 100644
->> --- a/mm/rmap.c
->> +++ b/mm/rmap.c
->> @@ -271,7 +271,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
->>           * 1. Parent has vm_prev, which implies we have vm_prev.
->>           * 2. Parent and its vm_prev have the same anon_vma.
->>           */
->> -       if (pprev && pprev->anon_vma == src->anon_vma)
->> +       if (!dst->anon_vma && pprev && pprev->anon_vma == src->anon_vma)
->>                  dst->anon_vma = prev->anon_vma;
->>          list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
->> 
->> > BTW, do you have the specific test case? So that I could verify my change. The
->> > kernel build test doesn't trigger this.
->> > 
->> > Thanks a lot :-)
->> > 
->> > On Wed, Oct 09, 2019 at 03:21:11PM -0700, Shakeel Butt wrote:
->> > -- 
->> > Wei Yang
->> > Help you, Help me
->> 
+Johan
+
+
+Johan Hovold (4):
+  drm/msm: fix memleak on release
+  media: bdisp: fix memleak on release
+  media: radio: wl1273: fix interrupt masking on release
+  s390/zcrypt: fix memleak at release
+
+ drivers/gpu/drm/msm/msm_debugfs.c             | 6 +-----
+ drivers/media/platform/sti/bdisp/bdisp-v4l2.c | 3 +--
+ drivers/media/radio/radio-wl1273.c            | 3 +--
+ drivers/s390/crypto/zcrypt_api.c              | 3 +--
+ 4 files changed, 4 insertions(+), 11 deletions(-)
 
 -- 
-Wei Yang
-Help you, Help me
+2.23.0
+
