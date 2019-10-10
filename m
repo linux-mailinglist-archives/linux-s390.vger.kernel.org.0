@@ -2,130 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7072FD2BB2
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 15:50:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E6E16D2C0B
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 16:04:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725978AbfJJNus (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Oct 2019 09:50:48 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:35695 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725867AbfJJNus (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Oct 2019 09:50:48 -0400
-Received: by mail-ed1-f68.google.com with SMTP id v8so5551419eds.2
-        for <linux-s390@vger.kernel.org>; Thu, 10 Oct 2019 06:50:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=o898Z3trs0jH/OlBQbiOm8e/1sEfrvM2Vk3WyyK56M4=;
-        b=TQZ07FMvCXrWciJ7O9lR+yonpxUCVIcHnhmodCVsy5Dh/Y5im2arlnqViBllsFZMoz
-         FX1zMJwHMqtbjlVh/VFK76TKJ5qMTJkhvErbbOvUl3k+Ss1ZPSUdmEOoFoKO4bV2Iigr
-         iZ9kCTkHefQMk+aqix6L1jZn0EltF9d/5eWS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=o898Z3trs0jH/OlBQbiOm8e/1sEfrvM2Vk3WyyK56M4=;
-        b=bf2s/+7tMlFOI71VdYFefm4pHydlJgLQuV+v8zHsAM843Lq/s5U69LWmzUVXU6gojr
-         Ku9IEHVgps1Aml6XEwzLhztH7RMLQ7w060+oOdgWt0FQVgkjzDB8wCqsAeUOeVEKujqO
-         Ofr0H65JQLkjJwgXNJNSq/HGOoYBKExea/UqQyKy2fPIyYqGMe/RuijI/yHemb0TEyi4
-         4hAA2kzj8mM/wmb2qmVdjJB03+EBU4oBO2bmXpCIlA/mSzx2Usm3zWyvyVaNbOmujjX2
-         OEdf0VgPlZ5O0dP/NeD2mITwa28Qho8fwTtutj+QQVsGRCkJHXcq0g2hYpuWbWuf0QeI
-         Y9tg==
-X-Gm-Message-State: APjAAAV7Xvqk0NCxvPkJw8rjeSZF3JImJyAGvaM+XRDDde+62xsUeAhf
-        uPe0ouZO7CvpP+4qaQ/21gi1xQ==
-X-Google-Smtp-Source: APXvYqwDTtGo4w8HEdRUZir73TR7uahsebmS6NjOfoevZfEYTOWdmz2kjDkxMdcPaAEi5/omDEtt/g==
-X-Received: by 2002:a17:906:7e17:: with SMTP id e23mr374597ejr.205.1570715446752;
-        Thu, 10 Oct 2019 06:50:46 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id 36sm988776edz.92.2019.10.10.06.50.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 06:50:45 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 15:50:43 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
+        id S1726009AbfJJOEO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Oct 2019 10:04:14 -0400
+Received: from mga11.intel.com ([192.55.52.93]:1921 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbfJJOEN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 10 Oct 2019 10:04:13 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 07:04:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,280,1566889200"; 
+   d="scan'208";a="194016809"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga007.fm.intel.com with ESMTP; 10 Oct 2019 07:04:09 -0700
+Date:   Thu, 10 Oct 2019 22:03:49 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Shakeel Butt <shakeelb@google.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@surriel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191010135043.GA16989@phenom.ffwll.local>
-Mail-Followup-To: Johan Hovold <johan@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-References: <20191010131333.23635-1-johan@kernel.org>
+        linux-s390@vger.kernel.org
+Subject: Re: "reuse mergeable anon_vma as parent when fork" causes a crash on
+ s390
+Message-ID: <20191010140349.GA28204@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <1570656570.5937.24.camel@lca.pw>
+ <CALvZod4psOEyYwPOF1UcJoK96LbYBccYhsG0DrKD+CCf8Sc-Yg@mail.gmail.com>
+ <20191010023601.GA4793@richard>
+ <20191010031516.GA5060@richard>
+ <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191010131333.23635-1-johan@kernel.org>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
-> Two old USB drivers had a bug in them which could lead to memory leaks
-> if an interrupted process raced with a disconnect event.
-> 
-> Turns out we had a few more driver in other subsystems with the same
-> kind of bug in them.
-> 
-> Note that all but the s390 patch have only been compile tested, while
-> the s390 one has not even been built.
+On Thu, Oct 10, 2019 at 11:29:44AM +0300, Konstantin Khlebnikov wrote:
+>On 10/10/2019 06.15, Wei Yang wrote:
+>> On Thu, Oct 10, 2019 at 10:36:01AM +0800, Wei Yang wrote:
+>> > Hi, Qian, Shakeel
+>> > 
+>> > Thanks for testing.
+>> > 
+>> > Sounds I missed some case to handle. anon_vma_clone() now would be called in
+>> > vma_adjust, which is a different case when it is introduced.
+>> > 
+>> 
+>> Well, I have to correct my statement. The reason is we may did something more
+>> in anon_vma_clone().
+>> 
+>> Here is a quick fix, while I need to go through all the cases carefully.
+>
+>Oops, I've overlooked this case too.
+>
+>You have to check src->anon_vma
+>otherwise in  __split_vma or copy_vma dst could pick completely random anon_vma.
+>
 
-Random funny idea: Could we do some debug annotations (akin to
-might_sleep) that splats when you might_sleep_interruptible somewhere
-where interruptible sleeps are generally a bad idea? Like in
-fops->release?
+Per my understanding, the root cause is commit 7a3ef208e662 did a little
+further for the reuse case.
 
-Something like non_block_start/end that I've recently done, but for
-interruptible sleeps only? Would need might_sleep_interruptibly()
-annotations and non_interruptly_sleep_start/end annotations.
--Daniel
+We intend to reuse anon_vma on fork, but we also did this when we just want a
+copy of src, like __split_vma(), copy_vma() and __vma_split(). This will lead
+to a random anon_vma and not what we expect.
 
-> 
-> Johan
-> 
-> 
-> Johan Hovold (4):
->   drm/msm: fix memleak on release
->   media: bdisp: fix memleak on release
->   media: radio: wl1273: fix interrupt masking on release
->   s390/zcrypt: fix memleak at release
-> 
->  drivers/gpu/drm/msm/msm_debugfs.c             | 6 +-----
->  drivers/media/platform/sti/bdisp/bdisp-v4l2.c | 3 +--
->  drivers/media/radio/radio-wl1273.c            | 3 +--
->  drivers/s390/crypto/zcrypt_api.c              | 3 +--
->  4 files changed, 4 insertions(+), 11 deletions(-)
-> 
-> -- 
-> 2.23.0
-> 
+A fix patch is sent for this.
+
+>Also checking prev will not hurt, just to be sure.
+>
+>So, something like this should work:
+>
+ >if (!dst->anon_vma && src->anon_vma &&
+>    prev && pprev && pprev->anon_vma == src->anon_vma)
+>      dst->anon_vma = prev->anon_vma;
+>
+>> 
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index 12f6c3d7fd9d..2844f442208d 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -271,7 +271,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>>           * 1. Parent has vm_prev, which implies we have vm_prev.
+>>           * 2. Parent and its vm_prev have the same anon_vma.
+>>           */
+>> -       if (pprev && pprev->anon_vma == src->anon_vma)
+>> +       if (!dst->anon_vma && pprev && pprev->anon_vma == src->anon_vma)
+>>                  dst->anon_vma = prev->anon_vma;
+>>          list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
+>> 
+>> > BTW, do you have the specific test case? So that I could verify my change. The
+>> > kernel build test doesn't trigger this.
+>> > 
+>> > Thanks a lot :-)
+>> > 
+>> > On Wed, Oct 09, 2019 at 03:21:11PM -0700, Shakeel Butt wrote:
+>> > -- 
+>> > Wei Yang
+>> > Help you, Help me
+>> 
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Wei Yang
+Help you, Help me
