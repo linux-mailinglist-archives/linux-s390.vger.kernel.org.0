@@ -2,143 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B5A1BD21D5
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 09:39:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F9CDD2223
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 09:53:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733025AbfJJHiJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Oct 2019 03:38:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43888 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1733070AbfJJHc3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 10 Oct 2019 03:32:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id D59DAABE3;
-        Thu, 10 Oct 2019 07:32:20 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 09:32:12 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yunsheng Lin <linyunsheng@huawei.com>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>, catalin.marinas@arm.com,
-        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
-        ink@jurassic.park.msu.ru, mattst88@gmail.com,
-        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
-        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
-        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
-        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
-        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
-        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
-        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
-        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
-        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
-        linux-mips@vger.kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org
-Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
-Message-ID: <20191010073212.GB18412@dhcp22.suse.cz>
-References: <20190924120943.GP2349@hirez.programming.kicks-ass.net>
- <20190924122500.GP23050@dhcp22.suse.cz>
- <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
- <20190924125936.GR2349@hirez.programming.kicks-ass.net>
- <20190924131939.GS23050@dhcp22.suse.cz>
- <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
- <20190925104108.GE4553@hirez.programming.kicks-ass.net>
- <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
- <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
- <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+        id S1727196AbfJJHxo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Oct 2019 03:53:44 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23868 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726923AbfJJHxo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 10 Oct 2019 03:53:44 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9A7rdSW004793
+        for <linux-s390@vger.kernel.org>; Thu, 10 Oct 2019 03:53:41 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vhx4dcedr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 10 Oct 2019 03:53:40 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Thu, 10 Oct 2019 08:52:42 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 10 Oct 2019 08:52:38 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9A7qbbR41615564
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 10 Oct 2019 07:52:37 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AC9DAE053;
+        Thu, 10 Oct 2019 07:52:37 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3656AAE04D;
+        Thu, 10 Oct 2019 07:52:37 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 10 Oct 2019 07:52:37 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id D8F05E0174; Thu, 10 Oct 2019 09:52:36 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: [PATCH] selftests: kvm: make syncregs more reliable on s390
+Date:   Thu, 10 Oct 2019 09:52:36 +0200
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101007-0016-0000-0000-000002B6C504
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101007-0017-0000-0000-00003317CF89
+Message-Id: <20191010075236.100247-1-borntraeger@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-10_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910100074
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu 10-10-19 14:07:21, Yunsheng Lin wrote:
-> On 2019/10/9 20:25, Robin Murphy wrote:
-> > On 2019-10-08 9:38 am, Yunsheng Lin wrote:
-> >> On 2019/9/25 18:41, Peter Zijlstra wrote:
-> >>> On Wed, Sep 25, 2019 at 05:14:20PM +0800, Yunsheng Lin wrote:
-> >>>>  From the discussion above, It seems making the node_to_cpumask_map()
-> >>>> NUMA_NO_NODE aware is the most feasible way to move forwad.
-> >>>
-> >>> That's still wrong.
-> >>
-> >> Hi, Peter
-> >>
-> >> It seems this has trapped in the dead circle.
-> >>
-> >>  From my understanding, NUMA_NO_NODE which means not node numa preference
-> >> is the state to describe the node of virtual device or the physical device
-> >> that has equal distance to all cpu.
-> >>
-> >> We can be stricter if the device does have a nearer node, but we can not
-> >> deny that a device does not have a node numa preference or node affinity,
-> >> which also means the control or data buffer can be allocated at the node where
-> >> the process is running.
-> >>
-> >> As you has proposed, making it -2 and have dev_to_node() warn if the device does
-> >> have a nearer node and not set by the fw is a way to be stricter.
-> >>
-> >> But I think maybe being stricter is not really relevant to NUMA_NO_NODE, because
-> >> we does need a state to describe the device that have equal distance to all node,
-> >> even if it is not physically scalable.
-> >>
-> >> Any better suggestion to move this forward?
-> > 
-> > FWIW (since this is in my inbox), it sounds like the fundamental issue is that NUMA_NO_NODE is conflated for at least two different purposes, so trying to sort that out would be a good first step. AFAICS we have genuine "don't care" cases like alloc_pages_node(), where if the producer says it doesn't matter then the consumer is free to make its own judgement on what to do, and fundamentally different "we expect this thing to have an affinity but it doesn't, so we can't say what's appropriate" cases which could really do with some separate indicator like "NUMA_INVALID_NODE".
-> > 
-> > The tricky part is then bestowed on the producers to decide whether they can downgrade "invalid" to "don't care". You can technically build 'a device' whose internal logic is distributed between nodes and thus appears to have equal affinity - interrupt controllers, for example, may have per-CPU or per-node interfaces that end up looking like that - so although it's unlikely it's not outright nonsensical. Similarly a 'device' that's actually emulated behind a firmware call interface may well effectively have no real affinity.
-> 
-> We may set node of the physical device to NUMA_INVALID_NODE when fw does not
-> provide one.
-> 
-> But what do we do about NUMA_INVALID_NODE when alloc_pages_node() is called
-> with nid being NUMA_INVALID_NODE?
+similar to commit 2c57da356800 ("selftests: kvm: fix sync_regs_test with
+newer gccs") and commit 204c91eff798a ("KVM: selftests: do not blindly
+clobber registers in guest asm") we better do not rely on gcc leaving
+r11 untouched.  We can write the simple ucall inline and have the guest
+code completely as small assembler function.
 
-There is nothing sensible the allocator can do. The only point of
-NUMA_INVALID_NODE would be to catch potential misconfiguration and
-report them to users so they can complain to their HW/FS suppliers.
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Suggested-by: Paolo Bonzini <pbonzini@redhat.com>
+---
+ .../testing/selftests/kvm/s390x/sync_regs_test.c  | 15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-Pushing it to other susbystem doesn't make much sense IMHO because there
-is nothing really actionable. Refusing an allocation altogether sounds
-like a bad plan to me.
+diff --git a/tools/testing/selftests/kvm/s390x/sync_regs_test.c b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+index d5290b4ad636..04d6abe68961 100644
+--- a/tools/testing/selftests/kvm/s390x/sync_regs_test.c
++++ b/tools/testing/selftests/kvm/s390x/sync_regs_test.c
+@@ -25,12 +25,15 @@
  
-> If we change the node to default one(like node 0) when node of device is
-> NUMA_INVALID_NODE in device_add(), how do we know the default one(like node 0)
-> is the right one to choose?
-
-Exactly. We cannot really assume any node in that situation.
+ static void guest_code(void)
+ {
+-	register u64 stage asm("11") = 0;
+-
+-	for (;;) {
+-		GUEST_SYNC(0);
+-		asm volatile ("ahi %0,1" : : "r"(stage));
+-	}
++	/*
++	 * we embed diag 501 here instead of a ucall as the called function
++	 * could mess with the content of r11 when doing the hypercall
++	 */
++	asm volatile (
++		"0:	diag 0,0,0x501\n"
++		"	ahi 11,1\n"
++		"	j 0b\n"
++	);
+ }
  
-> >From the privous disccusion, the below seems not get to consensus yet:
-> 1) Do we need a state like NUMA_NO_NODE to describe that the device does not
->    have any numa preference?
-
-This is a traditional meaning MM subsystem is using.
-
-> 2) What do we do if the fw does not provide a node for the device? Should
->    we guess and pick one for it and how do we do the guessing? Or leave it
->    as it is and handle it as NUMA_NO_NODE?
-
-As already pointed several times, picking any node is rather error
-prone. You can never assume topology. We used to assume that there
-always be node 0 but that is not really the case (see 3e8589963773
-("memcg: make it work on sparse non-0-node systems")). Nodes might also
-come and go so this might just lead to all sorts of subtle problems.
-
-On the other hand using NUMA_NO_NODE as no preference could only lead to
-slightly sub optimal performance.
-
-I do agree with Peter that reporting a lack of affinity might be useful
-but we shouldn't really try to clever and make up the affinity nilly
-willy.
+ #define REG_COMPARE(reg) \
 -- 
-Michal Hocko
-SUSE Labs
+2.21.0
+
