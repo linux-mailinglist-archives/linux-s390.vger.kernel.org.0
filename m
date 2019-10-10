@@ -2,56 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECD53D27D4
-	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 13:16:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 402DED290F
+	for <lists+linux-s390@lfdr.de>; Thu, 10 Oct 2019 14:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726833AbfJJLQH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Oct 2019 07:16:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44966 "EHLO mx1.redhat.com"
+        id S1733173AbfJJMOX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Oct 2019 08:14:23 -0400
+Received: from mga01.intel.com ([192.55.52.88]:37689 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726674AbfJJLQH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 10 Oct 2019 07:16:07 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 177A23024562;
-        Thu, 10 Oct 2019 11:16:07 +0000 (UTC)
-Received: from gondolin (dhcp-192-233.str.redhat.com [10.33.192.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 666D860C05;
-        Thu, 10 Oct 2019 11:16:03 +0000 (UTC)
-Date:   Thu, 10 Oct 2019 13:16:01 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
-        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH v2 2/2] KVM: s390: Do not yield when target is already
- running
-Message-ID: <20191010131601.6d987e7d.cohuck@redhat.com>
-In-Reply-To: <20191010110518.129256-3-borntraeger@de.ibm.com>
-References: <20191010110518.129256-1-borntraeger@de.ibm.com>
-        <20191010110518.129256-3-borntraeger@de.ibm.com>
-Organization: Red Hat GmbH
+        id S1728030AbfJJMOX (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 10 Oct 2019 08:14:23 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 10 Oct 2019 05:14:22 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.67,280,1566889200"; 
+   d="scan'208";a="198330411"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by orsmga006.jf.intel.com with ESMTP; 10 Oct 2019 05:14:20 -0700
+Date:   Thu, 10 Oct 2019 20:14:03 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        Shakeel Butt <shakeelb@google.com>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Rik van Riel <riel@surriel.com>,
+        Linux MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: Re: "reuse mergeable anon_vma as parent when fork" causes a crash on
+ s390
+Message-ID: <20191010121403.GA13088@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
+References: <1570656570.5937.24.camel@lca.pw>
+ <CALvZod4psOEyYwPOF1UcJoK96LbYBccYhsG0DrKD+CCf8Sc-Yg@mail.gmail.com>
+ <20191010023601.GA4793@richard>
+ <20191010031516.GA5060@richard>
+ <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Thu, 10 Oct 2019 11:16:07 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8e0d9999-9ee3-78e5-2737-5a504243413c@yandex-team.ru>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 10 Oct 2019 13:05:18 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+On Thu, Oct 10, 2019 at 11:29:44AM +0300, Konstantin Khlebnikov wrote:
+>On 10/10/2019 06.15, Wei Yang wrote:
+>> On Thu, Oct 10, 2019 at 10:36:01AM +0800, Wei Yang wrote:
+>> > Hi, Qian, Shakeel
+>> > 
+>> > Thanks for testing.
+>> > 
+>> > Sounds I missed some case to handle. anon_vma_clone() now would be called in
+>> > vma_adjust, which is a different case when it is introduced.
+>> > 
+>> 
+>> Well, I have to correct my statement. The reason is we may did something more
+>> in anon_vma_clone().
+>> 
+>> Here is a quick fix, while I need to go through all the cases carefully.
+>
+>Oops, I've overlooked this case too.
+>
+>You have to check src->anon_vma
+>otherwise in  __split_vma or copy_vma dst could pick completely random anon_vma.
+>
+>Also checking prev will not hurt, just to be sure.
+>
+>So, something like this should work:
+>
+>if (!dst->anon_vma && src->anon_vma &&
+>    prev && pprev && pprev->anon_vma == src->anon_vma)
+>      dst->anon_vma = prev->anon_vma;
+>
 
-> If the target is already running we do not need to yield.
-> 
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> ---
->  arch/s390/kvm/diag.c | 4 ++++
->  1 file changed, 4 insertions(+)
+This may not be the root cause, I found another problem of it.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Let me prepare a patch to fix it.
+
+>> 
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index 12f6c3d7fd9d..2844f442208d 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -271,7 +271,7 @@ int anon_vma_clone(struct vm_area_struct *dst, struct vm_area_struct *src)
+>>           * 1. Parent has vm_prev, which implies we have vm_prev.
+>>           * 2. Parent and its vm_prev have the same anon_vma.
+>>           */
+>> -       if (pprev && pprev->anon_vma == src->anon_vma)
+>> +       if (!dst->anon_vma && pprev && pprev->anon_vma == src->anon_vma)
+>>                  dst->anon_vma = prev->anon_vma;
+>>          list_for_each_entry_reverse(pavc, &src->anon_vma_chain, same_vma) {
+>> 
+>> > BTW, do you have the specific test case? So that I could verify my change. The
+>> > kernel build test doesn't trigger this.
+>> > 
+>> > Thanks a lot :-)
+>> > 
+>> > On Wed, Oct 09, 2019 at 03:21:11PM -0700, Shakeel Butt wrote:
+>> > -- 
+>> > Wei Yang
+>> > Help you, Help me
+>> 
+
+-- 
+Wei Yang
+Help you, Help me
