@@ -2,114 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AB8B4D3732
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Oct 2019 03:39:31 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BE0FAD3773
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Oct 2019 04:17:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727777AbfJKBj3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Oct 2019 21:39:29 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:40955 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727532AbfJKBj3 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 10 Oct 2019 21:39:29 -0400
-Received: from [IPv6:2601:646:8600:3281:14ec:615e:cb9c:4171] ([IPv6:2601:646:8600:3281:14ec:615e:cb9c:4171])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id x9B1cDnV301404
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Thu, 10 Oct 2019 18:38:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com x9B1cDnV301404
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019091901; t=1570757896;
-        bh=TUIhoFcV+31eZTr1kONofaEMms3/RhBG/iU3TdNS+pY=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=oW9dfaaRmKd2dWoG3cgkzVO7BvegyKalCQTxvCkvgSHMMP1aHzoAgAKgrdfUT1oLy
-         knMJjvPLF83nLOn/ZAN3CPvsjjRfkJ0aerhHPcT19nudWK5NOitM033cLOnaGvI2e1
-         LSFP3+8NCXofkKyTku2Ig+hd5GPCzdOhgJdURHIZGaQ2FvCQboeNg++CFWqgbXefQR
-         /SpG4FYMCfGdB5IJbLA+2mNkqs5PSktOsAiaYQAYgeDgNBG+PkAvJWstHjn+LuCQM9
-         xfo1Giy+1NXKFUnN4iD3tpGhUd+JWd6VRGxDGhkAiURF0SGwTc0cH1h/qmMomAnUUS
-         wkKqLjoRiDOug==
-Date:   Thu, 10 Oct 2019 18:38:03 -0700
-User-Agent: K-9 Mail for Android
-In-Reply-To: <201910101657.234CB71E53@keescook>
-References: <20190926175602.33098-1-keescook@chromium.org> <20191010180331.GI7658@zn.tnic> <201910101657.234CB71E53@keescook>
+        id S1727984AbfJKCRL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Oct 2019 22:17:11 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:39386 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727976AbfJKCRK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Oct 2019 22:17:10 -0400
+Received: by mail-qt1-f196.google.com with SMTP id n7so11719289qtb.6
+        for <linux-s390@vger.kernel.org>; Thu, 10 Oct 2019 19:17:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=hkxzZutoMB4mL+d3Ug//lWHvkUJxUQSMy0n0jqoKL1M=;
+        b=wTT3aAagQKQtlbtIxC5nKSFwQb7PwbfsDSTqjSB2TLJcRyFrZrHmOaNsDcT1oOQqKG
+         KZrtSQV7XGijBUVPpP/0TRkP4SWIRyhWDR2vJBw1H0IYzvsHC/fDu5a2FfbAdUfLJIKX
+         Nr2IATVQ0z27V0O6hCb5xgK81jPANhyzh7NeTVdD3aaBk5Im18822Fepc3bXbm/5SUVR
+         ioTIVJn3wMmcWTlorKTAByvus/VqTwGzMha1bMw4fCqxvToLTzf7t26KGFn8z+SUhlmf
+         //9wLyU3uMdnFjxZ1ZLn9TwUX5euyqkB5x03SLYEk2aHcU6xH9mFjMDieQZRaJid6hEp
+         3GMg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=hkxzZutoMB4mL+d3Ug//lWHvkUJxUQSMy0n0jqoKL1M=;
+        b=GPpdoRcxq9LfsW1EkN4otGlDqe9M2a+55tfHFM051EtCM4mx56QnnQoUpJ1EBqgavs
+         KPJ4KjDwJ4splrGlbjK3s2QYeeu7Y/psmInof1NiJ8QL/OGCJo7beC7mLvtrSBQlkz0+
+         zppBNudL3WHnw5HiPWoL6v9/kkSKMujShQrlHSXhlvECG/kcQ50iF2ZvVDq7idLUCeUH
+         u6ryPAyMrzN0Bxa4fl7QZ0YFm4EMVJXF9KWFHLjw5BrdL7PmbqZ6Vd8tG0MGaawOTqaZ
+         PWjkt+Xo71BinmhZiS0wd4gZwNDCwp+oOkNSNeXaKc1zWxl13HGfWejRvQC8L4eshix+
+         /TqA==
+X-Gm-Message-State: APjAAAXKoDUlaTVhScuS4iElDWA7MOZQDPfkb45cgoASEbkoeONwKbJk
+        +5kgad2Um0OCcFRdwzR/wPxLAw==
+X-Google-Smtp-Source: APXvYqzIn0S9ummLC74r3g9FqMdFkhi41XU2tWER3IiwCUIpjHJ14Oj4RC+eYohu8iGTOxdjyDbTYQ==
+X-Received: by 2002:ac8:d04:: with SMTP id q4mr13985060qti.76.1570760229973;
+        Thu, 10 Oct 2019 19:17:09 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id m63sm3564290qkc.72.2019.10.10.19.17.08
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Oct 2019 19:17:09 -0700 (PDT)
+Date:   Thu, 10 Oct 2019 19:16:53 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Karsten Graul <kgraul@linux.ibm.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, gor@linux.ibm.com,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: Re: [PATCH v2 net 0/3] net/smc: fixes for -net
+Message-ID: <20191010191653.35c93381@cakuba.netronome.com>
+In-Reply-To: <20191010081611.35446-1-kgraul@linux.ibm.com>
+References: <20191010081611.35446-1-kgraul@linux.ibm.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH 00/29] vmlinux.lds.h: Refactor EXCEPTION_TABLE and NOTES
-To:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@alien8.de>
-CC:     Thomas Gleixner <tglx@linutronix.de>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-From:   hpa@zytor.com
-Message-ID: <A020A6D1-C7DB-480B-826E-AE18308CD3E5@zytor.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On October 10, 2019 4:57:36 PM PDT, Kees Cook <keescook@chromium=2Eorg> wro=
-te:
->On Thu, Oct 10, 2019 at 08:03:31PM +0200, Borislav Petkov wrote:
->> On Thu, Sep 26, 2019 at 10:55:33AM -0700, Kees Cook wrote:
->> > This series works to move the linker sections for NOTES and
->> > EXCEPTION_TABLE into the RO_DATA area, where they belong on most
->> > (all?) architectures=2E The problem being addressed was the discovery
->> > by Rick Edgecombe that the exception table was accidentally marked
->> > executable while he was developing his execute-only-memory series=2E
->When
->> > permissions were flipped from readable-and-executable to
->only-executable,
->> > the exception table became unreadable, causing things to explode
->rather
->> > badly=2E :)
->> >=20
->> > Roughly speaking, the steps are:
->> >=20
->> > - regularize the linker names for PT_NOTE and PT_LOAD program
->headers
->> >   (to "note" and "text" respectively)
->> > - regularize restoration of linker section to program header
->assignment
->> >   (when PT_NOTE exists)
->> > - move NOTES into RO_DATA
->> > - finish macro naming conversions for RO_DATA and RW_DATA
->> > - move EXCEPTION_TABLE into RO_DATA on architectures where this is
->clear
->> > - clean up some x86-specific reporting of kernel memory resources
->> > - switch x86 linker fill byte from x90 (NOP) to 0xcc (INT3), just
->because
->> >   I finally realized what that trailing ": 0x9090" meant -- and we
->should
->> >   trap, not slide, if execution lands in section padding
->>=20
->> Yap, nice patchset overall=2E
->
->Thanks!
->
->> > Since these changes are treewide, I'd love to get
->architecture-maintainer
->> > Acks and either have this live in x86 -tip or in my own tree,
->however
->> > people think it should go=2E
->>=20
->> Sure, I don't mind taking v2 through tip once I get ACKs from the
->> respective arch maintainers=2E
->
->Okay, excellent=2E I've only had acks from arm64, but I'll call it out
->again in v2=2E Thanks for the review!
+On Thu, 10 Oct 2019 10:16:08 +0200, Karsten Graul wrote:
+> Fixes for -net, addressing two races in SMC receive path and
+> add a missing cleanup when the link group creating fails with
+> ISM devices and a VLAN id.
+> 
+> v1->v2:
+> - added fixes tags
 
-I would like to once again advocate for the generalized link table mechani=
-sm=2E It is nuts that each individual table should need vmlinux=2Elds hacki=
-ng across architectures=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+Applied, queued for stable
