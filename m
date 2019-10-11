@@ -2,54 +2,61 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74302D52DF
-	for <lists+linux-s390@lfdr.de>; Sat, 12 Oct 2019 23:40:06 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 87584D53F5
+	for <lists+linux-s390@lfdr.de>; Sun, 13 Oct 2019 05:11:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfJLVkF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 12 Oct 2019 17:40:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729296AbfJLVkF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 12 Oct 2019 17:40:05 -0400
-Subject: Re: [GIT PULL] s390 updates for 5.4-rc3
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1570916405;
-        bh=Bqk5XYFvPmYMqGXGvb3ZS0BE6cigGHuc5IgL4TPeKfo=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=BKUsa9cKt5i22m5t6eqLQFLRzJNuYpqd0oMx6v4Z94quuGMTc3j25ePmhAaU4NMT/
-         BY/q8u0YgFRv4aGyQ03dp2lvxU4vo980gw2psn/JwLKwbiK3rNvxPTL455LAjeaWmW
-         4qy7lww7f7hZ1aZh12UVy7rmbYg9sSgAXfpjbuVc=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01570875939-ext-1686@work.hours>
-References: <your-ad-here.call-01570875939-ext-1686@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01570875939-ext-1686@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-4
-X-PR-Tracked-Commit-Id: 062795fcdcb2d22822fb42644b1d76a8ad8439b3
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f154988a905e5cad9d1a20d4c4aeb176968fe3be
-Message-Id: <157091640502.3377.2210428493105655595.pr-tracker-bot@kernel.org>
-Date:   Sat, 12 Oct 2019 21:40:05 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        id S1728219AbfJMDLe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 12 Oct 2019 23:11:34 -0400
+Received: from [206.81.8.171] ([206.81.8.171]:33076 "EHLO varon.localdomain"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727184AbfJMDLe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 12 Oct 2019 23:11:34 -0400
+Received: from 127.0.0.1 (varon [127.0.0.1])
+        by varon.localdomain (Postfix) with SMTP id 4D75B55D63A;
+        Fri, 11 Oct 2019 10:21:17 +0000 (UTC)
+Received: from [28.133.97.201] by 127.0.0.1 with ESMTP id 87416658 for <linux-parisc@vger.kernel.org>; Fri, 11 Oct 2019 12:18:18 +0200
+Message-ID: <x88-n7-w-gky86-0$2@f47sl.w57>
+From:   "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
+Reply-To: "Mr Barrister Hans Erich" <dave@dbsoundfactory.com>
+To:     linux-parisc@vger.kernel.org
+Subject: RE:PERSONAL LETTER FROM MRS RASHIA AMIRA ??
+Date:   Fri, 11 Oct 19 12:18:18 GMT
+X-Mailer: Microsoft Outlook, Build 10.0.2616
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+        boundary="C.F387.BA..3D"
+X-Priority: 3
+X-MSMail-Priority: Normal
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Sat, 12 Oct 2019 12:25:39 +0200:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-4
+--C.F387.BA..3D
+Content-Type: text/plain;
+Content-Transfer-Encoding: quoted-printable
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f154988a905e5cad9d1a20d4c4aeb176968fe3be
+Greetings
 
-Thank you!
+My name is Barrister Hans Erich.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+I have a client who is interested to invest in your country, she is a well=
+ known politician in her country and deserve a lucrative investment partne=
+rship with you outside her country without any delay   Please can you mana=
+ge such investment please Kindly reply for further details.
+
+Your full nameS -----------
+
+
+Your urgent response will be appreciated
+
+Thank you and God bless you.
+
+Barrister Hans Erich
+
+Yours sincerely,
+Barrister Hans Erich
+
+--C.F387.BA..3D--
+
