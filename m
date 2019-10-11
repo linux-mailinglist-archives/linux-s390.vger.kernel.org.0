@@ -2,74 +2,173 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE0FAD3773
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Oct 2019 04:17:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70B49D37E0
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Oct 2019 05:28:56 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727984AbfJKCRL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Oct 2019 22:17:11 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:39386 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727976AbfJKCRK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Oct 2019 22:17:10 -0400
-Received: by mail-qt1-f196.google.com with SMTP id n7so11719289qtb.6
-        for <linux-s390@vger.kernel.org>; Thu, 10 Oct 2019 19:17:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=hkxzZutoMB4mL+d3Ug//lWHvkUJxUQSMy0n0jqoKL1M=;
-        b=wTT3aAagQKQtlbtIxC5nKSFwQb7PwbfsDSTqjSB2TLJcRyFrZrHmOaNsDcT1oOQqKG
-         KZrtSQV7XGijBUVPpP/0TRkP4SWIRyhWDR2vJBw1H0IYzvsHC/fDu5a2FfbAdUfLJIKX
-         Nr2IATVQ0z27V0O6hCb5xgK81jPANhyzh7NeTVdD3aaBk5Im18822Fepc3bXbm/5SUVR
-         ioTIVJn3wMmcWTlorKTAByvus/VqTwGzMha1bMw4fCqxvToLTzf7t26KGFn8z+SUhlmf
-         //9wLyU3uMdnFjxZ1ZLn9TwUX5euyqkB5x03SLYEk2aHcU6xH9mFjMDieQZRaJid6hEp
-         3GMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=hkxzZutoMB4mL+d3Ug//lWHvkUJxUQSMy0n0jqoKL1M=;
-        b=GPpdoRcxq9LfsW1EkN4otGlDqe9M2a+55tfHFM051EtCM4mx56QnnQoUpJ1EBqgavs
-         KPJ4KjDwJ4splrGlbjK3s2QYeeu7Y/psmInof1NiJ8QL/OGCJo7beC7mLvtrSBQlkz0+
-         zppBNudL3WHnw5HiPWoL6v9/kkSKMujShQrlHSXhlvECG/kcQ50iF2ZvVDq7idLUCeUH
-         u6ryPAyMrzN0Bxa4fl7QZ0YFm4EMVJXF9KWFHLjw5BrdL7PmbqZ6Vd8tG0MGaawOTqaZ
-         PWjkt+Xo71BinmhZiS0wd4gZwNDCwp+oOkNSNeXaKc1zWxl13HGfWejRvQC8L4eshix+
-         /TqA==
-X-Gm-Message-State: APjAAAXKoDUlaTVhScuS4iElDWA7MOZQDPfkb45cgoASEbkoeONwKbJk
-        +5kgad2Um0OCcFRdwzR/wPxLAw==
-X-Google-Smtp-Source: APXvYqzIn0S9ummLC74r3g9FqMdFkhi41XU2tWER3IiwCUIpjHJ14Oj4RC+eYohu8iGTOxdjyDbTYQ==
-X-Received: by 2002:ac8:d04:: with SMTP id q4mr13985060qti.76.1570760229973;
-        Thu, 10 Oct 2019 19:17:09 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id m63sm3564290qkc.72.2019.10.10.19.17.08
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Oct 2019 19:17:09 -0700 (PDT)
-Date:   Thu, 10 Oct 2019 19:16:53 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, gor@linux.ibm.com,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH v2 net 0/3] net/smc: fixes for -net
-Message-ID: <20191010191653.35c93381@cakuba.netronome.com>
-In-Reply-To: <20191010081611.35446-1-kgraul@linux.ibm.com>
-References: <20191010081611.35446-1-kgraul@linux.ibm.com>
-Organization: Netronome Systems, Ltd.
+        id S1726959AbfJKD2W (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Oct 2019 23:28:22 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:46206 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726096AbfJKD2W (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 10 Oct 2019 23:28:22 -0400
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 4CAACAEB091A1C599140;
+        Fri, 11 Oct 2019 11:28:18 +0800 (CST)
+Received: from [127.0.0.1] (10.74.191.121) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Fri, 11 Oct 2019
+ 11:28:13 +0800
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+To:     Michal Hocko <mhocko@kernel.org>
+CC:     Robin Murphy <robin.murphy@arm.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        <catalin.marinas@arm.com>, <will@kernel.org>, <mingo@redhat.com>,
+        <bp@alien8.de>, <rth@twiddle.net>, <ink@jurassic.park.msu.ru>,
+        <mattst88@gmail.com>, <benh@kernel.crashing.org>,
+        <paulus@samba.org>, <mpe@ellerman.id.au>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <ysato@users.sourceforge.jp>,
+        <dalias@libc.org>, <davem@davemloft.net>, <ralf@linux-mips.org>,
+        <paul.burton@mips.com>, <jhogan@kernel.org>,
+        <jiaxun.yang@flygoat.com>, <chenhc@lemote.com>,
+        <akpm@linux-foundation.org>, <rppt@linux.ibm.com>,
+        <anshuman.khandual@arm.com>, <tglx@linutronix.de>, <cai@lca.pw>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <hpa@zytor.com>, <x86@kernel.org>,
+        <dave.hansen@linux.intel.com>, <luto@kernel.org>,
+        <len.brown@intel.com>, <axboe@kernel.dk>, <dledford@redhat.com>,
+        <jeffrey.t.kirsher@intel.com>, <linux-alpha@vger.kernel.org>,
+        <naveen.n.rao@linux.vnet.ibm.com>, <mwb@linux.vnet.ibm.com>,
+        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
+        <linux-sh@vger.kernel.org>, <sparclinux@vger.kernel.org>,
+        <tbogendoerfer@suse.de>, <linux-mips@vger.kernel.org>,
+        <rafael@kernel.org>, <gregkh@linuxfoundation.org>
+References: <20190924120943.GP2349@hirez.programming.kicks-ass.net>
+ <20190924122500.GP23050@dhcp22.suse.cz>
+ <20190924124325.GQ2349@hirez.programming.kicks-ass.net>
+ <20190924125936.GR2349@hirez.programming.kicks-ass.net>
+ <20190924131939.GS23050@dhcp22.suse.cz>
+ <1adcbe68-6753-3497-48a0-cc84ac503372@huawei.com>
+ <20190925104108.GE4553@hirez.programming.kicks-ass.net>
+ <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+From:   Yunsheng Lin <linyunsheng@huawei.com>
+Message-ID: <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+Date:   Fri, 11 Oct 2019 11:27:54 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191010073212.GB18412@dhcp22.suse.cz>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.191.121]
+X-CFilter-Loop: Reflected
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 10 Oct 2019 10:16:08 +0200, Karsten Graul wrote:
-> Fixes for -net, addressing two races in SMC receive path and
-> add a missing cleanup when the link group creating fails with
-> ISM devices and a VLAN id.
+On 2019/10/10 15:32, Michal Hocko wrote:
+> On Thu 10-10-19 14:07:21, Yunsheng Lin wrote:
+>> On 2019/10/9 20:25, Robin Murphy wrote:
+>>> On 2019-10-08 9:38 am, Yunsheng Lin wrote:
+>>>> On 2019/9/25 18:41, Peter Zijlstra wrote:
+>>>>> On Wed, Sep 25, 2019 at 05:14:20PM +0800, Yunsheng Lin wrote:
+>>>>>>  From the discussion above, It seems making the node_to_cpumask_map()
+>>>>>> NUMA_NO_NODE aware is the most feasible way to move forwad.
+>>>>>
+>>>>> That's still wrong.
+>>>>
+>>>> Hi, Peter
+>>>>
+>>>> It seems this has trapped in the dead circle.
+>>>>
+>>>>  From my understanding, NUMA_NO_NODE which means not node numa preference
+>>>> is the state to describe the node of virtual device or the physical device
+>>>> that has equal distance to all cpu.
+>>>>
+>>>> We can be stricter if the device does have a nearer node, but we can not
+>>>> deny that a device does not have a node numa preference or node affinity,
+>>>> which also means the control or data buffer can be allocated at the node where
+>>>> the process is running.
+>>>>
+>>>> As you has proposed, making it -2 and have dev_to_node() warn if the device does
+>>>> have a nearer node and not set by the fw is a way to be stricter.
+>>>>
+>>>> But I think maybe being stricter is not really relevant to NUMA_NO_NODE, because
+>>>> we does need a state to describe the device that have equal distance to all node,
+>>>> even if it is not physically scalable.
+>>>>
+>>>> Any better suggestion to move this forward?
+>>>
+>>> FWIW (since this is in my inbox), it sounds like the fundamental issue is that NUMA_NO_NODE is conflated for at least two different purposes, so trying to sort that out would be a good first step. AFAICS we have genuine "don't care" cases like alloc_pages_node(), where if the producer says it doesn't matter then the consumer is free to make its own judgement on what to do, and fundamentally different "we expect this thing to have an affinity but it doesn't, so we can't say what's appropriate" cases which could really do with some separate indicator like "NUMA_INVALID_NODE".
+>>>
+>>> The tricky part is then bestowed on the producers to decide whether they can downgrade "invalid" to "don't care". You can technically build 'a device' whose internal logic is distributed between nodes and thus appears to have equal affinity - interrupt controllers, for example, may have per-CPU or per-node interfaces that end up looking like that - so although it's unlikely it's not outright nonsensical. Similarly a 'device' that's actually emulated behind a firmware call interface may well effectively have no real affinity.
+>>
+>> We may set node of the physical device to NUMA_INVALID_NODE when fw does not
+>> provide one.
+>>
+>> But what do we do about NUMA_INVALID_NODE when alloc_pages_node() is called
+>> with nid being NUMA_INVALID_NODE?
 > 
-> v1->v2:
-> - added fixes tags
+> There is nothing sensible the allocator can do. The only point of
+> NUMA_INVALID_NODE would be to catch potential misconfiguration and
+> report them to users so they can complain to their HW/FS suppliers.
+> 
+> Pushing it to other susbystem doesn't make much sense IMHO because there
+> is nothing really actionable. Refusing an allocation altogether sounds
+> like a bad plan to me.
+>  
+>> If we change the node to default one(like node 0) when node of device is
+>> NUMA_INVALID_NODE in device_add(), how do we know the default one(like node 0)
+>> is the right one to choose?
+> 
+> Exactly. We cannot really assume any node in that situation.
+>  
+>> >From the privous disccusion, the below seems not get to consensus yet:
+>> 1) Do we need a state like NUMA_NO_NODE to describe that the device does not
+>>    have any numa preference?
+> 
+> This is a traditional meaning MM subsystem is using.
+> 
+>> 2) What do we do if the fw does not provide a node for the device? Should
+>>    we guess and pick one for it and how do we do the guessing? Or leave it
+>>    as it is and handle it as NUMA_NO_NODE?
+> 
+> As already pointed several times, picking any node is rather error
+> prone. You can never assume topology. We used to assume that there
+> always be node 0 but that is not really the case (see 3e8589963773
+> ("memcg: make it work on sparse non-0-node systems")). Nodes might also
+> come and go so this might just lead to all sorts of subtle problems.
+> 
+> On the other hand using NUMA_NO_NODE as no preference could only lead to
+> slightly sub optimal performance.
+> 
+> I do agree with Peter that reporting a lack of affinity might be useful
+> but we shouldn't really try to clever and make up the affinity nilly
+> willy
 
-Applied, queued for stable
+Ok, thanks for clarify.
+
+So it seems we need to do the below if I understand it correctly:
+1. fix up the node id of device that has a clear node affinity without it
+   being set as much as possible.
+2. catch the case when the device that should have a nearer node but without
+   being set and warn about it.
+
+But I failed to see why the above is related to making node_to_cpumask_map()
+NUMA_NO_NODE aware?
+
+There is clear bug here too when node_to_cpumask_map() is not handling
+NUMA_NO_NODE.
+
+Maybe we can make the node_to_cpumask_map() NUMA_NO_NODE aware first and then
+deal with the above because event after the above is handled, we still need to
+handle NUMA_NO_NODE in node_to_cpumask_map() and it may take times to deal with
+the above when it is tricky to decide whether or not a device has a clear node.
+
+.
+> 
+
