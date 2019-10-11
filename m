@@ -2,42 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2083FD34CF
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Oct 2019 02:06:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 10B35D3537
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Oct 2019 02:08:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726096AbfJKAGY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 10 Oct 2019 20:06:24 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37522 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727493AbfJKAGX (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Oct 2019 20:06:23 -0400
-Received: by mail-pf1-f194.google.com with SMTP id y5so4951108pfo.4
+        id S1727505AbfJKAHb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 10 Oct 2019 20:07:31 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:40919 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727506AbfJKAGY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 10 Oct 2019 20:06:24 -0400
+Received: by mail-pg1-f195.google.com with SMTP id d26so4689584pgl.7
         for <linux-s390@vger.kernel.org>; Thu, 10 Oct 2019 17:06:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=ObCdg+imqB9G1d842Lgck/VSTqVGl2xoAH4cm4FkKow=;
-        b=crQ1Wv7yU8u6QDGlDwBktMC8ID6kd2jR2ktjlIEg9lNMaYkSGp+vVyfOhN5n/bbb4w
-         tpNmt7wW87sAgB/gHBbhR1BwKIxx8HWLuqxVFsB9sj+yjEeBVLxwYKqP8+nT6ULOb4qs
-         C5n7z+PSjnqWQlNXFQHms0qNFflOzMMUW6V2Y=
+        bh=7MxClQbH59XRrbTRajW1Gh8uACzcU2+htsVcXyM7D1g=;
+        b=TBJeuKMY2z8zTRQ1bFw/ImZS5YFoYQAHk+uSCJMry9jQKOeGheQ5i7gXGHU01GWcTB
+         uOgoFqPErAXZia+mP12x9qnkRfY1Ys9PjUB5SmB5We4kWHLZQ5n99yhQi0dIKcFUZu6/
+         hILLkVhE9upOn1PuRtaesOlh4SL00TV9kLm5U=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=ObCdg+imqB9G1d842Lgck/VSTqVGl2xoAH4cm4FkKow=;
-        b=St3SSsQRDbvnR09I5rJDEY5IRdTxZDqBRypmsk5yMzyMabKWkNTEVAHXpi6csDFg0u
-         Xpk81dr8JO0kL1E++hkR0AShLZrUDI3ORJiHYX9lW6JwBV0w2b03FlrP7Kix0YAY2cTB
-         +6iUAF6ZkTPeyRlP8pEr/akGNKz2MzAJH2AInn7kqfHEREpJe4k+EVYM9d693MPhjNNF
-         fk5UTlYcp0iBR3p6tfffgaOh+BYw4EXTPuB+oC52PIzB27j1VWEIQnPuOT7dH2GgH7q2
-         dfxNn+U8qG8CqxDYOmqZm/bfR2zZ1+MWT6AarEv4igCgc/WYMeVAHs3Kcux6fiBjteUq
-         GstQ==
-X-Gm-Message-State: APjAAAXNVWGZDYlrVhJ2uvGkkbuZDTh0mNFVoOqBkGCRWciJf4wA73HT
-        cr5dY1IJVxhQRBBECebauhLzLQ==
-X-Google-Smtp-Source: APXvYqx+lfPTpnvfcuRRBeqTz2GN8uCmPc7RnUYQGVmNn2nMH+aP0xZQtQocoZFSsUHXgigJlUoJog==
-X-Received: by 2002:a63:fb0a:: with SMTP id o10mr13787560pgh.258.1570752382982;
-        Thu, 10 Oct 2019 17:06:22 -0700 (PDT)
+        bh=7MxClQbH59XRrbTRajW1Gh8uACzcU2+htsVcXyM7D1g=;
+        b=jeAJTnNRc0p4PMC2nn1m6+C4eCuUQzDPG06cles8HhMEIpoZWS/C5VuJGcDu/u+3ld
+         CkOoRThuCdbu2GQXqVYNFJU0XjmFuRmT6k2Ky3NBEZ8pW3HHp6HFlQVYGzntbl4aKS4I
+         5IQaLwB80uwQnVt3lQCKQfDyxnGLWhD+yw0Dt3ygFSh4PwYWlpmr4FkDqrv1g7bhvWUB
+         mdBwAxXA/snAujRT3vfIhXGygAkXKmJLHZf04lttHfjFKR/VAkKLVIi1vRt9I3JTSNXo
+         6F1dqwiGm/RkyV+sqJ3MXadhUKoZt5L7UsDLwP+nxVNpfeNvfd6HB2GbkkU9UQjRFdA3
+         jlZQ==
+X-Gm-Message-State: APjAAAUjGCtWmz/OVIrvJ3TuGtXcQQno97vvfDxNDahV3c4C3X+hRpLa
+        QTqntqgmFSJeQp54QNThBVhf6Q==
+X-Google-Smtp-Source: APXvYqwg7IWyK5GALjp45zOGgCtbjryTtA5MoWvVIZiHDTE9GJEt+Ue8rYJCs4VD37qrCGGbQgqtBg==
+X-Received: by 2002:a62:5bc1:: with SMTP id p184mr12930072pfb.180.1570752383534;
+        Thu, 10 Oct 2019 17:06:23 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id k23sm9231444pgi.49.2019.10.10.17.06.19
+        by smtp.gmail.com with ESMTPSA id d5sm5372814pjw.31.2019.10.10.17.06.19
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Thu, 10 Oct 2019 17:06:20 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -58,9 +58,9 @@ Cc:     Kees Cook <keescook@chromium.org>,
         Michal Simek <monstr@monstr.eu>, linux-parisc@vger.kernel.org,
         linux-xtensa@linux-xtensa.org, x86@kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v2 03/29] powerpc: Rename PT_LOAD identifier "kernel" to "text"
-Date:   Thu, 10 Oct 2019 17:05:43 -0700
-Message-Id: <20191011000609.29728-4-keescook@chromium.org>
+Subject: [PATCH v2 04/29] alpha: Rename PT_LOAD identifier "kernel" to "text"
+Date:   Thu, 10 Oct 2019 17:05:44 -0700
+Message-Id: <20191011000609.29728-5-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191011000609.29728-1-keescook@chromium.org>
 References: <20191011000609.29728-1-keescook@chromium.org>
@@ -75,61 +75,40 @@ internal identifier for the PT_LOAD Program Header from "kernel" to
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- arch/powerpc/kernel/vmlinux.lds.S | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/alpha/kernel/vmlinux.lds.S | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index a3c8492b2b19..e184a63aa5b0 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -18,7 +18,7 @@
- ENTRY(_stext)
- 
- PHDRS {
--	kernel PT_LOAD FLAGS(7); /* RWX */
-+	text PT_LOAD FLAGS(7); /* RWX */
- 	note PT_NOTE FLAGS(0);
- }
- 
-@@ -63,7 +63,7 @@ SECTIONS
- #else /* !CONFIG_PPC64 */
- 		HEAD_TEXT
- #endif
+diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
+index c4b5ceceab52..781090cacc96 100644
+--- a/arch/alpha/kernel/vmlinux.lds.S
++++ b/arch/alpha/kernel/vmlinux.lds.S
+@@ -8,7 +8,7 @@
+ OUTPUT_FORMAT("elf64-alpha")
+ OUTPUT_ARCH(alpha)
+ ENTRY(__start)
+-PHDRS { kernel PT_LOAD; note PT_NOTE; }
++PHDRS { text PT_LOAD; note PT_NOTE; }
+ jiffies = jiffies_64;
+ SECTIONS
+ {
+@@ -27,14 +27,14 @@ SECTIONS
+ 		LOCK_TEXT
+ 		*(.fixup)
+ 		*(.gnu.warning)
 -	} :kernel
 +	} :text
- 
- 	__head_end = .;
- 
-@@ -112,7 +112,7 @@ SECTIONS
- 		__got2_end = .;
- #endif /* CONFIG_PPC32 */
- 
--	} :kernel
-+	} :text
- 
- 	. = ALIGN(ETEXT_ALIGN_SIZE);
- 	_etext = .;
-@@ -163,9 +163,9 @@ SECTIONS
- #endif
- 	EXCEPTION_TABLE(0)
+ 	swapper_pg_dir = SWAPPER_PGD;
+ 	_etext = .;	/* End of text section */
  
 -	NOTES :kernel :note
 +	NOTES :text :note
- 	/* Restore program header away from PT_NOTE. */
--	.dummy : { *(.dummy) } :kernel
-+	.dummy : { *(.dummy) } :text
- 
- /*
-  * Init sections discarded at runtime
-@@ -180,7 +180,7 @@ SECTIONS
- #ifdef CONFIG_PPC64
- 		*(.tramp.ftrace.init);
- #endif
+ 	.dummy : {
+ 		*(.dummy)
 -	} :kernel
 +	} :text
  
- 	/* .exit.text is discarded at runtime, not link time,
- 	 * to deal with references from __bug_table
+ 	RODATA
+ 	EXCEPTION_TABLE(16)
 -- 
 2.17.1
 
