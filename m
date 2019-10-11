@@ -2,89 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8F9AD3C80
-	for <lists+linux-s390@lfdr.de>; Fri, 11 Oct 2019 11:36:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B9ACD3CA3
+	for <lists+linux-s390@lfdr.de>; Fri, 11 Oct 2019 11:45:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726885AbfJKJg1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 11 Oct 2019 05:36:27 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40853 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726585AbfJKJg1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Oct 2019 05:36:27 -0400
-Received: by mail-lf1-f66.google.com with SMTP id d17so6561890lfa.7;
-        Fri, 11 Oct 2019 02:36:24 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qlK9gLf5RoF6ICNJqAb4e5paI/AKdb6mnn7W5mQFGS0=;
-        b=ASYBycLtttb85mOEqujHjzNaJ1CBKftLEp8d9y0oEDIEg56PY0AlVEV4Ol+wk1U/Cp
-         sWycuGXNr1FiYjukc3Ru2DwLEb2yoA2pun0hPCkOa3a8BBYnLwvx4EQitas/NCsFkD8y
-         VBQF1q+kSn09L2HW2g7VWhzaUnjf6ms7MtD59j/LPu2AF8V4OHdjKt7V7rkTC7JLyfiv
-         6Xib6TV0vtZXhi6POBowySVhzIRSgRjsgUpPHq83lt1Fc9xicb1av41EK5fcFz6KIuOw
-         8lQDihilkl+S5Ox9DVpxGBo9WiGxteli+fT+YyxdahSeWeyOJm8vaSEJ9yFUrgnpFg0Y
-         4oGA==
-X-Gm-Message-State: APjAAAU6KZOks7h0u718r1E/ud3Qe+V6eR/AvkiSbBVv1J4ZozBOp0Gv
-        svMHFBpMFUInmPMrGbwjaLA=
-X-Google-Smtp-Source: APXvYqzjdCwjHmD1OUcUAPcjISlrTMTsyvKPvNaG5NGSDzSHzWzFAkSASl1KZH637V4hkoJQOY7nGw==
-X-Received: by 2002:a19:23cc:: with SMTP id j195mr8266076lfj.91.1570786584009;
-        Fri, 11 Oct 2019 02:36:24 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id c16sm1961403lfj.8.2019.10.11.02.36.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 11 Oct 2019 02:36:23 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iIrLd-0007T3-Ez; Fri, 11 Oct 2019 11:36:34 +0200
-Date:   Fri, 11 Oct 2019 11:36:33 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191011093633.GD27819@localhost>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010135043.GA16989@phenom.ffwll.local>
+        id S1726585AbfJKJpc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 11 Oct 2019 05:45:32 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:34704 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726863AbfJKJpc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 11 Oct 2019 05:45:32 -0400
+Received: from v22018046084765073.goodsrv.de ([185.183.158.195] helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iIrUH-0004RM-Md; Fri, 11 Oct 2019 09:45:29 +0000
+Date:   Fri, 11 Oct 2019 11:45:28 +0200
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-um@lists.infradead.org, luto@kernel.org, oleg@redhat.com,
+        tglx@linutronix.de, wad@chromium.org, x86@kernel.org,
+        Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v1] seccomp: simplify secure_computing()
+Message-ID: <20191011094527.ftevtkeitjqafhdd@wittgenstein>
+References: <20190920131907.6886-1-christian.brauner@ubuntu.com>
+ <20190924064420.6353-1-christian.brauner@ubuntu.com>
+ <201910101450.0B13B7F@keescook>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191010135043.GA16989@phenom.ffwll.local>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <201910101450.0B13B7F@keescook>
+User-Agent: NeoMutt/20180716
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
-> On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
-> > Two old USB drivers had a bug in them which could lead to memory leaks
-> > if an interrupted process raced with a disconnect event.
-> > 
-> > Turns out we had a few more driver in other subsystems with the same
-> > kind of bug in them.
+On Thu, Oct 10, 2019 at 02:53:24PM -0700, Kees Cook wrote:
+> On Tue, Sep 24, 2019 at 08:44:20AM +0200, Christian Brauner wrote:
+> > Afaict, the struct seccomp_data argument to secure_computing() is unused
+> > by all current callers. So let's remove it.
+> > The argument was added in [1]. It was added because having the arch
+> > supply the syscall arguments used to be faster than having it done by
+> > secure_computing() (cf. Andy's comment in [2]). This is not true anymore
+> > though.
+> 
+> Yes; thanks for cleaning this up!
+> 
+> > diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
+> > index ad71132374f0..ed80bdfbf5fe 100644
+> > --- a/arch/s390/kernel/ptrace.c
+> > +++ b/arch/s390/kernel/ptrace.c
+> > @@ -439,7 +439,7 @@ static int poke_user(struct task_struct *child, addr_t addr, addr_t data)
+> >  long arch_ptrace(struct task_struct *child, long request,
+> >  		 unsigned long addr, unsigned long data)
+> >  {
+> > -	ptrace_area parea; 
+> > +	ptrace_area parea;
+> >  	int copied, ret;
+> >  
+> >  	switch (request) {
+> 
+> If this were whitespace cleanup in kernel/seccomp.c, I'd take it without
+> flinching. As this is only tangentially related and in an arch
+> directory, I've dropped this hunk out of a cowardly fear of causing
+> (a likely very unlikely) merge conflict.
+> 
+> I'd rather we globally clean up trailing whitespace at the end of -rc1
+> and ask Linus to run some crazy script. :)
 
-> Random funny idea: Could we do some debug annotations (akin to
-> might_sleep) that splats when you might_sleep_interruptible somewhere
-> where interruptible sleeps are generally a bad idea? Like in
-> fops->release?
+Oh that was on accident probably. It usally happens because I have vim
+do whitespace fixups automatically and then they end up slipping in...
+Sorry. Thanks for removing it! :)
 
-There's nothing wrong with interruptible sleep in fops->release per se,
-it's just that drivers cannot return -ERESTARTSYS and friends and expect
-to be called again later.
-
-The return value from release() is ignored by vfs, and adding a splat in
-__fput() to catch these buggy drivers might be overkill.
-
-Johan
+Christian
