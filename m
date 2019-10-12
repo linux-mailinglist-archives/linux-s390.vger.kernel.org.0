@@ -2,55 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70873D5226
-	for <lists+linux-s390@lfdr.de>; Sat, 12 Oct 2019 21:25:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBCBFD5258
+	for <lists+linux-s390@lfdr.de>; Sat, 12 Oct 2019 22:20:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729586AbfJLTXw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 12 Oct 2019 15:23:52 -0400
-Received: from nms02.ip-net.mgrs.ru ([178.237.242.9]:56412 "EHLO
-        nms02.ip-net.mgrs.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728579AbfJLTXv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 12 Oct 2019 15:23:51 -0400
-Received: from User (localhost.localdomain [127.0.0.1])
-        by nms02.ip-net.mgrs.ru (Postfix) with SMTP id C89BE4E11B8;
-        Sat, 12 Oct 2019 08:16:19 +0300 (MSK)
-Reply-To: <kepe19655@aol.com>
-From:   "Mr. Henk Boelens" <info@wholeearth.com>
-To:     henkboelens2016@contractor.net
-Subject: GOOD DAY?
-Date:   Fri, 11 Oct 2019 22:17:04 -0700
+        id S1729454AbfJLUUP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 12 Oct 2019 16:20:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55776 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729413AbfJLUUO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 12 Oct 2019 16:20:14 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E10CA20700;
+        Sat, 12 Oct 2019 20:20:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570911612;
+        bh=YIYi1aXNRP+OH+Apm03WWs+kylvIs7WZVZqljhJMypM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=Wtcyyyj4WgWrdzYuvXPsmxBtee+NBOkA78/EDQol0K3HATlT85yB7khWhvEmm8aCK
+         ONsEL5yZSf/9x8s+NEClmXeR9T/lG5Mp34ItZdV6+LRi0W0kxvI9mtUfby8/Q3/zGB
+         b3LjhR15QwCNnjmXeQtga6uy39UO/Yv2FiI7juXA=
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>
+Cc:     linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>
+Subject: [RFT PATCH 0/3] crypto: s390 - convert to skcipher API
+Date:   Sat, 12 Oct 2019 13:18:06 -0700
+Message-Id: <20191012201809.160500-1-ebiggers@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="Windows-1251"
-Content-Transfer-Encoding: 7bit
-X-Priority: 3
-X-MSMail-Priority: Normal
-X-Mailer: Microsoft Outlook Express 6.00.2600.0000
-X-MimeOLE: Produced By Microsoft MimeOLE V6.00.2600.0000
-Message-Id: <20191012051620.C89BE4E11B8@nms02.ip-net.mgrs.ru>
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Western Associate Bank
-Bank Address:Tower Building 83 Hull Road
-Oxwich Brussels Belgium
+This series converts the glue code for the S390 CPACF implementations of
+AES, DES, and 3DES modes from the deprecated "blkcipher" API to the
+"skcipher" API.  This is needed in order for the blkcipher API to be
+removed.
 
-Dear Friend
+I've compiled this patchset, and the conversion is very similar to that
+which has been done for many other crypto drivers.  But I don't have the
+hardware to test it, nor is S390 CPACF supported by QEMU.  So I really
+need someone with the hardware to test it.  You can do so by setting:
 
-Please accept my apologies if this request does not meet your personal ethics as it is not intended to cause you any embarrassment in what ever form. I got your
-contact email address from the internet directory and decided to contact you for this transaction that is based on trust and your outstanding. I have an interesting business proposal for you that will be of immense benefit to both of us. Although this may be hard for you to believe because i know that there is absolutely going to be a great doubt and distrust in your heart in respect of this email as this might sound strange to you and coupled with the fact that, so many individuals have taken possession of the Internet to facilitate their nefarious deeds, thereby making it extremely difficult for genuine and legitimate persons to get attention and recognition. Please grant me the benefit of doubt and hear me out.
+CONFIG_CRYPTO_HW=y
+CONFIG_ZCRYPT=y
+CONFIG_PKEY=y
+CONFIG_CRYPTO_AES_S390=y
+CONFIG_CRYPTO_PAES_S390=y
+CONFIG_CRYPTO_DES_S390=y
+# CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+CONFIG_DEBUG_KERNEL=y
+CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+CONFIG_CRYPTO_AES=y
+CONFIG_CRYPTO_DES=y
+CONFIG_CRYPTO_CBC=y
+CONFIG_CRYPTO_CTR=y
+CONFIG_CRYPTO_ECB=y
+CONFIG_CRYPTO_XTS=y
 
-My name is Henk Boelens . I work with Western Associate Bank here in Belgium as a branch bank manager. I discovered an abandoned sum of GBP 19,850,000.00 (Nineteen Million Eight Hundred And Fifty Thousand British Pounds) in an account that belongs to one of our foreign customers Late Dr. Erin Jacobson, an American citizen who unfortunately lost his life and his entire family in Montana plane crash on March 23, 2009, on their way to a group ski vacation. The choice of contacting you is aroused from the geographical nature of where you live, particularly due to the sensitivity of this transaction and the confidentiality herein. Now our bank has been waiting for any of the relatives to come up for the claim but nobody has done that. I personally tried to locate any member of his family but have been unsuccessful in locating the relatives for 7 years now, i have also checked the deposit documents and discovered that he did not declare any next of kin on the deposit.
+Then boot and check for crypto self-test failures by running
+'dmesg | grep alg'.
 
-Now the Management of our bank as instructed me to look for the next of kin or they will convert the funds into the Government Treasury Account as unclaimed funds and the funds will be wasted. Therefore, I cannot claim these funds without presenting a foreigner to stand as next of kin. This is reason why I contacted you to seek your consent to present you as an next of kin so that the funds will be release to you, then we share it 55% for me and 45% for you because am not a
-greedy person and is deal between me and you.
+If there are test failures, please also check whether they were already
+failing prior to this patchset.
 
-I have employed the service of an Attorney who will secure all necessary legal documents that could be used to back up this claim. All the attorney need to do is to fill in your names to the documents and legalize it in the Court here to prove you as the legitimate next of kin to the late depositor Dr. Erin Jacobson then the bank will release the funds to you as the rightful beneficiary.
+This won't cover the "paes" ("protected key AES") algorithms, however,
+since those don't have self-tests.  If anyone has any way to test those,
+please do so.
 
-This is a fair deal without any risk attached either on your part or on my part as long as we comply with the laws governing the claiming of funds in our establishment. All I require is your honest co-operation to enable us see this deal through, and with my position in the bank as a bank manager, I will do every thing possible to protect your interest and to make sure everything workout successfully.
+Eric Biggers (3):
+  crypto: s390/aes - convert to skcipher API
+  crypto: s390/paes - convert to skcipher API
+  crypto: s390/des - convert to skcipher API
 
-If you are interested in this deal, kindly send me your complete information, your full names and address, Your Private telephone and Fax numbers, and Cell phone so that the attorney will start processing the necessary paperwork that would facilitate the release of the funds to you.
+ arch/s390/crypto/aes_s390.c  | 609 ++++++++++++++---------------------
+ arch/s390/crypto/des_s390.c  | 419 ++++++++++--------------
+ arch/s390/crypto/paes_s390.c | 414 ++++++++++--------------
+ 3 files changed, 580 insertions(+), 862 deletions(-)
 
-Mr. Henk Boelens
+-- 
+2.23.0
+
