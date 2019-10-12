@@ -2,173 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D2A2D4F00
-	for <lists+linux-s390@lfdr.de>; Sat, 12 Oct 2019 12:27:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2DD3D4F13
+	for <lists+linux-s390@lfdr.de>; Sat, 12 Oct 2019 12:42:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727262AbfJLK1v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 12 Oct 2019 06:27:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1404 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727654AbfJLKZt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 12 Oct 2019 06:25:49 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9CALmSF001824
-        for <linux-s390@vger.kernel.org>; Sat, 12 Oct 2019 06:25:48 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vkayvu0t7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Sat, 12 Oct 2019 06:25:47 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Sat, 12 Oct 2019 11:25:45 +0100
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 12 Oct 2019 11:25:42 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9CAPABQ28770794
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 12 Oct 2019 10:25:10 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 369F3AE059;
-        Sat, 12 Oct 2019 10:25:41 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DAC94AE045;
-        Sat, 12 Oct 2019 10:25:40 +0000 (GMT)
-Received: from localhost (unknown [9.145.77.130])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Sat, 12 Oct 2019 10:25:40 +0000 (GMT)
-Date:   Sat, 12 Oct 2019 12:25:39 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [GIT PULL] s390 updates for 5.4-rc3
+        id S1729102AbfJLKmK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 12 Oct 2019 06:42:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33006 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727527AbfJLKkK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 12 Oct 2019 06:40:10 -0400
+Received: from localhost (unknown [84.241.192.39])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 21836206A1;
+        Sat, 12 Oct 2019 10:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1570876807;
+        bh=Ct3kT+xNZzomUoOHSl3j9vFEqmUcJVCQgXZFn+esWOA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=uhK6p65dsNjpWKMlH5Z/S77VSw/OawTEefkJ5bFoty44O22zb9+HsdWkKCgOrZlvg
+         z+O6ugk9vrUWQCU5tMgVYN0Ch1ZoRdmp5yrZdc06g1GsEaSH5pLBh4ruPiYQniHtaz
+         zvh7nzRLwKHoWOCyO7ub91SuvQZ0wyayC1/4J9Uo=
+Date:   Sat, 12 Oct 2019 12:40:01 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Yunsheng Lin <linyunsheng@huawei.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>, catalin.marinas@arm.com,
+        will@kernel.org, mingo@redhat.com, bp@alien8.de, rth@twiddle.net,
+        ink@jurassic.park.msu.ru, mattst88@gmail.com,
+        benh@kernel.crashing.org, paulus@samba.org, mpe@ellerman.id.au,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, ysato@users.sourceforge.jp,
+        dalias@libc.org, davem@davemloft.net, ralf@linux-mips.org,
+        paul.burton@mips.com, jhogan@kernel.org, jiaxun.yang@flygoat.com,
+        chenhc@lemote.com, akpm@linux-foundation.org, rppt@linux.ibm.com,
+        anshuman.khandual@arm.com, tglx@linutronix.de, cai@lca.pw,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        hpa@zytor.com, x86@kernel.org, dave.hansen@linux.intel.com,
+        luto@kernel.org, len.brown@intel.com, axboe@kernel.dk,
+        dledford@redhat.com, jeffrey.t.kirsher@intel.com,
+        linux-alpha@vger.kernel.org, naveen.n.rao@linux.vnet.ibm.com,
+        mwb@linux.vnet.ibm.com, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, tbogendoerfer@suse.de,
+        linux-mips@vger.kernel.org, rafael@kernel.org, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        lenb@kernel.org, linux-acpi@vger.kernel.org
+Subject: Re: [PATCH v6] numa: make node_to_cpumask_map() NUMA_NO_NODE aware
+Message-ID: <20191012104001.GA2052933@kroah.com>
+References: <20190925104108.GE4553@hirez.programming.kicks-ass.net>
+ <47fa4cee-8528-7c23-c7de-7be1b65aa2ae@huawei.com>
+ <bec80499-86d9-bf1f-df23-9044a8099992@arm.com>
+ <a5f0fc80-8e88-b781-77ce-1213e5d62125@huawei.com>
+ <20191010073212.GB18412@dhcp22.suse.cz>
+ <6cc94f9b-0d79-93a8-5ec2-4f6c21639268@huawei.com>
+ <20191011111539.GX2311@hirez.programming.kicks-ass.net>
+ <7fad58d6-5126-e8b8-a7d8-a91814da53ba@huawei.com>
+ <20191012074014.GA2037204@kroah.com>
+ <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19101210-0016-0000-0000-000002B769DC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101210-0017-0000-0000-000033187E86
-Message-Id: <your-ad-here.call-01570875939-ext-1686@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910120098
+In-Reply-To: <1e1ec851-b5e7-8f35-a627-4c12ca9c2d3c@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Linus,
+On Sat, Oct 12, 2019 at 05:47:56PM +0800, Yunsheng Lin wrote:
+> On 2019/10/12 15:40, Greg KH wrote:
+> > On Sat, Oct 12, 2019 at 02:17:26PM +0800, Yunsheng Lin wrote:
+> >> add pci and acpi maintainer
+> >> cc linux-pci@vger.kernel.org and linux-acpi@vger.kernel.org
+> >>
+> >> On 2019/10/11 19:15, Peter Zijlstra wrote:
+> >>> On Fri, Oct 11, 2019 at 11:27:54AM +0800, Yunsheng Lin wrote:
+> >>>> But I failed to see why the above is related to making node_to_cpumask_map()
+> >>>> NUMA_NO_NODE aware?
+> >>>
+> >>> Your initial bug is for hns3, which is a PCI device, which really _MUST_
+> >>> have a node assigned.
+> >>>
+> >>> It not having one, is a straight up bug. We must not silently accept
+> >>> NO_NODE there, ever.
+> >>>
+> >>
+> >> I suppose you mean reporting a lack of affinity when the node of a pcie
+> >> device is not set by "not silently accept NO_NODE".
+> > 
+> > If the firmware of a pci device does not provide the node information,
+> > then yes, warn about that.
+> > 
+> >> As Greg has asked about in [1]:
+> >> what is a user to do when the user sees the kernel reporting that?
+> >>
+> >> We may tell user to contact their vendor for info or updates about
+> >> that when they do not know about their system well enough, but their
+> >> vendor may get away with this by quoting ACPI spec as the spec
+> >> considering this optional. Should the user believe this is indeed a
+> >> fw bug or a misreport from the kernel?
+> > 
+> > Say it is a firmware bug, if it is a firmware bug, that's simple.
+> > 
+> >> If this kind of reporting is common pratice and will not cause any
+> >> misunderstanding, then maybe we can report that.
+> > 
+> > Yes, please do so, that's the only way those boxes are ever going to get
+> > fixed.  And go add the test to the "firmware testing" tool that is based
+> > on Linux that Intel has somewhere, to give vendors a chance to fix this
+> > before they ship hardware.
+> > 
+> > This shouldn't be a big deal, we warn of other hardware bugs all the
+> > time.
+> 
+> Ok, thanks for clarifying.
+> 
+> Will send a patch to catch the case when a pcie device without numa node
+> being set and warn about it.
+> 
+> Maybe use dev->bus to verify if it is a pci device?
 
-please pull s390 changes for 5.4-rc3.
+No, do that in the pci bus core code itself, when creating the devices
+as that is when you know, or do not know, the numa node, right?
 
-Thank you,
-Vasily
+This can't be in the driver core only, as each bus type will have a
+different way of determining what the node the device is on.  For some
+reason, I thought the PCI core code already does this, right?
 
-The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
+thanks,
 
-  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-4
-
-for you to fetch changes up to 062795fcdcb2d22822fb42644b1d76a8ad8439b3:
-
-  s390/uaccess: avoid (false positive) compiler warnings (2019-10-11 12:27:25 +0200)
-
-----------------------------------------------------------------
-s390 updates for 5.4-rc3
-
-- Fix virtio-ccw DMA regression.
-
-- Fix compiler warnings in uaccess.
-
-----------------------------------------------------------------
-Christian Borntraeger (1):
-      s390/uaccess: avoid (false positive) compiler warnings
-
-Halil Pasic (1):
-      s390/cio: fix virtio-ccw DMA without PV
-
- arch/s390/include/asm/uaccess.h | 4 ++--
- drivers/s390/cio/cio.h          | 1 +
- drivers/s390/cio/css.c          | 7 ++++++-
- drivers/s390/cio/device.c       | 2 +-
- 4 files changed, 10 insertions(+), 4 deletions(-)
-
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index bd2fd9a7821d..a470f1fa9f2a 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -83,7 +83,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
- 	__rc;							\
- })
- 
--static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
-+static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x010000UL;
- 	int rc;
-@@ -113,7 +113,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
- 	return rc;
- }
- 
--static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
-+static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
- {
- 	unsigned long spec = 0x01UL;
- 	int rc;
-diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-index ba7d2480613b..dcdaba689b20 100644
---- a/drivers/s390/cio/cio.h
-+++ b/drivers/s390/cio/cio.h
-@@ -113,6 +113,7 @@ struct subchannel {
- 	enum sch_todo todo;
- 	struct work_struct todo_work;
- 	struct schib_config config;
-+	u64 dma_mask;
- 	char *driver_override; /* Driver name to force a match */
- } __attribute__ ((aligned(8)));
- 
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 1fbfb0a93f5f..831850435c23 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -232,7 +232,12 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
- 	 * belong to a subchannel need to fit 31 bit width (e.g. ccw).
- 	 */
- 	sch->dev.coherent_dma_mask = DMA_BIT_MASK(31);
--	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
-+	/*
-+	 * But we don't have such restrictions imposed on the stuff that
-+	 * is handled by the streaming API.
-+	 */
-+	sch->dma_mask = DMA_BIT_MASK(64);
-+	sch->dev.dma_mask = &sch->dma_mask;
- 	return sch;
- 
- err:
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index 131430bd48d9..0c6245fc7706 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -710,7 +710,7 @@ static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
- 	if (!cdev->private)
- 		goto err_priv;
- 	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
--	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
-+	cdev->dev.dma_mask = sch->dev.dma_mask;
- 	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
- 	if (!dma_pool)
- 		goto err_dma_pool;
-
+greg k-h
