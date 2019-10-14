@@ -2,138 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B731D68D1
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 19:49:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D25E7D6918
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 20:09:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730202AbfJNRtx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Oct 2019 13:49:53 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41115 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729776AbfJNRtx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 14 Oct 2019 13:49:53 -0400
-Received: by mail-wr1-f67.google.com with SMTP id p4so4849866wrm.8;
-        Mon, 14 Oct 2019 10:49:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=XXUMrGZIb6oF2ZXlkY6NvVGKtm0a8dgxsmrS0PyzrVM=;
-        b=I/j8jtNurZb03wO5OtpFMwdIEKSI/vQc1BpvLpGl7ryBO321tGoGGD/dOPskkClYgw
-         od4t5zjq2+ndwxdNXh+zb0qgGfEDiYNC8CJI5nF9z0sOJtW/AfXcRs9u9iWNzfztTASm
-         zRmpLe4p98ADBn7rdM7pjSDzk7VKVIejQmclv2xjvGruv1pY+/Z3iKi3Ri2jzo/vZXKZ
-         U1CtlK0iIYAuWGsQk/PJUF6nLEzNapqKj/Nhjmq1INYWCFMOd1+W22by2mHCL9aIRP7o
-         dRogtOEYzA8TV/asYmxRHwEpPsFleBrtG5/5o48RbATHAQ6SxNYlqC7Ip8//tVEgp69R
-         zJfA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=XXUMrGZIb6oF2ZXlkY6NvVGKtm0a8dgxsmrS0PyzrVM=;
-        b=iDRSjREZaDKP5Nl1ZIDtb+r//1i4tkubJ4zWmetRoiPdlb8lgy2+BIK5rPvHL6sZtp
-         ImF4NY/a/hyHRrQCeexUiB2lTsvFxRMfaRwgwKofZvmYepbRMEwrFZPjqUdiZLJKF+YL
-         ouA58MaQRhrUpY9YS5DOXKjTDQFuO52TGDk35JYJhpuE2IUum3VjzM4XvTn5CgDGqpeQ
-         0HDMou1ApeI0JN3tPHNTzRGmFbBhmyHLnw/ENj/A1/qXaH66CgG/KgWtly5PdsUFwo7t
-         3acTWr4gUUf3fcgcRz3NMKWwNj7dySP19sfPBzperEXZJYgDNSLStL072CSAwlKhSqZk
-         1iOA==
-X-Gm-Message-State: APjAAAXuo8DuEGJjVZXJtylxFGpO5+TpNp9+f95232UhWL7TqAUawFyo
-        vnceqEb2zSAIh/SV3lWC9MM=
-X-Google-Smtp-Source: APXvYqy78vv8xomOjJzk/rQmkBz13qhvU+ercRByH/EBEIZm2MrjAU0AN+KF4wDSX2QXx60c7i4efw==
-X-Received: by 2002:adf:fa92:: with SMTP id h18mr26866005wrr.220.1571075388812;
-        Mon, 14 Oct 2019 10:49:48 -0700 (PDT)
-Received: from localhost ([51.15.41.238])
-        by smtp.gmail.com with ESMTPSA id o70sm26093856wme.29.2019.10.14.10.49.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 10:49:48 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 18:49:46 +0100
-From:   Stefan Hajnoczi <stefanha@gmail.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-Subject: Re: [PATCH V3 0/7] mdev based hardware virtio offloading support
-Message-ID: <20191014174946.GC5359@stefanha-x1.localdomain>
-References: <20191011081557.28302-1-jasowang@redhat.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="XMCwj5IQnwKtuyBG"
-Content-Disposition: inline
-In-Reply-To: <20191011081557.28302-1-jasowang@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        id S1732653AbfJNSJF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Oct 2019 14:09:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43320 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730577AbfJNSJF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 14 Oct 2019 14:09:05 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9EHvlgn136764
+        for <linux-s390@vger.kernel.org>; Mon, 14 Oct 2019 14:09:04 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vmu30xw4q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 14 Oct 2019 14:09:03 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
+        Mon, 14 Oct 2019 19:09:02 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 14 Oct 2019 19:09:01 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9EI8xoc49217666
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 14 Oct 2019 18:08:59 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0F3B64C052;
+        Mon, 14 Oct 2019 18:08:59 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EE9954C050;
+        Mon, 14 Oct 2019 18:08:58 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 14 Oct 2019 18:08:58 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id 9B588E016E; Mon, 14 Oct 2019 20:08:58 +0200 (CEST)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
+Subject: [RFC PATCH 0/4] vfio-ccw: A couple trace changes
+Date:   Mon, 14 Oct 2019 20:08:51 +0200
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19101418-4275-0000-0000-00000372042F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101418-4276-0000-0000-00003885140A
+Message-Id: <20191014180855.19400-1-farman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-14_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=655 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910140149
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Conny,
 
---XMCwj5IQnwKtuyBG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I mentioned these to you a while ago; just been caught up in other
+things. These aren't really pre-reqs for anything in our pipe, but
+they've been beneficial to me on their own, and simplify debugging
+of future work (such as the FSM needs brought up by Halil).
 
-On Fri, Oct 11, 2019 at 04:15:50PM +0800, Jason Wang wrote:
-> There are hardware that can do virtio datapath offloading while having
-> its own control path. This path tries to implement a mdev based
-> unified API to support using kernel virtio driver to drive those
-> devices. This is done by introducing a new mdev transport for virtio
-> (virtio_mdev) and register itself as a new kind of mdev driver. Then
-> it provides a unified way for kernel virtio driver to talk with mdev
-> device implementation.
->=20
-> Though the series only contains kernel driver support, the goal is to
-> make the transport generic enough to support userspace drivers. This
-> means vhost-mdev[1] could be built on top as well by resuing the
-> transport.
->=20
-> A sample driver is also implemented which simulate a virito-net
-> loopback ethernet device on top of vringh + workqueue. This could be
-> used as a reference implementation for real hardware driver.
->=20
-> Consider mdev framework only support VFIO device and driver right now,
-> this series also extend it to support other types. This is done
-> through introducing class id to the device and pairing it with
-> id_talbe claimed by the driver. On top, this seris also decouple
-> device specific parents ops out of the common ones.
+While the first patch refactors the trace so new ones can be added
+outside the FSM, none of the other patches in this series really do.
+I imagine that would be beneficial in the future, so I think it
+would be good to do that rework before we get too far along.
 
-I was curious so I took a quick look and posted comments.
+Eric Farman (4):
+  vfio-ccw: Refactor how the traces are built
+  vfio-ccw: Trace the FSM jumptable
+  vfio-ccw: Add a trace for asynchronous requests
+  vfio-ccw: Rename the io_fctl trace
 
-I guess this driver runs inside the guest since it registers virtio
-devices?
+ drivers/s390/cio/Makefile           |  4 +--
+ drivers/s390/cio/vfio_ccw_cp.h      |  1 +
+ drivers/s390/cio/vfio_ccw_fsm.c     | 11 +++---
+ drivers/s390/cio/vfio_ccw_private.h |  1 +
+ drivers/s390/cio/vfio_ccw_trace.c   | 14 ++++++++
+ drivers/s390/cio/vfio_ccw_trace.h   | 56 ++++++++++++++++++++++++++++-
+ 6 files changed, 79 insertions(+), 8 deletions(-)
+ create mode 100644 drivers/s390/cio/vfio_ccw_trace.c
 
-If this is used with physical PCI devices that support datapath
-offloading then how are physical devices presented to the guest without
-SR-IOV?
+-- 
+2.17.1
 
-Stefan
-
---XMCwj5IQnwKtuyBG
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2ktToACgkQnKSrs4Gr
-c8jgRgf/WWO5uJxyZLwosUbr+PGHcqci4COe1VGy3Aveab34yl0NQekiPT6CEG5k
-PLqiRN9UlPXnMq5H6tsIptfG1mBTxJpF0H7FVRGvwKnV+NizCllURp1Eb1y6ucTd
-j3Rg8JZAwDCdJsZ8d2o4JXQKv9CIavomjp0ZQNIdRiKJ8gOueiWydBgCOSO/l0dh
-t/YI7ENprVpSg56pZba9Y3eueA6Gt4oSfHZbgtQWXBueHkyN90em9JoDAktAOu1m
-PZAQykFnCUGV7RwfK2jUW+WIgh8mSrhu36zoyl9OAASnmHeiMBCTqpvHTKzRH180
-fEnf2WwIaOxFvEnbfxu/3ljKyhjEaA==
-=X6sM
------END PGP SIGNATURE-----
-
---XMCwj5IQnwKtuyBG--
