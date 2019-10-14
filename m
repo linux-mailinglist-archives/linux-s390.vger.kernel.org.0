@@ -2,98 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 127DBD5B41
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 08:19:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A3546D5C91
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 09:41:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbfJNGS6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Oct 2019 02:18:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56616 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729978AbfJNGS5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Oct 2019 02:18:57 -0400
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9E67Q2e131574
-        for <linux-s390@vger.kernel.org>; Mon, 14 Oct 2019 02:18:56 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vmk3fgwyg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 14 Oct 2019 02:18:56 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Mon, 14 Oct 2019 07:18:53 +0100
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 14 Oct 2019 07:18:49 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9E6Im7a40567074
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 14 Oct 2019 06:18:48 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 039EC4CCB7;
-        Mon, 14 Oct 2019 06:18:48 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6D2404CC9B;
-        Mon, 14 Oct 2019 06:18:47 +0000 (GMT)
-Received: from osiris (unknown [9.152.212.85])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 14 Oct 2019 06:18:47 +0000 (GMT)
-Date:   Mon, 14 Oct 2019 08:18:46 +0200
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable <stable@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>
-Subject: Re: [PATCH 4/4] s390/zcrypt: fix memleak at release
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010131333.23635-5-johan@kernel.org>
+        id S1728976AbfJNHlS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Oct 2019 03:41:18 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:45479 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725934AbfJNHlS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 14 Oct 2019 03:41:18 -0400
+Received: by mail-yw1-f68.google.com with SMTP id x65so5791654ywf.12;
+        Mon, 14 Oct 2019 00:41:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=sEN7o3yuO56xvPDuUwKgUiAGNAgWvdh9IYFyMwir9eg=;
+        b=ULg0x+kVwo2eT+iIl7xEqgOGbAzw68nEs+Tf1EX6WbkwD6JZiL1PJq9RZFvkDJEthU
+         ocfdC+Pu3HU8yKboyYft824CwBNxjIEzx8zyCCvt9khKX2P3rnlv1B/RrEDuwgE/1mG/
+         dO9bqvuIwHg7kYFJ6cR8Rxh98z5xxnACgBkXR6UU0aSIjsvAx7CLSTrvS1W1Yc6B2hbM
+         xVKkvAsHm4h5LvwOcL7O3xZNwPSbX/1EH8Ha7BFbRmH59L7FLoc17rAHr/p/fi2/0aQd
+         XhR8EuPvAa5rR0cGHGbuZEBAsY6jzipW6b/VsB7pAItTeOGbyHWLGnGRGwAir0skqH6K
+         QqgA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=sEN7o3yuO56xvPDuUwKgUiAGNAgWvdh9IYFyMwir9eg=;
+        b=DXvyBS28aRlaI4Nm2zm9PDsokcJzfyPcLEHlYJsVU0j0RHrmAa9qEDD5zxVlK28ji4
+         ml1ztiNxDpla9MB/4Fi6/e67HLH03pYAZoxK24oqgyeM2ZEFSDP9bjQEkz+e2oKC6ADc
+         H1F0xnYUr1xJg21vou4jZXSwuji2q3qZYxLxyqlQ+QvbZZPNmIGO3V4zQbNXCPNHIEp6
+         5Ppbyox73jtqN1nu7Y5TwwH5bE0LXwUlymUgLQm08nUaahNkm+cmln4m1l6f8zusPJnG
+         rcYMWa5pswj0kfIpeeAh6h8c4ymQr0kO4s/VjnbbjHsnrNGtONPuSscQJEv3P3MeVx0T
+         eb9g==
+X-Gm-Message-State: APjAAAXWByfGe4yxcOb2m9/B6/Skxx0BU/08NY6/RscdEt2lLW451RjK
+        F+wNl0HAM+zeC8huxgzgneyV7yaAcPAcYwgMqSU=
+X-Google-Smtp-Source: APXvYqw4VB+FAxVRs0lcX+ZIr7P8ykk483BJkOe9a1ta9sipUpx8Dmb1cwz7VKpxf94e6Vopzx6wAvxttFQCwsQ1L0I=
+X-Received: by 2002:a81:254d:: with SMTP id l74mr12130385ywl.409.1571038877410;
+ Mon, 14 Oct 2019 00:41:17 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191010131333.23635-5-johan@kernel.org>
-X-TM-AS-GCONF: 00
-x-cbid: 19101406-0008-0000-0000-00000321CE1C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101406-0009-0000-0000-00004A40DEC6
-Message-Id: <20191014061846.GA6834@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-14_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=5 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=927 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910140060
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-26-keescook@chromium.org>
+In-Reply-To: <20191011000609.29728-26-keescook@chromium.org>
+From:   Max Filippov <jcmvbkbc@gmail.com>
+Date:   Mon, 14 Oct 2019 00:41:06 -0700
+Message-ID: <CAMo8BfKexMmMusB3XOeaMOZHdU4ccz+PMGA=Jy+KQhgD8H_8UQ@mail.gmail.com>
+Subject: Re: [PATCH v2 25/29] xtensa: Move EXCEPTION_TABLE to RO_DATA segment
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org,
+        "open list:ALPHA PORT" <linux-alpha@vger.kernel.org>,
+        "open list:IA64 (Itanium) PL..." <linux-ia64@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>,
+        "open list:PARISC ARCHITECTURE" <linux-parisc@vger.kernel.org>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>,
+        "maintainer:X86 ARCHITECTURE..." <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 10, 2019 at 03:13:33PM +0200, Johan Hovold wrote:
-> If a process is interrupted while accessing the crypto device and the
-> global ap_perms_mutex is contented, release() could return early and
-> fail to free related resources.
-> 
-> Fixes: 00fab2350e6b ("s390/zcrypt: multiple zcrypt device nodes support")
-> Cc: stable <stable@vger.kernel.org>     # 4.19
-> Cc: Harald Freudenberger <freude@linux.ibm.com>
-> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> Signed-off-by: Johan Hovold <johan@kernel.org>
+On Thu, Oct 10, 2019 at 5:16 PM Kees Cook <keescook@chromium.org> wrote:
+>
+> Since the EXCEPTION_TABLE is read-only, collapse it into RO_DATA.
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 > ---
->  drivers/s390/crypto/zcrypt_api.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  arch/xtensa/kernel/vmlinux.lds.S | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 
-Applied, thanks!
+Acked-by: Max Filippov <jcmvbkbc@gmail.com>
 
+-- 
+Thanks.
+-- Max
