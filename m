@@ -2,66 +2,61 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DC0CCD69F8
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 21:17:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1EA24D6AFC
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 22:59:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731586AbfJNTRV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Oct 2019 15:17:21 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44800 "EHLO mail.kernel.org"
+        id S1730335AbfJNU7J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Oct 2019 16:59:09 -0400
+Received: from foss.arm.com ([217.140.110.172]:52526 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728005AbfJNTRV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Oct 2019 15:17:21 -0400
-Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E75B9217F9;
-        Mon, 14 Oct 2019 19:17:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571080640;
-        bh=GVOpKJU8+fX2Cvw0U5HfH5hzn91D4G2Rk4nes27+pag=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=FR3WzbMF70HWxk7LTH30/6dEQ8O2Dy6iHIYsz3roW7gGsiv/bCa+/sQvvUktTZ/BO
-         sea8B8Iv2qQrW/t9KU/O3J+J0m3QYNRD0hYc9BPn9xPN45izvaOitFObeTCJxIolf7
-         oGAogT4n2dH58KrM+gstDU8nD3TYaBLq3dqW2/DM=
-Date:   Mon, 14 Oct 2019 12:17:19 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH v6 04/10] mm/memory_hotplug: Don't access uninitialized
- memmaps in shrink_zone_span()
-Message-Id: <20191014121719.cb9b9efe51a7e9e985b38075@linux-foundation.org>
-In-Reply-To: <5a4573de-bd8a-6cd3-55d0-86d503a236fd@redhat.com>
-References: <20191006085646.5768-1-david@redhat.com>
-        <20191006085646.5768-5-david@redhat.com>
-        <5a4573de-bd8a-6cd3-55d0-86d503a236fd@redhat.com>
-X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1731815AbfJNU7J (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 14 Oct 2019 16:59:09 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A383337;
+        Mon, 14 Oct 2019 13:59:08 -0700 (PDT)
+Received: from iMac-3.local (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA5423F68E;
+        Mon, 14 Oct 2019 13:59:06 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 21:59:00 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org, linux-s390@vger.kernel.org,
+        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
+        hch@infradead.org, mbrugger@suse.com, wahrenst@gmx.net,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH RFC 0/5] ARM: Raspberry Pi 4 DMA support
+Message-ID: <20191014205859.GA7634@iMac-3.local>
+References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014183108.24804-1-nsaenzjulienne@suse.de>
+User-Agent: Mutt/1.11.1 (2018-12-01)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 14 Oct 2019 11:32:13 +0200 David Hildenbrand <david@redhat.com> wrote:
+On Mon, Oct 14, 2019 at 08:31:02PM +0200, Nicolas Saenz Julienne wrote:
+> the Raspberry Pi 4 offers up to 4GB of memory, of which only the first
+> is DMA capable device wide. This forces us to use of bounce buffers,
+> which are currently not very well supported by ARM's custom DMA ops.
+> Among other things the current mechanism (see dmabounce.c) isn't
+> suitable for high memory. Instead of fixing it, this series introduces a
+> way of selecting dma-direct as the default DMA ops provider which allows
+> for the Raspberry Pi to make use of swiotlb.
 
-> > Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
-> 
-> @Andrew, can you convert that to
-> 
-> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded 
-> memory to zones until online") # visible after d0dc12e86b319
-> 
-> and add
-> 
-> Cc: stable@vger.kernel.org # v4.13+
+I presume these patches go on top of this series:
 
-Done, thanks.
+http://lkml.kernel.org/r/20190911182546.17094-1-nsaenzjulienne@suse.de
+
+which I queued here:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/zone-dma
+
+-- 
+Catalin
