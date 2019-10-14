@@ -2,124 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2682BD66F4
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 18:13:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8B600D685A
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 19:23:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387975AbfJNQNT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Oct 2019 12:13:19 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:34974 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730030AbfJNQNT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 14 Oct 2019 12:13:19 -0400
-Received: by mail-lf1-f68.google.com with SMTP id w6so12224397lfl.2;
-        Mon, 14 Oct 2019 09:13:17 -0700 (PDT)
+        id S2387737AbfJNRXH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Oct 2019 13:23:07 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:40134 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731347AbfJNRXH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 14 Oct 2019 13:23:07 -0400
+Received: by mail-wr1-f67.google.com with SMTP id h4so20677223wrv.7;
+        Mon, 14 Oct 2019 10:23:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=EGGdaz7JChYl4JPWAU70Za+RRAZ6S/LKBm6uuB4+/Xc=;
+        b=RRPJF2yb4XFeB7uEMgAAHug959rwOOi8I/aMvVs+16qpBMg/xi88CdeE9Z0H9RouJ+
+         fuML1Z9e9rjBfDAPLO3vADPa3LKcP9qnEf/xpsiWQnNh+luQFiGV3tK5aWSEkUPYzdfA
+         KpZpZ+iy0Yoy/NcKo/yZtrnc6V+97GtwBpJroCZjdetayH+gySMvQCYQhbhgEwH6uh48
+         WPbN59RIfr0Ttxd+BL05PY62ls2843A5TDjRJu5P2+VWH3gHHPu5bJlTNgtK5BrOavSZ
+         bJycA88kKLnGA677mFQ8W/bpEIMLoXR5m1yU1geUzd8TFe+sPFHy6SrFhwmpW0BGfxq4
+         DNXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YHnMAZs14fJi1NNz2NtD+GzNSsWEq3noMLIQejJbPKU=;
-        b=toH9VV3wIiWhb/2qHvQHVe+jWgxZmwSsmZS57GensCyN++iU9E+LykRN0Ln+cTA3KY
-         dwzm5i6h6jXjiL6dp2lKbQtTVPEBGYvaqWG+zX3yKSTluqFm3BrklQT2G+q1b2iXIO7I
-         p9l312WUWBvjU9wLMG9MLJtlNJXqxKKiECobN92aIMmY5yoPduxzxXHgNpUGwDvKEpRu
-         VWq4U5dEOzbevlOoYQgfTJkAkeAJ2kKO8+U4Jy01yz9cmKjtVjYZ4BXLoHyx6GUzUs7n
-         DQy/qbWucgwNONBbD10gdcSN1fKeUvtgNZtv4JOEhDHWCDRMamEjq8OKl/dfc6Kmu5xl
-         qDBw==
-X-Gm-Message-State: APjAAAUSPIzgN3OCpX5H+rlkAte+JKd7NKhZnU1b0TxXrLgxBPtVne/y
-        G39hULvg8/BJZXR8PyCNvdw=
-X-Google-Smtp-Source: APXvYqwDP0lRYsp3cJGX83F+AoNpiKoRwb/MliBNk6cC6YR1rKI1uNyUAt7eBJo+pCIcoF5AbQU7Mg==
-X-Received: by 2002:ac2:5a06:: with SMTP id q6mr16772533lfn.59.1571069596454;
-        Mon, 14 Oct 2019 09:13:16 -0700 (PDT)
-Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
-        by smtp.gmail.com with ESMTPSA id 126sm5526559lfh.45.2019.10.14.09.13.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 14 Oct 2019 09:13:14 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.92.2)
-        (envelope-from <johan@kernel.org>)
-        id 1iK2yM-00051m-6W; Mon, 14 Oct 2019 18:13:26 +0200
-Date:   Mon, 14 Oct 2019 18:13:26 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     Johan Hovold <johan@kernel.org>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191014161326.GO13531@localhost>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010135043.GA16989@phenom.ffwll.local>
- <20191011093633.GD27819@localhost>
- <20191014084847.GD11828@phenom.ffwll.local>
+        bh=EGGdaz7JChYl4JPWAU70Za+RRAZ6S/LKBm6uuB4+/Xc=;
+        b=SvitF9CzvT9Th5XrcJd1BSyRmyD+ZgCEbnUZzB6F4HY3oDLsRuUcqpWHxA6ARHv8j5
+         7Kq0LFgnaWIGzZkO3BdFZfqqgl1qwb7oyRL2aS8tjH6LGfYhPTWsLABX5v4+BE+8X3o3
+         a+MPcixyqNnAva00X4ssWXzkbBUXCZWCpLrf0QbsyPvvgqaiA09XXsJH6G5NU7sYowVx
+         sdamSAB5H0T8x5035ufXMJkGaw4B/0MKLOIv88yfOneS2h+9V/7ebOWDP4LBLVKaOYfT
+         z+vHzC71XrRFbQM0RQZFyEulIDYZbR1TuH9/PFueEj7cjdxvezo3vow5zCBeVdQ9UtZO
+         kAig==
+X-Gm-Message-State: APjAAAVRaIijLQ6I3eDTRK/w6mbuPGEztFmhcxr5DK46Yb4gnqhCKT+P
+        BVJsxcs7LbsJgX95jpOGSss=
+X-Google-Smtp-Source: APXvYqwzHqNY1eXa8Wf7T+/uPb0SEQxKfUwA6RcA+GYW/wDuACvWvp5czJ0hnFuczXqrqbCUluKYlA==
+X-Received: by 2002:adf:e403:: with SMTP id g3mr24811494wrm.294.1571073784104;
+        Mon, 14 Oct 2019 10:23:04 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id u11sm17480327wmd.32.2019.10.14.10.23.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2019 10:23:02 -0700 (PDT)
+Date:   Mon, 14 Oct 2019 18:23:01 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+Subject: Re: [PATCH V3 5/7] mdev: introduce virtio device and its device ops
+Message-ID: <20191014172301.GA5359@stefanha-x1.localdomain>
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191011081557.28302-6-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="KsGdsel6WgEHnImy"
 Content-Disposition: inline
-In-Reply-To: <20191014084847.GD11828@phenom.ffwll.local>
+In-Reply-To: <20191011081557.28302-6-jasowang@redhat.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 10:48:47AM +0200, Daniel Vetter wrote:
-> On Fri, Oct 11, 2019 at 11:36:33AM +0200, Johan Hovold wrote:
-> > On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
-> > > On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
-> > > > Two old USB drivers had a bug in them which could lead to memory leaks
-> > > > if an interrupted process raced with a disconnect event.
-> > > > 
-> > > > Turns out we had a few more driver in other subsystems with the same
-> > > > kind of bug in them.
-> > 
-> > > Random funny idea: Could we do some debug annotations (akin to
-> > > might_sleep) that splats when you might_sleep_interruptible somewhere
-> > > where interruptible sleeps are generally a bad idea? Like in
-> > > fops->release?
-> > 
-> > There's nothing wrong with interruptible sleep in fops->release per se,
-> > it's just that drivers cannot return -ERESTARTSYS and friends and expect
-> > to be called again later.
-> 
-> Do you have a legit usecase for interruptible sleeps in fops->release?
 
-The tty layer depends on this for example when waiting for buffered
-writes to complete (something which may never happen when using flow
-control).
+--KsGdsel6WgEHnImy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> I'm not even sure killable is legit in there, since it's an fd, not a
-> process context ...
+On Fri, Oct 11, 2019 at 04:15:55PM +0800, Jason Wang wrote:
+> + * @set_vq_cb:			Set the interrut calback function for
 
-It will be run in process context in many cases, and for ttys we're good
-AFAICT.
+s/interrut/interrupt/
 
-> > The return value from release() is ignored by vfs, and adding a splat in
-> > __fput() to catch these buggy drivers might be overkill.
-> 
-> Ime once you have a handful of instances of a broken pattern, creating a
-> check for it (under a debug option only ofc) is very much justified.
-> Otherwise they just come back to life like the undead, all the time. And
-> there's a _lot_ of fops->release callbacks in the kernel.
+s/calback/callback/
 
-Yeah, you have a point.
+--KsGdsel6WgEHnImy
+Content-Type: application/pgp-signature; name="signature.asc"
 
-But take tty again as an example, the close tty operation called from
-release() is declared void so there's no propagated return value for vfs
-to check.
+-----BEGIN PGP SIGNATURE-----
 
-It may even be better to fix up the 100 or so callbacks potentially
-returning non-zero and make fops->release void so that the compiler
-would help us catch any future bugs and also serve as a hint for
-developers that returning errnos from fops->release is probably not
-what you want to do.
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2krvUACgkQnKSrs4Gr
+c8hIpQgArOf5wNMCOOx9mrAoFEfDyFDnQGYWa6Ce2/25rBYZVN1BIaLrZLwRk4Za
+aM65SiUsAMIh+UTdezqEPyUZCoRZbcxFRWUtyQZqHLCVg3yrwM++9xtTFclrIY0p
+hP+v2ZVAMUT/1BQiaAo3+qlItEYbUDwtSl+wsSwzlvu9nFRlHjjdbUZAJmU78zv0
+Y50LNaXQf3+E9GqPDj6nJEUSxpww44C1FOgxh9SErmqG8j7ReyAfng0loRKNdZbv
+6g7U1I0J+vNgzcCxTSipVRS8EH0bOEY07w3OggpIoIRnOx6voaXYz8SMEQZ8tiRu
+k0SSOtAyZ48s1BaOt3vREX8uYFlt0A==
+=/ZZN
+-----END PGP SIGNATURE-----
 
-But that's a lot of churn of course.
-
-Johan
+--KsGdsel6WgEHnImy--
