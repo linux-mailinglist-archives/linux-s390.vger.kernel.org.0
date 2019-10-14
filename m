@@ -2,125 +2,150 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5147DD5DD7
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 10:49:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CBFF6D5E1B
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 11:06:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730464AbfJNIsz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Oct 2019 04:48:55 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:43712 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730476AbfJNIsw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 14 Oct 2019 04:48:52 -0400
-Received: by mail-ed1-f68.google.com with SMTP id r9so14067739edl.10
-        for <linux-s390@vger.kernel.org>; Mon, 14 Oct 2019 01:48:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=xtv8eDUo7LGL8wXNVViezHRuz1eIYtvj8JrfIGcZVug=;
-        b=HrE4MoWhmtc/2ksDE63nOcfdOtX17WLrOzhRQ9QxIpfLhDYJ37xkcRCjeilpHPQbY/
-         a9VXf8/BQDX+xVYBdbQxwqJg/4C0nxCllPh4PXFjE6krWeWUAUVaKgU8hoVw1CcGNRUj
-         havuz7CsORrPqD7MmaYvGtD/MPGCN3gWB5HRo=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=xtv8eDUo7LGL8wXNVViezHRuz1eIYtvj8JrfIGcZVug=;
-        b=D50mhhO5kqjp6vaBuPfBJwxUP3lhGQtHePvo1YP6obBb3fBRkWpyiu+K9h+TSTQKg7
-         xyEDwSux/ze0AiNKThI0o8NflmTL5cVOAeJJdBOvljJ0ZCzveVjVkKdZPF1FrKJj7daB
-         6rFz9kH31lsQsvBjOIPHk4mf+w3y+SJ53HAfgGfVXLFGR/IaCEeey8o6/uSC6eVjiDz0
-         S089R/fQq5/s6XrtjXjS5iCYyN8/EY11XLOL5yIh7ROr/03tNKjaV8dZTq5kRE+2x5QZ
-         q+rx1zxXpHZ5AzQcKFmxl7FW/L5yI+28DwO88mHeoG9yBLaOe+rF/OVJ3Jmt6jIptqVY
-         ryxA==
-X-Gm-Message-State: APjAAAXKuGAcoSL1+IN50iom0KUkprWTYCC25WpXQvDdmtP8F4zvSWdq
-        kVqfoQ7DHoWF7bj1TnmIc7ZV/g==
-X-Google-Smtp-Source: APXvYqy/ZEwWAWWWTFpXjJ6+8zSYCyYSv2xT+RJWq3EenfofAI17t+WveIWMFS5L/0g7YiaoBEcqkg==
-X-Received: by 2002:a17:906:309b:: with SMTP id 27mr27115276ejv.243.1571042930920;
-        Mon, 14 Oct 2019 01:48:50 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id bq13sm2215123ejb.25.2019.10.14.01.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 14 Oct 2019 01:48:50 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 10:48:47 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191014084847.GD11828@phenom.ffwll.local>
-Mail-Followup-To: Johan Hovold <johan@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010135043.GA16989@phenom.ffwll.local>
- <20191011093633.GD27819@localhost>
+        id S1730660AbfJNJGA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Oct 2019 05:06:00 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45300 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730605AbfJNJGA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 14 Oct 2019 05:06:00 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 962863082E42;
+        Mon, 14 Oct 2019 09:05:59 +0000 (UTC)
+Received: from [10.36.117.10] (ovpn-117-10.ams2.redhat.com [10.36.117.10])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6C47860BE2;
+        Mon, 14 Oct 2019 09:05:55 +0000 (UTC)
+Subject: Re: [PATCH v6 01/10] mm/memunmap: Don't access uninitialized memmap
+ in memunmap_pages()
+To:     linux-kernel@vger.kernel.org
+Cc:     linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        x86@kernel.org, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Ira Weiny <ira.weiny@intel.com>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-2-david@redhat.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <c528655a-7050-506b-c9bb-632dfde6c209@redhat.com>
+Date:   Mon, 14 Oct 2019 11:05:54 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191011093633.GD27819@localhost>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191006085646.5768-2-david@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 14 Oct 2019 09:06:00 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Oct 11, 2019 at 11:36:33AM +0200, Johan Hovold wrote:
-> On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
-> > On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
-> > > Two old USB drivers had a bug in them which could lead to memory leaks
-> > > if an interrupted process raced with a disconnect event.
-> > > 
-> > > Turns out we had a few more driver in other subsystems with the same
-> > > kind of bug in them.
+On 06.10.19 10:56, David Hildenbrand wrote:
+> From: "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
 > 
-> > Random funny idea: Could we do some debug annotations (akin to
-> > might_sleep) that splats when you might_sleep_interruptible somewhere
-> > where interruptible sleeps are generally a bad idea? Like in
-> > fops->release?
+> With an altmap, the memmap falling into the reserved altmap space are
+> not initialized and, therefore, contain a garbage NID and a garbage
+> zone. Make sure to read the NID/zone from a memmap that was initialzed.
 > 
-> There's nothing wrong with interruptible sleep in fops->release per se,
-> it's just that drivers cannot return -ERESTARTSYS and friends and expect
-> to be called again later.
+> This fixes a kernel crash that is observed when destroying a namespace:
+> 
+> [   81.356173] kernel BUG at include/linux/mm.h:1107!
+> cpu 0x1: Vector: 700 (Program Check) at [c000000274087890]
+>      pc: c0000000004b9728: memunmap_pages+0x238/0x340
+>      lr: c0000000004b9724: memunmap_pages+0x234/0x340
+> ...
+>      pid   = 3669, comm = ndctl
+> kernel BUG at include/linux/mm.h:1107!
+> [c000000274087ba0] c0000000009e3500 devm_action_release+0x30/0x50
+> [c000000274087bc0] c0000000009e4758 release_nodes+0x268/0x2d0
+> [c000000274087c30] c0000000009dd144 device_release_driver_internal+0x174/0x240
+> [c000000274087c70] c0000000009d9dfc unbind_store+0x13c/0x190
+> [c000000274087cb0] c0000000009d8a24 drv_attr_store+0x44/0x60
+> [c000000274087cd0] c0000000005a7470 sysfs_kf_write+0x70/0xa0
+> [c000000274087d10] c0000000005a5cac kernfs_fop_write+0x1ac/0x290
+> [c000000274087d60] c0000000004be45c __vfs_write+0x3c/0x70
+> [c000000274087d80] c0000000004c26e4 vfs_write+0xe4/0x200
+> [c000000274087dd0] c0000000004c2a6c ksys_write+0x7c/0x140
+> [c000000274087e20] c00000000000bbd0 system_call+0x5c/0x68
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Logan Gunthorpe <logang@deltatee.com>
+> Cc: Ira Weiny <ira.weiny@intel.com>
+> Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+> [ minimze code changes, rephrase description ]
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>   mm/memremap.c | 11 +++++++----
+>   1 file changed, 7 insertions(+), 4 deletions(-)
+> 
+> diff --git a/mm/memremap.c b/mm/memremap.c
+> index 557e53c6fb46..8c2fb44c3b4d 100644
+> --- a/mm/memremap.c
+> +++ b/mm/memremap.c
+> @@ -123,6 +123,7 @@ static void dev_pagemap_cleanup(struct dev_pagemap *pgmap)
+>   void memunmap_pages(struct dev_pagemap *pgmap)
+>   {
+>   	struct resource *res = &pgmap->res;
+> +	struct page *first_page;
+>   	unsigned long pfn;
+>   	int nid;
+>   
+> @@ -131,14 +132,16 @@ void memunmap_pages(struct dev_pagemap *pgmap)
+>   		put_page(pfn_to_page(pfn));
+>   	dev_pagemap_cleanup(pgmap);
+>   
+> +	/* make sure to access a memmap that was actually initialized */
+> +	first_page = pfn_to_page(pfn_first(pgmap));
+> +
+>   	/* pages are dead and unused, undo the arch mapping */
+> -	nid = page_to_nid(pfn_to_page(PHYS_PFN(res->start)));
+> +	nid = page_to_nid(first_page);
+>   
+>   	mem_hotplug_begin();
+>   	if (pgmap->type == MEMORY_DEVICE_PRIVATE) {
+> -		pfn = PHYS_PFN(res->start);
+> -		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+> -				 PHYS_PFN(resource_size(res)), NULL);
+> +		__remove_pages(page_zone(first_page), PHYS_PFN(res->start),
+> +			       PHYS_PFN(resource_size(res)), NULL);
+>   	} else {
+>   		arch_remove_memory(nid, res->start, resource_size(res),
+>   				pgmap_altmap(pgmap));
+> 
 
-Do you have a legit usecase for interruptible sleeps in fops->release?
+@Andrew, can you add
 
-I'm not even sure killable is legit in there, since it's an fd, not a
-process context ...
+Fixes: 2c2a5af6fed2 ("mm, memory_hotplug: add nid parameter to 
+arch_remove_memory")
 
-> The return value from release() is ignored by vfs, and adding a splat in
-> __fput() to catch these buggy drivers might be overkill.
+(which basically introduced the nid = page_to_nid(first_page))
 
-Ime once you have a handful of instances of a broken pattern, creating a
-check for it (under a debug option only ofc) is very much justified.
-Otherwise they just come back to life like the undead, all the time. And
-there's a _lot_ of fops->release callbacks in the kernel.
--Daniel
+The "page_zone(pfn_to_page(pfn)" was introduced by 69324b8f4833 ("mm, 
+devm_memremap_pages: add MEMORY_DEVICE_PRIVATE support"), however, I 
+think we will never have driver reserved memory with 
+MEMORY_DEVICE_PRIVATE (no altmap AFAIKS).
+
+Also, I think
+
+Cc: stable@vger.kernel.org # v5.0+
+
+makes sense.
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+
+Thanks,
+
+David / dhildenb
