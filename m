@@ -2,253 +2,66 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5152FD696C
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 20:31:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id DC0CCD69F8
+	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 21:17:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730828AbfJNSbw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Oct 2019 14:31:52 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42682 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388791AbfJNSbw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Oct 2019 14:31:52 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 45AF8BB70;
-        Mon, 14 Oct 2019 18:31:49 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     hch@infradead.org, mbrugger@suse.com, f.fainelli@gmail.com,
-        wahrenst@gmx.net, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH RFC 1/5] dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
-Date:   Mon, 14 Oct 2019 20:31:03 +0200
-Message-Id: <20191014183108.24804-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191014183108.24804-1-nsaenzjulienne@suse.de>
-References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1731586AbfJNTRV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Oct 2019 15:17:21 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44800 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728005AbfJNTRV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 14 Oct 2019 15:17:21 -0400
+Received: from akpm3.svl.corp.google.com (unknown [104.133.8.65])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E75B9217F9;
+        Mon, 14 Oct 2019 19:17:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571080640;
+        bh=GVOpKJU8+fX2Cvw0U5HfH5hzn91D4G2Rk4nes27+pag=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=FR3WzbMF70HWxk7LTH30/6dEQ8O2Dy6iHIYsz3roW7gGsiv/bCa+/sQvvUktTZ/BO
+         sea8B8Iv2qQrW/t9KU/O3J+J0m3QYNRD0hYc9BPn9xPN45izvaOitFObeTCJxIolf7
+         oGAogT4n2dH58KrM+gstDU8nD3TYaBLq3dqW2/DM=
+Date:   Mon, 14 Oct 2019 12:17:19 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
+Subject: Re: [PATCH v6 04/10] mm/memory_hotplug: Don't access uninitialized
+ memmaps in shrink_zone_span()
+Message-Id: <20191014121719.cb9b9efe51a7e9e985b38075@linux-foundation.org>
+In-Reply-To: <5a4573de-bd8a-6cd3-55d0-86d503a236fd@redhat.com>
+References: <20191006085646.5768-1-david@redhat.com>
+        <20191006085646.5768-5-david@redhat.com>
+        <5a4573de-bd8a-6cd3-55d0-86d503a236fd@redhat.com>
+X-Mailer: Sylpheed 3.7.0 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Some architectures, notably ARM, are interested in tweaking this
-depending on their runtime DMA addressing limitations.
+On Mon, 14 Oct 2019 11:32:13 +0200 David Hildenbrand <david@redhat.com> wrote:
 
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- arch/arm64/include/asm/page.h   |  2 --
- arch/arm64/mm/init.c            |  9 +++++++--
- arch/powerpc/include/asm/page.h |  9 ---------
- arch/powerpc/mm/mem.c           | 20 +++++++++++++++-----
- arch/s390/include/asm/page.h    |  2 --
- arch/s390/mm/init.c             |  1 +
- include/linux/dma-direct.h      |  2 ++
- kernel/dma/direct.c             | 13 ++++++-------
- 8 files changed, 31 insertions(+), 27 deletions(-)
+> > Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
+> 
+> @Andrew, can you convert that to
+> 
+> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded 
+> memory to zones until online") # visible after d0dc12e86b319
+> 
+> and add
+> 
+> Cc: stable@vger.kernel.org # v4.13+
 
-diff --git a/arch/arm64/include/asm/page.h b/arch/arm64/include/asm/page.h
-index 7b8c98830101..d39ddb258a04 100644
---- a/arch/arm64/include/asm/page.h
-+++ b/arch/arm64/include/asm/page.h
-@@ -38,6 +38,4 @@ extern int pfn_valid(unsigned long);
- 
- #include <asm-generic/getorder.h>
- 
--#define ARCH_ZONE_DMA_BITS 30
--
- #endif
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 44f07fdf7a59..ddd6a6ce158e 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -20,6 +20,7 @@
- #include <linux/sort.h>
- #include <linux/of.h>
- #include <linux/of_fdt.h>
-+#include <linux/dma-direct.h>
- #include <linux/dma-mapping.h>
- #include <linux/dma-contiguous.h>
- #include <linux/efi.h>
-@@ -41,6 +42,8 @@
- #include <asm/tlb.h>
- #include <asm/alternative.h>
- 
-+#define ARM64_ZONE_DMA_BITS	30
-+
- /*
-  * We need to be able to catch inadvertent references to memstart_addr
-  * that occur (potentially in generic code) before arm64_memblock_init()
-@@ -440,8 +443,10 @@ void __init arm64_memblock_init(void)
- 
- 	early_init_fdt_scan_reserved_mem();
- 
--	if (IS_ENABLED(CONFIG_ZONE_DMA))
--		arm64_dma_phys_limit = max_zone_phys(ARCH_ZONE_DMA_BITS);
-+	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
-+		zone_dma_bits = ARM64_ZONE_DMA_BITS;
-+		arm64_dma_phys_limit = max_zone_phys(ARM64_ZONE_DMA_BITS);
-+	}
- 
- 	if (IS_ENABLED(CONFIG_ZONE_DMA32))
- 		arm64_dma32_phys_limit = max_zone_phys(32);
-diff --git a/arch/powerpc/include/asm/page.h b/arch/powerpc/include/asm/page.h
-index c8bb14ff4713..f6c562acc3f8 100644
---- a/arch/powerpc/include/asm/page.h
-+++ b/arch/powerpc/include/asm/page.h
-@@ -329,13 +329,4 @@ struct vm_area_struct;
- #endif /* __ASSEMBLY__ */
- #include <asm/slice.h>
- 
--/*
-- * Allow 30-bit DMA for very limited Broadcom wifi chips on many powerbooks.
-- */
--#ifdef CONFIG_PPC32
--#define ARCH_ZONE_DMA_BITS 30
--#else
--#define ARCH_ZONE_DMA_BITS 31
--#endif
--
- #endif /* _ASM_POWERPC_PAGE_H */
-diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-index 97e5922cb52e..8bab4e8b6bae 100644
---- a/arch/powerpc/mm/mem.c
-+++ b/arch/powerpc/mm/mem.c
-@@ -31,6 +31,7 @@
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/memremap.h>
-+#include <linux/dma-direct.h>
- 
- #include <asm/pgalloc.h>
- #include <asm/prom.h>
-@@ -200,10 +201,10 @@ static int __init mark_nonram_nosave(void)
-  * everything else. GFP_DMA32 page allocations automatically fall back to
-  * ZONE_DMA.
-  *
-- * By using 31-bit unconditionally, we can exploit ARCH_ZONE_DMA_BITS to
-- * inform the generic DMA mapping code.  32-bit only devices (if not handled
-- * by an IOMMU anyway) will take a first dip into ZONE_NORMAL and get
-- * otherwise served by ZONE_DMA.
-+ * By using 31-bit unconditionally, we can exploit zone_dma_bits to inform the
-+ * generic DMA mapping code.  32-bit only devices (if not handled by an IOMMU
-+ * anyway) will take a first dip into ZONE_NORMAL and get otherwise served by
-+ * ZONE_DMA.
-  */
- static unsigned long max_zone_pfns[MAX_NR_ZONES];
- 
-@@ -236,9 +237,18 @@ void __init paging_init(void)
- 	printk(KERN_DEBUG "Memory hole size: %ldMB\n",
- 	       (long int)((top_of_ram - total_ram) >> 20));
- 
-+	/*
-+	 * Allow 30-bit DMA for very limited Broadcom wifi chips on many
-+	 * powerbooks.
-+	 */
-+	if (IS_ENABLED(CONFIG_PPC32))
-+		zone_dma_bits = 30;
-+	else
-+		zone_dma_bits = 31;
-+
- #ifdef CONFIG_ZONE_DMA
- 	max_zone_pfns[ZONE_DMA]	= min(max_low_pfn,
--				      1UL << (ARCH_ZONE_DMA_BITS - PAGE_SHIFT));
-+				      1UL << (zone_dma_bits - PAGE_SHIFT));
- #endif
- 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
- #ifdef CONFIG_HIGHMEM
-diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
-index 823578c6b9e2..a4d38092530a 100644
---- a/arch/s390/include/asm/page.h
-+++ b/arch/s390/include/asm/page.h
-@@ -177,8 +177,6 @@ static inline int devmem_is_allowed(unsigned long pfn)
- #define VM_DATA_DEFAULT_FLAGS	(VM_READ | VM_WRITE | \
- 				 VM_MAYREAD | VM_MAYWRITE | VM_MAYEXEC)
- 
--#define ARCH_ZONE_DMA_BITS	31
--
- #include <asm-generic/memory_model.h>
- #include <asm-generic/getorder.h>
- 
-diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
-index c1d96e588152..ac44bd76db4b 100644
---- a/arch/s390/mm/init.c
-+++ b/arch/s390/mm/init.c
-@@ -118,6 +118,7 @@ void __init paging_init(void)
- 
- 	sparse_memory_present_with_active_regions(MAX_NUMNODES);
- 	sparse_init();
-+	zone_dma_bits = 31;
- 	memset(max_zone_pfns, 0, sizeof(max_zone_pfns));
- 	max_zone_pfns[ZONE_DMA] = PFN_DOWN(MAX_DMA_ADDRESS);
- 	max_zone_pfns[ZONE_NORMAL] = max_low_pfn;
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index adf993a3bd58..d03af3605460 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -5,6 +5,8 @@
- #include <linux/dma-mapping.h>
- #include <linux/mem_encrypt.h>
- 
-+extern unsigned int zone_dma_bits;
-+
- #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
- #include <asm/dma-direct.h>
- #else
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index 8402b29c280f..0b67c04e531b 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -16,12 +16,11 @@
- #include <linux/swiotlb.h>
- 
- /*
-- * Most architectures use ZONE_DMA for the first 16 Megabytes, but
-- * some use it for entirely different regions:
-+ * Most architectures use ZONE_DMA for the first 16 Megabytes, but some use it
-+ * it for entirely different regions. In that case the arch code needs to
-+ * override the variable below for dma-direct to work properly.
-  */
--#ifndef ARCH_ZONE_DMA_BITS
--#define ARCH_ZONE_DMA_BITS 24
--#endif
-+unsigned int zone_dma_bits __ro_after_init = 24;
- 
- static void report_addr(struct device *dev, dma_addr_t dma_addr, size_t size)
- {
-@@ -69,7 +68,7 @@ static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- 	 * Note that GFP_DMA32 and GFP_DMA are no ops without the corresponding
- 	 * zones.
- 	 */
--	if (*phys_mask <= DMA_BIT_MASK(ARCH_ZONE_DMA_BITS))
-+	if (*phys_mask <= DMA_BIT_MASK(zone_dma_bits))
- 		return GFP_DMA;
- 	if (*phys_mask <= DMA_BIT_MASK(32))
- 		return GFP_DMA32;
-@@ -395,7 +394,7 @@ int dma_direct_supported(struct device *dev, u64 mask)
- 	u64 min_mask;
- 
- 	if (IS_ENABLED(CONFIG_ZONE_DMA))
--		min_mask = DMA_BIT_MASK(ARCH_ZONE_DMA_BITS);
-+		min_mask = DMA_BIT_MASK(zone_dma_bits);
- 	else
- 		min_mask = DMA_BIT_MASK(32);
- 
--- 
-2.23.0
-
+Done, thanks.
