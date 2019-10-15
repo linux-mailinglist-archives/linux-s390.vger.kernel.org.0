@@ -2,160 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 62516D7384
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 12:41:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8DE9AD73F2
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 12:53:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfJOKl4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Oct 2019 06:41:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59612 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725790AbfJOKlz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Oct 2019 06:41:55 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6141C20F2;
-        Tue, 15 Oct 2019 10:41:54 +0000 (UTC)
-Received: from gondolin (dhcp-192-233.str.redhat.com [10.33.192.233])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AAC1260127;
-        Tue, 15 Oct 2019 10:41:39 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 12:41:37 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-Subject: Re: [PATCH V3 4/7] mdev: introduce device specific ops
-Message-ID: <20191015124137.4f948bd2.cohuck@redhat.com>
-In-Reply-To: <20191011081557.28302-5-jasowang@redhat.com>
-References: <20191011081557.28302-1-jasowang@redhat.com>
-        <20191011081557.28302-5-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        id S1728272AbfJOKxY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Oct 2019 06:53:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46462 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726906AbfJOKxY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 15 Oct 2019 06:53:24 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9FAqL3F056865
+        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 06:53:23 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vnc5j983t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 06:53:22 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <iii@linux.ibm.com>;
+        Tue, 15 Oct 2019 11:53:19 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 15 Oct 2019 11:53:16 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9FArELh49021050
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 10:53:14 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 875C442049;
+        Tue, 15 Oct 2019 10:53:14 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 450A842042;
+        Tue, 15 Oct 2019 10:53:14 +0000 (GMT)
+Received: from white.boeblingen.de.ibm.com (unknown [9.152.98.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 15 Oct 2019 10:53:14 +0000 (GMT)
+From:   Ilya Leoshkevich <iii@linux.ibm.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH] scripts/gdb: fix debugging modules on s390
+Date:   Tue, 15 Oct 2019 12:53:13 +0200
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.71]); Tue, 15 Oct 2019 10:41:54 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101510-0020-0000-0000-0000037938D2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101510-0021-0000-0000-000021CF56AB
+Message-Id: <20191015105313.12663-1-iii@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=852 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910150100
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 11 Oct 2019 16:15:54 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+Currently lx-symbols assumes that module text is always located at
+module->core_layout->base, but s390 uses the following layout:
 
-> Currently, except for the create and remove, the rest of
-> mdev_parent_ops is designed for vfio-mdev driver only and may not help
-> for kernel mdev driver. With the help of class id, this patch
-> introduces device specific callbacks inside mdev_device
-> structure. This allows different set of callback to be used by
-> vfio-mdev and virtio-mdev.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  .../driver-api/vfio-mediated-device.rst       | 22 +++++---
->  MAINTAINERS                                   |  1 +
->  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
->  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
->  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
->  drivers/vfio/mdev/mdev_core.c                 |  9 +++-
->  drivers/vfio/mdev/mdev_private.h              |  1 +
->  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
->  include/linux/mdev.h                          | 42 +++------------
->  include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
->  samples/vfio-mdev/mbochs.c                    | 20 ++++---
->  samples/vfio-mdev/mdpy.c                      | 21 +++++---
->  samples/vfio-mdev/mtty.c                      | 18 ++++---
->  13 files changed, 177 insertions(+), 96 deletions(-)
->  create mode 100644 include/linux/vfio_mdev.h
-> 
-> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
-> index 2035e48da7b2..553574ebba73 100644
-> --- a/Documentation/driver-api/vfio-mediated-device.rst
-> +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> @@ -152,11 +152,20 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
->  Vendor drivers are expected to be fully asynchronous in this respect or
->  provide their own internal resource protection.)
->  
-> -The callbacks in the mdev_parent_ops structure are as follows:
-> +In order to support multiple types of device/driver, device needs to
-> +provide both class_id and device_ops through:
++------+  <- module->core_layout->base
+| GOT  |
++------+  <- module->core_layout->base + module->arch->plt_offset
+| PLT  |
++------+  <- module->core_layout->base + module->arch->plt_offset +
+| TEXT |     module->arch->plt_size
++------+
 
-"As multiple types of mediated devices may be supported, the device
-needs to set up the class id and the device specific callbacks via:"
+Therefore, when trying to debug modules on s390, all the symbol
+addresses are skewed by plt_offset + plt_size.
 
-?
+Fix by adding plt_offset + plt_size to module_addr in
+load_module_symbols().
 
->  
-> -* open: open callback of mediated device
-> -* close: close callback of mediated device
-> -* ioctl: ioctl callback of mediated device
-> +    void mdev_set_class(struct mdev_device *mdev, u16 id, const void *ops);
-> +
-> +The class_id is used to be paired with ids in id_table in mdev_driver
-> +structure for probing the correct driver.
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
+ scripts/gdb/linux/symbols.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
-"The class id  (specified in id) is used to match a device with an mdev
-driver via its id table."
+diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
+index f0d8f2ecfde7..41c6d1a55b03 100644
+--- a/scripts/gdb/linux/symbols.py
++++ b/scripts/gdb/linux/symbols.py
+@@ -15,7 +15,7 @@ import gdb
+ import os
+ import re
+ 
+-from linux import modules
++from linux import modules, utils
+ 
+ 
+ if hasattr(gdb, 'Breakpoint'):
+@@ -113,6 +113,12 @@ lx-symbols command."""
+         if module_file:
+             gdb.write("loading @{addr}: {filename}\n".format(
+                 addr=module_addr, filename=module_file))
++            if utils.is_target_arch('s390'):
++                # Module text is preceded by PLT stubs on s390.
++                module_arch = module['arch']
++                plt_offset = int(module_arch['plt_offset'])
++                plt_size = int(module_arch['plt_size'])
++                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
+             cmdline = "add-symbol-file {filename} {addr}{sections}".format(
+                 filename=module_file,
+                 addr=module_addr,
+-- 
+2.23.0
 
-?
-
-> The device_ops is device
-> +specific callbacks which can be get through mdev_get_dev_ops()
-> +function by mdev bus driver. 
-
-"The device specific callbacks (specified in *ops) are obtainable via
-mdev_get_dev_ops() (for use by the mdev bus driver.)"
-
-?
-
-> For vfio-mdev device, its device specific
-> +ops are as follows:
-
-"A vfio-mdev device (class id MDEV_ID_VFIO) uses the following
-device-specific ops:"
-
-?
-
-> +
-> +* open: open callback of vfio mediated device
-> +* close: close callback of vfio mediated device
-> +* ioctl: ioctl callback of vfio mediated device
->  * read : read emulation callback
->  * write: write emulation callback
->  * mmap: mmap emulation callback
-> @@ -167,9 +176,10 @@ register itself with the mdev core driver::
->  	extern int  mdev_register_device(struct device *dev,
->  	                                 const struct mdev_parent_ops *ops);
->  
-> -It is also required to specify the class_id through::
-> +It is also required to specify the class_id and device specific ops through::
->  
-> -	extern int mdev_set_class(struct device *dev, u16 id);
-> +	extern int mdev_set_class(struct device *dev, u16 id,
-> +	                          const void *ops);
-
-Apologies if that has already been discussed, but do we want a 1:1
-relationship between id and ops, or can different devices with the same
-id register different ops? If the former, would it make sense to first
-register the ops for an id (once), and then have the ->create callback
-only set the class id (with the core doing the lookup of the ops)?
-
->  
->  However, the mdev_parent_ops structure is not required in the function call
->  that a driver should use to unregister itself with the mdev core driver::
