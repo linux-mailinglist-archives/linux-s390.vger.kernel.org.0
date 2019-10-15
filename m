@@ -2,171 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB648D77D8
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 16:00:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 70B1BD77FF
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 16:07:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732387AbfJOOAR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Oct 2019 10:00:17 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39444 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728880AbfJOOAR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Oct 2019 10:00:17 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9FDsD4N130984
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 10:00:16 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vnd4wwkw7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 10:00:15 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <maier@linux.ibm.com>;
-        Tue, 15 Oct 2019 15:00:13 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 15 Oct 2019 15:00:11 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9FE0A2U55640224
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 14:00:10 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C1B511C074;
-        Tue, 15 Oct 2019 14:00:10 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C8CA311C066;
-        Tue, 15 Oct 2019 14:00:09 +0000 (GMT)
-Received: from oc4120165700.ibm.com (unknown [9.152.99.188])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 15 Oct 2019 14:00:09 +0000 (GMT)
-Subject: Re: [RFC PATCH 2/4] vfio-ccw: Trace the FSM jumptable
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20191014180855.19400-1-farman@linux.ibm.com>
- <20191014180855.19400-3-farman@linux.ibm.com>
- <96431f2f-774c-0be2-54ef-ebcaa4ae7298@linux.ibm.com>
- <20191015155339.0d714c75.cohuck@redhat.com>
-From:   Steffen Maier <maier@linux.ibm.com>
-Date:   Tue, 15 Oct 2019 16:00:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1732456AbfJOOHc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Oct 2019 10:07:32 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:35267 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732150AbfJOOHc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Oct 2019 10:07:32 -0400
+Received: by mail-ed1-f66.google.com with SMTP id v8so18180948eds.2
+        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 07:07:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qNZCwssE+agkEqCxaKtKVtylCGvXFSXX5DhiQKaIXpg=;
+        b=NPijPlHE9mOZETSF+T0qFTrnynppESRm1hPk8m15z6BtFKp/f35nb6fP0AtxA+vICD
+         JOWnOXgGumAnnyCgoxgqcArGuemzJeDfqPdA4LYis0/rmWoNPx8t+Aa38BhPM8yc5J1y
+         jTOJ95BLBFELDrUekBUcpVOI1TGYpw9L5o3bg=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=qNZCwssE+agkEqCxaKtKVtylCGvXFSXX5DhiQKaIXpg=;
+        b=TwZ/OZbdYNSlcHtNlJiU22pmddqGDM8TbxtOCMfPT2I5tnxUdNMoRQ4vFrbTHLCrUP
+         UalaWJzUei3UY6uHu+j8guKss1hSQQI8Tk4thYLJQ/hNYY/FLksL4zuE2CBmC9z8KxyS
+         NNkjst6PSIpgGKQj70w4nZEDuI1LssWHo85r+RpZUCY2TzdKyKn8K8MoJ7aAgxxznYr0
+         nqEJt8B9TZbRsvweWeXEu0NUfStr8h1E0WmHohpFenerGawkQSzbVBsI2Mif9MZ1OSgo
+         hhe1G7qk4x4aQfna3EJuJyMk19WbqkADYMc3nYz8EHXST9M3D7n/v/kvL6cr8ylvrleb
+         gOmg==
+X-Gm-Message-State: APjAAAVUBYdw5AfNONK9rKlZtRvtjWgNW/EHbsFoSb1aqgxOPIndW7rq
+        RlwmwjiBdvd16eBSAF08MOyttg==
+X-Google-Smtp-Source: APXvYqxwy4bxug6xoJIsFM59wzr8Eu7OLed7aQTfUGOfiWObU9eeM/ertrRHn6MHc5kJuwT0SZQfrw==
+X-Received: by 2002:a17:906:6a8e:: with SMTP id p14mr34255737ejr.137.1571148449724;
+        Tue, 15 Oct 2019 07:07:29 -0700 (PDT)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id d2sm3745355eda.20.2019.10.15.07.07.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 15 Oct 2019 07:07:28 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 16:07:26 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
+        Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [PATCH 0/4] treewide: fix interrupted release
+Message-ID: <20191015140726.GN11828@phenom.ffwll.local>
+Mail-Followup-To: Johan Hovold <johan@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>
+References: <20191010131333.23635-1-johan@kernel.org>
+ <20191010135043.GA16989@phenom.ffwll.local>
+ <20191011093633.GD27819@localhost>
+ <20191014084847.GD11828@phenom.ffwll.local>
+ <20191014161326.GO13531@localhost>
 MIME-Version: 1.0
-In-Reply-To: <20191015155339.0d714c75.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19101514-4275-0000-0000-000003724A97
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101514-4276-0000-0000-000038855D1F
-Message-Id: <4d9b1e87-18be-24f3-5f4d-796442b882a5@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910150126
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191014161326.GO13531@localhost>
+X-Operating-System: Linux phenom 5.2.0-2-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/15/19 3:53 PM, Cornelia Huck wrote:
-> On Tue, 15 Oct 2019 12:01:12 +0200
-> Steffen Maier <maier@linux.ibm.com> wrote:
+On Mon, Oct 14, 2019 at 06:13:26PM +0200, Johan Hovold wrote:
+> On Mon, Oct 14, 2019 at 10:48:47AM +0200, Daniel Vetter wrote:
+> > On Fri, Oct 11, 2019 at 11:36:33AM +0200, Johan Hovold wrote:
+> > > On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
+> > > > On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
+> > > > > Two old USB drivers had a bug in them which could lead to memory leaks
+> > > > > if an interrupted process raced with a disconnect event.
+> > > > > 
+> > > > > Turns out we had a few more driver in other subsystems with the same
+> > > > > kind of bug in them.
+> > > 
+> > > > Random funny idea: Could we do some debug annotations (akin to
+> > > > might_sleep) that splats when you might_sleep_interruptible somewhere
+> > > > where interruptible sleeps are generally a bad idea? Like in
+> > > > fops->release?
+> > > 
+> > > There's nothing wrong with interruptible sleep in fops->release per se,
+> > > it's just that drivers cannot return -ERESTARTSYS and friends and expect
+> > > to be called again later.
+> > 
+> > Do you have a legit usecase for interruptible sleeps in fops->release?
 > 
->> On 10/14/19 8:08 PM, Eric Farman wrote:
->>> It would be nice if we could track the sequence of events within
->>> vfio-ccw, based on the state of the device/FSM and our calling
->>> sequence within it.  So let's add a simple trace here so we can
->>> watch the states change as things go, and allow it to be folded
->>> into the rest of the other cio traces.
->>>
->>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
->>> ---
->>>    drivers/s390/cio/vfio_ccw_private.h |  1 +
->>>    drivers/s390/cio/vfio_ccw_trace.c   |  1 +
->>>    drivers/s390/cio/vfio_ccw_trace.h   | 26 ++++++++++++++++++++++++++
->>>    3 files changed, 28 insertions(+)
+> The tty layer depends on this for example when waiting for buffered
+> writes to complete (something which may never happen when using flow
+> control).
 > 
-> (...)
+> > I'm not even sure killable is legit in there, since it's an fd, not a
+> > process context ...
 > 
->>> diff --git a/drivers/s390/cio/vfio_ccw_trace.h b/drivers/s390/cio/vfio_ccw_trace.h
->>> index 2a2937a40124..24a8152acfdf 100644
->>> --- a/drivers/s390/cio/vfio_ccw_trace.h
->>> +++ b/drivers/s390/cio/vfio_ccw_trace.h
->>> @@ -17,6 +17,32 @@
->>>
->>>    #include <linux/tracepoint.h>
->>>
->>> +TRACE_EVENT(vfio_ccw_fsm_event,
->>> +	TP_PROTO(struct subchannel_id schid, int state, int event),
->>> +	TP_ARGS(schid, state, event),
->>> +
->>> +	TP_STRUCT__entry(
->>> +		__field(u8, cssid)
->>> +		__field(u8, ssid)
->>> +		__field(u16, schno)
->>> +		__field(int, state)
->>> +		__field(int, event)
->>> +	),
->>> +
->>> +	TP_fast_assign(
->>> +		__entry->cssid = schid.cssid;
->>> +		__entry->ssid = schid.ssid;
->>> +		__entry->schno = schid.sch_no;
->>> +		__entry->state = state;
->>> +		__entry->event = event;
->>> +	),
->>> +
->>> +	TP_printk("schid=%x.%x.%04x state=%x event=%x",
->>
->> /sys/kernel/debug/tracing/events](0)# grep -R '%[^%]*x'
->>
->> Many existing TPs often seem to format hex output with a 0x prefix (either
->> explicit with 0x%x or implicit with %#x). Since some of your other TPs also
->> output decimal integer values, I wonder if a distinction would help
->> unexperienced TP readers.
-> 
-> I generally agree. However, we explicitly don't want to do that for
-> schid formatting (as it should match the bus id). For event, it might
-> become relevant should we want to introduce a high number of new events
-> in the future (currently, there's a grand total of four events.)
+> It will be run in process context in many cases, and for ttys we're good
+> AFAICT.
 
-Yeah, thanks for clarifying. I meant just state and event, not schid.
+Huh, read it a bit, all the ->shutdown callbacks have void return type.
+But there's indeed interruptible sleeps in there. Doesn't this break
+userspace that expects that a close() actually flushes the tty?
 
+Imo if you're ->release callbacks feels like it should do a wait to
+guaranteed something userspace expects, then doing a
+wait_interruptible/killable feels like a bug. Or alternatively, the wait
+isn't really needed in the first place.
+
+> > > The return value from release() is ignored by vfs, and adding a splat in
+> > > __fput() to catch these buggy drivers might be overkill.
+> > 
+> > Ime once you have a handful of instances of a broken pattern, creating a
+> > check for it (under a debug option only ofc) is very much justified.
+> > Otherwise they just come back to life like the undead, all the time. And
+> > there's a _lot_ of fops->release callbacks in the kernel.
 > 
->>
->>> +		__entry->cssid, __entry->ssid, __entry->schno,
->>> +		__entry->state,
->>> +		__entry->event)
->>> +);
->>> +
->>>    TRACE_EVENT(vfio_ccw_io_fctl,
->>>    	TP_PROTO(int fctl, struct subchannel_id schid, int errno, char *errstr),
->>>    	TP_ARGS(fctl, schid, errno, errstr),
->>>    
->>
->>
+> Yeah, you have a point.
 > 
+> But take tty again as an example, the close tty operation called from
+> release() is declared void so there's no propagated return value for vfs
+> to check.
+> 
+> It may even be better to fix up the 100 or so callbacks potentially
+> returning non-zero and make fops->release void so that the compiler
+> would help us catch any future bugs and also serve as a hint for
+> developers that returning errnos from fops->release is probably not
+> what you want to do.
+> 
+> But that's a lot of churn of course.
 
+Hm indeed ->release has int as return type. I guess that's needed for
+file I/O errno and similar stuff ...
 
+Still void return value doesn't catch funny stuff like doing interruptible
+waits and occasionally failing if you have a process that likes to use
+signals and also uses some library somewhere to do something. In graphics
+we have that, with Xorg loving signals for various things.
+-Daniel
 -- 
-Mit freundlichen Gruessen / Kind regards
-Steffen Maier
-
-Linux on IBM Z Development
-
-https://www.ibm.com/privacy/us/en/
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschaeftsfuehrung: Dirk Wittkopp
-Sitz der Gesellschaft: Boeblingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
