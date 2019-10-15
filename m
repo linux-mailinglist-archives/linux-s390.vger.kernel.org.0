@@ -2,158 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE65DD7F2F
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 20:42:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AE84D8008
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 21:21:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389209AbfJOSmG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Oct 2019 14:42:06 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:35606 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389207AbfJOSmF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Oct 2019 14:42:05 -0400
-Received: by mail-qt1-f194.google.com with SMTP id m15so32114325qtq.2
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 11:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YXiUOqo8ETclVClbFsr4YOWOeJ7XlxA5Qh2JOUOHtn0=;
-        b=ih4zeCbnEW9LSQmgDID0erLrP4wKSRd4quPFdjB7jDfMBRahOCBa+C67Dy1NqHkrCv
-         VJSNTqSrY43O2EJhupvXVshQ0BC82dIhxESVHTwLHkCEPN42OBS3yBTYdKusIr1FPyqX
-         wpUPZ/cGTRy5YK2T6ObGKxHp1+6vi2CjoWlyTCo/dPXrhBn0tNseTwJyJuKrduDqfttY
-         fd4SW/I4j0BpnaIdz6zO9hqQf6+agjiuheLCXQaQrYEDCeHJq0DF3gEtcT6Uvp1RF+B9
-         gDgx+ctEQBhsj7GuizlLnNWuM5pbIfjPRVvTdcRA7Ese4V0mQHl7lb1qg7KFEBXx5acS
-         G4wg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YXiUOqo8ETclVClbFsr4YOWOeJ7XlxA5Qh2JOUOHtn0=;
-        b=QYmZAExr/YdrYxCYufzBr/h+rSO+mJ1hml/72qbdtfutosGscMy2gBQxvf3vDKfgmF
-         iGxukQH5zxfRCU3amjsjI7ayqsL1ovtKor1hqcBoGUm6BsZf3GodsyiCM7qa+QpGFbP1
-         3E0EXHpcHL9AwbVcJzrY1umKq0IFGVVPWQBJ2pCPNxaL42/TDRSJ2QEjzDfBKKDIpNHy
-         z2k+dvqnVQ9d4MLy7+2v3wBa1GI33SRWAJP0NbiNF9X1YMQbQtgqbXYSwHa5d/F7CoSd
-         n1l7i+K9XeXsY459zjXYhH1wEUengwwmV8S1ZIElPzIbXDWVZ/JKEcSRySY76KZ/GM3q
-         Pu5A==
-X-Gm-Message-State: APjAAAVKSsoAb+/mg6DRm1LsniaXGw/O6f5anjYe+5/yL1+hX2jzsf4f
-        wqPOM04D2lDROqeAIAg/48XbSA==
-X-Google-Smtp-Source: APXvYqwar5I/V60pS57/UcDUw1cogFuq6+7hHVlNRpscniqz5EATufxt8kONpUilAAyTNCHiUcXZ9w==
-X-Received: by 2002:ac8:1c49:: with SMTP id j9mr41218038qtk.364.1571164924491;
-        Tue, 15 Oct 2019 11:42:04 -0700 (PDT)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id o28sm9204198qkk.106.2019.10.15.11.42.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 15 Oct 2019 11:42:03 -0700 (PDT)
-Message-ID: <1571164920.5937.45.camel@lca.pw>
-Subject: Re: [PATCH V6 0/2] mm/debug: Add tests validating architecture page
- table helpers
-From:   Qian Cai <cai@lca.pw>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Date:   Tue, 15 Oct 2019 14:42:00 -0400
-In-Reply-To: <c052784a-a5d7-878e-cd97-01daa90c0ed8@arm.com>
-References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
-         <1571150502.5937.39.camel@lca.pw>
-         <c052784a-a5d7-878e-cd97-01daa90c0ed8@arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1731933AbfJOTUf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Oct 2019 15:20:35 -0400
+Received: from Galois.linutronix.de ([193.142.43.55]:45649 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389376AbfJOTSl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Oct 2019 15:18:41 -0400
+Received: from localhost ([127.0.0.1] helo=localhost.localdomain)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1iKSL8-00067i-BZ; Tue, 15 Oct 2019 21:18:38 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     linux-kernel@vger.kernel.org
+Cc:     tglx@linutronix.de, Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH 17/34] s390: Use CONFIG_PREEMPTION
+Date:   Tue, 15 Oct 2019 21:18:04 +0200
+Message-Id: <20191015191821.11479-18-bigeasy@linutronix.de>
+In-Reply-To: <20191015191821.11479-1-bigeasy@linutronix.de>
+References: <20191015191821.11479-1-bigeasy@linutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 2019-10-15 at 20:51 +0530, Anshuman Khandual wrote:
-> 
-> On 10/15/2019 08:11 PM, Qian Cai wrote:
-> > The x86 will crash with linux-next during boot due to this series (v5) with the
-> > config below plus CONFIG_DEBUG_VM_PGTABLE=y. I am not sure if v6 would address
-> > it.
-> > 
-> > https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
-> > 
-> > [   33.862600][    T1] page:ffffea0009000000 is uninitialized and poisoned
-> > [   33.862608][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff
-> > ffffff871140][    T1]  ? _raw_spin_unlock_irq+0x27/0x40
-> > [   33.871140][    T1]  ? rest_init+0x307/0x307
-> > [   33.871140][    T1]  kernel_init+0x11/0x139
-> > [   33.871140][    T1]  ? rest_init+0x307/0x307
-> > [   33.871140][    T1]  ret_from_fork+0x27/0x50
-> > [   33.871140][    T1] Modules linked in:
-> > [   33.871140][    T1] ---[ end trace e99d392b0f7befbd ]---
-> > [   33.871140][    T1] RIP: 0010:alloc_gigantic_page_order+0x3fe/0x490
-> 
-> Hmm, with defconfig (DEBUG_VM=y and DEBUG_VM_PGTABLE=y) it does not crash but
-> with the config above, it does. Just wondering if it is possible that these
-> pages might not been initialized yet because DEFERRED_STRUCT_PAGE_INIT=y ?
+From: Thomas Gleixner <tglx@linutronix.de>
 
-Yes, this patch works fine.
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
 
-diff --git a/init/main.c b/init/main.c
-index 676d8020dd29..591be8f9e8e0 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -1177,7 +1177,6 @@ static noinline void __init kernel_init_freeable(void)
-        workqueue_init();
- 
-        init_mm_internals();
--       debug_vm_pgtable();
- 
-        do_pre_smp_initcalls();
-        lockup_detector_init();
-@@ -1186,6 +1185,8 @@ static noinline void __init kernel_init_freeable(void)
-        sched_init_smp();
- 
-        page_alloc_init_late();
-+       debug_vm_pgtable();
-+
-        /* Initialize page ext after all struct pages are initialized. */
-        page_ext_init();
+Switch the preemption and entry code over to use CONFIG_PREEMPTION. Add
+PREEMPT_RT output to die().
 
-> 
-> [   13.898549][    T1] page:ffffea0005000000 is uninitialized and poisoned
-> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-> [   13.898549][    T1] raw: ffffffffffffffff ffffffffffffffff ffffffffffffffff ffffffffffffffff
-> [   13.898549][    T1] page dumped because: VM_BUG_ON_PAGE(PagePoisoned(p))
-> [   13.898549][    T1] ------------[ cut here ]------------
-> [   13.898549][    T1] kernel BUG at ./include/linux/mm.h:1107!
-> [   13.898549][    T1] invalid opcode: 0000 [#1] SMP DEBUG_PAGEALLOC KASAN PTI
-> [   13.898549][    T1] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc3-next-20191015+ #
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[bigeasy: +Kconfig, dumpstack.c]
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ arch/s390/Kconfig               | 2 +-
+ arch/s390/include/asm/preempt.h | 4 ++--
+ arch/s390/kernel/dumpstack.c    | 2 ++
+ arch/s390/kernel/entry.S        | 2 +-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
+
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 43a81d0ad5074..33d968175038e 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -30,7 +30,7 @@ config GENERIC_BUG_RELATIVE_POINTERS
+ 	def_bool y
+=20
+ config GENERIC_LOCKBREAK
+-	def_bool y if PREEMPT
++	def_bool y if PREEMPTTION
+=20
+ config PGSTE
+ 	def_bool y if KVM
+diff --git a/arch/s390/include/asm/preempt.h b/arch/s390/include/asm/preemp=
+t.h
+index b5ea9e14c017a..6ede29907fbf7 100644
+--- a/arch/s390/include/asm/preempt.h
++++ b/arch/s390/include/asm/preempt.h
+@@ -130,11 +130,11 @@ static inline bool should_resched(int preempt_offset)
+=20
+ #endif /* CONFIG_HAVE_MARCH_Z196_FEATURES */
+=20
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ extern asmlinkage void preempt_schedule(void);
+ #define __preempt_schedule() preempt_schedule()
+ extern asmlinkage void preempt_schedule_notrace(void);
+ #define __preempt_schedule_notrace() preempt_schedule_notrace()
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+=20
+ #endif /* __ASM_PREEMPT_H */
+diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
+index 34bdc60c0b11d..8e38447be4653 100644
+--- a/arch/s390/kernel/dumpstack.c
++++ b/arch/s390/kernel/dumpstack.c
+@@ -194,6 +194,8 @@ void die(struct pt_regs *regs, const char *str)
+ 	       regs->int_code >> 17, ++die_counter);
+ #ifdef CONFIG_PREEMPT
+ 	pr_cont("PREEMPT ");
++#elif defined(CONFIG_PREEMPT_RT)
++	pr_cont("PREEMPT_RT ");
+ #endif
+ 	pr_cont("SMP ");
+ 	if (debug_pagealloc_enabled())
+diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+index 270d1d145761b..9205add8481d5 100644
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -790,7 +790,7 @@ ENTRY(io_int_handler)
+ .Lio_work:
+ 	tm	__PT_PSW+1(%r11),0x01	# returning to user ?
+ 	jo	.Lio_work_user		# yes -> do resched & signal
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	# check for preemptive scheduling
+ 	icm	%r0,15,__LC_PREEMPT_COUNT
+ 	jnz	.Lio_restore		# preemption is disabled
+--=20
+2.23.0
+
