@@ -2,105 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D882D7A13
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 17:43:36 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D06D7D7BE2
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 18:38:26 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731631AbfJOPnc convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 15 Oct 2019 11:43:32 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14230 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731230AbfJOPnc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Oct 2019 11:43:32 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9FFfu3x058366
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 11:43:31 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vng3t9sw1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 11:43:30 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <iii@linux.ibm.com>;
-        Tue, 15 Oct 2019 16:43:22 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 15 Oct 2019 16:43:19 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9FFhJEI39780562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 15 Oct 2019 15:43:19 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E8B3DA4065;
-        Tue, 15 Oct 2019 15:43:18 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AC21AA4062;
-        Tue, 15 Oct 2019 15:43:18 +0000 (GMT)
-Received: from dyn-9-152-98-114.boeblingen.de.ibm.com (unknown [9.152.98.114])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 15 Oct 2019 15:43:18 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH] scripts/gdb: fix debugging modules on s390
-From:   Ilya Leoshkevich <iii@linux.ibm.com>
-In-Reply-To: <356384d7-d14f-2c9d-1c13-3d96e75e1727@siemens.com>
-Date:   Tue, 15 Oct 2019 17:43:18 +0200
-Cc:     Kieran Bingham <kbingham@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Content-Transfer-Encoding: 8BIT
-References: <20191015105313.12663-1-iii@linux.ibm.com>
- <356384d7-d14f-2c9d-1c13-3d96e75e1727@siemens.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-X-Mailer: Apple Mail (2.3594.4.19)
-X-TM-AS-GCONF: 00
-x-cbid: 19101515-0008-0000-0000-000003224AA3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101515-0009-0000-0000-00004A416167
-Message-Id: <EC1E8F36-C374-4130-9841-CC35F557B7CE@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=866 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910150138
+        id S2388191AbfJOQiS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Oct 2019 12:38:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46636 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728238AbfJOQiR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 15 Oct 2019 12:38:17 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D70D0308FBAC;
+        Tue, 15 Oct 2019 16:38:16 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 144475D6B7;
+        Tue, 15 Oct 2019 16:38:07 +0000 (UTC)
+Date:   Tue, 15 Oct 2019 10:38:06 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+Subject: Re: [PATCH V3 1/7] mdev: class id support
+Message-ID: <20191015103806.0538ccb2@x1.home>
+In-Reply-To: <20191011081557.28302-2-jasowang@redhat.com>
+References: <20191011081557.28302-1-jasowang@redhat.com>
+        <20191011081557.28302-2-jasowang@redhat.com>
+Organization: Red Hat
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 15 Oct 2019 16:38:17 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> Am 15.10.2019 um 17:21 schrieb Jan Kiszka <jan.kiszka@siemens.com>:
-> 
->> @@ -113,6 +113,12 @@ lx-symbols command."""
->>         if module_file:
->>             gdb.write("loading @{addr}: {filename}\n".format(
->>                 addr=module_addr, filename=module_file))
->> +            if utils.is_target_arch('s390'):
->> +                # Module text is preceded by PLT stubs on s390.
->> +                module_arch = module['arch']
->> +                plt_offset = int(module_arch['plt_offset'])
->> +                plt_size = int(module_arch['plt_size'])
->> +                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
-> 
-> Shouldn't we report the actual address above, ie. reorder this tuning
-> with the gdb.write?
+On Fri, 11 Oct 2019 16:15:51 +0800
+Jason Wang <jasowang@redhat.com> wrote:
+  
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index b558d4cfd082..724e9b9841d8 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -45,6 +45,12 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
+>  }
+>  EXPORT_SYMBOL(mdev_set_drvdata);
+>  
+> +void mdev_set_class(struct mdev_device *mdev, u16 id)
+> +{
+> +	mdev->class_id = id;
+> +}
+> +EXPORT_SYMBOL(mdev_set_class);
+> +
+>  struct device *mdev_dev(struct mdev_device *mdev)
+>  {
+>  	return &mdev->dev;
+> @@ -135,6 +141,7 @@ static int mdev_device_remove_cb(struct device *dev, void *data)
+>   * mdev_register_device : Register a device
+>   * @dev: device structure representing parent device.
+>   * @ops: Parent device operation structure to be registered.
+> + * @id: class id.
+>   *
+>   * Add device to list of registered parent devices.
+>   * Returns a negative value on error, otherwise 0.
+> @@ -324,6 +331,9 @@ int mdev_device_create(struct kobject *kobj,
+>  	if (ret)
+>  		goto ops_create_fail;
+>  
+> +	if (!mdev->class_id)
 
-That's a tough question. I thought about this, and the argument for
-showing the fixed up address is that if someone does the math with
-symbol offsets from e.g. objdump, the result will be consistent with
-what gdb shows.
+This is a sanity test failure of the parent driver on a privileged
+path, I think it's fair to print a warning when this occurs rather than
+only return an errno to the user.  In fact, ret is not set to an error
+value here, so it looks like this fails to create the device but
+returns success.  Thanks,
 
-On the other hand side, why would anyone do this? that's exactly what
-this gdb script is for. So showing the actual address at which the
-memory was allocated gives the user some additional information, and is
-also consistent with what cat /proc/modules would show.
+Alex
 
-At the end of the day, I don't have a strong opinion on this, so if you
-think it's better to show the fixed up address, I'll send a v2.
-
-Best regards,
-Ilya
+> +		goto class_id_fail;
+> +
+>  	ret = device_add(&mdev->dev);
+>  	if (ret)
+>  		goto add_fail;
+> @@ -340,6 +350,7 @@ int mdev_device_create(struct kobject *kobj,
+>  
+>  sysfs_fail:
+>  	device_del(&mdev->dev);
+> +class_id_fail:
+>  add_fail:
+>  	parent->ops->remove(mdev);
+>  ops_create_fail:
