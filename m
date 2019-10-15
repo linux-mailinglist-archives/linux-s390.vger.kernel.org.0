@@ -2,61 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EA24D6AFC
-	for <lists+linux-s390@lfdr.de>; Mon, 14 Oct 2019 22:59:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A02C1D6DB8
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 05:28:03 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730335AbfJNU7J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 14 Oct 2019 16:59:09 -0400
-Received: from foss.arm.com ([217.140.110.172]:52526 "EHLO foss.arm.com"
+        id S1727730AbfJOD14 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 14 Oct 2019 23:27:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:49094 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731815AbfJNU7J (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 14 Oct 2019 16:59:09 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A383337;
-        Mon, 14 Oct 2019 13:59:08 -0700 (PDT)
-Received: from iMac-3.local (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id BA5423F68E;
-        Mon, 14 Oct 2019 13:59:06 -0700 (PDT)
-Date:   Mon, 14 Oct 2019 21:59:00 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org, linux-s390@vger.kernel.org,
-        f.fainelli@gmail.com, linux-kernel@vger.kernel.org,
-        hch@infradead.org, mbrugger@suse.com, wahrenst@gmx.net,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH RFC 0/5] ARM: Raspberry Pi 4 DMA support
-Message-ID: <20191014205859.GA7634@iMac-3.local>
-References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
+        id S1727195AbfJOD1z (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 14 Oct 2019 23:27:55 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2C69085543;
+        Tue, 15 Oct 2019 03:27:55 +0000 (UTC)
+Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 79BB75C1D6;
+        Tue, 15 Oct 2019 03:27:34 +0000 (UTC)
+Subject: Re: [PATCH V3 5/7] mdev: introduce virtio device and its device ops
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191011081557.28302-6-jasowang@redhat.com>
+ <20191014172301.GA5359@stefanha-x1.localdomain>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <97d93729-9bc2-4cb5-5e4f-678285044c7f@redhat.com>
+Date:   Tue, 15 Oct 2019 11:27:32 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191014183108.24804-1-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.11.1 (2018-12-01)
+In-Reply-To: <20191014172301.GA5359@stefanha-x1.localdomain>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 15 Oct 2019 03:27:55 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 08:31:02PM +0200, Nicolas Saenz Julienne wrote:
-> the Raspberry Pi 4 offers up to 4GB of memory, of which only the first
-> is DMA capable device wide. This forces us to use of bounce buffers,
-> which are currently not very well supported by ARM's custom DMA ops.
-> Among other things the current mechanism (see dmabounce.c) isn't
-> suitable for high memory. Instead of fixing it, this series introduces a
-> way of selecting dma-direct as the default DMA ops provider which allows
-> for the Raspberry Pi to make use of swiotlb.
 
-I presume these patches go on top of this series:
+On 2019/10/15 上午1:23, Stefan Hajnoczi wrote:
+> On Fri, Oct 11, 2019 at 04:15:55PM +0800, Jason Wang wrote:
+>> + * @set_vq_cb:			Set the interrut calback function for
+> s/interrut/interrupt/
+>
+> s/calback/callback/
 
-http://lkml.kernel.org/r/20190911182546.17094-1-nsaenzjulienne@suse.de
 
-which I queued here:
+Fixed.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/zone-dma
+Thanks
 
--- 
-Catalin
