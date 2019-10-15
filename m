@@ -2,146 +2,170 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 232CFD725D
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 11:34:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F003D7296
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 11:54:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfJOJeN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Oct 2019 05:34:13 -0400
-Received: from mx2.suse.de ([195.135.220.15]:58106 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725890AbfJOJeN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Oct 2019 05:34:13 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 0064EB15A;
-        Tue, 15 Oct 2019 09:34:09 +0000 (UTC)
-Date:   Tue, 15 Oct 2019 11:34:08 +0200
-From:   Petr Vorel <pvorel@suse.cz>
-To:     linux-s390@vger.kernel.org
-Cc:     Michal Kubecek <mkubecek@suse.cz>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Alexey Kodanev <alexey.kodanev@oracle.com>, ihno@suse.com
-Subject: Re: s390 EAGAIN on send{msg,to}()/recvmsg() on small MTU and big
- packet size
-Message-ID: <20191015093408.GA13298@dell5510>
-Reply-To: Petr Vorel <pvorel@suse.cz>
-References: <20190923152558.GA31182@dell5510>
+        id S1727033AbfJOJyX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Oct 2019 05:54:23 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:60532 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727080AbfJOJyW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 15 Oct 2019 05:54:22 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9F9lojf056486
+        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 05:54:21 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vnastjhab-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 05:54:20 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <maier@linux.ibm.com>;
+        Tue, 15 Oct 2019 10:54:18 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 15 Oct 2019 10:54:15 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9F9sEjQ54919300
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 09:54:14 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E1D652052;
+        Tue, 15 Oct 2019 09:54:14 +0000 (GMT)
+Received: from oc4120165700.ibm.com (unknown [9.152.99.188])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BD86452054;
+        Tue, 15 Oct 2019 09:54:13 +0000 (GMT)
+Subject: Re: [RFC PATCH 3/4] vfio-ccw: Add a trace for asynchronous requests
+To:     Eric Farman <farman@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20191014180855.19400-1-farman@linux.ibm.com>
+ <20191014180855.19400-4-farman@linux.ibm.com>
+From:   Steffen Maier <maier@linux.ibm.com>
+Date:   Tue, 15 Oct 2019 11:54:13 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190923152558.GA31182@dell5510>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20191014180855.19400-4-farman@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19101509-0016-0000-0000-000002B8305D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101509-0017-0000-0000-000033194E09
+Message-Id: <2fd50890-2d94-37ae-8266-1b41b9bf9a74@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910150091
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi,
+On 10/14/19 8:08 PM, Eric Farman wrote:
+> Since the asynchronous requests are typically associated with
+> error recovery, let's add a simple trace when one of those is
+> issued to a device.
+> 
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> ---
+>   drivers/s390/cio/vfio_ccw_fsm.c   |  4 ++++
+>   drivers/s390/cio/vfio_ccw_trace.c |  1 +
+>   drivers/s390/cio/vfio_ccw_trace.h | 26 ++++++++++++++++++++++++++
+>   3 files changed, 31 insertions(+)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
+> index d4119e4c4a8c..23648a9aa721 100644
+> --- a/drivers/s390/cio/vfio_ccw_fsm.c
+> +++ b/drivers/s390/cio/vfio_ccw_fsm.c
+> @@ -341,6 +341,10 @@ static void fsm_async_request(struct vfio_ccw_private *private,
+>   		/* should not happen? */
+>   		cmd_region->ret_code = -EINVAL;
+>   	}
+> +
+> +	trace_vfio_ccw_fsm_async_request(get_schid(private),
+> +					 cmd_region->command,
+> +					 cmd_region->ret_code);
+>   }
+> 
+>   /*
+> diff --git a/drivers/s390/cio/vfio_ccw_trace.c b/drivers/s390/cio/vfio_ccw_trace.c
+> index b37bc68e7f18..37ecbf8be805 100644
+> --- a/drivers/s390/cio/vfio_ccw_trace.c
+> +++ b/drivers/s390/cio/vfio_ccw_trace.c
+> @@ -9,5 +9,6 @@
+>   #define CREATE_TRACE_POINTS
+>   #include "vfio_ccw_trace.h"
+> 
+> +EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_async_request);
+>   EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_event);
+>   EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_io_fctl);
+> diff --git a/drivers/s390/cio/vfio_ccw_trace.h b/drivers/s390/cio/vfio_ccw_trace.h
+> index 24a8152acfdf..4be2e36242e6 100644
+> --- a/drivers/s390/cio/vfio_ccw_trace.h
+> +++ b/drivers/s390/cio/vfio_ccw_trace.h
+> @@ -17,6 +17,32 @@
+> 
+>   #include <linux/tracepoint.h>
+> 
+> +TRACE_EVENT(vfio_ccw_fsm_async_request,
+> +	TP_PROTO(struct subchannel_id schid,
+> +		 int command,
+> +		 int errno),
+> +	TP_ARGS(schid, command, errno),
+> +
+> +	TP_STRUCT__entry(
+> +		__field_struct(struct subchannel_id, schid)
 
-[ Cc Alexey and Ihno ]
+Not sure: Does this allow the user to filter for fields of struct subchannel_id 
+or can the user express a filter on the entire combined struct subchannel_id?
+In the preceding patch you have the 3 parts of schid as explicit separate trace 
+fields in the tracepoint.
 
-Any hint on this? I know it's a corner case, but it'd be nice to have it fixed.
+> +		__field(int, command)
+> +		__field(int, errno)
+> +	),
+> +
+> +	TP_fast_assign(
+> +		__entry->schid = schid;
+> +		__entry->command = command;
+> +		__entry->errno = errno;
+> +	),
+> +
+> +	TP_printk("schid=%x.%x.%04x command=%d errno=%d",
+> +		  __entry->schid.cssid,
+> +		  __entry->schid.ssid,
+> +		  __entry->schid.sch_no,
+> +		  __entry->command,
+> +		  __entry->errno)
+> +);
+> +
+>   TRACE_EVENT(vfio_ccw_fsm_event,
+>   	TP_PROTO(struct subchannel_id schid, int state, int event),
+>   	TP_ARGS(schid, state, event),
+> 
 
-Kind regards,
-Petr
 
-> Hi,
+-- 
+Mit freundlichen Gruessen / Kind regards
+Steffen Maier
 
-> I've found a bug on s390 on small MTU combined with big packet size, using ping
-> (of course both within valid ranges, e.g. MTU 552 and packet size 61245).
+Linux on IBM Z Development
 
-> Below is full reproducer on netns.
+https://www.ibm.com/privacy/us/en/
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschaeftsfuehrung: Dirk Wittkopp
+Sitz der Gesellschaft: Boeblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
 
-> I tested it on vanilla: v5.3-rc8 and v4.16.
-> I reproduced it on current iputils master which uses sendto()/recvmsg() and on
-> older version which uses sendmsg()/recvmsg().
-
-> As I'm not aware of any s390 specific socket code in kernel I suspect big endian or something else.
-
-> This bug was find with LTP/if-mtu-change.sh.
-
-> REPRODUCER:
-> LTP_NS="ip netns exec ltp_ns"
-> ip net add ltp_ns
-> ip li add name ltp_ns_veth1 type veth peer name ltp_ns_veth2
-> ip li set dev ltp_ns_veth1 netns ltp_ns
-> $LTP_NS ip li set lo up
-
-> ip xfrm policy flush
-> ip xfrm state flush
-> ip link set ltp_ns_veth2 down
-> ip route flush dev ltp_ns_veth2
-> ip addr flush dev ltp_ns_veth2
-> ip link set ltp_ns_veth2 up
-> ip addr add 10.0.0.2/24 dev ltp_ns_veth2
-
-> $LTP_NS ip xfrm policy flush
-> $LTP_NS ip xfrm state flush
-> $LTP_NS ip link set ltp_ns_veth1 down
-> $LTP_NS ip route flush dev ltp_ns_veth1
-> $LTP_NS ip addr flush dev ltp_ns_veth1
-> $LTP_NS ip link set ltp_ns_veth1 up
-> $LTP_NS ip addr add 10.0.0.1/24 dev ltp_ns_veth1
-
-> i=552; ip link set dev ltp_ns_veth2 mtu $i; $LTP_NS ip link set dev ltp_ns_veth1 mtu $i # it's enough to set just one of them
-
-> ping -I 10.0.0.2 -c 1 10.0.0.1 -s 61245 # fail
-> ping -I 10.0.0.2 -c 1 10.0.0.1 -s 61244 # ok
-
-> FAIL (iputils-s20121221 from package, using sendmsg())
-> ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-> ioctl(1, TIOCGWINSZ, {ws_row=74, ws_col=273, ws_xpixel=1911, ws_ypixel=1050}) = 0
-> sendmsg(3, {msg_name(16)={sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, msg_iov(1)=[{"\10\0\253_\241\373\0\1\0\0\0\0]wf\330\0\0\0\0\0\6\375\201\20\21\22\23\24\25\26\27"..., 61253}], msg_controllen=0, msg_flags=0}, 0) = 61253
-> setitimer(ITIMER_REAL, {it_interval={0, 0}, it_value={10, 0}}, NULL) = 0
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3fff887b588, 0)            = -1 EINTR (Interrupted system call)
-> --- SIGALRM {si_signo=SIGALRM, si_code=SI_KERNEL} ---
-> sigreturn({mask=[]})                    = -1 EINTR (Interrupted system call)
-
-> OK (iputils-s20121221 from package, using sendmsg())
-> ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-> ioctl(1, TIOCGWINSZ, {ws_row=74, ws_col=273, ws_xpixel=1911, ws_ypixel=1050}) = 0
-> sendmsg(3, {msg_name(16)={sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, msg_iov(1)=[{"\10\0\3u\242\266\0\1\0\0\0\0]wgd\0\0\0\0\0\6\340%\20\21\22\23\24\25\26\27"..., 61252}], msg_controllen=0, msg_flags=0}, 0) = 61252
-> setitimer(ITIMER_REAL, {it_interval={0, 0}, it_value={10, 0}}, NULL) = 0
-> recvmsg(3, {msg_name(16)={sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, msg_iov(1)=[{"E\0\357X2\277\0\0@\1D\343\n\0\0\1\n\0\0\2\0\0\vu\242\266\0\1\0\0\0\0"..., 61380}], msg_controllen=32, [{cmsg_len=32, cmsg_level=SOL_SOCKET, cmsg_type=0x1d /*
-> SCM_??? */, ...}], msg_flags=0}, 0) = 61272
-> write(1, "61252 bytes from 10.0.0.1: icmp_"..., 5961252 bytes from 10.0.0.1: icmp_seq=1 ttl=64 time=0.442 ms
-> ) = 59
-
-> FAIL (current iputils master, using sendto())
-> ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-> ioctl(1, TIOCGWINSZ, {ws_row=74, ws_col=273, ws_xpixel=1911, ws_ypixel=1050}) = 0
-> sendto(3, "\10\0\2=\313\315\0\1\0\0\0\0]vH;\0\0\0\0\0\7\233o\20\21\22\23\24\25\26\27"..., 61253, 0, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, 16) = 61253
-> setitimer(ITIMER_REAL, {it_interval={0, 0}, it_value={10, 0}}, NULL) = 0
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EAGAIN (Resource temporarily unavailable)
-> recvmsg(3, 0x3ffe7e7b388, 0)            = -1 EINTR (Interrupted system call)
-> --- SIGALRM {si_signo=SIGALRM, si_code=SI_KERNEL} ---
-> sigreturn({mask=[]})                    = -1 EINTR (Interrupted system call)
-
-> OK (current iputils master, using sendto())
-> ioctl(1, TCGETS, {B38400 opost isig icanon echo ...}) = 0
-> ioctl(1, TIOCGWINSZ, {ws_row=74, ws_col=273, ws_xpixel=1911, ws_ypixel=1050}) = 0
-> sendto(3, "\10\0y\4\313\365\0\1\0\0\0\0]vHw\0\0\0\0\0\4`G\20\21\22\23\24\25\26\27"..., 61252, 0, {sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, 16) = 61252
-> setitimer(ITIMER_REAL, {it_interval={0, 0}, it_value={10, 0}}, NULL) = 0
-> recvmsg(3, {msg_name(16)={sa_family=AF_INET, sin_port=htons(0), sin_addr=inet_addr("10.0.0.1")}, msg_iov(1)=[{"E\0\357Xc$\0\0@\1\24~\n\0\0\1\n\0\0\2\0\0\201\4\313\365\0\1\0\0\0\0"..., 61380}], msg_controllen=32, [{cmsg_len=32, cmsg_level=SOL_SOCKET, cmsg_type=0x1d /*
-> SCM_??? */, ...}], msg_flags=0}, 0) = 61272
-> write(1, "61252 bytes from 10.0.0.1: icmp_"..., 59) = 59
-
-> Kind regards,
-> Petr
