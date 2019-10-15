@@ -2,167 +2,163 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70B1BD77FF
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 16:07:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1221CD78D0
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 16:38:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732456AbfJOOHc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Oct 2019 10:07:32 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:35267 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732150AbfJOOHc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Oct 2019 10:07:32 -0400
-Received: by mail-ed1-f66.google.com with SMTP id v8so18180948eds.2
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 07:07:30 -0700 (PDT)
+        id S1732831AbfJOOh1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Oct 2019 10:37:27 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:38863 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732825AbfJOOh0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 15 Oct 2019 10:37:26 -0400
+Received: by mail-wr1-f68.google.com with SMTP id y18so14735131wrn.5;
+        Tue, 15 Oct 2019 07:37:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qNZCwssE+agkEqCxaKtKVtylCGvXFSXX5DhiQKaIXpg=;
-        b=NPijPlHE9mOZETSF+T0qFTrnynppESRm1hPk8m15z6BtFKp/f35nb6fP0AtxA+vICD
-         JOWnOXgGumAnnyCgoxgqcArGuemzJeDfqPdA4LYis0/rmWoNPx8t+Aa38BhPM8yc5J1y
-         jTOJ95BLBFELDrUekBUcpVOI1TGYpw9L5o3bg=
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=neBsjR3UuUvIqjWSRW2rTQl/yD7xf9xUmzZJeouSucY=;
+        b=Ha/JGsd50SAmjoukDYzVJ+uuPpyS6R2PO/eaw9gkiIRIoM/HGQIlw9cEAjxcehLXgX
+         xtPrKatNFAft1UWxIzn3Defz+Km3jvCRPXTsAq9Pq3ufY6HVgJoOWyGxGPfjPvEdYCas
+         nmFfVEj8/OM25w2meSCjx2zxPPI1LmHgXKvgVJTMlwuYyyzncaqGB6hSe47Jkm2BmDdE
+         7Q1oVk61trb1ophCLz3TyIvG+5B4wxLnGIWfh8XXAXF2YWMuNcBZpEq+5iu4OQD/KM2o
+         pmgr9RP7X7EJ6h82CRMMDcjBoylZdxySRDcK25cQYOVMInHl93hoNZ/0PIMDNaEQWzXg
+         37Ig==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=qNZCwssE+agkEqCxaKtKVtylCGvXFSXX5DhiQKaIXpg=;
-        b=TwZ/OZbdYNSlcHtNlJiU22pmddqGDM8TbxtOCMfPT2I5tnxUdNMoRQ4vFrbTHLCrUP
-         UalaWJzUei3UY6uHu+j8guKss1hSQQI8Tk4thYLJQ/hNYY/FLksL4zuE2CBmC9z8KxyS
-         NNkjst6PSIpgGKQj70w4nZEDuI1LssWHo85r+RpZUCY2TzdKyKn8K8MoJ7aAgxxznYr0
-         nqEJt8B9TZbRsvweWeXEu0NUfStr8h1E0WmHohpFenerGawkQSzbVBsI2Mif9MZ1OSgo
-         hhe1G7qk4x4aQfna3EJuJyMk19WbqkADYMc3nYz8EHXST9M3D7n/v/kvL6cr8ylvrleb
-         gOmg==
-X-Gm-Message-State: APjAAAVUBYdw5AfNONK9rKlZtRvtjWgNW/EHbsFoSb1aqgxOPIndW7rq
-        RlwmwjiBdvd16eBSAF08MOyttg==
-X-Google-Smtp-Source: APXvYqxwy4bxug6xoJIsFM59wzr8Eu7OLed7aQTfUGOfiWObU9eeM/ertrRHn6MHc5kJuwT0SZQfrw==
-X-Received: by 2002:a17:906:6a8e:: with SMTP id p14mr34255737ejr.137.1571148449724;
-        Tue, 15 Oct 2019 07:07:29 -0700 (PDT)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id d2sm3745355eda.20.2019.10.15.07.07.27
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=neBsjR3UuUvIqjWSRW2rTQl/yD7xf9xUmzZJeouSucY=;
+        b=KTyxvWZc2Mpu0Uv1gdnpIq1i8j6ULRyvjuGLWFIfaYipbtVk1kc9etfxf0PzaRUG8E
+         khX4gXyu2Npt1szc/dRIZ6NPW06gbRnKuiFvh2KR+p7Xer2kPVYyBZMvTYIRtBAB42al
+         T+z3Snh/ke33A7H+CAAG1LejRCrbgdyXy/tytCzixC0omIrgrL9Rx9mnRV6sLErpBB1M
+         dTONR0OBUBVfHj2V+K6O8ECur6J/zHu4cWp8piPW9Tx+tPfl8S8ESXUO3iqYE2FTMkdn
+         U8r2H4OG5IoUvamiFjDAxyopPEffSj6WpAdC2SX408E1hNqQnx2MqzPANm3vsKDif5CY
+         j3rQ==
+X-Gm-Message-State: APjAAAWtI8qxpRHampWBjXmwzszy581F2s3bXxwonINwcW31GSpKkmyI
+        IkP/gqKsjgm0AzGVeVLY/fk=
+X-Google-Smtp-Source: APXvYqzV3/RVLumtjzKMF39X/kb+3GTjFjA6Zi36mjTbF3VD42lPRp342ZlZGPdL0S+AnrxMQCU2bw==
+X-Received: by 2002:a5d:674e:: with SMTP id l14mr29799012wrw.45.1571150243309;
+        Tue, 15 Oct 2019 07:37:23 -0700 (PDT)
+Received: from localhost ([51.15.41.238])
+        by smtp.gmail.com with ESMTPSA id r20sm29954681wrg.61.2019.10.15.07.37.22
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2019 07:07:28 -0700 (PDT)
-Date:   Tue, 15 Oct 2019 16:07:26 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     Daniel Vetter <daniel@ffwll.ch>, Rob Clark <robdclark@gmail.com>,
-        Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Subject: Re: [PATCH 0/4] treewide: fix interrupted release
-Message-ID: <20191015140726.GN11828@phenom.ffwll.local>
-Mail-Followup-To: Johan Hovold <johan@kernel.org>,
-        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        David Airlie <airlied@linux.ie>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>
-References: <20191010131333.23635-1-johan@kernel.org>
- <20191010135043.GA16989@phenom.ffwll.local>
- <20191011093633.GD27819@localhost>
- <20191014084847.GD11828@phenom.ffwll.local>
- <20191014161326.GO13531@localhost>
+        Tue, 15 Oct 2019 07:37:22 -0700 (PDT)
+Date:   Tue, 15 Oct 2019 15:37:20 +0100
+From:   Stefan Hajnoczi <stefanha@gmail.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+Subject: Re: [PATCH V3 0/7] mdev based hardware virtio offloading support
+Message-ID: <20191015143720.GA13108@stefanha-x1.localdomain>
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191014174946.GC5359@stefanha-x1.localdomain>
+ <6d12ad8f-8137-e07d-d735-da59a326e8ed@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ew6BAiZeqk4r7MaW"
 Content-Disposition: inline
-In-Reply-To: <20191014161326.GO13531@localhost>
-X-Operating-System: Linux phenom 5.2.0-2-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <6d12ad8f-8137-e07d-d735-da59a326e8ed@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Oct 14, 2019 at 06:13:26PM +0200, Johan Hovold wrote:
-> On Mon, Oct 14, 2019 at 10:48:47AM +0200, Daniel Vetter wrote:
-> > On Fri, Oct 11, 2019 at 11:36:33AM +0200, Johan Hovold wrote:
-> > > On Thu, Oct 10, 2019 at 03:50:43PM +0200, Daniel Vetter wrote:
-> > > > On Thu, Oct 10, 2019 at 03:13:29PM +0200, Johan Hovold wrote:
-> > > > > Two old USB drivers had a bug in them which could lead to memory leaks
-> > > > > if an interrupted process raced with a disconnect event.
-> > > > > 
-> > > > > Turns out we had a few more driver in other subsystems with the same
-> > > > > kind of bug in them.
-> > > 
-> > > > Random funny idea: Could we do some debug annotations (akin to
-> > > > might_sleep) that splats when you might_sleep_interruptible somewhere
-> > > > where interruptible sleeps are generally a bad idea? Like in
-> > > > fops->release?
-> > > 
-> > > There's nothing wrong with interruptible sleep in fops->release per se,
-> > > it's just that drivers cannot return -ERESTARTSYS and friends and expect
-> > > to be called again later.
-> > 
-> > Do you have a legit usecase for interruptible sleeps in fops->release?
-> 
-> The tty layer depends on this for example when waiting for buffered
-> writes to complete (something which may never happen when using flow
-> control).
-> 
-> > I'm not even sure killable is legit in there, since it's an fd, not a
-> > process context ...
-> 
-> It will be run in process context in many cases, and for ttys we're good
-> AFAICT.
 
-Huh, read it a bit, all the ->shutdown callbacks have void return type.
-But there's indeed interruptible sleeps in there. Doesn't this break
-userspace that expects that a close() actually flushes the tty?
+--ew6BAiZeqk4r7MaW
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Imo if you're ->release callbacks feels like it should do a wait to
-guaranteed something userspace expects, then doing a
-wait_interruptible/killable feels like a bug. Or alternatively, the wait
-isn't really needed in the first place.
+On Tue, Oct 15, 2019 at 11:37:17AM +0800, Jason Wang wrote:
+>=20
+> On 2019/10/15 =E4=B8=8A=E5=8D=881:49, Stefan Hajnoczi wrote:
+> > On Fri, Oct 11, 2019 at 04:15:50PM +0800, Jason Wang wrote:
+> > > There are hardware that can do virtio datapath offloading while having
+> > > its own control path. This path tries to implement a mdev based
+> > > unified API to support using kernel virtio driver to drive those
+> > > devices. This is done by introducing a new mdev transport for virtio
+> > > (virtio_mdev) and register itself as a new kind of mdev driver. Then
+> > > it provides a unified way for kernel virtio driver to talk with mdev
+> > > device implementation.
+> > >=20
+> > > Though the series only contains kernel driver support, the goal is to
+> > > make the transport generic enough to support userspace drivers. This
+> > > means vhost-mdev[1] could be built on top as well by resuing the
+> > > transport.
+> > >=20
+> > > A sample driver is also implemented which simulate a virito-net
+> > > loopback ethernet device on top of vringh + workqueue. This could be
+> > > used as a reference implementation for real hardware driver.
+> > >=20
+> > > Consider mdev framework only support VFIO device and driver right now,
+> > > this series also extend it to support other types. This is done
+> > > through introducing class id to the device and pairing it with
+> > > id_talbe claimed by the driver. On top, this seris also decouple
+> > > device specific parents ops out of the common ones.
+> > I was curious so I took a quick look and posted comments.
+> >=20
+> > I guess this driver runs inside the guest since it registers virtio
+> > devices?
+>=20
+>=20
+> It could run in either guest or host. But the main focus is to run in the
+> host then we can use virtio drivers in containers.
+>=20
+>=20
+> >=20
+> > If this is used with physical PCI devices that support datapath
+> > offloading then how are physical devices presented to the guest without
+> > SR-IOV?
+>=20
+>=20
+> We will do control path meditation through vhost-mdev[1] and vhost-vfio[2=
+].
+> Then we will present a full virtio compatible ethernet device for guest.
+>=20
+> SR-IOV is not a must, any mdev device that implements the API defined in
+> patch 5 can be used by this framework.
 
-> > > The return value from release() is ignored by vfs, and adding a splat in
-> > > __fput() to catch these buggy drivers might be overkill.
-> > 
-> > Ime once you have a handful of instances of a broken pattern, creating a
-> > check for it (under a debug option only ofc) is very much justified.
-> > Otherwise they just come back to life like the undead, all the time. And
-> > there's a _lot_ of fops->release callbacks in the kernel.
-> 
-> Yeah, you have a point.
-> 
-> But take tty again as an example, the close tty operation called from
-> release() is declared void so there's no propagated return value for vfs
-> to check.
-> 
-> It may even be better to fix up the 100 or so callbacks potentially
-> returning non-zero and make fops->release void so that the compiler
-> would help us catch any future bugs and also serve as a hint for
-> developers that returning errnos from fops->release is probably not
-> what you want to do.
-> 
-> But that's a lot of churn of course.
+What I'm trying to understand is: if you want to present a virtio-pci
+device to the guest (e.g. using vhost-mdev or vhost-vfio), then how is
+that related to this patch series?
 
-Hm indeed ->release has int as return type. I guess that's needed for
-file I/O errno and similar stuff ...
+Does this mean this patch series is useful mostly for presenting virtio
+devices to containers or the host?
 
-Still void return value doesn't catch funny stuff like doing interruptible
-waits and occasionally failing if you have a process that likes to use
-signals and also uses some library somewhere to do something. In graphics
-we have that, with Xorg loving signals for various things.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Stefan
+
+--ew6BAiZeqk4r7MaW
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl2l2aAACgkQnKSrs4Gr
+c8ji7wf9FHyYry8VO4FqVBdQWMz/h/mmNTgeyBCpCasw+joJ3LRHOyyGPsu2BiOX
+IhAuZvK3azvtP7vh1etYaoBrCPmyFBTh2UXsIYoGK1qpUzPNkB7nuGYTBPJgZbxd
+jmJNDjc9wrrn9sWBJjkJaFYSjEDfob63FtUG2VM6f109LXI4bTyt03KqS1tZ75Hi
+SSjVt95GYQ1xENjKUcVqV9ULwfsv0Wz/WQ2XIvn8Oij7NK9bKHWl3HLirrUE62FP
+y6/3Y2fKKhes58jmY09L37Ym625X95M//6g2WYv+uR5rTTfo7jQBlLZ1tklwNY/k
+X8Sw0iHJKxZjvZqItbu49kJtRJwm9g==
+=nOrh
+-----END PGP SIGNATURE-----
+
+--ew6BAiZeqk4r7MaW--
