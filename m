@@ -2,174 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8B57FD764A
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 14:17:40 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3ABF4D7676
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 14:26:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726078AbfJOMRe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Oct 2019 08:17:34 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57608 "EHLO mx1.redhat.com"
+        id S1729108AbfJOM04 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Oct 2019 08:26:56 -0400
+Received: from foss.arm.com ([217.140.110.172]:37692 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726004AbfJOMRe (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:17:34 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 12DEBC05B00E;
-        Tue, 15 Oct 2019 12:17:33 +0000 (UTC)
-Received: from [10.72.12.168] (ovpn-12-168.pek2.redhat.com [10.72.12.168])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 99C9760BE2;
-        Tue, 15 Oct 2019 12:17:02 +0000 (UTC)
-Subject: Re: [PATCH V3 4/7] mdev: introduce device specific ops
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
-References: <20191011081557.28302-1-jasowang@redhat.com>
- <20191011081557.28302-5-jasowang@redhat.com>
- <20191015124137.4f948bd2.cohuck@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <eb7ecd99-7465-6be4-7ecd-84c11f66e0ac@redhat.com>
-Date:   Tue, 15 Oct 2019 20:17:01 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1726441AbfJOM04 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 15 Oct 2019 08:26:56 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AB1D337;
+        Tue, 15 Oct 2019 05:26:55 -0700 (PDT)
+Received: from [10.162.42.142] (p8cg001049571a15.blr.arm.com [10.162.42.142])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 182753F68E;
+        Tue, 15 Oct 2019 05:26:41 -0700 (PDT)
+Subject: Re: [PATCH V6 2/2] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
+ <1571131302-32290-3-git-send-email-anshuman.khandual@arm.com>
+ <20191015114611.GC317@dhcp22.suse.cz>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <cb441eab-6cde-5537-6f94-f183f119c92e@arm.com>
+Date:   Tue, 15 Oct 2019 17:57:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191015124137.4f948bd2.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191015114611.GC317@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 15 Oct 2019 12:17:33 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-On 2019/10/15 下午6:41, Cornelia Huck wrote:
-> On Fri, 11 Oct 2019 16:15:54 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> Currently, except for the create and remove, the rest of
->> mdev_parent_ops is designed for vfio-mdev driver only and may not help
->> for kernel mdev driver. With the help of class id, this patch
->> introduces device specific callbacks inside mdev_device
->> structure. This allows different set of callback to be used by
->> vfio-mdev and virtio-mdev.
+
+On 10/15/2019 05:16 PM, Michal Hocko wrote:
+> On Tue 15-10-19 14:51:42, Anshuman Khandual wrote:
+>> This adds tests which will validate architecture page table helpers and
+>> other accessors in their compliance with expected generic MM semantics.
+>> This will help various architectures in validating changes to existing
+>> page table helpers or addition of new ones.
 >>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
->> ---
->>   .../driver-api/vfio-mediated-device.rst       | 22 +++++---
->>   MAINTAINERS                                   |  1 +
->>   drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
->>   drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
->>   drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
->>   drivers/vfio/mdev/mdev_core.c                 |  9 +++-
->>   drivers/vfio/mdev/mdev_private.h              |  1 +
->>   drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
->>   include/linux/mdev.h                          | 42 +++------------
->>   include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
->>   samples/vfio-mdev/mbochs.c                    | 20 ++++---
->>   samples/vfio-mdev/mdpy.c                      | 21 +++++---
->>   samples/vfio-mdev/mtty.c                      | 18 ++++---
->>   13 files changed, 177 insertions(+), 96 deletions(-)
->>   create mode 100644 include/linux/vfio_mdev.h
+>> Test page table and memory pages creating it's entries at various level are
+>> all allocated from system memory with required size and alignments. But if
+>> memory pages with required size and alignment could not be allocated, then
+>> all depending individual tests are just skipped afterwards. This test gets
+>> called right after init_mm_internals() required for alloc_contig_range() to
+>> work correctly.
 >>
->> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
->> index 2035e48da7b2..553574ebba73 100644
->> --- a/Documentation/driver-api/vfio-mediated-device.rst
->> +++ b/Documentation/driver-api/vfio-mediated-device.rst
->> @@ -152,11 +152,20 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
->>   Vendor drivers are expected to be fully asynchronous in this respect or
->>   provide their own internal resource protection.)
->>   
->> -The callbacks in the mdev_parent_ops structure are as follows:
->> +In order to support multiple types of device/driver, device needs to
->> +provide both class_id and device_ops through:
-> "As multiple types of mediated devices may be supported, the device
-> needs to set up the class id and the device specific callbacks via:"
->
-> ?
->
->>   
->> -* open: open callback of mediated device
->> -* close: close callback of mediated device
->> -* ioctl: ioctl callback of mediated device
->> +    void mdev_set_class(struct mdev_device *mdev, u16 id, const void *ops);
->> +
->> +The class_id is used to be paired with ids in id_table in mdev_driver
->> +structure for probing the correct driver.
-> "The class id  (specified in id) is used to match a device with an mdev
-> driver via its id table."
->
-> ?
->
->> The device_ops is device
->> +specific callbacks which can be get through mdev_get_dev_ops()
->> +function by mdev bus driver.
-> "The device specific callbacks (specified in *ops) are obtainable via
-> mdev_get_dev_ops() (for use by the mdev bus driver.)"
->
-> ?
->
->> For vfio-mdev device, its device specific
->> +ops are as follows:
-> "A vfio-mdev device (class id MDEV_ID_VFIO) uses the following
-> device-specific ops:"
->
-> ?
+>> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+>> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+>> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+>> arm64. Going forward, other architectures too can enable this after fixing
+>> build or runtime problems (if any) with their page table helpers.
+> 
+> A highlevel description of tests and what they are testing for would be
+> really appreciated. Who wants to run these tests and why/when? What kind
+> of bugs would get detected? In short why do we really need/want this
+> code in the tree?
 
-
-All you propose is better than what I wrote, will change the docs.
-
-
->
->> +
->> +* open: open callback of vfio mediated device
->> +* close: close callback of vfio mediated device
->> +* ioctl: ioctl callback of vfio mediated device
->>   * read : read emulation callback
->>   * write: write emulation callback
->>   * mmap: mmap emulation callback
->> @@ -167,9 +176,10 @@ register itself with the mdev core driver::
->>   	extern int  mdev_register_device(struct device *dev,
->>   	                                 const struct mdev_parent_ops *ops);
->>   
->> -It is also required to specify the class_id through::
->> +It is also required to specify the class_id and device specific ops through::
->>   
->> -	extern int mdev_set_class(struct device *dev, u16 id);
->> +	extern int mdev_set_class(struct device *dev, u16 id,
->> +	                          const void *ops);
-> Apologies if that has already been discussed, but do we want a 1:1
-> relationship between id and ops, or can different devices with the same
-> id register different ops?
-
-
-I think we have a N:1 mapping between id and ops, e.g we want both 
-virtio-mdev and vhost-mdev use a single set of device ops.
-
-Thanks
-
-
-> If the former, would it make sense to first
-> register the ops for an id (once), and then have the ->create callback
-> only set the class id (with the core doing the lookup of the ops)?
->
->>   
->>   However, the mdev_parent_ops structure is not required in the function call
->>   that a driver should use to unregister itself with the mdev core driver::
+Sure, will do.
