@@ -2,73 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3ABF4D7676
-	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 14:26:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F064AD7799
+	for <lists+linux-s390@lfdr.de>; Tue, 15 Oct 2019 15:42:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729108AbfJOM04 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Oct 2019 08:26:56 -0400
-Received: from foss.arm.com ([217.140.110.172]:37692 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfJOM04 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Oct 2019 08:26:56 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0AB1D337;
-        Tue, 15 Oct 2019 05:26:55 -0700 (PDT)
-Received: from [10.162.42.142] (p8cg001049571a15.blr.arm.com [10.162.42.142])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 182753F68E;
-        Tue, 15 Oct 2019 05:26:41 -0700 (PDT)
-Subject: Re: [PATCH V6 2/2] mm/debug: Add tests validating architecture page
- table helpers
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1571131302-32290-1-git-send-email-anshuman.khandual@arm.com>
- <1571131302-32290-3-git-send-email-anshuman.khandual@arm.com>
- <20191015114611.GC317@dhcp22.suse.cz>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <cb441eab-6cde-5537-6f94-f183f119c92e@arm.com>
-Date:   Tue, 15 Oct 2019 17:57:08 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1732096AbfJONmp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 15 Oct 2019 09:42:45 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:51932 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728880AbfJONmp (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 15 Oct 2019 09:42:45 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9FDc72Z136888;
+        Tue, 15 Oct 2019 09:42:42 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vne46txx3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Oct 2019 09:42:41 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9FDcXPc139555;
+        Tue, 15 Oct 2019 09:42:41 -0400
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vne46txwd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Oct 2019 09:42:41 -0400
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9FDeoEG009261;
+        Tue, 15 Oct 2019 13:42:40 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma05wdc.us.ibm.com with ESMTP id 2vk6f73q23-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 15 Oct 2019 13:42:40 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9FDgdv441157046
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 15 Oct 2019 13:42:39 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85BC07805E;
+        Tue, 15 Oct 2019 13:42:39 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4E5317805F;
+        Tue, 15 Oct 2019 13:42:38 +0000 (GMT)
+Received: from [9.85.147.229] (unknown [9.85.147.229])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 15 Oct 2019 13:42:38 +0000 (GMT)
+Subject: Re: [RFC PATCH 2/4] vfio-ccw: Trace the FSM jumptable
+To:     Steffen Maier <maier@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20191014180855.19400-1-farman@linux.ibm.com>
+ <20191014180855.19400-3-farman@linux.ibm.com>
+ <96431f2f-774c-0be2-54ef-ebcaa4ae7298@linux.ibm.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <b9d59763-4052-2dbb-ffc7-32f6cec9c426@linux.ibm.com>
+Date:   Tue, 15 Oct 2019 09:42:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191015114611.GC317@dhcp22.suse.cz>
+In-Reply-To: <96431f2f-774c-0be2-54ef-ebcaa4ae7298@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910150123
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -76,29 +81,99 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 10/15/2019 05:16 PM, Michal Hocko wrote:
-> On Tue 15-10-19 14:51:42, Anshuman Khandual wrote:
->> This adds tests which will validate architecture page table helpers and
->> other accessors in their compliance with expected generic MM semantics.
->> This will help various architectures in validating changes to existing
->> page table helpers or addition of new ones.
+On 10/15/19 6:01 AM, Steffen Maier wrote:
+> On 10/14/19 8:08 PM, Eric Farman wrote:
+>> It would be nice if we could track the sequence of events within
+>> vfio-ccw, based on the state of the device/FSM and our calling
+>> sequence within it.  So let's add a simple trace here so we can
+>> watch the states change as things go, and allow it to be folded
+>> into the rest of the other cio traces.
 >>
->> Test page table and memory pages creating it's entries at various level are
->> all allocated from system memory with required size and alignments. But if
->> memory pages with required size and alignment could not be allocated, then
->> all depending individual tests are just skipped afterwards. This test gets
->> called right after init_mm_internals() required for alloc_contig_range() to
->> work correctly.
+>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+>> ---
+>>   drivers/s390/cio/vfio_ccw_private.h |  1 +
+>>   drivers/s390/cio/vfio_ccw_trace.c   |  1 +
+>>   drivers/s390/cio/vfio_ccw_trace.h   | 26 ++++++++++++++++++++++++++
+>>   3 files changed, 28 insertions(+)
 >>
->> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
->> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
->> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
->> arm64. Going forward, other architectures too can enable this after fixing
->> build or runtime problems (if any) with their page table helpers.
+>> diff --git a/drivers/s390/cio/vfio_ccw_private.h
+>> b/drivers/s390/cio/vfio_ccw_private.h
+>> index bbe9babf767b..9b9bb4982972 100644
+>> --- a/drivers/s390/cio/vfio_ccw_private.h
+>> +++ b/drivers/s390/cio/vfio_ccw_private.h
+>> @@ -135,6 +135,7 @@ extern fsm_func_t
+>> *vfio_ccw_jumptable[NR_VFIO_CCW_STATES][NR_VFIO_CCW_EVENTS];
+>>   static inline void vfio_ccw_fsm_event(struct vfio_ccw_private *private,
+>>                        int event)
+>>   {
+>> +    trace_vfio_ccw_fsm_event(private->sch->schid, private->state,
+>> event);
+>>       vfio_ccw_jumptable[private->state][event](private, event);
+>>   }
+>>
+>> diff --git a/drivers/s390/cio/vfio_ccw_trace.c
+>> b/drivers/s390/cio/vfio_ccw_trace.c
+>> index d5cc943c6864..b37bc68e7f18 100644
+>> --- a/drivers/s390/cio/vfio_ccw_trace.c
+>> +++ b/drivers/s390/cio/vfio_ccw_trace.c
+>> @@ -9,4 +9,5 @@
+>>   #define CREATE_TRACE_POINTS
+>>   #include "vfio_ccw_trace.h"
+>>
+>> +EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_event);
+>>   EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_io_fctl);
+>> diff --git a/drivers/s390/cio/vfio_ccw_trace.h
+>> b/drivers/s390/cio/vfio_ccw_trace.h
+>> index 2a2937a40124..24a8152acfdf 100644
+>> --- a/drivers/s390/cio/vfio_ccw_trace.h
+>> +++ b/drivers/s390/cio/vfio_ccw_trace.h
+>> @@ -17,6 +17,32 @@
+>>
+>>   #include <linux/tracepoint.h>
+>>
+>> +TRACE_EVENT(vfio_ccw_fsm_event,
+>> +    TP_PROTO(struct subchannel_id schid, int state, int event),
+>> +    TP_ARGS(schid, state, event),
+>> +
+>> +    TP_STRUCT__entry(
+>> +        __field(u8, cssid)
+>> +        __field(u8, ssid)
+>> +        __field(u16, schno)
+>> +        __field(int, state)
+>> +        __field(int, event)
+>> +    ),
+>> +
+>> +    TP_fast_assign(
+>> +        __entry->cssid = schid.cssid;
+>> +        __entry->ssid = schid.ssid;
+>> +        __entry->schno = schid.sch_no;
+>> +        __entry->state = state;
+>> +        __entry->event = event;
+>> +    ),
+>> +
+>> +    TP_printk("schid=%x.%x.%04x state=%x event=%x",
 > 
-> A highlevel description of tests and what they are testing for would be
-> really appreciated. Who wants to run these tests and why/when? What kind
-> of bugs would get detected? In short why do we really need/want this
-> code in the tree?
+> /sys/kernel/debug/tracing/events](0)# grep -R '%[^%]*x'
+> 
+> Many existing TPs often seem to format hex output with a 0x prefix
+> (either explicit with 0x%x or implicit with %#x). Since some of your
+> other TPs also output decimal integer values, I wonder if a distinction
+> would help unexperienced TP readers.
 
-Sure, will do.
+Fair enough.  Since they're just enumerated values, they are probably
+better as %d; I don't have a good reason for picking %x (with or without
+a preceding 0x).
+
+> 
+>> +        __entry->cssid, __entry->ssid, __entry->schno,
+>> +        __entry->state,
+>> +        __entry->event)
+>> +);
+>> +
+>>   TRACE_EVENT(vfio_ccw_io_fctl,
+>>       TP_PROTO(int fctl, struct subchannel_id schid, int errno, char
+>> *errstr),
+>>       TP_ARGS(fctl, schid, errno, errstr),
+>>
+> 
+> 
