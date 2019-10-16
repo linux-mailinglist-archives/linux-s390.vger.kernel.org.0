@@ -2,464 +2,147 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3742FD8E1B
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 12:39:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A8478D8FA9
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 13:36:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728728AbfJPKjV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Oct 2019 06:39:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47272 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726259AbfJPKjV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 16 Oct 2019 06:39:21 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 81A6D306F4AB;
-        Wed, 16 Oct 2019 10:39:20 +0000 (UTC)
-Received: from [10.72.12.53] (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9368C19C68;
-        Wed, 16 Oct 2019 10:37:58 +0000 (UTC)
-Subject: Re: [PATCH V3 1/7] mdev: class id support
-To:     Parav Pandit <parav@mellanox.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        Ido Shamay <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>
-References: <20191011081557.28302-1-jasowang@redhat.com>
- <20191011081557.28302-2-jasowang@redhat.com>
- <AM0PR05MB4866481AEE614FDF766C6A25D1920@AM0PR05MB4866.eurprd05.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <302b3902-f065-b5e1-7fc9-5f8aaf826a99@redhat.com>
-Date:   Wed, 16 Oct 2019 18:37:53 +0800
+        id S1726263AbfJPLgR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Oct 2019 07:36:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:29852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726078AbfJPLgR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 16 Oct 2019 07:36:17 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9GBXCn6061229;
+        Wed, 16 Oct 2019 07:36:15 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vp07ww3ds-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Oct 2019 07:36:15 -0400
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9GBYNaC064735;
+        Wed, 16 Oct 2019 07:36:14 -0400
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vp07ww3d8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Oct 2019 07:36:14 -0400
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9GBZgPF019152;
+        Wed, 16 Oct 2019 11:36:13 GMT
+Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
+        by ppma04dal.us.ibm.com with ESMTP id 2vk6f7mx2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 16 Oct 2019 11:36:13 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9GBaCsQ43778538
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 11:36:12 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8631BE054;
+        Wed, 16 Oct 2019 11:36:11 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E094BE051;
+        Wed, 16 Oct 2019 11:36:10 +0000 (GMT)
+Received: from [9.80.230.104] (unknown [9.80.230.104])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 16 Oct 2019 11:36:10 +0000 (GMT)
+Subject: Re: [PATCH v2 3/4] vfio-ccw: Add a trace for asynchronous requests
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Steffen Maier <maier@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20191016015822.72425-1-farman@linux.ibm.com>
+ <20191016015822.72425-4-farman@linux.ibm.com>
+ <20191016121543.2b3f0a88.cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <6c559ea3-4abd-d83b-4a20-d022a188545e@linux.ibm.com>
+Date:   Wed, 16 Oct 2019 07:36:09 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <AM0PR05MB4866481AEE614FDF766C6A25D1920@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191016121543.2b3f0a88.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Wed, 16 Oct 2019 10:39:21 +0000 (UTC)
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910160105
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-On 2019/10/16 下午12:57, Parav Pandit wrote:
->
->> -----Original Message-----
->> From: Jason Wang <jasowang@redhat.com>
->> Sent: Friday, October 11, 2019 3:16 AM
->> To: kvm@vger.kernel.org; linux-s390@vger.kernel.org; linux-
->> kernel@vger.kernel.org; dri-devel@lists.freedesktop.org; intel-
->> gfx@lists.freedesktop.org; intel-gvt-dev@lists.freedesktop.org;
->> kwankhede@nvidia.com; alex.williamson@redhat.com; mst@redhat.com;
->> tiwei.bie@intel.com
->> Cc: virtualization@lists.linux-foundation.org; netdev@vger.kernel.org;
->> cohuck@redhat.com; maxime.coquelin@redhat.com;
->> cunming.liang@intel.com; zhihong.wang@intel.com;
->> rob.miller@broadcom.com; xiao.w.wang@intel.com;
->> haotian.wang@sifive.com; zhenyuw@linux.intel.com; zhi.a.wang@intel.com;
->> jani.nikula@linux.intel.com; joonas.lahtinen@linux.intel.com;
->> rodrigo.vivi@intel.com; airlied@linux.ie; daniel@ffwll.ch;
->> farman@linux.ibm.com; pasic@linux.ibm.com; sebott@linux.ibm.com;
->> oberpar@linux.ibm.com; heiko.carstens@de.ibm.com; gor@linux.ibm.com;
->> borntraeger@de.ibm.com; akrowiak@linux.ibm.com; freude@linux.ibm.com;
->> lingshan.zhu@intel.com; Ido Shamay <idos@mellanox.com>;
->> eperezma@redhat.com; lulu@redhat.com; Parav Pandit
->> <parav@mellanox.com>; christophe.de.dinechin@gmail.com;
->> kevin.tian@intel.com; Jason Wang <jasowang@redhat.com>
->> Subject: [PATCH V3 1/7] mdev: class id support
+
+On 10/16/19 6:15 AM, Cornelia Huck wrote:
+> On Wed, 16 Oct 2019 03:58:21 +0200
+> Eric Farman <farman@linux.ibm.com> wrote:
+> 
+>> Since the asynchronous requests are typically associated with
+>> error recovery, let's add a simple trace when one of those is
+>> issued to a device.
 >>
->> Mdev bus only supports vfio driver right now, so it doesn't implement match
->> method. But in the future, we may add drivers other than vfio, the first
->> driver could be virtio-mdev. This means we need to add device class id
->> support in bus match method to pair the mdev device and mdev driver
->> correctly.
->>
->> So this patch adds id_table to mdev_driver and class_id for mdev device
->> with the match method for mdev bus.
->>
->> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
 >> ---
->>   Documentation/driver-api/vfio-mediated-device.rst |  7 ++++++-
->>   drivers/gpu/drm/i915/gvt/kvmgt.c                  |  1 +
->>   drivers/s390/cio/vfio_ccw_ops.c                   |  1 +
->>   drivers/s390/crypto/vfio_ap_ops.c                 |  1 +
->>   drivers/vfio/mdev/mdev_core.c                     | 11 +++++++++++
->>   drivers/vfio/mdev/mdev_driver.c                   | 14 ++++++++++++++
->>   drivers/vfio/mdev/mdev_private.h                  |  1 +
->>   drivers/vfio/mdev/vfio_mdev.c                     |  6 ++++++
->>   include/linux/mdev.h                              |  8 ++++++++
->>   include/linux/mod_devicetable.h                   |  8 ++++++++
->>   samples/vfio-mdev/mbochs.c                        |  1 +
->>   samples/vfio-mdev/mdpy.c                          |  1 +
->>   samples/vfio-mdev/mtty.c                          |  1 +
->>   13 files changed, 60 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/driver-api/vfio-mediated-device.rst
->> b/Documentation/driver-api/vfio-mediated-device.rst
->> index 25eb7d5b834b..2035e48da7b2 100644
->> --- a/Documentation/driver-api/vfio-mediated-device.rst
->> +++ b/Documentation/driver-api/vfio-mediated-device.rst
->> @@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
->>         * @probe: called when new device created
->>         * @remove: called when device removed
->>         * @driver: device driver structure
->> +      * @id_table: the ids serviced by this driver
->>         */
->>        struct mdev_driver {
->>   	     const char *name;
->>   	     int  (*probe)  (struct device *dev);
->>   	     void (*remove) (struct device *dev);
->>   	     struct device_driver    driver;
->> +	     const struct mdev_class_id *id_table;
->>        };
->>
->>   A mediated bus driver for mdev should use this structure in the function
->> calls @@ -165,12 +167,15 @@ register itself with the mdev core driver::
->>   	extern int  mdev_register_device(struct device *dev,
->>   	                                 const struct mdev_parent_ops *ops);
->>
->> +It is also required to specify the class_id through::
+>>  drivers/s390/cio/vfio_ccw_fsm.c   |  4 ++++
+>>  drivers/s390/cio/vfio_ccw_trace.c |  1 +
+>>  drivers/s390/cio/vfio_ccw_trace.h | 30 ++++++++++++++++++++++++++++++
+>>  3 files changed, 35 insertions(+)
+> 
+> (...)
+> 
+>> diff --git a/drivers/s390/cio/vfio_ccw_trace.h b/drivers/s390/cio/vfio_ccw_trace.h
+>> index 5005d57901b4..23b288eb53dc 100644
+>> --- a/drivers/s390/cio/vfio_ccw_trace.h
+>> +++ b/drivers/s390/cio/vfio_ccw_trace.h
+>> @@ -17,6 +17,36 @@
+>>  
+>>  #include <linux/tracepoint.h>
+>>  
+>> +TRACE_EVENT(vfio_ccw_fsm_async_request,
+>> +	TP_PROTO(struct subchannel_id schid,
+>> +		 int command,
+>> +		 int errno),
+>> +	TP_ARGS(schid, command, errno),
 >> +
->> +	extern int mdev_set_class(struct device *dev, u16 id);
-> Drop extern.
-> In actual API you have correct signature, i.e. struct mdev_device.
-> s/struct device/struct mdev_device.
-
-
-Yes, will fix.
-
-
->
+>> +	TP_STRUCT__entry(
+>> +		__field(u8, cssid)
+>> +		__field(u8, ssid)
+>> +		__field(u16, sch_no)
+>> +		__field(int, command)
+>> +		__field(int, errno)
+>> +	),
 >> +
->>   However, the mdev_parent_ops structure is not required in the function call
->> that a driver should use to unregister itself with the mdev core driver::
->>
->>   	extern void mdev_unregister_device(struct device *dev);
->>
->> -
->>   Mediated Device Management Interface Through sysfs
->> ==================================================
->>
->> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c
->> b/drivers/gpu/drm/i915/gvt/kvmgt.c
->> index 343d79c1cb7e..17e9d4634c84 100644
->> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
->> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
->> @@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kobj,
->> struct mdev_device *mdev)
->>   		     dev_name(mdev_dev(mdev)));
->>   	ret = 0;
->>
->> +	mdev_set_class(mdev, MDEV_ID_VFIO);
->>   out:
->>   	return ret;
->>   }
->> diff --git a/drivers/s390/cio/vfio_ccw_ops.c
->> b/drivers/s390/cio/vfio_ccw_ops.c index f0d71ab77c50..b5d223882c6c
->> 100644
->> --- a/drivers/s390/cio/vfio_ccw_ops.c
->> +++ b/drivers/s390/cio/vfio_ccw_ops.c
->> @@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject *kobj,
->> struct mdev_device *mdev)
->>   			   private->sch->schid.ssid,
->>   			   private->sch->schid.sch_no);
->>
->> +	mdev_set_class(mdev, MDEV_ID_VFIO);
->>   	return 0;
->>   }
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_ops.c
->> b/drivers/s390/crypto/vfio_ap_ops.c
->> index 5c0f53c6dde7..47df1c593c35 100644
->> --- a/drivers/s390/crypto/vfio_ap_ops.c
->> +++ b/drivers/s390/crypto/vfio_ap_ops.c
->> @@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj,
->> struct mdev_device *mdev)
->>   	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
->>   	mutex_unlock(&matrix_dev->lock);
->>
->> +	mdev_set_class(mdev, MDEV_ID_VFIO);
->>   	return 0;
->>   }
->>
->> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
->> index b558d4cfd082..724e9b9841d8 100644
->> --- a/drivers/vfio/mdev/mdev_core.c
->> +++ b/drivers/vfio/mdev/mdev_core.c
->> @@ -45,6 +45,12 @@ void mdev_set_drvdata(struct mdev_device *mdev,
->> void *data)  }  EXPORT_SYMBOL(mdev_set_drvdata);
->>
->> +void mdev_set_class(struct mdev_device *mdev, u16 id) {
->> +	mdev->class_id = id;
->> +}
->> +EXPORT_SYMBOL(mdev_set_class);
+>> +	TP_fast_assign(
+>> +		__entry->cssid = schid.cssid;
+>> +		__entry->ssid = schid.ssid;
+>> +		__entry->sch_no = schid.sch_no;
+>> +		__entry->command = command;
+>> +		__entry->errno = errno;
+>> +	),
 >> +
-> Usually with every exported symbol we have signature comment block that describes when to use an API etc.
-> Please add it that describes that this API must be called during create() callback.
+>> +	TP_printk("schid=%x.%x.%04x command=%d errno=%d",
+> 
+> I'd probably rather print the command as a hex value.
 
+I'm fine with that too.  Want me to send an update?
 
-Ok.
-
-
->
->>   struct device *mdev_dev(struct mdev_device *mdev)  {
->>   	return &mdev->dev;
->> @@ -135,6 +141,7 @@ static int mdev_device_remove_cb(struct device
->> *dev, void *data)
->>    * mdev_register_device : Register a device
->>    * @dev: device structure representing parent device.
->>    * @ops: Parent device operation structure to be registered.
->> + * @id: class id.
->>    *
->>    * Add device to list of registered parent devices.
->>    * Returns a negative value on error, otherwise 0.
->> @@ -324,6 +331,9 @@ int mdev_device_create(struct kobject *kobj,
->>   	if (ret)
->>   		goto ops_create_fail;
->>
->> +	if (!mdev->class_id)
->> +		goto class_id_fail;
+> 
+>> +		  __entry->cssid,
+>> +		  __entry->ssid,
+>> +		  __entry->sch_no,
+>> +		  __entry->command,
+>> +		  __entry->errno)
+>> +);
 >> +
->>   	ret = device_add(&mdev->dev);
->>   	if (ret)
->>   		goto add_fail;
->> @@ -340,6 +350,7 @@ int mdev_device_create(struct kobject *kobj,
->>
->>   sysfs_fail:
->>   	device_del(&mdev->dev);
->> +class_id_fail:
-> No need for new label. Just use add_fail label.
-
-
-Ok.
-
-
->
->>   add_fail:
->>   	parent->ops->remove(mdev);
->>   ops_create_fail:
->> diff --git a/drivers/vfio/mdev/mdev_driver.c
->> b/drivers/vfio/mdev/mdev_driver.c index 0d3223aee20b..b7c40ce86ee3
->> 100644
->> --- a/drivers/vfio/mdev/mdev_driver.c
->> +++ b/drivers/vfio/mdev/mdev_driver.c
->> @@ -69,8 +69,22 @@ static int mdev_remove(struct device *dev)
->>   	return 0;
->>   }
->>
->> +static int mdev_match(struct device *dev, struct device_driver *drv) {
->> +	unsigned int i;
->> +	struct mdev_device *mdev = to_mdev_device(dev);
->> +	struct mdev_driver *mdrv = to_mdev_driver(drv);
->> +	const struct mdev_class_id *ids = mdrv->id_table;
->> +
->> +	for (i = 0; ids[i].id; i++)
->> +		if (ids[i].id == mdev->class_id)
->> +			return 1;
->> +	return 0;
->> +}
->> +
->>   struct bus_type mdev_bus_type = {
->>   	.name		= "mdev",
->> +	.match		= mdev_match,
->>   	.probe		= mdev_probe,
->>   	.remove		= mdev_remove,
->>   };
->> diff --git a/drivers/vfio/mdev/mdev_private.h
->> b/drivers/vfio/mdev/mdev_private.h
->> index 7d922950caaf..c65f436c1869 100644
->> --- a/drivers/vfio/mdev/mdev_private.h
->> +++ b/drivers/vfio/mdev/mdev_private.h
->> @@ -33,6 +33,7 @@ struct mdev_device {
->>   	struct kobject *type_kobj;
->>   	struct device *iommu_device;
->>   	bool active;
->> +	u16 class_id;
->>   };
->>
->>   #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
->> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
->> index 30964a4e0a28..fd2a4d9a3f26 100644
->> --- a/drivers/vfio/mdev/vfio_mdev.c
->> +++ b/drivers/vfio/mdev/vfio_mdev.c
->> @@ -120,10 +120,16 @@ static void vfio_mdev_remove(struct device *dev)
->>   	vfio_del_group_dev(dev);
->>   }
->>
->> +static struct mdev_class_id id_table[] = {
-> static const
-
-
-Fixed.
-
-
->
->> +	{ MDEV_ID_VFIO },
-> I guess you don't need extra braces for each entry.
-> Since this enum represents MDEV class id, it better to name it as MDEV_CLASS_ID_VFIO.
-> (Similar to  PCI_VENDOR_ID, PCI_DEVICE_ID)..
-
-
-Will do.
-
-
->> +	{ 0 },
->> +};
->> +
->>   static struct mdev_driver vfio_mdev_driver = {
->>   	.name	= "vfio_mdev",
->>   	.probe	= vfio_mdev_probe,
->>   	.remove	= vfio_mdev_remove,
->> +	.id_table = id_table,
->>   };
->>
->>   static int __init vfio_mdev_init(void)
->> diff --git a/include/linux/mdev.h b/include/linux/mdev.h index
->> 0ce30ca78db0..a7570cf13ba4 100644
->> --- a/include/linux/mdev.h
->> +++ b/include/linux/mdev.h
->> @@ -118,6 +118,7 @@ struct mdev_type_attribute
->> mdev_type_attr_##_name =		\
->>    * @probe: called when new device created
->>    * @remove: called when device removed
->>    * @driver: device driver structure
->> + * @id_table: the ids serviced by this driver
->>    *
->>    **/
->>   struct mdev_driver {
->> @@ -125,12 +126,14 @@ struct mdev_driver {
->>   	int  (*probe)(struct device *dev);
->>   	void (*remove)(struct device *dev);
->>   	struct device_driver driver;
->> +	const struct mdev_class_id *id_table;
->>   };
->>
->>   #define to_mdev_driver(drv)	container_of(drv, struct mdev_driver, driver)
->>
->>   void *mdev_get_drvdata(struct mdev_device *mdev);  void
->> mdev_set_drvdata(struct mdev_device *mdev, void *data);
->> +void mdev_set_class(struct mdev_device *mdev, u16 id);
-> Better to insert new API after mdev_uuid().
-
-
-Ok.
-
-Thanks
-
-
->
->>   const guid_t *mdev_uuid(struct mdev_device *mdev);
->>
->>   extern struct bus_type mdev_bus_type;
->> @@ -145,4 +148,9 @@ struct device *mdev_parent_dev(struct mdev_device
->> *mdev);  struct device *mdev_dev(struct mdev_device *mdev);  struct
->> mdev_device *mdev_from_dev(struct device *dev);
->>
->> +enum {
->> +	MDEV_ID_VFIO = 1,
->> +	/* New entries must be added here */
->> +};
->> +
->>   #endif /* MDEV_H */
->> diff --git a/include/linux/mod_devicetable.h
->> b/include/linux/mod_devicetable.h index 5714fd35a83c..f32c6e44fb1a
->> 100644
->> --- a/include/linux/mod_devicetable.h
->> +++ b/include/linux/mod_devicetable.h
->> @@ -821,4 +821,12 @@ struct wmi_device_id {
->>   	const void *context;
->>   };
->>
->> +/**
->> + * struct mdev_class_id - MDEV device class identifier
->> + * @id: Used to identify a specific class of device, e.g vfio-mdev device.
->> + */
->> +struct mdev_class_id {
->> +	__u16 id;
->> +};
->> +
->>   #endif /* LINUX_MOD_DEVICETABLE_H */
->> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
->> index ac5c8c17b1ff..fd8491e58fe2 100644
->> --- a/samples/vfio-mdev/mbochs.c
->> +++ b/samples/vfio-mdev/mbochs.c
->> @@ -561,6 +561,7 @@ static int mbochs_create(struct kobject *kobj, struct
->> mdev_device *mdev)
->>   	mbochs_reset(mdev);
->>
->>   	mbochs_used_mbytes += type->mbytes;
->> +	mdev_set_class(mdev, MDEV_ID_VFIO);
->>   	return 0;
->>
->>   err_mem:
->> diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c index
->> cc86bf6566e4..889472b06708 100644
->> --- a/samples/vfio-mdev/mdpy.c
->> +++ b/samples/vfio-mdev/mdpy.c
->> @@ -269,6 +269,7 @@ static int mdpy_create(struct kobject *kobj, struct
->> mdev_device *mdev)
->>   	mdpy_reset(mdev);
->>
->>   	mdpy_count++;
->> +	mdev_set_class(mdev, MDEV_ID_VFIO);
->>   	return 0;
->>   }
->>
->> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c index
->> ce84a300a4da..618810ca4331 100644
->> --- a/samples/vfio-mdev/mtty.c
->> +++ b/samples/vfio-mdev/mtty.c
->> @@ -755,6 +755,7 @@ static int mtty_create(struct kobject *kobj, struct
->> mdev_device *mdev)
->>   	list_add(&mdev_state->next, &mdev_devices_list);
->>   	mutex_unlock(&mdev_list_lock);
->>
->> +	mdev_set_class(mdev, MDEV_ID_VFIO);
->>   	return 0;
->>   }
->>
->> --
->> 2.19.1
+>>  TRACE_EVENT(vfio_ccw_fsm_event,
+>>  	TP_PROTO(struct subchannel_id schid, int state, int event),
+>>  	TP_ARGS(schid, state, event),
+> 
