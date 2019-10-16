@@ -2,256 +2,659 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1E8DED9588
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 17:28:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E80ED982E
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 19:05:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389169AbfJPP2R (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Oct 2019 11:28:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7814 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2392731AbfJPP2R (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 16 Oct 2019 11:28:17 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9GFRbe2041823
-        for <linux-s390@vger.kernel.org>; Wed, 16 Oct 2019 11:28:15 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vp573srp9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 16 Oct 2019 11:28:15 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <sth@linux.ibm.com>;
-        Wed, 16 Oct 2019 16:28:13 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 16 Oct 2019 16:28:09 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9GFS7kF60489962
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 15:28:07 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BBB4B11C052;
-        Wed, 16 Oct 2019 15:28:07 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5C73B11C054;
-        Wed, 16 Oct 2019 15:28:07 +0000 (GMT)
-Received: from [9.152.214.37] (unknown [9.152.214.37])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 16 Oct 2019 15:28:07 +0000 (GMT)
-Subject: Re: memory leaks in dasd_eckd_check_characteristics() error paths
-To:     Qian Cai <cai@lca.pw>, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        id S2387868AbfJPRFR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Oct 2019 13:05:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46490 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbfJPRFQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 16 Oct 2019 13:05:16 -0400
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8B42E20663;
+        Wed, 16 Oct 2019 17:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571245514;
+        bh=l1gHZk3dTlTp3//+5EBzE+NiMhHGIx8FEjS9EK+DTOk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=G5aWNRNHXLrkB2mVbhu2e/btNLW2S0J9ttHdmfqMWY7GBEzjaXNdGX9F3Sr6HN75s
+         ezHoASmlnTlRiDq/cMjRxg5vC6tk8YFzPR6lNTIASXRiSFkAYGej9TkCZIVPcnqy5U
+         86HpDbRwDqy0J0/ieEVQSQCdyAoZEf7sJ990s9aA=
+Date:   Wed, 16 Oct 2019 10:05:13 -0700
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Harald Freudenberger <freude@linux.ibm.com>
+Cc:     linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-s390@vger.kernel.org,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <1570044801.5576.262.camel@lca.pw>
- <6f5584d5-755c-e416-52da-3cb99c69adaf@linux.ibm.com>
- <1571234974.5937.53.camel@lca.pw>
- <ddc3fb26-2286-de78-70dd-ef0f62bfd6c0@linux.ibm.com>
- <1571239578.5937.62.camel@lca.pw>
-From:   Stefan Haberland <sth@linux.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=sth@linux.ibm.com; keydata=
- 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
- cH4TNHyhiR0KAbxE8qKx3Jc=
-Date:   Wed, 16 Oct 2019 17:28:07 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+Subject: Re: [RFT PATCH 2/3] crypto: s390/paes - convert to skcipher API
+Message-ID: <20191016170513.GA720@sol.localdomain>
+Mail-Followup-To: Harald Freudenberger <freude@linux.ibm.com>,
+        linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20191012201809.160500-1-ebiggers@kernel.org>
+ <20191012201809.160500-3-ebiggers@kernel.org>
+ <77a7eb57-2a26-8d2f-1ada-800d925514a4@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <1571239578.5937.62.camel@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19101615-0016-0000-0000-000002B89DF7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101615-0017-0000-0000-00003319C1C8
-Message-Id: <3e03a30c-f0c8-2941-7545-fcf609d77cb0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=65 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910160131
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <77a7eb57-2a26-8d2f-1ada-800d925514a4@linux.ibm.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 16.10.19 17:26, Qian Cai wrote:
-> On Wed, 2019-10-16 at 16:56 +0200, Stefan Haberland wrote:
->> On 16.10.19 16:09, Qian Cai wrote:
->>> On Wed, 2019-10-16 at 15:29 +0200, Stefan Haberland wrote:
->>>> Hi,
->>>>
->>>> thanks for reporting this.
->>>>
->>>> On 02.10.19 21:33, Qian Cai wrote:
->>>>> For some reasons, dasd_eckd_check_characteristics() received -ENOMEM and then
->>>>> dasd_generic_set_online() emits this message,
->>>>>
->>>>> dasd: 0.0.0122 Setting the DASD online with discipline ECKD failed with rc=-12
->>>>>
->>>>> After that, there are several memory leaks below. There are "config_data" and
->>>>> then stored as,
->>>>>
->>>>> /* store per path conf_data */
->>>>> device->path[pos].conf_data = conf_data;
->>>>>
->>>>> When it processes the error path in  dasd_generic_set_online(), it calls
->>>>> dasd_delete_device() which nuke the whole "struct dasd_device" without freeing
->>>>> the device->path[].conf_data first. 
->>>> Usually dasd_delete_device() calls dasd_generic_free_discipline() which
->>>> takes care of
->>>> the device->path[].conf_data in dasd_eckd_uncheck_device().
->>>> From a first look this looks sane.
->>>>
->>>> So I need to spend a closer look if this does not happen correctly here.
->>> When dasd_eckd_check_characteristics() failed here,
->>>
->>> 	if (!private) {
->>> 		private = kzalloc(sizeof(*private), GFP_KERNEL | GFP_DMA);
->>> 		if (!private) {
->>> 			dev_warn(&device->cdev->dev,
->>> 				 "Allocating memory for private DASD data "
->>> 				 "failed\n");
->>> 			return -ENOMEM;
->>> 		}
->>> 		device->private = private;
->>>
->>> The device->private is NULL.
->>>
->>> Then, in dasd_eckd_uncheck_device(), it will return immediately.
->>>
->>> 	if (!private)
->>> 		return;
->> Yes but in this case there is no per_path configuration data stored.
->> This is done after the private structure is allocated successfully.
-> Yes, you are right. It has been a while so I must lost a bit memory. Actually,
-> it looks like in dasd_eckd_check_characteristic() that device->private is set to
-> NULL from this path,
->
-> 	/* Read Configuration Data */
-> 	rc = dasd_eckd_read_conf(device);
-> 	if (rc)
-> 		goto out_err1;
->
-> out_err1:
-> 	kfree(private->conf_data);
-> 	kfree(device->private);
-> 	device->private = NULL;
-> 	return rc;
->
-> because dasd_eckd_read_conf() returns -ENOMEM and calls,
->
-> out_error:
-> 	kfree(rcd_buf);
-> 	*rcd_buffer = NULL;
-> 	*rcd_buffer_size = 0;
-> 	return ret;
->
-> It will only free its own config_data in one operational path, but there could
-> has already allocated in earlier paths in dasd_eckd_read_conf() without any
-> rollback and calls return,
->
-> 	for (lpm = 0x80; lpm; lpm>>= 1) {
-> 		if (!(lpm & opm))
-> 			continue;
-> 		rc = dasd_eckd_read_conf_lpm(device, &conf_data,
-> 					     &conf_len, lpm);
-> 		if (rc && rc != -EOPNOTSUPP) {	/* -EOPNOTSUPP is ok */
-> 			DBF_EVENT_DEVID(DBF_WARNING, device->cdev,
-> 					"Read configuration data returned "
-> 					"error %d", rc);
-> 			return rc;
-> 		}
->
-> Later, dasd_eckd_uncheck_device() see private->device is NULL without cleaning
-> up. Does it make sense?
+On Tue, Oct 15, 2019 at 01:31:39PM +0200, Harald Freudenberger wrote:
+> On 12.10.19 22:18, Eric Biggers wrote:
+> > From: Eric Biggers <ebiggers@google.com>
+> >
+> > Convert the glue code for the S390 CPACF protected key implementations
+> > of AES-ECB, AES-CBC, AES-XTS, and AES-CTR from the deprecated
+> > "blkcipher" API to the "skcipher" API.  This is needed in order for the
+> > blkcipher API to be removed.
+> >
+> > Note: I made CTR use the same function for encryption and decryption,
+> > since CTR encryption and decryption are identical.
+> >
+> > Signed-off-by: Eric Biggers <ebiggers@google.com>
+> > ---
+> >  arch/s390/crypto/paes_s390.c | 414 +++++++++++++++--------------------
+> >  1 file changed, 174 insertions(+), 240 deletions(-)
+> >
+> > diff --git a/arch/s390/crypto/paes_s390.c b/arch/s390/crypto/paes_s390.c
+> > index 6184dceed340..c7119c617b6e 100644
+> > --- a/arch/s390/crypto/paes_s390.c
+> > +++ b/arch/s390/crypto/paes_s390.c
+> > @@ -21,6 +21,7 @@
+> >  #include <linux/cpufeature.h>
+> >  #include <linux/init.h>
+> >  #include <linux/spinlock.h>
+> > +#include <crypto/internal/skcipher.h>
+> >  #include <crypto/xts.h>
+> >  #include <asm/cpacf.h>
+> >  #include <asm/pkey.h>
+> > @@ -123,27 +124,27 @@ static int __paes_set_key(struct s390_paes_ctx *ctx)
+> >  	return ctx->fc ? 0 : -EINVAL;
+> >  }
+> >  
+> > -static int ecb_paes_init(struct crypto_tfm *tfm)
+> > +static int ecb_paes_init(struct crypto_skcipher *tfm)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	ctx->kb.key = NULL;
+> >  
+> >  	return 0;
+> >  }
+> >  
+> > -static void ecb_paes_exit(struct crypto_tfm *tfm)
+> > +static void ecb_paes_exit(struct crypto_skcipher *tfm)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	_free_kb_keybuf(&ctx->kb);
+> >  }
+> >  
+> > -static int ecb_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> > +static int ecb_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
+> >  			    unsigned int key_len)
+> >  {
+> >  	int rc;
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	_free_kb_keybuf(&ctx->kb);
+> >  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
+> > @@ -151,91 +152,75 @@ static int ecb_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> >  		return rc;
+> >  
+> >  	if (__paes_set_key(ctx)) {
+> > -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
+> > +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+> >  		return -EINVAL;
+> >  	}
+> >  	return 0;
+> >  }
+> >  
+> > -static int ecb_paes_crypt(struct blkcipher_desc *desc,
+> > -			  unsigned long modifier,
+> > -			  struct blkcipher_walk *walk)
+> > +static int ecb_paes_crypt(struct skcipher_request *req, unsigned long modifier)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
+> > +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> > +	struct skcipher_walk walk;
+> >  	unsigned int nbytes, n, k;
+> >  	int ret;
+> >  
+> > -	ret = blkcipher_walk_virt(desc, walk);
+> > -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
+> > +	ret = skcipher_walk_virt(&walk, req, false);
+> > +	while ((nbytes = walk.nbytes) != 0) {
+> >  		/* only use complete blocks */
+> >  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
+> >  		k = cpacf_km(ctx->fc | modifier, ctx->pk.protkey,
+> > -			     walk->dst.virt.addr, walk->src.virt.addr, n);
+> > +			     walk.dst.virt.addr, walk.src.virt.addr, n);
+> >  		if (k)
+> > -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
+> > +			ret = skcipher_walk_done(&walk, nbytes - k);
+> >  		if (k < n) {
+> >  			if (__paes_set_key(ctx) != 0)
+> > -				return blkcipher_walk_done(desc, walk, -EIO);
+> > +				return skcipher_walk_done(&walk, -EIO);
+> >  		}
+> >  	}
+> >  	return ret;
+> >  }
+> >  
+> > -static int ecb_paes_encrypt(struct blkcipher_desc *desc,
+> > -			    struct scatterlist *dst, struct scatterlist *src,
+> > -			    unsigned int nbytes)
+> > +static int ecb_paes_encrypt(struct skcipher_request *req)
+> >  {
+> > -	struct blkcipher_walk walk;
+> > -
+> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
+> > -	return ecb_paes_crypt(desc, CPACF_ENCRYPT, &walk);
+> > +	return ecb_paes_crypt(req, 0);
+> >  }
+> >  
+> > -static int ecb_paes_decrypt(struct blkcipher_desc *desc,
+> > -			    struct scatterlist *dst, struct scatterlist *src,
+> > -			    unsigned int nbytes)
+> > +static int ecb_paes_decrypt(struct skcipher_request *req)
+> >  {
+> > -	struct blkcipher_walk walk;
+> > -
+> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
+> > -	return ecb_paes_crypt(desc, CPACF_DECRYPT, &walk);
+> > +	return ecb_paes_crypt(req, CPACF_DECRYPT);
+> >  }
+> >  
+> > -static struct crypto_alg ecb_paes_alg = {
+> > -	.cra_name		=	"ecb(paes)",
+> > -	.cra_driver_name	=	"ecb-paes-s390",
+> > -	.cra_priority		=	401,	/* combo: aes + ecb + 1 */
+> > -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
+> > -	.cra_blocksize		=	AES_BLOCK_SIZE,
+> > -	.cra_ctxsize		=	sizeof(struct s390_paes_ctx),
+> > -	.cra_type		=	&crypto_blkcipher_type,
+> > -	.cra_module		=	THIS_MODULE,
+> > -	.cra_list		=	LIST_HEAD_INIT(ecb_paes_alg.cra_list),
+> > -	.cra_init		=	ecb_paes_init,
+> > -	.cra_exit		=	ecb_paes_exit,
+> > -	.cra_u			=	{
+> > -		.blkcipher = {
+> > -			.min_keysize		=	PAES_MIN_KEYSIZE,
+> > -			.max_keysize		=	PAES_MAX_KEYSIZE,
+> > -			.setkey			=	ecb_paes_set_key,
+> > -			.encrypt		=	ecb_paes_encrypt,
+> > -			.decrypt		=	ecb_paes_decrypt,
+> > -		}
+> > -	}
+> > +static struct skcipher_alg ecb_paes_alg = {
+> > +	.base.cra_name		=	"ecb(paes)",
+> > +	.base.cra_driver_name	=	"ecb-paes-s390",
+> > +	.base.cra_priority	=	401,	/* combo: aes + ecb + 1 */
+> > +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
+> > +	.base.cra_ctxsize	=	sizeof(struct s390_paes_ctx),
+> > +	.base.cra_module	=	THIS_MODULE,
+> > +	.base.cra_list		=	LIST_HEAD_INIT(ecb_paes_alg.base.cra_list),
+> > +	.init			=	ecb_paes_init,
+> > +	.exit			=	ecb_paes_exit,
+> > +	.min_keysize		=	PAES_MIN_KEYSIZE,
+> > +	.max_keysize		=	PAES_MAX_KEYSIZE,
+> > +	.setkey			=	ecb_paes_set_key,
+> > +	.encrypt		=	ecb_paes_encrypt,
+> > +	.decrypt		=	ecb_paes_decrypt,
+> >  };
+> >  
+> > -static int cbc_paes_init(struct crypto_tfm *tfm)
+> > +static int cbc_paes_init(struct crypto_skcipher *tfm)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	ctx->kb.key = NULL;
+> >  
+> >  	return 0;
+> >  }
+> >  
+> > -static void cbc_paes_exit(struct crypto_tfm *tfm)
+> > +static void cbc_paes_exit(struct crypto_skcipher *tfm)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	_free_kb_keybuf(&ctx->kb);
+> >  }
+> > @@ -258,11 +243,11 @@ static int __cbc_paes_set_key(struct s390_paes_ctx *ctx)
+> >  	return ctx->fc ? 0 : -EINVAL;
+> >  }
+> >  
+> > -static int cbc_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> > +static int cbc_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
+> >  			    unsigned int key_len)
+> >  {
+> >  	int rc;
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	_free_kb_keybuf(&ctx->kb);
+> >  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
+> > @@ -270,16 +255,17 @@ static int cbc_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> >  		return rc;
+> >  
+> >  	if (__cbc_paes_set_key(ctx)) {
+> > -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
+> > +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+> >  		return -EINVAL;
+> >  	}
+> >  	return 0;
+> >  }
+> >  
+> > -static int cbc_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+> > -			  struct blkcipher_walk *walk)
+> > +static int cbc_paes_crypt(struct skcipher_request *req, unsigned long modifier)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
+> > +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> > +	struct skcipher_walk walk;
+> >  	unsigned int nbytes, n, k;
+> >  	int ret;
+> >  	struct {
+> > @@ -287,73 +273,60 @@ static int cbc_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+> >  		u8 key[MAXPROTKEYSIZE];
+> >  	} param;
+> >  
+> > -	ret = blkcipher_walk_virt(desc, walk);
+> > -	memcpy(param.iv, walk->iv, AES_BLOCK_SIZE);
+> > +	ret = skcipher_walk_virt(&walk, req, false);
+> > +	if (ret)
+> > +		return ret;
+> > +	memcpy(param.iv, walk.iv, AES_BLOCK_SIZE);
+> >  	memcpy(param.key, ctx->pk.protkey, MAXPROTKEYSIZE);
+> > -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
+> > +	while ((nbytes = walk.nbytes) != 0) {
+> >  		/* only use complete blocks */
+> >  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
+> >  		k = cpacf_kmc(ctx->fc | modifier, &param,
+> > -			      walk->dst.virt.addr, walk->src.virt.addr, n);
+> > -		if (k)
+> > -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
+> > +			      walk.dst.virt.addr, walk.src.virt.addr, n);
+> > +		if (k) {
+> > +			memcpy(walk.iv, param.iv, AES_BLOCK_SIZE);
+> > +			ret = skcipher_walk_done(&walk, nbytes - k);
+> > +		}
+> >  		if (k < n) {
+> >  			if (__cbc_paes_set_key(ctx) != 0)
+> > -				return blkcipher_walk_done(desc, walk, -EIO);
+> > +				return skcipher_walk_done(&walk, -EIO);
+> >  			memcpy(param.key, ctx->pk.protkey, MAXPROTKEYSIZE);
+> >  		}
+> >  	}
+> > -	memcpy(walk->iv, param.iv, AES_BLOCK_SIZE);
+> >  	return ret;
+> >  }
+> >  
+> > -static int cbc_paes_encrypt(struct blkcipher_desc *desc,
+> > -			    struct scatterlist *dst, struct scatterlist *src,
+> > -			    unsigned int nbytes)
+> > +static int cbc_paes_encrypt(struct skcipher_request *req)
+> >  {
+> > -	struct blkcipher_walk walk;
+> > -
+> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
+> > -	return cbc_paes_crypt(desc, 0, &walk);
+> > +	return cbc_paes_crypt(req, 0);
+> >  }
+> >  
+> > -static int cbc_paes_decrypt(struct blkcipher_desc *desc,
+> > -			    struct scatterlist *dst, struct scatterlist *src,
+> > -			    unsigned int nbytes)
+> > +static int cbc_paes_decrypt(struct skcipher_request *req)
+> >  {
+> > -	struct blkcipher_walk walk;
+> > -
+> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
+> > -	return cbc_paes_crypt(desc, CPACF_DECRYPT, &walk);
+> > +	return cbc_paes_crypt(req, CPACF_DECRYPT);
+> >  }
+> >  
+> > -static struct crypto_alg cbc_paes_alg = {
+> > -	.cra_name		=	"cbc(paes)",
+> > -	.cra_driver_name	=	"cbc-paes-s390",
+> > -	.cra_priority		=	402,	/* ecb-paes-s390 + 1 */
+> > -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
+> > -	.cra_blocksize		=	AES_BLOCK_SIZE,
+> > -	.cra_ctxsize		=	sizeof(struct s390_paes_ctx),
+> > -	.cra_type		=	&crypto_blkcipher_type,
+> > -	.cra_module		=	THIS_MODULE,
+> > -	.cra_list		=	LIST_HEAD_INIT(cbc_paes_alg.cra_list),
+> > -	.cra_init		=	cbc_paes_init,
+> > -	.cra_exit		=	cbc_paes_exit,
+> > -	.cra_u			=	{
+> > -		.blkcipher = {
+> > -			.min_keysize		=	PAES_MIN_KEYSIZE,
+> > -			.max_keysize		=	PAES_MAX_KEYSIZE,
+> > -			.ivsize			=	AES_BLOCK_SIZE,
+> > -			.setkey			=	cbc_paes_set_key,
+> > -			.encrypt		=	cbc_paes_encrypt,
+> > -			.decrypt		=	cbc_paes_decrypt,
+> > -		}
+> > -	}
+> > +static struct skcipher_alg cbc_paes_alg = {
+> > +	.base.cra_name		=	"cbc(paes)",
+> > +	.base.cra_driver_name	=	"cbc-paes-s390",
+> > +	.base.cra_priority	=	402,	/* ecb-paes-s390 + 1 */
+> > +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
+> > +	.base.cra_ctxsize	=	sizeof(struct s390_paes_ctx),
+> > +	.base.cra_module	=	THIS_MODULE,
+> > +	.base.cra_list		=	LIST_HEAD_INIT(cbc_paes_alg.base.cra_list),
+> > +	.init			=	cbc_paes_init,
+> > +	.exit			=	cbc_paes_exit,
+> > +	.min_keysize		=	PAES_MIN_KEYSIZE,
+> > +	.max_keysize		=	PAES_MAX_KEYSIZE,
+> > +	.ivsize			=	AES_BLOCK_SIZE,
+> > +	.setkey			=	cbc_paes_set_key,
+> > +	.encrypt		=	cbc_paes_encrypt,
+> > +	.decrypt		=	cbc_paes_decrypt,
+> >  };
+> >  
+> > -static int xts_paes_init(struct crypto_tfm *tfm)
+> > +static int xts_paes_init(struct crypto_skcipher *tfm)
+> >  {
+> > -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	ctx->kb[0].key = NULL;
+> >  	ctx->kb[1].key = NULL;
+> > @@ -361,9 +334,9 @@ static int xts_paes_init(struct crypto_tfm *tfm)
+> >  	return 0;
+> >  }
+> >  
+> > -static void xts_paes_exit(struct crypto_tfm *tfm)
+> > +static void xts_paes_exit(struct crypto_skcipher *tfm)
+> >  {
+> > -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	_free_kb_keybuf(&ctx->kb[0]);
+> >  	_free_kb_keybuf(&ctx->kb[1]);
+> > @@ -391,11 +364,11 @@ static int __xts_paes_set_key(struct s390_pxts_ctx *ctx)
+> >  	return ctx->fc ? 0 : -EINVAL;
+> >  }
+> >  
+> > -static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> > +static int xts_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
+> >  			    unsigned int xts_key_len)
+> >  {
+> >  	int rc;
+> > -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  	u8 ckey[2 * AES_MAX_KEY_SIZE];
+> >  	unsigned int ckey_len, key_len;
+> >  
+> > @@ -414,7 +387,7 @@ static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> >  		return rc;
+> >  
+> >  	if (__xts_paes_set_key(ctx)) {
+> > -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
+> > +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > @@ -427,13 +400,14 @@ static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> >  		AES_KEYSIZE_128 : AES_KEYSIZE_256;
+> >  	memcpy(ckey, ctx->pk[0].protkey, ckey_len);
+> >  	memcpy(ckey + ckey_len, ctx->pk[1].protkey, ckey_len);
+> > -	return xts_check_key(tfm, ckey, 2*ckey_len);
+> > +	return xts_verify_key(tfm, ckey, 2*ckey_len);
+> >  }
+> >  
+> > -static int xts_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+> > -			  struct blkcipher_walk *walk)
+> > +static int xts_paes_crypt(struct skcipher_request *req, unsigned long modifier)
+> >  {
+> > -	struct s390_pxts_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
+> > +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+> > +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
+> > +	struct skcipher_walk walk;
+> >  	unsigned int keylen, offset, nbytes, n, k;
+> >  	int ret;
+> >  	struct {
+> > @@ -448,90 +422,76 @@ static int xts_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+> >  		u8 init[16];
+> >  	} xts_param;
+> >  
+> > -	ret = blkcipher_walk_virt(desc, walk);
+> > +	ret = skcipher_walk_virt(&walk, req, false);
+> > +	if (ret)
+> > +		return ret;
+> >  	keylen = (ctx->pk[0].type == PKEY_KEYTYPE_AES_128) ? 48 : 64;
+> >  	offset = (ctx->pk[0].type == PKEY_KEYTYPE_AES_128) ? 16 : 0;
+> >  retry:
+> >  	memset(&pcc_param, 0, sizeof(pcc_param));
+> > -	memcpy(pcc_param.tweak, walk->iv, sizeof(pcc_param.tweak));
+> > +	memcpy(pcc_param.tweak, walk.iv, sizeof(pcc_param.tweak));
+> >  	memcpy(pcc_param.key + offset, ctx->pk[1].protkey, keylen);
+> >  	cpacf_pcc(ctx->fc, pcc_param.key + offset);
+> >  
+> >  	memcpy(xts_param.key + offset, ctx->pk[0].protkey, keylen);
+> >  	memcpy(xts_param.init, pcc_param.xts, 16);
+> >  
+> > -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
+> > +	while ((nbytes = walk.nbytes) != 0) {
+> >  		/* only use complete blocks */
+> >  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
+> >  		k = cpacf_km(ctx->fc | modifier, xts_param.key + offset,
+> > -			     walk->dst.virt.addr, walk->src.virt.addr, n);
+> > +			     walk.dst.virt.addr, walk.src.virt.addr, n);
+> >  		if (k)
+> > -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
+> > +			ret = skcipher_walk_done(&walk, nbytes - k);
+> >  		if (k < n) {
+> >  			if (__xts_paes_set_key(ctx) != 0)
+> > -				return blkcipher_walk_done(desc, walk, -EIO);
+> > +				return skcipher_walk_done(&walk, -EIO);
+> >  			goto retry;
+> >  		}
+> >  	}
+> >  	return ret;
+> >  }
+> >  
+> > -static int xts_paes_encrypt(struct blkcipher_desc *desc,
+> > -			    struct scatterlist *dst, struct scatterlist *src,
+> > -			    unsigned int nbytes)
+> > +static int xts_paes_encrypt(struct skcipher_request *req)
+> >  {
+> > -	struct blkcipher_walk walk;
+> > -
+> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
+> > -	return xts_paes_crypt(desc, 0, &walk);
+> > +	return xts_paes_crypt(req, 0);
+> >  }
+> >  
+> > -static int xts_paes_decrypt(struct blkcipher_desc *desc,
+> > -			    struct scatterlist *dst, struct scatterlist *src,
+> > -			    unsigned int nbytes)
+> > +static int xts_paes_decrypt(struct skcipher_request *req)
+> >  {
+> > -	struct blkcipher_walk walk;
+> > -
+> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
+> > -	return xts_paes_crypt(desc, CPACF_DECRYPT, &walk);
+> > +	return xts_paes_crypt(req, CPACF_DECRYPT);
+> >  }
+> >  
+> > -static struct crypto_alg xts_paes_alg = {
+> > -	.cra_name		=	"xts(paes)",
+> > -	.cra_driver_name	=	"xts-paes-s390",
+> > -	.cra_priority		=	402,	/* ecb-paes-s390 + 1 */
+> > -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
+> > -	.cra_blocksize		=	AES_BLOCK_SIZE,
+> > -	.cra_ctxsize		=	sizeof(struct s390_pxts_ctx),
+> > -	.cra_type		=	&crypto_blkcipher_type,
+> > -	.cra_module		=	THIS_MODULE,
+> > -	.cra_list		=	LIST_HEAD_INIT(xts_paes_alg.cra_list),
+> > -	.cra_init		=	xts_paes_init,
+> > -	.cra_exit		=	xts_paes_exit,
+> > -	.cra_u			=	{
+> > -		.blkcipher = {
+> > -			.min_keysize		=	2 * PAES_MIN_KEYSIZE,
+> > -			.max_keysize		=	2 * PAES_MAX_KEYSIZE,
+> > -			.ivsize			=	AES_BLOCK_SIZE,
+> > -			.setkey			=	xts_paes_set_key,
+> > -			.encrypt		=	xts_paes_encrypt,
+> > -			.decrypt		=	xts_paes_decrypt,
+> > -		}
+> > -	}
+> > +static struct skcipher_alg xts_paes_alg = {
+> > +	.base.cra_name		=	"xts(paes)",
+> > +	.base.cra_driver_name	=	"xts-paes-s390",
+> > +	.base.cra_priority	=	402,	/* ecb-paes-s390 + 1 */
+> > +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
+> > +	.base.cra_ctxsize	=	sizeof(struct s390_pxts_ctx),
+> > +	.base.cra_module	=	THIS_MODULE,
+> > +	.base.cra_list		=	LIST_HEAD_INIT(xts_paes_alg.base.cra_list),
+> > +	.init			=	xts_paes_init,
+> > +	.exit			=	xts_paes_exit,
+> > +	.min_keysize		=	2 * PAES_MIN_KEYSIZE,
+> > +	.max_keysize		=	2 * PAES_MAX_KEYSIZE,
+> > +	.ivsize			=	AES_BLOCK_SIZE,
+> > +	.setkey			=	xts_paes_set_key,
+> > +	.encrypt		=	xts_paes_encrypt,
+> > +	.decrypt		=	xts_paes_decrypt,
+> >  };
+> >  
+> > -static int ctr_paes_init(struct crypto_tfm *tfm)
+> > +static int ctr_paes_init(struct crypto_skcipher *tfm)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	ctx->kb.key = NULL;
+> >  
+> >  	return 0;
+> >  }
+> >  
+> > -static void ctr_paes_exit(struct crypto_tfm *tfm)
+> > +static void ctr_paes_exit(struct crypto_skcipher *tfm)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	_free_kb_keybuf(&ctx->kb);
+> >  }
+> > @@ -555,11 +515,11 @@ static int __ctr_paes_set_key(struct s390_paes_ctx *ctx)
+> >  	return ctx->fc ? 0 : -EINVAL;
+> >  }
+> >  
+> > -static int ctr_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> > +static int ctr_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
+> >  			    unsigned int key_len)
+> >  {
+> >  	int rc;
+> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  
+> >  	_free_kb_keybuf(&ctx->kb);
+> >  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
+> > @@ -567,7 +527,7 @@ static int ctr_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+> >  		return rc;
+> >  
+> >  	if (__ctr_paes_set_key(ctx)) {
+> > -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
+> > +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+> >  		return -EINVAL;
+> >  	}
+> >  	return 0;
+> > @@ -588,37 +548,37 @@ static unsigned int __ctrblk_init(u8 *ctrptr, u8 *iv, unsigned int nbytes)
+> >  	return n;
+> >  }
+> >  
+> > -static int ctr_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+> > -			  struct blkcipher_walk *walk)
+> > +static int ctr_paes_crypt(struct skcipher_request *req)
+> >  {
+> > -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
+> > +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+> >  	u8 buf[AES_BLOCK_SIZE], *ctrptr;
+> > +	struct skcipher_walk walk;
+> >  	unsigned int nbytes, n, k;
+> >  	int ret, locked;
+> >  
+> >  	locked = spin_trylock(&ctrblk_lock);
+> >  
+> > -	ret = blkcipher_walk_virt_block(desc, walk, AES_BLOCK_SIZE);
+> > -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
+> > +	ret = skcipher_walk_virt(&walk, req, false);
+> > +	while ((nbytes = walk.nbytes) >= AES_BLOCK_SIZE) {
+> >  		n = AES_BLOCK_SIZE;
+> >  		if (nbytes >= 2*AES_BLOCK_SIZE && locked)
+> > -			n = __ctrblk_init(ctrblk, walk->iv, nbytes);
+> > -		ctrptr = (n > AES_BLOCK_SIZE) ? ctrblk : walk->iv;
+> > -		k = cpacf_kmctr(ctx->fc | modifier, ctx->pk.protkey,
+> > -				walk->dst.virt.addr, walk->src.virt.addr,
+> > -				n, ctrptr);
+> > +			n = __ctrblk_init(ctrblk, walk.iv, nbytes);
+> > +		ctrptr = (n > AES_BLOCK_SIZE) ? ctrblk : walk.iv;
+> > +		k = cpacf_kmctr(ctx->fc, ctx->pk.protkey, walk.dst.virt.addr,
+> > +				walk.src.virt.addr, n, ctrptr);
+> >  		if (k) {
+> >  			if (ctrptr == ctrblk)
+> > -				memcpy(walk->iv, ctrptr + k - AES_BLOCK_SIZE,
+> > +				memcpy(walk.iv, ctrptr + k - AES_BLOCK_SIZE,
+> >  				       AES_BLOCK_SIZE);
+> > -			crypto_inc(walk->iv, AES_BLOCK_SIZE);
+> > -			ret = blkcipher_walk_done(desc, walk, nbytes - n);
+> > +			crypto_inc(walk.iv, AES_BLOCK_SIZE);
+> > +			ret = skcipher_walk_done(&walk, nbytes - n);
+> 
+> Looks like a bug here. It should be
+> 
+> ret = skcipher_walk_done(&walk, nbytes - k);
+> 
+> similar to the other modes.
+> You can add this in your patch or leave it to me to provide a separate patch.
 
-Yes, this looks like an error path not handling this correctly.
+I'm not planning to fix this since it's an existing bug, I can't test this code
+myself, and the paes code is different from the regular algorithms so it's hard
+to work with.  So I suggest you provide a patch later.
 
->
->>
->>>>> Is it safe to free those in
->>>>> dasd_free_device() without worrying about the double-free? Or, is it better to
->>>>> free those in dasd_eckd_check_characteristics()'s goto error handling, i.e.,
->>>>> out_err*?
->>>>>
->>>>> --- a/drivers/s390/block/dasd.c
->>>>> +++ b/drivers/s390/block/dasd.c
->>>>> @@ -153,6 +153,9 @@ struct dasd_device *dasd_alloc_device(void)
->>>>>   */
->>>>>  void dasd_free_device(struct dasd_device *device)
->>>>>  {
->>>>> +       for (int i = 0; i < 8; i++)
->>>>> +               kfree(device->path[i].conf_data);
->>>>> +
->>>>>         kfree(device->private);
->>>>>         free_pages((unsigned long) device->ese_mem, 1);
->>>>>         free_page((unsigned long) device->erp_mem);
->>>>>
->>>>>
->>>>> unreferenced object 0x0fcee900 (size 256):
->>>>>   comm "dasdconf.sh", pid 446, jiffies 4294940081 (age 170.340s)
->>>>>   hex dump (first 32 bytes):
->>>>>     dc 01 01 00 f0 f0 f2 f1 f0 f7 f9 f0 f0 c9 c2 d4  ................
->>>>>     f7 f5 f0 f0 f0 f0 f0 f0 f0 c6 d9 c2 f7 f1 62 33  ..............b3
->>>>>   backtrace:
->>>>>     [<00000000a83b1992>] kmem_cache_alloc_trace+0x200/0x388
->>>>>     [<00000000048ef3e2>] dasd_eckd_read_conf+0x408/0x1400 [dasd_eckd_mod]
->>>>>     [<00000000ce31f195>] dasd_eckd_check_characteristics+0x3cc/0x938
->>>>> [dasd_eckd_mod]
->>>>>     [<00000000f6f1759b>] dasd_generic_set_online+0x150/0x4c0
->>>>>     [<00000000efca1efa>] ccw_device_set_online+0x324/0x808
->>>>>     [<00000000f9779774>] online_store_recog_and_online+0xe8/0x220
->>>>>     [<00000000349a5446>] online_store+0x2ce/0x420
->>>>>     [<000000005bd145f8>] kernfs_fop_write+0x1bc/0x270
->>>>>     [<0000000005664197>] vfs_write+0xce/0x220
->>>>>     [<0000000044a8bccb>] ksys_write+0xea/0x190
->>>>>     [<0000000037335938>] system_call+0x296/0x2b4
->>
+> 
+> >  		}
+> >  		if (k < n) {
+> >  			if (__ctr_paes_set_key(ctx) != 0) {
+> >  				if (locked)
+> >  					spin_unlock(&ctrblk_lock);
+> > -				return blkcipher_walk_done(desc, walk, -EIO);
+> > +				return skcipher_walk_done(&walk, -EIO);
+> >  			}
+> >  		}
+> >  	}
 
+Note that __ctr_paes_set_key() is modifying the tfm_ctx which can be shared
+between multiple threads.  So this code seems broken in other ways too.
+
+How is "paes" tested, given that it isn't covered by the crypto subsystem's
+self-tests?  How do you know it isn't completely broken?
+
+- Eric
