@@ -2,158 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56AF2D85A7
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 03:58:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1622FD879A
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 06:41:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727138AbfJPB6b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 15 Oct 2019 21:58:31 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:62564 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726750AbfJPB6a (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 15 Oct 2019 21:58:30 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9G1q4k9029568
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 21:58:29 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vnmh0guc9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 15 Oct 2019 21:58:28 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
-        Wed, 16 Oct 2019 02:58:27 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 16 Oct 2019 02:58:26 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9G1wOV735454980
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 16 Oct 2019 01:58:24 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C3675204F;
-        Wed, 16 Oct 2019 01:58:24 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 693D65204E;
-        Wed, 16 Oct 2019 01:58:24 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id D7285E0279; Wed, 16 Oct 2019 03:58:23 +0200 (CEST)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>
-Cc:     Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
-Subject: [PATCH v2 4/4] vfio-ccw: Rework the io_fctl trace
-Date:   Wed, 16 Oct 2019 03:58:22 +0200
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191016015822.72425-1-farman@linux.ibm.com>
-References: <20191016015822.72425-1-farman@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19101601-0008-0000-0000-000003226744
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19101601-0009-0000-0000-00004A417EED
-Message-Id: <20191016015822.72425-5-farman@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-15_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=980 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910160015
+        id S1728681AbfJPElI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Oct 2019 00:41:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55874 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726502AbfJPElI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 16 Oct 2019 00:41:08 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3E8CA8E1CED;
+        Wed, 16 Oct 2019 04:41:07 +0000 (UTC)
+Received: from [10.72.12.53] (ovpn-12-53.pek2.redhat.com [10.72.12.53])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E7DDE5D9CD;
+        Wed, 16 Oct 2019 04:38:53 +0000 (UTC)
+Subject: Re: [PATCH V3 1/7] mdev: class id support
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191011081557.28302-2-jasowang@redhat.com>
+ <20191015103806.0538ccb2@x1.home>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3f6121a9-7d25-df8d-86ec-14443ab036f6@redhat.com>
+Date:   Wed, 16 Oct 2019 12:38:49 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191015103806.0538ccb2@x1.home>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Wed, 16 Oct 2019 04:41:08 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Using __field_struct for the schib is convenient, but it doesn't
-appear to let us filter based on any of the schib elements.
-Specifying, the full schid or any element within it results
-in various errors by the parser.  So, expand that out to its
-component elements, so we can limit the trace to a single device.
 
-While we are at it, rename this trace to the function name, so we
-remember what is being traced instead of an abstract reference to the
-function control bit of the SCSW.
+On 2019/10/16 上午12:38, Alex Williamson wrote:
+> On Fri, 11 Oct 2019 16:15:51 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>    
+>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+>> index b558d4cfd082..724e9b9841d8 100644
+>> --- a/drivers/vfio/mdev/mdev_core.c
+>> +++ b/drivers/vfio/mdev/mdev_core.c
+>> @@ -45,6 +45,12 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
+>>   }
+>>   EXPORT_SYMBOL(mdev_set_drvdata);
+>>   
+>> +void mdev_set_class(struct mdev_device *mdev, u16 id)
+>> +{
+>> +	mdev->class_id = id;
+>> +}
+>> +EXPORT_SYMBOL(mdev_set_class);
+>> +
+>>   struct device *mdev_dev(struct mdev_device *mdev)
+>>   {
+>>   	return &mdev->dev;
+>> @@ -135,6 +141,7 @@ static int mdev_device_remove_cb(struct device *dev, void *data)
+>>    * mdev_register_device : Register a device
+>>    * @dev: device structure representing parent device.
+>>    * @ops: Parent device operation structure to be registered.
+>> + * @id: class id.
+>>    *
+>>    * Add device to list of registered parent devices.
+>>    * Returns a negative value on error, otherwise 0.
+>> @@ -324,6 +331,9 @@ int mdev_device_create(struct kobject *kobj,
+>>   	if (ret)
+>>   		goto ops_create_fail;
+>>   
+>> +	if (!mdev->class_id)
+> This is a sanity test failure of the parent driver on a privileged
+> path, I think it's fair to print a warning when this occurs rather than
+> only return an errno to the user.  In fact, ret is not set to an error
+> value here, so it looks like this fails to create the device but
+> returns success.  Thanks,
+>
+> Alex
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- drivers/s390/cio/vfio_ccw_fsm.c   |  4 ++--
- drivers/s390/cio/vfio_ccw_trace.c |  2 +-
- drivers/s390/cio/vfio_ccw_trace.h | 18 +++++++++++-------
- 3 files changed, 14 insertions(+), 10 deletions(-)
 
-diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
-index 23648a9aa721..23e61aa638e4 100644
---- a/drivers/s390/cio/vfio_ccw_fsm.c
-+++ b/drivers/s390/cio/vfio_ccw_fsm.c
-@@ -318,8 +318,8 @@ static void fsm_io_request(struct vfio_ccw_private *private,
- 	}
- 
- err_out:
--	trace_vfio_ccw_io_fctl(scsw->cmd.fctl, schid,
--			       io_region->ret_code, errstr);
-+	trace_vfio_ccw_fsm_io_request(scsw->cmd.fctl, schid,
-+				      io_region->ret_code, errstr);
- }
- 
- /*
-diff --git a/drivers/s390/cio/vfio_ccw_trace.c b/drivers/s390/cio/vfio_ccw_trace.c
-index 37ecbf8be805..8c671d2519f6 100644
---- a/drivers/s390/cio/vfio_ccw_trace.c
-+++ b/drivers/s390/cio/vfio_ccw_trace.c
-@@ -11,4 +11,4 @@
- 
- EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_async_request);
- EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_event);
--EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_io_fctl);
-+EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_io_request);
-diff --git a/drivers/s390/cio/vfio_ccw_trace.h b/drivers/s390/cio/vfio_ccw_trace.h
-index 23b288eb53dc..f2de5d23c312 100644
---- a/drivers/s390/cio/vfio_ccw_trace.h
-+++ b/drivers/s390/cio/vfio_ccw_trace.h
-@@ -73,28 +73,32 @@ TRACE_EVENT(vfio_ccw_fsm_event,
- 		__entry->event)
- );
- 
--TRACE_EVENT(vfio_ccw_io_fctl,
-+TRACE_EVENT(vfio_ccw_fsm_io_request,
- 	TP_PROTO(int fctl, struct subchannel_id schid, int errno, char *errstr),
- 	TP_ARGS(fctl, schid, errno, errstr),
- 
- 	TP_STRUCT__entry(
-+		__field(u8, cssid)
-+		__field(u8, ssid)
-+		__field(u16, sch_no)
- 		__field(int, fctl)
--		__field_struct(struct subchannel_id, schid)
- 		__field(int, errno)
- 		__field(char*, errstr)
- 	),
- 
- 	TP_fast_assign(
-+		__entry->cssid = schid.cssid;
-+		__entry->ssid = schid.ssid;
-+		__entry->sch_no = schid.sch_no;
- 		__entry->fctl = fctl;
--		__entry->schid = schid;
- 		__entry->errno = errno;
- 		__entry->errstr = errstr;
- 	),
- 
--	TP_printk("schid=%x.%x.%04x fctl=%x errno=%d info=%s",
--		  __entry->schid.cssid,
--		  __entry->schid.ssid,
--		  __entry->schid.sch_no,
-+	TP_printk("schid=%x.%x.%04x fctl=0x%x errno=%d info=%s",
-+		  __entry->cssid,
-+		  __entry->ssid,
-+		  __entry->sch_no,
- 		  __entry->fctl,
- 		  __entry->errno,
- 		  __entry->errstr)
--- 
-2.17.1
+Will fix.
 
+Thanks
+
+
+>
+>> +		goto class_id_fail;
+>> +
+>>   	ret = device_add(&mdev->dev);
+>>   	if (ret)
+>>   		goto add_fail;
+>> @@ -340,6 +350,7 @@ int mdev_device_create(struct kobject *kobj,
+>>   
+>>   sysfs_fail:
+>>   	device_del(&mdev->dev);
+>> +class_id_fail:
+>>   add_fail:
+>>   	parent->ops->remove(mdev);
+>>   ops_create_fail:
