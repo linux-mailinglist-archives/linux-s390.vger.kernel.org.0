@@ -2,71 +2,184 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51E4CD910F
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 14:35:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id CE8EAD9276
+	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 15:29:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2391236AbfJPMfL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Oct 2019 08:35:11 -0400
-Received: from helcar.hmeau.com ([216.24.177.18]:59950 "EHLO fornost.hmeau.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728490AbfJPMfL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 16 Oct 2019 08:35:11 -0400
-Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
-        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
-        id 1iKiWC-0007NF-Gk; Wed, 16 Oct 2019 23:35:09 +1100
-Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Wed, 16 Oct 2019 23:35:07 +1100
-Date:   Wed, 16 Oct 2019 23:35:07 +1100
-From:   Herbert Xu <herbert@gondor.apana.org.au>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     Eric Biggers <ebiggers@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>
-Subject: Re: [RFT PATCH 0/3] crypto: s390 - convert to skcipher API
-Message-ID: <20191016123507.GA16265@gondor.apana.org.au>
-References: <20191012201809.160500-1-ebiggers@kernel.org>
- <20191016080103.GA4267@osiris>
+        id S1730468AbfJPN3y convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Wed, 16 Oct 2019 09:29:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49090 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730142AbfJPN3y (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 16 Oct 2019 09:29:54 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9GDSUR4011649
+        for <linux-s390@vger.kernel.org>; Wed, 16 Oct 2019 09:29:53 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vng3ubfb4-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 16 Oct 2019 09:29:52 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <sth@linux.ibm.com>;
+        Wed, 16 Oct 2019 14:29:48 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 16 Oct 2019 14:29:46 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9GDTguJ11862140
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 16 Oct 2019 13:29:42 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2A24311C052;
+        Wed, 16 Oct 2019 13:29:42 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C8DF811C050;
+        Wed, 16 Oct 2019 13:29:41 +0000 (GMT)
+Received: from [9.152.214.37] (unknown [9.152.214.37])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 16 Oct 2019 13:29:41 +0000 (GMT)
+To:     Qian Cai <cai@lca.pw>, Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1570044801.5576.262.camel@lca.pw>
+From:   Stefan Haberland <sth@linux.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=sth@linux.ibm.com; keydata=
+ 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
+ cH4TNHyhiR0KAbxE8qKx3Jc=
+Subject: Re: memory leaks in dasd_eckd_check_characteristics() error paths
+Date:   Wed, 16 Oct 2019 15:29:41 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191016080103.GA4267@osiris>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1570044801.5576.262.camel@lca.pw>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19101613-0012-0000-0000-000003589894
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101613-0013-0000-0000-00002193B23F
+Message-Id: <6f5584d5-755c-e416-52da-3cb99c69adaf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-16_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=65 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910160120
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Oct 16, 2019 at 10:01:03AM +0200, Heiko Carstens wrote:
-> On Sat, Oct 12, 2019 at 01:18:06PM -0700, Eric Biggers wrote:
-> > This series converts the glue code for the S390 CPACF implementations of
-> > AES, DES, and 3DES modes from the deprecated "blkcipher" API to the
-> > "skcipher" API.  This is needed in order for the blkcipher API to be
-> > removed.
-> > 
-> > I've compiled this patchset, and the conversion is very similar to that
-> > which has been done for many other crypto drivers.  But I don't have the
-> > hardware to test it, nor is S390 CPACF supported by QEMU.  So I really
-> > need someone with the hardware to test it.  You can do so by setting:
-> 
-> ...
-> 
-> > Eric Biggers (3):
-> >   crypto: s390/aes - convert to skcipher API
-> >   crypto: s390/paes - convert to skcipher API
-> >   crypto: s390/des - convert to skcipher API
-> > 
-> >  arch/s390/crypto/aes_s390.c  | 609 ++++++++++++++---------------------
-> >  arch/s390/crypto/des_s390.c  | 419 ++++++++++--------------
-> >  arch/s390/crypto/paes_s390.c | 414 ++++++++++--------------
-> >  3 files changed, 580 insertions(+), 862 deletions(-)
-> 
-> Herbert, should these go upstream via the s390 or crypto tree?
+Hi,
 
-It would be best to go via the crypto tree since any future patches
-to remove blkcipher/ablkcipher would depend on these patches.
+thanks for reporting this.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+On 02.10.19 21:33, Qian Cai wrote:
+> For some reasons, dasd_eckd_check_characteristics() received -ENOMEM and then
+> dasd_generic_set_online() emits this message,
+>
+> dasd: 0.0.0122 Setting the DASD online with discipline ECKD failed with rc=-12
+>
+> After that, there are several memory leaks below. There are "config_data" and
+> then stored as,
+>
+> /* store per path conf_data */
+> device->path[pos].conf_data = conf_data;
+>
+> When it processes the error path in  dasd_generic_set_online(), it calls
+> dasd_delete_device() which nuke the whole "struct dasd_device" without freeing
+> the device->path[].conf_data first. 
+
+Usually dasd_delete_device() calls dasd_generic_free_discipline() which
+takes care of
+the device->path[].conf_data in dasd_eckd_uncheck_device().
+From a first look this looks sane.
+
+So I need to spend a closer look if this does not happen correctly here.
+
+> Is it safe to free those in
+> dasd_free_device() without worrying about the double-free? Or, is it better to
+> free those in dasd_eckd_check_characteristics()'s goto error handling, i.e.,
+> out_err*?
+>
+> --- a/drivers/s390/block/dasd.c
+> +++ b/drivers/s390/block/dasd.c
+> @@ -153,6 +153,9 @@ struct dasd_device *dasd_alloc_device(void)
+>   */
+>  void dasd_free_device(struct dasd_device *device)
+>  {
+> +       for (int i = 0; i < 8; i++)
+> +               kfree(device->path[i].conf_data);
+> +
+>         kfree(device->private);
+>         free_pages((unsigned long) device->ese_mem, 1);
+>         free_page((unsigned long) device->erp_mem);
+>
+>
+> unreferenced object 0x0fcee900 (size 256):
+>   comm "dasdconf.sh", pid 446, jiffies 4294940081 (age 170.340s)
+>   hex dump (first 32 bytes):
+>     dc 01 01 00 f0 f0 f2 f1 f0 f7 f9 f0 f0 c9 c2 d4  ................
+>     f7 f5 f0 f0 f0 f0 f0 f0 f0 c6 d9 c2 f7 f1 62 33  ..............b3
+>   backtrace:
+>     [<00000000a83b1992>] kmem_cache_alloc_trace+0x200/0x388
+>     [<00000000048ef3e2>] dasd_eckd_read_conf+0x408/0x1400 [dasd_eckd_mod]
+>     [<00000000ce31f195>] dasd_eckd_check_characteristics+0x3cc/0x938
+> [dasd_eckd_mod]
+>     [<00000000f6f1759b>] dasd_generic_set_online+0x150/0x4c0
+>     [<00000000efca1efa>] ccw_device_set_online+0x324/0x808
+>     [<00000000f9779774>] online_store_recog_and_online+0xe8/0x220
+>     [<00000000349a5446>] online_store+0x2ce/0x420
+>     [<000000005bd145f8>] kernfs_fop_write+0x1bc/0x270
+>     [<0000000005664197>] vfs_write+0xce/0x220
+>     [<0000000044a8bccb>] ksys_write+0xea/0x190
+>     [<0000000037335938>] system_call+0x296/0x2b4
+
+
