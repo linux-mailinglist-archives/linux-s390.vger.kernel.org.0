@@ -2,113 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7425ADA75A
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 10:28:13 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CB63DA7E8
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 10:59:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390608AbfJQI2N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Oct 2019 04:28:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:57518 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389585AbfJQI2M (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 17 Oct 2019 04:28:12 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6813018CB90E;
-        Thu, 17 Oct 2019 08:28:11 +0000 (UTC)
-Received: from [10.72.12.185] (ovpn-12-185.pek2.redhat.com [10.72.12.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6719F60BE1;
-        Thu, 17 Oct 2019 08:27:43 +0000 (UTC)
-Subject: Re: [PATCH V3 1/7] mdev: class id support
-To:     Parav Pandit <parav@mellanox.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>
-Cc:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        Ido Shamay <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>
-References: <20191011081557.28302-1-jasowang@redhat.com>
- <20191011081557.28302-2-jasowang@redhat.com>
- <AM0PR05MB4866481AEE614FDF766C6A25D1920@AM0PR05MB4866.eurprd05.prod.outlook.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <67b645a6-1b70-094d-6a12-fc6591e07a13@redhat.com>
-Date:   Thu, 17 Oct 2019 16:27:41 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S2408433AbfJQI73 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Oct 2019 04:59:29 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36518 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2408396AbfJQI73 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Oct 2019 04:59:29 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9H8vA7X062637
+        for <linux-s390@vger.kernel.org>; Thu, 17 Oct 2019 04:59:26 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vpmvfrtt1-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 17 Oct 2019 04:59:26 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <iii@linux.ibm.com>;
+        Thu, 17 Oct 2019 09:59:24 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 17 Oct 2019 09:59:21 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9H8xKoD40697858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 08:59:20 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 28E61A4054;
+        Thu, 17 Oct 2019 08:59:20 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C6A40A405C;
+        Thu, 17 Oct 2019 08:59:19 +0000 (GMT)
+Received: from white.boeblingen.de.ibm.com (unknown [9.152.99.142])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 17 Oct 2019 08:59:19 +0000 (GMT)
+From:   Ilya Leoshkevich <iii@linux.ibm.com>
+To:     Jan Kiszka <jan.kiszka@siemens.com>,
+        Kieran Bingham <kbingham@kernel.org>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH v2] scripts/gdb: fix debugging modules on s390
+Date:   Thu, 17 Oct 2019 10:59:17 +0200
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <AM0PR05MB4866481AEE614FDF766C6A25D1920@AM0PR05MB4866.eurprd05.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.63]); Thu, 17 Oct 2019 08:28:12 +0000 (UTC)
+X-TM-AS-GCONF: 00
+x-cbid: 19101708-4275-0000-0000-00000372E37A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101708-4276-0000-0000-00003885FB4D
+Message-Id: <20191017085917.81791-1-iii@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=910 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910170081
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Currently lx-symbols assumes that module text is always located at
+module->core_layout->base, but s390 uses the following layout:
 
-On 2019/10/16 下午12:57, Parav Pandit wrote:
->> +static struct mdev_class_id id_table[] = {
-> static const
->
->> +	{ MDEV_ID_VFIO },
-> I guess you don't need extra braces for each entry.
-> Since this enum represents MDEV class id, it better to name it as MDEV_CLASS_ID_VFIO.
-> (Similar to  PCI_VENDOR_ID, PCI_DEVICE_ID)..
->
++------+  <- module->core_layout->base
+| GOT  |
++------+  <- module->core_layout->base + module->arch->plt_offset
+| PLT  |
++------+  <- module->core_layout->base + module->arch->plt_offset +
+| TEXT |     module->arch->plt_size
++------+
 
-Gcc start to complain like:
+Therefore, when trying to debug modules on s390, all the symbol
+addresses are skewed by plt_offset + plt_size.
 
-warning: missing braces around initializer [-Wmissing-braces]
-  static const struct mdev_class_id id_table[] = {
-                                                 ^
-   MDEV_ID_VFIO, 0,
-   {           } {
-  };
-  }
+Fix by adding plt_offset + plt_size to module_addr in
+load_module_symbols().
 
-So I will keep this part untouched.
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
 
-Thanks
+v1 -> v2: print the adjusted address.
 
+ scripts/gdb/linux/symbols.py | 8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
 
->> +	{ 0 },
->> +};
+diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
+index f0d8f2ecfde7..df4c810de663 100644
+--- a/scripts/gdb/linux/symbols.py
++++ b/scripts/gdb/linux/symbols.py
+@@ -15,7 +15,7 @@ import gdb
+ import os
+ import re
+ 
+-from linux import modules
++from linux import modules, utils
+ 
+ 
+ if hasattr(gdb, 'Breakpoint'):
+@@ -111,6 +111,12 @@ lx-symbols command."""
+             module_file = self._get_module_file(module_name)
+ 
+         if module_file:
++            if utils.is_target_arch('s390'):
++                # Module text is preceded by PLT stubs on s390.
++                module_arch = module['arch']
++                plt_offset = int(module_arch['plt_offset'])
++                plt_size = int(module_arch['plt_size'])
++                module_addr = hex(int(module_addr, 0) + plt_offset + plt_size)
+             gdb.write("loading @{addr}: {filename}\n".format(
+                 addr=module_addr, filename=module_file))
+             cmdline = "add-symbol-file {filename} {addr}{sections}".format(
+-- 
+2.23.0
+
