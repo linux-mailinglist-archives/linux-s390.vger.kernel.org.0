@@ -2,96 +2,72 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 861D0DB712
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 21:12:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8284CDB937
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 23:42:50 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441495AbfJQTL7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Oct 2019 15:11:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41848 "EHLO mx1.redhat.com"
+        id S2437853AbfJQVmr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Oct 2019 17:42:47 -0400
+Received: from mail.sf-mail.de ([116.202.16.50]:48233 "EHLO mail.sf-mail.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727646AbfJQTL7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 17 Oct 2019 15:11:59 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E97B307D985;
-        Thu, 17 Oct 2019 19:11:58 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-123-81.rdu2.redhat.com [10.10.123.81])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45D23600C8;
-        Thu, 17 Oct 2019 19:11:56 +0000 (UTC)
-Subject: Re: [PATCH 3/3] pci: Default to PCI_MSI_IRQ_DOMAIN
-To:     Palmer Dabbelt <palmer@sifive.com>,
-        Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
-        helgaas@kernel.org
-Cc:     tony.luck@intel.com, fenghua.yu@intel.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        kstewart@linuxfoundation.org, pbonzini@redhat.com,
-        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
-        mingo@kernel.org, peterz@infradead.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-pci@vger.kernel.org
-References: <20191017181937.7004-1-palmer@sifive.com>
- <20191017181937.7004-4-palmer@sifive.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <38389bfa-3fb2-c941-9f9d-0fa573112c58@redhat.com>
-Date:   Thu, 17 Oct 2019 15:11:55 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        id S2395408AbfJQVmm (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Oct 2019 17:42:42 -0400
+Received: (qmail 27079 invoked from network); 17 Oct 2019 21:31:57 -0000
+Received: from dslb-088-070-126-123.088.070.pools.vodafone-ip.de ([::ffff:88.70.126.123]:55060 HELO daneel.sf-tec.de) (auth=eike@sf-mail.de)
+        by mail.sf-mail.de (Qsmtpd 0.36dev) with (DHE-RSA-AES256-GCM-SHA384 encrypted) ESMTPSA
+        for <hch@lst.de>; Thu, 17 Oct 2019 23:31:57 +0200
+From:   Rolf Eike Beer <eike-kernel@sf-tec.de>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/21] parisc: remove __ioremap
+Date:   Thu, 17 Oct 2019 23:35:42 +0200
+Message-ID: <1650819.dOKmve5HLd@daneel.sf-tec.de>
+In-Reply-To: <20191017174554.29840-8-hch@lst.de>
+References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-8-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20191017181937.7004-4-palmer@sifive.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Thu, 17 Oct 2019 19:11:59 +0000 (UTC)
+Content-Type: multipart/signed; boundary="nextPart3002460.JnYtLPdinj"; micalg="pgp-sha1"; protocol="application/pgp-signature"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/17/19 2:19 PM, Palmer Dabbelt wrote:
-> As far as I can tell, the only reason there was an architecture
-> whitelist for PCI_MSI_IRQ_DOMAIN is because it requires msi.h.  I've
-> built this for all the architectures that play nice with make.cross, but
-> I haven't boot tested it anywhere.
->
-> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
-> ---
->  drivers/pci/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/pci/Kconfig b/drivers/pci/Kconfig
-> index a304f5ea11b9..77c1428cd945 100644
-> --- a/drivers/pci/Kconfig
-> +++ b/drivers/pci/Kconfig
-> @@ -52,7 +52,7 @@ config PCI_MSI
->  	   If you don't know what to do here, say Y.
->  
->  config PCI_MSI_IRQ_DOMAIN
-> -	def_bool ARC || ARM || ARM64 || X86 || RISCV
-> +	def_bool y
->  	depends on PCI_MSI
->  	select GENERIC_MSI_IRQ_DOMAIN
->  
+--nextPart3002460.JnYtLPdinj
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 
-The linking of asm-generic/msi.h is currently enabled for
+Christoph Hellwig wrote:
+> __ioremap is always called with the _PAGE_NO_CACHE, so fold the whole
+> thing and rename it to ioremap.  This allows allows to remove the
+                                        ^^^^^^^^^^^^^
+> special EISA quirk to force _PAGE_NO_CACHE.
 
-./arch/powerpc/include/asm/Kbuild:generic-y += msi.h
-./arch/arm/include/asm/Kbuild:generic-y += msi.h
-./arch/mips/include/asm/Kbuild:generic-y += msi.h
-./arch/riscv/include/asm/Kbuild:generic-y += msi.h
-./arch/arc/include/asm/Kbuild:generic-y += msi.h
-./arch/arm64/include/asm/Kbuild:generic-y += msi.h
-./arch/sparc/include/asm/Kbuild:generic-y += msi.h
+Eike
+--nextPart3002460.JnYtLPdinj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
 
-Your patchset adds 2 more and x86 has its own asm/msi.h. That leads to a
-total of 10 archs, but there are 37 sub-directories under arch. It is
-possible that the other architectures don't have PCI_MSI set. Still it
-may be a bit risky to set it to "def_bool y".
+-----BEGIN PGP SIGNATURE-----
 
-Cheers,
-Longman
+iF0EABECAB0WIQSaYVDeqwKa3fTXNeNcpIk+abn8TgUCXajergAKCRBcpIk+abn8
+TkOlAJ46117xxLoFzZCiYYebEyVSrw/31gCeMRBoULeYp+iYijM534mn8tCGYHM=
+=d3J8
+-----END PGP SIGNATURE-----
+
+--nextPart3002460.JnYtLPdinj--
+
+
 
