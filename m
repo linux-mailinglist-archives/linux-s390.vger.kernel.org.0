@@ -2,659 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6E80ED982E
-	for <lists+linux-s390@lfdr.de>; Wed, 16 Oct 2019 19:05:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6592EDA35A
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 03:43:20 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387868AbfJPRFR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 16 Oct 2019 13:05:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46490 "EHLO mail.kernel.org"
+        id S1732107AbfJQBnS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 16 Oct 2019 21:43:18 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:8848 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfJPRFQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 16 Oct 2019 13:05:16 -0400
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1730780AbfJQBnR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 16 Oct 2019 21:43:17 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B42E20663;
-        Wed, 16 Oct 2019 17:05:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571245514;
-        bh=l1gHZk3dTlTp3//+5EBzE+NiMhHGIx8FEjS9EK+DTOk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=G5aWNRNHXLrkB2mVbhu2e/btNLW2S0J9ttHdmfqMWY7GBEzjaXNdGX9F3Sr6HN75s
-         ezHoASmlnTlRiDq/cMjRxg5vC6tk8YFzPR6lNTIASXRiSFkAYGej9TkCZIVPcnqy5U
-         86HpDbRwDqy0J0/ieEVQSQCdyAoZEf7sJ990s9aA=
-Date:   Wed, 16 Oct 2019 10:05:13 -0700
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Harald Freudenberger <freude@linux.ibm.com>
-Cc:     linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: Re: [RFT PATCH 2/3] crypto: s390/paes - convert to skcipher API
-Message-ID: <20191016170513.GA720@sol.localdomain>
-Mail-Followup-To: Harald Freudenberger <freude@linux.ibm.com>,
-        linux-crypto@vger.kernel.org,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20191012201809.160500-1-ebiggers@kernel.org>
- <20191012201809.160500-3-ebiggers@kernel.org>
- <77a7eb57-2a26-8d2f-1ada-800d925514a4@linux.ibm.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id ACAAB51EF3;
+        Thu, 17 Oct 2019 01:43:16 +0000 (UTC)
+Received: from [10.72.12.185] (ovpn-12-185.pek2.redhat.com [10.72.12.185])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id F04551001B36;
+        Thu, 17 Oct 2019 01:42:54 +0000 (UTC)
+Subject: Re: [PATCH V3 0/7] mdev based hardware virtio offloading support
+To:     Stefan Hajnoczi <stefanha@gmail.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com
+References: <20191011081557.28302-1-jasowang@redhat.com>
+ <20191014174946.GC5359@stefanha-x1.localdomain>
+ <6d12ad8f-8137-e07d-d735-da59a326e8ed@redhat.com>
+ <20191015143720.GA13108@stefanha-x1.localdomain>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <ba81e603-cb7d-b152-8fae-97f070a7e460@redhat.com>
+Date:   Thu, 17 Oct 2019 09:42:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <77a7eb57-2a26-8d2f-1ada-800d925514a4@linux.ibm.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191015143720.GA13108@stefanha-x1.localdomain>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Thu, 17 Oct 2019 01:43:17 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Oct 15, 2019 at 01:31:39PM +0200, Harald Freudenberger wrote:
-> On 12.10.19 22:18, Eric Biggers wrote:
-> > From: Eric Biggers <ebiggers@google.com>
-> >
-> > Convert the glue code for the S390 CPACF protected key implementations
-> > of AES-ECB, AES-CBC, AES-XTS, and AES-CTR from the deprecated
-> > "blkcipher" API to the "skcipher" API.  This is needed in order for the
-> > blkcipher API to be removed.
-> >
-> > Note: I made CTR use the same function for encryption and decryption,
-> > since CTR encryption and decryption are identical.
-> >
-> > Signed-off-by: Eric Biggers <ebiggers@google.com>
-> > ---
-> >  arch/s390/crypto/paes_s390.c | 414 +++++++++++++++--------------------
-> >  1 file changed, 174 insertions(+), 240 deletions(-)
-> >
-> > diff --git a/arch/s390/crypto/paes_s390.c b/arch/s390/crypto/paes_s390.c
-> > index 6184dceed340..c7119c617b6e 100644
-> > --- a/arch/s390/crypto/paes_s390.c
-> > +++ b/arch/s390/crypto/paes_s390.c
-> > @@ -21,6 +21,7 @@
-> >  #include <linux/cpufeature.h>
-> >  #include <linux/init.h>
-> >  #include <linux/spinlock.h>
-> > +#include <crypto/internal/skcipher.h>
-> >  #include <crypto/xts.h>
-> >  #include <asm/cpacf.h>
-> >  #include <asm/pkey.h>
-> > @@ -123,27 +124,27 @@ static int __paes_set_key(struct s390_paes_ctx *ctx)
-> >  	return ctx->fc ? 0 : -EINVAL;
-> >  }
-> >  
-> > -static int ecb_paes_init(struct crypto_tfm *tfm)
-> > +static int ecb_paes_init(struct crypto_skcipher *tfm)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	ctx->kb.key = NULL;
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > -static void ecb_paes_exit(struct crypto_tfm *tfm)
-> > +static void ecb_paes_exit(struct crypto_skcipher *tfm)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	_free_kb_keybuf(&ctx->kb);
-> >  }
-> >  
-> > -static int ecb_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> > +static int ecb_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
-> >  			    unsigned int key_len)
-> >  {
-> >  	int rc;
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	_free_kb_keybuf(&ctx->kb);
-> >  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
-> > @@ -151,91 +152,75 @@ static int ecb_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> >  		return rc;
-> >  
-> >  	if (__paes_set_key(ctx)) {
-> > -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
-> > +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
-> >  		return -EINVAL;
-> >  	}
-> >  	return 0;
-> >  }
-> >  
-> > -static int ecb_paes_crypt(struct blkcipher_desc *desc,
-> > -			  unsigned long modifier,
-> > -			  struct blkcipher_walk *walk)
-> > +static int ecb_paes_crypt(struct skcipher_request *req, unsigned long modifier)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
-> > +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> > +	struct skcipher_walk walk;
-> >  	unsigned int nbytes, n, k;
-> >  	int ret;
-> >  
-> > -	ret = blkcipher_walk_virt(desc, walk);
-> > -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
-> > +	ret = skcipher_walk_virt(&walk, req, false);
-> > +	while ((nbytes = walk.nbytes) != 0) {
-> >  		/* only use complete blocks */
-> >  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
-> >  		k = cpacf_km(ctx->fc | modifier, ctx->pk.protkey,
-> > -			     walk->dst.virt.addr, walk->src.virt.addr, n);
-> > +			     walk.dst.virt.addr, walk.src.virt.addr, n);
-> >  		if (k)
-> > -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
-> > +			ret = skcipher_walk_done(&walk, nbytes - k);
-> >  		if (k < n) {
-> >  			if (__paes_set_key(ctx) != 0)
-> > -				return blkcipher_walk_done(desc, walk, -EIO);
-> > +				return skcipher_walk_done(&walk, -EIO);
-> >  		}
-> >  	}
-> >  	return ret;
-> >  }
-> >  
-> > -static int ecb_paes_encrypt(struct blkcipher_desc *desc,
-> > -			    struct scatterlist *dst, struct scatterlist *src,
-> > -			    unsigned int nbytes)
-> > +static int ecb_paes_encrypt(struct skcipher_request *req)
-> >  {
-> > -	struct blkcipher_walk walk;
-> > -
-> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
-> > -	return ecb_paes_crypt(desc, CPACF_ENCRYPT, &walk);
-> > +	return ecb_paes_crypt(req, 0);
-> >  }
-> >  
-> > -static int ecb_paes_decrypt(struct blkcipher_desc *desc,
-> > -			    struct scatterlist *dst, struct scatterlist *src,
-> > -			    unsigned int nbytes)
-> > +static int ecb_paes_decrypt(struct skcipher_request *req)
-> >  {
-> > -	struct blkcipher_walk walk;
-> > -
-> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
-> > -	return ecb_paes_crypt(desc, CPACF_DECRYPT, &walk);
-> > +	return ecb_paes_crypt(req, CPACF_DECRYPT);
-> >  }
-> >  
-> > -static struct crypto_alg ecb_paes_alg = {
-> > -	.cra_name		=	"ecb(paes)",
-> > -	.cra_driver_name	=	"ecb-paes-s390",
-> > -	.cra_priority		=	401,	/* combo: aes + ecb + 1 */
-> > -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
-> > -	.cra_blocksize		=	AES_BLOCK_SIZE,
-> > -	.cra_ctxsize		=	sizeof(struct s390_paes_ctx),
-> > -	.cra_type		=	&crypto_blkcipher_type,
-> > -	.cra_module		=	THIS_MODULE,
-> > -	.cra_list		=	LIST_HEAD_INIT(ecb_paes_alg.cra_list),
-> > -	.cra_init		=	ecb_paes_init,
-> > -	.cra_exit		=	ecb_paes_exit,
-> > -	.cra_u			=	{
-> > -		.blkcipher = {
-> > -			.min_keysize		=	PAES_MIN_KEYSIZE,
-> > -			.max_keysize		=	PAES_MAX_KEYSIZE,
-> > -			.setkey			=	ecb_paes_set_key,
-> > -			.encrypt		=	ecb_paes_encrypt,
-> > -			.decrypt		=	ecb_paes_decrypt,
-> > -		}
-> > -	}
-> > +static struct skcipher_alg ecb_paes_alg = {
-> > +	.base.cra_name		=	"ecb(paes)",
-> > +	.base.cra_driver_name	=	"ecb-paes-s390",
-> > +	.base.cra_priority	=	401,	/* combo: aes + ecb + 1 */
-> > +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
-> > +	.base.cra_ctxsize	=	sizeof(struct s390_paes_ctx),
-> > +	.base.cra_module	=	THIS_MODULE,
-> > +	.base.cra_list		=	LIST_HEAD_INIT(ecb_paes_alg.base.cra_list),
-> > +	.init			=	ecb_paes_init,
-> > +	.exit			=	ecb_paes_exit,
-> > +	.min_keysize		=	PAES_MIN_KEYSIZE,
-> > +	.max_keysize		=	PAES_MAX_KEYSIZE,
-> > +	.setkey			=	ecb_paes_set_key,
-> > +	.encrypt		=	ecb_paes_encrypt,
-> > +	.decrypt		=	ecb_paes_decrypt,
-> >  };
-> >  
-> > -static int cbc_paes_init(struct crypto_tfm *tfm)
-> > +static int cbc_paes_init(struct crypto_skcipher *tfm)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	ctx->kb.key = NULL;
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > -static void cbc_paes_exit(struct crypto_tfm *tfm)
-> > +static void cbc_paes_exit(struct crypto_skcipher *tfm)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	_free_kb_keybuf(&ctx->kb);
-> >  }
-> > @@ -258,11 +243,11 @@ static int __cbc_paes_set_key(struct s390_paes_ctx *ctx)
-> >  	return ctx->fc ? 0 : -EINVAL;
-> >  }
-> >  
-> > -static int cbc_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> > +static int cbc_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
-> >  			    unsigned int key_len)
-> >  {
-> >  	int rc;
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	_free_kb_keybuf(&ctx->kb);
-> >  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
-> > @@ -270,16 +255,17 @@ static int cbc_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> >  		return rc;
-> >  
-> >  	if (__cbc_paes_set_key(ctx)) {
-> > -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
-> > +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
-> >  		return -EINVAL;
-> >  	}
-> >  	return 0;
-> >  }
-> >  
-> > -static int cbc_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
-> > -			  struct blkcipher_walk *walk)
-> > +static int cbc_paes_crypt(struct skcipher_request *req, unsigned long modifier)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
-> > +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> > +	struct skcipher_walk walk;
-> >  	unsigned int nbytes, n, k;
-> >  	int ret;
-> >  	struct {
-> > @@ -287,73 +273,60 @@ static int cbc_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
-> >  		u8 key[MAXPROTKEYSIZE];
-> >  	} param;
-> >  
-> > -	ret = blkcipher_walk_virt(desc, walk);
-> > -	memcpy(param.iv, walk->iv, AES_BLOCK_SIZE);
-> > +	ret = skcipher_walk_virt(&walk, req, false);
-> > +	if (ret)
-> > +		return ret;
-> > +	memcpy(param.iv, walk.iv, AES_BLOCK_SIZE);
-> >  	memcpy(param.key, ctx->pk.protkey, MAXPROTKEYSIZE);
-> > -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
-> > +	while ((nbytes = walk.nbytes) != 0) {
-> >  		/* only use complete blocks */
-> >  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
-> >  		k = cpacf_kmc(ctx->fc | modifier, &param,
-> > -			      walk->dst.virt.addr, walk->src.virt.addr, n);
-> > -		if (k)
-> > -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
-> > +			      walk.dst.virt.addr, walk.src.virt.addr, n);
-> > +		if (k) {
-> > +			memcpy(walk.iv, param.iv, AES_BLOCK_SIZE);
-> > +			ret = skcipher_walk_done(&walk, nbytes - k);
-> > +		}
-> >  		if (k < n) {
-> >  			if (__cbc_paes_set_key(ctx) != 0)
-> > -				return blkcipher_walk_done(desc, walk, -EIO);
-> > +				return skcipher_walk_done(&walk, -EIO);
-> >  			memcpy(param.key, ctx->pk.protkey, MAXPROTKEYSIZE);
-> >  		}
-> >  	}
-> > -	memcpy(walk->iv, param.iv, AES_BLOCK_SIZE);
-> >  	return ret;
-> >  }
-> >  
-> > -static int cbc_paes_encrypt(struct blkcipher_desc *desc,
-> > -			    struct scatterlist *dst, struct scatterlist *src,
-> > -			    unsigned int nbytes)
-> > +static int cbc_paes_encrypt(struct skcipher_request *req)
-> >  {
-> > -	struct blkcipher_walk walk;
-> > -
-> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
-> > -	return cbc_paes_crypt(desc, 0, &walk);
-> > +	return cbc_paes_crypt(req, 0);
-> >  }
-> >  
-> > -static int cbc_paes_decrypt(struct blkcipher_desc *desc,
-> > -			    struct scatterlist *dst, struct scatterlist *src,
-> > -			    unsigned int nbytes)
-> > +static int cbc_paes_decrypt(struct skcipher_request *req)
-> >  {
-> > -	struct blkcipher_walk walk;
-> > -
-> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
-> > -	return cbc_paes_crypt(desc, CPACF_DECRYPT, &walk);
-> > +	return cbc_paes_crypt(req, CPACF_DECRYPT);
-> >  }
-> >  
-> > -static struct crypto_alg cbc_paes_alg = {
-> > -	.cra_name		=	"cbc(paes)",
-> > -	.cra_driver_name	=	"cbc-paes-s390",
-> > -	.cra_priority		=	402,	/* ecb-paes-s390 + 1 */
-> > -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
-> > -	.cra_blocksize		=	AES_BLOCK_SIZE,
-> > -	.cra_ctxsize		=	sizeof(struct s390_paes_ctx),
-> > -	.cra_type		=	&crypto_blkcipher_type,
-> > -	.cra_module		=	THIS_MODULE,
-> > -	.cra_list		=	LIST_HEAD_INIT(cbc_paes_alg.cra_list),
-> > -	.cra_init		=	cbc_paes_init,
-> > -	.cra_exit		=	cbc_paes_exit,
-> > -	.cra_u			=	{
-> > -		.blkcipher = {
-> > -			.min_keysize		=	PAES_MIN_KEYSIZE,
-> > -			.max_keysize		=	PAES_MAX_KEYSIZE,
-> > -			.ivsize			=	AES_BLOCK_SIZE,
-> > -			.setkey			=	cbc_paes_set_key,
-> > -			.encrypt		=	cbc_paes_encrypt,
-> > -			.decrypt		=	cbc_paes_decrypt,
-> > -		}
-> > -	}
-> > +static struct skcipher_alg cbc_paes_alg = {
-> > +	.base.cra_name		=	"cbc(paes)",
-> > +	.base.cra_driver_name	=	"cbc-paes-s390",
-> > +	.base.cra_priority	=	402,	/* ecb-paes-s390 + 1 */
-> > +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
-> > +	.base.cra_ctxsize	=	sizeof(struct s390_paes_ctx),
-> > +	.base.cra_module	=	THIS_MODULE,
-> > +	.base.cra_list		=	LIST_HEAD_INIT(cbc_paes_alg.base.cra_list),
-> > +	.init			=	cbc_paes_init,
-> > +	.exit			=	cbc_paes_exit,
-> > +	.min_keysize		=	PAES_MIN_KEYSIZE,
-> > +	.max_keysize		=	PAES_MAX_KEYSIZE,
-> > +	.ivsize			=	AES_BLOCK_SIZE,
-> > +	.setkey			=	cbc_paes_set_key,
-> > +	.encrypt		=	cbc_paes_encrypt,
-> > +	.decrypt		=	cbc_paes_decrypt,
-> >  };
-> >  
-> > -static int xts_paes_init(struct crypto_tfm *tfm)
-> > +static int xts_paes_init(struct crypto_skcipher *tfm)
-> >  {
-> > -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	ctx->kb[0].key = NULL;
-> >  	ctx->kb[1].key = NULL;
-> > @@ -361,9 +334,9 @@ static int xts_paes_init(struct crypto_tfm *tfm)
-> >  	return 0;
-> >  }
-> >  
-> > -static void xts_paes_exit(struct crypto_tfm *tfm)
-> > +static void xts_paes_exit(struct crypto_skcipher *tfm)
-> >  {
-> > -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	_free_kb_keybuf(&ctx->kb[0]);
-> >  	_free_kb_keybuf(&ctx->kb[1]);
-> > @@ -391,11 +364,11 @@ static int __xts_paes_set_key(struct s390_pxts_ctx *ctx)
-> >  	return ctx->fc ? 0 : -EINVAL;
-> >  }
-> >  
-> > -static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> > +static int xts_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
-> >  			    unsigned int xts_key_len)
-> >  {
-> >  	int rc;
-> > -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  	u8 ckey[2 * AES_MAX_KEY_SIZE];
-> >  	unsigned int ckey_len, key_len;
-> >  
-> > @@ -414,7 +387,7 @@ static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> >  		return rc;
-> >  
-> >  	if (__xts_paes_set_key(ctx)) {
-> > -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
-> > +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
-> >  		return -EINVAL;
-> >  	}
-> >  
-> > @@ -427,13 +400,14 @@ static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> >  		AES_KEYSIZE_128 : AES_KEYSIZE_256;
-> >  	memcpy(ckey, ctx->pk[0].protkey, ckey_len);
-> >  	memcpy(ckey + ckey_len, ctx->pk[1].protkey, ckey_len);
-> > -	return xts_check_key(tfm, ckey, 2*ckey_len);
-> > +	return xts_verify_key(tfm, ckey, 2*ckey_len);
-> >  }
-> >  
-> > -static int xts_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
-> > -			  struct blkcipher_walk *walk)
-> > +static int xts_paes_crypt(struct skcipher_request *req, unsigned long modifier)
-> >  {
-> > -	struct s390_pxts_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
-> > +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
-> > +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
-> > +	struct skcipher_walk walk;
-> >  	unsigned int keylen, offset, nbytes, n, k;
-> >  	int ret;
-> >  	struct {
-> > @@ -448,90 +422,76 @@ static int xts_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
-> >  		u8 init[16];
-> >  	} xts_param;
-> >  
-> > -	ret = blkcipher_walk_virt(desc, walk);
-> > +	ret = skcipher_walk_virt(&walk, req, false);
-> > +	if (ret)
-> > +		return ret;
-> >  	keylen = (ctx->pk[0].type == PKEY_KEYTYPE_AES_128) ? 48 : 64;
-> >  	offset = (ctx->pk[0].type == PKEY_KEYTYPE_AES_128) ? 16 : 0;
-> >  retry:
-> >  	memset(&pcc_param, 0, sizeof(pcc_param));
-> > -	memcpy(pcc_param.tweak, walk->iv, sizeof(pcc_param.tweak));
-> > +	memcpy(pcc_param.tweak, walk.iv, sizeof(pcc_param.tweak));
-> >  	memcpy(pcc_param.key + offset, ctx->pk[1].protkey, keylen);
-> >  	cpacf_pcc(ctx->fc, pcc_param.key + offset);
-> >  
-> >  	memcpy(xts_param.key + offset, ctx->pk[0].protkey, keylen);
-> >  	memcpy(xts_param.init, pcc_param.xts, 16);
-> >  
-> > -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
-> > +	while ((nbytes = walk.nbytes) != 0) {
-> >  		/* only use complete blocks */
-> >  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
-> >  		k = cpacf_km(ctx->fc | modifier, xts_param.key + offset,
-> > -			     walk->dst.virt.addr, walk->src.virt.addr, n);
-> > +			     walk.dst.virt.addr, walk.src.virt.addr, n);
-> >  		if (k)
-> > -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
-> > +			ret = skcipher_walk_done(&walk, nbytes - k);
-> >  		if (k < n) {
-> >  			if (__xts_paes_set_key(ctx) != 0)
-> > -				return blkcipher_walk_done(desc, walk, -EIO);
-> > +				return skcipher_walk_done(&walk, -EIO);
-> >  			goto retry;
-> >  		}
-> >  	}
-> >  	return ret;
-> >  }
-> >  
-> > -static int xts_paes_encrypt(struct blkcipher_desc *desc,
-> > -			    struct scatterlist *dst, struct scatterlist *src,
-> > -			    unsigned int nbytes)
-> > +static int xts_paes_encrypt(struct skcipher_request *req)
-> >  {
-> > -	struct blkcipher_walk walk;
-> > -
-> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
-> > -	return xts_paes_crypt(desc, 0, &walk);
-> > +	return xts_paes_crypt(req, 0);
-> >  }
-> >  
-> > -static int xts_paes_decrypt(struct blkcipher_desc *desc,
-> > -			    struct scatterlist *dst, struct scatterlist *src,
-> > -			    unsigned int nbytes)
-> > +static int xts_paes_decrypt(struct skcipher_request *req)
-> >  {
-> > -	struct blkcipher_walk walk;
-> > -
-> > -	blkcipher_walk_init(&walk, dst, src, nbytes);
-> > -	return xts_paes_crypt(desc, CPACF_DECRYPT, &walk);
-> > +	return xts_paes_crypt(req, CPACF_DECRYPT);
-> >  }
-> >  
-> > -static struct crypto_alg xts_paes_alg = {
-> > -	.cra_name		=	"xts(paes)",
-> > -	.cra_driver_name	=	"xts-paes-s390",
-> > -	.cra_priority		=	402,	/* ecb-paes-s390 + 1 */
-> > -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
-> > -	.cra_blocksize		=	AES_BLOCK_SIZE,
-> > -	.cra_ctxsize		=	sizeof(struct s390_pxts_ctx),
-> > -	.cra_type		=	&crypto_blkcipher_type,
-> > -	.cra_module		=	THIS_MODULE,
-> > -	.cra_list		=	LIST_HEAD_INIT(xts_paes_alg.cra_list),
-> > -	.cra_init		=	xts_paes_init,
-> > -	.cra_exit		=	xts_paes_exit,
-> > -	.cra_u			=	{
-> > -		.blkcipher = {
-> > -			.min_keysize		=	2 * PAES_MIN_KEYSIZE,
-> > -			.max_keysize		=	2 * PAES_MAX_KEYSIZE,
-> > -			.ivsize			=	AES_BLOCK_SIZE,
-> > -			.setkey			=	xts_paes_set_key,
-> > -			.encrypt		=	xts_paes_encrypt,
-> > -			.decrypt		=	xts_paes_decrypt,
-> > -		}
-> > -	}
-> > +static struct skcipher_alg xts_paes_alg = {
-> > +	.base.cra_name		=	"xts(paes)",
-> > +	.base.cra_driver_name	=	"xts-paes-s390",
-> > +	.base.cra_priority	=	402,	/* ecb-paes-s390 + 1 */
-> > +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
-> > +	.base.cra_ctxsize	=	sizeof(struct s390_pxts_ctx),
-> > +	.base.cra_module	=	THIS_MODULE,
-> > +	.base.cra_list		=	LIST_HEAD_INIT(xts_paes_alg.base.cra_list),
-> > +	.init			=	xts_paes_init,
-> > +	.exit			=	xts_paes_exit,
-> > +	.min_keysize		=	2 * PAES_MIN_KEYSIZE,
-> > +	.max_keysize		=	2 * PAES_MAX_KEYSIZE,
-> > +	.ivsize			=	AES_BLOCK_SIZE,
-> > +	.setkey			=	xts_paes_set_key,
-> > +	.encrypt		=	xts_paes_encrypt,
-> > +	.decrypt		=	xts_paes_decrypt,
-> >  };
-> >  
-> > -static int ctr_paes_init(struct crypto_tfm *tfm)
-> > +static int ctr_paes_init(struct crypto_skcipher *tfm)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	ctx->kb.key = NULL;
-> >  
-> >  	return 0;
-> >  }
-> >  
-> > -static void ctr_paes_exit(struct crypto_tfm *tfm)
-> > +static void ctr_paes_exit(struct crypto_skcipher *tfm)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	_free_kb_keybuf(&ctx->kb);
-> >  }
-> > @@ -555,11 +515,11 @@ static int __ctr_paes_set_key(struct s390_paes_ctx *ctx)
-> >  	return ctx->fc ? 0 : -EINVAL;
-> >  }
-> >  
-> > -static int ctr_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> > +static int ctr_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
-> >  			    unsigned int key_len)
-> >  {
-> >  	int rc;
-> > -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  
-> >  	_free_kb_keybuf(&ctx->kb);
-> >  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
-> > @@ -567,7 +527,7 @@ static int ctr_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
-> >  		return rc;
-> >  
-> >  	if (__ctr_paes_set_key(ctx)) {
-> > -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
-> > +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
-> >  		return -EINVAL;
-> >  	}
-> >  	return 0;
-> > @@ -588,37 +548,37 @@ static unsigned int __ctrblk_init(u8 *ctrptr, u8 *iv, unsigned int nbytes)
-> >  	return n;
-> >  }
-> >  
-> > -static int ctr_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
-> > -			  struct blkcipher_walk *walk)
-> > +static int ctr_paes_crypt(struct skcipher_request *req)
-> >  {
-> > -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
-> > +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
-> > +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
-> >  	u8 buf[AES_BLOCK_SIZE], *ctrptr;
-> > +	struct skcipher_walk walk;
-> >  	unsigned int nbytes, n, k;
-> >  	int ret, locked;
-> >  
-> >  	locked = spin_trylock(&ctrblk_lock);
-> >  
-> > -	ret = blkcipher_walk_virt_block(desc, walk, AES_BLOCK_SIZE);
-> > -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
-> > +	ret = skcipher_walk_virt(&walk, req, false);
-> > +	while ((nbytes = walk.nbytes) >= AES_BLOCK_SIZE) {
-> >  		n = AES_BLOCK_SIZE;
-> >  		if (nbytes >= 2*AES_BLOCK_SIZE && locked)
-> > -			n = __ctrblk_init(ctrblk, walk->iv, nbytes);
-> > -		ctrptr = (n > AES_BLOCK_SIZE) ? ctrblk : walk->iv;
-> > -		k = cpacf_kmctr(ctx->fc | modifier, ctx->pk.protkey,
-> > -				walk->dst.virt.addr, walk->src.virt.addr,
-> > -				n, ctrptr);
-> > +			n = __ctrblk_init(ctrblk, walk.iv, nbytes);
-> > +		ctrptr = (n > AES_BLOCK_SIZE) ? ctrblk : walk.iv;
-> > +		k = cpacf_kmctr(ctx->fc, ctx->pk.protkey, walk.dst.virt.addr,
-> > +				walk.src.virt.addr, n, ctrptr);
-> >  		if (k) {
-> >  			if (ctrptr == ctrblk)
-> > -				memcpy(walk->iv, ctrptr + k - AES_BLOCK_SIZE,
-> > +				memcpy(walk.iv, ctrptr + k - AES_BLOCK_SIZE,
-> >  				       AES_BLOCK_SIZE);
-> > -			crypto_inc(walk->iv, AES_BLOCK_SIZE);
-> > -			ret = blkcipher_walk_done(desc, walk, nbytes - n);
-> > +			crypto_inc(walk.iv, AES_BLOCK_SIZE);
-> > +			ret = skcipher_walk_done(&walk, nbytes - n);
-> 
-> Looks like a bug here. It should be
-> 
-> ret = skcipher_walk_done(&walk, nbytes - k);
-> 
-> similar to the other modes.
-> You can add this in your patch or leave it to me to provide a separate patch.
 
-I'm not planning to fix this since it's an existing bug, I can't test this code
-myself, and the paes code is different from the regular algorithms so it's hard
-to work with.  So I suggest you provide a patch later.
+On 2019/10/15 下午10:37, Stefan Hajnoczi wrote:
+> On Tue, Oct 15, 2019 at 11:37:17AM +0800, Jason Wang wrote:
+>> On 2019/10/15 上午1:49, Stefan Hajnoczi wrote:
+>>> On Fri, Oct 11, 2019 at 04:15:50PM +0800, Jason Wang wrote:
+>>>> There are hardware that can do virtio datapath offloading while having
+>>>> its own control path. This path tries to implement a mdev based
+>>>> unified API to support using kernel virtio driver to drive those
+>>>> devices. This is done by introducing a new mdev transport for virtio
+>>>> (virtio_mdev) and register itself as a new kind of mdev driver. Then
+>>>> it provides a unified way for kernel virtio driver to talk with mdev
+>>>> device implementation.
+>>>>
+>>>> Though the series only contains kernel driver support, the goal is to
+>>>> make the transport generic enough to support userspace drivers. This
+>>>> means vhost-mdev[1] could be built on top as well by resuing the
+>>>> transport.
+>>>>
+>>>> A sample driver is also implemented which simulate a virito-net
+>>>> loopback ethernet device on top of vringh + workqueue. This could be
+>>>> used as a reference implementation for real hardware driver.
+>>>>
+>>>> Consider mdev framework only support VFIO device and driver right now,
+>>>> this series also extend it to support other types. This is done
+>>>> through introducing class id to the device and pairing it with
+>>>> id_talbe claimed by the driver. On top, this seris also decouple
+>>>> device specific parents ops out of the common ones.
+>>> I was curious so I took a quick look and posted comments.
+>>>
+>>> I guess this driver runs inside the guest since it registers virtio
+>>> devices?
+>>
+>> It could run in either guest or host. But the main focus is to run in the
+>> host then we can use virtio drivers in containers.
+>>
+>>
+>>> If this is used with physical PCI devices that support datapath
+>>> offloading then how are physical devices presented to the guest without
+>>> SR-IOV?
+>>
+>> We will do control path meditation through vhost-mdev[1] and vhost-vfio[2].
+>> Then we will present a full virtio compatible ethernet device for guest.
+>>
+>> SR-IOV is not a must, any mdev device that implements the API defined in
+>> patch 5 can be used by this framework.
+> What I'm trying to understand is: if you want to present a virtio-pci
+> device to the guest (e.g. using vhost-mdev or vhost-vfio), then how is
+> that related to this patch series?
 
-> 
-> >  		}
-> >  		if (k < n) {
-> >  			if (__ctr_paes_set_key(ctx) != 0) {
-> >  				if (locked)
-> >  					spin_unlock(&ctrblk_lock);
-> > -				return blkcipher_walk_done(desc, walk, -EIO);
-> > +				return skcipher_walk_done(&walk, -EIO);
-> >  			}
-> >  		}
-> >  	}
 
-Note that __ctr_paes_set_key() is modifying the tfm_ctx which can be shared
-between multiple threads.  So this code seems broken in other ways too.
+This series introduce some infrastructure that would be used by vhost-mdev:
 
-How is "paes" tested, given that it isn't covered by the crypto subsystem's
-self-tests?  How do you know it isn't completely broken?
+1) allow new type of mdev devices/drivers other than vfio (through 
+class_id and device ops)
 
-- Eric
+2) a set of virtio specific callbacks that will be used by both 
+vhost-mdev and virtio-mdev defined in patch 5
+
+Then vhost-mdev can be implemented on top: a new mdev class id but reuse 
+the callback defined in 2. Through this way the parent can provides a 
+single set of callbacks (device ops) for both kernel virtio driver 
+(through virtio-mdev) or userspace virtio driver (through vhost-mdev).
+
+
+>
+> Does this mean this patch series is useful mostly for presenting virtio
+> devices to containers or the host?
+
+
+Patch 6 is mainly for bare metal or container use case, through it could 
+be used in guest as well. Patch 7 is a sample virtio mdev device 
+implementation. Patch 1 - 5 was the infrastructure for implementing 
+types other than vfio, the first user is virito-mdev, then Tiwei's 
+vhost-mdev and Parav's mlx5 mdev.
+
+Thanks
+
+
+>
+> Stefan
