@@ -2,174 +2,212 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4074DB427
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 19:47:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E8EADB4E2
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 19:53:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2441085AbfJQRrN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Oct 2019 13:47:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:56944 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2441071AbfJQRrM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 17 Oct 2019 13:47:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0G9VjTCDn1azePVEARZDWm3/hUf6+uTfkQZKCgB5wVo=; b=OO8uHH01lkLNVGTfVkN8iIpwAT
-        c2D1h9fcU7xuzjCEXklU+jLEGv3IwTxxLz/2EcFDHIyiP8rpusO1EfGfiUGWQeaGn6TzZIIaIQ9fd
-        i8g3G8yHRLmEgMEim4c5nxpmPiquio55+xykcpp1o6otIZQPJETr7caoZDRKDVemF8bvgyRdq5Tda
-        9ybeiLPk/H6YcZIzQCkjM9Ahb6xauO0lGIOWcGtFISjAvIET5w+4N8Fks4o0JIyOvRJylsDLLysWs
-        7wf/sZNlRvhTsfGd/nRqT9yL+dGtqdW+8RZ7WI/QY89rVNLkIa3SnAWVs0DkpX1gyM65Cstdew87K
-        02aaH6lQ==;
-Received: from [2001:4bb8:18c:d7b:c70:4a89:bc61:3] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iL9rT-0006Qq-S0; Thu, 17 Oct 2019 17:46:56 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org
-Cc:     linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 21/21] csky: use generic ioremap
-Date:   Thu, 17 Oct 2019 19:45:54 +0200
-Message-Id: <20191017174554.29840-22-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191017174554.29840-1-hch@lst.de>
-References: <20191017174554.29840-1-hch@lst.de>
+        id S2437245AbfJQRxX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Oct 2019 13:53:23 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:8340 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2437206AbfJQRxX (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Oct 2019 13:53:23 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 20DFA8AC6FB;
+        Thu, 17 Oct 2019 17:53:22 +0000 (UTC)
+Received: from x1.home (ovpn-118-102.phx2.redhat.com [10.3.118.102])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A39035C1D6;
+        Thu, 17 Oct 2019 17:53:10 +0000 (UTC)
+Date:   Thu, 17 Oct 2019 11:53:10 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V4 3/6] mdev: introduce device specific ops
+Message-ID: <20191017115310.0481cc52@x1.home>
+In-Reply-To: <20191017170755.15506ada.cohuck@redhat.com>
+References: <20191017104836.32464-1-jasowang@redhat.com>
+        <20191017104836.32464-4-jasowang@redhat.com>
+        <20191017170755.15506ada.cohuck@redhat.com>
+Organization: Red Hat
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 17 Oct 2019 17:53:22 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Use the generic ioremap_prot and iounmap helpers.
+On Thu, 17 Oct 2019 17:07:55 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- arch/csky/Kconfig               |  1 +
- arch/csky/include/asm/io.h      |  8 +++---
- arch/csky/include/asm/pgtable.h |  4 +++
- arch/csky/mm/ioremap.c          | 45 ---------------------------------
- 4 files changed, 8 insertions(+), 50 deletions(-)
+> On Thu, 17 Oct 2019 18:48:33 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+> 
+> > Currently, except for the create and remove, the rest of
+> > mdev_parent_ops is designed for vfio-mdev driver only and may not help
+> > for kernel mdev driver. With the help of class id, this patch
+> > introduces device specific callbacks inside mdev_device
+> > structure. This allows different set of callback to be used by
+> > vfio-mdev and virtio-mdev.
+> > 
+> > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > ---
+> >  .../driver-api/vfio-mediated-device.rst       | 25 +++++----
+> >  MAINTAINERS                                   |  1 +
+> >  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+> >  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+> >  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+> >  drivers/vfio/mdev/mdev_core.c                 | 18 +++++--
+> >  drivers/vfio/mdev/mdev_private.h              |  1 +
+> >  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+> >  include/linux/mdev.h                          | 45 ++++------------
+> >  include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
+> >  samples/vfio-mdev/mbochs.c                    | 20 ++++---
+> >  samples/vfio-mdev/mdpy.c                      | 20 ++++---
+> >  samples/vfio-mdev/mtty.c                      | 18 ++++---
+> >  13 files changed, 184 insertions(+), 103 deletions(-)
+> >  create mode 100644 include/linux/vfio_mdev.h
+> > 
+> > diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+> > index f9a78d75a67a..0cca84d19603 100644
+> > --- a/Documentation/driver-api/vfio-mediated-device.rst
+> > +++ b/Documentation/driver-api/vfio-mediated-device.rst
+> > @@ -152,11 +152,22 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
+> >  Vendor drivers are expected to be fully asynchronous in this respect or
+> >  provide their own internal resource protection.)
+> >  
+> > -The callbacks in the mdev_parent_ops structure are as follows:
+> > -
+> > -* open: open callback of mediated device
+> > -* close: close callback of mediated device
+> > -* ioctl: ioctl callback of mediated device
+> > +As multiple types of mediated devices may be supported, the device
+> > +must set up the class id and the device specific callbacks in create()  
+> 
+> s/in create()/in the create()/
+> 
+> > +callback. E.g for vfio-mdev device it needs to be done through:  
+> 
+> "Each class provides a helper function to do so; e.g. for vfio-mdev
+> devices, the function to be called is:"
+> 
+> ?
+> 
+> > +
+> > +    int mdev_set_vfio_ops(struct mdev_device *mdev,
+> > +                          const struct vfio_mdev_ops *vfio_ops);
+> > +
+> > +The class id (set to MDEV_CLASS_ID_VFIO) is used to match a device  
+> 
+> "(set by this helper function to MDEV_CLASS_ID_VFIO)" ?
+> 
+> > +with an mdev driver via its id table. The device specific callbacks
+> > +(specified in *ops) are obtainable via mdev_get_dev_ops() (for use by  
+> 
+> "(specified in *vfio_ops by the caller)" ?
+> 
+> > +the mdev bus driver). A vfio-mdev device (class id MDEV_CLASS_ID_VFIO)
+> > +uses the following device-specific ops:
+> > +
+> > +* open: open callback of vfio mediated device
+> > +* close: close callback of vfio mediated device
+> > +* ioctl: ioctl callback of vfio mediated device
+> >  * read : read emulation callback
+> >  * write: write emulation callback
+> >  * mmap: mmap emulation callback
+> > @@ -167,10 +178,6 @@ register itself with the mdev core driver::
+> >  	extern int  mdev_register_device(struct device *dev,
+> >  	                                 const struct mdev_parent_ops *ops);
+> >  
+> > -It is also required to specify the class_id in create() callback through::
+> > -
+> > -	int mdev_set_class(struct mdev_device *mdev, u16 id);
+> > -  
+> 
+> I'm wondering if this patch set should start out with introducing
+> helper functions already (i.e. don't introduce mdev_set_class(), but
+> start out with mdev_set_class_vfio() which will gain the *vfio_ops
+> argument in this patch.)
 
-diff --git a/arch/csky/Kconfig b/arch/csky/Kconfig
-index 3973847b5f42..da09c884cc30 100644
---- a/arch/csky/Kconfig
-+++ b/arch/csky/Kconfig
-@@ -17,6 +17,7 @@ config CSKY
- 	select IRQ_DOMAIN
- 	select HANDLE_DOMAIN_IRQ
- 	select DW_APB_TIMER_OF
-+	select GENERIC_IOREMAP
- 	select GENERIC_LIB_ASHLDI3
- 	select GENERIC_LIB_ASHRDI3
- 	select GENERIC_LIB_LSHRDI3
-diff --git a/arch/csky/include/asm/io.h b/arch/csky/include/asm/io.h
-index f572605d5ad5..332f51bc68fb 100644
---- a/arch/csky/include/asm/io.h
-+++ b/arch/csky/include/asm/io.h
-@@ -36,11 +36,9 @@
- /*
-  * I/O memory mapping functions.
-  */
--extern void __iomem *__ioremap(phys_addr_t addr, size_t size, pgprot_t prot);
--extern void iounmap(void *addr);
--
--#define ioremap(addr, size)		__ioremap((addr), (size), pgprot_noncached(PAGE_KERNEL))
--#define ioremap_wc(addr, size)		__ioremap((addr), (size), pgprot_writecombine(PAGE_KERNEL))
-+#define ioremap_wc(addr, size) \
-+	ioremap_prot((addr), (size), \
-+		(_PAGE_IOREMAP & ~_CACHE_MASK) | _CACHE_UNCACHED)
+Yes, it would be cleaner, but is it really worth the churn?  Correct me
+if I'm wrong, but I think we get to the same point after this patch and
+aside from the function name itself, the difference is really just that
+the class_id is briefly exposed to the parent driver, right?  Thanks,
+
+Alex
  
- #include <asm-generic/io.h>
- 
-diff --git a/arch/csky/include/asm/pgtable.h b/arch/csky/include/asm/pgtable.h
-index 7c21985c60dc..4b2a41e15f2e 100644
---- a/arch/csky/include/asm/pgtable.h
-+++ b/arch/csky/include/asm/pgtable.h
-@@ -86,6 +86,10 @@
- #define PAGE_USERIO	__pgprot(_PAGE_PRESENT | _PAGE_READ | _PAGE_WRITE | \
- 				_CACHE_CACHED)
- 
-+#define _PAGE_IOREMAP \
-+	(_PAGE_PRESENT | __READABLE | __WRITEABLE | _PAGE_GLOBAL | \
-+	 _CACHE_UNCACHED | _PAGE_SO)
-+
- #define __P000	PAGE_NONE
- #define __P001	PAGE_READONLY
- #define __P010	PAGE_COPY
-diff --git a/arch/csky/mm/ioremap.c b/arch/csky/mm/ioremap.c
-index ae78256a56fd..70c8268d3b2b 100644
---- a/arch/csky/mm/ioremap.c
-+++ b/arch/csky/mm/ioremap.c
-@@ -3,53 +3,8 @@
- 
- #include <linux/export.h>
- #include <linux/mm.h>
--#include <linux/vmalloc.h>
- #include <linux/io.h>
- 
--#include <asm/pgtable.h>
--
--static void __iomem *__ioremap_caller(phys_addr_t addr, size_t size,
--				      pgprot_t prot, void *caller)
--{
--	phys_addr_t last_addr;
--	unsigned long offset, vaddr;
--	struct vm_struct *area;
--
--	last_addr = addr + size - 1;
--	if (!size || last_addr < addr)
--		return NULL;
--
--	offset = addr & (~PAGE_MASK);
--	addr &= PAGE_MASK;
--	size = PAGE_ALIGN(size + offset);
--
--	area = get_vm_area_caller(size, VM_IOREMAP, caller);
--	if (!area)
--		return NULL;
--
--	vaddr = (unsigned long)area->addr;
--
--	if (ioremap_page_range(vaddr, vaddr + size, addr, prot)) {
--		free_vm_area(area);
--		return NULL;
--	}
--
--	return (void __iomem *)(vaddr + offset);
--}
--
--void __iomem *__ioremap(phys_addr_t phys_addr, size_t size, pgprot_t prot)
--{
--	return __ioremap_caller(phys_addr, size, prot,
--				__builtin_return_address(0));
--}
--EXPORT_SYMBOL(__ioremap);
--
--void iounmap(void __iomem *addr)
--{
--	vunmap((void *)((unsigned long)addr & PAGE_MASK));
--}
--EXPORT_SYMBOL(iounmap);
--
- pgprot_t phys_mem_access_prot(struct file *file, unsigned long pfn,
- 			      unsigned long size, pgprot_t vma_prot)
- {
--- 
-2.20.1
+> >  However, the mdev_parent_ops structure is not required in the function call
+> >  that a driver should use to unregister itself with the mdev core driver::
+> >    
+> 
+> (...)
+> 
+> > diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> > index 3a9c52d71b4e..d0f3113c8071 100644
+> > --- a/drivers/vfio/mdev/mdev_core.c
+> > +++ b/drivers/vfio/mdev/mdev_core.c
+> > @@ -45,15 +45,23 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
+> >  }
+> >  EXPORT_SYMBOL(mdev_set_drvdata);
+> >  
+> > -/* Specify the class for the mdev device, this must be called during
+> > - * create() callback.
+> > +/* Specify the VFIO device ops for the mdev device, this
+> > + * must be called during create() callback for VFIO mdev device.
+> >   */  
+> 
+> /*
+>  * Specify the mdev device to be a VFIO mdev device, and set the
+>  * VFIO devices ops for it. This must be called from the create()
+>  * callback for VFIO mdev devices.
+>  */
+> 
+> ?
+> 
+> > -void mdev_set_class(struct mdev_device *mdev, u16 id)
+> > +void mdev_set_vfio_ops(struct mdev_device *mdev,
+> > +		       const struct vfio_mdev_device_ops *vfio_ops)
+> >  {
+> >  	WARN_ON(mdev->class_id);
+> > -	mdev->class_id = id;
+> > +	mdev->class_id = MDEV_CLASS_ID_VFIO;
+> > +	mdev->device_ops = vfio_ops;
+> >  }
+> > -EXPORT_SYMBOL(mdev_set_class);
+> > +EXPORT_SYMBOL(mdev_set_vfio_ops);
+> > +
+> > +const void *mdev_get_dev_ops(struct mdev_device *mdev)
+> > +{
+> > +	return mdev->device_ops;
+> > +}
+> > +EXPORT_SYMBOL(mdev_get_dev_ops);
+> >  
+> >  struct device *mdev_dev(struct mdev_device *mdev)
+> >  {  
+> 
+> (...)
+> 
+> The code change looks good to me; I'm just wondering if we should
+> introduce mdev_set_class() at all (see above).
 
