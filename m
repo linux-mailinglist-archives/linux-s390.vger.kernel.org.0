@@ -2,72 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8284CDB937
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 23:42:50 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 39914DBAAE
+	for <lists+linux-s390@lfdr.de>; Fri, 18 Oct 2019 02:20:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437853AbfJQVmr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Oct 2019 17:42:47 -0400
-Received: from mail.sf-mail.de ([116.202.16.50]:48233 "EHLO mail.sf-mail.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2395408AbfJQVmm (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 17 Oct 2019 17:42:42 -0400
-Received: (qmail 27079 invoked from network); 17 Oct 2019 21:31:57 -0000
-Received: from dslb-088-070-126-123.088.070.pools.vodafone-ip.de ([::ffff:88.70.126.123]:55060 HELO daneel.sf-tec.de) (auth=eike@sf-mail.de)
-        by mail.sf-mail.de (Qsmtpd 0.36dev) with (DHE-RSA-AES256-GCM-SHA384 encrypted) ESMTPSA
-        for <hch@lst.de>; Thu, 17 Oct 2019 23:31:57 +0200
-From:   Rolf Eike Beer <eike-kernel@sf-tec.de>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
-        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 07/21] parisc: remove __ioremap
-Date:   Thu, 17 Oct 2019 23:35:42 +0200
-Message-ID: <1650819.dOKmve5HLd@daneel.sf-tec.de>
-In-Reply-To: <20191017174554.29840-8-hch@lst.de>
-References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-8-hch@lst.de>
+        id S2503948AbfJRAU2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Oct 2019 20:20:28 -0400
+Received: from zaovasilisa.ru ([88.200.194.99]:49001 "EHLO usrv.lan"
+        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2503926AbfJRAU1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Oct 2019 20:20:27 -0400
+X-Greylist: delayed 22562 seconds by postgrey-1.27 at vger.kernel.org; Thu, 17 Oct 2019 20:20:19 EDT
+Received: from 127.0.0.1 (localhost [127.0.0.1])
+        by usrv.lan (Postfix) with SMTP id E44FB186481;
+        Thu, 17 Oct 2019 17:04:03 +0400 (MSD)
+Received: from (HELO zlba) [49.155.13.191] by 127.0.0.1 id 08foBMeDLK33 for <linux-nvme@lists.infradead.org>; Thu, 17 Oct 2019 10:59:51 -0200
+Message-ID: <9$4n3z523f$d$rou@1wu6v8t.44r>
+From:   "Mr Ekrem Bayraktar" <dave@dbsoundfactory.com>
+Reply-To: "Mr Ekrem Bayraktar" <dave@dbsoundfactory.com>
+To:     linux-nvme@lists.infradead.org
+Subject: MOTHERLESS CHILDREN IN YOUR CITY !!
+Date:   Thu, 17 Oct 19 10:59:51 GMT
+X-Mailer: MIME-tools 5.503 (Entity 5.501)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="nextPart3002460.JnYtLPdinj"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Content-Type: multipart/alternative;
+        boundary="EFA7_FB09FAD2"
+X-Priority: 3
+X-MSMail-Priority: Normal
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---nextPart3002460.JnYtLPdinj
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
 
-Christoph Hellwig wrote:
-> __ioremap is always called with the _PAGE_NO_CACHE, so fold the whole
-> thing and rename it to ioremap.  This allows allows to remove the
-                                        ^^^^^^^^^^^^^
-> special EISA quirk to force _PAGE_NO_CACHE.
+--EFA7_FB09FAD2
+Content-Type: text/plain;
+Content-Transfer-Encoding: quoted-printable
 
-Eike
---nextPart3002460.JnYtLPdinj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-Content-Transfer-Encoding: 7Bit
-
------BEGIN PGP SIGNATURE-----
-
-iF0EABECAB0WIQSaYVDeqwKa3fTXNeNcpIk+abn8TgUCXajergAKCRBcpIk+abn8
-TkOlAJ46117xxLoFzZCiYYebEyVSrw/31gCeMRBoULeYp+iYijM534mn8tCGYHM=
-=d3J8
------END PGP SIGNATURE-----
-
---nextPart3002460.JnYtLPdinj--
+Dear Sir / Madam
 
 
+
+Since ever we left your country back to Canada , we have gotten Government=
+ approval and we have been busying planning for the less privilege Childre=
+n projects.
+
+We are planning to release first batch of the funds $2,990,000.00 within 1=
+4 days for building an estate for motherless children in your city.
+
+I want you to use my mother;s company name to register this charity projec=
+t in your country after receiving the project funds.
+
+It must be registered as { Bayraktar Group Homeless Children Ltd }.
+
+
+Can you handle and supervise this big project ?
+Can you manager all the workers as a senior supervisor ?
+We want to be sure you can handle it before we proceed with this project.
+
+
+Please call me if you want to hear from us + 1-917 580 4919.
+Please can you manage such project please Kindly reply for further details=
+.
+
+Your full names-----------
+
+
+
+Ekrem Bayraktar.
+Bayraktar Shipping Group
+
+--EFA7_FB09FAD2--
 
