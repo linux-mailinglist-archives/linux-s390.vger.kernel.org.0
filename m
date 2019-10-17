@@ -2,813 +2,697 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C781DDAA8A
-	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 12:52:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27416DAF22
+	for <lists+linux-s390@lfdr.de>; Thu, 17 Oct 2019 16:06:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409150AbfJQKwO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 17 Oct 2019 06:52:14 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58836 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409089AbfJQKwO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 17 Oct 2019 06:52:14 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 067098A1C85;
-        Thu, 17 Oct 2019 10:52:13 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-185.pek2.redhat.com [10.72.12.185])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 047875D70D;
-        Thu, 17 Oct 2019 10:51:48 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V4 6/6] docs: sample driver to demonstrate how to implement virtio-mdev framework
-Date:   Thu, 17 Oct 2019 18:48:36 +0800
-Message-Id: <20191017104836.32464-7-jasowang@redhat.com>
-In-Reply-To: <20191017104836.32464-1-jasowang@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
+        id S2389595AbfJQOGJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 17 Oct 2019 10:06:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10196 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727447AbfJQOGJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 17 Oct 2019 10:06:09 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9HE54hV192344
+        for <linux-s390@vger.kernel.org>; Thu, 17 Oct 2019 10:06:06 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vprpxtyd5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 17 Oct 2019 10:06:05 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <freude@linux.ibm.com>;
+        Thu, 17 Oct 2019 15:06:04 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 17 Oct 2019 15:06:00 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9HE5xSa35061830
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 17 Oct 2019 14:05:59 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EDAB942054;
+        Thu, 17 Oct 2019 14:05:58 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E27CB4203F;
+        Thu, 17 Oct 2019 14:05:57 +0000 (GMT)
+Received: from [10.0.2.15] (unknown [9.152.224.114])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 17 Oct 2019 14:05:57 +0000 (GMT)
+Subject: Re: [RFT PATCH 2/3] crypto: s390/paes - convert to skcipher API
+To:     linux-crypto@vger.kernel.org,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20191012201809.160500-1-ebiggers@kernel.org>
+ <20191012201809.160500-3-ebiggers@kernel.org>
+ <77a7eb57-2a26-8d2f-1ada-800d925514a4@linux.ibm.com>
+ <20191016170513.GA720@sol.localdomain>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Thu, 17 Oct 2019 16:05:57 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.69]); Thu, 17 Oct 2019 10:52:13 +0000 (UTC)
+In-Reply-To: <20191016170513.GA720@sol.localdomain>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19101714-0012-0000-0000-00000358F940
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19101714-0013-0000-0000-000021941747
+Message-Id: <a692da07-30c7-377b-6fa9-59930d2af639@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-17_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910170126
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This sample driver creates mdev device that simulate virtio net device
-over virtio mdev transport. The device is implemented through vringh
-and workqueue. A device specific dma ops is to make sure HVA is used
-directly as the IOVA. This should be sufficient for kernel virtio
-driver to work.
+On 16.10.19 19:05, Eric Biggers wrote:
+> On Tue, Oct 15, 2019 at 01:31:39PM +0200, Harald Freudenberger wrote:
+>> On 12.10.19 22:18, Eric Biggers wrote:
+>>> From: Eric Biggers <ebiggers@google.com>
+>>>
+>>> Convert the glue code for the S390 CPACF protected key implementations
+>>> of AES-ECB, AES-CBC, AES-XTS, and AES-CTR from the deprecated
+>>> "blkcipher" API to the "skcipher" API.  This is needed in order for the
+>>> blkcipher API to be removed.
+>>>
+>>> Note: I made CTR use the same function for encryption and decryption,
+>>> since CTR encryption and decryption are identical.
+>>>
+>>> Signed-off-by: Eric Biggers <ebiggers@google.com>
+>>> ---
+>>>  arch/s390/crypto/paes_s390.c | 414 +++++++++++++++--------------------
+>>>  1 file changed, 174 insertions(+), 240 deletions(-)
+>>>
+>>> diff --git a/arch/s390/crypto/paes_s390.c b/arch/s390/crypto/paes_s390.c
+>>> index 6184dceed340..c7119c617b6e 100644
+>>> --- a/arch/s390/crypto/paes_s390.c
+>>> +++ b/arch/s390/crypto/paes_s390.c
+>>> @@ -21,6 +21,7 @@
+>>>  #include <linux/cpufeature.h>
+>>>  #include <linux/init.h>
+>>>  #include <linux/spinlock.h>
+>>> +#include <crypto/internal/skcipher.h>
+>>>  #include <crypto/xts.h>
+>>>  #include <asm/cpacf.h>
+>>>  #include <asm/pkey.h>
+>>> @@ -123,27 +124,27 @@ static int __paes_set_key(struct s390_paes_ctx *ctx)
+>>>  	return ctx->fc ? 0 : -EINVAL;
+>>>  }
+>>>  
+>>> -static int ecb_paes_init(struct crypto_tfm *tfm)
+>>> +static int ecb_paes_init(struct crypto_skcipher *tfm)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	ctx->kb.key = NULL;
+>>>  
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -static void ecb_paes_exit(struct crypto_tfm *tfm)
+>>> +static void ecb_paes_exit(struct crypto_skcipher *tfm)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	_free_kb_keybuf(&ctx->kb);
+>>>  }
+>>>  
+>>> -static int ecb_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>> +static int ecb_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
+>>>  			    unsigned int key_len)
+>>>  {
+>>>  	int rc;
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	_free_kb_keybuf(&ctx->kb);
+>>>  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
+>>> @@ -151,91 +152,75 @@ static int ecb_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>>  		return rc;
+>>>  
+>>>  	if (__paes_set_key(ctx)) {
+>>> -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
+>>> +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+>>>  		return -EINVAL;
+>>>  	}
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -static int ecb_paes_crypt(struct blkcipher_desc *desc,
+>>> -			  unsigned long modifier,
+>>> -			  struct blkcipher_walk *walk)
+>>> +static int ecb_paes_crypt(struct skcipher_request *req, unsigned long modifier)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
+>>> +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>> +	struct skcipher_walk walk;
+>>>  	unsigned int nbytes, n, k;
+>>>  	int ret;
+>>>  
+>>> -	ret = blkcipher_walk_virt(desc, walk);
+>>> -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
+>>> +	ret = skcipher_walk_virt(&walk, req, false);
+>>> +	while ((nbytes = walk.nbytes) != 0) {
+>>>  		/* only use complete blocks */
+>>>  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
+>>>  		k = cpacf_km(ctx->fc | modifier, ctx->pk.protkey,
+>>> -			     walk->dst.virt.addr, walk->src.virt.addr, n);
+>>> +			     walk.dst.virt.addr, walk.src.virt.addr, n);
+>>>  		if (k)
+>>> -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
+>>> +			ret = skcipher_walk_done(&walk, nbytes - k);
+>>>  		if (k < n) {
+>>>  			if (__paes_set_key(ctx) != 0)
+>>> -				return blkcipher_walk_done(desc, walk, -EIO);
+>>> +				return skcipher_walk_done(&walk, -EIO);
+>>>  		}
+>>>  	}
+>>>  	return ret;
+>>>  }
+>>>  
+>>> -static int ecb_paes_encrypt(struct blkcipher_desc *desc,
+>>> -			    struct scatterlist *dst, struct scatterlist *src,
+>>> -			    unsigned int nbytes)
+>>> +static int ecb_paes_encrypt(struct skcipher_request *req)
+>>>  {
+>>> -	struct blkcipher_walk walk;
+>>> -
+>>> -	blkcipher_walk_init(&walk, dst, src, nbytes);
+>>> -	return ecb_paes_crypt(desc, CPACF_ENCRYPT, &walk);
+>>> +	return ecb_paes_crypt(req, 0);
+>>>  }
+>>>  
+>>> -static int ecb_paes_decrypt(struct blkcipher_desc *desc,
+>>> -			    struct scatterlist *dst, struct scatterlist *src,
+>>> -			    unsigned int nbytes)
+>>> +static int ecb_paes_decrypt(struct skcipher_request *req)
+>>>  {
+>>> -	struct blkcipher_walk walk;
+>>> -
+>>> -	blkcipher_walk_init(&walk, dst, src, nbytes);
+>>> -	return ecb_paes_crypt(desc, CPACF_DECRYPT, &walk);
+>>> +	return ecb_paes_crypt(req, CPACF_DECRYPT);
+>>>  }
+>>>  
+>>> -static struct crypto_alg ecb_paes_alg = {
+>>> -	.cra_name		=	"ecb(paes)",
+>>> -	.cra_driver_name	=	"ecb-paes-s390",
+>>> -	.cra_priority		=	401,	/* combo: aes + ecb + 1 */
+>>> -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
+>>> -	.cra_blocksize		=	AES_BLOCK_SIZE,
+>>> -	.cra_ctxsize		=	sizeof(struct s390_paes_ctx),
+>>> -	.cra_type		=	&crypto_blkcipher_type,
+>>> -	.cra_module		=	THIS_MODULE,
+>>> -	.cra_list		=	LIST_HEAD_INIT(ecb_paes_alg.cra_list),
+>>> -	.cra_init		=	ecb_paes_init,
+>>> -	.cra_exit		=	ecb_paes_exit,
+>>> -	.cra_u			=	{
+>>> -		.blkcipher = {
+>>> -			.min_keysize		=	PAES_MIN_KEYSIZE,
+>>> -			.max_keysize		=	PAES_MAX_KEYSIZE,
+>>> -			.setkey			=	ecb_paes_set_key,
+>>> -			.encrypt		=	ecb_paes_encrypt,
+>>> -			.decrypt		=	ecb_paes_decrypt,
+>>> -		}
+>>> -	}
+>>> +static struct skcipher_alg ecb_paes_alg = {
+>>> +	.base.cra_name		=	"ecb(paes)",
+>>> +	.base.cra_driver_name	=	"ecb-paes-s390",
+>>> +	.base.cra_priority	=	401,	/* combo: aes + ecb + 1 */
+>>> +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
+>>> +	.base.cra_ctxsize	=	sizeof(struct s390_paes_ctx),
+>>> +	.base.cra_module	=	THIS_MODULE,
+>>> +	.base.cra_list		=	LIST_HEAD_INIT(ecb_paes_alg.base.cra_list),
+>>> +	.init			=	ecb_paes_init,
+>>> +	.exit			=	ecb_paes_exit,
+>>> +	.min_keysize		=	PAES_MIN_KEYSIZE,
+>>> +	.max_keysize		=	PAES_MAX_KEYSIZE,
+>>> +	.setkey			=	ecb_paes_set_key,
+>>> +	.encrypt		=	ecb_paes_encrypt,
+>>> +	.decrypt		=	ecb_paes_decrypt,
+>>>  };
+>>>  
+>>> -static int cbc_paes_init(struct crypto_tfm *tfm)
+>>> +static int cbc_paes_init(struct crypto_skcipher *tfm)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	ctx->kb.key = NULL;
+>>>  
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -static void cbc_paes_exit(struct crypto_tfm *tfm)
+>>> +static void cbc_paes_exit(struct crypto_skcipher *tfm)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	_free_kb_keybuf(&ctx->kb);
+>>>  }
+>>> @@ -258,11 +243,11 @@ static int __cbc_paes_set_key(struct s390_paes_ctx *ctx)
+>>>  	return ctx->fc ? 0 : -EINVAL;
+>>>  }
+>>>  
+>>> -static int cbc_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>> +static int cbc_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
+>>>  			    unsigned int key_len)
+>>>  {
+>>>  	int rc;
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	_free_kb_keybuf(&ctx->kb);
+>>>  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
+>>> @@ -270,16 +255,17 @@ static int cbc_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>>  		return rc;
+>>>  
+>>>  	if (__cbc_paes_set_key(ctx)) {
+>>> -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
+>>> +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+>>>  		return -EINVAL;
+>>>  	}
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -static int cbc_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+>>> -			  struct blkcipher_walk *walk)
+>>> +static int cbc_paes_crypt(struct skcipher_request *req, unsigned long modifier)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
+>>> +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>> +	struct skcipher_walk walk;
+>>>  	unsigned int nbytes, n, k;
+>>>  	int ret;
+>>>  	struct {
+>>> @@ -287,73 +273,60 @@ static int cbc_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+>>>  		u8 key[MAXPROTKEYSIZE];
+>>>  	} param;
+>>>  
+>>> -	ret = blkcipher_walk_virt(desc, walk);
+>>> -	memcpy(param.iv, walk->iv, AES_BLOCK_SIZE);
+>>> +	ret = skcipher_walk_virt(&walk, req, false);
+>>> +	if (ret)
+>>> +		return ret;
+>>> +	memcpy(param.iv, walk.iv, AES_BLOCK_SIZE);
+>>>  	memcpy(param.key, ctx->pk.protkey, MAXPROTKEYSIZE);
+>>> -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
+>>> +	while ((nbytes = walk.nbytes) != 0) {
+>>>  		/* only use complete blocks */
+>>>  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
+>>>  		k = cpacf_kmc(ctx->fc | modifier, &param,
+>>> -			      walk->dst.virt.addr, walk->src.virt.addr, n);
+>>> -		if (k)
+>>> -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
+>>> +			      walk.dst.virt.addr, walk.src.virt.addr, n);
+>>> +		if (k) {
+>>> +			memcpy(walk.iv, param.iv, AES_BLOCK_SIZE);
+>>> +			ret = skcipher_walk_done(&walk, nbytes - k);
+>>> +		}
+>>>  		if (k < n) {
+>>>  			if (__cbc_paes_set_key(ctx) != 0)
+>>> -				return blkcipher_walk_done(desc, walk, -EIO);
+>>> +				return skcipher_walk_done(&walk, -EIO);
+>>>  			memcpy(param.key, ctx->pk.protkey, MAXPROTKEYSIZE);
+>>>  		}
+>>>  	}
+>>> -	memcpy(walk->iv, param.iv, AES_BLOCK_SIZE);
+>>>  	return ret;
+>>>  }
+>>>  
+>>> -static int cbc_paes_encrypt(struct blkcipher_desc *desc,
+>>> -			    struct scatterlist *dst, struct scatterlist *src,
+>>> -			    unsigned int nbytes)
+>>> +static int cbc_paes_encrypt(struct skcipher_request *req)
+>>>  {
+>>> -	struct blkcipher_walk walk;
+>>> -
+>>> -	blkcipher_walk_init(&walk, dst, src, nbytes);
+>>> -	return cbc_paes_crypt(desc, 0, &walk);
+>>> +	return cbc_paes_crypt(req, 0);
+>>>  }
+>>>  
+>>> -static int cbc_paes_decrypt(struct blkcipher_desc *desc,
+>>> -			    struct scatterlist *dst, struct scatterlist *src,
+>>> -			    unsigned int nbytes)
+>>> +static int cbc_paes_decrypt(struct skcipher_request *req)
+>>>  {
+>>> -	struct blkcipher_walk walk;
+>>> -
+>>> -	blkcipher_walk_init(&walk, dst, src, nbytes);
+>>> -	return cbc_paes_crypt(desc, CPACF_DECRYPT, &walk);
+>>> +	return cbc_paes_crypt(req, CPACF_DECRYPT);
+>>>  }
+>>>  
+>>> -static struct crypto_alg cbc_paes_alg = {
+>>> -	.cra_name		=	"cbc(paes)",
+>>> -	.cra_driver_name	=	"cbc-paes-s390",
+>>> -	.cra_priority		=	402,	/* ecb-paes-s390 + 1 */
+>>> -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
+>>> -	.cra_blocksize		=	AES_BLOCK_SIZE,
+>>> -	.cra_ctxsize		=	sizeof(struct s390_paes_ctx),
+>>> -	.cra_type		=	&crypto_blkcipher_type,
+>>> -	.cra_module		=	THIS_MODULE,
+>>> -	.cra_list		=	LIST_HEAD_INIT(cbc_paes_alg.cra_list),
+>>> -	.cra_init		=	cbc_paes_init,
+>>> -	.cra_exit		=	cbc_paes_exit,
+>>> -	.cra_u			=	{
+>>> -		.blkcipher = {
+>>> -			.min_keysize		=	PAES_MIN_KEYSIZE,
+>>> -			.max_keysize		=	PAES_MAX_KEYSIZE,
+>>> -			.ivsize			=	AES_BLOCK_SIZE,
+>>> -			.setkey			=	cbc_paes_set_key,
+>>> -			.encrypt		=	cbc_paes_encrypt,
+>>> -			.decrypt		=	cbc_paes_decrypt,
+>>> -		}
+>>> -	}
+>>> +static struct skcipher_alg cbc_paes_alg = {
+>>> +	.base.cra_name		=	"cbc(paes)",
+>>> +	.base.cra_driver_name	=	"cbc-paes-s390",
+>>> +	.base.cra_priority	=	402,	/* ecb-paes-s390 + 1 */
+>>> +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
+>>> +	.base.cra_ctxsize	=	sizeof(struct s390_paes_ctx),
+>>> +	.base.cra_module	=	THIS_MODULE,
+>>> +	.base.cra_list		=	LIST_HEAD_INIT(cbc_paes_alg.base.cra_list),
+>>> +	.init			=	cbc_paes_init,
+>>> +	.exit			=	cbc_paes_exit,
+>>> +	.min_keysize		=	PAES_MIN_KEYSIZE,
+>>> +	.max_keysize		=	PAES_MAX_KEYSIZE,
+>>> +	.ivsize			=	AES_BLOCK_SIZE,
+>>> +	.setkey			=	cbc_paes_set_key,
+>>> +	.encrypt		=	cbc_paes_encrypt,
+>>> +	.decrypt		=	cbc_paes_decrypt,
+>>>  };
+>>>  
+>>> -static int xts_paes_init(struct crypto_tfm *tfm)
+>>> +static int xts_paes_init(struct crypto_skcipher *tfm)
+>>>  {
+>>> -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	ctx->kb[0].key = NULL;
+>>>  	ctx->kb[1].key = NULL;
+>>> @@ -361,9 +334,9 @@ static int xts_paes_init(struct crypto_tfm *tfm)
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -static void xts_paes_exit(struct crypto_tfm *tfm)
+>>> +static void xts_paes_exit(struct crypto_skcipher *tfm)
+>>>  {
+>>> -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	_free_kb_keybuf(&ctx->kb[0]);
+>>>  	_free_kb_keybuf(&ctx->kb[1]);
+>>> @@ -391,11 +364,11 @@ static int __xts_paes_set_key(struct s390_pxts_ctx *ctx)
+>>>  	return ctx->fc ? 0 : -EINVAL;
+>>>  }
+>>>  
+>>> -static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>> +static int xts_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
+>>>  			    unsigned int xts_key_len)
+>>>  {
+>>>  	int rc;
+>>> -	struct s390_pxts_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  	u8 ckey[2 * AES_MAX_KEY_SIZE];
+>>>  	unsigned int ckey_len, key_len;
+>>>  
+>>> @@ -414,7 +387,7 @@ static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>>  		return rc;
+>>>  
+>>>  	if (__xts_paes_set_key(ctx)) {
+>>> -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
+>>> +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+>>>  		return -EINVAL;
+>>>  	}
+>>>  
+>>> @@ -427,13 +400,14 @@ static int xts_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>>  		AES_KEYSIZE_128 : AES_KEYSIZE_256;
+>>>  	memcpy(ckey, ctx->pk[0].protkey, ckey_len);
+>>>  	memcpy(ckey + ckey_len, ctx->pk[1].protkey, ckey_len);
+>>> -	return xts_check_key(tfm, ckey, 2*ckey_len);
+>>> +	return xts_verify_key(tfm, ckey, 2*ckey_len);
+>>>  }
+>>>  
+>>> -static int xts_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+>>> -			  struct blkcipher_walk *walk)
+>>> +static int xts_paes_crypt(struct skcipher_request *req, unsigned long modifier)
+>>>  {
+>>> -	struct s390_pxts_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
+>>> +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+>>> +	struct s390_pxts_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>> +	struct skcipher_walk walk;
+>>>  	unsigned int keylen, offset, nbytes, n, k;
+>>>  	int ret;
+>>>  	struct {
+>>> @@ -448,90 +422,76 @@ static int xts_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+>>>  		u8 init[16];
+>>>  	} xts_param;
+>>>  
+>>> -	ret = blkcipher_walk_virt(desc, walk);
+>>> +	ret = skcipher_walk_virt(&walk, req, false);
+>>> +	if (ret)
+>>> +		return ret;
+>>>  	keylen = (ctx->pk[0].type == PKEY_KEYTYPE_AES_128) ? 48 : 64;
+>>>  	offset = (ctx->pk[0].type == PKEY_KEYTYPE_AES_128) ? 16 : 0;
+>>>  retry:
+>>>  	memset(&pcc_param, 0, sizeof(pcc_param));
+>>> -	memcpy(pcc_param.tweak, walk->iv, sizeof(pcc_param.tweak));
+>>> +	memcpy(pcc_param.tweak, walk.iv, sizeof(pcc_param.tweak));
+>>>  	memcpy(pcc_param.key + offset, ctx->pk[1].protkey, keylen);
+>>>  	cpacf_pcc(ctx->fc, pcc_param.key + offset);
+>>>  
+>>>  	memcpy(xts_param.key + offset, ctx->pk[0].protkey, keylen);
+>>>  	memcpy(xts_param.init, pcc_param.xts, 16);
+>>>  
+>>> -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
+>>> +	while ((nbytes = walk.nbytes) != 0) {
+>>>  		/* only use complete blocks */
+>>>  		n = nbytes & ~(AES_BLOCK_SIZE - 1);
+>>>  		k = cpacf_km(ctx->fc | modifier, xts_param.key + offset,
+>>> -			     walk->dst.virt.addr, walk->src.virt.addr, n);
+>>> +			     walk.dst.virt.addr, walk.src.virt.addr, n);
+>>>  		if (k)
+>>> -			ret = blkcipher_walk_done(desc, walk, nbytes - k);
+>>> +			ret = skcipher_walk_done(&walk, nbytes - k);
+>>>  		if (k < n) {
+>>>  			if (__xts_paes_set_key(ctx) != 0)
+>>> -				return blkcipher_walk_done(desc, walk, -EIO);
+>>> +				return skcipher_walk_done(&walk, -EIO);
+>>>  			goto retry;
+>>>  		}
+>>>  	}
+>>>  	return ret;
+>>>  }
+>>>  
+>>> -static int xts_paes_encrypt(struct blkcipher_desc *desc,
+>>> -			    struct scatterlist *dst, struct scatterlist *src,
+>>> -			    unsigned int nbytes)
+>>> +static int xts_paes_encrypt(struct skcipher_request *req)
+>>>  {
+>>> -	struct blkcipher_walk walk;
+>>> -
+>>> -	blkcipher_walk_init(&walk, dst, src, nbytes);
+>>> -	return xts_paes_crypt(desc, 0, &walk);
+>>> +	return xts_paes_crypt(req, 0);
+>>>  }
+>>>  
+>>> -static int xts_paes_decrypt(struct blkcipher_desc *desc,
+>>> -			    struct scatterlist *dst, struct scatterlist *src,
+>>> -			    unsigned int nbytes)
+>>> +static int xts_paes_decrypt(struct skcipher_request *req)
+>>>  {
+>>> -	struct blkcipher_walk walk;
+>>> -
+>>> -	blkcipher_walk_init(&walk, dst, src, nbytes);
+>>> -	return xts_paes_crypt(desc, CPACF_DECRYPT, &walk);
+>>> +	return xts_paes_crypt(req, CPACF_DECRYPT);
+>>>  }
+>>>  
+>>> -static struct crypto_alg xts_paes_alg = {
+>>> -	.cra_name		=	"xts(paes)",
+>>> -	.cra_driver_name	=	"xts-paes-s390",
+>>> -	.cra_priority		=	402,	/* ecb-paes-s390 + 1 */
+>>> -	.cra_flags		=	CRYPTO_ALG_TYPE_BLKCIPHER,
+>>> -	.cra_blocksize		=	AES_BLOCK_SIZE,
+>>> -	.cra_ctxsize		=	sizeof(struct s390_pxts_ctx),
+>>> -	.cra_type		=	&crypto_blkcipher_type,
+>>> -	.cra_module		=	THIS_MODULE,
+>>> -	.cra_list		=	LIST_HEAD_INIT(xts_paes_alg.cra_list),
+>>> -	.cra_init		=	xts_paes_init,
+>>> -	.cra_exit		=	xts_paes_exit,
+>>> -	.cra_u			=	{
+>>> -		.blkcipher = {
+>>> -			.min_keysize		=	2 * PAES_MIN_KEYSIZE,
+>>> -			.max_keysize		=	2 * PAES_MAX_KEYSIZE,
+>>> -			.ivsize			=	AES_BLOCK_SIZE,
+>>> -			.setkey			=	xts_paes_set_key,
+>>> -			.encrypt		=	xts_paes_encrypt,
+>>> -			.decrypt		=	xts_paes_decrypt,
+>>> -		}
+>>> -	}
+>>> +static struct skcipher_alg xts_paes_alg = {
+>>> +	.base.cra_name		=	"xts(paes)",
+>>> +	.base.cra_driver_name	=	"xts-paes-s390",
+>>> +	.base.cra_priority	=	402,	/* ecb-paes-s390 + 1 */
+>>> +	.base.cra_blocksize	=	AES_BLOCK_SIZE,
+>>> +	.base.cra_ctxsize	=	sizeof(struct s390_pxts_ctx),
+>>> +	.base.cra_module	=	THIS_MODULE,
+>>> +	.base.cra_list		=	LIST_HEAD_INIT(xts_paes_alg.base.cra_list),
+>>> +	.init			=	xts_paes_init,
+>>> +	.exit			=	xts_paes_exit,
+>>> +	.min_keysize		=	2 * PAES_MIN_KEYSIZE,
+>>> +	.max_keysize		=	2 * PAES_MAX_KEYSIZE,
+>>> +	.ivsize			=	AES_BLOCK_SIZE,
+>>> +	.setkey			=	xts_paes_set_key,
+>>> +	.encrypt		=	xts_paes_encrypt,
+>>> +	.decrypt		=	xts_paes_decrypt,
+>>>  };
+>>>  
+>>> -static int ctr_paes_init(struct crypto_tfm *tfm)
+>>> +static int ctr_paes_init(struct crypto_skcipher *tfm)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	ctx->kb.key = NULL;
+>>>  
+>>>  	return 0;
+>>>  }
+>>>  
+>>> -static void ctr_paes_exit(struct crypto_tfm *tfm)
+>>> +static void ctr_paes_exit(struct crypto_skcipher *tfm)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	_free_kb_keybuf(&ctx->kb);
+>>>  }
+>>> @@ -555,11 +515,11 @@ static int __ctr_paes_set_key(struct s390_paes_ctx *ctx)
+>>>  	return ctx->fc ? 0 : -EINVAL;
+>>>  }
+>>>  
+>>> -static int ctr_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>> +static int ctr_paes_set_key(struct crypto_skcipher *tfm, const u8 *in_key,
+>>>  			    unsigned int key_len)
+>>>  {
+>>>  	int rc;
+>>> -	struct s390_paes_ctx *ctx = crypto_tfm_ctx(tfm);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  
+>>>  	_free_kb_keybuf(&ctx->kb);
+>>>  	rc = _copy_key_to_kb(&ctx->kb, in_key, key_len);
+>>> @@ -567,7 +527,7 @@ static int ctr_paes_set_key(struct crypto_tfm *tfm, const u8 *in_key,
+>>>  		return rc;
+>>>  
+>>>  	if (__ctr_paes_set_key(ctx)) {
+>>> -		tfm->crt_flags |= CRYPTO_TFM_RES_BAD_KEY_LEN;
+>>> +		crypto_skcipher_set_flags(tfm, CRYPTO_TFM_RES_BAD_KEY_LEN);
+>>>  		return -EINVAL;
+>>>  	}
+>>>  	return 0;
+>>> @@ -588,37 +548,37 @@ static unsigned int __ctrblk_init(u8 *ctrptr, u8 *iv, unsigned int nbytes)
+>>>  	return n;
+>>>  }
+>>>  
+>>> -static int ctr_paes_crypt(struct blkcipher_desc *desc, unsigned long modifier,
+>>> -			  struct blkcipher_walk *walk)
+>>> +static int ctr_paes_crypt(struct skcipher_request *req)
+>>>  {
+>>> -	struct s390_paes_ctx *ctx = crypto_blkcipher_ctx(desc->tfm);
+>>> +	struct crypto_skcipher *tfm = crypto_skcipher_reqtfm(req);
+>>> +	struct s390_paes_ctx *ctx = crypto_skcipher_ctx(tfm);
+>>>  	u8 buf[AES_BLOCK_SIZE], *ctrptr;
+>>> +	struct skcipher_walk walk;
+>>>  	unsigned int nbytes, n, k;
+>>>  	int ret, locked;
+>>>  
+>>>  	locked = spin_trylock(&ctrblk_lock);
+>>>  
+>>> -	ret = blkcipher_walk_virt_block(desc, walk, AES_BLOCK_SIZE);
+>>> -	while ((nbytes = walk->nbytes) >= AES_BLOCK_SIZE) {
+>>> +	ret = skcipher_walk_virt(&walk, req, false);
+>>> +	while ((nbytes = walk.nbytes) >= AES_BLOCK_SIZE) {
+>>>  		n = AES_BLOCK_SIZE;
+>>>  		if (nbytes >= 2*AES_BLOCK_SIZE && locked)
+>>> -			n = __ctrblk_init(ctrblk, walk->iv, nbytes);
+>>> -		ctrptr = (n > AES_BLOCK_SIZE) ? ctrblk : walk->iv;
+>>> -		k = cpacf_kmctr(ctx->fc | modifier, ctx->pk.protkey,
+>>> -				walk->dst.virt.addr, walk->src.virt.addr,
+>>> -				n, ctrptr);
+>>> +			n = __ctrblk_init(ctrblk, walk.iv, nbytes);
+>>> +		ctrptr = (n > AES_BLOCK_SIZE) ? ctrblk : walk.iv;
+>>> +		k = cpacf_kmctr(ctx->fc, ctx->pk.protkey, walk.dst.virt.addr,
+>>> +				walk.src.virt.addr, n, ctrptr);
+>>>  		if (k) {
+>>>  			if (ctrptr == ctrblk)
+>>> -				memcpy(walk->iv, ctrptr + k - AES_BLOCK_SIZE,
+>>> +				memcpy(walk.iv, ctrptr + k - AES_BLOCK_SIZE,
+>>>  				       AES_BLOCK_SIZE);
+>>> -			crypto_inc(walk->iv, AES_BLOCK_SIZE);
+>>> -			ret = blkcipher_walk_done(desc, walk, nbytes - n);
+>>> +			crypto_inc(walk.iv, AES_BLOCK_SIZE);
+>>> +			ret = skcipher_walk_done(&walk, nbytes - n);
+>> Looks like a bug here. It should be
+>>
+>> ret = skcipher_walk_done(&walk, nbytes - k);
+>>
+>> similar to the other modes.
+>> You can add this in your patch or leave it to me to provide a separate patch.
+> I'm not planning to fix this since it's an existing bug, I can't test this code
+> myself, and the paes code is different from the regular algorithms so it's hard
+> to work with.  So I suggest you provide a patch later.
+Ok, will do.
+>
+>>>  		}
+>>>  		if (k < n) {
+>>>  			if (__ctr_paes_set_key(ctx) != 0) {
+>>>  				if (locked)
+>>>  					spin_unlock(&ctrblk_lock);
+>>> -				return blkcipher_walk_done(desc, walk, -EIO);
+>>> +				return skcipher_walk_done(&walk, -EIO);
+>>>  			}
+>>>  		}
+>>>  	}
+> Note that __ctr_paes_set_key() is modifying the tfm_ctx which can be shared
+> between multiple threads.  So this code seems broken in other ways too.
+Ok, I'll check this.
+>
+> How is "paes" tested, given that it isn't covered by the crypto subsystem's
+> self-tests?  How do you know it isn't completely broken?
+>
+> - Eric
 
-Only 'virtio' type is supported right now. I plan to add 'vhost' type
-on top which requires some virtual IOMMU implemented in this sample
-driver.
+As you can see paes is an ordinary aes with just a special key - we call it "protected key".
+I have written selftests to be integrated into the kernel (will send out patches soon) which
+take a known clearkey AES value, derive a protected key with exactly this AES value and
+so I can use regular testvectors. I also have testcases which are using the AF_ALG interface
+and run common available NIST testvectors. There is also another way to create a protected
+key from a secure key (which requires to have crypto cards within the s390). As I have
+access to some s390 machines with crypto cards in, I ran all these tests. Have a look into
+the pkey code (drivers/s390/crypto/pkey_api.c) for even more details.
 
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- MAINTAINERS                |   1 +
- samples/Kconfig            |   7 +
- samples/vfio-mdev/Makefile |   1 +
- samples/vfio-mdev/mvnet.c  | 691 +++++++++++++++++++++++++++++++++++++
- 4 files changed, 700 insertions(+)
- create mode 100644 samples/vfio-mdev/mvnet.c
+regards Harald Freudenberger
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 3d196a023b5e..cb51351cd5c9 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -17254,6 +17254,7 @@ F:	include/linux/virtio*.h
- F:	include/uapi/linux/virtio_*.h
- F:	drivers/crypto/virtio/
- F:	mm/balloon_compaction.c
-+F:	samples/vfio-mdev/mvnet.c
- 
- VIRTIO BLOCK AND SCSI DRIVERS
- M:	"Michael S. Tsirkin" <mst@redhat.com>
-diff --git a/samples/Kconfig b/samples/Kconfig
-index c8dacb4dda80..a1a1ca2c00b7 100644
---- a/samples/Kconfig
-+++ b/samples/Kconfig
-@@ -131,6 +131,13 @@ config SAMPLE_VFIO_MDEV_MDPY
- 	  mediated device.  It is a simple framebuffer and supports
- 	  the region display interface (VFIO_GFX_PLANE_TYPE_REGION).
- 
-+config SAMPLE_VIRTIO_MDEV_NET
-+        tristate "Build virtio mdev net example mediated device sample code -- loadable modules only"
-+	depends on VIRTIO_MDEV_DEVICE && VHOST_RING && m
-+	help
-+	  Build a networking sample device for use as a virtio
-+	  mediated device.
-+
- config SAMPLE_VFIO_MDEV_MDPY_FB
- 	tristate "Build VFIO mdpy example guest fbdev driver -- loadable module only"
- 	depends on FB && m
-diff --git a/samples/vfio-mdev/Makefile b/samples/vfio-mdev/Makefile
-index 10d179c4fdeb..f34af90ed0a0 100644
---- a/samples/vfio-mdev/Makefile
-+++ b/samples/vfio-mdev/Makefile
-@@ -3,3 +3,4 @@ obj-$(CONFIG_SAMPLE_VFIO_MDEV_MTTY) += mtty.o
- obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY) += mdpy.o
- obj-$(CONFIG_SAMPLE_VFIO_MDEV_MDPY_FB) += mdpy-fb.o
- obj-$(CONFIG_SAMPLE_VFIO_MDEV_MBOCHS) += mbochs.o
-+obj-$(CONFIG_SAMPLE_VIRTIO_MDEV_NET) += mvnet.o
-diff --git a/samples/vfio-mdev/mvnet.c b/samples/vfio-mdev/mvnet.c
-new file mode 100644
-index 000000000000..19e823a449cd
---- /dev/null
-+++ b/samples/vfio-mdev/mvnet.c
-@@ -0,0 +1,691 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Mediated virtual virtio-net device driver.
-+ *
-+ * Copyright (c) 2019, Red Hat Inc. All rights reserved.
-+ *     Author: Jason Wang <jasowang@redhat.com>
-+ *
-+ * Sample driver that creates mdev device that simulates ethernet loopback
-+ * device.
-+ *
-+ * Usage:
-+ *
-+ * # modprobe virtio_mdev
-+ * # modprobe mvnet
-+ * # cd /sys/devices/virtual/mvnet/mvnet/mdev_supported_types/mvnet-virtio
-+ * # echo "83b8f4f2-509f-382f-3c1e-e6bfe0fa1001" > ./create
-+ * # cd devices/83b8f4f2-509f-382f-3c1e-e6bfe0fa1001
-+ * # ls -d virtio0
-+ * virtio0
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/kernel.h>
-+#include <linux/fs.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+#include <linux/sched.h>
-+#include <linux/wait.h>
-+#include <linux/uuid.h>
-+#include <linux/iommu.h>
-+#include <linux/sysfs.h>
-+#include <linux/file.h>
-+#include <linux/etherdevice.h>
-+#include <linux/mdev.h>
-+#include <linux/vringh.h>
-+#include <linux/virtio_mdev.h>
-+#include <uapi/linux/virtio_config.h>
-+#include <uapi/linux/virtio_net.h>
-+
-+#define VERSION_STRING  "0.1"
-+#define DRIVER_AUTHOR   "Red Hat Corporation"
-+
-+#define MVNET_CLASS_NAME "mvnet"
-+#define MVNET_NAME       "mvnet"
-+
-+/*
-+ * Global Structures
-+ */
-+
-+static struct mvnet_dev {
-+	struct class	*vd_class;
-+	struct idr	vd_idr;
-+	struct device	dev;
-+} mvnet_dev;
-+
-+struct mvnet_virtqueue {
-+	struct vringh vring;
-+	struct vringh_kiov iov;
-+	unsigned short head;
-+	bool ready;
-+	u64 desc_addr;
-+	u64 device_addr;
-+	u64 driver_addr;
-+	u32 num;
-+	void *private;
-+	irqreturn_t (*cb)(void *data);
-+};
-+
-+#define MVNET_QUEUE_ALIGN PAGE_SIZE
-+#define MVNET_QUEUE_MAX 256
-+#define MVNET_DEVICE_ID 0x1
-+#define MVNET_VENDOR_ID 0
-+
-+u64 mvnet_features = (1ULL << VIRTIO_F_ANY_LAYOUT) |
-+		     (1ULL << VIRTIO_F_VERSION_1) |
-+		     (1ULL << VIRTIO_F_IOMMU_PLATFORM);
-+
-+/* State of each mdev device */
-+struct mvnet_state {
-+	struct mvnet_virtqueue vqs[2];
-+	struct work_struct work;
-+	spinlock_t lock;
-+	struct mdev_device *mdev;
-+	struct virtio_net_config config;
-+	void *buffer;
-+	u32 status;
-+	u32 generation;
-+	u64 features;
-+	struct list_head next;
-+};
-+
-+static struct mutex mdev_list_lock;
-+static struct list_head mdev_devices_list;
-+
-+static void mvnet_queue_ready(struct mvnet_state *mvnet, unsigned int idx)
-+{
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+	int ret;
-+
-+	ret = vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
-+			       false, (struct vring_desc *)vq->desc_addr,
-+			       (struct vring_avail *)vq->driver_addr,
-+			       (struct vring_used *)vq->device_addr);
-+}
-+
-+static void mvnet_vq_reset(struct mvnet_virtqueue *vq)
-+{
-+	vq->ready = 0;
-+	vq->desc_addr = 0;
-+	vq->driver_addr = 0;
-+	vq->device_addr = 0;
-+	vq->cb = NULL;
-+	vq->private = NULL;
-+	vringh_init_kern(&vq->vring, mvnet_features, MVNET_QUEUE_MAX,
-+			false, 0, 0, 0);
-+}
-+
-+static void mvnet_reset(struct mvnet_state *mvnet)
-+{
-+	int i;
-+
-+	for (i = 0; i < 2; i++)
-+		mvnet_vq_reset(&mvnet->vqs[i]);
-+
-+	mvnet->features = 0;
-+	mvnet->status = 0;
-+	++mvnet->generation;
-+}
-+
-+static void mvnet_work(struct work_struct *work)
-+{
-+	struct mvnet_state *mvnet = container_of(work, struct
-+						 mvnet_state, work);
-+	struct mvnet_virtqueue *txq = &mvnet->vqs[1];
-+	struct mvnet_virtqueue *rxq = &mvnet->vqs[0];
-+	size_t read, write, total_write;
-+	int err;
-+	int pkts = 0;
-+
-+	spin_lock(&mvnet->lock);
-+
-+	if (!txq->ready || !rxq->ready)
-+		goto out;
-+
-+	while (true) {
-+		total_write = 0;
-+		err = vringh_getdesc_kern(&txq->vring, &txq->iov, NULL,
-+					  &txq->head, GFP_ATOMIC);
-+		if (err <= 0)
-+			break;
-+
-+		err = vringh_getdesc_kern(&rxq->vring, NULL, &rxq->iov,
-+					  &rxq->head, GFP_ATOMIC);
-+		if (err <= 0) {
-+			vringh_complete_kern(&txq->vring, txq->head, 0);
-+			break;
-+		}
-+
-+		while (true) {
-+			read = vringh_iov_pull_kern(&txq->iov, mvnet->buffer,
-+						    PAGE_SIZE);
-+			if (read <= 0)
-+				break;
-+
-+			write = vringh_iov_push_kern(&rxq->iov, mvnet->buffer,
-+						     read);
-+			if (write <= 0)
-+				break;
-+
-+			total_write += write;
-+		}
-+
-+		/* Make sure data is wrote before advancing index */
-+		smp_wmb();
-+
-+		vringh_complete_kern(&txq->vring, txq->head, 0);
-+		vringh_complete_kern(&rxq->vring, rxq->head, total_write);
-+
-+		/* Make sure used is visible before rasing the interrupt. */
-+		smp_wmb();
-+
-+		local_bh_disable();
-+		if (txq->cb)
-+			txq->cb(txq->private);
-+		if (rxq->cb)
-+			rxq->cb(rxq->private);
-+		local_bh_enable();
-+
-+		if (++pkts > 4) {
-+			schedule_work(&mvnet->work);
-+			goto out;
-+		}
-+	}
-+
-+out:
-+	spin_unlock(&mvnet->lock);
-+}
-+
-+static dma_addr_t mvnet_map_page(struct device *dev, struct page *page,
-+				 unsigned long offset, size_t size,
-+				 enum dma_data_direction dir,
-+				 unsigned long attrs)
-+{
-+	/* Vringh can only use HVA */
-+	return (dma_addr_t)(page_address(page) + offset);
-+}
-+
-+static void mvnet_unmap_page(struct device *dev, dma_addr_t dma_addr,
-+			     size_t size, enum dma_data_direction dir,
-+			     unsigned long attrs)
-+{
-+}
-+
-+static void *mvnet_alloc_coherent(struct device *dev, size_t size,
-+				  dma_addr_t *dma_addr, gfp_t flag,
-+				  unsigned long attrs)
-+{
-+	void *addr = kmalloc(size, flag);
-+
-+	if (addr == NULL)
-+		*dma_addr = DMA_MAPPING_ERROR;
-+	else
-+		*dma_addr = (dma_addr_t) addr;
-+
-+	return addr;
-+}
-+
-+static void mvnet_free_coherent(struct device *dev, size_t size,
-+				void *vaddr, dma_addr_t dma_addr,
-+				unsigned long attrs)
-+{
-+	kfree((void *)dma_addr);
-+}
-+
-+static const struct dma_map_ops mvnet_dma_ops = {
-+	.map_page = mvnet_map_page,
-+	.unmap_page = mvnet_unmap_page,
-+	.alloc = mvnet_alloc_coherent,
-+	.free = mvnet_free_coherent,
-+};
-+
-+static const struct virtio_mdev_device_ops virtio_mdev_ops;
-+
-+static int mvnet_create(struct kobject *kobj, struct mdev_device *mdev)
-+{
-+	struct mvnet_state *mvnet;
-+	struct virtio_net_config *config;
-+	struct device *dev = mdev_dev(mdev);
-+
-+	if (!mdev)
-+		return -EINVAL;
-+
-+	mvnet = kzalloc(sizeof(struct mvnet_state), GFP_KERNEL);
-+	if (mvnet == NULL)
-+		return -ENOMEM;
-+
-+	mvnet->buffer = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+	if (!mvnet->buffer) {
-+		kfree(mvnet);
-+		return -ENOMEM;
-+	}
-+
-+	config = &mvnet->config;
-+	config->mtu = 1500;
-+	config->status = VIRTIO_NET_S_LINK_UP;
-+	eth_random_addr(config->mac);
-+
-+	INIT_WORK(&mvnet->work, mvnet_work);
-+
-+	spin_lock_init(&mvnet->lock);
-+	mvnet->mdev = mdev;
-+	mdev_set_drvdata(mdev, mvnet);
-+
-+	mutex_lock(&mdev_list_lock);
-+	list_add(&mvnet->next, &mdev_devices_list);
-+	mutex_unlock(&mdev_list_lock);
-+
-+	dev->coherent_dma_mask = DMA_BIT_MASK(64);
-+	set_dma_ops(dev, &mvnet_dma_ops);
-+
-+	mdev_set_virtio_ops(mdev, &virtio_mdev_ops);
-+
-+	return 0;
-+}
-+
-+static int mvnet_remove(struct mdev_device *mdev)
-+{
-+	struct mvnet_state *mds, *tmp_mds;
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	int ret = -EINVAL;
-+
-+	mutex_lock(&mdev_list_lock);
-+	list_for_each_entry_safe(mds, tmp_mds, &mdev_devices_list, next) {
-+		if (mvnet == mds) {
-+			list_del(&mvnet->next);
-+			mdev_set_drvdata(mdev, NULL);
-+			kfree(mvnet->buffer);
-+			kfree(mvnet);
-+			ret = 0;
-+			break;
-+		}
-+	}
-+	mutex_unlock(&mdev_list_lock);
-+
-+	return ret;
-+}
-+
-+static ssize_t
-+sample_mvnet_dev_show(struct device *dev, struct device_attribute *attr,
-+		     char *buf)
-+{
-+	if (mdev_from_dev(dev))
-+		return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
-+
-+	return sprintf(buf, "\n");
-+}
-+
-+static DEVICE_ATTR_RO(sample_mvnet_dev);
-+
-+static struct attribute *mvnet_dev_attrs[] = {
-+	&dev_attr_sample_mvnet_dev.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group mvnet_dev_group = {
-+	.name  = "mvnet_dev",
-+	.attrs = mvnet_dev_attrs,
-+};
-+
-+static const struct attribute_group *mvnet_dev_groups[] = {
-+	&mvnet_dev_group,
-+	NULL,
-+};
-+
-+static ssize_t
-+sample_mdev_dev_show(struct device *dev, struct device_attribute *attr,
-+		     char *buf)
-+{
-+	if (mdev_from_dev(dev))
-+		return sprintf(buf, "This is MDEV %s\n", dev_name(dev));
-+
-+	return sprintf(buf, "\n");
-+}
-+
-+static DEVICE_ATTR_RO(sample_mdev_dev);
-+
-+static struct attribute *mdev_dev_attrs[] = {
-+	&dev_attr_sample_mdev_dev.attr,
-+	NULL,
-+};
-+
-+static const struct attribute_group mdev_dev_group = {
-+	.name  = "vendor",
-+	.attrs = mdev_dev_attrs,
-+};
-+
-+static const struct attribute_group *mdev_dev_groups[] = {
-+	&mdev_dev_group,
-+	NULL,
-+};
-+
-+#define MVNET_STRING_LEN 16
-+
-+static ssize_t
-+name_show(struct kobject *kobj, struct device *dev, char *buf)
-+{
-+	char name[MVNET_STRING_LEN];
-+	const char *name_str = "virtio-net";
-+
-+	snprintf(name, MVNET_STRING_LEN, "%s", dev_driver_string(dev));
-+	if (!strcmp(kobj->name, name))
-+		return sprintf(buf, "%s\n", name_str);
-+
-+	return -EINVAL;
-+}
-+
-+static MDEV_TYPE_ATTR_RO(name);
-+
-+static ssize_t
-+available_instances_show(struct kobject *kobj, struct device *dev, char *buf)
-+{
-+	return sprintf(buf, "%d\n", INT_MAX);
-+}
-+
-+static MDEV_TYPE_ATTR_RO(available_instances);
-+
-+static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
-+			       char *buf)
-+{
-+	return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
-+}
-+
-+static MDEV_TYPE_ATTR_RO(device_api);
-+
-+static struct attribute *mdev_types_attrs[] = {
-+	&mdev_type_attr_name.attr,
-+	&mdev_type_attr_device_api.attr,
-+	&mdev_type_attr_available_instances.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group mdev_type_group = {
-+	.name  = "virtio",
-+	.attrs = mdev_types_attrs,
-+};
-+
-+/* TBD: "vhost" type */
-+
-+static struct attribute_group *mdev_type_groups[] = {
-+	&mdev_type_group,
-+	NULL,
-+};
-+
-+static int mvnet_set_vq_address(struct mdev_device *mdev, u16 idx,
-+				u64 desc_area, u64 driver_area, u64 device_area)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+
-+	vq->desc_addr = desc_area;
-+	vq->driver_addr = driver_area;
-+	vq->device_addr = device_area;
-+
-+	return 0;
-+}
-+
-+static void mvnet_set_vq_num(struct mdev_device *mdev, u16 idx, u32 num)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+
-+	vq->num = num;
-+}
-+
-+static void mvnet_kick_vq(struct mdev_device *mdev, u16 idx)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+
-+	if (vq->ready)
-+		schedule_work(&mvnet->work);
-+}
-+
-+static void mvnet_set_vq_cb(struct mdev_device *mdev, u16 idx,
-+			    struct virtio_mdev_callback *cb)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+
-+	vq->cb = cb->callback;
-+	vq->private = cb->private;
-+}
-+
-+static void mvnet_set_vq_ready(struct mdev_device *mdev, u16 idx, bool ready)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+
-+	spin_lock(&mvnet->lock);
-+	vq->ready = ready;
-+	if (vq->ready)
-+		mvnet_queue_ready(mvnet, idx);
-+	spin_unlock(&mvnet->lock);
-+}
-+
-+static bool mvnet_get_vq_ready(struct mdev_device *mdev, u16 idx)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+
-+	return vq->ready;
-+}
-+
-+static int mvnet_set_vq_state(struct mdev_device *mdev, u16 idx, u64 state)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+	struct vringh *vrh = &vq->vring;
-+
-+	spin_lock(&mvnet->lock);
-+	vrh->last_avail_idx = state;
-+	spin_unlock(&mvnet->lock);
-+
-+	return 0;
-+}
-+
-+static u64 mvnet_get_vq_state(struct mdev_device *mdev, u16 idx)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+	struct mvnet_virtqueue *vq = &mvnet->vqs[idx];
-+	struct vringh *vrh = &vq->vring;
-+
-+	return vrh->last_avail_idx;
-+}
-+
-+static u16 mvnet_get_vq_align(struct mdev_device *mdev)
-+{
-+	return MVNET_QUEUE_ALIGN;
-+}
-+
-+static u64 mvnet_get_features(struct mdev_device *mdev)
-+{
-+	return mvnet_features;
-+}
-+
-+static int mvnet_set_features(struct mdev_device *mdev, u64 features)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+
-+	/* DMA mapping must be done by driver */
-+	if (!(features & (1ULL << VIRTIO_F_IOMMU_PLATFORM)))
-+		return -EINVAL;
-+
-+	mvnet->features = features & mvnet_features;
-+
-+	return 0;
-+}
-+
-+static void mvnet_set_config_cb(struct mdev_device *mdev,
-+				struct virtio_mdev_callback *cb)
-+{
-+	/* We don't support config interrupt */
-+}
-+
-+static u16 mvnet_get_vq_num_max(struct mdev_device *mdev)
-+{
-+	return MVNET_QUEUE_MAX;
-+}
-+
-+static u32 mvnet_get_device_id(struct mdev_device *mdev)
-+{
-+	return MVNET_DEVICE_ID;
-+}
-+
-+static u32 mvnet_get_vendor_id(struct mdev_device *mdev)
-+{
-+	return MVNET_VENDOR_ID;
-+}
-+
-+static u8 mvnet_get_status(struct mdev_device *mdev)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+
-+	return mvnet->status;
-+}
-+
-+static void mvnet_set_status(struct mdev_device *mdev, u8 status)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+
-+	mvnet->status = status;
-+
-+	if (status == 0) {
-+		spin_lock(&mvnet->lock);
-+		mvnet_reset(mvnet);
-+		spin_unlock(&mvnet->lock);
-+	}
-+}
-+
-+static void mvnet_get_config(struct mdev_device *mdev, unsigned int offset,
-+			     void *buf, unsigned int len)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+
-+	if (offset + len < sizeof(struct virtio_net_config))
-+		memcpy(buf, &mvnet->config + offset, len);
-+}
-+
-+static void mvnet_set_config(struct mdev_device *mdev, unsigned int offset,
-+			     const void *buf, unsigned int len)
-+{
-+	/* No writable config supportted by mvnet */
-+}
-+
-+static u64 mvnet_get_mdev_features(struct mdev_device *mdev)
-+{
-+	return VIRTIO_MDEV_F_VERSION_1;
-+}
-+
-+static u32 mvnet_get_generation(struct mdev_device *mdev)
-+{
-+	struct mvnet_state *mvnet = mdev_get_drvdata(mdev);
-+
-+	return mvnet->generation;
-+}
-+
-+static const struct virtio_mdev_device_ops virtio_mdev_ops = {
-+	.set_vq_address         = mvnet_set_vq_address,
-+	.set_vq_num             = mvnet_set_vq_num,
-+	.kick_vq                = mvnet_kick_vq,
-+	.set_vq_cb              = mvnet_set_vq_cb,
-+	.set_vq_ready           = mvnet_set_vq_ready,
-+	.get_vq_ready           = mvnet_get_vq_ready,
-+	.set_vq_state           = mvnet_set_vq_state,
-+	.get_vq_state           = mvnet_get_vq_state,
-+	.get_vq_align           = mvnet_get_vq_align,
-+	.get_features           = mvnet_get_features,
-+	.set_features           = mvnet_set_features,
-+	.set_config_cb          = mvnet_set_config_cb,
-+	.get_vq_num_max         = mvnet_get_vq_num_max,
-+	.get_device_id          = mvnet_get_device_id,
-+	.get_vendor_id          = mvnet_get_vendor_id,
-+	.get_status             = mvnet_get_status,
-+	.set_status             = mvnet_set_status,
-+	.get_config             = mvnet_get_config,
-+	.set_config             = mvnet_set_config,
-+	.get_mdev_features      = mvnet_get_mdev_features,
-+	.get_generation         = mvnet_get_generation,
-+};
-+
-+static const struct mdev_parent_ops mdev_fops = {
-+	.owner                  = THIS_MODULE,
-+	.dev_attr_groups        = mvnet_dev_groups,
-+	.mdev_attr_groups       = mdev_dev_groups,
-+	.supported_type_groups  = mdev_type_groups,
-+	.create                 = mvnet_create,
-+	.remove			= mvnet_remove,
-+};
-+
-+static void mvnet_device_release(struct device *dev)
-+{
-+	dev_dbg(dev, "mvnet: released\n");
-+}
-+
-+static int __init mvnet_dev_init(void)
-+{
-+	int ret = 0;
-+
-+	pr_info("mvnet_dev: %s\n", __func__);
-+
-+	memset(&mvnet_dev, 0, sizeof(mvnet_dev));
-+
-+	idr_init(&mvnet_dev.vd_idr);
-+
-+	mvnet_dev.vd_class = class_create(THIS_MODULE, MVNET_CLASS_NAME);
-+
-+	if (IS_ERR(mvnet_dev.vd_class)) {
-+		pr_err("Error: failed to register mvnet_dev class\n");
-+		ret = PTR_ERR(mvnet_dev.vd_class);
-+		goto failed1;
-+	}
-+
-+	mvnet_dev.dev.class = mvnet_dev.vd_class;
-+	mvnet_dev.dev.release = mvnet_device_release;
-+	dev_set_name(&mvnet_dev.dev, "%s", MVNET_NAME);
-+
-+	ret = device_register(&mvnet_dev.dev);
-+	if (ret)
-+		goto failed2;
-+
-+	ret = mdev_register_device(&mvnet_dev.dev, &mdev_fops);
-+	if (ret)
-+		goto failed3;
-+
-+	mutex_init(&mdev_list_lock);
-+	INIT_LIST_HEAD(&mdev_devices_list);
-+
-+	goto all_done;
-+
-+failed3:
-+
-+	device_unregister(&mvnet_dev.dev);
-+failed2:
-+	class_destroy(mvnet_dev.vd_class);
-+
-+failed1:
-+all_done:
-+	return ret;
-+}
-+
-+static void __exit mvnet_dev_exit(void)
-+{
-+	mvnet_dev.dev.bus = NULL;
-+	mdev_unregister_device(&mvnet_dev.dev);
-+
-+	device_unregister(&mvnet_dev.dev);
-+	idr_destroy(&mvnet_dev.vd_idr);
-+	class_destroy(mvnet_dev.vd_class);
-+	mvnet_dev.vd_class = NULL;
-+	pr_info("mvnet_dev: Unloaded!\n");
-+}
-+
-+module_init(mvnet_dev_init)
-+module_exit(mvnet_dev_exit)
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_INFO(supported, "Simulate loopback ethernet device over mdev");
-+MODULE_VERSION(VERSION_STRING);
-+MODULE_AUTHOR(DRIVER_AUTHOR);
--- 
-2.19.1
+keaSo I can test the paes implementation
+and in fact the paes implementation is used
+
 
