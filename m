@@ -2,134 +2,224 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83773DBE52
-	for <lists+linux-s390@lfdr.de>; Fri, 18 Oct 2019 09:31:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D7DA2DBE6C
+	for <lists+linux-s390@lfdr.de>; Fri, 18 Oct 2019 09:35:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504619AbfJRHbJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 18 Oct 2019 03:31:09 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:36638 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2394031AbfJRHbI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 18 Oct 2019 03:31:08 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 67so4178483oto.3;
-        Fri, 18 Oct 2019 00:31:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1vcvhB5CLF/+MeUyHDDl7fZL+tAXhkabxwY8RzqlUc4=;
-        b=K7Yt9YoviXa1EKl7IKMUxzV7fJKccYRkl/f/zlrsDAxPX7Y9NmcboBMaiUIBkisj6s
-         K/0rvmrdS4ruOkQk5Hdy5r6QgqM1ptvNEsMgEXyzH8j6K0hnmphrD4eoFVYR+YrhhTji
-         sv+lhgqy6QZRgZD9UXmKb0NmFnA2KEJsRyI8XTEnOKaVxHXC04Fd1wRItkbgJivTsSzv
-         WEjfcgaPLmReo38CmBMZ/lqF/gNrP8OH1ATnQNrGFeXk1zTfNbGS0Z139E6RYM4lQPHa
-         YGrHDrKdq3kF/mSl878GMtb0SEYzxy5WW3bYfpCTb0nm0HnvYBXtXxIRewJLiRbL9mf0
-         r1zg==
-X-Gm-Message-State: APjAAAUdHG9sRGDmTM/26149dvkFYcNaNyzvjXWe3Xz+3DsVdopC+4VX
-        Fd9KC55bUts+HuDpW7qo55LwNuOur/drHhczNuw=
-X-Google-Smtp-Source: APXvYqz5ZTzm2szPG0oqRjP0bYm68wI5cC2zWPx8OuV5blCVSPhZgU0siPaT+bnCFclqt0wG9CC25EAYDHrDP1i11C0=
-X-Received: by 2002:a9d:70d0:: with SMTP id w16mr6117171otj.107.1571383865678;
- Fri, 18 Oct 2019 00:31:05 -0700 (PDT)
+        id S1729372AbfJRHfQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 18 Oct 2019 03:35:16 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55966 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728706AbfJRHfQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 18 Oct 2019 03:35:16 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id A678F10DCC96;
+        Fri, 18 Oct 2019 07:35:14 +0000 (UTC)
+Received: from [10.72.12.183] (ovpn-12-183.pek2.redhat.com [10.72.12.183])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A27C960600;
+        Fri, 18 Oct 2019 07:34:48 +0000 (UTC)
+Subject: Re: [PATCH V4 3/6] mdev: introduce device specific ops
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191017104836.32464-1-jasowang@redhat.com>
+ <20191017104836.32464-4-jasowang@redhat.com>
+ <20191017170755.15506ada.cohuck@redhat.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <a15f2cde-925a-cff0-d959-4a0cd510323a@redhat.com>
+Date:   Fri, 18 Oct 2019 15:34:44 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-14-hch@lst.de>
-In-Reply-To: <20191017174554.29840-14-hch@lst.de>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Fri, 18 Oct 2019 09:30:54 +0200
-Message-ID: <CAMuHMdWaQ15j7fQ9-8XKgrSwgf96nT=yY+FCPWPxoPC9LGqvbQ@mail.gmail.com>
-Subject: Re: [PATCH 13/21] m68k: rename __iounmap and mark it static
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Arnd Bergmann <arnd@arndb.de>, Guo Ren <guoren@kernel.org>,
-        Michal Simek <monstr@monstr.eu>,
-        Greentime Hu <green.hu@gmail.com>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        "open list:QUALCOMM HEXAGON..." <linux-hexagon@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org, linux-mips@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k <linux-m68k@lists.linux-m68k.org>,
-        Openrisc <openrisc@lists.librecores.org>,
-        MTD Maling List <linux-mtd@lists.infradead.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        sparclinux <sparclinux@vger.kernel.org>,
-        nios2-dev@lists.rocketboards.org, linux-riscv@lists.infradead.org,
-        arcml <linux-snps-arc@lists.infradead.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191017170755.15506ada.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.6.2 (mx1.redhat.com [10.5.110.64]); Fri, 18 Oct 2019 07:35:15 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Christoph,
 
-On Thu, Oct 17, 2019 at 7:53 PM Christoph Hellwig <hch@lst.de> wrote:
-> m68k uses __iounmap as the name for an internal helper that is only
-> used for some CPU types.  Mark it static and give it a better name.
+On 2019/10/17 下午11:07, Cornelia Huck wrote:
+> On Thu, 17 Oct 2019 18:48:33 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
 >
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> Currently, except for the create and remove, the rest of
+>> mdev_parent_ops is designed for vfio-mdev driver only and may not help
+>> for kernel mdev driver. With the help of class id, this patch
+>> introduces device specific callbacks inside mdev_device
+>> structure. This allows different set of callback to be used by
+>> vfio-mdev and virtio-mdev.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+>>   .../driver-api/vfio-mediated-device.rst       | 25 +++++----
+>>   MAINTAINERS                                   |  1 +
+>>   drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+>>   drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+>>   drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+>>   drivers/vfio/mdev/mdev_core.c                 | 18 +++++--
+>>   drivers/vfio/mdev/mdev_private.h              |  1 +
+>>   drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+>>   include/linux/mdev.h                          | 45 ++++------------
+>>   include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
+>>   samples/vfio-mdev/mbochs.c                    | 20 ++++---
+>>   samples/vfio-mdev/mdpy.c                      | 20 ++++---
+>>   samples/vfio-mdev/mtty.c                      | 18 ++++---
+>>   13 files changed, 184 insertions(+), 103 deletions(-)
+>>   create mode 100644 include/linux/vfio_mdev.h
+>>
+>> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+>> index f9a78d75a67a..0cca84d19603 100644
+>> --- a/Documentation/driver-api/vfio-mediated-device.rst
+>> +++ b/Documentation/driver-api/vfio-mediated-device.rst
+>> @@ -152,11 +152,22 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
+>>   Vendor drivers are expected to be fully asynchronous in this respect or
+>>   provide their own internal resource protection.)
+>>   
+>> -The callbacks in the mdev_parent_ops structure are as follows:
+>> -
+>> -* open: open callback of mediated device
+>> -* close: close callback of mediated device
+>> -* ioctl: ioctl callback of mediated device
+>> +As multiple types of mediated devices may be supported, the device
+>> +must set up the class id and the device specific callbacks in create()
+> s/in create()/in the create()/
 
-Thanks for your patch!
 
-> --- a/arch/m68k/mm/kmap.c
-> +++ b/arch/m68k/mm/kmap.c
-> @@ -52,6 +52,7 @@ static inline void free_io_area(void *addr)
->
->  #define IO_SIZE                (256*1024)
->
-> +static void __free_io_area(void *addr, unsigned long size);
->  static struct vm_struct *iolist;
->
->  static struct vm_struct *get_io_area(unsigned long size)
-> @@ -90,7 +91,7 @@ static inline void free_io_area(void *addr)
->                 if (tmp->addr == addr) {
->                         *p = tmp->next;
->                         /* remove gap added in get_io_area() */
-> -                       __iounmap(tmp->addr, tmp->size - IO_SIZE);
-> +                       __free_io_area(tmp->addr, tmp->size - IO_SIZE);
->                         kfree(tmp);
->                         return;
->                 }
-> @@ -249,12 +250,13 @@ void iounmap(void __iomem *addr)
->  }
->  EXPORT_SYMBOL(iounmap);
->
-> +#ifndef CPU_M68040_OR_M68060_ONLY
+Will fix.
 
-Can you please move this block up, instead of adding more #ifdef cluttery?
-That would also remove the need for a forward declaration.
 
->  /*
-> - * __iounmap unmaps nearly everything, so be careful
-> + * __free_io_area unmaps nearly everything, so be careful
->   * Currently it doesn't free pointer/page tables anymore but this
->   * wasn't used anyway and might be added later.
+>
+>> +callback. E.g for vfio-mdev device it needs to be done through:
+> "Each class provides a helper function to do so; e.g. for vfio-mdev
+> devices, the function to be called is:"
+>
+> ?
+
+
+This looks better.
+
+
+>
+>> +
+>> +    int mdev_set_vfio_ops(struct mdev_device *mdev,
+>> +                          const struct vfio_mdev_ops *vfio_ops);
+>> +
+>> +The class id (set to MDEV_CLASS_ID_VFIO) is used to match a device
+> "(set by this helper function to MDEV_CLASS_ID_VFIO)" ?
+
+
+Yes.
+
+
+>> +with an mdev driver via its id table. The device specific callbacks
+>> +(specified in *ops) are obtainable via mdev_get_dev_ops() (for use by
+> "(specified in *vfio_ops by the caller)" ?
+
+
+Yes.
+
+
+>> +the mdev bus driver). A vfio-mdev device (class id MDEV_CLASS_ID_VFIO)
+>> +uses the following device-specific ops:
+>> +
+>> +* open: open callback of vfio mediated device
+>> +* close: close callback of vfio mediated device
+>> +* ioctl: ioctl callback of vfio mediated device
+>>   * read : read emulation callback
+>>   * write: write emulation callback
+>>   * mmap: mmap emulation callback
+>> @@ -167,10 +178,6 @@ register itself with the mdev core driver::
+>>   	extern int  mdev_register_device(struct device *dev,
+>>   	                                 const struct mdev_parent_ops *ops);
+>>   
+>> -It is also required to specify the class_id in create() callback through::
+>> -
+>> -	int mdev_set_class(struct mdev_device *mdev, u16 id);
+>> -
+> I'm wondering if this patch set should start out with introducing
+> helper functions already (i.e. don't introduce mdev_set_class(), but
+> start out with mdev_set_class_vfio() which will gain the *vfio_ops
+> argument in this patch.)
+
+
+I think it doesn't harm to keep it as is since in patch 1 we introduce 
+class_id and bus match method based on that without device ops there.  
+But if you stick I can change.
+
+Thanks
+
+
+>
+>>   However, the mdev_parent_ops structure is not required in the function call
+>>   that a driver should use to unregister itself with the mdev core driver::
+>>   
+> (...)
+>
+>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+>> index 3a9c52d71b4e..d0f3113c8071 100644
+>> --- a/drivers/vfio/mdev/mdev_core.c
+>> +++ b/drivers/vfio/mdev/mdev_core.c
+>> @@ -45,15 +45,23 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
+>>   }
+>>   EXPORT_SYMBOL(mdev_set_drvdata);
+>>   
+>> -/* Specify the class for the mdev device, this must be called during
+>> - * create() callback.
+>> +/* Specify the VFIO device ops for the mdev device, this
+>> + * must be called during create() callback for VFIO mdev device.
+>>    */
+> /*
+>   * Specify the mdev device to be a VFIO mdev device, and set the
+>   * VFIO devices ops for it. This must be called from the create()
+>   * callback for VFIO mdev devices.
 >   */
-> -void __iounmap(void *addr, unsigned long size)
-> +static void __free_io_area(void *addr, unsigned long size)
->  {
->         unsigned long virtaddr = (unsigned long)addr;
->         pgd_t *pgd_dir;
-> @@ -297,6 +299,7 @@ void __iounmap(void *addr, unsigned long size)
 >
->         flush_tlb_all();
->  }
-> +#endif /* CPU_M68040_OR_M68060_ONLY */
+> ?
 >
->  /*
->   * Set new cache mode for some kernel address space.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>> -void mdev_set_class(struct mdev_device *mdev, u16 id)
+>> +void mdev_set_vfio_ops(struct mdev_device *mdev,
+>> +		       const struct vfio_mdev_device_ops *vfio_ops)
+>>   {
+>>   	WARN_ON(mdev->class_id);
+>> -	mdev->class_id = id;
+>> +	mdev->class_id = MDEV_CLASS_ID_VFIO;
+>> +	mdev->device_ops = vfio_ops;
+>>   }
+>> -EXPORT_SYMBOL(mdev_set_class);
+>> +EXPORT_SYMBOL(mdev_set_vfio_ops);
+>> +
+>> +const void *mdev_get_dev_ops(struct mdev_device *mdev)
+>> +{
+>> +	return mdev->device_ops;
+>> +}
+>> +EXPORT_SYMBOL(mdev_get_dev_ops);
+>>   
+>>   struct device *mdev_dev(struct mdev_device *mdev)
+>>   {
+> (...)
+>
+> The code change looks good to me; I'm just wondering if we should
+> introduce mdev_set_class() at all (see above).
