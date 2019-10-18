@@ -2,162 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9AC1DBE97
-	for <lists+linux-s390@lfdr.de>; Fri, 18 Oct 2019 09:44:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1002BDBF5E
+	for <lists+linux-s390@lfdr.de>; Fri, 18 Oct 2019 10:05:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389099AbfJRHo1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 18 Oct 2019 03:44:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:54362 "EHLO mx1.redhat.com"
+        id S2437610AbfJRIFn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 18 Oct 2019 04:05:43 -0400
+Received: from helcar.hmeau.com ([216.24.177.18]:37384 "EHLO fornost.hmeau.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727388AbfJRHo1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 18 Oct 2019 03:44:27 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id BB379793F4;
-        Fri, 18 Oct 2019 07:44:25 +0000 (UTC)
-Received: from gondolin (dhcp-192-202.str.redhat.com [10.33.192.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 024D160600;
-        Fri, 18 Oct 2019 07:44:09 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 09:44:07 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 3/6] mdev: introduce device specific ops
-Message-ID: <20191018094407.1a91e843.cohuck@redhat.com>
-In-Reply-To: <20191017115310.0481cc52@x1.home>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-4-jasowang@redhat.com>
-        <20191017170755.15506ada.cohuck@redhat.com>
-        <20191017115310.0481cc52@x1.home>
-Organization: Red Hat GmbH
+        id S1727888AbfJRIFn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 18 Oct 2019 04:05:43 -0400
+Received: from gwarestrin.arnor.me.apana.org.au ([192.168.0.7])
+        by fornost.hmeau.com with smtp (Exim 4.89 #2 (Debian))
+        id 1iLNGT-0001yR-Uj; Fri, 18 Oct 2019 19:05:39 +1100
+Received: by gwarestrin.arnor.me.apana.org.au (sSMTP sendmail emulation); Fri, 18 Oct 2019 19:05:37 +1100
+Date:   Fri, 18 Oct 2019 19:05:37 +1100
+From:   Herbert Xu <herbert@gondor.apana.org.au>
+To:     Eric Biggers <ebiggers@kernel.org>
+Cc:     linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>
+Subject: Re: [RFT PATCH 0/3] crypto: s390 - convert to skcipher API
+Message-ID: <20191018080537.GK25128@gondor.apana.org.au>
+References: <20191012201809.160500-1-ebiggers@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Fri, 18 Oct 2019 07:44:26 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191012201809.160500-1-ebiggers@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 17 Oct 2019 11:53:10 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
-
-> On Thu, 17 Oct 2019 17:07:55 +0200
-> Cornelia Huck <cohuck@redhat.com> wrote:
+On Sat, Oct 12, 2019 at 01:18:06PM -0700, Eric Biggers wrote:
+> This series converts the glue code for the S390 CPACF implementations of
+> AES, DES, and 3DES modes from the deprecated "blkcipher" API to the
+> "skcipher" API.  This is needed in order for the blkcipher API to be
+> removed.
 > 
-> > On Thu, 17 Oct 2019 18:48:33 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
-> >   
-> > > Currently, except for the create and remove, the rest of
-> > > mdev_parent_ops is designed for vfio-mdev driver only and may not help
-> > > for kernel mdev driver. With the help of class id, this patch
-> > > introduces device specific callbacks inside mdev_device
-> > > structure. This allows different set of callback to be used by
-> > > vfio-mdev and virtio-mdev.
-> > > 
-> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > > ---
-> > >  .../driver-api/vfio-mediated-device.rst       | 25 +++++----
-> > >  MAINTAINERS                                   |  1 +
-> > >  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
-> > >  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
-> > >  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
-> > >  drivers/vfio/mdev/mdev_core.c                 | 18 +++++--
-> > >  drivers/vfio/mdev/mdev_private.h              |  1 +
-> > >  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
-> > >  include/linux/mdev.h                          | 45 ++++------------
-> > >  include/linux/vfio_mdev.h                     | 52 +++++++++++++++++++
-> > >  samples/vfio-mdev/mbochs.c                    | 20 ++++---
-> > >  samples/vfio-mdev/mdpy.c                      | 20 ++++---
-> > >  samples/vfio-mdev/mtty.c                      | 18 ++++---
-> > >  13 files changed, 184 insertions(+), 103 deletions(-)
-> > >  create mode 100644 include/linux/vfio_mdev.h
-> > > 
-> > > diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
-> > > index f9a78d75a67a..0cca84d19603 100644
-> > > --- a/Documentation/driver-api/vfio-mediated-device.rst
-> > > +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> > > @@ -152,11 +152,22 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
-> > >  Vendor drivers are expected to be fully asynchronous in this respect or
-> > >  provide their own internal resource protection.)
-> > >  
-> > > -The callbacks in the mdev_parent_ops structure are as follows:
-> > > -
-> > > -* open: open callback of mediated device
-> > > -* close: close callback of mediated device
-> > > -* ioctl: ioctl callback of mediated device
-> > > +As multiple types of mediated devices may be supported, the device
-> > > +must set up the class id and the device specific callbacks in create()    
-> > 
-> > s/in create()/in the create()/
-> >   
-> > > +callback. E.g for vfio-mdev device it needs to be done through:    
-> > 
-> > "Each class provides a helper function to do so; e.g. for vfio-mdev
-> > devices, the function to be called is:"
-> > 
-> > ?
-> >   
-> > > +
-> > > +    int mdev_set_vfio_ops(struct mdev_device *mdev,
-> > > +                          const struct vfio_mdev_ops *vfio_ops);
-> > > +
-> > > +The class id (set to MDEV_CLASS_ID_VFIO) is used to match a device    
-> > 
-> > "(set by this helper function to MDEV_CLASS_ID_VFIO)" ?
-> >   
-> > > +with an mdev driver via its id table. The device specific callbacks
-> > > +(specified in *ops) are obtainable via mdev_get_dev_ops() (for use by    
-> > 
-> > "(specified in *vfio_ops by the caller)" ?
-> >   
-> > > +the mdev bus driver). A vfio-mdev device (class id MDEV_CLASS_ID_VFIO)
-> > > +uses the following device-specific ops:
-> > > +
-> > > +* open: open callback of vfio mediated device
-> > > +* close: close callback of vfio mediated device
-> > > +* ioctl: ioctl callback of vfio mediated device
-> > >  * read : read emulation callback
-> > >  * write: write emulation callback
-> > >  * mmap: mmap emulation callback
-> > > @@ -167,10 +178,6 @@ register itself with the mdev core driver::
-> > >  	extern int  mdev_register_device(struct device *dev,
-> > >  	                                 const struct mdev_parent_ops *ops);
-> > >  
-> > > -It is also required to specify the class_id in create() callback through::
-> > > -
-> > > -	int mdev_set_class(struct mdev_device *mdev, u16 id);
-> > > -    
-> > 
-> > I'm wondering if this patch set should start out with introducing
-> > helper functions already (i.e. don't introduce mdev_set_class(), but
-> > start out with mdev_set_class_vfio() which will gain the *vfio_ops
-> > argument in this patch.)  
+> I've compiled this patchset, and the conversion is very similar to that
+> which has been done for many other crypto drivers.  But I don't have the
+> hardware to test it, nor is S390 CPACF supported by QEMU.  So I really
+> need someone with the hardware to test it.  You can do so by setting:
 > 
-> Yes, it would be cleaner, but is it really worth the churn?  Correct me
-> if I'm wrong, but I think we get to the same point after this patch and
-> aside from the function name itself, the difference is really just that
-> the class_id is briefly exposed to the parent driver, right?  Thanks,
+> CONFIG_CRYPTO_HW=y
+> CONFIG_ZCRYPT=y
+> CONFIG_PKEY=y
+> CONFIG_CRYPTO_AES_S390=y
+> CONFIG_CRYPTO_PAES_S390=y
+> CONFIG_CRYPTO_DES_S390=y
+> # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+> CONFIG_DEBUG_KERNEL=y
+> CONFIG_CRYPTO_MANAGER_EXTRA_TESTS=y
+> CONFIG_CRYPTO_AES=y
+> CONFIG_CRYPTO_DES=y
+> CONFIG_CRYPTO_CBC=y
+> CONFIG_CRYPTO_CTR=y
+> CONFIG_CRYPTO_ECB=y
+> CONFIG_CRYPTO_XTS=y
+> 
+> Then boot and check for crypto self-test failures by running
+> 'dmesg | grep alg'.
+> 
+> If there are test failures, please also check whether they were already
+> failing prior to this patchset.
+> 
+> This won't cover the "paes" ("protected key AES") algorithms, however,
+> since those don't have self-tests.  If anyone has any way to test those,
+> please do so.
+> 
+> Eric Biggers (3):
+>   crypto: s390/aes - convert to skcipher API
+>   crypto: s390/paes - convert to skcipher API
+>   crypto: s390/des - convert to skcipher API
+> 
+>  arch/s390/crypto/aes_s390.c  | 609 ++++++++++++++---------------------
+>  arch/s390/crypto/des_s390.c  | 419 ++++++++++--------------
+>  arch/s390/crypto/paes_s390.c | 414 ++++++++++--------------
+>  3 files changed, 580 insertions(+), 862 deletions(-)
 
-Yes, it does not really matter much. If there's no other reason to
-rework things, I'd just keep this as it is now.
+All applied.  Thanks.
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
