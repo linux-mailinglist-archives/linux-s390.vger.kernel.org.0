@@ -2,24 +2,24 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A942DC618
-	for <lists+linux-s390@lfdr.de>; Fri, 18 Oct 2019 15:31:41 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73028DC737
+	for <lists+linux-s390@lfdr.de>; Fri, 18 Oct 2019 16:20:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388709AbfJRNbN convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Fri, 18 Oct 2019 09:31:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:45750 "EHLO mx1.redhat.com"
+        id S2393955AbfJROU1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 18 Oct 2019 10:20:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47794 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729783AbfJRNbN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 18 Oct 2019 09:31:13 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S2393962AbfJROU1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 18 Oct 2019 10:20:27 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CE75D307D986;
-        Fri, 18 Oct 2019 13:31:12 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 778C7C057F2C;
+        Fri, 18 Oct 2019 14:20:26 +0000 (UTC)
 Received: from gondolin (dhcp-192-202.str.redhat.com [10.33.192.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 406EB60619;
-        Fri, 18 Oct 2019 13:30:45 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 15:30:42 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 45C8519D70;
+        Fri, 18 Oct 2019 14:20:10 +0000 (UTC)
+Date:   Fri, 18 Oct 2019 16:20:07 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Jason Wang <jasowang@redhat.com>
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
@@ -41,96 +41,88 @@ Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
         christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
         stefanha@redhat.com
-Subject: Re: [PATCH V4 4/6] mdev: introduce virtio device and its device ops
-Message-ID: <20191018153042.3516cde1.cohuck@redhat.com>
-In-Reply-To: <733c0cfe-064f-c8ba-6bf8-165db88d7e07@redhat.com>
+Subject: Re: [PATCH V4 5/6] virtio: introduce a mdev based transport
+Message-ID: <20191018162007.31631039.cohuck@redhat.com>
+In-Reply-To: <20191017104836.32464-6-jasowang@redhat.com>
 References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-5-jasowang@redhat.com>
-        <20191018114614.6f1e79dc.cohuck@redhat.com>
-        <733c0cfe-064f-c8ba-6bf8-165db88d7e07@redhat.com>
+        <20191017104836.32464-6-jasowang@redhat.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Fri, 18 Oct 2019 13:31:13 +0000 (UTC)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 18 Oct 2019 14:20:27 +0000 (UTC)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 18 Oct 2019 18:55:02 +0800
+On Thu, 17 Oct 2019 18:48:35 +0800
 Jason Wang <jasowang@redhat.com> wrote:
 
-> On 2019/10/18 下午5:46, Cornelia Huck wrote:
-> > On Thu, 17 Oct 2019 18:48:34 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
+> This patch introduces a new mdev transport for virtio. This is used to
+> use kernel virtio driver to drive the mediated device that is capable
+> of populating virtqueue directly.
+> 
+> A new virtio-mdev driver will be registered to the mdev bus, when a
+> new virtio-mdev device is probed, it will register the device with
+> mdev based config ops. This means it is a software transport between
+> mdev driver and mdev device. The transport was implemented through
+> device specific ops which is a part of mdev_parent_ops now.
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/virtio/Kconfig       |   7 +
+>  drivers/virtio/Makefile      |   1 +
+>  drivers/virtio/virtio_mdev.c | 409 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 417 insertions(+)
 
-> >> + * @get_vendor_id:		Get virtio vendor id
-> >> + *				@mdev: mediated device
-> >> + *				Returns u32: virtio vendor id  
-> > How is the vendor id defined? As for normal virtio-pci devices?  
-> 
-> 
-> The vendor that provides this device. So something like this
-> 
-> I notice that MMIO also had this so it looks to me it's not pci specific.
+(...)
 
-Ok. Would be good to specify this more explicitly.
+> +static int virtio_mdev_probe(struct device *dev)
+> +{
+> +	struct mdev_device *mdev = mdev_from_dev(dev);
+> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
+> +	struct virtio_mdev_device *vm_dev;
+> +	int rc;
+> +
+> +	vm_dev = devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
+> +	if (!vm_dev)
+> +		return -ENOMEM;
+> +
+> +	vm_dev->vdev.dev.parent = dev;
+> +	vm_dev->vdev.dev.release = virtio_mdev_release_dev;
+> +	vm_dev->vdev.config = &virtio_mdev_config_ops;
+> +	vm_dev->mdev = mdev;
+> +	INIT_LIST_HEAD(&vm_dev->virtqueues);
+> +	spin_lock_init(&vm_dev->lock);
+> +
+> +	vm_dev->version = ops->get_mdev_features(mdev);
+> +	if (vm_dev->version != VIRTIO_MDEV_F_VERSION_1) {
+> +		dev_err(dev, "VIRTIO_MDEV_F_VERSION_1 is mandatory\n");
+> +		return -ENXIO;
+> +	}
 
-> 
-> 
-> >  
-> >> + * @get_status: 		Get the device status
-> >> + *				@mdev: mediated device
-> >> + *				Returns u8: virtio device status
-> >> + * @set_status: 		Set the device status
-> >> + *				@mdev: mediated device
-> >> + *				@status: virtio device status
-> >> + * @get_config: 		Read from device specific configuration space
-> >> + *				@mdev: mediated device
-> >> + *				@offset: offset from the beginning of
-> >> + *				configuration space
-> >> + *				@buf: buffer used to read to
-> >> + *				@len: the length to read from
-> >> + *				configration space
-> >> + * @set_config: 		Write to device specific configuration space
-> >> + *				@mdev: mediated device
-> >> + *				@offset: offset from the beginning of
-> >> + *				configuration space
-> >> + *				@buf: buffer used to write from
-> >> + *				@len: the length to write to
-> >> + *				configration space
-> >> + * @get_mdev_features:		Get the feature of virtio mdev device
-> >> + *				@mdev: mediated device
-> >> + *				Returns the mdev features (API) support by
-> >> + *				the device.  
-> > What kind of 'features' are supposed to go in there? Are these bits,
-> > like you defined for VIRTIO_MDEV_F_VERSION_1 above?  
-> 
-> 
-> It's the API or mdev features other than virtio features. It could be 
-> used by driver to determine the capability of the mdev device. Besides 
-> _F_VERSION_1, we may add dirty page tracking etc which means we need new 
-> device ops.
+Hm, so how is that mdev features interface supposed to work? If
+VIRTIO_MDEV_F_VERSION_1 is a bit, I would expect this code to test for
+its presence, and not for identity.
 
-Ok, so that's supposed to be distinct bits that can be or'ed together?
-Makes sense, but probably needs some more documentation somewhere.
+What will happen if we come up with a version 2? If this is backwards
+compatible, will both version 2 and version 1 be set?
 
-> 
-> 
-> >  
-> >> + * @get_generation:		Get device generaton
-> >> + *				@mdev: mediated device
-> >> + *				Returns u32: device generation  
-> > Is that callback mandatory?  
-> 
-> 
-> I think so, it's hard to emulate that completely in virtio-mdev transport.
+> +
+> +	vm_dev->vdev.id.device = ops->get_device_id(mdev);
+> +	if (vm_dev->vdev.id.device == 0)
+> +		return -ENODEV;
+> +
+> +	vm_dev->vdev.id.vendor = ops->get_vendor_id(mdev);
+> +	rc = register_virtio_device(&vm_dev->vdev);
+> +	if (rc)
+> +		put_device(dev);
+> +	else
+> +		dev_set_drvdata(dev, vm_dev);
+> +
+> +	return rc;
+> +}
 
-IIRC, the generation stuff is not mandatory in the current version of
-virtio, as not all transports have that concept.
-
-Generally, are any of the callbacks optional, or are all of them
-mandatory? From what I understand, you plan to add new things that
-depend on features... would that mean non-mandatory callbacks?
+(...)
