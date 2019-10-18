@@ -2,127 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 73028DC737
-	for <lists+linux-s390@lfdr.de>; Fri, 18 Oct 2019 16:20:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F75CDD1B0
+	for <lists+linux-s390@lfdr.de>; Sat, 19 Oct 2019 00:05:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393955AbfJROU1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 18 Oct 2019 10:20:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47794 "EHLO mx1.redhat.com"
+        id S1729391AbfJRWFP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 18 Oct 2019 18:05:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2393962AbfJROU1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 18 Oct 2019 10:20:27 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1729336AbfJRWFO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:05:14 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 778C7C057F2C;
-        Fri, 18 Oct 2019 14:20:26 +0000 (UTC)
-Received: from gondolin (dhcp-192-202.str.redhat.com [10.33.192.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 45C8519D70;
-        Fri, 18 Oct 2019 14:20:10 +0000 (UTC)
-Date:   Fri, 18 Oct 2019 16:20:07 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V4 5/6] virtio: introduce a mdev based transport
-Message-ID: <20191018162007.31631039.cohuck@redhat.com>
-In-Reply-To: <20191017104836.32464-6-jasowang@redhat.com>
-References: <20191017104836.32464-1-jasowang@redhat.com>
-        <20191017104836.32464-6-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id AF7ED222CD;
+        Fri, 18 Oct 2019 22:05:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1571436313;
+        bh=ILWaVFAbM7pu+olaK2zDZOwCaPUffqfJMirgEEEL1/U=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=oB5MfjC62W9mxaGtw53uViYxZvdXEfGUFrDIaSQoV1CfrgWsTtj9c7hQ5ael0I2rx
+         Mz3DsUGszZ0DlMJQSueFcb4wDix6Dt65rMFgIFs+eiIkuhyEAwXgzqAFD5vdVQnT+s
+         8fdro9eDFD1WnqAbknsTDcotzjOc9ju1QsuOGj8M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Marc Hartmayer <mhartmay@linux.ibm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 82/89] s390/cio: fix virtio-ccw DMA without PV
+Date:   Fri, 18 Oct 2019 18:03:17 -0400
+Message-Id: <20191018220324.8165-82-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
+References: <20191018220324.8165-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Fri, 18 Oct 2019 14:20:27 +0000 (UTC)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 17 Oct 2019 18:48:35 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+From: Halil Pasic <pasic@linux.ibm.com>
 
-> This patch introduces a new mdev transport for virtio. This is used to
-> use kernel virtio driver to drive the mediated device that is capable
-> of populating virtqueue directly.
-> 
-> A new virtio-mdev driver will be registered to the mdev bus, when a
-> new virtio-mdev device is probed, it will register the device with
-> mdev based config ops. This means it is a software transport between
-> mdev driver and mdev device. The transport was implemented through
-> device specific ops which is a part of mdev_parent_ops now.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/virtio/Kconfig       |   7 +
->  drivers/virtio/Makefile      |   1 +
->  drivers/virtio/virtio_mdev.c | 409 +++++++++++++++++++++++++++++++++++
->  3 files changed, 417 insertions(+)
+[ Upstream commit 05668e1d74b84c53fbe0f28565e4c9502a6b8a67 ]
 
-(...)
+Commit 37db8985b211 ("s390/cio: add basic protected virtualization
+support") breaks virtio-ccw devices with VIRTIO_F_IOMMU_PLATFORM for non
+Protected Virtualization (PV) guests. The problem is that the dma_mask
+of the ccw device, which is used by virtio core, gets changed from 64 to
+31 bit, because some of the DMA allocations do require 31 bit
+addressable memory. For PV the only drawback is that some of the virtio
+structures must end up in ZONE_DMA because we have the bounce the
+buffers mapped via DMA API anyway.
 
-> +static int virtio_mdev_probe(struct device *dev)
-> +{
-> +	struct mdev_device *mdev = mdev_from_dev(dev);
-> +	const struct virtio_mdev_device_ops *ops = mdev_get_dev_ops(mdev);
-> +	struct virtio_mdev_device *vm_dev;
-> +	int rc;
-> +
-> +	vm_dev = devm_kzalloc(dev, sizeof(*vm_dev), GFP_KERNEL);
-> +	if (!vm_dev)
-> +		return -ENOMEM;
-> +
-> +	vm_dev->vdev.dev.parent = dev;
-> +	vm_dev->vdev.dev.release = virtio_mdev_release_dev;
-> +	vm_dev->vdev.config = &virtio_mdev_config_ops;
-> +	vm_dev->mdev = mdev;
-> +	INIT_LIST_HEAD(&vm_dev->virtqueues);
-> +	spin_lock_init(&vm_dev->lock);
-> +
-> +	vm_dev->version = ops->get_mdev_features(mdev);
-> +	if (vm_dev->version != VIRTIO_MDEV_F_VERSION_1) {
-> +		dev_err(dev, "VIRTIO_MDEV_F_VERSION_1 is mandatory\n");
-> +		return -ENXIO;
-> +	}
+But for non PV guests we have a problem: because of the 31 bit mask
+guests bigger than 2G are likely to try bouncing buffers. The swiotlb
+however is only initialized for PV guests, because we don't want to
+bounce anything for non PV guests. The first such map kills the guest.
 
-Hm, so how is that mdev features interface supposed to work? If
-VIRTIO_MDEV_F_VERSION_1 is a bit, I would expect this code to test for
-its presence, and not for identity.
+Since the DMA API won't allow us to specify for each allocation whether
+we need memory from ZONE_DMA (31 bit addressable) or any DMA capable
+memory will do, let us use coherent_dma_mask (which is used for
+allocations) to force allocating form ZONE_DMA while changing dma_mask
+to DMA_BIT_MASK(64) so that at least the streaming API will regard
+the whole memory DMA capable.
 
-What will happen if we come up with a version 2? If this is backwards
-compatible, will both version 2 and version 1 be set?
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
+Link: https://lore.kernel.org/lkml/20190930153803.7958-1-pasic@linux.ibm.com
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/cio/cio.h    | 1 +
+ drivers/s390/cio/css.c    | 7 ++++++-
+ drivers/s390/cio/device.c | 2 +-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-> +
-> +	vm_dev->vdev.id.device = ops->get_device_id(mdev);
-> +	if (vm_dev->vdev.id.device == 0)
-> +		return -ENODEV;
-> +
-> +	vm_dev->vdev.id.vendor = ops->get_vendor_id(mdev);
-> +	rc = register_virtio_device(&vm_dev->vdev);
-> +	if (rc)
-> +		put_device(dev);
-> +	else
-> +		dev_set_drvdata(dev, vm_dev);
-> +
-> +	return rc;
-> +}
+diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
+index ba7d2480613b9..dcdaba689b20c 100644
+--- a/drivers/s390/cio/cio.h
++++ b/drivers/s390/cio/cio.h
+@@ -113,6 +113,7 @@ struct subchannel {
+ 	enum sch_todo todo;
+ 	struct work_struct todo_work;
+ 	struct schib_config config;
++	u64 dma_mask;
+ 	char *driver_override; /* Driver name to force a match */
+ } __attribute__ ((aligned(8)));
+ 
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index 1fbfb0a93f5f1..831850435c23b 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -232,7 +232,12 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
+ 	 * belong to a subchannel need to fit 31 bit width (e.g. ccw).
+ 	 */
+ 	sch->dev.coherent_dma_mask = DMA_BIT_MASK(31);
+-	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
++	/*
++	 * But we don't have such restrictions imposed on the stuff that
++	 * is handled by the streaming API.
++	 */
++	sch->dma_mask = DMA_BIT_MASK(64);
++	sch->dev.dma_mask = &sch->dma_mask;
+ 	return sch;
+ 
+ err:
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index c421899be20f2..027ef1dde5a7a 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -710,7 +710,7 @@ static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
+ 	if (!cdev->private)
+ 		goto err_priv;
+ 	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
+-	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
++	cdev->dev.dma_mask = sch->dev.dma_mask;
+ 	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
+ 	if (!dma_pool)
+ 		goto err_dma_pool;
+-- 
+2.20.1
 
-(...)
