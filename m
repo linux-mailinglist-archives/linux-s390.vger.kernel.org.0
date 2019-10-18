@@ -2,44 +2,40 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F75CDD1B0
-	for <lists+linux-s390@lfdr.de>; Sat, 19 Oct 2019 00:05:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02E90DD206
+	for <lists+linux-s390@lfdr.de>; Sat, 19 Oct 2019 00:08:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729391AbfJRWFP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 18 Oct 2019 18:05:15 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37064 "EHLO mail.kernel.org"
+        id S1733309AbfJRWHw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 18 Oct 2019 18:07:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729336AbfJRWFO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:05:14 -0400
+        id S1733281AbfJRWHu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:07:50 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AF7ED222CD;
-        Fri, 18 Oct 2019 22:05:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7859C222D4;
+        Fri, 18 Oct 2019 22:07:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436313;
-        bh=ILWaVFAbM7pu+olaK2zDZOwCaPUffqfJMirgEEEL1/U=;
+        s=default; t=1571436470;
+        bh=xXS8p/EblncHJQHEhAPsiIeE9RiB5ZxpflNfzXPTfaQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oB5MfjC62W9mxaGtw53uViYxZvdXEfGUFrDIaSQoV1CfrgWsTtj9c7hQ5ael0I2rx
-         Mz3DsUGszZ0DlMJQSueFcb4wDix6Dt65rMFgIFs+eiIkuhyEAwXgzqAFD5vdVQnT+s
-         8fdro9eDFD1WnqAbknsTDcotzjOc9ju1QsuOGj8M=
+        b=krHBCYfAoKl/7I6w37QsAmUlEvsQ4tFsLkZpX78updqCRPT25w6jG/p3Vl/BkuW89
+         w6rFKpoV9+A2KI2xrUS2k+2WrXHCutrrPJNxNKjyVCMENQz+at+UlmtNpP/eEuQ7Wy
+         Sf/taBhtmsKZoEQLavGGYLS3m+ABPxpldCWIBWII=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Marc Hartmayer <mhartmay@linux.ibm.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 82/89] s390/cio: fix virtio-ccw DMA without PV
-Date:   Fri, 18 Oct 2019 18:03:17 -0400
-Message-Id: <20191018220324.8165-82-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 099/100] s390/uaccess: avoid (false positive) compiler warnings
+Date:   Fri, 18 Oct 2019 18:05:24 -0400
+Message-Id: <20191018220525.9042-99-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220324.8165-1-sashal@kernel.org>
-References: <20191018220324.8165-1-sashal@kernel.org>
+In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
+References: <20191018220525.9042-1-sashal@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 X-stable: review
 X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
@@ -48,90 +44,55 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Halil Pasic <pasic@linux.ibm.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-[ Upstream commit 05668e1d74b84c53fbe0f28565e4c9502a6b8a67 ]
+[ Upstream commit 062795fcdcb2d22822fb42644b1d76a8ad8439b3 ]
 
-Commit 37db8985b211 ("s390/cio: add basic protected virtualization
-support") breaks virtio-ccw devices with VIRTIO_F_IOMMU_PLATFORM for non
-Protected Virtualization (PV) guests. The problem is that the dma_mask
-of the ccw device, which is used by virtio core, gets changed from 64 to
-31 bit, because some of the DMA allocations do require 31 bit
-addressable memory. For PV the only drawback is that some of the virtio
-structures must end up in ZONE_DMA because we have the bounce the
-buffers mapped via DMA API anyway.
+Depending on inlining decisions by the compiler, __get/put_user_fn
+might become out of line. Then the compiler is no longer able to tell
+that size can only be 1,2,4 or 8 due to the check in __get/put_user
+resulting in false positives like
 
-But for non PV guests we have a problem: because of the 31 bit mask
-guests bigger than 2G are likely to try bouncing buffers. The swiotlb
-however is only initialized for PV guests, because we don't want to
-bounce anything for non PV guests. The first such map kills the guest.
+./arch/s390/include/asm/uaccess.h: In function ‘__put_user_fn’:
+./arch/s390/include/asm/uaccess.h:113:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  113 |  return rc;
+      |         ^~
+./arch/s390/include/asm/uaccess.h: In function ‘__get_user_fn’:
+./arch/s390/include/asm/uaccess.h:143:9: warning: ‘rc’ may be used uninitialized in this function [-Wmaybe-uninitialized]
+  143 |  return rc;
+      |         ^~
 
-Since the DMA API won't allow us to specify for each allocation whether
-we need memory from ZONE_DMA (31 bit addressable) or any DMA capable
-memory will do, let us use coherent_dma_mask (which is used for
-allocations) to force allocating form ZONE_DMA while changing dma_mask
-to DMA_BIT_MASK(64) so that at least the streaming API will regard
-the whole memory DMA capable.
+These functions are supposed to be always inlined. Mark it as such.
 
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
-Link: https://lore.kernel.org/lkml/20190930153803.7958-1-pasic@linux.ibm.com
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/cio.h    | 1 +
- drivers/s390/cio/css.c    | 7 ++++++-
- drivers/s390/cio/device.c | 2 +-
- 3 files changed, 8 insertions(+), 2 deletions(-)
+ arch/s390/include/asm/uaccess.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
-index ba7d2480613b9..dcdaba689b20c 100644
---- a/drivers/s390/cio/cio.h
-+++ b/drivers/s390/cio/cio.h
-@@ -113,6 +113,7 @@ struct subchannel {
- 	enum sch_todo todo;
- 	struct work_struct todo_work;
- 	struct schib_config config;
-+	u64 dma_mask;
- 	char *driver_override; /* Driver name to force a match */
- } __attribute__ ((aligned(8)));
+diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
+index 5332f628c1edc..40194f8c772a0 100644
+--- a/arch/s390/include/asm/uaccess.h
++++ b/arch/s390/include/asm/uaccess.h
+@@ -84,7 +84,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
+ 	__rc;							\
+ })
  
-diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
-index 1fbfb0a93f5f1..831850435c23b 100644
---- a/drivers/s390/cio/css.c
-+++ b/drivers/s390/cio/css.c
-@@ -232,7 +232,12 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
- 	 * belong to a subchannel need to fit 31 bit width (e.g. ccw).
- 	 */
- 	sch->dev.coherent_dma_mask = DMA_BIT_MASK(31);
--	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
-+	/*
-+	 * But we don't have such restrictions imposed on the stuff that
-+	 * is handled by the streaming API.
-+	 */
-+	sch->dma_mask = DMA_BIT_MASK(64);
-+	sch->dev.dma_mask = &sch->dma_mask;
- 	return sch;
+-static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
++static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
+ {
+ 	unsigned long spec = 0x010000UL;
+ 	int rc;
+@@ -114,7 +114,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
+ 	return rc;
+ }
  
- err:
-diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
-index c421899be20f2..027ef1dde5a7a 100644
---- a/drivers/s390/cio/device.c
-+++ b/drivers/s390/cio/device.c
-@@ -710,7 +710,7 @@ static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
- 	if (!cdev->private)
- 		goto err_priv;
- 	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
--	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
-+	cdev->dev.dma_mask = sch->dev.dma_mask;
- 	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
- 	if (!dma_pool)
- 		goto err_dma_pool;
+-static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
++static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
+ {
+ 	unsigned long spec = 0x01UL;
+ 	int rc;
 -- 
 2.20.1
 
