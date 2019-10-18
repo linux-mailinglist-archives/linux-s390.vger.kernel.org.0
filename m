@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02E90DD206
-	for <lists+linux-s390@lfdr.de>; Sat, 19 Oct 2019 00:08:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id EF502DD318
+	for <lists+linux-s390@lfdr.de>; Sat, 19 Oct 2019 00:17:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733309AbfJRWHw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 18 Oct 2019 18:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40256 "EHLO mail.kernel.org"
+        id S2388810AbfJRWOn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 18 Oct 2019 18:14:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733281AbfJRWHu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 18 Oct 2019 18:07:50 -0400
+        id S2388761AbfJRWJS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 18 Oct 2019 18:09:18 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7859C222D4;
-        Fri, 18 Oct 2019 22:07:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75069222C2;
+        Fri, 18 Oct 2019 22:09:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1571436470;
-        bh=xXS8p/EblncHJQHEhAPsiIeE9RiB5ZxpflNfzXPTfaQ=;
+        s=default; t=1571436558;
+        bh=vo9KI/6ReG4GAX0/NrUSIFMAlhImi0q1vwrXi1egK4s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=krHBCYfAoKl/7I6w37QsAmUlEvsQ4tFsLkZpX78updqCRPT25w6jG/p3Vl/BkuW89
-         w6rFKpoV9+A2KI2xrUS2k+2WrXHCutrrPJNxNKjyVCMENQz+at+UlmtNpP/eEuQ7Wy
-         Sf/taBhtmsKZoEQLavGGYLS3m+ABPxpldCWIBWII=
+        b=fyCLyGGjcUQkafh3wy6ZLXiwbqOdDP3hf8hsFTwmvl9NAWRg3sdrYszbLNkEZUUzX
+         RYNWwuaZ/8B8d6/1nnQchDpVW5ImZnGBDIP3UMYzhk0tEO1M55hSPU32KWWdqnzg78
+         J6UV7rR+42tuernckzfPuk2L4mB90JCeP5rUpkLY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 099/100] s390/uaccess: avoid (false positive) compiler warnings
-Date:   Fri, 18 Oct 2019 18:05:24 -0400
-Message-Id: <20191018220525.9042-99-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 55/56] s390/uaccess: avoid (false positive) compiler warnings
+Date:   Fri, 18 Oct 2019 18:07:52 -0400
+Message-Id: <20191018220753.10002-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191018220525.9042-1-sashal@kernel.org>
-References: <20191018220525.9042-1-sashal@kernel.org>
+In-Reply-To: <20191018220753.10002-1-sashal@kernel.org>
+References: <20191018220753.10002-1-sashal@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 X-stable: review
@@ -72,26 +72,26 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index 5332f628c1edc..40194f8c772a0 100644
+index 689eae8d38591..bd7a19a0aecf7 100644
 --- a/arch/s390/include/asm/uaccess.h
 +++ b/arch/s390/include/asm/uaccess.h
-@@ -84,7 +84,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
+@@ -95,7 +95,7 @@ raw_copy_to_user(void __user *to, const void *from, unsigned long n);
  	__rc;							\
  })
  
 -static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
 +static __always_inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
  {
- 	unsigned long spec = 0x010000UL;
+ 	unsigned long spec = 0x810000UL;
  	int rc;
-@@ -114,7 +114,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
+@@ -125,7 +125,7 @@ static inline int __put_user_fn(void *x, void __user *ptr, unsigned long size)
  	return rc;
  }
  
 -static inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
 +static __always_inline int __get_user_fn(void *x, const void __user *ptr, unsigned long size)
  {
- 	unsigned long spec = 0x01UL;
+ 	unsigned long spec = 0x81UL;
  	int rc;
 -- 
 2.20.1
