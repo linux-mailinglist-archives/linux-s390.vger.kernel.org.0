@@ -2,76 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E42E3E0711
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 17:10:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE9AAE07B0
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 17:44:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732203AbfJVPKu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Oct 2019 11:10:50 -0400
-Received: from mail-pf1-f173.google.com ([209.85.210.173]:35034 "EHLO
-        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731410AbfJVPKu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Oct 2019 11:10:50 -0400
-Received: by mail-pf1-f173.google.com with SMTP id 205so10842132pfw.2
-        for <linux-s390@vger.kernel.org>; Tue, 22 Oct 2019 08:10:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
-         :mime-version:content-transfer-encoding;
-        bh=8AwEM/obC8LRWaCg0EJY39OUdBAOiIs+mtoo3/7ay7o=;
-        b=KrOaQZDGk05tafmmH6KLu+uEC1bAN389Lg7fhetAVR4tRJttMy+Jo9gnRlZi9y0m8O
-         Gq2Q2pprklikZMI2HaB8Y0ldltEEI097fxYKcXw4a/KiXb0RSbgRgmiJAA8SVkkFyhjc
-         keVPKqAp2ByVyAL4VB3Pky/Qwea7Uit5hoEbakPlvdJXAOKOpPCrrMQR14Mz3hKXMIZR
-         KtVSElG4uAuHyZipopDl1JHznSBnziUR5ixROGlMHLq+2l6Nm1/g85P86l3Mbv/+eH7w
-         JTqdq4fmZRZ+VoI/2+C1cixHu1My3WkGY7K9m7XXjK2pm9GtD8mWeaRFVJPg7paujdcM
-         xPhw==
-X-Gm-Message-State: APjAAAWmg7crBWGQjXwdlaELXJw3SmXuhsoUu97enum0HDxxhaRzsT7j
-        wYx6VRiyQtPeec1q02fF6x0uyQ==
-X-Google-Smtp-Source: APXvYqwpcdig5U0KlygiWr/07ufZuXhgsDfX0+P8KVKTiRMi0+u8a5sKyE5qZZmPdgiu+6Nh3jLGkg==
-X-Received: by 2002:aa7:9156:: with SMTP id 22mr4907293pfi.246.1571757049387;
-        Tue, 22 Oct 2019 08:10:49 -0700 (PDT)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id t12sm15557832pjq.18.2019.10.22.08.10.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 08:10:48 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 08:10:48 -0700 (PDT)
-X-Google-Original-Date: Tue, 22 Oct 2019 08:10:42 PDT (-0700)
-Subject:     Re: PCI/MSI: Remove the PCI_MSI_IRQ_DOMAIN architecture whitelist
-In-Reply-To: <995f625b-1f56-6d97-ba99-9a4298e9dd37@xilinx.com>
-CC:     Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
-        helgaas@kernel.org, tony.luck@intel.com, fenghua.yu@intel.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
-        Greg KH <gregkh@linuxfoundation.org>,
-        kstewart@linuxfoundation.org, pbonzini@redhat.com,
-        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
-        longman@redhat.com, mingo@kernel.org, peterz@infradead.org,
-        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
-From:   Palmer Dabbelt <palmer@sifive.com>
-To:     michal.simek@xilinx.com
-Message-ID: <mhng-d42f23ae-e51f-49cd-9533-a4c793cd70fe@palmer-si-x1e>
-Mime-Version: 1.0 (MHng)
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        id S1731518AbfJVPoS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Oct 2019 11:44:18 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:54767 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731525AbfJVPoR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Oct 2019 11:44:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571759057;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=HIRV4OoEGpsIq1M7/7vc7smAtVYgtd5vhz7zUvougp0=;
+        b=QWG5v6Z+wSj4ouLPWA/ndnoUkPrI0OJIQtpTFrOvAFBr4iHPv+MBR+Kwfq5nYyh6fmNdXx
+        qW5inLq7JEC/PRXOUmBnAVBJtHUXO3MFfdXPz40pT4zt03sB0lD5jHFHQNBVmtKUC2WseW
+        vuE28waM9lW4HkTaT7tCznOTKm9/nmk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-184-9RmPP_f9NY-zD_WwAsbhfQ-1; Tue, 22 Oct 2019 11:44:09 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3A4851800D6A;
+        Tue, 22 Oct 2019 15:44:08 +0000 (UTC)
+Received: from [10.36.116.248] (ovpn-116-248.ams2.redhat.com [10.36.116.248])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0EF3260856;
+        Tue, 22 Oct 2019 15:44:06 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v1 1/5] s390x: remove redundant defines
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com
+References: <1571741584-17621-1-git-send-email-imbrenda@linux.ibm.com>
+ <1571741584-17621-2-git-send-email-imbrenda@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <bc05cdfa-60f5-007c-8df3-ab32f024cda3@redhat.com>
+Date:   Tue, 22 Oct 2019 17:44:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <1571741584-17621-2-git-send-email-imbrenda@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 9RmPP_f9NY-zD_WwAsbhfQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 17 Oct 2019 23:20:09 PDT (-0700), michal.simek@xilinx.com wrote:
-> Hi,
->
-> On 17. 10. 19 20:19, Palmer Dabbelt wrote:
->> This came up in the context of the microblaze port, where a patch was
->> recently posted to extend the whitelist.
->
-> I hoped you were aware about this discussion we have with Christoph.
-> https://lkml.org/lkml/2019/10/8/682
->
-> It means 1/3 and 2/3 should be replaced by mandatory-y and I expect
-> msi.h can be removed from architecture Kbuild too.
+On 22.10.19 12:53, Claudio Imbrenda wrote:
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>   lib/s390x/sclp.h | 2 --
+>   1 file changed, 2 deletions(-)
+>=20
+> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
+> index 4e69845..f00c3df 100644
+> --- a/lib/s390x/sclp.h
+> +++ b/lib/s390x/sclp.h
+> @@ -27,8 +27,6 @@
+>   #define SCLP_ASSIGN_STORAGE                     0x000D0001
+>   #define SCLP_CMD_READ_EVENT_DATA                0x00770005
+>   #define SCLP_CMD_WRITE_EVENT_DATA               0x00760005
+> -#define SCLP_CMD_READ_EVENT_DATA                0x00770005
+> -#define SCLP_CMD_WRITE_EVENT_DATA               0x00760005
+>   #define SCLP_CMD_WRITE_EVENT_MASK               0x00780005
+>  =20
+>   /* SCLP Memory hotplug codes */
+>=20
 
-I'd missed it, but that seems like a better way to do it.  I'm going to assume 
-you guys are going to handle this, so feel free to drop my patch set.
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
-Thanks!
+--=20
+
+Thanks,
+
+David / dhildenb
+
