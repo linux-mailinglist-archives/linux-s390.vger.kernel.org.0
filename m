@@ -2,199 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B160AE03BA
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 14:21:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E42E3E0711
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 17:10:51 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388574AbfJVMVW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Oct 2019 08:21:22 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388525AbfJVMVV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:21:21 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9MCHNov082676
-        for <linux-s390@vger.kernel.org>; Tue, 22 Oct 2019 08:21:20 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vsy97wg9x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 22 Oct 2019 08:21:20 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <maier@linux.ibm.com>;
-        Tue, 22 Oct 2019 13:21:17 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 22 Oct 2019 13:21:13 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9MCLD4v51052554
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 22 Oct 2019 12:21:13 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17D994C04A;
-        Tue, 22 Oct 2019 12:21:13 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BAA7C4C04E;
-        Tue, 22 Oct 2019 12:21:12 +0000 (GMT)
-Received: from oc4120165700.ibm.com (unknown [9.152.97.37])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 22 Oct 2019 12:21:12 +0000 (GMT)
-Subject: Re: [PATCH 12/24] scsi: introduce scsi_build_sense()
-To:     Hannes Reinecke <hare@suse.de>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        James Bottomley <james.bottomley@hansenpartnership.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        linux-scsi@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <20191021095322.137969-1-hare@suse.de>
- <20191021095322.137969-13-hare@suse.de>
-From:   Steffen Maier <maier@linux.ibm.com>
-Date:   Tue, 22 Oct 2019 14:21:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191021095322.137969-13-hare@suse.de>
+        id S1732203AbfJVPKu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Oct 2019 11:10:50 -0400
+Received: from mail-pf1-f173.google.com ([209.85.210.173]:35034 "EHLO
+        mail-pf1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731410AbfJVPKu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Oct 2019 11:10:50 -0400
+Received: by mail-pf1-f173.google.com with SMTP id 205so10842132pfw.2
+        for <linux-s390@vger.kernel.org>; Tue, 22 Oct 2019 08:10:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id
+         :mime-version:content-transfer-encoding;
+        bh=8AwEM/obC8LRWaCg0EJY39OUdBAOiIs+mtoo3/7ay7o=;
+        b=KrOaQZDGk05tafmmH6KLu+uEC1bAN389Lg7fhetAVR4tRJttMy+Jo9gnRlZi9y0m8O
+         Gq2Q2pprklikZMI2HaB8Y0ldltEEI097fxYKcXw4a/KiXb0RSbgRgmiJAA8SVkkFyhjc
+         keVPKqAp2ByVyAL4VB3Pky/Qwea7Uit5hoEbakPlvdJXAOKOpPCrrMQR14Mz3hKXMIZR
+         KtVSElG4uAuHyZipopDl1JHznSBnziUR5ixROGlMHLq+2l6Nm1/g85P86l3Mbv/+eH7w
+         JTqdq4fmZRZ+VoI/2+C1cixHu1My3WkGY7K9m7XXjK2pm9GtD8mWeaRFVJPg7paujdcM
+         xPhw==
+X-Gm-Message-State: APjAAAWmg7crBWGQjXwdlaELXJw3SmXuhsoUu97enum0HDxxhaRzsT7j
+        wYx6VRiyQtPeec1q02fF6x0uyQ==
+X-Google-Smtp-Source: APXvYqwpcdig5U0KlygiWr/07ufZuXhgsDfX0+P8KVKTiRMi0+u8a5sKyE5qZZmPdgiu+6Nh3jLGkg==
+X-Received: by 2002:aa7:9156:: with SMTP id 22mr4907293pfi.246.1571757049387;
+        Tue, 22 Oct 2019 08:10:49 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id t12sm15557832pjq.18.2019.10.22.08.10.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 08:10:48 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 08:10:48 -0700 (PDT)
+X-Google-Original-Date: Tue, 22 Oct 2019 08:10:42 PDT (-0700)
+Subject:     Re: PCI/MSI: Remove the PCI_MSI_IRQ_DOMAIN architecture whitelist
+In-Reply-To: <995f625b-1f56-6d97-ba99-9a4298e9dd37@xilinx.com>
+CC:     Christoph Hellwig <hch@infradead.org>, michal.simek@xilinx.com,
+        helgaas@kernel.org, tony.luck@intel.com, fenghua.yu@intel.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, bhelgaas@google.com, will@kernel.org,
+        Greg KH <gregkh@linuxfoundation.org>,
+        kstewart@linuxfoundation.org, pbonzini@redhat.com,
+        firoz.khan@linaro.org, yamada.masahiro@socionext.com,
+        longman@redhat.com, mingo@kernel.org, peterz@infradead.org,
+        linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pci@vger.kernel.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     michal.simek@xilinx.com
+Message-ID: <mhng-d42f23ae-e51f-49cd-9533-a4c793cd70fe@palmer-si-x1e>
+Mime-Version: 1.0 (MHng)
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102212-0020-0000-0000-0000037C7C96
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102212-0021-0000-0000-000021D2B8DC
-Message-Id: <4097c14b-4b28-f7ee-595c-cb338b878d27@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-22_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910220112
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/21/19 11:53 AM, Hannes Reinecke wrote:
-> Introduce scsi_build_sense() as a wrapper around
-> scsi_build_sense_buffer() to format the buffer and set
-> the correct SCSI status.
-> 
-> Signed-off-by: Hannes Reinecke <hare@suse.de>
-> ---
+On Thu, 17 Oct 2019 23:20:09 PDT (-0700), michal.simek@xilinx.com wrote:
+> Hi,
+>
+> On 17. 10. 19 20:19, Palmer Dabbelt wrote:
+>> This came up in the context of the microblaze port, where a patch was
+>> recently posted to extend the whitelist.
+>
+> I hoped you were aware about this discussion we have with Christoph.
+> https://lkml.org/lkml/2019/10/8/682
+>
+> It means 1/3 and 2/3 should be replaced by mandatory-y and I expect
+> msi.h can be removed from architecture Kbuild too.
 
->   drivers/s390/scsi/zfcp_scsi.c         |  5 +--
+I'd missed it, but that seems like a better way to do it.  I'm going to assume 
+you guys are going to handle this, so feel free to drop my patch set.
 
->   16 files changed, 60 insertions(+), 128 deletions(-)
-
-> diff --git a/drivers/s390/scsi/zfcp_scsi.c b/drivers/s390/scsi/zfcp_scsi.c
-> index e9ded2befa0d..da52d7649f4d 100644
-> --- a/drivers/s390/scsi/zfcp_scsi.c
-> +++ b/drivers/s390/scsi/zfcp_scsi.c
-> @@ -834,10 +834,7 @@ void zfcp_scsi_set_prot(struct zfcp_adapter *adapter)
->    */
->   void zfcp_scsi_dif_sense_error(struct scsi_cmnd *scmd, int ascq)
->   {
-> -	scsi_build_sense_buffer(1, scmd->sense_buffer,
-> -				ILLEGAL_REQUEST, 0x10, ascq);
-> -	set_driver_byte(scmd, DRIVER_SENSE);
-> -	scmd->result |= SAM_STAT_CHECK_CONDITION;
-> +	scsi_build_sense(scmd, 1, ILLEGAL_REQUEST, 0x10, ascq);
->   	set_host_byte(scmd, DID_SOFT_ERROR);
->   }
-> 
-
-looks like a non-functional change for zfcp, so for this part:
-
-Acked-by: Steffen Maier <maier@linux.ibm.com> # for zfcp
-
-> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
-> index a0db8d8766a8..2babf6df8066 100644
-> --- a/drivers/scsi/scsi_lib.c
-> +++ b/drivers/scsi/scsi_lib.c
-> @@ -3117,3 +3117,21 @@ int scsi_vpd_tpg_id(struct scsi_device *sdev, int *rel_id)
->   	return group_id;
->   }
->   EXPORT_SYMBOL(scsi_vpd_tpg_id);
-> +
-> +/**
-> + * scsi_build_sense - build sense data for a command
-
-minor: I suppose kdoc&sphnix parse and render it correctly? Because 
-Documentation/doc-guide/kernel-doc.rst says the format for function kdoc has 
-"()" as function name suffix:
-+ * scsi_build_sense() - build sense data for a command
-
-> + * @scmd:	scsi command for which the sense should be formatted
-> + * @desc:	Sense format (non-zero == descriptor format,
-> + *              0 == fixed format)
-
-Looks like this has already been like that. Not sure if this patch set touches 
-every user of scsi_build_sense{_buffer}(). It would be nice to have meaningful 
-identifiers for values passed to @desc, e.g. something like the following 
-instead of "magic" zero and non-zero:
-
-enum scsi_sense_format {
-	SCSI_SENSE_FIXED = 0,
-	SCSI_SENSE_DESCRIPTOR
-};
-
-> + * @key:	Sense key
-> + * @asc:	Additional sense code
-> + * @ascq:	Additional sense code qualifier
-> + *
-> + **/
-
-minor:
-
-+ */
-
-[no double star at kdoc end?]
-
-> +void scsi_build_sense(struct scsi_cmnd *scmd, int desc, u8 key, u8 asc, u8 ascq)
-> +{
-> +	scsi_build_sense_buffer(desc, scmd->sense_buffer, key, asc, ascq);
-> +	scmd->result = (DRIVER_SENSE << 24) | (DID_OK << 16) |
-> +		SAM_STAT_CHECK_CONDITION;
-
-While this is scsi_lib and thus "internal" helper code, I wonder if this should 
-nonetheless use the helper functions to access and build scmd->result in order 
-to have the error-prone bit shifts in only one central place?:
-
-	scmd->result = SAM_STAT_CHECK_CONDITION;
-	set_driver_byte(scmd, DRIVER_SENSE);
-	set_host_byte(scmd, DID_OK);
-	
-
-> +}
-> +EXPORT_SYMBOL_GPL(scsi_build_sense);
-
-> diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
-> index 6932d91472d5..9b9ca629097d 100644
-> --- a/include/scsi/scsi_cmnd.h
-> +++ b/include/scsi/scsi_cmnd.h
-> @@ -338,4 +338,7 @@ static inline unsigned scsi_transfer_length(struct scsi_cmnd *scmd)
->   	return xfer_len;
->   }
-> 
-> +extern void scsi_build_sense(struct scsi_cmnd *scmd, int desc,
-> +			     u8 key, u8 asc, u8 ascq);
-> +
->   #endif /* _SCSI_SCSI_CMND_H */
-> 
-
-
--- 
-Mit freundlichen Gruessen / Kind regards
-Steffen Maier
-
-Linux on IBM Z Development
-
-https://www.ibm.com/privacy/us/en/
-IBM Deutschland Research & Development GmbH
-Vorsitzender des Aufsichtsrats: Matthias Hartmann
-Geschaeftsfuehrung: Dirk Wittkopp
-Sitz der Gesellschaft: Boeblingen
-Registergericht: Amtsgericht Stuttgart, HRB 243294
-
+Thanks!
