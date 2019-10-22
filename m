@@ -2,150 +2,199 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DA2BAE03B1
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 14:16:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B160AE03BA
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 14:21:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388585AbfJVMQT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Oct 2019 08:16:19 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29493 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388574AbfJVMQT (ORCPT
+        id S2388574AbfJVMVW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Oct 2019 08:21:22 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15588 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388525AbfJVMVV (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 22 Oct 2019 08:16:19 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571746577;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp:autocrypt:autocrypt;
-        bh=XsfsO64LihlNxy4Jev2KK2UkTr0OK+rZWX4ghrxRCDw=;
-        b=JtcaRr76lxYsC5Fseal/QlvS5MAkKMhCze0btmTlhJTXQu5aHV7yQAuSKKWlMBdnBuraR2
-        T5dbFSmNtCkRLHhAemHckg4v7AMa2ZJTKQp4Y5T24vv7eKaxh00pw8LYVUF0lElZXKFGNs
-        LARtyiRZqytKxQ5J4x1ub6aHkZ4T3dY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-176-_euFQ_ATO_aJ1KYbHF-auw-1; Tue, 22 Oct 2019 08:16:14 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 49FEF800D4E;
-        Tue, 22 Oct 2019 12:16:13 +0000 (UTC)
-Received: from thuth.remote.csb (dhcp-200-228.str.redhat.com [10.33.200.228])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 113B75D6A5;
-        Tue, 22 Oct 2019 12:16:06 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v1 3/5] s390x: sclp: expose ram_size and
- max_ram_size
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com
-References: <1571741584-17621-1-git-send-email-imbrenda@linux.ibm.com>
- <1571741584-17621-4-git-send-email-imbrenda@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=thuth@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat
-Message-ID: <4123dae6-bc6c-6177-3465-828f2cca086d@redhat.com>
-Date:   Tue, 22 Oct 2019 14:16:06 +0200
+        Tue, 22 Oct 2019 08:21:21 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9MCHNov082676
+        for <linux-s390@vger.kernel.org>; Tue, 22 Oct 2019 08:21:20 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vsy97wg9x-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 22 Oct 2019 08:21:20 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <maier@linux.ibm.com>;
+        Tue, 22 Oct 2019 13:21:17 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 22 Oct 2019 13:21:13 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9MCLD4v51052554
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 22 Oct 2019 12:21:13 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 17D994C04A;
+        Tue, 22 Oct 2019 12:21:13 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BAA7C4C04E;
+        Tue, 22 Oct 2019 12:21:12 +0000 (GMT)
+Received: from oc4120165700.ibm.com (unknown [9.152.97.37])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 22 Oct 2019 12:21:12 +0000 (GMT)
+Subject: Re: [PATCH 12/24] scsi: introduce scsi_build_sense()
+To:     Hannes Reinecke <hare@suse.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        James Bottomley <james.bottomley@hansenpartnership.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        linux-scsi@vger.kernel.org, Benjamin Block <bblock@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <20191021095322.137969-1-hare@suse.de>
+ <20191021095322.137969-13-hare@suse.de>
+From:   Steffen Maier <maier@linux.ibm.com>
+Date:   Tue, 22 Oct 2019 14:21:12 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1571741584-17621-4-git-send-email-imbrenda@linux.ibm.com>
+In-Reply-To: <20191021095322.137969-13-hare@suse.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: _euFQ_ATO_aJ1KYbHF-auw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102212-0020-0000-0000-0000037C7C96
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102212-0021-0000-0000-000021D2B8DC
+Message-Id: <4097c14b-4b28-f7ee-595c-cb338b878d27@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-22_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910220112
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 22/10/2019 12.53, Claudio Imbrenda wrote:
-> Expose ram_size and max_ram_size through accessor functions.
->=20
-> We only use get_ram_size in an upcoming patch, but having an accessor
-> for the other one does not hurt.
->=20
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+On 10/21/19 11:53 AM, Hannes Reinecke wrote:
+> Introduce scsi_build_sense() as a wrapper around
+> scsi_build_sense_buffer() to format the buffer and set
+> the correct SCSI status.
+> 
+> Signed-off-by: Hannes Reinecke <hare@suse.de>
 > ---
->  lib/s390x/sclp.h | 2 ++
->  lib/s390x/sclp.c | 9 +++++++++
->  2 files changed, 11 insertions(+)
->=20
-> diff --git a/lib/s390x/sclp.h b/lib/s390x/sclp.h
-> index f00c3df..6d40fb7 100644
-> --- a/lib/s390x/sclp.h
-> +++ b/lib/s390x/sclp.h
-> @@ -272,5 +272,7 @@ void sclp_console_setup(void);
->  void sclp_print(const char *str);
->  int sclp_service_call(unsigned int command, void *sccb);
->  void sclp_memory_setup(void);
-> +uint64_t get_ram_size(void);
-> +uint64_t get_max_ram_size(void);
-> =20
->  #endif /* SCLP_H */
-> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
-> index 56fca0c..a57096c 100644
-> --- a/lib/s390x/sclp.c
-> +++ b/lib/s390x/sclp.c
-> @@ -167,3 +167,12 @@ void sclp_memory_setup(void)
-> =20
->  =09mem_init(ram_size);
->  }
+
+>   drivers/s390/scsi/zfcp_scsi.c         |  5 +--
+
+>   16 files changed, 60 insertions(+), 128 deletions(-)
+
+> diff --git a/drivers/s390/scsi/zfcp_scsi.c b/drivers/s390/scsi/zfcp_scsi.c
+> index e9ded2befa0d..da52d7649f4d 100644
+> --- a/drivers/s390/scsi/zfcp_scsi.c
+> +++ b/drivers/s390/scsi/zfcp_scsi.c
+> @@ -834,10 +834,7 @@ void zfcp_scsi_set_prot(struct zfcp_adapter *adapter)
+>    */
+>   void zfcp_scsi_dif_sense_error(struct scsi_cmnd *scmd, int ascq)
+>   {
+> -	scsi_build_sense_buffer(1, scmd->sense_buffer,
+> -				ILLEGAL_REQUEST, 0x10, ascq);
+> -	set_driver_byte(scmd, DRIVER_SENSE);
+> -	scmd->result |= SAM_STAT_CHECK_CONDITION;
+> +	scsi_build_sense(scmd, 1, ILLEGAL_REQUEST, 0x10, ascq);
+>   	set_host_byte(scmd, DID_SOFT_ERROR);
+>   }
+> 
+
+looks like a non-functional change for zfcp, so for this part:
+
+Acked-by: Steffen Maier <maier@linux.ibm.com> # for zfcp
+
+> diff --git a/drivers/scsi/scsi_lib.c b/drivers/scsi/scsi_lib.c
+> index a0db8d8766a8..2babf6df8066 100644
+> --- a/drivers/scsi/scsi_lib.c
+> +++ b/drivers/scsi/scsi_lib.c
+> @@ -3117,3 +3117,21 @@ int scsi_vpd_tpg_id(struct scsi_device *sdev, int *rel_id)
+>   	return group_id;
+>   }
+>   EXPORT_SYMBOL(scsi_vpd_tpg_id);
 > +
-> +uint64_t get_ram_size(void)
-> +{
-> +=09return ram_size;
-> +}
-> +uint64_t get_max_ram_size(void)
-> +{
-> +=09return max_ram_size;
-> +}
+> +/**
+> + * scsi_build_sense - build sense data for a command
 
-In case you respin, please add an empty line between the two functions.
+minor: I suppose kdoc&sphnix parse and render it correctly? Because 
+Documentation/doc-guide/kernel-doc.rst says the format for function kdoc has 
+"()" as function name suffix:
++ * scsi_build_sense() - build sense data for a command
 
-Reviewed-by: Thomas Huth <thuth@redhat.com>
+> + * @scmd:	scsi command for which the sense should be formatted
+> + * @desc:	Sense format (non-zero == descriptor format,
+> + *              0 == fixed format)
+
+Looks like this has already been like that. Not sure if this patch set touches 
+every user of scsi_build_sense{_buffer}(). It would be nice to have meaningful 
+identifiers for values passed to @desc, e.g. something like the following 
+instead of "magic" zero and non-zero:
+
+enum scsi_sense_format {
+	SCSI_SENSE_FIXED = 0,
+	SCSI_SENSE_DESCRIPTOR
+};
+
+> + * @key:	Sense key
+> + * @asc:	Additional sense code
+> + * @ascq:	Additional sense code qualifier
+> + *
+> + **/
+
+minor:
+
++ */
+
+[no double star at kdoc end?]
+
+> +void scsi_build_sense(struct scsi_cmnd *scmd, int desc, u8 key, u8 asc, u8 ascq)
+> +{
+> +	scsi_build_sense_buffer(desc, scmd->sense_buffer, key, asc, ascq);
+> +	scmd->result = (DRIVER_SENSE << 24) | (DID_OK << 16) |
+> +		SAM_STAT_CHECK_CONDITION;
+
+While this is scsi_lib and thus "internal" helper code, I wonder if this should 
+nonetheless use the helper functions to access and build scmd->result in order 
+to have the error-prone bit shifts in only one central place?:
+
+	scmd->result = SAM_STAT_CHECK_CONDITION;
+	set_driver_byte(scmd, DRIVER_SENSE);
+	set_host_byte(scmd, DID_OK);
+	
+
+> +}
+> +EXPORT_SYMBOL_GPL(scsi_build_sense);
+
+> diff --git a/include/scsi/scsi_cmnd.h b/include/scsi/scsi_cmnd.h
+> index 6932d91472d5..9b9ca629097d 100644
+> --- a/include/scsi/scsi_cmnd.h
+> +++ b/include/scsi/scsi_cmnd.h
+> @@ -338,4 +338,7 @@ static inline unsigned scsi_transfer_length(struct scsi_cmnd *scmd)
+>   	return xfer_len;
+>   }
+> 
+> +extern void scsi_build_sense(struct scsi_cmnd *scmd, int desc,
+> +			     u8 key, u8 asc, u8 ascq);
+> +
+>   #endif /* _SCSI_SCSI_CMND_H */
+> 
+
+
+-- 
+Mit freundlichen Gruessen / Kind regards
+Steffen Maier
+
+Linux on IBM Z Development
+
+https://www.ibm.com/privacy/us/en/
+IBM Deutschland Research & Development GmbH
+Vorsitzender des Aufsichtsrats: Matthias Hartmann
+Geschaeftsfuehrung: Dirk Wittkopp
+Sitz der Gesellschaft: Boeblingen
+Registergericht: Amtsgericht Stuttgart, HRB 243294
 
