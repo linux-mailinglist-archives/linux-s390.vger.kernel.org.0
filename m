@@ -2,129 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D9967E07BE
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 17:46:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 54164E0B83
+	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 20:36:16 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbfJVPqZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Oct 2019 11:46:25 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:20278 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731556AbfJVPqZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 22 Oct 2019 11:46:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571759183;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=2x718xOwr0K6es+E8t+LhS3fopKpjY38Em+QSJaQcfo=;
-        b=VruSjYtDNb+RRVN5CXxUOWcKR3GucSCVzBOwXrLE+5rQ4n3AlrOVJjJt3+jQIRZxwwQ0cV
-        6YSXYY6MOciO7ij8d00Ev80ZCPrplbAMKQd7oR+WK//hLAPN2ozaJjtHGQCJmdJpkQ8C5D
-        LLHXla0k/ZsJNUsqy9zh0NBdEqGdj5U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-362-ooGfiTFRMrO5rHkPWf5lVA-1; Tue, 22 Oct 2019 11:46:22 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6811E800D49;
-        Tue, 22 Oct 2019 15:46:21 +0000 (UTC)
-Received: from [10.36.116.248] (ovpn-116-248.ams2.redhat.com [10.36.116.248])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 362F01059A54;
-        Tue, 22 Oct 2019 15:46:20 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v1 4/5] s390x: sclp: add service call
- instruction wrapper
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com
-References: <1571741584-17621-1-git-send-email-imbrenda@linux.ibm.com>
- <1571741584-17621-5-git-send-email-imbrenda@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <aeff96b6-8097-d89b-337c-22300fc4a70e@redhat.com>
-Date:   Tue, 22 Oct 2019 17:46:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S2387794AbfJVSgQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 22 Oct 2019 14:36:16 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:38083 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387746AbfJVSgP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Oct 2019 14:36:15 -0400
+Received: by mail-lj1-f195.google.com with SMTP id q78so3153812lje.5
+        for <linux-s390@vger.kernel.org>; Tue, 22 Oct 2019 11:36:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=qM7e3bKoRmX1ib5TRz4vRhbrFvOqIjMUWoapHUYAKvE=;
+        b=En7jdaqINSs/VmNN4Jwkit5LlNrLvQq1xfN+EpjLqr5gSPsonNog5qNzpO8XBzzv14
+         qTQbjpSA7GOcsvdAdogBYLS7XukfcA7nKFSUcAlOGsV9TP1sa3tFz5QMd5I/HtO6WDKs
+         c0IgMSmOdVOW2+sWuLZDKE6LpAPOvv94GkXxAWgnlK1Y9oKhFdBy9UDX5uktOAquxyK+
+         n1IsoXRh00mVfwstqX2OzDOCJ65J0K7nRiEZnnHnMf14PPZERbvNDkhJHj2koX3J9oWJ
+         +F47YudXlMtoA93iEJv/ZgxCgTDD0Z/rPYdAXBnTvt/vihS5P05gyx/1bQj1eqcjcCHi
+         MzEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=qM7e3bKoRmX1ib5TRz4vRhbrFvOqIjMUWoapHUYAKvE=;
+        b=GFFR2cT/ra4L87Nde97KqZtFAAgT8xFvjTDJsXgYuNaYdfeF8zaC5BnDRU/8BBOX/E
+         Q0xCeARZ454AAmQLAkQXrfy3TZGuTqHHFrRurqBNGpNMl8wBtaedS029iLWELhJP37pw
+         6jT1AeEcriTon5nlgQ4PzSf54Olefonr+mHRD99B6NwC+M1DKGC87cz2bk4cyfsDSYwC
+         HlhUQqr0Kf9f0ypfRfNzsnhpv8nn4hqsCMywnR7SFN/zN9tU+wqO+f7s7hVBiGdIgqb+
+         i/7pYObWl63+ibcCXMcdndT5IIghWztXBBiYorWSaAsDixXfc3PI8UaEX0mfi6oTk8e3
+         RcIQ==
+X-Gm-Message-State: APjAAAWfQlMCdiL1kix+WYZnRQjbUP0onMzdMURZn4Bn8Xl6biXlt62T
+        ionhGy1WNcRWwzWTWjpJRLoAO6+JMWk=
+X-Google-Smtp-Source: APXvYqwON1rQ2VXxNQcCQEFTjXKLCOhHH9CuvzYX871jtBdlKN0iBoQGyNvokIoV1ZdIdqXrPAX/jQ==
+X-Received: by 2002:a2e:700f:: with SMTP id l15mr2555256ljc.69.1571769373858;
+        Tue, 22 Oct 2019 11:36:13 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id x3sm7843473ljm.103.2019.10.22.11.36.11
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 22 Oct 2019 11:36:13 -0700 (PDT)
+Date:   Tue, 22 Oct 2019 11:36:05 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Karsten Graul <kgraul@linux.ibm.com>
+Cc:     davem@davemloft.net, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, gor@linux.ibm.com,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: Re: [PATCH net-next 0/8] net/smc: improve termination handling
+ (part 2)
+Message-ID: <20191022113605.1a257a96@cakuba.netronome.com>
+In-Reply-To: <20191021141315.58969-1-kgraul@linux.ibm.com>
+References: <20191021141315.58969-1-kgraul@linux.ibm.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <1571741584-17621-5-git-send-email-imbrenda@linux.ibm.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: ooGfiTFRMrO5rHkPWf5lVA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 22.10.19 12:53, Claudio Imbrenda wrote:
-> Add a wrapper for the service call instruction, and use it for SCLP
-> interactions instead of using inline assembly everywhere.
+On Mon, 21 Oct 2019 16:13:07 +0200, Karsten Graul wrote:
+> More patches to address abnormal termination processing of
+> sockets and link groups.
 
-The description is weird.
-
-"Let's factor out the assembly for the service call instruction, we want=20
-to reuse that for actual SCLP service call tests soon."
-
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
->=20
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> ---
->   lib/s390x/asm/arch_def.h | 13 +++++++++++++
->   lib/s390x/sclp.c         |  7 +------
->   2 files changed, 14 insertions(+), 6 deletions(-)
->=20
-> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index 96cca2e..b3caff6 100644
-> --- a/lib/s390x/asm/arch_def.h
-> +++ b/lib/s390x/asm/arch_def.h
-> @@ -269,4 +269,17 @@ static inline int stsi(void *addr, int fc, int sel1,=
- int sel2)
->   =09return cc;
->   }
->  =20
-> +static inline int servc(uint32_t command, unsigned long sccb)
-> +{
-> +=09int cc;
-> +
-> +=09asm volatile(
-> +=09=09"       .insn   rre,0xb2200000,%1,%2\n"  /* servc %1,%2 */
-> +=09=09"       ipm     %0\n"
-> +=09=09"       srl     %0,28"
-> +=09=09: "=3D&d" (cc) : "d" (command), "a" (sccb)
-> +=09=09: "cc", "memory");
-> +=09return cc;
-> +}
-> +
->   #endif
-> diff --git a/lib/s390x/sclp.c b/lib/s390x/sclp.c
-> index a57096c..376040e 100644
-> --- a/lib/s390x/sclp.c
-> +++ b/lib/s390x/sclp.c
-> @@ -116,12 +116,7 @@ int sclp_service_call(unsigned int command, void *sc=
-cb)
->   =09int cc;
->  =20
->   =09sclp_setup_int();
-> -=09asm volatile(
-> -=09=09"       .insn   rre,0xb2200000,%1,%2\n"  /* servc %1,%2 */
-> -=09=09"       ipm     %0\n"
-> -=09=09"       srl     %0,28"
-> -=09=09: "=3D&d" (cc) : "d" (command), "a" (__pa(sccb))
-> -=09=09: "cc", "memory");
-> +=09cc =3D servc(command, __pa(sccb));
->   =09sclp_wait_busy();
->   =09if (cc =3D=3D 3)
->   =09=09return -1;
->=20
-
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+Applied, thanks!
