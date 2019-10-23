@@ -2,71 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 54164E0B83
-	for <lists+linux-s390@lfdr.de>; Tue, 22 Oct 2019 20:36:16 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C2366E147A
+	for <lists+linux-s390@lfdr.de>; Wed, 23 Oct 2019 10:40:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387794AbfJVSgQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 22 Oct 2019 14:36:16 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:38083 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387746AbfJVSgP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 22 Oct 2019 14:36:15 -0400
-Received: by mail-lj1-f195.google.com with SMTP id q78so3153812lje.5
-        for <linux-s390@vger.kernel.org>; Tue, 22 Oct 2019 11:36:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=qM7e3bKoRmX1ib5TRz4vRhbrFvOqIjMUWoapHUYAKvE=;
-        b=En7jdaqINSs/VmNN4Jwkit5LlNrLvQq1xfN+EpjLqr5gSPsonNog5qNzpO8XBzzv14
-         qTQbjpSA7GOcsvdAdogBYLS7XukfcA7nKFSUcAlOGsV9TP1sa3tFz5QMd5I/HtO6WDKs
-         c0IgMSmOdVOW2+sWuLZDKE6LpAPOvv94GkXxAWgnlK1Y9oKhFdBy9UDX5uktOAquxyK+
-         n1IsoXRh00mVfwstqX2OzDOCJ65J0K7nRiEZnnHnMf14PPZERbvNDkhJHj2koX3J9oWJ
-         +F47YudXlMtoA93iEJv/ZgxCgTDD0Z/rPYdAXBnTvt/vihS5P05gyx/1bQj1eqcjcCHi
-         MzEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=qM7e3bKoRmX1ib5TRz4vRhbrFvOqIjMUWoapHUYAKvE=;
-        b=GFFR2cT/ra4L87Nde97KqZtFAAgT8xFvjTDJsXgYuNaYdfeF8zaC5BnDRU/8BBOX/E
-         Q0xCeARZ454AAmQLAkQXrfy3TZGuTqHHFrRurqBNGpNMl8wBtaedS029iLWELhJP37pw
-         6jT1AeEcriTon5nlgQ4PzSf54Olefonr+mHRD99B6NwC+M1DKGC87cz2bk4cyfsDSYwC
-         HlhUQqr0Kf9f0ypfRfNzsnhpv8nn4hqsCMywnR7SFN/zN9tU+wqO+f7s7hVBiGdIgqb+
-         i/7pYObWl63+ibcCXMcdndT5IIghWztXBBiYorWSaAsDixXfc3PI8UaEX0mfi6oTk8e3
-         RcIQ==
-X-Gm-Message-State: APjAAAWfQlMCdiL1kix+WYZnRQjbUP0onMzdMURZn4Bn8Xl6biXlt62T
-        ionhGy1WNcRWwzWTWjpJRLoAO6+JMWk=
-X-Google-Smtp-Source: APXvYqwON1rQ2VXxNQcCQEFTjXKLCOhHH9CuvzYX871jtBdlKN0iBoQGyNvokIoV1ZdIdqXrPAX/jQ==
-X-Received: by 2002:a2e:700f:: with SMTP id l15mr2555256ljc.69.1571769373858;
-        Tue, 22 Oct 2019 11:36:13 -0700 (PDT)
-Received: from cakuba.netronome.com ([66.60.152.14])
-        by smtp.gmail.com with ESMTPSA id x3sm7843473ljm.103.2019.10.22.11.36.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2019 11:36:13 -0700 (PDT)
-Date:   Tue, 22 Oct 2019 11:36:05 -0700
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, gor@linux.ibm.com,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH net-next 0/8] net/smc: improve termination handling
- (part 2)
-Message-ID: <20191022113605.1a257a96@cakuba.netronome.com>
-In-Reply-To: <20191021141315.58969-1-kgraul@linux.ibm.com>
-References: <20191021141315.58969-1-kgraul@linux.ibm.com>
-Organization: Netronome Systems, Ltd.
+        id S2390272AbfJWIka (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 23 Oct 2019 04:40:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59214 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2390150AbfJWIk3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 23 Oct 2019 04:40:29 -0400
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9N8asD4034911
+        for <linux-s390@vger.kernel.org>; Wed, 23 Oct 2019 04:40:29 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vtk7r8tc6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 23 Oct 2019 04:40:29 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Wed, 23 Oct 2019 09:40:26 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 23 Oct 2019 09:40:23 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9N8eMNd41157048
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 23 Oct 2019 08:40:23 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB77611C050;
+        Wed, 23 Oct 2019 08:40:22 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02E5E11C058;
+        Wed, 23 Oct 2019 08:40:22 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.152.224.131])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 23 Oct 2019 08:40:21 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
+        borntraeger@de.ibm.com
+Subject: [kvm-unit-tests PATCH] s390x: Fix selftest malloc check
+Date:   Wed, 23 Oct 2019 04:40:17 -0400
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102308-0020-0000-0000-0000037CF971
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102308-0021-0000-0000-000021D339B5
+Message-Id: <20191023084017.13142-1-frankja@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-23_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=886 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910230086
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 21 Oct 2019 16:13:07 +0200, Karsten Graul wrote:
-> More patches to address abnormal termination processing of
-> sockets and link groups.
+Commit c09c54c ("lib: use an argument which doesn't require default
+argument promotion") broke the selftest. Let's fix it by converting
+the binary operations to bool.
 
-Applied, thanks!
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+---
+ s390x/selftest.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/s390x/selftest.c b/s390x/selftest.c
+index f4acdc4..9cd6943 100644
+--- a/s390x/selftest.c
++++ b/s390x/selftest.c
+@@ -49,9 +49,9 @@ static void test_malloc(void)
+ 	*tmp2 = 123456789;
+ 	mb();
+ 
+-	report("malloc: got vaddr", (uintptr_t)tmp & 0xf000000000000000ul);
++	report("malloc: got vaddr", !!((uintptr_t)tmp & 0xf000000000000000ul));
+ 	report("malloc: access works", *tmp == 123456789);
+-	report("malloc: got 2nd vaddr", (uintptr_t)tmp2 & 0xf000000000000000ul);
++	report("malloc: got 2nd vaddr", !!((uintptr_t)tmp2 & 0xf000000000000000ul));
+ 	report("malloc: access works", (*tmp2 == 123456789));
+ 	report("malloc: addresses differ", tmp != tmp2);
+ 
+-- 
+2.20.1
+
