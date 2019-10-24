@@ -2,198 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2904E30F7
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Oct 2019 13:43:04 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 73DECE340F
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Oct 2019 15:25:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2439190AbfJXLnD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 24 Oct 2019 07:43:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4222 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2439186AbfJXLmz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 24 Oct 2019 07:42:55 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9OBb8p0002574
-        for <linux-s390@vger.kernel.org>; Thu, 24 Oct 2019 07:42:54 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vub6ggayx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 24 Oct 2019 07:42:54 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 24 Oct 2019 12:42:52 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 24 Oct 2019 12:42:49 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9OBgmNx11468984
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 24 Oct 2019 11:42:48 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 22CB252050;
-        Thu, 24 Oct 2019 11:42:48 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.152.224.131])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9EE335204E;
-        Thu, 24 Oct 2019 11:42:46 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
+        id S1732486AbfJXNZk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 24 Oct 2019 09:25:40 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:39317 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730061AbfJXNZk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 24 Oct 2019 09:25:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571923539;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RnaYVIBwVCBk1qnxC/jWasOEO6e/vywHfNN0nktWCZM=;
+        b=Bv+7pzXMRCe61VORc8N1NW5WG1oP3QCUW0qUyEZz6HUryu5DXwwL2kG9H+G4lYPfbh19Vv
+        3A8Ak82UxUja6zGnQhSSbLS120Kn9Eao8aVkyLgAo3dapv64m2bNXPJhwhL3oq/tDhPHVt
+        SA5XlviK+KkjmAlF7P0m07B7Nz+pYHM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-S4LDN_mDNRanYpJ-l0avxQ-1; Thu, 24 Oct 2019 09:25:35 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33FF647B;
+        Thu, 24 Oct 2019 13:25:34 +0000 (UTC)
+Received: from [10.36.116.141] (ovpn-116-141.ams2.redhat.com [10.36.116.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4B38710027A9;
+        Thu, 24 Oct 2019 13:25:32 +0000 (UTC)
+Subject: Re: [RFC 02/37] s390/protvirt: introduce host side setup
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
         borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
         mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
-        gor@linux.ibm.com, frankja@linux.ibm.com
-Subject: [RFC 37/37] KVM: s390: protvirt: Add UV debug trace
-Date:   Thu, 24 Oct 2019 07:40:59 -0400
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191024114059.102802-1-frankja@linux.ibm.com>
+        gor@linux.ibm.com
 References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-3-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <e1a12cc7-de97-127d-6076-f86b7be6bac1@redhat.com>
+Date:   Thu, 24 Oct 2019 15:25:31 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102411-4275-0000-0000-00000376D3EC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102411-4276-0000-0000-00003889FDF0
-Message-Id: <20191024114059.102802-38-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-24_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=954 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910240115
+In-Reply-To: <20191024114059.102802-3-frankja@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: S4LDN_mDNRanYpJ-l0avxQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's have some debug traces which stay around for longer than the
-guest.
+On 24.10.19 13:40, Janosch Frank wrote:
+> From: Vasily Gorbik <gor@linux.ibm.com>
+>=20
+> Introduce KVM_S390_PROTECTED_VIRTUALIZATION_HOST kbuild option for
+> protected virtual machines hosting support code.
+>=20
+> Add "prot_virt" command line option which controls if the kernel
+> protected VMs support is enabled at runtime.
+>=20
+> Extend ultravisor info definitions and expose it via uv_info struct
+> filled in during startup.
+>=20
+> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> ---
+>   .../admin-guide/kernel-parameters.txt         |  5 ++
+>   arch/s390/boot/Makefile                       |  2 +-
+>   arch/s390/boot/uv.c                           | 20 +++++++-
+>   arch/s390/include/asm/uv.h                    | 46 ++++++++++++++++--
+>   arch/s390/kernel/Makefile                     |  1 +
+>   arch/s390/kernel/setup.c                      |  4 --
+>   arch/s390/kernel/uv.c                         | 48 +++++++++++++++++++
+>   arch/s390/kvm/Kconfig                         |  9 ++++
+>   8 files changed, 126 insertions(+), 9 deletions(-)
+>   create mode 100644 arch/s390/kernel/uv.c
+>=20
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentat=
+ion/admin-guide/kernel-parameters.txt
+> index c7ac2f3ac99f..aa22e36b3105 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3693,6 +3693,11 @@
+>   =09=09=09before loading.
+>   =09=09=09See Documentation/admin-guide/blockdev/ramdisk.rst.
+>  =20
+> +=09prot_virt=3D=09[S390] enable hosting protected virtual machines
+> +=09=09=09isolated from the hypervisor (if hardware supports
+> +=09=09=09that).
+> +=09=09=09Format: <bool>
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c | 10 +++++++++-
- arch/s390/kvm/kvm-s390.h |  9 +++++++++
- arch/s390/kvm/pv.c       | 16 ++++++++++++++++
- 3 files changed, 34 insertions(+), 1 deletion(-)
+Isn't that a virt driver detail that should come in via KVM module=20
+parameters? I don't see quite yet why this has to be a kernel parameter=20
+(that can be changed at runtime).
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 5cc9108c94e4..56627968f2ed 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -221,6 +221,7 @@ static struct kvm_s390_vm_cpu_subfunc kvm_s390_available_subfunc;
- static struct gmap_notifier gmap_notifier;
- static struct gmap_notifier vsie_gmap_notifier;
- debug_info_t *kvm_s390_dbf;
-+debug_info_t *kvm_s390_dbf_uv;
- 
- /* Section: not file related */
- int kvm_arch_hardware_enable(void)
-@@ -462,7 +463,13 @@ int kvm_arch_init(void *opaque)
- 	if (!kvm_s390_dbf)
- 		return -ENOMEM;
- 
--	if (debug_register_view(kvm_s390_dbf, &debug_sprintf_view))
-+	kvm_s390_dbf_uv = debug_register("kvm-uv", 32, 1, 7 * sizeof(long));
-+	if (!kvm_s390_dbf_uv)
-+		return -ENOMEM;
-+
-+
-+	if (debug_register_view(kvm_s390_dbf, &debug_sprintf_view) ||
-+	    debug_register_view(kvm_s390_dbf_uv, &debug_sprintf_view))
- 		goto out;
- 
- 	kvm_s390_cpu_feat_init();
-@@ -489,6 +496,7 @@ void kvm_arch_exit(void)
- {
- 	kvm_s390_gib_destroy();
- 	debug_unregister(kvm_s390_dbf);
-+	debug_unregister(kvm_s390_dbf_uv);
- }
- 
- /* Section: device related */
-diff --git a/arch/s390/kvm/kvm-s390.h b/arch/s390/kvm/kvm-s390.h
-index 8cd2e978363d..d13ddf2113c0 100644
---- a/arch/s390/kvm/kvm-s390.h
-+++ b/arch/s390/kvm/kvm-s390.h
-@@ -25,6 +25,15 @@
- #define IS_ITDB_VALID(vcpu)	((*(char *)vcpu->arch.sie_block->itdba == TDB_FORMAT1))
- 
- extern debug_info_t *kvm_s390_dbf;
-+extern debug_info_t *kvm_s390_dbf_uv;
-+
-+#define KVM_UV_EVENT(d_kvm, d_loglevel, d_string, d_args...)\
-+do { \
-+	debug_sprintf_event(kvm_s390_dbf_uv, d_loglevel, \
-+			    "%s: " d_string "\n", d_kvm->arch.dbf->name, \
-+			    d_args); \
-+} while (0)
-+
- #define KVM_EVENT(d_loglevel, d_string, d_args...)\
- do { \
- 	debug_sprintf_event(kvm_s390_dbf, d_loglevel, d_string "\n", \
-diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
-index cf79a6503e1c..78e4510a7776 100644
---- a/arch/s390/kvm/pv.c
-+++ b/arch/s390/kvm/pv.c
-@@ -100,6 +100,8 @@ int kvm_s390_pv_destroy_vm(struct kvm *kvm)
- 			   UVC_CMD_DESTROY_SEC_CONF, &ret);
- 	VM_EVENT(kvm, 3, "PROTVIRT DESTROY VM: rc %x rrc %x",
- 		 ret >> 16, ret & 0x0000ffff);
-+	KVM_UV_EVENT(kvm, 3, "PROTVIRT DESTROY VM: rc %x rrc %x",
-+		 ret >> 16, ret & 0x0000ffff);
- 	return rc;
- }
- 
-@@ -115,6 +117,8 @@ int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu)
- 
- 		VCPU_EVENT(vcpu, 3, "PROTVIRT DESTROY VCPU: cpu %d rc %x rrc %x",
- 			   vcpu->vcpu_id, ret >> 16, ret & 0x0000ffff);
-+		KVM_UV_EVENT(vcpu->kvm, 3, "PROTVIRT DESTROY VCPU: cpu %d rc %x rrc %x",
-+			     vcpu->vcpu_id, ret >> 16, ret & 0x0000ffff);
- 	}
- 
- 	free_pages(vcpu->arch.pv.stor_base,
-@@ -163,6 +167,10 @@ int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu)
- 	VCPU_EVENT(vcpu, 3, "PROTVIRT CREATE VCPU: cpu %d handle %llx rc %x rrc %x",
- 		   vcpu->vcpu_id, uvcb.cpu_handle, uvcb.header.rc,
- 		   uvcb.header.rrc);
-+	KVM_UV_EVENT(vcpu->kvm, 3,
-+		     "PROTVIRT CREATE VCPU: cpu %d handle %llx rc %x rrc %x",
-+		     vcpu->vcpu_id, uvcb.cpu_handle, uvcb.header.rc,
-+		     uvcb.header.rrc);
- 
- 	/* Output */
- 	vcpu->arch.pv.handle = uvcb.cpu_handle;
-@@ -200,6 +208,10 @@ int kvm_s390_pv_create_vm(struct kvm *kvm)
- 		 uvcb.guest_handle, uvcb.guest_stor_len, uvcb.header.rc,
- 		 uvcb.header.rrc);
- 
-+	KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len %llx rc %x rrc %x",
-+		 uvcb.guest_handle, uvcb.guest_stor_len, uvcb.header.rc,
-+		 uvcb.header.rrc);
-+
- 	/* Outputs */
- 	kvm->arch.pv.handle = uvcb.guest_handle;
- 
-@@ -230,6 +242,8 @@ int kvm_s390_pv_set_sec_parms(struct kvm *kvm,
- 	rc = uv_call(0, (u64)&uvcb);
- 	VM_EVENT(kvm, 3, "PROTVIRT VM SET PARMS: rc %x rrc %x",
- 		 uvcb.header.rc, uvcb.header.rrc);
-+	KVM_UV_EVENT(kvm, 3, "PROTVIRT VM SET PARMS: rc %x rrc %x",
-+		     uvcb.header.rc, uvcb.header.rrc);
- 	if (rc)
- 		return -EINVAL;
- 	return 0;
-@@ -278,6 +292,8 @@ int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned long size,
- 	}
- 	VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: finished with rc %x rrc %x",
- 		 uvcb.header.rc, uvcb.header.rrc);
-+	KVM_UV_EVENT(kvm, 3, "PROTVIRT VM UNPACK: finished with rc %x rrc %x",
-+		     uvcb.header.rc, uvcb.header.rrc);
- 	return rc;
- }
- 
--- 
-2.20.1
+--=20
+
+Thanks,
+
+David / dhildenb
 
