@@ -2,305 +2,247 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20C6FE4B1D
-	for <lists+linux-s390@lfdr.de>; Fri, 25 Oct 2019 14:33:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AE7A1E4C6A
+	for <lists+linux-s390@lfdr.de>; Fri, 25 Oct 2019 15:38:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504478AbfJYMdM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 25 Oct 2019 08:33:12 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:43902 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2440243AbfJYMdL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 25 Oct 2019 08:33:11 -0400
-Received: from [185.240.52.243] (helo=localhost.localdomain)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iNym9-0007oa-U4; Fri, 25 Oct 2019 12:33:05 +0000
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     viro@zeniv.linux.org.uk, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, torvalds@linux-foundation.org,
-        fweimer@redhat.com
-Cc:     jannh@google.com, oleg@redhat.com, tglx@linutronix.de,
-        arnd@arndb.de, shuah@kernel.org, dhowells@redhat.com,
-        tkjos@android.com, ldv@altlinux.org, miklos@szeredi.hu,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linux-api@vger.kernel.org, linux-alpha@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, x86@kernel.org
-Subject: [REVIEW PATCH v5 2/3] arch: wire-up close_range()
-Date:   Fri, 25 Oct 2019 14:28:50 +0200
-Message-Id: <20191025122851.30182-3-christian.brauner@ubuntu.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191025122851.30182-1-christian.brauner@ubuntu.com>
-References: <20191025122851.30182-1-christian.brauner@ubuntu.com>
+        id S1726404AbfJYNio (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 25 Oct 2019 09:38:44 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2068 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726285AbfJYNin (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 25 Oct 2019 09:38:43 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9PDbBtY054608
+        for <linux-s390@vger.kernel.org>; Fri, 25 Oct 2019 09:38:42 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vv0m0m6ha-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 25 Oct 2019 09:38:42 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Fri, 25 Oct 2019 14:38:39 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 25 Oct 2019 14:38:36 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9PDcZhv43385128
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 25 Oct 2019 13:38:35 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4B193A4054;
+        Fri, 25 Oct 2019 13:38:35 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0A668A405C;
+        Fri, 25 Oct 2019 13:38:35 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.39])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 25 Oct 2019 13:38:34 +0000 (GMT)
+Date:   Thu, 24 Oct 2019 17:40:48 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com
+Subject: Re: [kvm-unit-tests PATCH v1 5/5] s390x: SCLP unit test
+In-Reply-To: <1189848719.8181299.1571834913066.JavaMail.zimbra@redhat.com>
+References: <1571741584-17621-1-git-send-email-imbrenda@linux.ibm.com>
+        <1571741584-17621-6-git-send-email-imbrenda@linux.ibm.com>
+        <1189848719.8181299.1571834913066.JavaMail.zimbra@redhat.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102513-4275-0000-0000-000003778C27
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102513-4276-0000-0000-0000388ABA2B
+Message-Id: <20191024174048.2f0ab8d7@p-imbrenda.boeblingen.de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-25_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910250131
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This wires up the close_range() syscall into all arches at once.
+On Wed, 23 Oct 2019 08:48:33 -0400 (EDT)
+Thomas Huth <thuth@redhat.com> wrote:
 
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Reviewed-by: Oleg Nesterov <oleg@redhat.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
-Cc: Jann Horn <jannh@google.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Dmitry V. Levin <ldv@altlinux.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: linux-api@vger.kernel.org
-Cc: linux-alpha@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-ia64@vger.kernel.org
-Cc: linux-m68k@lists.linux-m68k.org
-Cc: linux-mips@vger.kernel.org
-Cc: linux-parisc@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
-Cc: linux-xtensa@linux-xtensa.org
-Cc: linux-arch@vger.kernel.org
-Cc: x86@kernel.org
----
-/* v2 */
-not present
+> ----- Original Message -----
+> > From: "Claudio Imbrenda" <imbrenda@linux.ibm.com>
+> > Sent: Tuesday, October 22, 2019 12:53:04 PM
+> > 
+> > SCLP unit test. Testing the following:
+> > 
+> > * Correctly ignoring instruction bits that should be ignored
+> > * Privileged instruction check
+> > * Check for addressing exceptions
+> > * Specification exceptions:
+> >   - SCCB size less than 8
+> >   - SCCB unaligned
+> >   - SCCB overlaps prefix or lowcore
+> >   - SCCB address higher than 2GB
+> > * Return codes for
+> >   - Invalid command
+> >   - SCCB too short (but at least 8)
+> >   - SCCB page boundary violation
+> > 
+> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> > ---
+> >  s390x/Makefile      |   1 +
+> >  s390x/sclp.c        | 373
+> >  ++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  s390x/unittests.cfg |   3 +
+> >  3 files changed, 377 insertions(+)
+> >  create mode 100644 s390x/sclp.c
+> > 
+> > diff --git a/s390x/Makefile b/s390x/Makefile
+> > index 3744372..ddb4b48 100644
+> > --- a/s390x/Makefile
+> > +++ b/s390x/Makefile
+> > @@ -16,6 +16,7 @@ tests += $(TEST_DIR)/diag288.elf
+> >  tests += $(TEST_DIR)/stsi.elf
+> >  tests += $(TEST_DIR)/skrf.elf
+> >  tests += $(TEST_DIR)/smp.elf
+> > +tests += $(TEST_DIR)/sclp.elf
+> >  tests_binary = $(patsubst %.elf,%.bin,$(tests))
+> >  
+> >  all: directories test_cases test_cases_binary
+> > diff --git a/s390x/sclp.c b/s390x/sclp.c
+> > new file mode 100644
+> > index 0000000..d7a9212
+> > --- /dev/null
+> > +++ b/s390x/sclp.c
+> > @@ -0,0 +1,373 @@
+> > +/*
+> > + * Store System Information tests  
+> 
+> Copy-n-paste from stsi.c ?
 
-/* v3 */
-not present
+Oops
 
-/* v4 */
-introduced
-- Arnd Bergmann <arnd@arndb.de>:
-  - split into two patches:
-    1. add close_range()
-    2. add syscall to all arches at once
-  - bump __NR_compat_syscalls in arch/arm64/include/asm/unistd.h
+> 
+> > + * Copyright (c) 2019 IBM Corp
+> > + *
+> > + * Authors:
+> > + *  Claudio Imbrenda <imbrenda@linux.ibm.com>
+> > + *
+> > + * This code is free software; you can redistribute it and/or
+> > modify it
+> > + * under the terms of the GNU General Public License version 2.
+> > + */
+> > +
+> > +#include <libcflat.h>
+> > +#include <asm/page.h>
+> > +#include <asm/asm-offsets.h>
+> > +#include <asm/interrupt.h>
+> > +#include <sclp.h>  
+> [...]
+> > +static int test_one_run(uint32_t cmd, uint64_t addr, uint16_t len,
+> > +			uint16_t clear, uint64_t exp_pgm, uint16_t
+> > exp_rc) +{
+> > +	char sccb[4096];
+> > +	void *p = sccb;
+> > +
+> > +	if (!len && !clear)
+> > +		p = NULL;
+> > +	else
+> > +		memset(sccb, 0, sizeof(sccb));
+> > +	((SCCBHeader *)sccb)->length = len;
+> > +	if (clear && (clear < 8))  
+> 
+> Please remove the parentheses around "clear < 8".
 
-/* v5 */
-- Christian Brauner <christian.brauner@ubuntu.com>:
----
- arch/alpha/kernel/syscalls/syscall.tbl      | 1 +
- arch/arm/tools/syscall.tbl                  | 1 +
- arch/arm64/include/asm/unistd.h             | 2 +-
- arch/arm64/include/asm/unistd32.h           | 2 ++
- arch/ia64/kernel/syscalls/syscall.tbl       | 1 +
- arch/m68k/kernel/syscalls/syscall.tbl       | 1 +
- arch/microblaze/kernel/syscalls/syscall.tbl | 1 +
- arch/mips/kernel/syscalls/syscall_n32.tbl   | 1 +
- arch/mips/kernel/syscalls/syscall_n64.tbl   | 1 +
- arch/mips/kernel/syscalls/syscall_o32.tbl   | 1 +
- arch/parisc/kernel/syscalls/syscall.tbl     | 1 +
- arch/powerpc/kernel/syscalls/syscall.tbl    | 1 +
- arch/s390/kernel/syscalls/syscall.tbl       | 1 +
- arch/sh/kernel/syscalls/syscall.tbl         | 1 +
- arch/sparc/kernel/syscalls/syscall.tbl      | 1 +
- arch/x86/entry/syscalls/syscall_32.tbl      | 1 +
- arch/x86/entry/syscalls/syscall_64.tbl      | 1 +
- arch/xtensa/kernel/syscalls/syscall.tbl     | 1 +
- include/uapi/asm-generic/unistd.h           | 4 +++-
- 19 files changed, 22 insertions(+), 2 deletions(-)
+I usually prefer to have more parentheses than necessary
+than fewer, but I'll fix it
 
-diff --git a/arch/alpha/kernel/syscalls/syscall.tbl b/arch/alpha/kernel/syscalls/syscall.tbl
-index 728fe028c02c..f08906efa5ff 100644
---- a/arch/alpha/kernel/syscalls/syscall.tbl
-+++ b/arch/alpha/kernel/syscalls/syscall.tbl
-@@ -475,3 +475,4 @@
- 543	common	fspick				sys_fspick
- 544	common	pidfd_open			sys_pidfd_open
- # 545 reserved for clone3
-+546	common	close_range			sys_close_range
-diff --git a/arch/arm/tools/syscall.tbl b/arch/arm/tools/syscall.tbl
-index 6da7dc4d79cc..f25716576d13 100644
---- a/arch/arm/tools/syscall.tbl
-+++ b/arch/arm/tools/syscall.tbl
-@@ -449,3 +449,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	common	clone3				sys_clone3
-+436	common	close_range			sys_close_range
-diff --git a/arch/arm64/include/asm/unistd.h b/arch/arm64/include/asm/unistd.h
-index 2629a68b8724..368761302768 100644
---- a/arch/arm64/include/asm/unistd.h
-+++ b/arch/arm64/include/asm/unistd.h
-@@ -38,7 +38,7 @@
- #define __ARM_NR_compat_set_tls		(__ARM_NR_COMPAT_BASE + 5)
- #define __ARM_NR_COMPAT_END		(__ARM_NR_COMPAT_BASE + 0x800)
- 
--#define __NR_compat_syscalls		436
-+#define __NR_compat_syscalls		437
- #endif
- 
- #define __ARCH_WANT_SYS_CLONE
-diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index 94ab29cf4f00..c1309f52c8ac 100644
---- a/arch/arm64/include/asm/unistd32.h
-+++ b/arch/arm64/include/asm/unistd32.h
-@@ -879,6 +879,8 @@ __SYSCALL(__NR_fspick, sys_fspick)
- __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
- #define __NR_clone3 435
- __SYSCALL(__NR_clone3, sys_clone3)
-+#define __NR_close_range 436
-+__SYSCALL(__NR_close_range, sys_close_range)
- 
- /*
-  * Please add new compat syscalls above this comment and update
-diff --git a/arch/ia64/kernel/syscalls/syscall.tbl b/arch/ia64/kernel/syscalls/syscall.tbl
-index 36d5faf4c86c..151f4fd234be 100644
---- a/arch/ia64/kernel/syscalls/syscall.tbl
-+++ b/arch/ia64/kernel/syscalls/syscall.tbl
-@@ -356,3 +356,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- # 435 reserved for clone3
-+436	common	close_range			sys_close_range
-diff --git a/arch/m68k/kernel/syscalls/syscall.tbl b/arch/m68k/kernel/syscalls/syscall.tbl
-index a88a285a0e5f..adff06c08d2f 100644
---- a/arch/m68k/kernel/syscalls/syscall.tbl
-+++ b/arch/m68k/kernel/syscalls/syscall.tbl
-@@ -435,3 +435,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- # 435 reserved for clone3
-+436	common	close_range			sys_close_range
-diff --git a/arch/microblaze/kernel/syscalls/syscall.tbl b/arch/microblaze/kernel/syscalls/syscall.tbl
-index 09b0cd7dab0a..84aa70453704 100644
---- a/arch/microblaze/kernel/syscalls/syscall.tbl
-+++ b/arch/microblaze/kernel/syscalls/syscall.tbl
-@@ -441,3 +441,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	common	clone3				sys_clone3
-+436	common	close_range			sys_close_range
-diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index e7c5ab38e403..0c1fdfc01ebb 100644
---- a/arch/mips/kernel/syscalls/syscall_n32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -374,3 +374,4 @@
- 433	n32	fspick				sys_fspick
- 434	n32	pidfd_open			sys_pidfd_open
- 435	n32	clone3				__sys_clone3
-+436	n32	close_range			sys_close_range
-diff --git a/arch/mips/kernel/syscalls/syscall_n64.tbl b/arch/mips/kernel/syscalls/syscall_n64.tbl
-index 13cd66581f3b..d1284f1ce329 100644
---- a/arch/mips/kernel/syscalls/syscall_n64.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_n64.tbl
-@@ -350,3 +350,4 @@
- 433	n64	fspick				sys_fspick
- 434	n64	pidfd_open			sys_pidfd_open
- 435	n64	clone3				__sys_clone3
-+436	n64	close_range			sys_close_range
-diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 353539ea4140..7e4118d8d2ca 100644
---- a/arch/mips/kernel/syscalls/syscall_o32.tbl
-+++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -423,3 +423,4 @@
- 433	o32	fspick				sys_fspick
- 434	o32	pidfd_open			sys_pidfd_open
- 435	o32	clone3				__sys_clone3
-+436	o32	close_range			sys_close_range
-diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 285ff516150c..d07f75996382 100644
---- a/arch/parisc/kernel/syscalls/syscall.tbl
-+++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -433,3 +433,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	common	clone3				sys_clone3_wrapper
-+436	common	close_range			sys_close_range
-diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index 43f736ed47f2..093d91114ea8 100644
---- a/arch/powerpc/kernel/syscalls/syscall.tbl
-+++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -517,3 +517,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	nospu	clone3				ppc_clone3
-+436	common	close_range			sys_close_range
-diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index 3054e9c035a3..74565cf327ce 100644
---- a/arch/s390/kernel/syscalls/syscall.tbl
-+++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -438,3 +438,4 @@
- 433  common	fspick			sys_fspick			sys_fspick
- 434  common	pidfd_open		sys_pidfd_open			sys_pidfd_open
- 435  common	clone3			sys_clone3			sys_clone3
-+436  common	close_range		sys_close_range			sys_close_range
-diff --git a/arch/sh/kernel/syscalls/syscall.tbl b/arch/sh/kernel/syscalls/syscall.tbl
-index b5ed26c4c005..11c9e5626fdd 100644
---- a/arch/sh/kernel/syscalls/syscall.tbl
-+++ b/arch/sh/kernel/syscalls/syscall.tbl
-@@ -438,3 +438,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- # 435 reserved for clone3
-+436	common	close_range			sys_close_range
-diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index 8c8cc7537fb2..7928240b3966 100644
---- a/arch/sparc/kernel/syscalls/syscall.tbl
-+++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -481,3 +481,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- # 435 reserved for clone3
-+436	common	close_range			sys_close_range
-diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 3fe02546aed3..cb56003ccf2d 100644
---- a/arch/x86/entry/syscalls/syscall_32.tbl
-+++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -440,3 +440,4 @@
- 433	i386	fspick			sys_fspick			__ia32_sys_fspick
- 434	i386	pidfd_open		sys_pidfd_open			__ia32_sys_pidfd_open
- 435	i386	clone3			sys_clone3			__ia32_sys_clone3
-+436	i386	close_range		sys_close_range			__ia32_sys_close_range
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index c29976eca4a8..0c8be7197ca2 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -357,6 +357,7 @@
- 433	common	fspick			__x64_sys_fspick
- 434	common	pidfd_open		__x64_sys_pidfd_open
- 435	common	clone3			__x64_sys_clone3/ptregs
-+436	common	close_range		__x64_sys_close_range
- 
- #
- # x32-specific system call numbers start at 512 to avoid cache impact
-diff --git a/arch/xtensa/kernel/syscalls/syscall.tbl b/arch/xtensa/kernel/syscalls/syscall.tbl
-index 25f4de729a6d..2526f37a6cac 100644
---- a/arch/xtensa/kernel/syscalls/syscall.tbl
-+++ b/arch/xtensa/kernel/syscalls/syscall.tbl
-@@ -406,3 +406,4 @@
- 433	common	fspick				sys_fspick
- 434	common	pidfd_open			sys_pidfd_open
- 435	common	clone3				sys_clone3
-+436	common	close_range			sys_close_range
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 1fc8faa6e973..53c57ffb3bd6 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -850,9 +850,11 @@ __SYSCALL(__NR_pidfd_open, sys_pidfd_open)
- #define __NR_clone3 435
- __SYSCALL(__NR_clone3, sys_clone3)
- #endif
-+#define __NR_close_range 436
-+__SYSCALL(__NR_close_range, sys_close_range)
- 
- #undef __NR_syscalls
--#define __NR_syscalls 436
-+#define __NR_syscalls 437
- 
- /*
-  * 32 bit systems traditionally used different
--- 
-2.23.0
+> 
+> > +		clear = 8;
+> > +	return test_one_sccb(cmd, addr, clear, p, exp_pgm, exp_rc);
+> > +}
+> > +
+> > +#define PGM_BIT_SPEC	(1ULL << PGM_INT_CODE_SPECIFICATION)
+> > +#define PGM_BIT_ADDR	(1ULL << PGM_INT_CODE_ADDRESSING)
+> > +#define PGM_BIT_PRIV	(1ULL <<
+> > PGM_INT_CODE_PRIVILEGED_OPERATION) +
+> > +#define PGBUF	((uintptr_t)pagebuf)
+> > +#define VALID	(valid_sclp_code)
+> > +
+> > +static void test_sccb_too_short(void)
+> > +{
+> > +	int cx;
+> > +
+> > +	for (cx = 0; cx < 8; cx++)
+> > +		if (!test_one_run(VALID, PGBUF, cx, 8,
+> > PGM_BIT_SPEC, 0))
+> > +			break;
+> > +
+> > +	report("SCCB too short", cx == 8);
+> > +}
+> > +
+> > +static void test_sccb_unaligned(void)
+> > +{
+> > +	int cx;
+> > +
+> > +	for (cx = 1; cx < 8; cx++)
+> > +		if (!test_one_run(VALID, cx + PGBUF, 8, 8,
+> > PGM_BIT_SPEC, 0))
+> > +			break;
+> > +	report("SCCB unaligned", cx == 8);
+> > +}
+> > +
+> > +static void test_sccb_prefix(void)
+> > +{
+> > +	uint32_t prefix, new_prefix;
+> > +	int cx;
+> > +
+> > +	for (cx = 0; cx < 8192; cx += 8)
+> > +		if (!test_one_run(VALID, cx, 0, 0, PGM_BIT_SPEC,
+> > 0))
+> > +			break;
+> > +	report("SCCB low pages", cx == 8192);
+> > +
+> > +	new_prefix = (uint32_t)(intptr_t)prefix_buf;
+> > +	memcpy(prefix_buf, 0, 8192);
+> > +	asm volatile("stpx %0": "+Q"(prefix));  
+> 
+> Isn't "=Q" sufficient enough here?
+
+Ooops. think I copypasted this from somewhere else. Will fix.
+
+> 
+> > +	asm volatile("spx %0": "+Q"(new_prefix));  
+> 
+> Shouldn't that be just an input parameter instead? ... and maybe also
+> better add "memory" to the clobber list, since the memory layout has
+> changed.
+
+same
+
+> 
+> > +	for (cx = 0; cx < 8192; cx += 8)
+> > +		if (!test_one_run(VALID, new_prefix + cx, 8, 8,
+> > PGM_BIT_SPEC, 0))
+> > +			break;
+> > +	report("SCCB prefix pages", cx == 8192);
+> > +
+> > +	memcpy(prefix_buf, 0, 8192);
+> > +	asm volatile("spx %0": "+Q"(prefix));  
+> 
+> dito?
+
+same
+
+> 
+> > +}  
+> 
+>  Thomas
+> 
 
