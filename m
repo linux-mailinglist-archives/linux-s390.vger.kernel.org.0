@@ -2,144 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 55FBCE38D2
-	for <lists+linux-s390@lfdr.de>; Thu, 24 Oct 2019 18:49:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A964E38DC
+	for <lists+linux-s390@lfdr.de>; Thu, 24 Oct 2019 18:52:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409915AbfJXQt3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 24 Oct 2019 12:49:29 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53414 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730622AbfJXQt3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 24 Oct 2019 12:49:29 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1571935767;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9wOuON6m0GrG2Pw/SMi88O/xGbI5u+0Sk5v2Ka89WZk=;
-        b=IsnGc5njLHs/uiXje9Jd/axe4HdqXzZbZV/c/25oqzjCPQXqxPYMlZSz4VuaNxOpJf25Gt
-        Pn6/zA0G6NO5u9fWr9MFB2x8Q6YtBmlevh7uyk7eFSPgOsU8DpklYCdQP5PZoii7mvpkG/
-        DUg9PvRwJ/k6G/WuKsGLdaCzpJi5buA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-284-LAySkc6_MouRV588Cw80wA-1; Thu, 24 Oct 2019 12:49:26 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B34C75EF;
-        Thu, 24 Oct 2019 16:49:24 +0000 (UTC)
-Received: from [10.36.116.202] (ovpn-116-202.ams2.redhat.com [10.36.116.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A9F3A60BE0;
-        Thu, 24 Oct 2019 16:49:20 +0000 (UTC)
-Subject: Re: [RFC 07/37] KVM: s390: protvirt: Secure memory is not mergeable
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, thuth@redhat.com,
-        borntraeger@de.ibm.com, mihajlov@linux.ibm.com, mimu@linux.ibm.com,
-        cohuck@redhat.com, gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-8-frankja@linux.ibm.com>
- <f80519a0-a8da-1a98-c450-b81dfcf2e897@redhat.com>
- <20191024183306.4c2bd289@p-imbrenda.boeblingen.de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <2f166dc7-3419-4980-2b0e-9e7a1e7c475b@redhat.com>
-Date:   Thu, 24 Oct 2019 18:49:19 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191024183306.4c2bd289@p-imbrenda.boeblingen.de.ibm.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: LAySkc6_MouRV588Cw80wA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+        id S2409933AbfJXQwA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 24 Oct 2019 12:52:00 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44892 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2405516AbfJXQv7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 24 Oct 2019 12:51:59 -0400
+Received: by mail-qt1-f194.google.com with SMTP id z22so18328801qtq.11
+        for <linux-s390@vger.kernel.org>; Thu, 24 Oct 2019 09:51:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=content-transfer-encoding:from:mime-version:subject:date:message-id
+         :references:cc:in-reply-to:to;
+        bh=MD1pbzPN74Cooi+p6oJbLof2wiDKOMhFaRekjLXUrZs=;
+        b=sB2Jn2rl37IzEiSgyk42DahVjDex25NdgPPfI1R0zFA09tT7ZrEMPasarAoAIcvKxN
+         +n+x+G/+I18JPbiGrp5t2JZcqhYPVeiElEGSvhaL9nzJ8Ww77rBhXEczirB9UWDjC+HR
+         FGu6S9JSyxY5ETieOFNYQcEvWt2BfiJWwkUuEuoDsJvJztOWzJQGE+BFr2DaG5QlopyQ
+         ABJd/lChwAngBkE3q9AXNi+BbvxqNkFBoPMDPmKsYKQMDx8sAaTnfM/AZCbzTa94uXWS
+         F+ZruUfTIm9SwZJdBHY7xPH/3MaUjJC8g0ITbr2z/pLULsaIH5B4UY62/g4sqHyx5zRc
+         ID7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=MD1pbzPN74Cooi+p6oJbLof2wiDKOMhFaRekjLXUrZs=;
+        b=NBU8ma+I5LAMYdFquATtlIAvntUSaQGq7bVjVPNl020D3hQqtqGWk1ITqXlwpwOsUv
+         8cTeQseRbYGZ9qwC8I7LNH8buUHJ9EcwE58XHo/V4PhgOqYwltUfwCDelalWkqBTLrMr
+         zy42M4wPodBIjnkIHS8eQxpfOYhcvWyn8UzjyDoDOeMB9cNwYcJpjxnjnEJEtmQcB2Iy
+         dPXidwWz2EXazUBgm+nCcj7ba1pRQFgpz0rcEiYl4RAN1X0PMkqqVgvOJW3J+XEA3io5
+         jY8YLsTcHxO2qx+gMIfX0BTwJk4B6Hv++omNyy30Drtp3nzLzDl119xvMBOxqY9pF64P
+         N71Q==
+X-Gm-Message-State: APjAAAUgt3uV0pkN8Q3JEJ8fEzSDu1N/h61RL4u4wj1hshJD8Eartwa8
+        RCoodttyCgw3G1C07DHKgQS22w==
+X-Google-Smtp-Source: APXvYqxQOBVx3ITKJVFCZM4JTBqxBQ++B+FV+OPeFAZHzhypJMMzaZu2sZwLWN1gjap9nOuKNtEYxQ==
+X-Received: by 2002:ac8:1b45:: with SMTP id p5mr1975446qtk.330.1571935918881;
+        Thu, 24 Oct 2019 09:51:58 -0700 (PDT)
+Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u9sm1610352qkk.34.2019.10.24.09.51.58
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 24 Oct 2019 09:51:58 -0700 (PDT)
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: quoted-printable
+From:   Qian Cai <cai@lca.pw>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH V7] mm/debug: Add tests validating architecture page table helpers
+Date:   Thu, 24 Oct 2019 12:51:57 -0400
+Message-Id: <FCAFFD72-3781-4474-8393-A4E40264473A@lca.pw>
+References: <1571625739-29943-1-git-send-email-anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1571625739-29943-1-git-send-email-anshuman.khandual@arm.com>
+To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24.10.19 18:33, Claudio Imbrenda wrote:
-> On Thu, 24 Oct 2019 18:07:14 +0200
-> David Hildenbrand <david@redhat.com> wrote:
+
+
+> On Oct 24, 2019, at 10:50 AM, Anshuman Khandual <Anshuman.Khandual@arm.com=
+> wrote:
 >=20
->> On 24.10.19 13:40, Janosch Frank wrote:
->>> KSM will not work on secure pages, because when the kernel reads a
->>> secure page, it will be encrypted and hence no two pages will look
->>> the same.
->>>
->>> Let's mark the guest pages as unmergeable when we transition to
->>> secure mode.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> ---
->>>    arch/s390/include/asm/gmap.h |  1 +
->>>    arch/s390/kvm/kvm-s390.c     |  6 ++++++
->>>    arch/s390/mm/gmap.c          | 28 ++++++++++++++++++----------
->>>    3 files changed, 25 insertions(+), 10 deletions(-)
->>>
->>> diff --git a/arch/s390/include/asm/gmap.h
->>> b/arch/s390/include/asm/gmap.h index 6efc0b501227..eab6a2ec3599
->>> 100644 --- a/arch/s390/include/asm/gmap.h
->>> +++ b/arch/s390/include/asm/gmap.h
->>> @@ -145,4 +145,5 @@ int gmap_mprotect_notify(struct gmap *,
->>> unsigned long start,
->>>    void gmap_sync_dirty_log_pmd(struct gmap *gmap, unsigned long
->>> dirty_bitmap[4], unsigned long gaddr, unsigned long vmaddr);
->>> +int gmap_mark_unmergeable(void);
->>>    #endif /* _ASM_S390_GMAP_H */
->>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->>> index 924132d92782..d1ba12f857e7 100644
->>> --- a/arch/s390/kvm/kvm-s390.c
->>> +++ b/arch/s390/kvm/kvm-s390.c
->>> @@ -2176,6 +2176,12 @@ static int kvm_s390_handle_pv(struct kvm
->>> *kvm, struct kvm_pv_cmd *cmd) if (r)
->>>    =09=09=09break;
->>>   =20
->>> +=09=09down_write(&current->mm->mmap_sem);
->>> +=09=09r =3D gmap_mark_unmergeable();
->>> +=09=09up_write(&current->mm->mmap_sem);
->>> +=09=09if (r)
->>> +=09=09=09break;
->>> +
->>>    =09=09mutex_lock(&kvm->lock);
->>>    =09=09kvm_s390_vcpu_block_all(kvm);
->>>    =09=09/* FMT 4 SIE needs esca */
->>> diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
->>> index edcdca97e85e..bf365a09f900 100644
->>> --- a/arch/s390/mm/gmap.c
->>> +++ b/arch/s390/mm/gmap.c
->>> @@ -2548,6 +2548,23 @@ int s390_enable_sie(void)
->>>    }
->>>    EXPORT_SYMBOL_GPL(s390_enable_sie);
->>>   =20
->>> +int gmap_mark_unmergeable(void)
->>> +{
->>> +=09struct mm_struct *mm =3D current->mm;
->>> +=09struct vm_area_struct *vma;
->>> +
->>> +=09for (vma =3D mm->mmap; vma; vma =3D vma->vm_next) {
->>> +=09=09if (ksm_madvise(vma, vma->vm_start, vma->vm_end,
->>> +=09=09=09=09MADV_UNMERGEABLE, &vma->vm_flags))
->>> {
->>> +=09=09=09mm->context.uses_skeys =3D 0;
->>
->> That skey setting does not make too much sense when coming via
->> kvm_s390_handle_pv(). handle that in the caller?
+> Changes in V7:
 >=20
-> protected guests run keyless; any attempt to use keys in the guest will
-> result in an exception in the guest.
+> - Memory allocation and free routines for mapped pages have been droped
+> - Mapped pfns are derived from standard kernel text symbol per Matthew
+> - Moved debug_vm_pgtaable() after page_alloc_init_late() per Michal and Qi=
+an=20
+> - Updated the commit message per Michal
+> - Updated W=3D1 GCC warning problem on x86 per Qian Cai
 
-still, this is the recovery path for the "mm->context.uses_skeys =3D 1;"=20
-in enable_skey_walk_ops() and confuses reader (like me).
-
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+It would be interesting to know if you actually tested  out to see if the wa=
+rning went away. As far I can tell, the GCC is quite stubborn there, so I am=
+ not going to insist.=
