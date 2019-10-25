@@ -2,131 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97F13E459C
-	for <lists+linux-s390@lfdr.de>; Fri, 25 Oct 2019 10:24:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 795CAE45A1
+	for <lists+linux-s390@lfdr.de>; Fri, 25 Oct 2019 10:24:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406228AbfJYIX7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 25 Oct 2019 04:23:59 -0400
-Received: from foss.arm.com ([217.140.110.172]:36578 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405823AbfJYIX7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 25 Oct 2019 04:23:59 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF61228;
-        Fri, 25 Oct 2019 01:23:57 -0700 (PDT)
-Received: from [10.162.41.137] (p8cg001049571a15.blr.arm.com [10.162.41.137])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 8D6FC3F718;
-        Fri, 25 Oct 2019 01:23:44 -0700 (PDT)
-Subject: Re: [PATCH V7] mm/debug: Add tests validating architecture page table
- helpers
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <ccdd4f7a-c7dc-ca10-d30c-0bc05c7136c7@arm.com>
- <69256008-2235-4AF1-A3BA-0146C82CCB93@lca.pw>
- <3cfec421-4006-4159-ca32-313ff5196ff9@c-s.fr>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <763d58b4-f532-0bba-bf2b-71433ac514fb@arm.com>
-Date:   Fri, 25 Oct 2019 13:54:14 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S2406061AbfJYIYn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 25 Oct 2019 04:24:43 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:52090 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2406192AbfJYIYn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 25 Oct 2019 04:24:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1571991882;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=jZ3ObiMH0F7j1wSA9zzxBruHE+ktLAVpPAJA85XUiWU=;
+        b=gJJdg1jQxhkDIsIo/fsm8A6Adot0dpOfhx0SpALLFmimo58aYtFrbFmgeCCATn5YO8S67w
+        3HW7E3fULBH67m/qPgDFvfOurDpD0OkT/HeVF8TfzOkwzZ+O9eAUVdCTkLGBgN/6lGZidL
+        HmgQZtSV+hAQJTwlTTSFfVsf5Bbk+eE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-293-qDmLouTCOL-Pj66QQpcQeg-1; Fri, 25 Oct 2019 04:24:38 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 511DA1800E00;
+        Fri, 25 Oct 2019 08:24:37 +0000 (UTC)
+Received: from [10.36.116.205] (ovpn-116-205.ams2.redhat.com [10.36.116.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7691E5D70E;
+        Fri, 25 Oct 2019 08:24:35 +0000 (UTC)
+Subject: Re: [RFC 08/37] KVM: s390: add missing include in gmap.h
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-9-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <2055e82a-5fea-1903-1c76-b3a8c8fb544f@redhat.com>
+Date:   Fri, 25 Oct 2019 10:24:34 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <3cfec421-4006-4159-ca32-313ff5196ff9@c-s.fr>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191024114059.102802-9-frankja@linux.ibm.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: qDmLouTCOL-Pj66QQpcQeg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 24.10.19 13:40, Janosch Frank wrote:
+> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+>=20
+> gmap.h references radix trees, but does not include linux/radix-tree.h
+> itself. Sources that include gmap.h but not also radix-tree.h will
+> therefore fail to compile.
+>=20
+> This simple patch adds the include for linux/radix-tree.h in gmap.h so
+> that users of gmap.h will be able to compile.
+>=20
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> ---
+>   arch/s390/include/asm/gmap.h | 1 +
+>   1 file changed, 1 insertion(+)
+>=20
+> diff --git a/arch/s390/include/asm/gmap.h b/arch/s390/include/asm/gmap.h
+> index eab6a2ec3599..99b3eedda26e 100644
+> --- a/arch/s390/include/asm/gmap.h
+> +++ b/arch/s390/include/asm/gmap.h
+> @@ -10,6 +10,7 @@
+>   #define _ASM_S390_GMAP_H
+>  =20
+>   #include <linux/refcount.h>
+> +#include <linux/radix-tree.h>
+>  =20
+>   /* Generic bits for GMAP notification on DAT table entry changes. */
+>   #define GMAP_NOTIFY_SHADOW=090x2
+>=20
 
+Not sure if that's worth a separate patch, just squash it into the patch=20
+that needs it?
 
-On 10/25/2019 12:41 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 25/10/2019 à 07:52, Qian Cai a écrit :
->>
->>
->>> On Oct 24, 2019, at 11:45 PM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>>
->>> Nothing specific. But just tested this with x86 defconfig with relevant configs
->>> which are required for this test. Not sure if it involved W=1.
->>
->> No, it will not. It needs to run like,
->>
->> make W=1 -j 64 2>/tmp/warns
->>
-> 
-> Are we talking about this peace of code ?
-> 
-> +static unsigned long __init get_random_vaddr(void)
-> +{
-> +    unsigned long random_vaddr, random_pages, total_user_pages;
-> +
-> +    total_user_pages = (TASK_SIZE - FIRST_USER_ADDRESS) / PAGE_SIZE;
-> +
-> +    random_pages = get_random_long() % total_user_pages;
-> +    random_vaddr = FIRST_USER_ADDRESS + random_pages * PAGE_SIZE;
-> +
-> +    WARN_ON((random_vaddr > TASK_SIZE) ||
-> +        (random_vaddr < FIRST_USER_ADDRESS));
-> +    return random_vaddr;
-> +}
-> +
-> 
-> ramdom_vaddr is unsigned,
-> random_pages is unsigned and lower than total_user_pages
-> 
-> So the max value random_vaddr can get is FIRST_USER_ADDRESS + ((TASK_SIZE - FIRST_USER_ADDRESS - 1) / PAGE_SIZE) * PAGE_SIZE = TASK_SIZE - 1
-> And the min value random_vaddr can get is FIRST_USER_ADDRESS (that's when random_pages = 0)
+We usually don't care about includes as long as it compiles ...
 
-That's right.
+--=20
 
-> 
-> So the WARN_ON() is just unneeded, isn't it ?
+Thanks,
 
-It is just a sanity check on possible vaddr values before it's corresponding
-page table mappings could be created. If it's worth to drop this in favor of
-avoiding these unwanted warning messages on x86, will go ahead with it as it
-is not super important.
+David / dhildenb
 
-> 
-> Christophe
-> 
