@@ -2,54 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EE4EE59A8
-	for <lists+linux-s390@lfdr.de>; Sat, 26 Oct 2019 12:45:15 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E23C5E5AC2
+	for <lists+linux-s390@lfdr.de>; Sat, 26 Oct 2019 15:17:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfJZKpJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 26 Oct 2019 06:45:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47424 "EHLO mail.kernel.org"
+        id S1727471AbfJZNRn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 26 Oct 2019 09:17:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726233AbfJZKpH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 26 Oct 2019 06:45:07 -0400
-Subject: Re: [GIT PULL] s390 updates for 5.4-rc5
+        id S1727465AbfJZNRm (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:17:42 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 39E55222BD;
+        Sat, 26 Oct 2019 13:17:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572086707;
-        bh=/O7DfNPYpSv+tqEzW3t2Yux73Vui6akwaxl+F0AQQYM=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=yO6j4k0VsYRVFlkBlwv5LYLTEt30DMRt/uidqaymWHmK/kYSgDW8GDmzy3f3U5S2+
-         6vx3H6KBpDtTn6ZY2NtkWJ2+Y0xS9uPaRtbpNXyW9xfpENH+qME2gNM0vlHy8F6WNP
-         5czIiVSpK9MTMyirwtTqvbzsM3KvHr+F/qaxNNzM=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01572084898-ext-1277@work.hours>
-References: <your-ad-here.call-01572084898-ext-1277@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01572084898-ext-1277@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-5
-X-PR-Tracked-Commit-Id: ac49303d9ef0ad98b79867a380ef23480e48870b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: f877bee5ea0b56c39cd0a243e113a577b5a4ef92
-Message-Id: <157208670731.20302.6383353662643415232.pr-tracker-bot@kernel.org>
-Date:   Sat, 26 Oct 2019 10:45:07 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        s=default; t=1572095862;
+        bh=8nYqj/0JPT07L2fvbPyBmKLq6JaKKIJB6D6zTqdr/kY=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=hfAjB+rLOpTtLqh0XsXXYD8en++lplkhyTQfjNnnvmPOSNltR87okUnIsNEQ4ZUi2
+         ckvSborhC+M5HGLI0z7zZiiCTzPvzTGIHgHpL6FLmuWdpGL/+zlT+nIebsNXRJdDm4
+         yjnq/R8J671WSLN45RRDZeowlAFJNTX7dn19BHog=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Karsten Graul <kgraul@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 54/99] net/smc: receive returns without data
+Date:   Sat, 26 Oct 2019 09:15:15 -0400
+Message-Id: <20191026131600.2507-54-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
+References: <20191026131600.2507-1-sashal@kernel.org>
+MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Sat, 26 Oct 2019 12:14:58 +0200:
+From: Karsten Graul <kgraul@linux.ibm.com>
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.4-5
+[ Upstream commit 882dcfe5a1785c20f45820cbe6fec4b8b647c946 ]
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/f877bee5ea0b56c39cd0a243e113a577b5a4ef92
+smc_cdc_rxed_any_close_or_senddone() is used as an end condition for the
+receive loop. This conflicts with smc_cdc_msg_recv_action() which could
+run in parallel and set the bits checked by
+smc_cdc_rxed_any_close_or_senddone() before the receive is processed.
+In that case we could return from receive with no data, although data is
+available. The same applies to smc_rx_wait().
+Fix this by checking for RCV_SHUTDOWN only, which is set in
+smc_cdc_msg_recv_action() after the receive was actually processed.
 
-Thank you!
+Fixes: 952310ccf2d8 ("smc: receive data from RMBE")
+Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/smc/smc_rx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
+diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
+index 413a6abf227ef..0000026422885 100644
+--- a/net/smc/smc_rx.c
++++ b/net/smc/smc_rx.c
+@@ -211,8 +211,7 @@ int smc_rx_wait(struct smc_sock *smc, long *timeo,
+ 	rc = sk_wait_event(sk, timeo,
+ 			   sk->sk_err ||
+ 			   sk->sk_shutdown & RCV_SHUTDOWN ||
+-			   fcrit(conn) ||
+-			   smc_cdc_rxed_any_close_or_senddone(conn),
++			   fcrit(conn),
+ 			   &wait);
+ 	remove_wait_queue(sk_sleep(sk), &wait);
+ 	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
+@@ -310,7 +309,6 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
+ 			smc_rx_update_cons(smc, 0);
+ 
+ 		if (sk->sk_shutdown & RCV_SHUTDOWN ||
+-		    smc_cdc_rxed_any_close_or_senddone(conn) ||
+ 		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort)
+ 			break;
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+2.20.1
+
