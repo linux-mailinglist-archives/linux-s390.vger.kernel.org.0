@@ -2,36 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DA52E5D1A
-	for <lists+linux-s390@lfdr.de>; Sat, 26 Oct 2019 15:35:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A5CEE5D00
+	for <lists+linux-s390@lfdr.de>; Sat, 26 Oct 2019 15:34:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbfJZNez (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 26 Oct 2019 09:34:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
+        id S1727876AbfJZNe1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 26 Oct 2019 09:34:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39256 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727281AbfJZNR1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:17:27 -0400
+        id S1727450AbfJZNRl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:17:41 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BFE62070B;
-        Sat, 26 Oct 2019 13:17:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F24A821E6F;
+        Sat, 26 Oct 2019 13:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095846;
-        bh=+WTnZQS0Xpw/cwwprl/VCxCd2cyIC1hhCuyGvhbOqmc=;
+        s=default; t=1572095860;
+        bh=Erj0YtBMybGdaqN3l1d/8o3zG1P1aQifLZxJEmEjtgc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ubjm0FioqdfZUkImMyBH5X0566wLUvqGxeHyDSUOBl3zJRCKhqu3Jnor9R1/N8V67
-         FgnEGxGwiNVXDDKm4uTKrKbvTdRJGpmfeplND4AFKFkJq+tiBqujJsiS1ka+2WfPz+
-         1a0IVIfTNgKuBOY2N7ihp1VZeTxc/A18g8qy/vyQ=
+        b=xUXGG0BkdWBfMWuA9uZXELrdkvxXq0n8ipqyykNUinnZnpgp1fbqBuCStRH9oHhlW
+         saHbuNF+GDd0CvqexQ6K3rB3oOgHgqSIJUutboUz/s1hP4WoWQfA47nXI7ggNnW0vE
+         MwNlYb01zOVrLV/seDHjKkGQl7rVT/XWsumJx3fA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandra Winter <wintera@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
+Cc:     Ursula Braun <ubraun@linux.ibm.com>,
+        Karsten Graul <kgraul@linux.ibm.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 45/99] s390/qeth: Fix initialization of vnicc cmd masks during set online
-Date:   Sat, 26 Oct 2019 09:15:06 -0400
-Message-Id: <20191026131600.2507-45-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.3 53/99] net/smc: fix SMCD link group creation with VLAN id
+Date:   Sat, 26 Oct 2019 09:15:14 -0400
+Message-Id: <20191026131600.2507-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
 References: <20191026131600.2507-1-sashal@kernel.org>
@@ -44,49 +45,45 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Alexandra Winter <wintera@linux.ibm.com>
+From: Ursula Braun <ubraun@linux.ibm.com>
 
-[ Upstream commit be40a86c319706f90caca144343c64743c32b953 ]
+[ Upstream commit 29ee2701529e1905c0e948688f9688c68c8d4ea4 ]
 
-Without this patch, a command bit in the supported commands mask is only
-ever set to unsupported during set online. If a command is ever marked as
-unsupported (e.g. because of error during qeth_l2_vnicc_query_cmds),
-subsequent successful initialization (offline/online) would not bring it
-back.
+If creation of an SMCD link group with VLAN id fails, the initial
+smc_ism_get_vlan() step has to be reverted as well.
 
-Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Fixes: c6ba7c9ba43d ("net/smc: add base infrastructure for SMC-D and ISM")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ net/smc/smc_core.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index f011e2c43f00d..d5d0b2408a6b2 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -2063,11 +2063,15 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
- 			sup_cmds = 0;
- 			error = true;
- 		}
--		if (!(sup_cmds & IPA_VNICC_SET_TIMEOUT) ||
--		    !(sup_cmds & IPA_VNICC_GET_TIMEOUT))
-+		if ((sup_cmds & IPA_VNICC_SET_TIMEOUT) &&
-+		    (sup_cmds & IPA_VNICC_GET_TIMEOUT))
-+			card->options.vnicc.getset_timeout_sup |= vnicc;
-+		else
- 			card->options.vnicc.getset_timeout_sup &= ~vnicc;
--		if (!(sup_cmds & IPA_VNICC_ENABLE) ||
--		    !(sup_cmds & IPA_VNICC_DISABLE))
-+		if ((sup_cmds & IPA_VNICC_ENABLE) &&
-+		    (sup_cmds & IPA_VNICC_DISABLE))
-+			card->options.vnicc.set_char_sup |= vnicc;
-+		else
- 			card->options.vnicc.set_char_sup &= ~vnicc;
+diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
+index 4ca50ddf8d161..88556f0251ab9 100644
+--- a/net/smc/smc_core.c
++++ b/net/smc/smc_core.c
+@@ -213,7 +213,7 @@ static int smc_lgr_create(struct smc_sock *smc, struct smc_init_info *ini)
+ 	lgr = kzalloc(sizeof(*lgr), GFP_KERNEL);
+ 	if (!lgr) {
+ 		rc = SMC_CLC_DECL_MEM;
+-		goto out;
++		goto ism_put_vlan;
  	}
- 	/* enforce assumed default values and recover settings, if changed  */
+ 	lgr->is_smcd = ini->is_smcd;
+ 	lgr->sync_err = 0;
+@@ -289,6 +289,9 @@ static int smc_lgr_create(struct smc_sock *smc, struct smc_init_info *ini)
+ 	smc_llc_link_clear(lnk);
+ free_lgr:
+ 	kfree(lgr);
++ism_put_vlan:
++	if (ini->is_smcd && ini->vlan_id)
++		smc_ism_put_vlan(ini->ism_dev, ini->vlan_id);
+ out:
+ 	if (rc < 0) {
+ 		if (rc == -ENOMEM)
 -- 
 2.20.1
 
