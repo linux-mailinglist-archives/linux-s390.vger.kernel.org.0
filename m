@@ -2,40 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E23C5E5AC2
-	for <lists+linux-s390@lfdr.de>; Sat, 26 Oct 2019 15:17:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F86AE5C5A
+	for <lists+linux-s390@lfdr.de>; Sat, 26 Oct 2019 15:29:58 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbfJZNRn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 26 Oct 2019 09:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39264 "EHLO mail.kernel.org"
+        id S1726614AbfJZNUR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 26 Oct 2019 09:20:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42016 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727465AbfJZNRm (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 26 Oct 2019 09:17:42 -0400
+        id S1726474AbfJZNUQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 26 Oct 2019 09:20:16 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 39E55222BD;
-        Sat, 26 Oct 2019 13:17:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89FB9222C4;
+        Sat, 26 Oct 2019 13:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572095862;
-        bh=8nYqj/0JPT07L2fvbPyBmKLq6JaKKIJB6D6zTqdr/kY=;
+        s=default; t=1572096015;
+        bh=dDcqdwzmfziiuG8Bhf21mdgTAguQoiR/ydOqSM8oWpM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hfAjB+rLOpTtLqh0XsXXYD8en++lplkhyTQfjNnnvmPOSNltR87okUnIsNEQ4ZUi2
-         ckvSborhC+M5HGLI0z7zZiiCTzPvzTGIHgHpL6FLmuWdpGL/+zlT+nIebsNXRJdDm4
-         yjnq/R8J671WSLN45RRDZeowlAFJNTX7dn19BHog=
+        b=BGeurBm1rP3Ufggjp5m6CIlqf+LLvXb/NS4HTeIYN/w2/+wA3O+eQjJTRrIyrkqiA
+         SACNx4X8VvtK2Buq1K/6/m9Z4eNMxhkwCVlxPnrAjpuWfWMuInDdeAUjdSKHjibiiG
+         2rClICW6On4OWZU+cqmr0V81qYcUB0b/jQby7SXA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
+Cc:     Alexandra Winter <wintera@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.3 54/99] net/smc: receive returns without data
-Date:   Sat, 26 Oct 2019 09:15:15 -0400
-Message-Id: <20191026131600.2507-54-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 30/59] s390/qeth: Fix error handling during VNICC initialization
+Date:   Sat, 26 Oct 2019 09:18:41 -0400
+Message-Id: <20191026131910.3435-30-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191026131600.2507-1-sashal@kernel.org>
-References: <20191026131600.2507-1-sashal@kernel.org>
+In-Reply-To: <20191026131910.3435-1-sashal@kernel.org>
+References: <20191026131910.3435-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -45,50 +44,61 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
 
-[ Upstream commit 882dcfe5a1785c20f45820cbe6fec4b8b647c946 ]
+[ Upstream commit b528965bcc827dad32a8d21745feaacfc76c9703 ]
 
-smc_cdc_rxed_any_close_or_senddone() is used as an end condition for the
-receive loop. This conflicts with smc_cdc_msg_recv_action() which could
-run in parallel and set the bits checked by
-smc_cdc_rxed_any_close_or_senddone() before the receive is processed.
-In that case we could return from receive with no data, although data is
-available. The same applies to smc_rx_wait().
-Fix this by checking for RCV_SHUTDOWN only, which is set in
-smc_cdc_msg_recv_action() after the receive was actually processed.
+Smatch discovered the use of uninitialized variable sup_cmds
+in error paths.
 
-Fixes: 952310ccf2d8 ("smc: receive data from RMBE")
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_rx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/s390/net/qeth_l2_main.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
-index 413a6abf227ef..0000026422885 100644
---- a/net/smc/smc_rx.c
-+++ b/net/smc/smc_rx.c
-@@ -211,8 +211,7 @@ int smc_rx_wait(struct smc_sock *smc, long *timeo,
- 	rc = sk_wait_event(sk, timeo,
- 			   sk->sk_err ||
- 			   sk->sk_shutdown & RCV_SHUTDOWN ||
--			   fcrit(conn) ||
--			   smc_cdc_rxed_any_close_or_senddone(conn),
-+			   fcrit(conn),
- 			   &wait);
- 	remove_wait_queue(sk_sleep(sk), &wait);
- 	sk_clear_bit(SOCKWQ_ASYNC_WAITDATA, sk);
-@@ -310,7 +309,6 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
- 			smc_rx_update_cons(smc, 0);
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index c1c35eccd5b65..e571129c364e4 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -2328,10 +2328,10 @@ static bool qeth_l2_vnicc_recover_char(struct qeth_card *card, u32 vnicc,
+ static void qeth_l2_vnicc_init(struct qeth_card *card)
+ {
+ 	u32 *timeout = &card->options.vnicc.learning_timeout;
++	bool enable, error = false;
+ 	unsigned int chars_len, i;
+ 	unsigned long chars_tmp;
+ 	u32 sup_cmds, vnicc;
+-	bool enable, error;
  
- 		if (sk->sk_shutdown & RCV_SHUTDOWN ||
--		    smc_cdc_rxed_any_close_or_senddone(conn) ||
- 		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort)
- 			break;
- 
+ 	QETH_CARD_TEXT(card, 2, "vniccini");
+ 	/* reset rx_bcast */
+@@ -2352,7 +2352,10 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
+ 	chars_len = sizeof(card->options.vnicc.sup_chars) * BITS_PER_BYTE;
+ 	for_each_set_bit(i, &chars_tmp, chars_len) {
+ 		vnicc = BIT(i);
+-		qeth_l2_vnicc_query_cmds(card, vnicc, &sup_cmds);
++		if (qeth_l2_vnicc_query_cmds(card, vnicc, &sup_cmds)) {
++			sup_cmds = 0;
++			error = true;
++		}
+ 		if (!(sup_cmds & IPA_VNICC_SET_TIMEOUT) ||
+ 		    !(sup_cmds & IPA_VNICC_GET_TIMEOUT))
+ 			card->options.vnicc.getset_timeout_sup &= ~vnicc;
+@@ -2361,8 +2364,8 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
+ 			card->options.vnicc.set_char_sup &= ~vnicc;
+ 	}
+ 	/* enforce assumed default values and recover settings, if changed  */
+-	error = qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
+-					      timeout);
++	error |= qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
++					       timeout);
+ 	chars_tmp = card->options.vnicc.wanted_chars ^ QETH_VNICC_DEFAULT;
+ 	chars_tmp |= QETH_VNICC_BRIDGE_INVISIBLE;
+ 	chars_len = sizeof(card->options.vnicc.wanted_chars) * BITS_PER_BYTE;
 -- 
 2.20.1
 
