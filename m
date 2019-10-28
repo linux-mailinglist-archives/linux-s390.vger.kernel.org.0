@@ -2,151 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61CC4E7591
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Oct 2019 16:54:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F5A8E7712
+	for <lists+linux-s390@lfdr.de>; Mon, 28 Oct 2019 17:56:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390184AbfJ1Pyp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Oct 2019 11:54:45 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:27866 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2390178AbfJ1Pyo (ORCPT
+        id S1729716AbfJ1Q4F (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 28 Oct 2019 12:56:05 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27852 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2403920AbfJ1Q4F (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 28 Oct 2019 11:54:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572278083;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=iWxllc1G8SHq1RkOK7kCt83EB2YbceKdCT0ElOAOVVk=;
-        b=ab8+/fyFLk7oVARGRieNNkHVAZCvmR/afvq91VFV5L/n5mgmPadxFIEAdApMa9d7hbMPGe
-        VCY9KgW4wwrNUahSUbY8JYBqOzx1yHGTeggke8nRnnBrpH0jBT0OnQoGjwfn1uD7LaHCil
-        y++tOOlxIE2EX0kj9fty9rg6fxy4NMk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-166-FgDxBwwEOaeigqXAT-gtiw-1; Mon, 28 Oct 2019 11:54:40 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B3D34801E64;
-        Mon, 28 Oct 2019 15:54:38 +0000 (UTC)
-Received: from [10.36.117.63] (ovpn-117-63.ams2.redhat.com [10.36.117.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D15C55C1B2;
-        Mon, 28 Oct 2019 15:54:36 +0000 (UTC)
-Subject: Re: [RFC 03/37] s390/protvirt: add ultravisor initialization
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, thuth@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-4-frankja@linux.ibm.com>
- <d0bc545a-fdbb-2aa9-4f0a-2e0ea1abce5b@redhat.com>
- <your-ad-here.call-01572277730-ext-9266@work.hours>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <6a5b7e54-ca44-4341-9772-e782aa67cd53@redhat.com>
-Date:   Mon, 28 Oct 2019 16:54:36 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 28 Oct 2019 12:56:05 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SGqkta008680
+        for <linux-s390@vger.kernel.org>; Mon, 28 Oct 2019 12:56:03 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vx2xmb9c9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 28 Oct 2019 12:56:03 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <iii@linux.ibm.com>;
+        Mon, 28 Oct 2019 16:56:02 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 28 Oct 2019 16:56:00 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SGtwJa38273158
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 28 Oct 2019 16:55:58 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C82AAE045;
+        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4BEADAE04D;
+        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
+Received: from white.boeblingen.de.ibm.com (unknown [9.152.97.44])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 28 Oct 2019 16:55:58 +0000 (GMT)
+From:   Ilya Leoshkevich <iii@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>
+Subject: [PATCH] mm/sparse.c: mark populate_section_memmap as __meminit
+Date:   Mon, 28 Oct 2019 17:55:49 +0100
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <your-ad-here.call-01572277730-ext-9266@work.hours>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: FgDxBwwEOaeigqXAT-gtiw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19102816-0008-0000-0000-000003287607
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102816-0009-0000-0000-00004A47B510
+Message-Id: <20191028165549.14478-1-iii@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910280163
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 28.10.19 16:48, Vasily Gorbik wrote:
-> On Fri, Oct 25, 2019 at 11:21:05AM +0200, David Hildenbrand wrote:
->> On 24.10.19 13:40, Janosch Frank wrote:
->>> From: Vasily Gorbik <gor@linux.ibm.com>
->>>
->>> Before being able to host protected virtual machines, donate some of
->>> the memory to the ultravisor. Besides that the ultravisor might impose
->>> addressing limitations for memory used to back protected VM storage. Tr=
-eat
->>> that limit as protected virtualization host's virtual memory limit.
->>>
->>> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
->>> ---
->>>    arch/s390/include/asm/uv.h | 16 ++++++++++++
->>>    arch/s390/kernel/setup.c   |  3 +++
->>>    arch/s390/kernel/uv.c      | 53 ++++++++++++++++++++++++++++++++++++=
-++
->>>    3 files changed, 72 insertions(+)
->>>
->>> --- a/arch/s390/kernel/setup.c
->>> +++ b/arch/s390/kernel/setup.c
->>> @@ -567,6 +567,8 @@ static void __init setup_memory_end(void)
->>>    =09=09=09vmax =3D _REGION1_SIZE; /* 4-level kernel page table */
->>>    =09}
->>> +=09adjust_to_uv_max(&vmax);
->>
->> I do wonder what would happen if vmax < max_physmem_end. Not sure if tha=
-t is
->> relevant at all.
->=20
-> Then identity mapping would be shorter then actual physical memory availa=
-ble
-> and everything above would be lost. But in reality "max_sec_stor_addr"
-> is big enough to not worry about it in the foreseeable future at all.
->=20
->>> +void __init setup_uv(void)
->>> +{
->>> +=09unsigned long uv_stor_base;
->>> +
->>> +=09if (!prot_virt_host)
->>> +=09=09return;
->>> +
->>> +=09uv_stor_base =3D (unsigned long)memblock_alloc_try_nid(
->>> +=09=09uv_info.uv_base_stor_len, SZ_1M, SZ_2G,
->>> +=09=09MEMBLOCK_ALLOC_ACCESSIBLE, NUMA_NO_NODE);
->>> +=09if (!uv_stor_base) {
->>> +=09=09pr_info("Failed to reserve %lu bytes for ultravisor base storage=
-\n",
->>> +=09=09=09uv_info.uv_base_stor_len);
->>> +=09=09goto fail;
->>> +=09}
->>
->> If I'm not wrong, we could setup/reserve a CMA area here and defer the
->> actual allocation. Then, any MOVABLE data can end up on this CMA area un=
-til
->> needed.
->>
->> But I am neither an expert on CMA nor on UV, so most probably what I say=
- is
->> wrong ;)
->=20
->  From pure memory management this sounds like a good idea. And I tried
-> it and cma_declare_contiguous fulfills our needs, just had to export
-> cma_alloc/cma_release symbols. Nevertheless, delaying ultravisor init mea=
-ns we
-> would be potentially left with vmax =3D=3D max_sec_stor_addr even if we w=
-ouldn't
-> be able to run protected VMs after all (currently setup_uv() is called
-> before kernel address space layout setup). Another much more fundamental
-> reason is that ultravisor init has to be called with a single cpu running=
-,
-> which means it's easy to do before bringing other cpus up and we currentl=
-y
-> don't have api to stop cpus at a later point (stop_machine won't cut it).
+Building the kernel on s390 with -Og produces the following warning:
 
-Interesting point, I guess. One could hack around that. Emphasis on=20
-*hack* :) In stop_machine() you caught all CPUs. You could just=20
-temporarily SIGP STOP all running ones, issue the UV init call, and SIGP=20
-START them again. Not sure how that works with SMP, though ...
+WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from the function populate_section_memmap() to the function .meminit.text:__populate_section_memmap()
+The function populate_section_memmap() references
+the function __meminit __populate_section_memmap().
+This is often because populate_section_memmap lacks a __meminit
+annotation or the annotation of __populate_section_memmap is wrong.
 
-But yeah, this is stuff for the future, just an idea from my side :)
+While -Og is not supported, in theory this might still happen with
+another compiler or on another architecture. So fix this by using the
+correct section annotations.
 
---=20
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+---
+ mm/sparse.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Thanks,
-
-David / dhildenb
+diff --git a/mm/sparse.c b/mm/sparse.c
+index f6891c1992b1..0f1f36443a96 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -448,7 +448,7 @@ static unsigned long __init section_map_size(void)
+ 	return PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
+ }
+ 
+-struct page __init *__populate_section_memmap(unsigned long pfn,
++struct page __meminit *__populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	unsigned long size = section_map_size();
+@@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+ #endif
+ 
+ #ifdef CONFIG_SPARSEMEM_VMEMMAP
+-static struct page *populate_section_memmap(unsigned long pfn,
++static struct page * __meminit populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	return __populate_section_memmap(pfn, nr_pages, nid, altmap);
+@@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
+ 	vmemmap_free(start, end, NULL);
+ }
+ #else
+-struct page *populate_section_memmap(unsigned long pfn,
++struct page * __meminit populate_section_memmap(unsigned long pfn,
+ 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ {
+ 	struct page *page, *ret;
+-- 
+2.23.0
 
