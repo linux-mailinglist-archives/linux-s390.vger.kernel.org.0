@@ -2,144 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 91C36E79F4
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Oct 2019 21:20:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73556E7AD3
+	for <lists+linux-s390@lfdr.de>; Mon, 28 Oct 2019 22:06:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732880AbfJ1UUM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Oct 2019 16:20:12 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33492 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726483AbfJ1UUM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 28 Oct 2019 16:20:12 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9SKHJ6e129795
-        for <linux-s390@vger.kernel.org>; Mon, 28 Oct 2019 16:20:10 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vx5w12huh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 28 Oct 2019 16:20:10 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 28 Oct 2019 20:20:08 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 28 Oct 2019 20:20:06 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9SKK4J248889966
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 28 Oct 2019 20:20:04 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 797C7AE04D;
-        Mon, 28 Oct 2019 20:20:04 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C2D7DAE056;
-        Mon, 28 Oct 2019 20:20:03 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.64.10])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 28 Oct 2019 20:20:03 +0000 (GMT)
-Subject: Re: [RFC 02/37] s390/protvirt: introduce host side setup
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
-        david@redhat.com, imbrenda@linux.ibm.com, mihajlov@linux.ibm.com,
-        mimu@linux.ibm.com, gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-3-frankja@linux.ibm.com>
- <20191028155453.4b142994.cohuck@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Mon, 28 Oct 2019 21:20:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191028155453.4b142994.cohuck@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19102820-0020-0000-0000-0000038059F9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102820-0021-0000-0000-000021D65F8F
-Message-Id: <7e14305d-bec4-27d6-c723-ee231817b855@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-28_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=485 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910280192
+        id S2389552AbfJ1VGG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 28 Oct 2019 17:06:06 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36922 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728898AbfJ1VGF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 28 Oct 2019 17:06:05 -0400
+Received: by mail-wm1-f65.google.com with SMTP id q130so372216wme.2
+        for <linux-s390@vger.kernel.org>; Mon, 28 Oct 2019 14:06:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=uRLJnnkoKtrt3q1ob0/siBgAznuJHarDQvJURi9aQb4=;
+        b=SIpiQHIotDzzIYqm9aXXXSdbbNyIiBGfjR5nwKGqhflsnh3A5ENnvL5ku7plympJ56
+         nU36hscWDg92/FfoUgg6mGZV1MQZ06P3qheMpNe3W+BoMzXYLyDOcBz9DFqkhDIEdh5B
+         gqbt6pLe8aajvT9/ApxWiQy6qHncmnK9uEhkZ9EqPdAXzu6B6PFTNwcVhG3P2ju+X3f/
+         sfPBA2pEnzU6TygZk9bck8dKivYNrYpRDwfFHpK5yH8NWhYl07OW9N75iEfLQn0AVE4T
+         Xhi5EjkHr/H2F2I9Ee4ffmNMGotxS1WZGlXL+yrOupHrVgXxi75kCPijWu4pb+5VrVqk
+         yHmA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=uRLJnnkoKtrt3q1ob0/siBgAznuJHarDQvJURi9aQb4=;
+        b=l4c2dsG+cBj5F92VDl1QQNZcjYpDyoPVh52xSEOAkpQ9dvR/G2J6dNap+6dnpO2D2W
+         arpKMq5Lq+QPvlXDKEB8zhGVjxo6T4FzW0WCSbT9c6TwTzGNP2C5rm2pQOEf2q/bTrbZ
+         Uv8l6HpNgVvK603dNZayHjHhmjLB/6jilp9QB6aH/Pv9oaGhnXf9PQ3X1aZw4XT4j0nc
+         2xOisIuetomvmnpP3gfEZMIYQuaXN3SdbU0ZGcybNfhifAweOIFoS7SDMgfyXkzcTsAy
+         JJAS5whpHCb/Dkhx7Z1E7vVxcYboMpgfe8HnK9JlL4epOTNOwRQfQe+iY4qSgIR+68f0
+         pU+Q==
+X-Gm-Message-State: APjAAAUGrSxeKCHN+oRI+CtaIKFdxIT+QDn+hzMertniMpKEqVm0CwR0
+        ASo4SHsVXqO7jNExdi2T6ZZQsg==
+X-Google-Smtp-Source: APXvYqxLhsR1PGtmh9drHOLTiE38etYU0uqVFMpWhqoC1tXLMotQdsLS61o8y7c30loRYYNwzvsK1Q==
+X-Received: by 2002:a7b:ce99:: with SMTP id q25mr1133067wmj.115.1572296762897;
+        Mon, 28 Oct 2019 14:06:02 -0700 (PDT)
+Received: from localhost.localdomain (230.106.138.88.rev.sfr.net. [88.138.106.230])
+        by smtp.gmail.com with ESMTPSA id b196sm927822wmd.24.2019.10.28.14.05.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 28 Oct 2019 14:06:00 -0700 (PDT)
+From:   Richard Henderson <richard.henderson@linaro.org>
+X-Google-Original-From: Richard Henderson <rth@twiddle.net>
+To:     linux-arch@vger.kernel.org
+Cc:     x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 0/6] Improvements for random.h/archrandom.h
+Date:   Mon, 28 Oct 2019 22:05:53 +0100
+Message-Id: <20191028210559.8289-1-rth@twiddle.net>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+During patch review for an addition of archrandom.h for arm64,
+it was suggeted that the arch_random_get_* functions should be
+marked __must_check.  Which does sound like a good idea, since
+the by-reference integer output may be uninitialized when the
+boolean result is false.
+
+In addition, I noticed a few other minor inconsistencies between
+the different architectures: x86 defines some functional macros
+outside CONFIG_ARCH_RANDOM, and powerpc isn't using bool.
 
 
-On 28.10.19 15:54, Cornelia Huck wrote:
+r~
 
-> I think there's not enough information in here to allow someone
-> configuring the kernel to decide what this is and if it would be useful
-> to them. This should probably be at least point to some document giving
-> some more details. Also, can you add a sentence where this feature is
-> actually expected to be available?
-> 
->> +
->> +	  If unsure, say Y.
-> 
-> Is 'Y' really the safe choice here? AFAICS, this is introducing new
-> code and not only trying to call new interfaces, if available. Is there
-> any drawback to enabling this on a kernel that won't run on a platform
-> supporting this feature? Is this supposed to be a common setup?
 
-I would expect that this is enabled on distributions in the future. So
-I think we should actually get rid of this Kconfig and always enable that code.
-We just must pay attention to fence of all the new code if the user does 
-not opt in. (e.g. prot_virt=0). We need to do that anyway and not hanving a
-Kconfig forces us to be extra careful.
+Richard Henderson (6):
+  random: Mark CONFIG_ARCH_RANDOM functions __must_check
+  x86: Move arch_has_random* inside CONFIG_ARCH_RANDOM
+  x86: Mark archrandom.h functions __must_check
+  powerpc: Use bool in archrandom.h
+  powerpc: Mark archrandom.h functions __must_check
+  s390x: Mark archrandom.h functions __must_check
+
+ arch/powerpc/include/asm/archrandom.h | 24 +++++++++++++-----------
+ arch/s390/include/asm/archrandom.h    |  8 ++++----
+ arch/x86/include/asm/archrandom.h     | 24 ++++++++++++------------
+ include/linux/random.h                |  8 ++++----
+ 4 files changed, 33 insertions(+), 31 deletions(-)
+
+-- 
+2.17.1
 
