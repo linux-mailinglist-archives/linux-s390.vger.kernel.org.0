@@ -2,89 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2361E893D
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 14:18:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07A57E8AE9
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 15:37:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728735AbfJ2NSz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Oct 2019 09:18:55 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36619 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388227AbfJ2NSz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Oct 2019 09:18:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id g9so6998848plp.3
-        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 06:18:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=pvuEzJtwy1JCp5X7vm7kUHA8B0ogZ/ZQKVMwcTk3J2c=;
-        b=mMPUyzRdTbvZmttcT39vAlD8XQuSMw1OB0uhi2zQDeiKX19RuTkEzwD4DPzEKEriED
-         hDXwNagfD5B6P8HaJ1YGUyexAiZ6fW+5O9p86sA7Geeq1BcrCeeyTXUMrjJquQcBDYSZ
-         M58G8hECZ2Dcq5BvTUL+QsWucQWNHm0/mMCy/YWr60P702rZs1xunutr4uNVgkjNTCvN
-         Wj5PFSmreN8VT5b+V3u4QTMCE5N75NCyWGB2UI4s0SMfdlD6oi1hfDACJMn+0xTzQCuN
-         2jVznLsU0WIPED8xb8LmPf9XBws1styHv+jre4JrQbH4+eXB+tBV62W1HqRNMVZOqv3i
-         4r5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=pvuEzJtwy1JCp5X7vm7kUHA8B0ogZ/ZQKVMwcTk3J2c=;
-        b=iZ5OSYl+twiDhQD0FmLiAgC2edZ0E1CJBmGYp7iCzA0nvfg316Hfjd95KNmCR/y103
-         QZcfMlzdnH4LPKVN/Mg955zpImGvSgOodVALdjcTany7mp9TVIAuzO3Nc47jq+CiSWfo
-         ZjJx9mufAB+nKtXF+DZm2zl9DGqkA35aVKQcbN/Vo8b8uiSgBjPxCiysAep0ilU9afJW
-         OxE1XJAhf6vB5a/dZhR/HjmUwbrQdZpUxItX2NoOJt5tBvrdlXdHyYU0SCsPsSv+nM2o
-         emTP/qhERqwnkFevFkdM1aXe32urg1AqmbtoIIGak4BMWiOyzP6ONT6KUfZ2/CtAnEtL
-         qcaA==
-X-Gm-Message-State: APjAAAWq2wxlWhjkTu/YTBDNYtDQy1v4TeC5PMQI37oF4goJoBvvxVz1
-        sw93m/0K9QlaRyFmnqQa/iS88g==
-X-Google-Smtp-Source: APXvYqy9Yzd9eMDthtj14AZwGUiHvvvfwGQQB2LpKxaqTurfBAKOtYBIGduDk9lusHNW3JpAtnB4Cg==
-X-Received: by 2002:a17:902:fe95:: with SMTP id x21mr3986776plm.53.1572355134404;
-        Tue, 29 Oct 2019 06:18:54 -0700 (PDT)
-Received: from [192.168.43.94] ([172.58.27.50])
-        by smtp.gmail.com with ESMTPSA id c125sm14602926pfa.107.2019.10.29.06.18.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 29 Oct 2019 06:18:53 -0700 (PDT)
-Subject: Re: [PATCH 6/6] s390x: Mark archrandom.h functions __must_check
-To:     Harald Freudenberger <freude@linux.ibm.com>,
-        linux-arch@vger.kernel.org
-Cc:     x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S2389433AbfJ2Ohi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Oct 2019 10:37:38 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50496 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389432AbfJ2Ohi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 29 Oct 2019 10:37:38 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TEYHxA056041
+        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 10:37:37 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxptv1m27-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 10:37:36 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <bblock@linux.ibm.com>;
+        Tue, 29 Oct 2019 14:37:34 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 29 Oct 2019 14:37:32 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TEbVa354001778
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 14:37:31 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 05DECA4060;
+        Tue, 29 Oct 2019 14:37:31 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3D20A4062;
+        Tue, 29 Oct 2019 14:37:30 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.145.150.237])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 29 Oct 2019 14:37:30 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.92.3)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1iPScg-0004JO-MF; Tue, 29 Oct 2019 15:37:26 +0100
+Date:   Tue, 29 Oct 2019 15:37:26 +0100
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20191028210559.8289-1-rth@twiddle.net>
- <20191028210559.8289-7-rth@twiddle.net>
- <935cf73a-d06c-365d-131a-23dcb350ba17@linux.ibm.com>
-From:   Richard Henderson <richard.henderson@linaro.org>
-Openpgp: preference=signencrypt
-Message-ID: <cd6b5b8c-77f0-ad7e-702a-27e5a929ca54@linaro.org>
-Date:   Tue, 29 Oct 2019 14:18:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] zfcp: retrieve local RDP data, fix and cleanup
+References: <cover.1571934247.git.bblock@linux.ibm.com>
+ <yq18sp48feb.fsf@oracle.com>
 MIME-Version: 1.0
-In-Reply-To: <935cf73a-d06c-365d-131a-23dcb350ba17@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <yq18sp48feb.fsf@oracle.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19102914-0020-0000-0000-00000380A59B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102914-0021-0000-0000-000021D6AF31
+Message-Id: <20191029143726.GA25907@t480-pf1aa2c2>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910290140
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 10/29/19 8:26 AM, Harald Freudenberger wrote:
-> Fine with me, Thanks, reviewed, build and tested.
-> You may add my reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
-> However, will this go into the kernel tree via crypto or s390 subsystem ?
+On Mon, Oct 28, 2019 at 10:16:44PM -0400, Martin K. Petersen wrote:
+> 
+> Benjamin,
+> 
+> > this is the second version of my RDP patchset for zfcp, after I
+> > noticed a memory-leak in the first version earlier this year. Here is
+> > the original description, which remains valid:
+> 
+> Applied to 5.5/scsi-queue, thanks!
+> 
 
-That's an excellent question.
+Thanks, Martin.
 
-As an API decision, perhaps going via crypto makes more sense,
-but none of the patches are dependent on one another, so they
-could go through separate architecture trees.
+-- 
+With Best Regards, Benjamin Block      /      Linux on IBM Z Kernel Development
+IBM Systems & Technology Group   /  IBM Deutschland Research & Development GmbH
+Vorsitz. AufsR.: Matthias Hartmann       /      Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
 
-It has been a long time since I have done much kernel work;
-I'm open to suggestions on the subject.
-
-
-r~
