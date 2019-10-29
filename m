@@ -2,93 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92D7EE875F
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 12:44:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D2361E893D
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 14:18:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387746AbfJ2Ln7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Oct 2019 07:43:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52784 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387737AbfJ2Ln7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 29 Oct 2019 07:43:59 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TBdYRX142862
-        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 07:43:58 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxmrc851y-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 07:43:58 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <ubraun@linux.ibm.com>;
-        Tue, 29 Oct 2019 11:43:56 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 29 Oct 2019 11:43:53 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TBhnOs61931534
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 11:43:49 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67F97A404D;
-        Tue, 29 Oct 2019 11:43:49 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0CE8AA4040;
-        Tue, 29 Oct 2019 11:43:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 29 Oct 2019 11:43:48 +0000 (GMT)
-From:   Ursula Braun <ubraun@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        gor@linux.ibm.com, heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        kgraul@linux.ibm.com, ubraun@linux.ibm.com,
-        jakub.kicinski@netronome.com
-Subject: [PATCH net-next 1/1] net/smc: remove unneeded include for smc.h
-Date:   Tue, 29 Oct 2019 12:43:46 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19102911-0028-0000-0000-000003B0B9DD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102911-0029-0000-0000-00002472FA70
-Message-Id: <20191029114346.73418-1-ubraun@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=813 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910290118
+        id S1728735AbfJ2NSz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Oct 2019 09:18:55 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36619 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388227AbfJ2NSz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Oct 2019 09:18:55 -0400
+Received: by mail-pl1-f194.google.com with SMTP id g9so6998848plp.3
+        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 06:18:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=pvuEzJtwy1JCp5X7vm7kUHA8B0ogZ/ZQKVMwcTk3J2c=;
+        b=mMPUyzRdTbvZmttcT39vAlD8XQuSMw1OB0uhi2zQDeiKX19RuTkEzwD4DPzEKEriED
+         hDXwNagfD5B6P8HaJ1YGUyexAiZ6fW+5O9p86sA7Geeq1BcrCeeyTXUMrjJquQcBDYSZ
+         M58G8hECZ2Dcq5BvTUL+QsWucQWNHm0/mMCy/YWr60P702rZs1xunutr4uNVgkjNTCvN
+         Wj5PFSmreN8VT5b+V3u4QTMCE5N75NCyWGB2UI4s0SMfdlD6oi1hfDACJMn+0xTzQCuN
+         2jVznLsU0WIPED8xb8LmPf9XBws1styHv+jre4JrQbH4+eXB+tBV62W1HqRNMVZOqv3i
+         4r5g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=pvuEzJtwy1JCp5X7vm7kUHA8B0ogZ/ZQKVMwcTk3J2c=;
+        b=iZ5OSYl+twiDhQD0FmLiAgC2edZ0E1CJBmGYp7iCzA0nvfg316Hfjd95KNmCR/y103
+         QZcfMlzdnH4LPKVN/Mg955zpImGvSgOodVALdjcTany7mp9TVIAuzO3Nc47jq+CiSWfo
+         ZjJx9mufAB+nKtXF+DZm2zl9DGqkA35aVKQcbN/Vo8b8uiSgBjPxCiysAep0ilU9afJW
+         OxE1XJAhf6vB5a/dZhR/HjmUwbrQdZpUxItX2NoOJt5tBvrdlXdHyYU0SCsPsSv+nM2o
+         emTP/qhERqwnkFevFkdM1aXe32urg1AqmbtoIIGak4BMWiOyzP6ONT6KUfZ2/CtAnEtL
+         qcaA==
+X-Gm-Message-State: APjAAAWq2wxlWhjkTu/YTBDNYtDQy1v4TeC5PMQI37oF4goJoBvvxVz1
+        sw93m/0K9QlaRyFmnqQa/iS88g==
+X-Google-Smtp-Source: APXvYqy9Yzd9eMDthtj14AZwGUiHvvvfwGQQB2LpKxaqTurfBAKOtYBIGduDk9lusHNW3JpAtnB4Cg==
+X-Received: by 2002:a17:902:fe95:: with SMTP id x21mr3986776plm.53.1572355134404;
+        Tue, 29 Oct 2019 06:18:54 -0700 (PDT)
+Received: from [192.168.43.94] ([172.58.27.50])
+        by smtp.gmail.com with ESMTPSA id c125sm14602926pfa.107.2019.10.29.06.18.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 29 Oct 2019 06:18:53 -0700 (PDT)
+Subject: Re: [PATCH 6/6] s390x: Mark archrandom.h functions __must_check
+To:     Harald Freudenberger <freude@linux.ibm.com>,
+        linux-arch@vger.kernel.org
+Cc:     x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20191028210559.8289-1-rth@twiddle.net>
+ <20191028210559.8289-7-rth@twiddle.net>
+ <935cf73a-d06c-365d-131a-23dcb350ba17@linux.ibm.com>
+From:   Richard Henderson <richard.henderson@linaro.org>
+Openpgp: preference=signencrypt
+Message-ID: <cd6b5b8c-77f0-ad7e-702a-27e5a929ca54@linaro.org>
+Date:   Tue, 29 Oct 2019 14:18:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <935cf73a-d06c-365d-131a-23dcb350ba17@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The only smc-related reference in net/sock.h is struct smc_hashinfo.
-But just its address is refered to. Thus there is no need for the
-include of net/smc.h. Remove it.
+On 10/29/19 8:26 AM, Harald Freudenberger wrote:
+> Fine with me, Thanks, reviewed, build and tested.
+> You may add my reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
+> However, will this go into the kernel tree via crypto or s390 subsystem ?
 
-Suggested-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Reviewed by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
----
- include/net/sock.h | 1 -
- 1 file changed, 1 deletion(-)
+That's an excellent question.
 
-diff --git a/include/net/sock.h b/include/net/sock.h
-index 380312cc67a9..09c26a5ecbff 100644
---- a/include/net/sock.h
-+++ b/include/net/sock.h
-@@ -66,7 +66,6 @@
- #include <net/checksum.h>
- #include <net/tcp_states.h>
- #include <linux/net_tstamp.h>
--#include <net/smc.h>
- #include <net/l3mdev.h>
- 
- /*
--- 
-2.17.1
+As an API decision, perhaps going via crypto makes more sense,
+but none of the patches are dependent on one another, so they
+could go through separate architecture trees.
 
+It has been a long time since I have done much kernel work;
+I'm open to suggestions on the subject.
+
+
+r~
