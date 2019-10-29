@@ -2,41 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DF1BE9149
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 22:14:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D5D19E9146
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 22:14:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729232AbfJ2VOF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Oct 2019 17:14:05 -0400
-Received: from mail-pg1-f169.google.com ([209.85.215.169]:41465 "EHLO
-        mail-pg1-f169.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729240AbfJ2VOF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Oct 2019 17:14:05 -0400
-Received: by mail-pg1-f169.google.com with SMTP id l3so10493130pgr.8
-        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 14:14:03 -0700 (PDT)
+        id S1728909AbfJ2VOD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Oct 2019 17:14:03 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:45033 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728707AbfJ2VOD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Oct 2019 17:14:03 -0400
+Received: by mail-pl1-f195.google.com with SMTP id q16so8054209pll.11
+        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 14:14:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=tvuo3Ns0E4Fiim71b6F+/V34tv+uW7W3PecAxYDk1kI=;
-        b=kjmJ2PRco2QbnnQ6/Lb5HykXKFCW8bMSMkr+JBAd0YCZqAHZUBgyl2XlQchiLsBsZA
-         VWyGFqzEFLvF5puyLHdyKCM+5hmQj5PuueBjIKUK8Jn2QPWeJZWfexDjBm6I6dRaBLQj
-         uENAgaybqP2QWV47BGcYFOi14iqWSDuRPGxb4=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=UBMCQcUOloL4FNQm5udB+snIcmDdRxu45Na8ZXgn6j0=;
+        b=kdVHFkWUWfSKoiPKPgWKbAsFTrcW5JNBQhTGTF4q2deleiY3/8n0BF6eoXBERPq8mq
+         MXvnqxBYuL7FPHWZ/R6H0s/W1xjZNZPEiLHYArhnUWssmjQ9IekX8pDgbayL/8UyYSTb
+         kH2PTazTZLVUdMFc2ETjXJ8rIdmfptOgLDOBM=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tvuo3Ns0E4Fiim71b6F+/V34tv+uW7W3PecAxYDk1kI=;
-        b=cvTswVZpLpczeWrgTxqFhyZriujm1F/QJbS4VYIH9GFjHJC87LWYOBWajgqtAnzQu1
-         O3acvEv+Rif/66AIWO3p/9qkLCan6x5hWiQYu3ZzVABmzNy6jB/YUxFBO5dNnfnRA+Yj
-         G1V1wgyZXKOLj5RlEks2kRQbpzUS455yjiua3uLkfUY5IaxDYKIBr9AmEK4sGVfpXmgx
-         q/ScKM8bbW9888+Mp5PK2houwfaClta8pvww7+drdSRtvKQCHSwN2YfuwIGqvRidOAts
-         4Nwf/Ui4TmywlxWMbSKK3Xb7GtORhlvNN8N2G5VRe48Xp4bdlNjxoGJzUV/upG5Bhf8E
-         Jk0A==
-X-Gm-Message-State: APjAAAXgo330xuU+B9Etz3aOBULkxkDq/AQMYS/UOqyQNrdWRTz9Oyxm
-        0FYu3SYGCwU3fbZU32GEtyrbkA==
-X-Google-Smtp-Source: APXvYqxG6K5OnJmD5FS0dzSHIwPfA6+/IkLP3MyheBThwDhBc+0h1IEDuELusvnpNyG3iWLjyHi91w==
-X-Received: by 2002:a63:471b:: with SMTP id u27mr28891174pga.96.1572383642989;
-        Tue, 29 Oct 2019 14:14:02 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=UBMCQcUOloL4FNQm5udB+snIcmDdRxu45Na8ZXgn6j0=;
+        b=te5KiQH7Epm0QBIpl8ySqlAA8tM7kVF4nEpwDsTXeOZMEm12qenHtHKvsBqEHP5gzP
+         Ulkj6hUy1MIvvhLPJj0cSCY53jVwmBarjE6Lqb8QENNHHlxTwkOKCuHm5xy1ypmz7L3Z
+         Fzj/tBQOmKdO8URxNzEm9+a/bhi6TSdarLxV3inigN/6yW0Vt3iwXwKvqJhzWqWVtDHJ
+         Hch1OKaOw8B7+gwMDCunZNVsa1ISQAbreUB0XRqgJZUeaM+Ksf0jJlxUwyV31utwh7CB
+         ZExarTGZSu7pwPP28O5jQEKh5hooICo0cas/egdIYpx6piIGDn05sxv3rijLm5zjocyr
+         owng==
+X-Gm-Message-State: APjAAAV/9BXAXP41D8ppidUUSmxO1SmdJzKCm/w7m6sET5f53uvSbtbJ
+        715M4pes8ZQ2stWsJhlZyFBeFw==
+X-Google-Smtp-Source: APXvYqxEU/jPSR344Zm3qUnGnizPxb8rt1UkEG6PtKOdviXqXNGWzTbgn7h13zjGLZsYob22VLKUOQ==
+X-Received: by 2002:a17:902:bb8d:: with SMTP id m13mr785919pls.29.1572383641856;
+        Tue, 29 Oct 2019 14:14:01 -0700 (PDT)
 Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id x7sm51799pff.0.2019.10.29.14.13.59
+        by smtp.gmail.com with ESMTPSA id z9sm135208pgs.46.2019.10.29.14.13.59
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Tue, 29 Oct 2019 14:14:00 -0700 (PDT)
 From:   Kees Cook <keescook@chromium.org>
@@ -56,122 +57,59 @@ Cc:     Kees Cook <keescook@chromium.org>,
         linux-c6x-dev@linux-c6x.org,
         Yoshinori Sato <ysato@users.sourceforge.jp>,
         Michal Simek <monstr@monstr.eu>
-Subject: [PATCH v3 00/29] vmlinux.lds.h: Refactor EXCEPTION_TABLE and NOTES
-Date:   Tue, 29 Oct 2019 14:13:22 -0700
-Message-Id: <20191029211351.13243-1-keescook@chromium.org>
+Subject: [PATCH v3 01/29] powerpc: Rename "notes" PT_NOTE to "note"
+Date:   Tue, 29 Oct 2019 14:13:23 -0700
+Message-Id: <20191029211351.13243-2-keescook@chromium.org>
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191029211351.13243-1-keescook@chromium.org>
+References: <20191029211351.13243-1-keescook@chromium.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Arch maintainers: please send Acks (if you haven't already) for your
-respective linker script changes; the intention is for this series to land
-via -tip. See patch #1 for an extended rationale for the "note" vs "notes"
-naming. If "notes" is strongly desired, we can perform that change on
-top of this series. For now, I prefer to leave things as they were in v2.
+The Program Header identifiers are internal to the linker scripts. In
+preparation for moving the NOTES segment declaration into RO_DATA,
+standardize the identifier for the PT_NOTE entry to "note" as used by
+all other architectures that emit PT_NOTE.
 
-v3: Add new Acks, clarify "note" vs "notes" renaming
-v2: https://lore.kernel.org/lkml/20191011000609.29728-1-keescook@chromium.org
-v1: https://lore.kernel.org/lkml/20190926175602.33098-1-keescook@chromium.org
+Note that there was discussion about changing all architectures to use
+"notes" instead, but I prefer to avoid that at this time. Changing only
+powerpc is the smallest change to standardize the entire kernel. And
+while this standardization does use singular "note" for a section that
+has more than one note in it, this is just an internal identifier. It
+matches the ELF "PT_NOTE", and is 4 characters (like "text", and "data")
+for pretty alignment. The more exposed macro, "NOTES", use the more
+sensible plural wording.
 
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/kernel/vmlinux.lds.S | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-This series works to move the linker sections for NOTES and
-EXCEPTION_TABLE into the RO_DATA area, where they belong on most
-(all?) architectures. The problem being addressed was the discovery
-by Rick Edgecombe that the exception table was accidentally marked
-executable while he was developing his execute-only-memory series. When
-permissions were flipped from readable-and-executable to only-executable,
-the exception table became unreadable, causing things to explode rather
-badly. :)
-
-Roughly speaking, the steps are:
-
-- regularize the linker names for PT_NOTE and PT_LOAD program headers
-  (to "note" and "text" respectively)
-- regularize restoration of linker section to program header assignment
-  (when PT_NOTE exists)
-- move NOTES into RO_DATA
-- finish macro naming conversions for RO_DATA and RW_DATA
-- move EXCEPTION_TABLE into RO_DATA on architectures where this is clear
-- clean up some x86-specific reporting of kernel memory resources
-- switch x86 linker fill byte from x90 (NOP) to 0xcc (INT3), just because
-  I finally realized what that trailing ": 0x9090" meant -- and we should
-  trap, not slide, if execution lands in section padding
-
-Thanks!
-
--Kees
-
-
-Kees Cook (29):
-  powerpc: Rename "notes" PT_NOTE to "note"
-  powerpc: Remove PT_NOTE workaround
-  powerpc: Rename PT_LOAD identifier "kernel" to "text"
-  alpha: Rename PT_LOAD identifier "kernel" to "text"
-  ia64: Rename PT_LOAD identifier "code" to "text"
-  s390: Move RO_DATA into "text" PT_LOAD Program Header
-  x86: Restore "text" Program Header with dummy section
-  vmlinux.lds.h: Provide EMIT_PT_NOTE to indicate export of .notes
-  vmlinux.lds.h: Move Program Header restoration into NOTES macro
-  vmlinux.lds.h: Move NOTES into RO_DATA
-  vmlinux.lds.h: Replace RODATA with RO_DATA
-  vmlinux.lds.h: Replace RO_DATA_SECTION with RO_DATA
-  vmlinux.lds.h: Replace RW_DATA_SECTION with RW_DATA
-  vmlinux.lds.h: Allow EXCEPTION_TABLE to live in RO_DATA
-  x86: Actually use _etext for end of text segment
-  x86: Move EXCEPTION_TABLE to RO_DATA segment
-  alpha: Move EXCEPTION_TABLE to RO_DATA segment
-  arm64: Move EXCEPTION_TABLE to RO_DATA segment
-  c6x: Move EXCEPTION_TABLE to RO_DATA segment
-  h8300: Move EXCEPTION_TABLE to RO_DATA segment
-  ia64: Move EXCEPTION_TABLE to RO_DATA segment
-  microblaze: Move EXCEPTION_TABLE to RO_DATA segment
-  parisc: Move EXCEPTION_TABLE to RO_DATA segment
-  powerpc: Move EXCEPTION_TABLE to RO_DATA segment
-  xtensa: Move EXCEPTION_TABLE to RO_DATA segment
-  x86/mm: Remove redundant &s on addresses
-  x86/mm: Report which part of kernel image is freed
-  x86/mm: Report actual image regions in /proc/iomem
-  x86: Use INT3 instead of NOP for linker fill bytes
-
- arch/alpha/kernel/vmlinux.lds.S      | 18 +++++-----
- arch/arc/kernel/vmlinux.lds.S        |  6 ++--
- arch/arm/kernel/vmlinux-xip.lds.S    |  4 +--
- arch/arm/kernel/vmlinux.lds.S        |  4 +--
- arch/arm64/kernel/vmlinux.lds.S      | 10 +++---
- arch/c6x/kernel/vmlinux.lds.S        |  8 ++---
- arch/csky/kernel/vmlinux.lds.S       |  5 ++-
- arch/h8300/kernel/vmlinux.lds.S      |  9 ++---
- arch/hexagon/kernel/vmlinux.lds.S    |  5 ++-
- arch/ia64/kernel/vmlinux.lds.S       | 20 +++++------
- arch/m68k/kernel/vmlinux-nommu.lds   |  4 +--
- arch/m68k/kernel/vmlinux-std.lds     |  2 +-
- arch/m68k/kernel/vmlinux-sun3.lds    |  2 +-
- arch/microblaze/kernel/vmlinux.lds.S |  8 ++---
- arch/mips/kernel/vmlinux.lds.S       | 15 ++++----
- arch/nds32/kernel/vmlinux.lds.S      |  5 ++-
- arch/nios2/kernel/vmlinux.lds.S      |  5 ++-
- arch/openrisc/kernel/vmlinux.lds.S   |  7 ++--
- arch/parisc/kernel/vmlinux.lds.S     | 11 +++---
- arch/powerpc/kernel/vmlinux.lds.S    | 37 ++++---------------
- arch/riscv/kernel/vmlinux.lds.S      |  5 ++-
- arch/s390/kernel/vmlinux.lds.S       | 12 +++----
- arch/sh/kernel/vmlinux.lds.S         |  3 +-
- arch/sparc/kernel/vmlinux.lds.S      |  3 +-
- arch/um/include/asm/common.lds.S     |  3 +-
- arch/unicore32/kernel/vmlinux.lds.S  |  5 ++-
- arch/x86/include/asm/processor.h     |  2 +-
- arch/x86/include/asm/sections.h      |  1 -
- arch/x86/kernel/setup.c              | 12 ++++++-
- arch/x86/kernel/vmlinux.lds.S        | 16 ++++-----
- arch/x86/mm/init.c                   |  8 ++---
- arch/x86/mm/init_64.c                | 16 +++++----
- arch/x86/mm/pti.c                    |  2 +-
- arch/xtensa/kernel/vmlinux.lds.S     |  8 ++---
- include/asm-generic/vmlinux.lds.h    | 53 ++++++++++++++++++++--------
- 35 files changed, 159 insertions(+), 175 deletions(-)
-
+diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+index 060a1acd7c6d..81e672654789 100644
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -19,7 +19,7 @@ ENTRY(_stext)
+ 
+ PHDRS {
+ 	kernel PT_LOAD FLAGS(7); /* RWX */
+-	notes PT_NOTE FLAGS(0);
++	note PT_NOTE FLAGS(0);
+ 	dummy PT_NOTE FLAGS(0);
+ 
+ 	/* binutils < 2.18 has a bug that makes it misbehave when taking an
+@@ -177,7 +177,7 @@ SECTIONS
+ #endif
+ 	EXCEPTION_TABLE(0)
+ 
+-	NOTES :kernel :notes
++	NOTES :kernel :note
+ 
+ 	/* The dummy segment contents for the bug workaround mentioned above
+ 	   near PHDRS.  */
 -- 
 2.17.1
 
