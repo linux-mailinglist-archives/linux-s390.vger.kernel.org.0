@@ -2,143 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AC238E859C
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 11:31:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B586E85F8
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 11:43:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730953AbfJ2KbO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Oct 2019 06:31:14 -0400
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:40976 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730955AbfJ2KbO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Oct 2019 06:31:14 -0400
-Received: by mail-qt1-f194.google.com with SMTP id o3so19385935qtj.8
-        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 03:31:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=9SS4b78ehrP4a9/DZbJX4AGCB0l2oYRtncqtM2VcVgs=;
-        b=G/LkZ5EFLI13fNYweg2QLrX9wPwyX1HFJIpSnMQHTrMXQvOr8WcBlj7L6PpPDNjdgP
-         i5InJ9pIYo4M2+ahXyCmJkm0/aSmAFV1b0ddTRW1LgRG7OVGwCri8wGtJhq7q7n0OHXS
-         /62wwsP9sjkBXi1sfsKUBwKdoX3XI/7IX8CepjzvKNmSryJQnKF34LTh2GQ9WhtDP2dt
-         IXSVXKbxiNcS5b+rYkiVMk/YKYGmnfMv31SeMxHd7e0Hp2u4HSyq7youtj+T3jqrMDT3
-         TABjTwTyDtWr5DElB4lPasN8uyXQjZI6Au4SUlUuoJnmXJBOg31XRn9SRwxaflUvjklQ
-         6j8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=9SS4b78ehrP4a9/DZbJX4AGCB0l2oYRtncqtM2VcVgs=;
-        b=hCRewt5Cyi+iZcDIQLfJRPHb03Ms7WiDmq9HGI/x85ZR4UXVuUwOOXbm1eC+tUhfY7
-         WGYDUHSyZihWRRPiT2YVossXCPLU8ELfPCs7TxdGcj19gJXPon9ofd4dXcEpaMB1sKCx
-         sFucb/TonudjFDcOJ2Gp7SbaLnOX+f42gErDeGPkYH2owtzK+9OKT5nWWzjQ05Z4hKIz
-         gnQLrXOP07HEgzEV9ddGaV+9+jQDdHPYa3X6+YnDUYjDpZZP5y9dRBcOhyZ5WaR9AY0n
-         nWfM9EHimKJEIx390nsXJKaUnt1eH345qwUQAdECCZ5bS1KZSCw6JFBPfVe0qG6ARsz5
-         3hRQ==
-X-Gm-Message-State: APjAAAVIJlBY52DOmqMaabOaY31Jm8MazdtglKPhUEUq623XhZPl6VLW
-        7sqrijB0mQ8+adT3piT2cMsgYQ==
-X-Google-Smtp-Source: APXvYqxu87KxuRTj39OXWAVjw/WFzSDMbE3Up95oGqmF/PZSf0Vx1vPkAAaomtV6kZQFzmiTSl4zEw==
-X-Received: by 2002:a0c:f6d2:: with SMTP id d18mr6856697qvo.155.1572345072935;
-        Tue, 29 Oct 2019 03:31:12 -0700 (PDT)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id t1sm7346140qkm.121.2019.10.29.03.31.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 29 Oct 2019 03:31:12 -0700 (PDT)
-Content-Type: text/plain; charset=us-ascii
+        id S1728739AbfJ2Knt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Oct 2019 06:43:49 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:31211 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727389AbfJ2Knt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 29 Oct 2019 06:43:49 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572345827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=8QKaEOxWqH0XbEXmeRTfx0XwaFmBJ9rzCJkgjIkFVeU=;
+        b=Tt+d8fz9rBLzEKRtR2jEWVJHoh/7v2uHuNhB644495Cp9YRg71PX4FOwIyi9ufLDFcaHQP
+        QpRb9aqbbLnz0e4iLRNMXTuxUirp7L2rgm5ZOVZSC5NwZaryLYOytLKZGw1DagJczBz15/
+        U5tdiNyMiwqjUDDfuxlLFtw7re22sZY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-280-f_q__00gOjOwW2LVCQTfjw-1; Tue, 29 Oct 2019 06:43:43 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B317E1005500;
+        Tue, 29 Oct 2019 10:43:39 +0000 (UTC)
+Received: from [10.72.12.223] (ovpn-12-223.pek2.redhat.com [10.72.12.223])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 902D960BF1;
+        Tue, 29 Oct 2019 10:42:12 +0000 (UTC)
+Subject: Re: [PATCH V5 4/6] mdev: introduce virtio device and its device ops
+To:     Zhu Lingshan <lingshan.zhu@linux.intel.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191023130752.18980-1-jasowang@redhat.com>
+ <20191023130752.18980-5-jasowang@redhat.com>
+ <df1eb77c-d159-da11-bb8f-df2c19089ac6@linux.intel.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <14410ac9-cc01-185a-5dcf-7f6c78aefd65@redhat.com>
+Date:   Tue, 29 Oct 2019 18:42:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <df1eb77c-d159-da11-bb8f-df2c19089ac6@linux.intel.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: f_q__00gOjOwW2LVCQTfjw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table helpers
-Date:   Tue, 29 Oct 2019 06:31:11 -0400
-Message-Id: <B6AAFA3F-745D-48E2-98CC-CFB30934CE39@lca.pw>
-References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-In-Reply-To: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
-To:     Anshuman Khandual <Anshuman.Khandual@arm.com>
-X-Mailer: iPhone Mail (17A878)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
+On 2019/10/29 =E4=B8=8B=E5=8D=883:42, Zhu Lingshan wrote:
+>>
+>> +=C2=A0=C2=A0=C2=A0 void (*set_status)(struct mdev_device *mdev, u8 stat=
+us);
+>
+> Hi Jason
+>
+> Is it possible to make set_status() return an u8 or bool, because this
+> may fail in real hardware. Without a returned code, I am not sure=C2=A0
+> whether it is a good idea to set the status | NEED_RESET when fail.
+>
+> Thanks,
+> BR
+> Zhu Lingshan=20
 
-> On Oct 28, 2019, at 1:29 AM, Anshuman Khandual <Anshuman.Khandual@arm.com>=
- wrote:
->=20
-> This adds tests which will validate architecture page table helpers and
-> other accessors in their compliance with expected generic MM semantics.
-> This will help various architectures in validating changes to existing
-> page table helpers or addition of new ones.
->=20
-> This test covers basic page table entry transformations including but not
-> limited to old, young, dirty, clean, write, write protect etc at various
-> level along with populating intermediate entries with next page table page=
 
-> and validating them.
->=20
-> Test page table pages are allocated from system memory with required size
-> and alignments. The mapped pfns at page table levels are derived from a
-> real pfn representing a valid kernel text symbol. This test gets called
-> right after page_alloc_init_late().
->=20
-> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along wit=
-h
-> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to=
+Hi:
 
-> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 an=
-d
-> arm64. Going forward, other architectures too can enable this after fixing=
 
-> build or runtime problems (if any) with their page table helpers.
->=20
-> Folks interested in making sure that a given platform's page table helpers=
+It's possible but I'm not sure whether any user will care about it. E.g
+see virtio_add_status():
 
-> conform to expected generic MM semantics should enable the above config
-> which will just trigger this test during boot. Any non conformity here wil=
-l
-> be reported as an warning which would need to be fixed. This test will hel=
-p
-> catch any changes to the agreed upon semantics expected from generic MM an=
-d
-> enable platforms to accommodate it thereafter.
+void virtio_add_status(struct virtio_device *dev, unsigned int status)
+{
+=C2=A0=C2=A0=C2=A0 might_sleep();
+=C2=A0=C2=A0=C2=A0 dev->config->set_status(dev, dev->config->get_status(dev=
+) | status);
+}
+EXPORT_SYMBOL_GPL(virtio_add_status);
 
-This looks like a perfect candidate to streamline with the new kunit framewo=
-rk, no?=
+And I believe how it work should be:
+
+virtio_add_status(xyz);
+
+status =3D virtio_get_status();
+
+if (!(status & xyz))
+
+=C2=A0=C2=A0=C2=A0 error;
+
+Thanks
+
+
+
