@@ -2,129 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D4E55E8656
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 12:09:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18E71E8752
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 12:41:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfJ2LJc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Oct 2019 07:09:32 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28368 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727406AbfJ2LJc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 29 Oct 2019 07:09:32 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572347370;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gxjLgsc8qA8QS5AMJrptlvxMj6UiaLdFsNtqMQqPbhA=;
-        b=eMhNukffaBa+E9VaO7hLzAuFanke9kC2WbeFX8Tky+0LqdEModNPZwfujJilS2A1K0/UCG
-        +53KxxN4pZNOCV68RCDaaOLLBwY2fvy5p9rQ+mhvyV0RxOlHxnjxNAeZLMNUMGvwxy2VtS
-        exroBFwZ1uhrPYzAqyee3wUkrvoIn3k=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-135-_kvQpE-QM9W83HYDPmpjEA-1; Tue, 29 Oct 2019 07:09:27 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B375800C80;
-        Tue, 29 Oct 2019 11:09:26 +0000 (UTC)
-Received: from [10.36.117.183] (ovpn-117-183.ams2.redhat.com [10.36.117.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3DFC5D6C3;
-        Tue, 29 Oct 2019 11:09:24 +0000 (UTC)
-Subject: Re: [PATCH] mm/sparse.c: mark populate_section_memmap as __meminit
-To:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20191028165549.14478-1-iii@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <6e845b02-9601-5c9d-3f99-c8a439df07ae@redhat.com>
-Date:   Tue, 29 Oct 2019 12:09:24 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191028165549.14478-1-iii@linux.ibm.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: _kvQpE-QM9W83HYDPmpjEA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        id S1731885AbfJ2Llk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Oct 2019 07:41:40 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29206 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728317AbfJ2Llk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 29 Oct 2019 07:41:40 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TBdrCA124947
+        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 07:41:39 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxmr9r1qf-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 07:41:38 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <ubraun@linux.ibm.com>;
+        Tue, 29 Oct 2019 11:41:36 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 29 Oct 2019 11:41:34 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TBevBr18284994
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 11:40:57 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1FA7352051;
+        Tue, 29 Oct 2019 11:41:31 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B687D52059;
+        Tue, 29 Oct 2019 11:41:30 +0000 (GMT)
+From:   Ursula Braun <ubraun@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        gor@linux.ibm.com, heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        kgraul@linux.ibm.com, ubraun@linux.ibm.com
+Subject: [PATCH net 1/1] net/smc: fix refcounting for non-blocking connect()
+Date:   Tue, 29 Oct 2019 12:41:26 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19102911-0016-0000-0000-000002BEC0A7
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19102911-0017-0000-0000-000033201812
+Message-Id: <20191029114126.59907-1-ubraun@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=985 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910290118
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 28.10.19 17:55, Ilya Leoshkevich wrote:
-> Building the kernel on s390 with -Og produces the following warning:
->=20
-> WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from th=
-e function populate_section_memmap() to the function .meminit.text:__popula=
-te_section_memmap()
-> The function populate_section_memmap() references
-> the function __meminit __populate_section_memmap().
-> This is often because populate_section_memmap lacks a __meminit
-> annotation or the annotation of __populate_section_memmap is wrong.
->=20
-> While -Og is not supported, in theory this might still happen with
-> another compiler or on another architecture. So fix this by using the
-> correct section annotations.
->=20
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-> ---
->   mm/sparse.c | 6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->=20
-> diff --git a/mm/sparse.c b/mm/sparse.c
-> index f6891c1992b1..0f1f36443a96 100644
-> --- a/mm/sparse.c
-> +++ b/mm/sparse.c
-> @@ -448,7 +448,7 @@ static unsigned long __init section_map_size(void)
->   =09return PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
->   }
->  =20
-> -struct page __init *__populate_section_memmap(unsigned long pfn,
-> +struct page __meminit *__populate_section_memmap(unsigned long pfn,
->   =09=09unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
->   {
->   =09unsigned long size =3D section_map_size();
-> @@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, un=
-signed long end_pfn)
->   #endif
->  =20
->   #ifdef CONFIG_SPARSEMEM_VMEMMAP
-> -static struct page *populate_section_memmap(unsigned long pfn,
-> +static struct page * __meminit populate_section_memmap(unsigned long pfn=
-,
->   =09=09unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
->   {
->   =09return __populate_section_memmap(pfn, nr_pages, nid, altmap);
-> @@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
->   =09vmemmap_free(start, end, NULL);
->   }
->   #else
-> -struct page *populate_section_memmap(unsigned long pfn,
-> +struct page * __meminit populate_section_memmap(unsigned long pfn,
->   =09=09unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
->   {
->   =09struct page *page, *ret;
->=20
+If a nonblocking socket is immediately closed after connect(),
+the connect worker may not have started. This results in a refcount
+problem, since sock_hold() is called from the connect worker.
+This patch moves the sock_hold in front of the connect worker
+scheduling.
 
-So mm/sparse-vmemmap.c:__populate_section_memmap() already has this=20
-annotation. I guess it's the right thing to do as=20
-populate_section_memmap() is called from
+Reported-by: syzbot+4c063e6dea39e4b79f29@syzkaller.appspotmail.com
+Fixes: 50717a37db03 ("net/smc: nonblocking connect rework")
+Reviewed-by: Karsten Graul <kgraul@linux.ibm.com>
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+---
+ net/smc/af_smc.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-static struct page * __meminit section_activate()
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
---=20
-
-Thanks,
-
-David / dhildenb
+diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
+index cea3c36ea0da..47946f489fd4 100644
+--- a/net/smc/af_smc.c
++++ b/net/smc/af_smc.c
+@@ -707,8 +707,6 @@ static int __smc_connect(struct smc_sock *smc)
+ 	int smc_type;
+ 	int rc = 0;
+ 
+-	sock_hold(&smc->sk); /* sock put in passive closing */
+-
+ 	if (smc->use_fallback)
+ 		return smc_connect_fallback(smc, smc->fallback_rsn);
+ 
+@@ -853,6 +851,8 @@ static int smc_connect(struct socket *sock, struct sockaddr *addr,
+ 	rc = kernel_connect(smc->clcsock, addr, alen, flags);
+ 	if (rc && rc != -EINPROGRESS)
+ 		goto out;
++
++	sock_hold(&smc->sk); /* sock put in passive closing */
+ 	if (flags & O_NONBLOCK) {
+ 		if (schedule_work(&smc->connect_work))
+ 			smc->connect_nonblock = 1;
+-- 
+2.17.1
 
