@@ -2,112 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56EDEE7AE0
-	for <lists+linux-s390@lfdr.de>; Mon, 28 Oct 2019 22:06:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC6F1E7E7D
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 03:16:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389632AbfJ1VGL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 28 Oct 2019 17:06:11 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:38973 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389625AbfJ1VGL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 28 Oct 2019 17:06:11 -0400
-Received: by mail-wr1-f65.google.com with SMTP id a11so11377543wra.6
-        for <linux-s390@vger.kernel.org>; Mon, 28 Oct 2019 14:06:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=mU+g+sfz1bIovsmfwMpnLnRDz98DNUSgbeHXg3LWxbU=;
-        b=ribUHw8KQSMwF+HWzboOgcGnyDaK3YUsaQY5qHoPDIig1OlIIT+RSRtjqhXe7Dbg9E
-         bSBQUcVMSR2hYT8aXJgTZ6f8OGIkctk+xHOQSOwJ6Q5CwvdDqm8e88AiepxRc7ZP1ybt
-         fZNDCcdVU5u+XgHEnSecAhSA4O/3UGIAmBBvg8DDG4bGvgXFaAQ8BKz/3WIkMHUfBlmS
-         oKK67aICFbH6k1HpTOZAE4EfYQIf0NUv0kei21drYEvGV16iP17AW1GGbOUwYExGH1Sj
-         lsicZeW7Xu2uJgnaBUUTw18H4HUdfa/VFa8ufg7ZyBeH4hFKJ43/53r6cTSoTGfZETjQ
-         vB1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=mU+g+sfz1bIovsmfwMpnLnRDz98DNUSgbeHXg3LWxbU=;
-        b=G+sfca8jUOdhVOxq8+3oxO6td6ZtFI+ya8ibQYM9hqPRRBFBQnF43xdxZql38QFG2Q
-         GIhsQu+HcrAtiYlhnVxkKo+oaYiGJEzW4lZHMA6KS4Q0Ecne5CMtq32ej7nnlhaCr5fZ
-         gBIIwFCyc9uNY9PSC3k5U33XiHVms419xleNIxpNLqZzdjHJgY257ais8/OFz0dSX4Na
-         nQg8SLgZr1LfjNLRRMngGUwB0R7oWxyqcoR4r2sCNLKpGtd5H68HxyYgRFtwA0N6eryy
-         PW0CVYyvH3UvYGbge3EAjUVt8zw4gKx0fG5AEunIb7tG4BLzelQD6pQipA4X7Qck7kRe
-         id0w==
-X-Gm-Message-State: APjAAAVgOqnx1I+PiNry2CrRcsj4Rxufw5JFXGMRFb9atX1R6KLDVJPO
-        wxmEyDGXcQkZCZoV+UHdsAhlLQ==
-X-Google-Smtp-Source: APXvYqwLLcOvu9N5SeRwebeTNTR9kL0tb9M7ihMiJM5pCGfJvj4BNTg8/+5IGhg+G1oQqTj4kcEk6g==
-X-Received: by 2002:adf:f192:: with SMTP id h18mr17665670wro.148.1572296769066;
-        Mon, 28 Oct 2019 14:06:09 -0700 (PDT)
-Received: from localhost.localdomain (230.106.138.88.rev.sfr.net. [88.138.106.230])
-        by smtp.gmail.com with ESMTPSA id b196sm927822wmd.24.2019.10.28.14.06.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 28 Oct 2019 14:06:08 -0700 (PDT)
-From:   Richard Henderson <richard.henderson@linaro.org>
-X-Google-Original-From: Richard Henderson <rth@twiddle.net>
-To:     linux-arch@vger.kernel.org
-Cc:     x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        id S1728030AbfJ2CQx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 28 Oct 2019 22:16:53 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:40484 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727243AbfJ2CQx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 28 Oct 2019 22:16:53 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9T29TD9100918;
+        Tue, 29 Oct 2019 02:16:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=hONsJVeOJ8urVvWMHySRlkDni8+Tc811zDNnd4BXEr8=;
+ b=UkpT28My6MjH1SBiyR4Qlk5EFpcp1ubg+WiHm+3eNMW9l2gM4lBtAfxT41xVeRZrGuMO
+ lcGxCHY6Hs/lZ3+WSqTMVrMcfYP7oIm/0oxGCrmXhMcps62WpFO34N2BMmS9aabP9DiL
+ dpzPT4Q5hfaDL0NRpUBqzw0t2LvxQ4e3FCvGO0IWo3pTr95WTiB1ftMPzKS5xMGrMTyt
+ a2s3BRiwe87tXpiNFGRRqorZXhc4Jt/XsKS1tidhbGBbkT/hy7wM+lFqECi5OVq+o2GZ
+ er8bw55lrCgRb2Fg+MLWony7OwG6sBHBClPuMTZjG7CHqm7keuZzRQH6Tmnq2GxV44xl bg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2vvumfak9s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 02:16:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x9T2DkJf145428;
+        Tue, 29 Oct 2019 02:16:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2vwam02j7a-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 29 Oct 2019 02:16:49 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x9T2Gldn028010;
+        Tue, 29 Oct 2019 02:16:47 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 28 Oct 2019 19:16:47 -0700
+To:     Benjamin Block <bblock@linux.ibm.com>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        Steffen Maier <maier@linux.ibm.com>,
+        Jens Remus <jremus@linux.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [PATCH 6/6] s390x: Mark archrandom.h functions __must_check
-Date:   Mon, 28 Oct 2019 22:05:59 +0100
-Message-Id: <20191028210559.8289-7-rth@twiddle.net>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191028210559.8289-1-rth@twiddle.net>
-References: <20191028210559.8289-1-rth@twiddle.net>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v2 00/11] zfcp: retrieve local RDP data, fix and cleanup
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <cover.1571934247.git.bblock@linux.ibm.com>
+Date:   Mon, 28 Oct 2019 22:16:44 -0400
+In-Reply-To: <cover.1571934247.git.bblock@linux.ibm.com> (Benjamin Block's
+        message of "Fri, 25 Oct 2019 18:12:42 +0200")
+Message-ID: <yq18sp48feb.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1910290022
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9424 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1910290022
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-We cannot use the pointer output without validating the
-success of the random read.
 
-Signed-off-by: Richard Henderson <rth@twiddle.net>
----
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
----
- arch/s390/include/asm/archrandom.h | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Benjamin,
 
-diff --git a/arch/s390/include/asm/archrandom.h b/arch/s390/include/asm/archrandom.h
-index c67b82dfa558..f3f1ee0a8c38 100644
---- a/arch/s390/include/asm/archrandom.h
-+++ b/arch/s390/include/asm/archrandom.h
-@@ -33,17 +33,17 @@ static inline bool arch_has_random_seed(void)
- 	return false;
- }
- 
--static inline bool arch_get_random_long(unsigned long *v)
-+static inline bool __must_check arch_get_random_long(unsigned long *v)
- {
- 	return false;
- }
- 
--static inline bool arch_get_random_int(unsigned int *v)
-+static inline bool __must_check arch_get_random_int(unsigned int *v)
- {
- 	return false;
- }
- 
--static inline bool arch_get_random_seed_long(unsigned long *v)
-+static inline bool __must_check arch_get_random_seed_long(unsigned long *v)
- {
- 	if (static_branch_likely(&s390_arch_random_available)) {
- 		return s390_arch_random_generate((u8 *)v, sizeof(*v));
-@@ -51,7 +51,7 @@ static inline bool arch_get_random_seed_long(unsigned long *v)
- 	return false;
- }
- 
--static inline bool arch_get_random_seed_int(unsigned int *v)
-+static inline bool __must_check arch_get_random_seed_int(unsigned int *v)
- {
- 	if (static_branch_likely(&s390_arch_random_available)) {
- 		return s390_arch_random_generate((u8 *)v, sizeof(*v));
+> this is the second version of my RDP patchset for zfcp, after I
+> noticed a memory-leak in the first version earlier this year. Here is
+> the original description, which remains valid:
+
+Applied to 5.5/scsi-queue, thanks!
+
 -- 
-2.17.1
-
+Martin K. Petersen	Oracle Linux Engineering
