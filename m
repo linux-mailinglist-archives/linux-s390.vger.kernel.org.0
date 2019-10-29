@@ -2,101 +2,88 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 07A57E8AE9
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 15:37:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46316E8AFC
+	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 15:39:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389433AbfJ2Ohi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Oct 2019 10:37:38 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50496 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389432AbfJ2Ohi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 29 Oct 2019 10:37:38 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9TEYHxA056041
-        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 10:37:37 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxptv1m27-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 29 Oct 2019 10:37:36 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <bblock@linux.ibm.com>;
-        Tue, 29 Oct 2019 14:37:34 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 29 Oct 2019 14:37:32 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9TEbVa354001778
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 29 Oct 2019 14:37:31 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 05DECA4060;
-        Tue, 29 Oct 2019 14:37:31 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3D20A4062;
-        Tue, 29 Oct 2019 14:37:30 +0000 (GMT)
-Received: from t480-pf1aa2c2 (unknown [9.145.150.237])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 29 Oct 2019 14:37:30 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2 with local (Exim 4.92.3)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1iPScg-0004JO-MF; Tue, 29 Oct 2019 15:37:26 +0100
-Date:   Tue, 29 Oct 2019 15:37:26 +0100
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2 00/11] zfcp: retrieve local RDP data, fix and cleanup
-References: <cover.1571934247.git.bblock@linux.ibm.com>
- <yq18sp48feb.fsf@oracle.com>
+        id S2389245AbfJ2OjR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Oct 2019 10:39:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:54584 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388885AbfJ2OjI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 29 Oct 2019 10:39:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7CB12B29A;
+        Tue, 29 Oct 2019 14:39:06 +0000 (UTC)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, jpoimboe@redhat.com,
+        joe.lawrence@redhat.com
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jikos@kernel.org, pmladek@suse.com, nstange@suse.de,
+        live-patching@vger.kernel.org, Miroslav Benes <mbenes@suse.cz>
+Subject: [PATCH v2 0/3] s390/livepatch: Implement reliable stack tracing for the consistency model
+Date:   Tue, 29 Oct 2019 15:39:01 +0100
+Message-Id: <20191029143904.24051-1-mbenes@suse.cz>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <yq18sp48feb.fsf@oracle.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19102914-0020-0000-0000-00000380A59B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19102914-0021-0000-0000-000021D6AF31
-Message-Id: <20191029143726.GA25907@t480-pf1aa2c2>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-29_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910290140
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 10:16:44PM -0400, Martin K. Petersen wrote:
-> 
-> Benjamin,
-> 
-> > this is the second version of my RDP patchset for zfcp, after I
-> > noticed a memory-leak in the first version earlier this year. Here is
-> > the original description, which remains valid:
-> 
-> Applied to 5.5/scsi-queue, thanks!
-> 
+The livepatch consistency model requires reliable stack tracing
+architecture support in order to work properly. In order to achieve
+this, two main issues have to be solved. First, reliable and consistent
+call chain backtracing has to be ensured. Second, the unwinder needs to
+be able to detect stack corruptions and return errors.
 
-Thanks, Martin.
+The former should be guaranteed (see 3/3 for details), the latter is
+implemented by the patch set (mainly 3/3).
+
+It passes livepatch kselftests (with timeout disabled, see
+https://lore.kernel.org/live-patching/20191025115041.23186-1-mbenes@suse.cz/)
+and tests from https://github.com/lpechacek/qa_test_klp.
+
+Changes since v1 and questions follow:
+- rebased on top of v5.4-rc5. It also meant rebasing on top of
+  ARCH_STACKWALK, which made the outcome nicer and addressed some of
+  Joe's remarks.
+- sp alignment is checked in both _start and _next_frame cases
+- ftrace_graph_ret_addr() calling cleanup
+
+- I tried to use the existing infrastructure as much as possible with
+  one exception. I kept unwind_next_frame_reliable() next to the
+  ordinary unwind_next_frame(). I did not come up with a nice solution
+  how to integrate it. The reliable unwinding is executed on a task
+  stack only, which leads to a nice simplification. My integration
+  attempts only obfuscated the existing unwind_next_frame() which is
+  already not easy to read. Ideas are definitely welcome.
+
+- although not nice (Josh mentioned it in his review), I kept checking
+  for kretprobe_trampoline in the main loop. It could go into _start and
+  _next_frame callbacks, but more changes would be required (changing a
+  function return type, ordinary unwinding does not need it). So I did
+  not think it was worth it. I could change it in v3, of course.
+
+Miroslav Benes (3):
+  s390/unwind: drop unnecessary code around calling
+    ftrace_graph_ret_addr()
+  s390/unwind: prepare the unwinding interface for reliable stack traces
+  s390/livepatch: Implement reliable stack tracing for the consistency
+    model
+
+ arch/s390/Kconfig                  |  1 +
+ arch/s390/include/asm/stacktrace.h |  3 +-
+ arch/s390/include/asm/unwind.h     | 15 +++---
+ arch/s390/kernel/dumpstack.c       | 16 +++++-
+ arch/s390/kernel/perf_event.c      |  2 +-
+ arch/s390/kernel/stacktrace.c      | 48 +++++++++++++++++-
+ arch/s390/kernel/unwind_bc.c       | 79 ++++++++++++++++++++++++------
+ arch/s390/oprofile/init.c          |  2 +-
+ 8 files changed, 139 insertions(+), 27 deletions(-)
 
 -- 
-With Best Regards, Benjamin Block      /      Linux on IBM Z Kernel Development
-IBM Systems & Technology Group   /  IBM Deutschland Research & Development GmbH
-Vorsitz. AufsR.: Matthias Hartmann       /      Geschäftsführung: Dirk Wittkopp
-Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
+2.23.0
 
