@@ -2,121 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3724E9758
-	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 08:44:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 409CBE976F
+	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 08:56:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726246AbfJ3HoU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 30 Oct 2019 03:44:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12442 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726043AbfJ3HoT (ORCPT
+        id S1726020AbfJ3H4R (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 30 Oct 2019 03:56:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14506 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725822AbfJ3H4Q (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 30 Oct 2019 03:44:19 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9U7gdgu112284
-        for <linux-s390@vger.kernel.org>; Wed, 30 Oct 2019 03:44:18 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vy5tx92d5-1
+        Wed, 30 Oct 2019 03:56:16 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9U7nNTN011025
+        for <linux-s390@vger.kernel.org>; Wed, 30 Oct 2019 03:56:15 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vy40y4aqt-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 30 Oct 2019 03:44:18 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 30 Oct 2019 03:56:15 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <freude@linux.ibm.com>;
-        Wed, 30 Oct 2019 07:44:16 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Wed, 30 Oct 2019 07:56:13 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 30 Oct 2019 07:44:12 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9U7iCO361866182
+        Wed, 30 Oct 2019 07:56:09 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9U7u7Ri45416546
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 07:44:12 GMT
+        Wed, 30 Oct 2019 07:56:08 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E728642041;
-        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D5DA942042;
+        Wed, 30 Oct 2019 07:56:07 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3DCF642052;
-        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 3DCD44203F;
+        Wed, 30 Oct 2019 07:56:07 +0000 (GMT)
 Received: from funtu.home (unknown [9.145.158.134])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 30 Oct 2019 07:44:11 +0000 (GMT)
-Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results in
- kernel OOPS
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
-        pmorel@linux.ibm.com, pasic@linux.ibm.com, jjherne@linux.ibm.com
-References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+        Wed, 30 Oct 2019 07:56:07 +0000 (GMT)
+Subject: Re: [PATCH 6/6] s390x: Mark archrandom.h functions __must_check
+To:     Richard Henderson <richard.henderson@linaro.org>,
+        linux-arch@vger.kernel.org
+Cc:     x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+References: <20191028210559.8289-1-rth@twiddle.net>
+ <20191028210559.8289-7-rth@twiddle.net>
+ <935cf73a-d06c-365d-131a-23dcb350ba17@linux.ibm.com>
+ <cd6b5b8c-77f0-ad7e-702a-27e5a929ca54@linaro.org>
 From:   Harald Freudenberger <freude@linux.ibm.com>
-Date:   Wed, 30 Oct 2019 08:44:11 +0100
+Date:   Wed, 30 Oct 2019 08:56:07 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+In-Reply-To: <cd6b5b8c-77f0-ad7e-702a-27e5a929ca54@linaro.org>
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
 X-TM-AS-GCONF: 00
-x-cbid: 19103007-0008-0000-0000-0000032907CB
+x-cbid: 19103007-0028-0000-0000-000003B10491
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103007-0009-0000-0000-00004A484CD5
-Message-Id: <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
+x-cbparentid: 19103007-0029-0000-0000-00002473484E
+Message-Id: <95aa7fd3-5e80-f11b-3f74-42628f7dfba4@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_03:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910300076
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910300077
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 29.10.19 23:09, Tony Krowiak wrote:
-> From: aekrowia <akrowiak@linux.ibm.com>
+On 29.10.19 14:18, Richard Henderson wrote:
+> On 10/29/19 8:26 AM, Harald Freudenberger wrote:
+>> Fine with me, Thanks, reviewed, build and tested.
+>> You may add my reviewed-by: Harald Freudenberger <freude@linux.ibm.com>
+>> However, will this go into the kernel tree via crypto or s390 subsystem ?
+> That's an excellent question.
 >
-> When an AP adapter card is configured off via the SE or the SCLP
-> Deconfigure Adjunct Processor command and the AP bus subsequently detects
-> that the adapter card is no longer in the AP configuration, the card
-> device representing the adapter card as well as each of its associated
-> AP queue devices will be removed by the AP bus. If one or more of the
-> affected queue devices is bound to the VFIO AP device driver, its remove
-> callback will be invoked for each queue to be removed. The remove callback
-> resets the queue and disables IRQ processing. If interrupt processing was
-> never enabled for the queue, disabling IRQ processing will fail resulting
-> in a kernel OOPS.
+> As an API decision, perhaps going via crypto makes more sense,
+> but none of the patches are dependent on one another, so they
+> could go through separate architecture trees.
 >
-> This patch verifies IRQ processing is enabled before attempting to disable
-> interrupts for the queue.
+> It has been a long time since I have done much kernel work;
+> I'm open to suggestions on the subject.
 >
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
 >
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-> index be2520cc010b..42d8308fd3a1 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
->  	apid = AP_QID_CARD(q->apqn);
->  	apqi = AP_QID_QUEUE(q->apqn);
->  	vfio_ap_mdev_reset_queue(apid, apqi, 1);
-> -	vfio_ap_irq_disable(q);
-> +	if (q->saved_isc != VFIO_AP_ISC_INVALID)
-> +		vfio_ap_irq_disable(q);
->  	kfree(q);
->  	mutex_unlock(&matrix_dev->lock);
->  }
-Reset of an APQN does also clear IRQ processing. I don't say that the
-resources associated with IRQ handling for the APQN are also cleared.
-But when you call PQAP(AQIC) after an PQAP(RAPQ) or PQAP(ZAPQ)
-it is superfluous. However, there should not appear any kernel OOPS.
-So can you please give me more details about this kernel oops - maybe
-I need to add exception handler code to the inline ap_aqic() function.
-
-regards, Harald Freudenberger
+> r~
+Since the change needs to be done in include/linux/random.h
+and in parallel with all the arch files in arch/xxx/include/asm/archrandom.h
+it should go in one shot. I'd suggest to post the patch series to linux-crypto
+and let Herbert Xu handle this.
 
