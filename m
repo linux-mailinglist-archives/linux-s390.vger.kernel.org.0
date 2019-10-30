@@ -2,101 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D5B5EA358
-	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 19:29:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35FFDEA558
+	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 22:23:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727529AbfJ3S3y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 30 Oct 2019 14:29:54 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41790 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726795AbfJ3S3x (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 30 Oct 2019 14:29:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572460192;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sD9ilt7E0eF8ebEenHyF+oLBsdtqCiop9f34SpTYO9U=;
-        b=OGYSnVU8OCSc3LQTXPe/e6mOV4/qKMPdjDZ10nTjm3FvDnFjMbTvuVyW9MS2voV6K+NY0+
-        oG/lLVplVpz3abLsl5SsvwJhpL8zb2jk90kjUjtBuVjmD7TH1Pcd/H8KFiV+zSQ9IH+/vG
-        gWx8x0ahmTeFzgR049QkBpGBA5vtoXU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-138-fsqSqvcaMyCho3W8c_yCWA-1; Wed, 30 Oct 2019 14:29:49 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EECC9800D49;
-        Wed, 30 Oct 2019 18:29:47 +0000 (UTC)
-Received: from [10.36.116.178] (ovpn-116-178.ams2.redhat.com [10.36.116.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BAAE5C1C3;
-        Wed, 30 Oct 2019 18:29:45 +0000 (UTC)
-Subject: Re: [RFC 27/37] KVM: s390: protvirt: SIGP handling
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
-        gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-28-frankja@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <37df8c9a-091b-4da6-e1dc-294f432cb743@redhat.com>
-Date:   Wed, 30 Oct 2019 19:29:45 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1727082AbfJ3VXO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 30 Oct 2019 17:23:14 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:35622 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726261AbfJ3VXO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 30 Oct 2019 17:23:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=87X+oyehu7JN6cXbNSmkqxhLbbV13utM66QLaFqOq30=; b=C0K0acY3VsFEjNSc5aNiAJFe4
+        d54AjrBqdl31EiwE3juEmhzyVlbqM+vV8tLM0pK41NKkIBPSSjSJhZxLTJf1ZR1dUzQPd3P7Bfepo
+        N5/Js2feq2atD6kIsq2nEI0zR7hMtJPFvxme4ObJ++6o7y3Lv9Q2ez3hM7Ym6z9j6MFfCzNt1u3UN
+        DH4xUDvfwjWGNhxU+bGtqYo33RhrKWLa7yiZ4XkUlrrgYqN77HzLVIF3OHkXVDSNjno7AvoAzFX22
+        YURfaj2i3xyAz42tT3zZ7C5c1fxke8BVtS/Kq2nwouudZaM5RtFilstS8C0cp7b25PYnwqyWSHF/R
+        PnCRVVR8Q==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iPvQu-00034L-4b; Wed, 30 Oct 2019 21:23:12 +0000
+Date:   Wed, 30 Oct 2019 14:23:12 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V6 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+Message-ID: <20191030212312.GA4251@infradead.org>
+References: <20191030064444.21166-1-jasowang@redhat.com>
+ <20191030064444.21166-7-jasowang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191024114059.102802-28-frankja@linux.ibm.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: fsqSqvcaMyCho3W8c_yCWA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030064444.21166-7-jasowang@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24.10.19 13:40, Janosch Frank wrote:
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+On Wed, Oct 30, 2019 at 02:44:44PM +0800, Jason Wang wrote:
+> This sample driver creates mdev device that simulate virtio net device
+> over virtio mdev transport. The device is implemented through vringh
+> and workqueue. A device specific dma ops is to make sure HVA is used
+> directly as the IOVA. This should be sufficient for kernel virtio
+> driver to work.
+> 
+> Only 'virtio' type is supported right now. I plan to add 'vhost' type
+> on top which requires some virtual IOMMU implemented in this sample
+> driver.
 
-Can you add why this is necessary and how handle_stop() is intended to=20
-work in prot mode?
-
-How is SIGP handled in general in prot mode? (which intercepts are=20
-handled by QEMU)
-Would it be valid for user space to inject a STOP interrupt with "flags=20
-& KVM_S390_STOP_FLAG_STORE_STATUS" - I think not (legacy QEMU only)
-
-I think we should rather disallow injecting such stop interrupts=20
-(KVM_S390_STOP_FLAG_STORE_STATUS) in prot mode in the first place. Also,=20
-we should disallow prot virt without user_sigp.
-
-> ---
->   arch/s390/kvm/intercept.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
-> index 37cb62bc261b..a89738e4f761 100644
-> --- a/arch/s390/kvm/intercept.c
-> +++ b/arch/s390/kvm/intercept.c
-> @@ -72,7 +72,8 @@ static int handle_stop(struct kvm_vcpu *vcpu)
->   =09if (!stop_pending)
->   =09=09return 0;
->  =20
-> -=09if (flags & KVM_S390_STOP_FLAG_STORE_STATUS) {
-> +=09if (flags & KVM_S390_STOP_FLAG_STORE_STATUS &&
-> +=09    !kvm_s390_pv_is_protected(vcpu->kvm)) {
->   =09=09rc =3D kvm_s390_vcpu_store_status(vcpu,
->   =09=09=09=09=09=09KVM_S390_STORE_STATUS_NOADDR);
->   =09=09if (rc)
->=20
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+Can we please submit a real driver for it?  A more or less useless
+sample driver doesn't really qualify for our normal kernel requirements
+that infrastructure should have a real user.
