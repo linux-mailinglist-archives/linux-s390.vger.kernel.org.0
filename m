@@ -2,114 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02226E92FA
-	for <lists+linux-s390@lfdr.de>; Tue, 29 Oct 2019 23:20:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43EF0E9455
+	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 02:02:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725909AbfJ2WU1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 29 Oct 2019 18:20:27 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25312 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725905AbfJ2WU1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 29 Oct 2019 18:20:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572387625;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5eWT9nPy+R5O4U/dHhPn5efOlyKUPzVBsOetLDlPYDU=;
-        b=ZJqLNtPx8t6Dsd2vNGTSkF0rZnjWsErulJaYS8hyITSvEvUl2zIS5Q0PAIBeEkteUhzfZI
-        Nyo+OumAxmssXG7f4hk4AXoZ8Q/Tw/tKvGMkd8hqvYl2uIjNlj6xc52uq3WV9e8BMv9H/Y
-        flyBgsRGRWuNMyDjy42HVnwl/kFfTXg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-dv88SZ0uMyG58oCKmZGY9g-1; Tue, 29 Oct 2019 18:20:22 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 835A45E6;
-        Tue, 29 Oct 2019 22:20:20 +0000 (UTC)
-Received: from gondolin (ovpn-116-60.ams2.redhat.com [10.36.116.60])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E1D7919D70;
-        Tue, 29 Oct 2019 22:20:13 +0000 (UTC)
-Date:   Tue, 29 Oct 2019 23:19:17 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, freude@linux.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        jjherne@linux.ibm.com
-Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results
- in kernel OOPS
-Message-ID: <20191029231917.0e6a62b9.cohuck@redhat.com>
-In-Reply-To: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
-References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: dv88SZ0uMyG58oCKmZGY9g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        id S1726495AbfJ3BCT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 29 Oct 2019 21:02:19 -0400
+Received: from gate.crashing.org ([63.228.1.57]:57584 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbfJ3BCS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 29 Oct 2019 21:02:18 -0400
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x9U11JQ0012494;
+        Tue, 29 Oct 2019 20:01:20 -0500
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id x9U11Hij012492;
+        Tue, 29 Oct 2019 20:01:17 -0500
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Tue, 29 Oct 2019 20:01:17 -0500
+From:   Segher Boessenkool <segher@kernel.crashing.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Borislav Petkov <bp@alien8.de>, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-ia64@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-xtensa@linux-xtensa.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-parisc@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org
+Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
+Message-ID: <20191030010117.GJ28442@gate.crashing.org>
+References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-2-keescook@chromium.org> <20191011082519.GI9749@gate.crashing.org> <201910110910.48270FC97@keescook> <20191011162552.GK9749@gate.crashing.org> <20191015165412.GD596@zn.tnic> <201910291414.F29F738B7@keescook>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201910291414.F29F738B7@keescook>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 29 Oct 2019 18:09:06 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+On Tue, Oct 29, 2019 at 02:15:39PM -0700, Kees Cook wrote:
+> On Tue, Oct 15, 2019 at 06:54:13PM +0200, Borislav Petkov wrote:
+> > On Fri, Oct 11, 2019 at 11:25:52AM -0500, Segher Boessenkool wrote:
+> > > Names *matter*, internal names doubly so.  So why replace a good name with
+> > > a worse name?  Because it is slightly less work for you?
+> > 
+> > So if we agree on the name "notes" and we decide to rename the other
+> > arches, this should all be done in a separate patchset anyway, and ontop
+> > of this one. And I believe Kees wouldn't mind doing it ontop since he's
+> > gotten his hands dirty already. :-P
+> 
+> I've added more rationale to patch #1 in the just-sent v3 of this
+> series. If I still can't convince you Segher, I'm happy to send "patch
+> 30/29" to do a bulk rename to "notes". Let me know. :)
 
-> From: aekrowia <akrowiak@linux.ibm.com>
+I am still not convinced the worse name is a better name, no :-)  But if
+you don't want to do the work, and instead prefer the much smaller change,
+that is of course a fine decision.  Thank you!
 
-Some accident seems to have happened to your git config.
+(I would be happy with such a 30/29 as well, of course.)
 
->=20
-> When an AP adapter card is configured off via the SE or the SCLP
-> Deconfigure Adjunct Processor command and the AP bus subsequently detects
-> that the adapter card is no longer in the AP configuration, the card
-> device representing the adapter card as well as each of its associated
-> AP queue devices will be removed by the AP bus. If one or more of the
-> affected queue devices is bound to the VFIO AP device driver, its remove
-> callback will be invoked for each queue to be removed. The remove callbac=
-k
-> resets the queue and disables IRQ processing. If interrupt processing was
-> never enabled for the queue, disabling IRQ processing will fail resulting
-> in a kernel OOPS.
->=20
-> This patch verifies IRQ processing is enabled before attempting to disabl=
-e
-> interrupts for the queue.
->=20
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio=
-_ap_drv.c
-> index be2520cc010b..42d8308fd3a1 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct ap_device *=
-apdev)
->  =09apid =3D AP_QID_CARD(q->apqn);
->  =09apqi =3D AP_QID_QUEUE(q->apqn);
->  =09vfio_ap_mdev_reset_queue(apid, apqi, 1);
-> -=09vfio_ap_irq_disable(q);
-> +=09if (q->saved_isc !=3D VFIO_AP_ISC_INVALID)
-> +=09=09vfio_ap_irq_disable(q);
 
-Hm... would it make sense to move that check into vfio_ap_irq_disable()
-instead? Or are we sure that in all other cases the irq processing had
-been enabled before?
-
-Also, if that oops is reasonably easy to trigger, it would probably
-make sense to cc:stable. (Or is this a new problem?)
-
->  =09kfree(q);
->  =09mutex_unlock(&matrix_dev->lock);
->  }
-
+Segher
