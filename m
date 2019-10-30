@@ -2,94 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 584BAEA355
-	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 19:29:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D5B5EA358
+	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 19:29:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfJ3S3v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 30 Oct 2019 14:29:51 -0400
-Received: from david.siemens.de ([192.35.17.14]:55175 "EHLO david.siemens.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726795AbfJ3S3v (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 30 Oct 2019 14:29:51 -0400
-Received: from mail1.sbs.de (mail1.sbs.de [192.129.41.35])
-        by david.siemens.de (8.15.2/8.15.2) with ESMTPS id x9UITYZc006975
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 19:29:34 +0100
-Received: from [167.87.33.44] ([167.87.33.44])
-        by mail1.sbs.de (8.15.2/8.15.2) with ESMTP id x9UITXgO017475;
-        Wed, 30 Oct 2019 19:29:34 +0100
-Subject: Re: [PATCH] scripts/gdb: fix debugging modules compiled with hot/cold
- partitioning
-To:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Kieran Bingham <kbingham@kernel.org>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20191028152734.13065-1-iii@linux.ibm.com>
-From:   Jan Kiszka <jan.kiszka@siemens.com>
-Message-ID: <130e31f0-ce38-77cb-58a9-cedf3b0f8113@siemens.com>
-Date:   Wed, 30 Oct 2019 19:29:33 +0100
+        id S1727529AbfJ3S3y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 30 Oct 2019 14:29:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41790 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726795AbfJ3S3x (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 30 Oct 2019 14:29:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572460192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=sD9ilt7E0eF8ebEenHyF+oLBsdtqCiop9f34SpTYO9U=;
+        b=OGYSnVU8OCSc3LQTXPe/e6mOV4/qKMPdjDZ10nTjm3FvDnFjMbTvuVyW9MS2voV6K+NY0+
+        oG/lLVplVpz3abLsl5SsvwJhpL8zb2jk90kjUjtBuVjmD7TH1Pcd/H8KFiV+zSQ9IH+/vG
+        gWx8x0ahmTeFzgR049QkBpGBA5vtoXU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-138-fsqSqvcaMyCho3W8c_yCWA-1; Wed, 30 Oct 2019 14:29:49 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EECC9800D49;
+        Wed, 30 Oct 2019 18:29:47 +0000 (UTC)
+Received: from [10.36.116.178] (ovpn-116-178.ams2.redhat.com [10.36.116.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0BAAE5C1C3;
+        Wed, 30 Oct 2019 18:29:45 +0000 (UTC)
+Subject: Re: [RFC 27/37] KVM: s390: protvirt: SIGP handling
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-28-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <37df8c9a-091b-4da6-e1dc-294f432cb743@redhat.com>
+Date:   Wed, 30 Oct 2019 19:29:45 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191028152734.13065-1-iii@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191024114059.102802-28-frankja@linux.ibm.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: fsqSqvcaMyCho3W8c_yCWA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 28.10.19 16:27, Ilya Leoshkevich wrote:
-> gcc's -freorder-blocks-and-partition option makes it group frequently
-> and infrequently used code in .text.hot and .text.unlikely sections
-> respectively. At least when building modules on s390, this option is
-> used by default.
-> 
-> gdb assumes that all code is located in .text section, and that .text
-> section is located at module load address. With such modules this is no
-> longer the case: there is code in .text.hot and .text.unlikely, and
-> either of them might precede .text.
-> 
-> Fix by explicitly telling gdb the addresses of code sections.
-> 
-> It might be tempting to do this for all sections, not only the ones in
-> the white list. Unfortunately, gdb appears to have an issue, when telling
-> it about e.g. loadable .note.gnu.build-id section causes it to think that
-> non-loadable .note.Linux section is loaded at address 0, which in turn
-> causes NULL pointers to be resolved to bogus symbols. So keep using the
-> white list approach for the time being.
+On 24.10.19 13:40, Janosch Frank wrote:
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 
-Did you report this to gdb?
+Can you add why this is necessary and how handle_stop() is intended to=20
+work in prot mode?
 
-> 
-> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+How is SIGP handled in general in prot mode? (which intercepts are=20
+handled by QEMU)
+Would it be valid for user space to inject a STOP interrupt with "flags=20
+& KVM_S390_STOP_FLAG_STORE_STATUS" - I think not (legacy QEMU only)
+
+I think we should rather disallow injecting such stop interrupts=20
+(KVM_S390_STOP_FLAG_STORE_STATUS) in prot mode in the first place. Also,=20
+we should disallow prot virt without user_sigp.
+
 > ---
->  scripts/gdb/linux/symbols.py | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/scripts/gdb/linux/symbols.py b/scripts/gdb/linux/symbols.py
-> index 7b7c2fafbc68..be984aa29b75 100644
-> --- a/scripts/gdb/linux/symbols.py
-> +++ b/scripts/gdb/linux/symbols.py
-> @@ -99,7 +99,8 @@ lx-symbols command."""
->              attrs[n]['name'].string(): attrs[n]['address']
->              for n in range(int(sect_attrs['nsections']))}
->          args = []
-> -        for section_name in [".data", ".data..read_mostly", ".rodata", ".bss"]:
-> +        for section_name in [".data", ".data..read_mostly", ".rodata", ".bss",
-> +                             ".text", ".text.hot", ".text.unlikely"]:
->              address = section_name_to_address.get(section_name)
->              if address:
->                  args.append(" -s {name} {addr}".format(
-> 
+>   arch/s390/kvm/intercept.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
+> index 37cb62bc261b..a89738e4f761 100644
+> --- a/arch/s390/kvm/intercept.c
+> +++ b/arch/s390/kvm/intercept.c
+> @@ -72,7 +72,8 @@ static int handle_stop(struct kvm_vcpu *vcpu)
+>   =09if (!stop_pending)
+>   =09=09return 0;
+>  =20
+> -=09if (flags & KVM_S390_STOP_FLAG_STORE_STATUS) {
+> +=09if (flags & KVM_S390_STOP_FLAG_STORE_STATUS &&
+> +=09    !kvm_s390_pv_is_protected(vcpu->kvm)) {
+>   =09=09rc =3D kvm_s390_vcpu_store_status(vcpu,
+>   =09=09=09=09=09=09KVM_S390_STORE_STATUS_NOADDR);
+>   =09=09if (rc)
+>=20
 
-Reviewed-by: Jan Kiszka <jan.kiszka@siemens.com>
+--=20
 
-Jan
+Thanks,
 
--- 
-Siemens AG, Corporate Technology, CT RDA IOT SES-DE
-Corporate Competence Center Embedded Linux
+David / dhildenb
+
