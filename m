@@ -2,145 +2,148 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D79C4E9CE0
-	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 15:00:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 45904E9E56
+	for <lists+linux-s390@lfdr.de>; Wed, 30 Oct 2019 16:07:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726171AbfJ3OAb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 30 Oct 2019 10:00:31 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62990 "EHLO
+        id S1726359AbfJ3PHU convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Wed, 30 Oct 2019 11:07:20 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:28380 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726272AbfJ3OAb (ORCPT
+        by vger.kernel.org with ESMTP id S1726175AbfJ3PHU (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 30 Oct 2019 10:00:31 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9UDv3Zp123623
-        for <linux-s390@vger.kernel.org>; Wed, 30 Oct 2019 10:00:30 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyb8xa714-1
+        Wed, 30 Oct 2019 11:07:20 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9UF5GSq142159
+        for <linux-s390@vger.kernel.org>; Wed, 30 Oct 2019 11:07:18 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyc7r2spx-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 30 Oct 2019 10:00:28 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 30 Oct 2019 11:07:18 -0400
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Wed, 30 Oct 2019 14:00:23 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <iii@linux.ibm.com>;
+        Wed, 30 Oct 2019 15:07:13 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 30 Oct 2019 14:00:21 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9UE0Jno38010928
+        Wed, 30 Oct 2019 15:07:10 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9UF79PG57278480
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 30 Oct 2019 14:00:19 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86E394C046;
-        Wed, 30 Oct 2019 14:00:19 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E11824C052;
-        Wed, 30 Oct 2019 14:00:18 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.148.76])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 30 Oct 2019 14:00:18 +0000 (GMT)
-Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results in
- kernel OOPS
-To:     Harald Freudenberger <freude@linux.ibm.com>,
-        Tony Krowiak <akrowiak@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
-        pasic@linux.ibm.com, jjherne@linux.ibm.com
-References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
- <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Wed, 30 Oct 2019 15:00:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+        Wed, 30 Oct 2019 15:07:10 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D8D05A4062;
+        Wed, 30 Oct 2019 15:07:09 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91E3FA4060;
+        Wed, 30 Oct 2019 15:07:09 +0000 (GMT)
+Received: from dyn-9-152-96-251.boeblingen.de.ibm.com (unknown [9.152.96.251])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 30 Oct 2019 15:07:09 +0000 (GMT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
+Subject: Re: [PATCH] mm/sparse.c: mark populate_section_memmap as __meminit
+From:   Ilya Leoshkevich <iii@linux.ibm.com>
+In-Reply-To: <20191030081359.GA11931@linux>
+Date:   Wed, 30 Oct 2019 16:07:09 +0100
+Cc:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Content-Transfer-Encoding: 8BIT
+References: <20191028165549.14478-1-iii@linux.ibm.com>
+ <20191030081359.GA11931@linux>
+To:     Oscar Salvador <osalvador@suse.de>
+X-Mailer: Apple Mail (2.3594.4.19)
 X-TM-AS-GCONF: 00
-x-cbid: 19103014-0016-0000-0000-000002BF261E
+x-cbid: 19103015-0028-0000-0000-000003B1257B
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103014-0017-0000-0000-0000332083C9
-Message-Id: <97cf7863-d6d0-418a-09c1-50d9e84fd855@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_05:,,
+x-cbparentid: 19103015-0029-0000-0000-000024736AFE
+Message-Id: <EA4FBE3A-13D4-4ECF-A2FC-64CBACEA9A87@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-30_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=11 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910300127
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910300141
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-
-On 10/30/19 8:44 AM, Harald Freudenberger wrote:
-> On 29.10.19 23:09, Tony Krowiak wrote:
->> From: aekrowia <akrowiak@linux.ibm.com>
->>
->> When an AP adapter card is configured off via the SE or the SCLP
->> Deconfigure Adjunct Processor command and the AP bus subsequently detects
->> that the adapter card is no longer in the AP configuration, the card
->> device representing the adapter card as well as each of its associated
->> AP queue devices will be removed by the AP bus. If one or more of the
->> affected queue devices is bound to the VFIO AP device driver, its remove
->> callback will be invoked for each queue to be removed. The remove callback
->> resets the queue and disables IRQ processing. If interrupt processing was
->> never enabled for the queue, disabling IRQ processing will fail resulting
->> in a kernel OOPS.
->>
->> This patch verifies IRQ processing is enabled before attempting to disable
->> interrupts for the queue.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
+> Am 30.10.2019 um 09:14 schrieb Oscar Salvador <osalvador@suse.de>:
+> 
+> On Mon, Oct 28, 2019 at 05:55:49PM +0100, Ilya Leoshkevich wrote:
+>> Building the kernel on s390 with -Og produces the following warning:
+>> 
+>> WARNING: vmlinux.o(.text+0x28dabe): Section mismatch in reference from the function populate_section_memmap() to the function .meminit.text:__populate_section_memmap()
+>> The function populate_section_memmap() references
+>> the function __meminit __populate_section_memmap().
+>> This is often because populate_section_memmap lacks a __meminit
+>> annotation or the annotation of __populate_section_memmap is wrong.
+>> 
+>> While -Og is not supported, in theory this might still happen with
+>> another compiler or on another architecture. So fix this by using the
+>> correct section annotations.
+>> 
+>> Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
 >> ---
->>   drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
->>   1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
->> index be2520cc010b..42d8308fd3a1 100644
->> --- a/drivers/s390/crypto/vfio_ap_drv.c
->> +++ b/drivers/s390/crypto/vfio_ap_drv.c
->> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
->>   	apid = AP_QID_CARD(q->apqn);
->>   	apqi = AP_QID_QUEUE(q->apqn);
->>   	vfio_ap_mdev_reset_queue(apid, apqi, 1);
->> -	vfio_ap_irq_disable(q);
->> +	if (q->saved_isc != VFIO_AP_ISC_INVALID)
->> +		vfio_ap_irq_disable(q);
->>   	kfree(q);
->>   	mutex_unlock(&matrix_dev->lock);
->>   }
-> Reset of an APQN does also clear IRQ processing. I don't say that the
-> resources associated with IRQ handling for the APQN are also cleared.
-> But when you call PQAP(AQIC) after an PQAP(RAPQ) or PQAP(ZAPQ)
-> it is superfluous. However, there should not appear any kernel OOPS.
-> So can you please give me more details about this kernel oops - maybe
-> I need to add exception handler code to the inline ap_aqic() function.
->
-> regards, Harald Freudenberger
->
+>> mm/sparse.c | 6 +++---
+>> 1 file changed, 3 insertions(+), 3 deletions(-)
+>> 
+>> diff --git a/mm/sparse.c b/mm/sparse.c
+>> index f6891c1992b1..0f1f36443a96 100644
+>> --- a/mm/sparse.c
+>> +++ b/mm/sparse.c
+>> @@ -448,7 +448,7 @@ static unsigned long __init section_map_size(void)
+>> 	return PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
+>> }
+>> 
+>> -struct page __init *__populate_section_memmap(unsigned long pfn,
+>> +struct page __meminit *__populate_section_memmap(unsigned long pfn,
+>> 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>> {
+>> 	unsigned long size = section_map_size();
+>> @@ -647,7 +647,7 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
+>> #endif
+>> 
+>> #ifdef CONFIG_SPARSEMEM_VMEMMAP
+>> -static struct page *populate_section_memmap(unsigned long pfn,
+>> +static struct page * __meminit populate_section_memmap(unsigned long pfn,
+>> 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>> {
+>> 	return __populate_section_memmap(pfn, nr_pages, nid, altmap);
+>> @@ -669,7 +669,7 @@ static void free_map_bootmem(struct page *memmap)
+>> 	vmemmap_free(start, end, NULL);
+>> }
+>> #else
+>> -struct page *populate_section_memmap(unsigned long pfn,
+>> +struct page * __meminit populate_section_memmap(unsigned long pfn,
+>> 		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+>> {
+>> 	struct page *page, *ret;
+> 
+> I did not really check deep, but I __think__ you only need to add __meminit in
+> populate_section_memmap functions.
+> 
+> __populate_section_memmap for SPARSE case is only used at init phase.
 
-Hi Tony,
+You are absolutely right, and this is what must be causing the problem
+on sh4.
 
-wasn't it already solved by the patch 5c4c2126  from Christian ?
+With CONFIG_SPARSEMEM_VMEMMAP, populate_section_memmap calls
+__populate_section_memmap version from mm/sparse-vmemmap.c, which is
+already marked as __meminit.
 
-Can you send the trace to me please?
+Without CONFIG_SPARSEMEM_VMEMMAP, populate_section_memmap does not
+call __populate_section_memmap (which is then defined in mm/sparse.c).
+Like you said, in this case the latter is called only during the init
+phase (by sparse_init_nid), so it should keep the __init annotation.
 
-Thanks,
+I think it still makes sense to mark the !CONFIG_SPARSEMEM_VMEMMAP
+version of populate_section_memmap as __meminit, since it's only called
+from __meminit section_activate.
 
-Pierre
-
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
-
+I will send a v2.
