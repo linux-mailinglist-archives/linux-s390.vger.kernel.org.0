@@ -2,121 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87D73EAFF0
-	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 13:13:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B633EEB087
+	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 13:42:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726602AbfJaMNI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 31 Oct 2019 08:13:08 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10562 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726779AbfJaMNI (ORCPT
+        id S1726761AbfJaMm5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 31 Oct 2019 08:42:57 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7606 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726735AbfJaMm4 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:13:08 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VCCvJP076010
-        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 08:13:07 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vyvp0pd00-1
+        Thu, 31 Oct 2019 08:42:56 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VCeSBx052635
+        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 08:42:55 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vxwmq9be0-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 08:13:04 -0400
+        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 08:42:50 -0400
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <mimu@linux.ibm.com>;
-        Thu, 31 Oct 2019 12:10:08 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Thu, 31 Oct 2019 12:42:27 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 31 Oct 2019 12:10:05 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VCA3TE28508234
+        Thu, 31 Oct 2019 12:42:25 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VCgNqZ28573818
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 12:10:03 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83C2BAE057;
-        Thu, 31 Oct 2019 12:10:03 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 26D14AE045;
-        Thu, 31 Oct 2019 12:10:03 +0000 (GMT)
-Received: from [9.152.96.213] (unknown [9.152.96.213])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 31 Oct 2019 12:10:03 +0000 (GMT)
-Reply-To: mimu@linux.ibm.com
-Subject: Re: [RFC 13/37] KVM: s390: protvirt: Add interruption injection
- controls
-To:     David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, cohuck@redhat.com, gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-14-frankja@linux.ibm.com>
- <c09046eb-380f-d930-8e99-42b9cc8a62ae@redhat.com>
- <26dfdefa-edbe-40e5-5b41-a4de86d47d15@linux.ibm.com>
- <5e8c5e1c-d08a-6ba4-da28-ee387522c257@redhat.com>
-From:   Michael Mueller <mimu@linux.ibm.com>
-Organization: IBM
-Date:   Thu, 31 Oct 2019 13:10:02 +0100
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <5e8c5e1c-d08a-6ba4-da28-ee387522c257@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Thu, 31 Oct 2019 12:42:23 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A139711C05B;
+        Thu, 31 Oct 2019 12:42:23 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 461C611C050;
+        Thu, 31 Oct 2019 12:42:23 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 31 Oct 2019 12:42:23 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Stefan Raspl <raspl@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net-next 0/8] s390/qeth: updates 2019-10-31
+Date:   Thu, 31 Oct 2019 13:42:13 +0100
+X-Mailer: git-send-email 2.17.1
 X-TM-AS-GCONF: 00
-x-cbid: 19103112-0020-0000-0000-000003814FC7
+x-cbid: 19103112-0028-0000-0000-000003B175FF
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103112-0021-0000-0000-000021D76583
-Message-Id: <63976ad0-745e-204b-f7c1-55f5a7465ca6@linux.ibm.com>
+x-cbparentid: 19103112-0029-0000-0000-00002473BFD2
+Message-Id: <20191031124221.34028-1-jwi@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=794 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910310125
+ mlxlogscore=854 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910310131
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Dave,
 
+please apply the following series of spooky qeth updates for net-next.
 
-On 31.10.19 10:15, David Hildenbrand wrote:
-> On 31.10.19 09:48, Michael Mueller wrote:
->>
->>
->> On 30.10.19 16:53, David Hildenbrand wrote:
->>>> @@ -268,8 +277,16 @@ struct kvm_s390_sie_block {
->>>>        __u8    oai;            /* 0x00e2 */
->>>>        __u8    armid;            /* 0x00e3 */
->>>>        __u8    reservede4[4];        /* 0x00e4 */
->>>> -    __u64    tecmc;            /* 0x00e8 */
->>>> -    __u8    reservedf0[12];        /* 0x00f0 */
->>>> +    union {
->>>> +        __u64    tecmc;        /* 0x00e8 */
->>>> +        struct {
->>>> +            __u16    subchannel_id;    /* 0x00e8 */
->>>> +            __u16    subchannel_nr;    /* 0x00ea */
->>>> +            __u32    io_int_parm;    /* 0x00ec */
->>>> +            __u32    io_int_word;    /* 0x00f0 */
->>>> +        };
->>>
->>> I only wonder if we should give this member a fitting name, e.g.,
->>> "ioparams"
->>
->> Do you see a real gain for that? We have a lot of other unnamed structs
->> defined here as well.
-> 
-> I was wondering if we could just copy the whole struct when delivering
-> the interrupt.
-> 
-> You could even reuse  "struct kvm_s390_io_info" here to make that more
-> clear.
+The first two patches add support for an enhanced TX doorbell, which
+enables us to do more xmit_more-based bulking.
+Note that this requires one patch for the s390/qdio base layer, which
+has been graciously acked by Heiko to go through your tree.
 
-I want to keep it the way it is to have the fields in the SCB
-declaration explicit.
+The remaining patches are just the usual minor cleanups/improvements.
 
 Thanks,
-Michael
+Julian
+
+
+Julian Wiedmann (8):
+  s390/qdio: implement IQD Multi-Write
+  s390/qeth: use IQD Multi-Write
+  s390/qeth: use QDIO_BUFNR()
+  s390/qeth: keep IRQ disabled until NAPI is really done
+  s390/qeth: consolidate some duplicated HW cmd code
+  s390/qeth: don't set card state in qeth_qdio_clear_card()
+  s390/qeth: use helpers for IP address hashing
+  s390/qeth: don't cache MAC addresses for multicast IPs
+
+ drivers/s390/cio/qdio.h           |   1 +
+ drivers/s390/cio/qdio_main.c      |  31 +++++----
+ drivers/s390/net/qeth_core.h      |   9 +++
+ drivers/s390/net/qeth_core_main.c | 108 ++++++++++++++++++++----------
+ drivers/s390/net/qeth_core_mpc.h  |   4 +-
+ drivers/s390/net/qeth_l2_main.c   |  21 ------
+ drivers/s390/net/qeth_l3.h        |  24 ++-----
+ drivers/s390/net/qeth_l3_main.c   |  41 ++++--------
+ 8 files changed, 120 insertions(+), 119 deletions(-)
+
+-- 
+2.17.1
 
