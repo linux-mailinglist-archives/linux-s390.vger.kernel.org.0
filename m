@@ -2,87 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 56165EAB2B
-	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 08:57:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0104EABBF
+	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 09:48:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726776AbfJaH5s (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 31 Oct 2019 03:57:48 -0400
-Received: from mga06.intel.com ([134.134.136.31]:64655 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726769AbfJaH5r (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 31 Oct 2019 03:57:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 31 Oct 2019 00:57:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,250,1569308400"; 
-   d="scan'208";a="206036015"
-Received: from lingshan-mobl5.ccr.corp.intel.com (HELO [10.238.129.48]) ([10.238.129.48])
-  by FMSMGA003.fm.intel.com with ESMTP; 31 Oct 2019 00:57:39 -0700
-Subject: Re: [PATCH V6 6/6] docs: sample driver to demonstrate how to
- implement virtio-mdev framework
-To:     Christoph Hellwig <hch@infradead.org>,
-        Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, idos@mellanox.com, eperezma@redhat.com,
-        lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191030064444.21166-1-jasowang@redhat.com>
- <20191030064444.21166-7-jasowang@redhat.com>
- <20191030212312.GA4251@infradead.org>
-From:   "Zhu, Lingshan" <lingshan.zhu@intel.com>
-Message-ID: <1592d723-a580-8614-3fb4-88560a06cdc1@intel.com>
-Date:   Thu, 31 Oct 2019 15:57:38 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S1727023AbfJaIsb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 31 Oct 2019 04:48:31 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4938 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727012AbfJaIsb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 31 Oct 2019 04:48:31 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9V8m7XW038428
+        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 04:48:29 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2vysd3wf48-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 04:48:29 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <mimu@linux.ibm.com>;
+        Thu, 31 Oct 2019 08:48:27 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 31 Oct 2019 08:48:24 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9V8mMR721561470
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 08:48:22 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BFCBA4060;
+        Thu, 31 Oct 2019 08:48:22 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 26B8FA405C;
+        Thu, 31 Oct 2019 08:48:22 +0000 (GMT)
+Received: from [9.152.96.213] (unknown [9.152.96.213])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 31 Oct 2019 08:48:22 +0000 (GMT)
+Reply-To: mimu@linux.ibm.com
+Subject: Re: [RFC 13/37] KVM: s390: protvirt: Add interruption injection
+ controls
+To:     David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, cohuck@redhat.com, gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-14-frankja@linux.ibm.com>
+ <c09046eb-380f-d930-8e99-42b9cc8a62ae@redhat.com>
+From:   Michael Mueller <mimu@linux.ibm.com>
+Organization: IBM
+Date:   Thu, 31 Oct 2019 09:48:21 +0100
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191030212312.GA4251@infradead.org>
+In-Reply-To: <c09046eb-380f-d930-8e99-42b9cc8a62ae@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
 Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19103108-0028-0000-0000-000003B16433
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19103108-0029-0000-0000-00002473AD04
+Message-Id: <26dfdefa-edbe-40e5-5b41-a4de86d47d15@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=977 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910310088
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-On 10/31/2019 5:23 AM, Christoph Hellwig wrote:
-> On Wed, Oct 30, 2019 at 02:44:44PM +0800, Jason Wang wrote:
->> This sample driver creates mdev device that simulate virtio net device
->> over virtio mdev transport. The device is implemented through vringh
->> and workqueue. A device specific dma ops is to make sure HVA is used
->> directly as the IOVA. This should be sufficient for kernel virtio
->> driver to work.
+
+On 30.10.19 16:53, David Hildenbrand wrote:
+>> @@ -268,8 +277,16 @@ struct kvm_s390_sie_block {
+>>       __u8    oai;            /* 0x00e2 */
+>>       __u8    armid;            /* 0x00e3 */
+>>       __u8    reservede4[4];        /* 0x00e4 */
+>> -    __u64    tecmc;            /* 0x00e8 */
+>> -    __u8    reservedf0[12];        /* 0x00f0 */
+>> +    union {
+>> +        __u64    tecmc;        /* 0x00e8 */
+>> +        struct {
+>> +            __u16    subchannel_id;    /* 0x00e8 */
+>> +            __u16    subchannel_nr;    /* 0x00ea */
+>> +            __u32    io_int_parm;    /* 0x00ec */
+>> +            __u32    io_int_word;    /* 0x00f0 */
+>> +        };
+> 
+> I only wonder if we should give this member a fitting name, e.g., 
+> "ioparams"
+
+Do you see a real gain for that? We have a lot of other unnamed structs
+defined here as well.
+
+
+> 
+>> +    } __packed;
+>> +    __u8    reservedf4[8];        /* 0x00f4 */
+>>   #define CRYCB_FORMAT_MASK 0x00000003
+>>   #define CRYCB_FORMAT0 0x00000000
+>>   #define CRYCB_FORMAT1 0x00000001
 >>
->> Only 'virtio' type is supported right now. I plan to add 'vhost' type
->> on top which requires some virtual IOMMU implemented in this sample
->> driver.
-> Can we please submit a real driver for it?  A more or less useless
-> sample driver doesn't really qualify for our normal kernel requirements
-> that infrastructure should have a real user.
-
-Hello Christoph,
-
-I am working on a real hardware driver for it, it's called IFC, I have 
-posted RFC V1 and will post RFC V2 soon.
 
 Thanks,
-BR
-Zhu Lingshan
+Michael
+
