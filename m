@@ -2,80 +2,89 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5CB22EB157
-	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 14:38:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D61FEB3C4
+	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 16:19:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfJaNip (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 31 Oct 2019 09:38:45 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40612 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727486AbfJaNip (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 31 Oct 2019 09:38:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QkB42TZaY19p2tUWLkDIEWFmICndZjJCiuu8c7FQUq4=; b=OewjRBc9r9Xp8/PXv2ckSWK7N
-        WX5KxNtEnxuD88ukmOO+8iDivb6it9c5njv2xdlRHDV3ilOSkq+TQL1eZ8py0NxbpFJIK4xgwK6ux
-        7D5//CzzfbuOt0waXy9tZOoZuyaFaj6keBpC0pEGDXq0l0ZpuzSYhyoXX9IBE403iJ2khy33zpTr9
-        sJDM3/z9b9fFXeAnO2iZzJx16eN0zkdRxNCAyRmFcOIfHAWM7iod8Jv07lYmHFMQ2Rm4qWOBeNu/q
-        QKBxAgivmnYe77smiwpxolIuesXJq2NVe/USj+FRAOM5XgZaMqbOpfLsKJvOXgwLXdGuNFg0qOkS+
-        TMOLequjA==;
-Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iQAel-0005dF-3D; Thu, 31 Oct 2019 13:38:31 +0000
-Date:   Thu, 31 Oct 2019 06:38:31 -0700
-From:   Christoph Hellwig <hch@infradead.org>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        iommu@lists.linux-foundation.org,
-        Marek Szyprowski <m.szyprowski@samsung.com>, mbrugger@suse.com,
-        f.fainelli@gmail.com, wahrenst@gmx.net,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1728253AbfJaPTa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 31 Oct 2019 11:19:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55328 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727981AbfJaPT3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 31 Oct 2019 11:19:29 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VFI04S028738
+        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 11:19:28 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w006pmys3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 11:19:27 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Thu, 31 Oct 2019 15:19:25 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 31 Oct 2019 15:19:23 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VFJMPF58392614
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 31 Oct 2019 15:19:22 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 064F55205A;
+        Thu, 31 Oct 2019 15:19:22 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id E7DEC52059;
+        Thu, 31 Oct 2019 15:19:21 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 932E8E0258; Thu, 31 Oct 2019 16:19:21 +0100 (CET)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH RFC 1/5] dma/direct: turn ARCH_ZONE_DMA_BITS into a
- variable
-Message-ID: <20191031133831.GA21509@infradead.org>
-References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
- <20191014183108.24804-2-nsaenzjulienne@suse.de>
- <20191030214914.GA15939@infradead.org>
- <8c525f66c1c0d9f07e0cff4948d1ec3229756220.camel@suse.de>
+        David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Thomas Huth <thuth@redhat.com>
+Subject: [PATCH 0/1] RFC: memcg support for KVM/s390
+Date:   Thu, 31 Oct 2019 16:19:20 +0100
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8c525f66c1c0d9f07e0cff4948d1ec3229756220.camel@suse.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19103115-0008-0000-0000-00000329857B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19103115-0009-0000-0000-00004A48D1AE
+Message-Id: <20191031151921.31871-1-borntraeger@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=416 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910310153
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 11:30:36AM +0100, Nicolas Saenz Julienne wrote:
-> On Wed, 2019-10-30 at 14:49 -0700, Christoph Hellwig wrote:
-> > On Mon, Oct 14, 2019 at 08:31:03PM +0200, Nicolas Saenz Julienne wrote:
-> > > Some architectures, notably ARM, are interested in tweaking this
-> > > depending on their runtime DMA addressing limitations.
-> > > 
-> > > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> > 
-> > Do you want me to pick this up for the 5.5 dma-mapping tree, or do you
-> > want me to wait for the rest to settle?
-> 
-> I'd say take it, this will be ultimately needed once we push forward with ARM.
+As a followup to my keynote where I talked about memcg support in
+kvm/x86, here is the s390 equivalent.
 
-Can you resend a version that applies against 5.4-rc?  The current one
-has conflicts in the arm64 code.
+I think all of those allocations can be really attributed to a specific
+host process but a 2nd (or 3rd) pair of eyes is certainly welcome.
+
+Christian Borntraeger (1):
+  KVM: s390:  Add memcg accounting to KVM allocations
+
+ arch/s390/kvm/guestdbg.c  |  8 ++++----
+ arch/s390/kvm/intercept.c |  2 +-
+ arch/s390/kvm/interrupt.c | 12 ++++++------
+ arch/s390/kvm/kvm-s390.c  | 22 +++++++++++-----------
+ arch/s390/kvm/priv.c      |  4 ++--
+ arch/s390/kvm/vsie.c      |  4 ++--
+ 6 files changed, 26 insertions(+), 26 deletions(-)
+
+-- 
+2.21.0
+
