@@ -2,118 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F54AEB628
-	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 18:30:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9C773EB69D
+	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 19:06:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfJaRam (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 31 Oct 2019 13:30:42 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48550 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728561AbfJaRal (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 31 Oct 2019 13:30:41 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572543040;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UGSSoPW9SbtoPw1zyBmx41eOb8KWOrUeRgITIL6IQKY=;
-        b=hUqW6xJu+tYQPlpEe2L+G5itmkXtIn8CE9K5MC7zJei46S6UwtgvoM5t56oMoN56HfosDr
-        VghQqG0CGaVKYuF7Y9PvWX3UVhgE8antUG3CAju4IHh6HNx5bh1jzj2v1jRgV9/bCImVIV
-        eR4u17rFOhaVtPw0qTQw4/yvErkz8Ck=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-325-GHoi6ENEO_Gu0KdCE_Y4Cw-1; Thu, 31 Oct 2019 13:30:36 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 61324800C80;
-        Thu, 31 Oct 2019 17:30:35 +0000 (UTC)
-Received: from [10.36.116.51] (ovpn-116-51.ams2.redhat.com [10.36.116.51])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9928F19C7F;
-        Thu, 31 Oct 2019 17:30:31 +0000 (UTC)
-Subject: Re: [RFC 09/37] KVM: s390: protvirt: Implement on-demand pinning
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
-        imbrenda@linux.ibm.com, mihajlov@linux.ibm.com, mimu@linux.ibm.com,
-        cohuck@redhat.com, gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-10-frankja@linux.ibm.com>
- <b76ae1ca-d211-d1c7-63d9-9b45c789f261@redhat.com>
- <7465141c-27b7-a89e-f02d-ab05cdd8505d@de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <4abdc1dc-884e-a819-2e9d-2b8b15030394@redhat.com>
-Date:   Thu, 31 Oct 2019 18:30:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        id S1729027AbfJaSGY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 31 Oct 2019 14:06:24 -0400
+Received: from foss.arm.com ([217.140.110.172]:53562 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726602AbfJaSGY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 31 Oct 2019 14:06:24 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id AC1D41FB;
+        Thu, 31 Oct 2019 11:06:23 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A95563F6C4;
+        Thu, 31 Oct 2019 11:06:21 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 18:06:19 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        iommu@lists.linux-foundation.org
+Subject: Re: [PATCH] dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
+Message-ID: <20191031180619.GI39590@arrakis.emea.arm.com>
+References: <20191031152837.15253-1-nsaenzjulienne@suse.de>
+ <20191031154759.GA7162@lst.de>
+ <40d06d463c05d36968e8b64924d78f7794f8de50.camel@suse.de>
+ <20191031155750.GA7394@lst.de>
+ <6726a651c12d91ca22b9d8984745d90db5d507ec.camel@suse.de>
+ <20191031165853.GA8532@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <7465141c-27b7-a89e-f02d-ab05cdd8505d@de.ibm.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: GHoi6ENEO_Gu0KdCE_Y4Cw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031165853.GA8532@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 31.10.19 16:41, Christian Borntraeger wrote:
->=20
->=20
-> On 25.10.19 10:49, David Hildenbrand wrote:
->> On 24.10.19 13:40, Janosch Frank wrote:
->>> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
->>>
->>> Pin the guest pages when they are first accessed, instead of all at
->>> the same time when starting the guest.
->>
->> Please explain why you do stuff. Why do we have to pin the hole guest me=
-mory? Why can't we mlock() the hole memory to avoid swapping in user space?
->=20
-> Basically we pin the guest for the same reason as AMD did it for their SE=
-V. It is hard
+On Thu, Oct 31, 2019 at 05:58:53PM +0100, Christoph Hellwig wrote:
+> On Thu, Oct 31, 2019 at 05:22:59PM +0100, Nicolas Saenz Julienne wrote:
+> > OK, I see what you mean now. It's wrong indeed.
+> > 
+> > The trouble is the ZONE_DMA series[1] in arm64, also due for v5.5, will be
+> > affected by this patch. I don't know the right way to approach this problem
+> > since depending on the merge order, this patch should be updated or the arm64
+> > ZONE_DMA series fixed.
+> > 
+> > Maybe it's easier to just wait for v5.6.
+> 
+> Ok, I can wait.  Or the arm64 maintainers can pick up this patch if
+> you want to add it to that series.
 
-Pinning all guest memory is very ugly. What you want is "don't page",=20
-what you get is unmovable pages all over the place. I was hoping that=20
-you could get around this by having an automatic back-and-forth=20
-conversion in place (due to the special new exceptions).
+This branch is stable (may add a fix but not I'm not rebasing it) if you
+want to base this patch on top:
 
-> to synchronize page import/export with the I/O for paging. For example yo=
-u can actually
-> fault in a page that is currently under paging I/O. What do you do? impor=
-t (so that the
-> guest can run) or export (so that the I/O will work). As this turned out =
-to be harder then
-> we though we decided to defer paging to a later point in time.
+https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/zone-dma
 
-I don't quite see the issue yet. If you page out, the page will=20
-automatically (on access) be converted to !secure/encrypted memory. If=20
-the UV/guest wants to access it, it will be automatically converted to=20
-secure/unencrypted memory. If you have concurrent access, it will be=20
-converted back and forth until one party is done.
+Otherwise, with your ack, I can add it on top of the above branch (aimed
+at 5.5).
 
-A proper automatic conversion should make this work. What am I missing?
-
->=20
-> As we do not want to rely on the userspace to do the mlock this is now do=
-ne in the kernel.
-
-I wonder if we could come up with an alternative (similar to how we=20
-override VM_MERGEABLE in the kernel) that can be called and ensured in=20
-the kernel. E.g., marking whole VMAs as "don't page" (I remember=20
-something like "special VMAs" like used for VDSOs that achieve exactly=20
-that, but I am absolutely no expert on that). That would be much nicer=20
-than pinning all pages and remembering what you pinned in huge page=20
-arrays ...
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+-- 
+Catalin
