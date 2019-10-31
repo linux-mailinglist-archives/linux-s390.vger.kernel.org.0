@@ -2,196 +2,276 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A4C9EB07E
-	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 13:42:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48496EB125
+	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 14:26:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727141AbfJaMmh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 31 Oct 2019 08:42:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58504 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727089AbfJaMme (ORCPT
+        id S1726735AbfJaN0a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 31 Oct 2019 09:26:30 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58934 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726728AbfJaN0a (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 31 Oct 2019 08:42:34 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VCclDn137847
-        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 08:42:33 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyxn2jwt6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 08:42:32 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Thu, 31 Oct 2019 12:42:31 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 31 Oct 2019 12:42:27 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VCgQAr48496748
+        Thu, 31 Oct 2019 09:26:30 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9VDMQqa125574;
+        Thu, 31 Oct 2019 09:26:29 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyya3ju99-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 31 Oct 2019 09:26:28 -0400
+Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id x9VDMf5s127056;
+        Thu, 31 Oct 2019 09:26:27 -0400
+Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2vyya3ju80-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 31 Oct 2019 09:26:27 -0400
+Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
+        by ppma03dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id x9VDOip8024333;
+        Thu, 31 Oct 2019 13:26:26 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma03dal.us.ibm.com with ESMTP id 2vxwh6b8w8-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 31 Oct 2019 13:26:26 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9VDQN7B46072156
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 12:42:26 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4857E11C050;
-        Thu, 31 Oct 2019 12:42:26 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08B3D11C054;
-        Thu, 31 Oct 2019 12:42:26 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 31 Oct 2019 12:42:25 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 8/8] s390/qeth: don't cache MAC addresses for multicast IPs
-Date:   Thu, 31 Oct 2019 13:42:21 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191031124221.34028-1-jwi@linux.ibm.com>
-References: <20191031124221.34028-1-jwi@linux.ibm.com>
+        Thu, 31 Oct 2019 13:26:23 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CD83DAC05E;
+        Thu, 31 Oct 2019 13:26:23 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7018CAC05B;
+        Thu, 31 Oct 2019 13:26:23 +0000 (GMT)
+Received: from [9.60.75.238] (unknown [9.60.75.238])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 31 Oct 2019 13:26:23 +0000 (GMT)
+Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results in
+ kernel OOPS
+To:     Pierre Morel <pmorel@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, jjherne@linux.ibm.com
+References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+ <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
+ <97cf7863-d6d0-418a-09c1-50d9e84fd855@linux.ibm.com>
+ <2ea83094-46c6-ef92-f39c-579f88979320@linux.ibm.com>
+ <c404a796-dfc3-1da1-46b7-fe26d1be18f9@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <adcd01f1-0b0d-04a7-d784-e734fb82add9@linux.ibm.com>
+Date:   Thu, 31 Oct 2019 09:26:23 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <c404a796-dfc3-1da1-46b7-fe26d1be18f9@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19103112-0016-0000-0000-000002BF7C63
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103112-0017-0000-0000-00003320DFDE
-Message-Id: <20191031124221.34028-9-jwi@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910310131
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1910310139
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Instead of storing the multicast-mapped MAC address in an IP address
-object, just calculate the MAC address when actually building a cmd
-for the IP address.
+On 10/30/19 2:02 PM, Pierre Morel wrote:
+> 
+> On 10/30/19 5:51 PM, Tony Krowiak wrote:
+>> On 10/30/19 10:00 AM, Pierre Morel wrote:
+>>>
+>>>
+>>>
+>>> On 10/30/19 8:44 AM, Harald Freudenberger wrote:
+>>>> On 29.10.19 23:09, Tony Krowiak wrote:
+>>>>> From: aekrowia <akrowiak@linux.ibm.com>
+>>>>>
+>>>>> When an AP adapter card is configured off via the SE or the SCLP
+>>>>> Deconfigure Adjunct Processor command and the AP bus subsequently 
+>>>>> detects
+>>>>> that the adapter card is no longer in the AP configuration, the card
+>>>>> device representing the adapter card as well as each of its associated
+>>>>> AP queue devices will be removed by the AP bus. If one or more of the
+>>>>> affected queue devices is bound to the VFIO AP device driver, its 
+>>>>> remove
+>>>>> callback will be invoked for each queue to be removed. The remove 
+>>>>> callback
+>>>>> resets the queue and disables IRQ processing. If interrupt 
+>>>>> processing was
+>>>>> never enabled for the queue, disabling IRQ processing will fail 
+>>>>> resulting
+>>>>> in a kernel OOPS.
+>>>>>
+>>>>> This patch verifies IRQ processing is enabled before attempting to 
+>>>>> disable
+>>>>> interrupts for the queue.
+>>>>>
+>>>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>>>>> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
+>>>>> ---
+>>>>>   drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
+>>>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c 
+>>>>> b/drivers/s390/crypto/vfio_ap_drv.c
+>>>>> index be2520cc010b..42d8308fd3a1 100644
+>>>>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>>>>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>>>>> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct 
+>>>>> ap_device *apdev)
+>>>>>       apid = AP_QID_CARD(q->apqn);
+>>>>>       apqi = AP_QID_QUEUE(q->apqn);
+>>>>>       vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>>>>> -    vfio_ap_irq_disable(q);
+>>>>> +    if (q->saved_isc != VFIO_AP_ISC_INVALID)
+>>>>> +        vfio_ap_irq_disable(q);
+>>>>>       kfree(q);
+>>>>>       mutex_unlock(&matrix_dev->lock);
+>>>>>   }
+>>>> Reset of an APQN does also clear IRQ processing. I don't say that the
+>>>> resources associated with IRQ handling for the APQN are also cleared.
+>>>> But when you call PQAP(AQIC) after an PQAP(RAPQ) or PQAP(ZAPQ)
+>>>> it is superfluous. However, there should not appear any kernel OOPS.
+>>>> So can you please give me more details about this kernel oops - maybe
+>>>> I need to add exception handler code to the inline ap_aqic() function.
+>>>>
+>>>> regards, Harald Freudenberger
+>>>>
+>>>
+>>> Hi Tony,
+>>>
+>>> wasn't it already solved by the patch 5c4c2126  from Christian ?
+>>
+>> No, that patch merely sets the 'matrix_mdev' field of the
+>> 'struct vfio_ap_queue' to NULL in the vfio_ap_free_aqic_resources()
+>> function. Also, with the latest master branch which has 5c4c2126
+>> installed, the failure occurs.
+>>
+>>>
+>>> Can you send the trace to me please?
+>>
+>> [  266.989476] crw_info : CRW reports slct=0, oflw=0, chn=0, rsc=B, 
+>> anc=0, erc=0, rsid=0
+>> [  266.989617] ------------[ cut here ]------------
+>> [  266.989622] vfio_ap_wait_for_irqclear: tapq rc 03: 0504
+>> [  266.989681] WARNING: CPU: 0 PID: 7 at 
+>> drivers/s390/crypto/vfio_ap_ops.c:101 vfio_ap_irq_disable+0x13c/0x1b0 
+>> [vfio_ap]
+> 
+> 
+> Hi Tony,
+> 
+> This is not a oops this is the warning written in 
+> vfio_ap_wait_for_irqclear() because the AP has been deconfigured.
 
-While at it, also clean up some rather verbose copying of IP addresses.
+Yes, I was mistaken about that. I had seen an oops earlier from
+something else in code on which I was working and mistakenly thought
+this was a repeat.
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core_mpc.h |  4 ++--
- drivers/s390/net/qeth_l3.h       |  3 ---
- drivers/s390/net/qeth_l3_main.c  | 24 ++++++++++--------------
- 3 files changed, 12 insertions(+), 19 deletions(-)
+> 
+> Note that, IIUC, this (the warning) does not happen for devices bound to 
+> the vfio_ap driver but not currently assigned to a mediated device.
 
-diff --git a/drivers/s390/net/qeth_core_mpc.h b/drivers/s390/net/qeth_core_mpc.h
-index 6420b58cf42b..9ad0d6f9d48b 100644
---- a/drivers/s390/net/qeth_core_mpc.h
-+++ b/drivers/s390/net/qeth_core_mpc.h
-@@ -11,6 +11,7 @@
- 
- #include <asm/qeth.h>
- #include <uapi/linux/if_ether.h>
-+#include <uapi/linux/in6.h>
- 
- #define IPA_PDU_HEADER_SIZE	0x40
- #define QETH_IPA_PDU_LEN_TOTAL(buffer) (buffer + 0x0e)
-@@ -365,8 +366,7 @@ struct qeth_ipacmd_setdelip6 {
- struct qeth_ipacmd_setdelipm {
- 	__u8 mac[6];
- 	__u8 padding[2];
--	__u8 ip6[12];
--	__u8 ip4[4];
-+	struct in6_addr ip;
- } __attribute__ ((packed));
- 
- struct qeth_ipacmd_layer2setdelmac {
-diff --git a/drivers/s390/net/qeth_l3.h b/drivers/s390/net/qeth_l3.h
-index b7ba404a81f9..ba913d1ab88d 100644
---- a/drivers/s390/net/qeth_l3.h
-+++ b/drivers/s390/net/qeth_l3.h
-@@ -24,7 +24,6 @@ enum qeth_ip_types {
- struct qeth_ipaddr {
- 	struct hlist_node hnode;
- 	enum qeth_ip_types type;
--	unsigned char mac[ETH_ALEN];
- 	u8 is_multicast:1;
- 	u8 in_progress:1;
- 	u8 disp_flag:2;
-@@ -74,12 +73,10 @@ static inline bool qeth_l3_addr_match_all(struct qeth_ipaddr *a1,
- 	 * so 'proto' and 'addr' match for sure.
- 	 *
- 	 * For ucast:
--	 * -	'mac' is always 0.
- 	 * -	'mask'/'pfxlen' for RXIP/VIPA is always 0. For NORMAL, matching
- 	 *	values are required to avoid mixups in takeover eligibility.
- 	 *
- 	 * For mcast,
--	 * -	'mac' is mapped from the IP, and thus always matches.
- 	 * -	'mask'/'pfxlen' is always 0.
- 	 */
- 	if (a1->type != a2->type)
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 8f92407bf580..70d4586dc779 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -381,12 +381,13 @@ static int qeth_l3_send_setdelmc(struct qeth_card *card,
- 	if (!iob)
- 		return -ENOMEM;
- 	cmd = __ipa_cmd(iob);
--	ether_addr_copy(cmd->data.setdelipm.mac, addr->mac);
--	if (addr->proto == QETH_PROT_IPV6)
--		memcpy(cmd->data.setdelipm.ip6, &addr->u.a6.addr,
--		       sizeof(struct in6_addr));
--	else
--		memcpy(&cmd->data.setdelipm.ip4, &addr->u.a4.addr, 4);
-+	if (addr->proto == QETH_PROT_IPV6) {
-+		cmd->data.setdelipm.ip = addr->u.a6.addr;
-+		ipv6_eth_mc_map(&addr->u.a6.addr, cmd->data.setdelipm.mac);
-+	} else {
-+		cmd->data.setdelipm.ip.s6_addr32[3] = addr->u.a4.addr;
-+		ip_eth_mc_map(addr->u.a4.addr, cmd->data.setdelipm.mac);
-+	}
- 
- 	return qeth_send_ipa_cmd(card, iob, qeth_l3_setdelip_cb, NULL);
- }
-@@ -1127,7 +1128,6 @@ qeth_l3_add_mc_to_hash(struct qeth_card *card, struct in_device *in4_dev)
- 
- 	for (im4 = rcu_dereference(in4_dev->mc_list); im4 != NULL;
- 	     im4 = rcu_dereference(im4->next_rcu)) {
--		ip_eth_mc_map(im4->multiaddr, tmp->mac);
- 		tmp->u.a4.addr = im4->multiaddr;
- 		tmp->is_multicast = 1;
- 
-@@ -1139,7 +1139,7 @@ qeth_l3_add_mc_to_hash(struct qeth_card *card, struct in_device *in4_dev)
- 			ipm = qeth_l3_get_addr_buffer(QETH_PROT_IPV4);
- 			if (!ipm)
- 				continue;
--			ether_addr_copy(ipm->mac, tmp->mac);
-+
- 			ipm->u.a4.addr = im4->multiaddr;
- 			ipm->is_multicast = 1;
- 			ipm->disp_flag = QETH_DISP_ADDR_ADD;
-@@ -1207,9 +1207,7 @@ static void qeth_l3_add_mc6_to_hash(struct qeth_card *card,
- 		return;
- 
- 	for (im6 = in6_dev->mc_list; im6 != NULL; im6 = im6->next) {
--		ipv6_eth_mc_map(&im6->mca_addr, tmp->mac);
--		memcpy(&tmp->u.a6.addr, &im6->mca_addr.s6_addr,
--		       sizeof(struct in6_addr));
-+		tmp->u.a6.addr = im6->mca_addr;
- 		tmp->is_multicast = 1;
- 
- 		ipm = qeth_l3_find_addr_by_ip(card, tmp);
-@@ -1223,9 +1221,7 @@ static void qeth_l3_add_mc6_to_hash(struct qeth_card *card,
- 		if (!ipm)
- 			continue;
- 
--		ether_addr_copy(ipm->mac, tmp->mac);
--		memcpy(&ipm->u.a6.addr, &im6->mca_addr.s6_addr,
--		       sizeof(struct in6_addr));
-+		ipm->u.a6.addr = im6->mca_addr;
- 		ipm->is_multicast = 1;
- 		ipm->disp_flag = QETH_DISP_ADDR_ADD;
- 		hash_add(card->ip_mc_htable,
--- 
-2.17.1
+That is the case in point, but I suspect it will happen whenever
+interrupts are not enabled.
+
+> 
+> I do not think we should avoid sending a warning in this case because 
+> this is not a normal administration good practice to forcefully take an 
+> AP away like this without smoothly removing the device from the mediated 
+> device.
+
+The scenario in which I encountered this was when a queue was bound to
+the vfio_ap driver but not assigned to a mediated device and the queue
+was unbound due to deconfiguration of the adapter from the SE. So, the
+queue was not being forcefully taken away from a mediated device. In
+other words, this was normal administration.
+
+> 
+> Regards,
+> 
+> Pierre
+> 
+> 
+>> [ 266.989682] Modules linked in: xt_CHECKSUM xt_MASQUERADE tun bridge 
+>> stp llc ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 xt_conntrack 
+>> ebtable_nat ip6table_nat ip6table_mangle ip6table_raw 
+>> ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw 
+>> iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c 
+>> ip_set nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables 
+>> sunrpc ghash_s390 prng aes_s390 des_s390 libdes vfio_ccw sha512_s390 
+>> sha1_s390 eadm_sch zcrypt_cex4 qeth_l2 crc32_vx_s390 dasd_eckd_mod 
+>> sha256_s390 qeth sha_common dasd_mod ccwgroup qdio pkey zcrypt vfio_ap 
+>> kvm
+>> [  266.989704] CPU: 0 PID: 7 Comm: kworker/0:1 Not tainted 5.4.0-rc5 #81
+>> [  266.989705] Hardware name: IBM 2964 NE1 749 (LPAR)
+>> [  266.989710] Workqueue: events_long ap_scan_bus
+>> [  266.989711] Krnl PSW : 0704c00180000000 000003ff8007d89c 
+>> (vfio_ap_irq_disable+0x13c/0x1b0 [vfio_ap])
+>> [  266.989714]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 
+>> CC:0 PM:0 RI:0 EA:3
+>> [  266.989716] Krnl GPRS: 000000000000000a 0000000000000006 
+>> 000000000000002b 0000000000000007
+>> [  266.989717]            0000000000000007 000000007fe06000 
+>> 000003ff00000005 0000000000000000
+>> [  266.989718]            0000000100000504 0000000000000003 
+>> 00000001f9d27e40 000003e00003bb5c
+>> [  266.989719]            00000001fe765d00 0000000000000504 
+>> 000003ff8007d898 000003e00003ba60
+>> [  266.989724] Krnl Code: 000003ff8007d88c: c02000000ce6    larl 
+>> %r2,3ff8007f258
+>>                           000003ff8007d892: c0e5fffff4c7    brasl 
+>> %r14,3ff8007c220
+>>                          #000003ff8007d898: a7f40001        brc 
+>> 15,3ff8007d89a
+>>                          >000003ff8007d89c: a7f4ff9d        brc 
+>> 15,3ff8007d7d6
+>>                           000003ff8007d8a0: a7100100 tmlh    %r1,256
+>>                           000003ff8007d8a4: a784ff99        brc 
+>> 8,3ff8007d7d6
+>>                           000003ff8007d8a8: a7290014 lghi    %r2,20
+>>                           000003ff8007d8ac: c0e5fffff4b0    brasl 
+>> %r14,3ff8007c20c
+>> [  266.989772] Call Trace:
+>> [  266.989777] ([<000003ff8007d898>] vfio_ap_irq_disable+0x138/0x1b0 
+>> [vfio_ap])
+>> [  266.989779]  [<000003ff8007c4d2>] 
+>> vfio_ap_queue_dev_remove+0x6a/0x90 [vfio_ap]
+>> [  266.989782]  [<00000000bf0f24f0>] ap_device_remove+0x50/0x110
+>> [  266.989784]  [<00000000beffbaac>] 
+>> device_release_driver_internal+0x114/0x1f0
+>> [  266.989787]  [<00000000beff9c88>] bus_remove_device+0x108/0x190
+>> [  266.989789]  [<00000000beff5418>] device_del+0x178/0x3a0
+>> [  266.989790]  [<00000000beff5670>] device_unregister+0x30/0x90
+>> [  266.989791]  [<00000000bf0f0f04>] 
+>> __ap_queue_devices_with_id_unregister+0x44/0x50
+>> [  266.989793]  [<00000000beff86ea>] bus_for_each_dev+0x82/0xb0
+>> [  266.989794]  [<00000000bf0f2aba>] ap_scan_bus+0x262/0x878
+>> [  266.989798]  [<00000000beb4785c>] process_one_work+0x1e4/0x410
+>> [  266.989800]  [<00000000beb47ca8>] worker_thread+0x220/0x460
+>> [  266.989802]  [<00000000beb4e99a>] kthread+0x12a/0x160
+>> [  266.989805]  [<00000000bf2d8eb0>] ret_from_fork+0x28/0x2c
+>> [  266.989806]  [<00000000bf2d8eb4>] kernel_thread_starter+0x0/0xc
+>> [  266.989807] Last Breaking-Event-Address:
+>> [  266.989809]  [<000003ff8007d898>] vfio_ap_irq_disable+0x138/0x1b0 
+>> [vfio_ap]
+>> [  266.989810] ---[ end trace 59b4020890dbd391 ]---
+>>
+>>
+>>>
+>>> Thanks,
+>>>
+>>> Pierre
+>>>
+>>>
+>>>
+>>
 
