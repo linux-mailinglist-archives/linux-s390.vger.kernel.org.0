@@ -2,105 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE3A5EACEA
-	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 10:56:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 37D03EAD6B
+	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 11:30:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726922AbfJaJ4u (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 31 Oct 2019 05:56:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55436 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726932AbfJaJ4u (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 31 Oct 2019 05:56:50 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x9V9nxRf039100
-        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 05:56:49 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2vyvp0hqt9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 31 Oct 2019 05:56:48 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <iii@linux.ibm.com>;
-        Thu, 31 Oct 2019 09:56:47 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 31 Oct 2019 09:56:44 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x9V9uhe541287908
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 31 Oct 2019 09:56:43 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 386DB11C05C;
-        Thu, 31 Oct 2019 09:56:43 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EDB9711C050;
-        Thu, 31 Oct 2019 09:56:42 +0000 (GMT)
-Received: from dyn-9-152-96-251.boeblingen.de.ibm.com (unknown [9.152.96.251])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 31 Oct 2019 09:56:42 +0000 (GMT)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH] scripts/gdb: fix debugging modules compiled with hot/cold
- partitioning
-From:   Ilya Leoshkevich <iii@linux.ibm.com>
-In-Reply-To: <130e31f0-ce38-77cb-58a9-cedf3b0f8113@siemens.com>
-Date:   Thu, 31 Oct 2019 10:56:42 +0100
-Cc:     Kieran Bingham <kbingham@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
+        id S1726892AbfJaKam (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 31 Oct 2019 06:30:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:51478 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbfJaKam (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 31 Oct 2019 06:30:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 89138B38E;
+        Thu, 31 Oct 2019 10:30:40 +0000 (UTC)
+Message-ID: <8c525f66c1c0d9f07e0cff4948d1ec3229756220.camel@suse.de>
+Subject: Re: [PATCH RFC 1/5] dma/direct: turn ARCH_ZONE_DMA_BITS into a
+ variable
+From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        iommu@lists.linux-foundation.org,
+        Marek Szyprowski <m.szyprowski@samsung.com>, mbrugger@suse.com,
+        f.fainelli@gmail.com, wahrenst@gmx.net,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Content-Transfer-Encoding: 7bit
-References: <20191028152734.13065-1-iii@linux.ibm.com>
- <130e31f0-ce38-77cb-58a9-cedf3b0f8113@siemens.com>
-To:     Jan Kiszka <jan.kiszka@siemens.com>
-X-Mailer: Apple Mail (2.3594.4.19)
-X-TM-AS-GCONF: 00
-x-cbid: 19103109-0020-0000-0000-000003814697
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19103109-0021-0000-0000-000021D75B92
-Message-Id: <565ED332-3D0E-4741-BB82-3E82371C7054@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-10-31_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1910310098
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+Date:   Thu, 31 Oct 2019 11:30:36 +0100
+In-Reply-To: <20191030214914.GA15939@infradead.org>
+References: <20191014183108.24804-1-nsaenzjulienne@suse.de>
+         <20191014183108.24804-2-nsaenzjulienne@suse.de>
+         <20191030214914.GA15939@infradead.org>
+Content-Type: multipart/signed; micalg="pgp-sha256";
+        protocol="application/pgp-signature"; boundary="=-c/h1zpmiYL5xA/R3DgLo"
+User-Agent: Evolution 3.34.1 
+MIME-Version: 1.0
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> Am 30.10.2019 um 19:29 schrieb Jan Kiszka <jan.kiszka@siemens.com>:
-> 
-> On 28.10.19 16:27, Ilya Leoshkevich wrote:
->> gcc's -freorder-blocks-and-partition option makes it group frequently
->> and infrequently used code in .text.hot and .text.unlikely sections
->> respectively. At least when building modules on s390, this option is
->> used by default.
->> 
->> gdb assumes that all code is located in .text section, and that .text
->> section is located at module load address. With such modules this is no
->> longer the case: there is code in .text.hot and .text.unlikely, and
->> either of them might precede .text.
->> 
->> Fix by explicitly telling gdb the addresses of code sections.
->> 
->> It might be tempting to do this for all sections, not only the ones in
->> the white list. Unfortunately, gdb appears to have an issue, when telling
->> it about e.g. loadable .note.gnu.build-id section causes it to think that
->> non-loadable .note.Linux section is loaded at address 0, which in turn
->> causes NULL pointers to be resolved to bogus symbols. So keep using the
->> white list approach for the time being.
-> 
-> Did you report this to gdb?
 
-Yes: https://sourceware.org/bugzilla/show_bug.cgi?id=25152
+--=-c/h1zpmiYL5xA/R3DgLo
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Ilya
+On Wed, 2019-10-30 at 14:49 -0700, Christoph Hellwig wrote:
+> On Mon, Oct 14, 2019 at 08:31:03PM +0200, Nicolas Saenz Julienne wrote:
+> > Some architectures, notably ARM, are interested in tweaking this
+> > depending on their runtime DMA addressing limitations.
+> >=20
+> > Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>=20
+> Do you want me to pick this up for the 5.5 dma-mapping tree, or do you
+> want me to wait for the rest to settle?
+
+I'd say take it, this will be ultimately needed once we push forward with A=
+RM.
+
+
+--=-c/h1zpmiYL5xA/R3DgLo
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl26t8wACgkQlfZmHno8
+x/6Bvgf8CKw0zktkkeQiMRg7+/wfA7jkI0EdKaeR38AVackkoByc3ab5S2A4Qepy
+XpQVhaciStaOBkqCzcHLVJnucMd/6d9YH+49GubC64NT12ukfjVwUBbfzgVHTJH2
+SOf3YpmsDw+8RokSUatZQZwY4D+b+jezcgK12EYOj244ip65tNEnM87G5ZUZVG1U
+2rXnFOH4ne4LmUn6u6Gdgydn5j7pSJnvYH0U0DRU0PLK7kV2uxOrllqSnvdENiRz
+QLSjWe2SON35T0OsddsecCq/FWrNzYBYa6bEfc2NsA0qdNAEJVaXQEn3p9bROBPw
+I2SkWEPTaKCtL9hUC1eiqUx1nLTY8g==
+=5BcM
+-----END PGP SIGNATURE-----
+
+--=-c/h1zpmiYL5xA/R3DgLo--
 
