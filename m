@@ -2,70 +2,53 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42639EB6FC
-	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 19:33:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 60689EB7FC
+	for <lists+linux-s390@lfdr.de>; Thu, 31 Oct 2019 20:33:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729221AbfJaSc7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 31 Oct 2019 14:32:59 -0400
-Received: from verein.lst.de ([213.95.11.211]:52524 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729027AbfJaSc7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 31 Oct 2019 14:32:59 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id DC3F5227A81; Thu, 31 Oct 2019 19:32:55 +0100 (CET)
-Date:   Thu, 31 Oct 2019 19:32:55 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        iommu@lists.linux-foundation.org
-Subject: Re: [PATCH] dma/direct: turn ARCH_ZONE_DMA_BITS into a variable
-Message-ID: <20191031183255.GA10116@lst.de>
-References: <20191031152837.15253-1-nsaenzjulienne@suse.de> <20191031154759.GA7162@lst.de> <40d06d463c05d36968e8b64924d78f7794f8de50.camel@suse.de> <20191031155750.GA7394@lst.de> <6726a651c12d91ca22b9d8984745d90db5d507ec.camel@suse.de> <20191031165853.GA8532@lst.de> <20191031180619.GI39590@arrakis.emea.arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191031180619.GI39590@arrakis.emea.arm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1726836AbfJaTdb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 31 Oct 2019 15:33:31 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:59912 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726728AbfJaTdb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 31 Oct 2019 15:33:31 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id D88C414FD0BF1;
+        Thu, 31 Oct 2019 12:33:30 -0700 (PDT)
+Date:   Thu, 31 Oct 2019 12:33:30 -0700 (PDT)
+Message-Id: <20191031.123330.290389323537118897.davem@davemloft.net>
+To:     jwi@linux.ibm.com
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: Re: [PATCH net-next 0/8] s390/qeth: updates 2019-10-31
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191031124221.34028-1-jwi@linux.ibm.com>
+References: <20191031124221.34028-1-jwi@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 31 Oct 2019 12:33:31 -0700 (PDT)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 06:06:19PM +0000, Catalin Marinas wrote:
-> On Thu, Oct 31, 2019 at 05:58:53PM +0100, Christoph Hellwig wrote:
-> > On Thu, Oct 31, 2019 at 05:22:59PM +0100, Nicolas Saenz Julienne wrote:
-> > > OK, I see what you mean now. It's wrong indeed.
-> > > 
-> > > The trouble is the ZONE_DMA series[1] in arm64, also due for v5.5, will be
-> > > affected by this patch. I don't know the right way to approach this problem
-> > > since depending on the merge order, this patch should be updated or the arm64
-> > > ZONE_DMA series fixed.
-> > > 
-> > > Maybe it's easier to just wait for v5.6.
-> > 
-> > Ok, I can wait.  Or the arm64 maintainers can pick up this patch if
-> > you want to add it to that series.
-> 
-> This branch is stable (may add a fix but not I'm not rebasing it) if you
-> want to base this patch on top:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git/log/?h=for-next/zone-dma
-> 
-> Otherwise, with your ack, I can add it on top of the above branch (aimed
-> at 5.5).
+From: Julian Wiedmann <jwi@linux.ibm.com>
+Date: Thu, 31 Oct 2019 13:42:13 +0100
 
-Please go ahead:
+> please apply the following series of spooky qeth updates for net-next.
 
-Acked-by: Christoph Hellwig <hch@lst.de>
+I hear that if you hack on S390, every day is like Halloween.
+
+> The first two patches add support for an enhanced TX doorbell, which
+> enables us to do more xmit_more-based bulking.
+> Note that this requires one patch for the s390/qdio base layer, which
+> has been graciously acked by Heiko to go through your tree.
+> 
+> The remaining patches are just the usual minor cleanups/improvements.
+
+Series applied to net-next, thank you.
