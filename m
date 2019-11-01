@@ -2,50 +2,50 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C238EC106
-	for <lists+linux-s390@lfdr.de>; Fri,  1 Nov 2019 11:08:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9C14EC1C9
+	for <lists+linux-s390@lfdr.de>; Fri,  1 Nov 2019 12:28:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729462AbfKAKIF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 1 Nov 2019 06:08:05 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:10548 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728617AbfKAKIF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 Nov 2019 06:08:05 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA1A7UXt154118
-        for <linux-s390@vger.kernel.org>; Fri, 1 Nov 2019 06:08:03 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w0hc1ttew-1
+        id S1728585AbfKAL2m (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 1 Nov 2019 07:28:42 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1580 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725904AbfKAL2l (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 Nov 2019 07:28:41 -0400
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA1BSeEm104564
+        for <linux-s390@vger.kernel.org>; Fri, 1 Nov 2019 07:28:40 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w050y8c9j-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 01 Nov 2019 06:08:02 -0400
+        for <linux-s390@vger.kernel.org>; Fri, 01 Nov 2019 07:28:39 -0400
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 1 Nov 2019 10:08:01 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 1 Nov 2019 11:26:38 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 1 Nov 2019 10:07:57 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA1A7uEg46989578
+        Fri, 1 Nov 2019 11:26:35 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA1BQYOd51970082
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 1 Nov 2019 10:07:56 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 169BA4C052;
-        Fri,  1 Nov 2019 10:07:56 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 96F7C4C04A;
-        Fri,  1 Nov 2019 10:07:55 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.72.35])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  1 Nov 2019 10:07:55 +0000 (GMT)
-Subject: Re: [RFC 03/37] s390/protvirt: add ultravisor initialization
+        Fri, 1 Nov 2019 11:26:34 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF37BA4053;
+        Fri,  1 Nov 2019 11:26:33 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 99F07A4040;
+        Fri,  1 Nov 2019 11:26:33 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.40.211])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  1 Nov 2019 11:26:33 +0000 (GMT)
+Subject: Re: [RFC 06/37] s390: UV: Add import and export to UV library
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
         imbrenda@linux.ibm.com, mihajlov@linux.ibm.com, mimu@linux.ibm.com,
         cohuck@redhat.com, gor@linux.ibm.com
 References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-4-frankja@linux.ibm.com>
+ <20191024114059.102802-7-frankja@linux.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
@@ -91,26 +91,26 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
  oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
  syiRa+UVlsKmx1hsEg==
-Date:   Fri, 1 Nov 2019 11:07:55 +0100
+Date:   Fri, 1 Nov 2019 12:26:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191024114059.102802-4-frankja@linux.ibm.com>
+In-Reply-To: <20191024114059.102802-7-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19110110-0028-0000-0000-000003B1C18A
+x-cbid: 19110111-0012-0000-0000-0000035FCA39
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110110-0029-0000-0000-000024740EEB
-Message-Id: <f00cf177-246d-8da8-ddfd-a0b1bea930d6@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-01_03:,,
+x-cbparentid: 19110111-0013-0000-0000-0000219B18C8
+Message-Id: <b7126f40-ff10-0123-4c5e-37f57d63c3cd@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-01_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911010102
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1911010116
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -119,155 +119,112 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 On 24.10.19 13:40, Janosch Frank wrote:
-> From: Vasily Gorbik <gor@linux.ibm.com>
+> The convert to/from secure (or also "import/export") ultravisor calls
+> are need for page management, i.e. paging, of secure execution VM.
 > 
-> Before being able to host protected virtual machines, donate some of
-> the memory to the ultravisor. Besides that the ultravisor might impose
-> addressing limitations for memory used to back protected VM storage. Treat
-> that limit as protected virtualization host's virtual memory limit.
+> Export encrypts a secure guest's page and makes it accessible to the
+> guest for paging.
 > 
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-
-
+> Import makes a page accessible to a secure guest.
+> On the first import of that page, the page will be cleared by the
+> Ultravisor before it is given to the guest.
+> 
+> All following imports will decrypt a exported page and verify
+> integrity before giving the page to the guest.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
->  arch/s390/include/asm/uv.h | 16 ++++++++++++
->  arch/s390/kernel/setup.c   |  3 +++
->  arch/s390/kernel/uv.c      | 53 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 72 insertions(+)
+>  arch/s390/include/asm/uv.h | 51 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 51 insertions(+)
 > 
 > diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-> index 6db1bc495e67..82a46fb913e7 100644
+> index 0bfbafcca136..99cdd2034503 100644
 > --- a/arch/s390/include/asm/uv.h
 > +++ b/arch/s390/include/asm/uv.h
-> @@ -23,12 +23,14 @@
->  #define UVC_RC_NO_RESUME	0x0007
+> @@ -15,6 +15,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/bug.h>
+>  #include <asm/page.h>
+> +#include <asm/gmap.h>
 >  
->  #define UVC_CMD_QUI			0x0001
-> +#define UVC_CMD_INIT_UV			0x000f
->  #define UVC_CMD_SET_SHARED_ACCESS	0x1000
->  #define UVC_CMD_REMOVE_SHARED_ACCESS	0x1001
->  
->  /* Bits in installed uv calls */
->  enum uv_cmds_inst {
->  	BIT_UVC_CMD_QUI = 0,
-> +	BIT_UVC_CMD_INIT_UV = 1,
->  	BIT_UVC_CMD_SET_SHARED_ACCESS = 8,
->  	BIT_UVC_CMD_REMOVE_SHARED_ACCESS = 9,
->  };
-> @@ -59,6 +61,15 @@ struct uv_cb_qui {
->  	u64 reserved98;
->  } __packed __aligned(8);
->  
-> +struct uv_cb_init {
-> +	struct uv_cb_header header;
-> +	u64 reserved08[2];
-> +	u64 stor_origin;
-> +	u64 stor_len;
-> +	u64 reserved28[4];
-> +
-> +} __packed __aligned(8);
-> +
->  struct uv_cb_share {
->  	struct uv_cb_header header;
->  	u64 reserved08[3];
-> @@ -158,8 +169,13 @@ static inline int is_prot_virt_host(void)
->  {
->  	return prot_virt_host;
+>  #define UVC_RC_EXECUTED		0x0001
+>  #define UVC_RC_INV_CMD		0x0002
+> @@ -279,6 +280,54 @@ static inline int uv_cmd_nodata(u64 handle, u16 cmd, u32 *ret)
+>  	return rc ? -EINVAL : 0;
 >  }
+>  
+> +/*
+> + * Requests the Ultravisor to encrypt a guest page and make it
+> + * accessible to the host for paging (export).
+> + *
+> + * @paddr: Absolute host address of page to be exported
+> + */
+> +static inline int uv_convert_from_secure(unsigned long paddr)
+> +{
+> +	struct uv_cb_cfs uvcb = {
+> +		.header.cmd = UVC_CMD_CONV_FROM_SEC_STOR,
+> +		.header.len = sizeof(uvcb),
+> +		.paddr = paddr
+> +	};
+> +	if (!uv_call(0, (u64)&uvcb))
+> +		return 0;
+
+As discussed on the KVM forum. We should also check for
+uvcb.header.rc != UVC_RC_EXECUTED
+I know, we cant really do much if this fails, but we certainly want to know.
+
+
+
+
+
+
+> +	return -EINVAL;
+> +}
 > +
-> +void setup_uv(void);
-> +void adjust_to_uv_max(unsigned long *vmax);
+> +/*
+> + * Requests the Ultravisor to make a page accessible to a guest
+> + * (import). If it's brought in the first time, it will be cleared. If
+> + * it has been exported before, it will be decrypted and integrity
+> + * checked.
+> + *
+> + * @handle: Ultravisor guest handle
+> + * @gaddr: Guest 2 absolute address to be imported
+> + */
+> +static inline int uv_convert_to_secure(struct gmap *gmap, unsigned long gaddr)
+> +{
+> +	int cc;
+> +	struct uv_cb_cts uvcb = {
+> +		.header.cmd = UVC_CMD_CONV_TO_SEC_STOR,
+> +		.header.len = sizeof(uvcb),
+> +		.guest_handle = gmap->se_handle,
+> +		.gaddr = gaddr
+> +	};
+> +
+> +	cc = uv_call(0, (u64)&uvcb);
+> +
+> +	if (!cc)
+> +		return 0;
+> +	if (uvcb.header.rc == 0x104)
+> +		return -EEXIST;
+> +	if (uvcb.header.rc == 0x10a)
+> +		return -EFAULT;
+
+again, we should probably check for rc != UVC_RC_EXECUTED to detect any other problem.
+
+> +	return -EINVAL;
+> +}
+> +
+>  void setup_uv(void);
+>  void adjust_to_uv_max(unsigned long *vmax);
 >  #else
->  #define is_prot_virt_host() 0
-> +static inline void setup_uv(void) {}
-> +static inline void adjust_to_uv_max(unsigned long *vmax) {}
+> @@ -286,6 +335,8 @@ void adjust_to_uv_max(unsigned long *vmax);
+>  static inline void setup_uv(void) {}
+>  static inline void adjust_to_uv_max(unsigned long *vmax) {}
+>  static inline int uv_cmd_nodata(u64 handle, u16 cmd, u32 *ret) { return 0; }
+> +static inline int uv_convert_from_secure(unsigned long paddr) { return 0; }
+> +static inline int uv_convert_to_secure(unsigned long handle, unsigned long gaddr) { return 0; }
 >  #endif
 >  
 >  #if defined(CONFIG_PROTECTED_VIRTUALIZATION_GUEST) ||                          \
-> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-> index f36370f8af38..d29d83c0b8df 100644
-> --- a/arch/s390/kernel/setup.c
-> +++ b/arch/s390/kernel/setup.c
-> @@ -567,6 +567,8 @@ static void __init setup_memory_end(void)
->  			vmax = _REGION1_SIZE; /* 4-level kernel page table */
->  	}
->  
-> +	adjust_to_uv_max(&vmax);
-> +
->  	/* module area is at the end of the kernel address space. */
->  	MODULES_END = vmax;
->  	MODULES_VADDR = MODULES_END - MODULES_LEN;
-> @@ -1147,6 +1149,7 @@ void __init setup_arch(char **cmdline_p)
->  	 */
->  	memblock_trim_memory(1UL << (MAX_ORDER - 1 + PAGE_SHIFT));
->  
-> +	setup_uv();
->  	setup_memory_end();
->  	setup_memory();
->  	dma_contiguous_reserve(memory_end);
-> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-> index 35ce89695509..f7778493e829 100644
-> --- a/arch/s390/kernel/uv.c
-> +++ b/arch/s390/kernel/uv.c
-> @@ -45,4 +45,57 @@ static int __init prot_virt_setup(char *val)
->  	return rc;
->  }
->  early_param("prot_virt", prot_virt_setup);
-> +
-> +static int __init uv_init(unsigned long stor_base, unsigned long stor_len)
-> +{
-> +	struct uv_cb_init uvcb = {
-> +		.header.cmd = UVC_CMD_INIT_UV,
-> +		.header.len = sizeof(uvcb),
-> +		.stor_origin = stor_base,
-> +		.stor_len = stor_len,
-> +	};
-> +	int cc;
-> +
-> +	cc = uv_call(0, (uint64_t)&uvcb);
-> +	if (cc || uvcb.header.rc != UVC_RC_EXECUTED) {
-> +		pr_err("Ultravisor init failed with cc: %d rc: 0x%hx\n", cc,
-> +		       uvcb.header.rc);
-> +		return -1;
-> +	}
-> +	return 0;
-> +}
-> +
-> +void __init setup_uv(void)
-> +{
-> +	unsigned long uv_stor_base;
-> +
-> +	if (!prot_virt_host)
-> +		return;
-> +
-> +	uv_stor_base = (unsigned long)memblock_alloc_try_nid(
-> +		uv_info.uv_base_stor_len, SZ_1M, SZ_2G,
-> +		MEMBLOCK_ALLOC_ACCESSIBLE, NUMA_NO_NODE);
-> +	if (!uv_stor_base) {
-> +		pr_info("Failed to reserve %lu bytes for ultravisor base storage\n",
-> +			uv_info.uv_base_stor_len);
-> +		goto fail;
-> +	}
-> +
-> +	if (uv_init(uv_stor_base, uv_info.uv_base_stor_len)) {
-> +		memblock_free(uv_stor_base, uv_info.uv_base_stor_len);
-> +		goto fail;
-> +	}
-> +
-> +	pr_info("Reserving %luMB as ultravisor base storage\n",
-> +		uv_info.uv_base_stor_len >> 20);
-> +	return;
-> +fail:
-> +	prot_virt_host = 0;
-> +}
-> +
-> +void adjust_to_uv_max(unsigned long *vmax)
-> +{
-> +	if (prot_virt_host && *vmax > uv_info.max_sec_stor_addr)
-> +		*vmax = uv_info.max_sec_stor_addr;
-> +}
->  #endif
 > 
 
