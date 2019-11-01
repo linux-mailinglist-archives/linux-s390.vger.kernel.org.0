@@ -2,471 +2,270 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5432FEC945
-	for <lists+linux-s390@lfdr.de>; Fri,  1 Nov 2019 20:55:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9385DEC958
+	for <lists+linux-s390@lfdr.de>; Fri,  1 Nov 2019 21:04:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726846AbfKATzT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 1 Nov 2019 15:55:19 -0400
-Received: from mail-eopbgr50063.outbound.protection.outlook.com ([40.107.5.63]:46337
-        "EHLO EUR03-VE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726477AbfKATzS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 1 Nov 2019 15:55:18 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=bFMorDuJeF0BjXmCiXsnNGQkq/+Q9n35U6eZUteEcuR35czKu2N6LW6TnbXl386n7bXFUJngUEoI2Ckk0wxt5o7T7IPo2iqWtg0yVqghAPaFxDO6C4F0WWhDRQz9+rNvAcUQZYHgY+BI7cOCPCmqEynM30OShMHNxnC1zWAfWjqX8Y87wWw0ekTfEsYepW7ZRUt3dsYNf+5KxJ1RLe7PMX8mNF0Oj1BK2cF+ombdwNgKy0p73ZEIQC24xoaJUhG4gloR4mNbrvSAIb1zZ2TYB0VbBbXBzjnBRsaG27F1omwkC+A9yf2XAlRVIdpAY6PNGICVVIxxA/IT/n9eRc0Idw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aB3DTF5kN4EM4BulyxImLm/PczaCHSttekXKc8J1TP4=;
- b=Ps5prY6fU60yOKhcrTU+XiNn7JAtdh+KbyvIVeiv+WqWhdpXM/pmR1DNTSos9SAkXiCdC9gpLa0YjeA7PGWaJN++AytgJeMnroBRFa0ToIvGEC2MvsZhu3VhLxeQXS5tacFOz+iz5pVHAAW//gPPLtQBsljl4EwodXEQ0sOvcYYOe0rPz3vGsAv0jZ/VymY3MBwDuRbdkmcXeToS5Qf2w7NUygJjfJjJ6ngaX5ND3V766SN1T1CwU+K43U2az9sI0qtjA2v+YFEbmatolZIY55ko8O3bj6Udcpel82zCr4dljMucP0EpwEU7Wj+HsYrSaSU0KP85CLWx+usJwWqwug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=aB3DTF5kN4EM4BulyxImLm/PczaCHSttekXKc8J1TP4=;
- b=hrFsLAgcc9YPb9mYormx5l0cKSRUsJxUfGTmmYyPz1WtEpp8ZK91OESVvIesKgyFTgqoTv0AQDIIo4etiLQmLBC9yPCoSIJL6cqz/e3FDL6DzNFQLapBJ3TXYcSowc5lULhNEuJ2U771sDXTeAyUPeElCKILBaAG1+xMoiFCga8=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB6547.eurprd05.prod.outlook.com (20.179.33.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.25; Fri, 1 Nov 2019 19:55:08 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::64b2:6eb4:f000:3432]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::64b2:6eb4:f000:3432%7]) with mapi id 15.20.2387.028; Fri, 1 Nov 2019
- 19:55:07 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        Ido Shamay <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>
-Subject: RE: [PATCH V6 1/6] mdev: class id support
-Thread-Topic: [PATCH V6 1/6] mdev: class id support
-Thread-Index: AQHVju2yGvQTvqp5E0i6CNNjQ6wmVad2vnxA
-Date:   Fri, 1 Nov 2019 19:55:07 +0000
-Message-ID: <AM0PR05MB486655EC2CC3EDA9D8C9C8E3D1620@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20191030064444.21166-1-jasowang@redhat.com>
- <20191030064444.21166-2-jasowang@redhat.com>
-In-Reply-To: <20191030064444.21166-2-jasowang@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 1e10740a-c974-4194-eabd-08d75f056588
-x-ms-traffictypediagnostic: AM0PR05MB6547:|AM0PR05MB6547:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB65479326219D06C64CF3345ED1620@AM0PR05MB6547.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4714;
-x-forefront-prvs: 020877E0CB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(136003)(39860400002)(346002)(396003)(199004)(189003)(13464003)(71190400001)(71200400001)(66556008)(5660300002)(66476007)(64756008)(66446008)(76116006)(86362001)(66946007)(186003)(6506007)(2201001)(2906002)(7696005)(102836004)(6116002)(53546011)(3846002)(110136005)(446003)(305945005)(11346002)(54906003)(81166006)(81156014)(7736002)(8676002)(26005)(486006)(6246003)(478600001)(99286004)(7406005)(7416002)(2501003)(476003)(74316002)(229853002)(6436002)(316002)(66066001)(33656002)(52536014)(256004)(76176011)(14454004)(8936002)(9686003)(30864003)(14444005)(4326008)(55016002)(25786009)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB6547;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Ley2WbDfJG4Z+yszxUFyvp1CoHBaD0QtNoMmFJSBukU0BkjypSxSHiav9ZwwDm/qPyLzP1exNYx5B+Wv4DiVu5p8ib67zlZw1u2NCmu/cGi/0LyFNWfQ2KxaXSa5ZH9Jr5scsN8dIEYnZhXd8UtKETMv8FY9NfRrpHsj/6ySFhIKkcTcP1RwPVxQJHoFvqJJbSHtPS5MqD0OsdZpm30NM9VuJZLAA4pjNli/gVMrmQ5OENbjL8TQjigEBPrwSewx3JNRlD3FfN9S1n6AmihQkYz6Xvi42zDlAgfLwYhVmT+47mc2ca2uHShGzts5ALggK4rRVOAeZxDz4P01kMyz8DegwHYl6FBzG7zpnAQCsKWtO4OdWp09/wUs3Ov5snGZvPGD8UFq5N4aWMrcxDN74Sb199Sw/BaOOhUH34n9S8lMfXkH854Yn+SjXXDbQpOr
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727603AbfKAUE3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 1 Nov 2019 16:04:29 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31696 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726709AbfKAUE3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 1 Nov 2019 16:04:29 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA1K3jUZ125668;
+        Fri, 1 Nov 2019 16:04:28 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w0srvb5d2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 Nov 2019 16:04:27 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.27/8.16.0.27) with SMTP id xA1K4RI5132461;
+        Fri, 1 Nov 2019 16:04:27 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w0srvb5bw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 Nov 2019 16:04:27 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA1K0r38001573;
+        Fri, 1 Nov 2019 20:04:26 GMT
+Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
+        by ppma04wdc.us.ibm.com with ESMTP id 2vxwh5uapu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 01 Nov 2019 20:04:26 +0000
+Received: from b03ledav006.gho.boulder.ibm.com (b03ledav006.gho.boulder.ibm.com [9.17.130.237])
+        by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA1K4LtT61079892
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 1 Nov 2019 20:04:21 GMT
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D743C605A;
+        Fri,  1 Nov 2019 20:04:21 +0000 (GMT)
+Received: from b03ledav006.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 925B0C6059;
+        Fri,  1 Nov 2019 20:04:20 +0000 (GMT)
+Received: from [9.60.75.238] (unknown [9.60.75.238])
+        by b03ledav006.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri,  1 Nov 2019 20:04:20 +0000 (GMT)
+Subject: Re: [PATCH] s390: vfio-ap: disable IRQ in remove callback results in
+ kernel OOPS
+To:     Pierre Morel <pmorel@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, cohuck@redhat.com, mjrosato@linux.ibm.com,
+        pasic@linux.ibm.com, jjherne@linux.ibm.com
+References: <1572386946-22566-1-git-send-email-akrowiak@linux.ibm.com>
+ <0565c250-726f-dd99-f933-f91162dc107e@linux.ibm.com>
+ <97cf7863-d6d0-418a-09c1-50d9e84fd855@linux.ibm.com>
+ <2ea83094-46c6-ef92-f39c-579f88979320@linux.ibm.com>
+ <c404a796-dfc3-1da1-46b7-fe26d1be18f9@linux.ibm.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <c007c372-5a7d-9e05-9510-cef62bbcee98@linux.ibm.com>
+Date:   Fri, 1 Nov 2019 16:04:20 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 1e10740a-c974-4194-eabd-08d75f056588
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 19:55:07.7222
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: VXhlroZdhIg86pEbqMVZUdT61jgSmfnEKwMOhEpAymFgp7IdHYrWCibv+PKwZjKAoTaAnGKajjVX7e4LvRemhg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB6547
+In-Reply-To: <c404a796-dfc3-1da1-46b7-fe26d1be18f9@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-01_07:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1911010181
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 10/30/19 2:02 PM, Pierre Morel wrote:
+> 
+> On 10/30/19 5:51 PM, Tony Krowiak wrote:
+>> On 10/30/19 10:00 AM, Pierre Morel wrote:
+>>>
+>>>
+>>>
+>>> On 10/30/19 8:44 AM, Harald Freudenberger wrote:
+>>>> On 29.10.19 23:09, Tony Krowiak wrote:
+>>>>> From: aekrowia <akrowiak@linux.ibm.com>
+>>>>>
+>>>>> When an AP adapter card is configured off via the SE or the SCLP
+>>>>> Deconfigure Adjunct Processor command and the AP bus subsequently 
+>>>>> detects
+>>>>> that the adapter card is no longer in the AP configuration, the card
+>>>>> device representing the adapter card as well as each of its associated
+>>>>> AP queue devices will be removed by the AP bus. If one or more of the
+>>>>> affected queue devices is bound to the VFIO AP device driver, its 
+>>>>> remove
+>>>>> callback will be invoked for each queue to be removed. The remove 
+>>>>> callback
+>>>>> resets the queue and disables IRQ processing. If interrupt 
+>>>>> processing was
+>>>>> never enabled for the queue, disabling IRQ processing will fail 
+>>>>> resulting
+>>>>> in a kernel OOPS.
+>>>>>
+>>>>> This patch verifies IRQ processing is enabled before attempting to 
+>>>>> disable
+>>>>> interrupts for the queue.
+>>>>>
+>>>>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>>>>> Signed-off-by: aekrowia <akrowiak@linux.ibm.com>
+>>>>> ---
+>>>>>   drivers/s390/crypto/vfio_ap_drv.c | 3 ++-
+>>>>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>>>>
+>>>>> diff --git a/drivers/s390/crypto/vfio_ap_drv.c 
+>>>>> b/drivers/s390/crypto/vfio_ap_drv.c
+>>>>> index be2520cc010b..42d8308fd3a1 100644
+>>>>> --- a/drivers/s390/crypto/vfio_ap_drv.c
+>>>>> +++ b/drivers/s390/crypto/vfio_ap_drv.c
+>>>>> @@ -79,7 +79,8 @@ static void vfio_ap_queue_dev_remove(struct 
+>>>>> ap_device *apdev)
+>>>>>       apid = AP_QID_CARD(q->apqn);
+>>>>>       apqi = AP_QID_QUEUE(q->apqn);
+>>>>>       vfio_ap_mdev_reset_queue(apid, apqi, 1);
+>>>>> -    vfio_ap_irq_disable(q);
+>>>>> +    if (q->saved_isc != VFIO_AP_ISC_INVALID)
+>>>>> +        vfio_ap_irq_disable(q);
+>>>>>       kfree(q);
+>>>>>       mutex_unlock(&matrix_dev->lock);
+>>>>>   }
+>>>> Reset of an APQN does also clear IRQ processing. I don't say that the
+>>>> resources associated with IRQ handling for the APQN are also cleared.
+>>>> But when you call PQAP(AQIC) after an PQAP(RAPQ) or PQAP(ZAPQ)
+>>>> it is superfluous. However, there should not appear any kernel OOPS.
+>>>> So can you please give me more details about this kernel oops - maybe
+>>>> I need to add exception handler code to the inline ap_aqic() function.
+>>>>
+>>>> regards, Harald Freudenberger
+>>>>
+>>>
+>>> Hi Tony,
+>>>
+>>> wasn't it already solved by the patch 5c4c2126  from Christian ?
+>>
+>> No, that patch merely sets the 'matrix_mdev' field of the
+>> 'struct vfio_ap_queue' to NULL in the vfio_ap_free_aqic_resources()
+>> function. Also, with the latest master branch which has 5c4c2126
+>> installed, the failure occurs.
+>>
+>>>
+>>> Can you send the trace to me please?
+>>
+>> [  266.989476] crw_info : CRW reports slct=0, oflw=0, chn=0, rsc=B, 
+>> anc=0, erc=0, rsid=0
+>> [  266.989617] ------------[ cut here ]------------
+>> [  266.989622] vfio_ap_wait_for_irqclear: tapq rc 03: 0504
+>> [  266.989681] WARNING: CPU: 0 PID: 7 at 
+>> drivers/s390/crypto/vfio_ap_ops.c:101 vfio_ap_irq_disable+0x13c/0x1b0 
+>> [vfio_ap]
+> 
+> 
+> Hi Tony,
+> 
+> This is not a oops this is the warning written in 
+> vfio_ap_wait_for_irqclear() because the AP has been deconfigured.
+> 
+> Note that, IIUC, this (the warning) does not happen for devices bound to 
+> the vfio_ap driver but not currently assigned to a mediated device.
+> 
+> I do not think we should avoid sending a warning in this case because 
+> this is not a normal administration good practice to forcefully take an 
+> AP away like this without smoothly removing the device from the mediated 
+> device.
+> 
+> Regards,
+> 
+> Pierre
 
+After further review, I see this warning is actually issued as a
+WARN_ONCE in the vfio_ap_wait_for_irqclear() function when the
+PQAP(TAPQ) returns with response code 3, AP adapter deconfigured.
+I wasn't aware that the WARN_ONCE macro put out a stack trace.
+That doesn't negate the fact that it makes no sense to disable
+interrupts if they are not enabled, nor does it make sense to
+disable interrrupts subsequent to a reset because the reset will
+disable interrupts. For now, this patch can be ignored pending
+further review of these issues.
 
-> -----Original Message-----
-> From: kvm-owner@vger.kernel.org <kvm-owner@vger.kernel.org> On Behalf
-> Of Jason Wang
-> Sent: Wednesday, October 30, 2019 1:45 AM
-> To: kvm@vger.kernel.org; linux-s390@vger.kernel.org; linux-
-> kernel@vger.kernel.org; dri-devel@lists.freedesktop.org; intel-
-> gfx@lists.freedesktop.org; intel-gvt-dev@lists.freedesktop.org;
-> kwankhede@nvidia.com; alex.williamson@redhat.com; mst@redhat.com;
-> tiwei.bie@intel.com
-> Cc: virtualization@lists.linux-foundation.org; netdev@vger.kernel.org;
-> cohuck@redhat.com; maxime.coquelin@redhat.com;
-> cunming.liang@intel.com; zhihong.wang@intel.com;
-> rob.miller@broadcom.com; xiao.w.wang@intel.com;
-> haotian.wang@sifive.com; zhenyuw@linux.intel.com; zhi.a.wang@intel.com;
-> jani.nikula@linux.intel.com; joonas.lahtinen@linux.intel.com;
-> rodrigo.vivi@intel.com; airlied@linux.ie; daniel@ffwll.ch;
-> farman@linux.ibm.com; pasic@linux.ibm.com; sebott@linux.ibm.com;
-> oberpar@linux.ibm.com; heiko.carstens@de.ibm.com; gor@linux.ibm.com;
-> borntraeger@de.ibm.com; akrowiak@linux.ibm.com; freude@linux.ibm.com;
-> lingshan.zhu@intel.com; Ido Shamay <idos@mellanox.com>;
-> eperezma@redhat.com; lulu@redhat.com; Parav Pandit
-> <parav@mellanox.com>; christophe.de.dinechin@gmail.com;
-> kevin.tian@intel.com; stefanha@redhat.com; Jason Wang
-> <jasowang@redhat.com>
-> Subject: [PATCH V6 1/6] mdev: class id support
->=20
-> Mdev bus only supports vfio driver right now, so it doesn't implement mat=
-ch
-> method. But in the future, we may add drivers other than vfio, the first =
-driver
-> could be virtio-mdev. This means we need to add device class id support i=
-n bus
-> match method to pair the mdev device and mdev driver correctly.
->=20
-> So this patch adds id_table to mdev_driver and class_id for mdev device w=
-ith
-> the match method for mdev bus.
->=20
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  .../driver-api/vfio-mediated-device.rst       |  5 ++++
->  drivers/gpu/drm/i915/gvt/kvmgt.c              |  1 +
->  drivers/s390/cio/vfio_ccw_ops.c               |  1 +
->  drivers/s390/crypto/vfio_ap_ops.c             |  1 +
->  drivers/vfio/mdev/mdev_core.c                 | 16 ++++++++++++
->  drivers/vfio/mdev/mdev_driver.c               | 25 +++++++++++++++++++
->  drivers/vfio/mdev/mdev_private.h              |  1 +
->  drivers/vfio/mdev/vfio_mdev.c                 |  6 +++++
->  include/linux/mdev.h                          |  8 ++++++
->  include/linux/mod_devicetable.h               |  8 ++++++
->  samples/vfio-mdev/mbochs.c                    |  1 +
->  samples/vfio-mdev/mdpy.c                      |  1 +
->  samples/vfio-mdev/mtty.c                      |  1 +
->  13 files changed, 75 insertions(+)
->=20
-> diff --git a/Documentation/driver-api/vfio-mediated-device.rst
-> b/Documentation/driver-api/vfio-mediated-device.rst
-> index 25eb7d5b834b..6709413bee29 100644
-> --- a/Documentation/driver-api/vfio-mediated-device.rst
-> +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> @@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
->        * @probe: called when new device created
->        * @remove: called when device removed
->        * @driver: device driver structure
-> +      * @id_table: the ids serviced by this driver
->        */
->       struct mdev_driver {
->  	     const char *name;
->  	     int  (*probe)  (struct device *dev);
->  	     void (*remove) (struct device *dev);
->  	     struct device_driver    driver;
-> +	     const struct mdev_class_id *id_table;
->       };
->=20
->  A mediated bus driver for mdev should use this structure in the function=
- calls
-> @@ -170,6 +172,9 @@ that a driver should use to unregister itself with th=
-e
-> mdev core driver::
->=20
->  	extern void mdev_unregister_device(struct device *dev);
->=20
-> +It is also required to specify the class_id in create() callback through=
-::
-> +
-> +	int mdev_set_class(struct mdev_device *mdev, u16 id);
->=20
->  Mediated Device Management Interface Through sysfs
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D
-> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> index 343d79c1cb7e..6420f0dbd31b 100644
-> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> @@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kobj, st=
-ruct
-> mdev_device *mdev)
->  		     dev_name(mdev_dev(mdev)));
->  	ret =3D 0;
->=20
-> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
->  out:
->  	return ret;
->  }
-> diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_=
-ops.c
-> index f0d71ab77c50..cf2c013ae32f 100644
-> --- a/drivers/s390/cio/vfio_ccw_ops.c
-> +++ b/drivers/s390/cio/vfio_ccw_ops.c
-> @@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject *kobj,
-> struct mdev_device *mdev)
->  			   private->sch->schid.ssid,
->  			   private->sch->schid.sch_no);
->=20
-> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
->  	return 0;
->  }
->=20
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c
-> b/drivers/s390/crypto/vfio_ap_ops.c
-> index 5c0f53c6dde7..07c31070afeb 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj,
-> struct mdev_device *mdev)
->  	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
->  	mutex_unlock(&matrix_dev->lock);
->=20
-> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
->  	return 0;
->  }
->=20
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.=
-c
-> index b558d4cfd082..d23ca39e3be6 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -45,6 +45,16 @@ void mdev_set_drvdata(struct mdev_device *mdev, void
-> *data)  }  EXPORT_SYMBOL(mdev_set_drvdata);
->=20
-> +/* Specify the class for the mdev device, this must be called during
-> + * create() callback.
-> + */
-> +void mdev_set_class(struct mdev_device *mdev, u16 id) {
-> +	WARN_ON(mdev->class_id);
-> +	mdev->class_id =3D id;
-> +}
-> +EXPORT_SYMBOL(mdev_set_class);
-> +
->  struct device *mdev_dev(struct mdev_device *mdev)  {
->  	return &mdev->dev;
-> @@ -324,6 +334,12 @@ int mdev_device_create(struct kobject *kobj,
->  	if (ret)
->  		goto ops_create_fail;
->=20
-> +	if (!mdev->class_id) {
-> +		ret =3D -EINVAL;
-> +		dev_warn(dev, "mdev vendor driver failed to specify device
-> class\n");
-> +		goto add_fail;
-> +	}
-> +
->  	ret =3D device_add(&mdev->dev);
->  	if (ret)
->  		goto add_fail;
-> diff --git a/drivers/vfio/mdev/mdev_driver.c
-> b/drivers/vfio/mdev/mdev_driver.c index 0d3223aee20b..ed06433693e8
-> 100644
-> --- a/drivers/vfio/mdev/mdev_driver.c
-> +++ b/drivers/vfio/mdev/mdev_driver.c
-> @@ -69,8 +69,33 @@ static int mdev_remove(struct device *dev)
->  	return 0;
->  }
->=20
-> +static int mdev_match(struct device *dev, struct device_driver *drv) {
-> +	unsigned int i;
-> +	struct mdev_device *mdev =3D to_mdev_device(dev);
-> +	struct mdev_driver *mdrv =3D to_mdev_driver(drv);
-> +	const struct mdev_class_id *ids =3D mdrv->id_table;
-> +
-> +	if (!ids)
-> +		return 0;
-> +
-> +	for (i =3D 0; ids[i].id; i++)
-> +		if (ids[i].id =3D=3D mdev->class_id)
-> +			return 1;
-> +	return 0;
-> +}
-> +
-> +static int mdev_uevent(struct device *dev, struct kobj_uevent_env *env)
-> +{
-> +	struct mdev_device *mdev =3D to_mdev_device(dev);
-> +
-> +	return add_uevent_var(env, "MODALIAS=3Dmdev:c%02X", mdev-
-> >class_id); }
-> +
->  struct bus_type mdev_bus_type =3D {
->  	.name		=3D "mdev",
-> +	.match		=3D mdev_match,
-> +	.uevent		=3D mdev_uevent,
->  	.probe		=3D mdev_probe,
->  	.remove		=3D mdev_remove,
->  };
-> diff --git a/drivers/vfio/mdev/mdev_private.h
-> b/drivers/vfio/mdev/mdev_private.h
-> index 7d922950caaf..c65f436c1869 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -33,6 +33,7 @@ struct mdev_device {
->  	struct kobject *type_kobj;
->  	struct device *iommu_device;
->  	bool active;
-> +	u16 class_id;
->  };
->=20
->  #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
-> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.=
-c
-> index 30964a4e0a28..38431e9ef7f5 100644
-> --- a/drivers/vfio/mdev/vfio_mdev.c
-> +++ b/drivers/vfio/mdev/vfio_mdev.c
-> @@ -120,10 +120,16 @@ static void vfio_mdev_remove(struct device *dev)
->  	vfio_del_group_dev(dev);
->  }
->=20
-> +static const struct mdev_class_id vfio_id_table[] =3D {
-> +	{ MDEV_CLASS_ID_VFIO },
-> +	{ 0 },
-> +};
-> +
->  static struct mdev_driver vfio_mdev_driver =3D {
->  	.name	=3D "vfio_mdev",
->  	.probe	=3D vfio_mdev_probe,
->  	.remove	=3D vfio_mdev_remove,
-> +	.id_table =3D vfio_id_table,
->  };
->=20
->  static int __init vfio_mdev_init(void)
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h index
-> 0ce30ca78db0..78b69d09eb54 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -118,6 +118,7 @@ struct mdev_type_attribute mdev_type_attr_##_name
-> =3D		\
->   * @probe: called when new device created
->   * @remove: called when device removed
->   * @driver: device driver structure
-> + * @id_table: the ids serviced by this driver
->   *
->   **/
->  struct mdev_driver {
-> @@ -125,6 +126,7 @@ struct mdev_driver {
->  	int  (*probe)(struct device *dev);
->  	void (*remove)(struct device *dev);
->  	struct device_driver driver;
-> +	const struct mdev_class_id *id_table;
->  };
->=20
->  #define to_mdev_driver(drv)	container_of(drv, struct mdev_driver, driver=
-)
-> @@ -132,6 +134,7 @@ struct mdev_driver {  void *mdev_get_drvdata(struct
-> mdev_device *mdev);  void mdev_set_drvdata(struct mdev_device *mdev, void
-> *data);  const guid_t *mdev_uuid(struct mdev_device *mdev);
-> +void mdev_set_class(struct mdev_device *mdev, u16 id);
->=20
->  extern struct bus_type mdev_bus_type;
->=20
-> @@ -145,4 +148,9 @@ struct device *mdev_parent_dev(struct mdev_device
-> *mdev);  struct device *mdev_dev(struct mdev_device *mdev);  struct
-> mdev_device *mdev_from_dev(struct device *dev);
->=20
-> +enum {
-> +	MDEV_CLASS_ID_VFIO =3D 1,
-> +	/* New entries must be added here */
-> +};
-> +
->  #endif /* MDEV_H */
-> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_deviceta=
-ble.h
-> index 5714fd35a83c..f32c6e44fb1a 100644
-> --- a/include/linux/mod_devicetable.h
-> +++ b/include/linux/mod_devicetable.h
-> @@ -821,4 +821,12 @@ struct wmi_device_id {
->  	const void *context;
->  };
->=20
-> +/**
-> + * struct mdev_class_id - MDEV device class identifier
-> + * @id: Used to identify a specific class of device, e.g vfio-mdev devic=
-e.
-> + */
-> +struct mdev_class_id {
-> +	__u16 id;
-> +};
-> +
->  #endif /* LINUX_MOD_DEVICETABLE_H */
-> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c inde=
-x
-> ac5c8c17b1ff..115bc5074656 100644
-> --- a/samples/vfio-mdev/mbochs.c
-> +++ b/samples/vfio-mdev/mbochs.c
-> @@ -561,6 +561,7 @@ static int mbochs_create(struct kobject *kobj, struct
-> mdev_device *mdev)
->  	mbochs_reset(mdev);
->=20
->  	mbochs_used_mbytes +=3D type->mbytes;
-> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
->  	return 0;
->=20
->  err_mem:
-> diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c index
-> cc86bf6566e4..665614574d50 100644
-> --- a/samples/vfio-mdev/mdpy.c
-> +++ b/samples/vfio-mdev/mdpy.c
-> @@ -269,6 +269,7 @@ static int mdpy_create(struct kobject *kobj, struct
-> mdev_device *mdev)
->  	mdpy_reset(mdev);
->=20
->  	mdpy_count++;
-> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
->  	return 0;
->  }
->=20
-> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c index
-> ce84a300a4da..90da12ff7fd9 100644
-> --- a/samples/vfio-mdev/mtty.c
-> +++ b/samples/vfio-mdev/mtty.c
-> @@ -755,6 +755,7 @@ static int mtty_create(struct kobject *kobj, struct
-> mdev_device *mdev)
->  	list_add(&mdev_state->next, &mdev_devices_list);
->  	mutex_unlock(&mdev_list_lock);
->=20
-> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
->  	return 0;
->  }
->=20
-> --
-> 2.19.1
-Reviewed-by: Parav Pandit <parav@mellanox.com>
+> 
+> 
+>> [ 266.989682] Modules linked in: xt_CHECKSUM xt_MASQUERADE tun bridge 
+>> stp llc ip6t_rpfilter ip6t_REJECT nf_reject_ipv6 xt_conntrack 
+>> ebtable_nat ip6table_nat ip6table_mangle ip6table_raw 
+>> ip6table_security iptable_nat nf_nat iptable_mangle iptable_raw 
+>> iptable_security nf_conntrack nf_defrag_ipv6 nf_defrag_ipv4 libcrc32c 
+>> ip_set nfnetlink ebtable_filter ebtables ip6table_filter ip6_tables 
+>> sunrpc ghash_s390 prng aes_s390 des_s390 libdes vfio_ccw sha512_s390 
+>> sha1_s390 eadm_sch zcrypt_cex4 qeth_l2 crc32_vx_s390 dasd_eckd_mod 
+>> sha256_s390 qeth sha_common dasd_mod ccwgroup qdio pkey zcrypt vfio_ap 
+>> kvm
+>> [  266.989704] CPU: 0 PID: 7 Comm: kworker/0:1 Not tainted 5.4.0-rc5 #81
+>> [  266.989705] Hardware name: IBM 2964 NE1 749 (LPAR)
+>> [  266.989710] Workqueue: events_long ap_scan_bus
+>> [  266.989711] Krnl PSW : 0704c00180000000 000003ff8007d89c 
+>> (vfio_ap_irq_disable+0x13c/0x1b0 [vfio_ap])
+>> [  266.989714]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 
+>> CC:0 PM:0 RI:0 EA:3
+>> [  266.989716] Krnl GPRS: 000000000000000a 0000000000000006 
+>> 000000000000002b 0000000000000007
+>> [  266.989717]            0000000000000007 000000007fe06000 
+>> 000003ff00000005 0000000000000000
+>> [  266.989718]            0000000100000504 0000000000000003 
+>> 00000001f9d27e40 000003e00003bb5c
+>> [  266.989719]            00000001fe765d00 0000000000000504 
+>> 000003ff8007d898 000003e00003ba60
+>> [  266.989724] Krnl Code: 000003ff8007d88c: c02000000ce6    larl 
+>> %r2,3ff8007f258
+>>                           000003ff8007d892: c0e5fffff4c7    brasl 
+>> %r14,3ff8007c220
+>>                          #000003ff8007d898: a7f40001        brc 
+>> 15,3ff8007d89a
+>>                          >000003ff8007d89c: a7f4ff9d        brc 
+>> 15,3ff8007d7d6
+>>                           000003ff8007d8a0: a7100100 tmlh    %r1,256
+>>                           000003ff8007d8a4: a784ff99        brc 
+>> 8,3ff8007d7d6
+>>                           000003ff8007d8a8: a7290014 lghi    %r2,20
+>>                           000003ff8007d8ac: c0e5fffff4b0    brasl 
+>> %r14,3ff8007c20c
+>> [  266.989772] Call Trace:
+>> [  266.989777] ([<000003ff8007d898>] vfio_ap_irq_disable+0x138/0x1b0 
+>> [vfio_ap])
+>> [  266.989779]  [<000003ff8007c4d2>] 
+>> vfio_ap_queue_dev_remove+0x6a/0x90 [vfio_ap]
+>> [  266.989782]  [<00000000bf0f24f0>] ap_device_remove+0x50/0x110
+>> [  266.989784]  [<00000000beffbaac>] 
+>> device_release_driver_internal+0x114/0x1f0
+>> [  266.989787]  [<00000000beff9c88>] bus_remove_device+0x108/0x190
+>> [  266.989789]  [<00000000beff5418>] device_del+0x178/0x3a0
+>> [  266.989790]  [<00000000beff5670>] device_unregister+0x30/0x90
+>> [  266.989791]  [<00000000bf0f0f04>] 
+>> __ap_queue_devices_with_id_unregister+0x44/0x50
+>> [  266.989793]  [<00000000beff86ea>] bus_for_each_dev+0x82/0xb0
+>> [  266.989794]  [<00000000bf0f2aba>] ap_scan_bus+0x262/0x878
+>> [  266.989798]  [<00000000beb4785c>] process_one_work+0x1e4/0x410
+>> [  266.989800]  [<00000000beb47ca8>] worker_thread+0x220/0x460
+>> [  266.989802]  [<00000000beb4e99a>] kthread+0x12a/0x160
+>> [  266.989805]  [<00000000bf2d8eb0>] ret_from_fork+0x28/0x2c
+>> [  266.989806]  [<00000000bf2d8eb4>] kernel_thread_starter+0x0/0xc
+>> [  266.989807] Last Breaking-Event-Address:
+>> [  266.989809]  [<000003ff8007d898>] vfio_ap_irq_disable+0x138/0x1b0 
+>> [vfio_ap]
+>> [  266.989810] ---[ end trace 59b4020890dbd391 ]---
+>>
+>>
+>>>
+>>> Thanks,
+>>>
+>>> Pierre
+>>>
+>>>
+>>>
+>>
+
