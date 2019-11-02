@@ -2,126 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BB118EC967
-	for <lists+linux-s390@lfdr.de>; Fri,  1 Nov 2019 21:11:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D4B1BECDC8
+	for <lists+linux-s390@lfdr.de>; Sat,  2 Nov 2019 09:53:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727089AbfKAULh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 1 Nov 2019 16:11:37 -0400
-Received: from mail-eopbgr150050.outbound.protection.outlook.com ([40.107.15.50]:21063
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726709AbfKAULh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 1 Nov 2019 16:11:37 -0400
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=d9c5jmLCRkkrZ0yR/IKrF1+ewdArAsI2MtXXYPB2/KIUx28+yjtP4yVDzmp15RQJuAexHsUYyHQdlowp55qBpKjtw6MRz0EGosiCvICk3RIQGxF5/d9TphWG83v8lCze0qqRGjYB2yBkf5nX1hpcv00r3trvNv1qBFevlT54FSIi9HVr7EPFhNIOpOuryF8Z0ZDfPsQLGADgCjVwP1dsqGULEjjMn9i9KkaAVbAcRfIlSAp8Y0dZsjI+GlulJtf75lLDITWv5W/B0aGV5wlow4PSQ8NE0SgML93KKBYuvw8d/n0pKmc6JAEYyOTrFPNhnyA8q26Md8nJzwO1mgWiUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s5MgvGOAx/HfUZj2RnveEiLcK9cxzl/d30370nKYdAU=;
- b=jQG0Mu8nTNgT6JwkoR71MJJP+pvwkI/pThHq9bLW6LsfEnNS5tVz/D2BYfNKzV4nmoS4B177ir1niY8iYovrAYD955CkrAV7MQTe8KtCcNGUL2Gc+ojWiCRal0LcU9H2Csf3upSS4jpclEeWE5X+zONQk3I3ZfAZcNg0lPJB6SyNbkipsPwdBu1b1uPtsWzOrPCpA06G7TWGPkrBCMVVse9Udptt9zJtOivOe/iiaUsLdiLNDg1lnt2MwP6e48LpWs6v0kwTZ10vxoegOwM8aRsmboct33/ctG30yqbvhiqgoB/P548Go9JJ+YzhRpZVmDP7eWL0V2I3cJgpGVLfcQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=s5MgvGOAx/HfUZj2RnveEiLcK9cxzl/d30370nKYdAU=;
- b=XMvYgdJ6jp3kVnbfQS0HzXcbSkQ6At4h8hbWPmXYOdqQQb4KSFhPKnO3oGRl1qJ+XDoXRHmcr0jUUBbGBmQSmgu386c1GJQXQe8CNNKnWCa1erwk9XW+e+zzENnA5pCfx78PVdRDByJ4G/MTzFRb+P0tFe7LNi8XMHVfZYnIm1Q=
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com (20.176.214.160) by
- AM0PR05MB5665.eurprd05.prod.outlook.com (20.178.112.10) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Fri, 1 Nov 2019 20:11:29 +0000
-Received: from AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::64b2:6eb4:f000:3432]) by AM0PR05MB4866.eurprd05.prod.outlook.com
- ([fe80::64b2:6eb4:f000:3432%7]) with mapi id 15.20.2387.028; Fri, 1 Nov 2019
- 20:11:29 +0000
-From:   Parav Pandit <parav@mellanox.com>
-To:     Jason Wang <jasowang@redhat.com>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "intel-gvt-dev@lists.freedesktop.org" 
-        <intel-gvt-dev@lists.freedesktop.org>,
-        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
-        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
-        "mst@redhat.com" <mst@redhat.com>,
-        "tiwei.bie@intel.com" <tiwei.bie@intel.com>
-CC:     "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "cohuck@redhat.com" <cohuck@redhat.com>,
-        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
-        "cunming.liang@intel.com" <cunming.liang@intel.com>,
-        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
-        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
-        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
-        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
-        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
-        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
-        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
-        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
-        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "farman@linux.ibm.com" <farman@linux.ibm.com>,
-        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
-        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
-        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
-        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
-        "gor@linux.ibm.com" <gor@linux.ibm.com>,
-        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
-        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
-        "freude@linux.ibm.com" <freude@linux.ibm.com>,
-        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
-        Ido Shamay <idos@mellanox.com>,
-        "eperezma@redhat.com" <eperezma@redhat.com>,
-        "lulu@redhat.com" <lulu@redhat.com>,
-        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>,
-        "kevin.tian@intel.com" <kevin.tian@intel.com>,
-        "stefanha@redhat.com" <stefanha@redhat.com>
-Subject: RE: [PATCH V6 3/6] mdev: introduce device specific ops
-Thread-Topic: [PATCH V6 3/6] mdev: introduce device specific ops
-Thread-Index: AQHVju3ug3yiMO78q0axXkP5igJmr6d2wYnQ
-Date:   Fri, 1 Nov 2019 20:11:28 +0000
-Message-ID: <AM0PR05MB4866E91139617C9F2380BBAFD1620@AM0PR05MB4866.eurprd05.prod.outlook.com>
-References: <20191030064444.21166-1-jasowang@redhat.com>
- <20191030064444.21166-4-jasowang@redhat.com>
-In-Reply-To: <20191030064444.21166-4-jasowang@redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=parav@mellanox.com; 
-x-originating-ip: [208.176.44.194]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 138b56cc-818d-4114-4cd4-08d75f07ae7a
-x-ms-traffictypediagnostic: AM0PR05MB5665:|AM0PR05MB5665:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM0PR05MB5665BDDBAA2337B5A52F0FBDD1620@AM0PR05MB5665.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:3968;
-x-forefront-prvs: 020877E0CB
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(366004)(136003)(346002)(376002)(189003)(199004)(13464003)(4326008)(99286004)(316002)(6116002)(55016002)(476003)(2906002)(229853002)(9686003)(3846002)(53546011)(110136005)(66946007)(14454004)(25786009)(66476007)(2501003)(54906003)(66066001)(64756008)(66556008)(486006)(11346002)(446003)(76116006)(81156014)(7696005)(74316002)(2201001)(76176011)(7416002)(7406005)(305945005)(33656002)(7736002)(52536014)(26005)(66446008)(5660300002)(86362001)(102836004)(6506007)(6246003)(81166006)(6436002)(71200400001)(71190400001)(8676002)(8936002)(478600001)(14444005)(256004)(186003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR05MB5665;H:AM0PR05MB4866.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Bv/wZtxh1hquQLapEfoP1sjVlYC3HofuASHTlCDx4m9dhxcBOqiHYEYv4rRo7EHFjCgJZfWdIl8mprQUk04nN9GLhoOiZcDnNQ4vUJCm1x4wB7YRHlJ+4ILk8UnUSRk/SuGp1NAyph1/KQ9HiQvgWNHy9Cw6pF6ESb/XaJyxPPgYITN9IX14KmTE1j7V5QA33ZvDh0HNZ14RSysK/wbEcw2iHDPvXaoM0gFqwXt0YEU1MNlFHArqYTm44cx9T7AV6G0rmUnB8OC9l2MqBuqB0Gk6fmotXzvp0+YYkXaBmTQ6BqAxZb3k8np7upqvKJbc4rknSa27KT496ouPMWiw7HNAzwh+8kWXJKIILNCAEEmKLCdLoqRpyN22SUwgyxtsHeRGK4Hdxq9ICM9tN9yPa8QmpcNjZCaMIOO2oDXE74N9H17kjDecmswI1Kt7pfsu
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1727500AbfKBIxK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 2 Nov 2019 04:53:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32742 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727458AbfKBIxJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 2 Nov 2019 04:53:09 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA28WvuF077447
+        for <linux-s390@vger.kernel.org>; Sat, 2 Nov 2019 04:53:08 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w16b70jkt-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Sat, 02 Nov 2019 04:53:08 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Sat, 2 Nov 2019 08:53:06 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 2 Nov 2019 08:53:04 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA28r2dl38862934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 2 Nov 2019 08:53:02 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63D8CA404D;
+        Sat,  2 Nov 2019 08:53:02 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 07A11A4051;
+        Sat,  2 Nov 2019 08:53:02 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.10.62])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Sat,  2 Nov 2019 08:53:01 +0000 (GMT)
+Subject: Re: [RFC 09/37] KVM: s390: protvirt: Implement on-demand pinning
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
+        imbrenda@linux.ibm.com, mihajlov@linux.ibm.com, mimu@linux.ibm.com,
+        cohuck@redhat.com, gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-10-frankja@linux.ibm.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ syiRa+UVlsKmx1hsEg==
+Date:   Sat, 2 Nov 2019 09:53:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 138b56cc-818d-4114-4cd4-08d75f07ae7a
-X-MS-Exchange-CrossTenant-originalarrivaltime: 01 Nov 2019 20:11:29.0456
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: fOgp+ASMgUu+x5Y5uts7uk6VxHVNawaggp2GYSihgQOFo1NKConiaqp0Rebvsi6pEi34wUTIg6KpCrPQbR8v2A==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR05MB5665
+In-Reply-To: <20191024114059.102802-10-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110208-0016-0000-0000-000002C0086E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110208-0017-0000-0000-000033217375
+Message-Id: <6ff87f0a-6fad-797f-dc12-e6031933d74a@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-02_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=821 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1911020084
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -129,304 +118,87 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-> -----Original Message-----
-> From: Jason Wang <jasowang@redhat.com>
-> Sent: Wednesday, October 30, 2019 1:45 AM
-> To: kvm@vger.kernel.org; linux-s390@vger.kernel.org; linux-
-> kernel@vger.kernel.org; dri-devel@lists.freedesktop.org; intel-
-> gfx@lists.freedesktop.org; intel-gvt-dev@lists.freedesktop.org;
-> kwankhede@nvidia.com; alex.williamson@redhat.com; mst@redhat.com;
-> tiwei.bie@intel.com
-> Cc: virtualization@lists.linux-foundation.org; netdev@vger.kernel.org;
-> cohuck@redhat.com; maxime.coquelin@redhat.com;
-> cunming.liang@intel.com; zhihong.wang@intel.com;
-> rob.miller@broadcom.com; xiao.w.wang@intel.com;
-> haotian.wang@sifive.com; zhenyuw@linux.intel.com; zhi.a.wang@intel.com;
-> jani.nikula@linux.intel.com; joonas.lahtinen@linux.intel.com;
-> rodrigo.vivi@intel.com; airlied@linux.ie; daniel@ffwll.ch;
-> farman@linux.ibm.com; pasic@linux.ibm.com; sebott@linux.ibm.com;
-> oberpar@linux.ibm.com; heiko.carstens@de.ibm.com; gor@linux.ibm.com;
-> borntraeger@de.ibm.com; akrowiak@linux.ibm.com; freude@linux.ibm.com;
-> lingshan.zhu@intel.com; Ido Shamay <idos@mellanox.com>;
-> eperezma@redhat.com; lulu@redhat.com; Parav Pandit
-> <parav@mellanox.com>; christophe.de.dinechin@gmail.com;
-> kevin.tian@intel.com; stefanha@redhat.com; Jason Wang
-> <jasowang@redhat.com>
-> Subject: [PATCH V6 3/6] mdev: introduce device specific ops
->=20
-> Currently, except for the create and remove, the rest of mdev_parent_ops =
-is
-> designed for vfio-mdev driver only and may not help for kernel mdev drive=
-r.
-> With the help of class id, this patch introduces device specific callback=
-s inside
-> mdev_device structure. This allows different set of callback to be used b=
-y vfio-
-> mdev and virtio-mdev.
->=20
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
-[ ..]
-
-> diff --git a/include/linux/vfio_mdev_ops.h b/include/linux/vfio_mdev_ops.=
-h
-> new file mode 100644 index 000000000000..3907c5371c2b
-> --- /dev/null
-> +++ b/include/linux/vfio_mdev_ops.h
-> @@ -0,0 +1,52 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * VFIO Mediated device definition
-> + */
+On 24.10.19 13:40, Janosch Frank wrote:
+> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> 
+> Pin the guest pages when they are first accessed, instead of all at
+> the same time when starting the guest.
+> 
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+[...]
+> diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
+> index 80aecd5bea9e..383e660e2221 100644
+> --- a/arch/s390/kvm/pv.c
+> +++ b/arch/s390/kvm/pv.c
+> @@ -15,8 +15,35 @@
+>  #include <asm/mman.h>
+>  #include "kvm-s390.h"
+>  
+> +static void unpin_destroy(struct page **pages, int nr)
+> +{
+> +	int i;
+> +	struct page *page;
+> +	u8 *val;
 > +
-> +#ifndef VFIO_MDEV_H
-> +#define VFIO_MDEV_H
+> +	for (i = 0; i < nr; i++) {
+> +		page = pages[i];
+> +		if (!page)	/* page was never used */
+> +			continue;
+> +		val = (void *)page_to_phys(page);
+
+Why dont we call the convert from secure directly here to avoid the fault overhead?
+
+> +		READ_ONCE(*val);
+> +		put_page(page);
+
+as we also do the export here (via implicit reading that page) this can take a while.
+I think we must add a cond_resched here. 
+
+> +	}
+> +}
 > +
-I should have noticed this before. :-(
-APIs exposed are by the mdev module and named with mdev_ prefix.
-And file name is _ops.h,
 
-We should name this file as mdev_vfio_ops.h
-
-And #define should be MDEV_VFIO_OPS_H
-
-> +#include <linux/mdev.h>
+[...]
+> -
+>  	mutex_unlock(&kvm->slots_lock);
 > +
-> +/**
-> + * struct vfio_mdev_device_ops - Structure to be registered for each
-s/vfio_mdev_device_ops/mdev_vfio_device_ops/
-
-Similarly for virtio in future patches.
-
-> + * mdev device to register the device to vfio-mdev module.
-> + *
-> + * @open:		Open mediated device.
-> + *			@mdev: mediated device.
-> + *			Returns integer: success (0) or error (< 0)
-> + * @release:		release mediated device
-> + *			@mdev: mediated device.
-> + * @read:		Read emulation callback
-> + *			@mdev: mediated device structure
-> + *			@buf: read buffer
-> + *			@count: number of bytes to read
-> + *			@ppos: address.
-> + *			Retuns number on bytes read on success or error.
-> + * @write:		Write emulation callback
-> + *			@mdev: mediated device structure
-> + *			@buf: write buffer
-> + *			@count: number of bytes to be written
-> + *			@ppos: address.
-> + *			Retuns number on bytes written on success or error.
-> + * @ioctl:		IOCTL callback
-> + *			@mdev: mediated device structure
-> + *			@cmd: ioctl command
-> + *			@arg: arguments to ioctl
-> + * @mmap:		mmap callback
-> + *			@mdev: mediated device structure
-> + *			@vma: vma structure
-> + */
-> +struct vfio_mdev_device_ops {
-> +	int     (*open)(struct mdev_device *mdev);
-> +	void    (*release)(struct mdev_device *mdev);
-> +	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> +			size_t count, loff_t *ppos);
-> +	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> +			 size_t count, loff_t *ppos);
-> +	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> +			 unsigned long arg);
-> +	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct
-> *vma);
-> +};
-> +
-> +#endif
-> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c inde=
-x
-> 115bc5074656..1afec20bf0c5 100644
-> --- a/samples/vfio-mdev/mbochs.c
-> +++ b/samples/vfio-mdev/mbochs.c
-> @@ -30,6 +30,7 @@
->  #include <linux/iommu.h>
->  #include <linux/sysfs.h>
->  #include <linux/mdev.h>
-> +#include <linux/vfio_mdev_ops.h>
->  #include <linux/pci.h>
->  #include <linux/dma-buf.h>
->  #include <linux/highmem.h>
-> @@ -516,6 +517,8 @@ static int mbochs_reset(struct mdev_device *mdev)
+> +	kvm->arch.gmap->pinned_pages = vzalloc(npages * sizeof(struct page *));
+> +	if (!kvm->arch.gmap->pinned_pages)
+> +		goto out_err;
+>  	kvm->arch.pv.guest_len = npages * PAGE_SIZE;
+>  
+>  	/* Allocate variable storage */
+>  	vlen = ALIGN(virt * ((npages * PAGE_SIZE) / HPAGE_SIZE), PAGE_SIZE);
+>  	vlen += uv_info.guest_virt_base_stor_len;
+>  	kvm->arch.pv.stor_var = vzalloc(vlen);
+> -	if (!kvm->arch.pv.stor_var) {
+> -		kvm_s390_pv_dealloc_vm(kvm);
+> -		return -ENOMEM;
+> -	}
+> +	if (!kvm->arch.pv.stor_var)
+> +		goto out_err;
 >  	return 0;
+> +
+> +out_err:
+> +	kvm_s390_pv_dealloc_vm(kvm);
+> +	return -ENOMEM;
 >  }
->=20
-> +static const struct vfio_mdev_device_ops vfio_mdev_ops;
-> +
->  static int mbochs_create(struct kobject *kobj, struct mdev_device *mdev)=
-  {
->  	const struct mbochs_type *type =3D mbochs_find_type(kobj); @@ -561,7
-> +564,7 @@ static int mbochs_create(struct kobject *kobj, struct mdev_devi=
-ce
-> *mdev)
->  	mbochs_reset(mdev);
->=20
->  	mbochs_used_mbytes +=3D type->mbytes;
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &vfio_mdev_ops);
->  	return 0;
->=20
->  err_mem:
-> @@ -1419,12 +1422,7 @@ static struct attribute_group *mdev_type_groups[]
-> =3D {
->  	NULL,
->  };
->=20
-> -static const struct mdev_parent_ops mdev_fops =3D {
-> -	.owner			=3D THIS_MODULE,
-> -	.mdev_attr_groups	=3D mdev_dev_groups,
-> -	.supported_type_groups	=3D mdev_type_groups,
-> -	.create			=3D mbochs_create,
-> -	.remove			=3D mbochs_remove,
-> +static const struct vfio_mdev_device_ops vfio_mdev_ops =3D {
->  	.open			=3D mbochs_open,
->  	.release		=3D mbochs_close,
->  	.read			=3D mbochs_read,
-> @@ -1433,6 +1431,14 @@ static const struct mdev_parent_ops mdev_fops =3D =
-{
->  	.mmap			=3D mbochs_mmap,
->  };
->=20
-> +static const struct mdev_parent_ops mdev_fops =3D {
-> +	.owner			=3D THIS_MODULE,
-> +	.mdev_attr_groups	=3D mdev_dev_groups,
-> +	.supported_type_groups	=3D mdev_type_groups,
-> +	.create			=3D mbochs_create,
-> +	.remove			=3D mbochs_remove,
-> +};
-> +
->  static const struct file_operations vd_fops =3D {
->  	.owner		=3D THIS_MODULE,
->  };
-> diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c index
-> 665614574d50..d571fb65f50f 100644
-> --- a/samples/vfio-mdev/mdpy.c
-> +++ b/samples/vfio-mdev/mdpy.c
-> @@ -26,6 +26,7 @@
->  #include <linux/iommu.h>
->  #include <linux/sysfs.h>
->  #include <linux/mdev.h>
-> +#include <linux/vfio_mdev_ops.h>
->  #include <linux/pci.h>
->  #include <drm/drm_fourcc.h>
->  #include "mdpy-defs.h"
-> @@ -226,6 +227,8 @@ static int mdpy_reset(struct mdev_device *mdev)
->  	return 0;
->  }
->=20
-> +static const struct vfio_mdev_device_ops vfio_mdev_ops;
-> +
->  static int mdpy_create(struct kobject *kobj, struct mdev_device *mdev)  =
-{
->  	const struct mdpy_type *type =3D mdpy_find_type(kobj); @@ -269,7
-> +272,7 @@ static int mdpy_create(struct kobject *kobj, struct mdev_device
-> *mdev)
->  	mdpy_reset(mdev);
->=20
->  	mdpy_count++;
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &vfio_mdev_ops);
->  	return 0;
->  }
->=20
-> @@ -726,12 +729,7 @@ static struct attribute_group *mdev_type_groups[] =
-=3D {
->  	NULL,
->  };
->=20
-> -static const struct mdev_parent_ops mdev_fops =3D {
-> -	.owner			=3D THIS_MODULE,
-> -	.mdev_attr_groups	=3D mdev_dev_groups,
-> -	.supported_type_groups	=3D mdev_type_groups,
-> -	.create			=3D mdpy_create,
-> -	.remove			=3D mdpy_remove,
-> +static const struct vfio_mdev_device_ops vfio_mdev_ops =3D {
->  	.open			=3D mdpy_open,
->  	.release		=3D mdpy_close,
->  	.read			=3D mdpy_read,
-> @@ -740,6 +738,14 @@ static const struct mdev_parent_ops mdev_fops =3D {
->  	.mmap			=3D mdpy_mmap,
->  };
->=20
-> +static const struct mdev_parent_ops mdev_fops =3D {
-> +	.owner			=3D THIS_MODULE,
-> +	.mdev_attr_groups	=3D mdev_dev_groups,
-> +	.supported_type_groups	=3D mdev_type_groups,
-> +	.create			=3D mdpy_create,
-> +	.remove			=3D mdpy_remove,
-> +};
-> +
->  static const struct file_operations vd_fops =3D {
->  	.owner		=3D THIS_MODULE,
->  };
-> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c index
-> 90da12ff7fd9..4048b242c636 100644
-> --- a/samples/vfio-mdev/mtty.c
-> +++ b/samples/vfio-mdev/mtty.c
-> @@ -27,6 +27,7 @@
->  #include <linux/ctype.h>
->  #include <linux/file.h>
->  #include <linux/mdev.h>
-> +#include <linux/vfio_mdev_ops.h>
->  #include <linux/pci.h>
->  #include <linux/serial.h>
->  #include <uapi/linux/serial_reg.h>
-> @@ -708,6 +709,8 @@ static ssize_t mdev_access(struct mdev_device *mdev,
-> u8 *buf, size_t count,
->  	return ret;
->  }
->=20
-> +static const struct vfio_mdev_device_ops vfio_dev_ops;
-> +
->  static int mtty_create(struct kobject *kobj, struct mdev_device *mdev)  =
-{
->  	struct mdev_state *mdev_state;
-> @@ -755,7 +758,7 @@ static int mtty_create(struct kobject *kobj, struct
-> mdev_device *mdev)
->  	list_add(&mdev_state->next, &mdev_devices_list);
->  	mutex_unlock(&mdev_list_lock);
->=20
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &vfio_dev_ops);
->  	return 0;
->  }
->=20
-> @@ -1388,6 +1391,14 @@ static struct attribute_group *mdev_type_groups[]
-> =3D {
->  	NULL,
->  };
->=20
-> +static const struct vfio_mdev_device_ops vfio_dev_ops =3D {
-> +	.open		=3D mtty_open,
-> +	.release	=3D mtty_close,
-> +	.read		=3D mtty_read,
-> +	.write		=3D mtty_write,
-> +	.ioctl		=3D mtty_ioctl,
-> +};
-> +
->  static const struct mdev_parent_ops mdev_fops =3D {
->  	.owner                  =3D THIS_MODULE,
->  	.dev_attr_groups        =3D mtty_dev_groups,
-> @@ -1395,11 +1406,6 @@ static const struct mdev_parent_ops mdev_fops =3D =
-{
->  	.supported_type_groups  =3D mdev_type_groups,
->  	.create                 =3D mtty_create,
->  	.remove			=3D mtty_remove,
-> -	.open                   =3D mtty_open,
-> -	.release                =3D mtty_close,
-> -	.read                   =3D mtty_read,
-> -	.write                  =3D mtty_write,
-> -	.ioctl		        =3D mtty_ioctl,
->  };
->=20
->  static void mtty_device_release(struct device *dev)
-> --
-> 2.19.1
-With above small nit changes to rename the fields and file,
+>  
+>  int kvm_s390_pv_destroy_vm(struct kvm *kvm)
+> @@ -216,6 +246,11 @@ int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned long size,
+>  	for (i = 0; i < size / PAGE_SIZE; i++) {
+>  		uvcb.gaddr = addr + i * PAGE_SIZE;
+>  		uvcb.tweak[1] = i * PAGE_SIZE;
+> +		down_read(&kvm->mm->mmap_sem);
+> +		rc = kvm_s390_pv_pin_page(kvm->arch.gmap, uvcb.gaddr);
+> +		up_read(&kvm->mm->mmap_sem);
 
-Reviewed-by: Parav Pandit <parav@mellanox.com>
+Here we should also have a cond_resched();
+
+> +		if (rc && (rc != -EEXIST))
+> +			break;
+>  retry:
+>  		rc = uv_call(0, (u64)&uvcb);
+>  		if (!rc)
+> 
+
