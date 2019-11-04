@@ -2,307 +2,146 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0758DEDD9C
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2019 12:20:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5B509EDDA9
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2019 12:25:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfKDLT7 convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Mon, 4 Nov 2019 06:19:59 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33256 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728532AbfKDLT7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 Nov 2019 06:19:59 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA4BJqxT036806
-        for <linux-s390@vger.kernel.org>; Mon, 4 Nov 2019 06:19:58 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w2hubtemd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 04 Nov 2019 06:19:54 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Mon, 4 Nov 2019 11:19:09 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 4 Nov 2019 11:19:05 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA4BJ4p765667072
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 Nov 2019 11:19:04 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2AB6D11C054;
-        Mon,  4 Nov 2019 11:19:04 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF64C11C04C;
-        Mon,  4 Nov 2019 11:19:03 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.39])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  4 Nov 2019 11:19:03 +0000 (GMT)
-Date:   Mon, 4 Nov 2019 12:19:01 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
-        david@redhat.com, borntraeger@de.ibm.com
-Subject: Re: [kvm-unit-tests PATCH v2 5/5] s390x: SCLP unit test
-In-Reply-To: <191dbc7f-74b2-6f78-a721-aaac49895948@linux.ibm.com>
-References: <1572023194-14370-1-git-send-email-imbrenda@linux.ibm.com>
-        <1572023194-14370-6-git-send-email-imbrenda@linux.ibm.com>
-        <191dbc7f-74b2-6f78-a721-aaac49895948@linux.ibm.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726526AbfKDLZx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 4 Nov 2019 06:25:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26114 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726364AbfKDLZw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 Nov 2019 06:25:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572866751;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=u8ORXVaygiG7yZ+UA4fbgu2ZwJRWaM7SoO6rj/g5bUM=;
+        b=MYgA8Wx9PxXvr1BF9HmL8Ux3AmVbBJatUvpkv4e+Zst3hGdHy3rkK486c6Kfsqxf3FIiR/
+        pNQQjkIqJHYmISu+Vpgmc3vWlqnfSl+bA1aI+b8HVJIFnPqITfx7d3Jut54VX3CSe6Iozv
+        M7x5i3cn0lcSCh3lrYfWv8Wumex/pTw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-170-kKmctXOMPS6zSrtGx6V8jQ-1; Mon, 04 Nov 2019 06:25:48 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F0221005500;
+        Mon,  4 Nov 2019 11:25:46 +0000 (UTC)
+Received: from [10.36.118.62] (unknown [10.36.118.62])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BFDBA600C4;
+        Mon,  4 Nov 2019 11:25:44 +0000 (UTC)
+Subject: Re: [RFC 19/37] KVM: s390: protvirt: Add new gprs location handling
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-20-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <2eba24a5-063d-1e93-acf0-1153963facfe@redhat.com>
+Date:   Mon, 4 Nov 2019 12:25:43 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19110411-0016-0000-0000-000002C083E3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110411-0017-0000-0000-00003321F3D7
-Message-Id: <20191104121901.3b3ab68b@p-imbrenda.boeblingen.de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-04_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911040113
+In-Reply-To: <20191024114059.102802-20-frankja@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: kKmctXOMPS6zSrtGx6V8jQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 4 Nov 2019 10:45:07 +0100
-Janosch Frank <frankja@linux.ibm.com> wrote:
+On 24.10.19 13:40, Janosch Frank wrote:
+> Guest registers for protected guests are stored at offset 0x380.
+>=20
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>   arch/s390/include/asm/kvm_host.h |  4 +++-
+>   arch/s390/kvm/kvm-s390.c         | 11 +++++++++++
+>   2 files changed, 14 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm=
+_host.h
+> index 0ab309b7bf4c..5deabf9734d9 100644
+> --- a/arch/s390/include/asm/kvm_host.h
+> +++ b/arch/s390/include/asm/kvm_host.h
+> @@ -336,7 +336,9 @@ struct kvm_s390_itdb {
+>   struct sie_page {
+>   =09struct kvm_s390_sie_block sie_block;
+>   =09struct mcck_volatile_info mcck_info;=09/* 0x0200 */
+> -=09__u8 reserved218[1000];=09=09/* 0x0218 */
+> +=09__u8 reserved218[360];=09=09/* 0x0218 */
+> +=09__u64 pv_grregs[16];=09=09/* 0x380 */
+> +=09__u8 reserved400[512];
+>   =09struct kvm_s390_itdb itdb;=09/* 0x0600 */
+>   =09__u8 reserved700[2304];=09=09/* 0x0700 */
+>   };
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 490fde080107..97d3a81e5074 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -3965,6 +3965,7 @@ static int vcpu_post_run(struct kvm_vcpu *vcpu, int=
+ exit_reason)
+>   static int __vcpu_run(struct kvm_vcpu *vcpu)
+>   {
+>   =09int rc, exit_reason;
+> +=09struct sie_page *sie_page =3D (struct sie_page *)vcpu->arch.sie_block=
+;
+>  =20
+>   =09/*
+>   =09 * We try to hold kvm->srcu during most of vcpu_run (except when run=
+-
+> @@ -3986,8 +3987,18 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
+>   =09=09guest_enter_irqoff();
+>   =09=09__disable_cpu_timer_accounting(vcpu);
+>   =09=09local_irq_enable();
+> +=09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
+> +=09=09=09memcpy(sie_page->pv_grregs,
+> +=09=09=09       vcpu->run->s.regs.gprs,
+> +=09=09=09       sizeof(sie_page->pv_grregs));
+> +=09=09}
+>   =09=09exit_reason =3D sie64a(vcpu->arch.sie_block,
+>   =09=09=09=09     vcpu->run->s.regs.gprs);
+> +=09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
+> +=09=09=09memcpy(vcpu->run->s.regs.gprs,
+> +=09=09=09       sie_page->pv_grregs,
+> +=09=09=09       sizeof(sie_page->pv_grregs));
+> +=09=09}
 
-[...]
+sie64a will load/save gprs 0-13 from to vcpu->run->s.regs.gprs.
 
-> > +/**
-> > + * Enable SCLP interrupt.
-> > + */
-> > +static void sclp_setup_int_test(void)
-> > +{
-> > +	uint64_t mask;
-> > +
-> > +	ctl_set_bit(0, 9);
-> > +	mask = extract_psw_mask();
-> > +	mask |= PSW_MASK_EXT;
-> > +	load_psw_mask(mask);
-> > +}  
-> 
-> Or you could just export the definition in sclp.c...
-
-I could, but is it worth it to export the definition just for this
-one use?
+I would have assume that this is not required for prot virt, because the=20
+HW has direct access via the sie block?
 
 
-[...]
+1. Would it make sense to have a specialized sie64a() (or a parameter,=20
+e.g., if you pass in NULL in r3), that optimizes this loading/saving?=20
+Eventually we can also optimize which host registers to save/restore then.
 
-> > +static void test_toolong(void)
-> > +{
-> > +	uint32_t cmd = SCLP_CMD_WRITE_EVENT_DATA;
-> > +	uint16_t res = SCLP_RC_SCCB_BOUNDARY_VIOLATION;  
-> 
-> Why use variables for constants that are never touched?
+2. Avoid this copying here. We have to store the state to=20
+vcpu->run->s.regs.gprs when returning to user space and restore the=20
+state when coming from user space.
 
-readability mostly. the names of the constants are rather long.
-the compiler will notice it and do the Right Thing™
+Also, we access the GPRS from interception handlers, there we might use=20
+wrappers like
 
-> > +	WriteEventData *sccb = (WriteEventData *)sccb_template;
-> > +	int cx;
-> > +
-> > +	memset(sccb_template, 0, sizeof(sccb_template));
-> > +	sccb->h.function_code = SCLP_FC_NORMAL_WRITE;
-> > +	for (cx = 4097; cx < 8192; cx++) {
-> > +		sccb->h.length = cx;
-> > +		if (!test_one_sccb(cmd, pagebuf, PAGE_SIZE, 0,
-> > res))
-> > +			break;
-> > +	}
-> > +	report("SCCB bigger than 4k", cx == 8192);
-> > +}
-> > +
-> > +/**
-> > + * Test privileged operation.
-> > + */
-> > +static void test_priv(void)
-> > +{
-> > +	report_prefix_push("Privileged operation");
-> > +	pagebuf[0] = 0;
-> > +	pagebuf[1] = 8;  
-> 
-> Id much rather have a proper cast using the header struct.
+kvm_s390_set_gprs()
+kvm_s390_get_gprs()
 
-ok, will fix
+to route to the right location. There are multiple options to optimize this=
+.
 
-> > +	expect_pgm_int();
-> > +	enter_pstate();
-> > +	servc(valid_code, __pa(pagebuf));
-> > +	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
-> > +	report_prefix_pop();
-> > +}
-> > +
-> > +/**
-> > + * Test addressing exceptions. We need to test SCCB addresses
-> > between the
-> > + * end of available memory and 2GB, because after 2GB a
-> > specification
-> > + * exception is also allowed.
-> > + * Only applicable if the VM has less than 2GB of memory
-> > + */
-> > +static void test_addressing(void)
-> > +{
-> > +	unsigned long cx, maxram = get_ram_size();
-> > +
-> > +	if (maxram >= 0x80000000) {
-> > +		report_skip("Invalid SCCB address");
-> > +		return;
-> > +	}
-> > +	for (cx = maxram; cx < MIN(maxram + 65536, 0x80000000); cx
-> > += 8)
-> > +		if (!test_one_sccb(valid_code, (void *)cx, 0,
-> > PGM_BIT_ADDR, 0))
-> > +			goto out;
-> > +	for (; cx < MIN((maxram + 0x7fffff) & ~0xfffff,
-> > 0x80000000); cx += 4096)
-> > +		if (!test_one_sccb(valid_code, (void *)cx, 0,
-> > PGM_BIT_ADDR, 0))
-> > +			goto out;
-> > +	for (; cx < 0x80000000; cx += 1048576)
-> > +		if (!test_one_sccb(valid_code, (void *)cx, 0,
-> > PGM_BIT_ADDR, 0))
-> > +			goto out;
-> > +out:
-> > +	report("Invalid SCCB address", cx == 0x80000000);
-> > +}
-> > +
-> > +/**
-> > + * Test some bits in the instruction format that are specified to
-> > be ignored.
-> > + */
-> > +static void test_instbits(void)
-> > +{
-> > +	SCCBHeader *h = (SCCBHeader *)pagebuf;
-> > +	unsigned long mask;
-> > +	int cc;
-> > +
-> > +	sclp_mark_busy();
-> > +	h->length = 8;
-> > +
-> > +	ctl_set_bit(0, 9);
-> > +	mask = extract_psw_mask();
-> > +	mask |= PSW_MASK_EXT;
-> > +	load_psw_mask(mask);  
-> 
-> Huh, you already got a function for that at the top.
+--=20
 
-oops. will fix
- 
-> > +
-> > +	asm volatile(
-> > +		"       .insn   rre,0xb2204200,%1,%2\n"  /* servc
-> > %1,%2 */
-> > +		"       ipm     %0\n"
-> > +		"       srl     %0,28"
-> > +		: "=&d" (cc) : "d" (valid_code),
-> > "a" (__pa(pagebuf))
-> > +		: "cc", "memory");
-> > +	sclp_wait_busy();
-> > +	report("Instruction format ignored bits", cc == 0);
-> > +}
-> > +
-> > +/**
-> > + * Find a valid SCLP command code; not all codes are always
-> > allowed, and
-> > + * probing should be performed in the right order.
-> > + */
-> > +static void find_valid_sclp_code(void)
-> > +{
-> > +	unsigned int commands[] = { SCLP_CMDW_READ_SCP_INFO_FORCED,
-> > +				    SCLP_CMDW_READ_SCP_INFO };
-> > +	SCCBHeader *h = (SCCBHeader *)pagebuf;
-> > +	int i, cc;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(commands); i++) {
-> > +		sclp_mark_busy();
-> > +		memset(h, 0, sizeof(pagebuf));  
-> 
-> pagebuf is 8k, but you can only use 4k in sclp.
-> We don't need to clear 2 pages.
+Thanks,
 
-well, technically I don't even need to clear the whole buffer at all.
-I should probably simply clear just the header.
-
-> > +		h->length = 4096;
-> > +
-> > +		valid_code = commands[i];
-> > +		cc = sclp_service_call(commands[i], h);
-> > +		if (cc)
-> > +			break;
-> > +		if (h->response_code ==
-> > SCLP_RC_NORMAL_READ_COMPLETION)
-> > +			return;
-> > +		if (h->response_code !=
-> > SCLP_RC_INVALID_SCLP_COMMAND)
-> > +			break;  
-> 
-> Depending on line length you could add that to the cc check.
-> Maybe you could also group the error conditions before the success
-> conditions or the other way around.
-
-yeah it woud fit, but I'm not sure it would be more readable:
-
-if (cc || (h->response_code != SCLP_RC_INVALID_SCLP_COMMAND))
-                        break;
-
-I think readability is more important that saving lines of source code,
-especially when the compiler will be smart enough to do the Right Thing™
-
-also, that is copy-pasted directly from lib/s390x/sclp.c
-
-> > +	}
-> > +	valid_code = 0;
-> > +	report_abort("READ_SCP_INFO failed");
-> > +}
-> > +
-> > +int main(void)
-> > +{
-> > +	report_prefix_push("sclp");
-> > +	find_valid_sclp_code();
-> > +
-> > +	/* Test some basic things */
-> > +	test_instbits();
-> > +	test_priv();
-> > +	test_addressing();
-> > +
-> > +	/* Test the specification exceptions */
-> > +	test_sccb_too_short();
-> > +	test_sccb_unaligned();
-> > +	test_sccb_prefix();
-> > +	test_sccb_high();
-> > +
-> > +	/* Test the expected response codes */
-> > +	test_inval();
-> > +	test_short();
-> > +	test_boundary();
-> > +	test_toolong();
-> > +
-> > +	return report_summary();
-> > +}
-> > diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
-> > index f1b07cd..75e3d37 100644
-> > --- a/s390x/unittests.cfg
-> > +++ b/s390x/unittests.cfg
-> > @@ -75,3 +75,6 @@ file = stsi.elf
-> >  [smp]
-> >  file = smp.elf
-> >  extra_params =-smp 2
-> > +
-> > +[sclp]
-> > +file = sclp.elf  
-> 
-> Don't we need a newline here?
-
-no, the file ended already with a newline, the three lines are added
-above the final newline, so there is always a newline at the end of the
-file.
+David / dhildenb
 
