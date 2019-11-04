@@ -2,118 +2,187 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 14A67ED7A6
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2019 03:15:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A033ED7D7
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2019 03:52:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728432AbfKDCPl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 3 Nov 2019 21:15:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:34396 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728227AbfKDCPk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 3 Nov 2019 21:15:40 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E7F6631F;
-        Sun,  3 Nov 2019 18:15:39 -0800 (PST)
-Received: from [10.163.1.23] (unknown [10.163.1.23])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6E4893F67D;
-        Sun,  3 Nov 2019 18:15:22 -0800 (PST)
-Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
- helpers
-To:     Qian Cai <cai@lca.pw>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
- <B6AAFA3F-745D-48E2-98CC-CFB30934CE39@lca.pw>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <fdb72ac1-5f21-bcf1-ebab-411f56e67b56@arm.com>
-Date:   Mon, 4 Nov 2019 07:45:56 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1728437AbfKDCwd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 3 Nov 2019 21:52:33 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:38747 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728227AbfKDCwc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 3 Nov 2019 21:52:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572835951;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=AXjYrGIsHqKdgGAtBr7HEpIjQtsm9UUKtuxj6Twt+UY=;
+        b=RVZRRJU4LWQme1tbNNbzKqlsFPVDGtYGVVV71VhCWd52Px6osGA8AOTDo6RNqO24G6Z7gr
+        EnOgLd2zADDjviY7mwnYsjjb56vxkWrPgjK0zbxgBIqkeF3FAcvNPxnVzJJF/cY55o2hje
+        lbwtc4d3CgwzCJnSvkYhEF617S2vgts=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-215--hfYGEOLOBaATEUH2p7Y3g-1; Sun, 03 Nov 2019 21:52:27 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 58B2B800A1A;
+        Mon,  4 Nov 2019 02:52:23 +0000 (UTC)
+Received: from [10.72.12.188] (ovpn-12-188.pek2.redhat.com [10.72.12.188])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CFF69600C4;
+        Mon,  4 Nov 2019 02:51:55 +0000 (UTC)
+Subject: Re: [PATCH V6 3/6] mdev: introduce device specific ops
+To:     Parav Pandit <parav@mellanox.com>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "intel-gvt-dev@lists.freedesktop.org" 
+        <intel-gvt-dev@lists.freedesktop.org>,
+        "kwankhede@nvidia.com" <kwankhede@nvidia.com>,
+        "alex.williamson@redhat.com" <alex.williamson@redhat.com>,
+        "mst@redhat.com" <mst@redhat.com>,
+        "tiwei.bie@intel.com" <tiwei.bie@intel.com>
+Cc:     "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "cohuck@redhat.com" <cohuck@redhat.com>,
+        "maxime.coquelin@redhat.com" <maxime.coquelin@redhat.com>,
+        "cunming.liang@intel.com" <cunming.liang@intel.com>,
+        "zhihong.wang@intel.com" <zhihong.wang@intel.com>,
+        "rob.miller@broadcom.com" <rob.miller@broadcom.com>,
+        "xiao.w.wang@intel.com" <xiao.w.wang@intel.com>,
+        "haotian.wang@sifive.com" <haotian.wang@sifive.com>,
+        "zhenyuw@linux.intel.com" <zhenyuw@linux.intel.com>,
+        "zhi.a.wang@intel.com" <zhi.a.wang@intel.com>,
+        "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>,
+        "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>,
+        "rodrigo.vivi@intel.com" <rodrigo.vivi@intel.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "daniel@ffwll.ch" <daniel@ffwll.ch>,
+        "farman@linux.ibm.com" <farman@linux.ibm.com>,
+        "pasic@linux.ibm.com" <pasic@linux.ibm.com>,
+        "sebott@linux.ibm.com" <sebott@linux.ibm.com>,
+        "oberpar@linux.ibm.com" <oberpar@linux.ibm.com>,
+        "heiko.carstens@de.ibm.com" <heiko.carstens@de.ibm.com>,
+        "gor@linux.ibm.com" <gor@linux.ibm.com>,
+        "borntraeger@de.ibm.com" <borntraeger@de.ibm.com>,
+        "akrowiak@linux.ibm.com" <akrowiak@linux.ibm.com>,
+        "freude@linux.ibm.com" <freude@linux.ibm.com>,
+        "lingshan.zhu@intel.com" <lingshan.zhu@intel.com>,
+        Ido Shamay <idos@mellanox.com>,
+        "eperezma@redhat.com" <eperezma@redhat.com>,
+        "lulu@redhat.com" <lulu@redhat.com>,
+        "christophe.de.dinechin@gmail.com" <christophe.de.dinechin@gmail.com>,
+        "kevin.tian@intel.com" <kevin.tian@intel.com>,
+        "stefanha@redhat.com" <stefanha@redhat.com>
+References: <20191030064444.21166-1-jasowang@redhat.com>
+ <20191030064444.21166-4-jasowang@redhat.com>
+ <AM0PR05MB4866E91139617C9F2380BBAFD1620@AM0PR05MB4866.eurprd05.prod.outlook.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <495efacd-4898-fb89-2599-dce3a5a277f0@redhat.com>
+Date:   Mon, 4 Nov 2019 10:51:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <B6AAFA3F-745D-48E2-98CC-CFB30934CE39@lca.pw>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <AM0PR05MB4866E91139617C9F2380BBAFD1620@AM0PR05MB4866.eurprd05.prod.outlook.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: -hfYGEOLOBaATEUH2p7Y3g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
+On 2019/11/2 =E4=B8=8A=E5=8D=884:11, Parav Pandit wrote:
+>
+>> -----Original Message-----
+>> From: Jason Wang <jasowang@redhat.com>
+>> Sent: Wednesday, October 30, 2019 1:45 AM
+>> To: kvm@vger.kernel.org; linux-s390@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; dri-devel@lists.freedesktop.org; intel-
+>> gfx@lists.freedesktop.org; intel-gvt-dev@lists.freedesktop.org;
+>> kwankhede@nvidia.com; alex.williamson@redhat.com; mst@redhat.com;
+>> tiwei.bie@intel.com
+>> Cc: virtualization@lists.linux-foundation.org; netdev@vger.kernel.org;
+>> cohuck@redhat.com; maxime.coquelin@redhat.com;
+>> cunming.liang@intel.com; zhihong.wang@intel.com;
+>> rob.miller@broadcom.com; xiao.w.wang@intel.com;
+>> haotian.wang@sifive.com; zhenyuw@linux.intel.com; zhi.a.wang@intel.com;
+>> jani.nikula@linux.intel.com; joonas.lahtinen@linux.intel.com;
+>> rodrigo.vivi@intel.com; airlied@linux.ie; daniel@ffwll.ch;
+>> farman@linux.ibm.com; pasic@linux.ibm.com; sebott@linux.ibm.com;
+>> oberpar@linux.ibm.com; heiko.carstens@de.ibm.com; gor@linux.ibm.com;
+>> borntraeger@de.ibm.com; akrowiak@linux.ibm.com; freude@linux.ibm.com;
+>> lingshan.zhu@intel.com; Ido Shamay <idos@mellanox.com>;
+>> eperezma@redhat.com; lulu@redhat.com; Parav Pandit
+>> <parav@mellanox.com>; christophe.de.dinechin@gmail.com;
+>> kevin.tian@intel.com; stefanha@redhat.com; Jason Wang
+>> <jasowang@redhat.com>
+>> Subject: [PATCH V6 3/6] mdev: introduce device specific ops
+>>
+>> Currently, except for the create and remove, the rest of mdev_parent_ops=
+ is
+>> designed for vfio-mdev driver only and may not help for kernel mdev driv=
+er.
+>> With the help of class id, this patch introduces device specific callbac=
+ks inside
+>> mdev_device structure. This allows different set of callback to be used =
+by vfio-
+>> mdev and virtio-mdev.
+>>
+>> Signed-off-by: Jason Wang <jasowang@redhat.com>
+>> ---
+> [ ..]
+>
+>> diff --git a/include/linux/vfio_mdev_ops.h b/include/linux/vfio_mdev_ops=
+.h
+>> new file mode 100644 index 000000000000..3907c5371c2b
+>> --- /dev/null
+>> +++ b/include/linux/vfio_mdev_ops.h
+>> @@ -0,0 +1,52 @@
+>> +/* SPDX-License-Identifier: GPL-2.0-only */
+>> +/*
+>> + * VFIO Mediated device definition
+>> + */
+>> +
+>> +#ifndef VFIO_MDEV_H
+>> +#define VFIO_MDEV_H
+>> +
+> I should have noticed this before. :-(
+> APIs exposed are by the mdev module and named with mdev_ prefix.
+> And file name is _ops.h,
+>
+> We should name this file as mdev_vfio_ops.h
+>
+> And #define should be MDEV_VFIO_OPS_H
+>
+>> +#include <linux/mdev.h>
+>> +
+>> +/**
+>> + * struct vfio_mdev_device_ops - Structure to be registered for each
+> s/vfio_mdev_device_ops/mdev_vfio_device_ops/
+>
+> Similarly for virtio in future patches.
+>
 
-On 10/29/2019 04:01 PM, Qian Cai wrote:
-> 
-> 
->> On Oct 28, 2019, at 1:29 AM, Anshuman Khandual <Anshuman.Khandual@arm.com> wrote:
->>
->> This adds tests which will validate architecture page table helpers and
->> other accessors in their compliance with expected generic MM semantics.
->> This will help various architectures in validating changes to existing
->> page table helpers or addition of new ones.
->>
->> This test covers basic page table entry transformations including but not
->> limited to old, young, dirty, clean, write, write protect etc at various
->> level along with populating intermediate entries with next page table page
->> and validating them.
->>
->> Test page table pages are allocated from system memory with required size
->> and alignments. The mapped pfns at page table levels are derived from a
->> real pfn representing a valid kernel text symbol. This test gets called
->> right after page_alloc_init_late().
->>
->> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
->> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
->> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
->> arm64. Going forward, other architectures too can enable this after fixing
->> build or runtime problems (if any) with their page table helpers.
->>
->> Folks interested in making sure that a given platform's page table helpers
->> conform to expected generic MM semantics should enable the above config
->> which will just trigger this test during boot. Any non conformity here will
->> be reported as an warning which would need to be fixed. This test will help
->> catch any changes to the agreed upon semantics expected from generic MM and
->> enable platforms to accommodate it thereafter.
-> 
-> This looks like a perfect candidate to streamline with the new kunit framework, no?
+Will fix in V7.
 
-I have not been following the kunit test framework. But being highly dependent on
-existing MM accessors (generic or platform) and very much page table modification
-centric, mm/ is the best place for this test IMHO. It is now also part of DEBUG_VM
-set of tests. Probably in future all existing MM tests (mm/ or lib/) might move to
-kunit framework but for now it should remain with DEBUG_VM set of tests.
+
+>   static void mtty_device_release(struct device *dev)
+> --
+> 2.19.1
+> With above small nit changes to rename the fields and file,
+>
+> Reviewed-by: Parav Pandit <parav@mellanox.com>
+
+
+Appreciate that, thanks.
+
+
