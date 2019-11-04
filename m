@@ -2,132 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 903D5EDADF
-	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2019 09:56:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D822EDAED
+	for <lists+linux-s390@lfdr.de>; Mon,  4 Nov 2019 09:59:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727826AbfKDI45 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 4 Nov 2019 03:56:57 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8912 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726100AbfKDI45 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 4 Nov 2019 03:56:57 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA48uE4A074562
-        for <linux-s390@vger.kernel.org>; Mon, 4 Nov 2019 03:56:54 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w2dk56hve-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 04 Nov 2019 03:56:35 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Mon, 4 Nov 2019 08:54:44 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 4 Nov 2019 08:54:41 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA48sedA47514050
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 Nov 2019 08:54:41 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DDDB14C040;
-        Mon,  4 Nov 2019 08:54:40 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A65B34C044;
-        Mon,  4 Nov 2019 08:54:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.70.20])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  4 Nov 2019 08:54:39 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        pmorel@linux.ibm.com
-Subject: [kvm-unit-tests PATCH] s390x: Use loop to save and restore fprs
-Date:   Mon,  4 Nov 2019 03:55:33 -0500
-X-Mailer: git-send-email 2.20.1
+        id S1728014AbfKDI70 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 4 Nov 2019 03:59:26 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:48792 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726100AbfKDI70 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 4 Nov 2019 03:59:26 -0500
+Received: from zn.tnic (p200300EC2F0AFA00A5208D92F28E6777.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:fa00:a520:8d92:f28e:6777])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id ACC701EC090E;
+        Mon,  4 Nov 2019 09:59:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1572857963;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=3Gglep10uhUlKdGt/9F9KI4CEHNO3URUde1zRbFYs6c=;
+        b=mZ979Q+RwEfYln6X7+2rMbzRQnkLl+SkKWMqTuum8Tfx9zcfxzhHK1nSgWY4G/USMPwuyj
+        TAvt+OQ42PFam14XDo4uiLhSRHIQatiruA2gvrK8hu1adymNxCtv2b2SHOWgjrd8YbtKXZ
+        N++brJBjeqC7MRe0dmxwetGoUBIRqC8=
+Date:   Mon, 4 Nov 2019 09:59:18 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Segher Boessenkool <segher@kernel.crashing.org>
+Cc:     Kees Cook <keescook@chromium.org>, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, Michal Simek <monstr@monstr.eu>,
+        x86@kernel.org, linux-ia64@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>, linux-xtensa@linux-xtensa.org,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linuxppc-dev@lists.ozlabs.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-parisc@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org
+Subject: Re: [PATCH v2 01/29] powerpc: Rename "notes" PT_NOTE to "note"
+Message-ID: <20191104085918.GA7862@zn.tnic>
+References: <20191011000609.29728-1-keescook@chromium.org>
+ <20191011000609.29728-2-keescook@chromium.org>
+ <20191011082519.GI9749@gate.crashing.org>
+ <201910110910.48270FC97@keescook>
+ <20191011162552.GK9749@gate.crashing.org>
+ <20191015165412.GD596@zn.tnic>
+ <201910291414.F29F738B7@keescook>
+ <20191030010117.GJ28442@gate.crashing.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110408-0028-0000-0000-000003B26ED6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110408-0029-0000-0000-00002474C153
-Message-Id: <20191104085533.2892-1-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-04_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=591 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911040088
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191030010117.GJ28442@gate.crashing.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's save some lines in the assembly by using a loop to save and
-restore the fprs.
+On Tue, Oct 29, 2019 at 08:01:17PM -0500, Segher Boessenkool wrote:
+> I am still not convinced the worse name is a better name, no :-)  But if
+> you don't want to do the work, and instead prefer the much smaller change,
+> that is of course a fine decision.  Thank you!
+>
+> (I would be happy with such a 30/29 as well, of course.)
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- s390x/cstart64.S | 38 ++++++--------------------------------
- 1 file changed, 6 insertions(+), 32 deletions(-)
+Ok, thanks.
 
-diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-index 5dc1577..8e2b21e 100644
---- a/s390x/cstart64.S
-+++ b/s390x/cstart64.S
-@@ -99,44 +99,18 @@ memsetxc:
- 	lctlg	%c0, %c0, 0(%r1)
- 	/* save fprs 0-15 + fpc */
- 	la	%r1, GEN_LC_SW_INT_FPRS
--	std	%f0, 0(%r1)
--	std	%f1, 8(%r1)
--	std	%f2, 16(%r1)
--	std	%f3, 24(%r1)
--	std	%f4, 32(%r1)
--	std	%f5, 40(%r1)
--	std	%f6, 48(%r1)
--	std	%f7, 56(%r1)
--	std	%f8, 64(%r1)
--	std	%f9, 72(%r1)
--	std	%f10, 80(%r1)
--	std	%f11, 88(%r1)
--	std	%f12, 96(%r1)
--	std	%f13, 104(%r1)
--	std	%f14, 112(%r1)
--	std	%f15, 120(%r1)
-+	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
-+	std	\i, \i * 8(%r1)
-+	.endr
- 	stfpc	GEN_LC_SW_INT_FPC
- 	.endm
- 
- 	.macro RESTORE_REGS
- 	/* restore fprs 0-15 + fpc */
- 	la	%r1, GEN_LC_SW_INT_FPRS
--	ld	%f0, 0(%r1)
--	ld	%f1, 8(%r1)
--	ld	%f2, 16(%r1)
--	ld	%f3, 24(%r1)
--	ld	%f4, 32(%r1)
--	ld	%f5, 40(%r1)
--	ld	%f6, 48(%r1)
--	ld	%f7, 56(%r1)
--	ld	%f8, 64(%r1)
--	ld	%f9, 72(%r1)
--	ld	%f10, 80(%r1)
--	ld	%f11, 88(%r1)
--	ld	%f12, 96(%r1)
--	ld	%f13, 104(%r1)
--	ld	%f14, 112(%r1)
--	ld	%f15, 120(%r1)
-+	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
-+	ld	\i, \i * 8(%r1)
-+	.endr
- 	lfpc	GEN_LC_SW_INT_FPC
- 	/* restore cr0 */
- 	lctlg	%c0, %c0, GEN_LC_SW_INT_CR0
+I'll start picking up the pile and the renaming patch can then go ontop.
+
 -- 
-2.20.1
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
