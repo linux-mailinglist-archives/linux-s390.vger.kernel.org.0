@@ -2,89 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E62AF0392
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 17:58:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE9D3F0429
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 18:34:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389356AbfKEQ6C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Nov 2019 11:58:02 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24525 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390181AbfKEQ6A (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 11:58:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572973079;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W8k8y0xwvZYiGfN3jpSGfUUS3E/00qqxgsKSLEHx8lY=;
-        b=dqI6iO8HNEnUpxsiECHrllUxoM6yJL7z6VxE1LFyMpFeFZsp5XhaYNwYDQPcusxfMNULbD
-        3c/ya7FLyyxFhxCnQr6G6AT78NYy8qD76uIQmcri9Se4ojqchS+EGzOv+PMvtEekTwqzvg
-        HvffQhjzQfc7EpWn7U/rzGJ7gYRr36Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-236-Qp3HxU0YNEujQ2UorNEKXw-1; Tue, 05 Nov 2019 11:57:56 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2390492AbfKEReF convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Tue, 5 Nov 2019 12:34:05 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:45772 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390258AbfKEReF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:34:05 -0500
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A7608017DE;
-        Tue,  5 Nov 2019 16:57:52 +0000 (UTC)
-Received: from gondolin (unknown [10.36.118.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A3A9B5C1D8;
-        Tue,  5 Nov 2019 16:57:26 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 17:57:24 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V8 4/6] mdev: introduce virtio device and its device ops
-Message-ID: <20191105175724.0c52784e.cohuck@redhat.com>
-In-Reply-To: <20191105093240.5135-5-jasowang@redhat.com>
-References: <20191105093240.5135-1-jasowang@redhat.com>
-        <20191105093240.5135-5-jasowang@redhat.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: Qp3HxU0YNEujQ2UorNEKXw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        by mx1.redhat.com (Postfix) with ESMTPS id 90A4FC057F23
+        for <linux-s390@vger.kernel.org>; Tue,  5 Nov 2019 17:34:04 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id f8so9817538wrq.6
+        for <linux-s390@vger.kernel.org>; Tue, 05 Nov 2019 09:34:04 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:content-transfer-encoding:from:mime-version
+         :subject:date:message-id:references:cc:in-reply-to:to;
+        bh=BMfbrDDdhycp+V4IUo9GmouVBKVCyDS9gZpIOUXzmdo=;
+        b=ApWLrHpiVop4Kf0HvRRbGFXkuzNtbGpzvlO/P11npYte9iUjx9f1ZLRxuw2muhhg/b
+         384FbVijQ5BP2S+CA09rKd6mBwK7YMvckWZrHWhadsJS+aGEYjesVM2h7XXBBDXgwW0T
+         g3HOnENI5c0BokAFAw8qhdFtvak5eVh1yjoGcHd6aSa4oZTy1b1Sn5BI0829xeohLrWq
+         OjXvS1Jkj0jsFRsl+46n9G14H5JKStc2GoHJBxMUlu/cfcasZWYOuXItzp8LPMFAe9xd
+         ZfwjFoP56yMybJQuBzE5Flv9GR7kuXrS3T/7gR7raZdWGTLk31JWrBeipvqBkSKHRxVj
+         yBhQ==
+X-Gm-Message-State: APjAAAV2LdMUqtPNnQBRoFtvyamYQScPuyo+mdu13KQmwBcw6amAYKlI
+        jZ89mMLMkjInV5R2vCyUjFvViiBjjFLeSPxx3tmhUTLZbVK4W4q0d1Ic7NfqSElXvWh5cYlgQtg
+        aLX6eh9VFXPmkGJREBVT9YQ==
+X-Received: by 2002:adf:e903:: with SMTP id f3mr30854034wrm.121.1572975243318;
+        Tue, 05 Nov 2019 09:34:03 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwEckeFf7/gf8keUjBTJdxGv/uyLrloT6JORCYL32uo1D7t8nPmuWyHlbXT+13GL9phAIUBlg==
+X-Received: by 2002:adf:e903:: with SMTP id f3mr30854013wrm.121.1572975243085;
+        Tue, 05 Nov 2019 09:34:03 -0800 (PST)
+Received: from ?IPv6:2a01:598:b909:23a5:e032:f549:e9f6:ecae? ([2a01:598:b909:23a5:e032:f549:e9f6:ecae])
+        by smtp.gmail.com with ESMTPSA id t13sm14699974wrr.88.2019.11.05.09.34.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2019 09:34:02 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+From:   David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [kvm-unit-tests PATCH 0/2] s390x: Improve architectural compliance for diag308
+Date:   Tue, 5 Nov 2019 18:34:01 +0100
+Message-Id: <70BDB5DE-489D-4718-B6C2-0EABD89414D2@redhat.com>
+References: <20191105162828.2490-1-frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com
+In-Reply-To: <20191105162828.2490-1-frankja@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+X-Mailer: iPhone Mail (17A878)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  5 Nov 2019 17:32:38 +0800
-Jason Wang <jasowang@redhat.com> wrote:
 
-> This patch implements basic support for mdev driver that supports
-> virtio transport for kernel virtio driver.
->=20
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/vfio/mdev/mdev_core.c    |  21 +++++
->  drivers/vfio/mdev/mdev_private.h |   2 +
->  include/linux/mdev.h             |   6 ++
->  include/linux/mdev_virtio_ops.h  | 149 +++++++++++++++++++++++++++++++
->  4 files changed, 178 insertions(+)
->  create mode 100644 include/linux/mdev_virtio_ops.h
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> Am 05.11.2019 um 17:29 schrieb Janosch Frank <frankja@linux.ibm.com>:
+> 
+> ﻿When testing diag308 subcodes 0/1 on lpar with virtual mem set up, I
+> experienced spec PGMs and addressing PGMs due to the tests not setting
+> short psw bit 12 and leaving the DAT bit on.
+> 
+> The problem was not found under KVM/QEMU, because Qemu just ignores
+> all cpu mask bits... I'm working on a fix for that too.
+> 
 
+I don‘t have access to documentation. Is what LPAR does documented behavior or is this completely undocumented and therefore undefined behavior? Then we should remove these test cases completely instead.
+
+> Janosch Frank (2):
+>  s390x: Add CR save area
+>  s390x: Remove DAT and add short indication psw bits on diag308 reset
+> 
+> lib/s390x/asm-offsets.c  |  3 ++-
+> lib/s390x/asm/arch_def.h |  5 +++--
+> lib/s390x/interrupt.c    |  4 ++--
+> lib/s390x/smp.c          |  2 +-
+> s390x/cstart64.S         | 29 ++++++++++++++++++++---------
+> 5 files changed, 28 insertions(+), 15 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
