@@ -2,50 +2,47 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 24CDEF04CD
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 19:15:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7E9F8F0500
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 19:23:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390569AbfKESP1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Nov 2019 13:15:27 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41136 "EHLO
+        id S2390233AbfKESXO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Nov 2019 13:23:14 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38322 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390560AbfKESP1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 13:15:27 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA5IE39W119937
-        for <linux-s390@vger.kernel.org>; Tue, 5 Nov 2019 13:15:26 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w3dqsh6x4-1
+        by vger.kernel.org with ESMTP id S2390482AbfKESXN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 13:23:13 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA5IETLp075714
+        for <linux-s390@vger.kernel.org>; Tue, 5 Nov 2019 13:23:12 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w3e19rq8g-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 05 Nov 2019 13:15:26 -0500
+        for <linux-s390@vger.kernel.org>; Tue, 05 Nov 2019 13:23:12 -0500
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 5 Nov 2019 18:15:24 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 5 Nov 2019 18:23:10 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 5 Nov 2019 18:15:22 -0000
+        Tue, 5 Nov 2019 18:23:06 -0000
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA5IFKVK49152042
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA5IMUAa43516368
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Nov 2019 18:15:20 GMT
+        Tue, 5 Nov 2019 18:22:30 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4C02B5205F;
-        Tue,  5 Nov 2019 18:15:20 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id A99CC52051;
+        Tue,  5 Nov 2019 18:23:05 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.151.13])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B921952050;
-        Tue,  5 Nov 2019 18:15:19 +0000 (GMT)
-Subject: Re: [RFC 12/37] KVM: s390: protvirt: Handle SE notification
- interceptions
-To:     Cornelia Huck <cohuck@redhat.com>,
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 651E95204F;
+        Tue,  5 Nov 2019 18:23:05 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH 0/2] s390x: Improve architectural
+ compliance for diag308
+To:     David Hildenbrand <david@redhat.com>,
         Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
-        david@redhat.com, imbrenda@linux.ibm.com, mihajlov@linux.ibm.com,
-        mimu@linux.ibm.com, gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-13-frankja@linux.ibm.com>
- <20191105190407.68992d92.cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com
+References: <20191105162828.2490-1-frankja@linux.ibm.com>
+ <70BDB5DE-489D-4718-B6C2-0EABD89414D2@redhat.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
@@ -91,25 +88,25 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  RGIN40QWFVlZvkKIEkzlzqpAyGaRLhXJPv/6tpoQaCQQoSAc5Z9kM/wEd9e2zMeojcWjUXgg
  oWj8A/wY4UXExGBu+UCzzP/6sQRpBiPFgmqPTytrDo/gsUGqjOudLiHQcMU+uunULYQxVghC
  syiRa+UVlsKmx1hsEg==
-Date:   Tue, 5 Nov 2019 19:15:19 +0100
+Date:   Tue, 5 Nov 2019 19:23:05 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191105190407.68992d92.cohuck@redhat.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <70BDB5DE-489D-4718-B6C2-0EABD89414D2@redhat.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19110518-0028-0000-0000-000003B2F678
+x-cbid: 19110518-4275-0000-0000-0000037B0FA9
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110518-0029-0000-0000-000024754FBC
-Message-Id: <f0837f93-ace8-b4e0-f69c-c1fbe7b95c6a@de.ibm.com>
+x-cbparentid: 19110518-4276-0000-0000-0000388E5B17
+Message-Id: <0560e27d-dac8-a569-2e3f-f8188724c822@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_07:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=529 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1908290000 definitions=main-1911050153
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
@@ -118,37 +115,37 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 05.11.19 19:04, Cornelia Huck wrote:
-> On Thu, 24 Oct 2019 07:40:34 -0400
-> Janosch Frank <frankja@linux.ibm.com> wrote:
+On 05.11.19 18:34, David Hildenbrand wrote:
 > 
->> Since KVM doesn't emulate any form of load control and load psw
->> instructions anymore, we wouldn't get an interception if PSWs or CRs
->> are changed in the guest. That means we can't inject IRQs right after
->> the guest is enabled for them.
+> 
+>> Am 05.11.2019 um 17:29 schrieb Janosch Frank <frankja@linux.ibm.com>:
 >>
->> The new interception codes solve that problem by being a notification
->> for changes to IRQ enablement relevant bits in CRs 0, 6 and 14, as
->> well a the machine check mask bit in the PSW.
+>> ﻿When testing diag308 subcodes 0/1 on lpar with virtual mem set up, I
+>> experienced spec PGMs and addressing PGMs due to the tests not setting
+>> short psw bit 12 and leaving the DAT bit on.
 >>
->> No special handling is needed for these interception codes, the KVM
->> pre-run code will consult all necessary CRs and PSW bits and inject
->> IRQs the guest is enabled for.
+>> The problem was not found under KVM/QEMU, because Qemu just ignores
+>> all cpu mask bits... I'm working on a fix for that too.
+>>
 > 
-> Just to clarify: The hypervisor can still access the relevant bits for
-> pv guests, this is only about the notification, right?
-> 
+> I don‘t have access to documentation. Is what LPAR does documented behavior or is this completely undocumented and therefore undefined behavior? Then we should remove these test cases completely instead.
 
-Yes, the hypervisor (KVM) can always read the relevant PSW bits (I,E,M) and
-CR bits to decide if an interrupt can be delivered. All other bits of PSW
-and CRx are masked though.
-This is a new intercept for notification as we do no longer get an IC4 (instruction
-to handle) for load control and friends so that we can re-check the bits. 
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> ---
->>  arch/s390/include/asm/kvm_host.h |  2 ++
->>  arch/s390/kvm/intercept.c        | 18 ++++++++++++++++++
->>  2 files changed, 20 insertions(+)
+Yes. It was just that KVM/QEMU never looked at the mask and just used a default
+one. The short PSW on address 0 clearly contains a mask and we should better set
+it.
 > 
+>> Janosch Frank (2):
+>>  s390x: Add CR save area
+>>  s390x: Remove DAT and add short indication psw bits on diag308 reset
+>>
+>> lib/s390x/asm-offsets.c  |  3 ++-
+>> lib/s390x/asm/arch_def.h |  5 +++--
+>> lib/s390x/interrupt.c    |  4 ++--
+>> lib/s390x/smp.c          |  2 +-
+>> s390x/cstart64.S         | 29 ++++++++++++++++++++---------
+>> 5 files changed, 28 insertions(+), 15 deletions(-)
+>>
+>> -- 
+>> 2.20.1
+>>
 
