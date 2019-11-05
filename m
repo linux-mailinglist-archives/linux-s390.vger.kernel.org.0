@@ -2,126 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 00972EF83D
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 10:10:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 735FEEF862
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 10:15:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730744AbfKEJJ6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Nov 2019 04:09:58 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:9604 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730555AbfKEJJ5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 04:09:57 -0500
-Received: from smtp2.mailbox.org (smtp2.mailbox.org [IPv6:2001:67c:2050:105:465:1:2:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        id S1730598AbfKEJPv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Nov 2019 04:15:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57490 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730591AbfKEJPv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 04:15:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572945349;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=FCD6QGoJF3F+fwV3iJLHrFr6PnYTZpQBq4NvDPTmGUE=;
+        b=Wd9gL9oCOOxFN/AMF+WNLh04+FuGclze4E/gZuhr3huZQRIF1kPCvykZEI0BWdXMWVN3Hr
+        dAvqjkBlE9g9+Gk/nGVBPgi7ureNmWcN9DEhh3xD5//fszygDiCn3RUodHnf1C2Y7L9W97
+        5Wo8qMzC9xXFa5o4tn+0Xjw0JzoKOro=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-17-HO-ATHYPPOmPWoLMM96aAw-1; Tue, 05 Nov 2019 04:15:46 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 476kQ90KYtzQlBP;
-        Tue,  5 Nov 2019 10:09:53 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp2.mailbox.org ([80.241.60.241])
-        by spamfilter02.heinlein-hosting.de (spamfilter02.heinlein-hosting.de [80.241.56.116]) (amavisd-new, port 10030)
-        with ESMTP id fOLl1hihmqMD; Tue,  5 Nov 2019 10:09:46 +0100 (CET)
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>,
-        Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Cc:     Aleksa Sarai <cyphar@cyphar.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: [PATCH v15 9/9] Documentation: path-lookup: mention LOOKUP_MAGICLINK_JUMPED
-Date:   Tue,  5 Nov 2019 20:05:53 +1100
-Message-Id: <20191105090553.6350-10-cyphar@cyphar.com>
-In-Reply-To: <20191105090553.6350-1-cyphar@cyphar.com>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E32AF477;
+        Tue,  5 Nov 2019 09:15:44 +0000 (UTC)
+Received: from gondolin (unknown [10.36.118.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5C4085D70D;
+        Tue,  5 Nov 2019 09:15:39 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 10:15:36 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, thuth@redhat.com,
+        imbrenda@linux.ibm.com, mihajlov@linux.ibm.com, mimu@linux.ibm.com,
+        gor@linux.ibm.com
+Subject: Re: [RFC 09/37] KVM: s390: protvirt: Implement on-demand pinning
+Message-ID: <20191105101536.7df8f3bb.cohuck@redhat.com>
+In-Reply-To: <2c36b668-e6a7-4497-62da-f2be09350896@redhat.com>
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+        <20191024114059.102802-10-frankja@linux.ibm.com>
+        <b76ae1ca-d211-d1c7-63d9-9b45c789f261@redhat.com>
+        <7465141c-27b7-a89e-f02d-ab05cdd8505d@de.ibm.com>
+        <4abdc1dc-884e-a819-2e9d-2b8b15030394@redhat.com>
+        <2a7c4644-d718-420a-9bd7-723baccfb302@linux.ibm.com>
+        <84bd87f0-37bf-caa8-5762-d8da58f37a8f@redhat.com>
+        <69ddb6a7-8f69-fbc4-63a4-4f5695117078@de.ibm.com>
+        <1fad0466-1eeb-7d24-8015-98af9b564f74@redhat.com>
+        <8a68fcbb-1dea-414f-7d48-e4647f7985fe@redhat.com>
+        <20191104181743.3792924a.cohuck@redhat.com>
+        <2c36b668-e6a7-4497-62da-f2be09350896@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: HO-ATHYPPOmPWoLMM96aAw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Now that we have a special flag to signify magic-link jumps, mention it
-within the path-lookup docs. And now that "magic link" is the correct
-term for nd_jump_link()-style symlinks, clean up references to this type
-of "symlink".
+On Mon, 4 Nov 2019 19:38:27 +0100
+David Hildenbrand <david@redhat.com> wrote:
 
-Signed-off-by: Aleksa Sarai <cyphar@cyphar.com>
----
- Documentation/filesystems/path-lookup.rst | 18 ++++++++++++------
- 1 file changed, 12 insertions(+), 6 deletions(-)
+> On 04.11.19 18:17, Cornelia Huck wrote:
+> > On Mon, 4 Nov 2019 15:42:11 +0100
+> > David Hildenbrand <david@redhat.com> wrote:
+> >  =20
+> >> On 04.11.19 15:08, David Hildenbrand wrote: =20
+> >>> On 04.11.19 14:58, Christian Borntraeger wrote: =20
 
-diff --git a/Documentation/filesystems/path-lookup.rst b/Documentation/filesystems/path-lookup.rst
-index 434a07b0002b..2c32795389bd 100644
---- a/Documentation/filesystems/path-lookup.rst
-+++ b/Documentation/filesystems/path-lookup.rst
-@@ -405,6 +405,10 @@ is requested.  Keeping a reference in the ``nameidata`` ensures that
- only one root is in effect for the entire path walk, even if it races
- with a ``chroot()`` system call.
- 
-+It should be noted that in the case of ``LOOKUP_IN_ROOT`` or
-+``LOOKUP_BENEATH``, the effective root becomes the directory file descriptor
-+passed to ``openat2()`` (which exposes these ``LOOKUP_`` flags).
-+
- The root is needed when either of two conditions holds: (1) either the
- pathname or a symbolic link starts with a "'/'", or (2) a "``..``"
- component is being handled, since "``..``" from the root must always stay
-@@ -1149,7 +1153,7 @@ so ``NULL`` is returned to indicate that the symlink can be released and
- the stack frame discarded.
- 
- The other case involves things in ``/proc`` that look like symlinks but
--aren't really::
-+aren't really (and are therefore commonly referred to as "magic-links")::
- 
-      $ ls -l /proc/self/fd/1
-      lrwx------ 1 neilb neilb 64 Jun 13 10:19 /proc/self/fd/1 -> /dev/pts/4
-@@ -1310,12 +1314,14 @@ longer needed.
- ``LOOKUP_JUMPED`` means that the current dentry was chosen not because
- it had the right name but for some other reason.  This happens when
- following "``..``", following a symlink to ``/``, crossing a mount point
--or accessing a "``/proc/$PID/fd/$FD``" symlink.  In this case the
--filesystem has not been asked to revalidate the name (with
--``d_revalidate()``).  In such cases the inode may still need to be
--revalidated, so ``d_op->d_weak_revalidate()`` is called if
-+or accessing a "``/proc/$PID/fd/$FD``" symlink (also known as a "magic
-+link"). In this case the filesystem has not been asked to revalidate the
-+name (with ``d_revalidate()``).  In such cases the inode may still need
-+to be revalidated, so ``d_op->d_weak_revalidate()`` is called if
- ``LOOKUP_JUMPED`` is set when the look completes - which may be at the
--final component or, when creating, unlinking, or renaming, at the penultimate component.
-+final component or, when creating, unlinking, or renaming, at the
-+penultimate component. ``LOOKUP_MAGICLINK_JUMPED`` is set alongside
-+``LOOKUP_JUMPED`` if a magic-link was traversed.
- 
- Final-component flags
- ~~~~~~~~~~~~~~~~~~~~~
--- 
-2.23.0
+> >>>>> How hard would it be to
+> >>>>>
+> >>>>> 1. Detect the error condition
+> >>>>> 2. Try a read on the affected page from the CPU (will will automati=
+cally convert to encrypted/!secure)
+> >>>>> 3. Restart the I/O
+> >>>>>
+> >>>>> I assume that this is a corner case where we don't really have to c=
+are about performance in the first shot. =20
+> >>>>
+> >>>> We have looked into this. You would need to implement this in the lo=
+w level
+> >>>> handler for every I/O. DASD, FCP, PCI based NVME, iscsi. Where do yo=
+u want
+> >>>> to stop? =20
+> >>>
+> >>> If that's the real fix, we should do that. Maybe one can focus on the
+> >>> real use cases first. But I am no I/O expert, so my judgment might be
+> >>> completely wrong.
+> >>>     =20
+> >>
+> >> Oh, and by the way, as discussed you really only have to care about
+> >> accesses via "real" I/O devices (IOW, not via the CPU). When accessing
+> >> via the CPU, you should have automatic conversion back and forth. As I
+> >> am no expert on I/O, I have no idea how iscsi fits into this picture
+> >> here (especially on s390x).
+> >> =20
+> >=20
+> > By "real" I/O devices, you mean things like channel devices, right? (So
+> > everything where you basically hand off control to a different kind of
+> > processor.)
+> >=20
+> > For classic channel I/O (as used by dasd), I'd expect something like
+> > getting a check condition on a ccw if the CU or device cannot access
+> > the memory. You will know how far the channel program has progressed,
+> > and might be able to restart (from the beginning or from that point).
+> > Probably has a chance of working for a subset of channel programs.
+
+NB that there's more than simple reads/writes... could also be control
+commands, some of which do read/writes as well.
+
+> >=20
+> > For QDIO (as used by FCP), I have no idea how this is could work, as we
+> > have long-running channel programs there and any error basically kills
+> > the queues, which you would have to re-setup from the beginning.
+> >=20
+> > For PCI devices, I have no idea how the instructions even act.
+> >=20
+> >  From my point of view, that error/restart approach looks nice on paper=
+,
+> > but it seems hard to make it work in the general case (and I'm unsure
+> > if it's possible at all.) =20
+>=20
+> One thought: If all we do during an I/O request is read or write (or=20
+> even a mixture), can we simply restart the whole I/O again, although we=
+=20
+> did partial reads/writes? This would eliminate the "know how far the=20
+> channel program has progressed". On error, one would have to touch each=
+=20
+> involved page (e.g., try to read first byte to trigger a conversion) and=
+=20
+> restart the I/O. I can understand that this might sound simpler than it=
+=20
+> is (if it is even possible)
+
+Any control commands might have side effects, though. Problems there
+should be uncommon; there's still the _general_ case, though :(
+
+Also, there's stuff like rewriting the channel program w/o prefetch,
+jumping with TIC, etc. Linux probably does not do the former, but at
+least the dasd driver uses NOP/TIC for error recovery.
+
+> and might still be problematic for QDIO as=20
+> far as I understand. Just a thought.
+
+Yes, given that for QDIO, establishing the queues is simply one
+long-running channel program...
 
