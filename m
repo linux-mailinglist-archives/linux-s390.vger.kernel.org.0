@@ -2,145 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 08F67F0618
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 20:36:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AAC8EF0652
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 20:53:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390769AbfKETgy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Nov 2019 14:36:54 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390839AbfKETgy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 14:36:54 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA5JXiUY060924
-        for <linux-s390@vger.kernel.org>; Tue, 5 Nov 2019 14:36:54 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w3dqsky6q-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 05 Nov 2019 14:36:53 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
-        Tue, 5 Nov 2019 19:36:50 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 5 Nov 2019 19:36:41 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA5JaeNI31719424
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Nov 2019 19:36:40 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6370DAE057;
-        Tue,  5 Nov 2019 19:36:40 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 43F44AE056;
-        Tue,  5 Nov 2019 19:36:39 +0000 (GMT)
-Received: from thinkpad (unknown [9.152.97.32])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Nov 2019 19:36:39 +0000 (GMT)
-Date:   Tue, 5 Nov 2019 20:36:38 +0100
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page
- table helpers
-In-Reply-To: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
-References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1726231AbfKETxW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Nov 2019 14:53:22 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:20546 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726446AbfKETxV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 14:53:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572983599;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Cs8rrq4D6iWgBd/KEbQ97aB2BdD9wmZzx9N28weGUpo=;
+        b=U4v6h0OB5s7V6ZULhNw+6qslPOVUHO6jBrEKYwgwLCKMXG//gIRu9QOt9VYijvqiLJ4vWv
+        R8L0W/UCbZ1uZS44aqA+l6hXNmu5IP3XEEk+XfiSvG6fRyTisgE7iNgQ79s3ZpVJenDbkP
+        LILaHlQLK9Txy8yDvvxDdnwpfgKnDGU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-BNB7lTiQOwONKOtuyzk4DQ-1; Tue, 05 Nov 2019 14:53:16 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8BD0D107ACC3;
+        Tue,  5 Nov 2019 19:53:15 +0000 (UTC)
+Received: from [10.36.116.98] (ovpn-116-98.ams2.redhat.com [10.36.116.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 843BD60BF4;
+        Tue,  5 Nov 2019 19:53:14 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 2/2] s390x: Remove DAT and add short
+ indication psw bits on diag308 reset
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com
+References: <20191105162828.2490-1-frankja@linux.ibm.com>
+ <20191105162828.2490-3-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <15a9d438-d906-dcc6-0bda-8c6b049c946d@redhat.com>
+Date:   Tue, 5 Nov 2019 20:53:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110519-0020-0000-0000-00000382D869
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110519-0021-0000-0000-000021D903DD
-Message-Id: <20191105203638.6889a994@thinkpad>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911050162
+In-Reply-To: <20191105162828.2490-3-frankja@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: BNB7lTiQOwONKOtuyzk4DQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 28 Oct 2019 10:59:22 +0530
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+On 05.11.19 17:28, Janosch Frank wrote:
 
-> This adds tests which will validate architecture page table helpers and
-> other accessors in their compliance with expected generic MM semantics.
-> This will help various architectures in validating changes to existing
-> page table helpers or addition of new ones.
-> 
-> This test covers basic page table entry transformations including but not
-> limited to old, young, dirty, clean, write, write protect etc at various
-> level along with populating intermediate entries with next page table page
-> and validating them.
-> 
-> Test page table pages are allocated from system memory with required size
-> and alignments. The mapped pfns at page table levels are derived from a
-> real pfn representing a valid kernel text symbol. This test gets called
-> right after page_alloc_init_late().
-> 
-> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
-> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
-> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
-> arm64. Going forward, other architectures too can enable this after fixing
-> build or runtime problems (if any) with their page table helpers.
+In the subject "Disable" vs. "Remove" ?
 
-I've prepared a couple of commits to our arch code to make this work on s390,
-they will go upstream in the next merge window. After that, we can add s390
-to the supported architectures.
+> On a diag308 subcode 0 CRs will be reset, so we need to mask of PSW
+> DAT indication until we restore our CRs.
+>=20
+> Also we need to set the short psw indication to be compliant with the
+> architecture.
+>=20
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>   lib/s390x/asm-offsets.c  |  1 +
+>   lib/s390x/asm/arch_def.h |  3 ++-
+>   s390x/cstart64.S         | 20 ++++++++++++++------
+>   3 files changed, 17 insertions(+), 7 deletions(-)
+>=20
+> diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
+> index 4b213f8..61d2658 100644
+> --- a/lib/s390x/asm-offsets.c
+> +++ b/lib/s390x/asm-offsets.c
+> @@ -58,6 +58,7 @@ int main(void)
+>   =09OFFSET(GEN_LC_SW_INT_FPRS, lowcore, sw_int_fprs);
+>   =09OFFSET(GEN_LC_SW_INT_FPC, lowcore, sw_int_fpc);
+>   =09OFFSET(GEN_LC_SW_INT_CRS, lowcore, sw_int_crs);
+> +=09OFFSET(GEN_LC_SW_INT_PSW, lowcore, sw_int_psw);
+>   =09OFFSET(GEN_LC_MCCK_EXT_SA_ADDR, lowcore, mcck_ext_sa_addr);
+>   =09OFFSET(GEN_LC_FPRS_SA, lowcore, fprs_sa);
+>   =09OFFSET(GEN_LC_GRS_SA, lowcore, grs_sa);
+> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> index 07d4e5e..7d25e4f 100644
+> --- a/lib/s390x/asm/arch_def.h
+> +++ b/lib/s390x/asm/arch_def.h
+> @@ -79,7 +79,8 @@ struct lowcore {
+>   =09uint32_t=09sw_int_fpc;=09=09=09/* 0x0300 */
+>   =09uint8_t=09=09pad_0x0304[0x0308 - 0x0304];=09/* 0x0304 */
+>   =09uint64_t=09sw_int_crs[16];=09=09=09/* 0x0308 */
+> -=09uint8_t=09=09pad_0x0310[0x11b0 - 0x0388];=09/* 0x0388 */
+> +=09struct psw=09sw_int_psw;=09=09=09/* 0x0388 */
+> +=09uint8_t=09=09pad_0x0310[0x11b0 - 0x0390];=09/* 0x0390 */
+>   =09uint64_t=09mcck_ext_sa_addr;=09=09/* 0x11b0 */
+>   =09uint8_t=09=09pad_0x11b8[0x1200 - 0x11b8];=09/* 0x11b8 */
+>   =09uint64_t=09fprs_sa[16];=09=09=09/* 0x1200 */
+> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+> index 0455591..2e0dcf5 100644
+> --- a/s390x/cstart64.S
+> +++ b/s390x/cstart64.S
+> @@ -129,8 +129,15 @@ memsetxc:
+>   .globl diag308_load_reset
+>   diag308_load_reset:
+>   =09SAVE_REGS
+> -=09/* Save the first PSW word to the IPL PSW */
+> +=09/* Backup current PSW */
 
-We had some issues, e.g. because we do not report large entries as bad in
-pxd_bad(), do not check for folded page tables in pxd_free(), or assume
-that primitives like pmd_mkdirty() will only be called after pmd_mkhuge().
-None of those should have any impact on current code, but your test module
-revealed that we do not behave like other architectures in some aspects,
-and it's good to find and fix such things to prevent possible future issues.
+/*
+  * Backup the current PSW MASK, as we have to restore it on
+  * success.
+  */
 
-Thanks a lot for the effort!
+>   =09epsw=09%r0, %r1
+> +=09st=09%r0, GEN_LC_SW_INT_PSW
+> +=09st=09%r1, GEN_LC_SW_INT_PSW + 4
 
-Regards,
-Gerald
+I was confused at first, but then I realized that you really only store=20
+the PSW mask here and not also the PSW address ...
+
+
+> +=09/* Disable DAT as the CRs will be reset too */
+> +=09nilh=09%r0, 0xfbff
+> +=09/* Add psw bit 12 to indicate short psw */
+> +=09oilh=09%r0, 0x0008
+
+Why care about the old PSW mask here at all? Wouldn't it be easier to=20
+just construct a new PSW mask from scratch? (64bit, PSW bit 12 set ...)
+
+Save it somewhere and just load it directly from memory.
+
+> +=09/* Save the first PSW word to the IPL PSW */
+>   =09st=09%r0, 0
+>   =09/* Store the address and the bit for 31 bit addressing */
+>   =09larl    %r0, 0f
+> @@ -142,12 +149,13 @@ diag308_load_reset:
+>   =09xgr=09%r2, %r2
+>   =09br=09%r14
+>   =09/* Success path */
+> -=09/* We lost cr0 due to the reset */
+> -0:=09larl=09%r1, initial_cr0
+> -=09lctlg=09%c0, %c0, 0(%r1)
+> -=09RESTORE_REGS
+> +=09/* Switch to z/Architecture mode and 64-bit */
+> +0:=09RESTORE_REGS
+>   =09lhi=09%r2, 1
+> -=09br=09%r14
+> +=09larl=09%r0, 1f
+> +=09stg=09%r0, GEN_LC_SW_INT_PSW + 8
+> +=09lpswe=09GEN_LC_SW_INT_PSW
+> +1:=09br=09%r14
+>  =20
+>   .globl smp_cpu_setup_state
+>   smp_cpu_setup_state:
+>=20
+
+
+--=20
+
+Thanks,
+
+David / dhildenb
 
