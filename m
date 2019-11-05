@@ -2,149 +2,160 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FFB7F02B4
-	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 17:29:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5A457F0360
+	for <lists+linux-s390@lfdr.de>; Tue,  5 Nov 2019 17:50:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390230AbfKEQ3T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Nov 2019 11:29:19 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22128 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390228AbfKEQ3T (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 11:29:19 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA5GQ7wM068138
-        for <linux-s390@vger.kernel.org>; Tue, 5 Nov 2019 11:29:18 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w14m4kd6k-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 05 Nov 2019 11:29:13 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Tue, 5 Nov 2019 16:29:03 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 5 Nov 2019 16:29:01 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA5GT0LX38142154
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Nov 2019 16:29:00 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1B35042045;
-        Tue,  5 Nov 2019 16:29:00 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5770442042;
-        Tue,  5 Nov 2019 16:28:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.152.224.131])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Nov 2019 16:28:59 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com
-Subject: [kvm-unit-tests PATCH 2/2] s390x: Remove DAT and add short indication psw bits on diag308 reset
-Date:   Tue,  5 Nov 2019 11:28:28 -0500
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191105162828.2490-1-frankja@linux.ibm.com>
-References: <20191105162828.2490-1-frankja@linux.ibm.com>
+        id S1731052AbfKEQuz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Nov 2019 11:50:55 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29985 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728756AbfKEQuz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 11:50:55 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572972655;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DEq/4N6z16D+kibBkGDa/kA9t8KJGrCRdBUQy6uE194=;
+        b=aCP80+BpFVXW9q2bKK9XWMdMd4FPzGixMyzL3PJTFsHfjG8BjohepaqUWrP6C9w0BJDSML
+        RMhlsHdaXhsf6Anm5JpmpvdJJEQUPrSbB9hW5Kdor3ZMN9yGa6dvnkbzWH1iWI6vwRQbG6
+        MHVZ9/q1GZy+k5i8yLyPQ4E6LfUw0xc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-333-Dv4NBosnMKiU07dNahgicg-1; Tue, 05 Nov 2019 11:50:51 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 99D18800C73;
+        Tue,  5 Nov 2019 16:50:47 +0000 (UTC)
+Received: from gondolin (unknown [10.36.118.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D2771608AC;
+        Tue,  5 Nov 2019 16:50:27 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 17:50:25 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V8 3/6] mdev: introduce device specific ops
+Message-ID: <20191105175025.1a620844.cohuck@redhat.com>
+In-Reply-To: <20191105093240.5135-4-jasowang@redhat.com>
+References: <20191105093240.5135-1-jasowang@redhat.com>
+        <20191105093240.5135-4-jasowang@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110516-0020-0000-0000-00000382CD9F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110516-0021-0000-0000-000021D8F856
-Message-Id: <20191105162828.2490-3-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=983 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911050135
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: Dv4NBosnMKiU07dNahgicg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On a diag308 subcode 0 CRs will be reset, so we need to mask of PSW
-DAT indication until we restore our CRs.
+On Tue,  5 Nov 2019 17:32:37 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-Also we need to set the short psw indication to be compliant with the
-architecture.
+> Currently, except for the create and remove, the rest of
+> mdev_parent_ops is designed for vfio-mdev driver only and may not help
+> for kernel mdev driver. With the help of class id, this patch
+> introduces device specific callbacks inside mdev_device
+> structure. This allows different set of callback to be used by
+> vfio-mdev and virtio-mdev.
+>=20
+> Reviewed-by: Parav Pandit <parav@mellanox.com>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  .../driver-api/vfio-mediated-device.rst       | 35 +++++++++----
+>  MAINTAINERS                                   |  1 +
+>  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+>  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+>  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+>  drivers/vfio/mdev/mdev_core.c                 | 24 ++++++++-
+>  drivers/vfio/mdev/mdev_private.h              |  5 ++
+>  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+>  include/linux/mdev.h                          | 43 ++++-----------
+>  include/linux/mdev_vfio_ops.h                 | 52 +++++++++++++++++++
+>  samples/vfio-mdev/mbochs.c                    | 20 ++++---
+>  samples/vfio-mdev/mdpy.c                      | 20 ++++---
+>  samples/vfio-mdev/mtty.c                      | 18 ++++---
+>  13 files changed, 206 insertions(+), 99 deletions(-)
+>  create mode 100644 include/linux/mdev_vfio_ops.h
+>=20
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- lib/s390x/asm-offsets.c  |  1 +
- lib/s390x/asm/arch_def.h |  3 ++-
- s390x/cstart64.S         | 20 ++++++++++++++------
- 3 files changed, 17 insertions(+), 7 deletions(-)
+(...)
 
-diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
-index 4b213f8..61d2658 100644
---- a/lib/s390x/asm-offsets.c
-+++ b/lib/s390x/asm-offsets.c
-@@ -58,6 +58,7 @@ int main(void)
- 	OFFSET(GEN_LC_SW_INT_FPRS, lowcore, sw_int_fprs);
- 	OFFSET(GEN_LC_SW_INT_FPC, lowcore, sw_int_fpc);
- 	OFFSET(GEN_LC_SW_INT_CRS, lowcore, sw_int_crs);
-+	OFFSET(GEN_LC_SW_INT_PSW, lowcore, sw_int_psw);
- 	OFFSET(GEN_LC_MCCK_EXT_SA_ADDR, lowcore, mcck_ext_sa_addr);
- 	OFFSET(GEN_LC_FPRS_SA, lowcore, fprs_sa);
- 	OFFSET(GEN_LC_GRS_SA, lowcore, grs_sa);
-diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-index 07d4e5e..7d25e4f 100644
---- a/lib/s390x/asm/arch_def.h
-+++ b/lib/s390x/asm/arch_def.h
-@@ -79,7 +79,8 @@ struct lowcore {
- 	uint32_t	sw_int_fpc;			/* 0x0300 */
- 	uint8_t		pad_0x0304[0x0308 - 0x0304];	/* 0x0304 */
- 	uint64_t	sw_int_crs[16];			/* 0x0308 */
--	uint8_t		pad_0x0310[0x11b0 - 0x0388];	/* 0x0388 */
-+	struct psw	sw_int_psw;			/* 0x0388 */
-+	uint8_t		pad_0x0310[0x11b0 - 0x0390];	/* 0x0390 */
- 	uint64_t	mcck_ext_sa_addr;		/* 0x11b0 */
- 	uint8_t		pad_0x11b8[0x1200 - 0x11b8];	/* 0x11b8 */
- 	uint64_t	fprs_sa[16];			/* 0x1200 */
-diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-index 0455591..2e0dcf5 100644
---- a/s390x/cstart64.S
-+++ b/s390x/cstart64.S
-@@ -129,8 +129,15 @@ memsetxc:
- .globl diag308_load_reset
- diag308_load_reset:
- 	SAVE_REGS
--	/* Save the first PSW word to the IPL PSW */
-+	/* Backup current PSW */
- 	epsw	%r0, %r1
-+	st	%r0, GEN_LC_SW_INT_PSW
-+	st	%r1, GEN_LC_SW_INT_PSW + 4
-+	/* Disable DAT as the CRs will be reset too */
-+	nilh	%r0, 0xfbff
-+	/* Add psw bit 12 to indicate short psw */
-+	oilh	%r0, 0x0008
-+	/* Save the first PSW word to the IPL PSW */
- 	st	%r0, 0
- 	/* Store the address and the bit for 31 bit addressing */
- 	larl    %r0, 0f
-@@ -142,12 +149,13 @@ diag308_load_reset:
- 	xgr	%r2, %r2
- 	br	%r14
- 	/* Success path */
--	/* We lost cr0 due to the reset */
--0:	larl	%r1, initial_cr0
--	lctlg	%c0, %c0, 0(%r1)
--	RESTORE_REGS
-+	/* Switch to z/Architecture mode and 64-bit */
-+0:	RESTORE_REGS
- 	lhi	%r2, 1
--	br	%r14
-+	larl	%r0, 1f
-+	stg	%r0, GEN_LC_SW_INT_PSW + 8
-+	lpswe	GEN_LC_SW_INT_PSW
-+1:	br	%r14
- 
- .globl smp_cpu_setup_state
- smp_cpu_setup_state:
--- 
-2.20.1
+> @@ -172,10 +163,34 @@ that a driver should use to unregister itself with =
+the mdev core driver::
+> =20
+>  =09extern void mdev_unregister_device(struct device *dev);
+> =20
+> -It is also required to specify the class_id in create() callback through=
+::
+> +As multiple types of mediated devices may be supported, class id needs
+> +to be specified in the create callback(). This could be done
+
+The brackets should probably go behind 'create'?
+
+> +explicitly for the device that does not use on mdev bus for its
+
+"for devices that do not use the mdev bus" ?
+
+But why wouldn't they? I feel like I've missed some discussion here :/
+
+> +operation through:
+> =20
+>  =09int mdev_set_class(struct mdev_device *mdev, u16 id);
+> =20
+> +For the device that uses on the mdev bus for its operation, the class
+
+"For devices that use the mdev bus..."
+
+But same comment as above.
+
+> +should provide helper function to set class id and device specific
+> +ops. E.g for vfio-mdev devices, the function to be called is::
+> +
+> +=09int mdev_set_vfio_ops(struct mdev_device *mdev,
+> +                              const struct mdev_vfio_device_ops *vfio_op=
+s);
+> +
+> +The class id (set by this function to MDEV_CLASS_ID_VFIO) is used to
+> +match a device with an mdev driver via its id table. The device
+> +specific callbacks (specified in *vfio_ops) are obtainable via
+> +mdev_get_vfio_ops() (for use by the mdev bus driver). A vfio-mdev
+> +device (class id MDEV_CLASS_ID_VFIO) uses the following
+> +device-specific ops:
+> +
+> +* open: open callback of vfio mediated device
+> +* close: close callback of vfio mediated device
+> +* ioctl: ioctl callback of vfio mediated device
+> +* read : read emulation callback
+> +* write: write emulation callback
+> +* mmap: mmap emulation callback
+> +
+>  Mediated Device Management Interface Through sysfs
+>  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+
+Otherwise, looks good.
 
