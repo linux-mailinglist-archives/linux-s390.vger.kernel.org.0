@@ -2,48 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0012F1C6D
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 18:24:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 61A6EF1C7E
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 18:29:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732363AbfKFRYs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 Nov 2019 12:24:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39186 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbfKFRYr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:24:47 -0500
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 691BA217F5;
-        Wed,  6 Nov 2019 17:24:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573061087;
-        bh=RE/IsLYOi2qChANIsA+38p9u4anE+4jM8pf89/vGfV8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uRcO8ENWLOSL55xJV8FjH/gc8IsTO1ytR8fzhZkfXV9yI6351IP1hpLpcOto0SHCB
-         iwFqwUtI0WqlwOkIxIZLQxLKQKgylzVQtKxcRs/wk2JZT30x7dK4rbQ4WjjhYA/vzl
-         CgxQRnCL+r3sbXtu+O3pK3zfMijrb2cJqa+XkVGs=
-Date:   Thu, 7 Nov 2019 02:24:39 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
-        linux-block@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH 2/5] block: merge invalidate_partitions into
- rescan_partitions
-Message-ID: <20191106172439.GA29853@redsun51.ssa.fujisawa.hgst.com>
-References: <20191106151439.30056-1-hch@lst.de>
- <20191106151439.30056-3-hch@lst.de>
+        id S1729384AbfKFR3r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 Nov 2019 12:29:47 -0500
+Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:36993 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728983AbfKFR3q (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 12:29:46 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 0FBA8180A5AE6;
+        Wed,  6 Nov 2019 17:29:45 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::,RULES_HIT:41:152:355:379:599:960:982:988:989:1042:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2693:2911:3138:3139:3140:3141:3142:3167:3352:3622:3865:3866:3867:3868:3870:3871:3872:3873:4321:4425:4605:5007:7904:10004:10400:11232:11658:11914:12043:12266:12297:12438:12740:12895:13069:13161:13229:13311:13357:13894:14096:14097:14659:14721:21080:21220:21451:21627:21772:30012:30054:30091,0,RBL:47.151.135.224:@perches.com:.lbl8.mailshell.net-62.14.0.100 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
+X-HE-Tag: leaf04_37d3b9d49d90d
+X-Filterd-Recvd-Size: 2273
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf12.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  6 Nov 2019 17:29:43 +0000 (UTC)
+Message-ID: <47c55ab899aafe10898e6581582363aa446b2091.camel@perches.com>
+Subject: Re: s390/pkey: Use memdup_user() rather than duplicating its
+ implementation
+From:   Joe Perches <joe@perches.com>
+To:     Markus Elfring <Markus.Elfring@web.de>, linux-s390@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Cc:     Christian =?ISO-8859-1?Q?Borntr=E4ger?= <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Franzki <ifranzki@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Date:   Wed, 06 Nov 2019 09:29:31 -0800
+In-Reply-To: <0f90b278-7b3e-6509-1633-301d16513c5d@web.de>
+References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
+         <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
+         <0f90b278-7b3e-6509-1633-301d16513c5d@web.de>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106151439.30056-3-hch@lst.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 04:14:36PM +0100, Christoph Hellwig wrote:
-> A lot of the logic in invalidate_partitions and invalidate_partitions
+On Wed, 2019-11-06 at 14:00 +0100, Markus Elfring wrote:
+> > > Reuse existing functionality from memdup_user() instead of keeping
+> > > duplicate source code.
+> > > 
+> > > Generated by: scripts/coccinelle/api/memdup_user.cocci
+> …
+> > > Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
+> > 
+> > This doesn't fix anything
+> 
+> How would you categorise the proposed source code reduction and software reuse?
 
-One of these should say 'rescan_partitions'. Otherwise, patch looks good.
+As inappropriate for a fixes tag.
+
+The fixes tag is "used to make it easy to determine where a bug
+originated, which can help review a bug fix"
+
+There is no bug here.
+
+> Will the development opinions vary between contributors?
+
+Ever had a bikeshed?
+
+> > > +	return !ukey || keylen < MINKEYBLOBSIZE || keylen > KEYBLOBBUFSIZE
+> > > +	       ? ERR_PTR(-EINVAL)
+> > > +	       : memdup_user(ukey, keylen);
+> > 
+> > This is a very poor use of ternary ?: code.
+> 
+> The conditional operator is applied once more in the intended way,
+> isn't it?
+
+Please take your development efforts to obfuscated c contests.
+
+
