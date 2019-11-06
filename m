@@ -2,114 +2,48 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6A9B4F1848
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 15:17:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 871BEF19A5
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 16:14:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731922AbfKFORE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 Nov 2019 09:17:04 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:51936 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727478AbfKFORE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 09:17:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573049823;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ER/WquWBpU7PunGVOI/swL9aOZ32qLf8hTv9Vd0HUN0=;
-        b=K5C8nkI56OkAcoj9twh1LjAQV4fRlomAPzQEvTMAkaZJMTjsIC3gGXhwOERomTqWE9zDd4
-        2fYmRhI6Kb/dAWuaHtBlrkqUvXaxiPxvAttKWCLkDpaH1sNEQx8nVltqBrUdej2IO+3/zK
-        lhJF7todK2to4K7dbs5zChnSCptTpGc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-I-KaKfnbOz6RjNvb_LV7Ig-1; Wed, 06 Nov 2019 09:16:59 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A78B3477;
-        Wed,  6 Nov 2019 14:16:55 +0000 (UTC)
-Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD5815D70D;
-        Wed,  6 Nov 2019 14:16:37 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 15:16:35 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V10 0/6] mdev based hardware virtio offloading support
-Message-ID: <20191106151635.0d1cb3bc.cohuck@redhat.com>
-In-Reply-To: <20191106133531.693-1-jasowang@redhat.com>
-References: <20191106133531.693-1-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        id S1731820AbfKFPOn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 Nov 2019 10:14:43 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:60354 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727824AbfKFPOn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 10:14:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=On05a94w0KiC4K5lOIZ12JY44ZTH3FlHnt0c/Jx8KVQ=; b=sTfSBmWU0QydbrLyx0P848kD2
+        6w7qt8rGsfnqB6+Tc2M3NJtQyGul9+QIAbrxZA2MDeQnGSmRejWeqBIfCcaXg0HhkF4exDqSoKdLp
+        LBvtOyiua0nlZe+Dw6ttC0MOpdikoVMoS+TtkUNNHSjoh4SUo20wpSjKs0M1CNZqDrJKXLN3k7r17
+        inqk1ti2ybQwIHhEeCmNznr7YEeBSxIDuEXHfWKpIl8z6hPS2prdCRpkxFVNoUiZ8whSYq5c5LIv9
+        dgVVT2w478kzZ4ifGlviKB5T7+5Qqyc7EBNBr9Y8yVJlUMdlG4uZTt88VZxlk1tvHINQeh5TjCRB4
+        fa45GGV8g==;
+Received: from [88.128.80.117] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSN17-0005Dg-Sh; Wed, 06 Nov 2019 15:14:42 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>
+Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: disk revalidation cleanups and fixlets
+Date:   Wed,  6 Nov 2019 16:14:34 +0100
+Message-Id: <20191106151439.30056-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: I-KaKfnbOz6RjNvb_LV7Ig-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed,  6 Nov 2019 21:35:25 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+Hi Jens and Jan,
 
-> Hi all:
->=20
-> There are hardwares that can do virtio datapath offloading while
-> having its own control path. This path tries to implement a mdev based
-> unified API to support using kernel virtio driver to drive those
-> devices. This is done by introducing a new mdev transport for virtio
-> (virtio_mdev) and register itself as a new kind of mdev driver. Then
-> it provides a unified way for kernel virtio driver to talk with mdev
-> device implementation.
->=20
-> Though the series only contains kernel driver support, the goal is to
-> make the transport generic enough to support userspace drivers. This
-> means vhost-mdev[1] could be built on top as well by resuing the
-> transport.
->=20
-> A sample driver is also implemented which simulate a virito-net
-> loopback ethernet device on top of vringh + workqueue. This could be
-> used as a reference implementation for real hardware driver.
->=20
-> Also a real IFC VF driver was also posted here[2] which is a good
-> reference for vendors who is interested in their own virtio datapath
-> offloading product.
->=20
-> Consider mdev framework only support VFIO device and driver right now,
-> this series also extend it to support other types. This is done
-> through introducing class id to the device and pairing it with
-> id_talbe claimed by the driver. On top, this seris also decouple
-> device specific ops out of the common ones for implementing class
-> specific operations over mdev bus.
->=20
-> Pktgen test was done with virito-net + mvnet loop back device.
->=20
-> Please review.
-
-All looking good to me now.
-
->=20
-> [1] https://lkml.org/lkml/2019/11/5/424
-> [2] https://lkml.org/lkml/2019/11/5/227
-
+this series takes the disk size change detection and revalidations
+from Jan a step further and fully integrate the code path for
+partitioned vs non-partitioned devices.  It also fixes up a few
+bits where we have unintentionally differing behavior.
