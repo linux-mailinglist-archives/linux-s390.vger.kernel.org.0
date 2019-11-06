@@ -2,201 +2,145 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 371B3F19AF
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 16:14:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 53A31F1B9F
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 17:49:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731935AbfKFPOy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 Nov 2019 10:14:54 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:60404 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731914AbfKFPOx (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 10:14:53 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=/qZbo+ooYaazNGEUJTCw6EJUXj6b0NCilyX5lzIwB7Y=; b=jOL2gRUM+Et01wHsFbKsYLg4rg
-        cHjnrgFL5dDprg1Nlwu3E5vfBZmBnQQy4KOiY/eT+kex7nCDFJSMYo7pC517+CPK1yFCgqbJxrrMG
-        9E2KQBXLZbVFPahRdublPOEU2RQ6KS3aLcoXBtzxdJzqxkJDEc+E9rF8he+uljLVkuAthL1GPbRL6
-        ImMKl8uKRkzgIvMQCL6xiRD3fSUdXWbtupX7uMJZMl2aJT6HPArobCTjVh+/5zMd3O1MhlrgZRjlf
-        ifPToMwdtjmdSfZffQR11OFc1LMOaFttn2kDxY0hgz+rLyAOMi0XOAPz/n+nqtoTlLpqFs89/dGNt
-        +jMmeeMQ==;
-Received: from [88.128.80.117] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSN1I-0005G3-GN; Wed, 06 Nov 2019 15:14:52 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>
-Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 5/5] block: remove (__)blkdev_reread_part as an exported API
-Date:   Wed,  6 Nov 2019 16:14:39 +0100
-Message-Id: <20191106151439.30056-6-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191106151439.30056-1-hch@lst.de>
-References: <20191106151439.30056-1-hch@lst.de>
+        id S1728462AbfKFQtJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 Nov 2019 11:49:09 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37157 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732178AbfKFQtJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 11:49:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573058948;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=y3J2bTTmOsm3d0BAKb6B0gbVdRBPy0F4WDWyUAlOHcU=;
+        b=O7cYDDycYmYLVuh/J/BXugBqWpqIR2c6QCmJqj8bHqyBPonkACE7vt2uqxD8dWCcn02bhO
+        zOf0WbdhTSvV+xFFyL6+fdbuivV8JZKE504O6GgGsuqweO6Jda2H3CGScIt8YyRdS+IOMF
+        JA5W+BC1M2Dl2O0rnRC3ZOTg/K3+GGY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-79-cjq_llWXMLqIfbsPfkmCPA-1; Wed, 06 Nov 2019 11:49:04 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CE5FD1800D53;
+        Wed,  6 Nov 2019 16:49:02 +0000 (UTC)
+Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE13D60872;
+        Wed,  6 Nov 2019 16:48:57 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 17:48:55 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
+        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [RFC 30/37] DOCUMENTATION: protvirt: Diag 308 IPL
+Message-ID: <20191106174855.13a50f42.cohuck@redhat.com>
+In-Reply-To: <20191024114059.102802-31-frankja@linux.ibm.com>
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+        <20191024114059.102802-31-frankja@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: cjq_llWXMLqIfbsPfkmCPA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-In general drivers should never mess with partition tables directly.
-Unfortunately s390 and loop do for somewhat historic reasons, but they
-can use bdev_disk_changed directly instead when we export it as they
-satisfy the sanity checks we have in __blkdev_reread_part.
+On Thu, 24 Oct 2019 07:40:52 -0400
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/ioctl.c                   | 35 +++++----------------------------
- drivers/block/loop.c            | 13 +++++++-----
- drivers/s390/block/dasd_genhd.c |  4 +++-
- fs/block_dev.c                  |  7 +++++++
- include/linux/fs.h              |  2 --
- 5 files changed, 23 insertions(+), 38 deletions(-)
+> Description of changes that are necessary to move a KVM VM into
+> Protected Virtualization mode.
+>=20
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  Documentation/virtual/kvm/s390-pv-boot.txt | 62 ++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
+>  create mode 100644 Documentation/virtual/kvm/s390-pv-boot.txt
+>=20
+> diff --git a/Documentation/virtual/kvm/s390-pv-boot.txt b/Documentation/v=
+irtual/kvm/s390-pv-boot.txt
+> new file mode 100644
+> index 000000000000..af883c928c08
+> --- /dev/null
+> +++ b/Documentation/virtual/kvm/s390-pv-boot.txt
+> @@ -0,0 +1,62 @@
+> +Boot/IPL of Protected VMs
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Summary:
+> +
+> +Protected VMs are encrypted while not running. On IPL a small
+> +plaintext bootloader is started which provides information about the
+> +encrypted components and necessary metadata to KVM to decrypt it.
+> +
+> +Based on this data, KVM will make the PV known to the Ultravisor and
+> +instruct it to secure its memory, decrypt the components and verify
+> +the data and address list hashes, to ensure integrity. Afterwards KVM
+> +can run the PV via SIE which the UV will intercept and execute on
+> +KVM's behalf.
+> +
+> +The switch into PV mode lets us load encrypted guest executables and
+> +data via every available method (network, dasd, scsi, direct kernel,
+> +...) without the need to change the boot process.
+> +
+> +
+> +Diag308:
+> +
+> +This diagnose instruction is the basis vor VM IPL. The VM can set and
 
-diff --git a/block/ioctl.c b/block/ioctl.c
-index 52380c337078..2ed907ef0f01 100644
---- a/block/ioctl.c
-+++ b/block/ioctl.c
-@@ -155,46 +155,21 @@ static int blkpg_ioctl(struct block_device *bdev, struct blkpg_ioctl_arg __user
- 	}
- }
- 
--/*
-- * This is an exported API for the block driver, and will not
-- * acquire bd_mutex. This API should be used in case that
-- * caller has held bd_mutex already.
-- */
--int __blkdev_reread_part(struct block_device *bdev)
-+static int blkdev_reread_part(struct block_device *bdev)
- {
-+	int ret;
-+
- 	if (!disk_part_scan_enabled(bdev->bd_disk) || bdev != bdev->bd_contains)
- 		return -EINVAL;
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EACCES;
- 
--	lockdep_assert_held(&bdev->bd_mutex);
--
--	return bdev_disk_changed(bdev, false);
--}
--EXPORT_SYMBOL(__blkdev_reread_part);
--
--/*
-- * This is an exported API for the block driver, and will
-- * try to acquire bd_mutex. If bd_mutex has been held already
-- * in current context, please call __blkdev_reread_part().
-- *
-- * Make sure the held locks in current context aren't required
-- * in open()/close() handler and I/O path for avoiding ABBA deadlock:
-- * - bd_mutex is held before calling block driver's open/close
-- *   handler
-- * - reading partition table may submit I/O to the block device
-- */
--int blkdev_reread_part(struct block_device *bdev)
--{
--	int res;
--
- 	mutex_lock(&bdev->bd_mutex);
--	res = __blkdev_reread_part(bdev);
-+	ret = bdev_disk_changed(bdev, false);
- 	mutex_unlock(&bdev->bd_mutex);
- 
--	return res;
-+	return ret;
- }
--EXPORT_SYMBOL(blkdev_reread_part);
- 
- static int blk_ioctl_discard(struct block_device *bdev, fmode_t mode,
- 		unsigned long arg, unsigned long flags)
-diff --git a/drivers/block/loop.c b/drivers/block/loop.c
-index f6f77eaa7217..64b16abee280 100644
---- a/drivers/block/loop.c
-+++ b/drivers/block/loop.c
-@@ -630,7 +630,9 @@ static void loop_reread_partitions(struct loop_device *lo,
- {
- 	int rc;
- 
--	rc = blkdev_reread_part(bdev);
-+	mutex_lock(&bdev->bd_mutex);
-+	rc = bdev_disk_changed(bdev, false);
-+	mutex_unlock(&bdev->bd_mutex);
- 	if (rc)
- 		pr_warn("%s: partition scan of loop%d (%s) failed (rc=%d)\n",
- 			__func__, lo->lo_number, lo->lo_file_name, rc);
-@@ -1154,10 +1156,11 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
- 		 * must be at least one and it can only become zero when the
- 		 * current holder is released.
- 		 */
--		if (release)
--			err = __blkdev_reread_part(bdev);
--		else
--			err = blkdev_reread_part(bdev);
-+		if (!release)
-+			mutex_lock(&bdev->bd_mutex);
-+		err = bdev_disk_changed(bdev, false);
-+		if (!release)
-+			mutex_unlock(&bdev->bd_mutex);
- 		if (err)
- 			pr_warn("%s: partition scan of loop%d failed (rc=%d)\n",
- 				__func__, lo_number, err);
-diff --git a/drivers/s390/block/dasd_genhd.c b/drivers/s390/block/dasd_genhd.c
-index 5542d9eadfe0..7d079154f849 100644
---- a/drivers/s390/block/dasd_genhd.c
-+++ b/drivers/s390/block/dasd_genhd.c
-@@ -116,7 +116,9 @@ int dasd_scan_partitions(struct dasd_block *block)
- 		return -ENODEV;
- 	}
- 
--	rc = blkdev_reread_part(bdev);
-+	mutex_lock(&bdev->bd_mutex);
-+	rc = bdev_disk_changed(bdev, false);
-+	mutex_unlock(&bdev->bd_mutex);
- 	if (rc)
- 		DBF_DEV_EVENT(DBF_ERR, block->base,
- 				"scan partitions error, rc %d", rc);
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index ae16466a67f7..9558a2f064b1 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1513,6 +1513,8 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
- 	struct gendisk *disk = bdev->bd_disk;
- 	int ret;
- 
-+	lockdep_assert_held(&bdev->bd_mutex);
-+
- rescan:
- 	ret = blk_drop_partitions(disk, bdev);
- 	if (ret)
-@@ -1540,6 +1542,11 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
- 
- 	return ret;
- }
-+/*
-+ * Only exported for for loop and dasd for historic reasons.  Don't use in new
-+ * code!
-+ */
-+EXPORT_SYMBOL_GPL(bdev_disk_changed);
- 
- /*
-  * bd_mutex locking:
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index d233dd661df7..ae6c5c37f3ae 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2632,8 +2632,6 @@ extern void bd_finish_claiming(struct block_device *bdev,
- extern void bd_abort_claiming(struct block_device *bdev,
- 			      struct block_device *whole, void *holder);
- extern void blkdev_put(struct block_device *bdev, fmode_t mode);
--extern int __blkdev_reread_part(struct block_device *bdev);
--extern int blkdev_reread_part(struct block_device *bdev);
- 
- #ifdef CONFIG_SYSFS
- extern int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk);
--- 
-2.20.1
+s/vor/for/
+
+> +retrieve IPL information blocks, that specify the IPL method/devices
+> +and request VM memory and subsystem resets, as well as IPLs.
+> +
+> +For PVs this concept has been continued with new subcodes:
+> +
+> +Subcode 8: Set an IPL Information Block of type 5.
+> +Subcode 9: Store the saved block in guest memory
+> +Subcode 10: Move into Protected Virtualization mode
+> +
+> +The new PV load-device-specific-parameters field specifies all data,
+> +that is necessary to move into PV mode.
+> +
+> +* PV Header origin
+> +* PV Header length
+> +* List of Components composed of:
+> +  * AES-XTS Tweak prefix
+> +  * Origin
+> +  * Size
+> +
+> +The PV header contains the keys and hashes, which the UV will use to
+> +decrypt and verify the PV, as well as control flags and a start PSW.
+> +
+> +The components are for instance an encrypted kernel, kernel cmd and
+> +initrd. The components are decrypted by the UV.
+> +
+> +All non-decrypted data of the non-PV guest instance are zero on first
+> +access of the PV.
+> +
+> +
+> +When running in a protected mode some subcodes will result in
+> +exceptions or return error codes.
+> +
+> +Subcodes 4 and 7 will result in specification exceptions.
+> +When removing a secure VM, the UV will clear all memory, so we can't
+> +have non-clearing IPL subcodes.
+> +
+> +Subcodes 8, 9, 10 will result in specification exceptions.
+> +Re-IPL into a protected mode is only possible via a detour into non
+> +protected mode.
+
+So... what do we IPL from? Is there still a need for the bios?
+
+(Sorry, I'm a bit confused here.)
 
