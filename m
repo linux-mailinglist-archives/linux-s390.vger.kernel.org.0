@@ -2,128 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFD41F143A
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 11:45:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4BD02F146D
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 11:53:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726656AbfKFKpZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 Nov 2019 05:45:25 -0500
-Received: from smtprelay0222.hostedemail.com ([216.40.44.222]:41768 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730312AbfKFKpY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 05:45:24 -0500
-X-Greylist: delayed 389 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 05:45:23 EST
-Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
-        by smtpgrave06.hostedemail.com (Postfix) with ESMTP id CEF34800AB61
-        for <linux-s390@vger.kernel.org>; Wed,  6 Nov 2019 10:38:54 +0000 (UTC)
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay06.hostedemail.com (Postfix) with ESMTP id 5BDBF18224D68;
-        Wed,  6 Nov 2019 10:38:53 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::,RULES_HIT:41:355:379:599:960:966:973:982:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1542:1593:1594:1711:1730:1747:1777:1792:2196:2199:2393:2553:2559:2562:2693:2828:3138:3139:3140:3141:3142:3354:3622:3865:3866:3868:3870:3871:3873:4321:4385:4605:5007:7576:10004:10400:10967:11026:11232:11658:11914:12043:12048:12266:12297:12438:12740:12760:12895:13161:13229:13255:13439:14096:14097:14659:14721:21080:21220:21451:21627:30012:30051:30054:30070:30090:30091,0,RBL:47.151.135.224:@perches.com:.lbl8.mailshell.net-62.8.0.100 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:25,LUA_SUMMARY:none
-X-HE-Tag: fish39_6a8263ffbb247
-X-Filterd-Recvd-Size: 3444
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf04.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  6 Nov 2019 10:38:51 +0000 (UTC)
-Message-ID: <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
-Subject: Re: [PATCH] s390/pkey: Use memdup_user() rather than duplicating
- its implementation
-From:   Joe Perches <joe@perches.com>
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-s390@vger.kernel.org,
-        Christian =?ISO-8859-1?Q?Borntr=E4ger?= <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Date:   Wed, 06 Nov 2019 02:38:39 -0800
-In-Reply-To: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
-Content-Type: text/plain; charset="ISO-8859-1"
-User-Agent: Evolution 3.34.1-2 
+        id S1729370AbfKFKxI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 Nov 2019 05:53:08 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40642 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725890AbfKFKxI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 05:53:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573037586;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MkKeCgkVUq/k/URpvBggClnu00dCnD5SCCD9xuWRcUs=;
+        b=I4MF7y6CO0z35bt8kKUWLJ0krMgMKYmoU8F8bb1F/6HpawnLc97gpx5LvtKlISRhdxn/dE
+        hGGRib7qsa6t34Occa3AraVlja7kTd3isPyMdhS5dPrvwVnCrJM6IIjGnbAenmd/FH7Gqd
+        8+H8ND06M5Nyd5JWgja5683ay20heLk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-mVGv6jnnOgi-Oc91bWdiHA-1; Wed, 06 Nov 2019 05:53:03 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 74B7C8017DD;
+        Wed,  6 Nov 2019 10:52:59 +0000 (UTC)
+Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2863E10013D9;
+        Wed,  6 Nov 2019 10:52:36 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 11:52:33 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V9 3/6] mdev: introduce device specific ops
+Message-ID: <20191106115233.79bdbc1c.cohuck@redhat.com>
+In-Reply-To: <20191106070548.18980-4-jasowang@redhat.com>
+References: <20191106070548.18980-1-jasowang@redhat.com>
+        <20191106070548.18980-4-jasowang@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: mVGv6jnnOgi-Oc91bWdiHA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 2019-11-06 at 11:22 +0100, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Wed, 6 Nov 2019 11:11:42 +0100
-> 
-> Reuse existing functionality from memdup_user() instead of keeping
-> duplicate source code.
-> 
-> Generated by: scripts/coccinelle/api/memdup_user.cocci
-> 
-> Delete local variables which became unnecessary with this refactoring
-> in two function implementations.
-> 
-> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
+On Wed,  6 Nov 2019 15:05:45 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-This doesn't fix anything and the Fixes: line is not appropriate.
+> Currently, except for the create and remove, the rest of
+> mdev_parent_ops is designed for vfio-mdev driver only and may not help
+> for kernel mdev driver. With the help of class id, this patch
+> introduces device specific callbacks inside mdev_device
+> structure. This allows different set of callback to be used by
+> vfio-mdev and virtio-mdev.
+>=20
+> Reviewed-by: Parav Pandit <parav@mellanox.com>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  .../driver-api/vfio-mediated-device.rst       | 35 +++++++++----
+>  MAINTAINERS                                   |  1 +
+>  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+>  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+>  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+>  drivers/vfio/mdev/mdev_core.c                 | 24 ++++++++-
+>  drivers/vfio/mdev/mdev_private.h              |  5 ++
+>  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+>  include/linux/mdev.h                          | 43 ++++-----------
+>  include/linux/mdev_vfio_ops.h                 | 52 +++++++++++++++++++
+>  samples/vfio-mdev/mbochs.c                    | 20 ++++---
+>  samples/vfio-mdev/mdpy.c                      | 20 ++++---
+>  samples/vfio-mdev/mtty.c                      | 18 ++++---
+>  13 files changed, 206 insertions(+), 99 deletions(-)
+>  create mode 100644 include/linux/mdev_vfio_ops.h
 
-> diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
-[]
-> @@ -715,36 +715,16 @@ static int pkey_apqns4keytype(enum pkey_key_type ktype,
-> 
->  static void *_copy_key_from_user(void __user *ukey, size_t keylen)
->  {
-> -	void *kkey;
-> -
-> -	if (!ukey || keylen < MINKEYBLOBSIZE || keylen > KEYBLOBBUFSIZE)
-> -		return ERR_PTR(-EINVAL);
-> -	kkey = kmalloc(keylen, GFP_KERNEL);
-> -	if (!kkey)
-> -		return ERR_PTR(-ENOMEM);
-> -	if (copy_from_user(kkey, ukey, keylen)) {
-> -		kfree(kkey);
-> -		return ERR_PTR(-EFAULT);
-> -	}
-> -
-> -	return kkey;
-> +	return !ukey || keylen < MINKEYBLOBSIZE || keylen > KEYBLOBBUFSIZE
-> +	       ? ERR_PTR(-EINVAL)
-> +	       : memdup_user(ukey, keylen);
-
-This is a very poor use of ternary ?: code.
-This is much more readable for humans.
-
-	if (!ukey || keylen < MINKEYBLOBSIZE || keylen > KBLOBBUFSIZE)
-		return ERR_PTR(-EINVAL);
-
-	return memdup_user(ukey, keylen);
-
-The compiler will produce the same code.
-
->  static void *_copy_apqns_from_user(void __user *uapqns, size_t nr_apqns)
->  {
-> -	void *kapqns = NULL;
-> -	size_t nbytes;
-> -
-> -	if (uapqns && nr_apqns > 0) {
-> -		nbytes = nr_apqns * sizeof(struct pkey_apqn);
-> -		kapqns = kmalloc(nbytes, GFP_KERNEL);
-> -		if (!kapqns)
-> -			return ERR_PTR(-ENOMEM);
-> -		if (copy_from_user(kapqns, uapqns, nbytes))
-> -			return ERR_PTR(-EFAULT);
-> -	}
-> -
-> -	return kapqns;
-> +	return uapqns && nr_apqns > 0
-> +	       ? memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn))
-> +	       : NULL;
-
-And here you reverse the form of the earlier block.
-Please be consistent and use this style:
-
-	if (!uapqns || nr_apqns <= 0)
-		return NULL;
-
-	return memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn));
-
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
