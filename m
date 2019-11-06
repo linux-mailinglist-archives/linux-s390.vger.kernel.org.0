@@ -2,143 +2,150 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 38A7AF0D6F
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 04:58:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 805EFF0F0D
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 07:41:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731006AbfKFD6z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Nov 2019 22:58:55 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58252 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729705AbfKFD6z (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 22:58:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573012734;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gr71+XtimEL2u6AzLjyEgsguFtJGvEEF2xUegKTV/h0=;
-        b=PYlPgvFk/IGlthBT0Uy2XvRiRiL850ZAbjAwAB+qr7+tPvvvjTbw9h0hJwgMDjAEqpbSOM
-        FKkCS4fJihkpkZzIG5xMEyekUQd6mVrM30Cuk1+A35k+XRIJe3oc2xwZzE9ld8BqRGKvP6
-        Rg329xgx1Qsg85rHtr2J+C924pOUMY8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-vwBxFsjROy-3Zo-U4aD9YA-1; Tue, 05 Nov 2019 22:58:44 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97EBA8017DE;
-        Wed,  6 Nov 2019 03:58:40 +0000 (UTC)
-Received: from [10.72.12.193] (ovpn-12-193.pek2.redhat.com [10.72.12.193])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8514210013D9;
-        Wed,  6 Nov 2019 03:57:01 +0000 (UTC)
-Subject: Re: [PATCH V8 0/6] mdev based hardware virtio offloading support
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191105093240.5135-1-jasowang@redhat.com>
- <20191105105834.469675f0@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <393f2dc9-8c67-d3c9-6553-640b80c15aaf@redhat.com>
-Date:   Wed, 6 Nov 2019 11:56:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        id S1725980AbfKFGlM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 Nov 2019 01:41:12 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:39227 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfKFGlM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:41:12 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 477H450GyXz9v00D;
+        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=uDQK58sa; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id NP7mUVlPVLBt; Wed,  6 Nov 2019 07:41:08 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 477H445kq5z9v00C;
+        Wed,  6 Nov 2019 07:41:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1573022468; bh=ldK6jtPphgl+yNa6VSaAerjL+prNDwgkLRC6nRKEIeI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=uDQK58saIN0zvehZkL7oENgA4DemT8lDWmLXhETHs2fgk7tiYooqK7uit5oPw6kqK
+         UOoMgZlJGvnNPw1TVCdC6OsuYDkWv6rJFk3JlidSUeiN1jyfI5kOdxu8g2Q0UGfHfG
+         nJ9ksEtevKFg7K5FRpbJoChZCjEM1dr9rYK/i7Rk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 973408B82D;
+        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id A7VVbo-RdBde; Wed,  6 Nov 2019 07:41:09 +0100 (CET)
+Received: from [172.25.230.101] (unknown [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 27E838B7CC;
+        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
+Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
+ helpers
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
+ <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <42160baa-0e9d-73d0-bf72-58bdbacf10ff@c-s.fr>
+Date:   Wed, 6 Nov 2019 07:41:08 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191105105834.469675f0@x1.home>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: vwBxFsjROy-3Zo-U4aD9YA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-On 2019/11/6 =E4=B8=8A=E5=8D=881:58, Alex Williamson wrote:
-> On Tue,  5 Nov 2019 17:32:34 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> Hi all:
->>
->> There are hardwares that can do virtio datapath offloading while
->> having its own control path. This path tries to implement a mdev based
->> unified API to support using kernel virtio driver to drive those
->> devices. This is done by introducing a new mdev transport for virtio
->> (virtio_mdev) and register itself as a new kind of mdev driver. Then
->> it provides a unified way for kernel virtio driver to talk with mdev
->> device implementation.
->>
->> Though the series only contains kernel driver support, the goal is to
->> make the transport generic enough to support userspace drivers. This
->> means vhost-mdev[1] could be built on top as well by resuing the
->> transport.
->>
->> A sample driver is also implemented which simulate a virito-net
->> loopback ethernet device on top of vringh + workqueue. This could be
->> used as a reference implementation for real hardware driver.
->>
->> Also a real ICF VF driver was also posted here[2] which is a good
->> reference for vendors who is interested in their own virtio datapath
->> offloading product.
->>
->> Consider mdev framework only support VFIO device and driver right now,
->> this series also extend it to support other types. This is done
->> through introducing class id to the device and pairing it with
->> id_talbe claimed by the driver. On top, this seris also decouple
->> device specific parents ops out of the common ones.
->>
->> Pktgen test was done with virito-net + mvnet loop back device.
->>
->> Please review.
->>
->> [1] https://lkml.org/lkml/2019/10/31/440
->> [2] https://lkml.org/lkml/2019/10/15/1226
->>
->> Changes from V7:
->> - drop {set|get}_mdev_features for virtio
->> - typo and comment style fixes
->
-> Seems we're nearly there, all the remaining comments are relatively
-> superficial, though I would appreciate a v9 addressing them as well as
-> the checkpatch warnings:
->
-> https://patchwork.freedesktop.org/series/68977/
 
+Le 06/11/2019 à 04:22, Anshuman Khandual a écrit :
+> 
+> 
+> On 10/28/2019 10:59 AM, Anshuman Khandual wrote:
+>> +    -----------------------
+>> +    |         arch |status|
+>> +    -----------------------
+>> +    |       alpha: | TODO |
+>> +    |         arc: | TODO |
+>> +    |         arm: | TODO |
+>> +    |       arm64: |  ok  |
+>> +    |         c6x: | TODO |
+>> +    |        csky: | TODO |
+>> +    |       h8300: | TODO |
+>> +    |     hexagon: | TODO |
+>> +    |        ia64: | TODO |
+>> +    |        m68k: | TODO |
+>> +    |  microblaze: | TODO |
+>> +    |        mips: | TODO |
+>> +    |       nds32: | TODO |
+>> +    |       nios2: | TODO |
+>> +    |    openrisc: | TODO |
+>> +    |      parisc: | TODO |
+>> +    |     powerpc: | TODO |
+>> +    |       ppc32: |  ok  |
 
-Will do.
+Note that ppc32 is a part of powerpc, not a standalone arch.
 
-Btw, do you plan to merge vhost-mdev patch on top? Or you prefer it to=20
-go through Michael's vhost tree?
+Maybe something like the following would be more correct:
+|  powerpc/32: |  ok  |
+|  powerpc/64: | TODO |
 
-Thanks
+Christophe
 
-
->
-> Consider this a last call for reviews or acks (or naks) from affected
-> mdev vendor drivers, mdev-core sub-maintainers (Hi Kirti), virtio
-> stakeholders, etc.  Thanks,
->
-> Alex
->
-
+>> +    |       riscv: | TODO |
+>> +    |        s390: | TODO |
+>> +    |          sh: | TODO |
+>> +    |       sparc: | TODO |
+>> +    |          um: | TODO |
+>> +    |   unicore32: | TODO |
+>> +    |         x86: |  ok  |
+>> +    |      xtensa: | TODO |
+>> +    -----------------------
+> 
+> While here, are there some volunteers to test this on any of the
+> 'yet to be tested and supported' platforms ?
+> 
+> - Anshuman
+> 
