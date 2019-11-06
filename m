@@ -2,138 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15B1EF106B
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 08:34:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D0D01F12BD
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 10:50:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731093AbfKFHeR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 Nov 2019 02:34:17 -0500
-Received: from foss.arm.com ([217.140.110.172]:35138 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729896AbfKFHeQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:34:16 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1EE3430E;
-        Tue,  5 Nov 2019 23:34:13 -0800 (PST)
-Received: from [192.168.225.149] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2F42D3F71A;
-        Tue,  5 Nov 2019 23:36:40 -0800 (PST)
-Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
- helpers
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
- <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
- <42160baa-0e9d-73d0-bf72-58bdbacf10ff@c-s.fr>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <0e0c2ce9-636d-1153-2451-baf7317ed45f@arm.com>
-Date:   Wed, 6 Nov 2019 13:04:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <42160baa-0e9d-73d0-bf72-58bdbacf10ff@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        id S1726811AbfKFJuS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 Nov 2019 04:50:18 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20418 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727257AbfKFJuS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 04:50:18 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA69lCoW004996
+        for <linux-s390@vger.kernel.org>; Wed, 6 Nov 2019 04:50:17 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w3rk8q1dr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 06 Nov 2019 04:50:17 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <kgraul@linux.ibm.com>;
+        Wed, 6 Nov 2019 09:50:15 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 6 Nov 2019 09:50:13 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA69oBBP18612298
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Nov 2019 09:50:11 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3775A42049;
+        Wed,  6 Nov 2019 09:50:11 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DDC254203F;
+        Wed,  6 Nov 2019 09:50:10 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  6 Nov 2019 09:50:10 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: [PATCH net] net/smc: fix ethernet interface refcounting
+Date:   Wed,  6 Nov 2019 10:49:57 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19110609-0020-0000-0000-00000383051A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110609-0021-0000-0000-000021D93301
+Message-Id: <20191106094957.94521-1-kgraul@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-06_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=600 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1911060101
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+From: Ursula Braun <ubraun@linux.ibm.com>
 
+If a pnet table entry is to be added mentioning a valid ethernet
+interface, but an invalid infiniband or ISM device, the dev_put()
+operation for the ethernet interface is called twice, resulting
+in a negative refcount for the ethernet interface, which disables
+removal of such a network interface.
 
-On 11/06/2019 12:11 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 06/11/2019 à 04:22, Anshuman Khandual a écrit :
->>
->>
->> On 10/28/2019 10:59 AM, Anshuman Khandual wrote:
->>> +    -----------------------
->>> +    |         arch |status|
->>> +    -----------------------
->>> +    |       alpha: | TODO |
->>> +    |         arc: | TODO |
->>> +    |         arm: | TODO |
->>> +    |       arm64: |  ok  |
->>> +    |         c6x: | TODO |
->>> +    |        csky: | TODO |
->>> +    |       h8300: | TODO |
->>> +    |     hexagon: | TODO |
->>> +    |        ia64: | TODO |
->>> +    |        m68k: | TODO |
->>> +    |  microblaze: | TODO |
->>> +    |        mips: | TODO |
->>> +    |       nds32: | TODO |
->>> +    |       nios2: | TODO |
->>> +    |    openrisc: | TODO |
->>> +    |      parisc: | TODO |
->>> +    |     powerpc: | TODO |
->>> +    |       ppc32: |  ok  |
-> 
-> Note that ppc32 is a part of powerpc, not a standalone arch.
+This patch removes one of the dev_put() calls.
 
-Right, I understand. But we are yet to hear about how this test
-came about on powerpc server platforms. Will update 'powerpc'
-arch listing above once we get some confirmation. May be once
-this works on all relevant powerpc platforms, we can just merge
-'powerpc' and 'ppc32' entries here as just 'powerpc'.
+Fixes: 890a2cb4a966 ("net/smc: rework pnet table")
+Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+---
+ net/smc/smc_pnet.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> 
-> Maybe something like the following would be more correct:
-> |  powerpc/32: |  ok  |
-> |  powerpc/64: | TODO |
-> 
-> Christophe
-> 
->>> +    |       riscv: | TODO |
->>> +    |        s390: | TODO |
->>> +    |          sh: | TODO |
->>> +    |       sparc: | TODO |
->>> +    |          um: | TODO |
->>> +    |   unicore32: | TODO |
->>> +    |         x86: |  ok  |
->>> +    |      xtensa: | TODO |
->>> +    -----------------------
->>
->> While here, are there some volunteers to test this on any of the
->> 'yet to be tested and supported' platforms ?
->>
->> - Anshuman
->>
-> 
+diff --git a/net/smc/smc_pnet.c b/net/smc/smc_pnet.c
+index 2920b006f65c..571e6d84da3b 100644
+--- a/net/smc/smc_pnet.c
++++ b/net/smc/smc_pnet.c
+@@ -376,8 +376,6 @@ static int smc_pnet_fill_entry(struct net *net,
+ 	return 0;
+ 
+ error:
+-	if (pnetelem->ndev)
+-		dev_put(pnetelem->ndev);
+ 	return rc;
+ }
+ 
+-- 
+2.17.1
+
