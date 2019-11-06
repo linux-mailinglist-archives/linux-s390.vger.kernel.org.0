@@ -2,84 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61A6EF1C7E
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 18:29:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9463FF1C96
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 18:38:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfKFR3r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 Nov 2019 12:29:47 -0500
-Received: from smtprelay0165.hostedemail.com ([216.40.44.165]:36993 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728983AbfKFR3q (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 12:29:46 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 0FBA8180A5AE6;
-        Wed,  6 Nov 2019 17:29:45 +0000 (UTC)
-X-Session-Marker: 6A6F6540706572636865732E636F6D
-X-Spam-Summary: 2,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::::::,RULES_HIT:41:152:355:379:599:960:982:988:989:1042:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:2393:2559:2562:2693:2911:3138:3139:3140:3141:3142:3167:3352:3622:3865:3866:3867:3868:3870:3871:3872:3873:4321:4425:4605:5007:7904:10004:10400:11232:11658:11914:12043:12266:12297:12438:12740:12895:13069:13161:13229:13311:13357:13894:14096:14097:14659:14721:21080:21220:21451:21627:21772:30012:30054:30091,0,RBL:47.151.135.224:@perches.com:.lbl8.mailshell.net-62.14.0.100 64.201.201.201,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:fn,MSBL:0,DNSBL:neutral,Custom_rules:0:0:0,LFtime:24,LUA_SUMMARY:none
-X-HE-Tag: leaf04_37d3b9d49d90d
-X-Filterd-Recvd-Size: 2273
-Received: from XPS-9350.home (unknown [47.151.135.224])
-        (Authenticated sender: joe@perches.com)
-        by omf12.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  6 Nov 2019 17:29:43 +0000 (UTC)
-Message-ID: <47c55ab899aafe10898e6581582363aa446b2091.camel@perches.com>
-Subject: Re: s390/pkey: Use memdup_user() rather than duplicating its
- implementation
-From:   Joe Perches <joe@perches.com>
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-s390@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Cc:     Christian =?ISO-8859-1?Q?Borntr=E4ger?= <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Date:   Wed, 06 Nov 2019 09:29:31 -0800
-In-Reply-To: <0f90b278-7b3e-6509-1633-301d16513c5d@web.de>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
-         <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
-         <0f90b278-7b3e-6509-1633-301d16513c5d@web.de>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        id S1727286AbfKFRiS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 6 Nov 2019 12:38:18 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31256 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732239AbfKFRiS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 12:38:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573061897;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=2K0Oz02jNxfjdTmm8k8SnXt42GxVvZTo5vju30J6EFY=;
+        b=SiwBaLFPreSyxwiQ7lIqPPUfDv/jLaFQKDa5AXnOc0sAoDM7k6nO2I8qMPwAymQRmzXmwt
+        VULF2zQhjYWAVKlGmOedl5xvFg2Pw+pR5ThyOkNzNhPde2Tpzdgf9JpMSkgDM/ueo1e8Sh
+        ZTYdn1+sDRAImUwsQn5wyRu3sxQC5Hg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-37-wQV1i4JHNt6URo7WCkd3tA-1; Wed, 06 Nov 2019 12:38:13 -0500
+X-MC-Unique: wQV1i4JHNt6URo7WCkd3tA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 55C89107ACC3;
+        Wed,  6 Nov 2019 17:38:12 +0000 (UTC)
+Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A91065D9E1;
+        Wed,  6 Nov 2019 17:38:06 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 18:37:54 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
+        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [RFC 30/37] DOCUMENTATION: protvirt: Diag 308 IPL
+Message-ID: <20191106183754.68e1be0f.cohuck@redhat.com>
+In-Reply-To: <6dd98dfe-63ce-374c-9b04-00cdeceee905@linux.ibm.com>
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+        <20191024114059.102802-31-frankja@linux.ibm.com>
+        <20191106174855.13a50f42.cohuck@redhat.com>
+        <6dd98dfe-63ce-374c-9b04-00cdeceee905@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; boundary="Sig_/KFFssDcS.y.elHxVLw6NCDc";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 2019-11-06 at 14:00 +0100, Markus Elfring wrote:
-> > > Reuse existing functionality from memdup_user() instead of keeping
-> > > duplicate source code.
-> > > 
-> > > Generated by: scripts/coccinelle/api/memdup_user.cocci
-> …
-> > > Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
-> > 
-> > This doesn't fix anything
-> 
-> How would you categorise the proposed source code reduction and software reuse?
+--Sig_/KFFssDcS.y.elHxVLw6NCDc
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-As inappropriate for a fixes tag.
+On Wed, 6 Nov 2019 18:05:22 +0100
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-The fixes tag is "used to make it easy to determine where a bug
-originated, which can help review a bug fix"
+> On 11/6/19 5:48 PM, Cornelia Huck wrote:
+> > On Thu, 24 Oct 2019 07:40:52 -0400
+> > Janosch Frank <frankja@linux.ibm.com> wrote:
+> >  =20
+> >> Description of changes that are necessary to move a KVM VM into
+> >> Protected Virtualization mode.
+> >>
+> >> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> >> ---
+> >>  Documentation/virtual/kvm/s390-pv-boot.txt | 62 +++++++++++++++++++++=
++
+> >>  1 file changed, 62 insertions(+)
+> >>  create mode 100644 Documentation/virtual/kvm/s390-pv-boot.txt
 
-There is no bug here.
+> > So... what do we IPL from? Is there still a need for the bios?
+> >=20
+> > (Sorry, I'm a bit confused here.)
+> >  =20
+>=20
+> We load a blob via the bios (all methods are supported) and that blob
+> moves itself into protected mode. I.e. it has a small unprotected stub,
+> the rest is an encrypted kernel.
+>=20
 
-> Will the development opinions vary between contributors?
+Ok. The magic is in the loaded kernel, and we don't need modifications
+to the bios?
 
-Ever had a bikeshed?
+--Sig_/KFFssDcS.y.elHxVLw6NCDc
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
-> > > +	return !ukey || keylen < MINKEYBLOBSIZE || keylen > KEYBLOBBUFSIZE
-> > > +	       ? ERR_PTR(-EINVAL)
-> > > +	       : memdup_user(ukey, keylen);
-> > 
-> > This is a very poor use of ternary ?: code.
-> 
-> The conditional operator is applied once more in the intended way,
-> isn't it?
+-----BEGIN PGP SIGNATURE-----
 
-Please take your development efforts to obfuscated c contests.
+iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl3DBPIACgkQ3s9rk8bw
+L68O9Q/+PNV0FWP35V+Byn2eX/IP2pwYzdpktSY2sS/oEIJ2PnUHuJbTqazcwyul
+JEJx6NWOunSsqLE4kJHUqncbfLzq+LkbuO+/IXVW7SWuf+J3XhMbT8JyHSSksI6e
+LVZgI4D40G4kfCmMT4UubszAnpmpwnxZcgIiCy7Ry5qZEx2jPVxAo6HR3zQ9nkW2
+yk+xhrjGmjk0uVR5Ec76jmSTeqMlcDNNQ+wjrZI5TV8HlrxOyaAaJd27MJPuaoPL
+GvWjYvVzt8MePAa+T8OXTwR4JSI6YMwUx9X4OuOFIunfgg18f8rWwVqJ0Y/DPw8g
+c/rhM3wTfWnOOKCl8qFSBbYXv3ps7YSuJHUIMjRdbNIj4JWXEjpEC4oolMJe5gT7
+rNf14r6ERv2y5jMgojSKjwCuh7ZO0ocPeJCTuYxOt3GM8bZ9kSJXE2oxnXXrRchS
+MaLTVQj/GUmgowh/8yyBBksrXRapzQ9V08iBkATKn5fUN89/xcVFTZnCUe3VkZfI
+KQ15yj7LrDKMAMBwJh3G7MHaNoQnO7GlOFpRluWVNaLRmw84jFBHufxKnm7urTHe
+YhC+KH4rPuAerO+VtTHWqSFH3UPyP/8w96q1LLj9kCXXutYKQwcyg29m98L/MCFV
+qeNEKJfWDyw+PQl5CVtX6hogkMfhpzWQ2eDeTDkLn544d7DeR1E=
+=VQrj
+-----END PGP SIGNATURE-----
 
+--Sig_/KFFssDcS.y.elHxVLw6NCDc--
 
