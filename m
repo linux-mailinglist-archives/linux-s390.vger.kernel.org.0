@@ -2,140 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 323C0F0C85
-	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 04:08:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 97DF8F0CB6
+	for <lists+linux-s390@lfdr.de>; Wed,  6 Nov 2019 04:10:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388039AbfKFDH5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 5 Nov 2019 22:07:57 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42502 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387725AbfKFDH4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 5 Nov 2019 22:07:56 -0500
-Received: by mail-pf1-f194.google.com with SMTP id s5so9473246pfh.9
-        for <linux-s390@vger.kernel.org>; Tue, 05 Nov 2019 19:07:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ltvHqBOKpiD2l5ND4e2zUJLZaNbuv0rVXPgSgZl66Aw=;
-        b=Hd8PtdO4WQgjJ2rZRc4lcPgXWh5Jl+NOyxQUhpCFlJ/5w+XtRMZuPAOhNgsYMeOAUQ
-         KJAgOP4ckJdkVZkm83U7EVX5LWc+H/LXqs9wmjMwCAEnZbNu4kHvao4lMC6iNpj5hbzG
-         F5kc5v5Nm4ct7kNDcK5fbff3sx1DouD/iQ8J9Y/mJl34ESyofu7gVM6Ro1ROaVFijim7
-         olOnKD9ptcmp9Nh68d0gSGbzBiahE+C9UqxngJqIoCsFb8Ea5QPFGaL9VI5d5IyyURym
-         I5UvsjyXbUSooDh0PtSLxRiSqKe6KpldH623QhAN+rMonDk3siwjmXxTC36dahgARnTV
-         YbnQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ltvHqBOKpiD2l5ND4e2zUJLZaNbuv0rVXPgSgZl66Aw=;
-        b=PbMS4gXf2FxRK5EcHe1ZOJQkKrnZIelFZpGTmUgwrlUcRkyq1OBEwEZUN3o6fx8TSA
-         OgPBkt5kNHocDNbdyZ3TRCzpidYdA3sN4NJNUhKBnivRwjE8Yvac+xfsIqUYLBUsWYy5
-         FXUC37/4KMIEL4calV3MrEqb0IDnZDEKGaxyL2X662VATjb6r+Q+fommEyGz7/oW5yIy
-         7pT9016dLNmEKqwWIyVIxAHuU824g/t+NcDGRtqHPuGqYrLXfiX3lWw2y0G1XjnaavmG
-         zfnl5VzuQ++xIAufmPMKzMhws+mDu1OvE0TjW7CVTf+OxoIG6TSfAn/OGZuyU+5pGSc5
-         lDjw==
-X-Gm-Message-State: APjAAAX4LyvXGgtdanrsb1342c9OOOOy9agWwuwb0qk4+gYoHaANZcYV
-        C7c5DDHOAt7Mi4N3BecKFpOT8uu74Ww=
-X-Google-Smtp-Source: APXvYqxoh7SswIGfcGLUzP2eWTaPnr/Qq6dF9alaThcEfJbeFh98Jk6bm8sZB2XHEVJZ02GQMNrwLw==
-X-Received: by 2002:a17:90a:bf16:: with SMTP id c22mr570965pjs.83.1573009676053;
-        Tue, 05 Nov 2019 19:07:56 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.07.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:07:55 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        id S1730585AbfKFDKo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 5 Nov 2019 22:10:44 -0500
+Received: from foss.arm.com ([217.140.110.172]:32962 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730562AbfKFDKo (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:10:44 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0480C30E;
+        Tue,  5 Nov 2019 19:10:43 -0800 (PST)
+Received: from [192.168.225.149] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DA843F719;
+        Tue,  5 Nov 2019 19:10:22 -0800 (PST)
+Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
+ helpers
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: [PATCH 28/50] s390: Add show_stack_loglvl()
-Date:   Wed,  6 Nov 2019 03:05:19 +0000
-Message-Id: <20191106030542.868541-29-dima@arista.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191106030542.868541-1-dima@arista.com>
-References: <20191106030542.868541-1-dima@arista.com>
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
+ <20191105203638.6889a994@thinkpad>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <d9487d9b-7f23-6311-f432-d2271b961f00@arm.com>
+Date:   Wed, 6 Nov 2019 08:40:57 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105203638.6889a994@thinkpad>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Currently, the log-level of show_stack() depends on a platform
-realization. It creates situations where the headers are printed with
-lower log level or higher than the stacktrace (depending on
-a platform or user).
 
-Furthermore, it forces the logic decision from user to an architecture
-side. In result, some users as sysrq/kdb/etc are doing tricks with
-temporary rising console_loglevel while printing their messages.
-And in result it not only may print unwanted messages from other CPUs,
-but also omit printing at all in the unlucky case where the printk()
-was deferred.
 
-Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
-an easier approach than introducing more printk buffers.
-Also, it will consolidate printings with headers.
+On 11/06/2019 01:06 AM, Gerald Schaefer wrote:
+> On Mon, 28 Oct 2019 10:59:22 +0530
+> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+> 
+>> This adds tests which will validate architecture page table helpers and
+>> other accessors in their compliance with expected generic MM semantics.
+>> This will help various architectures in validating changes to existing
+>> page table helpers or addition of new ones.
+>>
+>> This test covers basic page table entry transformations including but not
+>> limited to old, young, dirty, clean, write, write protect etc at various
+>> level along with populating intermediate entries with next page table page
+>> and validating them.
+>>
+>> Test page table pages are allocated from system memory with required size
+>> and alignments. The mapped pfns at page table levels are derived from a
+>> real pfn representing a valid kernel text symbol. This test gets called
+>> right after page_alloc_init_late().
+>>
+>> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+>> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+>> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+>> arm64. Going forward, other architectures too can enable this after fixing
+>> build or runtime problems (if any) with their page table helpers.
+> 
+> I've prepared a couple of commits to our arch code to make this work on s390,
+> they will go upstream in the next merge window. After that, we can add s390
+> to the supported architectures.
 
-Introduce show_stack_loglvl(), that eventually will substitute
-show_stack().
+Thats good.
 
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
-[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- arch/s390/kernel/dumpstack.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+> 
+> We had some issues, e.g. because we do not report large entries as bad in
+> pxd_bad(), do not check for folded page tables in pxd_free(), or assume
+> that primitives like pmd_mkdirty() will only be called after pmd_mkhuge().
+> None of those should have any impact on current code, but your test module
+> revealed that we do not behave like other architectures in some aspects,
+> and it's good to find and fix such things to prevent possible future issues.
 
-diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
-index 34bdc60c0b11..1a89f0968742 100644
---- a/arch/s390/kernel/dumpstack.c
-+++ b/arch/s390/kernel/dumpstack.c
-@@ -123,20 +123,26 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
- 	return -EINVAL;
- }
- 
--void show_stack(struct task_struct *task, unsigned long *stack)
-+void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
-+		       const char *loglvl)
- {
- 	struct unwind_state state;
- 
--	printk("Call Trace:\n");
-+	printk("%sCall Trace:\n", loglvl);
- 	if (!task)
- 		task = current;
- 	unwind_for_each_frame(&state, task, NULL, (unsigned long) stack)
--		printk(state.reliable ? " [<%016lx>] %pSR \n" :
--					"([<%016lx>] %pSR)\n",
--		       state.ip, (void *) state.ip);
-+		printk(state.reliable ? "%s [<%016lx>] %pSR \n" :
-+					"%s([<%016lx>] %pSR)\n",
-+		       loglvl, state.ip, (void *) state.ip);
- 	debug_show_held_locks(task ? : current);
- }
- 
-+void show_stack(struct task_struct *task, unsigned long *stack)
-+{
-+	show_stack_loglvl(task, stack, KERN_DEFAULT);
-+}
-+
- static void show_last_breaking_event(struct pt_regs *regs)
- {
- 	printk("Last Breaking-Event-Address:\n");
--- 
-2.23.0
+Right and those s390 fixes are the testimony for the usefulness of this test.
 
+> 
+> Thanks a lot for the effort!
+> 
+> Regards,
+> Gerald
+> 
+> 
