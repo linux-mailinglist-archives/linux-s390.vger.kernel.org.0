@@ -2,165 +2,110 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0EABCF266D
-	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 05:12:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E74BF27AC
+	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 07:35:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387585AbfKGEMK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 6 Nov 2019 23:12:10 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:26156 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387518AbfKGEMJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 6 Nov 2019 23:12:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573099927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vy7XJKdY7uHiidwzfWnqy3jEytGSp6O8E3wPOjJLQeY=;
-        b=bLpu8RsTeegLIijJQ+AtutrfeZok3A+78Uuq1iPl+IxGd9vmj7KipONmHo4HIKKlQ0gJsa
-        /Lrs+3KHc08ZgXLcULahn6CtJU5NUbq+hxg5ouDvkEPK+59VzhJgoBbJYvUp+F6uSggSjr
-        sIZFT8u7flpmuBFlO/l/hAJbnwubwYY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-Y7iroPMHNZ6uJ8flJrTieg-1; Wed, 06 Nov 2019 23:12:03 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726467AbfKGGfD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 Nov 2019 01:35:03 -0500
+Received: from ozlabs.org ([203.11.71.1]:34557 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725763AbfKGGfD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 7 Nov 2019 01:35:03 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 258F9107ACC3;
-        Thu,  7 Nov 2019 04:11:59 +0000 (UTC)
-Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 390AD60870;
-        Thu,  7 Nov 2019 04:11:33 +0000 (UTC)
-Subject: Re: [PATCH V8 0/6] mdev based hardware virtio offloading support
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, cohuck@redhat.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191105093240.5135-1-jasowang@redhat.com>
- <20191105105834.469675f0@x1.home>
- <393f2dc9-8c67-d3c9-6553-640b80c15aaf@redhat.com>
- <20191106120312.77a6a318@x1.home>
- <20191106142449-mutt-send-email-mst@kernel.org>
- <20191106141318.150f3b9b@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <1c1126ec-94b8-5d1a-8ef6-616604e5a93f@redhat.com>
-Date:   Thu, 7 Nov 2019 12:11:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 477ttV3Hh4zB3tP;
+        Thu,  7 Nov 2019 17:34:58 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573108500;
+        bh=8QWFC8ATOW/EWg2Fx4XSxd/+I6wxAZCxEEB8iiH/Ywo=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=l5EM9iXCztIvbZInfj1ruXyv6YaYOKS3Ef5x5s+/TphU4cBRKtqq+6aNQgGvgkGZR
+         7nfbzNySMTkA6jJftTOwd7SmXLtFsum33xOsHfu678QnYkL5hzuBaNx+qYZKqy+GG4
+         BnrmvPa6HCOqYavtI0Rpo5NEhMA7K/2RwHhOKpDqbysn0s7e5B0cxRRDcCVwpwD5Qj
+         wjnJUB930g+Z89iEqjr10awoXsZsRiV9eQgHCPCu1RsyXF7srI03RWgHBr9E7TMzVK
+         KWPIf4bYo0KxNlOFVMBCVXIg8uQOqmOEHCAvA0SG5soPbvZWU+i2HozMyKmcy7maTf
+         wPA0Su1RnUitw==
+Date:   Thu, 7 Nov 2019 17:34:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     linux-next@vger.kernel.org, christophe.leroy@c-s.fr,
+        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
+        kasan-dev@googlegroups.com, Daniel Axtens <dja@axtens.net>
+Subject: Re: Please add powerpc topic/kasan-bitops branch to linux-next
+Message-ID: <20191107173451.6be74953@canb.auug.org.au>
+In-Reply-To: <87r22k5nrz.fsf@mpe.ellerman.id.au>
+References: <87r22k5nrz.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <20191106141318.150f3b9b@x1.home>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: Y7iroPMHNZ6uJ8flJrTieg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; boundary="Sig_/QLj.mRHKb6JGbFGyiT8jLoU";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+--Sig_/QLj.mRHKb6JGbFGyiT8jLoU
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/11/7 =E4=B8=8A=E5=8D=885:13, Alex Williamson wrote:
-> On Wed, 6 Nov 2019 14:25:23 -0500
-> "Michael S. Tsirkin" <mst@redhat.com> wrote:
+Hi Michael,
+
+On Thu, 07 Nov 2019 15:11:12 +1100 Michael Ellerman <mpe@ellerman.id.au> wr=
+ote:
 >
->> On Wed, Nov 06, 2019 at 12:03:12PM -0700, Alex Williamson wrote:
->>> On Wed, 6 Nov 2019 11:56:46 +0800
->>> Jason Wang <jasowang@redhat.com> wrote:
->>>   =20
->>>> On 2019/11/6 =E4=B8=8A=E5=8D=881:58, Alex Williamson wrote:
->>>>> On Tue,  5 Nov 2019 17:32:34 +0800
->>>>> Jason Wang <jasowang@redhat.com> wrote:
->>>>>    =20
->>>>>> Hi all:
->>>>>>
->>>>>> There are hardwares that can do virtio datapath offloading while
->>>>>> having its own control path. This path tries to implement a mdev bas=
-ed
->>>>>> unified API to support using kernel virtio driver to drive those
->>>>>> devices. This is done by introducing a new mdev transport for virtio
->>>>>> (virtio_mdev) and register itself as a new kind of mdev driver. Then
->>>>>> it provides a unified way for kernel virtio driver to talk with mdev
->>>>>> device implementation.
->>>>>>
->>>>>> Though the series only contains kernel driver support, the goal is t=
-o
->>>>>> make the transport generic enough to support userspace drivers. This
->>>>>> means vhost-mdev[1] could be built on top as well by resuing the
->>>>>> transport.
->>>>>>
->>>>>> A sample driver is also implemented which simulate a virito-net
->>>>>> loopback ethernet device on top of vringh + workqueue. This could be
->>>>>> used as a reference implementation for real hardware driver.
->>>>>>
->>>>>> Also a real ICF VF driver was also posted here[2] which is a good
->>>>>> reference for vendors who is interested in their own virtio datapath
->>>>>> offloading product.
->>>>>>
->>>>>> Consider mdev framework only support VFIO device and driver right no=
-w,
->>>>>> this series also extend it to support other types. This is done
->>>>>> through introducing class id to the device and pairing it with
->>>>>> id_talbe claimed by the driver. On top, this seris also decouple
->>>>>> device specific parents ops out of the common ones.
->>>>>>
->>>>>> Pktgen test was done with virito-net + mvnet loop back device.
->>>>>>
->>>>>> Please review.
->>>>>>
->>>>>> [1] https://lkml.org/lkml/2019/10/31/440
->>>>>> [2] https://lkml.org/lkml/2019/10/15/1226
->>>>>>
->>>>>> Changes from V7:
->>>>>> - drop {set|get}_mdev_features for virtio
->>>>>> - typo and comment style fixes
->>>>> Seems we're nearly there, all the remaining comments are relatively
->>>>> superficial, though I would appreciate a v9 addressing them as well a=
-s
->>>>> the checkpatch warnings:
->>>>>
->>>>> https://patchwork.freedesktop.org/series/68977/
->>>>
->>>> Will do.
->>>>
->>>> Btw, do you plan to merge vhost-mdev patch on top? Or you prefer it to
->>>> go through Michael's vhost tree?
->>> I can include it if you wish.  The mdev changes are isolated enough in
->>> that patch that I wouldn't presume it, but clearly it would require
->>> less merge coordination to drop it in my tree.  Let me know.  Thanks,
->>>
->>> Alex
->> I'm fine with merging through your tree. If you do, feel free to
->> include
->>
->> Acked-by: Michael S. Tsirkin <mst@redhat.com>
-> AFAICT, it looks like we're expecting at least one more version of
-> Tiwei's patch after V5, so it'd probably be best to provide the ack and
-> go-ahead on that next version so there's no confusion.  Thanks,
->
-> Alex
+> Can you please add the topic/kasan-bitops tree of the powerpc repository
+> to linux-next.
+>=20
+> powerpc         git     git://git.kernel.org/pub/scm/linux/kernel/git/pow=
+erpc/linux.git#topic/kasan-bitops
+>=20
+> See:
+>   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/log/?=
+h=3Dtopic/kasan-bitops
+>=20
+> This will be a (hopefully) short lived branch to carry some cross
+> architecture KASAN related patches for v5.5.
 
+Added from today.
 
-Yes, it's probably need a V6. Will give ack there.
+Thanks for adding your subsystem tree as a participant of linux-next.  As
+you may know, this is not a judgement of your code.  The purpose of
+linux-next is for integration testing and to lower the impact of
+conflicts between subsystems in the next merge window.=20
 
-Thanks
+You will need to ensure that the patches/commits in your tree/series have
+been:
+     * submitted under GPL v2 (or later) and include the Contributor's
+        Signed-off-by,
+     * posted to the relevant mailing list,
+     * reviewed by you (or another maintainer of your subsystem tree),
+     * successfully unit tested, and=20
+     * destined for the current or next Linux merge window.
 
+Basically, this should be just what you would send to Linus (or ask him
+to fetch).  It is allowed to be rebased if you deem it necessary.
+
+--=20
+Cheers,
+Stephen Rothwell=20
+sfr@canb.auug.org.au
+
+--Sig_/QLj.mRHKb6JGbFGyiT8jLoU
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3DuwsACgkQAVBC80lX
+0Gx+nQf+Kb9/DdUAxGd+w9sWu1q0Z+Hiq9qD8vwzOM0/tFtNdMhWLOJRM0idUy9Q
+NHHN0yi54olE5bolHbOqmXXITBE+Dy7RyRUchaPSMkUgAAI8n+iteHy4/ZakmJr+
+6lYeGHjGzM9+9q5eYl6yD7hj6cAAyI4wBUu0fMYBcuWix/xOImWZAe/6iGRhgRLf
+UAzDGUbnyqpox0S0v10SJjbTkGXyuvaxzs27pGUBZbRODNPbZYEX7hpo5TnQxzBq
+ZMkJaRdxAKi0szigouKz9d75XPKNmc4zz5tY9gCShmBlE6bjJHzVF0ntNGrge78W
+mMgfvcvatGMcL/fbSn8nu3+vqMnFpg==
+=XNA5
+-----END PGP SIGNATURE-----
+
+--Sig_/QLj.mRHKb6JGbFGyiT8jLoU--
