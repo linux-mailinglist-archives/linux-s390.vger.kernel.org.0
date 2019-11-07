@@ -2,154 +2,148 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9446F30AD
-	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 14:55:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EDC8F3145
+	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 15:21:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728180AbfKGNzz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 Nov 2019 08:55:55 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61236 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388823AbfKGNzy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Nov 2019 08:55:54 -0500
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7DtZQm128185
-        for <linux-s390@vger.kernel.org>; Thu, 7 Nov 2019 08:55:53 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w4ke9kdrf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 07 Nov 2019 08:55:50 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 7 Nov 2019 13:54:58 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Nov 2019 13:54:55 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7Dssbe47055056
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 13:54:54 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 52A984C04E;
-        Thu,  7 Nov 2019 13:54:54 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB1D54C04A;
-        Thu,  7 Nov 2019 13:54:53 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.123])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Nov 2019 13:54:53 +0000 (GMT)
-Subject: Re: [PATCH v2] s390/pkey: Use memdup_user() rather than duplicating
- its implementation
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-s390@vger.kernel.org,
-        Joe Perches <joe@perches.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
-        Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
- <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
- <deb7893f-3cfe-18fc-3feb-b26b290bf3c6@web.de>
- <833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com>
- <1b65bc81-f47a-eefa-f1f4-d5af6a1809c0@web.de>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Thu, 7 Nov 2019 14:54:53 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1726754AbfKGOVv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 Nov 2019 09:21:51 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36417 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726924AbfKGOVr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Nov 2019 09:21:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573136505;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=DrmPAze8Ac5FFece7lozmX/b+JhD3npiUhbXA+xlp7o=;
+        b=F38MnjzJMtKn5UUaMAKqCJX7HmlRIV6jh4/ETG4k76uGASUAN5UMZBJHzeC4ZXcYb5t8T4
+        VUpOK6wLbteMugv+ZYidrmeCoBZz3+FB43BhJrnyr+GeogzM/tZCuudjfimrYxQDna3RFB
+        YF2MP+bBHc8nnx18FlouSISWZoAVIEs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-100-J1OMK1x0NCiU9HfU4rkiww-1; Thu, 07 Nov 2019 09:21:42 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7DEFA1005500;
+        Thu,  7 Nov 2019 14:21:38 +0000 (UTC)
+Received: from [10.72.12.21] (ovpn-12-21.pek2.redhat.com [10.72.12.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C818C608B6;
+        Thu,  7 Nov 2019 14:20:45 +0000 (UTC)
+Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191106133531.693-1-jasowang@redhat.com>
+ <20191106133531.693-7-jasowang@redhat.com>
+ <20191107040700-mutt-send-email-mst@kernel.org>
+ <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
+ <20191107061942-mutt-send-email-mst@kernel.org>
+ <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
+ <20191107080834-mutt-send-email-mst@kernel.org>
+ <b2265e3a-6f86-c21a-2ebd-d0e4eea2886f@redhat.com>
+ <20191107085013-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <3440c55b-bbb9-fd4d-7c06-f45860fb4bd3@redhat.com>
+Date:   Thu, 7 Nov 2019 22:20:43 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <1b65bc81-f47a-eefa-f1f4-d5af6a1809c0@web.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191107085013-mutt-send-email-mst@kernel.org>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110713-0008-0000-0000-0000032C6CC5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110713-0009-0000-0000-00004A4B7206
-Message-Id: <733b29df-207e-a165-ee80-46be8720c0c4@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=854 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911070140
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: J1OMK1x0NCiU9HfU4rkiww-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-
-On 07.11.19 14:45, Markus Elfring wrote:
->>> Reuse existing functionality from memdup_user() instead of keeping
->>> duplicate source code.
->>>
->>> Generated by: scripts/coccinelle/api/memdup_user.cocci
->>>
->>> Delete local variables which became unnecessary with this refactoring
->>> in two function implementations.
->>>
->>> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
+On 2019/11/7 =E4=B8=8B=E5=8D=889:50, Michael S. Tsirkin wrote:
+> On Thu, Nov 07, 2019 at 09:32:29PM +0800, Jason Wang wrote:
+>> On 2019/11/7 =E4=B8=8B=E5=8D=889:08, Michael S. Tsirkin wrote:
+>>> On Thu, Nov 07, 2019 at 08:43:29PM +0800, Jason Wang wrote:
+>>>> On 2019/11/7 =E4=B8=8B=E5=8D=887:21, Michael S. Tsirkin wrote:
+>>>>> On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
+>>>>>> On 2019/11/7 =E4=B8=8B=E5=8D=885:08, Michael S. Tsirkin wrote:
+>>>>>>> On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
+>>>>>>>> This sample driver creates mdev device that simulate virtio net de=
+vice
+>>>>>>>> over virtio mdev transport. The device is implemented through vrin=
+gh
+>>>>>>>> and workqueue. A device specific dma ops is to make sure HVA is us=
+ed
+>>>>>>>> directly as the IOVA. This should be sufficient for kernel virtio
+>>>>>>>> driver to work.
+>>>>>>>>
+>>>>>>>> Only 'virtio' type is supported right now. I plan to add 'vhost' t=
+ype
+>>>>>>>> on top which requires some virtual IOMMU implemented in this sampl=
+e
+>>>>>>>> driver.
+>>>>>>>>
+>>>>>>>> Acked-by: Cornelia Huck<cohuck@redhat.com>
+>>>>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>>>>>> I'd prefer it that we call this something else, e.g.
+>>>>>>> mvnet-loopback. Just so people don't expect a fully
+>>>>>>> functional device somehow. Can be renamed when applying?
+>>>>>> Actually, I plan to extend it as another standard network interface =
+for
+>>>>>> kernel. It could be either a standalone pseudo device or a stack dev=
+ice.
+>>>>>> Does this sounds good to you?
+>>>>>>
+>>>>>> Thanks
+>>>>> That's a big change in an interface so it's a good reason
+>>>>> to rename the driver at that point right?
+>>>>> Oherwise users of an old kernel would expect a stacked driver
+>>>>> and get a loopback instead.
+>>>>>
+>>>>> Or did I miss something?
+>>>> My understanding is that it was a sample driver in /doc. It should not=
+ be
+>>>> used in production environment. Otherwise we need to move it to
+>>>> driver/virtio.
+>>>>
+>>>> But if you insist, I can post a V11.
+>>>>
+>>>> Thanks
+>>> this can be a patch on top.
+>> Then maybe it's better just extend it to work as a normal networking dev=
+ice
+>> on top?
 >>
->> With that patch description, the Fixes tag is wrong...but (see below)
-> 
-> I wonder about such a conclusion together with your subsequent feedback.
+>> Thanks
+> That would be a substantial change. Maybe drop 6/6 for now until
+> we have a better handle on this?
+>
 
-Please try to read and understand what other people write. My point was that your
-patch description only talks about refactoring and avoiding code duplication.
-So you do not claim to have fixed anything. You claim to have refactored things
-to avoid code duplication. And no, refactoring is NOT a fix.
+Ok, consider the change should be small, I will post V11 where I can fix=20
+the typos spotted.
 
-That fact that you fix a bug was obviously just by accident. So you have not even
-noticed that your change was actually chaning the logical flow of the code. 
-
-Now: When you change the patch description explaining what you fix, a Fixes tag is
-appropriate. 
+Thanks
 
