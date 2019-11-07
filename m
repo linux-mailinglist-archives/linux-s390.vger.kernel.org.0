@@ -2,284 +2,379 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFC6FF34A6
-	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 17:30:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18F58F38B9
+	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 20:36:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727606AbfKGQaT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 Nov 2019 11:30:19 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:59297 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726231AbfKGQaT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Nov 2019 11:30:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573144216;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=9iUGIATPWGlrCyytMv5PoDcROBcbF2ZwF3JfqkMtX+g=;
-        b=MCvryzhy057Wm0iP4LTOAfxAghT8SAGdF8MrnnDn9MZqdYKmgGIXcFoKkl0f0P8r58anlb
-        v3iQ8jFV5Gsih/8Dt02QbQ+6DQ1mRMl/9BLPPL270qqK92Y7HOSrnUQIdkqsZvqo+/4OCb
-        GqFC7guSfrh/Q3FmDiq4LnzXv8nD9no=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-PZX1kUoWOgWyf1ry26GILw-1; Thu, 07 Nov 2019 11:30:13 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DA51D107ACC4;
-        Thu,  7 Nov 2019 16:30:11 +0000 (UTC)
-Received: from gondolin (ovpn-117-222.ams2.redhat.com [10.36.117.222])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 044E2600F0;
-        Thu,  7 Nov 2019 16:30:01 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 17:29:56 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
-        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [RFC 04/37] KVM: s390: protvirt: Add initial lifecycle handling
-Message-ID: <20191107172956.4f4d8a90.cohuck@redhat.com>
-In-Reply-To: <20191024114059.102802-5-frankja@linux.ibm.com>
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
-        <20191024114059.102802-5-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1725871AbfKGTgC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 Nov 2019 14:36:02 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:2146 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725785AbfKGTgB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Nov 2019 14:36:01 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc471d90001>; Thu, 07 Nov 2019 11:34:50 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Thu, 07 Nov 2019 11:35:46 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Thu, 07 Nov 2019 11:35:46 -0800
+Received: from [10.25.75.102] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 Nov
+ 2019 19:35:29 +0000
+Subject: Re: [PATCH V11 1/6] mdev: class id support
+To:     Jason Wang <jasowang@redhat.com>, <kvm@vger.kernel.org>,
+        <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>,
+        <intel-gfx@lists.freedesktop.org>,
+        <intel-gvt-dev@lists.freedesktop.org>,
+        <alex.williamson@redhat.com>, <mst@redhat.com>,
+        <tiwei.bie@intel.com>
+CC:     <virtualization@lists.linux-foundation.org>,
+        <netdev@vger.kernel.org>, <cohuck@redhat.com>,
+        <maxime.coquelin@redhat.com>, <cunming.liang@intel.com>,
+        <zhihong.wang@intel.com>, <rob.miller@broadcom.com>,
+        <xiao.w.wang@intel.com>, <haotian.wang@sifive.com>,
+        <zhenyuw@linux.intel.com>, <zhi.a.wang@intel.com>,
+        <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
+        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
+        <farman@linux.ibm.com>, <pasic@linux.ibm.com>,
+        <sebott@linux.ibm.com>, <oberpar@linux.ibm.com>,
+        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
+        <borntraeger@de.ibm.com>, <akrowiak@linux.ibm.com>,
+        <freude@linux.ibm.com>, <lingshan.zhu@intel.com>,
+        <eperezma@redhat.com>, <lulu@redhat.com>, <parav@mellanox.com>,
+        <christophe.de.dinechin@gmail.com>, <kevin.tian@intel.com>,
+        <stefanha@redhat.com>
+References: <20191107151109.23261-1-jasowang@redhat.com>
+ <20191107151109.23261-2-jasowang@redhat.com>
+From:   Kirti Wankhede <kwankhede@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <ba7d7b97-85f3-4596-6ae0-8dfa57c94b8c@nvidia.com>
+Date:   Fri, 8 Nov 2019 01:05:19 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: PZX1kUoWOgWyf1ry26GILw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191107151109.23261-2-jasowang@redhat.com>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1573155290; bh=/EXrnlwfJbtB2dfkiHy1I5m8c/7sbDj9nW2Y2Fur0F4=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nESaiR8+mxVXejiYLAHUq3/pOZlOBGtFAwQiStFOScdoeIXKxPqhdyEm7XoMCc2+e
+         8aJ0QpQ7Pj3JhfVGtWw3Tw+Oi938s7g9cMs3iYi1ILvIOXo70u8oE8gIQI6fyHJAjX
+         zXvyedhXtqTQQ99W0HYlF3ESK+EPnWJDUXdzuM1/NgjiI4ff/Ewg23kxY92bhcPYPQ
+         fNwWS+Lf8eBVublzKDHSOoPzO1Ux43SGjuCx3rM0AA4ZglKYTNc5WgxkTiIVpx4I0n
+         DIrwuSQLSiN3WMOh2Vv+h6+sYXhCtSveV+HeGoApb+er3DFKQf706OdgxXne7LYAxo
+         40J2lowQheE8Q==
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 24 Oct 2019 07:40:26 -0400
-Janosch Frank <frankja@linux.ibm.com> wrote:
 
-> Let's add a KVM interface to create and destroy protected VMs.
->=20
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+
+On 11/7/2019 8:41 PM, Jason Wang wrote:
+> Mdev bus only supports vfio driver right now, so it doesn't implement
+> match method. But in the future, we may add drivers other than vfio,
+> the first driver could be virtio-mdev. This means we need to add
+> device class id support in bus match method to pair the mdev device
+> and mdev driver correctly.
+> 
+> So this patch adds id_table to mdev_driver and class_id for mdev
+> device with the match method for mdev bus.
+> 
+> Reviewed-by: Parav Pandit <parav@mellanox.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+
+Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
+
+Thanks,
+Kirti
+
 > ---
->  arch/s390/include/asm/kvm_host.h |  24 +++-
->  arch/s390/include/asm/uv.h       | 110 ++++++++++++++
->  arch/s390/kvm/Makefile           |   2 +-
->  arch/s390/kvm/kvm-s390.c         | 173 +++++++++++++++++++++-
->  arch/s390/kvm/kvm-s390.h         |  47 ++++++
->  arch/s390/kvm/pv.c               | 237 +++++++++++++++++++++++++++++++
->  include/uapi/linux/kvm.h         |  33 +++++
-
-Any new ioctls and caps probably want a mention in
-Documentation/virt/kvm/api.txt :)
-
->  7 files changed, 622 insertions(+), 4 deletions(-)
->  create mode 100644 arch/s390/kvm/pv.c
-
-(...)
-
-> @@ -2157,6 +2164,96 @@ static int kvm_s390_set_cmma_bits(struct kvm *kvm,
->  =09return r;
->  }
-> =20
-> +#ifdef CONFIG_KVM_S390_PROTECTED_VIRTUALIZATION_HOST
-> +static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
+>   .../driver-api/vfio-mediated-device.rst       |  5 ++++
+>   drivers/gpu/drm/i915/gvt/kvmgt.c              |  1 +
+>   drivers/s390/cio/vfio_ccw_ops.c               |  1 +
+>   drivers/s390/crypto/vfio_ap_ops.c             |  1 +
+>   drivers/vfio/mdev/mdev_core.c                 | 17 +++++++++++++
+>   drivers/vfio/mdev/mdev_driver.c               | 25 +++++++++++++++++++
+>   drivers/vfio/mdev/mdev_private.h              |  1 +
+>   drivers/vfio/mdev/vfio_mdev.c                 |  6 +++++
+>   include/linux/mdev.h                          |  8 ++++++
+>   include/linux/mod_devicetable.h               |  8 ++++++
+>   samples/vfio-mdev/mbochs.c                    |  1 +
+>   samples/vfio-mdev/mdpy.c                      |  1 +
+>   samples/vfio-mdev/mtty.c                      |  1 +
+>   13 files changed, 76 insertions(+)
+> 
+> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
+> index 25eb7d5b834b..6709413bee29 100644
+> --- a/Documentation/driver-api/vfio-mediated-device.rst
+> +++ b/Documentation/driver-api/vfio-mediated-device.rst
+> @@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
+>         * @probe: called when new device created
+>         * @remove: called when device removed
+>         * @driver: device driver structure
+> +      * @id_table: the ids serviced by this driver
+>         */
+>        struct mdev_driver {
+>   	     const char *name;
+>   	     int  (*probe)  (struct device *dev);
+>   	     void (*remove) (struct device *dev);
+>   	     struct device_driver    driver;
+> +	     const struct mdev_class_id *id_table;
+>        };
+>   
+>   A mediated bus driver for mdev should use this structure in the function calls
+> @@ -170,6 +172,9 @@ that a driver should use to unregister itself with the mdev core driver::
+>   
+>   	extern void mdev_unregister_device(struct device *dev);
+>   
+> +It is also required to specify the class_id in create() callback through::
+> +
+> +	int mdev_set_class(struct mdev_device *mdev, u16 id);
+>   
+>   Mediated Device Management Interface Through sysfs
+>   ==================================================
+> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> index 343d79c1cb7e..6420f0dbd31b 100644
+> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
+> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+> @@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *mdev)
+>   		     dev_name(mdev_dev(mdev)));
+>   	ret = 0;
+>   
+> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+>   out:
+>   	return ret;
+>   }
+> diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
+> index f0d71ab77c50..cf2c013ae32f 100644
+> --- a/drivers/s390/cio/vfio_ccw_ops.c
+> +++ b/drivers/s390/cio/vfio_ccw_ops.c
+> @@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>   			   private->sch->schid.ssid,
+>   			   private->sch->schid.sch_no);
+>   
+> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+>   	return 0;
+>   }
+>   
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 5c0f53c6dde7..07c31070afeb 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>   	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
+>   	mutex_unlock(&matrix_dev->lock);
+>   
+> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+>   	return 0;
+>   }
+>   
+> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+> index b558d4cfd082..7bfa2e46e829 100644
+> --- a/drivers/vfio/mdev/mdev_core.c
+> +++ b/drivers/vfio/mdev/mdev_core.c
+> @@ -45,6 +45,17 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *data)
+>   }
+>   EXPORT_SYMBOL(mdev_set_drvdata);
+>   
+> +/*
+> + * Specify the class for the mdev device, this must be called during
+> + * create() callback.
+> + */
+> +void mdev_set_class(struct mdev_device *mdev, u16 id)
 > +{
-> +=09int r =3D 0;
-> +=09void __user *argp =3D (void __user *)cmd->data;
+> +	WARN_ON(mdev->class_id);
+> +	mdev->class_id = id;
+> +}
+> +EXPORT_SYMBOL(mdev_set_class);
 > +
-> +=09switch (cmd->cmd) {
-> +=09case KVM_PV_VM_CREATE: {
-> +=09=09r =3D kvm_s390_pv_alloc_vm(kvm);
-> +=09=09if (r)
-> +=09=09=09break;
+>   struct device *mdev_dev(struct mdev_device *mdev)
+>   {
+>   	return &mdev->dev;
+> @@ -324,6 +335,12 @@ int mdev_device_create(struct kobject *kobj,
+>   	if (ret)
+>   		goto ops_create_fail;
+>   
+> +	if (!mdev->class_id) {
+> +		ret = -EINVAL;
+> +		dev_warn(dev, "mdev vendor driver failed to specify device class\n");
+> +		goto add_fail;
+> +	}
 > +
-> +=09=09mutex_lock(&kvm->lock);
-> +=09=09kvm_s390_vcpu_block_all(kvm);
-> +=09=09/* FMT 4 SIE needs esca */
-> +=09=09r =3D sca_switch_to_extended(kvm);
-> +=09=09if (!r)
-> +=09=09=09r =3D kvm_s390_pv_create_vm(kvm);
-> +=09=09kvm_s390_vcpu_unblock_all(kvm);
-> +=09=09mutex_unlock(&kvm->lock);
-> +=09=09break;
-> +=09}
-> +=09case KVM_PV_VM_DESTROY: {
-> +=09=09/* All VCPUs have to be destroyed before this call. */
-> +=09=09mutex_lock(&kvm->lock);
-> +=09=09kvm_s390_vcpu_block_all(kvm);
-> +=09=09r =3D kvm_s390_pv_destroy_vm(kvm);
-> +=09=09if (!r)
-> +=09=09=09kvm_s390_pv_dealloc_vm(kvm);
-> +=09=09kvm_s390_vcpu_unblock_all(kvm);
-> +=09=09mutex_unlock(&kvm->lock);
-> +=09=09break;
-> +=09}
-
-Would be helpful to have some code that shows when/how these are called
-- do you have any plans to post something soon?
-
-(...)
-
-> @@ -2529,6 +2642,9 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
-> =20
->  =09if (vcpu->kvm->arch.use_cmma)
->  =09=09kvm_s390_vcpu_unsetup_cmma(vcpu);
-> +=09if (IS_ENABLED(CONFIG_KVM_S390_PROTECTED_VIRTUALIZATION_HOST) &&
-> +=09    kvm_s390_pv_handle_cpu(vcpu))
-
-I was a bit confused by that function name... maybe
-kvm_s390_pv_cpu_get_handle()?
-
-Also, if this always returns 0 if the config option is off, you
-probably don't need to check for that option?
-
-> +=09=09kvm_s390_pv_destroy_cpu(vcpu);
->  =09free_page((unsigned long)(vcpu->arch.sie_block));
-> =20
->  =09kvm_vcpu_uninit(vcpu);
-> @@ -2555,8 +2671,13 @@ void kvm_arch_destroy_vm(struct kvm *kvm)
->  {
->  =09kvm_free_vcpus(kvm);
->  =09sca_dispose(kvm);
-> -=09debug_unregister(kvm->arch.dbf);
->  =09kvm_s390_gisa_destroy(kvm);
-> +=09if (IS_ENABLED(CONFIG_KVM_S390_PROTECTED_VIRTUALIZATION_HOST) &&
-> +=09    kvm_s390_pv_is_protected(kvm)) {
-> +=09=09kvm_s390_pv_destroy_vm(kvm);
-> +=09=09kvm_s390_pv_dealloc_vm(kvm);
-
-It seems the pv vm can be either destroyed via the ioctl above or in
-the course of normal vm destruction. When is which way supposed to be
-used? Also, it seems kvm_s390_pv_destroy_vm() can fail -- can that be a
-problem in this code path?
-
-> +=09}
-> +=09debug_unregister(kvm->arch.dbf);
->  =09free_page((unsigned long)kvm->arch.sie_page2);
->  =09if (!kvm_is_ucontrol(kvm))
->  =09=09gmap_remove(kvm->arch.gmap);
-
-(...)
-
-> diff --git a/arch/s390/kvm/kvm-s390.h b/arch/s390/kvm/kvm-s390.h
-> index 6d9448dbd052..0d61dcc51f0e 100644
-> --- a/arch/s390/kvm/kvm-s390.h
-> +++ b/arch/s390/kvm/kvm-s390.h
-> @@ -196,6 +196,53 @@ static inline int kvm_s390_user_cpu_state_ctrl(struc=
-t kvm *kvm)
->  =09return kvm->arch.user_cpu_state_ctrl !=3D 0;
->  }
-> =20
-> +#ifdef CONFIG_KVM_S390_PROTECTED_VIRTUALIZATION_HOST
-> +/* implemented in pv.c */
-> +void kvm_s390_pv_unpin(struct kvm *kvm);
-> +void kvm_s390_pv_dealloc_vm(struct kvm *kvm);
-> +int kvm_s390_pv_alloc_vm(struct kvm *kvm);
-> +int kvm_s390_pv_create_vm(struct kvm *kvm);
-> +int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu);
-> +int kvm_s390_pv_destroy_vm(struct kvm *kvm);
-> +int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu);
-> +int kvm_s390_pv_set_sec_parms(struct kvm *kvm, void *hdr, u64 length);
-> +int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned lon=
-g size,
-> +=09=09       unsigned long tweak);
-> +int kvm_s390_pv_verify(struct kvm *kvm);
-> +
-> +static inline bool kvm_s390_pv_is_protected(struct kvm *kvm)
+>   	ret = device_add(&mdev->dev);
+>   	if (ret)
+>   		goto add_fail;
+> diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/vfio/mdev/mdev_driver.c
+> index 0d3223aee20b..ed06433693e8 100644
+> --- a/drivers/vfio/mdev/mdev_driver.c
+> +++ b/drivers/vfio/mdev/mdev_driver.c
+> @@ -69,8 +69,33 @@ static int mdev_remove(struct device *dev)
+>   	return 0;
+>   }
+>   
+> +static int mdev_match(struct device *dev, struct device_driver *drv)
 > +{
-> +=09return !!kvm->arch.pv.handle;
+> +	unsigned int i;
+> +	struct mdev_device *mdev = to_mdev_device(dev);
+> +	struct mdev_driver *mdrv = to_mdev_driver(drv);
+> +	const struct mdev_class_id *ids = mdrv->id_table;
+> +
+> +	if (!ids)
+> +		return 0;
+> +
+> +	for (i = 0; ids[i].id; i++)
+> +		if (ids[i].id == mdev->class_id)
+> +			return 1;
+> +	return 0;
 > +}
 > +
-> +static inline u64 kvm_s390_pv_handle(struct kvm *kvm)
-
-This function name is less confusing than the one below, but maybe also
-rename this to kvm_s390_pv_get_handle() for consistency?
-
+> +static int mdev_uevent(struct device *dev, struct kobj_uevent_env *env)
 > +{
-> +=09return kvm->arch.pv.handle;
+> +	struct mdev_device *mdev = to_mdev_device(dev);
+> +
+> +	return add_uevent_var(env, "MODALIAS=mdev:c%02X", mdev->class_id);
 > +}
 > +
-> +static inline u64 kvm_s390_pv_handle_cpu(struct kvm_vcpu *vcpu)
-> +{
-> +=09return vcpu->arch.pv.handle;
-> +}
-> +#else
-> +static inline void kvm_s390_pv_unpin(struct kvm *kvm) {}
-> +static inline void kvm_s390_pv_dealloc_vm(struct kvm *kvm) {}
-> +static inline int kvm_s390_pv_alloc_vm(struct kvm *kvm) { return 0; }
-> +static inline int kvm_s390_pv_create_vm(struct kvm *kvm) { return 0; }
-> +static inline int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu) { return=
- 0; }
-> +static inline int kvm_s390_pv_destroy_vm(struct kvm *kvm) { return 0; }
-> +static inline int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu) { retur=
-n 0; }
-> +static inline int kvm_s390_pv_set_sec_parms(struct kvm *kvm,
-> +=09=09=09=09=09    u64 origin, u64 length) { return 0; }
-> +static inline int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr=
-,
-> +=09=09=09=09     unsigned long size,  unsigned long tweak)
-> +{ return 0; }
-> +static inline int kvm_s390_pv_verify(struct kvm *kvm) { return 0; }
-> +static inline bool kvm_s390_pv_is_protected(struct kvm *kvm) { return 0;=
- }
-> +static inline u64 kvm_s390_pv_handle(struct kvm *kvm) { return 0; }
-> +static inline u64 kvm_s390_pv_handle_cpu(struct kvm_vcpu *vcpu) { return=
- 0; }
-> +#endif
+>   struct bus_type mdev_bus_type = {
+>   	.name		= "mdev",
+> +	.match		= mdev_match,
+> +	.uevent		= mdev_uevent,
+>   	.probe		= mdev_probe,
+>   	.remove		= mdev_remove,
+>   };
+> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
+> index 7d922950caaf..c65f436c1869 100644
+> --- a/drivers/vfio/mdev/mdev_private.h
+> +++ b/drivers/vfio/mdev/mdev_private.h
+> @@ -33,6 +33,7 @@ struct mdev_device {
+>   	struct kobject *type_kobj;
+>   	struct device *iommu_device;
+>   	bool active;
+> +	u16 class_id;
+>   };
+>   
+>   #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
+> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+> index 30964a4e0a28..38431e9ef7f5 100644
+> --- a/drivers/vfio/mdev/vfio_mdev.c
+> +++ b/drivers/vfio/mdev/vfio_mdev.c
+> @@ -120,10 +120,16 @@ static void vfio_mdev_remove(struct device *dev)
+>   	vfio_del_group_dev(dev);
+>   }
+>   
+> +static const struct mdev_class_id vfio_id_table[] = {
+> +	{ MDEV_CLASS_ID_VFIO },
+> +	{ 0 },
+> +};
 > +
->  /* implemented in interrupt.c */
->  int kvm_s390_handle_wait(struct kvm_vcpu *vcpu);
->  void kvm_s390_vcpu_wakeup(struct kvm_vcpu *vcpu);
-
-(...)
-
-> +int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu)
-> +{
-> +=09int rc;
-> +=09struct uv_cb_csc uvcb =3D {
-> +=09=09.header.cmd =3D UVC_CMD_CREATE_SEC_CPU,
-> +=09=09.header.len =3D sizeof(uvcb),
-> +=09};
+>   static struct mdev_driver vfio_mdev_driver = {
+>   	.name	= "vfio_mdev",
+>   	.probe	= vfio_mdev_probe,
+>   	.remove	= vfio_mdev_remove,
+> +	.id_table = vfio_id_table,
+>   };
+>   
+>   static int __init vfio_mdev_init(void)
+> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+> index 0ce30ca78db0..78b69d09eb54 100644
+> --- a/include/linux/mdev.h
+> +++ b/include/linux/mdev.h
+> @@ -118,6 +118,7 @@ struct mdev_type_attribute mdev_type_attr_##_name =		\
+>    * @probe: called when new device created
+>    * @remove: called when device removed
+>    * @driver: device driver structure
+> + * @id_table: the ids serviced by this driver
+>    *
+>    **/
+>   struct mdev_driver {
+> @@ -125,6 +126,7 @@ struct mdev_driver {
+>   	int  (*probe)(struct device *dev);
+>   	void (*remove)(struct device *dev);
+>   	struct device_driver driver;
+> +	const struct mdev_class_id *id_table;
+>   };
+>   
+>   #define to_mdev_driver(drv)	container_of(drv, struct mdev_driver, driver)
+> @@ -132,6 +134,7 @@ struct mdev_driver {
+>   void *mdev_get_drvdata(struct mdev_device *mdev);
+>   void mdev_set_drvdata(struct mdev_device *mdev, void *data);
+>   const guid_t *mdev_uuid(struct mdev_device *mdev);
+> +void mdev_set_class(struct mdev_device *mdev, u16 id);
+>   
+>   extern struct bus_type mdev_bus_type;
+>   
+> @@ -145,4 +148,9 @@ struct device *mdev_parent_dev(struct mdev_device *mdev);
+>   struct device *mdev_dev(struct mdev_device *mdev);
+>   struct mdev_device *mdev_from_dev(struct device *dev);
+>   
+> +enum {
+> +	MDEV_CLASS_ID_VFIO = 1,
+> +	/* New entries must be added here */
+> +};
 > +
-> +=09/* EEXIST and ENOENT? */
-
-?
-
-> +=09if (kvm_s390_pv_handle_cpu(vcpu))
-> +=09=09return -EINVAL;
+>   #endif /* MDEV_H */
+> diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetable.h
+> index 5714fd35a83c..f32c6e44fb1a 100644
+> --- a/include/linux/mod_devicetable.h
+> +++ b/include/linux/mod_devicetable.h
+> @@ -821,4 +821,12 @@ struct wmi_device_id {
+>   	const void *context;
+>   };
+>   
+> +/**
+> + * struct mdev_class_id - MDEV device class identifier
+> + * @id: Used to identify a specific class of device, e.g vfio-mdev device.
+> + */
+> +struct mdev_class_id {
+> +	__u16 id;
+> +};
 > +
-> +=09vcpu->arch.pv.stor_base =3D __get_free_pages(GFP_KERNEL,
-> +=09=09=09=09=09=09   get_order(uv_info.guest_cpu_stor_len));
-> +=09if (!vcpu->arch.pv.stor_base)
-> +=09=09return -ENOMEM;
-> +
-> +=09/* Input */
-> +=09uvcb.guest_handle =3D kvm_s390_pv_handle(vcpu->kvm);
-> +=09uvcb.num =3D vcpu->arch.sie_block->icpua;
-> +=09uvcb.state_origin =3D (u64)vcpu->arch.sie_block;
-> +=09uvcb.stor_origin =3D (u64)vcpu->arch.pv.stor_base;
-> +
-> +=09rc =3D uv_call(0, (u64)&uvcb);
-> +=09VCPU_EVENT(vcpu, 3, "PROTVIRT CREATE VCPU: cpu %d handle %llx rc %x r=
-rc %x",
-> +=09=09   vcpu->vcpu_id, uvcb.cpu_handle, uvcb.header.rc,
-> +=09=09   uvcb.header.rrc);
-> +
-> +=09/* Output */
-> +=09vcpu->arch.pv.handle =3D uvcb.cpu_handle;
-> +=09vcpu->arch.sie_block->pv_handle_cpu =3D uvcb.cpu_handle;
-> +=09vcpu->arch.sie_block->pv_handle_config =3D kvm_s390_pv_handle(vcpu->k=
-vm);
-> +=09vcpu->arch.sie_block->sdf =3D 2;
-> +=09if (!rc)
-> +=09=09return 0;
-> +
-> +=09kvm_s390_pv_destroy_cpu(vcpu);
-> +=09return -EINVAL;
-> +}
-
-(...)
-
-Only a quick readthrough, as this patch is longish.
-
+>   #endif /* LINUX_MOD_DEVICETABLE_H */
+> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
+> index ac5c8c17b1ff..115bc5074656 100644
+> --- a/samples/vfio-mdev/mbochs.c
+> +++ b/samples/vfio-mdev/mbochs.c
+> @@ -561,6 +561,7 @@ static int mbochs_create(struct kobject *kobj, struct mdev_device *mdev)
+>   	mbochs_reset(mdev);
+>   
+>   	mbochs_used_mbytes += type->mbytes;
+> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+>   	return 0;
+>   
+>   err_mem:
+> diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
+> index cc86bf6566e4..665614574d50 100644
+> --- a/samples/vfio-mdev/mdpy.c
+> +++ b/samples/vfio-mdev/mdpy.c
+> @@ -269,6 +269,7 @@ static int mdpy_create(struct kobject *kobj, struct mdev_device *mdev)
+>   	mdpy_reset(mdev);
+>   
+>   	mdpy_count++;
+> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+>   	return 0;
+>   }
+>   
+> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+> index ce84a300a4da..90da12ff7fd9 100644
+> --- a/samples/vfio-mdev/mtty.c
+> +++ b/samples/vfio-mdev/mtty.c
+> @@ -755,6 +755,7 @@ static int mtty_create(struct kobject *kobj, struct mdev_device *mdev)
+>   	list_add(&mdev_state->next, &mdev_devices_list);
+>   	mutex_unlock(&mdev_list_lock);
+>   
+> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+>   	return 0;
+>   }
+>   
+> 
