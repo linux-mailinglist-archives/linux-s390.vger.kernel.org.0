@@ -2,154 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0E0ADF28B7
-	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 09:07:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFA80F29D7
+	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 09:53:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726791AbfKGIH2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 Nov 2019 03:07:28 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27270 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727517AbfKGIH1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Nov 2019 03:07:27 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA77tIUp084001
-        for <linux-s390@vger.kernel.org>; Thu, 7 Nov 2019 03:07:26 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4dewbxpa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 07 Nov 2019 03:07:25 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 7 Nov 2019 08:07:23 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Nov 2019 08:07:20 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA786h4M22217000
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 08:06:43 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F3B54203F;
-        Thu,  7 Nov 2019 08:07:18 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55C0C4204C;
-        Thu,  7 Nov 2019 08:07:18 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.123])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Nov 2019 08:07:18 +0000 (GMT)
-Subject: Re: s390/pkey: Use memdup_user() rather than duplicating its
- implementation
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Joe Perches <joe@perches.com>, linux-s390@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
- <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
- <4fa0e106-2565-8610-1356-4adfba08c0a0@web.de>
- <a4eaf80e-a5dd-4da3-75ca-8231f01af193@de.ibm.com>
- <20191107064854.GM10409@kadam>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
- b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
- gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
- kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
- NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
- hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
- QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
- OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
- tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
- WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
- DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
- OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
- t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
- PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
- Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
- 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
- PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
- YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
- REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
- vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
- DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
- D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
- 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
- 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
- v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
- 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
- JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
- cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
- i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
- jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
- ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Thu, 7 Nov 2019 09:07:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1727693AbfKGIxn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 Nov 2019 03:53:43 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:23253 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727300AbfKGIxn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Nov 2019 03:53:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573116822;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=GfR9mtVNwdm5BJ9PpBS3Beg4P93ZCaJfjRi/VlYl1cE=;
+        b=HCMGZj4a8AvJFpcuknSuSS9MX5+XYpUroghvqCzbgB5bMDwVc3BAuXuYf+SivYtY6PzNfi
+        2/s1glWQrUd67mek4ME9yYYWmHN1qLnTwWwP42rbhP8FYQIWwglTmnGpFgLjK1JEnKCikl
+        KNQiJezhIrCeLguCr73aj+cglFYjjYo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-aaUfKkOsM_ySC3fgMv4P2A-1; Thu, 07 Nov 2019 03:53:40 -0500
+X-MC-Unique: aaUfKkOsM_ySC3fgMv4P2A-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 961BD1800D6B;
+        Thu,  7 Nov 2019 08:53:39 +0000 (UTC)
+Received: from gondolin (ovpn-117-222.ams2.redhat.com [10.36.117.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AA5381001E75;
+        Thu,  7 Nov 2019 08:53:34 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 09:53:23 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
+        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [RFC 30/37] DOCUMENTATION: protvirt: Diag 308 IPL
+Message-ID: <20191107095323.0ede44b5.cohuck@redhat.com>
+In-Reply-To: <faacad49-3f91-08f3-d1ee-d31f31ac38bb@linux.ibm.com>
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+        <20191024114059.102802-31-frankja@linux.ibm.com>
+        <20191106174855.13a50f42.cohuck@redhat.com>
+        <6dd98dfe-63ce-374c-9b04-00cdeceee905@linux.ibm.com>
+        <20191106183754.68e1be0f.cohuck@redhat.com>
+        <faacad49-3f91-08f3-d1ee-d31f31ac38bb@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20191107064854.GM10409@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110708-4275-0000-0000-0000037B8FDE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110708-4276-0000-0000-0000388EE035
-Message-Id: <604a921d-9240-f271-3f92-675df85784e6@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=495 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911070079
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Mimecast-Spam-Score: 0
+Content-Type: multipart/signed; boundary="Sig_/+pqUrJPM52a+7T7phztqDvF";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+--Sig_/+pqUrJPM52a+7T7phztqDvF
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, 6 Nov 2019 22:02:41 +0100
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-On 07.11.19 07:48, Dan Carpenter wrote:
-> On Wed, Nov 06, 2019 at 07:30:19PM +0100, Christian Borntraeger wrote:
->>
->>
->> On 06.11.19 14:00, Markus Elfring wrote:
->>>>> Reuse existing functionality from memdup_user() instead of keeping
->>>>> duplicate source code.
->>>>>
->>>>> Generated by: scripts/coccinelle/api/memdup_user.cocci
->>> …
->>>>> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
->>>>
->>>> This doesn't fix anything
->>>
->>> How would you categorise the proposed source code reduction and software reuse?
->>
->> Cleanup.
->>
->> Can you please stop arguing about review feedback that is clearly right? This is not fixing 
->> anything. The Fixes tag is used to decide if something needs a backport.
-> 
-> Fixes tags are independent from backports.  If you want a backport you
-> should CC stable.
+> On 11/6/19 6:37 PM, Cornelia Huck wrote:
+> > On Wed, 6 Nov 2019 18:05:22 +0100
+> > Janosch Frank <frankja@linux.ibm.com> wrote:
+> >  =20
+> >> On 11/6/19 5:48 PM, Cornelia Huck wrote: =20
+> >>> On Thu, 24 Oct 2019 07:40:52 -0400
+> >>> Janosch Frank <frankja@linux.ibm.com> wrote:
+> >>>    =20
+> >>>> Description of changes that are necessary to move a KVM VM into
+> >>>> Protected Virtualization mode.
+> >>>>
+> >>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> >>>> ---
+> >>>>  Documentation/virtual/kvm/s390-pv-boot.txt | 62 +++++++++++++++++++=
++++
+> >>>>  1 file changed, 62 insertions(+)
+> >>>>  create mode 100644 Documentation/virtual/kvm/s390-pv-boot.txt =20
+> >  =20
+> >>> So... what do we IPL from? Is there still a need for the bios?
+> >>>
+> >>> (Sorry, I'm a bit confused here.)
+> >>>    =20
+> >>
+> >> We load a blob via the bios (all methods are supported) and that blob
+> >> moves itself into protected mode. I.e. it has a small unprotected stub=
+,
+> >> the rest is an encrypted kernel.
+> >> =20
+> >=20
+> > Ok. The magic is in the loaded kernel, and we don't need modifications
+> > to the bios?
+> >  =20
+>=20
+> Yes.
+>=20
+> The order is:
+> * We load a blob via the bios or direct kernel boot.
+> * That blob consists of a small stub, a header and an encrypted blob
+> glued together
+> * The small stub does the diag 308 subcode 8 and 10.
+> * Subcode 8 basically passes the header that describes the encrypted
+> blob to the Ultravisor (well rather registers it with qemu to pass on lat=
+er)
+> * Subcode 10 tells QEMU to move the VM into protected mode
+> * A lot of APIs in KVM and the Ultravisor are called
+> * The protected VM starts
+> * A memory mover copies the now unencrypted, but protected kernel to its
+> intended place and jumps into the entry function
+> * Linux boots and detects, that it is protected and needs to use bounce
+> buffers
+>=20
 
-I agree, but a Fixes tag increases the likelyhood of automatic backports anyway.
-(e.g. some distro kernel maintainers check for this tag).
+Thanks, this explanation makes things much clearer.
+
+--Sig_/+pqUrJPM52a+7T7phztqDvF
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl3D24MACgkQ3s9rk8bw
+L68TdA//a0XhiqGFKJe/PjkQ9y2zl+ZgSrPVyL/j37eYW3DBa5fAyK/o4Yt5CkcW
+9DgrfuQ0yZMaQWuh3ZeaKf6bF63bvkLND2ouUEsbteRw9j68GZHm/WXaRpfbztA2
+hVGA85DtUwZZ/Gb4OFlEYkEgPvddc+hjnMTwRV4s25K86TIcGvB5/ozb1Oy2Kz+l
+JApN0Zwcz1FBIcDpLpPPEk/MhIYnr1n/A1GkLjSm26DmVzxkEVtTC3r9QrXtRUTx
+JkGzgn/5uvL0NnK22QRCwRWXrFAvwVt+LVr5x/vjHPxtnJJOQyKRETRHTXkjv+uJ
+11dffNfCtO82DyHplnQzDg7+0UfIIWgoEJJPLhaAjEoc3pBhSTtrt3mfe+H/4HBu
+VpxZIkZZJnah4vb216hZPr9U0ea2gHKLdlC1o9rZAdJIJM8yuxgYZVQ9lcEXsRNW
+9Hsz+FSc/PHl4+2bevvNCal0tRIwQ9enISUyjtSqg6qhJVzaxcbqSfaUDhel0TfY
+1WxeopBLE4NPnzdbcCp+qFTGkSkylbpac+GAPNleauxPFW6Z2A27E35Az/qDcXY6
+VhGskxkqlMLzcxCCLZX+JdUxj+9RNmGEZMg2pKWDsMZY7MWFSUrrhmsLHZNAmqm9
+f4DJF6N0A+OvACM2T8mI/hRLPTvKXtVt1gHOPUh/9OeZ88oS+/0=
+=bYAa
+-----END PGP SIGNATURE-----
+
+--Sig_/+pqUrJPM52a+7T7phztqDvF--
 
