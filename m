@@ -2,128 +2,189 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 341C2F2EE6
-	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 14:09:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 08F89F2F17
+	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 14:22:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388931AbfKGNJB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 Nov 2019 08:09:01 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:40718 "EHLO mx1.redhat.com"
+        id S2388499AbfKGNWT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 Nov 2019 08:22:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:56012 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388867AbfKGNI4 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:08:56 -0500
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com [209.85.222.200])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6C0285945C
-        for <linux-s390@vger.kernel.org>; Thu,  7 Nov 2019 13:08:55 +0000 (UTC)
-Received: by mail-qk1-f200.google.com with SMTP id s3so2198654qkd.6
-        for <linux-s390@vger.kernel.org>; Thu, 07 Nov 2019 05:08:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=sGkh4BOm1ga49aAyABsuJ1+hTpGliKNhcGi2Gh8UYvM=;
-        b=r2rFISbVrre8j7Jjnovusv8RqdUaNZr6FLHwtA/57csO05YkXw/4jPOFlOyQzl/qMR
-         xvCtT0fudtt+l0+CScAKbAovftYdXhWWd2oEBeLlFvxa0L39npUfYauyvkfjK651w2uB
-         oTR54aNHv7yBz3K8cpw7sgaLoR8mnqdeP2FdbuwAny8He4naTfDT2E3kZExipQg78opP
-         15dnuie1nqWMNn3gZTzIj2YBDuvwZXUqdlDItbU+tAhBHDn4JMaGz/ZUKyQ7UsObw/qy
-         IEX1HFYHB55auBzwz+Ty2BdiWtri1wWWNijGzx1VhKz4AjZjiSAiItktGChPJQflxiU3
-         7nGw==
-X-Gm-Message-State: APjAAAW/8VU932jUk29H/yiOJZy7BGT4rZ6raeqKlO462eLvDaxHfk98
-        iT+p5+rIF87YREobnO/xfECnrR2W4NvZWj2GF4AEbjxjAeQRQPOawLgckTkP21VmAa0j5/pXWxl
-        klcLnucCh3jhm8hN2GKNC3w==
-X-Received: by 2002:ac8:30ea:: with SMTP id w39mr3701960qta.250.1573132134376;
-        Thu, 07 Nov 2019 05:08:54 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyuaZUrn0+Bhr6V2XR4C8EnN+CEUlSfNq4Ndy0t+kY3CRNcx3lsYUHZ/oZi4s940i7uHezLLA==
-X-Received: by 2002:ac8:30ea:: with SMTP id w39mr3701918qta.250.1573132134172;
-        Thu, 07 Nov 2019 05:08:54 -0800 (PST)
-Received: from redhat.com (bzq-79-178-12-128.red.bezeqint.net. [79.178.12.128])
-        by smtp.gmail.com with ESMTPSA id x203sm1051418qkb.11.2019.11.07.05.08.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 05:08:53 -0800 (PST)
-Date:   Thu, 7 Nov 2019 08:08:41 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
- implement virtio-mdev framework
-Message-ID: <20191107080834-mutt-send-email-mst@kernel.org>
-References: <20191106133531.693-1-jasowang@redhat.com>
- <20191106133531.693-7-jasowang@redhat.com>
- <20191107040700-mutt-send-email-mst@kernel.org>
- <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
- <20191107061942-mutt-send-email-mst@kernel.org>
- <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
+        id S2388368AbfKGNWT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:22:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3172D31B;
+        Thu,  7 Nov 2019 05:22:18 -0800 (PST)
+Received: from [10.163.1.22] (unknown [10.163.1.22])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7406D3F6C4;
+        Thu,  7 Nov 2019 05:21:59 -0800 (PST)
+Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
+ helpers
+To:     Michael Ellerman <mpe@ellerman.id.au>,
+        Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
+ <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
+ <42160baa-0e9d-73d0-bf72-58bdbacf10ff@c-s.fr>
+ <0e0c2ce9-636d-1153-2451-baf7317ed45f@arm.com>
+ <87tv7f4zkf.fsf@mpe.ellerman.id.au>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <83f14c65-035c-8387-3216-5dee8a287cfb@arm.com>
+Date:   Thu, 7 Nov 2019 18:52:34 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <87tv7f4zkf.fsf@mpe.ellerman.id.au>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 08:43:29PM +0800, Jason Wang wrote:
-> 
-> On 2019/11/7 下午7:21, Michael S. Tsirkin wrote:
-> > On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
-> > > On 2019/11/7 下午5:08, Michael S. Tsirkin wrote:
-> > > > On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
-> > > > > This sample driver creates mdev device that simulate virtio net device
-> > > > > over virtio mdev transport. The device is implemented through vringh
-> > > > > and workqueue. A device specific dma ops is to make sure HVA is used
-> > > > > directly as the IOVA. This should be sufficient for kernel virtio
-> > > > > driver to work.
-> > > > > 
-> > > > > Only 'virtio' type is supported right now. I plan to add 'vhost' type
-> > > > > on top which requires some virtual IOMMU implemented in this sample
-> > > > > driver.
-> > > > > 
-> > > > > Acked-by: Cornelia Huck<cohuck@redhat.com>
-> > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
-> > > > I'd prefer it that we call this something else, e.g.
-> > > > mvnet-loopback. Just so people don't expect a fully
-> > > > functional device somehow. Can be renamed when applying?
-> > > Actually, I plan to extend it as another standard network interface for
-> > > kernel. It could be either a standalone pseudo device or a stack device.
-> > > Does this sounds good to you?
-> > > 
-> > > Thanks
-> > That's a big change in an interface so it's a good reason
-> > to rename the driver at that point right?
-> > Oherwise users of an old kernel would expect a stacked driver
-> > and get a loopback instead.
-> > 
-> > Or did I miss something?
-> 
-> 
-> My understanding is that it was a sample driver in /doc. It should not be
-> used in production environment. Otherwise we need to move it to
-> driver/virtio.
-> 
-> But if you insist, I can post a V11.
-> 
-> Thanks
 
-this can be a patch on top.
+
+On 11/07/2019 06:24 PM, Michael Ellerman wrote:
+> Anshuman Khandual <anshuman.khandual@arm.com> writes:
+>> On 11/06/2019 12:11 PM, Christophe Leroy wrote:
+>>> Le 06/11/2019 à 04:22, Anshuman Khandual a écrit :
+>>>> On 10/28/2019 10:59 AM, Anshuman Khandual wrote:
+>>>>> +    -----------------------
+>>>>> +    |         arch |status|
+>>>>> +    -----------------------
+>>>>> +    |       alpha: | TODO |
+>>>>> +    |         arc: | TODO |
+>>>>> +    |         arm: | TODO |
+>>>>> +    |       arm64: |  ok  |
+>>>>> +    |         c6x: | TODO |
+>>>>> +    |        csky: | TODO |
+>>>>> +    |       h8300: | TODO |
+>>>>> +    |     hexagon: | TODO |
+>>>>> +    |        ia64: | TODO |
+>>>>> +    |        m68k: | TODO |
+>>>>> +    |  microblaze: | TODO |
+>>>>> +    |        mips: | TODO |
+>>>>> +    |       nds32: | TODO |
+>>>>> +    |       nios2: | TODO |
+>>>>> +    |    openrisc: | TODO |
+>>>>> +    |      parisc: | TODO |
+>>>>> +    |     powerpc: | TODO |
+>>>>> +    |       ppc32: |  ok  |
+>>>
+>>> Note that ppc32 is a part of powerpc, not a standalone arch.
+>>
+>> Right, I understand. But we are yet to hear about how this test
+>> came about on powerpc server platforms. Will update 'powerpc'
+>> arch listing above once we get some confirmation. May be once
+>> this works on all relevant powerpc platforms, we can just merge
+>> 'powerpc' and 'ppc32' entries here as just 'powerpc'.
+> 
+> On pseries:
+> 
+>   watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [swapper/0:1]
+>   Modules linked in:
+>   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc6-gcc-8.2.0-next-20191107-00001-g250339d6747b-dirty #152
+>   NIP:  c0000000010435a0 LR: c0000000010434b4 CTR: 0000000000000000
+>   REGS: c00000003a403980 TRAP: 0901   Not tainted  (5.4.0-rc6-gcc-8.2.0-next-20191107-00001-g250339d6747b-dirty)
+>   MSR:  8000000002009033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 44000222  XER: 00000000
+>   CFAR: c0000000010435a8 IRQMASK: 0 
+>   GPR00: c0000000010434b4 c00000003a403c10 c000000001295000 05210001000000c0 
+>   GPR04: 8000000000000105 0000000000400dc0 000000003eb00000 0000000000000001 
+>   GPR08: 0000000000000000 ffffffffffffffff 0000000000000001 0000000000000100 
+>   GPR12: 0000000000000000 c0000000018f0000 
+>   NIP [c0000000010435a0] debug_vm_pgtable+0x43c/0x82c
+>   LR [c0000000010434b4] debug_vm_pgtable+0x350/0x82c
+>   Call Trace:
+>   [c00000003a403c10] [c00000000104346c] debug_vm_pgtable+0x308/0x82c (unreliable)
+>   [c00000003a403ce0] [c000000001004310] kernel_init_freeable+0x1d0/0x39c
+>   [c00000003a403db0] [c000000000010da0] kernel_init+0x24/0x174
+>   [c00000003a403e20] [c00000000000bdc4] ret_from_kernel_thread+0x5c/0x78
+>   Instruction dump:
+>   7d075078 7ce74b78 7ce0f9ad 40c2fff0 38800000 7f83e378 4b02eee1 60000000 
+>   48000080 3920ffff 39400001 39000000 <7ea0f8a8> 7ea75039 40c2fff8 7ea74878 
+> 
+> Looking at the asm I think it's stuck in hash__pte_update() waiting for
+> H_PAGE_BUSY to clear, but not sure why.
+> 
+> That's just using qemu TCG, instructions here if anyone wants to test it
+> themselves :)
+> 
+>   https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu
+> 
+> 
+> If I boot with -cpu power9 (using Radix MMU), I get a plain old BUG:
+> 
+>   debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
+>   ------------[ cut here ]------------
+>   kernel BUG at arch/powerpc/mm/pgtable.c:274!
+>   Oops: Exception in kernel mode, sig: 5 [#1]
+>   LE PAGE_SIZE=64K MMU=Radix SMP NR_CPUS=32 NUMA pSeries
+>   Modules linked in:
+>   CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.4.0-rc6-gcc-8.2.0-next-20191107-00001-g250339d6747b-dirty #152
+>   NIP:  c0000000000724e8 LR: c00000000104358c CTR: 0000000000000000
+>   REGS: c00000003a483980 TRAP: 0700   Not tainted  (5.4.0-rc6-gcc-8.2.0-next-20191107-00001-g250339d6747b-dirty)
+>   MSR:  8000000002029033 <SF,VEC,EE,ME,IR,DR,RI,LE>  CR: 24000224  XER: 20000000
+>   CFAR: c000000001043588 IRQMASK: 0 
+>   GPR00: c00000000104358c c00000003a483c10 c000000001295000 0000000000000009 
+>   GPR04: 0000000000000000 0000000000000005 0000000000000000 0000000000000009 
+>   GPR08: 0000000000000001 000000000000000e 0000000000000001 c00000003a5f0000 
+>   GPR12: 0000000000000000 c0000000018f0000 c000000000010d84 0000000000000000 
+>   GPR16: 0000000000000000 0000000000000000 c00000003a5f0000 8000000000000105 
+>   GPR20: c000000001003ab8 0000000000000015 0500613a00000080 0900603a00000080 
+>   GPR24: 09202e3a00000080 c00000000133bd90 c00000000133bd98 c00000000133bda0 
+>   GPR28: c00000003a5e0000 c00000003a600af8 c00000003a2e2d48 c00000003a6100a0 
+>   NIP [c0000000000724e8] assert_pte_locked+0x88/0x190
+>   LR [c00000000104358c] debug_vm_pgtable+0x428/0x82c
+>   Call Trace:
+>   [c00000003a483c10] [c00000000104346c] debug_vm_pgtable+0x308/0x82c (unreliable)
+>   [c00000003a483ce0] [c000000001004310] kernel_init_freeable+0x1d0/0x39c
+>   [c00000003a483db0] [c000000000010da0] kernel_init+0x24/0x174
+>   [c00000003a483e20] [c00000000000bdc4] ret_from_kernel_thread+0x5c/0x78
+>   Instruction dump:
+>   7d251a14 39070010 7d463030 7d084a14 38c6ffff 7c884436 7cc607b4 7d083038 
+>   79081f24 7ccb402a 7cc80074 7908d182 <0b080000> 78cb0022 54c8c03e 7d473830 
+>   ---[ end trace a694f1bc56529c0e ]---
+
+Oops. Does not seem like a quick problem to fix :) Though assert_pte_locked()
+gets checked only when DEBUG_VM is enabled. Probably will have to keep this
+test disabled on powerpc for now.
+
+> 
+> 
+> cheers
+> 
