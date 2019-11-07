@@ -2,110 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5E74BF27AC
-	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 07:35:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ED70BF27C7
+	for <lists+linux-s390@lfdr.de>; Thu,  7 Nov 2019 07:50:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726467AbfKGGfD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 7 Nov 2019 01:35:03 -0500
-Received: from ozlabs.org ([203.11.71.1]:34557 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725763AbfKGGfD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:35:03 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 477ttV3Hh4zB3tP;
-        Thu,  7 Nov 2019 17:34:58 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573108500;
-        bh=8QWFC8ATOW/EWg2Fx4XSxd/+I6wxAZCxEEB8iiH/Ywo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=l5EM9iXCztIvbZInfj1ruXyv6YaYOKS3Ef5x5s+/TphU4cBRKtqq+6aNQgGvgkGZR
-         7nfbzNySMTkA6jJftTOwd7SmXLtFsum33xOsHfu678QnYkL5hzuBaNx+qYZKqy+GG4
-         BnrmvPa6HCOqYavtI0Rpo5NEhMA7K/2RwHhOKpDqbysn0s7e5B0cxRRDcCVwpwD5Qj
-         wjnJUB930g+Z89iEqjr10awoXsZsRiV9eQgHCPCu1RsyXF7srI03RWgHBr9E7TMzVK
-         KWPIf4bYo0KxNlOFVMBCVXIg8uQOqmOEHCAvA0SG5soPbvZWU+i2HozMyKmcy7maTf
-         wPA0Su1RnUitw==
-Date:   Thu, 7 Nov 2019 17:34:51 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     linux-next@vger.kernel.org, christophe.leroy@c-s.fr,
-        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
-        x86@kernel.org, linuxppc-dev@lists.ozlabs.org,
-        kasan-dev@googlegroups.com, Daniel Axtens <dja@axtens.net>
-Subject: Re: Please add powerpc topic/kasan-bitops branch to linux-next
-Message-ID: <20191107173451.6be74953@canb.auug.org.au>
-In-Reply-To: <87r22k5nrz.fsf@mpe.ellerman.id.au>
-References: <87r22k5nrz.fsf@mpe.ellerman.id.au>
+        id S1726791AbfKGGuL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 7 Nov 2019 01:50:11 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36502 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726016AbfKGGuL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 7 Nov 2019 01:50:11 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA76n1Jp196208;
+        Thu, 7 Nov 2019 06:49:07 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=l7mmS/BfVHFftT6TRlrOwVf4WCbYvzr8ANLVN4YzayM=;
+ b=LtEIYDbw0nvLzWoy6/9YEKUxKh0mr1rXrNBYYWCS4+C4yY63WgF4KPpuv1MoXCp4OVyP
+ 1HZxia0/4rlIT8jVGF6F4FlWds26jxoxXOHYjR6LSC6dw8E1Tp2YRTVy0ucBnNHHXV7Y
+ QTwW2u7eZMKG7EKWVXD7jPSILZW69e3oL5tH1qS6N/uo88EK0LiXmU3Djf+br6EQqJLc
+ CJ2XZENJ49IiSv8Pf8nH0ms8UCBs02Vuza1ZJJBqh5gZABLcaTsDU80zyCjZxdJTDpZx
+ fASChHQiNjOZOhlBLfRSeLg/T7D1sZTEl3UWaQ8+/96+VCPaLZ79CxGdiFrNp8sbQNPE cA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2120.oracle.com with ESMTP id 2w41w0uw0s-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 06:49:07 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA76mimV124568;
+        Thu, 7 Nov 2019 06:49:06 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2w41wgn6tv-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 06:49:06 +0000
+Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA76n3St028935;
+        Thu, 7 Nov 2019 06:49:03 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Nov 2019 22:49:02 -0800
+Date:   Thu, 7 Nov 2019 09:48:54 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Markus Elfring <Markus.Elfring@web.de>,
+        Joe Perches <joe@perches.com>, linux-s390@vger.kernel.org,
+        kernel-janitors@vger.kernel.org,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Franzki <ifranzki@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: s390/pkey: Use memdup_user() rather than duplicating its
+ implementation
+Message-ID: <20191107064854.GM10409@kadam>
+References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
+ <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
+ <4fa0e106-2565-8610-1356-4adfba08c0a0@web.de>
+ <a4eaf80e-a5dd-4da3-75ca-8231f01af193@de.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/QLj.mRHKb6JGbFGyiT8jLoU";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <a4eaf80e-a5dd-4da3-75ca-8231f01af193@de.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=710
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911070069
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=789 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911070069
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/QLj.mRHKb6JGbFGyiT8jLoU
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Wed, Nov 06, 2019 at 07:30:19PM +0100, Christian Borntraeger wrote:
+> 
+> 
+> On 06.11.19 14:00, Markus Elfring wrote:
+> >>> Reuse existing functionality from memdup_user() instead of keeping
+> >>> duplicate source code.
+> >>>
+> >>> Generated by: scripts/coccinelle/api/memdup_user.cocci
+> > …
+> >>> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
+> >>
+> >> This doesn't fix anything
+> > 
+> > How would you categorise the proposed source code reduction and software reuse?
+> 
+> Cleanup.
+> 
+> Can you please stop arguing about review feedback that is clearly right? This is not fixing 
+> anything. The Fixes tag is used to decide if something needs a backport.
 
-Hi Michael,
+Fixes tags are independent from backports.  If you want a backport you
+should CC stable.
 
-On Thu, 07 Nov 2019 15:11:12 +1100 Michael Ellerman <mpe@ellerman.id.au> wr=
-ote:
->
-> Can you please add the topic/kasan-bitops tree of the powerpc repository
-> to linux-next.
->=20
-> powerpc         git     git://git.kernel.org/pub/scm/linux/kernel/git/pow=
-erpc/linux.git#topic/kasan-bitops
->=20
-> See:
->   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/log/?=
-h=3Dtopic/kasan-bitops
->=20
-> This will be a (hopefully) short lived branch to carry some cross
-> architecture KASAN related patches for v5.5.
+Fixes tags are useful for a bunch of things like when you're reviewing a
+patch you can look at the original commit to see what was intended.
+Also we can do automated analysis to see what sort of commits introduce
+bugs (did they spend time in linux-next etc).
 
-Added from today.
+regards,
+dan carpenter
 
-Thanks for adding your subsystem tree as a participant of linux-next.  As
-you may know, this is not a judgement of your code.  The purpose of
-linux-next is for integration testing and to lower the impact of
-conflicts between subsystems in the next merge window.=20
-
-You will need to ensure that the patches/commits in your tree/series have
-been:
-     * submitted under GPL v2 (or later) and include the Contributor's
-        Signed-off-by,
-     * posted to the relevant mailing list,
-     * reviewed by you (or another maintainer of your subsystem tree),
-     * successfully unit tested, and=20
-     * destined for the current or next Linux merge window.
-
-Basically, this should be just what you would send to Linus (or ask him
-to fetch).  It is allowed to be rebased if you deem it necessary.
-
---=20
-Cheers,
-Stephen Rothwell=20
-sfr@canb.auug.org.au
-
---Sig_/QLj.mRHKb6JGbFGyiT8jLoU
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3DuwsACgkQAVBC80lX
-0Gx+nQf+Kb9/DdUAxGd+w9sWu1q0Z+Hiq9qD8vwzOM0/tFtNdMhWLOJRM0idUy9Q
-NHHN0yi54olE5bolHbOqmXXITBE+Dy7RyRUchaPSMkUgAAI8n+iteHy4/ZakmJr+
-6lYeGHjGzM9+9q5eYl6yD7hj6cAAyI4wBUu0fMYBcuWix/xOImWZAe/6iGRhgRLf
-UAzDGUbnyqpox0S0v10SJjbTkGXyuvaxzs27pGUBZbRODNPbZYEX7hpo5TnQxzBq
-ZMkJaRdxAKi0szigouKz9d75XPKNmc4zz5tY9gCShmBlE6bjJHzVF0ntNGrge78W
-mMgfvcvatGMcL/fbSn8nu3+vqMnFpg==
-=XNA5
------END PGP SIGNATURE-----
-
---Sig_/QLj.mRHKb6JGbFGyiT8jLoU--
