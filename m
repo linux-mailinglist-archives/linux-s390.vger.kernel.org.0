@@ -2,107 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DAB1DF4B45
-	for <lists+linux-s390@lfdr.de>; Fri,  8 Nov 2019 13:15:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BFCCDF4B4E
+	for <lists+linux-s390@lfdr.de>; Fri,  8 Nov 2019 13:18:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388143AbfKHMO7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 8 Nov 2019 07:14:59 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32608 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1733267AbfKHMO6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 8 Nov 2019 07:14:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573215297;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=H7WeKdbRoP0tf6imHAoI5OYJTFpoEhjRxxfTT3g7nMc=;
-        b=E6p1EtckGZbuxVUl9OAvils/N07E3DauM+C7qNFaJDcus2T0unW+z3/y5KRA29utvHBTyJ
-        rmEUOcvXkJtgKk40sW3XXDrAmrT/eYlP1Y1WhL+mjgRu/miZKeXNhHCKyQVR3L1faur/Io
-        4PYr4dgkJas5yGwESQfpypJHHFRH5AE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-97-8Dd2l3zKP5SMbEJhjg0Hjw-1; Fri, 08 Nov 2019 07:14:54 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E2DD1477;
-        Fri,  8 Nov 2019 12:14:52 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-167.ams2.redhat.com [10.36.116.167])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2EDDA6084E;
-        Fri,  8 Nov 2019 12:14:47 +0000 (UTC)
-Subject: Re: [RFC 02/37] s390/protvirt: introduce host side setup
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, david@redhat.com,
-        imbrenda@linux.ibm.com, mihajlov@linux.ibm.com, mimu@linux.ibm.com,
-        gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-3-frankja@linux.ibm.com>
- <20191104165427.0e5e6da4.cohuck@redhat.com>
- <5a34febd-8abc-84f5-195e-43decbb366a5@de.ibm.com>
- <20191105102654.223e7b42.cohuck@redhat.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <9bbd0930-c55c-084b-6ae1-6a5df6a33778@redhat.com>
-Date:   Fri, 8 Nov 2019 13:14:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1732700AbfKHMQd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 8 Nov 2019 07:16:33 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47682 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731931AbfKHMQd (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 8 Nov 2019 07:16:33 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA8CDZtT125576
+        for <linux-s390@vger.kernel.org>; Fri, 8 Nov 2019 07:16:32 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w57kfsmw5-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 08 Nov 2019 07:16:32 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Fri, 8 Nov 2019 12:16:30 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 8 Nov 2019 12:16:27 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA8CGQIn18481198
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 8 Nov 2019 12:16:26 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C517FA4054;
+        Fri,  8 Nov 2019 12:16:26 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8774EA405B;
+        Fri,  8 Nov 2019 12:16:26 +0000 (GMT)
+Received: from [9.152.222.69] (unknown [9.152.222.69])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  8 Nov 2019 12:16:26 +0000 (GMT)
+Subject: Re: [PATCH AUTOSEL 4.19 204/205] s390/qeth: limit csum offload
+ erratum to L3 devices
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-s390@vger.kernel.org
+References: <20191108113752.12502-1-sashal@kernel.org>
+ <20191108113752.12502-204-sashal@kernel.org>
+ <2e4553d6-de1f-bb61-33e4-10a5c23f0aa7@linux.ibm.com>
+ <20191108120025.GM4787@sasha-vm>
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+Date:   Fri, 8 Nov 2019 13:16:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191105102654.223e7b42.cohuck@redhat.com>
+In-Reply-To: <20191108120025.GM4787@sasha-vm>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: 8Dd2l3zKP5SMbEJhjg0Hjw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110812-0012-0000-0000-00000361E08A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110812-0013-0000-0000-0000219D4507
+Message-Id: <4d8f1938-af6e-7e0e-4085-2f7c53390b2d@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-08_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1031 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911080121
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 05/11/2019 10.26, Cornelia Huck wrote:
-> On Mon, 4 Nov 2019 18:50:12 +0100
-> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
->=20
->> On 04.11.19 16:54, Cornelia Huck wrote:
->>> On Thu, 24 Oct 2019 07:40:24 -0400
->>> Janosch Frank <frankja@linux.ibm.com> wrote:
->=20
->>>> diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
->>>> index ed007f4a6444..88cf8825d169 100644
->>>> --- a/arch/s390/boot/uv.c
->>>> +++ b/arch/s390/boot/uv.c
->>>> @@ -3,7 +3,12 @@
->>>>   #include <asm/facility.h>
->>>>   #include <asm/sections.h>
->>>>  =20
->>>> +#ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
->>>>   int __bootdata_preserved(prot_virt_guest);
->>>> +#endif
->>>> +#ifdef CONFIG_KVM_S390_PROTECTED_VIRTUALIZATION_HOST
->>>> +struct uv_info __bootdata_preserved(uv_info);
->>>> +#endif
+On 08.11.19 13:00, Sasha Levin wrote:
+> On Fri, Nov 08, 2019 at 12:50:24PM +0100, Julian Wiedmann wrote:
+>> On 08.11.19 12:37, Sasha Levin wrote:
+>>> From: Julian Wiedmann <jwi@linux.ibm.com>
 >>>
->>> Two functions with the same name, but different signatures look really
->>> ugly.
+>>> [ Upstream commit f231dc9dbd789b0f98a15941e3cebedb4ad72ad5 ]
 >>>
->>> Also, what happens if I want to build just a single kernel image for
->>> both guest and host?
+>>> Combined L3+L4 csum offload is only required for some L3 HW. So for
+>>> L2 devices, don't offload the IP header csum calculation.
+>>>
 >>
->> This is not two functions with the same name. It is 2 variable declarati=
-ons with
->> the __bootdata_preserved helper. We expect to have all distro kernels to=
- enable
->> both.
->=20
-> Ah ok, I misread that. (I'm blaming lack of sleep :/)
+>> NACK, this has no relevance for stable.
+> 
+> Sure, I'll drop it.
+> 
+> Do you have an idea why the centos and ubuntu folks might have
+> backported this commit into their kernels?
+> 
 
-Honestly, I have to admit that I mis-read this in the same way as=20
-Cornelia at the first glance. Why is that macro not using capital=20
-letters? ... then it would be way more obvious that it's not about a=20
-function prototype...
-
-  Thomas
+No clue, I trust they have their own reasons.
 
