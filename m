@@ -2,36 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EFAD3F621C
-	for <lists+linux-s390@lfdr.de>; Sun, 10 Nov 2019 03:40:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E41CF6250
+	for <lists+linux-s390@lfdr.de>; Sun, 10 Nov 2019 03:42:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726569AbfKJCkQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 9 Nov 2019 21:40:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33162 "EHLO mail.kernel.org"
+        id S1727737AbfKJCmP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 9 Nov 2019 21:42:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37634 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726559AbfKJCkQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:16 -0500
+        id S1727764AbfKJCmN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:13 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7E3B721019;
-        Sun, 10 Nov 2019 02:40:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 94AE920650;
+        Sun, 10 Nov 2019 02:42:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353615;
-        bh=qb2GIUFEwa4pCictKGureubfmT4D4gr9I87skM+8uVM=;
-        h=From:To:Cc:Subject:Date:From;
-        b=tx4jZw2wzmSPL3zQb2HjD/XC6qUjh5bJp3GfTd4PzVX0nZKaeX4NXAu/KDFJRdrhK
-         VrpC0iB8tLKZ75MMom4g/2FtRGwI/QLNgkeS31y87tHvkWYseOyJPwmfYYkZUh060i
-         M6KQ3jGeFX4HQZAL9jx6v76Eswix+vVorDxPjlkY=
+        s=default; t=1573353732;
+        bh=uGWYfVg65/HzkdeuzxNxaCvqxmyX3trBbFNbZSXOU/s=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dgk5jNlcQMO8XnF7ktkRW1S0HMKZFanO4X+WygyeGF691mcGvj12KpQ09bW+puWNj
+         1MByuBZutz3HdWZQgERi9vdmxVjer2oQD/3mVUqpWKmWxZ5oyurK4XtSgH4ySddArO
+         1+uh2p+1/Cgeog0miXaiHBsW0r/utoj5WwevIn0I=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 001/191] s390/qeth: uninstall IRQ handler on device removal
-Date:   Sat,  9 Nov 2019 21:37:03 -0500
-Message-Id: <20191110024013.29782-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 057/191] s390/vdso: correct CFI annotations of vDSO functions
+Date:   Sat,  9 Nov 2019 21:37:59 -0500
+Message-Id: <20191110024013.29782-57-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
+References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -41,184 +44,210 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 121ca39aa5585def682a2c8592983442438b84dc ]
+[ Upstream commit 26f4414a45b808f83d42d6fd2fbf4a59ef25e84b ]
 
-When setting up, qeth installs its IRQ handler on the ccw devices. But
-the IRQ handler is not cleared on removal - so even after qeth yields
-control of the ccw devices, spurious interrupts would still be presented
-to us.
+Correct stack frame overhead for 31-bit vdso, which should be 96 rather
+then 160. This is done by reusing STACK_FRAME_OVERHEAD definition which
+contains correct value based on build flags. This fixes stack unwinding
+within vdso code for 31-bit processes. While at it replace all hard coded
+stack frame overhead values with the same definition in vdso64 as well.
 
-Make (de-)installation of the IRQ handler part of the ccw channel
-setup/removal helpers, and while at it also add the appropriate locking.
-Shift around qeth_setup_channel() to avoid a forward declaration for
-qeth_irq().
-
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 102 ++++++++++++++++--------------
- 1 file changed, 54 insertions(+), 48 deletions(-)
+ arch/s390/kernel/vdso32/clock_gettime.S | 19 ++++++++++---------
+ arch/s390/kernel/vdso32/gettimeofday.S  |  3 ++-
+ arch/s390/kernel/vdso64/clock_gettime.S | 25 +++++++++++++------------
+ arch/s390/kernel/vdso64/gettimeofday.S  |  3 ++-
+ 4 files changed, 27 insertions(+), 23 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 461afc276db72..81e2c591acb0b 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -901,44 +901,6 @@ static void qeth_send_control_data_cb(struct qeth_channel *channel,
- 	qeth_release_buffer(channel, iob);
- }
+diff --git a/arch/s390/kernel/vdso32/clock_gettime.S b/arch/s390/kernel/vdso32/clock_gettime.S
+index a9418bf975db5..ada5c11a16e5a 100644
+--- a/arch/s390/kernel/vdso32/clock_gettime.S
++++ b/arch/s390/kernel/vdso32/clock_gettime.S
+@@ -10,6 +10,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/dwarf.h>
++#include <asm/ptrace.h>
  
--static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
--{
--	int cnt;
--
--	QETH_DBF_TEXT(SETUP, 2, "setupch");
--
--	channel->ccw = kmalloc(sizeof(struct ccw1), GFP_KERNEL | GFP_DMA);
--	if (!channel->ccw)
--		return -ENOMEM;
--	channel->state = CH_STATE_DOWN;
--	atomic_set(&channel->irq_pending, 0);
--	init_waitqueue_head(&channel->wait_q);
--
--	if (!alloc_buffers)
--		return 0;
--
--	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++) {
--		channel->iob[cnt].data =
--			kzalloc(QETH_BUFSIZE, GFP_DMA|GFP_KERNEL);
--		if (channel->iob[cnt].data == NULL)
--			break;
--		channel->iob[cnt].state = BUF_STATE_FREE;
--		channel->iob[cnt].channel = channel;
--		channel->iob[cnt].callback = qeth_send_control_data_cb;
--		channel->iob[cnt].rc = 0;
--	}
--	if (cnt < QETH_CMD_BUFFER_NO) {
--		kfree(channel->ccw);
--		while (cnt-- > 0)
--			kfree(channel->iob[cnt].data);
--		return -ENOMEM;
--	}
--	channel->io_buf_no = 0;
--	spin_lock_init(&channel->iob_lock);
--
--	return 0;
--}
--
- static int qeth_set_thread_start_bit(struct qeth_card *card,
- 		unsigned long thread)
- {
-@@ -1339,14 +1301,61 @@ static void qeth_free_buffer_pool(struct qeth_card *card)
+ 	.text
+ 	.align 4
+@@ -18,8 +19,8 @@
+ __kernel_clock_gettime:
+ 	CFI_STARTPROC
+ 	ahi	%r15,-16
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 	basr	%r5,0
+ 0:	al	%r5,21f-0b(%r5)			/* get &_vdso_data */
+ 	chi	%r2,__CLOCK_REALTIME_COARSE
+@@ -72,13 +73,13 @@ __kernel_clock_gettime:
+ 	st	%r1,4(%r3)			/* store tp->tv_nsec */
+ 	lhi	%r2,0
+ 	ahi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
- static void qeth_clean_channel(struct qeth_channel *channel)
- {
-+	struct ccw_device *cdev = channel->ccwdev;
- 	int cnt;
+ 	/* CLOCK_MONOTONIC_COARSE */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 9:	l	%r4,__VDSO_UPD_COUNT+4(%r5)	/* load update counter */
+ 	tml	%r4,0x0001			/* pending update ? loop */
+ 	jnz	9b
+@@ -158,17 +159,17 @@ __kernel_clock_gettime:
+ 	st	%r1,4(%r3)			/* store tp->tv_nsec */
+ 	lhi	%r2,0
+ 	ahi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
- 	QETH_DBF_TEXT(SETUP, 2, "freech");
-+
-+	spin_lock_irq(get_ccwdev_lock(cdev));
-+	cdev->handler = NULL;
-+	spin_unlock_irq(get_ccwdev_lock(cdev));
-+
- 	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++)
- 		kfree(channel->iob[cnt].data);
- 	kfree(channel->ccw);
- }
+ 	/* Fallback to system call */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 19:	lhi	%r1,__NR_clock_gettime
+ 	svc	0
+ 	ahi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
+ 	CFI_ENDPROC
+diff --git a/arch/s390/kernel/vdso32/gettimeofday.S b/arch/s390/kernel/vdso32/gettimeofday.S
+index 3c0db0fa6ad90..b23063fbc892c 100644
+--- a/arch/s390/kernel/vdso32/gettimeofday.S
++++ b/arch/s390/kernel/vdso32/gettimeofday.S
+@@ -10,6 +10,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/dwarf.h>
++#include <asm/ptrace.h>
  
-+static int qeth_setup_channel(struct qeth_channel *channel, bool alloc_buffers)
-+{
-+	struct ccw_device *cdev = channel->ccwdev;
-+	int cnt;
-+
-+	QETH_DBF_TEXT(SETUP, 2, "setupch");
-+
-+	channel->ccw = kmalloc(sizeof(struct ccw1), GFP_KERNEL | GFP_DMA);
-+	if (!channel->ccw)
-+		return -ENOMEM;
-+	channel->state = CH_STATE_DOWN;
-+	atomic_set(&channel->irq_pending, 0);
-+	init_waitqueue_head(&channel->wait_q);
-+
-+	spin_lock_irq(get_ccwdev_lock(cdev));
-+	cdev->handler = qeth_irq;
-+	spin_unlock_irq(get_ccwdev_lock(cdev));
-+
-+	if (!alloc_buffers)
-+		return 0;
-+
-+	for (cnt = 0; cnt < QETH_CMD_BUFFER_NO; cnt++) {
-+		channel->iob[cnt].data =
-+			kzalloc(QETH_BUFSIZE, GFP_DMA|GFP_KERNEL);
-+		if (channel->iob[cnt].data == NULL)
-+			break;
-+		channel->iob[cnt].state = BUF_STATE_FREE;
-+		channel->iob[cnt].channel = channel;
-+		channel->iob[cnt].callback = qeth_send_control_data_cb;
-+		channel->iob[cnt].rc = 0;
-+	}
-+	if (cnt < QETH_CMD_BUFFER_NO) {
-+		qeth_clean_channel(channel);
-+		return -ENOMEM;
-+	}
-+	channel->io_buf_no = 0;
-+	spin_lock_init(&channel->iob_lock);
-+
-+	return 0;
-+}
-+
- static void qeth_set_single_write_queues(struct qeth_card *card)
- {
- 	if ((atomic_read(&card->qdio.state) != QETH_QDIO_UNINITIALIZED) &&
-@@ -1498,7 +1507,7 @@ static void qeth_core_sl_print(struct seq_file *m, struct service_level *slr)
- 			CARD_BUS_ID(card), card->info.mcl_level);
- }
+ 	.text
+ 	.align 4
+@@ -19,7 +20,7 @@ __kernel_gettimeofday:
+ 	CFI_STARTPROC
+ 	ahi	%r15,-16
+ 	CFI_ADJUST_CFA_OFFSET 16
+-	CFI_VAL_OFFSET 15, -160
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 	basr	%r5,0
+ 0:	al	%r5,13f-0b(%r5)			/* get &_vdso_data */
+ 1:	ltr	%r3,%r3				/* check if tz is NULL */
+diff --git a/arch/s390/kernel/vdso64/clock_gettime.S b/arch/s390/kernel/vdso64/clock_gettime.S
+index fac3ab5ec83a9..9d2ee79b90f25 100644
+--- a/arch/s390/kernel/vdso64/clock_gettime.S
++++ b/arch/s390/kernel/vdso64/clock_gettime.S
+@@ -10,6 +10,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/dwarf.h>
++#include <asm/ptrace.h>
  
--static struct qeth_card *qeth_alloc_card(void)
-+static struct qeth_card *qeth_alloc_card(struct ccwgroup_device *gdev)
- {
- 	struct qeth_card *card;
+ 	.text
+ 	.align 4
+@@ -18,8 +19,8 @@
+ __kernel_clock_gettime:
+ 	CFI_STARTPROC
+ 	aghi	%r15,-16
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 	larl	%r5,_vdso_data
+ 	cghi	%r2,__CLOCK_REALTIME_COARSE
+ 	je	4f
+@@ -56,13 +57,13 @@ __kernel_clock_gettime:
+ 	stg	%r1,8(%r3)			/* store tp->tv_nsec */
+ 	lghi	%r2,0
+ 	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
-@@ -1507,6 +1516,11 @@ static struct qeth_card *qeth_alloc_card(void)
- 	if (!card)
- 		goto out;
- 	QETH_DBF_HEX(SETUP, 2, &card, sizeof(void *));
-+
-+	card->gdev = gdev;
-+	CARD_RDEV(card) = gdev->cdev[0];
-+	CARD_WDEV(card) = gdev->cdev[1];
-+	CARD_DDEV(card) = gdev->cdev[2];
- 	if (qeth_setup_channel(&card->read, true))
- 		goto out_ip;
- 	if (qeth_setup_channel(&card->write, true))
-@@ -5745,7 +5759,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
+ 	/* CLOCK_MONOTONIC_COARSE */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 3:	lg	%r4,__VDSO_UPD_COUNT(%r5)	/* load update counter */
+ 	tmll	%r4,0x0001			/* pending update ? loop */
+ 	jnz	3b
+@@ -115,13 +116,13 @@ __kernel_clock_gettime:
+ 	stg	%r1,8(%r3)			/* store tp->tv_nsec */
+ 	lghi	%r2,0
+ 	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
- 	QETH_DBF_TEXT_(SETUP, 2, "%s", dev_name(&gdev->dev));
+ 	/* CPUCLOCK_VIRT for this thread */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 9:	lghi	%r4,0
+ 	icm	%r0,15,__VDSO_ECTG_OK(%r5)
+ 	jz	12f
+@@ -142,17 +143,17 @@ __kernel_clock_gettime:
+ 	stg	%r4,8(%r3)
+ 	lghi	%r2,0
+ 	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
  
--	card = qeth_alloc_card();
-+	card = qeth_alloc_card(gdev);
- 	if (!card) {
- 		QETH_DBF_TEXT_(SETUP, 2, "1err%d", -ENOMEM);
- 		rc = -ENOMEM;
-@@ -5761,15 +5775,7 @@ static int qeth_core_probe_device(struct ccwgroup_device *gdev)
- 			goto err_card;
- 	}
+ 	/* Fallback to system call */
+-	CFI_DEF_CFA_OFFSET 176
+-	CFI_VAL_OFFSET 15, -160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD+16
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 12:	lghi	%r1,__NR_clock_gettime
+ 	svc	0
+ 	aghi	%r15,16
+-	CFI_DEF_CFA_OFFSET 160
++	CFI_DEF_CFA_OFFSET STACK_FRAME_OVERHEAD
+ 	CFI_RESTORE 15
+ 	br	%r14
+ 	CFI_ENDPROC
+diff --git a/arch/s390/kernel/vdso64/gettimeofday.S b/arch/s390/kernel/vdso64/gettimeofday.S
+index 6e1f0b421695a..aebe10dc7c99a 100644
+--- a/arch/s390/kernel/vdso64/gettimeofday.S
++++ b/arch/s390/kernel/vdso64/gettimeofday.S
+@@ -10,6 +10,7 @@
+ #include <asm/asm-offsets.h>
+ #include <asm/unistd.h>
+ #include <asm/dwarf.h>
++#include <asm/ptrace.h>
  
--	card->read.ccwdev  = gdev->cdev[0];
--	card->write.ccwdev = gdev->cdev[1];
--	card->data.ccwdev  = gdev->cdev[2];
- 	dev_set_drvdata(&gdev->dev, card);
--	card->gdev = gdev;
--	gdev->cdev[0]->handler = qeth_irq;
--	gdev->cdev[1]->handler = qeth_irq;
--	gdev->cdev[2]->handler = qeth_irq;
--
- 	qeth_setup_card(card);
- 	rc = qeth_update_from_chp_desc(card);
- 	if (rc)
+ 	.text
+ 	.align 4
+@@ -19,7 +20,7 @@ __kernel_gettimeofday:
+ 	CFI_STARTPROC
+ 	aghi	%r15,-16
+ 	CFI_ADJUST_CFA_OFFSET 16
+-	CFI_VAL_OFFSET 15, -160
++	CFI_VAL_OFFSET 15, -STACK_FRAME_OVERHEAD
+ 	larl	%r5,_vdso_data
+ 0:	ltgr	%r3,%r3				/* check if tz is NULL */
+ 	je	1f
 -- 
 2.20.1
 
