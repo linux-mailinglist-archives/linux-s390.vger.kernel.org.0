@@ -2,36 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49543F63B8
-	for <lists+linux-s390@lfdr.de>; Sun, 10 Nov 2019 03:54:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA9D0F6709
+	for <lists+linux-s390@lfdr.de>; Sun, 10 Nov 2019 04:17:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727162AbfKJCyk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 9 Nov 2019 21:54:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34228 "EHLO mail.kernel.org"
+        id S1726645AbfKJCkS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 9 Nov 2019 21:40:18 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728386AbfKJCuf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:50:35 -0500
+        id S1726560AbfKJCkR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:40:17 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CE8A822583;
-        Sun, 10 Nov 2019 02:50:33 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 92F09215EA;
+        Sun, 10 Nov 2019 02:40:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573354234;
-        bh=tyo6kBRBm1QkQkkx+3ckrmLBrKm+CEEt7pqVzB1udDs=;
-        h=From:To:Cc:Subject:Date:From;
-        b=Gh+WIAt2KsO/ffpW0zSBlZBBIxXFYggUhLyO5z/Hrf7buZ8NkejEoIMtlLFEf/Ji6
-         Jmu7Ag5mFALdVet+48ZzscgMoV6NOgQDtTVO+kdFtS8sWoq3695nyY5LzlYTXHxlDL
-         hFGFSF+WUW4ZE90G6Njiz3/tHIV8I7agSrq/+F9s=
+        s=default; t=1573353616;
+        bh=n6QzZCLFvjcRY9Gen25EumCUyRvB0LU/DHo9DES47YM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=pi0n4BajtpIb7SSxlRmgcWS51MIdrvHcq/VQJg04cY1HH1mJQSd5i6pnVm2bCGoh+
+         WO7MiuG71X4rr2zeodXj+fUJmonWLiSEMkwoFwpz+6zGMEEbEpLuo6wLTjUHpZI683
+         H4NNc2eGdmHMKseoxyDSi2KXTmCqGz+pdm0IJlyM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 01/40] s390/qeth: invoke softirqs after napi_schedule()
-Date:   Sat,  9 Nov 2019 21:49:53 -0500
-Message-Id: <20191110025032.827-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 002/191] s390/qeth: invoke softirqs after napi_schedule()
+Date:   Sat,  9 Nov 2019 21:37:04 -0500
+Message-Id: <20191110024013.29782-2-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
+References: <20191110024013.29782-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 6 insertions(+)
 
 diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 22045e7d78ac3..97211f7f0cf02 100644
+index c1c35eccd5b65..95669d47c389e 100644
 --- a/drivers/s390/net/qeth_l2_main.c
 +++ b/drivers/s390/net/qeth_l2_main.c
-@@ -996,7 +996,10 @@ static int __qeth_l2_open(struct net_device *dev)
+@@ -789,7 +789,10 @@ static int __qeth_l2_open(struct net_device *dev)
  
  	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
  		napi_enable(&card->napi);
@@ -81,10 +83,10 @@ index 22045e7d78ac3..97211f7f0cf02 100644
  		rc = -EIO;
  	return rc;
 diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 2cc9bc1ef1e38..0d71d2e6419af 100644
+index 9c5e801b3f6cb..52e0ae4dc7241 100644
 --- a/drivers/s390/net/qeth_l3_main.c
 +++ b/drivers/s390/net/qeth_l3_main.c
-@@ -3031,7 +3031,10 @@ static int __qeth_l3_open(struct net_device *dev)
+@@ -2414,7 +2414,10 @@ static int __qeth_l3_open(struct net_device *dev)
  
  	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
  		napi_enable(&card->napi);
