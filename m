@@ -2,35 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EA9D0F6709
-	for <lists+linux-s390@lfdr.de>; Sun, 10 Nov 2019 04:17:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 058BDF6697
+	for <lists+linux-s390@lfdr.de>; Sun, 10 Nov 2019 04:15:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726645AbfKJCkS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 9 Nov 2019 21:40:18 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33176 "EHLO mail.kernel.org"
+        id S1727730AbfKJCmG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 9 Nov 2019 21:42:06 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37290 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726560AbfKJCkR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 9 Nov 2019 21:40:17 -0500
+        id S1727722AbfKJCmF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 9 Nov 2019 21:42:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 92F09215EA;
-        Sun, 10 Nov 2019 02:40:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 22D6321882;
+        Sun, 10 Nov 2019 02:42:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573353616;
-        bh=n6QzZCLFvjcRY9Gen25EumCUyRvB0LU/DHo9DES47YM=;
+        s=default; t=1573353724;
+        bh=qtfPSf5XdBg0WP4w6wOZQEFPEjvRITY3Jf5D6oN0y44=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pi0n4BajtpIb7SSxlRmgcWS51MIdrvHcq/VQJg04cY1HH1mJQSd5i6pnVm2bCGoh+
-         WO7MiuG71X4rr2zeodXj+fUJmonWLiSEMkwoFwpz+6zGMEEbEpLuo6wLTjUHpZI683
-         H4NNc2eGdmHMKseoxyDSi2KXTmCqGz+pdm0IJlyM=
+        b=nztg3SLtobSi7ImkzpS1Bl9dXpnQbYkkxrvQ85dni3f06qN9RG7DtbUzxUjSXfzqB
+         qtS1shxMGyJMzgeCmN1Y01MT8/eOR9q8163Ws644EN10YwZHPjL+B/pipz+Kvq+jfo
+         pv0132foX+xk5G4dn1+19vKRdBMVCgq9IdkmPeS8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 002/191] s390/qeth: invoke softirqs after napi_schedule()
-Date:   Sat,  9 Nov 2019 21:37:04 -0500
-Message-Id: <20191110024013.29782-2-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 055/191] s390/zcrypt: enable AP bus scan without a valid default domain
+Date:   Sat,  9 Nov 2019 21:37:57 -0500
+Message-Id: <20191110024013.29782-55-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191110024013.29782-1-sashal@kernel.org>
 References: <20191110024013.29782-1-sashal@kernel.org>
@@ -43,60 +45,94 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-[ Upstream commit 4d19db777a2f32c9b76f6fd517ed8960576cb43e ]
+[ Upstream commit 1c472d46283263497adccd7a0bec64ee2f9c09e5 ]
 
-Calling napi_schedule() from process context does not ensure that the
-NET_RX softirq is run in a timely fashion. So trigger it manually.
+The AP bus scan is aborted before doing anything worth mentioning if
+ap_select_domain() fails, e.g. if the ap_rights.aqm mask is all zeros.
+As the result of this the ap bus fails to manage (e.g. create and
+register) devices like it is supposed to.
 
-This is no big issue with current code. A call to ndo_open() is usually
-followed by a ndo_set_rx_mode() call, and for qeth this contains a
-spin_unlock_bh(). Except for OSN, where qeth_l2_set_rx_mode() bails out
-early.
-Nevertheless it's best to not depend on this behaviour, and just fix
-the issue at its source like all other drivers do. For instance see
-commit 83a0c6e58901 ("i40e: Invoke softirqs after napi_reschedule").
+Let us make ap_scan_bus() work even if ap_select_domain() can't select a
+default domain. Let's also make ap_select_domain() return void, as there
+are no more callers interested in its return value.
 
-Fixes: a1c3ed4c9ca0 ("qeth: NAPI support for l2 and l3 discipline")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Reported-by: Michael Mueller <mimu@linux.ibm.com>
+Fixes: 7e0bdbe5c21c "s390/zcrypt: AP bus support for alternate driver(s)"
+[freude@linux.ibm.com: title and patch header slightly modified]
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_l2_main.c | 3 +++
- drivers/s390/net/qeth_l3_main.c | 3 +++
- 2 files changed, 6 insertions(+)
+ drivers/s390/crypto/ap_bus.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index c1c35eccd5b65..95669d47c389e 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -789,7 +789,10 @@ static int __qeth_l2_open(struct net_device *dev)
+diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+index 3be54651698a3..027a53eec42a5 100644
+--- a/drivers/s390/crypto/ap_bus.c
++++ b/drivers/s390/crypto/ap_bus.c
+@@ -1223,11 +1223,10 @@ static struct bus_attribute *const ap_bus_attrs[] = {
+ };
  
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 9c5e801b3f6cb..52e0ae4dc7241 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -2414,7 +2414,10 @@ static int __qeth_l3_open(struct net_device *dev)
+ /**
+- * ap_select_domain(): Select an AP domain.
+- *
+- * Pick one of the 16 AP domains.
++ * ap_select_domain(): Select an AP domain if possible and we haven't
++ * already done so before.
+  */
+-static int ap_select_domain(void)
++static void ap_select_domain(void)
+ {
+ 	int count, max_count, best_domain;
+ 	struct ap_queue_status status;
+@@ -1242,7 +1241,7 @@ static int ap_select_domain(void)
+ 	if (ap_domain_index >= 0) {
+ 		/* Domain has already been selected. */
+ 		spin_unlock_bh(&ap_domain_lock);
+-		return 0;
++		return;
+ 	}
+ 	best_domain = -1;
+ 	max_count = 0;
+@@ -1269,11 +1268,8 @@ static int ap_select_domain(void)
+ 	if (best_domain >= 0) {
+ 		ap_domain_index = best_domain;
+ 		AP_DBF(DBF_DEBUG, "new ap_domain_index=%d\n", ap_domain_index);
+-		spin_unlock_bh(&ap_domain_lock);
+-		return 0;
+ 	}
+ 	spin_unlock_bh(&ap_domain_lock);
+-	return -ENODEV;
+ }
  
- 	if (qdio_stop_irq(card->data.ccwdev, 0) >= 0) {
- 		napi_enable(&card->napi);
-+		local_bh_disable();
- 		napi_schedule(&card->napi);
-+		/* kick-start the NAPI softirq: */
-+		local_bh_enable();
- 	} else
- 		rc = -EIO;
- 	return rc;
+ /*
+@@ -1351,8 +1347,7 @@ static void ap_scan_bus(struct work_struct *unused)
+ 	AP_DBF(DBF_DEBUG, "%s running\n", __func__);
+ 
+ 	ap_query_configuration(ap_configuration);
+-	if (ap_select_domain() != 0)
+-		goto out;
++	ap_select_domain();
+ 
+ 	for (id = 0; id < AP_DEVICES; id++) {
+ 		/* check if device is registered */
+@@ -1468,12 +1463,11 @@ static void ap_scan_bus(struct work_struct *unused)
+ 		}
+ 	} /* end device loop */
+ 
+-	if (defdomdevs < 1)
++	if (ap_domain_index >= 0 && defdomdevs < 1)
+ 		AP_DBF(DBF_INFO,
+ 		       "no queue device with default domain %d available\n",
+ 		       ap_domain_index);
+ 
+-out:
+ 	mod_timer(&ap_config_timer, jiffies + ap_config_time * HZ);
+ }
+ 
 -- 
 2.20.1
 
