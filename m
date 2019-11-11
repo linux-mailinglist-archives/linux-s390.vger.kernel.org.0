@@ -2,193 +2,133 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CCD2F79C8
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2019 18:23:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D9120F79C9
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2019 18:23:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726877AbfKKRXD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 Nov 2019 12:23:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41571 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726887AbfKKRXD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 Nov 2019 12:23:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573492981;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OEhtdn0ducEBktqMJPHx+gxE4ZPzNIL4ZrcEG/r2e04=;
-        b=DssIW8dtmjmZJb4UQ0+5K/8wDEm2YxMB+yKgqyKcE49rMe/bG9II+RzB/aynEAoJ4gHSC9
-        suhPH3vhpj/0x9tKF4Neoa9OZmOO7vKvbfFv4QGCYOUbAibG3rb6kco2rWaQXkbHlBeoKF
-        1z7uacmPBJO+e2TqMdciiExM4qFZEdc=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-180-tGIll_hTMCSAn6vh5W1gRA-1; Mon, 11 Nov 2019 12:23:00 -0500
-Received: by mail-wr1-f70.google.com with SMTP id k15so3065173wrp.22
-        for <linux-s390@vger.kernel.org>; Mon, 11 Nov 2019 09:23:00 -0800 (PST)
+        id S1727020AbfKKRXG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 Nov 2019 12:23:06 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:45140 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbfKKRXG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 11 Nov 2019 12:23:06 -0500
+Received: by mail-pf1-f195.google.com with SMTP id z4so11066769pfn.12
+        for <linux-s390@vger.kernel.org>; Mon, 11 Nov 2019 09:23:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=yAajaC8HCWYzucX9F7lpdzKRK9O4DP5SS69z8MpuzC8=;
+        b=X/LzmRNI+PAfGCx7iOXc7jITwTbPHloj6W9cE45iZE62pceyrxHDPEHiavfj9tEFm4
+         3ssTDoHViE0PIaYRTxiES+N/vQ0V6XBCRSxJLkNHA5EmXVvGMUKq6TH0JVEbtbv7eJIs
+         og7HVJoMSxXZSuRdEpfAiyzG2OcgsCx2ssepg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=nEOIBNMxOOtSZX6/l/nKquHk+EOlBFfmyVDwDPZC6jE=;
-        b=FsywZg8GT1xUb3gJGwhaN+K4uJNcnzWJlaXYFGD+Lp5xaDu9qyvEN5EbizaZx956kJ
-         HkFLDGF5s/Wc5SzeADWJ3CXN7rpdyKhVSdIIkbI6GJrYEyan9iq9F6LDvz37Ja4ca6le
-         XJBHGD9j1uHg98gAsGZ82BEh4evIfkN+QNaO7/FCHU8vJ4ucYRQteHCYqxwFzIcLD+t1
-         Dcq3LJOojzasEcOBrnX9g23ThUg6yxJFWXk2TxP8cVXTHxpuAngyUaEq5ehbys/kPMYA
-         9v+MUDBgCjrHOzX1WI+zuduU5MghnbHc2h/Tva6vkHyU9ifjpOgIz0g9NNrUh58Ln8ki
-         A1hw==
-X-Gm-Message-State: APjAAAVThc1+6BZoBoi08/Mexqv4sWH2j+mszuVjOH2lhyft8Nv6UlPb
-        xL5U/lpi1rSAa+IP4kZcxAdC1nxDhPrg0PhYVA3IVAxT4ws2kwotm4PtZOpzLvuQX4ovJzf0uEr
-        R6K9VYjPg/XnOlrX4CrFDkg==
-X-Received: by 2002:adf:8b01:: with SMTP id n1mr10873897wra.227.1573492979068;
-        Mon, 11 Nov 2019 09:22:59 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyQoV8+pBRF8GAdIW9Yuq23ZqdPgT0Q1VEbPFcK9HYRpLTRWv+nP5hCRciUDpTYuZpwuu8wWw==
-X-Received: by 2002:adf:8b01:: with SMTP id n1mr10873884wra.227.1573492978858;
-        Mon, 11 Nov 2019 09:22:58 -0800 (PST)
-Received: from [192.168.3.122] (p5B0C62A5.dip0.t-ipconnect.de. [91.12.98.165])
-        by smtp.gmail.com with ESMTPSA id c144sm120002wmd.1.2019.11.11.09.22.58
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 11 Nov 2019 09:22:58 -0800 (PST)
-From:   David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [kvm-unit-tests PATCH v2 2/3] s390x: Add CR save area
-Date:   Mon, 11 Nov 2019 18:22:57 +0100
-Message-Id: <C799E856-1F4B-4052-8D33-3FD1EE2EA570@redhat.com>
-References: <20191111153345.22505-3-frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        thuth@redhat.com
-In-Reply-To: <20191111153345.22505-3-frankja@linux.ibm.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-X-Mailer: iPhone Mail (17A878)
-X-MC-Unique: tGIll_hTMCSAn6vh5W1gRA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=yAajaC8HCWYzucX9F7lpdzKRK9O4DP5SS69z8MpuzC8=;
+        b=F9XhWqs7WtT2RT8bWYxWiKAjeGm15zxj6V4OAz9h6+ezV6SaWLwM8WlbnUEK0wvHXH
+         rEGYrGZ4e9o6gImbVT+KmOW9DLrn1RU/SOCRaQ5E2lXb3MPdFBWziAYa+Sg/3DRLDLsH
+         TzW6OujYKrJufy0S2BWFqybFl4TZFxTz074YBy+WIZsGvHy3sJRIqJJZz8KSqTqF2Bx0
+         Z/arT23ZTnAop/BdgrAsjqFfNeJQQyD0zCPxLpJ7v745nckh8Ru8cOG3hKUPqaAFwOmn
+         hhwuT3u7bbt/r3cjCY1a9dhi6OOgHbEjYLt1qi6lExlarJnIl1wdR7J4RjvT7mXBOC7V
+         0HMw==
+X-Gm-Message-State: APjAAAUzK+ngI4LoYjk4xuA+riuoorZ5Z5BXw8wYllt0ny+JOlvmMiXA
+        W0snf6+6VVRKLjYlwnPA6zitKw==
+X-Google-Smtp-Source: APXvYqyYRSzpwUPLuEiDxWQRl2mmu7HM3K81RSwKffyFA1Sp64Zbaq8qhH85VUnK4TNVxH3gOyo1gQ==
+X-Received: by 2002:a17:90a:5d0e:: with SMTP id s14mr85161pji.55.1573492985697;
+        Mon, 11 Nov 2019 09:23:05 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id o15sm22800000pgn.49.2019.11.11.09.23.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 11 Nov 2019 09:23:04 -0800 (PST)
+Date:   Mon, 11 Nov 2019 09:23:03 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Will Deacon <will@kernel.org>,
+        Linux-Arch <linux-arch@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        linux-c6x-dev@linux-c6x.org,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Michal Simek <monstr@monstr.eu>,
+        Parisc List <linux-parisc@vger.kernel.org>,
+        linux-xtensa@linux-xtensa.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 11/29] vmlinux.lds.h: Replace RODATA with RO_DATA
+Message-ID: <201911110922.17A2112B0@keescook>
+References: <20191011000609.29728-1-keescook@chromium.org>
+ <20191011000609.29728-12-keescook@chromium.org>
+ <CAMuHMdXfPyti1wFBb0hhf3CeDSQ=zVv7cV-taeYCmDswMQkXPQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdXfPyti1wFBb0hhf3CeDSQ=zVv7cV-taeYCmDswMQkXPQ@mail.gmail.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, Nov 11, 2019 at 05:58:06PM +0100, Geert Uytterhoeven wrote:
+> Hi Kees,
+> 
+> On Fri, Oct 11, 2019 at 2:07 AM Kees Cook <keescook@chromium.org> wrote:
+> > There's no reason to keep the RODATA macro: replace the callers with
+> > the expected RO_DATA macro.
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> > ---
+> >  arch/alpha/kernel/vmlinux.lds.S      | 2 +-
+> >  arch/ia64/kernel/vmlinux.lds.S       | 2 +-
+> >  arch/microblaze/kernel/vmlinux.lds.S | 2 +-
+> >  arch/mips/kernel/vmlinux.lds.S       | 2 +-
+> >  arch/um/include/asm/common.lds.S     | 2 +-
+> >  arch/xtensa/kernel/vmlinux.lds.S     | 2 +-
+> >  include/asm-generic/vmlinux.lds.h    | 4 +---
+> >  7 files changed, 7 insertions(+), 9 deletions(-)
+> 
+> Somehow you missed:
+> 
+>     arch/m68k/kernel/vmlinux-std.lds:  RODATA
+>     arch/m68k/kernel/vmlinux-sun3.lds:      RODATA
 
+Argh. I've sent a patch; sorry and thanks for catching this. For my own
+cross-build testing, which defconfig targets will hit these two linker
+scripts?
 
-> Am 11.11.2019 um 16:34 schrieb Janosch Frank <frankja@linux.ibm.com>:
->=20
-> =EF=BB=BFIf we run with DAT enabled and do a reset, we need to save the C=
-Rs to
-> backup our ASCEs on a diag308 for example.
->=20
+-Kees
 
-Looks good
+> 
+> Leading to build failures in next-20191111:
+> 
+>     /opt/cross/kisskb/gcc-4.6.3-nolibc/m68k-linux/bin/m68k-linux-ld:./arch/m68k/kernel/vmlinux.lds:29:
+> syntax error
+>     make[1]: *** [/kisskb/src/Makefile:1075: vmlinux] Error 1
+> 
+> Reported-by: noreply@ellerman.id.au
+> http://kisskb.ellerman.id.au/kisskb/buildresult/14022846/
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> 
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
-
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
-> lib/s390x/asm-offsets.c  |  2 +-
-> lib/s390x/asm/arch_def.h |  4 ++--
-> lib/s390x/interrupt.c    |  4 ++--
-> lib/s390x/smp.c          |  2 +-
-> s390x/cstart64.S         | 10 +++++-----
-> 5 files changed, 11 insertions(+), 11 deletions(-)
->=20
-> diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
-> index 6e2d259..4b213f8 100644
-> --- a/lib/s390x/asm-offsets.c
-> +++ b/lib/s390x/asm-offsets.c
-> @@ -57,7 +57,7 @@ int main(void)
->    OFFSET(GEN_LC_SW_INT_GRS, lowcore, sw_int_grs);
->    OFFSET(GEN_LC_SW_INT_FPRS, lowcore, sw_int_fprs);
->    OFFSET(GEN_LC_SW_INT_FPC, lowcore, sw_int_fpc);
-> -    OFFSET(GEN_LC_SW_INT_CR0, lowcore, sw_int_cr0);
-> +    OFFSET(GEN_LC_SW_INT_CRS, lowcore, sw_int_crs);
->    OFFSET(GEN_LC_MCCK_EXT_SA_ADDR, lowcore, mcck_ext_sa_addr);
->    OFFSET(GEN_LC_FPRS_SA, lowcore, fprs_sa);
->    OFFSET(GEN_LC_GRS_SA, lowcore, grs_sa);
-> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index 96cca2e..07d4e5e 100644
-> --- a/lib/s390x/asm/arch_def.h
-> +++ b/lib/s390x/asm/arch_def.h
-> @@ -78,8 +78,8 @@ struct lowcore {
->    uint64_t    sw_int_fprs[16];        /* 0x0280 */
->    uint32_t    sw_int_fpc;            /* 0x0300 */
->    uint8_t        pad_0x0304[0x0308 - 0x0304];    /* 0x0304 */
-> -    uint64_t    sw_int_cr0;            /* 0x0308 */
-> -    uint8_t        pad_0x0310[0x11b0 - 0x0310];    /* 0x0310 */
-> +    uint64_t    sw_int_crs[16];            /* 0x0308 */
-> +    uint8_t        pad_0x0310[0x11b0 - 0x0388];    /* 0x0388 */
->    uint64_t    mcck_ext_sa_addr;        /* 0x11b0 */
->    uint8_t        pad_0x11b8[0x1200 - 0x11b8];    /* 0x11b8 */
->    uint64_t    fprs_sa[16];            /* 0x1200 */
-> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
-> index 5cade23..c9e2dc6 100644
-> --- a/lib/s390x/interrupt.c
-> +++ b/lib/s390x/interrupt.c
-> @@ -124,13 +124,13 @@ void handle_ext_int(void)
->    }
->=20
->    if (lc->ext_int_code =3D=3D EXT_IRQ_SERVICE_SIG) {
-> -        lc->sw_int_cr0 &=3D ~(1UL << 9);
-> +        lc->sw_int_crs[0] &=3D ~(1UL << 9);
->        sclp_handle_ext();
->    } else {
->        ext_int_expected =3D false;
->    }
->=20
-> -    if (!(lc->sw_int_cr0 & CR0_EXTM_MASK))
-> +    if (!(lc->sw_int_crs[0] & CR0_EXTM_MASK))
->        lc->ext_old_psw.mask &=3D ~PSW_MASK_EXT;
-> }
->=20
-> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
-> index 7602886..f57f420 100644
-> --- a/lib/s390x/smp.c
-> +++ b/lib/s390x/smp.c
-> @@ -189,7 +189,7 @@ int smp_cpu_setup(uint16_t addr, struct psw psw)
->    cpu->lowcore->sw_int_grs[15] =3D (uint64_t)cpu->stack + (PAGE_SIZE * 4=
-);
->    lc->restart_new_psw.mask =3D 0x0000000180000000UL;
->    lc->restart_new_psw.addr =3D (uint64_t)smp_cpu_setup_state;
-> -    lc->sw_int_cr0 =3D 0x0000000000040000UL;
-> +    lc->sw_int_crs[0] =3D 0x0000000000040000UL;
->=20
->    /* Start processing */
->    rc =3D sigp_retry(cpu->addr, SIGP_RESTART, 0, NULL);
-> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-> index 043e34a..4be20fc 100644
-> --- a/s390x/cstart64.S
-> +++ b/s390x/cstart64.S
-> @@ -92,8 +92,8 @@ memsetxc:
->    .macro SAVE_REGS
->    /* save grs 0-15 */
->    stmg    %r0, %r15, GEN_LC_SW_INT_GRS
-> -    /* save cr0 */
-> -    stctg    %c0, %c0, GEN_LC_SW_INT_CR0
-> +    /* save crs 0-15 */
-> +    stctg    %c0, %c15, GEN_LC_SW_INT_CRS
->    /* load a cr0 that has the AFP control bit which enables all FPRs */
->    larl    %r1, initial_cr0
->    lctlg    %c0, %c0, 0(%r1)
-> @@ -112,8 +112,8 @@ memsetxc:
->    ld    \i, \i * 8(%r1)
->    .endr
->    lfpc    GEN_LC_SW_INT_FPC
-> -    /* restore cr0 */
-> -    lctlg    %c0, %c0, GEN_LC_SW_INT_CR0
-> +    /* restore crs 0-15 */
-> +    lctlg    %c0, %c15, GEN_LC_SW_INT_CRS
->    /* restore grs 0-15 */
->    lmg    %r0, %r15, GEN_LC_SW_INT_GRS
->    .endm
-> @@ -150,7 +150,7 @@ diag308_load_reset:
-> smp_cpu_setup_state:
->    xgr    %r1, %r1
->    lmg     %r0, %r15, GEN_LC_SW_INT_GRS
-> -    lctlg   %c0, %c0, GEN_LC_SW_INT_CR0
-> +    lctlg   %c0, %c0, GEN_LC_SW_INT_CRS
->    br    %r14
->=20
-> pgm_int:
-> --=20
-> 2.20.1
->=20
-
+-- 
+Kees Cook
