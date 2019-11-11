@@ -2,98 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3642F79AB
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2019 18:20:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 16FEBF79B3
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2019 18:20:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfKKRUL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 Nov 2019 12:20:11 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:52422 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfKKRUK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 11 Nov 2019 12:20:10 -0500
-Received: from zn.tnic (p200300EC2F26BB00D592BD3399DA4BDA.dip0.t-ipconnect.de [IPv6:2003:ec:2f26:bb00:d592:bd33:99da:4bda])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1FA4E1EC0C25;
-        Mon, 11 Nov 2019 18:20:09 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573492809;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=3tu/7JPN4tV5i1X8iQrVSJW+CCc7eYR1Dlq3I5+LVX8=;
-        b=qyuqe1jFxo+K8LpqQlIAKT4knwZJson6Dvyz8Q1EbH8WUy/pnEULfJDRJhknMQgBSqHA7b
-        0jAl0vdQ6vQKlNAxpErBdf/04xKzI48cJfK3z2WqrCdCYctQTdfSo3SRTzXCzYebnJ3rlb
-        lWXbQPBg6M9I7MtRDGog4//j2Gp6meQ=
-Date:   Mon, 11 Nov 2019 18:20:06 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     Richard Henderson <richard.henderson@linaro.org>
-Cc:     linux-crypto@vger.kernel.org, herbert@gondor.apana.org.au,
-        linux-arch@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 00/10] Improvements for random.h/archrandom.h
-Message-ID: <20191111172006.GC2799@zn.tnic>
-References: <20191106141308.30535-1-rth@twiddle.net>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191106141308.30535-1-rth@twiddle.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727068AbfKKRUf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 Nov 2019 12:20:35 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45480 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726845AbfKKRUe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 11 Nov 2019 12:20:34 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xABHG6nw082649
+        for <linux-s390@vger.kernel.org>; Mon, 11 Nov 2019 12:20:33 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7bw4858f-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 11 Nov 2019 12:20:32 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Mon, 11 Nov 2019 17:20:31 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 11 Nov 2019 17:20:29 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xABHJpFk15598014
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 11 Nov 2019 17:19:51 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87DC552065;
+        Mon, 11 Nov 2019 17:20:27 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.39])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 44BE752059;
+        Mon, 11 Nov 2019 17:20:27 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com
+Subject: [kvm-unit-tests PATCH v3 0/2] s390x: SCLP Unit test
+Date:   Mon, 11 Nov 2019 18:20:24 +0100
+X-Mailer: git-send-email 2.7.4
+X-TM-AS-GCONF: 00
+x-cbid: 19111117-0028-0000-0000-000003B4F96C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111117-0029-0000-0000-000024780204
+Message-Id: <1573492826-24589-1-git-send-email-imbrenda@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-11_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=702 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911110155
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 03:12:58PM +0100, Richard Henderson wrote:
-> During patch review for an addition of archrandom.h for arm64, it was
-> suggeted that the arch_random_get_* functions should be marked __must_check.
-> Which does sound like a good idea, since the by-reference integer output
-> may be uninitialized when the boolean result is false.
-> 
-> In addition, it turns out that arch_has_random() and arch_has_random_seed()
-> are not used, and not easy to support for arm64.  Rather than cobble
-> something together that would not be testable, remove the interfaces
-> against some future accidental use.
-> 
-> In addition, I noticed a few other minor inconsistencies between the
-> different architectures, e.g. powerpc isn't using bool.
-> 
-> Change since v1:
->   * Remove arch_has_random, arch_has_random_seed.
-> 
-> 
-> r~
-> 
-> 
-> Richard Henderson (10):
->   x86: Remove arch_has_random, arch_has_random_seed
->   powerpc: Remove arch_has_random, arch_has_random_seed
->   s390: Remove arch_has_random, arch_has_random_seed
->   linux/random.h: Remove arch_has_random, arch_has_random_seed
->   linux/random.h: Use false with bool
->   linux/random.h: Mark CONFIG_ARCH_RANDOM functions __must_check
->   x86: Mark archrandom.h functions __must_check
->   powerpc: Use bool in archrandom.h
->   powerpc: Mark archrandom.h functions __must_check
->   s390x: Mark archrandom.h functions __must_check
-> 
->  arch/powerpc/include/asm/archrandom.h | 27 +++++++++-----------------
->  arch/s390/include/asm/archrandom.h    | 20 ++++---------------
->  arch/x86/include/asm/archrandom.h     | 28 ++++++++++++---------------
->  include/linux/random.h                | 24 ++++++++---------------
->  4 files changed, 33 insertions(+), 66 deletions(-)
-> 
-> -- 
+This patchset contains some minor cleanup, some preparatory work and
+then the SCLP unit test itself.
 
-They look good to me.
+The unit test checks the following:
+    
+    * Correctly ignoring instruction bits that should be ignored
+    * Privileged instruction check
+    * Check for addressing exceptions
+    * Specification exceptions:
+      - SCCB size less than 8
+      - SCCB unaligned
+      - SCCB overlaps prefix or lowcore
+      - SCCB address higher than 2GB
+    * Return codes for
+      - Invalid command
+      - SCCB too short (but at least 8)
+      - SCCB page boundary violation
 
-Is anyone going to take them or should I though the tip tree?
+v2 -> v3
+* generally improved the naming of variables
+* added and fixed comments
+* renamed test_one_run to test_one_simple
+* added some const where needed
+* addresed many more small comments received during review
+v1 -> v2
+* fix many small issues that came up during the first round of reviews
+* add comments to each function
+* use a static buffer for the SCCP template when used
 
-Thx.
+Claudio Imbrenda (2):
+  s390x: sclp: add service call instruction wrapper
+  s390x: SCLP unit test
+
+ s390x/Makefile           |   1 +
+ lib/s390x/asm/arch_def.h |  13 ++
+ lib/s390x/sclp.c         |   7 +-
+ s390x/sclp.c             | 417 +++++++++++++++++++++++++++++++++++++++++++++++
+ s390x/unittests.cfg      |   3 +
+ 5 files changed, 435 insertions(+), 6 deletions(-)
+ create mode 100644 s390x/sclp.c
 
 -- 
-Regards/Gruss,
-    Boris.
+2.7.4
 
-https://people.kernel.org/tglx/notes-about-netiquette
