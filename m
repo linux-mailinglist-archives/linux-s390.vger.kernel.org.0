@@ -2,47 +2,30 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5DB6BF6F41
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2019 08:54:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7873F6F8D
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2019 09:11:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726845AbfKKHyy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 Nov 2019 02:54:54 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726878AbfKKHyu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 11 Nov 2019 02:54:50 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAB7pZ0c037861
-        for <linux-s390@vger.kernel.org>; Mon, 11 Nov 2019 02:54:48 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w7142n3xq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 11 Nov 2019 02:54:47 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 11 Nov 2019 07:54:46 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 11 Nov 2019 07:54:43 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAB7sgWc66388060
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 11 Nov 2019 07:54:42 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 736CF42047;
-        Mon, 11 Nov 2019 07:54:42 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 081B24203F;
-        Mon, 11 Nov 2019 07:54:42 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.123])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 11 Nov 2019 07:54:41 +0000 (GMT)
-Subject: Re: [PATCH v3] s390/pkey: Use memdup_user() rather than duplicating
- its implementation
-To:     Markus Elfring <Markus.Elfring@web.de>, linux-s390@vger.kernel.org,
+        id S1726811AbfKKIL2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 Nov 2019 03:11:28 -0500
+Received: from mout.web.de ([212.227.15.14]:52665 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726768AbfKKIL2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 11 Nov 2019 03:11:28 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1573459874;
+        bh=yLeMLMfEOOmRdYGLi72Oh+GomTas8U7P2yb54eV5zIE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Up+hoPUAJDhsVkdhiTrnfBwMcgFNBzZfhRImfJl7jeI3cyRVHxoPJa7uRMxE+vwlE
+         AA0Jn+iOcibvwfLJFzImykZX3+LeMocRtqcarUOZSZMh52TyUBnYcntCV/5WW4A1I5
+         oDPuRt4g0gzN7u2a1Y3gMgOqKpnLceNfD30eu/Kc=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.2] ([78.48.123.26]) by smtp.web.de (mrweb001
+ [213.165.67.108]) with ESMTPSA (Nemesis) id 0LpwMZ-1i0lWP1Jkl-00fjpe; Mon, 11
+ Nov 2019 09:11:14 +0100
+Subject: Re: [v3] s390/pkey: Use memdup_user() rather than duplicating its
+ implementation
+To:     =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org,
         Harald Freudenberger <freude@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Ingo Franzki <ifranzki@linux.ibm.com>,
@@ -61,102 +44,114 @@ References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
  <8f98f9fc-57df-5993-44b5-5ea4c0de7ef9@web.de>
  <c0df9cc8-c41a-1e5d-811c-1ff045c13fcc@de.ibm.com>
  <61244676-8ac1-20af-ed94-99e19c1f95d5@web.de>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 11 Nov 2019 08:54:41 +0100
+ <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <c701adc9-dab2-46af-003f-d8a2c47bc0af@web.de>
+Date:   Mon, 11 Nov 2019 09:11:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <61244676-8ac1-20af-ed94-99e19c1f95d5@web.de>
+In-Reply-To: <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111107-0028-0000-0000-000003B4D21E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111107-0029-0000-0000-00002477D8BF
-Message-Id: <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-11_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911110077
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vH4aX6LXNvdHTc+K1DuZ8FwCr07s13jof9BYG9/BhG4eGujVsPH
+ raoUQMGWsBCFkYFCgYpLWsrzBzBp7huXdzbh/cdjmmS5P/fyhdEoV45lXQmLJafTzT2o7xl
+ zLnltSntqBno1bPrJvpCSPtvYCUHPGER7lqc+s65pvmcP6wZs2Vb2TTMwEjDu+xhu1qzcdW
+ 4jYZY4edz4tzu34nhPPqA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yFkd6y7QlR4=:deNoql56lhMJcReKqwH7Ev
+ MDdMYHuVQyhpuiCsl+BskCGf1kIig9PqikmP1jG2gRfURd3vedaM/A0c1bMPZB6iOLaoUNtKc
+ i5+T/an9E/RsnxBH9E0t1ik9gHmIhUyvpnvi7pN8n1AAh1iSCiVNUWEs+enOfmhloqXYdtogd
+ x2hZSHa4Lvi8ks6umwZN2UEbwSw1aodcMo14eWCRtS2nsweMdGjX2UQMJd5WNCQEhkrANR/IS
+ KtXCIuOfsVLifNS0lJCd5pMhdmjrCBQ+bJh57E4Us3OwzzHcdyYtMjabvmwv+x4tYohU6+n1o
+ kdro6gQPdtXA7GCJazaOZNKO/sVSkpOAdgHy1uf/xVzS1qEQh7Cn1QEP3ynMRBZpT0VK8JNPU
+ Hl7WBQTikZR+YSKUl7ytakE/D4YZkX8PFwY1sG/mvGsWamgEhtOxvAFd84q2Oje3BYEJ7Ee28
+ JwMumYKMpfrxblI6r5Xe7mZoRhvXxrX4TVGZqVwS6yzA9AyhsS7pvj5HIqouhBrupbwy0kQ7y
+ VwwsgFSEoqhZZDJk62cUO6SgzA81ISoxatUcY8FRrM0EuxFdyLcNCRX2639isKZFAYvTK5krj
+ +k1yYSNMfM+oqsLpspEVA4l5IUcJdRUpjpzcz4q8/F0qfDtBk3tTDdWadvExjJ75ajRyps31i
+ zrxnDjIRveIsFxDpPHRSduWcO19Gfg+I6emZmjl12uQQznMBO6UJ9gd67E/ottCH8vsneDEn0
+ aIPD+S2b/shNHLk766eMD5dy7rD8TRXMiflUznIYV7NoTNCM5FVRsPwbO2EST4b1z2VLqCKVL
+ IFuw2cXIqqovho0CcvgRMAhgIfpJRxXlD8aSNetGoaMflDoYWLxikrfE808r5AkFs8oIQyIVz
+ rROUCbcZ8dQWA3qHTcwl0ceWC7oxFWre3eJ/2ZGS2JKcqDUPCsvJPh+XWB01fhbvbXmClbUBz
+ 2RCLuALUG+nwSPYBG5H7uSKO96GOmTyM82DpFW3IsYhUGq1+oGF1xfDM3ZhLY3xtyOssZc5O4
+ CMOLSGdE+g2Uev/WiNi/eozBso61bIMUk3l/JM9TWYw2XD1F90h5N0Suw0fcDNcFuZdsgCIKe
+ Rc3f7Kh4P+j+jzvGa+kKToWkDLZqe8/DWOnf/UtTMS5bNCo7kioX/e9Os5K7Zj8a5wfDmdUJG
+ eislFRa5Z6ntiyI6AcK7x7lxtPz5nSEaExoSBF67V9lHGIYLv4W12+frxw2K/O/QFeFuHRXqI
+ dWdAaZ56whX4t6K/AKFEcCWILeajOf8OTJkwoCxdQ+3cDVfzmG0AFI8C6xRc=
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 08.11.19 18:14, Markus Elfring wrote:
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Fri, 8 Nov 2019 17:50:22 +0100
-> 
-> Reuse existing functionality from memdup_user() instead of keeping
-> duplicate source code.
-> 
-> Generated by: scripts/coccinelle/api/memdup_user.cocci
-> 
-> * The function "_copy_apqns_from_user" contained a memory leak
->   because of a missing function call "kfree(kapqns)" for an if branch.
->   Link: https://lore.kernel.org/r/833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com/
-> 
->   Thus complete the exception handling by this code replacement.
-> 
-> * Delete local variables which became unnecessary with this refactoring
->   in two function implementations.
-> 
-> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+>> From: Markus Elfring <elfring@users.sourceforge.net>
+>> Date: Fri, 8 Nov 2019 17:50:22 +0100
+=E2=80=A6
+>> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AE=
+S cipher key support")
+>> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+>
+> You were sending this from a different email address.
 
-You were sending this from a different email address. Can you use the same for
-the sender and the signoff?
+Yes.
 
 
+> Can you use the same for the sender and the signoff?
 
-Can you also change the subject to indicate the "fix". e.g. something like
+I would prefer to use the other email address (for a while).
 
-s390/pkey: fix memory leak in error case by using memdup_user() rather than open coding
 
+> Can you also change the subject to indicate the "fix". e.g. something li=
+ke
+>
+> s390/pkey: fix memory leak in error case by using memdup_user() rather t=
+han open coding
+
+Does this change request indicate also a need to split the software update
+between the discussed two function implementations?
+
+Regards,
+Markus
