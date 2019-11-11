@@ -2,157 +2,229 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80D58F756B
-	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2019 14:50:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 57586F76E1
+	for <lists+linux-s390@lfdr.de>; Mon, 11 Nov 2019 15:45:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727148AbfKKNui (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 11 Nov 2019 08:50:38 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41609 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726970AbfKKNui (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 11 Nov 2019 08:50:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573480237;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RU4VgwLo9MGzc+9QkEoX+MFAI9eljvMriPMcRLGVQFc=;
-        b=GgHRExS+2WrgFOfHHpAP/lrSXaF9OnXbbZhm8E06e60V5D96kiDIMpGBVLigPZY82mz+kS
-        ZuwmtQUQqRKd+ZuYc0n9BRkb61ugL2Nc2JjWEDf5/H2JNSaFSnl4/lVGmwiRX85OTgHuur
-        CTL7nQYcxJ8CU/2WipIQYUfztwMHCoo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-338-pcAIOd8QM5a8rwsjIgAmUw-1; Mon, 11 Nov 2019 08:50:33 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CD59107ACC8;
-        Mon, 11 Nov 2019 13:50:32 +0000 (UTC)
-Received: from localhost (ovpn-117-4.ams2.redhat.com [10.36.117.4])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B7CA289AB;
-        Mon, 11 Nov 2019 13:50:32 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1727073AbfKKOpm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 11 Nov 2019 09:45:42 -0500
+Received: from mout.web.de ([217.72.192.78]:44843 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726889AbfKKOpl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 11 Nov 2019 09:45:41 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1573483525;
+        bh=uMoDkWJUgFT1gvyvqjo2rYa3D4aad3/mfFPRtyiVCP0=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=Arnr4ZLX88KyLn9xlJdLEaG2NSF8PKHfCqRmVg3by8/JRmk4nHwG2kLzNewwhwgEl
+         SG6/RYZ69JWLUUohxVTy0B5cXHHsrQD1MAdRFHK0HO9Q9AhqavvnL7jxG2kE8J9+bn
+         /lYkMH8Ybin76BUwBnfWueKEndS9TFMSi7ELUUvQ=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([78.49.55.229]) by smtp.web.de (mrweb101
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0Lkh7Q-1hwDAX1sZw-00aTlV; Mon, 11
+ Nov 2019 15:45:25 +0100
+Subject: [PATCH v4] s390/pkey: Fix memory leak in error case by using
+ memdup_user() rather than open coding
+To:     linux-s390@vger.kernel.org,
+        =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ingo Franzki <ifranzki@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>
-Subject: [PULL 4/4] vfio-ccw: Rework the io_fctl trace
-Date:   Mon, 11 Nov 2019 14:50:19 +0100
-Message-Id: <20191111135019.2394-5-cohuck@redhat.com>
-In-Reply-To: <20191111135019.2394-1-cohuck@redhat.com>
-References: <20191111135019.2394-1-cohuck@redhat.com>
+        Joe Perches <joe@perches.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>
+References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
+ <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
+ <deb7893f-3cfe-18fc-3feb-b26b290bf3c6@web.de>
+ <833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com>
+ <1b65bc81-f47a-eefa-f1f4-d5af6a1809c0@web.de>
+ <733b29df-207e-a165-ee80-46be8720c0c4@de.ibm.com>
+ <8f98f9fc-57df-5993-44b5-5ea4c0de7ef9@web.de>
+ <c0df9cc8-c41a-1e5d-811c-1ff045c13fcc@de.ibm.com>
+ <61244676-8ac1-20af-ed94-99e19c1f95d5@web.de>
+ <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <aca044e8-e4b2-eda8-d724-b08772a44ed9@web.de>
+Date:   Mon, 11 Nov 2019 15:45:23 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: pcAIOd8QM5a8rwsjIgAmUw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:vv4/yrx5YeN+Rejl3yr+6ogSVlusXLgt44atnhw2xRn0UjiymnL
+ j5XXSSKhLFP+n9hYBHZTEF3S11bOV3SDRTttmjK6EFPrAgtjfw9viUHby/eKG7zvzv+PA/Q
+ wWyx+Z8C7/dFhPuQGlvch+KSN06IFarQ7P2UbTm9rnuaYABbDo3nnr5bZltJx7LzFzdVqzN
+ DwbkqOELoOuX5eSNFbDNQ==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:m5Eyl2mAIT0=:znTxTalbGgJpIHiDRy2kgh
+ FXXS7+Rm35fUSyTHC1FANbwaCIjn8mc9+Ofu+w4+nBWZqynagIQWtjX9YIAqxoWVFUWXblJ2Y
+ 9Y3WnZsbvo8+c1z9qtm/NHF2TB7Jvt+1ZlAbVdluBb7UA33S7A+7vKBglo5HJrawc0V+ejNZ6
+ VJ4EigrbBzAo3dC7m8e4HnNQmwA6zWEWMTrSt8R9seThHFq6HrZlFb5sZCowQ08RWTWM969hO
+ TMXGgDFHS8/eYdDKrH8Pwjb9egKAMgoIl+0/8iqtJrQcXO+/KAsYoxo5fH9zzsnNFKQm9WBab
+ yz0jli0nTEwr1SPBueaNF7Ne9iHqtxemtFhCWaj6OADey9uXd2XydR2FOsX7e21yaH5/Z93B6
+ dvcPpIn4K9glzGpSc4rGvaucv59B0eKzrsBKLWekg5EASYPN4QjJLlLFlsYNX65mmtQD2blW6
+ gYDf3D0UTPCWl6rgmUtD2I1T2GISc+CYkkvnyx/p2+LiCk9wqcVT2Vuky8BO2vk8Di7MOkhfF
+ vxi1b0F2KyO64hxB+aL+kSuXyfz7VvuE6N9Hot36Vls1LfjJrBwt9eY2URW6/DBz/i7pR+x4T
+ xeNmDK8XwLzLDgVOfz72s1eE12MTNK79Khl25czIMUV3OmunriTRB/YFd5U+dRsPaWreG5IXe
+ BN1BazTbEYgg2+jAdPErQTu/7An6w+k0qwpvMBfrf/pCdv4KutQTxqUhRPjGHo3ViMoUyN7vz
+ t2RvIRwBdEHOJdCwcx7s8beTgCWEqSaZHrHl7zUR+iwIlMYROmSkZ5WeRttDbiXK1yaqlG/h4
+ J6T3YOVwr3ysMNyqDJOt95rJZjaS/VULEDBUM9K9UiGZjzR6MrXTXTtNnYW/QG1jozSyPr4Yn
+ //ejdiuxCoHOxhTgO9lSNga44nr47v0+EFROhQ84SID4rZ3l3LgvO0aduxCSwJayIcTA84Mpf
+ JEjzJUZH/ly3G/PHTgjYv0BW4G6xL6tAnB5mwyVIuGZsaAtBKSA8N7jJAE5C4Rj2RCy/CPyeh
+ gLchK2IlwT8wHBlYUKCOhd2QlbhwBKKNJisUqpBCbxk6pPU29NwNrvQ4H/sexRSQiXlDiiZr1
+ Vc3rpN8g6TLTtCtot7mn4AkVsQ7um/HkUOeoHqmH9PFDjMcfSjXpb8reIciUnlYEPLp5LGVcj
+ /gjZ9Z86eyAYBYxhQak6/aUanwbTMpUJiDlGMEElJ+xA3uUimias5f3duCov8+iBWi7RGEtuX
+ J7abSM7EIBeetuBqCtYgOKtz/YUXQ8X3HeWYqLXlz/9ogJO2nDQQSTL+E2Ow=
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Eric Farman <farman@linux.ibm.com>
+Date: Mon, 11 Nov 2019 15:20:44 +0100
 
-Using __field_struct for the schib is convenient, but it doesn't
-appear to let us filter based on any of the schib elements.
-Specifying the full schid or any element within it results
-in various errors by the parser.  So, expand that out to its
-component elements, so we can limit the trace to a single device.
+Reuse existing functionality from memdup_user() instead of keeping
+duplicate source code.
 
-While we are at it, rename this trace to the function name, so we
-remember what is being traced instead of an abstract reference to the
-function control bit of the SCSW.
+Generated by: scripts/coccinelle/api/memdup_user.cocci
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Message-Id: <20191016142040.14132-5-farman@linux.ibm.com>
-Acked-by: Halil Pasic <pasic@linux.ibm.com>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
----
- drivers/s390/cio/vfio_ccw_fsm.c   |  4 ++--
- drivers/s390/cio/vfio_ccw_trace.c |  2 +-
- drivers/s390/cio/vfio_ccw_trace.h | 18 +++++++++++-------
- 3 files changed, 14 insertions(+), 10 deletions(-)
+* The function "_copy_apqns_from_user" contained a memory leak
+  because of a misssing function call "kfree(kapqns)" for an if branch.
+  Link: https://lore.kernel.org/r/833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.=
+ibm.com/
 
-diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fs=
-m.c
-index 23648a9aa721..23e61aa638e4 100644
---- a/drivers/s390/cio/vfio_ccw_fsm.c
-+++ b/drivers/s390/cio/vfio_ccw_fsm.c
-@@ -318,8 +318,8 @@ static void fsm_io_request(struct vfio_ccw_private *pri=
-vate,
- =09}
-=20
- err_out:
--=09trace_vfio_ccw_io_fctl(scsw->cmd.fctl, schid,
--=09=09=09       io_region->ret_code, errstr);
-+=09trace_vfio_ccw_fsm_io_request(scsw->cmd.fctl, schid,
-+=09=09=09=09      io_region->ret_code, errstr);
+  Thus complete the exception handling by this code replacement.
+
+* Delete local variables which became unnecessary with this refactoring
+  in two function implementations.
+
+Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES c=
+ipher key support")
+Signed-off-by: Markus Elfring <Markus.Elfring@web.de>
+=2D--
+
+v4:
+Further changes were requested by Christian Borntr=C3=A4ger.
+https://lore.kernel.org/r/040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com/
+
+* An other patch subject was selected.
+
+* An other email address was used for the tag =E2=80=9CSigned-off-by=E2=80=
+=9D this time.
+
+v3:
+An adjustment was requested by Christian Borntr=C3=A4ger for the change de=
+scription.
+https://lore.kernel.org/r/c0df9cc8-c41a-1e5d-811c-1ff045c13fcc@de.ibm.com/
+
+v2:
+Further changes were requested by Joe Perches.
+https://lore.kernel.org/r/6137855bb4170c438c7436cbdb7dfd21639a8855.camel@p=
+erches.com/
+
+* The proposed usage of two conditional operators was replaced by
+  an other code structure.
+
+* A sanity check was adjusted for the function =E2=80=9C_copy_apqns_from_u=
+ser=E2=80=9D.
+
+
+ drivers/s390/crypto/pkey_api.c | 26 ++++----------------------
+ 1 file changed, 4 insertions(+), 22 deletions(-)
+
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api=
+.c
+index 9de3d46b3253..ac99fd97569d 100644
+=2D-- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -715,36 +715,18 @@ static int pkey_apqns4keytype(enum pkey_key_type kty=
+pe,
+
+ static void *_copy_key_from_user(void __user *ukey, size_t keylen)
+ {
+-	void *kkey;
+-
+ 	if (!ukey || keylen < MINKEYBLOBSIZE || keylen > KEYBLOBBUFSIZE)
+ 		return ERR_PTR(-EINVAL);
+-	kkey =3D kmalloc(keylen, GFP_KERNEL);
+-	if (!kkey)
+-		return ERR_PTR(-ENOMEM);
+-	if (copy_from_user(kkey, ukey, keylen)) {
+-		kfree(kkey);
+-		return ERR_PTR(-EFAULT);
+-	}
+
+-	return kkey;
++	return memdup_user(ukey, keylen);
  }
-=20
- /*
-diff --git a/drivers/s390/cio/vfio_ccw_trace.c b/drivers/s390/cio/vfio_ccw_=
-trace.c
-index 37ecbf8be805..8c671d2519f6 100644
---- a/drivers/s390/cio/vfio_ccw_trace.c
-+++ b/drivers/s390/cio/vfio_ccw_trace.c
-@@ -11,4 +11,4 @@
-=20
- EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_async_request);
- EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_event);
--EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_io_fctl);
-+EXPORT_TRACEPOINT_SYMBOL(vfio_ccw_fsm_io_request);
-diff --git a/drivers/s390/cio/vfio_ccw_trace.h b/drivers/s390/cio/vfio_ccw_=
-trace.h
-index 5f57cefa84dd..30162a318a8a 100644
---- a/drivers/s390/cio/vfio_ccw_trace.h
-+++ b/drivers/s390/cio/vfio_ccw_trace.h
-@@ -73,28 +73,32 @@ TRACE_EVENT(vfio_ccw_fsm_event,
- =09=09__entry->event)
- );
-=20
--TRACE_EVENT(vfio_ccw_io_fctl,
-+TRACE_EVENT(vfio_ccw_fsm_io_request,
- =09TP_PROTO(int fctl, struct subchannel_id schid, int errno, char *errstr)=
-,
- =09TP_ARGS(fctl, schid, errno, errstr),
-=20
- =09TP_STRUCT__entry(
-+=09=09__field(u8, cssid)
-+=09=09__field(u8, ssid)
-+=09=09__field(u16, sch_no)
- =09=09__field(int, fctl)
--=09=09__field_struct(struct subchannel_id, schid)
- =09=09__field(int, errno)
- =09=09__field(char*, errstr)
- =09),
-=20
- =09TP_fast_assign(
-+=09=09__entry->cssid =3D schid.cssid;
-+=09=09__entry->ssid =3D schid.ssid;
-+=09=09__entry->sch_no =3D schid.sch_no;
- =09=09__entry->fctl =3D fctl;
--=09=09__entry->schid =3D schid;
- =09=09__entry->errno =3D errno;
- =09=09__entry->errstr =3D errstr;
- =09),
-=20
--=09TP_printk("schid=3D%x.%x.%04x fctl=3D%x errno=3D%d info=3D%s",
--=09=09  __entry->schid.cssid,
--=09=09  __entry->schid.ssid,
--=09=09  __entry->schid.sch_no,
-+=09TP_printk("schid=3D%x.%x.%04x fctl=3D0x%x errno=3D%d info=3D%s",
-+=09=09  __entry->cssid,
-+=09=09  __entry->ssid,
-+=09=09  __entry->sch_no,
- =09=09  __entry->fctl,
- =09=09  __entry->errno,
- =09=09  __entry->errstr)
---=20
-2.21.0
+
+ static void *_copy_apqns_from_user(void __user *uapqns, size_t nr_apqns)
+ {
+-	void *kapqns =3D NULL;
+-	size_t nbytes;
+-
+-	if (uapqns && nr_apqns > 0) {
+-		nbytes =3D nr_apqns * sizeof(struct pkey_apqn);
+-		kapqns =3D kmalloc(nbytes, GFP_KERNEL);
+-		if (!kapqns)
+-			return ERR_PTR(-ENOMEM);
+-		if (copy_from_user(kapqns, uapqns, nbytes))
+-			return ERR_PTR(-EFAULT);
+-	}
++	if (!uapqns || nr_apqns <=3D 0)
++		return NULL;
+
+-	return kapqns;
++	return memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn));
+ }
+
+ static long pkey_unlocked_ioctl(struct file *filp, unsigned int cmd,
+=2D-
+2.24.0
 
