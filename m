@@ -2,161 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BF237F90EA
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 14:45:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CBCFAF9153
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 15:02:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726962AbfKLNph (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Nov 2019 08:45:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10642 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725919AbfKLNph (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 12 Nov 2019 08:45:37 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xACDbmnA030166
-        for <linux-s390@vger.kernel.org>; Tue, 12 Nov 2019 08:45:36 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w7w1p2grb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 12 Nov 2019 08:45:35 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Tue, 12 Nov 2019 13:45:33 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 12 Nov 2019 13:45:30 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xACDirZn38666688
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 12 Nov 2019 13:44:53 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7AE66AE063;
-        Tue, 12 Nov 2019 13:45:29 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C3076AE04D;
-        Tue, 12 Nov 2019 13:45:28 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.152.224.131])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 12 Nov 2019 13:45:28 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-Subject: [kvm-unit-tests PATCH v3] s390x: Load reset psw on diag308 reset
-Date:   Tue, 12 Nov 2019 08:45:26 -0500
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <7683adc7-2cd0-1103-d231-8a1577f1e673@redhat.com>
-References: <7683adc7-2cd0-1103-d231-8a1577f1e673@redhat.com>
+        id S1727428AbfKLOCA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Nov 2019 09:02:00 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40109 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727291AbfKLOCA (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Nov 2019 09:02:00 -0500
+Received: by mail-wm1-f67.google.com with SMTP id f3so3073111wmc.5
+        for <linux-s390@vger.kernel.org>; Tue, 12 Nov 2019 06:01:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MrWmg4S4QVjfl7ElzvbNo6Dq6sBDPaTcM04xou8JMbE=;
+        b=ax6nC2UjJtb1u8+MWf7et5sm8f0kIu4FeoVmwb6B7m7QoYHoTqVObl+BovSgMMSj/Y
+         9LZMJ3Q78YAesg8YG9NjW3ZTkADp/BoA9hw5aPkSBeQjZwSPGeuvAWEUC2HqA3ZoZqfo
+         ZkBPnLF64sC+ifwhNdox79S20LdCKzVH6cupY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=MrWmg4S4QVjfl7ElzvbNo6Dq6sBDPaTcM04xou8JMbE=;
+        b=GVBJr/warIe/95O/Cb/BDG+1RVSDAzkJ9bwTyqBB6jSPjd8NFkZy8pTsZYeblgqWIE
+         FlYBt7+xh1IjT6oH1+GOW7K29251SoCx8MT0A71NHL8wBJdo2/ZnVlIFTsAS7I7F5EPZ
+         onco5+D78XHSK94vBd30cUVkX2wMVc9rwOGaYam5nPK+mgoj4UJCUQnSOJKKGub2OXb5
+         0GMLGEWp592N2DWZDUzlar4miOlOpPtzUObTyCvA7rVo5VW1Pq9nvYIf8l8rml5pdGBp
+         E7riXZVLLIrAZ9RZUFw0oqCNOm3HG3Dhf5hDnPc4On0U5UMoIObOcbLa4p9z9fScoUrd
+         4iPA==
+X-Gm-Message-State: APjAAAUwa1PZ11qWGhcD/Oj9TLs1NMfGIui6ESE2fA++8rxnhAH2IZbt
+        jTc4MaLLcILadxSt7rDy6QjDmh3CkRo=
+X-Google-Smtp-Source: APXvYqwg1um6jg+/qODyeIAqZsG4VJkK0RglxJrSmFgE3PAxS7h90PQ/gBE97aZORkW05LcpoYTR5w==
+X-Received: by 2002:a1c:984b:: with SMTP id a72mr4286085wme.78.1573567317930;
+        Tue, 12 Nov 2019 06:01:57 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id l4sm3059222wme.4.2019.11.12.06.01.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 06:01:57 -0800 (PST)
+Date:   Tue, 12 Nov 2019 15:01:55 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Johan Hovold <johan@kernel.org>
+Cc:     Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable <stable@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Dave Airlie <airlied@gmail.com>
+Subject: Re: [PATCH 1/4] drm/msm: fix memleak on release
+Message-ID: <20191112140155.GJ23790@phenom.ffwll.local>
+Mail-Followup-To: Johan Hovold <johan@kernel.org>,
+        Rob Clark <robdclark@gmail.com>, Sean Paul <sean@poorly.run>,
+        David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        freedreno@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable <stable@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Dave Airlie <airlied@gmail.com>
+References: <20191010131333.23635-1-johan@kernel.org>
+ <20191010131333.23635-2-johan@kernel.org>
+ <20191030100146.GC4691@localhost>
+ <20191112104001.GP11035@localhost>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111213-0008-0000-0000-0000032E5D21
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111213-0009-0000-0000-00004A4D624F
-Message-Id: <20191112134526.2106-1-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-12_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911120123
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191112104001.GP11035@localhost>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On a diag308 subcode 0 CRs will be reset, so we need a PSW mask
-without DAT. Also we need to set the short psw indication to be
-compliant with the architecture.
+On Tue, Nov 12, 2019 at 11:40:01AM +0100, Johan Hovold wrote:
+> On Wed, Oct 30, 2019 at 11:01:46AM +0100, Johan Hovold wrote:
+> > On Thu, Oct 10, 2019 at 03:13:30PM +0200, Johan Hovold wrote:
+> > > If a process is interrupted while accessing the "gpu" debugfs file and
+> > > the drm device struct_mutex is contended, release() could return early
+> > > and fail to free related resources.
+> > > 
+> > > Note that the return value from release() is ignored.
+> > > 
+> > > Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
+> > > Cc: stable <stable@vger.kernel.org>     # 4.18
+> > > Cc: Jordan Crouse <jcrouse@codeaurora.org>
+> > > Cc: Rob Clark <robdclark@gmail.com>
+> > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > ---
+> > 
+> > Rob, Sean,
+> > 
+> > Sending a reminder about this one, which is not yet in linux-next.
+> > 
+> > Perhaps Daniel can pick it up otherwise?
+> 
+> Another two weeks, another reminder. This one is still not in -next.
 
-Let's therefore define a reset PSW mask with 64 bit addressing and
-short PSW indication that is compliant with architecture and use it.
+Well msm is maintained in a separate tree, so the usual group maintainer
+fallback for when patches are stuck doesn't apply.
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- lib/s390x/asm-offsets.c  |  1 +
- lib/s390x/asm/arch_def.h |  3 ++-
- s390x/cstart64.S         | 24 +++++++++++++++++-------
- 3 files changed, 20 insertions(+), 8 deletions(-)
+Rob, Sean, time to reconsider drm-misc for msm? I think there's some more
+oddball patches that occasionally get stuck for msm ...
 
-diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
-index 4b213f8..61d2658 100644
---- a/lib/s390x/asm-offsets.c
-+++ b/lib/s390x/asm-offsets.c
-@@ -58,6 +58,7 @@ int main(void)
- 	OFFSET(GEN_LC_SW_INT_FPRS, lowcore, sw_int_fprs);
- 	OFFSET(GEN_LC_SW_INT_FPC, lowcore, sw_int_fpc);
- 	OFFSET(GEN_LC_SW_INT_CRS, lowcore, sw_int_crs);
-+	OFFSET(GEN_LC_SW_INT_PSW, lowcore, sw_int_psw);
- 	OFFSET(GEN_LC_MCCK_EXT_SA_ADDR, lowcore, mcck_ext_sa_addr);
- 	OFFSET(GEN_LC_FPRS_SA, lowcore, fprs_sa);
- 	OFFSET(GEN_LC_GRS_SA, lowcore, grs_sa);
-diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-index 07d4e5e..5f034a7 100644
---- a/lib/s390x/asm/arch_def.h
-+++ b/lib/s390x/asm/arch_def.h
-@@ -79,7 +79,8 @@ struct lowcore {
- 	uint32_t	sw_int_fpc;			/* 0x0300 */
- 	uint8_t		pad_0x0304[0x0308 - 0x0304];	/* 0x0304 */
- 	uint64_t	sw_int_crs[16];			/* 0x0308 */
--	uint8_t		pad_0x0310[0x11b0 - 0x0388];	/* 0x0388 */
-+	struct psw	sw_int_psw;			/* 0x0388 */
-+	uint8_t		pad_0x0310[0x11b0 - 0x0398];	/* 0x0398 */
- 	uint64_t	mcck_ext_sa_addr;		/* 0x11b0 */
- 	uint8_t		pad_0x11b8[0x1200 - 0x11b8];	/* 0x11b8 */
- 	uint64_t	fprs_sa[16];			/* 0x1200 */
-diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-index 4be20fc..86dd4c4 100644
---- a/s390x/cstart64.S
-+++ b/s390x/cstart64.S
-@@ -126,13 +126,18 @@ memsetxc:
- .globl diag308_load_reset
- diag308_load_reset:
- 	SAVE_REGS
--	/* Save the first PSW word to the IPL PSW */
-+	/* Backup current PSW mask, as we have to restore it on success */
- 	epsw	%r0, %r1
--	st	%r0, 0
--	/* Store the address and the bit for 31 bit addressing */
--	larl    %r0, 0f
--	oilh    %r0, 0x8000
--	st      %r0, 0x4
-+	st	%r0, GEN_LC_SW_INT_PSW
-+	st	%r1, GEN_LC_SW_INT_PSW + 4
-+	/* Load reset psw mask (short psw, 64 bit) */
-+	lg	%r0, reset_psw
-+	/* Load the success label address */
-+	larl    %r1, 0f
-+	/* Or it to the mask */
-+	ogr	%r0, %r1
-+	/* Store it at the reset PSW location (real 0x0) */
-+	stg	%r0, 0
- 	/* Do the reset */
- 	diag    %r0,%r2,0x308
- 	/* Failure path */
-@@ -144,7 +149,10 @@ diag308_load_reset:
- 	lctlg	%c0, %c0, 0(%r1)
- 	RESTORE_REGS
- 	lhi	%r2, 1
--	br	%r14
-+	larl	%r0, 1f
-+	stg	%r0, GEN_LC_SW_INT_PSW + 8
-+	lpswe	GEN_LC_SW_INT_PSW
-+1:	br	%r14
- 
- .globl smp_cpu_setup_state
- smp_cpu_setup_state:
-@@ -184,6 +192,8 @@ svc_int:
- 	lpswe	GEN_LC_SVC_OLD_PSW
- 
- 	.align	8
-+reset_psw:
-+	.quad	0x0008000180000000
- initial_psw:
- 	.quad	0x0000000180000000, clear_bss_start
- pgm_int_psw:
+Also +Dave.
+-Daniel
+
+> 
+> Johan
+> 
+> > >  drivers/gpu/drm/msm/msm_debugfs.c | 6 +-----
+> > >  1 file changed, 1 insertion(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+> > > index 6be879578140..1c74381a4fc9 100644
+> > > --- a/drivers/gpu/drm/msm/msm_debugfs.c
+> > > +++ b/drivers/gpu/drm/msm/msm_debugfs.c
+> > > @@ -47,12 +47,8 @@ static int msm_gpu_release(struct inode *inode, struct file *file)
+> > >  	struct msm_gpu_show_priv *show_priv = m->private;
+> > >  	struct msm_drm_private *priv = show_priv->dev->dev_private;
+> > >  	struct msm_gpu *gpu = priv->gpu;
+> > > -	int ret;
+> > > -
+> > > -	ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
+> > > -	if (ret)
+> > > -		return ret;
+> > >  
+> > > +	mutex_lock(&show_priv->dev->struct_mutex);
+> > >  	gpu->funcs->gpu_state_put(show_priv->state);
+> > >  	mutex_unlock(&show_priv->dev->struct_mutex);
+
 -- 
-2.20.1
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
