@@ -2,104 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70DEEF8B77
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 10:14:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 571F9F8BA8
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 10:26:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfKLJOI convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 12 Nov 2019 04:14:08 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:38968 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726008AbfKLJOI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Nov 2019 04:14:08 -0500
-Received: by mail-oi1-f196.google.com with SMTP id v138so14138244oif.6;
-        Tue, 12 Nov 2019 01:14:05 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=CcFia2f8UjT7Hz7B3H/t2zQe97c4U387QE8r5XjOH8A=;
-        b=t/3EoTXZwO4A4ZgrzT+/BHLcbzStTaLy3bem4ZjRM7T30rdHPt34rcy5vJKRfzNk3d
-         ewOd1cHrQa14znwpmvwgFadYJHaua/0hxTn6xlYa1nJL1puH+2Hepea+z+vNUzMTBZEL
-         z5ErdNK97ZwftHn/8POHHy+TViSd4hkPSy+9vTn8pvCgtGmsB+ZH3Hs/vdOzodLJUPVL
-         oJoKaQfxvkPq5ad6p6XDJEsUTO369ZWWf117DcJ2U/xfvT4YH+64ZKKfMVSdkw94AoVa
-         tfks1wzNfv1IFmZw/BT0Vlazs413Y6sFVF/rGY2RIjAQsZuApnFeeJyySO8iq+3Ehic3
-         25Xw==
-X-Gm-Message-State: APjAAAUeA30wiBquYZS+QrX1HQ50wpB+OqUJNpErqBBmFw0rADj2wWCx
-        LuOj5Q4WY/qLCBdkinvJQYJBcTnBs6GvJ8pEfLs=
-X-Google-Smtp-Source: APXvYqxbSiMMCm9vOSRUI81fzjT2IZ3Fd4CYajnzFOk7q7brNKIrKnb1uqJhXwzzLHRJu12wVQ5KC28YV3eKlUAChCc=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr2951038oia.131.1573550045207;
- Tue, 12 Nov 2019 01:14:05 -0800 (PST)
+        id S1727132AbfKLJ0M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Nov 2019 04:26:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46596 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726986AbfKLJ0L (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Nov 2019 04:26:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573550771;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=nyz0R0JFcm91sDUPNxPXHhLmYMpB12ASJ5cBmfOUd6o=;
+        b=LduT4gRlFjzWQ/AYQSZxnVdT7cKLP8PgKZghMvJ/Xa2QgCsJoILJJzMc6yG/PtLg0yZihd
+        8CvlRDkLIkhtBzY6Si94taxp72STqjk7qDhBA3MJt8aLgzvvMuWGAEze1+8XSmovbXA60U
+        TVJMYK0+k2xze0c/1GlQpCZEatSRPac=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-137-jlcQUFOLO-Ot6r267mUkDA-1; Tue, 12 Nov 2019 04:26:07 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53DEE91267;
+        Tue, 12 Nov 2019 09:26:06 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-124.ams2.redhat.com [10.36.116.124])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B03162671;
+        Tue, 12 Nov 2019 09:26:01 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v2 1/3] s390x: Fix initial cr0 load
+ comments
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com
+References: <20191111153345.22505-1-frankja@linux.ibm.com>
+ <20191111153345.22505-2-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <55d20cae-aa91-beec-a7b2-b1145b9983b0@redhat.com>
+Date:   Tue, 12 Nov 2019 10:25:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-References: <20191011000609.29728-1-keescook@chromium.org> <20191011000609.29728-12-keescook@chromium.org>
- <CAMuHMdXfPyti1wFBb0hhf3CeDSQ=zVv7cV-taeYCmDswMQkXPQ@mail.gmail.com>
- <201911110922.17A2112B0@keescook> <CAMuHMdUJ8QPvqf51nVmOg1Zm20SNT7pXR72z=qmco=ecwawZ7A@mail.gmail.com>
- <20191112090736.GA32336@zn.tnic>
-In-Reply-To: <20191112090736.GA32336@zn.tnic>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 12 Nov 2019 10:13:53 +0100
-Message-ID: <CAMuHMdXayF+z4z+Ds-gm4+YFA=BCMo0_9Q3uXcbQQgQkLxZ4uw@mail.gmail.com>
-Subject: Re: [PATCH v2 11/29] vmlinux.lds.h: Replace RODATA with RO_DATA
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Rick Edgecombe <rick.p.edgecombe@intel.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Will Deacon <will@kernel.org>,
-        Linux-Arch <linux-arch@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        alpha <linux-alpha@vger.kernel.org>,
-        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-c6x-dev@linux-c6x.org,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Michal Simek <monstr@monstr.eu>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20191111153345.22505-2-frankja@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: jlcQUFOLO-Ot6r267mUkDA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Borislav,
+On 11/11/2019 16.33, Janosch Frank wrote:
+> We need to load cr0 to have access to all fprs during save and restore
+> of fprs. Saving conditionally on basis of the CR0 AFP bit would be a
+> pain.
+>=20
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  s390x/cstart64.S | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>=20
+> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+> index 8e2b21e..043e34a 100644
+> --- a/s390x/cstart64.S
+> +++ b/s390x/cstart64.S
+> @@ -94,7 +94,7 @@ memsetxc:
+>  =09stmg=09%r0, %r15, GEN_LC_SW_INT_GRS
+>  =09/* save cr0 */
+>  =09stctg=09%c0, %c0, GEN_LC_SW_INT_CR0
+> -=09/* load initial cr0 again */
+> +=09/* load a cr0 that has the AFP control bit which enables all FPRs */
+>  =09larl=09%r1, initial_cr0
+>  =09lctlg=09%c0, %c0, 0(%r1)
+>  =09/* save fprs 0-15 + fpc */
+> @@ -139,7 +139,7 @@ diag308_load_reset:
+>  =09xgr=09%r2, %r2
+>  =09br=09%r14
+>  =09/* Success path */
+> -=09/* We lost cr0 due to the reset */
+> +=09/* load a cr0 that has the AFP control bit which enables all FPRs */
+>  0:=09larl=09%r1, initial_cr0
+>  =09lctlg=09%c0, %c0, 0(%r1)
+>  =09RESTORE_REGS
+>=20
 
-On Tue, Nov 12, 2019 at 10:08 AM Borislav Petkov <bp@alien8.de> wrote:
-> On Mon, Nov 11, 2019 at 07:08:51PM +0100, Geert Uytterhoeven wrote:
-> > vmlinux-std.lds: All other classic 680x0 targets with an MMU, e.g. plain
-> >                  defconfig aka multi_defconfig.
->
-> FWIW, the defconfig doesn't build with the cross compiler¹ here, even with Kees'
-> patch applied but for a different reason:
->
-> $ make.cross ARCH=m68k defconfig
-> ...
->
-> $make.cross ARCH=m68k 2>w.log
-> ...
-> drivers/video/fbdev/c2p_planar.o: In function `transp8':
-> c2p_planar.c:(.text+0x13a): undefined reference to `c2p_unsupported'
-> c2p_planar.c:(.text+0x1de): undefined reference to `c2p_unsupported'
-> drivers/video/fbdev/c2p_iplan2.o: In function `transp4x.constprop.0':
-> c2p_iplan2.c:(.text+0x98): undefined reference to `c2p_unsupported'
-> make: *** [Makefile:1094: vmlinux] Error 1
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
-The fix for that regression (finally) made it in rc7:
-b330f3972f4f2a82 ("fbdev: c2p: Fix link failure on non-inlining").
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
