@@ -2,42 +2,62 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26F4BF9812
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 19:00:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E57CBF9A68
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 21:17:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726957AbfKLSAr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Nov 2019 13:00:47 -0500
-Received: from [211.53.128.215] ([211.53.128.215]:35512 "EHLO MAIL.isd.co.kr"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726964AbfKLSAr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 12 Nov 2019 13:00:47 -0500
-Received: from 192.168.1.163 (217.217.179.17) by MAIL.isd.co.kr (10.10.10.22)
- with Microsoft SMTP Server id 14.3.123.3; Wed, 13 Nov 2019 02:57:40 +0900
-Date:   Tue, 12 Nov 2019 18:57:42 +0100
-From:   Peter Wong <choimj@isd.co.kr>
-Reply-To: Peter Wong <pw178484@gmail.com>
-To:     <linux-s390@vger.kernel.org>
-Message-ID: <10562658.155159.1573581464218.JavaMail.cash@webmail.isd.co.kr>
-Subject: Investment opportunity
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+        id S1727004AbfKLURv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Nov 2019 15:17:51 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:49096 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfKLURv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Nov 2019 15:17:51 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6A738154D32A3;
+        Tue, 12 Nov 2019 12:17:50 -0800 (PST)
+Date:   Tue, 12 Nov 2019 12:17:49 -0800 (PST)
+Message-Id: <20191112.121749.1249383492212187557.davem@davemloft.net>
+To:     kgraul@linux.ibm.com
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: Re: [PATCH net] net/smc: fix refcount non-blocking connect() -part
+ 2
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191112150341.90681-1-kgraul@linux.ibm.com>
+References: <20191112150341.90681-1-kgraul@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [217.217.179.17]
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 12:17:50 -0800 (PST)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Greetings,
+From: Karsten Graul <kgraul@linux.ibm.com>
+Date: Tue, 12 Nov 2019 16:03:41 +0100
 
-Find attached email very confidential. reply for more details
+> From: Ursula Braun <ubraun@linux.ibm.com>
+> 
+> If an SMC socket is immediately terminated after a non-blocking connect()
+> has been called, a memory leak is possible.
+> Due to the sock_hold move in
+> commit 301428ea3708 ("net/smc: fix refcounting for non-blocking connect()")
+> an extra sock_put() is needed in smc_connect_work(), if the internal
+> TCP socket is aborted and cancels the sk_stream_wait_connect() of the
+> connect worker.
+> 
+> Reported-by: syzbot+4b73ad6fc767e576e275@syzkaller.appspotmail.com
+> Fixes: 301428ea3708 ("net/smc: fix refcounting for non-blocking connect()")
+> Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
+> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+
+Applied.
+
+And since 301428ea3708 went to -stable, I'll queue this up too.
 
 Thanks.
-Peter Wong
-
-
-
-
-----------------------------------------------------
-This email was sent by the shareware version of Postman Professional.
-
