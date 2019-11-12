@@ -2,62 +2,163 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E57CBF9A68
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 21:17:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EE43DF9AEE
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 21:42:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727004AbfKLURv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Nov 2019 15:17:51 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:49096 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726977AbfKLURv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Nov 2019 15:17:51 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6A738154D32A3;
-        Tue, 12 Nov 2019 12:17:50 -0800 (PST)
-Date:   Tue, 12 Nov 2019 12:17:49 -0800 (PST)
-Message-Id: <20191112.121749.1249383492212187557.davem@davemloft.net>
-To:     kgraul@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH net] net/smc: fix refcount non-blocking connect() -part
- 2
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191112150341.90681-1-kgraul@linux.ibm.com>
-References: <20191112150341.90681-1-kgraul@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 12 Nov 2019 12:17:50 -0800 (PST)
+        id S1726986AbfKLUmY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Nov 2019 15:42:24 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:38350 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726977AbfKLUmY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Nov 2019 15:42:24 -0500
+Received: by mail-yb1-f194.google.com with SMTP id k206so26821ybb.5
+        for <linux-s390@vger.kernel.org>; Tue, 12 Nov 2019 12:42:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DjCiefqhC9NfqWC/1OWuy32sE5JWmV0rJU7JOPNgew0=;
+        b=W944HHeBKCxkA8DrDh1k5jwoR6EZOWptr72GU329mg37lMtwT4iUEUZ8MibJm1WXxY
+         mp7Vd5ttNkK4CKdk10wHGc7YF9Rmc7Qp+ybpA4tYo7/O523giEtR7c+XhEyDLATnYhVb
+         IHC5y7twtbRJyIHHZRzoKP5vi4ejGXVr27T0mo7g73zutfQIeyf6oGcvFewyLk2NPWyf
+         q8dSyuNzqh3edUolXoBkZG1uAJt7F9zXjjeQZ8cmV2aXlwTzMa1bBwazwh9AoGVjpztq
+         ROJ96zgqiMdd32cZMSWhMI6OeGD1IF1ynEhs9KMTYO6cZ/2BMyturVgRm8wJtwJzGjPa
+         d2sA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DjCiefqhC9NfqWC/1OWuy32sE5JWmV0rJU7JOPNgew0=;
+        b=BTg43haPh4dMN9Z9rTOfZsmhqV5GmZdBBp+7FreLC8D9UUOM0a4Z629dsvsLFsNtAu
+         HMjaMQ5LZecuor0ga2iFjXnN0AcPhUQKc35I3R1AcP35oPQ8hHQJPHmscBvky0FKVVQ4
+         TaAH+dKPUoCb0VB1WiqSVjUpUCcJXR/QCGxE9ZVIL9pcrHdDNI7vB9jKNYx1WsZj8Wmb
+         2pzCZWrphqHS7PA1eV74Hxy+krENMRY50fsAYfQMmU7nwp35z7+UDJCaYFuOl5oLGY/G
+         mKNDAVzUd+bK5KnwDJl/BXrf+I3uSsZUnBKmHGAziR+llEW0I4sHJ/Yav2GtDL7WXx4+
+         nXFw==
+X-Gm-Message-State: APjAAAWoI1NBvw35ISWFMK7jkBEHEBqHgxWm1ol9JsM+Fubr1jnoUbg2
+        3ORZaM9Fml+2rDkATY3IhpUY5A==
+X-Google-Smtp-Source: APXvYqyYtUgeVlNwdv9fMm8VoUMF8TaIvGt5yJhxR65GCBa+3/C4/0mBjyFFaaUNb80Ijg+1jMj5gA==
+X-Received: by 2002:a25:7583:: with SMTP id q125mr2877735ybc.28.1573591343192;
+        Tue, 12 Nov 2019 12:42:23 -0800 (PST)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id 138sm9476213ywr.46.2019.11.12.12.42.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 12 Nov 2019 12:42:22 -0800 (PST)
+Date:   Tue, 12 Nov 2019 15:42:22 -0500
+From:   Sean Paul <sean@poorly.run>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Johan Hovold <johan@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-media@vger.kernel.org, linux-s390@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable <stable@vger.kernel.org>,
+        Jordan Crouse <jcrouse@codeaurora.org>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Fabien Dessenne <fabien.dessenne@st.com>,
+        Dave Airlie <airlied@gmail.com>
+Subject: Re: [PATCH 1/4] drm/msm: fix memleak on release
+Message-ID: <20191112204222.GB25787@art_vandelay>
+References: <20191010131333.23635-1-johan@kernel.org>
+ <20191010131333.23635-2-johan@kernel.org>
+ <20191030100146.GC4691@localhost>
+ <20191112104001.GP11035@localhost>
+ <20191112140155.GJ23790@phenom.ffwll.local>
+ <CAF6AEGvom2wZ89434VLhhgAHCk_MMCGRbxSO+DQsX=+LPOCy8A@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAF6AEGvom2wZ89434VLhhgAHCk_MMCGRbxSO+DQsX=+LPOCy8A@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
-Date: Tue, 12 Nov 2019 16:03:41 +0100
-
-> From: Ursula Braun <ubraun@linux.ibm.com>
+On Tue, Nov 12, 2019 at 08:32:07AM -0800, Rob Clark wrote:
+> On Tue, Nov 12, 2019 at 6:01 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > On Tue, Nov 12, 2019 at 11:40:01AM +0100, Johan Hovold wrote:
+> > > On Wed, Oct 30, 2019 at 11:01:46AM +0100, Johan Hovold wrote:
+> > > > On Thu, Oct 10, 2019 at 03:13:30PM +0200, Johan Hovold wrote:
+> > > > > If a process is interrupted while accessing the "gpu" debugfs file and
+> > > > > the drm device struct_mutex is contended, release() could return early
+> > > > > and fail to free related resources.
+> > > > >
+> > > > > Note that the return value from release() is ignored.
+> > > > >
+> > > > > Fixes: 4f776f4511c7 ("drm/msm/gpu: Convert the GPU show function to use the GPU state")
+> > > > > Cc: stable <stable@vger.kernel.org>     # 4.18
+> > > > > Cc: Jordan Crouse <jcrouse@codeaurora.org>
+> > > > > Cc: Rob Clark <robdclark@gmail.com>
+> > > > > Signed-off-by: Johan Hovold <johan@kernel.org>
+> > > > > ---
+> > > >
+> > > > Rob, Sean,
+> > > >
+> > > > Sending a reminder about this one, which is not yet in linux-next.
+> > > >
+> > > > Perhaps Daniel can pick it up otherwise?
+> > >
+> > > Another two weeks, another reminder. This one is still not in -next.
+> >
+> > Well msm is maintained in a separate tree, so the usual group maintainer
+> > fallback for when patches are stuck doesn't apply.
 > 
-> If an SMC socket is immediately terminated after a non-blocking connect()
-> has been called, a memory leak is possible.
-> Due to the sock_hold move in
-> commit 301428ea3708 ("net/smc: fix refcounting for non-blocking connect()")
-> an extra sock_put() is needed in smc_connect_work(), if the internal
-> TCP socket is aborted and cancels the sk_stream_wait_connect() of the
-> connect worker.
+> oh, sorry, this wasn't showing up in patchwork.. or rather it did but
+> the non-msm related series subject made me overlook it.
 > 
-> Reported-by: syzbot+4b73ad6fc767e576e275@syzkaller.appspotmail.com
-> Fixes: 301428ea3708 ("net/smc: fix refcounting for non-blocking connect()")
-> Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+> I've already sent a PR, but this shouldn't conflict with anything and
+> I think it can go in via drm-misc/fixes
+> 
+> Reviewed-by: Rob Clark <robdclark@gmail.com>
 
-Applied.
+Thanks for the patch, pushed to drm-misc-next-fixes
 
-And since 301428ea3708 went to -stable, I'll queue this up too.
+Sean
 
-Thanks.
+> 
+> > Rob, Sean, time to reconsider drm-misc for msm? I think there's some more
+> > oddball patches that occasionally get stuck for msm ...
+> >
+> > Also +Dave.
+> > -Daniel
+> >
+> > >
+> > > Johan
+> > >
+> > > > >  drivers/gpu/drm/msm/msm_debugfs.c | 6 +-----
+> > > > >  1 file changed, 1 insertion(+), 5 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/gpu/drm/msm/msm_debugfs.c b/drivers/gpu/drm/msm/msm_debugfs.c
+> > > > > index 6be879578140..1c74381a4fc9 100644
+> > > > > --- a/drivers/gpu/drm/msm/msm_debugfs.c
+> > > > > +++ b/drivers/gpu/drm/msm/msm_debugfs.c
+> > > > > @@ -47,12 +47,8 @@ static int msm_gpu_release(struct inode *inode, struct file *file)
+> > > > >   struct msm_gpu_show_priv *show_priv = m->private;
+> > > > >   struct msm_drm_private *priv = show_priv->dev->dev_private;
+> > > > >   struct msm_gpu *gpu = priv->gpu;
+> > > > > - int ret;
+> > > > > -
+> > > > > - ret = mutex_lock_interruptible(&show_priv->dev->struct_mutex);
+> > > > > - if (ret)
+> > > > > -         return ret;
+> > > > >
+> > > > > + mutex_lock(&show_priv->dev->struct_mutex);
+> > > > >   gpu->funcs->gpu_state_put(show_priv->state);
+> > > > >   mutex_unlock(&show_priv->dev->struct_mutex);
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
