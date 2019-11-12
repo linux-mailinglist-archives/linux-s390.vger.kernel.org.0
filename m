@@ -2,52 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 571F9F8BA8
-	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 10:26:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18BD2F8C0F
+	for <lists+linux-s390@lfdr.de>; Tue, 12 Nov 2019 10:41:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727132AbfKLJ0M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Nov 2019 04:26:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46596 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726986AbfKLJ0L (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Nov 2019 04:26:11 -0500
+        id S1725835AbfKLJlX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Nov 2019 04:41:23 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29763 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725834AbfKLJlX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 12 Nov 2019 04:41:23 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573550771;
+        s=mimecast20190719; t=1573551682;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=nyz0R0JFcm91sDUPNxPXHhLmYMpB12ASJ5cBmfOUd6o=;
-        b=LduT4gRlFjzWQ/AYQSZxnVdT7cKLP8PgKZghMvJ/Xa2QgCsJoILJJzMc6yG/PtLg0yZihd
-        8CvlRDkLIkhtBzY6Si94taxp72STqjk7qDhBA3MJt8aLgzvvMuWGAEze1+8XSmovbXA60U
-        TVJMYK0+k2xze0c/1GlQpCZEatSRPac=
+        bh=kamQbVxJE5ElqqCSYGnRo/PaqtEy27FbLwc20ZuKZqQ=;
+        b=TpEVgbqRJGd0VpwCepLXzGKrZf/zOHJY/+YKq6v6g9kxmBFZz6b5c6xyQhIdxNb3wcyj22
+        lHMzRiOLme/QgGYdoOWQAz7si7cKQO/qTInv1QpIZYjtcdHl2yNFulDRB852lx9vR7TKVu
+        O0kk24nPsU7+At8SOCBNw4WZaCOWOY8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-jlcQUFOLO-Ot6r267mUkDA-1; Tue, 12 Nov 2019 04:26:07 -0500
+ us-mta-390-z0ViwiboO-yikvZ1tuu_ew-1; Tue, 12 Nov 2019 04:41:21 -0500
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 53DEE91267;
-        Tue, 12 Nov 2019 09:26:06 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25F539F481;
+        Tue, 12 Nov 2019 09:41:20 +0000 (UTC)
 Received: from localhost.localdomain (ovpn-116-124.ams2.redhat.com [10.36.116.124])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6B03162671;
-        Tue, 12 Nov 2019 09:26:01 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2 1/3] s390x: Fix initial cr0 load
- comments
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2944363BA9;
+        Tue, 12 Nov 2019 09:41:16 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v2 2/3] s390x: Add CR save area
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com
 References: <20191111153345.22505-1-frankja@linux.ibm.com>
- <20191111153345.22505-2-frankja@linux.ibm.com>
+ <20191111153345.22505-3-frankja@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <55d20cae-aa91-beec-a7b2-b1145b9983b0@redhat.com>
-Date:   Tue, 12 Nov 2019 10:25:58 +0100
+Message-ID: <b57dc6f5-76ba-8d7b-cae1-0437cfe410ab@redhat.com>
+Date:   Tue, 12 Nov 2019 10:41:14 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191111153345.22505-2-frankja@linux.ibm.com>
+In-Reply-To: <20191111153345.22505-3-frankja@linux.ibm.com>
 Content-Language: en-US
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: jlcQUFOLO-Ot6r267mUkDA-1
+X-MC-Unique: z0ViwiboO-yikvZ1tuu_ew-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -57,38 +57,17 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 11/11/2019 16.33, Janosch Frank wrote:
-> We need to load cr0 to have access to all fprs during save and restore
-> of fprs. Saving conditionally on basis of the CR0 AFP bit would be a
-> pain.
+> If we run with DAT enabled and do a reset, we need to save the CRs to
+> backup our ASCEs on a diag308 for example.
 >=20
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
->  s390x/cstart64.S | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->=20
-> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-> index 8e2b21e..043e34a 100644
-> --- a/s390x/cstart64.S
-> +++ b/s390x/cstart64.S
-> @@ -94,7 +94,7 @@ memsetxc:
->  =09stmg=09%r0, %r15, GEN_LC_SW_INT_GRS
->  =09/* save cr0 */
->  =09stctg=09%c0, %c0, GEN_LC_SW_INT_CR0
-> -=09/* load initial cr0 again */
-> +=09/* load a cr0 that has the AFP control bit which enables all FPRs */
->  =09larl=09%r1, initial_cr0
->  =09lctlg=09%c0, %c0, 0(%r1)
->  =09/* save fprs 0-15 + fpc */
-> @@ -139,7 +139,7 @@ diag308_load_reset:
->  =09xgr=09%r2, %r2
->  =09br=09%r14
->  =09/* Success path */
-> -=09/* We lost cr0 due to the reset */
-> +=09/* load a cr0 that has the AFP control bit which enables all FPRs */
->  0:=09larl=09%r1, initial_cr0
->  =09lctlg=09%c0, %c0, 0(%r1)
->  =09RESTORE_REGS
->=20
+>  lib/s390x/asm-offsets.c  |  2 +-
+>  lib/s390x/asm/arch_def.h |  4 ++--
+>  lib/s390x/interrupt.c    |  4 ++--
+>  lib/s390x/smp.c          |  2 +-
+>  s390x/cstart64.S         | 10 +++++-----
+>  5 files changed, 11 insertions(+), 11 deletions(-)
 
 Reviewed-by: Thomas Huth <thuth@redhat.com>
 
