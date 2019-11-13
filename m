@@ -2,80 +2,156 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 563F6FB292
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 15:29:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B9518FB2AE
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 15:36:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfKMO3h (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Nov 2019 09:29:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22656 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727500AbfKMO3h (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 13 Nov 2019 09:29:37 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADEJveo081900
-        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 09:29:36 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w8hb96n1j-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 09:29:34 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Wed, 13 Nov 2019 14:29:22 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Nov 2019 14:29:19 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADESggO33161592
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 14:28:42 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5E718A4059;
-        Wed, 13 Nov 2019 14:29:18 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27734A4040;
-        Wed, 13 Nov 2019 14:29:18 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.41])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Nov 2019 14:29:18 +0000 (GMT)
-Date:   Wed, 13 Nov 2019 15:29:17 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Tony Krowiak <akrowiak@linux.ibm.com>,
-        Pierre Morel <pmorel@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: [PATCH] s390: vfio-ap: fix some comments
-In-Reply-To: <20191113095319.6154-1-cohuck@redhat.com>
-References: <20191113095319.6154-1-cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1727698AbfKMOgQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Nov 2019 09:36:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35184 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726957AbfKMOgQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Nov 2019 09:36:16 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573655775;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=xWDKgi8hyKELKckEbHa2ghQc5tatezsGk0pMWoMaq2s=;
+        b=gzmbkd4L9aF66cGwRqvZo0Nni02V3lbJycvwwQGhKgEAModb2K1SNewE2q0OB9QJj+lov/
+        tvx2UUZQkyClPrlaKhpi5uxW0k088z0QfT2rieKF0hbwuDWHMetUbWm9dt/B0ni4lJU6yk
+        qY9BJPLssyF6d0iwfbIZOMEuQZX4xmA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-199-KDbfKjx1PSWMOQIlQvF8pA-1; Wed, 13 Nov 2019 09:36:12 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16AFB8C0861;
+        Wed, 13 Nov 2019 14:36:11 +0000 (UTC)
+Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 55AD64D74B;
+        Wed, 13 Nov 2019 14:36:07 +0000 (UTC)
+Date:   Wed, 13 Nov 2019 15:36:05 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
+        thuth@redhat.com
+Subject: Re: [PATCH] Fix unpack
+Message-ID: <20191113153605.09daa11c.cohuck@redhat.com>
+In-Reply-To: <20191113140306.2952-1-frankja@linux.ibm.com>
+References: <07705597-8e8f-28d4-f9a1-d3d5dc9a4555@redhat.com>
+        <20191113140306.2952-1-frankja@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111314-0016-0000-0000-000002C351B3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111314-0017-0000-0000-00003324EDEC
-Message-Id: <20191113152917.645f41ab.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=698 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911130134
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: KDbfKjx1PSWMOQIlQvF8pA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 13 Nov 2019 10:53:19 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
+On Wed, 13 Nov 2019 09:03:06 -0500
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-> The functions are called vfio_ap_irq_{en,dis}able.
-> 
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+You seem to have dropped some cc:s :(
 
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+> That should be easier to read :)
+>=20
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  arch/s390/kvm/pv.c | 60 +++++++++++++++++++++++++++-------------------
+>  1 file changed, 35 insertions(+), 25 deletions(-)
+>=20
+> diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
+> index 94cf16f40f25..fd73afb33b20 100644
+> --- a/arch/s390/kvm/pv.c
+> +++ b/arch/s390/kvm/pv.c
+> @@ -195,43 +195,53 @@ int kvm_s390_pv_set_sec_parms(struct kvm *kvm,
+>  =09return 0;
+>  }
+> =20
+> -int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned lon=
+g size,
+> -=09=09       unsigned long tweak)
+> +static int unpack_one(struct kvm *kvm, unsigned long addr, u64 tweak[2])
+>  {
+> -=09int i, rc =3D 0;
+> +=09int rc;
+>  =09struct uv_cb_unp uvcb =3D {
+>  =09=09.header.cmd =3D UVC_CMD_UNPACK_IMG,
+>  =09=09.header.len =3D sizeof(uvcb),
+>  =09=09.guest_handle =3D kvm_s390_pv_handle(kvm),
+> -=09=09.tweak[0] =3D tweak
+> +=09=09.gaddr =3D addr,
+> +=09=09.tweak[0] =3D tweak[0],
+> +=09=09.tweak[1] =3D tweak[1],
+>  =09};
+> =20
+> -=09if (addr & ~PAGE_MASK || size & ~PAGE_MASK)
+> -=09=09return -EINVAL;
+> +=09rc =3D uv_call(0, (u64)&uvcb);
+> +=09if (!rc)
+> +=09=09return rc;
+> +=09if (uvcb.header.rc =3D=3D 0x10a) {
+> +=09=09/* If not yet mapped fault and retry */
+> +=09=09rc =3D gmap_fault(kvm->arch.gmap, uvcb.gaddr,
+> +=09=09=09=09FAULT_FLAG_WRITE);
+> +=09=09if (!rc)
+> +=09=09=09return -EAGAIN;
+> +=09}
+> +=09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: failed addr %llx rc %x rrc %x",
+> +=09=09 uvcb.gaddr, uvcb.header.rc, uvcb.header.rrc);
+> +=09return rc;
+> +}
+> =20
+> +int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned lon=
+g size,
+> +=09=09       unsigned long tweak)
+> +{
+> +=09int rc =3D 0;
+> +=09u64 tw[2] =3D {tweak, 0};
+> +
+> +=09if (addr & ~PAGE_MASK || !size || size & ~PAGE_MASK)
+> +=09=09return -EINVAL;
+> =20
+>  =09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: start addr %lx size %lx",
+>  =09=09 addr, size);
+> -=09for (i =3D 0; i < size / PAGE_SIZE; i++) {
+> -=09=09uvcb.gaddr =3D addr + i * PAGE_SIZE;
+> -=09=09uvcb.tweak[1] =3D i * PAGE_SIZE;
+> -retry:
+> -=09=09rc =3D uv_call(0, (u64)&uvcb);
+> -=09=09if (!rc)
+> +=09while (tw[1] < size) {
+> +=09=09rc =3D unpack_one(kvm, addr, tw);
+> +=09=09if (rc =3D=3D -EAGAIN)
+>  =09=09=09continue;
+> -=09=09/* If not yet mapped fault and retry */
+> -=09=09if (uvcb.header.rc =3D=3D 0x10a) {
+> -=09=09=09rc =3D gmap_fault(kvm->arch.gmap, uvcb.gaddr,
+> -=09=09=09=09=09FAULT_FLAG_WRITE);
+> -=09=09=09if (rc)
+> -=09=09=09=09return rc;
+> -=09=09=09goto retry;
+> -=09=09}
+> -=09=09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: failed addr %llx rc %x rrc %=
+x",
+> -=09=09=09 uvcb.gaddr, uvcb.header.rc, uvcb.header.rrc);
+> -=09=09break;
+> +=09=09if (rc)
+> +=09=09=09break;
+> +=09=09addr +=3D PAGE_SIZE;
+> +=09=09tw[1] +=3D PAGE_SIZE;
+>  =09}
+> -=09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: finished with rc %x rrc %x",
+> -=09=09 uvcb.header.rc, uvcb.header.rrc);
+> +=09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: finished rc %x", rc);
+>  =09return rc;
+>  }
+
+Yes, this looks more readable.
 
