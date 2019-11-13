@@ -2,156 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B9518FB2AE
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 15:36:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58398FB2D8
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 15:50:05 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727698AbfKMOgQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Nov 2019 09:36:16 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35184 "EHLO
+        id S1727550AbfKMOuF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Nov 2019 09:50:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33264 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726957AbfKMOgQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Nov 2019 09:36:16 -0500
+        with ESMTP id S1727452AbfKMOuE (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Nov 2019 09:50:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573655775;
+        s=mimecast20190719; t=1573656603;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=xWDKgi8hyKELKckEbHa2ghQc5tatezsGk0pMWoMaq2s=;
-        b=gzmbkd4L9aF66cGwRqvZo0Nni02V3lbJycvwwQGhKgEAModb2K1SNewE2q0OB9QJj+lov/
-        tvx2UUZQkyClPrlaKhpi5uxW0k088z0QfT2rieKF0hbwuDWHMetUbWm9dt/B0ni4lJU6yk
-        qY9BJPLssyF6d0iwfbIZOMEuQZX4xmA=
+        bh=I2QpocGZg8paGDhHqoCyoy7YDgJcSMKZ4xM1a9farrU=;
+        b=CEu3NB8AfCKstFiPmufFtgLeFiRjaLfCMIbPa3xcWX9YXr4ZrctA4b4tl5eK4/yxu/0IpN
+        Phg9LxUTGDJqFeOyXuRo+o7jOA86Cl48gZZhAwlURuoOo3r6iFpactwpZuW0Ee8k1WqW1Y
+        xGAHix9In0BtYF2MTprE8DwSefjVn4A=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-199-KDbfKjx1PSWMOQIlQvF8pA-1; Wed, 13 Nov 2019 09:36:12 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-316-AQOCxp4zMYuCB6TCfIWrfA-1; Wed, 13 Nov 2019 09:50:00 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 16AFB8C0861;
-        Wed, 13 Nov 2019 14:36:11 +0000 (UTC)
-Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 55AD64D74B;
-        Wed, 13 Nov 2019 14:36:07 +0000 (UTC)
-Date:   Wed, 13 Nov 2019 15:36:05 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        thuth@redhat.com
-Subject: Re: [PATCH] Fix unpack
-Message-ID: <20191113153605.09daa11c.cohuck@redhat.com>
-In-Reply-To: <20191113140306.2952-1-frankja@linux.ibm.com>
-References: <07705597-8e8f-28d4-f9a1-d3d5dc9a4555@redhat.com>
-        <20191113140306.2952-1-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D3AC48A2471;
+        Wed, 13 Nov 2019 14:49:58 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-183.ams2.redhat.com [10.36.116.183])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3B1106293B;
+        Wed, 13 Nov 2019 14:49:53 +0000 (UTC)
+Subject: Re: [RFC 15/37] KVM: s390: protvirt: Add machine-check interruption
+ injection controls
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-16-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <6b0bef57-cbe3-99df-354e-061a12d4cc31@redhat.com>
+Date:   Wed, 13 Nov 2019 15:49:51 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: KDbfKjx1PSWMOQIlQvF8pA-1
+In-Reply-To: <20191024114059.102802-16-frankja@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: AQOCxp4zMYuCB6TCfIWrfA-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 13 Nov 2019 09:03:06 -0500
-Janosch Frank <frankja@linux.ibm.com> wrote:
-
-You seem to have dropped some cc:s :(
-
-> That should be easier to read :)
+On 24/10/2019 13.40, Janosch Frank wrote:
+> From: Michael Mueller <mimu@linux.ibm.com>
 >=20
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> The following fields are added to the sie control block type 4:
+>      - Machine Check Interruption Code (mcic)
+>      - External Damage Code (edc)
+>      - Failing Storage Address (faddr)
+>=20
+> Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
 > ---
->  arch/s390/kvm/pv.c | 60 +++++++++++++++++++++++++++-------------------
->  1 file changed, 35 insertions(+), 25 deletions(-)
+>  arch/s390/include/asm/kvm_host.h | 33 +++++++++++++++++++++++---------
+>  1 file changed, 24 insertions(+), 9 deletions(-)
 >=20
-> diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
-> index 94cf16f40f25..fd73afb33b20 100644
-> --- a/arch/s390/kvm/pv.c
-> +++ b/arch/s390/kvm/pv.c
-> @@ -195,43 +195,53 @@ int kvm_s390_pv_set_sec_parms(struct kvm *kvm,
->  =09return 0;
->  }
-> =20
-> -int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned lon=
-g size,
-> -=09=09       unsigned long tweak)
-> +static int unpack_one(struct kvm *kvm, unsigned long addr, u64 tweak[2])
->  {
-> -=09int i, rc =3D 0;
-> +=09int rc;
->  =09struct uv_cb_unp uvcb =3D {
->  =09=09.header.cmd =3D UVC_CMD_UNPACK_IMG,
->  =09=09.header.len =3D sizeof(uvcb),
->  =09=09.guest_handle =3D kvm_s390_pv_handle(kvm),
-> -=09=09.tweak[0] =3D tweak
-> +=09=09.gaddr =3D addr,
-> +=09=09.tweak[0] =3D tweak[0],
-> +=09=09.tweak[1] =3D tweak[1],
->  =09};
-> =20
-> -=09if (addr & ~PAGE_MASK || size & ~PAGE_MASK)
-> -=09=09return -EINVAL;
-> +=09rc =3D uv_call(0, (u64)&uvcb);
-> +=09if (!rc)
-> +=09=09return rc;
-> +=09if (uvcb.header.rc =3D=3D 0x10a) {
-> +=09=09/* If not yet mapped fault and retry */
-> +=09=09rc =3D gmap_fault(kvm->arch.gmap, uvcb.gaddr,
-> +=09=09=09=09FAULT_FLAG_WRITE);
-> +=09=09if (!rc)
-> +=09=09=09return -EAGAIN;
-> +=09}
-> +=09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: failed addr %llx rc %x rrc %x",
-> +=09=09 uvcb.gaddr, uvcb.header.rc, uvcb.header.rrc);
-> +=09return rc;
-> +}
-> =20
-> +int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned lon=
-g size,
-> +=09=09       unsigned long tweak)
-> +{
-> +=09int rc =3D 0;
-> +=09u64 tw[2] =3D {tweak, 0};
-> +
-> +=09if (addr & ~PAGE_MASK || !size || size & ~PAGE_MASK)
-> +=09=09return -EINVAL;
-> =20
->  =09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: start addr %lx size %lx",
->  =09=09 addr, size);
-> -=09for (i =3D 0; i < size / PAGE_SIZE; i++) {
-> -=09=09uvcb.gaddr =3D addr + i * PAGE_SIZE;
-> -=09=09uvcb.tweak[1] =3D i * PAGE_SIZE;
-> -retry:
-> -=09=09rc =3D uv_call(0, (u64)&uvcb);
-> -=09=09if (!rc)
-> +=09while (tw[1] < size) {
-> +=09=09rc =3D unpack_one(kvm, addr, tw);
-> +=09=09if (rc =3D=3D -EAGAIN)
->  =09=09=09continue;
-> -=09=09/* If not yet mapped fault and retry */
-> -=09=09if (uvcb.header.rc =3D=3D 0x10a) {
-> -=09=09=09rc =3D gmap_fault(kvm->arch.gmap, uvcb.gaddr,
-> -=09=09=09=09=09FAULT_FLAG_WRITE);
-> -=09=09=09if (rc)
-> -=09=09=09=09return rc;
-> -=09=09=09goto retry;
-> -=09=09}
-> -=09=09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: failed addr %llx rc %x rrc %=
-x",
-> -=09=09=09 uvcb.gaddr, uvcb.header.rc, uvcb.header.rrc);
-> -=09=09break;
-> +=09=09if (rc)
-> +=09=09=09break;
-> +=09=09addr +=3D PAGE_SIZE;
-> +=09=09tw[1] +=3D PAGE_SIZE;
->  =09}
-> -=09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: finished with rc %x rrc %x",
-> -=09=09 uvcb.header.rc, uvcb.header.rrc);
-> +=09VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: finished rc %x", rc);
->  =09return rc;
->  }
+> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm=
+_host.h
+> index 63fc32d38aa9..0ab309b7bf4c 100644
+> --- a/arch/s390/include/asm/kvm_host.h
+> +++ b/arch/s390/include/asm/kvm_host.h
+> @@ -261,16 +261,31 @@ struct kvm_s390_sie_block {
+>  #define HPID_VSIE=090x5
+>  =09__u8=09hpid;=09=09=09/* 0x00b8 */
+>  =09__u8=09reservedb9[7];=09=09/* 0x00b9 */
+> -=09__u32=09eiparams;=09=09/* 0x00c0 */
+> -=09__u16=09extcpuaddr;=09=09/* 0x00c4 */
+> -=09__u16=09eic;=09=09=09/* 0x00c6 */
+> +=09union {
+> +=09=09struct {
+> +=09=09=09__u32=09eiparams;=09/* 0x00c0 */
+> +=09=09=09__u16=09extcpuaddr;=09/* 0x00c4 */
+> +=09=09=09__u16=09eic;=09=09/* 0x00c6 */
+> +=09=09};
+> +=09=09__u64=09mcic;=09=09=09/* 0x00c0 */
+> +=09} __packed;
+>  =09__u32=09reservedc8;=09=09/* 0x00c8 */
+> -=09__u16=09pgmilc;=09=09=09/* 0x00cc */
+> -=09__u16=09iprcc;=09=09=09/* 0x00ce */
+> -=09__u32=09dxc;=09=09=09/* 0x00d0 */
+> -=09__u16=09mcn;=09=09=09/* 0x00d4 */
+> -=09__u8=09perc;=09=09=09/* 0x00d6 */
+> -=09__u8=09peratmid;=09=09/* 0x00d7 */
+> +=09union {
+> +=09=09struct {
+> +=09=09=09__u16=09pgmilc;=09=09/* 0x00cc */
+> +=09=09=09__u16=09iprcc;=09=09/* 0x00ce */
+> +=09=09};
+> +=09=09__u32=09edc;=09=09=09/* 0x00cc */
+> +=09} __packed;
+> +=09union {
+> +=09=09struct {
+> +=09=09=09__u32=09dxc;=09=09/* 0x00d0 */
+> +=09=09=09__u16=09mcn;=09=09/* 0x00d4 */
+> +=09=09=09__u8=09perc;=09=09/* 0x00d6 */
+> +=09=09=09__u8=09peratmid;=09/* 0x00d7 */
+> +=09=09};
+> +=09=09__u64=09faddr;=09=09=09/* 0x00d0 */
+> +=09} __packed;
 
-Yes, this looks more readable.
+Maybe drop the __packed keywords since the struct members are naturally
+aligned anyway?
+
+ Thomas
 
