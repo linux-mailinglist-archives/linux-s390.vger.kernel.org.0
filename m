@@ -2,326 +2,137 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B2FBDFB4B2
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 17:12:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 682E0FB5FB
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 18:09:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727348AbfKMQMt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Nov 2019 11:12:49 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44118 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726165AbfKMQMs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 13 Nov 2019 11:12:48 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADG3Ype060351
-        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 11:12:47 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w8krcbktn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 11:12:46 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Wed, 13 Nov 2019 16:12:45 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Nov 2019 16:12:43 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADGCgas42336746
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 16:12:42 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 14C5242049;
-        Wed, 13 Nov 2019 16:12:42 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D052C42045;
-        Wed, 13 Nov 2019 16:12:41 +0000 (GMT)
-Received: from dyn-9-152-224-131.boeblingen.de.ibm.com (unknown [9.152.224.131])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 13 Nov 2019 16:12:41 +0000 (GMT)
-Subject: Re: [PATCH v1 1/4] s390x: saving regs for interrupts
-To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-References: <1573647799-30584-1-git-send-email-pmorel@linux.ibm.com>
- <1573647799-30584-2-git-send-email-pmorel@linux.ibm.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Wed, 13 Nov 2019 17:12:41 +0100
+        id S1727638AbfKMRJs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Nov 2019 12:09:48 -0500
+Received: from mout.web.de ([212.227.17.12]:45209 "EHLO mout.web.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726155AbfKMRJs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 13 Nov 2019 12:09:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
+        s=dbaedf251592; t=1573664975;
+        bh=TbXQOl2DJCjg0tQYK7vyqi8tMf/qRCiawErn4PM7zTE=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=hOW+RDINVtvMcnOV+1A4GA2PwDuT/IxOb5csbnEZkr+JWw5lq8IocJ4rmjWCLlYh/
+         FrYXOePoIGRJOVnNKF+GiR80VdPrUaZgi6TzObchjoD5qxyQ1TwlHXWjr3AwMCXK1t
+         P/6YMqa5boB3xthvMPMtktKjVm4xoUKyldn+/9wM=
+X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
+Received: from [192.168.1.3] ([93.131.127.42]) by smtp.web.de (mrweb102
+ [213.165.67.124]) with ESMTPSA (Nemesis) id 0MhUbO-1iILDJ17Pm-00Mcds; Wed, 13
+ Nov 2019 18:09:35 +0100
+Subject: Re: [v4] s390/pkey: Fix memory leak in error case by using
+ memdup_user() rather than open coding
+To:     linux-s390@vger.kernel.org,
+        =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors@vger.kernel.org, Kangjie Lu <kjlu@umn.edu>,
+        Navid Emamdoost <emamd001@umn.edu>,
+        Stephen McCamant <smccaman@umn.edu>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        Ingo Franzki <ifranzki@linux.ibm.com>,
+        Joe Perches <joe@perches.com>
+References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
+ <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
+ <deb7893f-3cfe-18fc-3feb-b26b290bf3c6@web.de>
+ <833d7d5e-6ede-6bdd-a2cc-2da7f0b03908@de.ibm.com>
+ <1b65bc81-f47a-eefa-f1f4-d5af6a1809c0@web.de>
+ <733b29df-207e-a165-ee80-46be8720c0c4@de.ibm.com>
+ <8f98f9fc-57df-5993-44b5-5ea4c0de7ef9@web.de>
+ <c0df9cc8-c41a-1e5d-811c-1ff045c13fcc@de.ibm.com>
+ <61244676-8ac1-20af-ed94-99e19c1f95d5@web.de>
+ <040f3e18-d97a-fc32-b237-20e7553e1733@de.ibm.com>
+ <aca044e8-e4b2-eda8-d724-b08772a44ed9@web.de>
+ <0c47ee47-35a0-65ee-4da1-e1745f882947@de.ibm.com>
+From:   Markus Elfring <Markus.Elfring@web.de>
+Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
+ 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 FEE=
+Message-ID: <52593fb9-cfc4-e444-6657-aff6c622607d@web.de>
+Date:   Wed, 13 Nov 2019 18:09:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1573647799-30584-2-git-send-email-pmorel@linux.ibm.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="T7l0bocAsNY7PneeOXfo59mpPexWjFdhU"
-X-TM-AS-GCONF: 00
-x-cbid: 19111316-4275-0000-0000-0000037D6ECA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111316-4276-0000-0000-00003890D15D
-Message-Id: <7f40bf69-6e34-7613-1ab5-83e09464c0b0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911130144
+In-Reply-To: <0c47ee47-35a0-65ee-4da1-e1745f882947@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Provags-ID: V03:K1:ME5xkgC5yOHpNij0d+x40tT/vh5JC03iLWsIMrjgCrMY/0QIiE+
+ ktCheJC3chI8lum7qgjoE1C37zQblTWFynnUHjdR7tW6/UNiFqsrGPa083Uwh2akU5QuHGS
+ LCO6H687s+AAg9HfPrFbyD8uUfRFHzyAxRpaycuebHVJkGuXxRwkwvevQgAtF6wF9M7hXGh
+ m+lfIViytQWNa+UNSfVZA==
+X-Spam-Flag: NO
+X-UI-Out-Filterresults: notjunk:1;V03:K0:AfcU2xkBKMY=:D7wweDxYg8F5Ka5T4+EADM
+ Lv+SiKoEnPOqHYwfhFTYLMwNbHUQqN+pBkqNib2KbKJm5FFG2A6BOkxCxwvPgtpBOL7ufJ+7c
+ oB7UGsw8N/BUNLiVfq1jUMdWTBjO7ydGD1DrX8u5Hhv02sfOx+Cgj2uRHsiNR/RJqWY+erOR1
+ NrhGy3+WGoJJ7s8yK3NKsj7meN/odMkR9r2aZkWyibnJfAShQ9OvuVI94SB/3VgiLSNgK0IQk
+ wIduPLZVZ1sxDYz1znWIyTvmPRHbIKw/rFODLq0mm7r2WbH54CqB5ErTpTOAvUfScr4JjhW7q
+ gWYeZn6Qlzuy5CAEV4YGp+oVg41cxGMqLcLJE3wFQEO5gR1FY3Baw3wb5SC4ugeV0JGoa90af
+ 2t+i719xkKMYjim1fYzp9uSmfAvhYwM7BbAm+t1n34OPwFLDQs1FDbpkh+mcuf/6FWWFrKG6p
+ wMDPhKviDmu7ON4+cj/qhpStZSuW77/arcr5G9+2rbPUFf0MDAKq34aRir5QcAUb1OMyqZgVZ
+ MWH3Qo+7lOhYLCxcHNVh/cZTwrQYYZk+C5Zz4SYVZg9XHCgdhvjYY44Ncderky/KNTCPEXpwJ
+ LPMoc/O5R32uRT3MlgXChOjKdLEUzAwHBtwXtu2oAF06CHmq3BPe1cgbPIGGd96QFe5hSjhoL
+ x+qme/N/G5xY9HdqIUalmgvpFzsiylxJqb9hGo4yW7LLkqz6dgCg1v2NUzhlHV7Fmxc0oQqj1
+ 2P6QeEC6yq2foBnGHrOi5XByvPFsmAcT2HknHXYiXz1MDN9SbBQPZhMld4T5Nu87OzJVjE2b1
+ zF1CeRcOdRsb1hd1C0EJqF2eSg5USyW+Uv+O+RrsByuY4c4pu8vpAyglHL3O592zfYoNtKjNf
+ D038V380sgwk8fI8Jpn0l3KBa8XdpjugIxzSZrHFRwK12qtqyotT1x8uLuw4k2lBAVb8fwZ0F
+ lrG7WtB0u2DmN/x1RHjmHXH12RdQj49UcvYWGurRvOTFaf4doy+ASSEo/ioBVYMaUxwN67BKZ
+ +lBAFQL5TKqSScGbp64jgQg7Qc7yVIWXA5middp7FcpGb0tZCw3iE0khWzn1glNfaESNGD78t
+ xMPaBs+erbJeDz9um0MBSbPSrrjGgnoGvc4jTZayxd48tigA4yt28O7rzZW24vRKXpekxJDm8
+ 40t9Q1BOhrTpuP4N/UCSqSKU8eJQjtn0pxGhVYFPauPaehU9UErUGf3sykh7Xpw+SkUQE2ywL
+ oGPF08d8tjcmvGaPeEX0O5QXfKeDGNkP3konsRy50+M/4SrWPj6XNiEkDIIE=
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---T7l0bocAsNY7PneeOXfo59mpPexWjFdhU
-Content-Type: multipart/mixed; boundary="DFiyH82n6Typ8JwZzB8MBpyrm6vAPBrxR"
+> applied. [...]
 
---DFiyH82n6Typ8JwZzB8MBpyrm6vAPBrxR
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+I find it interesting how the commit message was changed once more.
+https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=8b57e7c852fc58a62e668a83c0fa8d9246131803
+("s390/pkey: use memdup_user() to simplify code")
 
-On 11/13/19 1:23 PM, Pierre Morel wrote:
-> If we use multiple source of interrupts, for exemple, using SCLP consol=
-e
-> to print information while using I/O interrupts or during exceptions, w=
-e
-> need to have a re-entrant register saving interruption handling.
->=20
-> Instead of saving at a static place, let's save the base registers on
-> the stack.
->=20
-> Note that we keep the static register saving that we need for the RESET=
-
-> tests.
->=20
-> We also care to give the handlers a pointer to the save registers in
-> case the handler needs it (fixup_pgm_int needs the old psw address).
-
-So you're still ignoring the FPRs...
-I disassembled a test and looked at all stds and it looks like printf
-and related functions use them. Wouldn't we overwrite test FPRs if
-printing in a handler?
-
->=20
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  lib/s390x/asm/interrupt.h | 15 ++++++++++-----
->  lib/s390x/interrupt.c     | 16 ++++++++--------
->  s390x/cstart64.S          | 17 ++++++++++++++---
->  3 files changed, 32 insertions(+), 16 deletions(-)
->=20
-> diff --git a/lib/s390x/asm/interrupt.h b/lib/s390x/asm/interrupt.h
-> index 4cfade9..a39a3a3 100644
-> --- a/lib/s390x/asm/interrupt.h
-> +++ b/lib/s390x/asm/interrupt.h
-> @@ -15,11 +15,16 @@
->  #define EXT_IRQ_EXTERNAL_CALL	0x1202
->  #define EXT_IRQ_SERVICE_SIG	0x2401
-> =20
-> -void handle_pgm_int(void);
-> -void handle_ext_int(void);
-> -void handle_mcck_int(void);
-> -void handle_io_int(void);
-> -void handle_svc_int(void);
-> +typedef struct saved_registers {
-> +        unsigned long regs[15];
-> +} sregs_t;
-> +
-> +void handle_pgm_int(sregs_t *regs);
-> +void handle_ext_int(sregs_t *regs);
-> +void handle_mcck_int(sregs_t *regs);
-> +void handle_io_int(sregs_t *regs);
-> +void handle_svc_int(sregs_t *regs);
-> +
->  void expect_pgm_int(void);
->  void expect_ext_int(void);
->  uint16_t clear_pgm_int(void);
-> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
-> index 5cade23..7aecfc5 100644
-> --- a/lib/s390x/interrupt.c
-> +++ b/lib/s390x/interrupt.c
-> @@ -50,7 +50,7 @@ void check_pgm_int_code(uint16_t code)
->  	       code =3D=3D lc->pgm_int_code, code, lc->pgm_int_code);
->  }
-> =20
-> -static void fixup_pgm_int(void)
-> +static void fixup_pgm_int(sregs_t *regs)
->  {
->  	switch (lc->pgm_int_code) {
->  	case PGM_INT_CODE_PRIVILEGED_OPERATION:
-> @@ -64,7 +64,7 @@ static void fixup_pgm_int(void)
->  		/* Handling for iep.c test case. */
->  		if (lc->trans_exc_id & 0x80UL && lc->trans_exc_id & 0x04UL &&
->  		    !(lc->trans_exc_id & 0x08UL))
-> -			lc->pgm_old_psw.addr =3D lc->sw_int_grs[14];
-> +			lc->pgm_old_psw.addr =3D regs->regs[14];
->  		break;
->  	case PGM_INT_CODE_SEGMENT_TRANSLATION:
->  	case PGM_INT_CODE_PAGE_TRANSLATION:
-> @@ -103,7 +103,7 @@ static void fixup_pgm_int(void)
->  	/* suppressed/terminated/completed point already at the next address =
-*/
->  }
-> =20
-> -void handle_pgm_int(void)
-> +void handle_pgm_int(sregs_t *regs)
->  {
->  	if (!pgm_int_expected)
->  		report_abort("Unexpected program interrupt: %d at %#lx, ilen %d\n",
-> @@ -111,10 +111,10 @@ void handle_pgm_int(void)
->  			     lc->pgm_int_id);
-> =20
->  	pgm_int_expected =3D false;
-> -	fixup_pgm_int();
-> +	fixup_pgm_int(regs);
->  }
-> =20
-> -void handle_ext_int(void)
-> +void handle_ext_int(sregs_t *regs)
->  {
->  	if (!ext_int_expected &&
->  	    lc->ext_int_code !=3D EXT_IRQ_SERVICE_SIG) {
-> @@ -134,19 +134,19 @@ void handle_ext_int(void)
->  		lc->ext_old_psw.mask &=3D ~PSW_MASK_EXT;
->  }
-> =20
-> -void handle_mcck_int(void)
-> +void handle_mcck_int(sregs_t *regs)
->  {
->  	report_abort("Unexpected machine check interrupt: at %#lx",
->  		     lc->mcck_old_psw.addr);
->  }
-> =20
-> -void handle_io_int(void)
-> +void handle_io_int(sregs_t *regs)
->  {
->  	report_abort("Unexpected io interrupt: at %#lx",
->  		     lc->io_old_psw.addr);
->  }
-> =20
-> -void handle_svc_int(void)
-> +void handle_svc_int(sregs_t *regs)
->  {
->  	report_abort("Unexpected supervisor call interrupt: at %#lx",
->  		     lc->svc_old_psw.addr);
-> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-> index 8e2b21e..eaff481 100644
-> --- a/s390x/cstart64.S
-> +++ b/s390x/cstart64.S
-> @@ -90,6 +90,17 @@ memsetxc:
->  	xc 0(1,%r1),0(%r1)
-> =20
->  	.macro SAVE_REGS
-> +	slgfi	%r15, 15 * 8
-> +	stmg	%r0, %r14, 0(%r15)
-> +	lgr	%r2, %r15
-> +	.endm
-> +
-> +	.macro RESTORE_REGS
-> +	lmg     %r0, %r14, 0(%r15)
-> +	algfi   %r15, 15 * 8
-> +	.endm
-> +
-> +	.macro SAVE_REGS_RESET
->  	/* save grs 0-15 */
->  	stmg	%r0, %r15, GEN_LC_SW_INT_GRS
->  	/* save cr0 */
-> @@ -105,7 +116,7 @@ memsetxc:
->  	stfpc	GEN_LC_SW_INT_FPC
->  	.endm
-> =20
-> -	.macro RESTORE_REGS
-> +	.macro RESTORE_REGS_RESET
->  	/* restore fprs 0-15 + fpc */
->  	la	%r1, GEN_LC_SW_INT_FPRS
->  	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
-> @@ -125,7 +136,7 @@ memsetxc:
->   */
->  .globl diag308_load_reset
->  diag308_load_reset:
-> -	SAVE_REGS
-> +	SAVE_REGS_RESET
->  	/* Save the first PSW word to the IPL PSW */
->  	epsw	%r0, %r1
->  	st	%r0, 0
-> @@ -142,7 +153,7 @@ diag308_load_reset:
->  	/* We lost cr0 due to the reset */
->  0:	larl	%r1, initial_cr0
->  	lctlg	%c0, %c0, 0(%r1)
-> -	RESTORE_REGS
-> +	RESTORE_REGS_RESET
->  	lhi	%r2, 1
->  	br	%r14
-> =20
->=20
-
-
-
---DFiyH82n6Typ8JwZzB8MBpyrm6vAPBrxR--
-
---T7l0bocAsNY7PneeOXfo59mpPexWjFdhU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl3MK3kACgkQ41TmuOI4
-ufgp+g//d1yXGzI5IK/w9iUQQXYs3a0VyV6Bq23FSIIrwUYJh/iuVJxvG66yR6+V
-XmaDrXG/kfpU63hpl2+Efqsh8U/plTFCc+fbe4olf1Lq+MWFYvyQ7oTWCwxxFd0p
-g3NCKuEZW/7An9PPDvaGt5UP/1g75f2k6ZQgAJvbmiZzEJe+yCgCBNuxNe7pxi5q
-Fqe0lKiQNN5Ht97nzbHbDjD36OAuyL7XjZXHBDD6Jw6lENlWEDBjV9JtMaRdK64u
-WQFs2DRfXqSNEuxrXoL5c/fOjlbI5A8Zw6TeJHPtXwGIwsppcwtJAiX+wdU8b/Xh
-WJRgZ6CTl2qiQv+SWAa2RYQ2uQYezovv14yjCHpZJrjAYE5c0ScQSBv6gIWfWAFs
-VVhVjz32r8kz6XUGBBW9zoIq9iFNHBwVynMKH83e69uQBjnVNWWlkBPtrOWgJh/e
-HFuVhoDQUUMd6OqWb/bKKDgcAoP8XF08WnI79prDW2O1YLPEISq4qlYFvezvuX/L
-PJ0FT/4QFbZr4uIM+DyLtUzWsiBUlUxEUsdRv6woX54o90n1+zDTS0ptwHmHqh+y
-MDeHZ2xjmIemkoxxw1pnU0nsQgosArm3XWqArdn+LBc8G7XKKI/p4nlNZOI/gKd8
-FoVCNsHpSqrc+ciCoIjjHgyLHPHjQ4lRB1j9QsSRCmOWxbKogz8=
-=4b+C
------END PGP SIGNATURE-----
-
---T7l0bocAsNY7PneeOXfo59mpPexWjFdhU--
-
+Regards,
+Markus
