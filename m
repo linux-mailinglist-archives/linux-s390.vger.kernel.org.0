@@ -2,95 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ABC57FA2E7
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 03:07:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 176FBFA273
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 03:04:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730760AbfKMCGs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 12 Nov 2019 21:06:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56722 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729120AbfKMCBC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 12 Nov 2019 21:01:02 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 83F5A22473;
-        Wed, 13 Nov 2019 02:01:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573610462;
-        bh=wuFV/Q3pP6kDQ8IyS7nsyXbODbwVXLDPUfz79SNORZk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BvL63daX7jWUgyVMHhCLoE1mt1ZEulQIceIWFhRpfLw0mUE6pjdvSsUEVB/jAMQDW
-         UaWPGBOovs6fpq8BICcwdW80awUzylsePgxY7cTNeTBeocq++7Gf0jePHE9hQQVLwS
-         99sjfCUdpt6NlfJ8unChhxfVdm8uO443a4iBfFGQ=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 50/68] s390/kasan: avoid vdso instrumentation
-Date:   Tue, 12 Nov 2019 20:59:14 -0500
-Message-Id: <20191113015932.12655-50-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
-References: <20191113015932.12655-1-sashal@kernel.org>
+        id S1730109AbfKMCDn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 12 Nov 2019 21:03:43 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:39298 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728300AbfKMCDm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 12 Nov 2019 21:03:42 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iUhzv-0008C3-Ic; Wed, 13 Nov 2019 02:03:07 +0000
+Date:   Wed, 13 Nov 2019 02:03:07 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        David Drysdale <drysdale@google.com>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 5/9] namei: LOOKUP_IN_ROOT: chroot-like scoped
+ resolution
+Message-ID: <20191113020307.GB26530@ZenIV.linux.org.uk>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-6-cyphar@cyphar.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105090553.6350-6-cyphar@cyphar.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
+On Tue, Nov 05, 2019 at 08:05:49PM +1100, Aleksa Sarai wrote:
 
-[ Upstream commit 348498458505e202df41b6b9a78da448d39298b7 ]
+> @@ -2277,12 +2277,20 @@ static const char *path_init(struct nameidata *nd, unsigned flags)
+>  
+>  	nd->m_seq = read_seqbegin(&mount_lock);
+>  
+> -	/* Figure out the starting path and root (if needed). */
+> -	if (*s == '/') {
+> +	/* Absolute pathname -- fetch the root. */
+> +	if (flags & LOOKUP_IN_ROOT) {
+> +		/* With LOOKUP_IN_ROOT, act as a relative path. */
+> +		while (*s == '/')
+> +			s++;
 
-vdso is mapped into user space processes, which won't have kasan
-shodow mapped.
-
-Reviewed-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/kernel/vdso32/Makefile | 3 ++-
- arch/s390/kernel/vdso64/Makefile | 3 ++-
- 2 files changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/kernel/vdso32/Makefile b/arch/s390/kernel/vdso32/Makefile
-index ca7c3c34f94ba..2bb3a255e51a4 100644
---- a/arch/s390/kernel/vdso32/Makefile
-+++ b/arch/s390/kernel/vdso32/Makefile
-@@ -24,9 +24,10 @@ obj-y += vdso32_wrapper.o
- extra-y += vdso32.lds
- CPPFLAGS_vdso32.lds += -P -C -U$(ARCH)
- 
--# Disable gcov profiling and ubsan for VDSO code
-+# Disable gcov profiling, ubsan and kasan for VDSO code
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
- 
- # Force dependency (incbin is bad)
- $(obj)/vdso32_wrapper.o : $(obj)/vdso32.so
-diff --git a/arch/s390/kernel/vdso64/Makefile b/arch/s390/kernel/vdso64/Makefile
-index 84af2b6b64c42..76c56b5382be9 100644
---- a/arch/s390/kernel/vdso64/Makefile
-+++ b/arch/s390/kernel/vdso64/Makefile
-@@ -24,9 +24,10 @@ obj-y += vdso64_wrapper.o
- extra-y += vdso64.lds
- CPPFLAGS_vdso64.lds += -P -C -U$(ARCH)
- 
--# Disable gcov profiling and ubsan for VDSO code
-+# Disable gcov profiling, ubsan and kasan for VDSO code
- GCOV_PROFILE := n
- UBSAN_SANITIZE := n
-+KASAN_SANITIZE := n
- 
- # Force dependency (incbin is bad)
- $(obj)/vdso64_wrapper.o : $(obj)/vdso64.so
--- 
-2.20.1
-
+Er...  Why bother skipping slashes?  I mean, not only link_path_walk()
+will skip them just fine, you are actually risking breakage in this:
+                if (*s && unlikely(!d_can_lookup(dentry))) {
+                        fdput(f);
+                        return ERR_PTR(-ENOTDIR);
+                }
+which is downstream from there with you patch, AFAICS.
