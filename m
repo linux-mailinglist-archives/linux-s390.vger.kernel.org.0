@@ -2,178 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A13EFAE92
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 11:31:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 76341FAF9B
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 12:24:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727427AbfKMKbe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Nov 2019 05:31:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35972 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726165AbfKMKbe (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Nov 2019 05:31:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573641093;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=ngzfD8RgnsUHYaJzCiev7qxHfXql3bU5Gv+F4NrA+Hw=;
-        b=I0yUtqcn6WzCgc3gKeYxBNxglSiio7ECGjqWGQ39Pr8EU39Jd6oIzFMnZ87TlGKroT+bS6
-        1Gm/oC5LNG5TLRC9FxvGTcgKPSkd/VPQfsCSX0NnzmvFAIjgRbw0qsYQRaI1+mFSEGMEqe
-        9IZx80MbjLgVhKz4hHlHuVX8aH5+A/A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-269-ICP2ydTpOGO7yyJciouADw-1; Wed, 13 Nov 2019 05:31:30 -0500
-X-MC-Unique: ICP2ydTpOGO7yyJciouADw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9CA52107ACC8;
-        Wed, 13 Nov 2019 10:31:29 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-183.ams2.redhat.com [10.36.116.183])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 05FD264044;
-        Wed, 13 Nov 2019 10:31:25 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2 3/3] s390x: Load reset psw on diag308
- reset
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org
-References: <20191111153345.22505-1-frankja@linux.ibm.com>
- <20191111153345.22505-4-frankja@linux.ibm.com>
- <7683adc7-2cd0-1103-d231-8a1577f1e673@redhat.com>
- <a22f8407-efb1-ab0e-eaf6-77d0b853c6de@linux.ibm.com>
- <f3be87c4-135e-dd42-b9b4-aadc0d0c90ca@redhat.com>
- <1dac633a-65f3-5331-ecd7-6173acffa360@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <e54ce8f8-7ed5-3eee-6715-8b5051cb49fb@redhat.com>
-Date:   Wed, 13 Nov 2019 11:31:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1726339AbfKMLYO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Nov 2019 06:24:14 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22758 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727733AbfKMLYO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 13 Nov 2019 06:24:14 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADBN9sF086915
+        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 06:24:12 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w8gk80y1j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 06:24:12 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Wed, 13 Nov 2019 11:24:09 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 13 Nov 2019 11:24:07 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADBO6PJ35979346
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 13 Nov 2019 11:24:06 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7DC765204E;
+        Wed, 13 Nov 2019 11:24:06 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.152.224.131])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BE45F5204F;
+        Wed, 13 Nov 2019 11:24:05 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
+Subject: [kvm-unit-tests PATCH v4] s390x: Load reset psw on diag308 reset
+Date:   Wed, 13 Nov 2019 06:24:03 -0500
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <e54ce8f8-7ed5-3eee-6715-8b5051cb49fb@redhat.com>
+References: <e54ce8f8-7ed5-3eee-6715-8b5051cb49fb@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1dac633a-65f3-5331-ecd7-6173acffa360@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="7FwqGp62SifqDXvSaC1UXcZE0ONliOhAT"
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111311-0008-0000-0000-0000032EA507
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111311-0009-0000-0000-00004A4DAE2B
+Message-Id: <20191113112403.7664-1-frankja@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911130108
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---7FwqGp62SifqDXvSaC1UXcZE0ONliOhAT
-Content-Type: multipart/mixed; boundary="oBK8PMOFVFjb1pClwrnoecfZftzI6XA8l"
+On a diag308 subcode 0 CRs will be reset, so we need a PSW mask
+without DAT. Also we need to set the short psw indication to be
+compliant with the architecture.
 
---oBK8PMOFVFjb1pClwrnoecfZftzI6XA8l
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+Let's therefore define a reset PSW mask with 64 bit addressing and
+short PSW indication that is compliant with architecture and use it.
 
-On 13/11/2019 11.04, Janosch Frank wrote:
-> On 11/12/19 5:17 PM, Thomas Huth wrote:
->> On 12/11/2019 14.42, Janosch Frank wrote:
->>> On 11/12/19 1:09 PM, David Hildenbrand wrote:
->>>> On 11.11.19 16:33, Janosch Frank wrote:
->>>>> On a diag308 subcode 0 CRs will be reset, so we need a PSW mask
->>>>> without DAT. Also we need to set the short psw indication to be
->>>>> compliant with the architecture.
->>>>>
->>>>> Let's therefore define a reset PSW mask with 64 bit addressing and
->>>>> short PSW indication that is compliant with architecture and use it.
->>>>>
->>>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>>>> ---
->>>>>  lib/s390x/asm-offsets.c  |  1 +
->>>>>  lib/s390x/asm/arch_def.h |  3 ++-
->>>>>  s390x/cstart64.S         | 24 +++++++++++++++++-------
->>>>>  3 files changed, 20 insertions(+), 8 deletions(-)
->>>>>
->>>>> diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
->>>>> index 4b213f8..61d2658 100644
->>>>> --- a/lib/s390x/asm-offsets.c
->>>>> +++ b/lib/s390x/asm-offsets.c
->>>>> @@ -58,6 +58,7 @@ int main(void)
->>>>>  =09OFFSET(GEN_LC_SW_INT_FPRS, lowcore, sw_int_fprs);
->>>>>  =09OFFSET(GEN_LC_SW_INT_FPC, lowcore, sw_int_fpc);
->>>>>  =09OFFSET(GEN_LC_SW_INT_CRS, lowcore, sw_int_crs);
->>>>> +=09OFFSET(GEN_LC_SW_INT_PSW, lowcore, sw_int_psw);
->>>>>  =09OFFSET(GEN_LC_MCCK_EXT_SA_ADDR, lowcore, mcck_ext_sa_addr);
->>>>>  =09OFFSET(GEN_LC_FPRS_SA, lowcore, fprs_sa);
->>>>>  =09OFFSET(GEN_LC_GRS_SA, lowcore, grs_sa);
->>>>> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
->>>>> index 07d4e5e..7d25e4f 100644
->>>>> --- a/lib/s390x/asm/arch_def.h
->>>>> +++ b/lib/s390x/asm/arch_def.h
->>>>> @@ -79,7 +79,8 @@ struct lowcore {
->>>>>  =09uint32_t=09sw_int_fpc;=09=09=09/* 0x0300 */
->>>>>  =09uint8_t=09=09pad_0x0304[0x0308 - 0x0304];=09/* 0x0304 */
->>>>>  =09uint64_t=09sw_int_crs[16];=09=09=09/* 0x0308 */
->>>>> -=09uint8_t=09=09pad_0x0310[0x11b0 - 0x0388];=09/* 0x0388 */
->>>>> +=09struct psw=09sw_int_psw;=09=09=09/* 0x0388 */
->>>>> +=09uint8_t=09=09pad_0x0310[0x11b0 - 0x0390];=09/* 0x0390 */
->>>>>  =09uint64_t=09mcck_ext_sa_addr;=09=09/* 0x11b0 */
->>>>>  =09uint8_t=09=09pad_0x11b8[0x1200 - 0x11b8];=09/* 0x11b8 */
->>>>>  =09uint64_t=09fprs_sa[16];=09=09=09/* 0x1200 */
->> [...]
->>>> This patch breaks the smp test under TCG (no clue and no time to look
->>>> into the details :) ):
->>>
->>> I forgot to fixup the offset calculation at the top of the patch once
->>> again...
->>
->> Maybe add a
->>
->> _Static_assert(sizeof(struct lowcore) =3D=3D xyz)
->>
->> after the struct definitions, to avoid that this happens again?
->>
->>  Thomas
->>
->=20
-> How about this?
-> Or do we want to extend the struct to 8K and test for that?
->=20
-> diff --git i/lib/s390x/asm/arch_def.h w/lib/s390x/asm/arch_def.h
-> index 5f034a7..cf6e1ca 100644
-> --- i/lib/s390x/asm/arch_def.h
-> +++ w/lib/s390x/asm/arch_def.h
-> @@ -99,6 +99,7 @@ struct lowcore {
->         uint8_t         pad_0x1400[0x1800 - 0x1400];    /* 0x1400 */
->         uint8_t         pgm_int_tdb[0x1900 - 0x1800];   /* 0x1800 */
->  } __attribute__ ((__packed__));
-> +_Static_assert(sizeof(struct lowcore) =3D=3D 0x1900, "Lowcore size");
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: Thomas Huth <thuth@redhat.com>
+---
+ lib/s390x/asm-offsets.c  |  1 +
+ lib/s390x/asm/arch_def.h |  4 +++-
+ s390x/cstart64.S         | 24 +++++++++++++++++-------
+ 3 files changed, 21 insertions(+), 8 deletions(-)
 
-Fine for me either way (either checking for 0x1900 or extending the
-struct to 8192).
-Hmm, maybe we should go with 0x1900 for now, and extend the struct to
-8192 bytes later if there is a reason to do it.
-
- Thomas
-
-
---oBK8PMOFVFjb1pClwrnoecfZftzI6XA8l--
-
---7FwqGp62SifqDXvSaC1UXcZE0ONliOhAT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJ7iIR+7gJQEY8+q5LtnXdP5wLbUFAl3L23QACgkQLtnXdP5w
-LbV6sBAAkVGgbboD3p2JLGS9KeQCGJeTczxVgfpFuTdMvbe0gzfj074nbxZjcdrS
-i8wyPwxv1/c1Ezus8ORjiXnMW+UmawBmD3PqCUiVG6VglN8nbRXZMKAMv7etthwu
-do+/XVKSc2HcU74tne8pDxbTRtKikpXX9UIC4FULioiTGgYzlfXZBj+kVgsdA7ut
-jrhaRRCQQ0DN8ArufuUc4ut7wHJfrf703OmnDrnNa9tBmE3cPDp8hnwwYMoZnXEh
-W95qbLXxVb06hiUONvx7DWh2zoKiuEe+Z1b7C5P9uXyc61rST2E+UQJ7mpKxK+dh
-VDObWD2Vz8iVy6/7hezLJf4pm2VsqPjOucY7KKIj3UF/7AJY7jH79DBMSPZn3GeV
-gu/B8GT15MrkDWI3LGsrgiw03en1uFcan37oZF5aHPjn2U5We6SVy0wsj856vI96
-hfm55I3QPlMiT6wPjLfGSYzMwBnzH3AyrIHQSO3gtJfJbNF4k7rmzCNxne3Kc2Lh
-Lkrm7yINog6yshIngYEHm5bQ7M7X4oGrxohw/057I7RHB1DhucAhqn4ROxpWp88C
-9uCZRImS+5xEqt6FHjgbAgeVbQpTmKsT/468wHm+MaYHZuyLL9/3scjMCfojOF3A
-ENVZATJObbu5vuVCu3h3DC916yyZVy5+6/99uWG/0I5fBRdtzV8=
-=gIbZ
------END PGP SIGNATURE-----
-
---7FwqGp62SifqDXvSaC1UXcZE0ONliOhAT--
+diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
+index 4b213f8..61d2658 100644
+--- a/lib/s390x/asm-offsets.c
++++ b/lib/s390x/asm-offsets.c
+@@ -58,6 +58,7 @@ int main(void)
+ 	OFFSET(GEN_LC_SW_INT_FPRS, lowcore, sw_int_fprs);
+ 	OFFSET(GEN_LC_SW_INT_FPC, lowcore, sw_int_fpc);
+ 	OFFSET(GEN_LC_SW_INT_CRS, lowcore, sw_int_crs);
++	OFFSET(GEN_LC_SW_INT_PSW, lowcore, sw_int_psw);
+ 	OFFSET(GEN_LC_MCCK_EXT_SA_ADDR, lowcore, mcck_ext_sa_addr);
+ 	OFFSET(GEN_LC_FPRS_SA, lowcore, fprs_sa);
+ 	OFFSET(GEN_LC_GRS_SA, lowcore, grs_sa);
+diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+index 07d4e5e..cf6e1ca 100644
+--- a/lib/s390x/asm/arch_def.h
++++ b/lib/s390x/asm/arch_def.h
+@@ -79,7 +79,8 @@ struct lowcore {
+ 	uint32_t	sw_int_fpc;			/* 0x0300 */
+ 	uint8_t		pad_0x0304[0x0308 - 0x0304];	/* 0x0304 */
+ 	uint64_t	sw_int_crs[16];			/* 0x0308 */
+-	uint8_t		pad_0x0310[0x11b0 - 0x0388];	/* 0x0388 */
++	struct psw	sw_int_psw;			/* 0x0388 */
++	uint8_t		pad_0x0310[0x11b0 - 0x0398];	/* 0x0398 */
+ 	uint64_t	mcck_ext_sa_addr;		/* 0x11b0 */
+ 	uint8_t		pad_0x11b8[0x1200 - 0x11b8];	/* 0x11b8 */
+ 	uint64_t	fprs_sa[16];			/* 0x1200 */
+@@ -98,6 +99,7 @@ struct lowcore {
+ 	uint8_t		pad_0x1400[0x1800 - 0x1400];	/* 0x1400 */
+ 	uint8_t		pgm_int_tdb[0x1900 - 0x1800];	/* 0x1800 */
+ } __attribute__ ((__packed__));
++_Static_assert(sizeof(struct lowcore) == 0x1900, "Lowcore size");
+ 
+ #define PGM_INT_CODE_OPERATION			0x01
+ #define PGM_INT_CODE_PRIVILEGED_OPERATION	0x02
+diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+index 4be20fc..86dd4c4 100644
+--- a/s390x/cstart64.S
++++ b/s390x/cstart64.S
+@@ -126,13 +126,18 @@ memsetxc:
+ .globl diag308_load_reset
+ diag308_load_reset:
+ 	SAVE_REGS
+-	/* Save the first PSW word to the IPL PSW */
++	/* Backup current PSW mask, as we have to restore it on success */
+ 	epsw	%r0, %r1
+-	st	%r0, 0
+-	/* Store the address and the bit for 31 bit addressing */
+-	larl    %r0, 0f
+-	oilh    %r0, 0x8000
+-	st      %r0, 0x4
++	st	%r0, GEN_LC_SW_INT_PSW
++	st	%r1, GEN_LC_SW_INT_PSW + 4
++	/* Load reset psw mask (short psw, 64 bit) */
++	lg	%r0, reset_psw
++	/* Load the success label address */
++	larl    %r1, 0f
++	/* Or it to the mask */
++	ogr	%r0, %r1
++	/* Store it at the reset PSW location (real 0x0) */
++	stg	%r0, 0
+ 	/* Do the reset */
+ 	diag    %r0,%r2,0x308
+ 	/* Failure path */
+@@ -144,7 +149,10 @@ diag308_load_reset:
+ 	lctlg	%c0, %c0, 0(%r1)
+ 	RESTORE_REGS
+ 	lhi	%r2, 1
+-	br	%r14
++	larl	%r0, 1f
++	stg	%r0, GEN_LC_SW_INT_PSW + 8
++	lpswe	GEN_LC_SW_INT_PSW
++1:	br	%r14
+ 
+ .globl smp_cpu_setup_state
+ smp_cpu_setup_state:
+@@ -184,6 +192,8 @@ svc_int:
+ 	lpswe	GEN_LC_SVC_OLD_PSW
+ 
+ 	.align	8
++reset_psw:
++	.quad	0x0008000180000000
+ initial_psw:
+ 	.quad	0x0000000180000000, clear_bss_start
+ pgm_int_psw:
+-- 
+2.20.1
 
