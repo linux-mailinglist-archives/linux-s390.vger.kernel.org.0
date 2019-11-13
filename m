@@ -2,167 +2,200 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76341FAF9B
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 12:24:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BDBE8FAFCA
+	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 12:34:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726339AbfKMLYO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Nov 2019 06:24:14 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22758 "EHLO
+        id S1727495AbfKMLel (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Nov 2019 06:34:41 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46684 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727733AbfKMLYO (ORCPT
+        by vger.kernel.org with ESMTP id S1727171AbfKMLel (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 13 Nov 2019 06:24:14 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADBN9sF086915
-        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 06:24:12 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w8gk80y1j-1
+        Wed, 13 Nov 2019 06:34:41 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xADBWWT8177648
+        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 06:34:39 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w8ex2593a-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 06:24:12 -0500
+        for <linux-s390@vger.kernel.org>; Wed, 13 Nov 2019 06:34:39 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Wed, 13 Nov 2019 11:24:09 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Wed, 13 Nov 2019 11:34:37 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 13 Nov 2019 11:24:07 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADBO6PJ35979346
+        Wed, 13 Nov 2019 11:34:36 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xADBYY3r22151216
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 13 Nov 2019 11:24:06 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DC765204E;
-        Wed, 13 Nov 2019 11:24:06 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.152.224.131])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id BE45F5204F;
-        Wed, 13 Nov 2019 11:24:05 +0000 (GMT)
+        Wed, 13 Nov 2019 11:34:35 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2FEFA4065;
+        Wed, 13 Nov 2019 11:34:34 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 85B3DA404D;
+        Wed, 13 Nov 2019 11:34:34 +0000 (GMT)
+Received: from dyn-9-152-224-131.boeblingen.de.ibm.com (unknown [9.152.224.131])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 13 Nov 2019 11:34:34 +0000 (GMT)
+Subject: Re: [RFC 04/37] KVM: s390: protvirt: Add initial lifecycle handling
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-5-frankja@linux.ibm.com>
+ <07705597-8e8f-28d4-f9a1-d3d5dc9a4555@redhat.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-Subject: [kvm-unit-tests PATCH v4] s390x: Load reset psw on diag308 reset
-Date:   Wed, 13 Nov 2019 06:24:03 -0500
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <e54ce8f8-7ed5-3eee-6715-8b5051cb49fb@redhat.com>
-References: <e54ce8f8-7ed5-3eee-6715-8b5051cb49fb@redhat.com>
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
+ qLqYr+qrG3buymJJRD9xkp4mqgasHdB5WR9MhXWKH08EvtvAMkEJLnqxgbqf8td3pCQ2cEpv
+ 15mH49iKSmlTcJ+PvJpGZcq/jE42u9/0YFHhozm8GfQdb9SOI/wBSsOqcXcLTUeAvbdqSBZe
+ zuMRBivJQQI1esD9HuADmxdE7c4AeMlap9MvxvUtWk4ZJ/1Z3swMVCGzZb2Xg/9jZpLsyQzb
+ lDbbTlEeyBACeED7DYLZI3d0SFKeJZ1SUyMmSOcr9zeSh4S4h4w8xgDDGmeDVygBQZa1HaoL
+ Esb8Y4avOYIgYDhgkCh0nol7XQ5i/yKLtnNThubAcxNyryw1xSstnKlxPRoxtqTsxMAiSekk
+ 0m3WJwvwd1s878HrQNK0orWd8BzzlSswzjNfQYLF466JOjHPWFOok9pzRs+ucrs6MUwDJj0S
+ cITWU9Rxb04XyigY4XmZ8dywaxwi2ZVTEg+MD+sPmRrTw+5F+sU83cUstuymF3w1GmyofgsU
+ Z+/ldjToHnq21MNa1wx0lCEipCCyE/8K9B9bg9pUwy5lfx7yORP3JuAUfCYb8DVSHWBPHKNj
+ HTOLb2g2UT65AjZEQE95U2AY9iYm5usMqaWD39pAHfhC09/7NQARAQABtCVKYW5vc2NoIEZy
+ YW5rIDxmcmFua2phQGxpbnV4LmlibS5jb20+iQI3BBMBCAAhBQJbm6Q+AhsjBQsJCAcCBhUI
+ CQoLAgQWAgMBAh4BAheAAAoJEONU5rjiOLn4p9gQALjkdj5euJVI2nNT3/IAxAhQSmRhPEt0
+ AmnCYnuTcHRWPujNr5kqgtyER9+EMQ0ZkX44JU2q7OWxTdSNSAN/5Z7qmOR9JySvDOf4d3mS
+ bMB5zxL9d8SbnSs1uW96H9ZBTlTQnmLfsiM9TetAjSrR8nUmjGhe2YUhJLR1v1LguME+YseT
+ eXnLzIzqqpu311/eYiiIGcmaOjPCE+vFjcXL5oLnGUE73qSYiujwhfPCCUK0850o1fUAYq5p
+ CNBCoKT4OddZR+0itKc/cT6NwEDwdokeg0+rAhxb4Rv5oFO70lziBplEjOxu3dqgIKbHbjza
+ EXTb+mr7VI9O4tTdqrwJo2q9zLqqOfDBi7NDvZFLzaCewhbdEpDYVu6/WxprAY94hY3F4trT
+ rQMHJKQENtF6ZTQc9fcT5I3gAmP+OEvDE5hcTALpWm6Z6SzxO7gEYCnF+qGXqp8sJVrweMub
+ UscyLqHoqdZC2UG4LQ1OJ97nzDpIRe0g6oJ9ZIYHKmfw5jjwH6rASTld5MFWajWdNsqK15k/
+ RZnHAGICKVIBOBsq26m4EsBlfCdt3b/6emuBjUXR1pyjHMz2awWzCq6/6OWs5eANZ0sdosNq
+ dq2v0ULYTazJz2rlCXV89qRa7ukkNwdBSZNEwsD4eEMicj1LSrqWDZMAALw50L4jxaMD7lPL
+ jJbauQINBFubpD4BEADAcUTRqXF/aY53OSH7IwIK9lFKxIm0IoFkOEh7LMfp7FGzaP7ANrZd
+ cIzhZi38xyOkcaFY+npGEWvko7rlIAn0JpBO4x3hfhmhBD/WSY8LQIFQNNjEm3vzrMo7b9Jb
+ JAqQxfbURY3Dql3GUzeWTG9uaJ00u+EEPlY8zcVShDltIl5PLih20e8xgTnNzx5c110lQSu0
+ iZv2lAE6DM+2bJQTsMSYiwKlwTuv9LI9Chnoo6+tsN55NqyMxYqJgElk3VzlTXSr3+rtSCwf
+ tq2cinETbzxc1XuhIX6pu/aCGnNfuEkM34b7G1D6CPzDMqokNFbyoO6DQ1+fW6c5gctXg/lZ
+ 602iEl4C4rgcr3+EpfoPUWzKeM8JXv5Kpq4YDxhvbitr8Dm8gr38+UKFZKlWLlwhQ56r/zAU
+ v6LIsm11GmFs2/cmgD1bqBTNHHcTWwWtRTLgmnqJbVisMJuYJt4KNPqphTWsPY8SEtbufIlY
+ HXOJ2lqUzOReTrie2u0qcSvGAbSfec9apTFl2Xko/ddqPcZMpKhBiXmY8tJzSPk3+G4tqur4
+ 6TYAm5ouitJsgAR61Cu7s+PNuq/pTLDhK+6/Njmc94NGBcRA4qTuysEGE79vYWP2oIAU4Fv6
+ gqaWHZ4MEI2XTqH8wiwzPdCQPYsSE0fXWiYu7ObeErT6iLSTZGx4rQARAQABiQIfBBgBCAAJ
+ BQJbm6Q+AhsMAAoJEONU5rjiOLn4DDEP/RuyckW65SZcPG4cMfNgWxZF8rVjeVl/9PBfy01K
+ 8R0hajU40bWtXSMiby7j0/dMjz99jN6L+AJHJvrLz4qYRzn2Ys843W+RfXj62Zde4YNBE5SL
+ jJweRCbMWKaJLj6499fctxTyeb9+AMLQS4yRSwHuAZLmAb5AyCW1gBcTWZb8ON5BmWnRqeGm
+ IgC1EvCnHy++aBnHTn0m+zV89BhTLTUal35tcjUFwluBY39R2ux/HNlBO1GY3Z+WYXhBvq7q
+ katThLjaQSmnOrMhzqYmdShP1leFTVbzXUUIYv/GbynO/YrL2gaQpaP1bEUEi8lUAfXJbEWG
+ dnHFkciryi092E8/9j89DJg4mmZqOau7TtUxjRMlBcIliXkzSLUk+QvD4LK1kWievJse4mte
+ FBdkWHfP4BH/+8DxapRcG1UAheSnSRQ5LiO50annOB7oXF+vgKIaie2TBfZxQNGAs3RQ+bga
+ DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
+ Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
+ phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
+Date:   Wed, 13 Nov 2019 12:34:34 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <07705597-8e8f-28d4-f9a1-d3d5dc9a4555@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19111311-0008-0000-0000-0000032EA507
+x-cbid: 19111311-0016-0000-0000-000002C34661
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111311-0009-0000-0000-00004A4DAE2B
-Message-Id: <20191113112403.7664-1-frankja@linux.ibm.com>
+x-cbparentid: 19111311-0017-0000-0000-00003324E137
+Message-Id: <40a5798c-fe66-f686-78f1-ff5cf076433f@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-13_03:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911130108
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911130110
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On a diag308 subcode 0 CRs will be reset, so we need a PSW mask
-without DAT. Also we need to set the short psw indication to be
-compliant with the architecture.
+On 11/13/19 11:28 AM, Thomas Huth wrote:
+> On 24/10/2019 13.40, Janosch Frank wrote:
+>> Let's add a KVM interface to create and destroy protected VMs.
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> ---
+> [...]
+>> +int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned long size,
+>> +		       unsigned long tweak)
+>> +{
+>> +	int i, rc = 0;
+>> +	struct uv_cb_unp uvcb = {
+>> +		.header.cmd = UVC_CMD_UNPACK_IMG,
+>> +		.header.len = sizeof(uvcb),
+>> +		.guest_handle = kvm_s390_pv_handle(kvm),
+>> +		.tweak[0] = tweak
+>> +	};
+>> +
+>> +	if (addr & ~PAGE_MASK || size & ~PAGE_MASK)
+>> +		return -EINVAL;
+> 
+> Also check for size == 0 ?
 
-Let's therefore define a reset PSW mask with 64 bit addressing and
-short PSW indication that is compliant with architecture and use it.
+Yep
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
----
- lib/s390x/asm-offsets.c  |  1 +
- lib/s390x/asm/arch_def.h |  4 +++-
- s390x/cstart64.S         | 24 +++++++++++++++++-------
- 3 files changed, 21 insertions(+), 8 deletions(-)
+> 
+>> +
+>> +
+> 
+> Remove one of the two empty lines, please.
 
-diff --git a/lib/s390x/asm-offsets.c b/lib/s390x/asm-offsets.c
-index 4b213f8..61d2658 100644
---- a/lib/s390x/asm-offsets.c
-+++ b/lib/s390x/asm-offsets.c
-@@ -58,6 +58,7 @@ int main(void)
- 	OFFSET(GEN_LC_SW_INT_FPRS, lowcore, sw_int_fprs);
- 	OFFSET(GEN_LC_SW_INT_FPC, lowcore, sw_int_fpc);
- 	OFFSET(GEN_LC_SW_INT_CRS, lowcore, sw_int_crs);
-+	OFFSET(GEN_LC_SW_INT_PSW, lowcore, sw_int_psw);
- 	OFFSET(GEN_LC_MCCK_EXT_SA_ADDR, lowcore, mcck_ext_sa_addr);
- 	OFFSET(GEN_LC_FPRS_SA, lowcore, fprs_sa);
- 	OFFSET(GEN_LC_GRS_SA, lowcore, grs_sa);
-diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-index 07d4e5e..cf6e1ca 100644
---- a/lib/s390x/asm/arch_def.h
-+++ b/lib/s390x/asm/arch_def.h
-@@ -79,7 +79,8 @@ struct lowcore {
- 	uint32_t	sw_int_fpc;			/* 0x0300 */
- 	uint8_t		pad_0x0304[0x0308 - 0x0304];	/* 0x0304 */
- 	uint64_t	sw_int_crs[16];			/* 0x0308 */
--	uint8_t		pad_0x0310[0x11b0 - 0x0388];	/* 0x0388 */
-+	struct psw	sw_int_psw;			/* 0x0388 */
-+	uint8_t		pad_0x0310[0x11b0 - 0x0398];	/* 0x0398 */
- 	uint64_t	mcck_ext_sa_addr;		/* 0x11b0 */
- 	uint8_t		pad_0x11b8[0x1200 - 0x11b8];	/* 0x11b8 */
- 	uint64_t	fprs_sa[16];			/* 0x1200 */
-@@ -98,6 +99,7 @@ struct lowcore {
- 	uint8_t		pad_0x1400[0x1800 - 0x1400];	/* 0x1400 */
- 	uint8_t		pgm_int_tdb[0x1900 - 0x1800];	/* 0x1800 */
- } __attribute__ ((__packed__));
-+_Static_assert(sizeof(struct lowcore) == 0x1900, "Lowcore size");
- 
- #define PGM_INT_CODE_OPERATION			0x01
- #define PGM_INT_CODE_PRIVILEGED_OPERATION	0x02
-diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-index 4be20fc..86dd4c4 100644
---- a/s390x/cstart64.S
-+++ b/s390x/cstart64.S
-@@ -126,13 +126,18 @@ memsetxc:
- .globl diag308_load_reset
- diag308_load_reset:
- 	SAVE_REGS
--	/* Save the first PSW word to the IPL PSW */
-+	/* Backup current PSW mask, as we have to restore it on success */
- 	epsw	%r0, %r1
--	st	%r0, 0
--	/* Store the address and the bit for 31 bit addressing */
--	larl    %r0, 0f
--	oilh    %r0, 0x8000
--	st      %r0, 0x4
-+	st	%r0, GEN_LC_SW_INT_PSW
-+	st	%r1, GEN_LC_SW_INT_PSW + 4
-+	/* Load reset psw mask (short psw, 64 bit) */
-+	lg	%r0, reset_psw
-+	/* Load the success label address */
-+	larl    %r1, 0f
-+	/* Or it to the mask */
-+	ogr	%r0, %r1
-+	/* Store it at the reset PSW location (real 0x0) */
-+	stg	%r0, 0
- 	/* Do the reset */
- 	diag    %r0,%r2,0x308
- 	/* Failure path */
-@@ -144,7 +149,10 @@ diag308_load_reset:
- 	lctlg	%c0, %c0, 0(%r1)
- 	RESTORE_REGS
- 	lhi	%r2, 1
--	br	%r14
-+	larl	%r0, 1f
-+	stg	%r0, GEN_LC_SW_INT_PSW + 8
-+	lpswe	GEN_LC_SW_INT_PSW
-+1:	br	%r14
- 
- .globl smp_cpu_setup_state
- smp_cpu_setup_state:
-@@ -184,6 +192,8 @@ svc_int:
- 	lpswe	GEN_LC_SVC_OLD_PSW
- 
- 	.align	8
-+reset_psw:
-+	.quad	0x0008000180000000
- initial_psw:
- 	.quad	0x0000000180000000, clear_bss_start
- pgm_int_psw:
--- 
-2.20.1
+Yep
+
+> 
+>> +	VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: start addr %lx size %lx",
+>> +		 addr, size);
+>> +	for (i = 0; i < size / PAGE_SIZE; i++) {
+>> +		uvcb.gaddr = addr + i * PAGE_SIZE;
+>> +		uvcb.tweak[1] = i * PAGE_SIZE;
+>> +retry:
+>> +		rc = uv_call(0, (u64)&uvcb);
+>> +		if (!rc)
+>> +			continue;
+>> +		/* If not yet mapped fault and retry */
+>> +		if (uvcb.header.rc == 0x10a) {
+>> +			rc = gmap_fault(kvm->arch.gmap, uvcb.gaddr,
+>> +					FAULT_FLAG_WRITE);
+>> +			if (rc)
+>> +				return rc;
+>> +			goto retry;
+>> +		}
+>> +		VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: failed addr %llx rc %x rrc %x",
+>> +			 uvcb.gaddr, uvcb.header.rc, uvcb.header.rrc);
+>> +		break;
+> 
+> A break at the end of the for-loop ... that's really not what I'd expect.
+> 
+> Could you please invert the logic here, i.e.:
+> 
+>     if (uvcb.header.rc != 0x10a) {
+>         VM_EVENT(...)
+>         break;
+>     }
+>     rc = gmap_fault(...)
+>     ...
+> 
+> I think you might even get rid of that ugly "goto", too, that way?
+
+But without the goto we would increment i, no?
+I'll try to find a solution, maybe using while, but then we need to
+manage i incrementation.
+
+> 
+>> +	}
+>> +	VM_EVENT(kvm, 3, "PROTVIRT VM UNPACK: finished with rc %x rrc %x",
+>> +		 uvcb.header.rc, uvcb.header.rrc);
+>> +	return rc;
+>> +}
+> 
+>  Thomas
+> 
 
