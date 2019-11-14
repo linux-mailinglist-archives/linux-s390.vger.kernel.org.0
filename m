@@ -2,91 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8585DFC56C
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 12:34:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2FD96FC5A4
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 12:49:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725977AbfKNLeE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 06:34:04 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:38871 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726190AbfKNLeC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 06:34:02 -0500
-Received: by mail-wm1-f66.google.com with SMTP id z19so5504347wmk.3
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 03:34:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=hXXV/2kIvB08deAA2EN09TWub+GXZhxQylBGV0wly2o=;
-        b=kiaWUZshTXZr77I5eM6Iord4uC+esCXUajeEDu2SLSeAXVtTQJxNXvn/FQxeDmINbP
-         hT17ITCVf33E7Nuo5Pa2+FdnKKivHy4MyMPQj4CZH8O0ULOonqs1/Mepgy1lCxDcDDPo
-         upBGlMw+9BhH8O2H4d2RY0V+vFjd6vM0zb3QqRYrGGOiaEwfmpMMoyhldK6cQ8vgcDHo
-         9zQTdLi2HBjEGiZY49KODbfy6ti/XQ9hA8mH2PPqLNLouCSyZXIFF4NW8Y5QNvIW/7Yd
-         /8KJ42P5CDv61U5sOVP7bcOPKI3zBjG5FL6it8hU7ucv8Nz4lbnbLUSrjLtHXxwnRcX7
-         oNDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=hXXV/2kIvB08deAA2EN09TWub+GXZhxQylBGV0wly2o=;
-        b=nE8+aJv4ZdPjR9IcbLqHseQroGxMNr1sCHsM7NaGKd27GYugyf+OTWDQ0VjC+0YqH4
-         zanZ4I8AtTXdrKZijDFeIYhdbZ61NfwKI/EI9FhsI51RA7bUYgqYa689e1gMM8ukT+8J
-         /4OA8W5eeYrx01VLi7HeVAK+OpRyz02TFjUQZq5/MPBqQlkcNCmxzoRs+ssY9UCQ3/eX
-         S6ok8n2dAzWPUAIwdi7LlqDxXv+Pld+ZWHFqPQ2GVa8C1e+WrcDrzTzkkz5rkEl+ckmz
-         0hjp4myCWx8af5M2XLwTjv/GvdaoDmrGOvy+otIL/6/hHS/EuzH9DXv8MyQSxluHYp82
-         5nvg==
-X-Gm-Message-State: APjAAAXnVAGRqeDN06odCcpXlqQX3lj/1D30TwvhsKWXmTTMQu6aoXSh
-        SziudvHI2ElJThZ66M8RU6d2jA==
-X-Google-Smtp-Source: APXvYqwa7C+SZPaRzDCDqgtRRX+BdBhI757ORIAlSyB2X3yAtBSVEylfezUJgRJyC7Xi8Z+nZfWaVw==
-X-Received: by 2002:a05:600c:230d:: with SMTP id 13mr6806183wmo.159.1573731239464;
-        Thu, 14 Nov 2019 03:33:59 -0800 (PST)
-Received: from localhost.localdomain (184.red-37-158-56.dynamicip.rima-tde.net. [37.158.56.184])
-        by smtp.gmail.com with ESMTPSA id m187sm3324275wmf.35.2019.11.14.03.33.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 14 Nov 2019 03:33:58 -0800 (PST)
-From:   richard.henderson@linaro.org
-To:     linux-crypto@vger.kernel.org
-Cc:     linux-arch@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Richard Henderson <richard.henderson@linaro.org>
-Subject: [PATCH] random: Make  RANDOM_TRUST_CPU depend on ARCH_RANDOM
-Date:   Thu, 14 Nov 2019 12:33:46 +0100
-Message-Id: <20191114113346.25138-1-richard.henderson@linaro.org>
-X-Mailer: git-send-email 2.17.1
+        id S1726115AbfKNLtK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 06:49:10 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:56038 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726087AbfKNLtK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 14 Nov 2019 06:49:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573732148;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=h1+q8062is0VvTGh9F8Kusrk8AH8c0bcaDCJzBzKUMg=;
+        b=VPL9Vu0s75pYkY/F52gEn1ZkCAXqD33yZWbuOFqcg94YmDFmBfuPwDY+r0i6HQgV1evbp8
+        DNv8HAPfS900sZU8kD3oB5n8Vok35/+54n0S7gAHR0gP77zJujDVgUYkS2rHHWPXu0JLs1
+        0e7BAqsEwsO9JWmIZvclnfUps7EaHKI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-261-49eiB2ciNRm-7G2n0von_w-1; Thu, 14 Nov 2019 06:49:05 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8ED11938FDC;
+        Thu, 14 Nov 2019 11:49:03 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-89.ams2.redhat.com [10.36.116.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2A71B63F63;
+        Thu, 14 Nov 2019 11:48:54 +0000 (UTC)
+Subject: Re: [RFC 13/37] KVM: s390: protvirt: Add interruption injection
+ controls
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-14-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <a81da821-5dad-8564-4b91-a1753d8e4bd0@redhat.com>
+Date:   Thu, 14 Nov 2019 12:48:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
+MIME-Version: 1.0
+In-Reply-To: <20191024114059.102802-14-frankja@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: 49eiB2ciNRm-7G2n0von_w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Richard Henderson <richard.henderson@linaro.org>
+On 24/10/2019 13.40, Janosch Frank wrote:
+> From: Michael Mueller <mimu@linux.ibm.com>
+>=20
+> Define the interruption injection codes and the related fields in the
+> sie control block for PVM interruption injection.
+>=20
+> Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/kvm_host.h | 25 +++++++++++++++++++++----
+>  1 file changed, 21 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm=
+_host.h
+> index 6cc3b73ca904..82443236d4cc 100644
+> --- a/arch/s390/include/asm/kvm_host.h
+> +++ b/arch/s390/include/asm/kvm_host.h
+> @@ -215,7 +215,15 @@ struct kvm_s390_sie_block {
+>  =09__u8=09icptcode;=09=09/* 0x0050 */
+>  =09__u8=09icptstatus;=09=09/* 0x0051 */
+>  =09__u16=09ihcpu;=09=09=09/* 0x0052 */
+> -=09__u8=09reserved54[2];=09=09/* 0x0054 */
+> +=09__u8=09reserved54;=09=09/* 0x0054 */
+> +#define IICTL_CODE_NONE=09=09 0x00
+> +#define IICTL_CODE_MCHK=09=09 0x01
+> +#define IICTL_CODE_EXT=09=09 0x02
+> +#define IICTL_CODE_IO=09=09 0x03
+> +#define IICTL_CODE_RESTART=09 0x04
+> +#define IICTL_CODE_SPECIFICATION 0x10
+> +#define IICTL_CODE_OPERAND=09 0x11
+> +=09__u8=09iictl;=09=09=09/* 0x0055 */
+>  =09__u16=09ipa;=09=09=09/* 0x0056 */
+>  =09__u32=09ipb;=09=09=09/* 0x0058 */
+>  =09__u32=09scaoh;=09=09=09/* 0x005c */
+> @@ -252,7 +260,8 @@ struct kvm_s390_sie_block {
+>  #define HPID_KVM=090x4
+>  #define HPID_VSIE=090x5
+>  =09__u8=09hpid;=09=09=09/* 0x00b8 */
+> -=09__u8=09reservedb9[11];=09=09/* 0x00b9 */
+> +=09__u8=09reservedb9[7];=09=09/* 0x00b9 */
+> +=09__u32=09eiparams;=09=09/* 0x00c0 */
+>  =09__u16=09extcpuaddr;=09=09/* 0x00c4 */
+>  =09__u16=09eic;=09=09=09/* 0x00c6 */
+>  =09__u32=09reservedc8;=09=09/* 0x00c8 */
+> @@ -268,8 +277,16 @@ struct kvm_s390_sie_block {
+>  =09__u8=09oai;=09=09=09/* 0x00e2 */
+>  =09__u8=09armid;=09=09=09/* 0x00e3 */
+>  =09__u8=09reservede4[4];=09=09/* 0x00e4 */
+> -=09__u64=09tecmc;=09=09=09/* 0x00e8 */
+> -=09__u8=09reservedf0[12];=09=09/* 0x00f0 */
+> +=09union {
+> +=09=09__u64=09tecmc;=09=09/* 0x00e8 */
 
-Listing the set of host architectures does not scale.
-Depend instead on the existance of the architecture rng.
+I have to admit that I always have to think twice where the compiler
+might put the padding in this case. Maybe you could do that manually to
+make it obvious and wrap it in a struct, too:
 
-Signed-off-by: Richard Henderson <richard.henderson@linaro.org>
----
- drivers/char/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+                struct {
+=09=09=09__u64=09tecmc;=09=09/* 0x00e8 */
+=09=09=09__u8=09reservedf0[4];=09/* 0x00f0 */
+ =09=09};
 
-diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
-index df0fc997dc3e..3c2123a23600 100644
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -539,7 +539,7 @@ endmenu
- 
- config RANDOM_TRUST_CPU
- 	bool "Trust the CPU manufacturer to initialize Linux's CRNG"
--	depends on X86 || S390 || PPC
-+	depends on ARCH_RANDOM
- 	default n
- 	help
- 	Assume that CPU manufacturer (e.g., Intel or AMD for RDSEED or
-@@ -559,4 +559,4 @@ config RANDOM_TRUST_BOOTLOADER
- 	device randomness. Say Y here to assume the entropy provided by the
- 	booloader is trustworthy so it will be added to the kernel's entropy
- 	pool. Otherwise, say N here so it will be regarded as device input that
--	only mixes the entropy pool.
-\ No newline at end of file
-+	only mixes the entropy pool.
--- 
-2.17.1
+?
+
+Just my 0.02 =E2=82=AC, though.
+
+ Thomas
+
+
+> +=09=09struct {
+> +=09=09=09__u16=09subchannel_id;=09/* 0x00e8 */
+> +=09=09=09__u16=09subchannel_nr;=09/* 0x00ea */
+> +=09=09=09__u32=09io_int_parm;=09/* 0x00ec */
+> +=09=09=09__u32=09io_int_word;=09/* 0x00f0 */
+> +=09=09};
+> +=09} __packed;
+> +=09__u8=09reservedf4[8];=09=09/* 0x00f4 */
+>  #define CRYCB_FORMAT_MASK 0x00000003
+>  #define CRYCB_FORMAT0 0x00000000
+>  #define CRYCB_FORMAT1 0x00000001
+>=20
 
