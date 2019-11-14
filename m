@@ -2,89 +2,206 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6D258FC8CC
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 15:22:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1F7B8FC8D1
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 15:24:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726374AbfKNOWn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 09:22:43 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:29291 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726592AbfKNOWn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 09:22:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573741361;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sCc5nA4aVTzlO3ItUygoMzfKpsiyxafzMqcM3+wFzd0=;
-        b=U7hyOu9d2jnaMouc/cWCAaUo5heKfGwGn4nOEsceHWu6rthg/NiMu13LRhWBPS8PCmP1Cb
-        CYWmL7GQCkNxgxhtz1JyaLlbv+5kgAqWvMI2a8frOm0C7cOx/CngVZnariIAlUL2Vvwa7I
-        lc2/anlmUCTikhLQiLgXevY32WvEH84=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-2-eULjYjAPOB-8qdMcXShXIw-1; Thu, 14 Nov 2019 09:22:38 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90214DB64;
-        Thu, 14 Nov 2019 14:22:36 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-89.ams2.redhat.com [10.36.116.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C921760475;
-        Thu, 14 Nov 2019 14:22:27 +0000 (UTC)
-Subject: Re: [RFC 18/37] KVM: s390: protvirt: Handle spec exception loops
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
-        gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-19-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <6d1d7c2f-0191-b41f-dbed-146a98c9ec4c@redhat.com>
-Date:   Thu, 14 Nov 2019 15:22:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1726516AbfKNOYI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 09:24:08 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51100 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726491AbfKNOYI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 14 Nov 2019 09:24:08 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 012D8B31E;
+        Thu, 14 Nov 2019 14:24:05 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id B0BB01E4331; Thu, 14 Nov 2019 15:24:05 +0100 (CET)
+Date:   Thu, 14 Nov 2019 15:24:05 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 5/5] block: remove (__)blkdev_reread_part as an exported
+ API
+Message-ID: <20191114142405.GJ28486@quack2.suse.cz>
+References: <20191106151439.30056-1-hch@lst.de>
+ <20191106151439.30056-6-hch@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <20191024114059.102802-19-frankja@linux.ibm.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: eULjYjAPOB-8qdMcXShXIw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106151439.30056-6-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24/10/2019 13.40, Janosch Frank wrote:
-> SIE intercept code 8 is used only on exception loops for protected
-> guests. That means we need stop the guest when we see it.
->=20
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+On Wed 06-11-19 16:14:39, Christoph Hellwig wrote:
+> In general drivers should never mess with partition tables directly.
+> Unfortunately s390 and loop do for somewhat historic reasons, but they
+> can use bdev_disk_changed directly instead when we export it as they
+> satisfy the sanity checks we have in __blkdev_reread_part.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
->  arch/s390/kvm/intercept.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->=20
-> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
-> index acc1710fc472..b013a9c88d43 100644
-> --- a/arch/s390/kvm/intercept.c
-> +++ b/arch/s390/kvm/intercept.c
-> @@ -231,6 +231,13 @@ static int handle_prog(struct kvm_vcpu *vcpu)
-> =20
->  =09vcpu->stat.exit_program_interruption++;
-> =20
-> +=09/*
-> +=09 * Intercept 8 indicates a loop of specification exceptions
-> +=09 * for protected guests
-> +=09 */
-> +=09if (kvm_s390_pv_is_protected(vcpu->kvm))
-> +=09=09return -EOPNOTSUPP;
+>  block/ioctl.c                   | 35 +++++----------------------------
+>  drivers/block/loop.c            | 13 +++++++-----
+>  drivers/s390/block/dasd_genhd.c |  4 +++-
+>  fs/block_dev.c                  |  7 +++++++
+>  include/linux/fs.h              |  2 --
+>  5 files changed, 23 insertions(+), 38 deletions(-)
+> 
+> diff --git a/block/ioctl.c b/block/ioctl.c
+> index 52380c337078..2ed907ef0f01 100644
+> --- a/block/ioctl.c
+> +++ b/block/ioctl.c
+> @@ -155,46 +155,21 @@ static int blkpg_ioctl(struct block_device *bdev, struct blkpg_ioctl_arg __user
+>  	}
+>  }
+>  
+> -/*
+> - * This is an exported API for the block driver, and will not
+> - * acquire bd_mutex. This API should be used in case that
+> - * caller has held bd_mutex already.
+> - */
+> -int __blkdev_reread_part(struct block_device *bdev)
+> +static int blkdev_reread_part(struct block_device *bdev)
+>  {
+> +	int ret;
 > +
->  =09if (guestdbg_enabled(vcpu) && per_event(vcpu)) {
->  =09=09rc =3D kvm_s390_handle_per_event(vcpu);
->  =09=09if (rc)
-
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-
+>  	if (!disk_part_scan_enabled(bdev->bd_disk) || bdev != bdev->bd_contains)
+>  		return -EINVAL;
+>  	if (!capable(CAP_SYS_ADMIN))
+>  		return -EACCES;
+>  
+> -	lockdep_assert_held(&bdev->bd_mutex);
+> -
+> -	return bdev_disk_changed(bdev, false);
+> -}
+> -EXPORT_SYMBOL(__blkdev_reread_part);
+> -
+> -/*
+> - * This is an exported API for the block driver, and will
+> - * try to acquire bd_mutex. If bd_mutex has been held already
+> - * in current context, please call __blkdev_reread_part().
+> - *
+> - * Make sure the held locks in current context aren't required
+> - * in open()/close() handler and I/O path for avoiding ABBA deadlock:
+> - * - bd_mutex is held before calling block driver's open/close
+> - *   handler
+> - * - reading partition table may submit I/O to the block device
+> - */
+> -int blkdev_reread_part(struct block_device *bdev)
+> -{
+> -	int res;
+> -
+>  	mutex_lock(&bdev->bd_mutex);
+> -	res = __blkdev_reread_part(bdev);
+> +	ret = bdev_disk_changed(bdev, false);
+>  	mutex_unlock(&bdev->bd_mutex);
+>  
+> -	return res;
+> +	return ret;
+>  }
+> -EXPORT_SYMBOL(blkdev_reread_part);
+>  
+>  static int blk_ioctl_discard(struct block_device *bdev, fmode_t mode,
+>  		unsigned long arg, unsigned long flags)
+> diff --git a/drivers/block/loop.c b/drivers/block/loop.c
+> index f6f77eaa7217..64b16abee280 100644
+> --- a/drivers/block/loop.c
+> +++ b/drivers/block/loop.c
+> @@ -630,7 +630,9 @@ static void loop_reread_partitions(struct loop_device *lo,
+>  {
+>  	int rc;
+>  
+> -	rc = blkdev_reread_part(bdev);
+> +	mutex_lock(&bdev->bd_mutex);
+> +	rc = bdev_disk_changed(bdev, false);
+> +	mutex_unlock(&bdev->bd_mutex);
+>  	if (rc)
+>  		pr_warn("%s: partition scan of loop%d (%s) failed (rc=%d)\n",
+>  			__func__, lo->lo_number, lo->lo_file_name, rc);
+> @@ -1154,10 +1156,11 @@ static int __loop_clr_fd(struct loop_device *lo, bool release)
+>  		 * must be at least one and it can only become zero when the
+>  		 * current holder is released.
+>  		 */
+> -		if (release)
+> -			err = __blkdev_reread_part(bdev);
+> -		else
+> -			err = blkdev_reread_part(bdev);
+> +		if (!release)
+> +			mutex_lock(&bdev->bd_mutex);
+> +		err = bdev_disk_changed(bdev, false);
+> +		if (!release)
+> +			mutex_unlock(&bdev->bd_mutex);
+>  		if (err)
+>  			pr_warn("%s: partition scan of loop%d failed (rc=%d)\n",
+>  				__func__, lo_number, err);
+> diff --git a/drivers/s390/block/dasd_genhd.c b/drivers/s390/block/dasd_genhd.c
+> index 5542d9eadfe0..7d079154f849 100644
+> --- a/drivers/s390/block/dasd_genhd.c
+> +++ b/drivers/s390/block/dasd_genhd.c
+> @@ -116,7 +116,9 @@ int dasd_scan_partitions(struct dasd_block *block)
+>  		return -ENODEV;
+>  	}
+>  
+> -	rc = blkdev_reread_part(bdev);
+> +	mutex_lock(&bdev->bd_mutex);
+> +	rc = bdev_disk_changed(bdev, false);
+> +	mutex_unlock(&bdev->bd_mutex);
+>  	if (rc)
+>  		DBF_DEV_EVENT(DBF_ERR, block->base,
+>  				"scan partitions error, rc %d", rc);
+> diff --git a/fs/block_dev.c b/fs/block_dev.c
+> index ae16466a67f7..9558a2f064b1 100644
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -1513,6 +1513,8 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
+>  	struct gendisk *disk = bdev->bd_disk;
+>  	int ret;
+>  
+> +	lockdep_assert_held(&bdev->bd_mutex);
+> +
+>  rescan:
+>  	ret = blk_drop_partitions(disk, bdev);
+>  	if (ret)
+> @@ -1540,6 +1542,11 @@ int bdev_disk_changed(struct block_device *bdev, bool invalidate)
+>  
+>  	return ret;
+>  }
+> +/*
+> + * Only exported for for loop and dasd for historic reasons.  Don't use in new
+> + * code!
+> + */
+> +EXPORT_SYMBOL_GPL(bdev_disk_changed);
+>  
+>  /*
+>   * bd_mutex locking:
+> diff --git a/include/linux/fs.h b/include/linux/fs.h
+> index d233dd661df7..ae6c5c37f3ae 100644
+> --- a/include/linux/fs.h
+> +++ b/include/linux/fs.h
+> @@ -2632,8 +2632,6 @@ extern void bd_finish_claiming(struct block_device *bdev,
+>  extern void bd_abort_claiming(struct block_device *bdev,
+>  			      struct block_device *whole, void *holder);
+>  extern void blkdev_put(struct block_device *bdev, fmode_t mode);
+> -extern int __blkdev_reread_part(struct block_device *bdev);
+> -extern int blkdev_reread_part(struct block_device *bdev);
+>  
+>  #ifdef CONFIG_SYSFS
+>  extern int bd_link_disk_holder(struct block_device *bdev, struct gendisk *disk);
+> -- 
+> 2.20.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
