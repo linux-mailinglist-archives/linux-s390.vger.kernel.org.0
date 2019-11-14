@@ -2,136 +2,277 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE571FC6F7
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 14:10:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 72965FC713
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 14:13:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726202AbfKNNKB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 08:10:01 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57795 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726190AbfKNNKB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 08:10:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573736999;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6yyZbS56I4tAONF7KcICPVxNVSf4T1PDtqDFeQbrNXM=;
-        b=bqepkPiZI7D7bkRnJGRZ7mjwZH/QlkpxoQZvJTekYFs/BEVTvpWaHyh6HJO20wRU8hXKh/
-        2Px3UUzMTCNG+rmzAP8yQ/6Eo3xGm1ksH9kUrWuFaLYpWPzkTfDcQTBTUiLq1XOcaJuJMp
-        DQG1SXkzBGsc/2JLhEL5oa5fkMibMes=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-309-gDdAxXV3MQGUwrIzoj9RUA-1; Thu, 14 Nov 2019 08:09:55 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0120B1006805;
-        Thu, 14 Nov 2019 13:09:54 +0000 (UTC)
-Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D3A9575E51;
-        Thu, 14 Nov 2019 13:09:48 +0000 (UTC)
-Date:   Thu, 14 Nov 2019 14:09:46 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
-        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [RFC 11/37] DOCUMENTATION: protvirt: Interrupt injection
-Message-ID: <20191114140946.7bca2350.cohuck@redhat.com>
-In-Reply-To: <20191024114059.102802-12-frankja@linux.ibm.com>
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
-        <20191024114059.102802-12-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726598AbfKNNNk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 08:13:40 -0500
+Received: from mx2.suse.de ([195.135.220.15]:43670 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726139AbfKNNNk (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:13:40 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DB8DCB20B;
+        Thu, 14 Nov 2019 13:13:35 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 0A2FA1E4331; Thu, 14 Nov 2019 14:13:32 +0100 (CET)
+Date:   Thu, 14 Nov 2019 14:13:32 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 1/5] block: refactor rescan_partitions
+Message-ID: <20191114131332.GF28486@quack2.suse.cz>
+References: <20191106151439.30056-1-hch@lst.de>
+ <20191106151439.30056-2-hch@lst.de>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: gDdAxXV3MQGUwrIzoj9RUA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106151439.30056-2-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 24 Oct 2019 07:40:33 -0400
-Janosch Frank <frankja@linux.ibm.com> wrote:
+On Wed 06-11-19 16:14:35, Christoph Hellwig wrote:
+> Split out a helper that adds one single partition, and another one
+> calling that dealing with the parsed_partitions state.  This makes
+> it much more obvious how we clean up all state and start again when
+> using the rescan label.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-> Interrupt injection has changed a lot for protected guests, as KVM
-> can't access the cpus' lowcores. New fields in the state description,
-> like the interrupt injection control, and masked values safeguard the
-> guest from KVM.
->=20
-> Let's add some documentation to the interrupt injection basics for
-> protected guests.
->=20
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
->  Documentation/virtual/kvm/s390-pv.txt | 27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
->=20
-> diff --git a/Documentation/virtual/kvm/s390-pv.txt b/Documentation/virtua=
-l/kvm/s390-pv.txt
-> index 86ed95f36759..e09f2dc5f164 100644
-> --- a/Documentation/virtual/kvm/s390-pv.txt
-> +++ b/Documentation/virtual/kvm/s390-pv.txt
-> @@ -21,3 +21,30 @@ normally needed to be able to run a VM, some changes h=
-ave been made in
->  SIE behavior and fields have different meaning for a PVM. SIE exits
->  are minimized as much as possible to improve speed and reduce exposed
->  guest state.
+>  block/partition-generic.c | 176 +++++++++++++++++++++-----------------
+>  1 file changed, 96 insertions(+), 80 deletions(-)
+> 
+> diff --git a/block/partition-generic.c b/block/partition-generic.c
+> index aee643ce13d1..f113be069b40 100644
+> --- a/block/partition-generic.c
+> +++ b/block/partition-generic.c
+> @@ -509,26 +509,77 @@ static bool part_zone_aligned(struct gendisk *disk,
+>  	return true;
+>  }
+>  
+> -int rescan_partitions(struct gendisk *disk, struct block_device *bdev)
+> +static bool blk_add_partition(struct gendisk *disk, struct block_device *bdev,
+> +		struct parsed_partitions *state, int p)
+>  {
+> -	struct parsed_partitions *state = NULL;
+> +	sector_t size = state->parts[p].size;
+> +	sector_t from = state->parts[p].from;
+>  	struct hd_struct *part;
+> -	int p, highest, res;
+> -rescan:
+> -	if (state && !IS_ERR(state)) {
+> -		free_partitions(state);
+> -		state = NULL;
 > +
+> +	if (!size)
+> +		return true;
 > +
-> +Interrupt injection:
+> +	if (from >= get_capacity(disk)) {
+> +		printk(KERN_WARNING
+> +		       "%s: p%d start %llu is beyond EOD, ",
+> +		       disk->disk_name, p, (unsigned long long) from);
+> +		if (disk_unlock_native_capacity(disk))
+> +			return false;
+> +		return true;
+>  	}
+>  
+> -	res = drop_partitions(disk, bdev);
+> -	if (res)
+> -		return res;
+> +	if (from + size > get_capacity(disk)) {
+> +		printk(KERN_WARNING
+> +		       "%s: p%d size %llu extends beyond EOD, ",
+> +		       disk->disk_name, p, (unsigned long long) size);
+>  
+> -	if (disk->fops->revalidate_disk)
+> -		disk->fops->revalidate_disk(disk);
+> -	check_disk_size_change(disk, bdev, true);
+> -	bdev->bd_invalidated = 0;
+> -	if (!get_capacity(disk) || !(state = check_partition(disk, bdev)))
+> +		if (disk_unlock_native_capacity(disk))
+> +			return false;
 > +
-> +Interrupt injection is safeguarded by the Ultravisor and, as KVM lost
-> +access to the VCPUs' lowcores, is handled via the format 4 state
-> +description.
+> +		/*
+> +		 * We can not ignore partitions of broken tables created by for
+> +		 * example camera firmware, but we limit them to the end of the
+> +		 * disk to avoid creating invalid block devices.
+> +		 */
+> +		size = get_capacity(disk) - from;
+> +	}
 > +
-> +Machine check, external, IO and restart interruptions each can be
-> +injected on SIE entry via a bit in the interrupt injection control
-> +field (offset 0x54). If the guest cpu is not enabled for the interrupt
-> +at the time of injection, a validity interception is recognized. The
-> +interrupt's data is transported via parts of the interception data
-> +block.
-
-"Data associated with the interrupt needs to be placed into the
-respective fields in the interception data block to be injected into
-the guest."
-
-?
-
+> +	/*
+> +	 * On a zoned block device, partitions should be aligned on the device
+> +	 * zone size (i.e. zone boundary crossing not allowed).  Otherwise,
+> +	 * resetting the write pointer of the last zone of one partition may
+> +	 * impact the following partition.
+> +	 */
+> +	if (bdev_is_zoned(bdev) && !part_zone_aligned(disk, bdev, from, size)) {
+> +		printk(KERN_WARNING
+> +		       "%s: p%d start %llu+%llu is not zone aligned\n",
+> +		       disk->disk_name, p, (unsigned long long) from,
+> +		       (unsigned long long) size);
+> +		return true;
+> +	}
 > +
-> +Program and Service Call exceptions have another layer of
-> +safeguarding, they are only injectable, when instructions have
-> +intercepted into KVM and such an exception can be an emulation result.
-
-I find this sentence hard to parse... not sure if I understand it
-correctly.
-
-"They can only be injected if the exception can be encountered during
-emulation of instructions that had been intercepted into KVM."
-
-?
-
+> +	part = add_partition(disk, p, from, size, state->parts[p].flags,
+> +			     &state->parts[p].info);
+> +	if (IS_ERR(part)) {
+> +		printk(KERN_ERR " %s: p%d could not be added: %ld\n",
+> +		       disk->disk_name, p, -PTR_ERR(part));
+> +		return true;
+> +	}
 > +
+> +#ifdef CONFIG_BLK_DEV_MD
+> +	if (state->parts[p].flags & ADDPART_FLAG_RAID)
+> +		md_autodetect_dev(part_to_dev(part)->devt);
+> +#endif
+> +	return true;
+> +}
 > +
-> +Mask notification interceptions:
-> +As a replacement for the lctl(g) and lpsw(e) interception, two new
-> +interception codes have been introduced. One which tells us that CRs
-> +0, 6 or 14 have been changed and therefore interrupt masking might
-> +have changed. And one for PSW bit 13 changes. The CRs and the PSW in
-
-Might be helpful to mention that this bit covers machine checks, which
-do not get a separate bit in the control block :)
-
-> +the state description only contain the mask bits and no further info
-> +like the current instruction address.
-
-"The CRs and the PSW in the state description only contain the bits
-referring to interrupt masking; other fields like e.g. the current
-instruction address are zero."
-
-?
-
+> +static int blk_add_partitions(struct gendisk *disk, struct block_device *bdev)
+> +{
+> +	struct parsed_partitions *state;
+> +	int ret = -EAGAIN, p, highest;
+> +
+> +	state = check_partition(disk, bdev);
+> +	if (!state)
+>  		return 0;
+>  	if (IS_ERR(state)) {
+>  		/*
+> @@ -540,7 +591,7 @@ int rescan_partitions(struct gendisk *disk, struct block_device *bdev)
+>  			printk(KERN_WARNING "%s: partition table beyond EOD, ",
+>  			       disk->disk_name);
+>  			if (disk_unlock_native_capacity(disk))
+> -				goto rescan;
+> +				return -EAGAIN;
+>  		}
+>  		return -EIO;
+>  	}
+> @@ -554,7 +605,7 @@ int rescan_partitions(struct gendisk *disk, struct block_device *bdev)
+>  		       "%s: partition table partially beyond EOD, ",
+>  		       disk->disk_name);
+>  		if (disk_unlock_native_capacity(disk))
+> -			goto rescan;
+> +			goto out_free_state;
+>  	}
+>  
+>  	/* tell userspace that the media / partition table may have changed */
+> @@ -571,72 +622,37 @@ int rescan_partitions(struct gendisk *disk, struct block_device *bdev)
+>  	disk_expand_part_tbl(disk, highest);
+>  
+>  	/* add partitions */
+> -	for (p = 1; p < state->limit; p++) {
+> -		sector_t size, from;
+> -
+> -		size = state->parts[p].size;
+> -		if (!size)
+> -			continue;
+> -
+> -		from = state->parts[p].from;
+> -		if (from >= get_capacity(disk)) {
+> -			printk(KERN_WARNING
+> -			       "%s: p%d start %llu is beyond EOD, ",
+> -			       disk->disk_name, p, (unsigned long long) from);
+> -			if (disk_unlock_native_capacity(disk))
+> -				goto rescan;
+> -			continue;
+> -		}
+> +	for (p = 1; p < state->limit; p++)
+> +		if (!blk_add_partition(disk, bdev, state, p))
+> +			goto out_free_state;
+>  
+> -		if (from + size > get_capacity(disk)) {
+> -			printk(KERN_WARNING
+> -			       "%s: p%d size %llu extends beyond EOD, ",
+> -			       disk->disk_name, p, (unsigned long long) size);
+> -
+> -			if (disk_unlock_native_capacity(disk)) {
+> -				/* free state and restart */
+> -				goto rescan;
+> -			} else {
+> -				/*
+> -				 * we can not ignore partitions of broken tables
+> -				 * created by for example camera firmware, but
+> -				 * we limit them to the end of the disk to avoid
+> -				 * creating invalid block devices
+> -				 */
+> -				size = get_capacity(disk) - from;
+> -			}
+> -		}
+> +	ret = 0;
+> +out_free_state:
+> +	free_partitions(state);
+> +	return ret;
+> +}
+>  
+> -		/*
+> -		 * On a zoned block device, partitions should be aligned on the
+> -		 * device zone size (i.e. zone boundary crossing not allowed).
+> -		 * Otherwise, resetting the write pointer of the last zone of
+> -		 * one partition may impact the following partition.
+> -		 */
+> -		if (bdev_is_zoned(bdev) &&
+> -		    !part_zone_aligned(disk, bdev, from, size)) {
+> -			printk(KERN_WARNING
+> -			       "%s: p%d start %llu+%llu is not zone aligned\n",
+> -			       disk->disk_name, p, (unsigned long long) from,
+> -			       (unsigned long long) size);
+> -			continue;
+> -		}
+> +int rescan_partitions(struct gendisk *disk, struct block_device *bdev)
+> +{
+> +	int ret;
+>  
+> -		part = add_partition(disk, p, from, size,
+> -				     state->parts[p].flags,
+> -				     &state->parts[p].info);
+> -		if (IS_ERR(part)) {
+> -			printk(KERN_ERR " %s: p%d could not be added: %ld\n",
+> -			       disk->disk_name, p, -PTR_ERR(part));
+> -			continue;
+> -		}
+> -#ifdef CONFIG_BLK_DEV_MD
+> -		if (state->parts[p].flags & ADDPART_FLAG_RAID)
+> -			md_autodetect_dev(part_to_dev(part)->devt);
+> -#endif
+> -	}
+> -	free_partitions(state);
+> -	return 0;
+> +rescan:
+> +	ret = drop_partitions(disk, bdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (disk->fops->revalidate_disk)
+> +		disk->fops->revalidate_disk(disk);
+> +	check_disk_size_change(disk, bdev, true);
+> +	bdev->bd_invalidated = 0;
+> +
+> +	if (!get_capacity(disk))
+> +		return 0;
+> +	
+> +	ret = blk_add_partitions(disk, bdev);
+> +	if (ret == -EAGAIN)
+> +		goto rescan;
+> +	return ret;
+>  }
+>  
+>  int invalidate_partitions(struct gendisk *disk, struct block_device *bdev)
+> -- 
+> 2.20.1
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
