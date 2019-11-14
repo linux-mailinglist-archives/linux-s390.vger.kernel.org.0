@@ -2,90 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F9EFFC91B
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 15:44:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 201CBFC91E
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 15:44:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726717AbfKNOod (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 09:44:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45511 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726179AbfKNOod (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 09:44:33 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573742673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=I5JOOBRZ00n8io3w1WR77ggp8kXBzEKChjwFUxDMPWY=;
-        b=BVBB/dDV2OKFD4JmxbqmsWKIFxs9R65xElRkAAR8a8j8crQ2EM0vycGgeKZkjw5jyS+Z0B
-        oDDsdwQEd17p0nRHtL9Np9L7wK5h0zIENz/rxpxYUSvXaUiKeOwgPyoTMmmYB+zZTYKs5/
-        dM0pN30lYBy/XBmWv3BX4gCabIYKztw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-wzi85W8ZMY26n7r_wEsljw-1; Thu, 14 Nov 2019 09:44:29 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 028A8805A63;
-        Thu, 14 Nov 2019 14:44:28 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-116-89.ams2.redhat.com [10.36.116.89])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75DCE472EC;
-        Thu, 14 Nov 2019 14:44:23 +0000 (UTC)
-Subject: Re: [RFC 19/37] KVM: s390: protvirt: Add new gprs location handling
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
-        gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-20-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <049b8634-c195-4b3f-4d9c-83a1df7f03f7@redhat.com>
-Date:   Thu, 14 Nov 2019 15:44:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1726956AbfKNOom (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 09:44:42 -0500
+Received: from mail-il1-f170.google.com ([209.85.166.170]:43592 "EHLO
+        mail-il1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKNOom (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 09:44:42 -0500
+Received: by mail-il1-f170.google.com with SMTP id r9so5543474ilq.10
+        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 06:44:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=ADPstWN7XNqk2D3Z/6arxgDRYwL1lVKXj/5T7iJkTkw=;
+        b=RA7v7ikhHyI5R001zRHpdNHi+xRAIHKJYoD0OyMKxYwQs63RcEkcfdgq5RaCHhI0RV
+         PQmLrg5AbUUiXLg+jy376cg97inXPEZB3JvMbwrvFPPULe9bmTKpSnQCEdn1QLOYqIdT
+         /3IS6HLQPUixTWjDfpzTTZ4QHiNDdsIq9NPUTPKdQbSbqd1kD32I9i/kPchg+T1RwNaX
+         72zWDtFaGbkKgCM3v0aS4+VCtmGRu3zMK/xJFT8AAt8UZ9LOIUD564qmQ3SWtAeAYNp+
+         EKdzIJ8uPPZFrGvDuRM207NYhCFM2dl8RWdj1lmIfXSq3R/iAQZpRY3BlenZoo7QUziF
+         mGEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=ADPstWN7XNqk2D3Z/6arxgDRYwL1lVKXj/5T7iJkTkw=;
+        b=CBAUkwH7ZKDO22a278cv5Kigjq9kVlVi5ajh2OYQFeju1QYOmRFRkR9U+KLonU95MF
+         wbtJi2MKFWrmZIWc1F2t6b6+PqQgkUpuhKHyNi4UoVzr0jg6heRzXyDCBThPdKG9FV85
+         uQbSFWMzX0/zg8Hx/METs9KZAPxTemrvH3UBrIirB7dZILSNAfQn6BcMuZEKc4VAAB8a
+         nQqIygcOO4rQ5qkTtlZjWN0rMKed3eYJQB2cW1rr7T9odYib8tReuKKEyF7FmBWtmsS4
+         tr+ZIyAlC5tzlL2WV966DSGjSb/4I0pfEuNltoO91BtuDpHEikAuv5fO7QqlBvwlNFvM
+         qH1A==
+X-Gm-Message-State: APjAAAXQAaJprlEAov3sdn94jdd6LvT/LjirvRqvkHICnGAR6qjyAA6A
+        smj73PxlZZW8DsRNUCwH+wZLZu5mU3g=
+X-Google-Smtp-Source: APXvYqwL/ZYZ3r/XCkgmpVkdlTYTAXHO8wASbNOYcIDy3XlAGojjl6i+3UBjpw4hz0xQC0tPoXqgjQ==
+X-Received: by 2002:a92:83d0:: with SMTP id p77mr10091426ilk.116.1573742680801;
+        Thu, 14 Nov 2019 06:44:40 -0800 (PST)
+Received: from [192.168.1.159] ([65.144.74.34])
+        by smtp.gmail.com with ESMTPSA id c73sm763672ila.9.2019.11.14.06.44.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 14 Nov 2019 06:44:39 -0800 (PST)
+Subject: Re: disk revalidation cleanups and fixlets v2
+To:     Christoph Hellwig <hch@lst.de>, Jan Kara <jack@suse.cz>
+Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20191114143438.14681-1-hch@lst.de>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <10175732-a3f0-510d-e423-f7f7072fef2b@kernel.dk>
+Date:   Thu, 14 Nov 2019 07:44:38 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191024114059.102802-20-frankja@linux.ibm.com>
+In-Reply-To: <20191114143438.14681-1-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: wzi85W8ZMY26n7r_wEsljw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24/10/2019 13.40, Janosch Frank wrote:
-> Guest registers for protected guests are stored at offset 0x380.
->=20
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  arch/s390/include/asm/kvm_host.h |  4 +++-
->  arch/s390/kvm/kvm-s390.c         | 11 +++++++++++
->  2 files changed, 14 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm=
-_host.h
-> index 0ab309b7bf4c..5deabf9734d9 100644
-> --- a/arch/s390/include/asm/kvm_host.h
-> +++ b/arch/s390/include/asm/kvm_host.h
-> @@ -336,7 +336,9 @@ struct kvm_s390_itdb {
->  struct sie_page {
->  =09struct kvm_s390_sie_block sie_block;
->  =09struct mcck_volatile_info mcck_info;=09/* 0x0200 */
-> -=09__u8 reserved218[1000];=09=09/* 0x0218 */
-> +=09__u8 reserved218[360];=09=09/* 0x0218 */
-> +=09__u64 pv_grregs[16];=09=09/* 0x380 */
-> +=09__u8 reserved400[512];
+On 11/14/19 7:34 AM, Christoph Hellwig wrote:
+> Hi Jens and Jan,
+> 
+> this series takes the disk size change detection and revalidations
+> from Jan a step further and fully integrate the code path for
+> partitioned vs non-partitioned devices.  It also fixes up a few
+> bits where we have unintentionally differing behavior.
+> 
+> Changes since v1:
+>   - rebased on to of for-5.5/zoned
+>   - fixed a commit message
+>   - added two new trivial patches
 
-Maybe add a "/* 0x400 */" comment to be consisten with the other lines?
+Applied, thanks.
 
->  =09struct kvm_s390_itdb itdb;=09/* 0x0600 */
->  =09__u8 reserved700[2304];=09=09/* 0x0700 */
->  };
-
- Thomas
+-- 
+Jens Axboe
 
