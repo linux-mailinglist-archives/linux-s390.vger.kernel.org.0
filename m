@@ -2,75 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18F00FC8F9
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 15:35:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F9EFFC91B
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 15:44:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726505AbfKNOe7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 09:34:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:38588 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfKNOe7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 09:34:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AadK/uVv2luLfObdhk6LVZNYq7Lla1UkNW5Nzg6F338=; b=Mo6adILpA7YQu34J2rI0ixFzQB
-        ya61nwQfWAN9nSjW1pm7ZLMuvUekB5gDlrmG2QXn7NnKtC73bB9qTqIHAJSLwzzp6ySDSi21Q33fw
-        aGdji4ND0dlgh77sn9w8yZtZMGdUIGIVq6FjCh6z9HxdhDpa5XXYa6MElBzDayenOzwwNElrQkHEf
-        ityD6/5A6lo77ocNZzLMS0DCKU5nqS68zurTxfstvAz2+uH5riO/9eyxGulFy8Wq5PdmbLSSjXflO
-        QCId22iY1MQOj5do+XYfE1rlsMumnLc+b0sMoyMeEZZYE4d+WLIAkpT9YUsuSpLtbZnK3Tbu86Baq
-        C7ZAMTzw==;
-Received: from [2001:4bb8:180:3806:c70:4a89:bc61:6] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVGD4-0004lc-GL; Thu, 14 Nov 2019 14:34:58 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>
-Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 7/7] block: move setting bd_invalidated from flush_disk to check_disk_change
-Date:   Thu, 14 Nov 2019 15:34:38 +0100
-Message-Id: <20191114143438.14681-8-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191114143438.14681-1-hch@lst.de>
-References: <20191114143438.14681-1-hch@lst.de>
+        id S1726717AbfKNOod (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 09:44:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45511 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726179AbfKNOod (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 09:44:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573742673;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=I5JOOBRZ00n8io3w1WR77ggp8kXBzEKChjwFUxDMPWY=;
+        b=BVBB/dDV2OKFD4JmxbqmsWKIFxs9R65xElRkAAR8a8j8crQ2EM0vycGgeKZkjw5jyS+Z0B
+        oDDsdwQEd17p0nRHtL9Np9L7wK5h0zIENz/rxpxYUSvXaUiKeOwgPyoTMmmYB+zZTYKs5/
+        dM0pN30lYBy/XBmWv3BX4gCabIYKztw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-139-wzi85W8ZMY26n7r_wEsljw-1; Thu, 14 Nov 2019 09:44:29 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 028A8805A63;
+        Thu, 14 Nov 2019 14:44:28 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-89.ams2.redhat.com [10.36.116.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 75DCE472EC;
+        Thu, 14 Nov 2019 14:44:23 +0000 (UTC)
+Subject: Re: [RFC 19/37] KVM: s390: protvirt: Add new gprs location handling
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-20-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <049b8634-c195-4b3f-4d9c-83a1df7f03f7@redhat.com>
+Date:   Thu, 14 Nov 2019 15:44:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+In-Reply-To: <20191024114059.102802-20-frankja@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: wzi85W8ZMY26n7r_wEsljw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The only other caller of flush_disk instantly clears the flag, so don't
-bother setting it there.
+On 24/10/2019 13.40, Janosch Frank wrote:
+> Guest registers for protected guests are stored at offset 0x380.
+>=20
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/kvm_host.h |  4 +++-
+>  arch/s390/kvm/kvm-s390.c         | 11 +++++++++++
+>  2 files changed, 14 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm=
+_host.h
+> index 0ab309b7bf4c..5deabf9734d9 100644
+> --- a/arch/s390/include/asm/kvm_host.h
+> +++ b/arch/s390/include/asm/kvm_host.h
+> @@ -336,7 +336,9 @@ struct kvm_s390_itdb {
+>  struct sie_page {
+>  =09struct kvm_s390_sie_block sie_block;
+>  =09struct mcck_volatile_info mcck_info;=09/* 0x0200 */
+> -=09__u8 reserved218[1000];=09=09/* 0x0218 */
+> +=09__u8 reserved218[360];=09=09/* 0x0218 */
+> +=09__u64 pv_grregs[16];=09=09/* 0x380 */
+> +=09__u8 reserved400[512];
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- fs/block_dev.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Maybe add a "/* 0x400 */" comment to be consisten with the other lines?
 
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index ee63c2732fa2..f60739b5a24f 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -1403,7 +1403,6 @@ static void flush_disk(struct block_device *bdev, bool kill_dirty)
- 		       "resized disk %s\n",
- 		       bdev->bd_disk ? bdev->bd_disk->disk_name : "");
- 	}
--	bdev->bd_invalidated = 1;
- }
- 
- /**
-@@ -1491,6 +1490,7 @@ int check_disk_change(struct block_device *bdev)
- 		return 0;
- 
- 	flush_disk(bdev, true);
-+	bdev->bd_invalidated = 1;
- 	if (bdops->revalidate_disk)
- 		bdops->revalidate_disk(bdev->bd_disk);
- 	return 1;
--- 
-2.20.1
+>  =09struct kvm_s390_itdb itdb;=09/* 0x0600 */
+>  =09__u8 reserved700[2304];=09=09/* 0x0700 */
+>  };
+
+ Thomas
 
