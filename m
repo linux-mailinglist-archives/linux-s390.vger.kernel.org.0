@@ -2,171 +2,180 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82B50FC751
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 14:25:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C408FC758
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 14:26:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfKNNZL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 08:25:11 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26372 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726339AbfKNNZL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Nov 2019 08:25:11 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEDGUFY119282
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 08:25:08 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w97hurhx3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 08:25:08 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Thu, 14 Nov 2019 13:25:06 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 13:25:03 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEDOP7M42795432
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 13:24:25 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 191F752051;
-        Thu, 14 Nov 2019 13:25:02 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.39])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B4C3352059;
-        Thu, 14 Nov 2019 13:25:01 +0000 (GMT)
-Date:   Thu, 14 Nov 2019 14:25:00 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        borntraeger@de.ibm.com, mihajlov@linux.ibm.com, mimu@linux.ibm.com,
-        gor@linux.ibm.com
-Subject: Re: [RFC 11/37] DOCUMENTATION: protvirt: Interrupt injection
-In-Reply-To: <20191114140946.7bca2350.cohuck@redhat.com>
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
-        <20191024114059.102802-12-frankja@linux.ibm.com>
-        <20191114140946.7bca2350.cohuck@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        id S1726452AbfKNN0B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 08:26:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51592 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726202AbfKNN0B (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 14 Nov 2019 08:26:01 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 4610CAEC4;
+        Thu, 14 Nov 2019 13:25:59 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 248F91E4331; Thu, 14 Nov 2019 14:25:55 +0100 (CET)
+Date:   Thu, 14 Nov 2019 14:25:55 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/5] block: merge invalidate_partitions into
+ rescan_partitions
+Message-ID: <20191114132555.GG28486@quack2.suse.cz>
+References: <20191106151439.30056-1-hch@lst.de>
+ <20191106151439.30056-3-hch@lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111413-0012-0000-0000-00000363994E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111413-0013-0000-0000-0000219F12BC
-Message-Id: <20191114142500.55f985b1@p-imbrenda.boeblingen.de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=987 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140123
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106151439.30056-3-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 14 Nov 2019 14:09:46 +0100
-Cornelia Huck <cohuck@redhat.com> wrote:
+On Wed 06-11-19 16:14:36, Christoph Hellwig wrote:
+> A lot of the logic in invalidate_partitions and invalidate_partitions
+			^^ rescan_partitions as others already mentioned
 
-> On Thu, 24 Oct 2019 07:40:33 -0400
-> Janosch Frank <frankja@linux.ibm.com> wrote:
+> is shared.  Merge the two functions to simplify things.  There is
+> a small behavior change in that we now send the keven change notice
+						  ^^^ kevent
+
+> also if we were not invalidating but no partitions were found, which
+> seems like the right thing to do.
 > 
-> > Interrupt injection has changed a lot for protected guests, as KVM
-> > can't access the cpus' lowcores. New fields in the state
-> > description, like the interrupt injection control, and masked
-> > values safeguard the guest from KVM.
-> > 
-> > Let's add some documentation to the interrupt injection basics for
-> > protected guests.
-> > 
-> > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> > ---
-> >  Documentation/virtual/kvm/s390-pv.txt | 27
-> > +++++++++++++++++++++++++++ 1 file changed, 27 insertions(+)
-> > 
-> > diff --git a/Documentation/virtual/kvm/s390-pv.txt
-> > b/Documentation/virtual/kvm/s390-pv.txt index
-> > 86ed95f36759..e09f2dc5f164 100644 ---
-> > a/Documentation/virtual/kvm/s390-pv.txt +++
-> > b/Documentation/virtual/kvm/s390-pv.txt @@ -21,3 +21,30 @@ normally
-> > needed to be able to run a VM, some changes have been made in SIE
-> > behavior and fields have different meaning for a PVM. SIE exits are
-> > minimized as much as possible to improve speed and reduce exposed
-> > guest state. +
-> > +
-> > +Interrupt injection:
-> > +
-> > +Interrupt injection is safeguarded by the Ultravisor and, as KVM
-> > lost +access to the VCPUs' lowcores, is handled via the format 4
-> > state +description.
-> > +
-> > +Machine check, external, IO and restart interruptions each can be
-> > +injected on SIE entry via a bit in the interrupt injection control
-> > +field (offset 0x54). If the guest cpu is not enabled for the
-> > interrupt +at the time of injection, a validity interception is
-> > recognized. The +interrupt's data is transported via parts of the
-> > interception data +block.  
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
+Otherwise the patch looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+> ---
+>  block/ioctl.c             |  2 +-
+>  block/partition-generic.c | 38 ++++++++++++++------------------------
+>  fs/block_dev.c            |  5 +----
+>  include/linux/genhd.h     |  4 ++--
+>  4 files changed, 18 insertions(+), 31 deletions(-)
 > 
-> "Data associated with the interrupt needs to be placed into the
-> respective fields in the interception data block to be injected into
-> the guest."
+> diff --git a/block/ioctl.c b/block/ioctl.c
+> index 15a0eb80ada9..8a7e33ce2097 100644
+> --- a/block/ioctl.c
+> +++ b/block/ioctl.c
+> @@ -171,7 +171,7 @@ int __blkdev_reread_part(struct block_device *bdev)
+>  
+>  	lockdep_assert_held(&bdev->bd_mutex);
+>  
+> -	return rescan_partitions(disk, bdev);
+> +	return rescan_partitions(disk, bdev, false);
+>  }
+>  EXPORT_SYMBOL(__blkdev_reread_part);
+>  
+> diff --git a/block/partition-generic.c b/block/partition-generic.c
+> index f113be069b40..eae9daa8a523 100644
+> --- a/block/partition-generic.c
+> +++ b/block/partition-generic.c
+> @@ -632,7 +632,8 @@ static int blk_add_partitions(struct gendisk *disk, struct block_device *bdev)
+>  	return ret;
+>  }
+>  
+> -int rescan_partitions(struct gendisk *disk, struct block_device *bdev)
+> +int rescan_partitions(struct gendisk *disk, struct block_device *bdev,
+> +		bool invalidate)
+>  {
+>  	int ret;
+>  
+> @@ -641,13 +642,22 @@ int rescan_partitions(struct gendisk *disk, struct block_device *bdev)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (disk->fops->revalidate_disk)
+> +	if (invalidate)
+> +		set_capacity(disk, 0);
+> +	else if (disk->fops->revalidate_disk)
+>  		disk->fops->revalidate_disk(disk);
+> -	check_disk_size_change(disk, bdev, true);
+> +
+> +	check_disk_size_change(disk, bdev, !invalidate);
+>  	bdev->bd_invalidated = 0;
+>  
+> -	if (!get_capacity(disk))
+> +	if (!get_capacity(disk)) {
+> +		/*
+> +		 * Tell userspace that the media / partition table may have
+> +		 * changed.
+> +		 */
+> +		kobject_uevent(&disk_to_dev(disk)->kobj, KOBJ_CHANGE);
+>  		return 0;
+> +	}
+>  	
+>  	ret = blk_add_partitions(disk, bdev);
+>  	if (ret == -EAGAIN)
+> @@ -655,26 +665,6 @@ int rescan_partitions(struct gendisk *disk, struct block_device *bdev)
+>  	return ret;
+>  }
+>  
+> -int invalidate_partitions(struct gendisk *disk, struct block_device *bdev)
+> -{
+> -	int res;
+> -
+> -	if (!bdev->bd_invalidated)
+> -		return 0;
+> -
+> -	res = drop_partitions(disk, bdev);
+> -	if (res)
+> -		return res;
+> -
+> -	set_capacity(disk, 0);
+> -	check_disk_size_change(disk, bdev, false);
+> -	bdev->bd_invalidated = 0;
+> -	/* tell userspace that the media / partition table may have changed */
+> -	kobject_uevent(&disk_to_dev(disk)->kobj, KOBJ_CHANGE);
+> -
+> -	return 0;
+> -}
+> -
+>  unsigned char *read_dev_sector(struct block_device *bdev, sector_t n, Sector *p)
+>  {
+>  	struct address_space *mapping = bdev->bd_inode->i_mapping;
+> diff --git a/fs/block_dev.c b/fs/block_dev.c
+> index d612468ee66b..0af62b76d031 100644
+> --- a/fs/block_dev.c
+> +++ b/fs/block_dev.c
+> @@ -1511,10 +1511,7 @@ static void __blkdev_put(struct block_device *bdev, fmode_t mode, int for_part);
+>  static void bdev_disk_changed(struct block_device *bdev, bool invalidate)
+>  {
+>  	if (disk_part_scan_enabled(bdev->bd_disk)) {
+> -		if (invalidate)
+> -			invalidate_partitions(bdev->bd_disk, bdev);
+> -		else
+> -			rescan_partitions(bdev->bd_disk, bdev);
+> +		rescan_partitions(bdev->bd_disk, bdev, invalidate);
+>  	} else {
+>  		check_disk_size_change(bdev->bd_disk, bdev, !invalidate);
+>  		bdev->bd_invalidated = 0;
+> diff --git a/include/linux/genhd.h b/include/linux/genhd.h
+> index 8b5330dd5ac0..fd7774e64f0b 100644
+> --- a/include/linux/genhd.h
+> +++ b/include/linux/genhd.h
+> @@ -622,8 +622,8 @@ extern dev_t blk_lookup_devt(const char *name, int partno);
+>  extern char *disk_name (struct gendisk *hd, int partno, char *buf);
+>  
+>  extern int disk_expand_part_tbl(struct gendisk *disk, int target);
+> -extern int rescan_partitions(struct gendisk *disk, struct block_device *bdev);
+> -extern int invalidate_partitions(struct gendisk *disk, struct block_device *bdev);
+> +int rescan_partitions(struct gendisk *disk, struct block_device *bdev,
+> +		bool invalidate);
+>  extern struct hd_struct * __must_check add_partition(struct gendisk *disk,
+>  						     int partno, sector_t start,
+>  						     sector_t len, int flags,
+> -- 
+> 2.20.1
 > 
-> ?
-
-when a normal guest intercepts an exception, depending on the exception
-type, the parameters are saved in the state description at specified
-offsets, between 0xC0 amd 0xF8
-
-to perform interrupt injection for secure guests, the same fields are
-used to specify the interrupt parameters that should be injected into
-the guest
-
-> > +
-> > +Program and Service Call exceptions have another layer of
-> > +safeguarding, they are only injectable, when instructions have
-> > +intercepted into KVM and such an exception can be an emulation
-> > result.  
-> 
-> I find this sentence hard to parse... not sure if I understand it
-> correctly.
-> 
-> "They can only be injected if the exception can be encountered during
-> emulation of instructions that had been intercepted into KVM."
- 
-yes
-
-> 
-> > +
-> > +
-> > +Mask notification interceptions:
-> > +As a replacement for the lctl(g) and lpsw(e) interception, two new
-> > +interception codes have been introduced. One which tells us that
-> > CRs +0, 6 or 14 have been changed and therefore interrupt masking
-> > might +have changed. And one for PSW bit 13 changes. The CRs and
-> > the PSW in  
-> 
-> Might be helpful to mention that this bit covers machine checks, which
-> do not get a separate bit in the control block :)
-> 
-> > +the state description only contain the mask bits and no further
-> > info +like the current instruction address.  
-> 
-> "The CRs and the PSW in the state description only contain the bits
-> referring to interrupt masking; other fields like e.g. the current
-> instruction address are zero."
-
-wait state is saved too
-
-CC is write only, and is only inspected by hardware/firmware when
-KVM/qemu is interpreting an instruction that expects a new CC to be set,
-and then only the expected CCs are allowed (e.g. if an instruction only
-allows CC 0 or 3, 2 cannot be specified)
-
-
-
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
