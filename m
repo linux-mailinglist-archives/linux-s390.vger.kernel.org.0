@@ -2,178 +2,171 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 160DFFC7BD
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 14:33:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D7E7FC816
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 14:47:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727507AbfKNNdm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 08:33:42 -0500
-Received: from mout-p-201.mailbox.org ([80.241.56.171]:21264 "EHLO
-        mout-p-201.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726473AbfKNNdl (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 08:33:41 -0500
-Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
-        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
+        id S1726818AbfKNNrv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 08:47:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:32935 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726179AbfKNNrv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 08:47:51 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573739269;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=61Im+QPZFQJdXU/FdfY59uPqIIvlWDz8/t0U8zWanMo=;
+        b=Hq27QzD/cvCXQRwgwi82gTxZ0+8d/7vu3uCqiQPzjZTiyzsyNjt/c2Jq4r3J+I83XVN6+K
+        ym0IjBvNV/BJubNFa085XpN8P11/S9j6FuaraJvle5k2QYSINEzfN7NM8NNKgArbYlZ+z4
+        TO9qP8zOfQ1nYuPADKb39XUKVmIpV04=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-30-CoIWNYVHNAy7Rc59aoaIxw-1; Thu, 14 Nov 2019 08:47:46 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mout-p-201.mailbox.org (Postfix) with ESMTPS id 47DMrH5rJDzQl9x;
-        Thu, 14 Nov 2019 14:33:35 +0100 (CET)
-X-Virus-Scanned: amavisd-new at heinlein-support.de
-Received: from smtp1.mailbox.org ([80.241.60.240])
-        by spamfilter03.heinlein-hosting.de (spamfilter03.heinlein-hosting.de [80.241.56.117]) (amavisd-new, port 10030)
-        with ESMTP id Wtrcg9lX2PUE; Thu, 14 Nov 2019 14:33:30 +0100 (CET)
-Date:   Fri, 15 Nov 2019 00:33:00 +1100
-From:   Aleksa Sarai <cyphar@cyphar.com>
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        David Drysdale <drysdale@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
-        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v15 3/9] namei: LOOKUP_NO_XDEV: block mountpoint crossing
-Message-ID: <20191114133300.soxnzmufwbt2ddid@yavin.dot.cyphar.com>
-References: <20191105090553.6350-1-cyphar@cyphar.com>
- <20191105090553.6350-4-cyphar@cyphar.com>
- <20191113013630.GZ26530@ZenIV.linux.org.uk>
- <20191114044945.ldedzjrb4s7i7irr@yavin.dot.cyphar.com>
- <20191114054348.GH26530@ZenIV.linux.org.uk>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0BB8A8048E8;
+        Thu, 14 Nov 2019 13:47:45 +0000 (UTC)
+Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 845CC619A8;
+        Thu, 14 Nov 2019 13:47:40 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 14:47:38 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
+        borntraeger@de.ibm.com, mihajlov@linux.ibm.com, mimu@linux.ibm.com,
+        gor@linux.ibm.com
+Subject: Re: [RFC 11/37] DOCUMENTATION: protvirt: Interrupt injection
+Message-ID: <20191114144738.19915998.cohuck@redhat.com>
+In-Reply-To: <20191114142500.55f985b1@p-imbrenda.boeblingen.de.ibm.com>
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+        <20191024114059.102802-12-frankja@linux.ibm.com>
+        <20191114140946.7bca2350.cohuck@redhat.com>
+        <20191114142500.55f985b1@p-imbrenda.boeblingen.de.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="zoh3k636biknnjmo"
-Content-Disposition: inline
-In-Reply-To: <20191114054348.GH26530@ZenIV.linux.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: CoIWNYVHNAy7Rc59aoaIxw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Thu, 14 Nov 2019 14:25:00 +0100
+Claudio Imbrenda <imbrenda@linux.ibm.com> wrote:
 
---zoh3k636biknnjmo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 2019-11-14, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> On Thu, Nov 14, 2019 at 03:49:45PM +1100, Aleksa Sarai wrote:
-> > On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
-> > > On Tue, Nov 05, 2019 at 08:05:47PM +1100, Aleksa Sarai wrote:
-> > >=20
-> > > > @@ -862,6 +870,8 @@ static int nd_jump_root(struct nameidata *nd)
-> > > >  void nd_jump_link(struct path *path)
-> > > >  {
-> > > >  	struct nameidata *nd =3D current->nameidata;
-> > > > +
-> > > > +	nd->last_magiclink.same_mnt =3D (nd->path.mnt =3D=3D path->mnt);
-> > > >  	path_put(&nd->path);
-> > > > =20
-> > > >  	nd->path =3D *path;
-> > > > @@ -1082,6 +1092,10 @@ const char *get_link(struct nameidata *nd)
-> > > >  		if (nd->flags & LOOKUP_MAGICLINK_JUMPED) {
-> > > >  			if (unlikely(nd->flags & LOOKUP_NO_MAGICLINKS))
-> > > >  				return ERR_PTR(-ELOOP);
-> > > > +			if (unlikely(nd->flags & LOOKUP_NO_XDEV)) {
-> > > > +				if (!nd->last_magiclink.same_mnt)
-> > > > +					return ERR_PTR(-EXDEV);
-> > > > +			}
-> > > >  		}
-> > >=20
-> > > Ugh...  Wouldn't it be better to take that logics (some equivalent th=
-ereof)
-> > > into nd_jump_link()?  Or just have nd_jump_link() return an error...
-> >=20
-> > This could be done, but the reason for stashing it away in
-> > last_magiclink is because of the future magic-link re-opening patches
-> > which can't be implemented like that without putting the open_flags
-> > inside nameidata (which was decided to be too ugly a while ago).
-> >=20
-> > My point being that I could implement it this way for this series, but
-> > I'd have to implement something like last_magiclink when I end up
-> > re-posting the magic-link stuff in a few weeks.
-> >=20
-> > Looking at all the nd_jump_link() users, the other option is to just
-> > disallow magic-link crossings entirely for LOOKUP_NO_XDEV. The only
-> > thing allowing them permits is to resolve file descriptors that are
-> > pointing to the same procfs mount -- and it's unclear to me how useful
-> > that really is (apparmorfs and nsfs will always give -EXDEV because
-> > aafs_mnt and nsfs_mnt are internal kernel vfsmounts).
+> On Thu, 14 Nov 2019 14:09:46 +0100
+> Cornelia Huck <cohuck@redhat.com> wrote:
 >=20
-> I would rather keep the entire if (nd->flags & LOOKUP_MAGICLINK_JUMPED)
-> out of the get_link().  If you want to generate some error if
-> nd_jump_link() has been called, just do it right there.  The fewer
-> pieces of state need to be carried around, the better...
+> > On Thu, 24 Oct 2019 07:40:33 -0400
+> > Janosch Frank <frankja@linux.ibm.com> wrote:
+> >  =20
+> > > Interrupt injection has changed a lot for protected guests, as KVM
+> > > can't access the cpus' lowcores. New fields in the state
+> > > description, like the interrupt injection control, and masked
+> > > values safeguard the guest from KVM.
+> > >=20
+> > > Let's add some documentation to the interrupt injection basics for
+> > > protected guests.
+> > >=20
+> > > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> > > ---
+> > >  Documentation/virtual/kvm/s390-pv.txt | 27
+> > > +++++++++++++++++++++++++++ 1 file changed, 27 insertions(+)
+> > >=20
+> > > diff --git a/Documentation/virtual/kvm/s390-pv.txt
+> > > b/Documentation/virtual/kvm/s390-pv.txt index
+> > > 86ed95f36759..e09f2dc5f164 100644 ---
+> > > a/Documentation/virtual/kvm/s390-pv.txt +++
+> > > b/Documentation/virtual/kvm/s390-pv.txt @@ -21,3 +21,30 @@ normally
+> > > needed to be able to run a VM, some changes have been made in SIE
+> > > behavior and fields have different meaning for a PVM. SIE exits are
+> > > minimized as much as possible to improve speed and reduce exposed
+> > > guest state. +
+> > > +
+> > > +Interrupt injection:
+> > > +
+> > > +Interrupt injection is safeguarded by the Ultravisor and, as KVM
+> > > lost +access to the VCPUs' lowcores, is handled via the format 4
+> > > state +description.
+> > > +
+> > > +Machine check, external, IO and restart interruptions each can be
+> > > +injected on SIE entry via a bit in the interrupt injection control
+> > > +field (offset 0x54). If the guest cpu is not enabled for the
+> > > interrupt +at the time of injection, a validity interception is
+> > > recognized. The +interrupt's data is transported via parts of the
+> > > interception data +block.   =20
+> >=20
+> > "Data associated with the interrupt needs to be placed into the
+> > respective fields in the interception data block to be injected into
+> > the guest."
+> >=20
+> > ? =20
+>=20
+> when a normal guest intercepts an exception, depending on the exception
+> type, the parameters are saved in the state description at specified
+> offsets, between 0xC0 amd 0xF8
+>=20
+> to perform interrupt injection for secure guests, the same fields are
+> used to specify the interrupt parameters that should be injected into
+> the guest
 
-Sure, I can make nd_jump_link() give -ELOOP and drop the current need
-for LOOKUP_MAGICLINK_JUMPED -- if necessary we can re-add it for the
-magic-link reopening patches.
+Ok, maybe add that as well.
 
-> And as for opening them...  Why would you need full open_flags in there?
-> Details, please...
+>=20
+> > > +
+> > > +Program and Service Call exceptions have another layer of
+> > > +safeguarding, they are only injectable, when instructions have
+> > > +intercepted into KVM and such an exception can be an emulation
+> > > result.   =20
+> >=20
+> > I find this sentence hard to parse... not sure if I understand it
+> > correctly.
+> >=20
+> > "They can only be injected if the exception can be encountered during
+> > emulation of instructions that had been intercepted into KVM." =20
+> =20
+> yes
+>=20
+> >  =20
+> > > +
+> > > +
+> > > +Mask notification interceptions:
+> > > +As a replacement for the lctl(g) and lpsw(e) interception, two new
+> > > +interception codes have been introduced. One which tells us that
+> > > CRs +0, 6 or 14 have been changed and therefore interrupt masking
+> > > might +have changed. And one for PSW bit 13 changes. The CRs and
+> > > the PSW in   =20
+> >=20
+> > Might be helpful to mention that this bit covers machine checks, which
+> > do not get a separate bit in the control block :)
+> >  =20
+> > > +the state description only contain the mask bits and no further
+> > > info +like the current instruction address.   =20
+> >=20
+> > "The CRs and the PSW in the state description only contain the bits
+> > referring to interrupt masking; other fields like e.g. the current
+> > instruction address are zero." =20
+>=20
+> wait state is saved too
+>=20
+> CC is write only, and is only inspected by hardware/firmware when
+> KVM/qemu is interpreting an instruction that expects a new CC to be set,
+> and then only the expected CCs are allowed (e.g. if an instruction only
+> allows CC 0 or 3, 2 cannot be specified)
 
-I was referring to [1] which has been dropped from this series. I
-misspoke -- you don't need the full open_flags, you just need acc_mode
-in nameidata -- but from memory you (understandably) weren't in favour
-of that either because it further muddled the open semantics with namei.
+So I'm wondering how much of that should go into the document... maybe
+just
 
-So the solution I went with was to stash away the i_mode of the
-magiclink in nd->last_magiclink.mode (though to avoid a race which Jann
-found, you actually need to recalculate it when you call nd_jump_link()
-but that's a different topic) and then check it in trailing_magiclink().
+"The CRs and the PSW in the state description contain less information
+than for normal guests: most information that does not refer to
+interrupt masking is not available to the hypervisor."
 
-However, I've since figured out that we need to restrict things like
-bind-mounts and truncate() because they can be used to get around the
-restrictions. I dropped that patch from this series so that I could work
-on implementing the restrictions for the other relevant VFS syscalls
-separately from openat2 (upgrade_mask will be re-added to open_how with
-those patches).
+?
 
-My point was that AFAICS we will either have to have nd->acc_mode (or
-something similar) or have nd->last_magiclink in order to implement the
-magic-link reopening hardening.
-
-[1]: https://lore.kernel.org/lkml/20190930183316.10190-2-cyphar@cyphar.com/
-
---=20
-Aleksa Sarai
-Senior Software Engineer (Containers)
-SUSE Linux GmbH
-<https://www.cyphar.com/>
-
---zoh3k636biknnjmo
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXc1XiQAKCRCdlLljIbnQ
-EgEVAQDde9bpKjJAbLEIt4D/9cw3B8CHqEBeW8SnIT4PqQNQUQD/TtE4FY5p3N1d
-gPZFRde/N3ihwtWscDvPXctFNxykJAQ=
-=TSKH
------END PGP SIGNATURE-----
-
---zoh3k636biknnjmo--
