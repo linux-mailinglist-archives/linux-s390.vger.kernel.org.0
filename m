@@ -2,81 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5AF03FB700
-	for <lists+linux-s390@lfdr.de>; Wed, 13 Nov 2019 19:06:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48ED6FBEBD
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 05:50:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726564AbfKMSGk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 13 Nov 2019 13:06:40 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:30584 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726120AbfKMSGj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Nov 2019 13:06:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573668398;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=sW3bxKekubakcaII8zSQ1CSMjxoo4vTeUozLl6kqOxQ=;
-        b=KQNQ6tDb4UzbGRWD4dHOLlXiCM5sLFOSWD9LN3sSiHyT2053Z0mait9025sCavjPDnGMWv
-        Lxg5IHy8qvPy1zyGxuvzDUBw73tml21DSUgoYP1egM6LH39hPTYZHy3mYiTFk0vGhAr8A1
-        PxHqKsHQTxAUj4TTqLgXuYkNTHNCoW8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-BEMNKOWTMKmzHejaJbhmhg-1; Wed, 13 Nov 2019 13:06:36 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727104AbfKNEuW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 13 Nov 2019 23:50:22 -0500
+Received: from mout-p-101.mailbox.org ([80.241.56.151]:44218 "EHLO
+        mout-p-101.mailbox.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727059AbfKNEuV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 13 Nov 2019 23:50:21 -0500
+Received: from smtp1.mailbox.org (smtp1.mailbox.org [IPv6:2001:67c:2050:105:465:1:1:0])
+        (using TLSv1.2 with cipher ECDHE-RSA-CHACHA20-POLY1305 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CEEA218A5140;
-        Wed, 13 Nov 2019 18:06:35 +0000 (UTC)
-Received: from [10.36.116.48] (ovpn-116-48.ams2.redhat.com [10.36.116.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D8EE310841A9;
-        Wed, 13 Nov 2019 18:06:34 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v4] s390x: Load reset psw on diag308 reset
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com
-References: <e54ce8f8-7ed5-3eee-6715-8b5051cb49fb@redhat.com>
- <20191113112403.7664-1-frankja@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <f8393e14-79a3-694e-d457-dff20b28f62a@redhat.com>
-Date:   Wed, 13 Nov 2019 19:06:34 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        by mout-p-101.mailbox.org (Postfix) with ESMTPS id 47D8DS2831zKmdH;
+        Thu, 14 Nov 2019 05:50:16 +0100 (CET)
+X-Virus-Scanned: amavisd-new at heinlein-support.de
+Received: from smtp1.mailbox.org ([80.241.60.240])
+        by spamfilter04.heinlein-hosting.de (spamfilter04.heinlein-hosting.de [80.241.56.122]) (amavisd-new, port 10030)
+        with ESMTP id GmtrxB8tgNO0; Thu, 14 Nov 2019 05:50:10 +0100 (CET)
+Date:   Thu, 14 Nov 2019 15:49:45 +1100
+From:   Aleksa Sarai <cyphar@cyphar.com>
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Jeff Layton <jlayton@kernel.org>,
+        "J. Bruce Fields" <bfields@fieldses.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        David Howells <dhowells@redhat.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Christian Brauner <christian.brauner@ubuntu.com>,
+        David Drysdale <drysdale@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Eric Biederman <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
+        Chanho Min <chanho.min@lge.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Christian Brauner <christian@brauner.io>,
+        Aleksa Sarai <asarai@suse.de>,
+        containers@lists.linux-foundation.org, linux-alpha@vger.kernel.org,
+        linux-api@vger.kernel.org, libc-alpha@sourceware.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
+Subject: Re: [PATCH v15 3/9] namei: LOOKUP_NO_XDEV: block mountpoint crossing
+Message-ID: <20191114044945.ldedzjrb4s7i7irr@yavin.dot.cyphar.com>
+References: <20191105090553.6350-1-cyphar@cyphar.com>
+ <20191105090553.6350-4-cyphar@cyphar.com>
+ <20191113013630.GZ26530@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191113112403.7664-1-frankja@linux.ibm.com>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: BEMNKOWTMKmzHejaJbhmhg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rwq4fftbhkszxm4g"
+Content-Disposition: inline
+In-Reply-To: <20191113013630.GZ26530@ZenIV.linux.org.uk>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 13.11.19 12:24, Janosch Frank wrote:
-> On a diag308 subcode 0 CRs will be reset, so we need a PSW mask
-> without DAT. Also we need to set the short psw indication to be
-> compliant with the architecture.
+
+--rwq4fftbhkszxm4g
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 2019-11-13, Al Viro <viro@zeniv.linux.org.uk> wrote:
+> On Tue, Nov 05, 2019 at 08:05:47PM +1100, Aleksa Sarai wrote:
 >=20
-> Let's therefore define a reset PSW mask with 64 bit addressing and
-> short PSW indication that is compliant with architecture and use it.
+> > @@ -862,6 +870,8 @@ static int nd_jump_root(struct nameidata *nd)
+> >  void nd_jump_link(struct path *path)
+> >  {
+> >  	struct nameidata *nd =3D current->nameidata;
+> > +
+> > +	nd->last_magiclink.same_mnt =3D (nd->path.mnt =3D=3D path->mnt);
+> >  	path_put(&nd->path);
+> > =20
+> >  	nd->path =3D *path;
+> > @@ -1082,6 +1092,10 @@ const char *get_link(struct nameidata *nd)
+> >  		if (nd->flags & LOOKUP_MAGICLINK_JUMPED) {
+> >  			if (unlikely(nd->flags & LOOKUP_NO_MAGICLINKS))
+> >  				return ERR_PTR(-ELOOP);
+> > +			if (unlikely(nd->flags & LOOKUP_NO_XDEV)) {
+> > +				if (!nd->last_magiclink.same_mnt)
+> > +					return ERR_PTR(-EXDEV);
+> > +			}
+> >  		}
 >=20
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
+> Ugh...  Wouldn't it be better to take that logics (some equivalent thereo=
+f)
+> into nd_jump_link()?  Or just have nd_jump_link() return an error...
 
-Queued to
+This could be done, but the reason for stashing it away in
+last_magiclink is because of the future magic-link re-opening patches
+which can't be implemented like that without putting the open_flags
+inside nameidata (which was decided to be too ugly a while ago).
 
-https://github.com/davidhildenbrand/kvm-unit-tests.git s390x-next
+My point being that I could implement it this way for this series, but
+I'd have to implement something like last_magiclink when I end up
+re-posting the magic-link stuff in a few weeks.
 
-I'll most probably wait a bit for the SCLP stuff to settle to send a=20
-pull request!
+Looking at all the nd_jump_link() users, the other option is to just
+disallow magic-link crossings entirely for LOOKUP_NO_XDEV. The only
+thing allowing them permits is to resolve file descriptors that are
+pointing to the same procfs mount -- and it's unclear to me how useful
+that really is (apparmorfs and nsfs will always give -EXDEV because
+aafs_mnt and nsfs_mnt are internal kernel vfsmounts).
 
 --=20
+Aleksa Sarai
+Senior Software Engineer (Containers)
+SUSE Linux GmbH
+<https://www.cyphar.com/>
 
-Thanks,
+--rwq4fftbhkszxm4g
+Content-Type: application/pgp-signature; name="signature.asc"
 
-David / dhildenb
+-----BEGIN PGP SIGNATURE-----
 
+iHUEABYIAB0WIQSxZm6dtfE8gxLLfYqdlLljIbnQEgUCXczc5gAKCRCdlLljIbnQ
+EspyAQDQkDnU2/CfvkXyKRLh2e7ycT5D4iHdCmBXbx8LlO8DlwD/S5O/FNHgyDdy
+RVaJ7aj0OZAzg7DMx3VZRiI+He4MXw0=
+=71Jv
+-----END PGP SIGNATURE-----
+
+--rwq4fftbhkszxm4g--
