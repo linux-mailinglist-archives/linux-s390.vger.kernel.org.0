@@ -2,126 +2,183 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F323DFC9E2
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 16:25:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 10669FCA05
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 16:37:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfKNPZo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 10:25:44 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24478 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726251AbfKNPZo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:25:44 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEFNgj9137034
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 10:25:43 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w99hbr4v1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 10:25:39 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 14 Nov 2019 15:25:34 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 15:25:30 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEFPTYx48300172
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 15:25:29 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A295E5204F;
-        Thu, 14 Nov 2019 15:25:29 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.152.222.27])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6AEC15204E;
-        Thu, 14 Nov 2019 15:25:29 +0000 (GMT)
-Subject: Re: [PATCH v1 2/4] s390x: Define the PSW bits
+        id S1726516AbfKNPhF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 10:37:05 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39864 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726339AbfKNPhF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 10:37:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573745823;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=OuyDHOIdbIGgQ83So0wUcm289BZEPHActWPPgoq5Jb0=;
+        b=IpAMlqT8oIY5l29kGN/4oCpLxOxYfBhyoy4wWPJnE7+9Pn90j3PHhio2pOTyILIdLPU6+5
+        i3dd1F80D7M4zMSZmSp+N+cRxDiFAIUNRaBYD8QR3R8MTr6PDdwwxuGGAiAHbSNlm+lfdz
+        uyEi2kBmTERU/10iI8oQe6I5jUT4OLw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-mkr-nL6ZOPyg1IeWSpN4yQ-1; Thu, 14 Nov 2019 10:37:00 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C8945477;
+        Thu, 14 Nov 2019 15:36:58 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-89.ams2.redhat.com [10.36.116.89])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5F2915F79C;
+        Thu, 14 Nov 2019 15:36:54 +0000 (UTC)
+Subject: Re: [RFC 20/37] KVM: S390: protvirt: Introduce instruction data area
+ bounce buffer
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com
-References: <1573647799-30584-1-git-send-email-pmorel@linux.ibm.com>
- <1573647799-30584-3-git-send-email-pmorel@linux.ibm.com>
- <5796f620-7ee6-6333-e4f4-5e904284a331@linux.ibm.com>
- <189f8129-86c5-8761-fdfe-d08c34fb1f18@linux.ibm.com>
- <e27023c2-5f9c-884d-e194-4420ec6e3023@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Thu, 14 Nov 2019 16:25:29 +0100
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-21-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <ad0f9b90-3ce4-c2d2-b661-635fe439f7e2@redhat.com>
+Date:   Thu, 14 Nov 2019 16:36:51 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <e27023c2-5f9c-884d-e194-4420ec6e3023@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191024114059.102802-21-frankja@linux.ibm.com>
 Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19111415-0016-0000-0000-000002C3A4BD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111415-0017-0000-0000-00003325476C
-Message-Id: <33163b34-247d-71b2-54a3-8a6b476b7157@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=773 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140142
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: mkr-nL6ZOPyg1IeWSpN4yQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 24/10/2019 13.40, Janosch Frank wrote:
+> Now that we can't access guest memory anymore, we have a dedicated
+> sattelite block that's a bounce buffer for instruction data.
 
-On 2019-11-14 09:53, Janosch Frank wrote:
-> On 11/14/19 9:40 AM, Pierre Morel wrote:
->> On 2019-11-13 17:05, Janosch Frank wrote:
->>> On 11/13/19 1:23 PM, Pierre Morel wrote:
->>>> Instead of assigning obfuscated masks to the PSW dedicated to the
->>>> exceptions, let's define the masks explicitely, it will clarify the
->>> s/explicitely/explicitly/
->>> Try to break that up into sentences.
->> OK thx
-...snip...
->>>> +
->>>> +#define PSW_EXCEPTION_MASK (PSW_MASK_EA|PSW_MASK_BA)
->>> That's not a bit anymore, shouldn't that be in arch_def.h?
->>> Also please add a comment, that this is 64 bit addressing.
->>
->> Don't we use the 64bit architecture only?
-> architecture != addressing
-> We can do 24 bit addressing on zArch...
-> We mostly use ESAME (zArch), but old machines start up in the old mode
-> and then we transition to zArch via a SIGP.
+"satellite block that is ..."
 
+> We re-use the memop interface to copy the instruction data to / from
+> userspace. This lets us re-use a lot of QEMU code which used that
+> interface to make logical guest memory accesses which are not possible
+> anymore in protected mode anyway.
+>=20
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  arch/s390/include/asm/kvm_host.h |  5 ++++-
+>  arch/s390/kvm/kvm-s390.c         | 31 +++++++++++++++++++++++++++++++
+>  arch/s390/kvm/pv.c               |  9 +++++++++
+>  3 files changed, 44 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm=
+_host.h
+> index 5deabf9734d9..2a8a1e21e1c3 100644
+> --- a/arch/s390/include/asm/kvm_host.h
+> +++ b/arch/s390/include/asm/kvm_host.h
+> @@ -308,7 +308,10 @@ struct kvm_s390_sie_block {
+>  #define CRYCB_FORMAT2 0x00000003
+>  =09__u32=09crycbd;=09=09=09/* 0x00fc */
+>  =09__u64=09gcr[16];=09=09/* 0x0100 */
+> -=09__u64=09gbea;=09=09=09/* 0x0180 */
+> +=09union {
+> +=09=09__u64=09gbea;=09=09=09/* 0x0180 */
+> +=09=09__u64=09sidad;
+> +=09};
+>  =09__u8    reserved188[8];=09=09/* 0x0188 */
+>  =09__u64   sdnxo;=09=09=09/* 0x0190 */
+>  =09__u8    reserved198[8];=09=09/* 0x0198 */
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 97d3a81e5074..6747cb6cf062 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -4416,6 +4416,13 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu =
+*vcpu,
+>  =09if (mop->size > MEM_OP_MAX_SIZE)
+>  =09=09return -E2BIG;
+> =20
+> +=09/* Protected guests move instruction data over the satellite
+> +=09 * block which has its own size limit
+> +=09 */
+> +=09if (kvm_s390_pv_is_protected(vcpu->kvm) &&
+> +=09    mop->size > ((vcpu->arch.sie_block->sidad & 0x0f) + 1) * PAGE_SIZ=
+E)
+> +=09=09return -E2BIG;
+> +
+>  =09if (!(mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY)) {
+>  =09=09tmpbuf =3D vmalloc(mop->size);
+>  =09=09if (!tmpbuf)
+> @@ -4427,10 +4434,22 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu=
+ *vcpu,
+>  =09switch (mop->op) {
+>  =09case KVM_S390_MEMOP_LOGICAL_READ:
+>  =09=09if (mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY) {
+> +=09=09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
+> +=09=09=09=09r =3D 0;
+> +=09=09=09=09break;
 
-Yes, this is done during the first instructions of cstart.S:
+Please add a short comment to the code why this is required / ok.
 
-- Setting the architecture to 64bit / ESAME using SIGP
+> +=09=09=09}
+>  =09=09=09r =3D check_gva_range(vcpu, mop->gaddr, mop->ar,
+>  =09=09=09=09=09    mop->size, GACC_FETCH);
+>  =09=09=09break;
+>  =09=09}
+> +=09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
+> +=09=09=09r =3D 0;
+> +=09=09=09if (copy_to_user(uaddr, (void *)vcpu->arch.sie_block->sidad +
+> +=09=09=09=09=09 (mop->gaddr & ~PAGE_MASK),
 
-- Set addressing mode to 64bit
+That looks bogus. Couldn't userspace use mop->gaddr =3D 4095 and mop->size
+=3D 4095 to read most of the page beyond the sidad page (assuming that it
+is mapped, too)?
+I think you have to take mop->gaddr into account in your new check at
+the beginning of the function, too.
 
-After that AFAIK we never change the addressing mode.
+Or should the ioctl maybe even be restricted to mop->gaddr =3D=3D 0 now? Is
+there maybe also a way to validate that gaddr & PAGE_MASK really matches
+the page that we have in sidad?
 
-The definitions in the file are intended for PSW flags which AFAIK are 
-always 64bits.
+> +=09=09=09=09=09 mop->size))
+> +=09=09=09=09r =3D -EFAULT;
+> +=09=09=09break;
+> +=09=09}
+>  =09=09r =3D read_guest(vcpu, mop->gaddr, mop->ar, tmpbuf, mop->size);
+>  =09=09if (r =3D=3D 0) {
+>  =09=09=09if (copy_to_user(uaddr, tmpbuf, mop->size))
+> @@ -4439,10 +4458,22 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu=
+ *vcpu,
+>  =09=09break;
+>  =09case KVM_S390_MEMOP_LOGICAL_WRITE:
+>  =09=09if (mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY) {
+> +=09=09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
+> +=09=09=09=09r =3D 0;
+> +=09=09=09=09break;
+> +=09=09=09}
+>  =09=09=09r =3D check_gva_range(vcpu, mop->gaddr, mop->ar,
+>  =09=09=09=09=09    mop->size, GACC_STORE);
+>  =09=09=09break;
+>  =09=09}
+> +=09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
+> +=09=09=09r =3D 0;
+> +=09=09=09if (copy_from_user((void *)vcpu->arch.sie_block->sidad +
+> +=09=09=09=09=09   (mop->gaddr & ~PAGE_MASK), uaddr,
+> +=09=09=09=09=09   mop->size))
 
-I created arch_bits.h to avoid using arch_def.h which contains C 
-structures and functions, so preventing to include it in assembler files.
+dito, of course.
 
+> +=09=09=09=09r =3D -EFAULT;
+> +=09=09=09break;
+> +=09=09}
+>  =09=09if (copy_from_user(tmpbuf, uaddr, mop->size)) {
+>  =09=09=09r =3D -EFAULT;
+>  =09=09=09break;
 
-Regards,
-
-Pierre
-
-
->
->> Regards,
->>
->> Pierre
->>
->>
->
--- 
-Pierre Morel
-IBM Lab Boeblingen
+ Thomas
 
