@@ -2,158 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 888D0FC9C4
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 16:21:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A5E31FC9DE
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 16:25:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726276AbfKNPVU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 10:21:20 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43696 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726179AbfKNPVT (ORCPT
+        id S1726528AbfKNPZ1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 10:25:27 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28948 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726251AbfKNPZ0 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:21:19 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEFGZax027704
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 10:21:18 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w99ck0bk4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 10:21:15 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 14 Nov 2019 15:21:09 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 15:21:07 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEFL6eL46072244
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 15:21:06 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 283EB52052;
-        Thu, 14 Nov 2019 15:21:06 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.152.222.27])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id EB6C552051;
-        Thu, 14 Nov 2019 15:21:05 +0000 (GMT)
-Subject: Re: [PATCH v1 1/4] s390x: saving regs for interrupts
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, thuth@redhat.com
-References: <c7d6c21e-3746-b31a-aff9-d19549feb24c@linux.ibm.com>
- <CD5636A0-3C33-4DC4-9217-68A00137E3F4@redhat.com>
- <ef5cc0aa-d1fe-874f-8f61-863c793a23d4@linux.ibm.com>
- <b88be625-26b1-9780-fde4-000e3065bdaf@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Thu, 14 Nov 2019 16:21:05 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 14 Nov 2019 10:25:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573745125;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=MKYCmTxFGEQzkrZiaOpvhYM9V1nG/QF6MJIc5vMkLeI=;
+        b=aAysR+PtGGfVx5I8QAngr4szB34dA51env5dnnCrxmFnpZy27ugNH0i6oEfKVAOL95sfhQ
+        KTfMFffPX54pYeMsNQUYKFgJleb1XEqowxtskgs3AdGPAwGq9Nly9pLAaw81ulDih1K45I
+        UwZfqhcSkkNyboPd3rMiWFzC0yqEGR0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-380-vNWIDD47P8GHiiRCelpfhQ-1; Thu, 14 Nov 2019 10:25:23 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A4998107ACC6;
+        Thu, 14 Nov 2019 15:25:22 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 991B85D9E2;
+        Thu, 14 Nov 2019 15:25:22 +0000 (UTC)
+Received: from zmail19.collab.prod.int.phx2.redhat.com (zmail19.collab.prod.int.phx2.redhat.com [10.5.83.22])
+        by colo-mx.corp.redhat.com (Postfix) with ESMTP id 6CD6A182B00E;
+        Thu, 14 Nov 2019 15:25:22 +0000 (UTC)
+From:   David Hildenbrand <dhildenb@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <b88be625-26b1-9780-fde4-000e3065bdaf@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 19111415-0012-0000-0000-00000363A104
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111415-0013-0000-0000-0000219F1AEB
-Message-Id: <6c84ade5-8a42-9c73-abff-47e019fc11bd@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=559 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140141
+Subject: Re: [PATCH v1 1/4] s390x: saving regs for interrupts
+Date:   Thu, 14 Nov 2019 10:25:22 -0500 (EST)
+Message-Id: <7C13E9AB-F26B-439B-A170-F187BC1E1136@redhat.com>
+References: <6c84ade5-8a42-9c73-abff-47e019fc11bd@linux.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, thuth@redhat.com
+In-Reply-To: <6c84ade5-8a42-9c73-abff-47e019fc11bd@linux.ibm.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Thread-Topic: s390x: saving regs for interrupts
+Thread-Index: 2ipOXvAHQqaDJRwVmNe/3QfngCvL3Q==
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: vNWIDD47P8GHiiRCelpfhQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: base64
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-On 2019-11-14 13:11, David Hildenbrand wrote:
-> On 14.11.19 12:57, Pierre Morel wrote:
->>
->> On 2019-11-14 11:28, David Hildenbrand wrote:
->>>
->>>> Am 14.11.2019 um 11:11 schrieb Pierre Morel <pmorel@linux.ibm.com>:
->>>>
->>>> ﻿
->>>>> On 2019-11-13 17:12, Janosch Frank wrote:
->>>>>> On 11/13/19 1:23 PM, Pierre Morel wrote:
->>>>>> If we use multiple source of interrupts, for exemple, using SCLP 
->>>>>> console
->>>>>> to print information while using I/O interrupts or during 
->>>>>> exceptions, we
->>>>>> need to have a re-entrant register saving interruption handling.
->>>>>>
->>>>>> Instead of saving at a static place, let's save the base 
->>>>>> registers on
->>>>>> the stack.
->>>>>>
->>>>>> Note that we keep the static register saving that we need for the 
->>>>>> RESET
->>>>>> tests.
->>>>>>
->>>>>> We also care to give the handlers a pointer to the save registers in
->>>>>> case the handler needs it (fixup_pgm_int needs the old psw address).
->>>>> So you're still ignoring the FPRs...
->>>>> I disassembled a test and looked at all stds and it looks like printf
->>>>> and related functions use them. Wouldn't we overwrite test FPRs if
->>>>> printing in a handler?
->>>> If printf uses the FPRs in my opinion we should modify the 
->>>> compilation options for the library.
->>>>
->>>> What is the reason for printf and related functions to use floating 
->>>> point?
->>>>
->>> Register spilling. This can and will be done.
->>
->>
->> Hum, can you please clarify?
->>
->> AFAIK register spilling is for a compiler, to use memory if it has not
->> enough registers.
->
-> Not strictly memory. If the compiler needs more GPRS, it can 
-> save/restore GPRS to FPRS.
->
-> Any function the compiler generates is free to use the FPRS..
->
->>
->> So your answer is for the my first sentence, meaning yes register
->> spilling will be done
->> or
->> do you mean register spilling is the reason why the compiler use FPRs
->> and it must be done so?
->
-> Confused by both options :D The compiler might generate code that uses 
-> the FPRS although no floating point instructions are in use. That's 
-> why we have to enable the AFP control and properly take care of FPRS 
-> being used.
->
->
-The compiler has the -msoft-float switch to avoid using the floating 
-point instructions and registers, so it is our decision.
-
-Saving the FP registers on exceptions is not very efficient, we loose 
-time on each interrupt, not sure that we win it back by using FPregs to 
-as Regs backup.
-
-Usually a system at low level uses some enter_fpu, leave_fpu routine to 
-enter critical sections using FPU instead of losing time on each 
-interruptions.
-
-We can think about this, in between I do as you recomand and save the 
-FPregs too.
-
-Best regards,
-
-Pierre
-
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+DQoNCj4gQW0gMTQuMTEuMjAxOSB1bSAxNjoyMSBzY2hyaWViIFBpZXJyZSBNb3JlbCA8cG1vcmVs
+QGxpbnV4LmlibS5jb20+Og0KPiANCj4g77u/DQo+PiBPbiAyMDE5LTExLTE0IDEzOjExLCBEYXZp
+ZCBIaWxkZW5icmFuZCB3cm90ZToNCj4+PiBPbiAxNC4xMS4xOSAxMjo1NywgUGllcnJlIE1vcmVs
+IHdyb3RlOg0KPj4+IA0KPj4+IE9uIDIwMTktMTEtMTQgMTE6MjgsIERhdmlkIEhpbGRlbmJyYW5k
+IHdyb3RlOg0KPj4+PiANCj4+Pj4+IEFtIDE0LjExLjIwMTkgdW0gMTE6MTEgc2NocmllYiBQaWVy
+cmUgTW9yZWwgPHBtb3JlbEBsaW51eC5pYm0uY29tPjoNCj4+Pj4+IA0KPj4+Pj4g77u/DQo+Pj4+
+Pj4gT24gMjAxOS0xMS0xMyAxNzoxMiwgSmFub3NjaCBGcmFuayB3cm90ZToNCj4+Pj4+Pj4gT24g
+MTEvMTMvMTkgMToyMyBQTSwgUGllcnJlIE1vcmVsIHdyb3RlOg0KPj4+Pj4+PiBJZiB3ZSB1c2Ug
+bXVsdGlwbGUgc291cmNlIG9mIGludGVycnVwdHMsIGZvciBleGVtcGxlLCB1c2luZyBTQ0xQIGNv
+bnNvbGUNCj4+Pj4+Pj4gdG8gcHJpbnQgaW5mb3JtYXRpb24gd2hpbGUgdXNpbmcgSS9PIGludGVy
+cnVwdHMgb3IgZHVyaW5nIGV4Y2VwdGlvbnMsIHdlDQo+Pj4+Pj4+IG5lZWQgdG8gaGF2ZSBhIHJl
+LWVudHJhbnQgcmVnaXN0ZXIgc2F2aW5nIGludGVycnVwdGlvbiBoYW5kbGluZy4NCj4+Pj4+Pj4g
+DQo+Pj4+Pj4+IEluc3RlYWQgb2Ygc2F2aW5nIGF0IGEgc3RhdGljIHBsYWNlLCBsZXQncyBzYXZl
+IHRoZSBiYXNlIHJlZ2lzdGVycyBvbg0KPj4+Pj4+PiB0aGUgc3RhY2suDQo+Pj4+Pj4+IA0KPj4+
+Pj4+PiBOb3RlIHRoYXQgd2Uga2VlcCB0aGUgc3RhdGljIHJlZ2lzdGVyIHNhdmluZyB0aGF0IHdl
+IG5lZWQgZm9yIHRoZSBSRVNFVA0KPj4+Pj4+PiB0ZXN0cy4NCj4+Pj4+Pj4gDQo+Pj4+Pj4+IFdl
+IGFsc28gY2FyZSB0byBnaXZlIHRoZSBoYW5kbGVycyBhIHBvaW50ZXIgdG8gdGhlIHNhdmUgcmVn
+aXN0ZXJzIGluDQo+Pj4+Pj4+IGNhc2UgdGhlIGhhbmRsZXIgbmVlZHMgaXQgKGZpeHVwX3BnbV9p
+bnQgbmVlZHMgdGhlIG9sZCBwc3cgYWRkcmVzcykuDQo+Pj4+Pj4gU28geW91J3JlIHN0aWxsIGln
+bm9yaW5nIHRoZSBGUFJzLi4uDQo+Pj4+Pj4gSSBkaXNhc3NlbWJsZWQgYSB0ZXN0IGFuZCBsb29r
+ZWQgYXQgYWxsIHN0ZHMgYW5kIGl0IGxvb2tzIGxpa2UgcHJpbnRmDQo+Pj4+Pj4gYW5kIHJlbGF0
+ZWQgZnVuY3Rpb25zIHVzZSB0aGVtLiBXb3VsZG4ndCB3ZSBvdmVyd3JpdGUgdGVzdCBGUFJzIGlm
+DQo+Pj4+Pj4gcHJpbnRpbmcgaW4gYSBoYW5kbGVyPw0KPj4+Pj4gSWYgcHJpbnRmIHVzZXMgdGhl
+IEZQUnMgaW4gbXkgb3BpbmlvbiB3ZSBzaG91bGQgbW9kaWZ5IHRoZSBjb21waWxhdGlvbiBvcHRp
+b25zIGZvciB0aGUgbGlicmFyeS4NCj4+Pj4+IA0KPj4+Pj4gV2hhdCBpcyB0aGUgcmVhc29uIGZv
+ciBwcmludGYgYW5kIHJlbGF0ZWQgZnVuY3Rpb25zIHRvIHVzZSBmbG9hdGluZyBwb2ludD8NCj4+
+Pj4+IA0KPj4+PiBSZWdpc3RlciBzcGlsbGluZy4gVGhpcyBjYW4gYW5kIHdpbGwgYmUgZG9uZS4N
+Cj4+PiANCj4+PiANCj4+PiBIdW0sIGNhbiB5b3UgcGxlYXNlIGNsYXJpZnk/DQo+Pj4gDQo+Pj4g
+QUZBSUsgcmVnaXN0ZXIgc3BpbGxpbmcgaXMgZm9yIGEgY29tcGlsZXIsIHRvIHVzZSBtZW1vcnkg
+aWYgaXQgaGFzIG5vdA0KPj4+IGVub3VnaCByZWdpc3RlcnMuDQo+PiANCj4+IE5vdCBzdHJpY3Rs
+eSBtZW1vcnkuIElmIHRoZSBjb21waWxlciBuZWVkcyBtb3JlIEdQUlMsIGl0IGNhbiBzYXZlL3Jl
+c3RvcmUgR1BSUyB0byBGUFJTLg0KPj4gDQo+PiBBbnkgZnVuY3Rpb24gdGhlIGNvbXBpbGVyIGdl
+bmVyYXRlcyBpcyBmcmVlIHRvIHVzZSB0aGUgRlBSUy4uDQo+PiANCj4+PiANCj4+PiBTbyB5b3Vy
+IGFuc3dlciBpcyBmb3IgdGhlIG15IGZpcnN0IHNlbnRlbmNlLCBtZWFuaW5nIHllcyByZWdpc3Rl
+cg0KPj4+IHNwaWxsaW5nIHdpbGwgYmUgZG9uZQ0KPj4+IG9yDQo+Pj4gZG8geW91IG1lYW4gcmVn
+aXN0ZXIgc3BpbGxpbmcgaXMgdGhlIHJlYXNvbiB3aHkgdGhlIGNvbXBpbGVyIHVzZSBGUFJzDQo+
+Pj4gYW5kIGl0IG11c3QgYmUgZG9uZSBzbz8NCj4+IA0KPj4gQ29uZnVzZWQgYnkgYm90aCBvcHRp
+b25zIDpEIFRoZSBjb21waWxlciBtaWdodCBnZW5lcmF0ZSBjb2RlIHRoYXQgdXNlcyB0aGUgRlBS
+UyBhbHRob3VnaCBubyBmbG9hdGluZyBwb2ludCBpbnN0cnVjdGlvbnMgYXJlIGluIHVzZS4gVGhh
+dCdzIHdoeSB3ZSBoYXZlIHRvIGVuYWJsZSB0aGUgQUZQIGNvbnRyb2wgYW5kIHByb3Blcmx5IHRh
+a2UgY2FyZSBvZiBGUFJTIGJlaW5nIHVzZWQuDQo+PiANCj4+IA0KPiBUaGUgY29tcGlsZXIgaGFz
+IHRoZSAtbXNvZnQtZmxvYXQgc3dpdGNoIHRvIGF2b2lkIHVzaW5nIHRoZSBmbG9hdGluZyBwb2lu
+dCBpbnN0cnVjdGlvbnMgYW5kIHJlZ2lzdGVycywgc28gaXQgaXMgb3VyIGRlY2lzaW9uLg0KDQpO
+bywgbm90IHJlZ2lzdGVycyBBRkFJSy4NCg0KPiANCj4gU2F2aW5nIHRoZSBGUCByZWdpc3RlcnMg
+b24gZXhjZXB0aW9ucyBpcyBub3QgdmVyeSBlZmZpY2llbnQsIHdlIGxvb3NlIHRpbWUgb24gZWFj
+aCBpbnRlcnJ1cHQsIG5vdCBzdXJlIHRoYXQgd2Ugd2luIGl0IGJhY2sgYnkgdXNpbmcgRlByZWdz
+IHRvIGFzIFJlZ3MgYmFja3VwLg0KDQpXaG8gb24gZWFydGggY2FyZXMgYWJvdXQgcGVyZm9ybWFu
+Y2UgaGVyZT8NCg0KPiANCj4gVXN1YWxseSBhIHN5c3RlbSBhdCBsb3cgbGV2ZWwgdXNlcyBzb21l
+IGVudGVyX2ZwdSwgbGVhdmVfZnB1IHJvdXRpbmUgdG8gZW50ZXIgY3JpdGljYWwgc2VjdGlvbnMg
+dXNpbmcgRlBVIGluc3RlYWQgb2YgbG9zaW5nIHRpbWUgb24gZWFjaCBpbnRlcnJ1cHRpb25zLg0K
+PiANCj4gV2UgY2FuIHRoaW5rIGFib3V0IHRoaXMsIGluIGJldHdlZW4gSSBkbyBhcyB5b3UgcmVj
+b21hbmQgYW5kIHNhdmUgdGhlIEZQcmVncyB0b28uDQo+IA0KPiBCZXN0IHJlZ2FyZHMsDQo+IA0K
+PiBQaWVycmUNCj4gDQo+IA0KPiAtLSANCj4gUGllcnJlIE1vcmVsDQo+IElCTSBMYWIgQm9lYmxp
+bmdlbg0KPiANCg==
 
