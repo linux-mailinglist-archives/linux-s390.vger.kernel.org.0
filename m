@@ -2,132 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9C11FDD41
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 13:18:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2C7D7FDE02
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 13:35:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727563AbfKOMSG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Nov 2019 07:18:06 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:38956 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727494AbfKOMSG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 15 Nov 2019 07:18:06 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFCEO65098665
-        for <linux-s390@vger.kernel.org>; Fri, 15 Nov 2019 07:18:05 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w9ntbc5xh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 15 Nov 2019 07:18:05 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Fri, 15 Nov 2019 12:18:03 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 15 Nov 2019 12:18:00 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAFCHwHb27852848
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 12:17:58 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B464CA4040;
-        Fri, 15 Nov 2019 12:17:58 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 67E96A4059;
-        Fri, 15 Nov 2019 12:17:57 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.152.224.131])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 15 Nov 2019 12:17:57 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com
-Subject: [PATCH] SIDAD macro fixup
-Date:   Fri, 15 Nov 2019 07:17:55 -0500
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <6f956633-d067-bde9-78dc-7833b9cd86ee@redhat.com>
-References: <6f956633-d067-bde9-78dc-7833b9cd86ee@redhat.com>
+        id S1727406AbfKOMfj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Nov 2019 07:35:39 -0500
+Received: from mail.hgs.gob.ec ([190.214.19.83]:35962 "HELO mail.hgs.gob.ec"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with SMTP
+        id S1727272AbfKOMfi (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 15 Nov 2019 07:35:38 -0500
+X-Greylist: delayed 38983 seconds by postgrey-1.27 at vger.kernel.org; Fri, 15 Nov 2019 07:35:28 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.hgs.gob.ec (Postfix) with ESMTP id 1E74FA7F4AD;
+        Thu, 14 Nov 2019 16:43:16 -0500 (-05)
+Received: from mail.hgs.gob.ec ([127.0.0.1])
+        by localhost (mail.hgs.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id RHfoPgIkWbl5; Thu, 14 Nov 2019 16:43:15 -0500 (-05)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.hgs.gob.ec (Postfix) with ESMTP id A4258A7DA52;
+        Thu, 14 Nov 2019 16:41:46 -0500 (-05)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.hgs.gob.ec A4258A7DA52
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=hgs.gob.ec;
+        s=DD120D66-D63F-11E9-9729-9452E74E1CB4; t=1573767706;
+        bh=oYeOwTtTK4mcRNNK0JGL7ZOgP8mm7StpJG1pujYq4Z0=;
+        h=MIME-Version:To:From:Date:Message-Id;
+        b=OWLhMYndrtgGQASHdKW0n71QVXY6WpYFOVBiQyYiaWFSTci9q+liSIa+oRUfZVJLX
+         FiRi2kPkv3P5MLolZuuzMLLhNnGiIlml49MaP+zppYuHGxl0Us+/m2b2FRNFIn0VWk
+         rrFW3s0ZvPBh4II9H1bKo3AsaxygXFioQ9Vt7LvpbFQakIx8PEvYfh4np3SKGvxJWI
+         d62/qNk4gyPbCz6VEBBkwRbDPsIFB+mdzhadzdcfGYpL6avj01i8QdIZM6lX531Pc6
+         g6Nnx0wsNOL+5JYEfKkRvOERSAbw7+S4705MI4338Zl82Lc3igIJQZTL2i6cT6ILwP
+         p6MRC8w6wYBfA==
+X-Virus-Scanned: amavisd-new at hgs.gob.ec
+Received: from mail.hgs.gob.ec ([127.0.0.1])
+        by localhost (mail.hgs.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 0_tiIowm_m-0; Thu, 14 Nov 2019 16:41:46 -0500 (-05)
+Received: from [10.32.142.65] (unknown [105.4.7.6])
+        by mail.hgs.gob.ec (Postfix) with ESMTPSA id E82B9A0B57A;
+        Thu, 14 Nov 2019 16:40:17 -0500 (-05)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19111512-0008-0000-0000-0000032F445C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111512-0009-0000-0000-00004A4E56D8
-Message-Id: <20191115121755.63197-1-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-15_03:2019-11-15,2019-11-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=904 clxscore=1015
- bulkscore=0 impostorscore=0 priorityscore=1501 adultscore=0 spamscore=0
- phishscore=0 lowpriorityscore=0 mlxscore=0 malwarescore=0 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911150116
+Content-Transfer-Encoding: quoted-printable
+Content-Description: Mail message body
+Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000=2E000_Euro?=
+To:     Recipients <dietetica@hgs.gob.ec>
+From:   ''Charles jackson'' <dietetica@hgs.gob.ec>
+Date:   Thu, 14 Nov 2019 23:40:08 +0200
+Reply-To: charlesjacksonjr001@gmail.com
+Message-Id: <20191114214017.E82B9A0B57A@mail.hgs.gob.ec>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Additionally I would need to use it in the other patches...
+Lieber Freund,
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/include/asm/kvm_host.h | 4 ++++
- arch/s390/kvm/kvm-s390.c         | 4 ++--
- arch/s390/kvm/pv.c               | 2 +-
- 3 files changed, 7 insertions(+), 3 deletions(-)
+Ich bin Herr Charles W Jackson, North Carolina, Vereinigte Staaten von Amer=
+ika, der Mega-Gewinner von 344 Millionen US-Dollar. Beim Mega-Millions-Jack=
+pot spende ich an 5 zuf&auml;llige Personen. Wenn Sie diese E-Mail erhalten=
+, wurde Ihre E-Mail zu einem Spinball, den ich am h&auml;ufigsten verteilt =
+habe von meinem Verm&ouml;gen an eine Reihe von Wohlt&auml;tigkeitsorganisa=
+tionen. Ich habe mich freiwillig entschlossen, Ihnen als einer der ausgew&a=
+uml;hlten 5 einen Betrag von &euro; 2.000.000,00 zu spenden, um meine Gewin=
+ne zu &uuml;berpr&uuml;fen.
+Dies ist Ihr Spendencode: [CJ530342019]
 
-diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-index 2a8a1e21e1c3..81f6532531cb 100644
---- a/arch/s390/include/asm/kvm_host.h
-+++ b/arch/s390/include/asm/kvm_host.h
-@@ -122,6 +122,10 @@ struct mcck_volatile_info {
- 	__u32 reserved;
- };
- 
-+#define SIDAD_SIZE_MASK		0xff
-+#define sidad_origin(sie_block) \
-+	(sie_block->sidad & PAGE_MASK)
-+
- #define CPUSTAT_STOPPED    0x80000000
- #define CPUSTAT_WAIT       0x10000000
- #define CPUSTAT_ECALL_PEND 0x08000000
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 0fa7c6d9ed0e..91a638cc1eba 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -4436,7 +4436,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
- 	 * block which has its own size limit
- 	 */
- 	if (kvm_s390_pv_is_protected(vcpu->kvm) &&
--	    mop->size > ((vcpu->arch.sie_block->sidad & 0x0f) + 1) * PAGE_SIZE)
-+	    mop->size > ((vcpu->arch.sie_block->sidad & SIDAD_SIZE_MASK) + 1) * PAGE_SIZE)
- 		return -E2BIG;
- 
- 	if (!(mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY)) {
-@@ -4460,7 +4460,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
- 		}
- 		if (kvm_s390_pv_is_protected(vcpu->kvm)) {
- 			r = 0;
--			if (copy_to_user(uaddr, (void *)vcpu->arch.sie_block->sidad +
-+			if (copy_to_user(uaddr, (void *)sidad_origin(vcpu->arch.sie_block) +
- 					 (mop->gaddr & ~PAGE_MASK),
- 					 mop->size))
- 				r = -EFAULT;
-diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
-index 764f8f9f5dff..661f03629265 100644
---- a/arch/s390/kvm/pv.c
-+++ b/arch/s390/kvm/pv.c
-@@ -119,7 +119,7 @@ int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu)
- 
- 	free_pages(vcpu->arch.pv.stor_base,
- 		   get_order(uv_info.guest_cpu_stor_len));
--	free_page(vcpu->arch.sie_block->sidad);
-+	free_page(sidad_origin(vcpu->arch.sie_block));
- 	/* Clear cpu and vm handle */
- 	memset(&vcpu->arch.sie_block->reserved10, 0,
- 	       sizeof(vcpu->arch.sie_block->reserved10));
--- 
-2.20.1
+www.youtube.com/watch?v=3DBSr8myiLPMQ
 
+Antworten Sie auf diese E-Mail mit dem SPENDER-CODE: =
+
+
+charlesjacksonjr001@gmail.com
+
+Ich hoffe, Sie und Ihre Familie gl&uuml;cklich zu machen
+
+Sch&ouml;ne Gr&uuml;&szlig;e
+Mr. Charles Jackson
