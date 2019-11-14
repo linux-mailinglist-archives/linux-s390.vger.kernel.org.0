@@ -2,53 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AED5FCA58
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 16:56:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 609F7FCA6F
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 17:02:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726613AbfKNP4V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 10:56:21 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10788 "EHLO
+        id S1726410AbfKNQCF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 11:02:05 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:61702 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726516AbfKNP4V (ORCPT
+        by vger.kernel.org with ESMTP id S1726482AbfKNQCF (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Nov 2019 10:56:21 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEFsqTh104329
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 10:56:20 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w99hbskj2-1
+        Thu, 14 Nov 2019 11:02:05 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAEFu3Dn019098
+        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 11:02:03 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w98jpc615-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 10:56:19 -0500
+        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 11:01:27 -0500
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 14 Nov 2019 15:56:16 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 14 Nov 2019 16:00:46 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 15:56:14 -0000
+        Thu, 14 Nov 2019 16:00:43 -0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEFuCYl32636988
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAEG0fEe37748800
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 15:56:12 GMT
+        Thu, 14 Nov 2019 16:00:41 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BEBD6A4066;
-        Thu, 14 Nov 2019 15:56:12 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D2BEEA406A;
+        Thu, 14 Nov 2019 16:00:41 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65672A405B;
-        Thu, 14 Nov 2019 15:56:12 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 71401A405C;
+        Thu, 14 Nov 2019 16:00:41 +0000 (GMT)
 Received: from dyn-9-152-224-131.boeblingen.de.ibm.com (unknown [9.152.224.131])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Nov 2019 15:56:12 +0000 (GMT)
-Subject: Re: [RFC 19/37] KVM: s390: protvirt: Add new gprs location handling
-To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
-        gor@linux.ibm.com
+        Thu, 14 Nov 2019 16:00:41 +0000 (GMT)
+Subject: Re: [RFC 21/37] KVM: S390: protvirt: Instruction emulation
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
+        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
 References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-20-frankja@linux.ibm.com>
- <049b8634-c195-4b3f-4d9c-83a1df7f03f7@redhat.com>
+ <20191024114059.102802-22-frankja@linux.ibm.com>
+ <20191114163819.4fb4bed1.cohuck@redhat.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -92,19 +91,19 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Date:   Thu, 14 Nov 2019 16:56:12 +0100
+Date:   Thu, 14 Nov 2019 17:00:41 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <049b8634-c195-4b3f-4d9c-83a1df7f03f7@redhat.com>
+In-Reply-To: <20191114163819.4fb4bed1.cohuck@redhat.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="qp2B3f9A6X4xMio4GmyZAWUKMhSuyCZMH"
+ boundary="inn8F68ytwU9e9c4sIqhVBsNilow3Ta6d"
 X-TM-AS-GCONF: 00
-x-cbid: 19111415-0016-0000-0000-000002C3A681
+x-cbid: 19111416-4275-0000-0000-0000037DBCF6
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111415-0017-0000-0000-00003325495C
-Message-Id: <80d53c48-25a3-8ec8-ee94-1f7854522df6@linux.ibm.com>
+x-cbparentid: 19111416-4276-0000-0000-0000389123E2
+Message-Id: <d25f2feb-2c40-efae-9970-e08c871de94e@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_04:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -118,76 +117,149 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---qp2B3f9A6X4xMio4GmyZAWUKMhSuyCZMH
-Content-Type: multipart/mixed; boundary="MbsG7KSxNzr6i7hWAKRffv5hJS8klzuE6"
+--inn8F68ytwU9e9c4sIqhVBsNilow3Ta6d
+Content-Type: multipart/mixed; boundary="FCnCkHKGqYIED1pdS398bmqp0uAAphmfy"
 
---MbsG7KSxNzr6i7hWAKRffv5hJS8klzuE6
-Content-Type: text/plain; charset=utf-8
+--FCnCkHKGqYIED1pdS398bmqp0uAAphmfy
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 11/14/19 3:44 PM, Thomas Huth wrote:
-> On 24/10/2019 13.40, Janosch Frank wrote:
->> Guest registers for protected guests are stored at offset 0x380.
+On 11/14/19 4:38 PM, Cornelia Huck wrote:
+> On Thu, 24 Oct 2019 07:40:43 -0400
+> Janosch Frank <frankja@linux.ibm.com> wrote:
+>=20
+>> We have two new SIE exit codes 104 for a secure instruction
+>> interception, on which the SIE needs hypervisor action to complete the=
+
+>> instruction.
+>>
+>> And 108 which is merely a notification and provides data for tracking
+>> and management, like for the lowcore we set notification bits for the
+>> lowcore pages.
+>=20
+> What about the following:
+>=20
+> "With protected virtualization, we have two new SIE exit codes:
+>=20
+> - 104 indicates a secure instruction interception; the hypervisor needs=
+
+>   to complete emulation of the instruction.
+> - 108 is merely a notification providing data for tracking and
+>   management in the hypervisor; for example, we set notification bits
+>   for the lowcore pages."
+>=20
+> ?
+>=20
 >>
 >> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 >> ---
->>  arch/s390/include/asm/kvm_host.h |  4 +++-
->>  arch/s390/kvm/kvm-s390.c         | 11 +++++++++++
->>  2 files changed, 14 insertions(+), 1 deletion(-)
+>>  arch/s390/include/asm/kvm_host.h |  2 ++
+>>  arch/s390/kvm/intercept.c        | 23 +++++++++++++++++++++++
+>>  2 files changed, 25 insertions(+)
 >>
 >> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/=
 kvm_host.h
->> index 0ab309b7bf4c..5deabf9734d9 100644
+>> index 2a8a1e21e1c3..a42dfe98128b 100644
 >> --- a/arch/s390/include/asm/kvm_host.h
 >> +++ b/arch/s390/include/asm/kvm_host.h
->> @@ -336,7 +336,9 @@ struct kvm_s390_itdb {
->>  struct sie_page {
->>  	struct kvm_s390_sie_block sie_block;
->>  	struct mcck_volatile_info mcck_info;	/* 0x0200 */
->> -	__u8 reserved218[1000];		/* 0x0218 */
->> +	__u8 reserved218[360];		/* 0x0218 */
->> +	__u64 pv_grregs[16];		/* 0x380 */
->> +	__u8 reserved400[512];
+>> @@ -212,6 +212,8 @@ struct kvm_s390_sie_block {
+>>  #define ICPT_KSS	0x5c
+>>  #define ICPT_PV_MCHKR	0x60
+>>  #define ICPT_PV_INT_EN	0x64
+>> +#define ICPT_PV_INSTR	0x68
+>> +#define ICPT_PV_NOT	0x6c
 >=20
-> Maybe add a "/* 0x400 */" comment to be consisten with the other lines?=
+> Maybe ICPT_PV_NOTIF?
 
-
-Sure
+NOTF?
 
 >=20
->>  	struct kvm_s390_itdb itdb;	/* 0x0600 */
->>  	__u8 reserved700[2304];		/* 0x0700 */
->>  };
+>>  	__u8	icptcode;		/* 0x0050 */
+>>  	__u8	icptstatus;		/* 0x0051 */
+>>  	__u16	ihcpu;			/* 0x0052 */
+>> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
+>> index b013a9c88d43..a1df8a43c88b 100644
+>> --- a/arch/s390/kvm/intercept.c
+>> +++ b/arch/s390/kvm/intercept.c
+>> @@ -451,6 +451,23 @@ static int handle_operexc(struct kvm_vcpu *vcpu)
+>>  	return kvm_s390_inject_program_int(vcpu, PGM_OPERATION);
+>>  }
+>> =20
+>> +static int handle_pv_spx(struct kvm_vcpu *vcpu)
+>> +{
+>> +	u32 pref =3D *(u32 *)vcpu->arch.sie_block->sidad;
+>> +
+>> +	kvm_s390_set_prefix(vcpu, pref);
+>> +	trace_kvm_s390_handle_prefix(vcpu, 1, pref);
+>> +	return 0;
+>> +}
+>> +
+>> +static int handle_pv_not(struct kvm_vcpu *vcpu)
+>> +{
+>> +	if (vcpu->arch.sie_block->ipa =3D=3D 0xb210)
+>> +		return handle_pv_spx(vcpu);
+>> +
+>> +	return handle_instruction(vcpu);
 >=20
->  Thomas
+> Hm... if I understood it correctly, we are getting this one because the=
+
+> SIE informs us about things that it handled itself (but which we
+> should be aware of). What can handle_instruction() do in this case?
+
+There used to be an instruction which I could just pipe through normal
+instruction handling. But I can't really remember what it was, too many
+firmware changes in that area since then.
+
+I'll mark it as a TODO for thinking about it with some coffee.
+
+>=20
+>> +}
+>> +
+>>  int kvm_handle_sie_intercept(struct kvm_vcpu *vcpu)
+>>  {
+>>  	int rc, per_rc =3D 0;
+>> @@ -505,6 +522,12 @@ int kvm_handle_sie_intercept(struct kvm_vcpu *vcp=
+u)
+>>  		 */
+>>  		rc =3D 0;
+>>  	break;
+>> +	case ICPT_PV_INSTR:
+>> +		rc =3D handle_instruction(vcpu);
+>> +		break;
+>> +	case ICPT_PV_NOT:
+>> +		rc =3D handle_pv_not(vcpu);
+>> +		break;
+>>  	default:
+>>  		return -EOPNOTSUPP;
+>>  	}
 >=20
 
 
 
---MbsG7KSxNzr6i7hWAKRffv5hJS8klzuE6--
+--FCnCkHKGqYIED1pdS398bmqp0uAAphmfy--
 
---qp2B3f9A6X4xMio4GmyZAWUKMhSuyCZMH
+--inn8F68ytwU9e9c4sIqhVBsNilow3Ta6d
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl3NeRwACgkQ41TmuOI4
-ufhN3A//Z7KUusoa2kmB1Ah4VrUOR08qe60cqj/uHwLXeP6Yuga6YIgFHUt2OT8U
-FM8QndSwGxWLUBLRwZikpOPNCRgysCoXk5gnBg0/u6GCslwBlQfeHZtIB/l4mG7X
-0VOmgwed2BoGELFPAnELvIzXTcLhaoYPaqES/h9JQVHS5EqfuwKiYyXnhLFaw6vo
-CTJ5NAKMmTKheyABdiZKver66s9u+IMfPGHnABWEDYDTyny7wMPEiCGCU6sKMcSI
-x/t78IPpEum6nBPyU/IYCMB/YS/uH27lGla8a90qz/7ZLf8x4yFz3QBdntasJ0ns
-+4gk+PTohBnLBQ2o+bO2mcdLq8l71xQBUQoaAv0g3/7v6IIzhnPMS6Dx9kfuUDpR
-zhth73dJCS9bTHidOYwlWZ2V98328m0JN344K33d4jLLcbBlgulmlCT3CokQJAmJ
-KPNt1nWh24Z/EWkR50v6couIP3RRI1zvtfJmqBoiqg+m3KLUPy+xvPgP7+KQ79b3
-GQVfgeVDoqLKQyVhxTocty6nd5U5gvkfwb5ywSzYxHsNRS913G490wpokbOzyfRx
-lkfe5aN0fAMBFUuqYUusyxjYrJdXsfDYEs7NPVbKPc83kmxIvDHdB42R2NE+MwwR
-XsWusIRfkE7tXQMzDKKsIR+JYSLey+Jae4XQf+H6sx2LWh4Rwj0=
-=1R2Y
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl3NeikACgkQ41TmuOI4
+ufjPmBAAiYVxSY40wrV7Yk7+Up9eFqQ6ZECpcVeq3B01X+IxfqSJn+Ad9zfa6PFa
+GQfzrGDDlYPzV5taLgino/0ZYTBC1ra/s+8DkUQIvkmXtSlGtP9S8CVJ32YEd0Jc
+xtyd7KusXH04SX+OhaiTXAX128JaxeMv3ZXO87l/84t8qkfFEkszPQu6jR1QKgjA
+nMb818QGTLmOHScyDBVOEAq0tgMU0WYEPzPMAuR6B5SlPdt5ciKg2J6hTpwK3o5Q
+EB0x7YqCBKnH/DNr0U2b7QjXCR1beuWdnxBJTJ2gH0tw0XLhTRwllJpnCkWdjfr6
+Ff6yMJlNCnWYCvqwkQXFjGZymmQih/AF9Wj3hRMsZOyaM+mPrqrkjhu9aaBsRxC7
+tCFLcbf79ecIdDJIA1hNuCaRVZB6WImnpJbKbQg/f7VJSMb8BUncd+uJ07NFtdAe
+L86ltSll+fN1mds6ORLQxuftW0C8P/FkP3t3dOX6vOTlzP+LlGlhPUU7r5MrM/2l
+auE6dnGvm2MzzUo7QcSO1j1SYLdeomc6WW3PdCL+DYFZKQ+d1zG8OGH0JZT15jYa
+XgFfKM4haA4YuFaYf+NpCr4SliM4TLjeWc0dJkhxrY9K1OqyVhT0t4k5pKWMehAw
+WmIetlF7J19mGwe0+VpoCfMWpgQvdOed0ezuuj6RvJP8Iw7SXbo=
+=w6Wb
 -----END PGP SIGNATURE-----
 
---qp2B3f9A6X4xMio4GmyZAWUKMhSuyCZMH--
+--inn8F68ytwU9e9c4sIqhVBsNilow3Ta6d--
 
