@@ -2,136 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58C67FC682
-	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 13:47:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DE571FC6F7
+	for <lists+linux-s390@lfdr.de>; Thu, 14 Nov 2019 14:10:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726179AbfKNMrS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 07:47:18 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55822 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726142AbfKNMrS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Nov 2019 07:47:18 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xAECkKYc109677
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 07:47:17 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w96f89evx-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 07:47:16 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Thu, 14 Nov 2019 12:47:13 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 14 Nov 2019 12:47:10 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAECl9up55509086
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 14 Nov 2019 12:47:09 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 31B544C040;
-        Thu, 14 Nov 2019 12:47:09 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A4C704C046;
-        Thu, 14 Nov 2019 12:47:08 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 14 Nov 2019 12:47:08 +0000 (GMT)
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Andy Lutomirski <luto@kernel.org>
-Subject: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
-Date:   Thu, 14 Nov 2019 13:46:46 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 19111412-0008-0000-0000-0000032EF93C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111412-0009-0000-0000-00004A4E07E0
-Message-Id: <20191114124646.74790-1-pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-14_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911140119
+        id S1726202AbfKNNKB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 08:10:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57795 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726190AbfKNNKB (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 14 Nov 2019 08:10:01 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573736999;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6yyZbS56I4tAONF7KcICPVxNVSf4T1PDtqDFeQbrNXM=;
+        b=bqepkPiZI7D7bkRnJGRZ7mjwZH/QlkpxoQZvJTekYFs/BEVTvpWaHyh6HJO20wRU8hXKh/
+        2Px3UUzMTCNG+rmzAP8yQ/6Eo3xGm1ksH9kUrWuFaLYpWPzkTfDcQTBTUiLq1XOcaJuJMp
+        DQG1SXkzBGsc/2JLhEL5oa5fkMibMes=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-309-gDdAxXV3MQGUwrIzoj9RUA-1; Thu, 14 Nov 2019 08:09:55 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0120B1006805;
+        Thu, 14 Nov 2019 13:09:54 +0000 (UTC)
+Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D3A9575E51;
+        Thu, 14 Nov 2019 13:09:48 +0000 (UTC)
+Date:   Thu, 14 Nov 2019 14:09:46 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
+        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
+Subject: Re: [RFC 11/37] DOCUMENTATION: protvirt: Interrupt injection
+Message-ID: <20191114140946.7bca2350.cohuck@redhat.com>
+In-Reply-To: <20191024114059.102802-12-frankja@linux.ibm.com>
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+        <20191024114059.102802-12-frankja@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: gDdAxXV3MQGUwrIzoj9RUA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
-virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
-a very realistic scenario for guests with encrypted memory, as swiotlb
-may run out of space, depending on it's size and the I/O load.
+On Thu, 24 Oct 2019 07:40:33 -0400
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
-error, despite the fact that swiotlb full is in absence of bugs a
-recoverable condition.
+> Interrupt injection has changed a lot for protected guests, as KVM
+> can't access the cpus' lowcores. New fields in the state description,
+> like the interrupt injection control, and masked values safeguard the
+> guest from KVM.
+>=20
+> Let's add some documentation to the interrupt injection basics for
+> protected guests.
+>=20
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  Documentation/virtual/kvm/s390-pv.txt | 27 +++++++++++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>=20
+> diff --git a/Documentation/virtual/kvm/s390-pv.txt b/Documentation/virtua=
+l/kvm/s390-pv.txt
+> index 86ed95f36759..e09f2dc5f164 100644
+> --- a/Documentation/virtual/kvm/s390-pv.txt
+> +++ b/Documentation/virtual/kvm/s390-pv.txt
+> @@ -21,3 +21,30 @@ normally needed to be able to run a VM, some changes h=
+ave been made in
+>  SIE behavior and fields have different meaning for a PVM. SIE exits
+>  are minimized as much as possible to improve speed and reduce exposed
+>  guest state.
+> +
+> +
+> +Interrupt injection:
+> +
+> +Interrupt injection is safeguarded by the Ultravisor and, as KVM lost
+> +access to the VCPUs' lowcores, is handled via the format 4 state
+> +description.
+> +
+> +Machine check, external, IO and restart interruptions each can be
+> +injected on SIE entry via a bit in the interrupt injection control
+> +field (offset 0x54). If the guest cpu is not enabled for the interrupt
+> +at the time of injection, a validity interception is recognized. The
+> +interrupt's data is transported via parts of the interception data
+> +block.
 
-Let us change the return code to -ENOMEM, and make the block layer
-recover form these failures when virtio-blk encounters the condition
-described above.
+"Data associated with the interrupt needs to be placed into the
+respective fields in the interception data block to be injected into
+the guest."
 
-Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
-Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
-Tested-by: Michael Mueller <mimu@linux.ibm.com>
----
+?
 
-Notes
-=====
+> +
+> +Program and Service Call exceptions have another layer of
+> +safeguarding, they are only injectable, when instructions have
+> +intercepted into KVM and such an exception can be an emulation result.
 
-* When out of descriptors (which might regarded as a similar out of
-resources condition) virtio uses -ENOSPC, this however seems wrong,
-as ENOSPC is defined as -ENOSPC. Thus I choose -ENOMEM over -ENOSPC.
+I find this sentence hard to parse... not sure if I understand it
+correctly.
 
-* In virtio_queue_rq() in virtio_blk.c both -ENOMEM and -ENOSPC are
-handled as BLK_STS_DEV_RESOURCE. Returning BLK_STS_RESOURCE however
-seems more appropriate for dma mapping failed as we are talking about
-a global, and not a device local resource. Both seem to do the trick.
+"They can only be injected if the exception can be encountered during
+emulation of instructions that had been intercepted into KVM."
 
-* Mimu tested the patch with virtio-blk and virtio-net (thanks!). We
-should look into how other virtio devices behave when DMA mapping fails.
----
- drivers/virtio/virtio_ring.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+?
 
-diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
-index a8041e451e9e..867c7ebd3f10 100644
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -583,7 +583,7 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
- 		kfree(desc);
- 
- 	END_USE(vq);
--	return -EIO;
-+	return -ENOMEM;
- }
- 
- static bool virtqueue_kick_prepare_split(struct virtqueue *_vq)
-@@ -1085,7 +1085,7 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
- 	kfree(desc);
- 
- 	END_USE(vq);
--	return -EIO;
-+	return -ENOMEM;
- }
- 
- static inline int virtqueue_add_packed(struct virtqueue *_vq,
--- 
-2.17.1
+> +
+> +
+> +Mask notification interceptions:
+> +As a replacement for the lctl(g) and lpsw(e) interception, two new
+> +interception codes have been introduced. One which tells us that CRs
+> +0, 6 or 14 have been changed and therefore interrupt masking might
+> +have changed. And one for PSW bit 13 changes. The CRs and the PSW in
+
+Might be helpful to mention that this bit covers machine checks, which
+do not get a separate bit in the control block :)
+
+> +the state description only contain the mask bits and no further info
+> +like the current instruction address.
+
+"The CRs and the PSW in the state description only contain the bits
+referring to interrupt masking; other fields like e.g. the current
+instruction address are zero."
+
+?
 
