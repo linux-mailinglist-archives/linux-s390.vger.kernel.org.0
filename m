@@ -2,81 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E634FE09E
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 15:56:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EF39AFE1D3
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 16:49:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfKOOzq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Nov 2019 09:55:46 -0500
-Received: from mail-qk1-f180.google.com ([209.85.222.180]:36396 "EHLO
-        mail-qk1-f180.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727758AbfKOOzp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Nov 2019 09:55:45 -0500
-Received: by mail-qk1-f180.google.com with SMTP id d13so8300374qko.3;
-        Fri, 15 Nov 2019 06:55:44 -0800 (PST)
+        id S1727654AbfKOPtp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Nov 2019 10:49:45 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:45281 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727709AbfKOPto (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Nov 2019 10:49:44 -0500
+Received: by mail-io1-f67.google.com with SMTP id v17so10886004iol.12
+        for <linux-s390@vger.kernel.org>; Fri, 15 Nov 2019 07:49:44 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Zw8wOIY8mNW318y4fP6Jxq3gT3vqgJzWHMf4m4vqBkE=;
-        b=LOwhHWT22OBlnSHpiAikAbBxvHi30RL+IBBMK3PZmWUq7XqPuvbKJEfQy7BEfPpdlv
-         PDNIAjAA4N3FXDU8H58bSN56ATiyHLx4x8buRO+Hxlba3zpFVM2r4JpDGyuTGGGwi7aF
-         FYRhIQMJkwzlYGlsYp/gg7t5RbyFY5War7OLnNH1qNaMHu47Q4FY0jB8nkU2JFHldK5K
-         wq7+4tF720mjj22BlYNKBQe2Ofr4DGbLwH9EOy+rZqbjGNnlS1GSHHQT6vC8l0T12R6K
-         26UFB0OGwj7m2Qzbvc6mS9htstuHMHdO2zhxhXzalpDma/QrGMslY9aCcRvKcNMt3Zqe
-         07jA==
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
+        b=T96mBsWswYjsm0w7ecYkWpV509ib/ulk9bHbI0Xwo0rzkePegh7rSfOcmzGbyf8vTc
+         lns/HOXyf4/6jOYDVIgZ/CZyIfN2m2y88qVdmXSABhNsP0MXDIRsHGSOOd7wWkwuGiQx
+         ehcoBpFXp6INIFq3jwmveina1L3fsWjpzHRhMvlhwo8OJ8Dy4xuFXwCrYZiL/Ja/dmiU
+         sEvBblBcC09ww5H/W1Li3rJXBc1TYjMn46kjeboNwYGUiqFeNnjz46iJxarBlBzUTpau
+         7EU4w1MkRxjhgPFrJ2/ipVqnuE4IawmENFYcW1JVUg9OFLrEKZvfb77T8+3XayPV4Zd+
+         KrHA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Zw8wOIY8mNW318y4fP6Jxq3gT3vqgJzWHMf4m4vqBkE=;
-        b=RUUxbGFXbNFFj48zH9Evgt4FKMJDeQ6g4h3PFC5N4ddgOO3LrHkxS1cD8Oyei+Gk2g
-         7RTpX1pbswuDcB2bakhrerlm3TzSTiW43ueVsyRfGMNX3S62gvxz1Uveqkqo9IDMsI4+
-         KlqKxaosMf0jOmWdqhcN5y60YYHVJ5s9IKveeDMdo9T5+VUQegqaEXlz5Ed3nqIuJInr
-         XBcbV0DlghSCt/EM8z38Sn7VQzQv1fVnIO8F1H/jEqYCAwEucXukSf4+g+Tt6M4kiy1/
-         CGylo0K91ZxCNusd4BNW6Lg9No7LiWMnbVMraAqj5wHN7JUvEauUImdqlDH3fnzD5Zr7
-         LhNg==
-X-Gm-Message-State: APjAAAV66JQsPZ7KgDkaYTa8pk9y7WgbnFIrdss86EUkiLjssH/ciF/6
-        rlquKT0gIQTq7c9kGUY9pe4=
-X-Google-Smtp-Source: APXvYqxvfDd/08vHSWuxUchxI2A1mnqwQYu5s1Qznz+IFc0+uV97tWZVqNkpauwAZaGlYwqT4+Gzvw==
-X-Received: by 2002:a37:8d7:: with SMTP id 206mr12815144qki.238.1573829744197;
-        Fri, 15 Nov 2019 06:55:44 -0800 (PST)
-Received: from localhost ([2620:10d:c091:480::4ef1])
-        by smtp.gmail.com with ESMTPSA id j7sm4157196qkd.46.2019.11.15.06.55.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Fri, 15 Nov 2019 06:55:43 -0800 (PST)
-Date:   Fri, 15 Nov 2019 06:55:40 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        axboe@kernel.dk, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] writeback: fix -Wformat compilation warnings
-Message-ID: <20191115145540.GP4163745@devbig004.ftw2.facebook.com>
-References: <20191114192118.GK4163745@devbig004.ftw2.facebook.com>
- <9D52EBB0-BE48-4C59-9145-857C3247B20D@lca.pw>
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
+        b=aB5eW/zkk7xe0EM1QMevjlIrYhbYehrQSva+T69/0P9vTmCZm51OuPoE7XKwQO5hYh
+         Vz4dVAcSl+2jza1uplItREwXeLQKchP6PVmYzRCQyxn+10z+nkYWzeWn6RFTOPik0Ae2
+         VU7vOIhWxc61M72FqQN/zOZxdQSE05+cEs6hd8hZxFq+dUCG6e8R8zQtbTiVlfqqvUzW
+         Us5pywRfT5WUd5p6GWrMj9mG21UhP+hgTk47wkQFZG9ru5RkzNbtMZvQNFJwDC/PVVEA
+         /TA1mpy6stKfnmqpKYT5KV04uAE8kp97VU+s1uzhW5PA5+oafsa2ohfxM+rpR1xrZW+y
+         wQGQ==
+X-Gm-Message-State: APjAAAXeZbt7k9HAcwn2FRrLzmnZyFvMsRfP5X0y9KOxFBdgEaioJLwh
+        UqGefVkR4oHG5q1aoHU04k4JOjmQ1pGXgmAYBA==
+X-Google-Smtp-Source: APXvYqxEj1beLI6zhjihT/lmX2Dk324PGcIr8veC5c+0F/PFQKT7AeNYgljOGh72OwNqCMMZvqGkvMbSAqCkDjgGkjg=
+X-Received: by 2002:a5e:8e02:: with SMTP id a2mr1343031ion.269.1573832982053;
+ Fri, 15 Nov 2019 07:49:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9D52EBB0-BE48-4C59-9145-857C3247B20D@lca.pw>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+Received: by 2002:a02:7749:0:0:0:0:0 with HTTP; Fri, 15 Nov 2019 07:49:41
+ -0800 (PST)
+Reply-To: moneygram.1820@outlook.fr
+From:   "Ms.Mary Coster" <info.zennitbankplcnigerian@gmail.com>
+Date:   Fri, 15 Nov 2019 16:49:41 +0100
+Message-ID: <CABHzvrkUQbbmg0Gr7foD3OjAJiY7Fd37=SW3mU=fnOPOcOyNdQ@mail.gmail.com>
+Subject: Goodnews, I have deposited your transfer total amount US$4.8million
+ Dollars with Money Gram this morning. we agreed you will be receiving it
+ $5000.00 daily.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Nov 14, 2019 at 07:26:21PM -0500, Qian Cai wrote:
-> 
-> 
-> > On Nov 14, 2019, at 2:21 PM, Tejun Heo <tj@kernel.org> wrote:
-> > 
-> > Acked-by: Tejun Heo <tj@kernel.org>
-> 
-> Tejun, suppose you will take this patch via your tree together with the series or should I Cc Andrew who normally handle this file?
-
-Patches in this area usually goes through Jens's block tree.
-
-Thanks.
-
--- 
-tejun
+Attn, Dear
+Goodnews, I have deposited your transfer total amount US$4.8million
+Dollars with Money Gram this morning. we agreed you will be receiving
+it $5000.00 daily.
+Contact Mr. John Dave Director, Money Gram to pick up your first Money
+Gram payment $5000.00 today.
+Contact Person; Mr. John Dave Director, Money Gram,International
+Remittance-Benin
+Email; moneygram.1820@outlook.fr
+Telephone; +229 62619517
+Please re-confirm your address to him once again such as listed below.
+1.Your Full Name..............................
+2.Address.........................
+3.Country....................
+4.Sex.........................................
+5.Your telephone numbers..........................
+6. Copy of your ID...........................
+This is to avoid sending your funds to wrong person, He is waiting to
+hear from you urgent today.
+Let me know once you pick up your transfer $5000.00 today.
+Finally, Note I have paid for the service fees, but only money will
+send to him is $90.00 transfer fee before you can pick up the transfer
+today.
+Ask, Mr. John Dave Director, Money Gram to give you direction where to
+send your transfer fee $90.00 only to Him Immediately so that you can
+pick up $5000.00 us dollars today.
+Thanks for undrstanding.
+Mary Coster
+m.coster@aol.com
