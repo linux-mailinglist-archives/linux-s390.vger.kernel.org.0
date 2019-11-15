@@ -2,57 +2,55 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F06BFDB59
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 11:28:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C0C2FDBAA
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 11:48:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKOK2E (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Nov 2019 05:28:04 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45335 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727333AbfKOK2E (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Nov 2019 05:28:04 -0500
+        id S1727215AbfKOKsK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Nov 2019 05:48:10 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57764 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727065AbfKOKsJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:48:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573813683;
+        s=mimecast20190719; t=1573814887;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=XFb6f9ZD8GvCwoOpidgioSbW7JaXjek7/iHylcipBMA=;
-        b=crQs6xiT9Gm3cQ2SUCJGWSuwajSWnUFt4lzOlVnwIJNbDHN0oq4qfSMbo9p1YT007BimTd
-        FjhHLUFJTuukNOyjtKMz0J68CKpLjfP7E7E1IfvEprnqr7S/IEw/BJpJHWKlFUg9+iL6+1
-        68qoEGk//7CYCOEQwDu+V07TghKMrDg=
+        bh=HzFbww9FVWdD39hKBOtyqsfxSOu8yp0+zrzbT4HP8KU=;
+        b=HrGKdCdfKCz2piTBW3uPXt/3vfUwVJIDw4c2NKGuF+Uf7K6IGBH3PqLlmKgOcwRcXuqKUO
+        OMErqw1uar6Xi77bmov1hggfaxenIlnN3hR+dzDuv5daaXvCLW+P0ZWkS7LCFEmqkO0U7y
+        EFyV1VPNef3e1ml4rMD54ss6a2ttlmU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-323-QR9weNsqM3G33dWHhslCsw-1; Fri, 15 Nov 2019 05:28:00 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-268-ad1wF_yMNMC33XubVJvPPQ-1; Fri, 15 Nov 2019 05:48:06 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 45F00DB21;
-        Fri, 15 Nov 2019 10:27:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F34878048ED;
+        Fri, 15 Nov 2019 10:48:04 +0000 (UTC)
 Received: from localhost.localdomain (ovpn-117-14.ams2.redhat.com [10.36.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 72BC32D269;
-        Fri, 15 Nov 2019 10:27:53 +0000 (UTC)
-Subject: Re: [RFC 31/37] KVM: s390: protvirt: Add diag 308 subcode 8 - 10
- handling
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8E10A65E99;
+        Fri, 15 Nov 2019 10:47:57 +0000 (UTC)
+Subject: Re: [RFC 33/37] KVM: s390: Introduce VCPU reset IOCTL
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com,
         borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
         mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
         gor@linux.ibm.com
 References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-32-frankja@linux.ibm.com>
- <a1c263ff-954e-a7c3-28b4-e9bd866eb35f@redhat.com>
- <f9ecf949-3f0d-fb64-cc77-44974a71625e@linux.ibm.com>
+ <20191024114059.102802-34-frankja@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <e8e80d38-ef63-c394-0e5d-9dbfdfc5241f@redhat.com>
-Date:   Fri, 15 Nov 2019 11:27:51 +0100
+Message-ID: <e7a62927-7e0e-1309-d5ad-b4a59149bb6a@redhat.com>
+Date:   Fri, 15 Nov 2019 11:47:56 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <f9ecf949-3f0d-fb64-cc77-44974a71625e@linux.ibm.com>
+In-Reply-To: <20191024114059.102802-34-frankja@linux.ibm.com>
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: QR9weNsqM3G33dWHhslCsw-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: ad1wF_yMNMC33XubVJvPPQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
@@ -61,29 +59,118 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 15/11/2019 11.20, Janosch Frank wrote:
-> On 11/15/19 11:04 AM, Thomas Huth wrote:
->> On 24/10/2019 13.40, Janosch Frank wrote:
->>> If the host initialized the Ultravisor, we can set stfle bit 161
->>> (protected virtual IPL enhancements facility), which indicates, that
->>> the IPL subcodes 8, 9 and are valid. These subcodes are used by a
->>> normal guest to set/retrieve a IPIB of type 5 and transition into
->>> protected mode.
->>>
->>> Once in protected mode, the VM will loose the facility bit, as each
->>
->> So should the bit be cleared in the host code again? ... I don't see
->> this happening in this patch?
->>
->>  Thomas
+On 24/10/2019 13.40, Janosch Frank wrote:
+> With PV we need to do things for all reset types, not only initial...
 >=20
-> No, KVM doesn't report stfle facilities in protected mode and we would
-> need to add it again in normal mode so just clearing it would be
-> pointless. In protected mode 8-10 do not intercept, so there's nothing
-> we need to do.
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 53 ++++++++++++++++++++++++++++++++++++++++
+>  include/uapi/linux/kvm.h |  6 +++++
+>  2 files changed, 59 insertions(+)
+>=20
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index d3fd3ad1d09b..d8ee3a98e961 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -3472,6 +3472,53 @@ static int kvm_arch_vcpu_ioctl_initial_reset(struc=
+t kvm_vcpu *vcpu)
+>  =09return 0;
+>  }
+> =20
+> +static int kvm_arch_vcpu_ioctl_reset(struct kvm_vcpu *vcpu,
+> +=09=09=09=09     unsigned long type)
+> +{
+> +=09int rc;
+> +=09u32 ret;
+> +
+> +=09switch (type) {
+> +=09case KVM_S390_VCPU_RESET_NORMAL:
+> +=09=09/*
+> +=09=09 * Only very little is reset, userspace handles the
+> +=09=09 * non-protected case.
+> +=09=09 */
+> +=09=09rc =3D 0;
+> +=09=09if (kvm_s390_pv_handle_cpu(vcpu)) {
+> +=09=09=09rc =3D uv_cmd_nodata(kvm_s390_pv_handle_cpu(vcpu),
+> +=09=09=09=09=09   UVC_CMD_CPU_RESET, &ret);
+> +=09=09=09VCPU_EVENT(vcpu, 3, "PROTVIRT RESET NORMAL VCPU: cpu %d rc %x r=
+rc %x",
+> +=09=09=09=09   vcpu->vcpu_id, ret >> 16, ret & 0x0000ffff);
+> +=09=09}
+> +=09=09break;
+> +=09case KVM_S390_VCPU_RESET_INITIAL:
+> +=09=09rc =3D kvm_arch_vcpu_ioctl_initial_reset(vcpu);
+> +=09=09if (kvm_s390_pv_handle_cpu(vcpu)) {
+> +=09=09=09uv_cmd_nodata(kvm_s390_pv_handle_cpu(vcpu),
+> +=09=09=09=09      UVC_CMD_CPU_RESET_INITIAL,
+> +=09=09=09=09      &ret);
+> +=09=09=09VCPU_EVENT(vcpu, 3, "PROTVIRT RESET INITIAL VCPU: cpu %d rc %x =
+rrc %x",
+> +=09=09=09=09   vcpu->vcpu_id, ret >> 16, ret & 0x0000ffff);
+> +=09=09}
+> +=09=09break;
+> +=09case KVM_S390_VCPU_RESET_CLEAR:
+> +=09=09rc =3D kvm_arch_vcpu_ioctl_initial_reset(vcpu);
+> +=09=09if (kvm_s390_pv_handle_cpu(vcpu)) {
+> +=09=09=09rc =3D uv_cmd_nodata(kvm_s390_pv_handle_cpu(vcpu),
+> +=09=09=09=09=09   UVC_CMD_CPU_RESET_CLEAR, &ret);
+> +=09=09=09VCPU_EVENT(vcpu, 3, "PROTVIRT RESET CLEAR VCPU: cpu %d rc %x rr=
+c %x",
+> +=09=09=09=09   vcpu->vcpu_id, ret >> 16, ret & 0x0000ffff);
+> +=09=09}
+> +=09=09break;
+> +=09default:
+> +=09=09rc =3D -EINVAL;
+> +=09=09break;
 
-Ah, ok, that's what I've missed. Maybe replace "the VM will loose the
-facility bit" with "the ultravisor will conceal the facility bit" ?
+(nit: you could drop the "break;" here)
+
+> +=09}
+> +=09return rc;
+> +}
+> +
+> +
+>  int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs =
+*regs)
+>  {
+>  =09vcpu_load(vcpu);
+> @@ -4633,8 +4680,14 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>  =09=09break;
+>  =09}
+>  =09case KVM_S390_INITIAL_RESET:
+> +=09=09r =3D -EINVAL;
+> +=09=09if (kvm_s390_pv_is_protected(vcpu->kvm))
+> +=09=09=09break;
+
+Wouldn't it be nicer to call
+
+  kvm_arch_vcpu_ioctl_reset(vcpu, KVM_S390_VCPU_RESET_INITIAL)
+
+in this case instead?
+
+>  =09=09r =3D kvm_arch_vcpu_ioctl_initial_reset(vcpu);
+>  =09=09break;
+> +=09case KVM_S390_VCPU_RESET:
+> +=09=09r =3D kvm_arch_vcpu_ioctl_reset(vcpu, arg);
+> +=09=09break;
+>  =09case KVM_SET_ONE_REG:
+>  =09case KVM_GET_ONE_REG: {
+>  =09=09struct kvm_one_reg reg;
+> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+> index f75a051a7705..2846ed5e5dd9 100644
+> --- a/include/uapi/linux/kvm.h
+> +++ b/include/uapi/linux/kvm.h
+> @@ -1496,6 +1496,12 @@ struct kvm_pv_cmd {
+>  #define KVM_S390_PV_COMMAND=09=09_IOW(KVMIO, 0xc3, struct kvm_pv_cmd)
+>  #define KVM_S390_PV_COMMAND_VCPU=09_IOW(KVMIO, 0xc4, struct kvm_pv_cmd)
+> =20
+> +#define KVM_S390_VCPU_RESET_NORMAL=090
+> +#define KVM_S390_VCPU_RESET_INITIAL=091
+> +#define KVM_S390_VCPU_RESET_CLEAR=092
+> +
+> +#define KVM_S390_VCPU_RESET    _IO(KVMIO,   0xd0)
+
+Why not 0xc5 ?
 
  Thomas
 
