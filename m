@@ -2,86 +2,50 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EF39AFE1D3
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 16:49:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B354FFE667
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 21:30:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfKOPtp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Nov 2019 10:49:45 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:45281 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727709AbfKOPto (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Nov 2019 10:49:44 -0500
-Received: by mail-io1-f67.google.com with SMTP id v17so10886004iol.12
-        for <linux-s390@vger.kernel.org>; Fri, 15 Nov 2019 07:49:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
-        b=T96mBsWswYjsm0w7ecYkWpV509ib/ulk9bHbI0Xwo0rzkePegh7rSfOcmzGbyf8vTc
-         lns/HOXyf4/6jOYDVIgZ/CZyIfN2m2y88qVdmXSABhNsP0MXDIRsHGSOOd7wWkwuGiQx
-         ehcoBpFXp6INIFq3jwmveina1L3fsWjpzHRhMvlhwo8OJ8Dy4xuFXwCrYZiL/Ja/dmiU
-         sEvBblBcC09ww5H/W1Li3rJXBc1TYjMn46kjeboNwYGUiqFeNnjz46iJxarBlBzUTpau
-         7EU4w1MkRxjhgPFrJ2/ipVqnuE4IawmENFYcW1JVUg9OFLrEKZvfb77T8+3XayPV4Zd+
-         KrHA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=X5NAAOrJ3bS32ihsXavVCESX6DNfXdWEE7aVqtLVIHM=;
-        b=aB5eW/zkk7xe0EM1QMevjlIrYhbYehrQSva+T69/0P9vTmCZm51OuPoE7XKwQO5hYh
-         Vz4dVAcSl+2jza1uplItREwXeLQKchP6PVmYzRCQyxn+10z+nkYWzeWn6RFTOPik0Ae2
-         VU7vOIhWxc61M72FqQN/zOZxdQSE05+cEs6hd8hZxFq+dUCG6e8R8zQtbTiVlfqqvUzW
-         Us5pywRfT5WUd5p6GWrMj9mG21UhP+hgTk47wkQFZG9ru5RkzNbtMZvQNFJwDC/PVVEA
-         /TA1mpy6stKfnmqpKYT5KV04uAE8kp97VU+s1uzhW5PA5+oafsa2ohfxM+rpR1xrZW+y
-         wQGQ==
-X-Gm-Message-State: APjAAAXeZbt7k9HAcwn2FRrLzmnZyFvMsRfP5X0y9KOxFBdgEaioJLwh
-        UqGefVkR4oHG5q1aoHU04k4JOjmQ1pGXgmAYBA==
-X-Google-Smtp-Source: APXvYqxEj1beLI6zhjihT/lmX2Dk324PGcIr8veC5c+0F/PFQKT7AeNYgljOGh72OwNqCMMZvqGkvMbSAqCkDjgGkjg=
-X-Received: by 2002:a5e:8e02:: with SMTP id a2mr1343031ion.269.1573832982053;
- Fri, 15 Nov 2019 07:49:42 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a02:7749:0:0:0:0:0 with HTTP; Fri, 15 Nov 2019 07:49:41
- -0800 (PST)
-Reply-To: moneygram.1820@outlook.fr
-From:   "Ms.Mary Coster" <info.zennitbankplcnigerian@gmail.com>
-Date:   Fri, 15 Nov 2019 16:49:41 +0100
-Message-ID: <CABHzvrkUQbbmg0Gr7foD3OjAJiY7Fd37=SW3mU=fnOPOcOyNdQ@mail.gmail.com>
-Subject: Goodnews, I have deposited your transfer total amount US$4.8million
- Dollars with Money Gram this morning. we agreed you will be receiving it
- $5000.00 daily.
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+        id S1726549AbfKOUaQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Nov 2019 15:30:16 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:40764 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726466AbfKOUaP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Nov 2019 15:30:15 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 41C6014E13AE0;
+        Fri, 15 Nov 2019 12:30:15 -0800 (PST)
+Date:   Fri, 15 Nov 2019 12:30:14 -0800 (PST)
+Message-Id: <20191115.123014.497961657029798608.davem@davemloft.net>
+To:     kgraul@linux.ibm.com
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: Re: [PATCH net-next 0/8] net/smc: improve termination handling
+ (part 3)
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191114120247.68889-1-kgraul@linux.ibm.com>
+References: <20191114120247.68889-1-kgraul@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 15 Nov 2019 12:30:15 -0800 (PST)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Attn, Dear
-Goodnews, I have deposited your transfer total amount US$4.8million
-Dollars with Money Gram this morning. we agreed you will be receiving
-it $5000.00 daily.
-Contact Mr. John Dave Director, Money Gram to pick up your first Money
-Gram payment $5000.00 today.
-Contact Person; Mr. John Dave Director, Money Gram,International
-Remittance-Benin
-Email; moneygram.1820@outlook.fr
-Telephone; +229 62619517
-Please re-confirm your address to him once again such as listed below.
-1.Your Full Name..............................
-2.Address.........................
-3.Country....................
-4.Sex.........................................
-5.Your telephone numbers..........................
-6. Copy of your ID...........................
-This is to avoid sending your funds to wrong person, He is waiting to
-hear from you urgent today.
-Let me know once you pick up your transfer $5000.00 today.
-Finally, Note I have paid for the service fees, but only money will
-send to him is $90.00 transfer fee before you can pick up the transfer
-today.
-Ask, Mr. John Dave Director, Money Gram to give you direction where to
-send your transfer fee $90.00 only to Him Immediately so that you can
-pick up $5000.00 us dollars today.
-Thanks for undrstanding.
-Mary Coster
-m.coster@aol.com
+From: Karsten Graul <kgraul@linux.ibm.com>
+Date: Thu, 14 Nov 2019 13:02:39 +0100
+
+> Part 3 of the SMC termination patches improves the link group
+> termination processing and introduces the ability to immediately
+> terminate a link group.
+
+Series applied, thanks.
+
+I wonder if you need an explicit ATOMIC_INIT() for that new atomic_t you
+add to the data structures?
