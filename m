@@ -2,126 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7376CFDA6B
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 11:04:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 87CACFDAA0
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 11:06:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727509AbfKOKEj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Nov 2019 05:04:39 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:33135 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727132AbfKOKEf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:04:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573812274;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=twfC3eJ9fenWbj+1iTb4uCfRWF8ThzLNgGYWE5XfCXc=;
-        b=bOtAihGMd19EHM8/9eVUXShEWDECIadniTOXVhQYSorkAkzVqlaIjqK6T/y485pRHhAmOA
-        SjvkkIr7FVzg0K2wnMj31qUq+RG8r0jlohyCmr8dDWObbs6ffkNVG4fVscNxvS+FqLmVpo
-        t27Vl4C8a37asOZBmfeyMiAcWViA2mw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-381-5QICuIuvOa-MvAoyXONlxA-1; Fri, 15 Nov 2019 05:04:31 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93F1E107ACC5;
-        Fri, 15 Nov 2019 10:04:29 +0000 (UTC)
-Received: from localhost.localdomain (ovpn-117-14.ams2.redhat.com [10.36.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id DC4A55C1B0;
-        Fri, 15 Nov 2019 10:04:24 +0000 (UTC)
-Subject: Re: [RFC 31/37] KVM: s390: protvirt: Add diag 308 subcode 8 - 10
- handling
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
-        gor@linux.ibm.com
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-32-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <a1c263ff-954e-a7c3-28b4-e9bd866eb35f@redhat.com>
-Date:   Fri, 15 Nov 2019 11:04:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1727757AbfKOKF6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Nov 2019 05:05:58 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44636 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727729AbfKOKF5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 15 Nov 2019 05:05:57 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id E7211B22C;
+        Fri, 15 Nov 2019 10:05:54 +0000 (UTC)
+Subject: Re: [PATCH 2/7] block: merge invalidate_partitions into
+ rescan_partitions
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Jan Kara <jack@suse.cz>
+Cc:     linux-block@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20191114143438.14681-1-hch@lst.de>
+ <20191114143438.14681-3-hch@lst.de>
+From:   Hannes Reinecke <hare@suse.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=hare@suse.de; prefer-encrypt=mutual; keydata=
+ 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
+ azzYF4VRJsdl+d0MCaSy8mUh
+Message-ID: <15ec0586-550b-2e98-d750-66f16b4f6bad@suse.de>
+Date:   Fri, 15 Nov 2019 11:05:54 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-In-Reply-To: <20191024114059.102802-32-frankja@linux.ibm.com>
+In-Reply-To: <20191114143438.14681-3-hch@lst.de>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 5QICuIuvOa-MvAoyXONlxA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24/10/2019 13.40, Janosch Frank wrote:
-> If the host initialized the Ultravisor, we can set stfle bit 161
-> (protected virtual IPL enhancements facility), which indicates, that
-> the IPL subcodes 8, 9 and are valid. These subcodes are used by a
-> normal guest to set/retrieve a IPIB of type 5 and transition into
-> protected mode.
->=20
-> Once in protected mode, the VM will loose the facility bit, as each
-
-So should the bit be cleared in the host code again? ... I don't see
-this happening in this patch?
-
- Thomas
-
-
-> boot into protected mode has to go through non-protected. There is no
-> secure re-ipl with subcode 10 without a previous subcode 3.
->=20
-> In protected mode, there is no subcode 4 available, as the VM has no
-> more access to its memory from non-protected mode. I.e. each IPL
-> clears.
->=20
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+On 11/14/19 3:34 PM, Christoph Hellwig wrote:
+> A lot of the logic in invalidate_partitions and rescan_partitions is
+> shared.  Merge the two functions to simplify things.  There is a small
+> behavior change in that we now send the kevent change notice also if we
+> were not invalidating but no partitions were found, which seems like
+> the right thing to do.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Jan Kara <jack@suse.cz>
 > ---
->  arch/s390/kvm/diag.c     | 6 ++++++
->  arch/s390/kvm/kvm-s390.c | 5 +++++
->  2 files changed, 11 insertions(+)
->=20
-> diff --git a/arch/s390/kvm/diag.c b/arch/s390/kvm/diag.c
-> index 3fb54ec2cf3e..b951dbdcb6a0 100644
-> --- a/arch/s390/kvm/diag.c
-> +++ b/arch/s390/kvm/diag.c
-> @@ -197,6 +197,12 @@ static int __diag_ipl_functions(struct kvm_vcpu *vcp=
-u)
->  =09case 4:
->  =09=09vcpu->run->s390_reset_flags =3D 0;
->  =09=09break;
-> +=09case 8:
-> +=09case 9:
-> +=09case 10:
-> +=09=09if (!test_kvm_facility(vcpu->kvm, 161))
-> +=09=09=09return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
-> +=09=09/* fall through */
->  =09default:
->  =09=09return -EOPNOTSUPP;
->  =09}
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 500972a1f742..8947f1812b12 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2590,6 +2590,11 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned lon=
-g type)
->  =09if (css_general_characteristics.aiv && test_facility(65))
->  =09=09set_kvm_facility(kvm->arch.model.fac_mask, 65);
-> =20
-> +=09if (is_prot_virt_host()) {
-> +=09=09set_kvm_facility(kvm->arch.model.fac_mask, 161);
-> +=09=09set_kvm_facility(kvm->arch.model.fac_list, 161);
-> +=09}
-> +
->  =09kvm->arch.model.cpuid =3D kvm_s390_get_initial_cpuid();
->  =09kvm->arch.model.ibc =3D sclp.ibc & 0x0fff;
-> =20
->=20
+>  block/ioctl.c             |  2 +-
+>  block/partition-generic.c | 38 ++++++++++++++------------------------
+>  fs/block_dev.c            |  5 +----
+>  include/linux/genhd.h     |  4 ++--
+>  4 files changed, 18 insertions(+), 31 deletions(-)
+> 
+Reviewed-by: Hannes Reinecke <hare@suse.de>
 
+Cheers,
+
+Hannes
+-- 
+Dr. Hannes Reinecke		      Teamlead Storage & Networking
+hare@suse.de			                  +49 911 74053 688
+SUSE Software Solutions Germany GmbH, Maxfeldstr. 5, 90409 Nürnberg
+HRB 247165 (AG München), GF: Felix Imendörffer
