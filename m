@@ -2,54 +2,54 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 43F3FFDAE9
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 11:16:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4FE92FDB2D
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 11:21:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727065AbfKOKQb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Nov 2019 05:16:31 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62600 "EHLO
+        id S1727171AbfKOKU7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Nov 2019 05:20:59 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46218 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727183AbfKOKQb (ORCPT
+        by vger.kernel.org with ESMTP id S1727486AbfKOKU7 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 15 Nov 2019 05:16:31 -0500
+        Fri, 15 Nov 2019 05:20:59 -0500
 Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFAC8ot092592
-        for <linux-s390@vger.kernel.org>; Fri, 15 Nov 2019 05:16:30 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w9nse19kr-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAFAHbqm112770
+        for <linux-s390@vger.kernel.org>; Fri, 15 Nov 2019 05:20:58 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w9nse1eqj-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 15 Nov 2019 05:16:29 -0500
+        for <linux-s390@vger.kernel.org>; Fri, 15 Nov 2019 05:20:58 -0500
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Fri, 15 Nov 2019 10:16:27 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 15 Nov 2019 10:20:56 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 15 Nov 2019 10:16:24 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAFAGNRV50528332
+        Fri, 15 Nov 2019 10:20:54 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAFAKqoB66388140
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 15 Nov 2019 10:16:23 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 456C411C05E;
-        Fri, 15 Nov 2019 10:16:23 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E054411C050;
-        Fri, 15 Nov 2019 10:16:22 +0000 (GMT)
+        Fri, 15 Nov 2019 10:20:53 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E0627AE055;
+        Fri, 15 Nov 2019 10:20:52 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 93E6BAE04D;
+        Fri, 15 Nov 2019 10:20:52 +0000 (GMT)
 Received: from dyn-9-152-224-131.boeblingen.de.ibm.com (unknown [9.152.224.131])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 15 Nov 2019 10:16:22 +0000 (GMT)
-Subject: Re: [RFC 24/37] KVM: s390: protvirt: Write sthyi data to instruction
- data area
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 15 Nov 2019 10:20:52 +0000 (GMT)
+Subject: Re: [RFC 31/37] KVM: s390: protvirt: Add diag 308 subcode 8 - 10
+ handling
 To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com,
         borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
         mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
         gor@linux.ibm.com
 References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-25-frankja@linux.ibm.com>
- <cf52261e-9281-b11c-fee4-b97013a77ff2@redhat.com>
+ <20191024114059.102802-32-frankja@linux.ibm.com>
+ <a1c263ff-954e-a7c3-28b4-e9bd866eb35f@redhat.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -93,120 +93,138 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Date:   Fri, 15 Nov 2019 11:16:22 +0100
+Date:   Fri, 15 Nov 2019 11:20:52 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <cf52261e-9281-b11c-fee4-b97013a77ff2@redhat.com>
+In-Reply-To: <a1c263ff-954e-a7c3-28b4-e9bd866eb35f@redhat.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="R1X0BeEmDhtvdjsMkiqystVIQlo8ovDk1"
+ boundary="mNYpZWWMOSggPlAcZYjb8DkDdg1R4ughY"
 X-TM-AS-GCONF: 00
-x-cbid: 19111510-0028-0000-0000-000003B71C27
+x-cbid: 19111510-0016-0000-0000-000002C3DF1C
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111510-0029-0000-0000-0000247A2CF1
-Message-Id: <25dcf105-9a25-2e88-287c-c7dfdff429c4@linux.ibm.com>
+x-cbparentid: 19111510-0017-0000-0000-0000332585A8
+Message-Id: <f9ecf949-3f0d-fb64-cc77-44974a71625e@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-11-15_02:2019-11-15,2019-11-15 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
  lowpriorityscore=0 adultscore=0 impostorscore=0 clxscore=1015 bulkscore=0
  mlxscore=0 malwarescore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
- suspectscore=11 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911150096
+ suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911150097
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---R1X0BeEmDhtvdjsMkiqystVIQlo8ovDk1
-Content-Type: multipart/mixed; boundary="rIo2895KEPxUfb8EOgMhWe372hf1bFWUe"
+--mNYpZWWMOSggPlAcZYjb8DkDdg1R4ughY
+Content-Type: multipart/mixed; boundary="0OjYKmcMSlh5SbpgqAJVhbT8Vo68SsmnL"
 
---rIo2895KEPxUfb8EOgMhWe372hf1bFWUe
+--0OjYKmcMSlh5SbpgqAJVhbT8Vo68SsmnL
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 11/15/19 9:04 AM, Thomas Huth wrote:
+On 11/15/19 11:04 AM, Thomas Huth wrote:
 > On 24/10/2019 13.40, Janosch Frank wrote:
->> STHYI data has to go through the bounce buffer.
+>> If the host initialized the Ultravisor, we can set stfle bit 161
+>> (protected virtual IPL enhancements facility), which indicates, that
+>> the IPL subcodes 8, 9 and are valid. These subcodes are used by a
+>> normal guest to set/retrieve a IPIB of type 5 and transition into
+>> protected mode.
+>>
+>> Once in protected mode, the VM will loose the facility bit, as each
+>=20
+> So should the bit be cleared in the host code again? ... I don't see
+> this happening in this patch?
+>=20
+>  Thomas
+
+No, KVM doesn't report stfle facilities in protected mode and we would
+need to add it again in normal mode so just clearing it would be
+pointless. In protected mode 8-10 do not intercept, so there's nothing
+we need to do.
+
+>=20
+>=20
+>> boot into protected mode has to go through non-protected. There is no
+>> secure re-ipl with subcode 10 without a previous subcode 3.
+>>
+>> In protected mode, there is no subcode 4 available, as the VM has no
+>> more access to its memory from non-protected mode. I.e. each IPL
+>> clears.
 >>
 >> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 >> ---
->>  arch/s390/kvm/intercept.c | 15 ++++++++++-----
->>  1 file changed, 10 insertions(+), 5 deletions(-)
+>>  arch/s390/kvm/diag.c     | 6 ++++++
+>>  arch/s390/kvm/kvm-s390.c | 5 +++++
+>>  2 files changed, 11 insertions(+)
 >>
->> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
->> index 510b1dee3320..37cb62bc261b 100644
->> --- a/arch/s390/kvm/intercept.c
->> +++ b/arch/s390/kvm/intercept.c
->> @@ -391,7 +391,7 @@ int handle_sthyi(struct kvm_vcpu *vcpu)
->>  		goto out;
+>> diff --git a/arch/s390/kvm/diag.c b/arch/s390/kvm/diag.c
+>> index 3fb54ec2cf3e..b951dbdcb6a0 100644
+>> --- a/arch/s390/kvm/diag.c
+>> +++ b/arch/s390/kvm/diag.c
+>> @@ -197,6 +197,12 @@ static int __diag_ipl_functions(struct kvm_vcpu *=
+vcpu)
+>>  	case 4:
+>>  		vcpu->run->s390_reset_flags =3D 0;
+>>  		break;
+>> +	case 8:
+>> +	case 9:
+>> +	case 10:
+>> +		if (!test_kvm_facility(vcpu->kvm, 161))
+>> +			return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
+>> +		/* fall through */
+>>  	default:
+>>  		return -EOPNOTSUPP;
 >>  	}
+>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>> index 500972a1f742..8947f1812b12 100644
+>> --- a/arch/s390/kvm/kvm-s390.c
+>> +++ b/arch/s390/kvm/kvm-s390.c
+>> @@ -2590,6 +2590,11 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned =
+long type)
+>>  	if (css_general_characteristics.aiv && test_facility(65))
+>>  		set_kvm_facility(kvm->arch.model.fac_mask, 65);
 >> =20
->> -	if (addr & ~PAGE_MASK)
->> +	if (!kvm_s390_pv_is_protected(vcpu->kvm) && (addr & ~PAGE_MASK))
->>  		return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
->> =20
->>  	sctns =3D (void *)get_zeroed_page(GFP_KERNEL);
->> @@ -402,10 +402,15 @@ int handle_sthyi(struct kvm_vcpu *vcpu)
->> =20
->>  out:
->>  	if (!cc) {
->> -		r =3D write_guest(vcpu, addr, reg2, sctns, PAGE_SIZE);
->> -		if (r) {
->> -			free_page((unsigned long)sctns);
->> -			return kvm_s390_inject_prog_cond(vcpu, r);
->> +		if (kvm_s390_pv_is_protected(vcpu->kvm)) {
->> +			memcpy((void *)vcpu->arch.sie_block->sidad, sctns,
->=20
-> sidad & PAGE_MASK, just to be sure?
-
-How about a macro or just saving the pointer in an arch struct?
-
->=20
->> +			       PAGE_SIZE);
->> +		} else {
->> +			r =3D write_guest(vcpu, addr, reg2, sctns, PAGE_SIZE);
->> +			if (r) {
->> +				free_page((unsigned long)sctns);
->> +				return kvm_s390_inject_prog_cond(vcpu, r);
->> +			}
->>  		}
->>  	}
+>> +	if (is_prot_virt_host()) {
+>> +		set_kvm_facility(kvm->arch.model.fac_mask, 161);
+>> +		set_kvm_facility(kvm->arch.model.fac_list, 161);
+>> +	}
+>> +
+>>  	kvm->arch.model.cpuid =3D kvm_s390_get_initial_cpuid();
+>>  	kvm->arch.model.ibc =3D sclp.ibc & 0x0fff;
 >> =20
 >>
 >=20
-> With "& PAGE_MASK":
->=20
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
->=20
 
 
 
---rIo2895KEPxUfb8EOgMhWe372hf1bFWUe--
+--0OjYKmcMSlh5SbpgqAJVhbT8Vo68SsmnL--
 
---R1X0BeEmDhtvdjsMkiqystVIQlo8ovDk1
+--mNYpZWWMOSggPlAcZYjb8DkDdg1R4ughY
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl3OevYACgkQ41TmuOI4
-ufhI8w//Um54bh3fscX0u4pd2SuoEv94BXoNziNR7iSPz2HsE2KE1ufvXTUhxTJY
-erXWPv8K2occVrTJNCG9doSJbAiZuRNwqq/PbcdHR9IuhVGyzlG+0EnCxxILtPeN
-fA67kH3A0afkZvRRZc1n8v2mfbF8sJya8N1FyMD2Fg8X960lUouzvaTxYrStX3Xl
-Y3sCPnn4yT/UmvLWoCq5mt674nzu6F7paYCKpk0OLXqRcjBXHVgGFnlC5LvBt529
-2F4WiEYawtt51jnnsbPUIQs/p9z0YC7NQ3YeXKG/Du3MS9KSQRDDLH+V52JN+AaM
-OC+i8nBzkXNpMVF72D1s/ipVERudlnAjVF/3nQDn1JSDxp0TdM08j/TJGVtE0B1y
-rOhGODhCRGilh+4ge7oVTFJTpKYCqe3eYZp3HDy79kT9Lpgb+HWcuD8irYYZsXUk
-dlpsRjhjrJ591mE78LxWPfFLv01xAXV2xpiBOed7S6FpCX6eYBiO+F4qmA464TlT
-AExkO/WaERfKMsIzMQOxHyxt7OcUfgocIKUyU+AmjxEO/apk4Vc/g1m9aOd9Ej4Q
-keZSFzede8/H1A46pkTCk1ITVCjG3ZGRP2MMbiDgFfbZ26W3mnT8clyCfVRB9il3
-UabkFOi42FUB2IlWS6d679dw/XJ60YvUP4qv/IWf3AhPTGMyKsI=
-=mcs8
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl3OfAQACgkQ41TmuOI4
+ufgQJRAAoBtCjfumzllkyZTQ/uQSqRqjPR7uB7phjpQCIiVKgk4A09wm/u7MA/Tq
+oqOHdedilCE3bh49jB7GvS9mKpzbZd7Y4T0F9uvXgbgxR/6wge+5gLBU7vHUwJnU
+D4ygrcDAV2EOQqUKACIL1TvJ6WCEqp7UrWpFNLfk61j3WPUaSIje/K6v61brTOGy
+4PpKg/afmFugkj7vOBu7d6WLpmuKSeSU4gdrR6+NT1hO3/AHMqOrQaSB50BMlDgl
+cN57Db2AnKJlCYM7yaWEL0yKKpLi93j/q7Kn88vo+9iM6AK+SbaEDuUHO4G/pisn
+ZbICi1mb7Qki9kezlHl3pyUEzBaH/RrD2NdG0qov+EOz+yjpfC4GPa+Y2zNymz+D
++gBdSYCI6YSUjoZnbXJzy2b/90wgKfJq9CzcwLQ1nvfyPTJ6p7HmUZuuPAeOZLlN
+rZbF4WFgfmTMMbbAUNcEjUgLcKRXTmp3zyOSx6AGntK9ohftz7+S/KtfGvgQwdj7
+N7vRxUAPCfjOo55ePb2/BOFi9pV1MREC9SF/LBML+wI+18TCTbq2PpZeWARL+LO0
+a1j/HqdaBYiInUgf9SdJzOwaXSzu6gWlacbp+K8x7LwfwSC7yRIEOnBO/dNd82Pz
+sENSKN4ieGLqynBr3v6xW7SDhPbI69Pn+gdRm0q8V6OyET/Answ=
+=Neg9
 -----END PGP SIGNATURE-----
 
---R1X0BeEmDhtvdjsMkiqystVIQlo8ovDk1--
+--mNYpZWWMOSggPlAcZYjb8DkDdg1R4ughY--
 
