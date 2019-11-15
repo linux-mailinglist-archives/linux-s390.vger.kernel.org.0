@@ -2,135 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EEE94FD7D0
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 09:19:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 14D41FD7E4
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 09:27:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725829AbfKOITX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Nov 2019 03:19:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44549 "EHLO
+        id S1726958AbfKOI1k (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 15 Nov 2019 03:27:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:40502 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726365AbfKOITW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Nov 2019 03:19:22 -0500
+        with ESMTP id S1726365AbfKOI1k (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Nov 2019 03:27:40 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573805961;
+        s=mimecast20190719; t=1573806459;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=HM25g7Y+c6Nk3R4SIg2yp3WYvXOoTvCW1OyFB7VAXf8=;
-        b=GBAmFn3apBaJEPfUegtHuzGThSQ2sW+Sl/ldSTYCMp1T/fAVXFyWe7iR3268UDs9Rk14L6
-        cayp9zKBgrjQ7xPDR8GGwwFoX9oIZCdVyypqDo3eOcBr1GEEKVHKCL8j+QFjXAu/jKsdUN
-        lpLbly4B4wSWsY65HZrnaKEh1EPfYiY=
+        bh=vdu6eMBJD2SgB0lzVDKbnJJ+cTOlwYyQGiOP5FLcOsc=;
+        b=bIclXITxmUAYdrny7rVFsFYFIE6hNe44L7VU7FfRdrUyo7MwwWUWzfxqxeMtxJaga6/Ih4
+        oPWRsTJA0ctIL+aLIvLUfzH6JdnbApyhR0DRuPR7K98AGdeeAbZ7FrzHXt1Tflfna9zprS
+        fnX+gJRj9+thD5CPREawXz/FP6/0+1k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-hwMwx4_wNYWDLqL_otnQ4Q-1; Fri, 15 Nov 2019 03:19:18 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-35-YZJ4-4IsMiWiuujpCcP-Ag-1; Fri, 15 Nov 2019 03:27:36 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CC57B1005511;
-        Fri, 15 Nov 2019 08:19:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 27D2D802682;
+        Fri, 15 Nov 2019 08:27:35 +0000 (UTC)
 Received: from localhost.localdomain (ovpn-117-14.ams2.redhat.com [10.36.117.14])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 819EB65E99;
-        Fri, 15 Nov 2019 08:19:10 +0000 (UTC)
-Subject: Re: [PATCH] Fixup sida bouncing
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AC6376293B;
+        Fri, 15 Nov 2019 08:27:30 +0000 (UTC)
+Subject: Re: [RFC 25/37] KVM: s390: protvirt: STSI handling
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com,
         borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com
-References: <ad0f9b90-3ce4-c2d2-b661-635fe439f7e2@redhat.com>
- <20191114162153.25349-1-frankja@linux.ibm.com>
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
+        gor@linux.ibm.com
+References: <20191024114059.102802-1-frankja@linux.ibm.com>
+ <20191024114059.102802-26-frankja@linux.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
-Message-ID: <016cea87-9097-ca8b-2d19-9f69cdff3af6@redhat.com>
-Date:   Fri, 15 Nov 2019 09:19:08 +0100
+Message-ID: <4891580a-422a-3d85-f20e-c4c194487d34@redhat.com>
+Date:   Fri, 15 Nov 2019 09:27:28 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191114162153.25349-1-frankja@linux.ibm.com>
+In-Reply-To: <20191024114059.102802-26-frankja@linux.ibm.com>
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: hwMwx4_wNYWDLqL_otnQ4Q-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: YZJ4-4IsMiWiuujpCcP-Ag-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 14/11/2019 17.21, Janosch Frank wrote:
+On 24/10/2019 13.40, Janosch Frank wrote:
+> Save response to sidad and disable address checking for protected
+> guests.
+>=20
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
->  arch/s390/kvm/kvm-s390.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
+>  arch/s390/kvm/priv.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
 >=20
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 0fa7c6d9ed0e..9820fde04887 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4432,13 +4432,21 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu=
- *vcpu,
->  =09if (mop->size > MEM_OP_MAX_SIZE)
->  =09=09return -E2BIG;
+> diff --git a/arch/s390/kvm/priv.c b/arch/s390/kvm/priv.c
+> index ed52ffa8d5d4..06c7e7a10825 100644
+> --- a/arch/s390/kvm/priv.c
+> +++ b/arch/s390/kvm/priv.c
+> @@ -872,7 +872,7 @@ static int handle_stsi(struct kvm_vcpu *vcpu)
 > =20
-> -=09/* Protected guests move instruction data over the satellite
-> +=09/*
-> +=09 * Protected guests move instruction data over the satellite
->  =09 * block which has its own size limit
->  =09 */
->  =09if (kvm_s390_pv_is_protected(vcpu->kvm) &&
-> -=09    mop->size > ((vcpu->arch.sie_block->sidad & 0x0f) + 1) * PAGE_SIZ=
-E)
-> +=09    mop->size > ((vcpu->arch.sie_block->sidad & 0xff) + 1) * PAGE_SIZ=
-E)
->  =09=09return -E2BIG;
+>  =09operand2 =3D kvm_s390_get_base_disp_s(vcpu, &ar);
 > =20
-> +=09/* We can currently only offset into the one SIDA page. */
+> -=09if (operand2 & 0xfff)
+> +=09if (!kvm_s390_pv_is_protected(vcpu->kvm) && (operand2 & 0xfff))
+>  =09=09return kvm_s390_inject_program_int(vcpu, PGM_SPECIFICATION);
+
+I'd prefer if you could put the calculation of operand2 also under the
+!pv if-statement:
+
+=09if (!kvm_s390_pv_is_protected(vcpu->kvm)) {
+=09=09operand2 =3D kvm_s390_get_base_disp_s(vcpu, &ar);
+=09=09if (operand2 & 0xfff)
+=09=09=09return kvm_s390_inject_program_int(vcpu,
+=09=09=09=09=09=09    PGM_SPECIFICATION);
+=09}
+
+... that makes it more obvious that operand2 is only valid in the !pv
+case and you should get automatic compiler warnings if you use it otherwise=
+.
+
+>  =09switch (fc) {
+> @@ -893,8 +893,13 @@ static int handle_stsi(struct kvm_vcpu *vcpu)
+>  =09=09handle_stsi_3_2_2(vcpu, (void *) mem);
+>  =09=09break;
+>  =09}
 > +=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
-> +=09=09mop->gaddr &=3D ~PAGE_MASK;
-> +=09=09if (mop->gaddr + mop->size > PAGE_SIZE)
-> +=09=09=09return -EINVAL;
-> +=09}
-> +
->  =09if (!(mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY)) {
->  =09=09tmpbuf =3D vmalloc(mop->size);
->  =09=09if (!tmpbuf)
-> @@ -4451,6 +4459,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *=
-vcpu,
->  =09case KVM_S390_MEMOP_LOGICAL_READ:
->  =09=09if (mop->flags & KVM_S390_MEMOP_F_CHECK_ONLY) {
->  =09=09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
-> +=09=09=09=09/* We can always copy into the SIDA */
->  =09=09=09=09r =3D 0;
->  =09=09=09=09break;
->  =09=09=09}
-> @@ -4461,8 +4470,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *=
-vcpu,
->  =09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
->  =09=09=09r =3D 0;
->  =09=09=09if (copy_to_user(uaddr, (void *)vcpu->arch.sie_block->sidad +
-> -=09=09=09=09=09 (mop->gaddr & ~PAGE_MASK),
-> -=09=09=09=09=09 mop->size))
-> +=09=09=09=09=09 mop->gaddr, mop->size))
->  =09=09=09=09r =3D -EFAULT;
->  =09=09=09break;
->  =09=09}
-> @@ -4485,8 +4493,7 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *=
-vcpu,
->  =09=09if (kvm_s390_pv_is_protected(vcpu->kvm)) {
->  =09=09=09r =3D 0;
->  =09=09=09if (copy_from_user((void *)vcpu->arch.sie_block->sidad +
-> -=09=09=09=09=09   (mop->gaddr & ~PAGE_MASK), uaddr,
-> -=09=09=09=09=09   mop->size))
-> +=09=09=09=09=09   mop->gaddr, uaddr, mop->size))
->  =09=09=09=09r =3D -EFAULT;
->  =09=09=09break;
->  =09=09}
->=20
+> +=09=09memcpy((void *)vcpu->arch.sie_block->sidad, (void *)mem,
+> +=09=09       PAGE_SIZE);
+> +=09=09rc =3D 0;
+> +=09} else
+> +=09=09rc =3D write_guest(vcpu, operand2, ar, (void *)mem, PAGE_SIZE);
 
-That looks better, indeed.
-
-Still, is there a way you could also verify that gaddr references the
-right page that is mirrored in the sidad?
+Please also use braces for the else-branch (according to
+Documentation/process/coding-style.rst).
 
  Thomas
 
