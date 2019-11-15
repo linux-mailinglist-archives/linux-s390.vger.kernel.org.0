@@ -2,64 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C073FD34B
-	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 04:27:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3E2F0FD348
+	for <lists+linux-s390@lfdr.de>; Fri, 15 Nov 2019 04:26:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727032AbfKOD11 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 14 Nov 2019 22:27:27 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:40362 "EHLO
+        id S1727020AbfKOD0v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 14 Nov 2019 22:26:51 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47854 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726491AbfKOD10 (ORCPT
+        by vger.kernel.org with ESMTP id S1726491AbfKOD0u (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 14 Nov 2019 22:27:26 -0500
+        Thu, 14 Nov 2019 22:26:50 -0500
 Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAF39Wua182353
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 22:27:25 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w9jcm1fjr-1
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAF39WBs182350
+        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 22:26:49 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w9jcm1g2f-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 22:27:24 -0500
+        for <linux-s390@vger.kernel.org>; Thu, 14 Nov 2019 22:26:48 -0500
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
-        Fri, 15 Nov 2019 02:56:25 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 15 Nov 2019 02:56:24 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Fri, 15 Nov 2019 02:56:22 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAF2uKBv45875442
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAF2uK8p40763672
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Fri, 15 Nov 2019 02:56:20 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0FB75204E;
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CB1A6AE057;
+        Fri, 15 Nov 2019 02:56:20 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B8B05AE053;
         Fri, 15 Nov 2019 02:56:20 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id AEFFA52050;
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
         Fri, 15 Nov 2019 02:56:20 +0000 (GMT)
 Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id 4E1CAE0193; Fri, 15 Nov 2019 03:56:20 +0100 (CET)
+        id 50D1AE01E7; Fri, 15 Nov 2019 03:56:20 +0100 (CET)
 From:   Eric Farman <farman@linux.ibm.com>
 To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
 Cc:     Cornelia Huck <cohuck@redhat.com>,
         Jason Herne <jjherne@linux.ibm.com>,
         Jared Rossi <jrossi@linux.ibm.com>,
         Eric Farman <farman@linux.ibm.com>
-Subject: [RFC PATCH v1 01/10] vfio-ccw: Introduce new helper functions to free/destroy regions
-Date:   Fri, 15 Nov 2019 03:56:11 +0100
+Subject: [RFC PATCH v1 02/10] vfio-ccw: Register a chp_event callback for vfio-ccw
+Date:   Fri, 15 Nov 2019 03:56:12 +0100
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191115025620.19593-1-farman@linux.ibm.com>
 References: <20191115025620.19593-1-farman@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 19111502-4275-0000-0000-0000037DDAA5
+x-cbid: 19111502-0012-0000-0000-00000363C160
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111502-4276-0000-0000-000038914295
-Message-Id: <20191115025620.19593-2-farman@linux.ibm.com>
+x-cbparentid: 19111502-0013-0000-0000-0000219F3D04
+Message-Id: <20191115025620.19593-3-farman@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-11-14_07:2019-11-14,2019-11-14 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 impostorscore=0 bulkscore=0 suspectscore=2
- malwarescore=0 phishscore=0 mlxlogscore=669 priorityscore=1501
+ spamscore=0 clxscore=1015 impostorscore=0 bulkscore=0 suspectscore=0
+ malwarescore=0 phishscore=0 mlxlogscore=999 priorityscore=1501
  adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1911150027
 Sender: linux-s390-owner@vger.kernel.org
@@ -69,8 +72,8 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 From: Farhan Ali <alifm@linux.ibm.com>
 
-Consolidate some of the cleanup code for the regions, so that
-as more are added we reduce code duplication.
+Register the chp_event callback to receive channel path related
+events for the subchannels managed by vfio-ccw.
 
 Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
 Signed-off-by: Eric Farman <farman@linux.ibm.com>
@@ -78,85 +81,80 @@ Signed-off-by: Eric Farman <farman@linux.ibm.com>
 
 Notes:
     v0->v1: [EF]
-     - Commit message
+     - Add s390dbf trace
 
- drivers/s390/cio/vfio_ccw_drv.c | 28 ++++++++++++++++++----------
- 1 file changed, 18 insertions(+), 10 deletions(-)
+ drivers/s390/cio/vfio_ccw_drv.c | 44 +++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
 diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-index e401a3d0aa57..91989269faf1 100644
+index 91989269faf1..05da1facee60 100644
 --- a/drivers/s390/cio/vfio_ccw_drv.c
 +++ b/drivers/s390/cio/vfio_ccw_drv.c
-@@ -116,6 +116,14 @@ static void vfio_ccw_sch_irq(struct subchannel *sch)
- 	vfio_ccw_fsm_event(private, VFIO_CCW_EVENT_INTERRUPT);
+@@ -19,6 +19,7 @@
+ 
+ #include <asm/isc.h>
+ 
++#include "chp.h"
+ #include "ioasm.h"
+ #include "css.h"
+ #include "vfio_ccw_private.h"
+@@ -257,6 +258,48 @@ static int vfio_ccw_sch_event(struct subchannel *sch, int process)
+ 	return rc;
  }
  
-+static void vfio_ccw_free_regions(struct vfio_ccw_private *private)
++static int vfio_ccw_chp_event(struct subchannel *sch,
++			      struct chp_link *link, int event)
 +{
-+	if (private->cmd_region)
-+		kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
-+	if (private->io_region)
-+		kmem_cache_free(vfio_ccw_io_region, private->io_region);
++	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
++	int mask = chp_ssd_get_mask(&sch->ssd_info, link);
++	int retry = 255;
++
++	if (!private || !mask)
++		return 0;
++
++	if (cio_update_schib(sch))
++		return -ENODEV;
++
++	VFIO_CCW_MSG_EVENT(2, "%pUl (%x.%x.%04x): mask=0x%x event=%d\n",
++			   mdev_uuid(private->mdev), sch->schid.cssid,
++			   sch->schid.ssid, sch->schid.sch_no,
++			   mask, event);
++
++	switch (event) {
++	case CHP_VARY_OFF:
++		/* Path logically turned off */
++		sch->opm &= ~mask;
++		sch->lpm &= ~mask;
++		break;
++	case CHP_OFFLINE:
++		/* Path is gone */
++		cio_cancel_halt_clear(sch, &retry);
++		break;
++	case CHP_VARY_ON:
++		/* Path logically turned on */
++		sch->opm |= mask;
++		sch->lpm |= mask;
++		break;
++	case CHP_ONLINE:
++		/* Path became available */
++		sch->lpm |= mask & sch->opm;
++		break;
++	}
++
++	return 0;
 +}
 +
- static int vfio_ccw_sch_probe(struct subchannel *sch)
- {
- 	struct pmcw *pmcw = &sch->schib.pmcw;
-@@ -176,10 +184,7 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
- 	cio_disable_subchannel(sch);
- out_free:
- 	dev_set_drvdata(&sch->dev, NULL);
--	if (private->cmd_region)
--		kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
--	if (private->io_region)
--		kmem_cache_free(vfio_ccw_io_region, private->io_region);
-+	vfio_ccw_free_regions(private);
- 	kfree(private->cp.guest_cp);
- 	kfree(private);
- 	return ret;
-@@ -195,8 +200,7 @@ static int vfio_ccw_sch_remove(struct subchannel *sch)
+ static struct css_device_id vfio_ccw_sch_ids[] = {
+ 	{ .match_flags = 0x1, .type = SUBCHANNEL_TYPE_IO, },
+ 	{ /* end of list */ },
+@@ -274,6 +317,7 @@ static struct css_driver vfio_ccw_sch_driver = {
+ 	.remove = vfio_ccw_sch_remove,
+ 	.shutdown = vfio_ccw_sch_shutdown,
+ 	.sch_event = vfio_ccw_sch_event,
++	.chp_event = vfio_ccw_chp_event,
+ };
  
- 	dev_set_drvdata(&sch->dev, NULL);
- 
--	kmem_cache_free(vfio_ccw_cmd_region, private->cmd_region);
--	kmem_cache_free(vfio_ccw_io_region, private->io_region);
-+	vfio_ccw_free_regions(private);
- 	kfree(private->cp.guest_cp);
- 	kfree(private);
- 
-@@ -299,6 +303,12 @@ static void vfio_ccw_debug_exit(void)
- 	debug_unregister(vfio_ccw_debug_trace_id);
- }
- 
-+static void vfio_ccw_destroy_regions(void)
-+{
-+	kmem_cache_destroy(vfio_ccw_cmd_region);
-+	kmem_cache_destroy(vfio_ccw_io_region);
-+}
-+
- static int __init vfio_ccw_sch_init(void)
- {
- 	int ret;
-@@ -341,8 +351,7 @@ static int __init vfio_ccw_sch_init(void)
- 	return ret;
- 
- out_err:
--	kmem_cache_destroy(vfio_ccw_cmd_region);
--	kmem_cache_destroy(vfio_ccw_io_region);
-+	vfio_ccw_destroy_regions();
- 	destroy_workqueue(vfio_ccw_work_q);
- 	vfio_ccw_debug_exit();
- 	return ret;
-@@ -352,8 +361,7 @@ static void __exit vfio_ccw_sch_exit(void)
- {
- 	css_driver_unregister(&vfio_ccw_sch_driver);
- 	isc_unregister(VFIO_CCW_ISC);
--	kmem_cache_destroy(vfio_ccw_io_region);
--	kmem_cache_destroy(vfio_ccw_cmd_region);
-+	vfio_ccw_destroy_regions();
- 	destroy_workqueue(vfio_ccw_work_q);
- 	vfio_ccw_debug_exit();
- }
+ static int __init vfio_ccw_debug_init(void)
 -- 
 2.17.1
 
