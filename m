@@ -2,98 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18020FE9CC
-	for <lists+linux-s390@lfdr.de>; Sat, 16 Nov 2019 01:38:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D7495FED44
+	for <lists+linux-s390@lfdr.de>; Sat, 16 Nov 2019 16:45:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727466AbfKPAiK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 15 Nov 2019 19:38:10 -0500
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43390 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727151AbfKPAiJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 15 Nov 2019 19:38:09 -0500
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iVm5G-00041D-QH; Sat, 16 Nov 2019 00:37:02 +0000
-Date:   Sat, 16 Nov 2019 00:37:02 +0000
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Jeff Layton <jlayton@kernel.org>,
-        "J. Bruce Fields" <bfields@fieldses.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        David Howells <dhowells@redhat.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andrii Nakryiko <andriin@fb.com>,
-        Eric Biederman <ebiederm@xmission.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Kees Cook <keescook@chromium.org>,
-        Jann Horn <jannh@google.com>, Tycho Andersen <tycho@tycho.ws>,
-        David Drysdale <drysdale@google.com>,
-        Chanho Min <chanho.min@lge.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Christian Brauner <christian@brauner.io>,
-        Aleksa Sarai <asarai@suse.de>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        dev@opencontainers.org, containers@lists.linux-foundation.org,
-        bpf@vger.kernel.org, netdev@vger.kernel.org,
-        linux-alpha@vger.kernel.org, linux-api@vger.kernel.org,
-        libc-alpha@sourceware.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, sparclinux@vger.kernel.org
-Subject: Re: [PATCH v16 02/12] namei: allow nd_jump_link() to produce errors
-Message-ID: <20191116003702.GX26530@ZenIV.linux.org.uk>
-References: <20191116002802.6663-1-cyphar@cyphar.com>
- <20191116002802.6663-3-cyphar@cyphar.com>
+        id S1728496AbfKPPmx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 16 Nov 2019 10:42:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728477AbfKPPmv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 16 Nov 2019 10:42:51 -0500
+Received: from sasha-vm.mshome.net (unknown [50.234.116.4])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2658620740;
+        Sat, 16 Nov 2019 15:42:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573918970;
+        bh=gjuzvXyhWRsXKjSOSgKr4qFWVX5/LvmJynn27rqTZCU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=KST8cLQvvEOeTaMOFk0K1Jy/FOLdYYZSfxSgNn+K3KO794RZa9ThxnmSlKoCeE+bR
+         LSWu6d5ul6GgOhFtH4dYTkKhL0mxEHSRkAP5xFBuiPiNrxdtH2F6ywemPSbUk/4B7e
+         uOrWAxcPirZOFuxr5jRBDCJfZpQC8L51Yolsv43A=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Hendrik Brueckner <brueckner@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 085/237] s390/perf: Return error when debug_register fails
+Date:   Sat, 16 Nov 2019 10:38:40 -0500
+Message-Id: <20191116154113.7417-85-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191116154113.7417-1-sashal@kernel.org>
+References: <20191116154113.7417-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191116002802.6663-3-cyphar@cyphar.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Nov 16, 2019 at 11:27:52AM +1100, Aleksa Sarai wrote:
-> +	error = nd_jump_link(&path);
-> +	if (error)
-> +		path_put(&path);
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-> +	error = nd_jump_link(&ns_path);
-> +	if (error)
-> +		path_put(&ns_path);
+[ Upstream commit ec0c0bb489727de0d4dca6a00be6970ab8a3b30a ]
 
-> +	error = nd_jump_link(&path);
-> +	if (error)
-> +		path_put(&path);
+Return an error when the function debug_register() fails allocating
+the debug handle.
+Also remove the registered debug handle when the initialization fails
+later on.
 
-3 calls.  Exact same boilerplate in each to handle a failure case.
-Which spells "wrong calling conventions"; it's absolutely clear
-that we want that path_put() inside nd_jump_link().
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/perf_cpum_sf.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-The rule should be this: reference that used to be held in
-*path is consumed in any case.  On success it goes into
-nd->path, on error it's just dropped, but in any case, the
-caller has the same refcounting environment to deal with.
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 44404836e9d11..df92c2af99b69 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -2045,14 +2045,17 @@ static int __init init_cpum_sampling_pmu(void)
+ 	}
+ 
+ 	sfdbg = debug_register(KMSG_COMPONENT, 2, 1, 80);
+-	if (!sfdbg)
++	if (!sfdbg) {
+ 		pr_err("Registering for s390dbf failed\n");
++		return -ENOMEM;
++	}
+ 	debug_register_view(sfdbg, &debug_sprintf_view);
+ 
+ 	err = register_external_irq(EXT_IRQ_MEASURE_ALERT,
+ 				    cpumf_measurement_alert);
+ 	if (err) {
+ 		pr_cpumsf_err(RS_INIT_FAILURE_ALRT);
++		debug_unregister(sfdbg);
+ 		goto out;
+ 	}
+ 
+@@ -2061,6 +2064,7 @@ static int __init init_cpum_sampling_pmu(void)
+ 		pr_cpumsf_err(RS_INIT_FAILURE_PERF);
+ 		unregister_external_irq(EXT_IRQ_MEASURE_ALERT,
+ 					cpumf_measurement_alert);
++		debug_unregister(sfdbg);
+ 		goto out;
+ 	}
+ 
+-- 
+2.20.1
 
-If you need the same boilerplate cleanup on failure again and again,
-the calling conventions are wrong and need to be fixed.
-
-And I'm not sure that int is the right return type here, to be honest.
-void * might be better - return ERR_PTR() or NULL, so that the value
-could be used as return value of ->get_link() that calls that thing.
