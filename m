@@ -2,171 +2,142 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 311C5102627
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Nov 2019 15:16:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A7A701027D7
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Nov 2019 16:16:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727351AbfKSOQe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Nov 2019 09:16:34 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46487 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725280AbfKSOQe (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Nov 2019 09:16:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574172993;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VC3V3Jxjtko1SYQH3MBBOMxUY3xpVbVtJKD+tE80Bi8=;
-        b=UKHM7JQ3Tjs+90CQXSKfP6fmeJDSGEooe1s+88zsz3LuWcTT+eCLxh7KUA2MoykHIVRB7S
-        hk6kUDQOf9eysJJEr+SsyKWk1ZcZpasWXdf5xYimiAaGPLIvQgdBpVPz66xA+5EZ5Rw2gs
-        J1uO98NUNxXAQYLlA4b4bpf6AIPUyTQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-106-9OzMB_CeNSaU2ssn_ay_0g-1; Tue, 19 Nov 2019 09:16:29 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 017E99A697;
-        Tue, 19 Nov 2019 14:16:27 +0000 (UTC)
-Received: from [10.36.117.126] (ovpn-117-126.ams2.redhat.com [10.36.117.126])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B33435E7A6;
-        Tue, 19 Nov 2019 14:16:23 +0000 (UTC)
-Subject: Re: [PATCH v6 04/10] mm/memory_hotplug: Don't access uninitialized
- memmaps in shrink_zone_span()
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>,
-        Toshiki Fukasawa <t-fukasawa@vx.jp.nec.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-5-david@redhat.com>
- <5a4573de-bd8a-6cd3-55d0-86d503a236fd@redhat.com>
- <20191014121719.cb9b9efe51a7e9e985b38075@linux-foundation.org>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <8bbbd4f1-e2c9-b654-ab73-aa4314135f21@redhat.com>
-Date:   Tue, 19 Nov 2019 15:16:22 +0100
+        id S1727682AbfKSPQe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Nov 2019 10:16:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17398 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726307AbfKSPQe (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 19 Nov 2019 10:16:34 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJF7x6X050964;
+        Tue, 19 Nov 2019 10:16:33 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf70k53k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Nov 2019 10:16:33 -0500
+Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xAJF82bp051293;
+        Tue, 19 Nov 2019 10:16:32 -0500
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf70k52j-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Nov 2019 10:16:32 -0500
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAJFGUJ7013161;
+        Tue, 19 Nov 2019 15:16:31 GMT
+Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
+        by ppma04wdc.us.ibm.com with ESMTP id 2wa8r6v61h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 19 Nov 2019 15:16:31 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAJFGURn46268814
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 15:16:30 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A8C88B2067;
+        Tue, 19 Nov 2019 15:16:30 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67B5CB2064;
+        Tue, 19 Nov 2019 15:16:30 +0000 (GMT)
+Received: from [9.80.210.113] (unknown [9.80.210.113])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Nov 2019 15:16:30 +0000 (GMT)
+Subject: Re: [RFC PATCH v1 03/10] vfio-ccw: Use subchannel lpm in the orb
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>
+References: <20191115025620.19593-1-farman@linux.ibm.com>
+ <20191115025620.19593-4-farman@linux.ibm.com>
+ <20191119140046.4b81edd8.cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <fa7f22e1-df44-4ad2-871a-23cd4feebc5e@linux.ibm.com>
+Date:   Tue, 19 Nov 2019 10:16:30 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191014121719.cb9b9efe51a7e9e985b38075@linux-foundation.org>
+In-Reply-To: <20191119140046.4b81edd8.cohuck@redhat.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: 9OzMB_CeNSaU2ssn_ay_0g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-19_04:2019-11-15,2019-11-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxlogscore=913 adultscore=0 bulkscore=0 mlxscore=0 suspectscore=0
+ impostorscore=0 clxscore=1015 spamscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911190139
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 14.10.19 21:17, Andrew Morton wrote:
-> On Mon, 14 Oct 2019 11:32:13 +0200 David Hildenbrand <david@redhat.com> w=
-rote:
->=20
->>> Fixes: d0dc12e86b31 ("mm/memory_hotplug: optimize memory hotplug")
+
+
+On 11/19/19 8:00 AM, Cornelia Huck wrote:
+> On Fri, 15 Nov 2019 03:56:13 +0100
+> Eric Farman <farman@linux.ibm.com> wrote:
+> 
+>> From: Farhan Ali <alifm@linux.ibm.com>
 >>
->> @Andrew, can you convert that to
+>> The subchannel logical path mask (lpm) would have the most
+>> up to date information of channel paths that are logically
+>> available for the subchannel.
 >>
->> Fixes: f1dd2cd13c4b ("mm, memory_hotplug: do not associate hotadded
->> memory to zones until online") # visible after d0dc12e86b319
+>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+>> ---
 >>
->> and add
+>> Notes:
+>>     v0->v1: [EF]
+>>      - None; however I am greatly confused by this one.  Thoughts?
+> 
+> I think it's actually wrong.
+> 
 >>
->> Cc: stable@vger.kernel.org # v4.13+
->=20
-> Done, thanks.
->=20
+>>  drivers/s390/cio/vfio_ccw_cp.c | 4 +---
+>>  1 file changed, 1 insertion(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/s390/cio/vfio_ccw_cp.c b/drivers/s390/cio/vfio_ccw_cp.c
+>> index 3645d1720c4b..d4a86fb9d162 100644
+>> --- a/drivers/s390/cio/vfio_ccw_cp.c
+>> +++ b/drivers/s390/cio/vfio_ccw_cp.c
+>> @@ -779,9 +779,7 @@ union orb *cp_get_orb(struct channel_program *cp, u32 intparm, u8 lpm)
+>>  	orb->cmd.intparm = intparm;
+>>  	orb->cmd.fmt = 1;
+>>  	orb->cmd.key = PAGE_DEFAULT_KEY >> 4;
+>> -
+>> -	if (orb->cmd.lpm == 0)
+>> -		orb->cmd.lpm = lpm;
+> 
+> In the end, the old code will use the lpm from the subchannel
+> structure, if userspace did not supply anything to be used.
+> 
+>> +	orb->cmd.lpm = lpm;
+> 
+> The new code will always discard any lpm userspace has supplied and
+> replace it with the lpm from the subchannel structure. This feels
+> wrong; what if the I/O is supposed to be restricted to a subset of the
+> paths?
 
-Just a note that Toshiki reported a BUG (race between delayed
-initialization of ZONE_DEVICE memmaps without holding the memory
-hotplug lock and concurrent zone shrinking).
+I had the same opinion, but didn't want to flat-out discard it from his
+series without a second look.  :)
 
-https://lkml.org/lkml/2019/11/14/1040
+> 
+> If we want to include the current value of the subchannel lpm in the
+> requests, we probably want to AND the masks instead.
 
-"Iteration of create and destroy namespace causes the panic as below:
+Then we'd be on the hook to return some sort of error if the result is
+zero.  Is it better to just send it to hw as-is, and let the response
+come back naturally?  (Which is what we do today.)
 
-[   41.207694] kernel BUG at mm/page_alloc.c:535!
-[   41.208109] invalid opcode: 0000 [#1] SMP PTI
-[   41.208508] CPU: 7 PID: 2766 Comm: ndctl Not tainted 5.4.0-rc4 #6
-[   41.209064] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS =
-rel-1.11.0-0-g63451fca13-prebuilt.qemu-project.org 04/01/2014
-[   41.210175] RIP: 0010:set_pfnblock_flags_mask+0x95/0xf0
-[   41.210643] Code: 04 41 83 e2 3c 48 8d 04 a8 48 c1 e0 07 48 03 04 dd e0 =
-59 55 bb 48 8b 58 68 48 39 da 73 0e 48 c7 c6 70 ac 11 bb e8 1b b2 fd ff <0f=
-> 0b 48 03 58 78 48 39 da 73 e9 49 01 ca b9 3f 00 00 00 4f 8d 0c
-[   41.212354] RSP: 0018:ffffac0d41557c80 EFLAGS: 00010246
-[   41.212821] RAX: 000000000000004a RBX: 0000000000244a00 RCX: 00000000000=
-00000
-[   41.213459] RDX: 0000000000000000 RSI: 0000000000000000 RDI: ffffffffbb1=
-197dc
-[   41.214100] RBP: 000000000000000c R08: 0000000000000439 R09: 00000000000=
-00059
-[   41.214736] R10: 0000000000000000 R11: ffffac0d41557b08 R12: ffff8be475e=
-a72b0
-[   41.215376] R13: 000000000000fa00 R14: 0000000000250000 R15: 00000000fff=
-c0bb5
-[   41.216008] FS:  00007f30862ab600(0000) GS:ffff8be57bc40000(0000) knlGS:=
-0000000000000000
-[   41.216771] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   41.217299] CR2: 000055e824d0d508 CR3: 0000000231dac000 CR4: 00000000000=
-006e0
-[   41.217934] Call Trace:
-[   41.218225]  memmap_init_zone_device+0x165/0x17c
-[   41.218642]  memremap_pages+0x4c1/0x540
-[   41.218989]  devm_memremap_pages+0x1d/0x60
-[   41.219367]  pmem_attach_disk+0x16b/0x600 [nd_pmem]
-[   41.219804]  ? devm_nsio_enable+0xb8/0xe0
-[   41.220172]  nvdimm_bus_probe+0x69/0x1c0
-[   41.220526]  really_probe+0x1c2/0x3e0
-[   41.220856]  driver_probe_device+0xb4/0x100
-[   41.221238]  device_driver_attach+0x4f/0x60
-[   41.221611]  bind_store+0xc9/0x110
-[   41.221919]  kernfs_fop_write+0x116/0x190
-[   41.222326]  vfs_write+0xa5/0x1a0
-[   41.222626]  ksys_write+0x59/0xd0
-[   41.222927]  do_syscall_64+0x5b/0x180
-[   41.223264]  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-[   41.223714] RIP: 0033:0x7f30865d0ed8
-[   41.224037] Code: 89 02 48 c7 c0 ff ff ff ff eb b3 0f 1f 80 00 00 00 00 =
-f3 0f 1e fa 48 8d 05 45 78 0d 00 8b 00 85 c0 75 17 b8 01 00 00 00 0f 05 <48=
-> 3d 00 f0 ff ff 77 58 c3 0f 1f 80 00 00 00 00 41 54 49 89 d4 55
-[   41.225920] RSP: 002b:00007fffe5d30a78 EFLAGS: 00000246 ORIG_RAX: 000000=
-0000000001
-[   41.226608] RAX: ffffffffffffffda RBX: 000055e824d07f40 RCX: 00007f30865=
-d0ed8
-[   41.227242] RDX: 0000000000000007 RSI: 000055e824d07f40 RDI: 00000000000=
-00004
-[   41.227870] RBP: 0000000000000007 R08: 0000000000000007 R09: 00000000000=
-00006
-[   41.228753] R10: 0000000000000000 R11: 0000000000000246 R12: 00000000000=
-00004
-[   41.229419] R13: 00007f30862ab528 R14: 0000000000000001 R15: 000055e824d=
-07f40
-
-While creating a namespace and initializing memmap, if you destroy the name=
-space
-and shrink the zone, it will initialize the memmap outside the zone and
-trigger VM_BUG_ON_PAGE(!zone_spans_pfn(page_zone(page), pfn), page) in
-set_pfnblock_flags_mask()."
-
-
-This BUG is also mitigated by this commit, where we for now stop to
-shrink the ZONE_DEVICE zone until we can do it in a safe and clean
-way.
-
---=20
-
-Thanks,
-
-David / dhildenb
-
+> 
+>>  
+>>  	chain = list_first_entry(&cp->ccwchain_list, struct ccwchain, next);
+>>  	cpa = chain->ch_ccw;
+> 
