@@ -2,54 +2,54 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 934D9102342
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Nov 2019 12:37:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 54BA4102370
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Nov 2019 12:41:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727856AbfKSLgc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Nov 2019 06:36:32 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:4086 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726351AbfKSLgb (ORCPT
+        id S1727831AbfKSLkL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Nov 2019 06:40:11 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40936 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726000AbfKSLkL (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 19 Nov 2019 06:36:31 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJBWrq4111124
-        for <linux-s390@vger.kernel.org>; Tue, 19 Nov 2019 06:36:30 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf579n3n-1
+        Tue, 19 Nov 2019 06:40:11 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJBWufJ076823
+        for <linux-s390@vger.kernel.org>; Tue, 19 Nov 2019 06:40:10 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf5p1j23-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 19 Nov 2019 06:36:30 -0500
+        for <linux-s390@vger.kernel.org>; Tue, 19 Nov 2019 06:40:09 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Tue, 19 Nov 2019 11:36:29 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 19 Nov 2019 11:40:07 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 19 Nov 2019 11:36:26 -0000
+        Tue, 19 Nov 2019 11:40:05 -0000
 Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAJBaPsq44106170
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAJBdQYI10682774
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 19 Nov 2019 11:36:25 GMT
+        Tue, 19 Nov 2019 11:39:26 GMT
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EDA3411C054;
-        Tue, 19 Nov 2019 11:36:24 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9291F11C052;
+        Tue, 19 Nov 2019 11:40:03 +0000 (GMT)
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 938A311C04A;
-        Tue, 19 Nov 2019 11:36:24 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 299DD11C05B;
+        Tue, 19 Nov 2019 11:40:03 +0000 (GMT)
 Received: from dyn-9-152-224-153.boeblingen.de.ibm.com (unknown [9.152.224.153])
         by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 19 Nov 2019 11:36:24 +0000 (GMT)
-Subject: Re: [RFC 23/37] KVM: s390: protvirt: Make sure prefix is always
- protected
-To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
-        borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, cohuck@redhat.com,
-        gor@linux.ibm.com
+        Tue, 19 Nov 2019 11:40:03 +0000 (GMT)
+Subject: Re: [RFC 36/37] KVM: s390: protvirt: Support cmd 5 operation state
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
+        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
+        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
 References: <20191024114059.102802-1-frankja@linux.ibm.com>
- <20191024114059.102802-24-frankja@linux.ibm.com>
- <ded0154c-a9b4-4419-14c8-a34095494d82@redhat.com>
+ <20191024114059.102802-37-frankja@linux.ibm.com>
+ <20191118183842.36688a81.cohuck@redhat.com>
+ <44b320d8-604d-8497-59a3-defc41472ba5@linux.ibm.com>
+ <20191119112316.0a421a01.cohuck@redhat.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -93,25 +93,25 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Date:   Tue, 19 Nov 2019 12:36:24 +0100
+Date:   Tue, 19 Nov 2019 12:40:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <ded0154c-a9b4-4419-14c8-a34095494d82@redhat.com>
+In-Reply-To: <20191119112316.0a421a01.cohuck@redhat.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="r96P6bmXUHkwtLw6Y9aFNZgIB8pjwkINf"
+ boundary="MBoE7p07IwHjDCn1yoh2tOEJDbN921Wpa"
 X-TM-AS-GCONF: 00
-x-cbid: 19111911-0008-0000-0000-000003335DB5
+x-cbid: 19111911-0012-0000-0000-00000367FDDA
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19111911-0009-0000-0000-00004A527C09
-Message-Id: <ab65cb14-e9b1-aced-9068-11d2ca566093@linux.ibm.com>
+x-cbparentid: 19111911-0013-0000-0000-000021A38790
+Message-Id: <b9d931c1-c397-ad59-31ef-2dc24a37d472@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-11-19_03:2019-11-15,2019-11-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=905
- suspectscore=3 adultscore=0 clxscore=1015 phishscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
+ mlxscore=0 malwarescore=0 suspectscore=3 priorityscore=1501
+ lowpriorityscore=0 mlxlogscore=999 clxscore=1015 impostorscore=0
+ spamscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-1910280000 definitions=main-1911190109
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
@@ -119,77 +119,150 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---r96P6bmXUHkwtLw6Y9aFNZgIB8pjwkINf
-Content-Type: multipart/mixed; boundary="2g65zlWkLNPx2YehiJq15LI9IfSdpeiDQ"
+--MBoE7p07IwHjDCn1yoh2tOEJDbN921Wpa
+Content-Type: multipart/mixed; boundary="PqRqh7TBYp86qHVFwckupNP7kyoj6NkGY"
 
---2g65zlWkLNPx2YehiJq15LI9IfSdpeiDQ
-Content-Type: text/plain; charset=utf-8
+--PqRqh7TBYp86qHVFwckupNP7kyoj6NkGY
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 11/19/19 11:18 AM, David Hildenbrand wrote:
-> On 24.10.19 13:40, Janosch Frank wrote:
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> ---
->>   arch/s390/kvm/kvm-s390.c | 9 +++++++++
->>   1 file changed, 9 insertions(+)
+On 11/19/19 11:23 AM, Cornelia Huck wrote:
+> On Tue, 19 Nov 2019 09:13:11 +0100
+> Janosch Frank <frankja@linux.ibm.com> wrote:
+>=20
+>> On 11/18/19 6:38 PM, Cornelia Huck wrote:
+>>> On Thu, 24 Oct 2019 07:40:58 -0400
+>>> Janosch Frank <frankja@linux.ibm.com> wrote:
+>>>  =20
+>>>> Code 5 for the set cpu state UV call tells the UV to load a PSW from=
+
+>>>> the SE header (first IPL) or from guest location 0x0 (diag 308 subco=
+de
+>>>> 0/1). Also it sets the cpu into operating state afterwards, so we ca=
+n
+>>>> start it. =20
+>>>
+>>> I'm a bit confused by the patch description: Does this mean that the =
+UV
+>>> does the transition to operating state? Does the hypervisor get a
+>>> notification for that? =20
 >>
->> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->> index eddc9508c1b1..17a78774c617 100644
->> --- a/arch/s390/kvm/kvm-s390.c
->> +++ b/arch/s390/kvm/kvm-s390.c
->> @@ -3646,6 +3646,15 @@ static int kvm_s390_handle_requests(struct kvm_=
-vcpu *vcpu)
->>   		rc =3D gmap_mprotect_notify(vcpu->arch.gmap,
->>   					  kvm_s390_get_prefix(vcpu),
->>   					  PAGE_SIZE * 2, PROT_WRITE);
->> +		if (!rc && kvm_s390_pv_is_protected(vcpu->kvm)) {
->> +			rc =3D uv_convert_to_secure(vcpu->arch.gmap,
->> +						  kvm_s390_get_prefix(vcpu));
->> +			WARN_ON_ONCE(rc && rc !=3D -EEXIST);
->> +			rc =3D uv_convert_to_secure(vcpu->arch.gmap,
->> +						  kvm_s390_get_prefix(vcpu) + PAGE_SIZE);
->> +			WARN_ON_ONCE(rc && rc !=3D -EEXIST);
->> +			rc =3D 0;
->> +		}
->=20
-> ... what if userspace reads the prefix pages just after these calls?=20
-> validity? :/
+>> CMD 5 is defined as "load psw and set to operating".
+>> Currently QEMU will still go out and do a "set to operating" after the=
 
-Currently yes, we're working with firmware to fix this.
+>> cmd 5 because our current infrastructure does it and it's basically a
+>> nop, so I didn't want to put in the effort to remove it.
+>=20
+> So, the "it" setting the cpu into operating state is QEMU, via the
+> mpstate interface, which triggers that call? Or is that implicit, but
+> it does not hurt to do it again (which would make more sense to me)?
+
+Qemu sets operating state via mpstate.
+I could fence that via env->pv checks but that would also mean more code
+and setting operating twice is just a nop.
 
 >=20
->>   		if (rc) {
->>   			kvm_make_request(KVM_REQ_MMU_RELOAD, vcpu);
->>   			return rc;
+> Assuming the latter, what about the following description:
+>=20
+> "KVM: s390: protvirt: support setting cpu state 5
+>=20
+> Setting code 5 ("load psw and set to operating") in the set cpu state
+> UV call tells the UV to load a PSW either from the SE header (first
+> IPL) or from guest location 0x0 (diag 308 subcode 0/1). Subsequently,
+> the cpu is set into operating state by the UV.
+>=20
+> Note that we can still instruct the UV to set the cpu into operating
+> state explicitly afterwards."
+
+Sounds good
+
+>=20
+>>
+>>>  =20
+>>>>
+>>>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>>>> ---
+>>>>  arch/s390/include/asm/uv.h | 1 +
+>>>>  arch/s390/kvm/kvm-s390.c   | 4 ++++
+>>>>  include/uapi/linux/kvm.h   | 1 +
+>>>>  3 files changed, 6 insertions(+)
+>>>>
+>>>> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h=
+
+>>>> index 33b52ba306af..8d10ae731458 100644
+>>>> --- a/arch/s390/include/asm/uv.h
+>>>> +++ b/arch/s390/include/asm/uv.h
+>>>> @@ -163,6 +163,7 @@ struct uv_cb_unp {
+>>>>  #define PV_CPU_STATE_OPR	1
+>>>>  #define PV_CPU_STATE_STP	2
+>>>>  #define PV_CPU_STATE_CHKSTP	3
+>>>> +#define PV_CPU_STATE_OPR_LOAD	5
+>>>> =20
+>>>>  struct uv_cb_cpu_set_state {
+>>>>  	struct uv_cb_header header;
+>>>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>>>> index cc5feb67f145..5cc9108c94e4 100644
+>>>> --- a/arch/s390/kvm/kvm-s390.c
+>>>> +++ b/arch/s390/kvm/kvm-s390.c
+>>>> @@ -4652,6 +4652,10 @@ static int kvm_s390_handle_pv_vcpu(struct kvm=
+_vcpu *vcpu,
+>>>>  		r =3D kvm_s390_pv_destroy_cpu(vcpu);
+>>>>  		break;
+>>>>  	}
+>>>> +	case KVM_PV_VCPU_SET_IPL_PSW: {
+>>>> +		r =3D kvm_s390_pv_set_cpu_state(vcpu, PV_CPU_STATE_OPR_LOAD);
+>=20
+> Also maybe add a comment here that setting into oper state (again) can
+> be done separately?
+>=20
+>>>> +		break;
+>>>> +	}
+>>>>  	default:
+>>>>  		r =3D -ENOTTY;
+>>>>  	}
+>>>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>>>> index 2846ed5e5dd9..973007d27d55 100644
+>>>> --- a/include/uapi/linux/kvm.h
+>>>> +++ b/include/uapi/linux/kvm.h
+>>>> @@ -1483,6 +1483,7 @@ enum pv_cmd_id {
+>>>>  	KVM_PV_VM_UNSHARE,
+>>>>  	KVM_PV_VCPU_CREATE,
+>>>>  	KVM_PV_VCPU_DESTROY,
+>>>> +	KVM_PV_VCPU_SET_IPL_PSW,
+>>>>  };
+>>>> =20
+>>>>  struct kvm_pv_cmd { =20
+>>>  =20
+>>
 >>
 >=20
 
 
 
---2g65zlWkLNPx2YehiJq15LI9IfSdpeiDQ--
+--PqRqh7TBYp86qHVFwckupNP7kyoj6NkGY--
 
---r96P6bmXUHkwtLw6Y9aFNZgIB8pjwkINf
+--MBoE7p07IwHjDCn1yoh2tOEJDbN921Wpa
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl3T07gACgkQ41TmuOI4
-ufiZZw/+KG8Ugl2/ARQI9jsKFfVRqwX3Q5DmxTBDiyuGO0UWlJTe6RiaLS3hTRjL
-tWbE+LvD1U1gjXQtc4VgedVfJL8nYIzNwHU93iEXqYIHSHbWIaiRwTNLDa6OPu0A
-ikPRUHHOS9uL8mD+KdYKUlp9+22NUuQ8D1VRVoaQtP+G2pzERXRKY03VNrd7LbDJ
-3ojJFVDOSwMKTbKiSbMrqGLvwFONQ1EGYO6TsBbO4hu1z/xcNG8qXQtBrQXedP07
-AhbEhlvUHltf426Tqt4R4Si9cgkbtyTG6Cf+yI098FAEfm9sRqBgq0Lfu7EehJ8c
-mz5AiNsK0dancuLafFDbQA70f35eTuoWSTh1rhYyiSCgBzCCAuXJkDyHSad1T5Jp
-OOxyqwuwbEtuauzrWhYUzgpuQ6vR9RoDzDld1Oe0EYkfelu+w9TkfgAYZae688AA
-Sk+l14Sj4ohBbX40mhReTBc2yDb/AK49wnBflgnOY8iiNk/YHYkJ46S6iCsJU5hL
-cioA/FHIiK0FRWq/vfvWT7DgDzkizFioom4iYbWETdj+T7+ECJNFI5epICIzloHW
-zfYZ3jEUPo09HMkFepa06S0Kx8Ys4gaeqEFo1GeP5a96LHB/3RHmHVJ2D3wR0F9w
-vljIbd6xo1BSRwaIXd5ohl9ryS1yUzSG048mIyVR4PsugVhmS6Y=
-=VII4
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl3T1JIACgkQ41TmuOI4
+ufgb+w/+O1S2/CILwR0MSsvfDWcyhYRGRWDFN/FBupiD2giKXJ/Q9nQZeOOqtvhe
+g3aeMBJ7NdMwsTn4b3nZFvPPkgQnDuAgKoq0724CNCRxEPSqR3hmbwab51Q7DC9U
+RE62I7wWo7qzY5pBgWJ0x08KybmslCstOAANjZZkZQDTkgZlmYQ2/MCH8WMFqvrj
+7royXTKgmnRwfvBUK7hKHXU4jJFRfMsH+a2JJXv8xu3qH9VW769qQbu66zCmehYK
+E0u3jOCh18Zcb4iXmtgliT+wr4mljaENiMxJ1f3GY0iyDZaAHLwmAsC2j1piZI/C
+xJSRX9e25j2dlz7IRsWzZvOZFpv0kp57SBj0cmKgIUVvC0Tw6MvuEaqg5cnJuRYV
+gYgB4vA+9VVqrwpxY36+0iOlkzTpKj4Ue5IuOJhsU8yyJblvqcbUpHNlsulWtiQH
+jSlP+xX+43FacT7HCYfnbB5rn+hxCJXh3LVOBAG9MkVju1qw+aJNI9CGR4CvZkcl
+gQ4sFV8inoA9/UuzLeahOMCQDpt7u142/NpEwns539qD3WUo1cip5Eir3H5ErJg5
+TaQXMlwChiQAWDwG23z4k2ad9QFMRDu7KqsaAjbvcdewtcyIaG1gYSg9v4DKpTdJ
+K1ivtD1QFy4mJ4bQDEHf3i3uUJqZcJjF//VhACDZx62aoRGCAJA=
+=ASdO
 -----END PGP SIGNATURE-----
 
---r96P6bmXUHkwtLw6Y9aFNZgIB8pjwkINf--
+--MBoE7p07IwHjDCn1yoh2tOEJDbN921Wpa--
 
