@@ -2,180 +2,144 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94B97102207
-	for <lists+linux-s390@lfdr.de>; Tue, 19 Nov 2019 11:23:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AEDB21022A7
+	for <lists+linux-s390@lfdr.de>; Tue, 19 Nov 2019 12:10:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726590AbfKSKXm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 19 Nov 2019 05:23:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22854 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725798AbfKSKXm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 19 Nov 2019 05:23:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574159020;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=6gLPt/JvxqVhsN2FUc2s1UUTeSB3OZ8a9bEL1y+5hKE=;
-        b=S1lM167gDPA1t9ea1G3A3JHUxOazEiW9DmSZg3axLc7qs20iSk3VZ4u4Tup+hezLY+P1se
-        vzU91hcXhs45ShijLYXFT9w/LovM5rSANUz3wnRCWSZQvIGTqG7qqnn1+ZAfArLA6tpLGG
-        VuG6OuuzElHIy9ObhD/HzF4RYRhEwgc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-241-3TDrG765O4yFekYnMqNZpg-1; Tue, 19 Nov 2019 05:23:37 -0500
-X-MC-Unique: 3TDrG765O4yFekYnMqNZpg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 10A1D477;
-        Tue, 19 Nov 2019 10:23:36 +0000 (UTC)
-Received: from gondolin (ovpn-117-102.ams2.redhat.com [10.36.117.102])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D9421B425;
-        Tue, 19 Nov 2019 10:23:28 +0000 (UTC)
-Date:   Tue, 19 Nov 2019 11:23:16 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, thuth@redhat.com,
-        david@redhat.com, borntraeger@de.ibm.com, imbrenda@linux.ibm.com,
-        mihajlov@linux.ibm.com, mimu@linux.ibm.com, gor@linux.ibm.com
-Subject: Re: [RFC 36/37] KVM: s390: protvirt: Support cmd 5 operation state
-Message-ID: <20191119112316.0a421a01.cohuck@redhat.com>
-In-Reply-To: <44b320d8-604d-8497-59a3-defc41472ba5@linux.ibm.com>
-References: <20191024114059.102802-1-frankja@linux.ibm.com>
-        <20191024114059.102802-37-frankja@linux.ibm.com>
-        <20191118183842.36688a81.cohuck@redhat.com>
-        <44b320d8-604d-8497-59a3-defc41472ba5@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1727698AbfKSLKd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 19 Nov 2019 06:10:33 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41812 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725904AbfKSLKc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 19 Nov 2019 06:10:32 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAJB85DU058966
+        for <linux-s390@vger.kernel.org>; Tue, 19 Nov 2019 06:10:31 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wcf5m8hwe-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 19 Nov 2019 06:10:31 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Tue, 19 Nov 2019 11:10:29 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 19 Nov 2019 11:10:25 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAJBAOfh45744278
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 19 Nov 2019 11:10:24 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A019DAE06C;
+        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 39272AE061;
+        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.42])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 19 Nov 2019 11:10:23 +0000 (GMT)
+Date:   Tue, 19 Nov 2019 12:10:22 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org
+Cc:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
+In-Reply-To: <20191114124646.74790-1-pasic@linux.ibm.com>
+References: <20191114124646.74790-1-pasic@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; boundary="Sig_/426suMwb8hy2eZjpANtTcZe";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19111911-0012-0000-0000-00000367F12E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19111911-0013-0000-0000-000021A37ACA
+Message-Id: <20191119121022.03aed69a.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-19_03:2019-11-15,2019-11-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ suspectscore=0 malwarescore=0 mlxlogscore=999 phishscore=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 mlxscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911190105
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/426suMwb8hy2eZjpANtTcZe
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+ping
 
-On Tue, 19 Nov 2019 09:13:11 +0100
-Janosch Frank <frankja@linux.ibm.com> wrote:
+On Thu, 14 Nov 2019 13:46:46 +0100
+Halil Pasic <pasic@linux.ibm.com> wrote:
 
-> On 11/18/19 6:38 PM, Cornelia Huck wrote:
-> > On Thu, 24 Oct 2019 07:40:58 -0400
-> > Janosch Frank <frankja@linux.ibm.com> wrote:
-> >  =20
-> >> Code 5 for the set cpu state UV call tells the UV to load a PSW from
-> >> the SE header (first IPL) or from guest location 0x0 (diag 308 subcode
-> >> 0/1). Also it sets the cpu into operating state afterwards, so we can
-> >> start it. =20
-> >=20
-> > I'm a bit confused by the patch description: Does this mean that the UV
-> > does the transition to operating state? Does the hypervisor get a
-> > notification for that? =20
->=20
-> CMD 5 is defined as "load psw and set to operating".
-> Currently QEMU will still go out and do a "set to operating" after the
-> cmd 5 because our current infrastructure does it and it's basically a
-> nop, so I didn't want to put in the effort to remove it.
-
-So, the "it" setting the cpu into operating state is QEMU, via the
-mpstate interface, which triggers that call? Or is that implicit, but
-it does not hurt to do it again (which would make more sense to me)?
-
-Assuming the latter, what about the following description:
-
-"KVM: s390: protvirt: support setting cpu state 5
-
-Setting code 5 ("load psw and set to operating") in the set cpu state
-UV call tells the UV to load a PSW either from the SE header (first
-IPL) or from guest location 0x0 (diag 308 subcode 0/1). Subsequently,
-the cpu is set into operating state by the UV.
-
-Note that we can still instruct the UV to set the cpu into operating
-state explicitly afterwards."
-
->=20
-> >  =20
-> >>
-> >> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> >> ---
-> >>  arch/s390/include/asm/uv.h | 1 +
-> >>  arch/s390/kvm/kvm-s390.c   | 4 ++++
-> >>  include/uapi/linux/kvm.h   | 1 +
-> >>  3 files changed, 6 insertions(+)
-> >>
-> >> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
-> >> index 33b52ba306af..8d10ae731458 100644
-> >> --- a/arch/s390/include/asm/uv.h
-> >> +++ b/arch/s390/include/asm/uv.h
-> >> @@ -163,6 +163,7 @@ struct uv_cb_unp {
-> >>  #define PV_CPU_STATE_OPR=091
-> >>  #define PV_CPU_STATE_STP=092
-> >>  #define PV_CPU_STATE_CHKSTP=093
-> >> +#define PV_CPU_STATE_OPR_LOAD=095
-> >> =20
-> >>  struct uv_cb_cpu_set_state {
-> >>  =09struct uv_cb_header header;
-> >> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> >> index cc5feb67f145..5cc9108c94e4 100644
-> >> --- a/arch/s390/kvm/kvm-s390.c
-> >> +++ b/arch/s390/kvm/kvm-s390.c
-> >> @@ -4652,6 +4652,10 @@ static int kvm_s390_handle_pv_vcpu(struct kvm_v=
-cpu *vcpu,
-> >>  =09=09r =3D kvm_s390_pv_destroy_cpu(vcpu);
-> >>  =09=09break;
-> >>  =09}
-> >> +=09case KVM_PV_VCPU_SET_IPL_PSW: {
-> >> +=09=09r =3D kvm_s390_pv_set_cpu_state(vcpu, PV_CPU_STATE_OPR_LOAD);
-
-Also maybe add a comment here that setting into oper state (again) can
-be done separately?
-
-> >> +=09=09break;
-> >> +=09}
-> >>  =09default:
-> >>  =09=09r =3D -ENOTTY;
-> >>  =09}
-> >> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> >> index 2846ed5e5dd9..973007d27d55 100644
-> >> --- a/include/uapi/linux/kvm.h
-> >> +++ b/include/uapi/linux/kvm.h
-> >> @@ -1483,6 +1483,7 @@ enum pv_cmd_id {
-> >>  =09KVM_PV_VM_UNSHARE,
-> >>  =09KVM_PV_VCPU_CREATE,
-> >>  =09KVM_PV_VCPU_DESTROY,
-> >> +=09KVM_PV_VCPU_SET_IPL_PSW,
-> >>  };
-> >> =20
-> >>  struct kvm_pv_cmd { =20
-> >  =20
->=20
->=20
-
-
---Sig_/426suMwb8hy2eZjpANtTcZe
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl3TwpQACgkQ3s9rk8bw
-L69hRQ/+IkXC55f5pKzsG5NQp7SL8hfIM4pfshIIq3fwfCO00Z/pB6YQJeckXXwr
-rpCbP7jJvAj3Mc7ZkTj4k41ekeol3Tvga9Oo8JBGWnxFFrlBEYs8P5Ee1qQNGhnE
-gb8+52B9CNwm0m2W5M61+8p/65I66EwiK5sksNnmsSYMSbCb6Za5/+q2xF8CdW6a
-2rTNXFvLxJ462N6BgLBC81euXEuJRdoK70YRK8ZUcXnpl/wDk3p9UhTnUUI21KxS
-ebwOGrpGfYaGXbQmMATIQiPDkQbnJl0SUpDrCPnod9hEHVt4gkCypjHIdMb8eX5a
-nlrbXKF8IAn1jKhhUdfbaJz3FEIRYs1Q4pY+Zt/pkPuzP3/GoA8FYetALc1oF2e+
-6Gi25JkqH4cvLfIc5x2ReJB657UzQsxO5mx4+KRmcA5LmqE/e7nBpjcObLrSdhf3
-XRtNCW1bMDrByN+FnE1Um36/dN5w44YlHF50b4MLbGMUmyePnkKCpCzCU/AV6TGO
-leVSB8txfwD+fVJH9s/dn9dqziFHXqtcLRx9ZlK8pUcKcErVgX3PHQ5iZTtpxWr1
-fKQNk5rD+d0PXE6qaSm9DvFvbFIPk7fiPlvj+fCQJsqbhtMGJOMY2cvtDUY0lWdR
-GcPu1x4xdbNNKKWb9RFWoYTioIHhMM6nx2xTp7w+fZc9XLeaRKs=
-=e9K4
------END PGP SIGNATURE-----
-
---Sig_/426suMwb8hy2eZjpANtTcZe--
+> Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
+> virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
+> a very realistic scenario for guests with encrypted memory, as swiotlb
+> may run out of space, depending on it's size and the I/O load.
+> 
+> The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
+> error, despite the fact that swiotlb full is in absence of bugs a
+> recoverable condition.
+> 
+> Let us change the return code to -ENOMEM, and make the block layer
+> recover form these failures when virtio-blk encounters the condition
+> described above.
+> 
+> Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Tested-by: Michael Mueller <mimu@linux.ibm.com>
+> ---
+> 
+> Notes
+> =====
+> 
+> * When out of descriptors (which might regarded as a similar out of
+> resources condition) virtio uses -ENOSPC, this however seems wrong,
+> as ENOSPC is defined as -ENOSPC. Thus I choose -ENOMEM over -ENOSPC.
+> 
+> * In virtio_queue_rq() in virtio_blk.c both -ENOMEM and -ENOSPC are
+> handled as BLK_STS_DEV_RESOURCE. Returning BLK_STS_RESOURCE however
+> seems more appropriate for dma mapping failed as we are talking about
+> a global, and not a device local resource. Both seem to do the trick.
+> 
+> * Mimu tested the patch with virtio-blk and virtio-net (thanks!). We
+> should look into how other virtio devices behave when DMA mapping fails.
+> ---
+>  drivers/virtio/virtio_ring.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> index a8041e451e9e..867c7ebd3f10 100644
+> --- a/drivers/virtio/virtio_ring.c
+> +++ b/drivers/virtio/virtio_ring.c
+> @@ -583,7 +583,7 @@ static inline int virtqueue_add_split(struct virtqueue *_vq,
+>  		kfree(desc);
+>  
+>  	END_USE(vq);
+> -	return -EIO;
+> +	return -ENOMEM;
+>  }
+>  
+>  static bool virtqueue_kick_prepare_split(struct virtqueue *_vq)
+> @@ -1085,7 +1085,7 @@ static int virtqueue_add_indirect_packed(struct vring_virtqueue *vq,
+>  	kfree(desc);
+>  
+>  	END_USE(vq);
+> -	return -EIO;
+> +	return -ENOMEM;
+>  }
+>  
+>  static inline int virtqueue_add_packed(struct virtqueue *_vq,
 
