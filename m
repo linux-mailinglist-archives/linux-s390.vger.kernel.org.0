@@ -2,147 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F521104151
-	for <lists+linux-s390@lfdr.de>; Wed, 20 Nov 2019 17:49:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB24B104318
+	for <lists+linux-s390@lfdr.de>; Wed, 20 Nov 2019 19:16:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbfKTQtu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Nov 2019 11:49:50 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9050 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729484AbfKTQtt (ORCPT
+        id S1727468AbfKTSQP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 20 Nov 2019 13:16:15 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45658 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727656AbfKTSQP (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 20 Nov 2019 11:49:49 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAKGcU9W040612;
-        Wed, 20 Nov 2019 11:49:48 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf5991t5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Nov 2019 11:49:48 -0500
-Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xAKGcZHU041236;
-        Wed, 20 Nov 2019 11:49:47 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf5991sy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Nov 2019 11:49:47 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xAKGjMsX011087;
-        Wed, 20 Nov 2019 16:49:47 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03wdc.us.ibm.com with ESMTP id 2wa8r6pfv4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 20 Nov 2019 16:49:47 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAKGnktp37224794
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 20 Nov 2019 16:49:46 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE2CAB2065;
-        Wed, 20 Nov 2019 16:49:46 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AA3CB2066;
-        Wed, 20 Nov 2019 16:49:46 +0000 (GMT)
-Received: from [9.60.89.236] (unknown [9.60.89.236])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 20 Nov 2019 16:49:46 +0000 (GMT)
-Subject: Re: [RFC PATCH v1 05/10] vfio-ccw: Introduce a new schib region
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>
-References: <20191115025620.19593-1-farman@linux.ibm.com>
- <20191115025620.19593-6-farman@linux.ibm.com>
- <20191119175253.3e688369.cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <97e27530-fed5-40df-0dc7-7b7adc219b96@linux.ibm.com>
-Date:   Wed, 20 Nov 2019 11:49:46 -0500
+        Wed, 20 Nov 2019 13:16:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574273773;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gYyBv5Rxp1Uje+USM1WcyGRNB3Xlzuqtk5xGVkD8gpY=;
+        b=Lyc+Q3eBZcxLVwIS8pM0SNHznJLZoOQAnyC7KIJjhWiRW/HPg6qynvMWjm9e77w0uJBP+Q
+        be2gdFMsc6TgdqBieadAlgZDax0WGH8SpU1RyOVKApGnjyfXyvFmXV8Prg2V+xNLiOP47k
+        kkedRO6oHjYyBvN7w1nTgQEzwFyH0Bk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-325-l6OFv6dKMxC7NNiu3rpBmw-1; Wed, 20 Nov 2019 13:16:10 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 35B37107ACE6;
+        Wed, 20 Nov 2019 18:16:09 +0000 (UTC)
+Received: from localhost.localdomain (ovpn-116-122.ams2.redhat.com [10.36.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E46DD5195F;
+        Wed, 20 Nov 2019 18:16:04 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v4 3/3] s390x: SCLP unit test
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com
+References: <1574157219-22052-1-git-send-email-imbrenda@linux.ibm.com>
+ <1574157219-22052-4-git-send-email-imbrenda@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Message-ID: <3ed24d20-9c77-7f18-203b-b28a38b5e07f@redhat.com>
+Date:   Wed, 20 Nov 2019 19:16:03 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191119175253.3e688369.cohuck@redhat.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <1574157219-22052-4-git-send-email-imbrenda@linux.ibm.com>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-20_04:2019-11-20,2019-11-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=646
- suspectscore=0 adultscore=0 clxscore=1015 phishscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911200143
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: l6OFv6dKMxC7NNiu3rpBmw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 19/11/2019 10.53, Claudio Imbrenda wrote:
+> SCLP unit test. Testing the following:
+>=20
+> * Correctly ignoring instruction bits that should be ignored
+> * Privileged instruction check
+> * Check for addressing exceptions
+> * Specification exceptions:
+>   - SCCB size less than 8
+>   - SCCB unaligned
+>   - SCCB overlaps prefix or lowcore
+>   - SCCB address higher than 2GB
+> * Return codes for
+>   - Invalid command
+>   - SCCB too short (but at least 8)
+>   - SCCB page boundary violation
+>=20
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> ---
+>  s390x/Makefile      |   1 +
+>  s390x/sclp.c        | 465 ++++++++++++++++++++++++++++++++++++++++++++++=
+++++++
+>  s390x/unittests.cfg |   3 +
+>  3 files changed, 469 insertions(+)
+>  create mode 100644 s390x/sclp.c
+[...]
+> +/**
+> + * Test SCCB page boundary violations.
+> + */
+> +static void test_boundary(void)
+> +{
+> +=09const uint32_t cmd =3D SCLP_CMD_WRITE_EVENT_DATA;
+> +=09const uint16_t res =3D SCLP_RC_SCCB_BOUNDARY_VIOLATION;
+> +=09WriteEventData *sccb =3D (WriteEventData *)sccb_template;
+> +=09int len, offset;
+> +
+> +=09memset(sccb_template, 0, sizeof(sccb_template));
+> +=09sccb->h.function_code =3D SCLP_FC_NORMAL_WRITE;
+> +=09for (len =3D 32; len <=3D 4096; len++) {
+> +=09=09offset =3D len & 7 ? len & ~7 : len - 8;
 
+I needed some time to understand that line. I think it would be easier
+that way:
 
-On 11/19/19 11:52 AM, Cornelia Huck wrote:
-> On Fri, 15 Nov 2019 03:56:15 +0100
-> Eric Farman <farman@linux.ibm.com> wrote:
-> 
->> From: Farhan Ali <alifm@linux.ibm.com>
->>
->> The schib region can be used by userspace to get the SCHIB for the
->> passthrough subchannel. This can be useful to get information such
->> as channel path information via the SCHIB.PMCW.
->>
->> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
->> Signed-off-by: Eric Farman <farman@linux.ibm.com>
->> ---
->>
->> Notes:
->>     v0->v1: [EF]
->>      - Clean up checkpatch (#include, whitespace) errors
->>      - Remove unnecessary includes from vfio_ccw_chp.c
->>      - Add ret=-ENOMEM in error path for new region
->>      - Add call to vfio_ccw_unregister_dev_regions() during error exit
->>        path of vfio_ccw_mdev_open()
->>      - New info on the module prologue
->>      - Reorder cleanup of regions
->>
->>  drivers/s390/cio/Makefile           |  2 +-
->>  drivers/s390/cio/vfio_ccw_chp.c     | 75 +++++++++++++++++++++++++++++
->>  drivers/s390/cio/vfio_ccw_drv.c     | 20 ++++++++
->>  drivers/s390/cio/vfio_ccw_ops.c     | 14 +++++-
->>  drivers/s390/cio/vfio_ccw_private.h |  3 ++
->>  include/uapi/linux/vfio.h           |  1 +
->>  include/uapi/linux/vfio_ccw.h       |  5 ++
->>  7 files changed, 117 insertions(+), 3 deletions(-)
->>  create mode 100644 drivers/s390/cio/vfio_ccw_chp.c
->>
-> 
->> diff --git a/include/uapi/linux/vfio_ccw.h b/include/uapi/linux/vfio_ccw.h
->> index cbecbf0cd54f..7c0a834e5d7a 100644
->> --- a/include/uapi/linux/vfio_ccw.h
->> +++ b/include/uapi/linux/vfio_ccw.h
->> @@ -34,4 +34,9 @@ struct ccw_cmd_region {
->>  	__u32 ret_code;
->>  } __packed;
->>
-> 
-> Let's add a comment:
-> - that reading this region triggers a stsch()
-> - that this region is guarded by a capability
-> 
-> ?
+=09=09offset =3D (len - 1) & ~7;
 
-Agreed, and ditto for patch 6.
+?
 
->   
->> +struct ccw_schib_region {
->> +#define SCHIB_AREA_SIZE 52
->> +	__u8 schib_area[SCHIB_AREA_SIZE];
->> +} __packed;
->> +
->>  #endif
-> 
-> Seems sane; but I need to continue reading this and the QEMU series to
-> see how it is used.
-> 
-> Oh, and please update Documentation/s390/vfio-ccw.rst :)
-> 
+Anyway, no need to respin just because of that line ... the rest of the
+patch looks ok to me.
 
-Whoops!  Yes, I'll do that here and in patch 6.
+> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
+> index f1b07cd..75e3d37 100644
+> --- a/s390x/unittests.cfg
+> +++ b/s390x/unittests.cfg
+> @@ -75,3 +75,6 @@ file =3D stsi.elf
+>  [smp]
+>  file =3D smp.elf
+>  extra_params =3D-smp 2
+> +
+> +[sclp]
+> +file =3D sclp.elf
+
+It's a little bit sad that some of the tests require < 2G of RAM while
+other tests should (also) be done with > 2G if I understood that
+correctly. So currently not all tests can be run automatically but just
+starting the "run_tests.sh" script, right?
+
+It does not have to be right now (i.e. could also be a follow-up patch
+later), but what about adding two sections to the unittests.cfg file,
+one with less and one with more than 2G of RAM? E.g.:
+
+[sclp-1g]
+file =3D sclp.elf
+extra_params =3D -m 1G
+
+[sclp-3g]
+file =3D sclp.elf
+extra_params =3D -m 3G -append "somemagicparametertoonlyrunthebigmemtest"
+
+?
+
+ Thomas
+
