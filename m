@@ -2,117 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A942C105255
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Nov 2019 13:36:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5FBEE105660
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Nov 2019 17:02:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726593AbfKUMgJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Nov 2019 07:36:09 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726230AbfKUMgJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 21 Nov 2019 07:36:09 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALCWBUw109697
-        for <linux-s390@vger.kernel.org>; Thu, 21 Nov 2019 07:36:08 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf73779n-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 21 Nov 2019 07:36:07 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <hoeppner@linux.ibm.com>;
-        Thu, 21 Nov 2019 12:36:05 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 21 Nov 2019 12:36:02 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xALCa1GP46268858
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 21 Nov 2019 12:36:01 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3EC744C050;
-        Thu, 21 Nov 2019 12:36:01 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DC98B4C058;
-        Thu, 21 Nov 2019 12:36:00 +0000 (GMT)
-Received: from [9.152.212.204] (unknown [9.152.212.204])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 21 Nov 2019 12:36:00 +0000 (GMT)
-Subject: Re: [PATCH] dasd_fba: Display '00000000' for zero page when dumping
- sense
-To:     Hannes Reinecke <hare@suse.de>
-Cc:     Stefan Haberland <sth@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
-        Hannes Reinecke <hare@suse.com>,
-        Sebastian Parschauer <sparschauer@suse.de>
-References: <20191118111226.56666-1-hare@suse.de>
-From:   =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>
-Date:   Thu, 21 Nov 2019 13:36:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1727020AbfKUQCu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Nov 2019 11:02:50 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39786 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726358AbfKUQCt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Nov 2019 11:02:49 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1574352168;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=a11re/ehZiEz1brS/g1soEqMUI57pKvAoVTakb9DkPc=;
+        b=TUQ0ZzT9NbZXSLhA9t6La2/t9xTxkwMHRAaq1zb+7dwi8JyzrgyK1uDK6UilJ51Reoyv3O
+        PKt5lSzzSCrC5aF7+Bcaj1lYrMvavx8h4Qp2LYY5bNpNV2naY8MI3Vsg1NMhjGmmjUg0it
+        H78K17cu9zUKydNJ4q3SMYRG9wkcDuI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-EoePcsGNNki38VNRGn8M6w-1; Thu, 21 Nov 2019 11:02:44 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DE0410509DF;
+        Thu, 21 Nov 2019 16:02:43 +0000 (UTC)
+Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ED48860148;
+        Thu, 21 Nov 2019 16:02:39 +0000 (UTC)
+Date:   Thu, 21 Nov 2019 17:02:37 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [PATCH v1 4/4] s390x: Testing the Subchannel I/O read
+Message-ID: <20191121170237.72e0bd45.cohuck@redhat.com>
+In-Reply-To: <802c298d-d2da-83c4-c222-67bb78131988@linux.ibm.com>
+References: <1573647799-30584-1-git-send-email-pmorel@linux.ibm.com>
+        <1573647799-30584-5-git-send-email-pmorel@linux.ibm.com>
+        <20191113140539.4d153d5f.cohuck@redhat.com>
+        <802c298d-d2da-83c4-c222-67bb78131988@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20191118111226.56666-1-hare@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112112-0008-0000-0000-00000335AFD2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112112-0009-0000-0000-00004A54D8D4
-Message-Id: <d329f133-6ed7-0389-2c7f-64c6bdc364c5@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 adultscore=0 bulkscore=0 mlxscore=0 suspectscore=0
- impostorscore=0 clxscore=1011 spamscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911210115
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: EoePcsGNNki38VNRGn8M6w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11/18/19 12:12 PM, Hannes Reinecke wrote:
-> When a discard I/O fails, dasd_fba_dump_sense() will crash as it
-> tries to print out the CCW, and failing to take into account that
-> for discard I/O we have only one data pointer, not one per sg.
-> As the data pointer will always point to the zero page this patch
-> replaces the data pointer output with '00000000' to avoid the crash.
-> 
-> Signed-off-by: Hannes Reinecke <hare@suse.com>
-> [sparschauer: replaced "ccw" with "act", "snprintf" with "sprintf"]
-> [sparschauer v2: added missing curly braces to for loops]
-> Signed-off-by: Sebastian Parschauer <sparschauer@suse.de>
-> ---
->  drivers/s390/block/dasd_fba.c | 21 ++++++++++++++++++---
->  1 file changed, 18 insertions(+), 3 deletions(-)
-> 
+On Thu, 14 Nov 2019 11:11:18 +0100
+Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-Hi Hannes,
+> On 2019-11-13 14:05, Cornelia Huck wrote:
+> > On Wed, 13 Nov 2019 13:23:19 +0100
+> > Pierre Morel <pmorel@linux.ibm.com> wrote:
+> > =20
+> >> This simple test test the I/O reading by the SUB Channel by:
+> >> - initializing the Channel SubSystem with predefined CSSID:
+> >>    0xfe000000 CSSID for a Virtual CCW =20
+> > 0 should be fine with recent QEMU versions as well, I guess? =20
+> Right
+>=20
+>=20
+> > =20
+> >>    0x00090000 SSID for CCW-PONG =20
+> > subchannel id, or subchannel set id? =20
+>=20
+> hum, only part of, I had SSID (Subchannel Set ID) 4 (a.k.a m bit) + Bit=
+=20
+> 47=C2=A0 =3D1
+>=20
+> But as you said, I can use CSSID 0 and m =3D 0 which makes:
+>=20
+> Subsystem Identification word =3D 0x00010000
 
-thanks for the patch. However,
+Yeah, I was mainly confused by the name 'SSID'.
 
-> diff --git a/drivers/s390/block/dasd_fba.c b/drivers/s390/block/dasd_fba.c
-> index cbb770824226..4b867bd6b164 100644
-> --- a/drivers/s390/block/dasd_fba.c
-> +++ b/drivers/s390/block/dasd_fba.c
-> @@ -717,10 +717,15 @@ dasd_fba_dump_sense(struct dasd_device *device, struct dasd_ccw_req * req,
->  			       " CCW %p: %08X %08X DAT:",
->  			       act, ((int *) act)[0], ((int *) act)[1]);
->  		for (count = 0; count < 32 && count < act->count;
-> -		     count += sizeof(int))
-> +		     count += sizeof(int)) {
-> +			if (act->flags & CCW_FLAG_SLI) {
+> >> - initializing the ORB pointing to a single READ CCW =20
+> > Out of curiosity: Would using a NOP also be an option? =20
+>=20
+> It will work but will not be handled by this device, css.c intercept it=
+=20
+> in sch_handle_start_func_virtual.
+>=20
+> AFAIU If we want to have a really good testing environment, for driver=20
+> testing for exemple, then it would be interesting to add a new=20
+> do_subchannel_work callback like do_subchannel_work_emulation along with=
+=20
+> the _virtual and _paththrough variantes.
+>=20
+> Having a dedicated callback for emulation, we can answer to any CSS=20
+> instructions and SSCH commands, including NOP and TIC.
 
-I'm not quite happy with the usage of CCW_FLAG_SLI here.
-We're currently looking into this issue in more detail to fully
-understand the problem.
+I guess that depends on what you want to test; if you actually want to
+test device emulation as used by virtio etc., you obviously want to go
+through the existing _virtual callback :)
 
-I'll let you know the outcome and possible improvements for the
-patch as soon as possible.
+The actual motivation behind my question was:
+Is it possible to e.g. throw NOP (or TIC, or something else not
+device-specific) at a normal, existing virtio device for test purposes?
+You'd end up testing the common emulation code without needing any
+extra support in QEMU. No idea how useful that would be.
 
-regards,
-Jan
+>=20
+> My goal here was to quickly develop a device answering to some basic=20
+> READ/WRITE command to start memory transfers from inside a guest without=
+=20
+> Linux and without implementing VIRTIO in KVM tests.
+
+Yes, if you want to do some simple memory transfers, virtio is probably
+not the first choice. Would e.g. doing a SenseID or so actually be
+useful in some way already? After all, it does transfer memory (but
+only in one direction).
+
+> >> +static inline int rsch(unsigned long schid) =20
+> > I don't think anyone has tried rsch with QEMU before; sounds like a
+> > good idea to test this :) =20
+>=20
+> With an do_subchannel_work_emulation() callback?
+
+You probably need to build a simple channel program that suspends
+itself and can be resumed later.
 
