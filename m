@@ -2,101 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69C86104868
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Nov 2019 03:06:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A942C105255
+	for <lists+linux-s390@lfdr.de>; Thu, 21 Nov 2019 13:36:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725904AbfKUCGT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 20 Nov 2019 21:06:19 -0500
-Received: from mail-pj1-f67.google.com ([209.85.216.67]:37133 "EHLO
-        mail-pj1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725819AbfKUCGT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 20 Nov 2019 21:06:19 -0500
-Received: by mail-pj1-f67.google.com with SMTP id f3so716843pjg.4
-        for <linux-s390@vger.kernel.org>; Wed, 20 Nov 2019 18:06:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=uo9mEPcaYcwnzYyWGiXlb2tEqoly25jIf2ri/BJ7dDw=;
-        b=Am9AlC+yrXpYjI9tLZJABP+RtHy2I4MpTU3JDy2quw9lARH0E9nsUx5sZLzW3WsDXO
-         MTT+d/n1iXXdDWbHu/+5ZNlEjJkBCfuMGQ0lkn8Y7lm/Tzm4N0xy3n8V3/0Et0gCoKEN
-         La77ktcLIHHNXLrDobr2UBGIDQa807YwOkRStoKCQx7d8nF5nRTY9eGyAdB04aZCf5yD
-         rO4aRJlugOJko5ct311BHN7FOI/OtYpsdzrpnaN7mckQkPbFwVkF+LgJJq63UARVC8nL
-         O2ZgCy5Q6Agt+f5TU+Sl3EUB3XFTfODjPAndMGYek+NU+pNGWBS4nA0GY5D6/JQ4Jzi9
-         BNsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uo9mEPcaYcwnzYyWGiXlb2tEqoly25jIf2ri/BJ7dDw=;
-        b=QZT3w709yNbV9hZf5fq4bR5LzqPKOoPtBtR9UxayuHe3b9pLj5vjQjONihi1e+RR7p
-         EKTu7F2HhoR83umc5D+a866OstqcnxiXSaVjtPsFpMyqj7vkKh7254Xegh3gaCVY0WZa
-         SUt7f6uvLcgxEH5HDqj2JwfSC79Nai7xMMQfVhr1CUNYrQ1Lchcy8iirEmQRsifZabfx
-         YEJLkeXgl5u5GOUipbLRZtGSu3/VuvUvsK6lwEF4zgv13+kiWlAPHBrsplTNteWifAjZ
-         VFA4kMhoC5K7T/MHDK/s9WhrJ/Nq+c59QFIfyqbS3kK9jawu9LsgVb4eB5mK10THk+Le
-         UDog==
-X-Gm-Message-State: APjAAAU3FVWkGq6MwOov9TbxVkrY7EvSQPzoy+C9yHd3H/DscZ6eMEf0
-        /74jgpasWe+1EhM9U9t/f2NY+Q==
-X-Google-Smtp-Source: APXvYqytngQq8IjjeiFBpEFRQm5zInwYRJW6QSTLANZYdx6eBrIH2RFe+esQWcWUc+a6h1YGF2wf6w==
-X-Received: by 2002:a17:90a:ec13:: with SMTP id l19mr8419701pjy.0.1574301978779;
-        Wed, 20 Nov 2019 18:06:18 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id s15sm541405pjp.3.2019.11.20.18.06.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 20 Nov 2019 18:06:17 -0800 (PST)
-Subject: Re: [PATCH -next] writeback: fix -Wformat compilation warnings
-To:     Qian Cai <cai@lca.pw>, Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191114192118.GK4163745@devbig004.ftw2.facebook.com>
- <9D52EBB0-BE48-4C59-9145-857C3247B20D@lca.pw>
- <20191115145540.GP4163745@devbig004.ftw2.facebook.com>
- <1574279778.9585.15.camel@lca.pw>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <26dc5699-9223-3e35-65f3-955fef7a990a@kernel.dk>
-Date:   Wed, 20 Nov 2019 16:17:51 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726593AbfKUMgJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 21 Nov 2019 07:36:09 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:4810 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726230AbfKUMgJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 21 Nov 2019 07:36:09 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xALCWBUw109697
+        for <linux-s390@vger.kernel.org>; Thu, 21 Nov 2019 07:36:08 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wcf73779n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 21 Nov 2019 07:36:07 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <hoeppner@linux.ibm.com>;
+        Thu, 21 Nov 2019 12:36:05 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 21 Nov 2019 12:36:02 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xALCa1GP46268858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 21 Nov 2019 12:36:01 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3EC744C050;
+        Thu, 21 Nov 2019 12:36:01 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DC98B4C058;
+        Thu, 21 Nov 2019 12:36:00 +0000 (GMT)
+Received: from [9.152.212.204] (unknown [9.152.212.204])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 21 Nov 2019 12:36:00 +0000 (GMT)
+Subject: Re: [PATCH] dasd_fba: Display '00000000' for zero page when dumping
+ sense
+To:     Hannes Reinecke <hare@suse.de>
+Cc:     Stefan Haberland <sth@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Linux Kernel Mailinglist <linux-kernel@vger.kernel.org>,
+        Hannes Reinecke <hare@suse.com>,
+        Sebastian Parschauer <sparschauer@suse.de>
+References: <20191118111226.56666-1-hare@suse.de>
+From:   =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>
+Date:   Thu, 21 Nov 2019 13:36:00 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <1574279778.9585.15.camel@lca.pw>
+In-Reply-To: <20191118111226.56666-1-hare@suse.de>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19112112-0008-0000-0000-00000335AFD2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112112-0009-0000-0000-00004A54D8D4
+Message-Id: <d329f133-6ed7-0389-2c7f-64c6bdc364c5@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-21_02:2019-11-21,2019-11-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ mlxlogscore=999 adultscore=0 bulkscore=0 mlxscore=0 suspectscore=0
+ impostorscore=0 clxscore=1011 spamscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911210115
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 11/20/19 12:56 PM, Qian Cai wrote:
-> On Fri, 2019-11-15 at 06:55 -0800, Tejun Heo wrote:
->> On Thu, Nov 14, 2019 at 07:26:21PM -0500, Qian Cai wrote:
->>>
->>>
->>>> On Nov 14, 2019, at 2:21 PM, Tejun Heo <tj@kernel.org> wrote:
->>>>
->>>> Acked-by: Tejun Heo <tj@kernel.org>
->>>
->>> Tejun, suppose you will take this patch via your tree together with the series or should I Cc Andrew who normally handle this file?
->>
->> Patches in this area usually goes through Jens's block tree.
+On 11/18/19 12:12 PM, Hannes Reinecke wrote:
+> When a discard I/O fails, dasd_fba_dump_sense() will crash as it
+> tries to print out the CCW, and failing to take into account that
+> for discard I/O we have only one data pointer, not one per sg.
+> As the data pointer will always point to the zero page this patch
+> replaces the data pointer output with '00000000' to avoid the crash.
 > 
-> I remember that last time Jens had no interests in picking up trivial patches
-> like this one. See the commit d1a445d3b86c ("include/trace/events/writeback.h:
-> fix -Wstringop-truncation warnings").
+> Signed-off-by: Hannes Reinecke <hare@suse.com>
+> [sparschauer: replaced "ccw" with "act", "snprintf" with "sprintf"]
+> [sparschauer v2: added missing curly braces to for loops]
+> Signed-off-by: Sebastian Parschauer <sparschauer@suse.de>
+> ---
+>  drivers/s390/block/dasd_fba.c | 21 ++++++++++++++++++---
+>  1 file changed, 18 insertions(+), 3 deletions(-)
 > 
-> Andrew, care to pick up this again?
-> 
-> https://lore.kernel.org/lkml/1573751861-10303-1-git-send-email-cai@lca.pw/
 
-I'm fine with picking it up, this one isn't trivial and it's fixing
-warnings. But I didn't (and don't) carry f05499a06fb4 in my tree,
-so it'd be more logical to funnel this one through the tree that
-has the offending commit.
+Hi Hannes,
 
--- 
-Jens Axboe
+thanks for the patch. However,
+
+> diff --git a/drivers/s390/block/dasd_fba.c b/drivers/s390/block/dasd_fba.c
+> index cbb770824226..4b867bd6b164 100644
+> --- a/drivers/s390/block/dasd_fba.c
+> +++ b/drivers/s390/block/dasd_fba.c
+> @@ -717,10 +717,15 @@ dasd_fba_dump_sense(struct dasd_device *device, struct dasd_ccw_req * req,
+>  			       " CCW %p: %08X %08X DAT:",
+>  			       act, ((int *) act)[0], ((int *) act)[1]);
+>  		for (count = 0; count < 32 && count < act->count;
+> -		     count += sizeof(int))
+> +		     count += sizeof(int)) {
+> +			if (act->flags & CCW_FLAG_SLI) {
+
+I'm not quite happy with the usage of CCW_FLAG_SLI here.
+We're currently looking into this issue in more detail to fully
+understand the problem.
+
+I'll let you know the outcome and possible improvements for the
+patch as soon as possible.
+
+regards,
+Jan
 
