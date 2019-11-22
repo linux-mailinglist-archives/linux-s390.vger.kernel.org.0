@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2B4E51062F8
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2019 07:08:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1874510646C
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2019 07:17:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728629AbfKVGHW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 22 Nov 2019 01:07:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
+        id S1729315AbfKVGN3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 22 Nov 2019 01:13:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50686 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729476AbfKVGCA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 22 Nov 2019 01:02:00 -0500
+        id S1729316AbfKVGN2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 22 Nov 2019 01:13:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E3B0920714;
-        Fri, 22 Nov 2019 06:01:58 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D01B620708;
+        Fri, 22 Nov 2019 06:13:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574402519;
-        bh=H8nhKXKNYwhdnZ1oxHBgqJQ/mhf3pJpP7CyzoovXYOM=;
+        s=default; t=1574403207;
+        bh=u/ht6PC8dTaXSeedqZtbu1SzlGDMXer7QYkbRsHtsc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XjE5IACapaKc3V9RlVpBq9VMCplpCP/wSDm+M8JxSEf48cflE8amWX/GUjikjquVF
-         gJlSgZKU29SM0pPwg+jI3s2+UlcvUcHqTXMnw9agQcJT4Zrwtg2/SsvB6zCH//CS66
-         /oOen0z6TsNYKNkBfw6RhPLr550so2a6ei81YkDM=
+        b=eMxybB1Eq+E9auJUqUF8i/9SEBn61IF6rqiKGG71rpwlBbMfCXPsfrxUOEAibhGFN
+         hqYokCuYVbHra9FHkUN/B3jnCanQE9Jv+nPBZVR3v8ldPfK3a5m3fffZxmyxL88n8/
+         UeougtOFK3piCzphZS8GOE36dtz3jzbI11EFXwJM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Michael Mueller <mimu@linux.ibm.com>,
@@ -32,12 +32,12 @@ Cc:     Michael Mueller <mimu@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
         linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 28/91] KVM: s390: unregister debug feature on failing arch init
-Date:   Fri, 22 Nov 2019 01:00:26 -0500
-Message-Id: <20191122060129.4239-27-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 23/68] KVM: s390: unregister debug feature on failing arch init
+Date:   Fri, 22 Nov 2019 01:12:16 -0500
+Message-Id: <20191122061301.4947-22-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122060129.4239-1-sashal@kernel.org>
-References: <20191122060129.4239-1-sashal@kernel.org>
+In-Reply-To: <20191122061301.4947-1-sashal@kernel.org>
+References: <20191122061301.4947-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -69,10 +69,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 14 insertions(+), 3 deletions(-)
 
 diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index 37c254677ccda..d8fd2eadcda7f 100644
+index 3e46f62d32adf..b4032d625d225 100644
 --- a/arch/s390/kvm/kvm-s390.c
 +++ b/arch/s390/kvm/kvm-s390.c
-@@ -319,19 +319,30 @@ static void kvm_s390_cpu_feat_init(void)
+@@ -185,17 +185,28 @@ void kvm_arch_hardware_unsetup(void)
  
  int kvm_arch_init(void *opaque)
  {
@@ -88,8 +88,6 @@ index 37c254677ccda..d8fd2eadcda7f 100644
 +		rc = -ENOMEM;
 +		goto out_debug_unreg;
  	}
- 
- 	kvm_s390_cpu_feat_init();
  
  	/* Register floating interrupt controller interface. */
 -	return kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
