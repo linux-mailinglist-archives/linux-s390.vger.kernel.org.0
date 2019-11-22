@@ -2,185 +2,160 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ED5C10726B
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2019 13:49:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C47D1072C6
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2019 14:08:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727467AbfKVMtA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 22 Nov 2019 07:49:00 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2366 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727072AbfKVMtA (ORCPT
+        id S1726735AbfKVNIi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 22 Nov 2019 08:08:38 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43988 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726664AbfKVNIi (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 22 Nov 2019 07:49:00 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMCl5Yg011090
-        for <linux-s390@vger.kernel.org>; Fri, 22 Nov 2019 07:48:59 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wdu63h2ry-1
+        Fri, 22 Nov 2019 08:08:38 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xAMD7AX8097399
+        for <linux-s390@vger.kernel.org>; Fri, 22 Nov 2019 08:08:37 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wefjw97xv-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 22 Nov 2019 07:48:59 -0500
+        for <linux-s390@vger.kernel.org>; Fri, 22 Nov 2019 08:08:36 -0500
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 22 Nov 2019 12:48:56 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 22 Nov 2019 13:08:35 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 22 Nov 2019 12:48:54 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAMCmrB549807576
+        Fri, 22 Nov 2019 13:08:30 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xAMD8T9J28114958
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 22 Nov 2019 12:48:53 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8AA685204F;
-        Fri, 22 Nov 2019 12:48:53 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.30.219])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 332B652050;
-        Fri, 22 Nov 2019 12:48:53 +0000 (GMT)
-Subject: Re: [PATCH v1 4/4] s390x: Testing the Subchannel I/O read
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-References: <1573647799-30584-1-git-send-email-pmorel@linux.ibm.com>
- <1573647799-30584-5-git-send-email-pmorel@linux.ibm.com>
- <20191113140539.4d153d5f.cohuck@redhat.com>
- <802c298d-d2da-83c4-c222-67bb78131988@linux.ibm.com>
- <20191121170237.72e0bd45.cohuck@redhat.com>
- <0c9d19ef-8ef7-0dab-b283-3db243b95476@linux.ibm.com>
- <20191122115422.56019f03.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Fri, 22 Nov 2019 13:48:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Fri, 22 Nov 2019 13:08:29 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 700134C044;
+        Fri, 22 Nov 2019 13:08:29 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E22A24C052;
+        Fri, 22 Nov 2019 13:08:28 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.110])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 22 Nov 2019 13:08:28 +0000 (GMT)
+Date:   Fri, 22 Nov 2019 14:08:27 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        linux-s390@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Christoph Hellwig <hch@lst.de>, Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Andy Lutomirski <luto@kernel.org>
+Subject: Re: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
+In-Reply-To: <20191119080420-mutt-send-email-mst@kernel.org>
+References: <20191114124646.74790-1-pasic@linux.ibm.com>
+ <20191119121022.03aed69a.pasic@linux.ibm.com>
+ <20191119080420-mutt-send-email-mst@kernel.org>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191122115422.56019f03.cohuck@redhat.com>
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19112212-0012-0000-0000-0000036AC524
+x-cbid: 19112213-0008-0000-0000-000003362449
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112212-0013-0000-0000-000021A65D74
-Message-Id: <bcdd966d-b60d-471c-0c48-a7d0cd006e42@linux.ibm.com>
+x-cbparentid: 19112213-0009-0000-0000-00004A5551E7
+Message-Id: <20191122140827.0ead345c.pasic@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-11-22_02:2019-11-21,2019-11-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 spamscore=0
- adultscore=0 priorityscore=1501 mlxscore=0 mlxlogscore=999 phishscore=0
- suspectscore=0 clxscore=1015 bulkscore=0 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911220113
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ priorityscore=1501 mlxlogscore=999 adultscore=0 suspectscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 impostorscore=0 bulkscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911220116
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Thanks Michael!
 
-On 2019-11-22 11:54, Cornelia Huck wrote:
-> On Fri, 22 Nov 2019 10:03:21 +0100
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
->
->> On 2019-11-21 17:02, Cornelia Huck wrote:
->>> On Thu, 14 Nov 2019 11:11:18 +0100
->>> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>>   
->>>> On 2019-11-13 14:05, Cornelia Huck wrote:
->>>>> On Wed, 13 Nov 2019 13:23:19 +0100
->>>>> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>>>>> - initializing the ORB pointing to a single READ CCW
->>>>> Out of curiosity: Would using a NOP also be an option?
->>>> It will work but will not be handled by this device, css.c intercept it
->>>> in sch_handle_start_func_virtual.
->>>>
->>>> AFAIU If we want to have a really good testing environment, for driver
->>>> testing for exemple, then it would be interesting to add a new
->>>> do_subchannel_work callback like do_subchannel_work_emulation along with
->>>> the _virtual and _paththrough variantes.
->>>>
->>>> Having a dedicated callback for emulation, we can answer to any CSS
->>>> instructions and SSCH commands, including NOP and TIC.
->>> I guess that depends on what you want to test; if you actually want to
->>> test device emulation as used by virtio etc., you obviously want to go
->>> through the existing _virtual callback :)
->> The first goal is to test basic I/O from inside the kvm-unit-test,
->> producing errors and see how the system respond to errors.
->>
->> In a standard system errors will be generated by QEMU analysing the I/O
->> instruction after interception.
->>
->> In a secured guest, we expect the same errors, however we want to check
->> this.
-> But we still get the intercepts for all I/O instructions, right? We
-> just get/inject the parameters in a slightly different way, IIUC.
->
-> Not that I disagree with wanting to check this :)
+Actually I also hoped to start a discussion on virtio with encrypted
+memory.
 
-AFAIU the SE firmware, the SIE and KVM first handle the instruction 
-interception before it comes to the QEMU code.
+I assume the AMD folks have the most experience with this, and I very
+much like to understand how do they master the challenges we are all
+facing.
 
-There are two major changes with secure execution that we want to test, 
-SE firmware and SIE modifications.
-If the instruction is treated by QEMU, then hopefully we get the same 
-answer as without SE.
+My understanding of IO in the context of AMD SEV is that the user
+is responsible for choosing the swiotlb command line parameter of the
+guest kernel so, that the guest never runs out of swiotlb. And that
+not doing so may have fatal consequences with regards to the guest. [1]
 
+The swiotlb being a guest global resource, to choose such a size, one
+would fist need to know the maximal swiotlb footprint of each device,
+and then apply some heuristics regarding fragmentation.
 
->
->> This PONG device is intended to be low level, no VIRTIO, and to allow
->> basic I/O.
-> Ok, so this is designed to test basic channel I/O handling, not
-> necessarily if the guest has set up all its control structures
-> correctly?
+Honestly, if somebody asked me how to calculate the max swiotlb
+footprint of the most common virtio devices, I would feel very
+uncomfortable.
 
-More than this it is intended, in the next version, to test answers to 
-bad configurations and wrong instruction's arguments.
+But maybe I got it all wrong. @Tom can you help me understand how this
+works?
 
+In any case, we s390 protected virtualization folks are concerned about
+the things laid out above. The goal of this patch is to make the swiotlb
+full condition less grave, but it is by no means a full solution.
 
->
->>> The actual motivation behind my question was:
->>> Is it possible to e.g. throw NOP (or TIC, or something else not
->>> device-specific) at a normal, existing virtio device for test purposes?
->>> You'd end up testing the common emulation code without needing any
->>> extra support in QEMU. No idea how useful that would be.
->> Writing a VIRTIO driver inside the kvm-unit-test is something we can do
->> in the future.
->>
->> As you said, the common code already handle NOP and TIC, the
->> interpretation of the
->> CCW chain, once the SSCH has been intercepted is done by QEMU.
->> I do not think it would be different with SE.
-> Yes. You don't really need to get the virtio device up on the virtio
-> side; if recognizing the device correctly via senseID works and you
-> maybe can do some NOP/TIC commands, you might have a very basic test
-> without introducing a new device.
+I would like to work on improving on this situation. Obviously we have
+done some thinking about what can be done, but I would very much like to
+collect the opinions, of the people in the community that AFAICT face
+same problem. One of the ideas is to try to prevent it from happening by
+making swiotlb sizing dynamic. Another idea is to make the system deal
+with the failures gracefully. Both ideas come with a bag of problems of
+their own (AFAICT).
 
-Right, but the test is incomplete, as you said before, no write 
-operation with this procedure.
+According to my research the people I need to talk to are Tom (AMD), and
+Ram and Thiago (Power) and of course the respective maintainers. Have I
+missed anybody?
 
+Regards,
+Halil
 
->
-> Testing virtio-ccw via kvm-unit-tests is probably a good idea for the
-> future.
->
->> To sum-up:
->>
->> in kvm-unit-test: implement all I/O instructions and force instructions
->> errors, like memory error, operand etc. and expect the right reaction of
->> the system.
->>
->> in QEMU, add the necessary infrastructure to test this.
-> Sounds good to me.
+--
 
-Thanks,
+[1] https://github.com/AMDESE/AMDSEV#faq-4
 
-I think the next version will make the purpose of all of it even more 
-obvious,
-and hopefully answers all your questions better.
+On Tue, 19 Nov 2019 08:04:29 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
 
-Best regards,
-
-Pierre
-
->
--- 
-Pierre Morel
-IBM Lab Boeblingen
+> Will be in the next pull request.
+> 
+> On Tue, Nov 19, 2019 at 12:10:22PM +0100, Halil Pasic wrote:
+> > ping
+> > 
+> > On Thu, 14 Nov 2019 13:46:46 +0100
+> > Halil Pasic <pasic@linux.ibm.com> wrote:
+> > 
+> > > Commit 780bc7903a32 ("virtio_ring: Support DMA APIs")  makes
+> > > virtqueue_add() return -EIO when we fail to map our I/O buffers. This is
+> > > a very realistic scenario for guests with encrypted memory, as swiotlb
+> > > may run out of space, depending on it's size and the I/O load.
+> > > 
+> > > The virtio-blk driver interprets -EIO form virtqueue_add() as an IO
+> > > error, despite the fact that swiotlb full is in absence of bugs a
+> > > recoverable condition.
+> > > 
+> > > Let us change the return code to -ENOMEM, and make the block layer
+> > > recover form these failures when virtio-blk encounters the condition
+> > > described above.
+> > > 
+> > > Fixes: 780bc7903a32 ("virtio_ring: Support DMA APIs")
+> > > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > > Tested-by: Michael Mueller <mimu@linux.ibm.com>
+> > > ---
+> > > 
+[..]
 
