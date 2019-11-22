@@ -2,39 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F159B1064D4
-	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2019 07:20:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AB24C106393
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2019 07:11:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728681AbfKVFwr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 22 Nov 2019 00:52:47 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58638 "EHLO mail.kernel.org"
+        id S1727923AbfKVGL2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 22 Nov 2019 01:11:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34370 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728666AbfKVFwr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 22 Nov 2019 00:52:47 -0500
+        id S1728788AbfKVF4d (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:56:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA0CE2068F;
-        Fri, 22 Nov 2019 05:52:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9501D2071B;
+        Fri, 22 Nov 2019 05:56:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1574401965;
-        bh=CQuBCBvKAAsOoZocCAsqj8Qd5e+iFxFP6/c3gZsHpI8=;
+        s=default; t=1574402192;
+        bh=3ZD4z5tSMConpDLT4YiQqF+w3h8Md2Wr1i9YsvQlzeo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u9wRdKFXg0a/NrOLTQLEcbHTwoGj7r7GuCULhLAezsY3vZLjMVpALpi/JItvAeQAk
-         3agdSV0JIdRrENnIThmnpezUT0jsaD7Z5DVW8XpR9UUp/plU3l87FA9g1m+Vhf5HkJ
-         E7dyroRF6lFhpo43gtSuAXP6x+moIlzkrCFnXnQ8=
+        b=em6dyl/DPDAbzmrPyL3bUWvgp3z/FSsGJ2sUk9cPTOc//XeDk01URV9lkHLni4H/3
+         irqdz8xYe94DWQnhD4o1nR9LxDwTZ3jimHFQU3pg/A31MTzQuufJncCMBZRv8yPMqZ
+         kK1C6qK+IfV4IkaaTNZ+i4Wa5X4ELAMl12jzuHG0=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ursula Braun <ubraun@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 186/219] net/smc: fix byte_order for rx_curs_confirmed
-Date:   Fri, 22 Nov 2019 00:48:38 -0500
-Message-Id: <20191122054911.1750-179-sashal@kernel.org>
+Cc:     Michael Mueller <mimu@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Pierre Morel <pmorel@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.14 042/127] KVM: s390: unregister debug feature on failing arch init
+Date:   Fri, 22 Nov 2019 00:54:20 -0500
+Message-Id: <20191122055544.3299-41-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
-References: <20191122054911.1750-1-sashal@kernel.org>
+In-Reply-To: <20191122055544.3299-1-sashal@kernel.org>
+References: <20191122055544.3299-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,79 +47,65 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+From: Michael Mueller <mimu@linux.ibm.com>
 
-[ Upstream commit ccc8ca9b90acb45a3309f922b2591b07b4e070ec ]
+[ Upstream commit 308c3e6673b012beecb96ef04cc65f4a0e7cdd99 ]
 
-The recent change in the rx_curs_confirmed assignment disregards
-byte order, which causes problems on little endian architectures.
-This patch fixes it.
+Make sure the debug feature and its allocated resources get
+released upon unsuccessful architecture initialization.
 
-Fixes: b8649efad879 ("net/smc: fix sender_free computation") (net-tree)
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+A related indication of the issue will be reported as kernel
+message.
+
+Signed-off-by: Michael Mueller <mimu@linux.ibm.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Reviewed-by: Pierre Morel <pmorel@linux.ibm.com>
+Reviewed-by: David Hildenbrand <david@redhat.com>
+Message-Id: <20181130143215.69496-2-mimu@linux.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_cdc.c |  4 +---
- net/smc/smc_cdc.h | 19 ++++++++++---------
- 2 files changed, 11 insertions(+), 12 deletions(-)
+ arch/s390/kvm/kvm-s390.c | 17 ++++++++++++++---
+ 1 file changed, 14 insertions(+), 3 deletions(-)
 
-diff --git a/net/smc/smc_cdc.c b/net/smc/smc_cdc.c
-index 8f691b5a44ddf..333e4353498f8 100644
---- a/net/smc/smc_cdc.c
-+++ b/net/smc/smc_cdc.c
-@@ -106,9 +106,7 @@ int smc_cdc_msg_send(struct smc_connection *conn,
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index ff62a4fe2159a..91c24e87fe10a 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -361,19 +361,30 @@ static void kvm_s390_cpu_feat_init(void)
  
- 	conn->tx_cdc_seq++;
- 	conn->local_tx_ctrl.seqno = conn->tx_cdc_seq;
--	smc_host_msg_to_cdc((struct smc_cdc_msg *)wr_buf,
--			    &conn->local_tx_ctrl, conn);
--	smc_curs_copy(&cfed, &((struct smc_host_cdc_msg *)wr_buf)->cons, conn);
-+	smc_host_msg_to_cdc((struct smc_cdc_msg *)wr_buf, conn, &cfed);
- 	rc = smc_wr_tx_send(link, (struct smc_wr_tx_pend_priv *)pend);
- 	if (!rc)
- 		smc_curs_copy(&conn->rx_curs_confirmed, &cfed, conn);
-diff --git a/net/smc/smc_cdc.h b/net/smc/smc_cdc.h
-index 2377a51772d51..34d2e1450320a 100644
---- a/net/smc/smc_cdc.h
-+++ b/net/smc/smc_cdc.h
-@@ -186,26 +186,27 @@ static inline int smc_curs_diff_large(unsigned int size,
- 
- static inline void smc_host_cursor_to_cdc(union smc_cdc_cursor *peer,
- 					  union smc_host_cursor *local,
-+					  union smc_host_cursor *save,
- 					  struct smc_connection *conn)
+ int kvm_arch_init(void *opaque)
  {
--	union smc_host_cursor temp;
--
--	smc_curs_copy(&temp, local, conn);
--	peer->count = htonl(temp.count);
--	peer->wrap = htons(temp.wrap);
-+	smc_curs_copy(save, local, conn);
-+	peer->count = htonl(save->count);
-+	peer->wrap = htons(save->wrap);
- 	/* peer->reserved = htons(0); must be ensured by caller */
- }
- 
- static inline void smc_host_msg_to_cdc(struct smc_cdc_msg *peer,
--				       struct smc_host_cdc_msg *local,
--				       struct smc_connection *conn)
-+				       struct smc_connection *conn,
-+				       union smc_host_cursor *save)
- {
-+	struct smc_host_cdc_msg *local = &conn->local_tx_ctrl;
++	int rc;
 +
- 	peer->common.type = local->common.type;
- 	peer->len = local->len;
- 	peer->seqno = htons(local->seqno);
- 	peer->token = htonl(local->token);
--	smc_host_cursor_to_cdc(&peer->prod, &local->prod, conn);
--	smc_host_cursor_to_cdc(&peer->cons, &local->cons, conn);
-+	smc_host_cursor_to_cdc(&peer->prod, &local->prod, save, conn);
-+	smc_host_cursor_to_cdc(&peer->cons, &local->cons, save, conn);
- 	peer->prod_flags = local->prod_flags;
- 	peer->conn_state_flags = local->conn_state_flags;
+ 	kvm_s390_dbf = debug_register("kvm-trace", 32, 1, 7 * sizeof(long));
+ 	if (!kvm_s390_dbf)
+ 		return -ENOMEM;
+ 
+ 	if (debug_register_view(kvm_s390_dbf, &debug_sprintf_view)) {
+-		debug_unregister(kvm_s390_dbf);
+-		return -ENOMEM;
++		rc = -ENOMEM;
++		goto out_debug_unreg;
+ 	}
+ 
+ 	kvm_s390_cpu_feat_init();
+ 
+ 	/* Register floating interrupt controller interface. */
+-	return kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
++	rc = kvm_register_device_ops(&kvm_flic_ops, KVM_DEV_TYPE_FLIC);
++	if (rc) {
++		pr_err("Failed to register FLIC rc=%d\n", rc);
++		goto out_debug_unreg;
++	}
++	return 0;
++
++out_debug_unreg:
++	debug_unregister(kvm_s390_dbf);
++	return rc;
  }
+ 
+ void kvm_arch_exit(void)
 -- 
 2.20.1
 
