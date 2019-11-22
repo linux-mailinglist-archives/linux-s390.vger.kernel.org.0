@@ -2,131 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5FBEE105660
-	for <lists+linux-s390@lfdr.de>; Thu, 21 Nov 2019 17:02:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C425110608E
+	for <lists+linux-s390@lfdr.de>; Fri, 22 Nov 2019 06:50:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727020AbfKUQCu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 21 Nov 2019 11:02:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39786 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726358AbfKUQCt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 21 Nov 2019 11:02:49 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1574352168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a11re/ehZiEz1brS/g1soEqMUI57pKvAoVTakb9DkPc=;
-        b=TUQ0ZzT9NbZXSLhA9t6La2/t9xTxkwMHRAaq1zb+7dwi8JyzrgyK1uDK6UilJ51Reoyv3O
-        PKt5lSzzSCrC5aF7+Bcaj1lYrMvavx8h4Qp2LYY5bNpNV2naY8MI3Vsg1NMhjGmmjUg0it
-        H78K17cu9zUKydNJ4q3SMYRG9wkcDuI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-EoePcsGNNki38VNRGn8M6w-1; Thu, 21 Nov 2019 11:02:44 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727367AbfKVFtz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 22 Nov 2019 00:49:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727356AbfKVFty (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 22 Nov 2019 00:49:54 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8DE0410509DF;
-        Thu, 21 Nov 2019 16:02:43 +0000 (UTC)
-Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id ED48860148;
-        Thu, 21 Nov 2019 16:02:39 +0000 (UTC)
-Date:   Thu, 21 Nov 2019 17:02:37 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [PATCH v1 4/4] s390x: Testing the Subchannel I/O read
-Message-ID: <20191121170237.72e0bd45.cohuck@redhat.com>
-In-Reply-To: <802c298d-d2da-83c4-c222-67bb78131988@linux.ibm.com>
-References: <1573647799-30584-1-git-send-email-pmorel@linux.ibm.com>
-        <1573647799-30584-5-git-send-email-pmorel@linux.ibm.com>
-        <20191113140539.4d153d5f.cohuck@redhat.com>
-        <802c298d-d2da-83c4-c222-67bb78131988@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 6A5842068F;
+        Fri, 22 Nov 2019 05:49:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1574401794;
+        bh=WxhQkwHJIFJqmiQcam91kuSyvW8HP7Zb7M0NPoHGyNg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=dckV56jpcE//8u+3l5nSQZtyoeT5CHOdkrM06c/ScAGQcQobNu4ZETxPsPY4suDSI
+         coLm8AVhpwiObYwWg9pr0H0MVAG/Gkqa2VMik05YtNlsjMqYxcqedGBBPuC5qLJKB2
+         NpTX7405+8vZ1W4kx7jH0wmuNtVsmyNvEcnOF34Q=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 041/219] s390/zcrypt: make sysfs reset attribute trigger queue reset
+Date:   Fri, 22 Nov 2019 00:46:13 -0500
+Message-Id: <20191122054911.1750-34-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191122054911.1750-1-sashal@kernel.org>
+References: <20191122054911.1750-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: EoePcsGNNki38VNRGn8M6w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 14 Nov 2019 11:11:18 +0100
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+From: Harald Freudenberger <freude@linux.ibm.com>
 
-> On 2019-11-13 14:05, Cornelia Huck wrote:
-> > On Wed, 13 Nov 2019 13:23:19 +0100
-> > Pierre Morel <pmorel@linux.ibm.com> wrote:
-> > =20
-> >> This simple test test the I/O reading by the SUB Channel by:
-> >> - initializing the Channel SubSystem with predefined CSSID:
-> >>    0xfe000000 CSSID for a Virtual CCW =20
-> > 0 should be fine with recent QEMU versions as well, I guess? =20
-> Right
->=20
->=20
-> > =20
-> >>    0x00090000 SSID for CCW-PONG =20
-> > subchannel id, or subchannel set id? =20
->=20
-> hum, only part of, I had SSID (Subchannel Set ID) 4 (a.k.a m bit) + Bit=
-=20
-> 47=C2=A0 =3D1
->=20
-> But as you said, I can use CSSID 0 and m =3D 0 which makes:
->=20
-> Subsystem Identification word =3D 0x00010000
+[ Upstream commit 42a87d4103ae365e18c3be1333592ab583b8ad9d ]
 
-Yeah, I was mainly confused by the name 'SSID'.
+Until now there is no way to reset a AP queue or card. Driving a card
+or queue offline and online again does only toggle the 'software'
+online state. The only way to trigger a (hardware) reset is by running
+hot-unplug/hot-plug for example on the HMC.
 
-> >> - initializing the ORB pointing to a single READ CCW =20
-> > Out of curiosity: Would using a NOP also be an option? =20
->=20
-> It will work but will not be handled by this device, css.c intercept it=
-=20
-> in sch_handle_start_func_virtual.
->=20
-> AFAIU If we want to have a really good testing environment, for driver=20
-> testing for exemple, then it would be interesting to add a new=20
-> do_subchannel_work callback like do_subchannel_work_emulation along with=
-=20
-> the _virtual and _paththrough variantes.
->=20
-> Having a dedicated callback for emulation, we can answer to any CSS=20
-> instructions and SSCH commands, including NOP and TIC.
+This patch makes the queue reset attribute in sysfs writable.
+Writing into this attribute triggers a reset on the AP queue's state
+machine. So the AP queue is flushed and state machine runs through the
+initial states which cause a reset (PQAP(RAPQ)) and a re-registration
+to interrupts (PQAP(AQIC)) if available.
 
-I guess that depends on what you want to test; if you actually want to
-test device emulation as used by virtio etc., you obviously want to go
-through the existing _virtual callback :)
+The reset sysfs attribute is writable by root only. So only an
+administrator is allowed to initiate a reset of AP queues. Please note
+that the queue's counter values are left untouched by the reset.
 
-The actual motivation behind my question was:
-Is it possible to e.g. throw NOP (or TIC, or something else not
-device-specific) at a normal, existing virtio device for test purposes?
-You'd end up testing the common emulation code without needing any
-extra support in QEMU. No idea how useful that would be.
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/crypto/ap_queue.c | 23 ++++++++++++++++++++++-
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
->=20
-> My goal here was to quickly develop a device answering to some basic=20
-> READ/WRITE command to start memory transfers from inside a guest without=
-=20
-> Linux and without implementing VIRTIO in KVM tests.
-
-Yes, if you want to do some simple memory transfers, virtio is probably
-not the first choice. Would e.g. doing a SenseID or so actually be
-useful in some way already? After all, it does transfer memory (but
-only in one direction).
-
-> >> +static inline int rsch(unsigned long schid) =20
-> > I don't think anyone has tried rsch with QEMU before; sounds like a
-> > good idea to test this :) =20
->=20
-> With an do_subchannel_work_emulation() callback?
-
-You probably need to build a simple channel program that suspends
-itself and can be resumed later.
+diff --git a/drivers/s390/crypto/ap_queue.c b/drivers/s390/crypto/ap_queue.c
+index 0aa4b3ccc948c..576ac08777c50 100644
+--- a/drivers/s390/crypto/ap_queue.c
++++ b/drivers/s390/crypto/ap_queue.c
+@@ -14,6 +14,9 @@
+ #include <asm/facility.h>
+ 
+ #include "ap_bus.h"
++#include "ap_debug.h"
++
++static void __ap_flush_queue(struct ap_queue *aq);
+ 
+ /**
+  * ap_queue_enable_interruption(): Enable interruption on an AP queue.
+@@ -541,7 +544,25 @@ static ssize_t reset_show(struct device *dev,
+ 	return rc;
+ }
+ 
+-static DEVICE_ATTR_RO(reset);
++static ssize_t reset_store(struct device *dev,
++			   struct device_attribute *attr,
++			   const char *buf, size_t count)
++{
++	struct ap_queue *aq = to_ap_queue(dev);
++
++	spin_lock_bh(&aq->lock);
++	__ap_flush_queue(aq);
++	aq->state = AP_STATE_RESET_START;
++	ap_wait(ap_sm_event(aq, AP_EVENT_POLL));
++	spin_unlock_bh(&aq->lock);
++
++	AP_DBF(DBF_INFO, "reset queue=%02x.%04x triggered by user\n",
++	       AP_QID_CARD(aq->qid), AP_QID_QUEUE(aq->qid));
++
++	return count;
++}
++
++static DEVICE_ATTR_RW(reset);
+ 
+ static ssize_t interrupt_show(struct device *dev,
+ 			      struct device_attribute *attr, char *buf)
+-- 
+2.20.1
 
