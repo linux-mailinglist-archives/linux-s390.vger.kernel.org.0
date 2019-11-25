@@ -2,130 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A18DB108A90
-	for <lists+linux-s390@lfdr.de>; Mon, 25 Nov 2019 10:12:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BAC8710914D
+	for <lists+linux-s390@lfdr.de>; Mon, 25 Nov 2019 16:51:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbfKYJMK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 25 Nov 2019 04:12:10 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:52402 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726980AbfKYJMJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 25 Nov 2019 04:12:09 -0500
-Received: by mail-io1-f70.google.com with SMTP id o5so10453544iob.19
-        for <linux-s390@vger.kernel.org>; Mon, 25 Nov 2019 01:12:09 -0800 (PST)
+        id S1728592AbfKYPvw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 25 Nov 2019 10:51:52 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:36780 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728243AbfKYPvv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 25 Nov 2019 10:51:51 -0500
+Received: by mail-qt1-f194.google.com with SMTP id y10so17686705qto.3;
+        Mon, 25 Nov 2019 07:51:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=wJroLw1W8XhiAqIM2yApPTWphY+Czv+rkw/DKkdw4pw=;
+        b=Gd1ZKoiXAaVl4BDkCHwzawDcjHjwOImvbMMuGUP3FsXtPKhPAdVo588WLrC4fpTF9Q
+         Vg/Fj2TKLYXA+mPiV5jSEnxSkXWRVOIc5LhkGc2AJZY44gL4S+AU8nVu3LVKez/ePTbD
+         ksLg7BLgUQUn+EsDwJS+wUgOrQATfqxvlcI7pbsXVzuo/03bxssJEk4NsF9a+i5Juc67
+         IEuYIoK2ncf21zA3n9jdUGy74Dthqh2KmWa+1Mc2imcXQNETb1OIMfYESvXm/GR7EOa/
+         T3z5HtsrVSRPKAUxJKY50AXRFZ5DVNFokQCi56P4t7l4syMkDwG478vG2RYlI2lvtkGl
+         W1OQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=5koVtO32iHG1fi3OYlKDnhYVJZ61U3UuaUrqfINFZwA=;
-        b=WGbYCU8RF0+KBDC2UcGydCXBS9yullZ3c6Xckk6HFznPwrS8SnnTVGbN8Oi3HC9FSV
-         4h3Di7cEEMPX576SgxektI6LcL47TRJUlLB+1+XgkJqoOu7bfOcG9NQBoH2hbV0Barqi
-         CedFpeVgo68akVOrvn9expRrYI1/9zs5teseaE+36lq973CL6S5a63t1cS4PZVu353/X
-         AY/P0NbOAheMfsZpRMyRMMZHuZR4EfTxIJzbP4kqxTljb77hVNneNHSDUY1BVQkd00K5
-         oZhFL9+jcrn2RUS7C1fIB6oFho+dfVI8WTqJuFmWO81vJYJxhMv8WOlcYStlD+u8F/UE
-         mYuw==
-X-Gm-Message-State: APjAAAU0g91WZTmO42STVUvbi9gJIsg+gL+QDKxQZPazJcCFYhUG34JV
-        6VyjmQgOyttBo+D6bhQyelqRea7749QgX+SRav6UPhTsJuES
-X-Google-Smtp-Source: APXvYqwmkHC5eBpCt0AiTaSyRIR3pm0vqd6V6ERDWDrbvCla3M7sn1YfGyYriNrrCnFLOl1DbYzknRIEDzLT25Wa+EwW1d+T6uLM
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=wJroLw1W8XhiAqIM2yApPTWphY+Czv+rkw/DKkdw4pw=;
+        b=qpdNrFQ7og7tLwMyBxUZEBDpDRPER7NNO8dM9A/2cxtHmSHn6o1o03uomYNMJ9Qm5W
+         rLGKYPEjMXFQ75P8nSOgADyS0croQyJFe7m+ZsKTlBCfKuN0s/6if1g2qSi0YSpU7pYR
+         n+9Tr/eNE3rNkHwF8IN1Gw/TmG6LRY2EAGh/UXFZST/mYvliW2BFp4T6ZcLovsz8u0O4
+         OBORctBZXy52kOs7rPaH8y3OIiQvLuw/6VBNo+t4R1ggAg752R7aZeALyX7hTyTKKx+8
+         9pBHcTQr/CMLwPPtEb18llCC6VpDdId3Mp4SoW0VpGn1Zo8fMgs8FjxkjODzgaqPszOr
+         1JDQ==
+X-Gm-Message-State: APjAAAXaZ8UR7BUQs3/kKkv9f7bvNXSpEoa9oh4+jOxXZjRbSpdxKgjp
+        X1FdAbZJ1ZN22NK2LboHnqoBK1zN
+X-Google-Smtp-Source: APXvYqz054PufwdJniA3H1ED9no4QQkpZFBGAIDBwJVTQWAvxffxYZRqOjYKdkcsAzBBdE1qWKjB/g==
+X-Received: by 2002:ac8:344a:: with SMTP id v10mr18840026qtb.323.1574697109880;
+        Mon, 25 Nov 2019 07:51:49 -0800 (PST)
+Received: from localhost ([2620:10d:c091:500::3:2f2e])
+        by smtp.gmail.com with ESMTPSA id f19sm3542530qkg.44.2019.11.25.07.51.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 25 Nov 2019 07:51:48 -0800 (PST)
+Date:   Mon, 25 Nov 2019 07:51:46 -0800
+From:   Tejun Heo <tj@kernel.org>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        jack@suse.cz, gregkh@linuxfoundation.org, cgroups@vger.kernel.org,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH -next] writeback: fix -Wformat compilation warnings
+Message-ID: <20191125155146.GA2867037@devbig004.ftw2.facebook.com>
+References: <20191114192118.GK4163745@devbig004.ftw2.facebook.com>
+ <9D52EBB0-BE48-4C59-9145-857C3247B20D@lca.pw>
+ <20191115145540.GP4163745@devbig004.ftw2.facebook.com>
+ <1574279778.9585.15.camel@lca.pw>
+ <26dc5699-9223-3e35-65f3-955fef7a990a@kernel.dk>
 MIME-Version: 1.0
-X-Received: by 2002:a92:9a17:: with SMTP id t23mr31910133ili.40.1574673128923;
- Mon, 25 Nov 2019 01:12:08 -0800 (PST)
-Date:   Mon, 25 Nov 2019 01:12:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000007cace40598282858@google.com>
-Subject: WARNING: refcount bug in smc_release (2)
-From:   syzbot <syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        ubraun@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <26dc5699-9223-3e35-65f3-955fef7a990a@kernel.dk>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
+On Wed, Nov 20, 2019 at 04:17:51PM -0700, Jens Axboe wrote:
+> On 11/20/19 12:56 PM, Qian Cai wrote:
+> > On Fri, 2019-11-15 at 06:55 -0800, Tejun Heo wrote:
+> >> On Thu, Nov 14, 2019 at 07:26:21PM -0500, Qian Cai wrote:
+> >>>
+> >>>
+> >>>> On Nov 14, 2019, at 2:21 PM, Tejun Heo <tj@kernel.org> wrote:
+> >>>>
+> >>>> Acked-by: Tejun Heo <tj@kernel.org>
+> >>>
+> >>> Tejun, suppose you will take this patch via your tree together with the series or should I Cc Andrew who normally handle this file?
+> >>
+> >> Patches in this area usually goes through Jens's block tree.
+> > 
+> > I remember that last time Jens had no interests in picking up trivial patches
+> > like this one. See the commit d1a445d3b86c ("include/trace/events/writeback.h:
+> > fix -Wstringop-truncation warnings").
+> > 
+> > Andrew, care to pick up this again?
+> > 
+> > https://lore.kernel.org/lkml/1573751861-10303-1-git-send-email-cai@lca.pw/
+> 
+> I'm fine with picking it up, this one isn't trivial and it's fixing
+> warnings. But I didn't (and don't) carry f05499a06fb4 in my tree,
+> so it'd be more logical to funnel this one through the tree that
+> has the offending commit.
 
-syzbot found the following crash on:
+Yeah, I was being dumb.  This was from the commit which got applied to
+cgroup tree as part of the cgroup id unification.  Applied to
+cgroup/for-5.5.
 
-HEAD commit:    c4f2cbd3 Merge branch '100GbE' of git://git.kernel.org/pub..
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=172bf5cae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=5ac526dc3578c3d3
-dashboard link: https://syzkaller.appspot.com/bug?extid=96d3f9ff6a86d37e44c8
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+Thanks.
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 0 PID: 20712 at lib/refcount.c:190  
-refcount_sub_and_test_checked lib/refcount.c:190 [inline]
-WARNING: CPU: 0 PID: 20712 at lib/refcount.c:190  
-refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 20712 Comm: syz-executor.0 Not tainted 5.4.0-rc8-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x35 kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:refcount_sub_and_test_checked lib/refcount.c:190 [inline]
-RIP: 0010:refcount_sub_and_test_checked+0x1d0/0x200 lib/refcount.c:180
-Code: 1d fb 91 7d 06 31 ff 89 de e8 6c f1 2d fe 84 db 75 94 e8 23 f0 2d fe  
-48 c7 c7 00 d9 e6 87 c6 05 db 91 7d 06 01 e8 b8 22 ff fd <0f> 0b e9 75 ff  
-ff ff e8 04 f0 2d fe e9 6e ff ff ff 48 89 df e8 17
-RSP: 0018:ffff88807446fa80 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 000000000000f9af RSI: ffffffff815d2076 RDI: ffffed100e88df42
-RBP: ffff88807446fb18 R08: ffff888070648580 R09: ffffed1015d04101
-R10: ffffed1015d04100 R11: ffff8880ae820807 R12: 00000000ffffffff
-R13: 0000000000000001 R14: ffff88807446faf0 R15: 0000000000000000
-  refcount_dec_and_test_checked+0x1b/0x20 lib/refcount.c:220
-  sock_put include/net/sock.h:1728 [inline]
-  smc_release+0x236/0x3e0 net/smc/af_smc.c:202
-  __sock_release+0xce/0x280 net/socket.c:590
-  sock_close+0x1e/0x30 net/socket.c:1268
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  get_signal+0x2078/0x2500 kernel/signal.c:2528
-  do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
-  exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:159
-  prepare_exit_to_usermode arch/x86/entry/common.c:194 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:274 [inline]
-  do_syscall_64+0x65f/0x760 arch/x86/entry/common.c:300
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a639
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f1a52923c78 EFLAGS: 00000246 ORIG_RAX: 000000000000002a
-RAX: ffffffffffffff8d RBX: 0000000000000003 RCX: 000000000045a639
-RDX: 0000000000000010 RSI: 0000000020000000 RDI: 0000000000000003
-RBP: 000000000075bf20 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f1a529246d4
-R13: 00000000004c0dc8 R14: 00000000004d3a00 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+-- 
+tejun
