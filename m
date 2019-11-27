@@ -2,184 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A157010AF3D
-	for <lists+linux-s390@lfdr.de>; Wed, 27 Nov 2019 13:05:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A012D10AF68
+	for <lists+linux-s390@lfdr.de>; Wed, 27 Nov 2019 13:14:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726537AbfK0MFV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 Nov 2019 07:05:21 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39680 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726530AbfK0MFU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 27 Nov 2019 07:05:20 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARC2f1L016509
-        for <linux-s390@vger.kernel.org>; Wed, 27 Nov 2019 07:05:20 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2whmsy9p9m-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 27 Nov 2019 07:05:19 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <ubraun@linux.ibm.com>;
-        Wed, 27 Nov 2019 12:05:17 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 27 Nov 2019 12:05:16 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARC5FWv50790522
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 12:05:15 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 301BC42045;
-        Wed, 27 Nov 2019 12:05:15 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB1AA4203F;
-        Wed, 27 Nov 2019 12:05:14 +0000 (GMT)
-Received: from oc5311105230.ibm.com (unknown [9.152.224.131])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 27 Nov 2019 12:05:14 +0000 (GMT)
-Subject: Re: memory leak in new_inode_pseudo (2)
-To:     Eric Biggers <ebiggers@kernel.org>,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        syzbot <syzbot+e682cca30bc101a4d9d9@syzkaller.appspotmail.com>
-References: <000000000000111cbe058dc7754d@google.com>
- <000000000000ed664f058dc82773@google.com>
- <20191119051350.GK163020@sol.localdomain>
-From:   Ursula Braun <ubraun@linux.ibm.com>
-Date:   Wed, 27 Nov 2019 13:05:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1726593AbfK0MO2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 Nov 2019 07:14:28 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54400 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726515AbfK0MO1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 27 Nov 2019 07:14:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C33C1ADB3;
+        Wed, 27 Nov 2019 12:14:25 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 6649CDA733; Wed, 27 Nov 2019 13:14:23 +0100 (CET)
+Date:   Wed, 27 Nov 2019 13:14:23 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
+Message-ID: <20191127121423.GQ2734@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Josef Bacik <josef@toxicpanda.com>,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
+ <20191126144130.75710-6-zaslonko@linux.ibm.com>
+ <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
 MIME-Version: 1.0
-In-Reply-To: <20191119051350.GK163020@sol.localdomain>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112712-4275-0000-0000-0000038706D1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112712-4276-0000-0000-0000389A952A
-Message-Id: <27dff6d8-b4f2-6940-355a-4bcb47464e71@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_02:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 bulkscore=0
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- spamscore=0 suspectscore=0 mlxscore=0 clxscore=1015 adultscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, Nov 26, 2019 at 10:52:49AM -0500, Josef Bacik wrote:
+> On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
+> > Due to the small size of zlib buffer (1 page) set in btrfs code, s390
+> > hardware compression is rather limited in terms of performance. Increasing
+> > the buffer size to 4 pages would bring significant benefit for s390
+> > hardware compression (up to 60% better performance compared to the
+> > PAGE_SIZE buffer) and should not bring much overhead in terms of memory
+> > consumption due to order 2 allocations.
+> > 
+> > Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+> 
+> We may have to make these allocations under memory pressure in the IO context,
+> order 2 allocations here is going to be not awesome.  If you really want it then
+> you need to at least be able to fall back to single page if you fail to get the
+> allocation.  Thanks,
 
+The allocation is only for the workspace and it does not happen on the
+IO path for each call. There's the pool and if
 
-On 11/19/19 6:13 AM, Eric Biggers wrote:
-> Ursula and Karsten,
-> 
-> On Tue, Jul 16, 2019 at 01:28:06AM -0700, syzbot wrote:
->> syzbot has found a reproducer for the following crash on:
->>
->> HEAD commit:    be8454af Merge tag 'drm-next-2019-07-16' of git://anongit...
->> git tree:       upstream
->> console output: https://syzkaller.appspot.com/x/log.txt?x=13d5f750600000
->> kernel config:  https://syzkaller.appspot.com/x/.config?x=d23a1a7bf85c5250
->> dashboard link: https://syzkaller.appspot.com/bug?extid=e682cca30bc101a4d9d9
->> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
->> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=155c5800600000
->> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1738f800600000
->>
->> IMPORTANT: if you fix the bug, please add the following tag to the commit:
->> Reported-by: syzbot+e682cca30bc101a4d9d9@syzkaller.appspotmail.com
->>
->> executing program
->> executing program
->> executing program
->> executing program
->> BUG: memory leak
->> unreferenced object 0xffff888128ea0980 (size 768):
->>   comm "syz-executor303", pid 7044, jiffies 4294943526 (age 13.490s)
->>   hex dump (first 32 bytes):
->>     01 00 00 00 01 00 00 00 00 00 00 00 00 00 00 00  ................
->>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->>   backtrace:
->>     [<000000005ba542b8>] kmemleak_alloc_recursive
->> include/linux/kmemleak.h:43 [inline]
->>     [<000000005ba542b8>] slab_post_alloc_hook mm/slab.h:522 [inline]
->>     [<000000005ba542b8>] slab_alloc mm/slab.c:3319 [inline]
->>     [<000000005ba542b8>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
->>     [<000000006532a1e9>] sock_alloc_inode+0x1c/0xa0 net/socket.c:238
->>     [<0000000014ddc967>] alloc_inode+0x2c/0xe0 fs/inode.c:227
->>     [<0000000056541455>] new_inode_pseudo+0x18/0x70 fs/inode.c:916
->>     [<000000003b5b5444>] sock_alloc+0x1c/0x90 net/socket.c:554
->>     [<00000000e623b353>] __sock_create+0x8f/0x250 net/socket.c:1378
->>     [<000000000e094708>] sock_create_kern+0x3b/0x50 net/socket.c:1483
->>     [<000000009fe4f64f>] smc_create+0xae/0x160 net/smc/af_smc.c:1975
->>     [<0000000056be84a7>] __sock_create+0x164/0x250 net/socket.c:1414
->>     [<000000005915e5fe>] sock_create net/socket.c:1465 [inline]
->>     [<000000005915e5fe>] __sys_socket+0x69/0x110 net/socket.c:1507
->>     [<00000000afa837b2>] __do_sys_socket net/socket.c:1516 [inline]
->>     [<00000000afa837b2>] __se_sys_socket net/socket.c:1514 [inline]
->>     [<00000000afa837b2>] __x64_sys_socket+0x1e/0x30 net/socket.c:1514
->>     [<00000000d0addad1>] do_syscall_64+0x76/0x1a0
->> arch/x86/entry/common.c:296
->>     [<000000004e8e7c22>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
->> BUG: memory leak
->> unreferenced object 0xffff88811faeeab8 (size 56):
->>   comm "syz-executor303", pid 7044, jiffies 4294943526 (age 13.490s)
->>   hex dump (first 32 bytes):
->>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
->>     00 0a ea 28 81 88 ff ff d0 ea ae 1f 81 88 ff ff  ...(............
->>   backtrace:
->>     [<000000005ba542b8>] kmemleak_alloc_recursive
->> include/linux/kmemleak.h:43 [inline]
->>     [<000000005ba542b8>] slab_post_alloc_hook mm/slab.h:522 [inline]
->>     [<000000005ba542b8>] slab_alloc mm/slab.c:3319 [inline]
->>     [<000000005ba542b8>] kmem_cache_alloc+0x13f/0x2c0 mm/slab.c:3483
->>     [<000000008ca63096>] kmem_cache_zalloc include/linux/slab.h:738 [inline]
->>     [<000000008ca63096>] lsm_inode_alloc security/security.c:522 [inline]
->>     [<000000008ca63096>] security_inode_alloc+0x33/0xb0
->> security/security.c:875
->>     [<00000000b335d930>] inode_init_always+0x108/0x200 fs/inode.c:169
->>     [<0000000015dcffb3>] alloc_inode+0x49/0xe0 fs/inode.c:234
->>     [<0000000056541455>] new_inode_pseudo+0x18/0x70 fs/inode.c:916
->>     [<000000003b5b5444>] sock_alloc+0x1c/0x90 net/socket.c:554
->>     [<00000000e623b353>] __sock_create+0x8f/0x250 net/socket.c:1378
->>     [<000000000e094708>] sock_create_kern+0x3b/0x50 net/socket.c:1483
->>     [<000000009fe4f64f>] smc_create+0xae/0x160 net/smc/af_smc.c:1975
->>     [<0000000056be84a7>] __sock_create+0x164/0x250 net/socket.c:1414
->>     [<000000005915e5fe>] sock_create net/socket.c:1465 [inline]
->>     [<000000005915e5fe>] __sys_socket+0x69/0x110 net/socket.c:1507
->>     [<00000000afa837b2>] __do_sys_socket net/socket.c:1516 [inline]
->>     [<00000000afa837b2>] __se_sys_socket net/socket.c:1514 [inline]
->>     [<00000000afa837b2>] __x64_sys_socket+0x1e/0x30 net/socket.c:1514
->>     [<00000000d0addad1>] do_syscall_64+0x76/0x1a0
->> arch/x86/entry/common.c:296
->>     [<000000004e8e7c22>] entry_SYSCALL_64_after_hwframe+0x44/0xa9
->>
-> 
-> Do you think this was fixed by:
-> 
-> 	commit 6d6dd528d5af05dc2d0c773951ed68d630a0c3f1
-> 	Author: Ursula Braun <ubraun@linux.ibm.com>
-> 	Date:   Tue Nov 12 16:03:41 2019 +0100
-> 
-> 	    net/smc: fix refcount non-blocking connect() -part 2
-> 
-> ?
-> 
+btrfs_get_workspace
+  alloc_workspace
 
-No, I don't think so. This patch changes the SMC connect() code, but I do not
-see any connect() call in the syzbot C-reproducer.
+fails, then there's fallback path to wait for an existing workspace to
+be free.
 
-Regards, Ursula
+The order 2 allocation can put more pressure on the allocator though so
+it's possible to have effects in some corner cases, but not in general.
+I don't think the single page fallback code is needed.
 
-> Thanks!
-> 
-> - Eric
-> 
-
+And of course evaluation of the effects of the larger zlib buffer should
+be done, it could improve compression but probably at the cost of cpu
+time. Also decompression of blocks created on new code (4 pages) must
+work on the old code (1 page).
