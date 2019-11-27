@@ -2,100 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBBE710B07D
-	for <lists+linux-s390@lfdr.de>; Wed, 27 Nov 2019 14:43:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1712910B099
+	for <lists+linux-s390@lfdr.de>; Wed, 27 Nov 2019 14:50:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfK0Nnl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 27 Nov 2019 08:43:41 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55990 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726320AbfK0Nnk (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 27 Nov 2019 08:43:40 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xARDfY77093032;
-        Wed, 27 Nov 2019 08:42:25 -0500
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2whh323tb7-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 08:42:25 -0500
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xARDaaeM005774;
-        Wed, 27 Nov 2019 13:42:24 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma05wdc.us.ibm.com with ESMTP id 2wevd75033-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 27 Nov 2019 13:42:24 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xARDgMud50856388
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 27 Nov 2019 13:42:23 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D69FD124055;
-        Wed, 27 Nov 2019 13:42:22 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BCE99124054;
-        Wed, 27 Nov 2019 13:42:21 +0000 (GMT)
-Received: from [9.152.98.31] (unknown [9.152.98.31])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTPS;
-        Wed, 27 Nov 2019 13:42:21 +0000 (GMT)
-Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        id S1726947AbfK0Nur (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 27 Nov 2019 08:50:47 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:33883 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726603AbfK0Nuq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 27 Nov 2019 08:50:46 -0500
+Received: by mail-qt1-f193.google.com with SMTP id i17so25407011qtq.1
+        for <linux-s390@vger.kernel.org>; Wed, 27 Nov 2019 05:50:46 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=ENNwrqnWly2N10fI6HBSaY3UGXsvSsC9VbBvDzJ2fE4=;
+        b=ZCPjTjYFKJSo59edWWJKdIEzNpFhc/9jtIXuuBiL0padAr263DJCa4Ys+0+Ey5qxGE
+         o8h52k0zglz8ZVr20Eea5eUSGBOYJxVjhuJoCuJzJzJWL+OZteGZXCcDhUEL3YdPUJJb
+         5LMfNwaJqONlCGcKESwVn2zovdGtILOoP6OgOJLNTSflRgc+ag1tyhz+D4EtuVRQYE3e
+         3kHSWCOwwX3Cf68P8K2mocL/5KZfC2dG2xDYxwEipMRiqY7sqm5uk/99PYI8g6RyR/Kc
+         20YCqFPTr60d6V6pyu4X1EHKdjFWua3C/7q1RWk1h4xksKpsBh02tJ9X/jMakyofeF2e
+         +f1g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=ENNwrqnWly2N10fI6HBSaY3UGXsvSsC9VbBvDzJ2fE4=;
+        b=f4at+3k1trb7JWWy5wi9hDYLiwrv3amer1KUR+OVlsGb3uVl7GWFUlFpJit/9QBjOG
+         rxjRyyR8XWRzaNeZZBh2HsVBw0AaXbACjjVBuHr7/xtGUehzOgSoMsUSXfXq0anv+pre
+         DNzERS6p7jBOfZq8HIcNojAGmMykioISgi7XdNdwOddzRInpAgLxQoh1nvXfF05mgIpw
+         1CsxNFF9Pu/+A+i6dympuUbgILs2nuUTr+hP3cTSf0buJUwTTwBR7Q9xPUcVLFXxJAvc
+         1c9btfxtUdVTaEITs/J0M6moDY/ozz38RpNBGs6kW42Lcq73p6xv9a8elEZdMpT91cl5
+         kebg==
+X-Gm-Message-State: APjAAAUGuIf6ZYq7SklH8Mb+na2ETtyiNA5o/xtVwuU/gSelmkwabwHZ
+        bYfJvlzH+wqmGA5GijHhh+XAiw==
+X-Google-Smtp-Source: APXvYqx0lnYA48mVzDt/HFClzXsTo+VHwuQqTUeAATshA9YhBhAlTZhOlO3h9piVCjXbaomUYqQ8tw==
+X-Received: by 2002:ac8:4083:: with SMTP id p3mr23043927qtl.144.1574862645640;
+        Wed, 27 Nov 2019 05:50:45 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::e4d7])
+        by smtp.gmail.com with ESMTPSA id g5sm1890999qki.92.2019.11.27.05.50.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 27 Nov 2019 05:50:44 -0800 (PST)
+Date:   Wed, 27 Nov 2019 08:50:43 -0500
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
         Richard Purdie <rpurdie@rpsys.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
+Message-ID: <20191127135043.6hqadevwkfeqyv2p@macbook-pro-91.dhcp.thefacebook.com>
 References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
  <20191126144130.75710-6-zaslonko@linux.ibm.com>
  <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
-From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Message-ID: <11377b99-b66c-fdc3-5c8f-0bae34c92c03@linux.ibm.com>
-Date:   Wed, 27 Nov 2019 14:42:20 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ <11377b99-b66c-fdc3-5c8f-0bae34c92c03@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-27_03:2019-11-27,2019-11-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 bulkscore=0
- adultscore=0 mlxlogscore=773 malwarescore=0 mlxscore=0 priorityscore=1501
- phishscore=0 impostorscore=0 clxscore=1015 suspectscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911270119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <11377b99-b66c-fdc3-5c8f-0bae34c92c03@linux.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
-
-On 26.11.2019 16:52, Josef Bacik wrote:
-> On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
->> Due to the small size of zlib buffer (1 page) set in btrfs code, s390
->> hardware compression is rather limited in terms of performance. Increasing
->> the buffer size to 4 pages would bring significant benefit for s390
->> hardware compression (up to 60% better performance compared to the
->> PAGE_SIZE buffer) and should not bring much overhead in terms of memory
->> consumption due to order 2 allocations.
->>
->> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+On Wed, Nov 27, 2019 at 02:42:20PM +0100, Zaslonko Mikhail wrote:
+> Hello,
 > 
-> We may have to make these allocations under memory pressure in the IO context,
-> order 2 allocations here is going to be not awesome.  If you really want it then
-> you need to at least be able to fall back to single page if you fail to get the
-> allocation.  Thanks,
+> On 26.11.2019 16:52, Josef Bacik wrote:
+> > On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
+> >> Due to the small size of zlib buffer (1 page) set in btrfs code, s390
+> >> hardware compression is rather limited in terms of performance. Increasing
+> >> the buffer size to 4 pages would bring significant benefit for s390
+> >> hardware compression (up to 60% better performance compared to the
+> >> PAGE_SIZE buffer) and should not bring much overhead in terms of memory
+> >> consumption due to order 2 allocations.
+> >>
+> >> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+> > 
+> > We may have to make these allocations under memory pressure in the IO context,
+> > order 2 allocations here is going to be not awesome.  If you really want it then
+> > you need to at least be able to fall back to single page if you fail to get the
+> > allocation.  Thanks,
+> > 
+> 
+> As far as I understand GFP_KERNEL allocations would never fail for the order <= 
+> PAGE_ALLOC_COSTLY_ORDER. How else can the memory pressure condition be identified
+> here?
 > 
 
-As far as I understand GFP_KERNEL allocations would never fail for the order <= 
-PAGE_ALLOC_COSTLY_ORDER. How else can the memory pressure condition be identified
-here?
+Except these can be done under NOFS, and just because GFP_KERNEL probably won't
+fail doesn't mean it won't cause problems accross the system at alloc time.
+Half of our rebase time at Facebook is spent finding all the fun ways people
+have abused memory allocations not thinking about how the system behaves under
+memory pressure.  Thanks,
 
-> josef
-> 
+Josef
