@@ -2,85 +2,99 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BDEF910CD3D
-	for <lists+linux-s390@lfdr.de>; Thu, 28 Nov 2019 17:51:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0806E10CEC5
+	for <lists+linux-s390@lfdr.de>; Thu, 28 Nov 2019 20:16:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726700AbfK1Qv6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 Nov 2019 11:51:58 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20968 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726569AbfK1Qv5 (ORCPT
+        id S1726622AbfK1TQk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 28 Nov 2019 14:16:40 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16616 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726634AbfK1TQk (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 28 Nov 2019 11:51:57 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASGlcYp159361
-        for <linux-s390@vger.kernel.org>; Thu, 28 Nov 2019 11:51:56 -0500
+        Thu, 28 Nov 2019 14:16:40 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASJBx5R074179
+        for <linux-s390@vger.kernel.org>; Thu, 28 Nov 2019 14:16:39 -0500
 Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wjf1v6s4r-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjgjdf8uu-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 28 Nov 2019 11:51:56 -0500
+        for <linux-s390@vger.kernel.org>; Thu, 28 Nov 2019 14:16:39 -0500
 Received: from localhost
         by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Thu, 28 Nov 2019 16:51:54 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 28 Nov 2019 19:16:37 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
         by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 28 Nov 2019 16:51:50 -0000
+        Thu, 28 Nov 2019 19:16:35 -0000
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASGpmKa46006438
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASJGYVW47775906
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 28 Nov 2019 16:51:48 GMT
+        Thu, 28 Nov 2019 19:16:34 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A437E52050;
-        Thu, 28 Nov 2019 16:51:48 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.112])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 4B1C052057;
-        Thu, 28 Nov 2019 16:51:48 +0000 (GMT)
-Date:   Thu, 28 Nov 2019 17:51:47 +0100
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     heiko.carstens@de.ibm.com, borntraeger@de.ibm.com,
-        jpoimboe@redhat.com, joe.lawrence@redhat.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jikos@kernel.org, pmladek@suse.com, nstange@suse.de,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v3 1/4] s390/unwind: drop unnecessary code around calling
- ftrace_graph_ret_addr()
-References: <20191106095601.29986-1-mbenes@suse.cz>
- <20191106095601.29986-2-mbenes@suse.cz>
+        by IMSVA (Postfix) with ESMTP id 2A42752051;
+        Thu, 28 Nov 2019 19:16:34 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.185.119])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C8E9852050;
+        Thu, 28 Nov 2019 19:16:33 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v2 2/9] s390x: Define the PSW bits
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        thuth@redhat.com, cohuck@redhat.com
+References: <1574945167-29677-1-git-send-email-pmorel@linux.ibm.com>
+ <1574945167-29677-3-git-send-email-pmorel@linux.ibm.com>
+ <489b43a4-6f71-71bf-b936-e4c94e52387b@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Thu, 28 Nov 2019 20:16:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191106095601.29986-2-mbenes@suse.cz>
+In-Reply-To: <489b43a4-6f71-71bf-b936-e4c94e52387b@redhat.com>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 X-TM-AS-GCONF: 00
-x-cbid: 19112816-0028-0000-0000-000003C135A0
+x-cbid: 19112819-0028-0000-0000-000003C1461A
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112816-0029-0000-0000-00002484414C
-Message-Id: <your-ad-here.call-01574959907-ext-0700@work.hours>
+x-cbparentid: 19112819-0029-0000-0000-00002484521B
+Message-Id: <7abb4725-b814-8b43-8a4f-e0e2cf7a44f8@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-28_05:2019-11-28,2019-11-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
- impostorscore=0 phishscore=0 mlxlogscore=731 spamscore=0 adultscore=0
- lowpriorityscore=0 clxscore=1015 suspectscore=1 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911280142
+ definitions=2019-11-28_06:2019-11-28,2019-11-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ priorityscore=1501 mlxscore=0 malwarescore=0 phishscore=0 spamscore=0
+ mlxlogscore=999 lowpriorityscore=0 adultscore=0 suspectscore=0
+ clxscore=1015 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911280165
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 10:55:58AM +0100, Miroslav Benes wrote:
-> The current code around calling ftrace_graph_ret_addr() is ifdeffed and
-> also tests if ftrace redirection is present on stack.
-> ftrace_graph_ret_addr() however performs the test internally and there
-> is a version for !CONFIG_FUNCTION_GRAPH_TRACER as well. The unnecessary
-> code can thus be dropped.
-> 
-> Signed-off-by: Miroslav Benes <mbenes@suse.cz>
-> ---
->  arch/s390/kernel/unwind_bc.c | 16 ++++------------
->  1 file changed, 4 insertions(+), 12 deletions(-)
 
-This patch has been picked up from v2 already. It's in Linus tree.
+On 2019-11-28 15:36, David Hildenbrand wrote:
+> On 28.11.19 13:46, Pierre Morel wrote:
+>> Let's define the PSW bits  explicitly, it will clarify their
+>> usage.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+>>   lib/s390x/asm/arch_bits.h | 20 ++++++++++++++++++++
+>>   lib/s390x/asm/arch_def.h  |  6 ++----
+> I'm sorry, but I don't really see a reason to move these 4/5 defines to
+> a separate header. Can you just keep them in arch_def.h and extend?
+
+no because arch_def.h contains C structures and inline.
+
+
+>
+> (none of your other patches touch arch_bits.h - and it is somewhat a
+> weird name. Where to put something new: arch_def.h or arch_bits.h? I
+> would have understood "psw.h", but even that, I don't consider necessary)
+>
+I can use a name like psw.h or let fall and keep the hexa.
+
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
 
