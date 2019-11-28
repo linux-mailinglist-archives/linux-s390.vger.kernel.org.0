@@ -2,56 +2,124 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC3B010C42E
-	for <lists+linux-s390@lfdr.de>; Thu, 28 Nov 2019 08:05:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E008E10C8CB
+	for <lists+linux-s390@lfdr.de>; Thu, 28 Nov 2019 13:46:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726583AbfK1HFn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 28 Nov 2019 02:05:43 -0500
-Received: from verein.lst.de ([213.95.11.211]:50681 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726301AbfK1HFn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 28 Nov 2019 02:05:43 -0500
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id CFD2968C7B; Thu, 28 Nov 2019 08:05:38 +0100 (CET)
-Date:   Thu, 28 Nov 2019 08:05:38 +0100
-From:   Christoph Hellwig <hch@lst.de>
-To:     Ashish Kalra <ashish.kalra@amd.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Tom Lendacky <thomas.lendacky@amd.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        linux-s390@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>
-Subject: Re: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
-Message-ID: <20191128070538.GB20274@lst.de>
-References: <20191114124646.74790-1-pasic@linux.ibm.com> <20191119121022.03aed69a.pasic@linux.ibm.com> <20191119080420-mutt-send-email-mst@kernel.org> <20191122140827.0ead345c.pasic@linux.ibm.com> <1ec7c229-6c4f-9351-efda-ed2df20f95f6@amd.com> <20191126184527.GA10481@lst.de> <20191128004225.GA11539@ashkalra_ubuntu_server>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191128004225.GA11539@ashkalra_ubuntu_server>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1726401AbfK1MqQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 28 Nov 2019 07:46:16 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57928 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726252AbfK1MqQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 28 Nov 2019 07:46:16 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xASCgwLu060789
+        for <linux-s390@vger.kernel.org>; Thu, 28 Nov 2019 07:46:15 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2whmt0nm98-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 28 Nov 2019 07:46:14 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 28 Nov 2019 12:46:12 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 28 Nov 2019 12:46:10 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xASCk9hv62259226
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 28 Nov 2019 12:46:09 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9023DAE045;
+        Thu, 28 Nov 2019 12:46:09 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2DB8AAE056;
+        Thu, 28 Nov 2019 12:46:09 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.185.119])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 28 Nov 2019 12:46:09 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, thuth@redhat.com, cohuck@redhat.com
+Subject: [kvm-unit-tests PATCH v2 0/9] s390x: Testing the Channel Subsystem I/O
+Date:   Thu, 28 Nov 2019 13:45:58 +0100
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19112812-0028-0000-0000-000003C11C66
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19112812-0029-0000-0000-000024842715
+Message-Id: <1574945167-29677-1-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-28_03:2019-11-28,2019-11-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=722 bulkscore=0
+ malwarescore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
+ spamscore=0 suspectscore=1 mlxscore=0 clxscore=1015 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911280112
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Nov 28, 2019 at 12:42:25AM +0000, Ashish Kalra wrote:
-> Why can't we leverage CMA instead of SWIOTLB for DMA when SEV is
-> enabled, CMA is well integerated with the DMA subsystem and handles
-> encrypted pages when force_dma_unencrypted() returns TRUE. 
-> 
-> Though, CMA might face the same issues as SWIOTLB bounce buffers, it's
-> size is similarly setup statically as SWIOTLB does or can be set as a 
-> percentage of the available system memory.
+Goal of the series is to have a framwork to test Channel-Subsystem I/O with
+QEMU/KVM.
 
-How is CMA integrated with SEV?  CMA just gives a contiguous chunk
-of memory, which still needs to be remapped as unencrypted before
-returning it to the user.
+To be able to support interrupt for CSS I/O and for SCLP we need to modify
+the interrupt framework to allow re-entrant interruptions.
+
+Making the interrupt handler weak allows the test programm to define its own
+interrupt handler. We need to do special work under interrupt like acknoledging
+the interrupt.
+
+Being working on PSW bits to allow I/O interrupt, we define all PSW bits in a
+dedicated file.
+
+The simple test tests the I/O reading by the SUB Channel. It needs QEMU to
+be patched to have the pong device defined.
+The pong device answers, for now, with a Hello World to the read request.
+
+
+Pierre Morel (9):
+  s390x: saving regs for interrupts
+  s390x: Define the PSW bits
+  s390x: irq: make IRQ handler weak
+  s390x: export the clock get_clock_ms() utility
+  s390x: Library resources for CSS tests
+  s390x: css: stsch, enumeration test
+  s390x: css: msch, enable test
+  s390x: css: ssch/tsch with sense and interrupt
+  s390x: css: ping pong
+
+ lib/s390x/asm/arch_bits.h |  20 +++
+ lib/s390x/asm/arch_def.h  |   6 +-
+ lib/s390x/asm/clock.h     |  25 ++++
+ lib/s390x/css.h           | 282 ++++++++++++++++++++++++++++++++++++
+ lib/s390x/css_dump.c      | 147 +++++++++++++++++++
+ lib/s390x/interrupt.c     |   2 +-
+ s390x/Makefile            |   4 +-
+ s390x/css.c               | 294 ++++++++++++++++++++++++++++++++++++++
+ s390x/cstart64.S          |  38 +++--
+ s390x/intercept.c         |  11 +-
+ s390x/unittests.cfg       |   4 +
+ 11 files changed, 809 insertions(+), 24 deletions(-)
+ create mode 100644 lib/s390x/asm/arch_bits.h
+ create mode 100644 lib/s390x/asm/clock.h
+ create mode 100644 lib/s390x/css.h
+ create mode 100644 lib/s390x/css_dump.c
+ create mode 100644 s390x/css.c
+
+-- 
+2.17.0
+
+Changelog:
+- saving floating point registers (David, Janosh)
+- suppress unused PSW bits defintions (Janosh)
+- added Thomas reviewed-by
+- style and comments modifications (Connie, Janosh)
+- moved get_clock_ms() into headers and use it (Thomas)
+- separate header and library utility from tests
+- Suppress traces, separate tests, make better usage of reports
+
