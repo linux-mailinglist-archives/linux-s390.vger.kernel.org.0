@@ -2,159 +2,163 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 551EB10D6E5
-	for <lists+linux-s390@lfdr.de>; Fri, 29 Nov 2019 15:21:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C6FDF10D705
+	for <lists+linux-s390@lfdr.de>; Fri, 29 Nov 2019 15:31:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfK2OVo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 29 Nov 2019 09:21:44 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47844 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726808AbfK2OVo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:21:44 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xATEIamC044787
-        for <linux-s390@vger.kernel.org>; Fri, 29 Nov 2019 09:21:43 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjvfgh896-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 29 Nov 2019 09:21:43 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Fri, 29 Nov 2019 14:21:41 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 29 Nov 2019 14:21:37 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xATELaSP55705770
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Nov 2019 14:21:36 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC228A4054;
-        Fri, 29 Nov 2019 14:21:35 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 30148A405C;
-        Fri, 29 Nov 2019 14:21:34 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.188.128])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 29 Nov 2019 14:21:33 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     thuth@redhat.com, david@redhat.com, borntraeger@de.ibm.com,
-        mihajlov@linux.ibm.com, cohuck@redhat.com,
-        linux-s390@vger.kernel.org
-Subject: [PATCH] KVM: s390: Add new reset vcpu API
-Date:   Fri, 29 Nov 2019 09:21:22 -0500
-X-Mailer: git-send-email 2.20.1
+        id S1726934AbfK2Obv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 29 Nov 2019 09:31:51 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43942 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726808AbfK2Obu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 29 Nov 2019 09:31:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575037909;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=hP0oY4h6+KNu9YkOzZioE8MzsM9rYT+KCQ582wt/cEY=;
+        b=IhDVubQ8Qy/6mp057kzcq0A0B0GGZE9KGHVUfcY4s/muzZP65nbo8br70mhgQyxp8eaWtP
+        siIc2Z3ypTS6ZCFNisFYjUIKASQfVaVL5uT8G4nnHOV/R20lGNALasZ11SjX4b4PfRVjIz
+        4VEaKFRJkFpMm2XU93v/puI9uOfDFeA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-5-NLIvxqUXOEyDXLfLmgDUPg-1; Fri, 29 Nov 2019 09:31:45 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93F0B184CAA0;
+        Fri, 29 Nov 2019 14:31:43 +0000 (UTC)
+Received: from [10.36.118.44] (unknown [10.36.118.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 12B025C3FA;
+        Fri, 29 Nov 2019 14:31:41 +0000 (UTC)
+Subject: Re: [PATCH] KVM: s390: Add new reset vcpu API
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     thuth@redhat.com, borntraeger@de.ibm.com, mihajlov@linux.ibm.com,
+        cohuck@redhat.com, linux-s390@vger.kernel.org
+References: <20191129142122.21528-1-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <bc1d057f-03a0-b850-dff8-a7156bfe3274@redhat.com>
+Date:   Fri, 29 Nov 2019 15:31:41 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19112914-4275-0000-0000-000003880E51
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112914-4276-0000-0000-0000389BA3B9
-Message-Id: <20191129142122.21528-1-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-29_04:2019-11-29,2019-11-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501 suspectscore=1
- lowpriorityscore=0 phishscore=0 bulkscore=0 malwarescore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-1911290124
+In-Reply-To: <20191129142122.21528-1-frankja@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: NLIvxqUXOEyDXLfLmgDUPg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The architecture states that we need to reset local IRQs for all CPU
-resets. Because the old reset interface did not support the normal CPU
-reset we never did that.
+On 29.11.19 15:21, Janosch Frank wrote:
+> The architecture states that we need to reset local IRQs for all CPU
+> resets. Because the old reset interface did not support the normal CPU
+> reset we never did that.
+> 
+> Now that we have a new interface, let's properly clear out local IRQs
+> and let this commit be a reminder.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  arch/s390/kvm/kvm-s390.c | 25 ++++++++++++++++++++++++-
+>  include/uapi/linux/kvm.h |  7 +++++++
+>  2 files changed, 31 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index d9e6bf3d54f0..2f74ff46b176 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -529,6 +529,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+>  	case KVM_CAP_S390_CMMA_MIGRATION:
+>  	case KVM_CAP_S390_AIS:
+>  	case KVM_CAP_S390_AIS_MIGRATION:
+> +	case KVM_CAP_S390_VCPU_RESETS:
+>  		r = 1;
+>  		break;
+>  	case KVM_CAP_S390_HPAGE_1M:
+> @@ -3293,6 +3294,25 @@ static int kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
+>  	return 0;
+>  }
+>  
+> +static int kvm_arch_vcpu_ioctl_reset(struct kvm_vcpu *vcpu, unsigned long type)
+> +{
+> +	int rc = -EINVAL;
+> +
+> +	switch (type) {
+> +	case KVM_S390_VCPU_RESET_NORMAL:
+> +		rc = 0;
+> +		kvm_clear_async_pf_completion_queue(vcpu);
+> +		kvm_s390_clear_local_irqs(vcpu);
+> +		break;
+> +	case KVM_S390_VCPU_RESET_INITIAL:
+> +		/* fallthrough */
+> +	case KVM_S390_VCPU_RESET_CLEAR:
+> +		rc = kvm_arch_vcpu_ioctl_initial_reset(vcpu);
 
-Now that we have a new interface, let's properly clear out local IRQs
-and let this commit be a reminder.
+As we now have two interfaces to achieve the same thing (initial reset),
+I do wonder if we should simply introduce
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
----
- arch/s390/kvm/kvm-s390.c | 25 ++++++++++++++++++++++++-
- include/uapi/linux/kvm.h |  7 +++++++
- 2 files changed, 31 insertions(+), 1 deletion(-)
+KVM_S390_NORMAL_RESET
+KVM_S390_CLEAR_RESET
 
-diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-index d9e6bf3d54f0..2f74ff46b176 100644
---- a/arch/s390/kvm/kvm-s390.c
-+++ b/arch/s390/kvm/kvm-s390.c
-@@ -529,6 +529,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
- 	case KVM_CAP_S390_CMMA_MIGRATION:
- 	case KVM_CAP_S390_AIS:
- 	case KVM_CAP_S390_AIS_MIGRATION:
-+	case KVM_CAP_S390_VCPU_RESETS:
- 		r = 1;
- 		break;
- 	case KVM_CAP_S390_HPAGE_1M:
-@@ -3293,6 +3294,25 @@ static int kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
- 	return 0;
- }
- 
-+static int kvm_arch_vcpu_ioctl_reset(struct kvm_vcpu *vcpu, unsigned long type)
-+{
-+	int rc = -EINVAL;
-+
-+	switch (type) {
-+	case KVM_S390_VCPU_RESET_NORMAL:
-+		rc = 0;
-+		kvm_clear_async_pf_completion_queue(vcpu);
-+		kvm_s390_clear_local_irqs(vcpu);
-+		break;
-+	case KVM_S390_VCPU_RESET_INITIAL:
-+		/* fallthrough */
-+	case KVM_S390_VCPU_RESET_CLEAR:
-+		rc = kvm_arch_vcpu_ioctl_initial_reset(vcpu);
-+		break;
-+	}
-+	return rc;
-+}
-+
- int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
- {
- 	vcpu_load(vcpu);
-@@ -4364,7 +4384,10 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
- 		break;
- 	}
- 	case KVM_S390_INITIAL_RESET:
--		r = kvm_arch_vcpu_ioctl_initial_reset(vcpu);
-+		arg = KVM_S390_VCPU_RESET_INITIAL;
-+		/* fallthrough */
-+	case KVM_S390_VCPU_RESET:
-+		r = kvm_arch_vcpu_ioctl_reset(vcpu, arg);
- 		break;
- 	case KVM_SET_ONE_REG:
- 	case KVM_GET_ONE_REG: {
-diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-index 52641d8ca9e8..6da16b1f2c86 100644
---- a/include/uapi/linux/kvm.h
-+++ b/include/uapi/linux/kvm.h
-@@ -1000,6 +1000,7 @@ struct kvm_ppc_resize_hpt {
- #define KVM_CAP_PMU_EVENT_FILTER 173
- #define KVM_CAP_ARM_IRQ_LINE_LAYOUT_2 174
- #define KVM_CAP_HYPERV_DIRECT_TLBFLUSH 175
-+#define KVM_CAP_S390_VCPU_RESETS 180
- 
- #ifdef KVM_CAP_IRQ_ROUTING
- 
-@@ -1461,6 +1462,12 @@ struct kvm_enc_region {
- /* Available with KVM_CAP_ARM_SVE */
- #define KVM_ARM_VCPU_FINALIZE	  _IOW(KVMIO,  0xc2, int)
- 
-+#define KVM_S390_VCPU_RESET_NORMAL	0
-+#define KVM_S390_VCPU_RESET_INITIAL	1
-+#define KVM_S390_VCPU_RESET_CLEAR	2
-+
-+#define KVM_S390_VCPU_RESET    _IO(KVMIO,   0xc3)
-+
- /* Secure Encrypted Virtualization command */
- enum sev_cmd_id {
- 	/* Guest initialization commands */
+instead ...
+
+Then you can do KVM_S390_NORMAL_RESET for the bugfix and
+KVM_S390_CLEAR_RESET later for PV.
+
+Does anything speak against that?
+
 -- 
-2.20.1
+Thanks,
+
+David / dhildenb
 
