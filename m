@@ -2,124 +2,159 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3367110D6A6
-	for <lists+linux-s390@lfdr.de>; Fri, 29 Nov 2019 15:09:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 551EB10D6E5
+	for <lists+linux-s390@lfdr.de>; Fri, 29 Nov 2019 15:21:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726857AbfK2OJw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 29 Nov 2019 09:09:52 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13270 "EHLO
+        id S1726824AbfK2OVo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 29 Nov 2019 09:21:44 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47844 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726808AbfK2OJw (ORCPT
+        by vger.kernel.org with ESMTP id S1726808AbfK2OVo (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 29 Nov 2019 09:09:52 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xATE2aZF051082
-        for <linux-s390@vger.kernel.org>; Fri, 29 Nov 2019 09:09:51 -0500
+        Fri, 29 Nov 2019 09:21:44 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xATEIamC044787
+        for <linux-s390@vger.kernel.org>; Fri, 29 Nov 2019 09:21:43 -0500
 Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjuwh9t0v-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wjvfgh896-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 29 Nov 2019 09:09:51 -0500
+        for <linux-s390@vger.kernel.org>; Fri, 29 Nov 2019 09:21:43 -0500
 Received: from localhost
         by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 29 Nov 2019 14:09:48 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Fri, 29 Nov 2019 14:21:41 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
         by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 29 Nov 2019 14:09:44 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xATE9h6h50200654
+        Fri, 29 Nov 2019 14:21:37 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xATELaSP55705770
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 29 Nov 2019 14:09:43 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EAAF011C05E;
-        Fri, 29 Nov 2019 14:09:42 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7816511C050;
-        Fri, 29 Nov 2019 14:09:42 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.151])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 29 Nov 2019 14:09:42 +0000 (GMT)
-Date:   Fri, 29 Nov 2019 15:09:41 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Tom Lendacky <thomas.lendacky@amd.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        linux-s390@vger.kernel.org, Michael Mueller <mimu@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Brijesh Singh <brijesh.singh@amd.com>,
-        "Kalra, Ashish" <Ashish.Kalra@amd.com>
-Subject: Re: [PATCH 1/1] virtio_ring: fix return code on DMA mapping fails
-In-Reply-To: <20191126184527.GA10481@lst.de>
-References: <20191114124646.74790-1-pasic@linux.ibm.com>
-        <20191119121022.03aed69a.pasic@linux.ibm.com>
-        <20191119080420-mutt-send-email-mst@kernel.org>
-        <20191122140827.0ead345c.pasic@linux.ibm.com>
-        <1ec7c229-6c4f-9351-efda-ed2df20f95f6@amd.com>
-        <20191126184527.GA10481@lst.de>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Fri, 29 Nov 2019 14:21:36 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC228A4054;
+        Fri, 29 Nov 2019 14:21:35 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 30148A405C;
+        Fri, 29 Nov 2019 14:21:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.188.128])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 29 Nov 2019 14:21:33 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     thuth@redhat.com, david@redhat.com, borntraeger@de.ibm.com,
+        mihajlov@linux.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org
+Subject: [PATCH] KVM: s390: Add new reset vcpu API
+Date:   Fri, 29 Nov 2019 09:21:22 -0500
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19112914-4275-0000-0000-000003880D13
+x-cbid: 19112914-4275-0000-0000-000003880E51
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19112914-4276-0000-0000-0000389BA270
-Message-Id: <20191129150941.34cab07a.pasic@linux.ibm.com>
+x-cbparentid: 19112914-4276-0000-0000-0000389BA3B9
+Message-Id: <20191129142122.21528-1-frankja@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-11-29_04:2019-11-29,2019-11-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
- impostorscore=0 priorityscore=1501 adultscore=0 mlxscore=0 bulkscore=0
- suspectscore=0 clxscore=1015 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911290123
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 clxscore=1015 spamscore=0 priorityscore=1501 suspectscore=1
+ lowpriorityscore=0 phishscore=0 bulkscore=0 malwarescore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1911290124
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 26 Nov 2019 19:45:27 +0100
-Christoph Hellwig <hch@lst.de> wrote:
+The architecture states that we need to reset local IRQs for all CPU
+resets. Because the old reset interface did not support the normal CPU
+reset we never did that.
 
-> On Sat, Nov 23, 2019 at 09:39:08AM -0600, Tom Lendacky wrote:
-> > Ideally, having a pool of shared pages for DMA, outside of standard
-> > SWIOTLB, might be a good thing.  On x86, SWIOTLB really seems geared
-> > towards devices that don't support 64-bit DMA. If a device supports 64-bit
-> > DMA then it can use shared pages that reside anywhere to perform the DMA
-> > and bounce buffering. I wonder if the SWIOTLB support can be enhanced to
-> > support something like this, using today's low SWIOTLB buffers if the DMA
-> > mask necessitates it, otherwise using a dynamically sized pool of shared
-> > pages that can live anywhere.
-> 
-> I think that can be done relatively easily.  I've actually been thinking
-> of multiple pool support for a whіle to replace the bounce buffering
-> in the block layer for ISA devices (24-bit addressing).
-> 
-> I've also been looking into a dma_alloc_pages interface to help people
-> just allocate pages that are always dma addressable, but don't need
-> a coherent allocation.  My last version I shared is here:
-> 
-> http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/dma_alloc_pages
-> 
-> But it turns out this still doesn't work with SEV as we'll always
-> bounce.  And I've been kinda lost on figuring out a way how to
-> allocate unencrypted pages that we we can feed into the normal
-> dma_map_page & co interfaces due to the magic encryption bit in
-> the address.  I guess we could have a fallback path in the mapping
-> path and just unconditionally clear that bit in the dma_to_phys
-> path.
+Now that we have a new interface, let's properly clear out local IRQs
+and let this commit be a reminder.
 
-Thanks Christoph! Thanks Tom! I will do some looking and thinking and
-report back.
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+---
+ arch/s390/kvm/kvm-s390.c | 25 ++++++++++++++++++++++++-
+ include/uapi/linux/kvm.h |  7 +++++++
+ 2 files changed, 31 insertions(+), 1 deletion(-)
 
-Regards,
-Halil
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index d9e6bf3d54f0..2f74ff46b176 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -529,6 +529,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_S390_CMMA_MIGRATION:
+ 	case KVM_CAP_S390_AIS:
+ 	case KVM_CAP_S390_AIS_MIGRATION:
++	case KVM_CAP_S390_VCPU_RESETS:
+ 		r = 1;
+ 		break;
+ 	case KVM_CAP_S390_HPAGE_1M:
+@@ -3293,6 +3294,25 @@ static int kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
+ 	return 0;
+ }
+ 
++static int kvm_arch_vcpu_ioctl_reset(struct kvm_vcpu *vcpu, unsigned long type)
++{
++	int rc = -EINVAL;
++
++	switch (type) {
++	case KVM_S390_VCPU_RESET_NORMAL:
++		rc = 0;
++		kvm_clear_async_pf_completion_queue(vcpu);
++		kvm_s390_clear_local_irqs(vcpu);
++		break;
++	case KVM_S390_VCPU_RESET_INITIAL:
++		/* fallthrough */
++	case KVM_S390_VCPU_RESET_CLEAR:
++		rc = kvm_arch_vcpu_ioctl_initial_reset(vcpu);
++		break;
++	}
++	return rc;
++}
++
+ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+ {
+ 	vcpu_load(vcpu);
+@@ -4364,7 +4384,10 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		break;
+ 	}
+ 	case KVM_S390_INITIAL_RESET:
+-		r = kvm_arch_vcpu_ioctl_initial_reset(vcpu);
++		arg = KVM_S390_VCPU_RESET_INITIAL;
++		/* fallthrough */
++	case KVM_S390_VCPU_RESET:
++		r = kvm_arch_vcpu_ioctl_reset(vcpu, arg);
+ 		break;
+ 	case KVM_SET_ONE_REG:
+ 	case KVM_GET_ONE_REG: {
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 52641d8ca9e8..6da16b1f2c86 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1000,6 +1000,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_PMU_EVENT_FILTER 173
+ #define KVM_CAP_ARM_IRQ_LINE_LAYOUT_2 174
+ #define KVM_CAP_HYPERV_DIRECT_TLBFLUSH 175
++#define KVM_CAP_S390_VCPU_RESETS 180
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
+@@ -1461,6 +1462,12 @@ struct kvm_enc_region {
+ /* Available with KVM_CAP_ARM_SVE */
+ #define KVM_ARM_VCPU_FINALIZE	  _IOW(KVMIO,  0xc2, int)
+ 
++#define KVM_S390_VCPU_RESET_NORMAL	0
++#define KVM_S390_VCPU_RESET_INITIAL	1
++#define KVM_S390_VCPU_RESET_CLEAR	2
++
++#define KVM_S390_VCPU_RESET    _IO(KVMIO,   0xc3)
++
+ /* Secure Encrypted Virtualization command */
+ enum sev_cmd_id {
+ 	/* Guest initialization commands */
+-- 
+2.20.1
 
