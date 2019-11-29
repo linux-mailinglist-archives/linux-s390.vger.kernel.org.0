@@ -2,94 +2,66 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 600B1196511
-	for <lists+linux-s390@lfdr.de>; Sat, 28 Mar 2020 11:34:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1AD761967AE
+	for <lists+linux-s390@lfdr.de>; Sat, 28 Mar 2020 17:46:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726164AbgC1KeP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 28 Mar 2020 06:34:15 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11714 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726045AbgC1KeP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 28 Mar 2020 06:34:15 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02SAWMQK056763
-        for <linux-s390@vger.kernel.org>; Sat, 28 Mar 2020 06:34:14 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3022jsadf8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Sat, 28 Mar 2020 06:34:14 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Sat, 28 Mar 2020 10:34:04 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 28 Mar 2020 10:34:01 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02SAY82i54067410
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 28 Mar 2020 10:34:08 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B559AE045;
-        Sat, 28 Mar 2020 10:34:08 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CB500AE051;
-        Sat, 28 Mar 2020 10:34:07 +0000 (GMT)
-Received: from [9.145.26.221] (unknown [9.145.26.221])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Sat, 28 Mar 2020 10:34:07 +0000 (GMT)
-Subject: Re: [PATCH net] s390/qeth: support net namespaces for L3 devices
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, ubraun@linux.ibm.com
-References: <20200327110042.50797-1-jwi@linux.ibm.com>
- <20200327.153902.1896503128370913021.davem@davemloft.net>
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-Date:   Sat, 28 Mar 2020 11:34:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200327.153902.1896503128370913021.davem@davemloft.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20032810-4275-0000-0000-000003B4EDBB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032810-4276-0000-0000-000038CA36B1
-Message-Id: <f0db28f1-d1a2-7173-1ac7-123f514768b1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-28_03:2020-03-27,2020-03-28 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
- bulkscore=0 phishscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
- clxscore=1015 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003280095
+        id S1727588AbgC1QnX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 28 Mar 2020 12:43:23 -0400
+Received: from mx.sdf.org ([205.166.94.20]:50199 "EHLO mx.sdf.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727461AbgC1QnV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 28 Mar 2020 12:43:21 -0400
+Received: from sdf.org (IDENT:lkml@sdf.lonestar.org [205.166.94.16])
+        by mx.sdf.org (8.15.2/8.14.5) with ESMTPS id 02SGhHan022954
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256 bits) verified NO);
+        Sat, 28 Mar 2020 16:43:17 GMT
+Received: (from lkml@localhost)
+        by sdf.org (8.15.2/8.12.8/Submit) id 02SGhHN7015213;
+        Sat, 28 Mar 2020 16:43:17 GMT
+Message-Id: <202003281643.02SGhHN7015213@sdf.org>
+From:   George Spelvin <lkml@sdf.org>
+Date:   Fri, 29 Nov 2019 15:39:41 -0500
+Subject: [RFC PATCH v1 27/50] drivers/s390/scsi/zcsp_fc.c: Use
+ prandom_u32_max() for backoff
+To:     linux-kernel@vger.kernel.org, lkml@sdf.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 27.03.20 23:39, David Miller wrote:
-> From: Julian Wiedmann <jwi@linux.ibm.com>
-> Date: Fri, 27 Mar 2020 12:00:42 +0100
-> 
->> Enable the L3 driver's IPv4 address notifier to watch for events on qeth
->> devices that have been moved into a net namespace. We need to program
->> those IPs into the HW just as usual, otherwise inbound traffic won't
->> flow.
->>
->> Fixes: 6133fb1aa137 ("[NETNS]: Disable inetaddr notifiers in namespaces other than initial.")
->> Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-> 
-> This looks more like a feature, openning the L3 driver into multiple
-> namespaces, rather than a critical fix.
-> 
+We don't need crypto-grade random numbers for randomized backoffs.
 
-Definitely not 'critical', agreed. It's rather silly though that things
-currently work just fine for IPv6, but not for IPv4.
+(We could skip the if() if we wanted to rely on the undocumented fact
+that prandom_u32_max(0) always returns 0.  That would be a net time
+saving it port_scan_backoff == 0 is rare; if it's common, the if()
+is false often enough to pay for itself. Not sure which applies here.)
 
-Mind queueing this up for net-next then instead? Thanks.
+Signed-off-by: George Spelvin <lkml@sdf.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+---
+ drivers/s390/scsi/zfcp_fc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+index b018b61bd168e..d24cafe02708f 100644
+--- a/drivers/s390/scsi/zfcp_fc.c
++++ b/drivers/s390/scsi/zfcp_fc.c
+@@ -48,7 +48,7 @@ unsigned int zfcp_fc_port_scan_backoff(void)
+ {
+ 	if (!port_scan_backoff)
+ 		return 0;
+-	return get_random_int() % port_scan_backoff;
++	return prandom_u32_max(port_scan_backoff);
+ }
+ 
+ static void zfcp_fc_port_scan_time(struct zfcp_adapter *adapter)
+-- 
+2.26.0
 
