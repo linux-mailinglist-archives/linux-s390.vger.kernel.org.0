@@ -2,118 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 326CB10DF0F
-	for <lists+linux-s390@lfdr.de>; Sat, 30 Nov 2019 20:51:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B76AF10DF6F
+	for <lists+linux-s390@lfdr.de>; Sat, 30 Nov 2019 22:49:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727236AbfK3TvI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 30 Nov 2019 14:51:08 -0500
-Received: from mail-il1-f198.google.com ([209.85.166.198]:44281 "EHLO
-        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726799AbfK3TvI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 30 Nov 2019 14:51:08 -0500
-Received: by mail-il1-f198.google.com with SMTP id h4so9704980ilh.11
-        for <linux-s390@vger.kernel.org>; Sat, 30 Nov 2019 11:51:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=N9tfN3qXh1nim/ONWEuXOYplZXsxxiAUSxKXDJcWegs=;
-        b=Ki1j3R7yVXWG2zpRC1Su1sN4NLnks+ja+GBIpu+4rO0St14E1Iwc1IE1RDYv8bwoaF
-         aqGR1LVob8zpJHxOqQScFG6AsEvDeoLlnlKUSvXU0tEH5xu5aTYesR0v7J2y7OuL9iIp
-         GHR+AtPjpDC1AhBujcsHwFk1ZTEmlwQiCefHDviz+2aFsMcLdxfGjAlYvBD2ovU+h6lq
-         xzHyLRoMpfywbEJk1aFGSPEgFsHkVU63Ycf9lPml8EehJInjESZNp8cvRh0DrAMYNWE5
-         C6QT7IIY7O/gh/n6Tbiu9PX2K3LOuvtb8qFPtjHeAR/AzcHzvbPB1To1YUCmn8MWtn28
-         EGJA==
-X-Gm-Message-State: APjAAAWJ8IgnYO504E8ETgG8uTISwpwe+Q1qw9tCorFITu5o8eIXJaLi
-        pDC+a2156rk4FL0gSWfvUM3LGK5KdTiLTpZIe4BzieMN8b8P
-X-Google-Smtp-Source: APXvYqzt7/++NFmLHVSdLkd0VbgMT24DiahmSpV4smSgpnwwmFIeEMB102THMO+a12HTYtPMK0aufWqqPSOLvJCI0nu3WIO3wT/2
+        id S1727108AbfK3Vtp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 30 Nov 2019 16:49:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726981AbfK3Vto (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 30 Nov 2019 16:49:44 -0500
+Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0E472075C;
+        Sat, 30 Nov 2019 21:49:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575150583;
+        bh=cPDPfb6Dqq6tvp4tmeQ7XscSExRYi28hhR3Zo8OLbXw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=yXhCGDF8CveikJZ0hACHs2dV7A+MT+0pDdmJkojtmjm3Va9yhx2QT0JZXN32/YXzo
+         lM2V9b/ccIUO2KzJWU5WxXYekq7XP13M4Am6xiqx6PCQVL9v1bbtFabLCg1Gvht4Da
+         A73frPj7Fhlb0zMv/dInwE8Hf+8I35PyMq6NuXGM=
+Date:   Sat, 30 Nov 2019 13:49:42 -0800
+From:   Eric Biggers <ebiggers@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Jens Axboe <axboe@kernel.dk>, Jan Kara <jack@suse.cz>,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: Re: [PATCH 2/7] block: merge invalidate_partitions into
+ rescan_partitions
+Message-ID: <20191130214942.GA676@sol.localdomain>
+References: <20191114143438.14681-1-hch@lst.de>
+ <20191114143438.14681-3-hch@lst.de>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:5c8:: with SMTP id l8mr10026679ils.287.1575143467310;
- Sat, 30 Nov 2019 11:51:07 -0800 (PST)
-Date:   Sat, 30 Nov 2019 11:51:07 -0800
-In-Reply-To: <0000000000007cace40598282858@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d6e755059895aad8@google.com>
-Subject: Re: WARNING: refcount bug in smc_release (2)
-From:   syzbot <syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        ubraun@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191114143438.14681-3-hch@lst.de>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-syzbot has found a reproducer for the following crash on:
+Hi Christoph,
 
-HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=15ce0abce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=333b76551307b2a0
-dashboard link: https://syzkaller.appspot.com/bug?extid=96d3f9ff6a86d37e44c8
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175a767ee00000
+On Thu, Nov 14, 2019 at 03:34:33PM +0100, Christoph Hellwig wrote:
+> A lot of the logic in invalidate_partitions and rescan_partitions is
+> shared.  Merge the two functions to simplify things.  There is a small
+> behavior change in that we now send the kevent change notice also if we
+> were not invalidating but no partitions were found, which seems like
+> the right thing to do.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> ---
+>  block/ioctl.c             |  2 +-
+>  block/partition-generic.c | 38 ++++++++++++++------------------------
+>  fs/block_dev.c            |  5 +----
+>  include/linux/genhd.h     |  4 ++--
+>  4 files changed, 18 insertions(+), 31 deletions(-)
+> 
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
+Mainline is broken for me because systemd-udevd spins forever using max CPU
+starting at boot time.  I bisected it to this commit.
 
-------------[ cut here ]------------
-refcount_t: underflow; use-after-free.
-WARNING: CPU: 1 PID: 9419 at lib/refcount.c:28  
-refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 9419 Comm: syz-executor.0 Not tainted 5.4.0-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x197/0x210 lib/dump_stack.c:118
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x3e kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  fixup_bug arch/x86/kernel/traps.c:169 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
-Code: e9 d8 fe ff ff 48 89 df e8 31 65 25 fe e9 85 fe ff ff e8 07 37 e8 fd  
-48 c7 c7 60 53 4f 88 c6 05 7d b6 a5 06 01 e8 73 eb b8 fd <0f> 0b e9 ac fe  
-ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
-RSP: 0018:ffff88808963fd50 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815e4316 RDI: ffffed10112c7f9c
-RBP: ffff88808963fd60 R08: ffff8880977a64c0 R09: ffffed1015d26621
-R10: ffffed1015d26620 R11: ffff8880ae933107 R12: 0000000000000003
-R13: 0000000000000000 R14: ffff8880965c0100 R15: ffff888094244a98
-  refcount_sub_and_test include/linux/refcount.h:261 [inline]
-  refcount_dec_and_test include/linux/refcount.h:281 [inline]
-  sock_put include/net/sock.h:1728 [inline]
-  smc_release+0x445/0x520 net/smc/af_smc.c:202
-  __sock_release+0xce/0x280 net/socket.c:591
-  sock_close+0x1e/0x30 net/socket.c:1269
-  __fput+0x2ff/0x890 fs/file_table.c:280
-  ____fput+0x16/0x20 fs/file_table.c:313
-  task_work_run+0x145/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
-  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
-  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x414211
-Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
-83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
-89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
-RSP: 002b:00007ffc46c3b260 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000414211
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
-RBP: 0000000000000000 R08: ffffffffffffffff R09: ffffffffffffffff
-R10: 00007ffc46c3b340 R11: 0000000000000293 R12: 000000000075bfc8
-R13: 00000000000ee743 R14: 0000000000760458 R15: 000000000075bfd4
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
+I'm not an expert in this code, but the following patch fixes it:
 
+diff --git a/block/partition-generic.c b/block/partition-generic.c
+index 6b9f4f5d993a..b0eebd7580ab 100644
+--- a/block/partition-generic.c
++++ b/block/partition-generic.c
+@@ -599,7 +599,8 @@ int rescan_partitions(struct gendisk *disk, struct block_device *bdev,
+ 		 * Tell userspace that the media / partition table may have
+ 		 * changed.
+ 		 */
+-		kobject_uevent(&disk_to_dev(disk)->kobj, KOBJ_CHANGE);
++		if (invalidate)
++			kobject_uevent(&disk_to_dev(disk)->kobj, KOBJ_CHANGE);
+ 		return 0;
+ 	}
+
+
+Do you have any better suggestion, or should I just send this as a formal patch?
+
+- Eric
