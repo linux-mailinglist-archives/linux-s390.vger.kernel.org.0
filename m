@@ -2,99 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E411210D981
-	for <lists+linux-s390@lfdr.de>; Fri, 29 Nov 2019 19:16:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 326CB10DF0F
+	for <lists+linux-s390@lfdr.de>; Sat, 30 Nov 2019 20:51:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727146AbfK2SQy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 29 Nov 2019 13:16:54 -0500
-Received: from mx2.suse.de ([195.135.220.15]:44892 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727107AbfK2SQx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 29 Nov 2019 13:16:53 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 79ED4B469;
-        Fri, 29 Nov 2019 18:16:51 +0000 (UTC)
-Date:   Fri, 29 Nov 2019 19:16:50 +0100 (CET)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Vasily Gorbik <gor@linux.ibm.com>
-cc:     heiko.carstens@de.ibm.com, borntraeger@de.ibm.com,
-        jpoimboe@redhat.com, joe.lawrence@redhat.com,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jikos@kernel.org, pmladek@suse.com, nstange@suse.de,
-        live-patching@vger.kernel.org
-Subject: Re: [PATCH v4 2/2] s390/livepatch: Implement reliable stack tracing
- for the consistency model
-In-Reply-To: <patch-2.thread-a0061f.git-a0061fcad34d.your-ad-here.call-01575012971-ext-9115@work.hours>
-Message-ID: <alpine.LSU.2.21.1911291533450.23789@pobox.suse.cz>
-References: <20191106095601.29986-5-mbenes@suse.cz> <cover.thread-a0061f.your-ad-here.call-01575012971-ext-9115@work.hours> <patch-2.thread-a0061f.git-a0061fcad34d.your-ad-here.call-01575012971-ext-9115@work.hours>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1727236AbfK3TvI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 30 Nov 2019 14:51:08 -0500
+Received: from mail-il1-f198.google.com ([209.85.166.198]:44281 "EHLO
+        mail-il1-f198.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726799AbfK3TvI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 30 Nov 2019 14:51:08 -0500
+Received: by mail-il1-f198.google.com with SMTP id h4so9704980ilh.11
+        for <linux-s390@vger.kernel.org>; Sat, 30 Nov 2019 11:51:07 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=N9tfN3qXh1nim/ONWEuXOYplZXsxxiAUSxKXDJcWegs=;
+        b=Ki1j3R7yVXWG2zpRC1Su1sN4NLnks+ja+GBIpu+4rO0St14E1Iwc1IE1RDYv8bwoaF
+         aqGR1LVob8zpJHxOqQScFG6AsEvDeoLlnlKUSvXU0tEH5xu5aTYesR0v7J2y7OuL9iIp
+         GHR+AtPjpDC1AhBujcsHwFk1ZTEmlwQiCefHDviz+2aFsMcLdxfGjAlYvBD2ovU+h6lq
+         xzHyLRoMpfywbEJk1aFGSPEgFsHkVU63Ycf9lPml8EehJInjESZNp8cvRh0DrAMYNWE5
+         C6QT7IIY7O/gh/n6Tbiu9PX2K3LOuvtb8qFPtjHeAR/AzcHzvbPB1To1YUCmn8MWtn28
+         EGJA==
+X-Gm-Message-State: APjAAAWJ8IgnYO504E8ETgG8uTISwpwe+Q1qw9tCorFITu5o8eIXJaLi
+        pDC+a2156rk4FL0gSWfvUM3LGK5KdTiLTpZIe4BzieMN8b8P
+X-Google-Smtp-Source: APXvYqzt7/++NFmLHVSdLkd0VbgMT24DiahmSpV4smSgpnwwmFIeEMB102THMO+a12HTYtPMK0aufWqqPSOLvJCI0nu3WIO3wT/2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Received: by 2002:a05:6e02:5c8:: with SMTP id l8mr10026679ils.287.1575143467310;
+ Sat, 30 Nov 2019 11:51:07 -0800 (PST)
+Date:   Sat, 30 Nov 2019 11:51:07 -0800
+In-Reply-To: <0000000000007cace40598282858@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d6e755059895aad8@google.com>
+Subject: Re: WARNING: refcount bug in smc_release (2)
+From:   syzbot <syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kgraul@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        ubraun@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 29 Nov 2019, Vasily Gorbik wrote:
+syzbot has found a reproducer for the following crash on:
 
-> From: Miroslav Benes <mbenes@suse.cz>
-> 
-> The livepatch consistency model requires reliable stack tracing
-> architecture support in order to work properly. In order to achieve
-> this, two main issues have to be solved. First, reliable and consistent
-> call chain backtracing has to be ensured. Second, the unwinder needs to
-> be able to detect stack corruptions and return errors.
-> 
-> The "zSeries ELF Application Binary Interface Supplement" says:
-> 
->   "The stack pointer points to the first word of the lowest allocated
->   stack frame. If the "back chain" is implemented this word will point to
->   the previously allocated stack frame (towards higher addresses), except
->   for the first stack frame, which shall have a back chain of zero (NULL).
->   The stack shall grow downwards, in other words towards lower addresses."
-> 
-> "back chain" is optional. GCC option -mbackchain enables it. Quoting
-> Martin Schwidefsky [1]:
-> 
->   "The compiler is called with the -mbackchain option, all normal C
->   function will store the backchain in the function prologue. All
->   functions written in assembler code should do the same, if you find one
->   that does not we should fix that. The end result is that a task that
->   *voluntarily* called schedule() should have a proper backchain at all
->   times.
-> 
->   Dependent on the use case this may or may not be enough. Asynchronous
->   interrupts may stop the CPU at the beginning of a function, if kernel
->   preemption is enabled we can end up with a broken backchain.  The
->   production kernels for IBM Z are all compiled *without* kernel
->   preemption. So yes, we might get away without the objtool support.
-> 
->   On a side-note, we do have a line item to implement the ORC unwinder for
->   the kernel, that includes the objtool support. Once we have that we can
->   drop the -mbackchain option for the kernel build. That gives us a nice
->   little performance benefit. I hope that the change from backchain to the
->   ORC unwinder will not be too hard to implement in the livepatch tools."
-> 
-> Since -mbackchain is enabled by default when the kernel is compiled, the
-> call chain backtracing should be currently ensured and objtool should
-> not be necessary for livepatch purposes.
-> 
-> Regarding the second issue, stack corruptions and non-reliable states
-> have to be recognized by the unwinder. Mainly it means to detect
-> preemption or page faults, the end of the task stack must be reached,
-> return addresses must be valid text addresses and hacks like function
-> graph tracing and kretprobes must be properly detected.
-> 
-> Unwinding a running task's stack is not a problem, because there is a
-> livepatch requirement that every checked task is blocked, except for the
-> current task. Due to that, we can consider a task's kernel/thread stack
-> only and skip the other stacks.
-> 
-> [1] 20180912121106.31ffa97c@mschwideX1 [not archived on lore.kernel.org]
-> 
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+HEAD commit:    81b6b964 Merge branch 'master' of git://git.kernel.org/pub..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15ce0abce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=333b76551307b2a0
+dashboard link: https://syzkaller.appspot.com/bug?extid=96d3f9ff6a86d37e44c8
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=175a767ee00000
 
-Signed-off-by: Miroslav Benes <mbenes@suse.cz>
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
 
-M
+------------[ cut here ]------------
+refcount_t: underflow; use-after-free.
+WARNING: CPU: 1 PID: 9419 at lib/refcount.c:28  
+refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 9419 Comm: syz-executor.0 Not tainted 5.4.0-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x197/0x210 lib/dump_stack.c:118
+  panic+0x2e3/0x75c kernel/panic.c:221
+  __warn.cold+0x2f/0x3e kernel/panic.c:582
+  report_bug+0x289/0x300 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  fixup_bug arch/x86/kernel/traps.c:169 [inline]
+  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+Code: e9 d8 fe ff ff 48 89 df e8 31 65 25 fe e9 85 fe ff ff e8 07 37 e8 fd  
+48 c7 c7 60 53 4f 88 c6 05 7d b6 a5 06 01 e8 73 eb b8 fd <0f> 0b e9 ac fe  
+ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
+RSP: 0018:ffff88808963fd50 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff815e4316 RDI: ffffed10112c7f9c
+RBP: ffff88808963fd60 R08: ffff8880977a64c0 R09: ffffed1015d26621
+R10: ffffed1015d26620 R11: ffff8880ae933107 R12: 0000000000000003
+R13: 0000000000000000 R14: ffff8880965c0100 R15: ffff888094244a98
+  refcount_sub_and_test include/linux/refcount.h:261 [inline]
+  refcount_dec_and_test include/linux/refcount.h:281 [inline]
+  sock_put include/net/sock.h:1728 [inline]
+  smc_release+0x445/0x520 net/smc/af_smc.c:202
+  __sock_release+0xce/0x280 net/socket.c:591
+  sock_close+0x1e/0x30 net/socket.c:1269
+  __fput+0x2ff/0x890 fs/file_table.c:280
+  ____fput+0x16/0x20 fs/file_table.c:313
+  task_work_run+0x145/0x1c0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop+0x316/0x380 arch/x86/entry/common.c:164
+  prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+  syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+  do_syscall_64+0x676/0x790 arch/x86/entry/common.c:304
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x414211
+Code: 75 14 b8 03 00 00 00 0f 05 48 3d 01 f0 ff ff 0f 83 04 1b 00 00 c3 48  
+83 ec 08 e8 0a fc ff ff 48 89 04 24 b8 03 00 00 00 0f 05 <48> 8b 3c 24 48  
+89 c2 e8 53 fc ff ff 48 89 d0 48 83 c4 08 48 3d 01
+RSP: 002b:00007ffc46c3b260 EFLAGS: 00000293 ORIG_RAX: 0000000000000003
+RAX: 0000000000000000 RBX: 0000000000000005 RCX: 0000000000414211
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000004
+RBP: 0000000000000000 R08: ffffffffffffffff R09: ffffffffffffffff
+R10: 00007ffc46c3b340 R11: 0000000000000293 R12: 000000000075bfc8
+R13: 00000000000ee743 R14: 0000000000760458 R15: 000000000075bfd4
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
+
