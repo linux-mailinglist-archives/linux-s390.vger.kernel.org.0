@@ -2,72 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49AEE10EE3D
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Dec 2019 18:33:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 94F3110EEC7
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Dec 2019 18:53:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfLBRdr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Dec 2019 12:33:47 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32618 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727786AbfLBRdr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Dec 2019 12:33:47 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2HSYJ9019256
-        for <linux-s390@vger.kernel.org>; Mon, 2 Dec 2019 12:33:45 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6rqfchf-1
+        id S1727708AbfLBRxY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Dec 2019 12:53:24 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21534 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727420AbfLBRxX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Dec 2019 12:53:23 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB2HlL0K139729
+        for <linux-s390@vger.kernel.org>; Mon, 2 Dec 2019 12:53:22 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wm6uygcb5-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 02 Dec 2019 12:33:44 -0500
+        for <linux-s390@vger.kernel.org>; Mon, 02 Dec 2019 12:53:22 -0500
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Mon, 2 Dec 2019 17:33:43 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Mon, 2 Dec 2019 17:53:20 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Dec 2019 17:33:39 -0000
+        Mon, 2 Dec 2019 17:53:17 -0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2HXcHf34668782
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB2HqaSj41681270
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Dec 2019 17:33:38 GMT
+        Mon, 2 Dec 2019 17:52:36 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 46F8BA4053;
-        Mon,  2 Dec 2019 17:33:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D3700A4055;
+        Mon,  2 Dec 2019 17:53:16 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 06A6EA4055;
-        Mon,  2 Dec 2019 17:33:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9B353A4053;
+        Mon,  2 Dec 2019 17:53:16 +0000 (GMT)
 Received: from oc3016276355.ibm.com (unknown [9.152.222.75])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Dec 2019 17:33:37 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v2 5/9] s390x: Library resources for CSS
- tests
+        Mon,  2 Dec 2019 17:53:16 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v2 6/9] s390x: css: stsch, enumeration test
 To:     Cornelia Huck <cohuck@redhat.com>
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
 References: <1574945167-29677-1-git-send-email-pmorel@linux.ibm.com>
- <1574945167-29677-6-git-send-email-pmorel@linux.ibm.com>
- <20191202150623.627730ad.cohuck@redhat.com>
+ <1574945167-29677-7-git-send-email-pmorel@linux.ibm.com>
+ <20191202152246.4d627b0e.cohuck@redhat.com>
 From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Mon, 2 Dec 2019 18:33:37 +0100
+Date:   Mon, 2 Dec 2019 18:53:16 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <20191202150623.627730ad.cohuck@redhat.com>
+In-Reply-To: <20191202152246.4d627b0e.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19120217-0016-0000-0000-000002CFD445
+x-cbid: 19120217-0012-0000-0000-0000036FD49B
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120217-0017-0000-0000-00003331C9EE
-Message-Id: <78616d28-2d49-cea1-0d25-54f5fb710b16@linux.ibm.com>
+x-cbparentid: 19120217-0013-0000-0000-000021AB8DA2
+Message-Id: <aa588c00-79ac-2942-7911-b476abb224db@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
  definitions=2019-12-02_04:2019-11-29,2019-12-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- spamscore=0 priorityscore=1501 mlxscore=0 bulkscore=0 mlxlogscore=999
- lowpriorityscore=0 impostorscore=0 phishscore=0 clxscore=1015
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912020147
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 adultscore=0 phishscore=0 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 mlxscore=0 spamscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912020151
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -75,433 +74,200 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 2019-12-02 15:06, Cornelia Huck wrote:
-> On Thu, 28 Nov 2019 13:46:03 +0100
+On 2019-12-02 15:22, Cornelia Huck wrote:
+> On Thu, 28 Nov 2019 13:46:04 +0100
 > Pierre Morel <pmorel@linux.ibm.com> wrote:
 > 
->> These are the include and library utilities for the css tests patch
->> series.
+>> First step by testing the channel subsystem is to enumerate the css and
+> 
+> s/by/for/
+
+ok
+
+> 
+>> retrieve the css devices.
+>>
+>> This test the success of STSCH I/O instruction.
+> 
+> s/test/tests/
+
+yes
+
+> 
 >>
 >> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 >> ---
->>   lib/s390x/css.h      | 269 +++++++++++++++++++++++++++++++++++++++++++
->>   lib/s390x/css_dump.c | 147 +++++++++++++++++++++++
->>   2 files changed, 416 insertions(+)
->>   create mode 100644 lib/s390x/css.h
->>   create mode 100644 lib/s390x/css_dump.c
+>>   s390x/Makefile      |  4 ++-
+>>   s390x/css.c         | 86 +++++++++++++++++++++++++++++++++++++++++++++
+>>   s390x/unittests.cfg |  4 +++
+>>   3 files changed, 93 insertions(+), 1 deletion(-)
+>>   create mode 100644 s390x/css.c
 >>
->> diff --git a/lib/s390x/css.h b/lib/s390x/css.h
->> new file mode 100644
->> index 0000000..95dec72
->> --- /dev/null
->> +++ b/lib/s390x/css.h
->> @@ -0,0 +1,269 @@
->> +/*
->> + * CSS definitions
->> + *
->> + * Copyright IBM, Corp. 2019
->> + * Author: Pierre Morel <pmorel@linux.ibm.com>
->> + *
->> + * This work is licensed under the terms of the GNU GPL, version 2 or (at
->> + * your option) any later version. See the COPYING file in the top-level
->> + * directory.
->> + */
->> +
->> +#ifndef CSS_H
->> +#define CSS_H
->> +
->> +#define CCW_F_CD	0x80
->> +#define CCW_F_CC	0x40
->> +#define CCW_F_SLI	0x20
->> +#define CCW_F_SKP	0x10
->> +#define CCW_F_PCI	0x08
->> +#define CCW_F_IDA	0x04
->> +#define CCW_F_S		0x02
->> +#define CCW_F_MIDA	0x01
->> +
->> +#define CCW_C_NOP	0x03
->> +#define CCW_C_TIC	0x08
->> +
->> +struct ccw {
-> 
-> ccw1, to make it clear that this is a format-1 ccw?
-> 
-> (Do you have any plans to test this with format-0 ccws as well?)
-
-not in a near future
-
-> 
->> +	unsigned char code;
->> +	unsigned char flags;
->> +	unsigned short count;
->> +	unsigned int data;
-> 
-> data_address?
-
-OK
-
-> 
->> +} __attribute__ ((aligned(4)));
->> +
->> +#define ORB_M_KEY	0xf0000000
->> +#define ORB_F_SUSPEND	0x08000000
->> +#define ORB_F_STREAMING	0x04000000
->> +#define ORB_F_MODIFCTRL	0x02000000
->> +#define ORB_F_SYNC	0x01000000
->> +#define ORB_F_FORMAT	0x00800000
->> +#define ORB_F_PREFETCH	0x00400000
->> +#define ORB_F_INIT_IRQ	0x00200000
->> +#define ORB_F_ADDRLIMIT	0x00100000
->> +#define ORB_F_SUSP_IRQ	0x00080000
->> +#define ORB_F_TRANSPORT	0x00040000
->> +#define ORB_F_IDAW2	0x00020000
->> +#define ORB_F_IDAW_2K	0x00010000
->> +#define ORB_M_LPM	0x0000ff00
->> +#define ORB_F_LPM_DFLT	0x00008000
->> +#define ORB_F_ILSM	0x00000080
->> +#define ORB_F_CCW_IND	0x00000040
->> +#define ORB_F_ORB_EXT	0x00000001
->> +
->> +struct orb {
->> +	unsigned int	intparm;
->> +	unsigned int	ctrl;
->> +	unsigned int	cpa;
->> +	unsigned int	prio;
->> +	unsigned int	reserved[4];
->> +} __attribute__ ((aligned(4)));
->> +
->> +struct scsw {
->> +	uint32_t ctrl;
->> +	uint32_t addr;
-> 
-> ccw_addr?
-
-OK
-
-> 
->> +	uint8_t  devs;
->> +	uint8_t  schs;
-> 
-> Maybe dev_stat/sch_stat?
-
-OK
-
-> 
->> +	uint16_t count;
->> +};
-> 
-> Out of curiousity (I'm not familiar with the conventions in
-> kvm-unit-tests): You use the explicit uint32_t et al. types here, while
-> you used unsigned int et al. in the other definitions... maybe it would
-> be better to use one or the other?
-
-OK, I suppose that if we want to be working with TCG uintxxx_t is better.
-So I will take care to be coherent.
-
-> 
-> Also, you probably always want to test against a QEMU-provided device
-> anyway, so you can probably ignore transport mode and stick with
-> command mode only, right?
-
-Yes
-
-> 
->> +
->> +struct pmcw {
->> +	uint32_t intparm;
->> +#define PMCW_DNV        0x0001
->> +#define PMCW_ENABLE     0x0080
->> +	uint16_t flags;
->> +	uint16_t devnum;
->> +	uint8_t  lpm;
->> +	uint8_t  pnom;
->> +	uint8_t  lpum;
->> +	uint8_t  pim;
->> +	uint16_t mbi;
->> +	uint8_t  pom;
->> +	uint8_t  pam;
->> +	uint8_t  chpid[8];
->> +	struct {
->> +		uint8_t res0;
->> +		uint8_t st:3;
->> +		uint8_t :5;
->> +		uint16_t :13;
->> +		uint16_t f:1;
->> +		uint16_t x:1;
->> +		uint16_t s:1;
->> +	};
-> 
-> Hm... you used masks for the other fields, any reason you didn't here?
-
-Here too , I must be coherent.
-Reason was that I use the flags differently, the test of the bit fields 
-is easier to read than shift & mask but ... anyway I prefer masks for 
-hardware close programing.
-
-> 
->> +};
->> +
->> +struct schib {
->> +	struct pmcw pmcw;
->> +	struct scsw scsw;
->> +	uint32_t  md0;
->> +	uint32_t  md1;
->> +	uint32_t  md2;
-> 
-> Hm, both Linux and QEMU express the fields you called md<n> as a 64 bit
-> measurement-block address and a four bytes model-dependent area...
-> would it make sense to do so here as well? If the extended measurement
-> block facility is not installed, we'd get a 12 bytes model-dependent
-> area, which IMHO would also look better here.
-
-OK, IMHO too
-
-> 
->> +} __attribute__ ((aligned(4)));
->> +
->> +struct irb {
->> +	struct scsw scsw;
->> +	uint32_t esw[5];
->> +	uint32_t ecw[8];
->> +	uint32_t emw[8];
-> 
-> If I read the PoP correctly, esw, ecw, and emw are defined bytewise,
-> not u32-wise.
-
-Hum, I found them referenced u32-wise.
-I intended to define them as a structure at the moment they are used.
-If you really prefer I can use uint8_t esw[40] uint8_t ecw[64] etc.
-but I like better word aligned structures.
-
-> 
->> +} __attribute__ ((aligned(4)));
->> +
->> +/* CSS low level access functions */
->> +
->> +static inline int ssch(unsigned long schid, struct orb *addr)
->> +{
->> +	register long long reg1 asm("1") = schid;
->> +	int cc = -1;
->> +
->> +	asm volatile(
->> +		"	   ssch	0(%2)\n"
->> +		"0:	 ipm	 %0\n"
->> +		"	   srl	 %0,28\n"
->> +		"1:\n"
->> +		: "+d" (cc)
->> +		: "d" (reg1), "a" (addr), "m" (*addr)
->> +		: "cc", "memory");
->> +	return cc;
->> +}
-> 
-> Looking at the Linux code, stsch, msch, and ssch all set up an
-> exception handler. IIRC, I had introduced that for stsch for multiple
-> subchannels sets, not sure about the others. Are we sure we never need
-> to catch exceptions here?
-
-This is the next and important step.
-I want to surround each call with expect_pgm_int() / check_pgm_int_code()
-
-Also testing each error case.
-So we do not need exception handler here, we will use the kvm-test ones.
-
-> 
->> +
->> +static inline int stsch(unsigned long schid, struct schib *addr)
->> +{
->> +	register unsigned long reg1 asm ("1") = schid;
->> +	int cc;
->> +
->> +	asm volatile(
->> +		"	   stsch	0(%3)\n"
->> +		"	   ipm	 %0\n"
->> +		"	   srl	 %0,28"
->> +		: "=d" (cc), "=m" (*addr)
->> +		: "d" (reg1), "a" (addr)
->> +		: "cc");
->> +	return cc;
->> +}
->> +
->> +static inline int msch(unsigned long schid, struct schib *addr)
->> +{
->> +	register unsigned long reg1 asm ("1") = schid;
->> +	int cc;
->> +
->> +	asm volatile(
->> +		"	   msch	0(%3)\n"
->> +		"	   ipm	 %0\n"
->> +		"	   srl	 %0,28"
->> +		: "=d" (cc), "=m" (*addr)
->> +		: "d" (reg1), "a" (addr)
->> +		: "cc");
->> +	return cc;
->> +}
 > 
 > (...)
 > 
->> +static inline int rchp(unsigned long chpid)
->> +{
->> +	register unsigned long reg1 asm("1") = chpid;
->> +	int cc;
->> +
->> +	asm volatile(
->> +		"	rchp\n"
->> +		"	ipm	%0\n"
->> +		"	srl	%0,28"
->> +		: "=d" (cc)
->> +		: "d" (reg1)
->> +		: "cc");
->> +	return cc;
->> +}
-> 
-> Does rchp actually do anything useful on QEMU? Or is this mainly for
-> completeness' sake?
-
-It is for completness for this first series.
-However I would like to do something with it in a following one.
-to be ready for QEMU implementation or to test real hardware when the 
-kvm-unit-test run on LPAR.
-
-> 
->> +
->> +/* Debug functions */
->> +char *dump_pmcw_flags(uint16_t f);
->> +char *dump_scsw_flags(uint32_t f);
->> +#undef DEBUG
->> +#ifdef DEBUG
->> +void dump_scsw(struct scsw *);
->> +void dump_irb(struct irb *irbp);
->> +void dump_schib(struct schib *sch);
->> +struct ccw *dump_ccw(struct ccw *cp);
->> +#else
->> +static inline void dump_scsw(struct scsw *scsw){}
->> +static inline void dump_irb(struct irb *irbp){}
->> +static inline void dump_pmcw(struct pmcw *p){}
->> +static inline void dump_schib(struct schib *sch){}
->> +static inline void dump_orb(struct orb *op){}
->> +static inline struct ccw *dump_ccw(struct ccw *cp)
->> +{
->> +	return NULL;
->> +}
->> +#endif
->> +
->> +extern unsigned long stacktop;
->> +#endif
->> diff --git a/lib/s390x/css_dump.c b/lib/s390x/css_dump.c
+>> diff --git a/s390x/css.c b/s390x/css.c
 >> new file mode 100644
->> index 0000000..5356df2
+>> index 0000000..8186f55
 >> --- /dev/null
->> +++ b/lib/s390x/css_dump.c
->> @@ -0,0 +1,147 @@
+>> +++ b/s390x/css.c
+>> @@ -0,0 +1,86 @@
 >> +/*
->> + * Channel Sub-System structures dumping
+>> + * Channel Sub-System tests
 > 
-> I think "subsystem" is the more usual spelling.
+> s/Sub-System/Subsystem/
 
-OK, I found it much fun so :)
+yes too
 
 > 
 >> + *
->> + * Copyright (c) 2019 IBM Corp.
+>> + * Copyright (c) 2019 IBM Corp
 >> + *
 >> + * Authors:
 >> + *  Pierre Morel <pmorel@linux.ibm.com>
 >> + *
 >> + * This code is free software; you can redistribute it and/or modify it
->> + * under the terms of the GNU Library General Public License version 2.
->> + *
->> + * Description:
->> + * Provides the dumping functions for various structures used by subchannels:
->> + * - ORB  : Operation request block, describe the I/O operation and point to
-> 
-> s/describe/describes/
-> s/point/points/
-
-thanks
-
-> 
->> + *          a CCW chain
->> + * - CCW  : Channel Command Word, describe the data and flow control
-> 
-> s/describe/describes/
-> 
-> but maybe better:
-> 
-> "contains the command, parameters, and a pointer to data"
-> 
-> ?
-
-yes, thanks
-
-> 
-> Also this is format-1 only, isn't it?
-
-yes, I add this
-
-> 
->> + * - IRB  : Interuption response Block, describe the result of an operation
-> 
-> s/describe/describes/
-
-again!
-thanks :)
-
-> 
->> + *          hold a SCSW and several channel type dependent fields.
-> 
-> s/hold/holds/
-hum...
-> 
-> s/several channel type dependent fields/model-dependent data/ ?
-
-yes
-
-> 
->> + * - SCHIB: SubChannel Information Block composed of:
-> 
-> s/SubChannel/Subchannel/
-> 
->> + *   - SCSW: SubChannel Status Word, status of the channel as a result of an
-> 
-> s/SubChannel/Subchannel/
-OK
-> 
->> + *           operation when in IRB.
-> 
-> I think that description is a bit confusing: An SCSW always contains
-> the subchannel status; it's just when it is contained in an IRB that
-> the status is associated to the last event on that subchannel (as the
-> result of an operation, or as an unsolicited status.)
-
-yes, the "when in IRB has nothing to do there" IRB defintion is above.
-I will make it clearer
-
-> 
->> + *   - PMCW: Path Management Control Word
->> + * You need the QEMU ccw-pong device in QEMU to answer the I/O transfers.
+>> + * under the terms of the GNU General Public License version 2.
 >> + */
 >> +
->> +#include <unistd.h>
->> +#include <stdio.h>
->> +#include <stdint.h>
->> +#include <string.h>
+>> +#include <libcflat.h>
 >> +
 >> +#include <css.h>
 >> +
->> +static const char *scsw_str = "kkkkslccfpixuzen";
->> +static const char *scsw_str2 = "1SHCrshcsdsAIPSs";
+>> +#define SID_ONE		0x00010000
+>> +
+>> +static struct schib schib;
+>> +
+>> +static const char *Channel_type[3] = {
+>> +	"I/O", "CHSC", "MSG"
 > 
-> Nice, random strings? :)
+> No EADM? :)
 
-these are the bit definitions associated with the scsw flags.
-Easier to read than a bit field ... as long as you have the 
-documentation (Pop)
+I forgot EADM, I will add it!
+
+> 
+> I don't think we plan to emulate anything beyond I/O in QEMU, though.
+
+Even, yes, no plan to use it for now.
+
+> 
+>> +};
+>> +
+>> +static int test_device_sid;
+>> +
+>> +static void test_enumerate(void)
+>> +{
+>> +	struct pmcw *pmcw = &schib.pmcw;
+>> +	int sid;
+>> +	int ret, i;
+>> +	int found = 0;
+>> +
+>> +	for (sid = 0; sid < 0xffff; sid++) {
+>> +		ret = stsch(sid|SID_ONE, &schib);
+> 
+> This seems a bit odd. You are basically putting the subchannel number
+> into sid, OR in the one, and then use the resulting value as the sid
+> (subchannel identifier).
+> 
+>> +		if (!ret && (pmcw->flags & PMCW_DNV)) {
+>> +			report_info("SID %04x Type %s PIM %x", sid,
+> 
+> That's not a sid, but the subchannel number (see above).
+> 
+>> +				     Channel_type[pmcw->st], pmcw->pim);
+>> +			for (i = 0; i < 8; i++)  {
+>> +				if ((pmcw->pim << i) & 0x80) {
+>> +					report_info("CHPID[%d]: %02x", i,
+>> +						    pmcw->chpid[i]);
+>> +					break;
+>> +				}
+>> +			}
+>> +			found++;
+>> +	
+>> +		}
+> 
+> Here, you iterate over the 0-0xffff range, even if you got a condition
+> code 3 (indicating no more subchannels in that set). Is that
+> intentional?
+
+I thought there could be more subchannels.
+I need then a break in the loop when this happens.
+I will reread the PoP to see how to find that no more subchannel are in 
+that set.
+
+> 
+>> +		if (found && !test_device_sid)
+>> +			test_device_sid = sid|SID_ONE;
+> 
+> You set test_device_sid to the last valid subchannel? Why?
+
+The last ? I wanted the first one
+
+I wanted something easy but I should have explain.
+
+To avoid doing complicated things like doing a sense on each valid 
+subchannel I just take the first one.
+Should be enough as we do not go to the device in this test.
+
+> 
+>> +	}
+>> +	if (!found) {
+>> +		report("Found %d devices", 0, found);
+>> +		return;
+>> +	}
+>> +	ret = stsch(test_device_sid, &schib);
+> 
+> Why do you do a stsch() again?
+
+right, no need.
+In an internal version I used to print some informations from the SCHIB.
+Since in between I overwrote the SHIB, I did it again.
+But in this version; no need.
+
+> 
+>> +	if (ret) {
+>> +		report("Err %d on stsch on sid %08x", 0, ret, test_device_sid);
+>> +		return;
+>> +	}
+>> +	report("Tested", 1);
+>> +	return;
+> 
+> I don't think you need this return statement.
+
+right I have enough work. :)
+
+> 
+> Your test only enumerates devices in the first subchannel set. Do you
+> plan to enhance the test to enable the MSS facility and iterate over
+> all subchannel sets?
+
+Yes, it is something we can do in a following series
+
+> 
+>> +}
+>> +
+>> +static struct {
+>> +	const char *name;
+>> +	void (*func)(void);
+>> +} tests[] = {
+>> +	{ "enumerate (stsch)", test_enumerate },
+>> +	{ NULL, NULL }
+>> +};
+>> +
+>> +int main(int argc, char *argv[])
+>> +{
+>> +	int i;
+>> +
+>> +	report_prefix_push("Channel Sub-System");
+> 
+> s/Sub-System/Subsystem/
+
+yes, again.
 
 
-Thanks a lot for the review.
-Seems I have some work for the v3
-
+Thanks for the review.
 Regards,
+
 Pierre
 
 
