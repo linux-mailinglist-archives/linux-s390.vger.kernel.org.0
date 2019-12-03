@@ -2,144 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4286B110247
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2019 17:28:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2580B110648
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2019 22:05:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727073AbfLCQ2Q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Dec 2019 11:28:16 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55533 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726718AbfLCQ2P (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Dec 2019 11:28:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575390494;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=YqwpuKtnDubpLXH4usVkrSMU1DYBVfWJge8/U62NBA0=;
-        b=hzmHJC8dbUqeXecNteLRjm0+1y0oS9l9G5ZubL/JOjLLmwSnDFSy338dnFvOL9WuJ3I4t/
-        tQkRBn9tVg8TzS8ryup81SliXQSD0Cv6NLu86xhNUCWxrWZR4qeKqY5ybr56m3jVv7pwVM
-        qXTTddH6wHOFVDqpt51yA8TlqCcNxBU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-242-qE2RYTeFMXO4sV2prbycvw-1; Tue, 03 Dec 2019 11:28:10 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 835EB18042C5;
-        Tue,  3 Dec 2019 16:28:09 +0000 (UTC)
-Received: from gondolin (ovpn-116-214.ams2.redhat.com [10.36.116.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F9EE1001902;
-        Tue,  3 Dec 2019 16:28:04 +0000 (UTC)
-Date:   Tue, 3 Dec 2019 17:28:02 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        borntraeger@de.ibm.com, mihajlov@linux.ibm.com,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2] KVM: s390: Add new reset vcpu API
-Message-ID: <20191203172802.7d67d31d.cohuck@redhat.com>
-In-Reply-To: <20191203162055.3519-1-frankja@linux.ibm.com>
-References: <20191203162055.3519-1-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: qE2RYTeFMXO4sV2prbycvw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1727575AbfLCVFX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Dec 2019 16:05:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36066 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727483AbfLCVFW (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Dec 2019 16:05:22 -0500
+Subject: Re: [GIT PULL] s390 patches for the 5.5 merge window #2
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1575407121;
+        bh=AlwLDPItj/QAwn+eT1jJUm7hNUdk601hVz1T2nPvZVo=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=Qam6KeR3isIQQIm2wV5ENZ0xN/7towfuAig2DwzLOQL0C/h6eyYN+sF/+HFmB7AX3
+         v9qD9kvgP55oqPG0LYhJCuU7gnue3FQyZ4LL9qoJMOQLflQAMED39A3WzLJN5nWiZD
+         4urscaMPQBypDkANZWo8UbOYIHexT43FZ3ISj4Mo=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <your-ad-here.call-01575376349-ext-1325@work.hours>
+References: <your-ad-here.call-01575376349-ext-1325@work.hours>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <your-ad-here.call-01575376349-ext-1325@work.hours>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux
+ tags/s390-5.5-2
+X-PR-Tracked-Commit-Id: 2115fbf7210bd053ba55a95e7ebc366df41aa9cf
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 01d1dff64662646023482806c6db8ef0b280c403
+Message-Id: <157540712144.31207.5722570862214097444.pr-tracker-bot@kernel.org>
+Date:   Tue, 03 Dec 2019 21:05:21 +0000
+To:     Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  3 Dec 2019 11:20:55 -0500
-Janosch Frank <frankja@linux.ibm.com> wrote:
+The pull request you sent on Tue, 3 Dec 2019 13:32:29 +0100:
 
-> The architecture states that we need to reset local IRQs for all CPU
-> resets. Because the old reset interface did not support the normal CPU
-> reset we never did that.
-> 
-> Now that we have a new interface, let's properly clear out local IRQs
-> and let this commit be a reminder.
+> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux tags/s390-5.5-2
 
-Well, the new interface did not appear magically, this patch introduces
-it :) (The whole sentence is a bit confusing; what is this commit
-supposed to remind us of?)
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/01d1dff64662646023482806c6db8ef0b280c403
 
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  arch/s390/kvm/kvm-s390.c | 13 +++++++++++++
->  include/uapi/linux/kvm.h |  4 ++++
->  2 files changed, 17 insertions(+)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index d9e6bf3d54f0..602214c5616c 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -529,6 +529,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
->  	case KVM_CAP_S390_CMMA_MIGRATION:
->  	case KVM_CAP_S390_AIS:
->  	case KVM_CAP_S390_AIS_MIGRATION:
-> +	case KVM_CAP_S390_VCPU_RESETS:
->  		r = 1;
->  		break;
->  	case KVM_CAP_S390_HPAGE_1M:
-> @@ -3287,6 +3288,13 @@ static int kvm_arch_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu,
->  	return r;
->  }
->  
-> +static int kvm_arch_vcpu_ioctl_normal_reset(struct kvm_vcpu *vcpu)
-> +{
-> +	kvm_clear_async_pf_completion_queue(vcpu);
-> +	kvm_s390_clear_local_irqs(vcpu);
-> +	return 0;
-> +}
-> +
->  static int kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
->  {
->  	kvm_s390_vcpu_initial_reset(vcpu);
-> @@ -4363,7 +4371,12 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->  		r = kvm_arch_vcpu_ioctl_set_initial_psw(vcpu, psw);
->  		break;
->  	}
-> +	case KVM_S390_NORMAL_RESET:
-> +		r = kvm_arch_vcpu_ioctl_normal_reset(vcpu);
-> +		break;
->  	case KVM_S390_INITIAL_RESET:
-> +		/* fallthrough */
-> +	case KVM_S390_CLEAR_RESET:
->  		r = kvm_arch_vcpu_ioctl_initial_reset(vcpu);
+Thank you!
 
-The cover letter probably should also mention that clear reset falls
-back to initial reset for now?
-
->  		break;
->  	case KVM_SET_ONE_REG:
-> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
-> index 52641d8ca9e8..f4fc865775a5 100644
-> --- a/include/uapi/linux/kvm.h
-> +++ b/include/uapi/linux/kvm.h
-> @@ -1000,6 +1000,7 @@ struct kvm_ppc_resize_hpt {
->  #define KVM_CAP_PMU_EVENT_FILTER 173
->  #define KVM_CAP_ARM_IRQ_LINE_LAYOUT_2 174
->  #define KVM_CAP_HYPERV_DIRECT_TLBFLUSH 175
-> +#define KVM_CAP_S390_VCPU_RESETS 180
->  
->  #ifdef KVM_CAP_IRQ_ROUTING
->  
-> @@ -1461,6 +1462,9 @@ struct kvm_enc_region {
->  /* Available with KVM_CAP_ARM_SVE */
->  #define KVM_ARM_VCPU_FINALIZE	  _IOW(KVMIO,  0xc2, int)
->  
-> +#define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
-> +#define KVM_S390_CLEAR_RESET    _IO(KVMIO,   0xc4)
-> +
->  /* Secure Encrypted Virtualization command */
->  enum sev_cmd_id {
->  	/* Guest initialization commands */
-
-Looks sane, but please also document the new ioctls and the new cap.
-
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
