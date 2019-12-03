@@ -2,207 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE99A10FDB3
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2019 13:32:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2A23E10FE52
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Dec 2019 14:04:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726214AbfLCMci (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Dec 2019 07:32:38 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:34759 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726079AbfLCMci (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Dec 2019 07:32:38 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB3CMvOs076182
-        for <linux-s390@vger.kernel.org>; Tue, 3 Dec 2019 07:32:37 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wnje9ervd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 03 Dec 2019 07:32:37 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Tue, 3 Dec 2019 12:32:35 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 3 Dec 2019 12:32:32 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB3CWUcY45482464
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 3 Dec 2019 12:32:30 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9CCD1A4062;
-        Tue,  3 Dec 2019 12:32:30 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63AC9A405C;
-        Tue,  3 Dec 2019 12:32:30 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.112])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  3 Dec 2019 12:32:30 +0000 (GMT)
-Date:   Tue, 3 Dec 2019 13:32:29 +0100
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [GIT PULL] s390 patches for the 5.5 merge window #2
+        id S1726131AbfLCNEf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Dec 2019 08:04:35 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:55199 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725954AbfLCNEf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 3 Dec 2019 08:04:35 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47S2Hy2kcFz9sP6;
+        Wed,  4 Dec 2019 00:04:30 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1575378271;
+        bh=Nb1I9Pw4Szleb7pQzOoCNntR4NmjasZkWR6215KZoeI=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=VBhQwAU2RS2Ewhqy2KlM6E10NtjSthPAasmSLU+RkJFX7//4mrqv74pUM4/ofqNQ3
+         ZC9ISHXUQHIFFbZQeN5i0fYnKIh+13l8bjQR3xLYJUJdSuoe+9yZvzWHwZCcdOoKdA
+         //KzKkt1OJ/2PorwwFq8mq3p6cROt5yG1wKgrhynNsHYXTh9ZPbltfeCf+J7rnG+w9
+         0T3A+Na9X68SH2/KQYzKdPJqQbFNFKh9hy+05OL+7Vv14arO1NF0bECZ42dh378jzF
+         VZ+2teRZoErfmscL+xbTCpPYutJP1cehQE158vObnpL1ON2Y6SVoXK7FUg9WRW42Wx
+         TaerOje4++O5A==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Marco Elver <elver@google.com>, Daniel Axtens <dja@axtens.net>
+Cc:     linux-s390@vger.kernel.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org
+Subject: Re: [PATCH v2 1/2] kasan: support instrumented bitops combined with generic bitops
+In-Reply-To: <CANpmjNN-=F6GK_jHPUx8OdpboK7nMV=i=sKKfSsKwKEHnMTG0g@mail.gmail.com>
+References: <20190820024941.12640-1-dja@axtens.net> <877e6vutiu.fsf@dja-thinkpad.axtens.net> <878sp57z44.fsf@dja-thinkpad.axtens.net> <CANpmjNOCxTxTpbB_LwUQS5jzfQ_2zbZVAc4nKf0FRXmrwO-7sA@mail.gmail.com> <87a78xgu8o.fsf@dja-thinkpad.axtens.net> <87y2wbf0xx.fsf@dja-thinkpad.axtens.net> <CANpmjNN-=F6GK_jHPUx8OdpboK7nMV=i=sKKfSsKwKEHnMTG0g@mail.gmail.com>
+Date:   Wed, 04 Dec 2019 00:04:23 +1100
+Message-ID: <87r21lef1k.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 19120312-0028-0000-0000-000003C41043
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19120312-0029-0000-0000-00002487298E
-Message-Id: <your-ad-here.call-01575376349-ext-1325@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-03_02:2019-12-02,2019-12-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- mlxscore=0 malwarescore=0 suspectscore=2 priorityscore=1501
- lowpriorityscore=0 adultscore=0 spamscore=0 mlxlogscore=999 clxscore=1015
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912030098
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Linus,
+Marco Elver <elver@google.com> writes:
+> On Wed, 20 Nov 2019 at 08:42, Daniel Axtens <dja@axtens.net> wrote:
+>>
+>> > But the docs do seem to indicate that it's atomic (for whatever that
+>> > means for a single read operation?), so you are right, it should live in
+>> > instrumented-atomic.h.
+>>
+>> Actually, on further inspection, test_bit has lived in
+>> bitops/non-atomic.h since it was added in 4117b02132d1 ("[PATCH] bitops:
+>> generic __{,test_and_}{set,clear,change}_bit() and test_bit()")
+>>
+>> So to match that, the wrapper should live in instrumented-non-atomic.h
+>> too.
+>>
+>> If test_bit should move, that would need to be a different patch. But I
+>> don't really know if it makes too much sense to stress about a read
+>> operation, as opposed to a read/modify/write...
+>
+> That's fair enough. I suppose this can stay where it is because it's
+> not hurting anyone per-se, but the only bad thing about it is that
+> kernel-api documentation will present test_bit() in non-atomic
+> operations.
 
-please pull the second round of s390 fixes and features for 5.5.
+I only just noticed this thread as I was about to send a pull request
+for these two commits.
 
-Thank you,
-Vasily
+I think I agree that test_bit() shouldn't move (yet), but I dislike that
+the documentation ends up being confusing due to this patch.
 
-The following changes since commit ea1f56fa16ae5f6e67f6ea03836b36c6053d33d1:
+So I'm inclined to append or squash in the patch below, which removes
+the new headers from the documentation. The end result is the docs look
+more or less the same, just the ordering of some of the functions
+changes. But we don't end up with test_bit() under the "Non-atomic"
+header, and then also documented in Documentation/atomic_bitops.txt.
 
-  Merge tag 's390-5.5-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux (2019-11-25 17:23:53 -0800)
+Thoughts?
 
-are available in the Git repository at:
+cheers
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux tags/s390-5.5-2
 
-for you to fetch changes up to 2115fbf7210bd053ba55a95e7ebc366df41aa9cf:
-
-  s390: remove compat vdso code (2019-12-01 12:48:49 +0100)
-
-----------------------------------------------------------------
-s390 updates for the 5.5 merge window #2
-
-- Make stack unwinder reliable and suitable for livepatching. Add unwinder
-  testing module.
-
-- Fixes for CALL_ON_STACK helper used for stack switching.
-
-- Fix unwinding from bpf code.
-
-- Fix getcpu and remove compat support in vdso code.
-
-- Fix address space control registers initialization.
-
-- Save KASLR offset for early dumps.
-
-- Handle new FILTERED_BY_HYPERVISOR reply code in crypto code.
-
-- Minor perf code cleanup and potential memory leak fix.
-
-- Add couple of error messages for corner cases during PCI device
-  creation.
-
-----------------------------------------------------------------
-Gerald Schaefer (1):
-      s390/kaslr: store KASLR offset for early dumps
-
-Harald Freudenberger (1):
-      s390/zcrypt: handle new reply code FILTERED_BY_HYPERVISOR
-
-Heiko Carstens (3):
-      s390/smp,vdso: fix ASCE handling
-      s390/vdso: fix getcpu
-      s390: remove compat vdso code
-
-Ilya Leoshkevich (2):
-      s390: implement perf_arch_fetch_caller_regs
-      s390/unwind: add a test for the internal API
-
-Miroslav Benes (2):
-      s390/unwind: add stack pointer alignment sanity checks
-      s390/livepatch: Implement reliable stack tracing for the consistency model
-
-Niklas Schnelle (2):
-      s390/pci: add error message for UID collision
-      s390/pci: add error message on device number limit
-
-Thomas Richter (4):
-      s390/cpum_sf: Replace function name in debug statements
-      s390/cpum_sf: Remove unnecessary check for pending SDBs
-      s390/cpum_sf: Use TEAR_REG macro consistantly
-      s390/cpum_sf: Check for SDBT and SDB consistency
-
-Vasily Gorbik (18):
-      s390: always inline disabled_wait
-      s390: disable preemption when switching to nodat stack with CALL_ON_STACK
-      s390/unwind: unify task is current checks
-      s390: correct CALL_ON_STACK back_chain saving
-      s390: avoid misusing CALL_ON_STACK for task stack setup
-      s390/unwind: report an error if pt_regs are not on stack
-      s390/unwind: make reuse_sp default when unwinding pt_regs
-      s390/head64: correct init_task stack setup
-      s390/unwind: stop gracefully at task pt_regs
-      s390/unwind: always inline get_stack_pointer
-      s390/test_unwind: require that unwinding ended successfully
-      s390: fix register clobbering in CALL_ON_STACK
-      s390/test_unwind: add CALL_ON_STACK tests
-      s390/test_unwind: print verbose unwinding results
-      s390/test_unwind: add irq context tests
-      s390/test_unwind: add program check context tests
-      s390/unwind: start unwinding from reliable state
-      s390/unwind: filter out unreliable bogus %r14
-
- arch/s390/Kconfig                        |  18 +-
- arch/s390/Makefile                       |   1 -
- arch/s390/boot/startup.c                 |   5 +
- arch/s390/include/asm/cpu_mf.h           |   2 +-
- arch/s390/include/asm/perf_event.h       |   7 +
- arch/s390/include/asm/processor.h        |   2 +-
- arch/s390/include/asm/stacktrace.h       |  36 +++-
- arch/s390/include/asm/unwind.h           |   8 +-
- arch/s390/include/asm/vdso.h             |  13 +-
- arch/s390/kernel/Makefile                |   1 -
- arch/s390/kernel/asm-offsets.c           |   3 +-
- arch/s390/kernel/dumpstack.c             |   7 +-
- arch/s390/kernel/head64.S                |   2 +-
- arch/s390/kernel/machine_kexec.c         |   4 +-
- arch/s390/kernel/perf_cpum_sf.c          | 136 ++++++------
- arch/s390/kernel/setup.c                 |   9 +-
- arch/s390/kernel/smp.c                   |   7 +-
- arch/s390/kernel/stacktrace.c            |  43 ++++
- arch/s390/kernel/unwind_bc.c             |  80 ++++---
- arch/s390/kernel/vdso.c                  |  42 +---
- arch/s390/kernel/vdso32/.gitignore       |   1 -
- arch/s390/kernel/vdso32/Makefile         |  66 ------
- arch/s390/kernel/vdso32/clock_getres.S   |  44 ----
- arch/s390/kernel/vdso32/clock_gettime.S  | 179 ----------------
- arch/s390/kernel/vdso32/getcpu.S         |  33 ---
- arch/s390/kernel/vdso32/gettimeofday.S   | 103 ---------
- arch/s390/kernel/vdso32/note.S           |  13 --
- arch/s390/kernel/vdso32/vdso32.lds.S     | 142 -------------
- arch/s390/kernel/vdso32/vdso32_wrapper.S |  15 --
- arch/s390/kernel/vdso64/getcpu.S         |   4 +-
- arch/s390/lib/Makefile                   |   3 +
- arch/s390/lib/test_unwind.c              | 347 +++++++++++++++++++++++++++++++
- arch/s390/mm/maccess.c                   |  12 +-
- arch/s390/pci/pci.c                      |   5 +
- drivers/s390/crypto/zcrypt_error.h       |   2 +
- 35 files changed, 627 insertions(+), 768 deletions(-)
- delete mode 100644 arch/s390/kernel/vdso32/.gitignore
- delete mode 100644 arch/s390/kernel/vdso32/Makefile
- delete mode 100644 arch/s390/kernel/vdso32/clock_getres.S
- delete mode 100644 arch/s390/kernel/vdso32/clock_gettime.S
- delete mode 100644 arch/s390/kernel/vdso32/getcpu.S
- delete mode 100644 arch/s390/kernel/vdso32/gettimeofday.S
- delete mode 100644 arch/s390/kernel/vdso32/note.S
- delete mode 100644 arch/s390/kernel/vdso32/vdso32.lds.S
- delete mode 100644 arch/s390/kernel/vdso32/vdso32_wrapper.S
- create mode 100644 arch/s390/lib/test_unwind.c
-
+diff --git a/Documentation/core-api/kernel-api.rst b/Documentation/core-api/kernel-api.rst
+index 2caaeb55e8dd..4ac53a1363f6 100644
+--- a/Documentation/core-api/kernel-api.rst
++++ b/Documentation/core-api/kernel-api.rst
+@@ -57,21 +57,12 @@ The Linux kernel provides more basic utility functions.
+ Bit Operations
+ --------------
+ 
+-Atomic Operations
+-~~~~~~~~~~~~~~~~~
+-
+ .. kernel-doc:: include/asm-generic/bitops/instrumented-atomic.h
+    :internal:
+ 
+-Non-atomic Operations
+-~~~~~~~~~~~~~~~~~~~~~
+-
+ .. kernel-doc:: include/asm-generic/bitops/instrumented-non-atomic.h
+    :internal:
+ 
+-Locking Operations
+-~~~~~~~~~~~~~~~~~~
+-
+ .. kernel-doc:: include/asm-generic/bitops/instrumented-lock.h
+    :internal:
+ 
