@@ -2,176 +2,185 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 714EB112963
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2019 11:37:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DEF48112A75
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Dec 2019 12:47:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727567AbfLDKhb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Dec 2019 05:37:31 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34668 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727268AbfLDKhb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Dec 2019 05:37:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575455849;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=nLt4HFCMZdjN5fYw9xFdC17/DzxDFC8QzLeH5bh/084=;
-        b=aSwy5irtvI6harkgU7a0zNIoh0XmA8RWVhrI7pvwGg+e6/NQSVwWEDVMEHtoZN96VuWxIb
-        UBTunqxpGGBIr25475u6QIxFX1HJ6vb7q1SwZ9aD+oig3vD+qD7Eyvh8CMpVSk+ksGMhgY
-        0a3dqoVX7zeSDlAiZ+2u/QtGF8YwxAU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-8-kvO5j03IMfSBU-JrVP5b1g-1; Wed, 04 Dec 2019 05:37:28 -0500
-X-MC-Unique: kvO5j03IMfSBU-JrVP5b1g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA7EEA053D;
-        Wed,  4 Dec 2019 10:37:26 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-117-39.ams2.redhat.com [10.36.117.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 486845DA70;
-        Wed,  4 Dec 2019 10:37:22 +0000 (UTC)
-Subject: Re: [PATCH v2] KVM: s390: Add new reset vcpu API
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     david@redhat.com, borntraeger@de.ibm.com, mihajlov@linux.ibm.com,
-        cohuck@redhat.com, linux-s390@vger.kernel.org
-References: <20191203162055.3519-1-frankja@linux.ibm.com>
- <c22eefd7-2c99-ec8e-3b5c-fabb343230a9@redhat.com>
- <26845508-9a35-7ec6-fc01-49ab4b7e3473@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <ac908a16-9b00-9c86-42f2-88cff497ed5c@redhat.com>
-Date:   Wed, 4 Dec 2019 11:37:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727469AbfLDLr5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Dec 2019 06:47:57 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58528 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727446AbfLDLr5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Dec 2019 06:47:57 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB4BjqJ0098341
+        for <linux-s390@vger.kernel.org>; Wed, 4 Dec 2019 06:47:56 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2wntctbkpm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 04 Dec 2019 06:47:56 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <ubraun@linux.ibm.com>;
+        Wed, 4 Dec 2019 11:47:54 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Dec 2019 11:47:50 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB4BlnWn36503584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Dec 2019 11:47:49 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D14E74C044;
+        Wed,  4 Dec 2019 11:47:49 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 901574C040;
+        Wed,  4 Dec 2019 11:47:49 +0000 (GMT)
+Received: from oc5311105230.ibm.com (unknown [9.152.224.131])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Dec 2019 11:47:49 +0000 (GMT)
+Subject: Re: WARNING: refcount bug in smc_release (2)
+To:     Hillf Danton <hdanton@sina.com>,
+        syzbot <syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com>
+Cc:     davem@davemloft.net, kgraul@linux.ibm.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
+References: <20191201122517.18720-1-hdanton@sina.com>
+From:   Ursula Braun <ubraun@linux.ibm.com>
+Date:   Wed, 4 Dec 2019 12:47:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-In-Reply-To: <26845508-9a35-7ec6-fc01-49ab4b7e3473@linux.ibm.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="qR7wqTKRxEjnmAonEU9nCTVzn0nEQX453"
+In-Reply-To: <20191201122517.18720-1-hdanton@sina.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19120411-4275-0000-0000-0000038B1234
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120411-4276-0000-0000-0000389EB3AD
+Message-Id: <e943de9d-a81a-e709-e228-64eaddc328da@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-04_03:2019-12-04,2019-12-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
+ bulkscore=0 adultscore=0 mlxlogscore=999 clxscore=1011 priorityscore=1501
+ spamscore=0 mlxscore=0 malwarescore=0 suspectscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-1912040094
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---qR7wqTKRxEjnmAonEU9nCTVzn0nEQX453
-Content-Type: multipart/mixed; boundary="XOTxow7ibzXRVYbHlE1y7VQsmzPAjTnA7";
- protected-headers="v1"
-From: Thomas Huth <thuth@redhat.com>
-To: Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc: david@redhat.com, borntraeger@de.ibm.com, mihajlov@linux.ibm.com,
- cohuck@redhat.com, linux-s390@vger.kernel.org
-Message-ID: <ac908a16-9b00-9c86-42f2-88cff497ed5c@redhat.com>
-Subject: Re: [PATCH v2] KVM: s390: Add new reset vcpu API
-References: <20191203162055.3519-1-frankja@linux.ibm.com>
- <c22eefd7-2c99-ec8e-3b5c-fabb343230a9@redhat.com>
- <26845508-9a35-7ec6-fc01-49ab4b7e3473@linux.ibm.com>
-In-Reply-To: <26845508-9a35-7ec6-fc01-49ab4b7e3473@linux.ibm.com>
 
---XOTxow7ibzXRVYbHlE1y7VQsmzPAjTnA7
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 
-On 04/12/2019 11.06, Janosch Frank wrote:
-> On 12/4/19 10:32 AM, Thomas Huth wrote:
->> On 03/12/2019 17.20, Janosch Frank wrote:
->>> The architecture states that we need to reset local IRQs for all CPU
->>> resets. Because the old reset interface did not support the normal CPU
->>> reset we never did that.
->>>
->>> Now that we have a new interface, let's properly clear out local IRQs
->>> and let this commit be a reminder.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> ---
->>>  arch/s390/kvm/kvm-s390.c | 13 +++++++++++++
->>>  include/uapi/linux/kvm.h |  4 ++++
->>>  2 files changed, 17 insertions(+)
->>>
->>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->>> index d9e6bf3d54f0..602214c5616c 100644
->>> --- a/arch/s390/kvm/kvm-s390.c
->>> +++ b/arch/s390/kvm/kvm-s390.c
->>> @@ -529,6 +529,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, l=
-ong ext)
->>>  =09case KVM_CAP_S390_CMMA_MIGRATION:
->>>  =09case KVM_CAP_S390_AIS:
->>>  =09case KVM_CAP_S390_AIS_MIGRATION:
->>> +=09case KVM_CAP_S390_VCPU_RESETS:
->>>  =09=09r =3D 1;
->>>  =09=09break;
->>>  =09case KVM_CAP_S390_HPAGE_1M:
->>> @@ -3287,6 +3288,13 @@ static int kvm_arch_vcpu_ioctl_set_one_reg(struc=
-t kvm_vcpu *vcpu,
->>>  =09return r;
->>>  }
->>> =20
->>> +static int kvm_arch_vcpu_ioctl_normal_reset(struct kvm_vcpu *vcpu)
->>> +{
->>> +=09kvm_clear_async_pf_completion_queue(vcpu);
->>> +=09kvm_s390_clear_local_irqs(vcpu);
->>> +=09return 0;
->>> +}
->>> +
->>>  static int kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
->>>  {
->>>  =09kvm_s390_vcpu_initial_reset(vcpu);
->>> @@ -4363,7 +4371,12 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
->>>  =09=09r =3D kvm_arch_vcpu_ioctl_set_initial_psw(vcpu, psw);
->>>  =09=09break;
->>>  =09}
->>> +=09case KVM_S390_NORMAL_RESET:
->>> +=09=09r =3D kvm_arch_vcpu_ioctl_normal_reset(vcpu);
->>> +=09=09break;
->>>  =09case KVM_S390_INITIAL_RESET:
->>> +=09=09/* fallthrough */
->>> +=09case KVM_S390_CLEAR_RESET:
->>>  =09=09r =3D kvm_arch_vcpu_ioctl_initial_reset(vcpu);
->>>  =09=09break;
+On 12/1/19 1:25 PM, Hillf Danton wrote:
+> 
+> On Sat, 30 Nov 2019 20:37:09 -0800
 >>
->> Isn't clear reset supposed to do more than the initial reset? If so, I'd
->> rather expect it the other way round:
->=20
-> In the PV patch I remove the fallthrough and add a function for the
-> clear reset. I add the UV reset calls into the
-> kvm_arch_vcpu_ioctl_*_reset() functions, therefore I can't fallthrough
-> because the Ultravisor does currently not allow staged resets (i.e.
-> first initial then clear if a clear reset is needed)
+>> syzbot has found a reproducer for the following crash on:
+>>
+>> HEAD commit:    32ef9553 Merge tag 'fsnotify_for_v5.5-rc1' of git://git.ke..
+>> git tree:       upstream
+>> console output: https://syzkaller.appspot.com/x/log.txt?x=15f6d82ae00000
+>> kernel config:  https://syzkaller.appspot.com/x/.config?x=ff560c3de405258c
+>> dashboard link: https://syzkaller.appspot.com/bug?extid=96d3f9ff6a86d37e44c8
+>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+>> userspace arch: i386
+>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14b57336e00000
+>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=149e357ae00000
+>>
+>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+>> Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
+>>
+>> ------------[ cut here ]------------
+>> refcount_t: underflow; use-after-free.
+>> WARNING: CPU: 1 PID: 9807 at lib/refcount.c:28  
+>> refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+>> Kernel panic - not syncing: panic_on_warn set ...
+>> CPU: 1 PID: 9807 Comm: syz-executor293 Not tainted 5.4.0-syzkaller #0
+>> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+>> Google 01/01/2011
+>> Call Trace:
+>>   __dump_stack lib/dump_stack.c:77 [inline]
+>>   dump_stack+0x197/0x210 lib/dump_stack.c:118
+>>   panic+0x2e3/0x75c kernel/panic.c:221
+>>   __warn.cold+0x2f/0x3e kernel/panic.c:582
+>>   report_bug+0x289/0x300 lib/bug.c:195
+>>   fixup_bug arch/x86/kernel/traps.c:174 [inline]
+>>   fixup_bug arch/x86/kernel/traps.c:169 [inline]
+>>   do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
+>>   do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
+>>   invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
+>> RIP: 0010:refcount_warn_saturate+0x1dc/0x1f0 lib/refcount.c:28
+>> Code: e9 d8 fe ff ff 48 89 df e8 c1 5a 24 fe e9 85 fe ff ff e8 e7 08 e7 fd  
+>> 48 c7 c7 a0 6f 4f 88 c6 05 60 b8 a4 06 01 e8 53 bd b7 fd <0f> 0b e9 ac fe  
+>> ff ff 0f 1f 00 66 2e 0f 1f 84 00 00 00 00 00 55 48
+>> RSP: 0018:ffff888093c97998 EFLAGS: 00010286
+>> RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
+>> RDX: 0000000000000000 RSI: ffffffff815e4316 RDI: ffffed1012792f25
+>> RBP: ffff888093c979a8 R08: ffff8880a04d4380 R09: ffffed1015d26621
+>> R10: ffffed1015d26620 R11: ffff8880ae933107 R12: 0000000000000003
+>> R13: 0000000000000000 R14: ffff8880a118d380 R15: ffff88809427e558
+>>   refcount_sub_and_test include/linux/refcount.h:261 [inline]
+>>   refcount_dec_and_test include/linux/refcount.h:281 [inline]
+>>   sock_put include/net/sock.h:1728 [inline]
+>>   smc_release+0x445/0x520 net/smc/af_smc.c:202
+>>   __sock_release+0xce/0x280 net/socket.c:591
+>>   sock_close+0x1e/0x30 net/socket.c:1269
+>>   __fput+0x2ff/0x890 fs/file_table.c:280
+>>   ____fput+0x16/0x20 fs/file_table.c:313
+>>   task_work_run+0x145/0x1c0 kernel/task_work.c:113
+>>   exit_task_work include/linux/task_work.h:22 [inline]
+>>   do_exit+0x8e7/0x2ef0 kernel/exit.c:797
+>>   do_group_exit+0x135/0x360 kernel/exit.c:895
+>>   get_signal+0x47c/0x24f0 kernel/signal.c:2734
+>>   do_signal+0x87/0x1700 arch/x86/kernel/signal.c:815
+>>   exit_to_usermode_loop+0x286/0x380 arch/x86/entry/common.c:160
+>>   prepare_exit_to_usermode arch/x86/entry/common.c:195 [inline]
+>>   syscall_return_slowpath arch/x86/entry/common.c:278 [inline]
+>>   do_syscall_32_irqs_on arch/x86/entry/common.c:352 [inline]
+>>   do_fast_syscall_32+0xbbd/0xe16 arch/x86/entry/common.c:408
+>>   entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> 
+> Prevent repeated release using cmpxchg and the sock_hold/put pair is
+> cut off as a bonus cleanup (which would go in another seperate one if
+> necessary).
+> 
 
-Ok, then it's fine. But in case you respin your patch, it's maybe less
-confusing if you swap it.
+Thanks, Hilff, for this cmpxchg() idea. We keep it in mind, but analyzing
+possible scenarios of the C reproducer I detected an errorneous duplicate
+refcount decrease possibility for the combination of non-blocking connect()
+and FASTOPEN_KEY setsockopt(). I am working on a fix.
 
- Thomas
+Thus I assume the syzbot problem is not caused by a repeated release.
 
+Kind regards, Ursula
 
---XOTxow7ibzXRVYbHlE1y7VQsmzPAjTnA7--
-
---qR7wqTKRxEjnmAonEU9nCTVzn0nEQX453
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJ7iIR+7gJQEY8+q5LtnXdP5wLbUFAl3njGAACgkQLtnXdP5w
-LbVn6Q/8CnGgKZzCuHCOdW6qjfakbo/fIfuAPbPOA5zm14avRLAUMJP/eJKZGcQl
-U1gAILLeQ6QcTsi0WGvS2qm7kdbKJKDKzy2N3/wboTV/huFGvLXdvUEu/wLMw8mQ
-ozieP2gD+TLCvI6NKHISoAfm65IgMrzhL+b6c3aZx9brIbsgD87sZrSum4F6XxMW
-jjxr+0dg/tvHu1hSU+VlTBrxhj5z6+Ix+gcGwgafnJ4V/gN0SFyHOfx5bwudHAHD
-oAF4RUXOcHnnJ3Sp9KttingpAGGsU7pSZWbYmQJsyQEvIM7X4qu485FOEkfRSFll
-hToZcVnSMISMM7Rdb+XpIRAen7095re3jI4YL6Xsrw/bOfR0+f11YUMcDQowbL+y
-FrnZa3PsEJqeOqtbXzY52uuhZLZlx5kkDXqNwvlvaYgTE5qPW7/3yu3wKZk8i2fi
-MM8uGSWKTi9Oajj5djm7XrODQZJZKLOuxKOVsJjBOmygcC2JF2aNbgPppzQ2KbRu
-Gz9JjDEGOxYrw9QZBWAaWc7Y+P7rMK2ZjnLyEB2b2npbZfBb3a/qSssXBaYOUbeF
-VztexG66N0PK5tOIieIE0nnkqJ+Zkw3VM9ICgMxCJZWBPVcE8LV2sGFC6LcCeYGv
-7eS6jHvWvDEslwMYwhfgGXG9Bbnl7+kQ8LjC4nMG7jUg5/mnT5E=
-=nXSx
------END PGP SIGNATURE-----
-
---qR7wqTKRxEjnmAonEU9nCTVzn0nEQX453--
+> --- a/net/smc/af_smc.c
+> +++ b/net/smc/af_smc.c
+> @@ -172,10 +172,9 @@ static int smc_release(struct socket *so
+>  	struct smc_sock *smc;
+>  	int rc = 0;
+>  
+> -	if (!sk)
+> -		goto out;
+> +	if (!sk || sk != cmpxchg(&sock->sk, sk, NULL))
+> +		return 0;
+>  
+> -	sock_hold(sk); /* sock_put below */
+>  	smc = smc_sk(sk);
+>  
+>  	/* cleanup for a dangling non-blocking connect */
+> @@ -198,9 +197,7 @@ static int smc_release(struct socket *so
+>  	sock->sk = NULL;
+>  	release_sock(sk);
+>  
+> -	sock_put(sk); /* sock_hold above */
+>  	sock_put(sk); /* final sock_put */
+> -out:
+>  	return rc;
+>  }
+>  
+> 
 
