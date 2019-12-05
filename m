@@ -2,70 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8C92C1140DD
-	for <lists+linux-s390@lfdr.de>; Thu,  5 Dec 2019 13:35:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6FD59114100
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Dec 2019 13:50:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfLEMfP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Dec 2019 07:35:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46367 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729048AbfLEMfP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Dec 2019 07:35:15 -0500
+        id S1729236AbfLEMuV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Dec 2019 07:50:21 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52880 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729260AbfLEMuV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Dec 2019 07:50:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575549313;
+        s=mimecast20190719; t=1575550220;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=1Z745T1ohTOchsX6AbDB+JziaT12T48bxF0g+IBboGs=;
-        b=GYckKvY6FJthv7XPJ09WzdGEQ/8e5/IFAnlhupFN5+yF6mA5XknVSxwY9zvnA4GAsF7aYX
-        Ta0goRbVMMjZNNGMSDfBUHkM1mIKlRw5iSh9i47sjvBNo7LwCBn/UABnddBzYNz9BNi10u
-        bvBZaxhJtqTgvQZFPmHwqo9ISHsdl6A=
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=Hyb3ibAkZAYbAECyFhbWYbuR4iitZbKy1OZQ/jhZU9E=;
+        b=Ls+umEusCq1YTRmx57goWvT1xzqQvRa2hy1A6XsSFHep/dYDQHO83eoSMUzqmpDnBhMrXv
+        tLmkZMgidr2PlAKj/At1YR2nVuEIHPBXjf2jSovZPbid6SKhHdxhsvDvmgou257Wj+DIxy
+        zNJy17AKed8Y8IiT2m7DQMOHyyBFCkA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-152-wdiLG1NdOEmALVfnB_bfZw-1; Thu, 05 Dec 2019 07:35:10 -0500
+ us-mta-368-wu3KczLdMO2YjAEPyeCztg-1; Thu, 05 Dec 2019 07:50:17 -0500
 Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 62A3E100550E;
-        Thu,  5 Dec 2019 12:35:09 +0000 (UTC)
-Received: from gondolin (unknown [10.36.118.1])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1551B60C85;
-        Thu,  5 Dec 2019 12:35:07 +0000 (UTC)
-Date:   Thu, 5 Dec 2019 13:35:05 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D8F40911E8;
+        Thu,  5 Dec 2019 12:50:15 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-87.ams2.redhat.com [10.36.116.87])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 969806106B;
+        Thu,  5 Dec 2019 12:50:14 +0000 (UTC)
 Subject: Re: [PATCH v4] KVM: s390: Add new reset vcpu API
-Message-ID: <20191205133505.7f3c4859.cohuck@redhat.com>
-In-Reply-To: <20191205122810.10672-1-frankja@linux.ibm.com>
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org
 References: <20191205131930.1b78f78b.cohuck@redhat.com>
-        <20191205122810.10672-1-frankja@linux.ibm.com>
-Organization: Red Hat GmbH
+ <20191205122810.10672-1-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <081eebc2-fbe4-d928-ad54-7e90fa06e0b2@redhat.com>
+Date:   Thu, 5 Dec 2019 13:50:13 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191205122810.10672-1-frankja@linux.ibm.com>
+Content-Language: en-US
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: wdiLG1NdOEmALVfnB_bfZw-1
+X-MC-Unique: wu3KczLdMO2YjAEPyeCztg-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu,  5 Dec 2019 07:28:10 -0500
-Janosch Frank <frankja@linux.ibm.com> wrote:
-
+On 05/12/2019 13.28, Janosch Frank wrote:
 > The architecture states that we need to reset local IRQs for all CPU
 > resets. Because the old reset interface did not support the normal CPU
 > reset we never did that. Now that we have a new interface, let's
 > properly clear out local IRQs.
-> 
+>=20
 > Also we add a ioctl for the clear reset to have all resets exposed to
 > userspace. Currently the clear reset falls back to the initial reset,
 > but we plan to have clear reset specific code in the future.
-> 
+>=20
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > Reviewed-by: David Hildenbrand <david@redhat.com>
 > ---
@@ -73,43 +74,7 @@ Janosch Frank <frankja@linux.ibm.com> wrote:
 >  arch/s390/kvm/kvm-s390.c       | 14 ++++++++++
 >  include/uapi/linux/kvm.h       |  5 ++++
 >  3 files changed, 67 insertions(+)
-> 
-> diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
-> index 4833904d32a5..296e51f9df70 100644
-> --- a/Documentation/virt/kvm/api.txt
-> +++ b/Documentation/virt/kvm/api.txt
-> @@ -4126,6 +4126,47 @@ Valid values for 'action':
->  #define KVM_PMU_EVENT_ALLOW 0
->  #define KVM_PMU_EVENT_DENY 1
->  
-> +4.121 KVM_S390_NORMAL_RESET
-> +
-> +Capability: KVM_CAP_S390_VCPU_RESETS
-> +Architectures: s390
-> +Type: vcpu ioctl
-> +Parameters: none
-> +Returns: 0
-> +
-> +This ioctl resets VCPU registers and control structures that userspace
-> +can't access via the kvm_run structure. It is intended to be called
-> +when a normal reset is performed on the vcpu and clears local
-> +interrupts, the riccb and PSW bit 24.
-> +
-> +4.122 KVM_S390_INITIAL_RESET
-> +
-> +Capability: none
-> +Architectures: s390
-> +Type: vcpu ioctl
-> +Parameters: none
-> +Returns: 0
-> +
-> +This ioctl resets VCPU registers and control structures that userspace
-> +can't access via the kvm_run structure. It is intended to be called
-> +when an initial reset (which is a superset of the normal reset) is
-> +performed on the vcpu and additionally clears the psw, prefix, timing
-> +related registers, as well as setting the control registers to their
-> +initial value.
-> +
+[...]
 > +4.123 KVM_S390_CLEAR_RESET
 > +
 > +Capability: KVM_CAP_S390_VCPU_RESETS
@@ -121,28 +86,19 @@ Janosch Frank <frankja@linux.ibm.com> wrote:
 > +This ioctl resets VCPU registers and control structures that userspace
 > +can't access via the kvm_run structure. It is intended to be called
 > +when an initial reset (which is a superset of the normal reset) is
-
-s/initial/clear/
-s/normal/initial/
-
-(no need to respin, just fix up while applying :)
-
 > +performed on the vcpu and additionally clears general, access,
 > +floating and vector registers.
->  
->  5. The kvm_run structure
->  ------------------------
-> @@ -5322,3 +5363,10 @@ handling by KVM (as some KVM hypercall may be mistakenly treated as TLB
->  flush hypercalls by Hyper-V) so userspace should disable KVM identification
->  in CPUID and only exposes Hyper-V identification. In this case, guest
->  thinks it's running on Hyper-V and only use Hyper-V hypercalls.
-> +
-> +8.22 KVM_CAP_S390_VCPU_RESETS
-> +
-> +Architectures: s390
-> +
-> +This capability indicates that the KVM_S390_NORMAL_RESET and
-> +KVM_S390_CLEAR_RESET ioctls are available.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+So now you've documented that this ioctl clears the GPRs, ARs and
+FRs/VRs ... but the implementation does not! That's quite ugly.
+Can you please state clearly that it is the job of userspace to clear
+these registers (in the default, non-protected case) and that this ioctl
+should be called on top?
+
+Same problem with the PSW bit 24 and riccb during normal reset.
+
+Or should the kernel code maybe also clear these in addition to
+userspace, just to be in line with the initial reset?
+
+ Thomas
 
