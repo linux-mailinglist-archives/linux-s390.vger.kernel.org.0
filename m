@@ -2,160 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29BC0114EF1
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Dec 2019 11:21:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB29311508B
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Dec 2019 13:46:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbfLFKVP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Dec 2019 05:21:15 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44597 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726070AbfLFKVP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Dec 2019 05:21:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575627673;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EHGK9Qv9XlV67tH0CXcjE3rwPlBNOol04FALgiwYmp0=;
-        b=a0q1lhw4qpc1tVpBRZ1KzjKxrnTZ8Ann2QSzP2/lXRKtcXmdw2FFzg7sMNwmWqxdKCE6Xk
-        wmB+SwngSXO6Nf+FbyhqXOD88WDP3eDEHghR+FR+CbXhq9LpdTIPyvYwt+y5+oOZ3R7jWA
-        15hKKewx0jh2ch0syoZBnvu/qTZcw6g=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-40-52sJfeCHNpS5VXWDNu7MKw-1; Fri, 06 Dec 2019 05:21:12 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1726171AbfLFMqU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 Dec 2019 07:46:20 -0500
+Received: from ozlabs.org ([203.11.71.1]:34691 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726124AbfLFMqT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 6 Dec 2019 07:46:19 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 251881005502;
-        Fri,  6 Dec 2019 10:21:11 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1B23519C4F;
-        Fri,  6 Dec 2019 10:21:09 +0000 (UTC)
-Date:   Fri, 6 Dec 2019 11:21:07 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>
-Subject: Re: [RFC PATCH v1 08/10] vfio-ccw: Wire up the CRW irq and CRW
- region
-Message-ID: <20191206112107.63fb37a1.cohuck@redhat.com>
-In-Reply-To: <02d98858-ddac-df7e-96a6-7c61335d3cee@linux.ibm.com>
-References: <20191115025620.19593-1-farman@linux.ibm.com>
-        <20191115025620.19593-9-farman@linux.ibm.com>
-        <20191119195236.35189d5b.cohuck@redhat.com>
-        <02d98858-ddac-df7e-96a6-7c61335d3cee@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47TslW10tCz9s4Y;
+        Fri,  6 Dec 2019 23:46:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1575636375;
+        bh=oyct4tPxjrlkjB1zVGbKoKAWyEMXqFKQz+rA6a80J+Q=;
+        h=From:To:Cc:Subject:Date:From;
+        b=LDjqbEKiUq8oNBats/yrnw90N+Rzv6Z+iiPnbOmZZ7DL568ZE4JOjjBHlEHFJfoeC
+         O8SOYmwLdmsN/V6kENixnnz/vOn5jzuNy7pWqQswsJTHN0f6lUjVdWV07IzT1YCnzG
+         1kL6GA7mRfq+HW2DeqJRjs0wlndNWkpM8er9OpYHENOK74c0gU4iuMOYCsOKOIFdBq
+         X+dupxBqvuGoTt7G8GxlraeFfKp5A0+6fkI8sOnQrpLnXb8TO52AAXLDQdhAsk4l/7
+         Pel8A8JoKvjlh+CqVUqwUBN4H7e+QZd4Je2t+OCOU6hgqTDNkgZRQDLShw8uq+fP7g
+         X1AGIjbhox6vg==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     dja@axtens.net, elver@google.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
+        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, kasan-dev@googlegroups.com
+Subject: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops)
+Date:   Fri, 06 Dec 2019 23:46:11 +1100
+Message-ID: <87blslei5o.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: 52sJfeCHNpS5VXWDNu7MKw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 5 Dec 2019 15:43:55 -0500
-Eric Farman <farman@linux.ibm.com> wrote:
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA256
 
-> On 11/19/19 1:52 PM, Cornelia Huck wrote:
-> > On Fri, 15 Nov 2019 03:56:18 +0100
-> > Eric Farman <farman@linux.ibm.com> wrote:
-> >   
-> >> From: Farhan Ali <alifm@linux.ibm.com>
-> >>
-> >> Use an IRQ to notify userspace that there is a CRW
-> >> pending in the region, related to path-availability
-> >> changes on the passthrough subchannel.  
-> > 
-> > Thinking a bit more about this, it feels a bit odd that a crw for a
-> > chpid ends up on one subchannel. What happens if we have multiple
-> > subchannels passed through by vfio-ccw that use that same chpid?  
-> 
-> Yeah...  It doesn't end up on one subchannel, it ends up on every
-> affected subchannel, based on the loops in (for example)
-> chsc_chp_offline().  This means that "let's configure off a CHPID to the
-> LPAR" translates one channel-path CRW into N channel-path CRWs (one each
-> sent to N subchannels).  It would make more sense if we just presented
-> one channel-path CRW to the guest, but I'm having difficulty seeing how
-> we could wire this up.  What we do here is use the channel-path event
-> handler in vfio-ccw also create a channel-path CRW to be presented to
-> the guest, even though it's processing something at the subchannel level.
+Hi Linus,
 
-Yes, it's a bit odd that we need to do 1 -> N -> 1 conversion here, but
-we can't really avoid it without introducing a new way to report
-information that is relevant for more than one subchannel. The thing we
-need to make sure is that userspace gets the same information,
-regardless of which affected subchannel it looks at.
+Please pull another powerpc update for 5.5.
 
-> 
-> The actual CRW handlers are in the base cio code, and we only get into
-> vfio-ccw when processing the individual subchannels.  Do we need to make
-> a device (or something?) at the guest level for the chpids that exist?
-> Or do something to say "hey we got this from a subchannel, put it on a
-> global queue if it's unique, or throw it away if it's a duplicate we
-> haven't processed yet" ?  Thoughts?
+As you'll see from the diffstat this is mostly not powerpc code. In order to do
+KASAN instrumentation of bitops we needed to juggle some of the generic bitops
+headers.
 
-The problem is that you can easily get several crws that look identical
-(consider e.g. a chpid that is set online and offline in a tight loop).
-The only entity that should make decisions as to what to process here
-is the guest.
+Because those changes potentially affect several architectures I wasn't
+confident putting them directly into my tree, so I've had them sitting in a
+topic branch. That branch (topic/kasan-bitops) has been in linux-next for a
+month, and I've not had any feedback that it's caused any problems.
 
-(...)
+So I think this is good to merge, but it's a standalone pull so if anyone does
+object it's not a problem.
 
-> >> @@ -312,6 +334,11 @@ static int vfio_ccw_chp_event(struct subchannel *sch,
-> >>  	case CHP_ONLINE:
-> >>  		/* Path became available */
-> >>  		sch->lpm |= mask & sch->opm;
-> >> +		private->crw.rsc = CRW_RSC_CPATH;
-> >> +		private->crw.rsid = 0x0 | (link->chpid.cssid << 8) |
-> >> +				    link->chpid.id;
-> >> +		private->crw.erc = CRW_ERC_INIT;
-> >> +		queue_work(vfio_ccw_work_q, &private->crw_work);  
-> > 
-> > Isn't that racy? Imagine you get one notification for a chpid and queue
-> > it. Then, you get another notification for another chpid and queue it
-> > as well. Depending on when userspace reads, it gets different chpids.
-> > Moreover, a crw may be lost... or am I missing something obvious?  
-> 
-> Nope, you're right on.  If I start thrashing config on/off chpids on the
-> host, I eventually fall down with all sorts of weirdness.
-> 
-> > 
-> > Maybe you need a real queue for the generated crws?  
-> 
-> I guess this is what I'm wrestling with...  We don't have a queue for
-> guest-wide work items, as it's currently broken apart by subchannel.  Is
-> adding one at the vfio-ccw level right?  Feels odd to me, since multiple
-> guests could use devices connected via vfio-ccw, which may or may share
-> common chpids.
+cheers
 
-One problem is that the common I/O layer already processes the crws and
-translates them into different per-subchannel events. We don't even
-know what the original crw was: IIUC, we translate both a crw for a
-chpid and a link incident event (reported by a crw with source css and
-event information via chsc) concerning the concrete link to the same
-event. That *probably* doesn't matter too much, but it makes things
-harder. Access to the original crw queue would be nice, but hard to
-implement without stepping on each others' toes.
 
-> 
-> I have a rough hack that serializes things a bit, while still keeping
-> the CRW duplication at the subchannel level.  Things improve
-> considerably, but it still seems odd to me.  I'll keep working on that
-> unless anyone has any better ideas.
+The following changes since commit da0c9ea146cbe92b832f1b0f694840ea8eb33cce:
 
-The main issue is that we're trying to report a somewhat global event
-via individual devices...
+  Linux 5.4-rc2 (2019-10-06 14:27:30 -0700)
 
-...what about not reporting crws at all, but something derived from the
-events we get at the subchannel driver level? Have four masks that
-indicate online/offline/vary on/vary off for the respective chpids, and
-have userspace decide how they want to report these to the guest? A
-drawback (?) would be that a series of on/off events would only be
-reported as one on and one off event, though. Feasible, or complete
-lunacy?
+are available in the git repository at:
 
+  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git tags/powerpc-5.5-2
+
+for you to fetch changes up to 4f4afc2c9599520300b3f2b3666d2034fca03df3:
+
+  docs/core-api: Remove possibly confusing sub-headings from Bit Operations (2019-12-04 21:20:28 +1100)
+
+- ------------------------------------------------------------------
+powerpc updates for 5.5 #2
+
+A few commits splitting the KASAN instrumented bitops header in
+three, to match the split of the asm-generic bitops headers.
+
+This is needed on powerpc because we use asm-generic/bitops/non-atomic.h,
+for the non-atomic bitops, whereas the existing KASAN instrumented
+bitops assume all the underlying operations are provided by the arch
+as arch_foo() versions.
+
+Thanks to:
+  Daniel Axtens & Christophe Leroy.
+
+- ------------------------------------------------------------------
+Daniel Axtens (2):
+      kasan: support instrumented bitops combined with generic bitops
+      powerpc: support KASAN instrumentation of bitops
+
+Michael Ellerman (1):
+      docs/core-api: Remove possibly confusing sub-headings from Bit Operations
+
+
+ Documentation/core-api/kernel-api.rst                |   8 +-
+ arch/powerpc/include/asm/bitops.h                    |  51 ++--
+ arch/s390/include/asm/bitops.h                       |   4 +-
+ arch/x86/include/asm/bitops.h                        |   4 +-
+ include/asm-generic/bitops-instrumented.h            | 263 --------------------
+ include/asm-generic/bitops/instrumented-atomic.h     | 100 ++++++++
+ include/asm-generic/bitops/instrumented-lock.h       |  81 ++++++
+ include/asm-generic/bitops/instrumented-non-atomic.h | 114 +++++++++
+ 8 files changed, 337 insertions(+), 288 deletions(-)
+ delete mode 100644 include/asm-generic/bitops-instrumented.h
+ create mode 100644 include/asm-generic/bitops/instrumented-atomic.h
+ create mode 100644 include/asm-generic/bitops/instrumented-lock.h
+ create mode 100644 include/asm-generic/bitops/instrumented-non-atomic.h
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEJFGtCPCthwEv2Y/bUevqPMjhpYAFAl3qSS4ACgkQUevqPMjh
+pYCp1Q//TrG2tPMDPHpWqCzNdWoh96zpIo2UsauDcc8l+XT7shkwHcGnpoECgCfK
+NjhP77qqXI61E+5qUCfO16/j5g6PbvvG/E/xlQEdgX7lIxBeGs4IkoRU8QjkJ9w5
+wAjG/XwaMJ21CQY2F51dn9NPQUvFxKV0o6QJ+/pIFBnv0eeYCtRWno7+tZGIiMhk
+ExfJhR0rnBdBc6oonNOTAfWn5u51FRRqUeICeo4iFoICu5v4cTbPiU3/8bZYzhSb
+wM9WdG+/IUs02PffIQF4GDyMmzi/Qm3Ujl3tUIEaFHlfN9pF6X7Yog7Co26CShJj
+No4wJK5rS3ECXmwo7Yd69sV9FZrMZZvGY9x7p7bEE7mqk1fHMaM3DMXvR8Gx6UGM
+NCXX2QIIigz3RUTbj3CW2iZa9R/FTSFXs3Ih4YDDJdPNanYpcX3/wE6mpwsco8do
+lxWcN1AMGXLiaNdQ8IkRZ6hOLH/Po34RvDo1P1mS06NzfyyTZW7JNiUtU2HSqPRs
+vjIkHDM7585ika6jeDHU4cJaLy7bsCNV2fLsHWDE3Xno43g7qcKGOx+PtO25XubZ
+iP1vojR4Qml+e3ySf6dDiOIDltSWZwjCGtbi2gmdErHiLdLeJX2XGjC36Qnep6u6
+15HIWzX41tg8y4QRJDmPyeDm3Ccbabz+m4LaccbdObgGWVwxwgA=
+=06Wr
+-----END PGP SIGNATURE-----
