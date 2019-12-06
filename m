@@ -2,96 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9A5D41150E9
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Dec 2019 14:17:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BB21F115193
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Dec 2019 14:55:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726251AbfLFNRN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Dec 2019 08:17:13 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:47864 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726201AbfLFNRN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Dec 2019 08:17:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=c/BS0k8X+8NG/g3S4NAeJDxb7dNaLWprIW3ucB/d7FI=; b=Orv0ZhCRtyr6C280YO0QMvQZ2
-        NLIRlOF2R1VcTi8UQ64A9l3gqUZ6zhu05V6kXJUgUQbXnPoilSWNKsCXK061mPrp7Fag5L5UudX2+
-        Net8OnlcMe75RQ4Gqu2hRvMi0QyYkqu+kfdYyWIO8d9zKvcRl6f9LZLYdJgDX7SQgeYB/C0MDPrrP
-        pl6607VUyQOCfcJKRkv2g8qs8rSVqJ6TT17NQyt8UYfmbuSbrwtpfMuGeBgbKJYDPNrqkJjnnuDfz
-        rTxYDz1H4TRsmFIb26kiFXvwmG0zj9VOdfV7n2jsezpjOT+JQBbKKlzBWzXWmmaiqIt28oOPeQ7R2
-        oEbok13BA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1idDTY-0007Xj-Ha; Fri, 06 Dec 2019 13:16:52 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 0CC7930025A;
-        Fri,  6 Dec 2019 14:15:33 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id A750E2B275E62; Fri,  6 Dec 2019 14:16:50 +0100 (CET)
-Date:   Fri, 6 Dec 2019 14:16:50 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
-        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
-        x86@kernel.org, kasan-dev@googlegroups.com,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag
- (topic/kasan-bitops)
-Message-ID: <20191206131650.GM2827@hirez.programming.kicks-ass.net>
-References: <87blslei5o.fsf@mpe.ellerman.id.au>
+        id S1726627AbfLFNyJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 Dec 2019 08:54:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:44620 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726599AbfLFNyI (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 6 Dec 2019 08:54:08 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BE352DA7;
+        Fri,  6 Dec 2019 05:54:07 -0800 (PST)
+Received: from e112269-lin.cambridge.arm.com (e112269-lin.cambridge.arm.com [10.1.194.43])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C7E313F718;
+        Fri,  6 Dec 2019 05:54:04 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v16 08/25] s390: mm: Add p?d_leaf() definitions
+Date:   Fri,  6 Dec 2019 13:52:59 +0000
+Message-Id: <20191206135316.47703-9-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191206135316.47703-1-steven.price@arm.com>
+References: <20191206135316.47703-1-steven.price@arm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87blslei5o.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Dec 06, 2019 at 11:46:11PM +1100, Michael Ellerman wrote:
-> -----BEGIN PGP SIGNED MESSAGE-----
-> Hash: SHA256
-> 
-> Hi Linus,
-> 
-> Please pull another powerpc update for 5.5.
-> 
-> As you'll see from the diffstat this is mostly not powerpc code. In order to do
-> KASAN instrumentation of bitops we needed to juggle some of the generic bitops
-> headers.
-> 
-> Because those changes potentially affect several architectures I wasn't
-> confident putting them directly into my tree, so I've had them sitting in a
-> topic branch. That branch (topic/kasan-bitops) has been in linux-next for a
-> month, and I've not had any feedback that it's caused any problems.
-> 
-> So I think this is good to merge, but it's a standalone pull so if anyone does
-> object it's not a problem.
+walk_page_range() is going to be allowed to walk page tables other than
+those of user space. For this it needs to know when it has reached a
+'leaf' entry in the page tables. This information is provided by the
+p?d_leaf() functions/macros.
 
-No objections, but here:
+For s390, pud_large() and pmd_large() are already implemented as static
+inline functions. Add a macro to provide the p?d_leaf names for the
+generic code to use.
 
-  https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git/commit/?h=topic/kasan-bitops&id=81d2c6f81996e01fbcd2b5aeefbb519e21c806e9
+CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+CC: Vasily Gorbik <gor@linux.ibm.com>
+CC: Christian Borntraeger <borntraeger@de.ibm.com>
+CC: linux-s390@vger.kernel.org
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ arch/s390/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-you write:
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 7b03037a8475..137a3920ca36 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -673,6 +673,7 @@ static inline int pud_none(pud_t pud)
+ 	return pud_val(pud) == _REGION3_ENTRY_EMPTY;
+ }
+ 
++#define pud_leaf	pud_large
+ static inline int pud_large(pud_t pud)
+ {
+ 	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
+@@ -690,6 +691,7 @@ static inline unsigned long pud_pfn(pud_t pud)
+ 	return (pud_val(pud) & origin_mask) >> PAGE_SHIFT;
+ }
+ 
++#define pmd_leaf	pmd_large
+ static inline int pmd_large(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_LARGE) != 0;
+-- 
+2.20.1
 
-  "Currently bitops-instrumented.h assumes that the architecture provides
-atomic, non-atomic and locking bitops (e.g. both set_bit and __set_bit).
-This is true on x86 and s390, but is not always true: there is a
-generic bitops/non-atomic.h header that provides generic non-atomic
-operations, and also a generic bitops/lock.h for locking operations."
-
-Is there any actual benefit for PPC to using their own atomic bitops
-over bitops/lock.h ? I'm thinking that the generic code is fairly
-optimal for most LL/SC architectures.
-
-I've been meaning to audit the various architectures and move them over,
-but alas, it's something I've not yet had time for...
