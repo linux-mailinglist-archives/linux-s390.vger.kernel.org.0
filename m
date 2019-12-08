@@ -2,61 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 17FFE115A48
-	for <lists+linux-s390@lfdr.de>; Sat,  7 Dec 2019 01:30:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 92D1B1161C4
+	for <lists+linux-s390@lfdr.de>; Sun,  8 Dec 2019 14:54:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726605AbfLGA34 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Dec 2019 19:29:56 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:36774 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726584AbfLGA3z (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Dec 2019 19:29:55 -0500
-Received: by mail-wr1-f66.google.com with SMTP id z3so9670853wru.3
-        for <linux-s390@vger.kernel.org>; Fri, 06 Dec 2019 16:29:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=S7m9By4/eRnSy0vxdfJ6TocT5eJ8gcKLceyHvlHTn3o=;
-        b=LXxoS6Ed7of6jWaofmDfQc8/u3Mg9Maolmr3Vpf9Rmy6M9EqjFAuvGQ8h9p7LhnwAL
-         J2FbblgdkGgZHafRFxx28eRdV2u28AyUlEZcVvHuYvVm3rtf1quwzUCMSvqmMRhzvXWg
-         Lr2BVgHFftpJuxoM6FIG7HwvD6NJoH8mvEjpjvV8POe7OxPQSgcaMvRkWz9Uiu2DLDQI
-         zLbCM6eF/2UqhYCC9SzqWLAqDFWNhNPH2Mzqdx7SMOIQYQVzi+r4mUYfVbZ4zkg6G/Rf
-         GMyYZz2zxEAODyOdyEtKF6h6LvlYj6nQy3cPNK/qqQ+yOafhqpdxqfrrNrKMk4+XdZU4
-         ueNQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=S7m9By4/eRnSy0vxdfJ6TocT5eJ8gcKLceyHvlHTn3o=;
-        b=dbfwGI3awblwqD1c7sY3iIgAXuVSZdG9mhd6R2aRHxC0vB/kxEs/78POgKeFQ8IfKn
-         xLucr4g9dhckKVj8Uk3/BoV0yofVD4tWs8pYO6fESv+uGvJ4Ki1mMbZe6L0W13FYLSw1
-         gsOprjeLBZpyJ+0+yCCJ3oPBbsH6bab0nHiwXe8BPVntOp+es9sBpBGBqYbQLIEk/pIp
-         fIs1za8KF7wGWy83tpRQlNbRFg2iEUvmQ5vAIWcFlgyVGT4OwmMg1vMPYT09obwNl4wi
-         1Wn8DbBRbERO99TaVHHIrIqQUQQv6/ohGAW2DSnYFB3zuy9QYC30S5g2HvwTiD246cfF
-         4pRA==
-X-Gm-Message-State: APjAAAWye6rCFOu5tFYDYWnW0H0/lV+V1ZVj6tXWpiKIuENiMj+8qhqr
-        izJQQhioaqz6CvZzuMfq+c49IYCU4fb3+ofWJhE=
-X-Google-Smtp-Source: APXvYqwrh3pZjAB0r+TmXxbhmAM/apODdHlIT+82DMPTCRz8CUTTqPzcZB7T3FAp1SOvDrWQKKNsT0CStxod+O7hBLs=
-X-Received: by 2002:adf:e591:: with SMTP id l17mr16654604wrm.139.1575678594023;
- Fri, 06 Dec 2019 16:29:54 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a5d:678e:0:0:0:0:0 with HTTP; Fri, 6 Dec 2019 16:29:53 -0800 (PST)
-Reply-To: mrs.aalia.ahmed@gmail.com
-From:   "Mrs.Aalia.Ahmed" <adamhana1907@gmail.com>
-Date:   Sat, 7 Dec 2019 00:29:53 +0000
-Message-ID: <CAOGreO=8t36s1Mau26bRqTQErHsnOf5ki10AJ6EA4tNedNUo8g@mail.gmail.com>
-Subject: OK
-To:     undisclosed-recipients:;
+        id S1727051AbfLHNyx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 8 Dec 2019 08:54:53 -0500
+Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60726 "EHLO
+        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727016AbfLHNyv (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Dec 2019 08:54:51 -0500
+Received: from [192.168.4.242] (helo=deadeye)
+        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1idx1C-0007eF-Tc; Sun, 08 Dec 2019 13:54:38 +0000
+Received: from ben by deadeye with local (Exim 4.93-RC1)
+        (envelope-from <ben@decadent.org.uk>)
+        id 1idx1B-0002ND-Li; Sun, 08 Dec 2019 13:54:37 +0000
 Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+MIME-Version: 1.0
+From:   Ben Hutchings <ben@decadent.org.uk>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
+        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
+        "David Howells" <dhowells@redhat.com>,
+        "Al Viro" <viro@zeniv.linux.org.uk>, linux-s390@vger.kernel.org,
+        "Heiko Carstens" <heiko.carstens@de.ibm.com>
+Date:   Sun, 08 Dec 2019 13:53:19 +0000
+Message-ID: <lsq.1575813165.422392579@decadent.org.uk>
+X-Mailer: LinuxStableQueue (scripts by bwh)
+X-Patchwork-Hint: ignore
+Subject: [PATCH 3.16 35/72] hypfs: Fix error number left in struct pointer
+ member
+In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
+X-SA-Exim-Connect-IP: 192.168.4.242
+X-SA-Exim-Mail-From: ben@decadent.org.uk
+X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Greetings My Dearest One.
+3.16.79-rc1 review patch.  If anyone has any objections, please let me know.
 
-My name is Mrs.Aalia.Ahmed, i saw your profile and became interested
-in you, please contact me through my email address
-(mrs.aalia.ahmed@gmail.com) to know each other and i have something
-very important to tell you, i wait for your response to my email ID.
-(mrs.aalia.ahmed@gmail.com
+------------------
+
+From: David Howells <dhowells@redhat.com>
+
+commit b54c64f7adeb241423cd46598f458b5486b0375e upstream.
+
+In hypfs_fill_super(), if hypfs_create_update_file() fails,
+sbi->update_file is left holding an error number.  This is passed to
+hypfs_kill_super() which doesn't check for this.
+
+Fix this by not setting sbi->update_value until after we've checked for
+error.
+
+Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
+Signed-off-by: David Howells <dhowells@redhat.com>
+cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+cc: linux-s390@vger.kernel.org
+Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
+Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+---
+ arch/s390/hypfs/inode.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+--- a/arch/s390/hypfs/inode.c
++++ b/arch/s390/hypfs/inode.c
+@@ -275,7 +275,7 @@ static int hypfs_show_options(struct seq
+ static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
+ {
+ 	struct inode *root_inode;
+-	struct dentry *root_dentry;
++	struct dentry *root_dentry, *update_file;
+ 	int rc = 0;
+ 	struct hypfs_sb_info *sbi;
+ 
+@@ -306,9 +306,10 @@ static int hypfs_fill_super(struct super
+ 		rc = hypfs_diag_create_files(root_dentry);
+ 	if (rc)
+ 		return rc;
+-	sbi->update_file = hypfs_create_update_file(root_dentry);
+-	if (IS_ERR(sbi->update_file))
+-		return PTR_ERR(sbi->update_file);
++	update_file = hypfs_create_update_file(root_dentry);
++	if (IS_ERR(update_file))
++		return PTR_ERR(update_file);
++	sbi->update_file = update_file;
+ 	hypfs_update_update(sb);
+ 	pr_info("Hypervisor filesystem mounted\n");
+ 	return 0;
+
