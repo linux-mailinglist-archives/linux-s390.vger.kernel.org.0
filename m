@@ -2,98 +2,146 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92D1B1161C4
-	for <lists+linux-s390@lfdr.de>; Sun,  8 Dec 2019 14:54:54 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 249B71162C0
+	for <lists+linux-s390@lfdr.de>; Sun,  8 Dec 2019 16:00:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727051AbfLHNyx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 8 Dec 2019 08:54:53 -0500
-Received: from shadbolt.e.decadent.org.uk ([88.96.1.126]:60726 "EHLO
-        shadbolt.e.decadent.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727016AbfLHNyv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Dec 2019 08:54:51 -0500
-Received: from [192.168.4.242] (helo=deadeye)
-        by shadbolt.decadent.org.uk with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1idx1C-0007eF-Tc; Sun, 08 Dec 2019 13:54:38 +0000
-Received: from ben by deadeye with local (Exim 4.93-RC1)
-        (envelope-from <ben@decadent.org.uk>)
-        id 1idx1B-0002ND-Li; Sun, 08 Dec 2019 13:54:37 +0000
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+        id S1726824AbfLHPAI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 8 Dec 2019 10:00:08 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:36763 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726535AbfLHO6m (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Dec 2019 09:58:42 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1idy14-0000TI-0r; Sun, 08 Dec 2019 15:58:34 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 506E91C2888;
+        Sun,  8 Dec 2019 15:58:32 +0100 (CET)
+Date:   Sun, 08 Dec 2019 14:58:32 -0000
+From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: sched/urgent] sched/rt, s390: Use CONFIG_PREEMPTION
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+In-Reply-To: <20191015191821.11479-18-bigeasy@linutronix.de>
+References: <20191015191821.11479-18-bigeasy@linutronix.de>
 MIME-Version: 1.0
-From:   Ben Hutchings <ben@decadent.org.uk>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-CC:     akpm@linux-foundation.org, Denis Kirjanov <kda@linux-powerpc.org>,
-        "Martin Schwidefsky" <schwidefsky@de.ibm.com>,
-        "David Howells" <dhowells@redhat.com>,
-        "Al Viro" <viro@zeniv.linux.org.uk>, linux-s390@vger.kernel.org,
-        "Heiko Carstens" <heiko.carstens@de.ibm.com>
-Date:   Sun, 08 Dec 2019 13:53:19 +0000
-Message-ID: <lsq.1575813165.422392579@decadent.org.uk>
-X-Mailer: LinuxStableQueue (scripts by bwh)
-X-Patchwork-Hint: ignore
-Subject: [PATCH 3.16 35/72] hypfs: Fix error number left in struct pointer
- member
-In-Reply-To: <lsq.1575813164.154362148@decadent.org.uk>
-X-SA-Exim-Connect-IP: 192.168.4.242
-X-SA-Exim-Mail-From: ben@decadent.org.uk
-X-SA-Exim-Scanned: No (on shadbolt.decadent.org.uk); SAEximRunCond expanded to false
+Message-ID: <157581711219.21853.18122159496311508925.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-3.16.79-rc1 review patch.  If anyone has any objections, please let me know.
+The following commit has been merged into the sched/urgent branch of tip:
 
-------------------
+Commit-ID:     fa686453053b70a8a01b7517df8cfc5872f63196
+Gitweb:        https://git.kernel.org/tip/fa686453053b70a8a01b7517df8cfc5872f63196
+Author:        Thomas Gleixner <tglx@linutronix.de>
+AuthorDate:    Tue, 15 Oct 2019 21:18:04 +02:00
+Committer:     Ingo Molnar <mingo@kernel.org>
+CommitterDate: Sun, 08 Dec 2019 14:37:35 +01:00
 
-From: David Howells <dhowells@redhat.com>
+sched/rt, s390: Use CONFIG_PREEMPTION
 
-commit b54c64f7adeb241423cd46598f458b5486b0375e upstream.
+CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
+Both PREEMPT and PREEMPT_RT require the same functionality which today
+depends on CONFIG_PREEMPT.
 
-In hypfs_fill_super(), if hypfs_create_update_file() fails,
-sbi->update_file is left holding an error number.  This is passed to
-hypfs_kill_super() which doesn't check for this.
+Switch the preemption and entry code over to use CONFIG_PREEMPTION. Add
+PREEMPT_RT output to die().
 
-Fix this by not setting sbi->update_value until after we've checked for
-error.
+[bigeasy: +Kconfig, dumpstack.c]
 
-Fixes: 24bbb1faf3f0 ("[PATCH] s390_hypfs filesystem")
-Signed-off-by: David Howells <dhowells@redhat.com>
-cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-cc: linux-s390@vger.kernel.org
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Ben Hutchings <ben@decadent.org.uk>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Link: https://lore.kernel.org/r/20191015191821.11479-18-bigeasy@linutronix.de
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/s390/hypfs/inode.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ arch/s390/Kconfig               | 2 +-
+ arch/s390/include/asm/preempt.h | 4 ++--
+ arch/s390/kernel/dumpstack.c    | 2 ++
+ arch/s390/kernel/entry.S        | 2 +-
+ 4 files changed, 6 insertions(+), 4 deletions(-)
 
---- a/arch/s390/hypfs/inode.c
-+++ b/arch/s390/hypfs/inode.c
-@@ -275,7 +275,7 @@ static int hypfs_show_options(struct seq
- static int hypfs_fill_super(struct super_block *sb, void *data, int silent)
- {
- 	struct inode *root_inode;
--	struct dentry *root_dentry;
-+	struct dentry *root_dentry, *update_file;
- 	int rc = 0;
- 	struct hypfs_sb_info *sbi;
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index d4051e8..62b10a3 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -30,7 +30,7 @@ config GENERIC_BUG_RELATIVE_POINTERS
+ 	def_bool y
  
-@@ -306,9 +306,10 @@ static int hypfs_fill_super(struct super
- 		rc = hypfs_diag_create_files(root_dentry);
- 	if (rc)
- 		return rc;
--	sbi->update_file = hypfs_create_update_file(root_dentry);
--	if (IS_ERR(sbi->update_file))
--		return PTR_ERR(sbi->update_file);
-+	update_file = hypfs_create_update_file(root_dentry);
-+	if (IS_ERR(update_file))
-+		return PTR_ERR(update_file);
-+	sbi->update_file = update_file;
- 	hypfs_update_update(sb);
- 	pr_info("Hypervisor filesystem mounted\n");
- 	return 0;
-
+ config GENERIC_LOCKBREAK
+-	def_bool y if PREEMPT
++	def_bool y if PREEMPTTION
+ 
+ config PGSTE
+ 	def_bool y if KVM
+diff --git a/arch/s390/include/asm/preempt.h b/arch/s390/include/asm/preempt.h
+index b5ea9e1..6ede299 100644
+--- a/arch/s390/include/asm/preempt.h
++++ b/arch/s390/include/asm/preempt.h
+@@ -130,11 +130,11 @@ static inline bool should_resched(int preempt_offset)
+ 
+ #endif /* CONFIG_HAVE_MARCH_Z196_FEATURES */
+ 
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ extern asmlinkage void preempt_schedule(void);
+ #define __preempt_schedule() preempt_schedule()
+ extern asmlinkage void preempt_schedule_notrace(void);
+ #define __preempt_schedule_notrace() preempt_schedule_notrace()
+-#endif /* CONFIG_PREEMPT */
++#endif /* CONFIG_PREEMPTION */
+ 
+ #endif /* __ASM_PREEMPT_H */
+diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
+index d306fe0..2c122d8 100644
+--- a/arch/s390/kernel/dumpstack.c
++++ b/arch/s390/kernel/dumpstack.c
+@@ -195,6 +195,8 @@ void die(struct pt_regs *regs, const char *str)
+ 	       regs->int_code >> 17, ++die_counter);
+ #ifdef CONFIG_PREEMPT
+ 	pr_cont("PREEMPT ");
++#elif defined(CONFIG_PREEMPT_RT)
++	pr_cont("PREEMPT_RT ");
+ #endif
+ 	pr_cont("SMP ");
+ 	if (debug_pagealloc_enabled())
+diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
+index 270d1d1..9205add 100644
+--- a/arch/s390/kernel/entry.S
++++ b/arch/s390/kernel/entry.S
+@@ -790,7 +790,7 @@ ENTRY(io_int_handler)
+ .Lio_work:
+ 	tm	__PT_PSW+1(%r11),0x01	# returning to user ?
+ 	jo	.Lio_work_user		# yes -> do resched & signal
+-#ifdef CONFIG_PREEMPT
++#ifdef CONFIG_PREEMPTION
+ 	# check for preemptive scheduling
+ 	icm	%r0,15,__LC_PREEMPT_COUNT
+ 	jnz	.Lio_restore		# preemption is disabled
