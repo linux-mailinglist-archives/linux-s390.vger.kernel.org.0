@@ -2,146 +2,248 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 249B71162C0
-	for <lists+linux-s390@lfdr.de>; Sun,  8 Dec 2019 16:00:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29D521168AC
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Dec 2019 09:53:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726824AbfLHPAI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 8 Dec 2019 10:00:08 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:36763 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726535AbfLHO6m (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Dec 2019 09:58:42 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1idy14-0000TI-0r; Sun, 08 Dec 2019 15:58:34 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 506E91C2888;
-        Sun,  8 Dec 2019 15:58:32 +0100 (CET)
-Date:   Sun, 08 Dec 2019 14:58:32 -0000
-From:   "tip-bot2 for Thomas Gleixner" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: sched/urgent] sched/rt, s390: Use CONFIG_PREEMPTION
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, x86 <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <20191015191821.11479-18-bigeasy@linutronix.de>
-References: <20191015191821.11479-18-bigeasy@linutronix.de>
+        id S1727044AbfLIIx3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Dec 2019 03:53:29 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9424 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726377AbfLIIx3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Dec 2019 03:53:29 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB98qP0a107955
+        for <linux-s390@vger.kernel.org>; Mon, 9 Dec 2019 03:53:28 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrtdp1293-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 09 Dec 2019 03:53:27 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Mon, 9 Dec 2019 08:53:26 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Dec 2019 08:53:24 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB98rNgZ42074182
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Dec 2019 08:53:23 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0D4A05204F;
+        Mon,  9 Dec 2019 08:53:23 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.152.222.89])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C40955205A;
+        Mon,  9 Dec 2019 08:53:22 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v3 2/9] s390x: Define the PSW bits
+To:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com
+References: <1575649588-6127-1-git-send-email-pmorel@linux.ibm.com>
+ <1575649588-6127-3-git-send-email-pmorel@linux.ibm.com>
+ <4d034f27-0449-08ea-5b45-be91a788bd6d@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Mon, 9 Dec 2019 09:53:22 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Message-ID: <157581711219.21853.18122159496311508925.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <4d034f27-0449-08ea-5b45-be91a788bd6d@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-TM-AS-GCONF: 00
+x-cbid: 19120908-0012-0000-0000-000003730C5D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120908-0013-0000-0000-000021AED9AE
+Message-Id: <36847ac9-fef4-1eea-8b3a-d8a94a989a6e@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_01:2019-12-09,2019-12-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ priorityscore=1501 impostorscore=0 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 suspectscore=0 bulkscore=0 adultscore=0 clxscore=1015
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090077
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The following commit has been merged into the sched/urgent branch of tip:
 
-Commit-ID:     fa686453053b70a8a01b7517df8cfc5872f63196
-Gitweb:        https://git.kernel.org/tip/fa686453053b70a8a01b7517df8cfc5872f63196
-Author:        Thomas Gleixner <tglx@linutronix.de>
-AuthorDate:    Tue, 15 Oct 2019 21:18:04 +02:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Sun, 08 Dec 2019 14:37:35 +01:00
 
-sched/rt, s390: Use CONFIG_PREEMPTION
+On 2019-12-06 17:29, Thomas Huth wrote:
+> On 06/12/2019 17.26, Pierre Morel wrote:
+>> Let's define the PSW bits explicitly, it will clarify their
+>> usage.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+>>   lib/s390x/asm/arch_def.h | 127 +++++++++++++++++++++------------------
+>>   s390x/cstart64.S         |  13 ++--
+>>   2 files changed, 74 insertions(+), 66 deletions(-)
+>>
+>> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+>> index cf6e1ca..1293640 100644
+>> --- a/lib/s390x/asm/arch_def.h
+>> +++ b/lib/s390x/asm/arch_def.h
+>> @@ -10,20 +10,81 @@
+>>   #ifndef _ASM_S390X_ARCH_DEF_H_
+>>   #define _ASM_S390X_ARCH_DEF_H_
+>>   
+>> -struct psw {
+>> -	uint64_t	mask;
+>> -	uint64_t	addr;
+>> -};
+>> -
+>>   #define PSW_MASK_EXT			0x0100000000000000UL
+>>   #define PSW_MASK_DAT			0x0400000000000000UL
+>>   #define PSW_MASK_PSTATE			0x0001000000000000UL
+>> +#define PSW_MASK_IO			0x0200000000000000
+>> +#define PSW_MASK_EA			0x0000000100000000
+>> +#define PSW_MASK_BA			0x0000000080000000
+>> +
+>> +#define PSW_EXCEPTION_MASK (PSW_MASK_EA|PSW_MASK_BA)
+>>   
+>>   #define CR0_EXTM_SCLP			0X0000000000000200UL
+>>   #define CR0_EXTM_EXTC			0X0000000000002000UL
+>>   #define CR0_EXTM_EMGC			0X0000000000004000UL
+>>   #define CR0_EXTM_MASK			0X0000000000006200UL
+>>   
+>> +#define PGM_INT_CODE_OPERATION			0x01
+>> +#define PGM_INT_CODE_PRIVILEGED_OPERATION	0x02
+>> +#define PGM_INT_CODE_EXECUTE			0x03
+>> +#define PGM_INT_CODE_PROTECTION			0x04
+>> +#define PGM_INT_CODE_ADDRESSING			0x05
+>> +#define PGM_INT_CODE_SPECIFICATION		0x06
+>> +#define PGM_INT_CODE_DATA			0x07
+>> +#define PGM_INT_CODE_FIXED_POINT_OVERFLOW	0x08
+>> +#define PGM_INT_CODE_FIXED_POINT_DIVIDE		0x09
+>> +#define PGM_INT_CODE_DECIMAL_OVERFLOW		0x0a
+>> +#define PGM_INT_CODE_DECIMAL_DIVIDE		0x0b
+>> +#define PGM_INT_CODE_HFP_EXPONENT_OVERFLOW	0x0c
+>> +#define PGM_INT_CODE_HFP_EXPONENT_UNDERFLOW	0x0d
+>> +#define PGM_INT_CODE_HFP_SIGNIFICANCE		0x0e
+>> +#define PGM_INT_CODE_HFP_DIVIDE			0x0f
+>> +#define PGM_INT_CODE_SEGMENT_TRANSLATION	0x10
+>> +#define PGM_INT_CODE_PAGE_TRANSLATION		0x11
+>> +#define PGM_INT_CODE_TRANSLATION_SPEC		0x12
+>> +#define PGM_INT_CODE_SPECIAL_OPERATION		0x13
+>> +#define PGM_INT_CODE_OPERAND			0x15
+>> +#define PGM_INT_CODE_TRACE_TABLE		0x16
+>> +#define PGM_INT_CODE_VECTOR_PROCESSING		0x1b
+>> +#define PGM_INT_CODE_SPACE_SWITCH_EVENT		0x1c
+>> +#define PGM_INT_CODE_HFP_SQUARE_ROOT		0x1d
+>> +#define PGM_INT_CODE_PC_TRANSLATION_SPEC	0x1f
+>> +#define PGM_INT_CODE_AFX_TRANSLATION		0x20
+>> +#define PGM_INT_CODE_ASX_TRANSLATION		0x21
+>> +#define PGM_INT_CODE_LX_TRANSLATION		0x22
+>> +#define PGM_INT_CODE_EX_TRANSLATION		0x23
+>> +#define PGM_INT_CODE_PRIMARY_AUTHORITY		0x24
+>> +#define PGM_INT_CODE_SECONDARY_AUTHORITY	0x25
+>> +#define PGM_INT_CODE_LFX_TRANSLATION		0x26
+>> +#define PGM_INT_CODE_LSX_TRANSLATION		0x27
+>> +#define PGM_INT_CODE_ALET_SPECIFICATION		0x28
+>> +#define PGM_INT_CODE_ALEN_TRANSLATION		0x29
+>> +#define PGM_INT_CODE_ALE_SEQUENCE		0x2a
+>> +#define PGM_INT_CODE_ASTE_VALIDITY		0x2b
+>> +#define PGM_INT_CODE_ASTE_SEQUENCE		0x2c
+>> +#define PGM_INT_CODE_EXTENDED_AUTHORITY		0x2d
+>> +#define PGM_INT_CODE_LSTE_SEQUENCE		0x2e
+>> +#define PGM_INT_CODE_ASTE_INSTANCE		0x2f
+>> +#define PGM_INT_CODE_STACK_FULL			0x30
+>> +#define PGM_INT_CODE_STACK_EMPTY		0x31
+>> +#define PGM_INT_CODE_STACK_SPECIFICATION	0x32
+>> +#define PGM_INT_CODE_STACK_TYPE			0x33
+>> +#define PGM_INT_CODE_STACK_OPERATION		0x34
+>> +#define PGM_INT_CODE_ASCE_TYPE			0x38
+>> +#define PGM_INT_CODE_REGION_FIRST_TRANS		0x39
+>> +#define PGM_INT_CODE_REGION_SECOND_TRANS	0x3a
+>> +#define PGM_INT_CODE_REGION_THIRD_TRANS		0x3b
+>> +#define PGM_INT_CODE_MONITOR_EVENT		0x40
+>> +#define PGM_INT_CODE_PER			0x80
+>> +#define PGM_INT_CODE_CRYPTO_OPERATION		0x119
+>> +#define PGM_INT_CODE_TX_ABORTED_EVENT		0x200
+>> +
+>> +#ifndef __ASSEMBLER__
+>> +struct psw {
+>> +	uint64_t	mask;
+>> +	uint64_t	addr;
+>> +};
+>> +
+>>   struct lowcore {
+>>   	uint8_t		pad_0x0000[0x0080 - 0x0000];	/* 0x0000 */
+>>   	uint32_t	ext_int_param;			/* 0x0080 */
+>> @@ -101,61 +162,6 @@ struct lowcore {
+>>   } __attribute__ ((__packed__));
+>>   _Static_assert(sizeof(struct lowcore) == 0x1900, "Lowcore size");
+>>   
+>> -#define PGM_INT_CODE_OPERATION			0x01
+>> -#define PGM_INT_CODE_PRIVILEGED_OPERATION	0x02
+>> -#define PGM_INT_CODE_EXECUTE			0x03
+>> -#define PGM_INT_CODE_PROTECTION			0x04
+>> -#define PGM_INT_CODE_ADDRESSING			0x05
+>> -#define PGM_INT_CODE_SPECIFICATION		0x06
+>> -#define PGM_INT_CODE_DATA			0x07
+>> -#define PGM_INT_CODE_FIXED_POINT_OVERFLOW	0x08
+>> -#define PGM_INT_CODE_FIXED_POINT_DIVIDE		0x09
+>> -#define PGM_INT_CODE_DECIMAL_OVERFLOW		0x0a
+>> -#define PGM_INT_CODE_DECIMAL_DIVIDE		0x0b
+>> -#define PGM_INT_CODE_HFP_EXPONENT_OVERFLOW	0x0c
+>> -#define PGM_INT_CODE_HFP_EXPONENT_UNDERFLOW	0x0d
+>> -#define PGM_INT_CODE_HFP_SIGNIFICANCE		0x0e
+>> -#define PGM_INT_CODE_HFP_DIVIDE			0x0f
+>> -#define PGM_INT_CODE_SEGMENT_TRANSLATION	0x10
+>> -#define PGM_INT_CODE_PAGE_TRANSLATION		0x11
+>> -#define PGM_INT_CODE_TRANSLATION_SPEC		0x12
+>> -#define PGM_INT_CODE_SPECIAL_OPERATION		0x13
+>> -#define PGM_INT_CODE_OPERAND			0x15
+>> -#define PGM_INT_CODE_TRACE_TABLE		0x16
+>> -#define PGM_INT_CODE_VECTOR_PROCESSING		0x1b
+>> -#define PGM_INT_CODE_SPACE_SWITCH_EVENT		0x1c
+>> -#define PGM_INT_CODE_HFP_SQUARE_ROOT		0x1d
+>> -#define PGM_INT_CODE_PC_TRANSLATION_SPEC	0x1f
+>> -#define PGM_INT_CODE_AFX_TRANSLATION		0x20
+>> -#define PGM_INT_CODE_ASX_TRANSLATION		0x21
+>> -#define PGM_INT_CODE_LX_TRANSLATION		0x22
+>> -#define PGM_INT_CODE_EX_TRANSLATION		0x23
+>> -#define PGM_INT_CODE_PRIMARY_AUTHORITY		0x24
+>> -#define PGM_INT_CODE_SECONDARY_AUTHORITY	0x25
+>> -#define PGM_INT_CODE_LFX_TRANSLATION		0x26
+>> -#define PGM_INT_CODE_LSX_TRANSLATION		0x27
+>> -#define PGM_INT_CODE_ALET_SPECIFICATION		0x28
+>> -#define PGM_INT_CODE_ALEN_TRANSLATION		0x29
+>> -#define PGM_INT_CODE_ALE_SEQUENCE		0x2a
+>> -#define PGM_INT_CODE_ASTE_VALIDITY		0x2b
+>> -#define PGM_INT_CODE_ASTE_SEQUENCE		0x2c
+>> -#define PGM_INT_CODE_EXTENDED_AUTHORITY		0x2d
+>> -#define PGM_INT_CODE_LSTE_SEQUENCE		0x2e
+>> -#define PGM_INT_CODE_ASTE_INSTANCE		0x2f
+>> -#define PGM_INT_CODE_STACK_FULL			0x30
+>> -#define PGM_INT_CODE_STACK_EMPTY		0x31
+>> -#define PGM_INT_CODE_STACK_SPECIFICATION	0x32
+>> -#define PGM_INT_CODE_STACK_TYPE			0x33
+>> -#define PGM_INT_CODE_STACK_OPERATION		0x34
+>> -#define PGM_INT_CODE_ASCE_TYPE			0x38
+>> -#define PGM_INT_CODE_REGION_FIRST_TRANS		0x39
+>> -#define PGM_INT_CODE_REGION_SECOND_TRANS	0x3a
+>> -#define PGM_INT_CODE_REGION_THIRD_TRANS		0x3b
+>> -#define PGM_INT_CODE_MONITOR_EVENT		0x40
+>> -#define PGM_INT_CODE_PER			0x80
+>> -#define PGM_INT_CODE_CRYPTO_OPERATION		0x119
+>> -#define PGM_INT_CODE_TX_ABORTED_EVENT		0x200
+> 
+> This patch definitely does more than you've mentioned in the patch
+> description. Please avoid the movement of the PGM definitions here and
+> move that into a separate patch (if it is really necessary).
+> 
+>   Thomas
+> 
 
-CONFIG_PREEMPTION is selected by CONFIG_PREEMPT and by CONFIG_PREEMPT_RT.
-Both PREEMPT and PREEMPT_RT require the same functionality which today
-depends on CONFIG_PREEMPT.
+OK, thanks,
 
-Switch the preemption and entry code over to use CONFIG_PREEMPTION. Add
-PREEMPT_RT output to die().
+Pierre
 
-[bigeasy: +Kconfig, dumpstack.c]
+-- 
+Pierre Morel
+IBM Lab Boeblingen
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Link: https://lore.kernel.org/r/20191015191821.11479-18-bigeasy@linutronix.de
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/s390/Kconfig               | 2 +-
- arch/s390/include/asm/preempt.h | 4 ++--
- arch/s390/kernel/dumpstack.c    | 2 ++
- arch/s390/kernel/entry.S        | 2 +-
- 4 files changed, 6 insertions(+), 4 deletions(-)
-
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index d4051e8..62b10a3 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -30,7 +30,7 @@ config GENERIC_BUG_RELATIVE_POINTERS
- 	def_bool y
- 
- config GENERIC_LOCKBREAK
--	def_bool y if PREEMPT
-+	def_bool y if PREEMPTTION
- 
- config PGSTE
- 	def_bool y if KVM
-diff --git a/arch/s390/include/asm/preempt.h b/arch/s390/include/asm/preempt.h
-index b5ea9e1..6ede299 100644
---- a/arch/s390/include/asm/preempt.h
-+++ b/arch/s390/include/asm/preempt.h
-@@ -130,11 +130,11 @@ static inline bool should_resched(int preempt_offset)
- 
- #endif /* CONFIG_HAVE_MARCH_Z196_FEATURES */
- 
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- extern asmlinkage void preempt_schedule(void);
- #define __preempt_schedule() preempt_schedule()
- extern asmlinkage void preempt_schedule_notrace(void);
- #define __preempt_schedule_notrace() preempt_schedule_notrace()
--#endif /* CONFIG_PREEMPT */
-+#endif /* CONFIG_PREEMPTION */
- 
- #endif /* __ASM_PREEMPT_H */
-diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
-index d306fe0..2c122d8 100644
---- a/arch/s390/kernel/dumpstack.c
-+++ b/arch/s390/kernel/dumpstack.c
-@@ -195,6 +195,8 @@ void die(struct pt_regs *regs, const char *str)
- 	       regs->int_code >> 17, ++die_counter);
- #ifdef CONFIG_PREEMPT
- 	pr_cont("PREEMPT ");
-+#elif defined(CONFIG_PREEMPT_RT)
-+	pr_cont("PREEMPT_RT ");
- #endif
- 	pr_cont("SMP ");
- 	if (debug_pagealloc_enabled())
-diff --git a/arch/s390/kernel/entry.S b/arch/s390/kernel/entry.S
-index 270d1d1..9205add 100644
---- a/arch/s390/kernel/entry.S
-+++ b/arch/s390/kernel/entry.S
-@@ -790,7 +790,7 @@ ENTRY(io_int_handler)
- .Lio_work:
- 	tm	__PT_PSW+1(%r11),0x01	# returning to user ?
- 	jo	.Lio_work_user		# yes -> do resched & signal
--#ifdef CONFIG_PREEMPT
-+#ifdef CONFIG_PREEMPTION
- 	# check for preemptive scheduling
- 	icm	%r0,15,__LC_PREEMPT_COUNT
- 	jnz	.Lio_restore		# preemption is disabled
