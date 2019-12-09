@@ -2,189 +2,188 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 58F10116D34
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Dec 2019 13:38:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BC25F117074
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Dec 2019 16:30:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727200AbfLIMib (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Dec 2019 07:38:31 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:36563 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727074AbfLIMib (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Dec 2019 07:38:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1575895109;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=VtEZxiYtb8B/oYzsBXNXGNYI+Q/s8Pr58Lcsq/KH3vc=;
-        b=Rbw/9CslklyHjRCC52FFawTy9DFwOQP6GHCBjnqTzGifPfiQ0AeZQILvj78nrVSucDleJk
-        9G3Xuw2tQjuAqmyd5bUo1gleOCFf3LXJLq96GyHnvi5OyzsGyoNcYKKIT7sXiFltt5a887
-        ZxMe4n2FpXxYe8wl9M4cPIrTbrytI9U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-399-sRNDBgMhMzuXtfBPXJRJSA-1; Mon, 09 Dec 2019 07:38:25 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05E3C8017DF;
-        Mon,  9 Dec 2019 12:38:24 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id EF7531001B03;
-        Mon,  9 Dec 2019 12:38:22 +0000 (UTC)
-Date:   Mon, 9 Dec 2019 13:38:20 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>
-Subject: Re: [RFC PATCH v1 08/10] vfio-ccw: Wire up the CRW irq and CRW
- region
-Message-ID: <20191209133820.42707b79.cohuck@redhat.com>
-In-Reply-To: <9c83e960-9f68-2328-6a89-d0fa7b8768d8@linux.ibm.com>
-References: <20191115025620.19593-1-farman@linux.ibm.com>
-        <20191115025620.19593-9-farman@linux.ibm.com>
-        <20191119195236.35189d5b.cohuck@redhat.com>
-        <02d98858-ddac-df7e-96a6-7c61335d3cee@linux.ibm.com>
-        <20191206112107.63fb37a1.cohuck@redhat.com>
-        <9c83e960-9f68-2328-6a89-d0fa7b8768d8@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: sRNDBgMhMzuXtfBPXJRJSA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        id S1726675AbfLIP36 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Dec 2019 10:29:58 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18912 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726619AbfLIP36 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Dec 2019 10:29:58 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9FSJQB085472
+        for <linux-s390@vger.kernel.org>; Mon, 9 Dec 2019 10:29:57 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wsm2cwj75-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 09 Dec 2019 10:29:57 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <zaslonko@linux.ibm.com>;
+        Mon, 9 Dec 2019 15:29:55 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 9 Dec 2019 15:29:51 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB9FTnpJ36896934
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Dec 2019 15:29:49 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D59BA4040;
+        Mon,  9 Dec 2019 15:29:49 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 26605A4051;
+        Mon,  9 Dec 2019 15:29:49 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Dec 2019 15:29:49 +0000 (GMT)
+From:   Mikhail Zaslonko <zaslonko@linux.ibm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        zaslonko@linux.ibm.com
+Subject: [PATCH v2 0/6] S390 hardware compression support for kernel zlib
+Date:   Mon,  9 Dec 2019 16:29:42 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19120915-4275-0000-0000-0000038D511F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19120915-4276-0000-0000-000038A0FF13
+Message-Id: <20191209152948.37080-1-zaslonko@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
+ clxscore=1015 bulkscore=0 mlxscore=0 impostorscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 priorityscore=1501 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912090135
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 6 Dec 2019 16:24:31 -0500
-Eric Farman <farman@linux.ibm.com> wrote:
+With IBM z15 mainframe the new DFLTCC instruction is available. It
+implements deflate algorithm in hardware (Nest Acceleration Unit - NXU)
+with estimated compression and decompression performance orders of
+magnitude faster than the current zlib.
 
-> On 12/6/19 5:21 AM, Cornelia Huck wrote:
-> > On Thu, 5 Dec 2019 15:43:55 -0500
-> > Eric Farman <farman@linux.ibm.com> wrote:
-> >   
-> >> On 11/19/19 1:52 PM, Cornelia Huck wrote:  
-> >>> On Fri, 15 Nov 2019 03:56:18 +0100
-> >>> Eric Farman <farman@linux.ibm.com> wrote:
+This patch-set adds s390 hardware compression support to kernel zlib.
+The code is based on the userspace zlib implementation:
+https://github.com/madler/zlib/pull/410
+The coding style is also preserved for future maintainability.
+There is only limited set of userspace zlib functions represented in
+kernel. Apart from that, all the memory allocation should be performed
+in advance. Thus, the workarea structures are extended with the parameter
+lists required for the DEFLATE CONVENTION CALL instruction.
+Since kernel zlib itself does not support gzip headers, only Adler-32
+checksum is processed (also can be produced by DFLTCC facility).
+Like it was implemented for userspace, kernel zlib will compress in
+hardware on level 1, and in software on all other levels. Decompression
+will always happen in hardware (when enabled).
+Two DFLTCC compression calls produce the same results only when they
+both are made on machines of the same generation, and when the
+respective buffers have the same offset relative to the start of the
+page. Therefore care should be taken when using hardware compression
+when reproducible results are desired. However it does always produce
+the standard conform output which can be inflated anyway.
+The new kernel command line parameter 'dfltcc' is introduced to
+configure s390 zlib hardware support:
+    Format: { on | off | def_only | inf_only | always }
+     on:       s390 zlib hardware support for compression on
+               level 1 and decompression (default)
+     off:      No s390 zlib hardware support
+     def_only: s390 zlib hardware support for deflate
+               only (compression on level 1)
+     inf_only: s390 zlib hardware support for inflate
+               only (decompression)
+     always:   Same as 'on' but ignores the selected compression
+               level always using hardware support (used for debugging)
 
-> >> The actual CRW handlers are in the base cio code, and we only get into
-> >> vfio-ccw when processing the individual subchannels.  Do we need to make
-> >> a device (or something?) at the guest level for the chpids that exist?
-> >> Or do something to say "hey we got this from a subchannel, put it on a
-> >> global queue if it's unique, or throw it away if it's a duplicate we
-> >> haven't processed yet" ?  Thoughts?  
-> > 
-> > The problem is that you can easily get several crws that look identical
-> > (consider e.g. a chpid that is set online and offline in a tight loop).  
-> 
-> Yeah, I have a little program that does such a loop.  Things don't work
-> too well even with a random delay between on/off, though a hack I'm
-> trying to formalize for v2 improves matters.  If I drop that delay to
-> zero, um, well I haven't had the nerve to try that.  :)
+The main purpose of the integration of the NXU support into the kernel zlib
+is the use of hardware deflate in btrfs filesystem with on-the-fly
+compression enabled. Apart from that, hardware support can also be used
+during boot for decompressing the kernel or the ramdisk image 
 
-:)
+With the patch for btrfs expanding zlib buffer from 1 to 4 pages (patch 6)
+the following performance results have been achieved using the ramdisk
+with btrfs. These are relative numbers based on throughput rate and
+compression ratio for zlib level 1:
 
-I'm also not quite sure what our expectations need to be here. IIRC, it
-is not guaranteed that we get a CRW for each and every of the
-operations anyway. From what I remember, the only sane way for the
-guest to process channel reports is to retrieve the current state (via
-stsch) and process that, as the state may have changed again between
-generating the CRW and the guest retrieving it.
+  Input data              Deflate rate   Inflate rate   Compression ratio
+                          NXU/Software   NXU/Software   NXU/Software
+  stream of zeroes        1.46           1.02           1.00
+  random ASCII data       10.44          3.00           0.96
+  ASCII text (dickens)    6,21           3.33           0.94
+  binary data (vmlinux)   8,37           3.90           1.02
 
-> 
-> > The only entity that should make decisions as to what to process here
-> > is the guest.  
-> 
-> Agreed.  So your suggestion in the QEMU series of acting like stcrw is
-> good; give the guest all the information it can, and let it decide what
-> thrashing is needed.  I guess if I can just queue everything on the
-> vfio_ccw_private, and move one (two?) into the crw_region each time it's
-> read then that should work well enough.  Thanks!
+This means that s390 hardware deflate can provide up to 10 times faster
+compression (on level 1) and up to 4 times faster decompression (refers to
+all compression  levels) for btrfs zlib.
 
-I *think* we can assume that the callback is invoked by the common I/O
-layer for every affected subchannel if there's actually an event from
-the hardware, so we can be reasonably sure that we can relay every
-event to userspace.
+Disclaimer: Performance results are based on IBM internal tests using DD
+command-line utility on btrfs on a Fedora 30 based internal driver in native
+LPAR on a z15 system. Results may vary based on individual workload,
+configuration and software levels.
 
-> 
-> > 
-> > (...)
-> >   
-> >>>> @@ -312,6 +334,11 @@ static int vfio_ccw_chp_event(struct subchannel *sch,
-> >>>>  	case CHP_ONLINE:
-> >>>>  		/* Path became available */
-> >>>>  		sch->lpm |= mask & sch->opm;
-> >>>> +		private->crw.rsc = CRW_RSC_CPATH;
-> >>>> +		private->crw.rsid = 0x0 | (link->chpid.cssid << 8) |
-> >>>> +				    link->chpid.id;
-> >>>> +		private->crw.erc = CRW_ERC_INIT;
-> >>>> +		queue_work(vfio_ccw_work_q, &private->crw_work);    
-> >>>
-> >>> Isn't that racy? Imagine you get one notification for a chpid and queue
-> >>> it. Then, you get another notification for another chpid and queue it
-> >>> as well. Depending on when userspace reads, it gets different chpids.
-> >>> Moreover, a crw may be lost... or am I missing something obvious?    
-> >>
-> >> Nope, you're right on.  If I start thrashing config on/off chpids on the
-> >> host, I eventually fall down with all sorts of weirdness.
-> >>  
-> >>>
-> >>> Maybe you need a real queue for the generated crws?    
-> >>
-> >> I guess this is what I'm wrestling with...  We don't have a queue for
-> >> guest-wide work items, as it's currently broken apart by subchannel.  Is
-> >> adding one at the vfio-ccw level right?  Feels odd to me, since multiple
-> >> guests could use devices connected via vfio-ccw, which may or may share
-> >> common chpids.  
-> > 
-> > One problem is that the common I/O layer already processes the crws and
-> > translates them into different per-subchannel events. We don't even
-> > know what the original crw was: IIUC, we translate both a crw for a
-> > chpid and a link incident event (reported by a crw with source css and
-> > event information via chsc) concerning the concrete link to the same
-> > event. That *probably* doesn't matter too much, but it makes things
-> > harder. Access to the original crw queue would be nice, but hard to
-> > implement without stepping on each others' toes.>  
-> >>
-> >> I have a rough hack that serializes things a bit, while still keeping
-> >> the CRW duplication at the subchannel level.  Things improve
-> >> considerably, but it still seems odd to me.  I'll keep working on that
-> >> unless anyone has any better ideas.  
-> > 
-> > The main issue is that we're trying to report a somewhat global event
-> > via individual devices...  
-> 
-> +1
+Changelog:
+v1 -> v2:
+ - Added new external zlib function to check if s390 Deflate-Conversion
+   facility is installed and enabled (see patch 5).
+ - The larger buffer for btrfs zlib workspace is allocated only if
+   s390 hardware compression is enabled. In case of failure to allocate
+   4-page buffer, we fall back to a PAGE_SIZE buffer, as proposed
+   by Josef Bacik (see patch 6).
 
-If only we could use some kind of global interface... but I can't think
-of a sane way to do that :/
+Mikhail Zaslonko (6):
+  lib/zlib: Add s390 hardware support for kernel zlib_deflate
+  s390/boot: Rename HEAP_SIZE due to name collision
+  lib/zlib: Add s390 hardware support for kernel zlib_inflate
+  s390/boot: Add dfltcc= kernel command line parameter
+  lib/zlib: Add zlib_deflate_dfltcc_enabled() function
+  btrfs: Use larger zlib buffer for s390 hardware compression
 
-> 
-> > 
-> > ...what about not reporting crws at all, but something derived from the
-> > events we get at the subchannel driver level? Have four masks that
-> > indicate online/offline/vary on/vary off for the respective chpids, and
-> > have userspace decide how they want to report these to the guest? A
-> > drawback (?) would be that a series of on/off events would only be
-> > reported as one on and one off event, though. Feasible, or complete
-> > lunacy?
-> >   
-> 
-> Not complete lunacy, but brings concerns of its own as we'd need to
-> ensure the masks don't say something nonsensical, like (for example)
-> both vary on and vary off.  Or what happens if both vary on and config
-> off gets set?  Not a huge amount of work, but just seems to carry more
-> risk than a queue of the existing CRWs and letting the guest process
-> them itself, even if things are duplicated more than necessary.  In
-> reality, these events aren't that common anyway unless things go REALLY
-> sideways.
+ .../admin-guide/kernel-parameters.txt         |  12 +
+ arch/s390/boot/compressed/decompressor.c      |   8 +-
+ arch/s390/boot/ipl_parm.c                     |  14 +
+ arch/s390/include/asm/setup.h                 |   7 +
+ arch/s390/kernel/setup.c                      |   1 +
+ fs/btrfs/compression.c                        |   2 +-
+ fs/btrfs/zlib.c                               | 118 +++++---
+ include/linux/zlib.h                          |   6 +
+ lib/Kconfig                                   |  22 ++
+ lib/Makefile                                  |   1 +
+ lib/decompress_inflate.c                      |  13 +
+ lib/zlib_deflate/deflate.c                    |  85 +++---
+ lib/zlib_deflate/deflate_syms.c               |   1 +
+ lib/zlib_deflate/deftree.c                    |  54 ----
+ lib/zlib_deflate/defutil.h                    | 134 ++++++++-
+ lib/zlib_dfltcc/Makefile                      |  11 +
+ lib/zlib_dfltcc/dfltcc.c                      |  55 ++++
+ lib/zlib_dfltcc/dfltcc.h                      | 147 +++++++++
+ lib/zlib_dfltcc/dfltcc_deflate.c              | 280 ++++++++++++++++++
+ lib/zlib_dfltcc/dfltcc_inflate.c              | 149 ++++++++++
+ lib/zlib_dfltcc/dfltcc_syms.c                 |  17 ++
+ lib/zlib_dfltcc/dfltcc_util.h                 | 124 ++++++++
+ lib/zlib_inflate/inflate.c                    |  32 +-
+ lib/zlib_inflate/inflate.h                    |   8 +
+ lib/zlib_inflate/infutil.h                    |  18 +-
+ 25 files changed, 1163 insertions(+), 156 deletions(-)
+ create mode 100644 lib/zlib_dfltcc/Makefile
+ create mode 100644 lib/zlib_dfltcc/dfltcc.c
+ create mode 100644 lib/zlib_dfltcc/dfltcc.h
+ create mode 100644 lib/zlib_dfltcc/dfltcc_deflate.c
+ create mode 100644 lib/zlib_dfltcc/dfltcc_inflate.c
+ create mode 100644 lib/zlib_dfltcc/dfltcc_syms.c
+ create mode 100644 lib/zlib_dfltcc/dfltcc_util.h
 
-Yeah, that approach probably just brings a different set of issues... I
-think we would need to relay all mask changes, and QEMU would need to
-inject all events, and the guest would need to figure out what to do.
-Not sure if that is better.
+-- 
+2.17.1
 
