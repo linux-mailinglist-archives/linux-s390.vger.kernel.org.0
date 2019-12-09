@@ -2,123 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 943981171F5
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Dec 2019 17:40:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B73531171FF
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Dec 2019 17:42:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726342AbfLIQkQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Dec 2019 11:40:16 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32588 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726197AbfLIQkQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Dec 2019 11:40:16 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xB9GMKjp108748;
-        Mon, 9 Dec 2019 11:40:02 -0500
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wrth045uf-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Dec 2019 11:40:02 -0500
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xB9GRtRP020060;
-        Mon, 9 Dec 2019 16:40:01 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-        by ppma04dal.us.ibm.com with ESMTP id 2wr3q698kq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 09 Dec 2019 16:40:01 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xB9Gdv1n46727472
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 9 Dec 2019 16:39:57 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B9E6E6E050;
-        Mon,  9 Dec 2019 16:39:57 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E65476E04C;
-        Mon,  9 Dec 2019 16:39:55 +0000 (GMT)
-Received: from [9.152.97.3] (unknown [9.152.97.3])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTPS;
-        Mon,  9 Dec 2019 16:39:55 +0000 (GMT)
-Subject: Re: [PATCH 5/5] btrfs: Increase buffer size for zlib functions
-To:     dsterba@suse.cz
-References: <20191126144130.75710-1-zaslonko@linux.ibm.com>
- <20191126144130.75710-6-zaslonko@linux.ibm.com>
- <20191126155249.j2dktiggykfoz4iz@MacBook-Pro-91.local>
- <20191127121423.GQ2734@suse.cz>
-From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
-Cc:     Josef Bacik <josef@toxicpanda.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Message-ID: <a8dc0941-ee2d-6df7-cb32-c6af26bdc54c@linux.ibm.com>
-Date:   Mon, 9 Dec 2019 17:39:51 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1726230AbfLIQmA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Dec 2019 11:42:00 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58683 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725904AbfLIQl7 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Dec 2019 11:41:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575909719;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=IOIs+T0JPjFAhSLIWFD9VPKRUMGW1/PSSpZsJupmtqs=;
+        b=LUxEjHutULu5ynVtuviH+CbM1ssokU5S+9OsI6fDQTDOtCjsQS8M+U36M7gQ6HLuXc6ih5
+        EJyxdKpi2by4rbD0an5LfQiPZR9SXwGDsO1zLwGQRAEhhI0YVLCfRN/pk7d3OOZNu1poqz
+        xbszjLlddBKIi6BZAB9bxmDsHTTCgz0=
+Received: from mail-yw1-f72.google.com (mail-yw1-f72.google.com
+ [209.85.161.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-163-BZ3m-wXVMmuOP0aiBst_pQ-1; Mon, 09 Dec 2019 11:41:58 -0500
+Received: by mail-yw1-f72.google.com with SMTP id l5so1327169ywf.9
+        for <linux-s390@vger.kernel.org>; Mon, 09 Dec 2019 08:41:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=7O3guB7wOY3MrLnldmdm9BIXXTqe2JfD4cDZWNKwU28=;
+        b=uBOMdWpqSbBJN8NtB9haxxAdinm3xaXHG6uq55d+UqR+R6Bd0cCe/jdhuyj/GfE8nN
+         7RBk7FagAEBCvZtoc3CODQjFhcVtg87+J2M33yLbHN8VG/qcV/UFDnNAzJdbPB/mARgB
+         pAbQD4CVlNaYLpN6tVRoyPhNOOLx5Jy4khCx0Ixzpgr50d+/GgpNCG0146M90f4fth6F
+         LKhgI8jXOyGMbksAqSisQFbJFiSG8IjvaxZ1HC1DU/hrQwHscK7Xzb0MfnYtwZ/XZF0r
+         EHK78t24+oyytos5lew7f9W90u7j1lprg12PkZV77G6TcOjcrlrA0FEsNXv4bhOcHsaz
+         dc5w==
+X-Gm-Message-State: APjAAAX+DcB00YD10M44jleEfS1BIo8ik9zRuEa2tvWc7cukcw+5vZ4t
+        5W7/V6ShyWPTkhA/HQ8uSSi7pYjzmyqaqc5lm1hiodvK7Pf92ks8R6ywY/+IWGalZ2/Qb9yqil8
+        p9aPUL3OL0O+7VeVn0P3VFQ==
+X-Received: by 2002:a81:2781:: with SMTP id n123mr22719232ywn.70.1575909717689;
+        Mon, 09 Dec 2019 08:41:57 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx/ZUHMqp43x8Abr0QbypV4zplr0Lxd2ECWn2wddcNUn2SzoWt0sz3QIsRsKZxWbketkY9G9w==
+X-Received: by 2002:a81:2781:: with SMTP id n123mr22719219ywn.70.1575909717409;
+        Mon, 09 Dec 2019 08:41:57 -0800 (PST)
+Received: from dev.jcline.org ([136.56.87.133])
+        by smtp.gmail.com with ESMTPSA id d186sm144163ywe.0.2019.12.09.08.41.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 08:41:56 -0800 (PST)
+Date:   Mon, 9 Dec 2019 11:41:55 -0500
+From:   Jeremy Cline <jcline@redhat.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: s390 depending on cc-options makes it difficult to configure
+Message-ID: <20191209164155.GA78160@dev.jcline.org>
 MIME-Version: 1.0
-In-Reply-To: <20191127121423.GQ2734@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-09_04:2019-12-09,2019-12-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1011
- priorityscore=1501 lowpriorityscore=0 suspectscore=3 bulkscore=0
- phishscore=0 impostorscore=0 adultscore=0 spamscore=0 mlxlogscore=996
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912090141
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-MC-Unique: BZ3m-wXVMmuOP0aiBst_pQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi David,
+Hi folks,
 
-On 27.11.2019 13:14, David Sterba wrote:
-> On Tue, Nov 26, 2019 at 10:52:49AM -0500, Josef Bacik wrote:
->> On Tue, Nov 26, 2019 at 03:41:30PM +0100, Mikhail Zaslonko wrote:
->>> Due to the small size of zlib buffer (1 page) set in btrfs code, s390
->>> hardware compression is rather limited in terms of performance. Increasing
->>> the buffer size to 4 pages would bring significant benefit for s390
->>> hardware compression (up to 60% better performance compared to the
->>> PAGE_SIZE buffer) and should not bring much overhead in terms of memory
->>> consumption due to order 2 allocations.
->>>
->>> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
->>
->> We may have to make these allocations under memory pressure in the IO context,
->> order 2 allocations here is going to be not awesome.  If you really want it then
->> you need to at least be able to fall back to single page if you fail to get the
->> allocation.  Thanks,
-> 
-> The allocation is only for the workspace and it does not happen on the
-> IO path for each call. There's the pool and if
-> 
-> btrfs_get_workspace
->   alloc_workspace
-> 
-> fails, then there's fallback path to wait for an existing workspace to
-> be free.
-> 
-> The order 2 allocation can put more pressure on the allocator though so
-> it's possible to have effects in some corner cases, but not in general.
-> I don't think the single page fallback code is needed.
-> 
-> And of course evaluation of the effects of the larger zlib buffer should
-> be done, it could improve compression but probably at the cost of cpu
-> time. Also decompression of blocks created on new code (4 pages) must
-> work on the old code (1 page).
-Regarding 'improve compression but probably at the cost of cpu' ... what would be 
-the proper way to evaluate this effect?
-As for backward compatibility, I do not see side effects of using larger buffers. 
-Data in the compressed state might differ indeed, but it will sill conform to zlib
-standard and thus can be decompressed.
+Commit 5474080a3a0a ("s390/Kconfig: make use of 'depends on cc-option'")
+makes it difficult to produce an s390 configuration for Fedora and Red
+Hat kernels.
 
-BTW, I have sent around V2 of the patch set. I would appreciate if you take a look 
-as well.
-> 
-Thanks,
-Mikhail
+The issue is I have the following configurations:
+
+CONFIG_MARCH_Z13=3Dy
+CONFIG_TUNE_Z14=3Dy
+# CONFIG_TUNE_DEFAULT is not set
+
+When the configuration is prepared on a non-s390x host without a
+compiler with -march=3Dz* it changes CONFIG_TUNE_DEFAULT to y which, as
+far as I can tell, leads to a kernel tuned for z13 instead of z14.
+Fedora and Red Hat build processes produce complete configurations from
+snippets on any available host in the build infrastructure which very
+frequently is *not* s390.
+
+I did a quick search and couldn't find any other examples of Kconfigs
+depending on march or mtune compiler flags and it seems like it'd
+generally problematic for people preparing configurations.
+
+Regards,
+Jeremy
+
