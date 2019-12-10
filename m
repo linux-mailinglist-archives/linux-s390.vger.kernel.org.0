@@ -2,93 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3D4F1184AC
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 11:16:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 22BAD118512
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 11:28:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727016AbfLJKQK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 05:16:10 -0500
-Received: from merlin.infradead.org ([205.233.59.134]:40428 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726915AbfLJKQK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 10 Dec 2019 05:16:10 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=e5Wq1cFS0C0HbXjy/2CErHJ0P8SNw5EcJk6ucsk+DLA=; b=XjKOtmLCV6KJsOr0IgZ1g+Czv
-        py8wpJ4igkoM+98DAQ+BsAzq6ROeHYgbzIAhjYxN915g62HCEIAxmY9Llk5cZ3HEwx/LDiXYYk5C6
-        XuKD71KCcuXEF2Ni9lejLTzL1EWYRFbyF63fFY9a3p14X9SCLyJ/4qMIGtE5bgu1sFKXLMJkn2keY
-        pgON83/ZTvCIZrSDe7BrSIcYsGYNldb2Rl4AyP3GWDUIcBvdJLH5+r6xzReej6ZFurrXfZ+Ia9orE
-        PGYNm4mIA30Uhbt3CHeP0fudDHhD/L4VSLDjrZCUW2EMd+SIBkKG45DYrBrLOxXeqSnMDmUQI5Egs
-        tyYXlInxg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iecYX-0002cL-52; Tue, 10 Dec 2019 10:15:49 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C2373305FD1;
-        Tue, 10 Dec 2019 11:14:25 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 342092010F142; Tue, 10 Dec 2019 11:15:45 +0100 (CET)
-Date:   Tue, 10 Dec 2019 11:15:45 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
-        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
-        x86@kernel.org, kasan-dev@googlegroups.com,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag
- (topic/kasan-bitops)
-Message-ID: <20191210101545.GL2844@hirez.programming.kicks-ass.net>
-References: <87blslei5o.fsf@mpe.ellerman.id.au>
- <20191206131650.GM2827@hirez.programming.kicks-ass.net>
- <87wob4pwnl.fsf@mpe.ellerman.id.au>
+        id S1727492AbfLJK2n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 05:28:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56364 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726574AbfLJK2m (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 10 Dec 2019 05:28:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1575973721;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=qQLjE6x+Qqsvkr5Q/eTHtuJougeuX+xHRNz4ZzjEMxU=;
+        b=N1HtPOvUH/s8mH0cl16btwpJXZ7C8YrRZVpnXjgVxg4ziidG5wJW2q7IhFUku1awvYGOHo
+        f2RrUTW++nD+BMPUXZ83OQFvht0jLmiKMEbXmg3LMR/ZTpovt66yKXErLZ/MCQ2EwNxaQn
+        99COMfb9Zepmp8xJKQSdMSOrukBFUZc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-158-Tqi9PExFNc-hjF8XHbhBOw-1; Tue, 10 Dec 2019 05:28:38 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 05782DBF5;
+        Tue, 10 Dec 2019 10:28:37 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-158.ams2.redhat.com [10.36.116.158])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 96C5C6FDDF;
+        Tue, 10 Dec 2019 10:28:24 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v3 5/9] s390x: Library resources for CSS
+ tests
+To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, cohuck@redhat.com
+References: <1575649588-6127-1-git-send-email-pmorel@linux.ibm.com>
+ <1575649588-6127-6-git-send-email-pmorel@linux.ibm.com>
+ <66233a15-7cc4-45b5-d930-abbedbd0729d@redhat.com>
+ <c37b0a10-358d-08be-7a59-20048b7af620@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <23770c1c-8aba-85ef-09a1-346393bb90d6@redhat.com>
+Date:   Tue, 10 Dec 2019 11:28:19 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wob4pwnl.fsf@mpe.ellerman.id.au>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <c37b0a10-358d-08be-7a59-20048b7af620@linux.ibm.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: Tqi9PExFNc-hjF8XHbhBOw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 04:38:54PM +1100, Michael Ellerman wrote:
+On 10/12/2019 11.07, Pierre Morel wrote:
+>=20
+>=20
+> On 2019-12-09 12:49, Thomas Huth wrote:
+>> On 06/12/2019 17.26, Pierre Morel wrote:
+>>> These are the include and library utilities for the css tests patch
+>>> series.
+>>>
+>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>>> ---
+>>> =C2=A0 lib/s390x/css.h=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 | 259 ++++++++++++=
++++++++++++++++++++++++++++++++
+>>> =C2=A0 lib/s390x/css_dump.c | 156 ++++++++++++++++++++++++++
+>>> =C2=A0 2 files changed, 415 insertions(+)
+>>> =C2=A0 create mode 100644 lib/s390x/css.h
+>>> =C2=A0 create mode 100644 lib/s390x/css_dump.c
+>>>
+>>> diff --git a/lib/s390x/css.h b/lib/s390x/css.h
+>>> new file mode 100644
+>>> index 0000000..6f19bb5
+>>> --- /dev/null
+>>> +++ b/lib/s390x/css.h
+>> [...]
+>>> +/* Debug functions */
+>>> +char *dump_pmcw_flags(uint16_t f);
+>>> +char *dump_scsw_flags(uint32_t f);
+>>> +#undef DEBUG
+>>> +#ifdef DEBUG
+>>> +void dump_scsw(struct scsw *);
+>>> +void dump_irb(struct irb *irbp);
+>>> +void dump_schib(struct schib *sch);
+>>> +struct ccw *dump_ccw(struct ccw *cp);
+>>> +#else
+>>> +static inline void dump_scsw(struct scsw *scsw) {}
+>>> +static inline void dump_irb(struct irb *irbp) {}
+>>> +static inline void dump_pmcw(struct pmcw *p) {}
+>>> +static inline void dump_schib(struct schib *sch) {}
+>>> +static inline void dump_orb(struct orb *op) {}
+>>> +static inline struct ccw *dump_ccw(struct ccw *cp)
+>>> +{
+>>> +=C2=A0=C2=A0=C2=A0 return NULL;
+>>> +}
+>>> +#endif
+>>
+>> I'd prefer to not have a "#undef DEBUG" (or "#define DEBUG") statement
+>=20
+> Anyway hawfull!
+>=20
+>> in the header here - it could trigger unexpected behavior with other
+>> files that also use a DEBUG macro.
+>>
+>> Could you please declare the prototypes here and move the "#else" part
+>> to the .c file instead? Thanks!
+>=20
+> What if I use a CSS_DEBUG here instead of a simple DEBUG definition?
+>=20
+> It can be enabled or not by defining CSS_ENABLED ahead of the include...?
 
-> Good question, I'll have a look.
-> 
-> There seems to be confusion about what the type of the bit number is,
-> which is leading to sign extension in some cases and not others.
+Why does it have to be in the header and not in the .c file?
 
-Shiny.
+ Thomas
 
-> It looks like the type should be unsigned long?
-
-I'm thinking unsigned makes most sense, I mean, negative bit offsets
-should 'work' but that's almost always guaranteed to be an out-of-bound
-operation.
-
-As to 'long' vs 'int', I'm not sure, 4G bits is a long bitmap. But I
-suppose since the bitmap itself is 'unsigned long', we might as well use
-'unsigned long' for the bitnr too.
-
->   Documentation/core-api/atomic_ops.rst:  void __clear_bit_unlock(unsigned long nr, unsigned long *addr);
->   arch/mips/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
->   arch/powerpc/include/asm/bitops.h:static inline void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
->   arch/riscv/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
->   arch/s390/include/asm/bitops.h:static inline void arch___clear_bit_unlock(unsigned long nr,
->   include/asm-generic/bitops/instrumented-lock.h:static inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
->   include/asm-generic/bitops/lock.h:static inline void __clear_bit_unlock(unsigned int nr,
-> 
-> So I guess step one is to convert our versions to use unsigned long, so
-> we're at least not tripping over that difference when comparing the
-> assembly.
-
-Yeah, I'll look at fixing the generic code, bitops/atomic.h and
-bitops/non-atomic.h don't even agree on the type of bitnr.
