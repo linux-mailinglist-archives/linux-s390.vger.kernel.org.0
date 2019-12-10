@@ -2,35 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3E0A21198FB
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:46:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99381119852
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:39:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729666AbfLJVll (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 16:41:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39116 "EHLO mail.kernel.org"
+        id S1727934AbfLJViq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 16:38:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729952AbfLJVeK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:34:10 -0500
+        id S1730199AbfLJVfL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:35:11 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7FEC42073B;
-        Tue, 10 Dec 2019 21:34:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B431D205C9;
+        Tue, 10 Dec 2019 21:35:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576013650;
-        bh=UT9oi/s9v/GTp5k7n/TwaiWPDk+vLR2tpyrAaDnfO6Y=;
+        s=default; t=1576013711;
+        bh=ntkEWq9Az0k28/gTcB607fPXcFBKNmq2wsDSzXmVA3g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RGIsMtpEDk0xtLjq18q2I+X5Nx8KJK9iO8z81Z5eJy/xQ6qvb7VHCcE0hQH75NlWx
-         SVNjndHvYFD/X9ZuuAB3WnGvstbHcBNQld7TA1Fl7UsUA2ATtXp7ECKrYNbYH7tcZr
-         SvMseRb6i5X/sHFuxi6WEWYdzwd+5CwGNIz+vdt8=
+        b=MgHPw6sezCp/WWPfJ0JI+rXtO4EnvuzbL20xOSna7LXMNHFAEmlue+wi136Zqq9D7
+         Y6/he9K9o+3Tgr9Q1lTtI2p3z+eWOD1WwzeAPltn/gbHJMGmdKxHQt04RJOEaJ2+ej
+         IUVMfCQnrQX7BVQ8ttk6/k1cohVvdEA8kk1h/iKU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 089/177] s390/mm: add mm_pxd_folded() checks to pxd_free()
-Date:   Tue, 10 Dec 2019 16:30:53 -0500
-Message-Id: <20191210213221.11921-89-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 139/177] s390/disassembler: don't hide instruction addresses
+Date:   Tue, 10 Dec 2019 16:31:43 -0500
+Message-Id: <20191210213221.11921-139-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210213221.11921-1-sashal@kernel.org>
 References: <20191210213221.11921-1-sashal@kernel.org>
@@ -43,70 +43,71 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 2416cefc504ba8ae9b17e3e6b40afc72708f96be ]
+[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
 
-Unlike pxd_free_tlb(), the pxd_free() functions do not check for folded
-page tables. This is not an issue so far, as those functions will actually
-never be called, since no code will reach them when page tables are folded.
+Due to kptr_restrict, JITted BPF code is now displayed like this:
 
-In order to avoid future issues, and to make the s390 code more similar to
-other architectures, add mm_pxd_folded() checks, similar to how it is done
-in pxd_free_tlb().
+000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
+000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
+00000000fbad41b0: a7fbffa0      aghi    %r15,-96
 
-This was found by testing a patch from from Anshuman Khandual, which is
-currently discussed on LKML ("mm/debug: Add tests validating architecture
-page table helpers").
+Leaking kernel addresses to dmesg is not a concern in this case, because
+this happens only when JIT debugging is explicitly activated, which only
+root can do.
 
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Use %px in this particular instance, and also to print an instruction
+address in show_code and PCREL (e.g. brasl) arguments in print_insn.
+While at present functionally equivalent to %016lx, %px is recommended
+by Documentation/core-api/printk-formats.rst for such cases.
+
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/pgalloc.h | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/s390/kernel/dis.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
-index 5ee733720a571..67838df3f3f92 100644
---- a/arch/s390/include/asm/pgalloc.h
-+++ b/arch/s390/include/asm/pgalloc.h
-@@ -56,7 +56,12 @@ static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long address)
- 		crst_table_init(table, _REGION2_ENTRY_EMPTY);
- 	return (p4d_t *) table;
- }
--#define p4d_free(mm, p4d) crst_table_free(mm, (unsigned long *) p4d)
+diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
+index b2c68fbf26346..41925f2206940 100644
+--- a/arch/s390/kernel/dis.c
++++ b/arch/s390/kernel/dis.c
+@@ -462,10 +462,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
+ 				ptr += sprintf(ptr, "%%c%i", value);
+ 			else if (operand->flags & OPERAND_VR)
+ 				ptr += sprintf(ptr, "%%v%i", value);
+-			else if (operand->flags & OPERAND_PCREL)
+-				ptr += sprintf(ptr, "%lx", (signed int) value
+-								      + addr);
+-			else if (operand->flags & OPERAND_SIGNED)
++			else if (operand->flags & OPERAND_PCREL) {
++				void *pcrel = (void *)((int)value + addr);
 +
-+static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
-+{
-+	if (!mm_p4d_folded(mm))
-+		crst_table_free(mm, (unsigned long *) p4d);
-+}
- 
- static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
- {
-@@ -65,7 +70,12 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
- 		crst_table_init(table, _REGION3_ENTRY_EMPTY);
- 	return (pud_t *) table;
- }
--#define pud_free(mm, pud) crst_table_free(mm, (unsigned long *) pud)
-+
-+static inline void pud_free(struct mm_struct *mm, pud_t *pud)
-+{
-+	if (!mm_pud_folded(mm))
-+		crst_table_free(mm, (unsigned long *) pud);
-+}
- 
- static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
- {
-@@ -83,6 +93,8 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
- 
- static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
- {
-+	if (mm_pmd_folded(mm))
-+		return;
- 	pgtable_pmd_page_dtor(virt_to_page(pmd));
- 	crst_table_free(mm, (unsigned long *) pmd);
- }
++				ptr += sprintf(ptr, "%px", pcrel);
++			} else if (operand->flags & OPERAND_SIGNED)
+ 				ptr += sprintf(ptr, "%i", value);
+ 			else
+ 				ptr += sprintf(ptr, "%u", value);
+@@ -537,7 +538,7 @@ void show_code(struct pt_regs *regs)
+ 		else
+ 			*ptr++ = ' ';
+ 		addr = regs->psw.addr + start - 32;
+-		ptr += sprintf(ptr, "%016lx: ", addr);
++		ptr += sprintf(ptr, "%px: ", (void *)addr);
+ 		if (start + opsize >= end)
+ 			break;
+ 		for (i = 0; i < opsize; i++)
+@@ -565,7 +566,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
+ 		opsize = insn_length(*code);
+ 		if (opsize > len)
+ 			break;
+-		ptr += sprintf(ptr, "%p: ", code);
++		ptr += sprintf(ptr, "%px: ", code);
+ 		for (i = 0; i < opsize; i++)
+ 			ptr += sprintf(ptr, "%02x", code[i]);
+ 		*ptr++ = '\t';
 -- 
 2.20.1
 
