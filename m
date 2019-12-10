@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 18684119B68
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 23:12:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 80A17119DDF
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 23:41:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728051AbfLJWHe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 17:07:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36320 "EHLO mail.kernel.org"
+        id S1729071AbfLJWcA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 17:32:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52222 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbfLJWFH (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 17:05:07 -0500
+        id S1729055AbfLJWb7 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Dec 2019 17:31:59 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 84FD62464B;
-        Tue, 10 Dec 2019 22:05:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CCF8B21D7D;
+        Tue, 10 Dec 2019 22:31:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576015506;
-        bh=/U5mBdY+HaDIPRi4lflZSSCfc6eLruDUWM40ZKLiTpI=;
+        s=default; t=1576017118;
+        bh=P52QaYQYRzEDfJhAUcaMO3WYFhJuIDoGFFYgQMkcWy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dzO7ZZuvxsy1TRS0tkcffFVT8G5cYEKnl6OKLlJUvgcKiJXZaVqwLP77Z6Qzb/33m
-         fuhUTtLpvuIyc0Iyno8Q3ijO4nuG9+eN98F9pRF0tnczbX82T5VjhkPCyTWqmd29OS
-         EmdR6jH8BicFQyuu43yqUSBg2k6u296VnX6SFnkE=
+        b=P4m54EQprhnRLrMSQSsSWJSid+5i9DtkHsLEWtGjAIfKZ67NjMp4AP1bAZRKkapo1
+         tpLHDF1xxhGtwW+4NKQnLDEeAZYhCbfgkOGdBN+AktMeRnuMB7k0+tXeFB0TumkjY5
+         V1taZd1TkA4wkFw0bronhOLCnW4pNcebb7t94GxM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 105/130] s390/disassembler: don't hide instruction addresses
-Date:   Tue, 10 Dec 2019 17:02:36 -0500
-Message-Id: <20191210220301.13262-105-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 70/91] s390/disassembler: don't hide instruction addresses
+Date:   Tue, 10 Dec 2019 17:30:14 -0500
+Message-Id: <20191210223035.14270-70-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191210220301.13262-1-sashal@kernel.org>
-References: <20191210220301.13262-1-sashal@kernel.org>
+In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
+References: <20191210223035.14270-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -71,7 +71,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
-index 2394557653d57..6d154069c9623 100644
+index aaf9dab3c1933..f9dca1aed9a4b 100644
 --- a/arch/s390/kernel/dis.c
 +++ b/arch/s390/kernel/dis.c
 @@ -1930,10 +1930,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
