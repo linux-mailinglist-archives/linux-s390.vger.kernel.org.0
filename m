@@ -2,35 +2,36 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CED57119689
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:28:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ACBA111958B
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:21:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728763AbfLJVZP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 16:25:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60668 "EHLO mail.kernel.org"
+        id S1728306AbfLJVVV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 16:21:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728544AbfLJVKf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:10:35 -0500
+        id S1728840AbfLJVLs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:11:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 75431246A3;
-        Tue, 10 Dec 2019 21:10:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A20CA24697;
+        Tue, 10 Dec 2019 21:11:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012235;
-        bh=vS8aMU79NzeSQmkyeMPXtxzGfCOBO5VOntSCYux0bfM=;
+        s=default; t=1576012307;
+        bh=ZgnB4lFM8X3vrrBvyCDddzp2I40k+9vWfvOWfY48zDg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=j5PI2NYW31A4bp+bSV6GmldLs6MLuNM3ib014J/oN1Z0wbqVDHd2Y2VVyvQvKzBIN
-         fYYcD5sKjSsWvXhz9rX037ldSTopGCeCMSPt/Bt2tmGZDBNpidxvUGgbCbWnOg2TqI
-         o4qwbhTs7vBvDLPya5HlNEBRIqSUooA3ivCU+g3k=
+        b=aIx0yhS2vzMelBtWSrSnYlS4Y5BkGNWh1HmNUJEsYtQXWdHs5fDn+LVeuQMpKfbjg
+         cg0TE1ltgzk75StLY+3fD/DfV66WvM5tnOMkJAHXi0FjNtM6t64T23WrvC/YFvssPY
+         e4hiYqNFewrwRsMGoafgTHnEBFSOzkGLPpgBbqB8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 184/350] s390/mm: add mm_pxd_folded() checks to pxd_free()
-Date:   Tue, 10 Dec 2019 16:04:49 -0500
-Message-Id: <20191210210735.9077-145-sashal@kernel.org>
+Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 243/350] s390/bpf: Use kvcalloc for addrs array
+Date:   Tue, 10 Dec 2019 16:05:48 -0500
+Message-Id: <20191210210735.9077-204-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -43,70 +44,58 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 2416cefc504ba8ae9b17e3e6b40afc72708f96be ]
+[ Upstream commit 166f11d11f6f70439830d09bfa5552ec1b368494 ]
 
-Unlike pxd_free_tlb(), the pxd_free() functions do not check for folded
-page tables. This is not an issue so far, as those functions will actually
-never be called, since no code will reach them when page tables are folded.
+A BPF program may consist of 1m instructions, which means JIT
+instruction-address mapping can be as large as 4m. s390 has
+FORCE_MAX_ZONEORDER=9 (for memory hotplug reasons), which means maximum
+kmalloc size is 1m. This makes it impossible to JIT programs with more
+than 256k instructions.
 
-In order to avoid future issues, and to make the s390 code more similar to
-other architectures, add mm_pxd_folded() checks, similar to how it is done
-in pxd_free_tlb().
+Fix by using kvcalloc, which falls back to vmalloc for larger
+allocations. An alternative would be to use a radix tree, but that is
+not supported by bpf_prog_fill_jited_linfo.
 
-This was found by testing a patch from from Anshuman Khandual, which is
-currently discussed on LKML ("mm/debug: Add tests validating architecture
-page table helpers").
-
-Signed-off-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
+Link: https://lore.kernel.org/bpf/20191107141838.92202-1-iii@linux.ibm.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/pgalloc.h | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/s390/net/bpf_jit_comp.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/include/asm/pgalloc.h b/arch/s390/include/asm/pgalloc.h
-index bccb8f4a63e20..77606c4acd58d 100644
---- a/arch/s390/include/asm/pgalloc.h
-+++ b/arch/s390/include/asm/pgalloc.h
-@@ -56,7 +56,12 @@ static inline p4d_t *p4d_alloc_one(struct mm_struct *mm, unsigned long address)
- 		crst_table_init(table, _REGION2_ENTRY_EMPTY);
- 	return (p4d_t *) table;
- }
--#define p4d_free(mm, p4d) crst_table_free(mm, (unsigned long *) p4d)
-+
-+static inline void p4d_free(struct mm_struct *mm, p4d_t *p4d)
-+{
-+	if (!mm_p4d_folded(mm))
-+		crst_table_free(mm, (unsigned long *) p4d);
-+}
+diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
+index ce88211b9c6cd..c8c16b5eed6be 100644
+--- a/arch/s390/net/bpf_jit_comp.c
++++ b/arch/s390/net/bpf_jit_comp.c
+@@ -23,6 +23,7 @@
+ #include <linux/filter.h>
+ #include <linux/init.h>
+ #include <linux/bpf.h>
++#include <linux/mm.h>
+ #include <asm/cacheflush.h>
+ #include <asm/dis.h>
+ #include <asm/facility.h>
+@@ -1369,7 +1370,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
+ 	}
  
- static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
- {
-@@ -65,7 +70,12 @@ static inline pud_t *pud_alloc_one(struct mm_struct *mm, unsigned long address)
- 		crst_table_init(table, _REGION3_ENTRY_EMPTY);
- 	return (pud_t *) table;
- }
--#define pud_free(mm, pud) crst_table_free(mm, (unsigned long *) pud)
-+
-+static inline void pud_free(struct mm_struct *mm, pud_t *pud)
-+{
-+	if (!mm_pud_folded(mm))
-+		crst_table_free(mm, (unsigned long *) pud);
-+}
- 
- static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
- {
-@@ -83,6 +93,8 @@ static inline pmd_t *pmd_alloc_one(struct mm_struct *mm, unsigned long vmaddr)
- 
- static inline void pmd_free(struct mm_struct *mm, pmd_t *pmd)
- {
-+	if (mm_pmd_folded(mm))
-+		return;
- 	pgtable_pmd_page_dtor(virt_to_page(pmd));
- 	crst_table_free(mm, (unsigned long *) pmd);
- }
+ 	memset(&jit, 0, sizeof(jit));
+-	jit.addrs = kcalloc(fp->len + 1, sizeof(*jit.addrs), GFP_KERNEL);
++	jit.addrs = kvcalloc(fp->len + 1, sizeof(*jit.addrs), GFP_KERNEL);
+ 	if (jit.addrs == NULL) {
+ 		fp = orig_fp;
+ 		goto out;
+@@ -1422,7 +1423,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
+ 	if (!fp->is_func || extra_pass) {
+ 		bpf_prog_fill_jited_linfo(fp, jit.addrs + 1);
+ free_addrs:
+-		kfree(jit.addrs);
++		kvfree(jit.addrs);
+ 		kfree(jit_data);
+ 		fp->aux->jit_data = NULL;
+ 	}
 -- 
 2.20.1
 
