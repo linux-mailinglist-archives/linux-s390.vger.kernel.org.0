@@ -2,36 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ACBA111958B
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:21:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15AFF119547
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:20:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728306AbfLJVVV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 16:21:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34976 "EHLO mail.kernel.org"
+        id S1728937AbfLJVMX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 16:12:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728840AbfLJVLs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:11:48 -0500
+        id S1727727AbfLJVMV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:12:21 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A20CA24697;
-        Tue, 10 Dec 2019 21:11:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 964752077B;
+        Tue, 10 Dec 2019 21:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012307;
-        bh=ZgnB4lFM8X3vrrBvyCDddzp2I40k+9vWfvOWfY48zDg=;
+        s=default; t=1576012341;
+        bh=HXpil44N5GmNjtAl+3KxceguPapHwyWGDSjDexNxcz4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=aIx0yhS2vzMelBtWSrSnYlS4Y5BkGNWh1HmNUJEsYtQXWdHs5fDn+LVeuQMpKfbjg
-         cg0TE1ltgzk75StLY+3fD/DfV66WvM5tnOMkJAHXi0FjNtM6t64T23WrvC/YFvssPY
-         e4hiYqNFewrwRsMGoafgTHnEBFSOzkGLPpgBbqB8=
+        b=cZ6LBMwcraBffM3qH9NBwwVOIn1l77hZKbeSx0RaqUxOOPO0IioBaDNHEtSfJ8KOL
+         vGvEvOT+5ubZ8/BBrwkjrfbVTwGwRTBE4QJJM6cW0BJicq1MDWuLlEzd3PT6jzHall
+         os5qmCzyasKF0E39WKtBDWdSDqRSgl5wY4pMPocE=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Sasha Levin <sashal@kernel.org>, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 243/350] s390/bpf: Use kvcalloc for addrs array
-Date:   Tue, 10 Dec 2019 16:05:48 -0500
-Message-Id: <20191210210735.9077-204-sashal@kernel.org>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 272/350] s390/disassembler: don't hide instruction addresses
+Date:   Tue, 10 Dec 2019 16:06:17 -0500
+Message-Id: <20191210210735.9077-233-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -46,56 +45,69 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 From: Ilya Leoshkevich <iii@linux.ibm.com>
 
-[ Upstream commit 166f11d11f6f70439830d09bfa5552ec1b368494 ]
+[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
 
-A BPF program may consist of 1m instructions, which means JIT
-instruction-address mapping can be as large as 4m. s390 has
-FORCE_MAX_ZONEORDER=9 (for memory hotplug reasons), which means maximum
-kmalloc size is 1m. This makes it impossible to JIT programs with more
-than 256k instructions.
+Due to kptr_restrict, JITted BPF code is now displayed like this:
 
-Fix by using kvcalloc, which falls back to vmalloc for larger
-allocations. An alternative would be to use a radix tree, but that is
-not supported by bpf_prog_fill_jited_linfo.
+000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
+000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
+00000000fbad41b0: a7fbffa0      aghi    %r15,-96
+
+Leaking kernel addresses to dmesg is not a concern in this case, because
+this happens only when JIT debugging is explicitly activated, which only
+root can do.
+
+Use %px in this particular instance, and also to print an instruction
+address in show_code and PCREL (e.g. brasl) arguments in print_insn.
+While at present functionally equivalent to %016lx, %px is recommended
+by Documentation/core-api/printk-formats.rst for such cases.
 
 Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
-Link: https://lore.kernel.org/bpf/20191107141838.92202-1-iii@linux.ibm.com
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/net/bpf_jit_comp.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/s390/kernel/dis.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-diff --git a/arch/s390/net/bpf_jit_comp.c b/arch/s390/net/bpf_jit_comp.c
-index ce88211b9c6cd..c8c16b5eed6be 100644
---- a/arch/s390/net/bpf_jit_comp.c
-+++ b/arch/s390/net/bpf_jit_comp.c
-@@ -23,6 +23,7 @@
- #include <linux/filter.h>
- #include <linux/init.h>
- #include <linux/bpf.h>
-+#include <linux/mm.h>
- #include <asm/cacheflush.h>
- #include <asm/dis.h>
- #include <asm/facility.h>
-@@ -1369,7 +1370,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 	}
- 
- 	memset(&jit, 0, sizeof(jit));
--	jit.addrs = kcalloc(fp->len + 1, sizeof(*jit.addrs), GFP_KERNEL);
-+	jit.addrs = kvcalloc(fp->len + 1, sizeof(*jit.addrs), GFP_KERNEL);
- 	if (jit.addrs == NULL) {
- 		fp = orig_fp;
- 		goto out;
-@@ -1422,7 +1423,7 @@ struct bpf_prog *bpf_int_jit_compile(struct bpf_prog *fp)
- 	if (!fp->is_func || extra_pass) {
- 		bpf_prog_fill_jited_linfo(fp, jit.addrs + 1);
- free_addrs:
--		kfree(jit.addrs);
-+		kvfree(jit.addrs);
- 		kfree(jit_data);
- 		fp->aux->jit_data = NULL;
- 	}
+diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
+index 7abe6ae261b42..f304802ecf7be 100644
+--- a/arch/s390/kernel/dis.c
++++ b/arch/s390/kernel/dis.c
+@@ -461,10 +461,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
+ 				ptr += sprintf(ptr, "%%c%i", value);
+ 			else if (operand->flags & OPERAND_VR)
+ 				ptr += sprintf(ptr, "%%v%i", value);
+-			else if (operand->flags & OPERAND_PCREL)
+-				ptr += sprintf(ptr, "%lx", (signed int) value
+-								      + addr);
+-			else if (operand->flags & OPERAND_SIGNED)
++			else if (operand->flags & OPERAND_PCREL) {
++				void *pcrel = (void *)((int)value + addr);
++
++				ptr += sprintf(ptr, "%px", pcrel);
++			} else if (operand->flags & OPERAND_SIGNED)
+ 				ptr += sprintf(ptr, "%i", value);
+ 			else
+ 				ptr += sprintf(ptr, "%u", value);
+@@ -536,7 +537,7 @@ void show_code(struct pt_regs *regs)
+ 		else
+ 			*ptr++ = ' ';
+ 		addr = regs->psw.addr + start - 32;
+-		ptr += sprintf(ptr, "%016lx: ", addr);
++		ptr += sprintf(ptr, "%px: ", (void *)addr);
+ 		if (start + opsize >= end)
+ 			break;
+ 		for (i = 0; i < opsize; i++)
+@@ -564,7 +565,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
+ 		opsize = insn_length(*code);
+ 		if (opsize > len)
+ 			break;
+-		ptr += sprintf(ptr, "%p: ", code);
++		ptr += sprintf(ptr, "%px: ", code);
+ 		for (i = 0; i < opsize; i++)
+ 			ptr += sprintf(ptr, "%02x", code[i]);
+ 		*ptr++ = '\t';
 -- 
 2.20.1
 
