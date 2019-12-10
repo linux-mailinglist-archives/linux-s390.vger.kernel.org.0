@@ -2,180 +2,104 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5037118F1F
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 18:35:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5D3DE119681
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:27:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727566AbfLJRfs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 12:35:48 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31712 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727211AbfLJRfs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 12:35:48 -0500
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBAHMOIu071910
-        for <linux-s390@vger.kernel.org>; Tue, 10 Dec 2019 12:35:46 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wt2et2qwf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 10 Dec 2019 12:35:46 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 10 Dec 2019 17:35:44 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Dec 2019 17:35:41 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBAHZfTl60620840
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 17:35:41 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F15BDA4051;
-        Tue, 10 Dec 2019 17:35:40 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BB24EA4053;
-        Tue, 10 Dec 2019 17:35:40 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.152.222.89])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 10 Dec 2019 17:35:40 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v3 7/9] s390x: css: msch, enable test
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-References: <1575649588-6127-1-git-send-email-pmorel@linux.ibm.com>
- <1575649588-6127-8-git-send-email-pmorel@linux.ibm.com>
- <20191209175430.5381b328.cohuck@redhat.com>
- <a19d7e91-4048-3eaa-a819-51e95dd922de@linux.ibm.com>
- <20191210100950.466e6211.cohuck@redhat.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 10 Dec 2019 18:35:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1728537AbfLJVKe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 16:10:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60598 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728531AbfLJVKd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:10:33 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F228246C4;
+        Tue, 10 Dec 2019 21:10:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576012233;
+        bh=qoWIB+0WSAHa/3SwzS6I1z52KR/Wh/ZPFYeXYzN9PqQ=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=ftwrQ6ccbopfaYCsCYq4OVICDtXHKYkm3focToIOSF0BVMjaoC75D4cQJqGUsLy3X
+         1qe0lERg5TU1PDWMoxku12/SPpk5i6m0P/GBjBs4+sE6trBALv9OVotW73LjtKW1px
+         SckpQsmkthGyKOWFHsUkJz5uyi+OrZYPmuBkvdgg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 182/350] s390/time: ensure get_clock_monotonic() returns monotonic values
+Date:   Tue, 10 Dec 2019 16:04:47 -0500
+Message-Id: <20191210210735.9077-143-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
+References: <20191210210735.9077-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191210100950.466e6211.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121017-4275-0000-0000-0000038DB1DC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121017-4276-0000-0000-000038A163BE
-Message-Id: <bf954926-fd77-9255-497b-44b825016a6f@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_05:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxscore=0
- mlxlogscore=999 spamscore=0 priorityscore=1501 bulkscore=0
- lowpriorityscore=0 impostorscore=0 clxscore=1015 phishscore=0
- suspectscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-1912100149
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
+[ Upstream commit 011620688a71f2f1fe9901dbc2479a7c01053196 ]
 
-On 2019-12-10 10:09, Cornelia Huck wrote:
-> On Tue, 10 Dec 2019 10:01:46 +0100
-> Pierre Morel <pmorel@linux.ibm.com> wrote:
-> 
->> On 2019-12-09 17:54, Cornelia Huck wrote:
->>> On Fri,  6 Dec 2019 17:26:26 +0100
->>> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>>    
->>>> A second step when testing the channel subsystem is to prepare a channel
->>>> for use.
->>>> This includes:
->>>> - Get the current SubCHannel Information Block (SCHIB) using STSCH
->>>> - Update it in memory to set the ENABLE bit
->>>> - Tell the CSS that the SCHIB has been modified using MSCH
->>>> - Get the SCHIB from the CSS again to verify that the subchannel is
->>>>     enabled.
->>>>
->>>> This tests the success of the MSCH instruction by enabling a channel.
->>>>
->>>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->>>> ---
->>>>    s390x/css.c | 39 +++++++++++++++++++++++++++++++++++++++
->>>>    1 file changed, 39 insertions(+)
->>>>
->>>> diff --git a/s390x/css.c b/s390x/css.c
->>>> index 3d4a986..4c0031c 100644
->>>> --- a/s390x/css.c
->>>> +++ b/s390x/css.c
->>>> @@ -58,11 +58,50 @@ static void test_enumerate(void)
->>>>    	report("Tested %d devices, %d found", 1, scn, found);
->>>>    }
->>>>    
->>>> +static void test_enable(void)
->>>> +{
->>>> +	struct pmcw *pmcw = &schib.pmcw;
->>>> +	int cc;
->>>> +
->>>> +	if (!test_device_sid) {
->>>> +		report_skip("No device");
->>>> +		return;
->>>> +	}
->>>> +	/* Read the SCIB for this subchannel */
->>>
->>> s/SCIB/SCHIB/
->>
->> yes
->>
->>>    
->>>> +	cc = stsch(test_device_sid, &schib);
->>>> +	if (cc) {
->>>> +		report("stsch cc=%d", 0, cc);
->>>> +		return;
->>>> +	}
->>>> +	/* Update the SCHIB to enable the channel */
->>>> +	pmcw->flags |= PMCW_ENABLE;
->>>> +
->>>> +	/* Tell the CSS we want to modify the subchannel */
->>>> +	cc = msch(test_device_sid, &schib);
->>>> +	if (cc) {
->>>> +		report("msch cc=%d", 0, cc);
->>>
->>> So you expect the subchannel to be idle? Probably true, especially as
->>> QEMU has no reason to post an unsolicited interrupt for a test device.
->>>    
->>>> +		return;
->>>> +	}
->>>> +
->>>> +	/* Read the SCHIB again to verify the enablement */
->>>> +	cc = stsch(test_device_sid, &schib);
->>>> +	if (cc) {
->>>> +		report("stsch cc=%d", 0, cc);
->>>> +		return;
->>>> +	}
->>>> +	if (!(pmcw->flags & PMCW_ENABLE)) {
->>>> +		report("Enable failed. pmcw: %x", 0, pmcw->flags);
->>>
->>> This check is fine when running under KVM. If this test is modified to
->>> run under z/VM in the future, you probably should retry here: I've seen
->>> the enable bit 'stick' only after the second msch() there.
->>
->> Oh. Thanks, may be I can loop with a delay and count.
-> 
-> FWIW, the Linux kernel code is trying 5 times.
-> 
->> If I need to do this may be I need to create dedicated sub-functions to
->> include the sanity tests.
-> 
-> I'm not sure how worthwhile investing time here is, actually: If you
-> don't plan to run under anything but KVM, you won't need it. I'm not
-> sure if current versions of z/VM still display the same behaviour (it
-> has been some time...); on the other hand, it is compliant with the
-> architecture...
+The current implementation of get_clock_monotonic() leaves it up to
+the caller to call the function with preemption disabled. The only
+core kernel caller (sched_clock) however does not disable preemption.
 
-OK, I just insert the retry.
+In order to make sure that all callers of this function see monotonic
+values handle disabling preemption within the function itself.
 
-Thanks,
-Pierre
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/include/asm/timex.h | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
+diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
+index 64539c221672b..0f12a3f912820 100644
+--- a/arch/s390/include/asm/timex.h
++++ b/arch/s390/include/asm/timex.h
+@@ -10,8 +10,9 @@
+ #ifndef _ASM_S390_TIMEX_H
+ #define _ASM_S390_TIMEX_H
+ 
+-#include <asm/lowcore.h>
++#include <linux/preempt.h>
+ #include <linux/time64.h>
++#include <asm/lowcore.h>
+ 
+ /* The value of the TOD clock for 1.1.1970. */
+ #define TOD_UNIX_EPOCH 0x7d91048bca000000ULL
+@@ -186,15 +187,18 @@ extern unsigned char tod_clock_base[16] __aligned(8);
+ /**
+  * get_clock_monotonic - returns current time in clock rate units
+  *
+- * The caller must ensure that preemption is disabled.
+  * The clock and tod_clock_base get changed via stop_machine.
+- * Therefore preemption must be disabled when calling this
+- * function, otherwise the returned value is not guaranteed to
+- * be monotonic.
++ * Therefore preemption must be disabled, otherwise the returned
++ * value is not guaranteed to be monotonic.
+  */
+ static inline unsigned long long get_tod_clock_monotonic(void)
+ {
+-	return get_tod_clock() - *(unsigned long long *) &tod_clock_base[1];
++	unsigned long long tod;
++
++	preempt_disable();
++	tod = get_tod_clock() - *(unsigned long long *) &tod_clock_base[1];
++	preempt_enable();
++	return tod;
+ }
+ 
+ /**
 -- 
-Pierre Morel
-IBM Lab Boeblingen
+2.20.1
 
