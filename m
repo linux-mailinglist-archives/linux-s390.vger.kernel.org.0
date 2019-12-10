@@ -2,108 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DAFC7117873
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Dec 2019 22:27:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 58080117F14
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 05:47:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726522AbfLIV12 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Dec 2019 16:27:28 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:60534 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726354AbfLIV11 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 9 Dec 2019 16:27:27 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ieQYj-0005SY-26; Mon, 09 Dec 2019 14:27:14 -0700
-To:     Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20191209191346.5197-1-logang@deltatee.com>
- <20191209191346.5197-6-logang@deltatee.com>
- <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
- <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
- <20191209204128.GC7658@dhcp22.suse.cz>
- <CAPcyv4iKKw8cuFyDrY2VLN2ecd-qAbDCfYa7SufuhUb59e89Rw@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <05e82397-4d89-a54d-5334-2ddca6c94f19@deltatee.com>
-Date:   Mon, 9 Dec 2019 14:27:12 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726691AbfLJErX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Dec 2019 23:47:23 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40884 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726619AbfLJErX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Dec 2019 23:47:23 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g6so6758288plp.7
+        for <linux-s390@vger.kernel.org>; Mon, 09 Dec 2019 20:47:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y8tQSVFZXpglTzCwnCQJ/H8jDbSquTv0j0/ujEPlW6k=;
+        b=Q5ohWjCIeOzukO5LCkWh2UDZUjzpG6Dg+k5QibSsNEXqnEUsNI3eOHJLFy8voZYt1D
+         zWAwzTdpWafUiM/2V3jWWisOZsqR4bWCl+3Si1gmC/LlI61VQXqM8pt6m9UAyMGHCMQR
+         a4aAP4oUxg9Iibn2yn+JTh0K/J6050DPkyO3I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=y8tQSVFZXpglTzCwnCQJ/H8jDbSquTv0j0/ujEPlW6k=;
+        b=YE6TZxopzkt3zv1I5GWSIv5HHuBWAUN32R0jUJwKaRG6U3vnFDZKC3uX73JUq/9ro/
+         D31rJuvdu1S2jU4eeD42UW1bP9hKhyO/WuOB66qAzNtrx0XEd4jxJIcr3Fsw2q9ZWAX6
+         oiW0M1moiEt6YIQMTKQq5fJBtp/1X0i6OvhO3qS3efBxZt/0/3PkoJQF6pKHLn5ChUhU
+         cS7y0OfIIo7ComdX40u4JOtSkDqLOxmA1S5nuPT7YGmI0PNiqNnwG32fceCAzJnIL1Fz
+         QgFlh+q4/8p0DQtXscLvD7QnjDf+yyablNorBACr/VODE0M2Cvk1RmRM/ECfYBMEL/lE
+         d5iw==
+X-Gm-Message-State: APjAAAVtwvJ3idi8S1fjSx70UJRHMT4TvHs8swr0kcozEzt87+JKBkBJ
+        NYdEQocdnRRGLUlCf0PkikOPsZCF8z8=
+X-Google-Smtp-Source: APXvYqzZzlhFQwpykUHNZoV4iqQbstcouL0rgALlQzDURKcSExHxCCWi3YgmjP5uPHJuX5j1JCnLyA==
+X-Received: by 2002:a17:902:9f83:: with SMTP id g3mr30957647plq.234.1575953242726;
+        Mon, 09 Dec 2019 20:47:22 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-e460-0b66-7007-c654.static.ipv6.internode.on.net. [2001:44b8:1113:6700:e460:b66:7007:c654])
+        by smtp.gmail.com with ESMTPSA id e16sm1159270pgk.77.2019.12.09.20.47.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2019 20:47:21 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
+        christophe.leroy@c-s.fr, aneesh.kumar@linux.ibm.com,
+        bsingharora@gmail.com
+Cc:     Daniel Axtens <dja@axtens.net>
+Subject: [PATCH v2 0/4] KASAN for powerpc64 radix, plus generic mm change
+Date:   Tue, 10 Dec 2019 15:47:10 +1100
+Message-Id: <20191210044714.27265-1-dja@axtens.net>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4iKKw8cuFyDrY2VLN2ecd-qAbDCfYa7SufuhUb59e89Rw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, akpm@linux-foundation.org, hch@lst.de, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, david@redhat.com, mhocko@kernel.org, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the pgprot_t
- in arch_add_memory()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Building on the work of Christophe, Aneesh and Balbir, I've ported
+KASAN to 64-bit Book3S kernels running on the Radix MMU.
 
+This provides full inline instrumentation on radix, but does require
+that you be able to specify the amount of physically contiguous memory
+on the system at compile time. More details in patch 4.
 
-On 2019-12-09 2:00 p.m., Dan Williams wrote:
->>>> Can we fiddle that into "struct mhp_restrictions" instead?
->>>
->>> Yes, if that's what people want, it's pretty trivial to do. I chose not
->>> to do it that way because it doesn't get passed down to add_pages() and
->>> it's not really a "restriction". If I don't hear any objections, I will
->>> do that for v2.
->>
->> I do agree that restriction is not the best fit. But I consider prot
->> argument to complicate the API to all users even though it is not really
->> clear whether we are going to have many users really benefiting from it.
->> Look at the vmalloc API and try to find how many users of __vmalloc do
->> not use PAGE_KERNEL.
-> 
-> At least for this I can foresee at least one more user in the
-> pipeline, encrypted memory support for persistent memory mappings that
-> will store the key-id in the ptes.
-> 
->>
->> So I can see two options. One of them is to add arch_add_memory_prot
->> that would allow to have give and extra prot argument or simply call
->> an arch independent API to change the protection after arch_add_memory.
->> The later sounds like much less code. The memory shouldn't be in use by
->> anybody at that stage yet AFAIU. Maybe there even is an API like that.
-> 
-> I'm ok with passing it the same way as altmap or a new
-> arch_add_memory_prot() my only hangup with after the fact changes is
-> the wasted effort it inflicts in the init path for potentially large
-> address ranges.
+The big change from v1 is the introduction of tree-wide(ish)
+MAX_PTRS_PER_{PTE,PMD,PUD} macros in preference to the previous
+approach, which was for the arch to override the page table array
+definitions with their own. (And I squashed the annoying intermittent
+crash!)
 
-Yes, I'll change the way it's passed in for v2 as that seems to be
-generally agreed upon. I can also add a patch to make the name change.
+Apart from that there's just a lot of cleanup. Christophe, I've
+addressed most of what you asked for and I will reply to your v1
+emails to clarify what remains unchanged.
 
-And, yes, given our testing, the wasted effort is quite significant so
-I'm against changing the prots after the fact.
+Regards,
+Daniel
 
-Logan
+Daniel Axtens (4):
+  mm: define MAX_PTRS_PER_{PTE,PMD,PUD}
+  kasan: use MAX_PTRS_PER_* for early shadow
+  kasan: Document support on 32-bit powerpc
+  powerpc: Book3S 64-bit "heavyweight" KASAN support
+
+ Documentation/dev-tools/kasan.rst             |   7 +-
+ Documentation/powerpc/kasan.txt               | 112 ++++++++++++++++++
+ arch/arm64/include/asm/pgtable-hwdef.h        |   3 +
+ arch/powerpc/Kconfig                          |   3 +
+ arch/powerpc/Kconfig.debug                    |  21 ++++
+ arch/powerpc/Makefile                         |  11 ++
+ arch/powerpc/include/asm/book3s/64/hash.h     |   4 +
+ arch/powerpc/include/asm/book3s/64/pgtable.h  |   7 ++
+ arch/powerpc/include/asm/book3s/64/radix.h    |   5 +
+ arch/powerpc/include/asm/kasan.h              |  20 +++-
+ arch/powerpc/kernel/process.c                 |   8 ++
+ arch/powerpc/kernel/prom.c                    |  59 ++++++++-
+ arch/powerpc/mm/kasan/Makefile                |   3 +-
+ .../mm/kasan/{kasan_init_32.c => init_32.c}   |   0
+ arch/powerpc/mm/kasan/init_book3s_64.c        |  67 +++++++++++
+ arch/s390/include/asm/pgtable.h               |   3 +
+ arch/x86/include/asm/pgtable_types.h          |   5 +
+ arch/xtensa/include/asm/pgtable.h             |   1 +
+ include/asm-generic/pgtable-nop4d-hack.h      |   9 +-
+ include/asm-generic/pgtable-nopmd.h           |   9 +-
+ include/asm-generic/pgtable-nopud.h           |   9 +-
+ include/linux/kasan.h                         |   6 +-
+ mm/kasan/init.c                               |   6 +-
+ 23 files changed, 353 insertions(+), 25 deletions(-)
+ create mode 100644 Documentation/powerpc/kasan.txt
+ rename arch/powerpc/mm/kasan/{kasan_init_32.c => init_32.c} (100%)
+ create mode 100644 arch/powerpc/mm/kasan/init_book3s_64.c
+
+-- 
+2.20.1
 
