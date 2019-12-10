@@ -2,35 +2,37 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15AFF119547
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:20:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7BC8C119485
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 22:16:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfLJVMX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 16:12:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36124 "EHLO mail.kernel.org"
+        id S1729272AbfLJVNT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 16:13:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727727AbfLJVMV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 16:12:21 -0500
+        id S1728733AbfLJVNS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Dec 2019 16:13:18 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 964752077B;
-        Tue, 10 Dec 2019 21:12:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C50B6205C9;
+        Tue, 10 Dec 2019 21:13:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576012341;
-        bh=HXpil44N5GmNjtAl+3KxceguPapHwyWGDSjDexNxcz4=;
+        s=default; t=1576012397;
+        bh=vGhZFSEsZqCy533g7WLZ+OnLZ3qZFRbE9KzvE/bFCEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZ6LBMwcraBffM3qH9NBwwVOIn1l77hZKbeSx0RaqUxOOPO0IioBaDNHEtSfJ8KOL
-         vGvEvOT+5ubZ8/BBrwkjrfbVTwGwRTBE4QJJM6cW0BJicq1MDWuLlEzd3PT6jzHall
-         os5qmCzyasKF0E39WKtBDWdSDqRSgl5wY4pMPocE=
+        b=w+w9wvtpHcl65h2iIDupZ0ngXqmN38V2BgXrrR0B9azZFYDCbLxkla+KDkxIUEZBX
+         PjIKAFMXZQkEdo+zkVOUHM9DkXBa+/q3k29/fVLT1r7MV5a2e1gzF3dKX1MukAkkhu
+         RnXiEHZ9bFxtZhx5sQqnWom8HcMtscz7ZmI7s9LQ=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ilya Leoshkevich <iii@linux.ibm.com>,
+Cc:     YueHaibing <yuehaibing@huawei.com>, Hulk Robot <hulkci@huawei.com>,
+        Joerg Schmidbauer <jschmidb@linux.vnet.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 272/350] s390/disassembler: don't hide instruction addresses
-Date:   Tue, 10 Dec 2019 16:06:17 -0500
-Message-Id: <20191210210735.9077-233-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 317/350] s390/crypto: Fix unsigned variable compared with zero
+Date:   Tue, 10 Dec 2019 16:07:02 -0500
+Message-Id: <20191210210735.9077-278-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191210210735.9077-1-sashal@kernel.org>
 References: <20191210210735.9077-1-sashal@kernel.org>
@@ -43,71 +45,48 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ilya Leoshkevich <iii@linux.ibm.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-[ Upstream commit 544f1d62e3e6c6e6d17a5e56f6139208acb5ff46 ]
+[ Upstream commit 0398d4ab1677f7d8cd43aac2aa29a93dfcf9e2e3 ]
 
-Due to kptr_restrict, JITted BPF code is now displayed like this:
+s390_crypto_shash_parmsize() return type is int, it
+should not be stored in a unsigned variable, which
+compared with zero.
 
-000000000b6ed1b2: ebdff0800024  stmg    %r13,%r15,128(%r15)
-000000004cde2ba0: 41d0f040      la      %r13,64(%r15)
-00000000fbad41b0: a7fbffa0      aghi    %r15,-96
-
-Leaking kernel addresses to dmesg is not a concern in this case, because
-this happens only when JIT debugging is explicitly activated, which only
-root can do.
-
-Use %px in this particular instance, and also to print an instruction
-address in show_code and PCREL (e.g. brasl) arguments in print_insn.
-While at present functionally equivalent to %016lx, %px is recommended
-by Documentation/core-api/printk-formats.rst for such cases.
-
-Signed-off-by: Ilya Leoshkevich <iii@linux.ibm.com>
-Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 3c2eb6b76cab ("s390/crypto: Support for SHA3 via CPACF (MSA6)")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Signed-off-by: Joerg Schmidbauer <jschmidb@linux.vnet.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/dis.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/s390/crypto/sha_common.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/s390/kernel/dis.c b/arch/s390/kernel/dis.c
-index 7abe6ae261b42..f304802ecf7be 100644
---- a/arch/s390/kernel/dis.c
-+++ b/arch/s390/kernel/dis.c
-@@ -461,10 +461,11 @@ static int print_insn(char *buffer, unsigned char *code, unsigned long addr)
- 				ptr += sprintf(ptr, "%%c%i", value);
- 			else if (operand->flags & OPERAND_VR)
- 				ptr += sprintf(ptr, "%%v%i", value);
--			else if (operand->flags & OPERAND_PCREL)
--				ptr += sprintf(ptr, "%lx", (signed int) value
--								      + addr);
--			else if (operand->flags & OPERAND_SIGNED)
-+			else if (operand->flags & OPERAND_PCREL) {
-+				void *pcrel = (void *)((int)value + addr);
+diff --git a/arch/s390/crypto/sha_common.c b/arch/s390/crypto/sha_common.c
+index d39e0f0792170..686fe7aa192f4 100644
+--- a/arch/s390/crypto/sha_common.c
++++ b/arch/s390/crypto/sha_common.c
+@@ -74,14 +74,17 @@ int s390_sha_final(struct shash_desc *desc, u8 *out)
+ 	struct s390_sha_ctx *ctx = shash_desc_ctx(desc);
+ 	unsigned int bsize = crypto_shash_blocksize(desc->tfm);
+ 	u64 bits;
+-	unsigned int n, mbl_offset;
++	unsigned int n;
++	int mbl_offset;
+ 
+ 	n = ctx->count % bsize;
+ 	bits = ctx->count * 8;
+-	mbl_offset = s390_crypto_shash_parmsize(ctx->func) / sizeof(u32);
++	mbl_offset = s390_crypto_shash_parmsize(ctx->func);
+ 	if (mbl_offset < 0)
+ 		return -EINVAL;
+ 
++	mbl_offset = mbl_offset / sizeof(u32);
 +
-+				ptr += sprintf(ptr, "%px", pcrel);
-+			} else if (operand->flags & OPERAND_SIGNED)
- 				ptr += sprintf(ptr, "%i", value);
- 			else
- 				ptr += sprintf(ptr, "%u", value);
-@@ -536,7 +537,7 @@ void show_code(struct pt_regs *regs)
- 		else
- 			*ptr++ = ' ';
- 		addr = regs->psw.addr + start - 32;
--		ptr += sprintf(ptr, "%016lx: ", addr);
-+		ptr += sprintf(ptr, "%px: ", (void *)addr);
- 		if (start + opsize >= end)
- 			break;
- 		for (i = 0; i < opsize; i++)
-@@ -564,7 +565,7 @@ void print_fn_code(unsigned char *code, unsigned long len)
- 		opsize = insn_length(*code);
- 		if (opsize > len)
- 			break;
--		ptr += sprintf(ptr, "%p: ", code);
-+		ptr += sprintf(ptr, "%px: ", code);
- 		for (i = 0; i < opsize; i++)
- 			ptr += sprintf(ptr, "%02x", code[i]);
- 		*ptr++ = '\t';
+ 	/* set total msg bit length (mbl) in CPACF parmblock */
+ 	switch (ctx->func) {
+ 	case CPACF_KLMD_SHA_1:
 -- 
 2.20.1
 
