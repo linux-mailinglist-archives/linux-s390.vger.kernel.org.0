@@ -2,71 +2,65 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0FACC11867E
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 12:38:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D207118B39
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Dec 2019 15:39:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727550AbfLJLiL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 06:38:11 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:25092 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727553AbfLJLiJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 06:38:09 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBABc7gq070295
-        for <linux-s390@vger.kernel.org>; Tue, 10 Dec 2019 06:38:08 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wsqc11adp-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 10 Dec 2019 06:38:07 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 10 Dec 2019 11:37:33 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 10 Dec 2019 11:37:31 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBABbUat47448094
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 10 Dec 2019 11:37:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5DFE2A4053;
-        Tue, 10 Dec 2019 11:37:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27AADA404D;
-        Tue, 10 Dec 2019 11:37:30 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.152.222.89])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 10 Dec 2019 11:37:30 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v3 6/9] s390x: css: stsch, enumeration test
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
-        david@redhat.com, thuth@redhat.com, cohuck@redhat.com
-References: <1575649588-6127-1-git-send-email-pmorel@linux.ibm.com>
- <1575649588-6127-7-git-send-email-pmorel@linux.ibm.com>
-Date:   Tue, 10 Dec 2019 12:37:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1727451AbfLJOji (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 09:39:38 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:48137 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727272AbfLJOji (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Dec 2019 09:39:38 -0500
+Received: from localhost (mailhub1-ext [192.168.12.233])
+        by localhost (Postfix) with ESMTP id 47XN4R2jvMz9txPV;
+        Tue, 10 Dec 2019 15:39:35 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=S5kJVxPB; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id h_8fAE0U-HoN; Tue, 10 Dec 2019 15:39:35 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 47XN4R1Whkz9txPQ;
+        Tue, 10 Dec 2019 15:39:35 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1575988775; bh=gC07UrkwsOByoVoBIV4uyW1SIFHfck0w0oYmnN2eVmc=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=S5kJVxPBDtEJof7P7KiznADxbNG3gE1jXaxpcR3MKMReOTnvMUIuCOPU2EwO2JYvz
+         bQF+6k36pGkxUSHvMr2woVfbXc1TrlcRFqStmczYl+Zel3SHLk7Imx+672RESlTwWE
+         TGGY3rLrhsFplKCs29s3aOxdlXrG4Jy0gYxaqwLk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id A165C8B815;
+        Tue, 10 Dec 2019 15:39:36 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id Hn7oLwJSlDri; Tue, 10 Dec 2019 15:39:36 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 96E4F8B754;
+        Tue, 10 Dec 2019 15:39:35 +0100 (CET)
+Subject: Re: [PATCH v2 2/4] kasan: use MAX_PTRS_PER_* for early shadow
+To:     Balbir Singh <bsingharora@gmail.com>,
+        Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kasan-dev@googlegroups.com, aneesh.kumar@linux.ibm.com
+References: <20191210044714.27265-1-dja@axtens.net>
+ <20191210044714.27265-3-dja@axtens.net>
+ <a31459ee-2019-2f7b-0dc1-235374579508@gmail.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <5d1ec6e3-777e-9f23-ea8f-50361a29302f@c-s.fr>
+Date:   Tue, 10 Dec 2019 15:39:34 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <1575649588-6127-7-git-send-email-pmorel@linux.ibm.com>
+In-Reply-To: <a31459ee-2019-2f7b-0dc1-235374579508@gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121011-0012-0000-0000-000003737625
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121011-0013-0000-0000-000021AF4839
-Message-Id: <0b275849-b0d7-8f84-f99c-5488ae7cebc1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-10_02:2019-12-10,2019-12-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- malwarescore=0 suspectscore=1 clxscore=1015 mlxscore=0 phishscore=0
- priorityscore=1501 mlxlogscore=999 spamscore=0 lowpriorityscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912100103
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -74,161 +68,23 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 2019-12-06 17:26, Pierre Morel wrote:
-> First step for testing the channel subsystem is to enumerate the css and
-> retrieve the css devices.
+Le 10/12/2019 à 10:36, Balbir Singh a écrit :
 > 
-> This tests the success of STSCH I/O instruction.
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->   lib/s390x/css.h     |  1 +
->   s390x/Makefile      |  2 ++
->   s390x/css.c         | 82 +++++++++++++++++++++++++++++++++++++++++++++
->   s390x/unittests.cfg |  4 +++
->   4 files changed, 89 insertions(+)
->   create mode 100644 s390x/css.c
+> On 10/12/19 3:47 pm, Daniel Axtens wrote:
+>> This helps with powerpc support, and should have no effect on
+>> anything else.
+>>
+>> Suggested-by: Christophe Leroy <christophe.leroy@c-s.fr>
+>> Signed-off-by: Daniel Axtens <dja@axtens.net>
 > 
-> diff --git a/lib/s390x/css.h b/lib/s390x/css.h
-> index 6f19bb5..d37227b 100644
-> --- a/lib/s390x/css.h
-> +++ b/lib/s390x/css.h
-> @@ -82,6 +82,7 @@ struct pmcw {
->   	uint8_t  chpid[8];
->   	uint16_t flags2;
->   };
-> +#define PMCW_CHANNEL_TYPE(pmcw) (pmcw->flags >> 21)
+> If you follow the recommendations by Christophe and I, you don't need this patch
 
-This is wrong.
-In between I redefined flag2 as 32bits and type as (flags2>>21)
+I guess you mean Patch 1 (the one adding the const to all arches) is not 
+needed. Of course this one (Patch 2) is needed as it is the one that 
+changes kasan.h to use const table size instead of impossible variable 
+table size.
 
+And that would also fix the problem reported by the kbuild test robot.
 
->   
->   struct schib {
->   	struct pmcw pmcw;
-> diff --git a/s390x/Makefile b/s390x/Makefile
-> index 3744372..9ebbb84 100644
-> --- a/s390x/Makefile
-> +++ b/s390x/Makefile
-> @@ -16,6 +16,7 @@ tests += $(TEST_DIR)/diag288.elf
->   tests += $(TEST_DIR)/stsi.elf
->   tests += $(TEST_DIR)/skrf.elf
->   tests += $(TEST_DIR)/smp.elf
-> +tests += $(TEST_DIR)/css.elf
->   tests_binary = $(patsubst %.elf,%.bin,$(tests))
->   
->   all: directories test_cases test_cases_binary
-> @@ -50,6 +51,7 @@ cflatobjs += lib/s390x/sclp-console.o
->   cflatobjs += lib/s390x/interrupt.o
->   cflatobjs += lib/s390x/mmu.o
->   cflatobjs += lib/s390x/smp.o
-> +cflatobjs += lib/s390x/css_dump.o
->   
->   OBJDIRS += lib/s390x
->   
-> diff --git a/s390x/css.c b/s390x/css.c
-> new file mode 100644
-> index 0000000..3d4a986
-> --- /dev/null
-> +++ b/s390x/css.c
-> @@ -0,0 +1,82 @@
-> +/*
-> + * Channel Subsystem tests
-> + *
-> + * Copyright (c) 2019 IBM Corp
-> + *
-> + * Authors:
-> + *  Pierre Morel <pmorel@linux.ibm.com>
-> + *
-> + * This code is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2.
-> + */
-> +
-> +#include <libcflat.h>
-> +
-> +#include <css.h>
-> +
-> +#define SID_ONE		0x00010000
-> +
-> +static struct schib schib;
-> +
-> +static const char *Channel_type[4] = {
-> +	"I/O", "CHSC", "MSG", "EADM"
-> +};
-> +
-> +static int test_device_sid;
-> +
-> +static void test_enumerate(void)
-> +{
-> +	struct pmcw *pmcw = &schib.pmcw;
-> +	int scn;
-> +	int cc, i;
-> +	int found = 0;
-> +
-> +	for (scn = 0; scn < 0xffff; scn++) {
-> +		cc = stsch(scn|SID_ONE, &schib);
-> +		if (!cc && (pmcw->flags & PMCW_DNV)) {
-> +			report_info("SID %04x Type %s PIM %x", scn,
-> +				     Channel_type[PMCW_CHANNEL_TYPE(pmcw)],
-> +				     pmcw->pim);
-> +			for (i = 0; i < 8; i++)  {
-> +				if ((pmcw->pim << i) & 0x80) {
-> +					report_info("CHPID[%d]: %02x", i,
-> +						    pmcw->chpid[i]);
-> +					break;
-> +				}
-> +			}
-> +			found++;
-> +		}
-> +		if (cc == 3) /* cc = 3 means no more channel in CSS */
-> +			break;
-> +		if (found && !test_device_sid)
-> +			test_device_sid = scn|SID_ONE;
-> +	}
-> +	if (!found) {
-> +		report("Tested %d devices, none found", 0, scn);
-> +		return;
-> +	}
-> +	report("Tested %d devices, %d found", 1, scn, found);
-> +}
-> +
-> +static struct {
-> +	const char *name;
-> +	void (*func)(void);
-> +} tests[] = {
-> +	{ "enumerate (stsch)", test_enumerate },
-> +	{ NULL, NULL }
-> +};
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	int i;
-> +
-> +	report_prefix_push("Channel Sub-System");
-> +	for (i = 0; tests[i].name; i++) {
-> +		report_prefix_push(tests[i].name);
-> +		tests[i].func();
-> +		report_prefix_pop();
-> +	}
-> +	report_prefix_pop();
-> +
-> +	return report_summary();
-> +}
-> diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
-> index f1b07cd..1755d9e 100644
-> --- a/s390x/unittests.cfg
-> +++ b/s390x/unittests.cfg
-> @@ -75,3 +75,7 @@ file = stsi.elf
->   [smp]
->   file = smp.elf
->   extra_params =-smp 2
-> +
-> +[css]
-> +file = css.elf
-> +extra_params =-device ccw-pong
-> 
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
-
+Christophe
