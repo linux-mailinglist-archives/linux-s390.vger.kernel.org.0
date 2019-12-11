@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C778411B26C
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 16:36:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3C9711B2D4
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 16:40:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387635AbfLKPfy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Dec 2019 10:35:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45216 "EHLO mail.kernel.org"
+        id S2388508AbfLKPix (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Dec 2019 10:38:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49616 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388248AbfLKPfy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:35:54 -0500
+        id S2388501AbfLKPiw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:38:52 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 897C12467A;
-        Wed, 11 Dec 2019 15:35:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85C352464B;
+        Wed, 11 Dec 2019 15:38:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078553;
-        bh=YVUZ/vc6IgD6/Q26ftSCQsbJ+vLqmFJ2jTNAXrSTNDU=;
+        s=default; t=1576078731;
+        bh=F6/qD3qQ3TPzFSsBZxOB423TixJO/UBcfKX5aUM8GYU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SBwJHwSRgLJy69gVIVwZ4kbL4nYD5NZiRVa2hRm79107sA1YrrF9ZWFkFhkjCjtmZ
-         E+CeShI53VgNln7NizWztinctv+FA2J+D1wEn9vnOB7pWChm2Icswh8xdZp4ezsAyR
-         GwCqER1Iw+UkkyiNlP0SRKGyz6PIeQ1Qceq9clG4=
+        b=dGQxOpesVFwF2pGeq0YnRkx6C/avBjHzaxCMTV2jbBU3LIz5GmcUUzBjLSYn5Qikk
+         KyrjPr0JuSBtJvYSSRJd62gX4Vc1SEeRajP8WkjmIZFQHeIoSy74VrQODvXHfi6g8d
+         2HE7xIiOWfJtfP71kY/1ytZjr8xZZ1F63+13oqQg=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Thomas Richter <tmricht@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 40/42] s390/cpum_sf: Check for SDBT and SDB consistency
-Date:   Wed, 11 Dec 2019 10:35:08 -0500
-Message-Id: <20191211153510.23861-40-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 35/37] s390/cpum_sf: Check for SDBT and SDB consistency
+Date:   Wed, 11 Dec 2019 10:38:11 -0500
+Message-Id: <20191211153813.24126-35-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211153510.23861-1-sashal@kernel.org>
-References: <20191211153510.23861-1-sashal@kernel.org>
+In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
+References: <20191211153813.24126-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -98,7 +98,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index f46e5c0cb6d95..02476d2333df3 100644
+index 874762a51c546..7490c52b27153 100644
 --- a/arch/s390/kernel/perf_cpum_sf.c
 +++ b/arch/s390/kernel/perf_cpum_sf.c
 @@ -185,7 +185,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
