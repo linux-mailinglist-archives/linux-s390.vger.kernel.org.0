@@ -2,155 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 661EF119FAD
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 00:53:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B36BB119FFE
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 01:29:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726771AbfLJXx1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 18:53:27 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:45848 "EHLO ale.deltatee.com"
+        id S1726691AbfLKA3X (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Dec 2019 19:29:23 -0500
+Received: from ozlabs.org ([203.11.71.1]:40799 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726631AbfLJXx1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 18:53:27 -0500
-Received: from guinness.priv.deltatee.com ([172.16.1.162])
-        by ale.deltatee.com with esmtp (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1iepJ1-0006ir-2c; Tue, 10 Dec 2019 16:52:40 -0700
-To:     David Hildenbrand <david@redhat.com>,
-        Michal Hocko <mhocko@kernel.org>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
+        id S1725999AbfLKA3X (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Dec 2019 19:29:23 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Xd8v5C5Hz9sP3;
+        Wed, 11 Dec 2019 11:29:19 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1576024160;
+        bh=kmbp6MpyHsnC/owM/o4yDj8cWLNwjC0odjA8A0F3r2Y=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=Jn2SQvPiqev5TL35DBK5lCO8mnXg+BTtXzArbhl7WqrvTJu5M+ZoiCVATKvHzLOLD
+         /490q3sNuoaS8RrCEOiJfUlfiOE7FyR1xupxy+LuXjQrlnNee0sKWSvxRdwvkmFzJL
+         8cX9BG/37iHETX+SK6OEUNldhJo0kpLbionDwCbFGHrNEr/2bHr8GHHP8EvBJp2w5d
+         Oq7Yqge4fyyFATWKyy/JiMHOdF3ZSJiokdKFsNzkoblZu7BIUOmrVNWAjFd0ArDVZD
+         MSOu1H54hdcXdP2PAhbK8MNYDb646YZe392xvS8NArPz8yhZ0UaP34j/Lsl3ab+Us5
+         zD/LY1lWBWRBw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
+        elver@google.com, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
+        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
+        x86@kernel.org, kasan-dev@googlegroups.com,
         Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-References: <20191209191346.5197-1-logang@deltatee.com>
- <20191209191346.5197-6-logang@deltatee.com>
- <ce50d9da-c60e-05a1-a86b-3bb3629de502@redhat.com>
- <f34a4c52-cc95-15ed-8a72-c05ab4fd6d33@deltatee.com>
- <CAPcyv4hpXCZxV5p7WaeGgE7ceujBBa5NOz9Z8fepDHOt6zHO2A@mail.gmail.com>
- <20191210100432.GC10404@dhcp22.suse.cz>
- <6da2b279-6a6d-d89c-a34c-962ed021d91d@redhat.com>
- <20191210103452.GF10404@dhcp22.suse.cz>
- <a9d6cfe8-39fb-accf-acdc-7cce5578bf2f@redhat.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <297b7cc0-c5bc-a4c6-83eb-afc008395234@deltatee.com>
-Date:   Tue, 10 Dec 2019 16:52:31 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops)
+In-Reply-To: <20191210101545.GL2844@hirez.programming.kicks-ass.net>
+References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net> <87wob4pwnl.fsf@mpe.ellerman.id.au> <20191210101545.GL2844@hirez.programming.kicks-ass.net>
+Date:   Wed, 11 Dec 2019 11:29:16 +1100
+Message-ID: <87lfrjpuw3.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <a9d6cfe8-39fb-accf-acdc-7cce5578bf2f@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-CA
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 172.16.1.162
-X-SA-Exim-Rcpt-To: peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, akpm@linux-foundation.org, hch@lst.de, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com, mhocko@kernel.org, david@redhat.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH 5/6] mm, memory_hotplug: Provide argument for the pgprot_t
- in arch_add_memory()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Peter Zijlstra <peterz@infradead.org> writes:
+> On Tue, Dec 10, 2019 at 04:38:54PM +1100, Michael Ellerman wrote:
+>
+>> Good question, I'll have a look.
+>> 
+>> There seems to be confusion about what the type of the bit number is,
+>> which is leading to sign extension in some cases and not others.
+>
+> Shiny.
+>
+>> It looks like the type should be unsigned long?
+>
+> I'm thinking unsigned makes most sense, I mean, negative bit offsets
+> should 'work' but that's almost always guaranteed to be an out-of-bound
+> operation.
 
+Yeah I agree.
 
-On 2019-12-10 4:25 a.m., David Hildenbrand wrote:
-> On 10.12.19 11:34, Michal Hocko wrote:
->> On Tue 10-12-19 11:09:46, David Hildenbrand wrote:
->>> On 10.12.19 11:04, Michal Hocko wrote:
->>>> On Mon 09-12-19 12:43:40, Dan Williams wrote:
->>>>> On Mon, Dec 9, 2019 at 12:24 PM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>>>>
->>>>>>
->>>>>>
->>>>>> On 2019-12-09 12:23 p.m., David Hildenbrand wrote:
->>>>>>> On 09.12.19 20:13, Logan Gunthorpe wrote:
->>>> [...]
->>>>>>>>  #ifdef CONFIG_MEMORY_HOTPLUG
->>>>>>>> -int arch_add_memory(int nid, u64 start, u64 size,
->>>>>>>> +int arch_add_memory(int nid, u64 start, u64 size, pgprot_t prot,
->>>>>>>>                      struct mhp_restrictions *restrictions)
->>>>>>>
->>>>>>> Can we fiddle that into "struct mhp_restrictions" instead?
->>>>>>
->>>>>> Yes, if that's what people want, it's pretty trivial to do. I chose not
->>>>>> to do it that way because it doesn't get passed down to add_pages() and
->>>>>> it's not really a "restriction". If I don't hear any objections, I will
->>>>>> do that for v2.
->>>>>
->>>>> +1 to storing this information alongside the altmap in that structure.
->>>>> However, I agree struct mhp_restrictions, with the MHP_MEMBLOCK_API
->>>>> flag now gone, has lost all of its "restrictions". How about dropping
->>>>> the 'flags' property and renaming the struct to 'struct
->>>>> mhp_modifiers'?
->>>>
->>>> Hmm, this email somehow didn't end up in my inbox so I have missed it
->>>> before replying.
->>>>
->>>> Well, mhp_modifiers makes some sense and it would reduce the API
->>>> proliferation but how do you expect the prot part to be handled?
->>>> I really do not want people to think about PAGE_KERNEL or which
->>>> protection to use because my experience tells that this will get copied
->>>> without much thinking or simply will break with some odd usecases.
->>>> So how exactly this would be used?
->>>
->>> I was thinking about exactly the same "issue".
->>>
->>> 1. default initialization via a function
->>>
->>> memhp_modifier_default_init(&modified);
->>>
->>> 2. a flag that unlocks the prot field (default:0). Without the flag, it
->>> is ignored. We can keep the current initialization then.
->>>
->>> Other ideas?
->>
->> 3. a prot mask to apply on top of PAGE_KERNEL? Or would that be
->> insufficient/clumsy?
->>
-> 
-> If it works for the given use case, I guess this would be simple and ok.
+> As to 'long' vs 'int', I'm not sure, 4G bits is a long bitmap. But I
+> suppose since the bitmap itself is 'unsigned long', we might as well use
+> 'unsigned long' for the bitnr too.
 
-I don't see how we can do that without a ton of work. The pgport_t is
-architecture specific so we'd need to add mask functions to every
-architecture for every page cache type we need to use. I don't think
-that's a good idea.
+4G is a lot of bits, but it's not *that* many.
 
-I think I slightly prefer option 2 over the above.  But I'd actually
-prefer callers have to think about the caching type seeing when we grew
-the second user (memremap_pages()) and it was paired with
-track_pfn_remap(), it was actually subtly wrong because it could create
-a mapping that track_pfn_remap() disagreed with. In fact, PAGE_KERNEL
-has already been specified in memremap_pages() for ages, it was just
-ignored when it got to the arch_add_memory() step which is were this
-issue comes from.
+eg. If we had a bit per 4K page on a 32T machine that would be 8G bits.
 
-In my opinion, having a coder and reviewer see PAGE_KERNEL and ask if
-that makes sense is a benefit. Having it hidden because we don't want
-people to think about it is worse, harder to understand and results in
-bugs that are more difficult to spot.
+So unsigned long seems best.
 
-Though, we may be overthinking this: arch_add_memory() is a low level
-non-exported API that's currently used in exactly two places. I don't
-think there's going to be many, if any, valid new use cases coming up
-for it in the future. That's more what memremap_pages() is for.
+>>   Documentation/core-api/atomic_ops.rst:  void __clear_bit_unlock(unsigned long nr, unsigned long *addr);
+>>   arch/mips/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
+>>   arch/powerpc/include/asm/bitops.h:static inline void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
+>>   arch/riscv/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
+>>   arch/s390/include/asm/bitops.h:static inline void arch___clear_bit_unlock(unsigned long nr,
+>>   include/asm-generic/bitops/instrumented-lock.h:static inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
+>>   include/asm-generic/bitops/lock.h:static inline void __clear_bit_unlock(unsigned int nr,
+>> 
+>> So I guess step one is to convert our versions to use unsigned long, so
+>> we're at least not tripping over that difference when comparing the
+>> assembly.
+>
+> Yeah, I'll look at fixing the generic code, bitops/atomic.h and
+> bitops/non-atomic.h don't even agree on the type of bitnr.
 
-Logan
+Thanks.
+
+cheers
