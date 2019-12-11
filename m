@@ -2,196 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 15DE311AD60
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 15:25:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 307CB11B626
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 16:59:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfLKOZG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Dec 2019 09:25:06 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43266 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726242AbfLKOZF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 11 Dec 2019 09:25:05 -0500
-Received: by mail-pg1-f196.google.com with SMTP id k197so375897pga.10
-        for <linux-s390@vger.kernel.org>; Wed, 11 Dec 2019 06:25:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=axtens.net; s=google;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=098L4qWOo/dhHj7up13Q/6AGsTiEtq7zvqd33y20xho=;
-        b=bFMQWnI1gXtKeiW21Ws8EHVoOcE5cqQ2w2Df6osYM/2xsfsIpAWPWYxCufyaZoj4DI
-         DbCCvWw90Y+crXFC3bZL94l5YRUG0RBgiyIIz5kKgQW7pxE7sq8fpJ+ADLtnfSGsn3IH
-         hE2VnMFgCaV4BtHbpbf2+z09SPak4lBeQ7Txw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=098L4qWOo/dhHj7up13Q/6AGsTiEtq7zvqd33y20xho=;
-        b=soBpKtq1cKbzjcezYp0In9Ka76WWE2Z//MC3Iul5z+4PHBo+JTRchJ3pyWoecGh0UJ
-         oVw6SV53djfd0IJSaeJ10sDppQDwgDt6PxAuKcEMY26ORvOJrFLzv9FX54U9MCffw/RS
-         yPw906LpB4mPDRkdY5gV5nTaOHSUiQB0fCGDiAPdidQ6AdBnUCzE5dwudYYWZBdeLhfZ
-         Nxw4wf8ivp8MpYsDavsYuvS37RjjihmvpXE70oBY9WooBgbuFV1xN8L1gR2AA9ecZ27I
-         UQPeUTmfVEQOZwAOM6EREGZ6g6FqmnA4nQ0LFPlMjTXXewYzFmQycJev1/IIbHNz7gYP
-         cQiA==
-X-Gm-Message-State: APjAAAUiQVSnk3m/9mAlW8CAPs5bnwhKbp5jr4/sXtwCZ2XNbxxH2RsO
-        VmPOPrhsbLgNBwaNLc7T6gEzGQ==
-X-Google-Smtp-Source: APXvYqxPxi+KaqBazUZaoJTrv1EEot9gnqUhrYprkTIb3+HbLUJJUrb1vIdkZL8Y+vj7jHi2BsmD6w==
-X-Received: by 2002:a65:6916:: with SMTP id s22mr4325069pgq.244.1576074303700;
-        Wed, 11 Dec 2019 06:25:03 -0800 (PST)
-Received: from localhost (2001-44b8-111e-5c00-b116-2689-a4a9-76f8.static.ipv6.internode.on.net. [2001:44b8:111e:5c00:b116:2689:a4a9:76f8])
-        by smtp.gmail.com with ESMTPSA id j16sm3395784pfi.165.2019.12.11.06.25.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 06:25:02 -0800 (PST)
-From:   Daniel Axtens <dja@axtens.net>
-To:     Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
-        aneesh.kumar@linux.ibm.com, Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-In-Reply-To: <2e0f21e6-7552-815b-1bf3-b54b0fc5caa9@gmail.com>
-References: <20191210044714.27265-1-dja@axtens.net> <20191210044714.27265-5-dja@axtens.net> <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com> <875zincu8a.fsf@dja-thinkpad.axtens.net> <2e0f21e6-7552-815b-1bf3-b54b0fc5caa9@gmail.com>
-Date:   Thu, 12 Dec 2019 01:24:59 +1100
-Message-ID: <87wob3aqis.fsf@dja-thinkpad.axtens.net>
+        id S1731789AbfLKP7I (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Dec 2019 10:59:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38798 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730879AbfLKPOG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:06 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A88C24689;
+        Wed, 11 Dec 2019 15:14:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576077245;
+        bh=vLqYYTM82HamJTGPmHpMKZKqv/I8O2HIM359ltwtoC0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aFIes3V1m0hsc6rxzr5F0cxLJfqenTegtc/vPbzJQGxOGjFhZnnx9vMGRMvOlbD61
+         fq3F+o2RotE/mbt7zvktwDz9S4WZUgsZm8yIkZwQNq824d+W0wAoUI6R2DH8IlMZ4t
+         dCJnyUWEbm9NkokXgUtfIcP0AIMCckwC91unNq8M=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 123/134] s390/zcrypt: handle new reply code FILTERED_BY_HYPERVISOR
+Date:   Wed, 11 Dec 2019 10:11:39 -0500
+Message-Id: <20191211151150.19073-123-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
+References: <20191211151150.19073-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Balbir,
+From: Harald Freudenberger <freude@linux.ibm.com>
 
->>>> +Discontiguous memory can occur when you have a machine with memory spread
->>>> +across multiple nodes. For example, on a Talos II with 64GB of RAM:
->>>> +
->>>> + - 32GB runs from 0x0 to 0x0000_0008_0000_0000,
->>>> + - then there's a gap,
->>>> + - then the final 32GB runs from 0x0000_2000_0000_0000 to 0x0000_2008_0000_0000
->>>> +
->>>> +This can create _significant_ issues:
->>>> +
->>>> + - If we try to treat the machine as having 64GB of _contiguous_ RAM, we would
->>>> +   assume that ran from 0x0 to 0x0000_0010_0000_0000. We'd then reserve the
->>>> +   last 1/8th - 0x0000_000e_0000_0000 to 0x0000_0010_0000_0000 as the shadow
->>>> +   region. But when we try to access any of that, we'll try to access pages
->>>> +   that are not physically present.
->>>> +
->>>
->>> If we reserved memory for KASAN from each node (discontig region), we might survive
->>> this no? May be we need NUMA aware KASAN? That might be a generic change, just thinking
->>> out loud.
->> 
->> The challenge is that - AIUI - in inline instrumentation, the compiler
->> doesn't generate calls to things like __asan_loadN and
->> __asan_storeN. Instead it uses -fasan-shadow-offset to compute the
->> checks, and only calls the __asan_report* family of functions if it
->> detects an issue. This also matches what I can observe with objdump
->> across outline and inline instrumentation settings.
->> 
->> This means that for this sort of thing to work we would need to either
->> drop back to out-of-line calls, or teach the compiler how to use a
->> nonlinear, NUMA aware mem-to-shadow mapping.
->
-> Yes, out of line is expensive, but seems to work well for all use cases.
+[ Upstream commit 6733775a92eacd612ac88afa0fd922e4ffeb2bc7 ]
 
-I'm not sure this is true. Looking at scripts/Makefile.kasan, allocas,
-stacks and globals will only be instrumented if you can provide
-KASAN_SHADOW_OFFSET. In the case you're proposing, we can't provide a
-static offset. I _think_ this is a compiler limitation, where some of
-those instrumentations only work/make sense with a static offset, but
-perhaps that's not right? Dmitry and Andrey, can you shed some light on
-this?
+This patch introduces support for a new architectured reply
+code 0x8B indicating that a hypervisor layer (if any) has
+rejected an ap message.
 
-Also, as it currently stands, the speed difference between inline and
-outline is approximately 2x, and given that we'd like to run this
-full-time in syzkaller I think there is value in trading off speed for
-some limitations.
+Linux may run as a guest on top of a hypervisor like zVM
+or KVM. So the crypto hardware seen by the ap bus may be
+restricted by the hypervisor for example only a subset like
+only clear key crypto requests may be supported. Other
+requests will be filtered out - rejected by the hypervisor.
+The new reply code 0x8B will appear in such cases and needs
+to get recognized by the ap bus and zcrypt device driver zoo.
 
-> BTW, the current set of patches just hang if I try to make the default
-> mode as out of line
+Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/s390/crypto/zcrypt_error.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Do you have CONFIG_RELOCATABLE?
+diff --git a/drivers/s390/crypto/zcrypt_error.h b/drivers/s390/crypto/zcrypt_error.h
+index f34ee41cbed88..4f4dd9d727c9e 100644
+--- a/drivers/s390/crypto/zcrypt_error.h
++++ b/drivers/s390/crypto/zcrypt_error.h
+@@ -61,6 +61,7 @@ struct error_hdr {
+ #define REP82_ERROR_EVEN_MOD_IN_OPND	    0x85
+ #define REP82_ERROR_RESERVED_FIELD	    0x88
+ #define REP82_ERROR_INVALID_DOMAIN_PENDING  0x8A
++#define REP82_ERROR_FILTERED_BY_HYPERVISOR  0x8B
+ #define REP82_ERROR_TRANSPORT_FAIL	    0x90
+ #define REP82_ERROR_PACKET_TRUNCATED	    0xA0
+ #define REP82_ERROR_ZERO_BUFFER_LEN	    0xB0
+@@ -91,6 +92,7 @@ static inline int convert_error(struct zcrypt_queue *zq,
+ 	case REP82_ERROR_INVALID_DOMAIN_PRECHECK:
+ 	case REP82_ERROR_INVALID_DOMAIN_PENDING:
+ 	case REP82_ERROR_INVALID_SPECIAL_CMD:
++	case REP82_ERROR_FILTERED_BY_HYPERVISOR:
+ 	//   REP88_ERROR_INVALID_KEY		// '82' CEX2A
+ 	//   REP88_ERROR_OPERAND		// '84' CEX2A
+ 	//   REP88_ERROR_OPERAND_EVEN_MOD	// '85' CEX2A
+-- 
+2.20.1
 
-I've tested the following process:
-
-# 1) apply patches on a fresh linux-next
-# 2) output dir
-mkdir ../out-3s-kasan
-
-# 3) merge in the relevant config snippets
-cat > kasan.config << EOF
-CONFIG_EXPERT=y
-CONFIG_LD_HEAD_STUB_CATCH=y
-
-CONFIG_RELOCATABLE=y
-
-CONFIG_KASAN=y
-CONFIG_KASAN_GENERIC=y
-CONFIG_KASAN_OUTLINE=y
-
-CONFIG_PHYS_MEM_SIZE_FOR_KASAN=2048
-EOF
-
-ARCH=powerpc CROSS_COMPILE=powerpc64-linux-gnu- ./scripts/kconfig/merge_config.sh -O ../out-3s-kasan/ arch/powerpc/configs/pseries_defconfig arch/powerpc/configs/le.config kasan.config
-
-# 4) make
-make O=../out-3s-kasan/ ARCH=powerpc CROSS_COMPILE=powerpc64-linux-gnu- -j8 vmlinux
-
-# 5) test
-qemu-system-ppc64  -m 2G -M pseries -cpu power9  -kernel ../out-3s-kasan/vmlinux  -nographic -chardev stdio,id=charserial0,mux=on -device spapr-vty,chardev=charserial0,reg=0x30000000 -initrd ./rootfs-le.cpio.xz -mon chardev=charserial0,mode=readline -nodefaults -smp 4 
-
-This boots fine for me under TCG and KVM, with both CONFIG_KASAN_OUTLINE
-and CONFIG_KASAN_INLINE. You do still need to supply the size even in
-outline mode - I don't have code that switches over to vmalloced space
-when in outline mode. I will clarify the docs on that.
-
-
->>>> +	if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_PPC_BOOK3S_64)) {
->>>> +		kasan_memory_size =
->>>> +			((phys_addr_t)CONFIG_PHYS_MEM_SIZE_FOR_KASAN << 20);
->>>> +
->>>> +		if (top_phys_addr < kasan_memory_size) {
->>>> +			/*
->>>> +			 * We are doomed. Attempts to call e.g. panic() are
->>>> +			 * likely to fail because they call out into
->>>> +			 * instrumented code, which will almost certainly
->>>> +			 * access memory beyond the end of physical
->>>> +			 * memory. Hang here so that at least the NIP points
->>>> +			 * somewhere that will help you debug it if you look at
->>>> +			 * it in qemu.
->>>> +			 */
->>>> +			while (true)
->>>> +				;
->>>
->>> Again with the right hooks in check_memory_region_inline() these are recoverable,
->>> or so I think
->> 
->> So unless I misunderstand the circumstances in which
->> check_memory_region_inline is used, this isn't going to help with inline
->> instrumentation.
->> 
->
-> Yes, I understand. Same as above?
-
-Yes.
-
->>> NOTE: I can't test any of these, well may be with qemu, let me see if I can spin
->>> the series and provide more feedback
->> 
->> It's actually super easy to do simple boot tests with qemu, it works fine in TCG,
->> Michael's wiki page at
->> https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu is very helpful.
->> 
->> I did this a lot in development.
->> 
->> My full commandline, fwiw, is:
->> 
->> qemu-system-ppc64  -m 8G -M pseries -cpu power9  -kernel ../out-3s-radix/vmlinux  -nographic -chardev stdio,id=charserial0,mux=on -device spapr-vty,chardev=charserial0,reg=0x30000000 -initrd ./rootfs-le.cpio.xz -mon chardev=charserial0,mode=readline -nodefaults -smp 4
->
-> qemu has been crashing with KASAN enabled/ both inline/out-of-line options. I am running linux-next + the 4 patches you've posted. In one case I get a panic and a hang in the other. I can confirm that when I disable KASAN, the issue disappears
-
-Hopefully my script above can help narrow that down.
-
-Regards,
-Daniel
