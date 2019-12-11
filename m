@@ -2,35 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C963E11B623
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 16:59:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D186911B61D
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 16:59:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731595AbfLKP7C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Dec 2019 10:59:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39026 "EHLO mail.kernel.org"
+        id S1731494AbfLKP6x (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Dec 2019 10:58:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39130 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731590AbfLKPOK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:14:10 -0500
+        id S1731602AbfLKPOO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:14:14 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 576E524658;
-        Wed, 11 Dec 2019 15:14:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 288032467A;
+        Wed, 11 Dec 2019 15:14:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576077250;
-        bh=Bz+8WnJtqczywJSe0UW6YQd82hoa3y0kDAL/ZZjTorE=;
+        s=default; t=1576077253;
+        bh=U2C69MNLaSO6Y0NTKcM6QCvHTZjD6tMLoLQs47BJnaU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=12NkmH7GcBDH8yyWoAdlMWmBYqxpc8PiIG/xGCBqnd79K8PCLS/TbCjgjfzpzgSyV
-         uvMcFtne7+kDotJpGQQ6pxdip+zu99UI8Wvdo70aBnOjV1uKUzU+QfDo2tvBRctcdc
-         VDImB/BbozoZ8IcKSSNPI5rMVWFkjXLnIctKhlF8=
+        b=eZ5bRElAQ6JsBbMvVmYfpWBL0DG67DE9/xkVo9ZiMfbskIpX37iyfEYe/fbtlbtWA
+         eaW7Umiq8Fi9kWCaIEZBVS02/7iH+DDXkNqW2FFB+jOPTN7WZomSTbdebTcSjJbVvF
+         qrDLh5mL23Wl/gMQBm5g+G+PwfRZzPnB2ANkHr+8=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 127/134] s390/cpum_sf: Check for SDBT and SDB consistency
-Date:   Wed, 11 Dec 2019 10:11:43 -0500
-Message-Id: <20191211151150.19073-127-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 130/134] s390: disable preemption when switching to nodat stack with CALL_ON_STACK
+Date:   Wed, 11 Dec 2019 10:11:46 -0500
+Message-Id: <20191211151150.19073-130-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191211151150.19073-1-sashal@kernel.org>
 References: <20191211151150.19073-1-sashal@kernel.org>
@@ -43,105 +43,58 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 247f265fa502e7b17a0cb0cc330e055a36aafce4 ]
+[ Upstream commit 7f28dad395243c5026d649136823bbc40029a828 ]
 
-Each SBDT is located at a 4KB page and contains 512 entries.
-Each entry of a SDBT points to a SDB, a 4KB page containing
-sampled data. The last entry is a link to another SDBT page.
+Make sure preemption is disabled when temporary switching to nodat
+stack with CALL_ON_STACK helper, because nodat stack is per cpu.
 
-When an event is created the function sequence executed is:
-
-  __hw_perf_event_init()
-  +--> allocate_buffers()
-       +--> realloc_sampling_buffers()
-	    +---> alloc_sample_data_block()
-
-Both functions realloc_sampling_buffers() and
-alloc_sample_data_block() allocate pages and the allocation
-can fail. This is handled correctly and all allocated
-pages are freed and error -ENOMEM is returned to the
-top calling function. Finally the event is not created.
-
-Once the event has been created, the amount of initially
-allocated SDBT and SDB can be too low. This is detected
-during measurement interrupt handling, where the amount
-of lost samples is calculated. If the number of lost samples
-is too high considering sampling frequency and already allocated
-SBDs, the number of SDBs is enlarged during the next execution
-of cpumsf_pmu_enable().
-
-If more SBDs need to be allocated, functions
-
-       realloc_sampling_buffers()
-       +---> alloc-sample_data_block()
-
-are called to allocate more pages. Page allocation may fail
-and the returned error is ignored. A SDBT and SDB setup
-already exists.
-
-However the modified SDBTs and SDBs might end up in a situation
-where the first entry of an SDBT does not point to an SDB,
-but another SDBT, basicly an SBDT without payload.
-This can not be handled by the interrupt handler, where an SDBT
-must have at least one entry pointing to an SBD.
-
-Add a check to avoid SDBTs with out payload (SDBs) when enlarging
-the buffer setup.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/kernel/perf_cpum_sf.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
+ arch/s390/kernel/machine_kexec.c |  2 ++
+ arch/s390/mm/maccess.c           | 12 +++++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 3d8b12a9a6ff4..7511b71d29313 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -193,7 +193,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 				   unsigned long num_sdb, gfp_t gfp_flags)
+diff --git a/arch/s390/kernel/machine_kexec.c b/arch/s390/kernel/machine_kexec.c
+index 444a19125a815..dcaadceaf6efc 100644
+--- a/arch/s390/kernel/machine_kexec.c
++++ b/arch/s390/kernel/machine_kexec.c
+@@ -164,7 +164,9 @@ static bool kdump_csum_valid(struct kimage *image)
+ #ifdef CONFIG_CRASH_DUMP
+ 	int rc;
+ 
++	preempt_disable();
+ 	rc = CALL_ON_STACK(do_start_kdump, S390_lowcore.nodat_stack, 1, image);
++	preempt_enable();
+ 	return rc == 0;
+ #else
+ 	return false;
+diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
+index 1864a8bb9622f..88d5fcf67a2f1 100644
+--- a/arch/s390/mm/maccess.c
++++ b/arch/s390/mm/maccess.c
+@@ -115,9 +115,15 @@ static unsigned long _memcpy_real(unsigned long dest, unsigned long src,
+  */
+ int memcpy_real(void *dest, void *src, size_t count)
  {
- 	int i, rc;
--	unsigned long *new, *tail;
-+	unsigned long *new, *tail, *tail_prev = NULL;
- 
- 	if (!sfb->sdbt || !sfb->tail)
- 		return -EINVAL;
-@@ -232,6 +232,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 			sfb->num_sdbt++;
- 			/* Link current page to tail of chain */
- 			*tail = (unsigned long)(void *) new + 1;
-+			tail_prev = tail;
- 			tail = new;
- 		}
- 
-@@ -241,10 +242,22 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 		 * issue, a new realloc call (if required) might succeed.
- 		 */
- 		rc = alloc_sample_data_block(tail, gfp_flags);
--		if (rc)
-+		if (rc) {
-+			/* Undo last SDBT. An SDBT with no SDB at its first
-+			 * entry but with an SDBT entry instead can not be
-+			 * handled by the interrupt handler code.
-+			 * Avoid this situation.
-+			 */
-+			if (tail_prev) {
-+				sfb->num_sdbt--;
-+				free_page((unsigned long) new);
-+				tail = tail_prev;
-+			}
- 			break;
-+		}
- 		sfb->num_sdb++;
- 		tail++;
-+		tail_prev = new = NULL;	/* Allocated at least one SBD */
- 	}
- 
- 	/* Link sampling buffer to its origin */
+-	if (S390_lowcore.nodat_stack != 0)
+-		return CALL_ON_STACK(_memcpy_real, S390_lowcore.nodat_stack,
+-				     3, dest, src, count);
++	int rc;
++
++	if (S390_lowcore.nodat_stack != 0) {
++		preempt_disable();
++		rc = CALL_ON_STACK(_memcpy_real, S390_lowcore.nodat_stack, 3,
++				   dest, src, count);
++		preempt_enable();
++		return rc;
++	}
+ 	/*
+ 	 * This is a really early memcpy_real call, the stacks are
+ 	 * not set up yet. Just call _memcpy_real on the early boot
 -- 
 2.20.1
 
