@@ -2,146 +2,183 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D3C9711B2D4
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 16:40:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E21611B435
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 16:46:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388508AbfLKPix (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Dec 2019 10:38:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49616 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388501AbfLKPiw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 11 Dec 2019 10:38:52 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85C352464B;
-        Wed, 11 Dec 2019 15:38:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576078731;
-        bh=F6/qD3qQ3TPzFSsBZxOB423TixJO/UBcfKX5aUM8GYU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dGQxOpesVFwF2pGeq0YnRkx6C/avBjHzaxCMTV2jbBU3LIz5GmcUUzBjLSYn5Qikk
-         KyrjPr0JuSBtJvYSSRJd62gX4Vc1SEeRajP8WkjmIZFQHeIoSy74VrQODvXHfi6g8d
-         2HE7xIiOWfJtfP71kY/1ytZjr8xZZ1F63+13oqQg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Thomas Richter <tmricht@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 35/37] s390/cpum_sf: Check for SDBT and SDB consistency
-Date:   Wed, 11 Dec 2019 10:38:11 -0500
-Message-Id: <20191211153813.24126-35-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191211153813.24126-1-sashal@kernel.org>
-References: <20191211153813.24126-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S2387692AbfLKPqb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Dec 2019 10:46:31 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58364 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732292AbfLKPqS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 11 Dec 2019 10:46:18 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBBFi7n8058342
+        for <linux-s390@vger.kernel.org>; Wed, 11 Dec 2019 10:46:17 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtf83vxhd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 11 Dec 2019 10:46:16 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Wed, 11 Dec 2019 15:46:15 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 11 Dec 2019 15:46:11 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBBFkBVG42336434
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 11 Dec 2019 15:46:11 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 007DB4C059;
+        Wed, 11 Dec 2019 15:46:10 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BB6CD4C058;
+        Wed, 11 Dec 2019 15:46:10 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.152.222.89])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 11 Dec 2019 15:46:10 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, thuth@redhat.com, cohuck@redhat.com
+Subject: [kvm-unit-tests PATCH v4 0/9] s390x: Testing the Channel Subsystem I/O
+Date:   Wed, 11 Dec 2019 16:46:01 +0100
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 19121115-0020-0000-0000-000003973324
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121115-0021-0000-0000-000021EE381A
+Message-Id: <1576079170-7244-1-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-11_04:2019-12-11,2019-12-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
+ spamscore=0 priorityscore=1501 suspectscore=1 mlxscore=0 adultscore=0
+ clxscore=1015 lowpriorityscore=0 malwarescore=0 mlxlogscore=924
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912110132
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Thomas Richter <tmricht@linux.ibm.com>
-
-[ Upstream commit 247f265fa502e7b17a0cb0cc330e055a36aafce4 ]
-
-Each SBDT is located at a 4KB page and contains 512 entries.
-Each entry of a SDBT points to a SDB, a 4KB page containing
-sampled data. The last entry is a link to another SDBT page.
-
-When an event is created the function sequence executed is:
-
-  __hw_perf_event_init()
-  +--> allocate_buffers()
-       +--> realloc_sampling_buffers()
-	    +---> alloc_sample_data_block()
-
-Both functions realloc_sampling_buffers() and
-alloc_sample_data_block() allocate pages and the allocation
-can fail. This is handled correctly and all allocated
-pages are freed and error -ENOMEM is returned to the
-top calling function. Finally the event is not created.
-
-Once the event has been created, the amount of initially
-allocated SDBT and SDB can be too low. This is detected
-during measurement interrupt handling, where the amount
-of lost samples is calculated. If the number of lost samples
-is too high considering sampling frequency and already allocated
-SBDs, the number of SDBs is enlarged during the next execution
-of cpumsf_pmu_enable().
-
-If more SBDs need to be allocated, functions
-
-       realloc_sampling_buffers()
-       +---> alloc-sample_data_block()
-
-are called to allocate more pages. Page allocation may fail
-and the returned error is ignored. A SDBT and SDB setup
-already exists.
-
-However the modified SDBTs and SDBs might end up in a situation
-where the first entry of an SDBT does not point to an SDB,
-but another SDBT, basicly an SBDT without payload.
-This can not be handled by the interrupt handler, where an SDBT
-must have at least one entry pointing to an SBD.
-
-Add a check to avoid SDBTs with out payload (SDBs) when enlarging
-the buffer setup.
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/kernel/perf_cpum_sf.c | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
-index 874762a51c546..7490c52b27153 100644
---- a/arch/s390/kernel/perf_cpum_sf.c
-+++ b/arch/s390/kernel/perf_cpum_sf.c
-@@ -185,7 +185,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 				   unsigned long num_sdb, gfp_t gfp_flags)
- {
- 	int i, rc;
--	unsigned long *new, *tail;
-+	unsigned long *new, *tail, *tail_prev = NULL;
+Goal of the series is to have a framwork to test Channel-Subsystem I/O with
+QEMU/KVM.
+  
+To be able to support interrupt for CSS I/O and for SCLP we need to modify
+the interrupt framework to allow re-entrant interruptions.
+  
+We add a registration for IRQ callbacks to the test programm to define its own
+interrupt handler. We need to do special work under interrupt like acknoledging
+the interrupt.
+  
+Being working on PSW bits to allow I/O interrupt, we define new PSW bits
+in arch_def.h and use __ASSEMBLER__ define to be able to include this header
+in an assembler source file. 
  
- 	if (!sfb->sdbt || !sfb->tail)
- 		return -EINVAL;
-@@ -224,6 +224,7 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 			sfb->num_sdbt++;
- 			/* Link current page to tail of chain */
- 			*tail = (unsigned long)(void *) new + 1;
-+			tail_prev = tail;
- 			tail = new;
- 		}
+This series presents four major tests:
+- Enumeration:
+        The CSS is enumerated using the STSCH instruction recursively on all
+        potentially existing channels.
+        Keeping the first channel found as a reference for future use.
+        Checks STSCH
  
-@@ -233,10 +234,22 @@ static int realloc_sampling_buffer(struct sf_buffer *sfb,
- 		 * issue, a new realloc call (if required) might succeed.
- 		 */
- 		rc = alloc_sample_data_block(tail, gfp_flags);
--		if (rc)
-+		if (rc) {
-+			/* Undo last SDBT. An SDBT with no SDB at its first
-+			 * entry but with an SDBT entry instead can not be
-+			 * handled by the interrupt handler code.
-+			 * Avoid this situation.
-+			 */
-+			if (tail_prev) {
-+				sfb->num_sdbt--;
-+				free_page((unsigned long) new);
-+				tail = tail_prev;
-+			}
- 			break;
-+		}
- 		sfb->num_sdb++;
- 		tail++;
-+		tail_prev = new = NULL;	/* Allocated at least one SBD */
- 	}
+- Enable:
+        If the enumeration succeeded the tests enables the reference
+        channel with MSCH and verifies with STSCH that the channel is
+        effectively enabled
+        Checks MSCH 
  
- 	/* Link sampling buffer to its origin */
+- Sense:
+        If the channel is enabled this test sends a SENSE_ID command
+        to the reference channel, analysing the answer and expecting
+        the Control unit type being 0xc0ca
+        Checks SSCH(READ) and IO-IRQ
+
+- ping-pong:
+        If the reference channel leads to the PONG device (0xc0ca),
+        the test exchanges a string containing a 9 digit number with
+        the PONG device and expecting this number to be incremented
+        by the PONG device.
+        Checks SSCH(WRITE)
+
+
+Pierre Morel (9):
+  s390x: saving regs for interrupts
+  s390x: Use PSW bits definitions in cstart
+  s390x: interrupt registration
+  s390x: export the clock get_clock_ms() utility
+  s390x: Library resources for CSS tests
+  s390x: css: stsch, enumeration test
+  s390x: css: msch, enable test
+  s390x: css: ssch/tsch with sense and interrupt
+  s390x: css: ping pong
+
+ lib/s390x/asm/arch_def.h |  16 +-
+ lib/s390x/asm/time.h     |  26 +++
+ lib/s390x/css.h          | 273 ++++++++++++++++++++++++++++
+ lib/s390x/css_dump.c     | 157 ++++++++++++++++
+ lib/s390x/interrupt.c    |  23 ++-
+ lib/s390x/interrupt.h    |   7 +
+ s390x/Makefile           |   2 +
+ s390x/css.c              | 374 +++++++++++++++++++++++++++++++++++++++
+ s390x/cstart64.S         |  40 ++++-
+ s390x/intercept.c        |  11 +-
+ s390x/unittests.cfg      |   4 +
+ 11 files changed, 909 insertions(+), 24 deletions(-)
+ create mode 100644 lib/s390x/asm/time.h
+ create mode 100644 lib/s390x/css.h
+ create mode 100644 lib/s390x/css_dump.c
+ create mode 100644 lib/s390x/interrupt.h
+ create mode 100644 s390x/css.c
+
 -- 
-2.20.1
+2.17.0
+
+Changelog:
+from v3 to v4
+- add RB from David and Thomas for patchs 
+  (3) irq registrqtion and (4) clock export
+- rework the PSW bit definitions
+  (Thomas)
+- Suppress undef DEBUG from css_dump
+  (Thomas)
+- rework report() functions using new scheme
+  (Thomas)
+- suppress un-necessary report_info()
+- more spelling corrections
+- add a loop around enable bit testing
+  (Connie)
+- rework IRQ testing
+  (Connie)
+- Test data addresses to be under 2G
+  (Connie)
+
+from v2 to v3:
+- Rework spelling
+  (Connie)
+- More descriptions
+  (Connie)
+- use __ASSEMBLER__ preprocessing to keep
+  bits definitions and C structures in the same file
+  (David)
+- rename the new file clock.h as time.h
+  (Janosch, David?)
+- use registration for the IO interruption
+  (David, Thomas)
+- test the SCHIB to verify it has really be modified
+  (Connie)
+- Lot of simplifications in the tests
+  (Connie)
+
+from v1 to v2:
+- saving floating point registers (David, Janosh)
+- suppress unused PSW bits defintions (Janosh)
+- added Thomas reviewed-by
+- style and comments modifications (Connie, Janosh)
+- moved get_clock_ms() into headers and use it (Thomas)
+- separate header and library utility from tests
+- Suppress traces, separate tests, make better usage of reports
 
