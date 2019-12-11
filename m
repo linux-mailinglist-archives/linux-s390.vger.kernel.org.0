@@ -2,45 +2,56 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B36BB119FFE
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 01:29:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 820ED11A3B5
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 06:22:03 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726691AbfLKA3X (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Dec 2019 19:29:23 -0500
-Received: from ozlabs.org ([203.11.71.1]:40799 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725999AbfLKA3X (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Dec 2019 19:29:23 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47Xd8v5C5Hz9sP3;
-        Wed, 11 Dec 2019 11:29:19 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1576024160;
-        bh=kmbp6MpyHsnC/owM/o4yDj8cWLNwjC0odjA8A0F3r2Y=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Jn2SQvPiqev5TL35DBK5lCO8mnXg+BTtXzArbhl7WqrvTJu5M+ZoiCVATKvHzLOLD
-         /490q3sNuoaS8RrCEOiJfUlfiOE7FyR1xupxy+LuXjQrlnNee0sKWSvxRdwvkmFzJL
-         8cX9BG/37iHETX+SK6OEUNldhJo0kpLbionDwCbFGHrNEr/2bHr8GHHP8EvBJp2w5d
-         Oq7Yqge4fyyFATWKyy/JiMHOdF3ZSJiokdKFsNzkoblZu7BIUOmrVNWAjFd0ArDVZD
-         MSOu1H54hdcXdP2PAhbK8MNYDb646YZe392xvS8NArPz8yhZ0UaP34j/Lsl3ab+Us5
-         zD/LY1lWBWRBw==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>, dja@axtens.net,
-        elver@google.com, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, christophe.leroy@c-s.fr,
-        linux-s390@vger.kernel.org, linux-arch@vger.kernel.org,
-        x86@kernel.org, kasan-dev@googlegroups.com,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [GIT PULL] Please pull powerpc/linux.git powerpc-5.5-2 tag (topic/kasan-bitops)
-In-Reply-To: <20191210101545.GL2844@hirez.programming.kicks-ass.net>
-References: <87blslei5o.fsf@mpe.ellerman.id.au> <20191206131650.GM2827@hirez.programming.kicks-ass.net> <87wob4pwnl.fsf@mpe.ellerman.id.au> <20191210101545.GL2844@hirez.programming.kicks-ass.net>
-Date:   Wed, 11 Dec 2019 11:29:16 +1100
-Message-ID: <87lfrjpuw3.fsf@mpe.ellerman.id.au>
+        id S1726487AbfLKFWC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Dec 2019 00:22:02 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:35504 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfLKFWC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 11 Dec 2019 00:22:02 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l24so10170615pgk.2
+        for <linux-s390@vger.kernel.org>; Tue, 10 Dec 2019 21:22:01 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
+        bh=OGsdV5jSDDEFcnOk4gJS+m/O081C8UQbyskvOH4VTPw=;
+        b=d+vkKjwN/B7Eemt4aTf5+2EppVPiUSkGgGmMGibO69VudKHjSmIcTbfwnpxCCc+oVT
+         2S6XUMuiwAyy1OK8j/g/0ywNzRSnfEzqdVVtBSWr6aCDKX4cMZa65yqdTSngOAoSerQG
+         ZZ/fl2c0wRuhrRu2sVo6USDP7/ZGWJSzW6Sc4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=OGsdV5jSDDEFcnOk4gJS+m/O081C8UQbyskvOH4VTPw=;
+        b=miCKvTa17R94ADQ3F/27ZifHh8LEoZki00FCbaVxIqehr1aB1senyQm+X4T+wtJMo9
+         NAmgPmH612Dp2wgJ0tkwN4HAiDOmbAVZaPfLV5KMJ2iQ1w6mnBM1cPBWL2rOa15gsEu+
+         70X2emVC1q6a006lpCnqfEkPkFVbw/uHyz4LnGcZt0buNCwPp+sum9gFO/bTaNlIiKRg
+         SLvTc5bcEFX/a0JvK3Y6QTLNkeNHpz55RwBiw2zjPtMV5ngPVNFv2aoYRQWZHK3FXNyE
+         pmus56KMHhL6JBDHUyTLO8EaKrqsivcrWWrVPQcidDBUrRJ8o2hVvkHHoQlx+AWwHurc
+         TCXw==
+X-Gm-Message-State: APjAAAUrVuakgQKLpGtOPHqQszh4bFLAE8+QWGi4wTdHjnF5ajUQpp5a
+        B6dyNkIfU9IVR6xW56FAEE0Xlw==
+X-Google-Smtp-Source: APXvYqy8kiPOFzQDhHNR7yZIAuZ3DCi8vXHTVH/NuDcXMhPAyICB5cohpd05/qlLbtvTlkWmL2TaeA==
+X-Received: by 2002:a63:5d4d:: with SMTP id o13mr2058179pgm.182.1576041721369;
+        Tue, 10 Dec 2019 21:22:01 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-899f-c50f-5647-b1f9.static.ipv6.internode.on.net. [2001:44b8:1113:6700:899f:c50f:5647:b1f9])
+        by smtp.gmail.com with ESMTPSA id y62sm966374pfg.45.2019.12.10.21.21.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Dec 2019 21:22:00 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Balbir Singh <bsingharora@gmail.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
+        aneesh.kumar@linux.ibm.com
+Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
+In-Reply-To: <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com>
+References: <20191210044714.27265-1-dja@axtens.net> <20191210044714.27265-5-dja@axtens.net> <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com>
+Date:   Wed, 11 Dec 2019 16:21:57 +1100
+Message-ID: <875zincu8a.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
 Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
@@ -48,49 +59,107 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-> On Tue, Dec 10, 2019 at 04:38:54PM +1100, Michael Ellerman wrote:
+Hi Balbir,
+
+>> +Discontiguous memory can occur when you have a machine with memory spread
+>> +across multiple nodes. For example, on a Talos II with 64GB of RAM:
+>> +
+>> + - 32GB runs from 0x0 to 0x0000_0008_0000_0000,
+>> + - then there's a gap,
+>> + - then the final 32GB runs from 0x0000_2000_0000_0000 to 0x0000_2008_0000_0000
+>> +
+>> +This can create _significant_ issues:
+>> +
+>> + - If we try to treat the machine as having 64GB of _contiguous_ RAM, we would
+>> +   assume that ran from 0x0 to 0x0000_0010_0000_0000. We'd then reserve the
+>> +   last 1/8th - 0x0000_000e_0000_0000 to 0x0000_0010_0000_0000 as the shadow
+>> +   region. But when we try to access any of that, we'll try to access pages
+>> +   that are not physically present.
+>> +
 >
->> Good question, I'll have a look.
->> 
->> There seems to be confusion about what the type of the bit number is,
->> which is leading to sign extension in some cases and not others.
+> If we reserved memory for KASAN from each node (discontig region), we might survive
+> this no? May be we need NUMA aware KASAN? That might be a generic change, just thinking
+> out loud.
+
+The challenge is that - AIUI - in inline instrumentation, the compiler
+doesn't generate calls to things like __asan_loadN and
+__asan_storeN. Instead it uses -fasan-shadow-offset to compute the
+checks, and only calls the __asan_report* family of functions if it
+detects an issue. This also matches what I can observe with objdump
+across outline and inline instrumentation settings.
+
+This means that for this sort of thing to work we would need to either
+drop back to out-of-line calls, or teach the compiler how to use a
+nonlinear, NUMA aware mem-to-shadow mapping.
+
+I'll document this a bit better in the next spin.
+
+>> +	if (IS_ENABLED(CONFIG_KASAN) && IS_ENABLED(CONFIG_PPC_BOOK3S_64)) {
+>> +		kasan_memory_size =
+>> +			((phys_addr_t)CONFIG_PHYS_MEM_SIZE_FOR_KASAN << 20);
+>> +
+>> +		if (top_phys_addr < kasan_memory_size) {
+>> +			/*
+>> +			 * We are doomed. Attempts to call e.g. panic() are
+>> +			 * likely to fail because they call out into
+>> +			 * instrumented code, which will almost certainly
+>> +			 * access memory beyond the end of physical
+>> +			 * memory. Hang here so that at least the NIP points
+>> +			 * somewhere that will help you debug it if you look at
+>> +			 * it in qemu.
+>> +			 */
+>> +			while (true)
+>> +				;
 >
-> Shiny.
+> Again with the right hooks in check_memory_region_inline() these are recoverable,
+> or so I think
+
+So unless I misunderstand the circumstances in which
+check_memory_region_inline is used, this isn't going to help with inline
+instrumentation.
+
+>> +void __init kasan_init(void)
+>> +{
+>> +	int i;
+>> +	void *k_start = kasan_mem_to_shadow((void *)RADIX_KERN_VIRT_START);
+>> +	void *k_end = kasan_mem_to_shadow((void *)RADIX_VMEMMAP_END);
+>> +
+>> +	pte_t pte = __pte(__pa(kasan_early_shadow_page) |
+>> +			  pgprot_val(PAGE_KERNEL) | _PAGE_PTE);
+>> +
+>> +	if (!early_radix_enabled())
+>> +		panic("KASAN requires radix!");
+>> +
 >
->> It looks like the type should be unsigned long?
+> I think this is avoidable, we could use a static key for disabling kasan in
+> the generic code. I wonder what happens if someone tries to boot this
+> image on a Power8 box and keeps panic'ing with no easy way of recovering.
+
+Again, assuming I understand correctly that the compiler generates raw
+IR->asm for these checks rather than calling out to a function, then I
+don't think we get a way to intercept those checks. It's too late to do
+anything at the __asan report stage because that will already have
+accessed memory that's not set up properly.
+
+If you try to boot this on a Power8 box it will panic and you'll have to
+boot into another kernel from the bootloader. I don't think it's
+avoidable without disabling inline instrumentation, but I'd love to be
+proven wrong.
+
 >
-> I'm thinking unsigned makes most sense, I mean, negative bit offsets
-> should 'work' but that's almost always guaranteed to be an out-of-bound
-> operation.
+> NOTE: I can't test any of these, well may be with qemu, let me see if I can spin
+> the series and provide more feedback
 
-Yeah I agree.
+It's actually super easy to do simple boot tests with qemu, it works fine in TCG,
+Michael's wiki page at
+https://github.com/linuxppc/wiki/wiki/Booting-with-Qemu is very helpful.
 
-> As to 'long' vs 'int', I'm not sure, 4G bits is a long bitmap. But I
-> suppose since the bitmap itself is 'unsigned long', we might as well use
-> 'unsigned long' for the bitnr too.
+I did this a lot in development.
 
-4G is a lot of bits, but it's not *that* many.
+My full commandline, fwiw, is:
 
-eg. If we had a bit per 4K page on a 32T machine that would be 8G bits.
+qemu-system-ppc64  -m 8G -M pseries -cpu power9  -kernel ../out-3s-radix/vmlinux  -nographic -chardev stdio,id=charserial0,mux=on -device spapr-vty,chardev=charserial0,reg=0x30000000 -initrd ./rootfs-le.cpio.xz -mon chardev=charserial0,mode=readline -nodefaults -smp 4
 
-So unsigned long seems best.
+Regards,
+Daniel
 
->>   Documentation/core-api/atomic_ops.rst:  void __clear_bit_unlock(unsigned long nr, unsigned long *addr);
->>   arch/mips/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
->>   arch/powerpc/include/asm/bitops.h:static inline void arch___clear_bit_unlock(int nr, volatile unsigned long *addr)
->>   arch/riscv/include/asm/bitops.h:static inline void __clear_bit_unlock(unsigned long nr, volatile unsigned long *addr)
->>   arch/s390/include/asm/bitops.h:static inline void arch___clear_bit_unlock(unsigned long nr,
->>   include/asm-generic/bitops/instrumented-lock.h:static inline void __clear_bit_unlock(long nr, volatile unsigned long *addr)
->>   include/asm-generic/bitops/lock.h:static inline void __clear_bit_unlock(unsigned int nr,
->> 
->> So I guess step one is to convert our versions to use unsigned long, so
->> we're at least not tripping over that difference when comparing the
->> assembly.
->
-> Yeah, I'll look at fixing the generic code, bitops/atomic.h and
-> bitops/non-atomic.h don't even agree on the type of bitnr.
-
-Thanks.
-
-cheers
