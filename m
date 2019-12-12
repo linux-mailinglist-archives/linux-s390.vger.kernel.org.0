@@ -2,99 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2A9DF11CE71
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 14:36:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 23E2311CE93
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 14:41:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfLLNgN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Dec 2019 08:36:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57304 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729392AbfLLNgN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 12 Dec 2019 08:36:13 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCDWKD9029087
-        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 08:36:12 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtdp5n66p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 08:36:12 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 12 Dec 2019 13:36:11 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Dec 2019 13:36:08 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBCDa7bS43516088
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 13:36:08 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD930A4060;
-        Thu, 12 Dec 2019 13:36:07 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A69EEA405F;
-        Thu, 12 Dec 2019 13:36:07 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.152.222.89])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Dec 2019 13:36:07 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v4 4/9] s390x: export the clock
- get_clock_ms() utility
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
-        cohuck@redhat.com
-References: <1576079170-7244-1-git-send-email-pmorel@linux.ibm.com>
- <1576079170-7244-5-git-send-email-pmorel@linux.ibm.com>
- <c26c335a-7894-09ad-bc23-6ae060f4a255@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Thu, 12 Dec 2019 14:36:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1729528AbfLLNlT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Dec 2019 08:41:19 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36674 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729465AbfLLNlT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Dec 2019 08:41:19 -0500
+Received: by mail-pl1-f194.google.com with SMTP id d15so619866pll.3
+        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 05:41:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=axtens.net; s=google;
+        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
+        bh=K1dcdOatOeVeFsIQxT5aEB0ANkvhzz2V9qjht9zfLUs=;
+        b=GdElbodEdxjlTrBwa3I6J+sEs4W2s8EoeCX3lxYPy4O5JSwTyZcODXGJSRA1xj4/Th
+         5RtnvwUWSB2afNeAL6+3jSXcezJ6aTZ2Ul1yCG9FnmvdgLq0A/BabGqxJQXU4aLQibFm
+         sZaLkJC5i3jZy2lEJbSUwiAQSB4z7dLoQktt4=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=K1dcdOatOeVeFsIQxT5aEB0ANkvhzz2V9qjht9zfLUs=;
+        b=m9mzTfV3QaSloQ9XpjshIJBUD6N76CVyNuOs4/ONGGSHLoeowxGe/Vz5AT/IRKaE9R
+         qt146eOMnpy+DBlbgOBVsQjhwDuN0Tmp2IMzHJsVmncjzmvY8o0sTIQCotaWDnexLVBe
+         DCNQgvuLuJn8+tbDlXKEpI17+6vpsFbcGxppSiODNl9Azr1VFgVbJIB/RL8GUkAKPSAI
+         VElbUVMcm+26SjHLU9FpC1SeJryELEUxNbWN4Z5tlnJOqWADHYz8WWmhB20kmAUze2g8
+         xlT9AJYag7eOPAdz9VrAa3IlGFHbPMCif72Rz1PLRnpZinaGQ4rtPQdgXsgdjH7qlCrF
+         s74g==
+X-Gm-Message-State: APjAAAXnx4k4xAL7L4g4XEDH+2PBHjKzFBlOrU5uBmdjOCTiD4Eru9ac
+        A+yMCm9OJmviIoK1GbFvnW3QsYTP+kY=
+X-Google-Smtp-Source: APXvYqzPs6Cbt1MwcGO7Ifn/65S78x+5CnY2vxScmtjpazHyalO6+YCcj2OzBuBrETruOG5iKaL2pw==
+X-Received: by 2002:a17:902:9885:: with SMTP id s5mr9457771plp.217.1576158078207;
+        Thu, 12 Dec 2019 05:41:18 -0800 (PST)
+Received: from localhost (2001-44b8-1113-6700-b116-2689-a4a9-76f8.static.ipv6.internode.on.net. [2001:44b8:1113:6700:b116:2689:a4a9:76f8])
+        by smtp.gmail.com with ESMTPSA id i68sm7464966pfe.173.2019.12.12.05.41.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Dec 2019 05:41:17 -0800 (PST)
+From:   Daniel Axtens <dja@axtens.net>
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
+        aneesh.kumar@linux.ibm.com, bsingharora@gmail.com
+Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
+In-Reply-To: <414293e0-3b75-8e78-90d8-2c14182f3739@c-s.fr>
+References: <20191210044714.27265-1-dja@axtens.net> <20191210044714.27265-5-dja@axtens.net> <414293e0-3b75-8e78-90d8-2c14182f3739@c-s.fr>
+Date:   Fri, 13 Dec 2019 00:41:14 +1100
+Message-ID: <87tv65br0l.fsf@dja-thinkpad.axtens.net>
 MIME-Version: 1.0
-In-Reply-To: <c26c335a-7894-09ad-bc23-6ae060f4a255@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121213-0012-0000-0000-00000374222B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121213-0013-0000-0000-000021AFFDF0
-Message-Id: <664e1119-24c1-eab0-0f0c-d1d57f0e6f6b@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_03:2019-12-12,2019-12-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
- lowpriorityscore=0 malwarescore=0 spamscore=0 suspectscore=0
- priorityscore=1501 mlxscore=0 phishscore=0 impostorscore=0 adultscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912120103
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Christophe,
 
+I think I've covered everything you've mentioned in the v3 I'm about to
+send, except for:
 
-On 2019-12-12 10:40, Janosch Frank wrote:
-> On 12/11/19 4:46 PM, Pierre Morel wrote:
->> To serve multiple times, the function get_clock_ms() is moved
->> from intercept.c test to the new file asm/time.h.
-> 
-> Let's move get_clock_ms() to lib/s390/asm/time.h, so it can be used in
-> multiple places.
-> 
->>
->> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
->> Reviewed-by: David Hildenbrand <david@redhat.com>
->> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> 
-> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-> 
-Thanks,
-Pierre
+>> +	/* mark early shadow region as RO and wipe */
+>> +	pte = __pte(__pa(kasan_early_shadow_page) |
+>> +		    pgprot_val(PAGE_KERNEL_RO) | _PAGE_PTE);
+>
+> Any reason for _PAGE_PTE being required here and not being included in 
+> PAGE_KERNEL_RO ?
 
--- 
-Pierre Morel
-IBM Lab Boeblingen
+I'm not 100% sure quite what you mean here. I think you're asking: why
+do we need to supply _PAGE_PTE here, shouldn't PAGE_KERNEL_RO set that
+bit or cover that case?
 
+_PAGE_PTE is defined by section 5.7.10.2 of Book III of ISA 3.0: bit 1
+(linux bit 62) is 'Leaf (entry is a PTE)' I originally had this because
+it was set in Balbir's original implementation, but the bit is also set
+by pte_mkpte which is called in set_pte_at, so I also think it's right
+to set it.
+
+I don't know why it's not included in the permission classes; I suspect
+it's because it's not conceptually a permission, it's set and cleared in
+things like swp entry code.
+
+Does that answer your question?
+
+Regards,
+Daniel
