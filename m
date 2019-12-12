@@ -2,204 +2,183 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1393C11CA73
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 11:18:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0F81211CCB4
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 13:01:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728345AbfLLKSj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Dec 2019 05:18:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52421 "EHLO
+        id S1729069AbfLLMBV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Dec 2019 07:01:21 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42328 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728536AbfLLKSj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Dec 2019 05:18:39 -0500
+        with ESMTP id S1726492AbfLLMBV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Dec 2019 07:01:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576145917;
+        s=mimecast20190719; t=1576152080;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RhdheA6GpZI1OFubnN+r2hJUi2ulCpehuF17tpTSN/o=;
-        b=FQ6Dfe9KsA43J5aTwlF0ky6sguk851EuJgCW9p7iFR4wkSaCuqbRmw3LwTj+C5swvMj7gE
-        bCnE1rz6mQLl8XI5ckf7S6isRFX0LSJ/7V3CvhbdctzxqHWAD2X4b9eXMBLhsGpA4v5N1L
-        uCZyej6sTmRAYvenl4BnPTFRJqRIjKQ=
+        bh=CPE/8oIGO26OJsajbewmS01w56jDq0RNArcjOdYfuO4=;
+        b=CLvqnEo1MOnDjCu/HzsbABrWLGvfFZDXOgOxlD//1V4vXKBVP1/goMHRVMX7jggJ4XsXKi
+        Xv/kk6ExQV83Kb2hB7QEmu+TVl7aKU8E3fXKQn+AdJnEyRqSjclOmH/1DRndE775pDvQC/
+        shUqz2lVglVqkrssCV2N2ocGahJ/4o8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-CVy3HQ8DMMqcqcKpoJ4YBQ-1; Thu, 12 Dec 2019 05:18:34 -0500
-X-MC-Unique: CVy3HQ8DMMqcqcKpoJ4YBQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-292-PZRf8znCNCSf5aavRxb3KQ-1; Thu, 12 Dec 2019 07:01:18 -0500
+X-MC-Unique: PZRf8znCNCSf5aavRxb3KQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC419800EC0;
-        Thu, 12 Dec 2019 10:18:33 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8E788100551D;
+        Thu, 12 Dec 2019 12:01:17 +0000 (UTC)
 Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 289AF60BB9;
-        Thu, 12 Dec 2019 10:18:30 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 11:18:27 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1913A19C58;
+        Thu, 12 Dec 2019 12:01:13 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 13:01:11 +0100
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Pierre Morel <pmorel@linux.ibm.com>
 Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
         frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v4 6/9] s390x: css: stsch, enumeration
- test
-Message-ID: <20191212111827.21f64fa3.cohuck@redhat.com>
-In-Reply-To: <1576079170-7244-7-git-send-email-pmorel@linux.ibm.com>
+Subject: Re: [kvm-unit-tests PATCH v4 7/9] s390x: css: msch, enable test
+Message-ID: <20191212130111.0f75fe7f.cohuck@redhat.com>
+In-Reply-To: <1576079170-7244-8-git-send-email-pmorel@linux.ibm.com>
 References: <1576079170-7244-1-git-send-email-pmorel@linux.ibm.com>
-        <1576079170-7244-7-git-send-email-pmorel@linux.ibm.com>
+        <1576079170-7244-8-git-send-email-pmorel@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 11 Dec 2019 16:46:07 +0100
+On Wed, 11 Dec 2019 16:46:08 +0100
 Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> First step for testing the channel subsystem is to enumerate the css and
-> retrieve the css devices.
+> A second step when testing the channel subsystem is to prepare a channel
+> for use.
+> This includes:
+> - Get the current SubCHannel Information Block (SCHIB) using STSCH
+> - Update it in memory to set the ENABLE bit
+> - Tell the CSS that the SCHIB has been modified using MSCH
+> - Get the SCHIB from the CSS again to verify that the subchannel is
+>   enabled.
 > 
-> This tests the success of STSCH I/O instruction, we do not test the
-> reaction of the VM for an instruction with wrong parameters.
+> This tests the success of the MSCH instruction by enabling a channel.
 > 
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 > ---
->  lib/s390x/css.h     |  1 +
->  s390x/Makefile      |  2 ++
->  s390x/css.c         | 88 +++++++++++++++++++++++++++++++++++++++++++++
->  s390x/unittests.cfg |  4 +++
->  4 files changed, 95 insertions(+)
->  create mode 100644 s390x/css.c
-
+>  s390x/css.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 65 insertions(+)
+> 
 > diff --git a/s390x/css.c b/s390x/css.c
-> new file mode 100644
-> index 0000000..dfab35f
-> --- /dev/null
+> index dfab35f..b8824ad 100644
+> --- a/s390x/css.c
 > +++ b/s390x/css.c
-> @@ -0,0 +1,88 @@
-> +/*
-> + * Channel Subsystem tests
-> + *
-> + * Copyright (c) 2019 IBM Corp
-> + *
-> + * Authors:
-> + *  Pierre Morel <pmorel@linux.ibm.com>
-> + *
-> + * This code is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License version 2.
-> + */
-> +
-> +#include <libcflat.h>
-> +#include <alloc_phys.h>
-> +#include <asm/page.h>
-> +#include <string.h>
-> +#include <interrupt.h>
-> +#include <asm/arch_def.h>
+> @@ -19,12 +19,24 @@
+>  #include <asm/time.h>
+>  
+>  #include <css.h>
 > +#include <asm/time.h>
+>  
+>  #define SID_ONE		0x00010000
+>  
+>  static struct schib schib;
+>  static int test_device_sid;
+>  
+> +static inline void delay(unsigned long ms)
+> +{
+> +	unsigned long startclk;
 > +
-> +#include <css.h>
+> +	startclk = get_clock_ms();
+> +	for (;;) {
+> +		if (get_clock_ms() - startclk > ms)
+> +			break;
+> +	}
+> +}
+
+Would this function be useful for other callers as well? I.e., should
+it go into a common header?
+
 > +
-> +#define SID_ONE		0x00010000
-> +
-> +static struct schib schib;
-> +static int test_device_sid;
-> +
-> +static void test_enumerate(void)
+>  static void test_enumerate(void)
+>  {
+>  	struct pmcw *pmcw = &schib.pmcw;
+> @@ -64,11 +76,64 @@ out:
+>  	report(1, "Devices, tested: %d, I/O type: %d", scn, scn_found);
+>  }
+>  
+> +static void test_enable(void)
 > +{
 > +	struct pmcw *pmcw = &schib.pmcw;
+> +		int count = 0;
+
+Odd indentation.
+
 > +	int cc;
-> +	int scn;
-> +	int scn_found = 0;
 > +
-> +	for (scn = 0; scn < 0xffff; scn++) {
-> +		cc = stsch(scn|SID_ONE, &schib);
-> +		switch (cc) {
-> +		case 0:		/* 0 means SCHIB stored */
-> +			break;
-> +		case 3:		/* 3 means no more channels */
-> +			goto out;
-> +		default:	/* 1 or 2 should never happened for STSCH */
-> +			report(0, "Unexpected cc=%d on scn 0x%x", cc, scn);
-
-Spell out "subchannel number"?
-
-> +			return;
-> +		}
-> +		if (cc)
-> +			break;
-
-Isn't that redundant?
-
-> +		/* We silently only support type 0, a.k.a. I/O channels */
-
-s/silently/currently/ ?
-
-> +		if (PMCW_CHANNEL_TYPE(pmcw) != 0)
-> +			continue;
-> +		/* We ignore I/O channels without valid devices */
-> +		if (!(pmcw->flags & PMCW_DNV))
-> +			continue;
-> +		/* We keep track of the first device as our test device */
-> +		if (!test_device_sid)
-> +			test_device_sid = scn|SID_ONE;
-> +		scn_found++;
-> +	}
-> +out:
-> +	if (!scn_found) {
-> +		report(0, "Devices, Tested: %d, no I/O type found", scn);
-
-It's no I/O _devices_ found, isn't it? There might have been I/O
-subchannels, but none with a valid device...
-
+> +	if (!test_device_sid) {
+> +		report_skip("No device");
 > +		return;
 > +	}
-> +	report(1, "Devices, tested: %d, I/O type: %d", scn, scn_found);
-
-As you're testing this anyway: what about tracking _all_ numbers here?
-I.e., advance a counter for I/O subchannels as well, even if !dnv, and
-have an output like
-
-"Tested subchannels: 20, I/O subchannels: 18, I/O devices: 10"
-
-or so?
-
-> +}
-> +
-> +static struct {
-> +	const char *name;
-> +	void (*func)(void);
-> +} tests[] = {
-> +	{ "enumerate (stsch)", test_enumerate },
-> +	{ NULL, NULL }
-> +};
-> +
-> +int main(int argc, char *argv[])
-> +{
-> +	int i;
-> +
-> +	report_prefix_push("Channel Sub-System");
-
-s/Channel Sub-System/Channel Subsystem/ ?
-
-> +	for (i = 0; tests[i].name; i++) {
-> +		report_prefix_push(tests[i].name);
-> +		tests[i].func();
-> +		report_prefix_pop();
+> +	/* Read the SCHIB for this subchannel */
+> +	cc = stsch(test_device_sid, &schib);
+> +	if (cc) {
+> +		report(0, "stsch cc=%d", cc);
+> +		return;
 > +	}
-> +	report_prefix_pop();
 > +
-> +	return report_summary();
+> +	/* Update the SCHIB to enable the channel */
+> +	pmcw->flags |= PMCW_ENABLE;
+> +
+> +	/* Tell the CSS we want to modify the subchannel */
+> +	cc = msch(test_device_sid, &schib);
+> +	if (cc) {
+> +		/*
+> +		 * If the subchannel is status pending or
+> +		 * if a function is in progress,
+> +		 * we consider both cases as errors.
+> +		 */
+> +		report(0, "msch cc=%d", cc);
+> +		return;
+> +	}
+> +
+> +	/*
+> +	 * Read the SCHIB again to verify the enablement
+> +	 * insert a little delay and try 5 times.
+> +	 */
+> +	do {
+> +		cc = stsch(test_device_sid, &schib);
+> +		if (cc) {
+> +			report(0, "stsch cc=%d", cc);
+> +			return;
+> +		}
+> +		delay(10);
+
+That's just a short delay to avoid a busy loop, right? msch should be
+immediate, and you probably should not delay on success?
+
+> +	} while (!(pmcw->flags & PMCW_ENABLE) && count++ < 5);
+
+How is this supposed to work? Doesn't the stsch overwrite the control
+block again, so you need to re-set the enable bit before you retry?
+
+> +
+> +	if (!(pmcw->flags & PMCW_ENABLE)) {
+> +		report(0, "Enable failed. pmcw: %x", pmcw->flags);
+> +		return;
+> +	}
+> +	report(1, "Tested");
 > +}
-
-This basically looks sane to me now.
-
-Just some additional considerations (we can do that on top, no need to
-do surgery here right now):
-
-I currently have the (not sure how sensible) idea to add some optional
-testing for vfio-ccw, and this would obviously need some I/O routines as
-well. So, in the long run, it would be good if something like this
-stsch-loop could be factored out to a kind of library function. Just
-some thoughts for now :)
+> +
+>  static struct {
+>  	const char *name;
+>  	void (*func)(void);
+>  } tests[] = {
+>  	{ "enumerate (stsch)", test_enumerate },
+> +	{ "enable (msch)", test_enable },
+>  	{ NULL, NULL }
+>  };
+>  
 
