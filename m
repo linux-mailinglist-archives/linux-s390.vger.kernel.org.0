@@ -2,151 +2,238 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 887F811C966
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 10:39:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DF07411C97F
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 10:39:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728404AbfLLJit (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Dec 2019 04:38:49 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:22030 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728391AbfLLJit (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:38:49 -0500
-Received: from localhost (mailhub1-ext [192.168.12.233])
-        by localhost (Postfix) with ESMTP id 47YTJQ19QQz9tx9d;
-        Thu, 12 Dec 2019 10:38:46 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=ud0LAurH; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id PtgGjD3L2HhS; Thu, 12 Dec 2019 10:38:46 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 47YTJQ04Spz9tx9b;
-        Thu, 12 Dec 2019 10:38:46 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1576143526; bh=PmEFgaQ7Eo9rbAL5MPouRGU/8Glf/6NoE8/kyEXX9XI=;
-        h=Subject:To:References:From:Date:In-Reply-To:From;
-        b=ud0LAurHVCHTtzHonbn8ggiFwj8yqRLCq120So6BnJYTKnINs+gq8gijKGFlcEk8d
-         +TgnRymV/wNbxtAsJKay2iOmRUp+H61LLodMFeYPw1Athio8oP8JCZjOortSPz5NQK
-         1pwHjkeNU9ObsJxl02zEkD5UarY4Tr0gAvrMwPFM=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 1E80E8B85B;
-        Thu, 12 Dec 2019 10:38:47 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id kkSWjlcM3lXj; Thu, 12 Dec 2019 10:38:47 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 350948B776;
-        Thu, 12 Dec 2019 10:38:46 +0100 (CET)
-Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-To:     Balbir Singh <bsingharora@gmail.com>,
-        Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kasan-dev@googlegroups.com, aneesh.kumar@linux.ibm.com,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>
-References: <20191210044714.27265-1-dja@axtens.net>
- <20191210044714.27265-5-dja@axtens.net>
- <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com>
- <875zincu8a.fsf@dja-thinkpad.axtens.net>
- <2e0f21e6-7552-815b-1bf3-b54b0fc5caa9@gmail.com>
- <87wob3aqis.fsf@dja-thinkpad.axtens.net>
- <1bffad2d-db13-9808-afc9-5594f02dcf01@gmail.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <2f017b74-b6f4-5723-591a-fe7525b85419@c-s.fr>
-Date:   Thu, 12 Dec 2019 10:38:45 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1728339AbfLLJjd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Dec 2019 04:39:33 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21908 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728435AbfLLJjc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 12 Dec 2019 04:39:32 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBC9bEkc116654
+        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 04:39:31 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wr8m0v7c3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 04:39:30 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Thu, 12 Dec 2019 09:39:19 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Dec 2019 09:39:16 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBC9dFFR54329486
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 09:39:15 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C42E311C058;
+        Thu, 12 Dec 2019 09:39:15 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D61D11C050;
+        Thu, 12 Dec 2019 09:39:15 +0000 (GMT)
+Received: from dyn-9-152-224-51.boeblingen.de.ibm.com (unknown [9.152.224.51])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Dec 2019 09:39:15 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v4 3/9] s390x: interrupt registration
+To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
+        cohuck@redhat.com
+References: <1576079170-7244-1-git-send-email-pmorel@linux.ibm.com>
+ <1576079170-7244-4-git-send-email-pmorel@linux.ibm.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Thu, 12 Dec 2019 10:39:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <1bffad2d-db13-9808-afc9-5594f02dcf01@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1576079170-7244-4-git-send-email-pmorel@linux.ibm.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="L3xDJArAebKHX4yp87u0Vf7JaK820eBN7"
+X-TM-AS-GCONF: 00
+x-cbid: 19121209-0016-0000-0000-000002D40F1F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121209-0017-0000-0000-000033363268
+Message-Id: <7ae0f105-0809-3c42-288c-f7136764a8f3@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_02:2019-12-12,2019-12-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=764
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 clxscore=1015 adultscore=0 spamscore=0
+ suspectscore=3 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912120069
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--L3xDJArAebKHX4yp87u0Vf7JaK820eBN7
+Content-Type: multipart/mixed; boundary="bOld5wOUZqOqi8aFVTkcWeQY8k5ooa1w2"
+
+--bOld5wOUZqOqi8aFVTkcWeQY8k5ooa1w2
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 12/11/19 4:46 PM, Pierre Morel wrote:
+> Define two functions to register and to unregister a call back for IO
+> Interrupt handling.
+
+How about:
+Let's make it possible to add and remove a custom io interrupt handler,
+that can be used instead of the normal one.
+
+>=20
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Reviewed-by: Thomas Huth <thuth@redhat.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> ---
+>  lib/s390x/interrupt.c | 23 ++++++++++++++++++++++-
+>  lib/s390x/interrupt.h |  7 +++++++
+>  2 files changed, 29 insertions(+), 1 deletion(-)
+>  create mode 100644 lib/s390x/interrupt.h
+>=20
+> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
+> index 05f30be..b70aafd 100644
+> --- a/lib/s390x/interrupt.c
+> +++ b/lib/s390x/interrupt.c
+> @@ -10,9 +10,9 @@
+>   * under the terms of the GNU Library General Public License version 2=
+=2E
+>   */
+>  #include <libcflat.h>
+> -#include <asm/interrupt.h>
+>  #include <asm/barrier.h>
+>  #include <sclp.h>
+> +#include <interrupt.h>
+> =20
+>  static bool pgm_int_expected;
+>  static bool ext_int_expected;
+> @@ -141,12 +141,33 @@ void handle_mcck_int(void)
+>  		     lc->mcck_old_psw.addr);
+>  }
+> =20
+> +static void (*io_int_func)(void);
+> +
+>  void handle_io_int(void)
+>  {
+> +	if (*io_int_func)
+> +		return (*io_int_func)();
+> +
+>  	report_abort("Unexpected io interrupt: at %#lx",
+>  		     lc->io_old_psw.addr);
+>  }
+> =20
+> +int register_io_int_func(void (*f)(void))
+> +{
+> +	if (io_int_func)
+> +		return -1;
+> +	io_int_func =3D f;
+> +	return 0;
+> +}
+
+Not completely sure why this isn't a bool, but ok.
+
+> +
+> +int unregister_io_int_func(void (*f)(void))
+> +{
+> +	if (io_int_func !=3D f)
+> +		return -1;
+> +	io_int_func =3D NULL;
+> +	return 0;
+> +}
+> +
+>  void handle_svc_int(void)
+>  {
+>  	report_abort("Unexpected supervisor call interrupt: at %#lx",
+> diff --git a/lib/s390x/interrupt.h b/lib/s390x/interrupt.h
+> new file mode 100644
+> index 0000000..e945ef7
+> --- /dev/null
+> +++ b/lib/s390x/interrupt.h
+> @@ -0,0 +1,7 @@
+> +#ifndef __INTERRUPT_H
+> +#include <asm/interrupt.h>
+> +
+> +int register_io_int_func(void (*f)(void));
+> +int unregister_io_int_func(void (*f)(void));
+> +
+> +#endif
+>=20
 
 
-Le 12/12/2019 à 08:42, Balbir Singh a écrit :
-> 
-> 
-> On 12/12/19 1:24 am, Daniel Axtens wrote:
->> Hi Balbir,
->>
->>>>>> +Discontiguous memory can occur when you have a machine with memory spread
->>>>>> +across multiple nodes. For example, on a Talos II with 64GB of RAM:
->>>>>> +
->>>>>> + - 32GB runs from 0x0 to 0x0000_0008_0000_0000,
->>>>>> + - then there's a gap,
->>>>>> + - then the final 32GB runs from 0x0000_2000_0000_0000 to 0x0000_2008_0000_0000
->>>>>> +
->>>>>> +This can create _significant_ issues:
->>>>>> +
->>>>>> + - If we try to treat the machine as having 64GB of _contiguous_ RAM, we would
->>>>>> +   assume that ran from 0x0 to 0x0000_0010_0000_0000. We'd then reserve the
->>>>>> +   last 1/8th - 0x0000_000e_0000_0000 to 0x0000_0010_0000_0000 as the shadow
->>>>>> +   region. But when we try to access any of that, we'll try to access pages
->>>>>> +   that are not physically present.
->>>>>> +
->>>>>
->>>>> If we reserved memory for KASAN from each node (discontig region), we might survive
->>>>> this no? May be we need NUMA aware KASAN? That might be a generic change, just thinking
->>>>> out loud.
->>>>
->>>> The challenge is that - AIUI - in inline instrumentation, the compiler
->>>> doesn't generate calls to things like __asan_loadN and
->>>> __asan_storeN. Instead it uses -fasan-shadow-offset to compute the
->>>> checks, and only calls the __asan_report* family of functions if it
->>>> detects an issue. This also matches what I can observe with objdump
->>>> across outline and inline instrumentation settings.
->>>>
->>>> This means that for this sort of thing to work we would need to either
->>>> drop back to out-of-line calls, or teach the compiler how to use a
->>>> nonlinear, NUMA aware mem-to-shadow mapping.
->>>
->>> Yes, out of line is expensive, but seems to work well for all use cases.
->>
->> I'm not sure this is true. Looking at scripts/Makefile.kasan, allocas,
->> stacks and globals will only be instrumented if you can provide
->> KASAN_SHADOW_OFFSET. In the case you're proposing, we can't provide a
->> static offset. I _think_ this is a compiler limitation, where some of
->> those instrumentations only work/make sense with a static offset, but
->> perhaps that's not right? Dmitry and Andrey, can you shed some light on
->> this?
->>
-> 
->  From what I can read, everything should still be supported, the info page
-> for gcc states that globals, stack asan should be enabled by default.
-> allocas may have limited meaning if stack-protector is turned on (no?)
 
-Where do you read that ?
+--bOld5wOUZqOqi8aFVTkcWeQY8k5ooa1w2--
 
-As far as I can see, there is not much details about 
--fsanitize=kernel-address and -fasan-shadow-offset=number in GCC doc 
-(https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html)
+--L3xDJArAebKHX4yp87u0Vf7JaK820eBN7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-[...]
+-----BEGIN PGP SIGNATURE-----
 
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl3yCsMACgkQ41TmuOI4
+ufht7w//cYFofO2ThArFFL5dMEdt3moQp+urrqjmwq+bSdtXwWg6Whrdoi6xumyR
+UT8AQpBp4CPbaz4YAHymvUAQDpSHIh9nGqnN8ezgt7eeNVCGdoGXIGZ8ygkDICfA
+w2O1AEIIG16uGVA31Q4n3I2ZvA3J2pEW4Ap1/rMDHqJqYtm9wfl03iEgT6FaoT35
+od4kSrBSYTi1z4MdNqcTzOZXl7OcNv2okOQpMk4V1Kc+7PsxpzVL+NBLQeYjrJBj
+iAyPCg4teuVYFR6Kii+fYWToW+xPFwG2DOjVWI/QSG4jJ+J4YlcdicxtbbAmfoDh
+wxTuldax75wZ5dt1LZOY7neijpxfesqJdmKn9KKK0sHiT51uvugZ9ANEg9ECD/1h
+SbSt0tdmtPEcP3de70Yn9eI20lqcR1zJRuJKq/bnMY9aYMIyvB7qyNwXXjeOvnTb
+fFJsTdfivOxPD/FnBmNkRfXFrFCwFVsr+trud47Zz/lT6jOT4kAxG9O2mmoV94db
+p6Ru7UjKNgVJA3G/qR+n6BHh+AUpP3O/voBgvwFjNtoaQRMqCEfgu6kFzKw/rnck
+nrajs7wyC2jv/9u9UEiwoNfVnUf1fan0AjBrUNLZq/rI3x2lCJxXiB6bjPc6dmGY
+t42hDe1clRKSO27oVywa20garWdXm2TysUHkjKn6bjaUx5dtWyU=
+=UoxB
+-----END PGP SIGNATURE-----
 
->>
-> 
-> I think I got CONFIG_PHYS_MEM_SIZE_FOR_KASN wrong, honestly I don't get why
-> we need this size? The size is in MB and the default is 0.
-> 
-> Why does the powerpc port of KASAN need the SIZE to be explicitly specified?
-> 
+--L3xDJArAebKHX4yp87u0Vf7JaK820eBN7--
 
-AFAICS, it is explained in details in Daniel's commit log. That's 
-because on book3s64, KVM requires KASAN to also work when MMU is off.
-
-The 0 default is for when CONFIG_KASAN is not selected, in order to 
-avoid a forest of #ifdefs in the code.
-
-Christophe
