@@ -2,259 +2,166 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F112E11CD1D
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 13:26:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B22E11CE67
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 14:34:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729157AbfLLM0p (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Dec 2019 07:26:45 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29720 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729092AbfLLM0p (ORCPT
+        id S1729428AbfLLNeX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Dec 2019 08:34:23 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60730 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729395AbfLLNeW (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 12 Dec 2019 07:26:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576153603;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ti7MbfWNPlo3igfhAHarIgxQz4gImvo8od601LB4EeU=;
-        b=MI1ZQYYwxgeikxBmyEqtMhFVPhLnwvzpeM2pyDbLBFDVLkOVh6bnSDhXtEacIQv4t6aTvn
-        fj3uqGiTuincIcHATfpWxa70i/IuouVnpDZeR7FNAeUM4FCkX7KP4/IT4Jh4PjDjul1Q5z
-        patLlLhaPacmCtMsStDYMW7ccGrjRPc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-368-cd2DHJI3P6aeU8LynnIZaQ-1; Thu, 12 Dec 2019 07:26:42 -0500
-X-MC-Unique: cd2DHJI3P6aeU8LynnIZaQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EEFBCDB20;
-        Thu, 12 Dec 2019 12:26:40 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CDFD319C58;
-        Thu, 12 Dec 2019 12:26:36 +0000 (UTC)
-Date:   Thu, 12 Dec 2019 13:26:34 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v4 8/9] s390x: css: ssch/tsch with sense
- and interrupt
-Message-ID: <20191212132634.3a16a389.cohuck@redhat.com>
-In-Reply-To: <1576079170-7244-9-git-send-email-pmorel@linux.ibm.com>
+        Thu, 12 Dec 2019 08:34:22 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCDXF9x148566
+        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 08:34:21 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wtf70hum8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 08:34:04 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 12 Dec 2019 13:32:19 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Dec 2019 13:32:17 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBCDWGsl36110556
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Dec 2019 13:32:16 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 66E8DA4062;
+        Thu, 12 Dec 2019 13:32:16 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2D988A405C;
+        Thu, 12 Dec 2019 13:32:16 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.152.222.89])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 12 Dec 2019 13:32:16 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v4 1/9] s390x: saving regs for interrupts
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
+        cohuck@redhat.com
 References: <1576079170-7244-1-git-send-email-pmorel@linux.ibm.com>
-        <1576079170-7244-9-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
+ <1576079170-7244-2-git-send-email-pmorel@linux.ibm.com>
+ <19f572f1-5855-154a-af2b-1273d485be51@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Thu, 12 Dec 2019 14:32:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <19f572f1-5855-154a-af2b-1273d485be51@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-TM-AS-GCONF: 00
+x-cbid: 19121213-0020-0000-0000-0000039775DC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121213-0021-0000-0000-000021EE7EE0
+Message-Id: <eada4a92-afab-c6fa-a125-fdcc254643dd@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-12_03:2019-12-12,2019-12-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 adultscore=0 clxscore=1015 malwarescore=0
+ suspectscore=0 impostorscore=0 bulkscore=0 phishscore=0 spamscore=0
+ mlxscore=0 mlxlogscore=776 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912120103
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 11 Dec 2019 16:46:09 +0100
-Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> When a channel is enabled we can start a SENSE command using the SSCH
 
-s/SENSE/SENSE ID/
-
-SENSE is for getting sense data after a unit check :)
-
-> instruction to recognize the control unit and device.
+On 2019-12-12 10:24, Janosch Frank wrote:
+> On 12/11/19 4:46 PM, Pierre Morel wrote:
+>> If we use multiple source of interrupts, for exemple, using SCLP
 > 
-> This tests the success of SSCH, the I/O interruption and the TSCH
-> instructions.
+> s/exemple/example/
+
+OK, thanks
+
 > 
-> The test expects a device with a control unit type of 0xC0CA as the
-> first subchannel of the CSS.
+>> console to print information while using I/O interrupts, we need
+>> to have a re-entrant register saving interruption handling.
+>>
+>> Instead of saving at a static memory address, let's save the base
+>> registers and the floating point registers on the stack.
+>>
+>> Note that we keep the static register saving to recover from the
+>> RESET tests.
+>>
+>> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+>> ---
+>>   s390x/cstart64.S | 25 +++++++++++++++++++++++--
+>>   1 file changed, 23 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+>> index 86dd4c4..ff05f9b 100644
+>> --- a/s390x/cstart64.S
+>> +++ b/s390x/cstart64.S
+>> @@ -118,6 +118,25 @@ memsetxc:
+>>   	lmg	%r0, %r15, GEN_LC_SW_INT_GRS
+>>   	.endm
+>>> +	.macro SAVE_IRQ_REGS
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> ---
->  lib/s390x/css.h |  13 ++++
->  s390x/css.c     | 175 ++++++++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 188 insertions(+)
+> Maybe add comments to the start of the macros like:
+> "Save registers on the stack, so we can have stacked interrupts."
 
-> +static void irq_io(void)
-> +{
-> +	int ret = 0;
-> +	char *flags;
-> +	int sid;
-> +
-> +	report_prefix_push("Interrupt");
-> +	if (lowcore->io_int_param != CSS_TEST_INT_PARAM) {
-> +		report(0, "Bad io_int_param: %x", lowcore->io_int_param);
-> +		report_prefix_pop();
-> +		return;
-> +	}
-> +	report_prefix_pop();
-> +
-> +	report_prefix_push("tsch");
-> +	sid = lowcore->subsys_id_word;
-> +	ret = tsch(sid, &irb);
-> +	switch (ret) {
-> +	case 1:
-> +		dump_irb(&irb);
-> +		flags = dump_scsw_flags(irb.scsw.ctrl);
-> +		report(0, "IRB scsw flags: %s", flags);
+OK.
 
-I guess that should only happen if the I/O interrupt was for another
-subchannel, and we only enable one subchannel, right?
+> 
+>> +	slgfi   %r15, 15 * 8
+>> +	stmg    %r0, %r14, 0(%r15)
+>> +	slgfi   %r15, 16 * 8
+>> +	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+>> +	std	\i, \i * 8(%r15)
+>> +	.endr
+>> +	lgr     %r2, %r15
+> 
+> What's that doing?
 
-Maybe log "I/O interrupt, but sch not status pending: <flags>"? (No
-idea how log the logged messages can be for kvm unit tests.)
+Passing a parameter to the saved registers to the handler.
+makes me think that since I reworked the interrupt handler to add 
+registration the parameter disappeared...
 
-> +		goto pop;
-> +	case 2:
-> +		report(0, "TSCH return unexpected CC 2");
+I will remove this line and come back with a new series at the time we 
+need to access the registers.
 
-s/return/returns/
+> 
+>> +	.endm
+>> +
+>> +	.macro RESTORE_IRQ_REGS
+>> +	.irp i, 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+>> +	ld	\i, \i * 8(%r15)
+>> +	.endr
+>> +	algfi   %r15, 16 * 8
+>> +	lmg     %r0, %r14, 0(%r15)
+>> +	algfi   %r15, 15 * 8
+>> +	.endm
+>> +
+>>   .section .text
+>>   /*
+>>    * load_reset calling convention:
+>> @@ -154,6 +173,8 @@ diag308_load_reset:
+>>   	lpswe	GEN_LC_SW_INT_PSW
+>>   1:	br	%r14
+>>   
+>> +
+>> +
+> 
+> Still not fixed
 
-> +		goto pop;
-> +	case 3:
-> +		report(0, "Subchannel %08x not operational", sid);
-> +		goto pop;
-> +	case 0:
-> +		/* Stay humble on success */
+sorry I did not see this
 
-:)
+Thanks for review,
+Regards,
+Pierre
 
-> +		break;
-> +	}
-> +pop:
-> +	report_prefix_pop();
-> +}
-> +
-> +static int start_subchannel(int code, char *data, int count)
-> +{
-> +	int ret;
-> +	struct pmcw *p = &schib.pmcw;
-> +	struct orb *orb_p = &orb[0];
-> +
-> +	/* Verify that a test subchannel has been set */
-> +	if (!test_device_sid) {
-> +		report_skip("No device");
-> +		return 0;
-> +	}
-> +
-> +	if ((unsigned long)data >= 0x80000000UL) {
-> +		report(0, "Data above 2G! %p", data);
-> +		return 0;
-> +	}
-> +
-> +	/* Verify that the subchannel has been enabled */
-> +	ret = stsch(test_device_sid, &schib);
-> +	if (ret) {
-> +		report(0, "Err %d on stsch on sid %08x", ret, test_device_sid);
-> +		return 0;
-> +	}
-> +	if (!(p->flags & PMCW_ENABLE)) {
-> +		report_skip("Device (sid %08x) not enabled", test_device_sid);
-> +		return 0;
-> +	}
-> +
-> +	report_prefix_push("ssch");
-> +	/* Build the CCW chain with a single CCW */
-> +	ccw[0].code = code;
-> +	ccw[0].flags = 0; /* No flags need to be set */
-> +	ccw[0].count = count;
-> +	ccw[0].data_address = (int)(unsigned long)data;
-> +	orb_p->intparm = CSS_TEST_INT_PARAM;
-> +	orb_p->ctrl = ORB_F_INIT_IRQ|ORB_F_FORMAT|ORB_F_LPM_DFLT;
-> +	if ((unsigned long)&ccw[0] >= 0x80000000UL) {
-> +		report(0, "CCW above 2G! %016lx", (unsigned long)&ccw[0]);
 
-Maybe check before filling out the ccw?
-
-> +		report_prefix_pop();
-> +		return 0;
-> +	}
-> +	orb_p->cpa = (unsigned int) (unsigned long)&ccw[0];
-> +
-> +	ret = ssch(test_device_sid, orb_p);
-> +	if (ret) {
-> +		report(0, "ssch cc=%d", ret);
-> +		report_prefix_pop();
-> +		return 0;
-> +	}
-> +	report_prefix_pop();
-> +	return 1;
-> +}
-> +
-> +/*
-> + * test_sense
-> + * Pre-requisits:
-> + * - We need the QEMU PONG device as the first recognized
-> + * - device by the enumeration.
-> + * - ./s390x-run s390x/css.elf -device ccw-pong,cu_type=0xc0ca
-> + */
-> +static void test_sense(void)
-> +{
-> +	int ret;
-> +
-> +	ret = register_io_int_func(irq_io);
-> +	if (ret) {
-> +		report(0, "Could not register IRQ handler");
-> +		goto unreg_cb;
-> +	}
-> +
-> +	enable_io_irq();
-> +	lowcore->io_int_param = 0;
-> +
-> +	ret = start_subchannel(CCW_CMD_SENSE_ID, buffer, sizeof(senseid));
-> +	if (!ret) {
-> +		report(0, "start_subchannel failed");
-> +		goto unreg_cb;
-> +	}
-> +
-> +	delay(100);
-> +	if (lowcore->io_int_param != CSS_TEST_INT_PARAM) {
-> +		report(0, "cu_type: expect 0x%08x, got 0x%08x",
-> +		       CSS_TEST_INT_PARAM, lowcore->io_int_param);
-> +		goto unreg_cb;
-> +	}
-
-This still looks like that odd "delay and hope an interrupt has arrived
-in the mean time" pattern.
-
-Also, doesn't the interrupt handler check for the intparm already?
-
-> +
-> +	senseid.cu_type = buffer[2] | (buffer[1] << 8);
-
-This still looks odd; why not have the ccw fill out the senseid
-structure directly?
-
-> +
-> +	/* Sense ID is non packed cut_type is at offset +1 byte */
-
-I have trouble parsing this sentence...
-
-> +	if (senseid.cu_type == PONG_CU)
-> +		report(1, "cu_type: expect 0x%04x got 0x%04x",
-> +		       PONG_CU_TYPE, senseid.cu_type);
-> +	else
-> +		report(0, "cu_type: expect 0x%04x got 0x%04x",
-> +		       PONG_CU_TYPE, senseid.cu_type);
-
-Didn't you want to check for ff in the reserved field as well?
-
-> +
-> +unreg_cb:
-> +	unregister_io_int_func(irq_io);
-> +}
-> +
->  static struct {
->  	const char *name;
->  	void (*func)(void);
->  } tests[] = {
->  	{ "enumerate (stsch)", test_enumerate },
->  	{ "enable (msch)", test_enable },
-> +	{ "sense (ssch/tsch)", test_sense },
->  	{ NULL, NULL }
->  };
->  
+-- 
+Pierre Morel
+IBM Lab Boeblingen
 
