@@ -2,114 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A91BA11D52D
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 19:20:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FA0F11D81D
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 21:53:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730357AbfLLSUP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Dec 2019 13:20:15 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13318 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730343AbfLLSUP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 12 Dec 2019 13:20:15 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBCI9fbB037571
-        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 13:20:13 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wuswr97d1-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 12 Dec 2019 13:20:13 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Thu, 12 Dec 2019 18:20:11 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 12 Dec 2019 18:20:08 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBCIK7an39322082
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 12 Dec 2019 18:20:08 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D73D2A405F;
-        Thu, 12 Dec 2019 18:20:07 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB5CCA406A;
-        Thu, 12 Dec 2019 18:20:07 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.152.222.89])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 12 Dec 2019 18:20:07 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v4 8/9] s390x: css: ssch/tsch with sense
- and interrupt
-From:   Pierre Morel <pmorel@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-References: <1576079170-7244-1-git-send-email-pmorel@linux.ibm.com>
- <1576079170-7244-9-git-send-email-pmorel@linux.ibm.com>
- <20191212132634.3a16a389.cohuck@redhat.com>
- <1ea58644-9f24-f547-92d5-a99dcb041502@linux.ibm.com>
-Date:   Thu, 12 Dec 2019 19:20:07 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        id S1730880AbfLLUxR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Dec 2019 15:53:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50948 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730749AbfLLUxR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Dec 2019 15:53:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576183996;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=jFsMCkTPVgR+W1Kd3Lf7aWur2abNjkkDZbU5lmEOBvY=;
+        b=hK/r0/tdUfUddrypg8CTRgyQQsrs3YRpe8+jY2rzNAv8seUe133HnAINpm6M2BLw4kVEcW
+        ffiuO9SV+Z35WQbTpPNMddJa9XY6PXkxR+ykOrxIbYgLRjbMPP/ScT6E7wmEg0FvGCQFx+
+        NU7O2+r1NJ9elj20oPGY+JET/Py0E3w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-191-8Vj4gIgUMM2OAurVbZEBGA-1; Thu, 12 Dec 2019 15:53:11 -0500
+X-MC-Unique: 8Vj4gIgUMM2OAurVbZEBGA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B0B8F100726D;
+        Thu, 12 Dec 2019 20:53:06 +0000 (UTC)
+Received: from shalem.localdomain.com (unknown [10.36.118.3])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7223B60BB1;
+        Thu, 12 Dec 2019 20:53:05 +0000 (UTC)
+From:   Hans de Goede <hdegoede@redhat.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Hans de Goede <hdegoede@redhat.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH resend] s390/purgatory: Make sure we fail the build if purgatory has missing symbols
+Date:   Thu, 12 Dec 2019 21:53:04 +0100
+Message-Id: <20191212205304.191610-1-hdegoede@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1ea58644-9f24-f547-92d5-a99dcb041502@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19121218-0012-0000-0000-000003743795
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121218-0013-0000-0000-000021B014CF
-Message-Id: <96034dbc-489a-7f76-0402-d5c0c42d20b3@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-12_06:2019-12-12,2019-12-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
- mlxlogscore=789 clxscore=1015 priorityscore=1501 adultscore=0
- impostorscore=0 phishscore=0 bulkscore=0 lowpriorityscore=0 suspectscore=0
- spamscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912120140
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Since we link purgatory with -r aka we enable "incremental linking"
+no checks for unresolved symbols are done while linking the purgatory.
 
+This commit adds an extra check for unresolved symbols by calling ld
+without -r before running objcopy to generate purgatory.ro.
 
-On 2019-12-12 15:10, Pierre Morel wrote:
-> 
-> 
-> On 2019-12-12 13:26, Cornelia Huck wrote:
->> On Wed, 11 Dec 2019 16:46:09 +0100
->> Pierre Morel <pmorel@linux.ibm.com> wrote:
->>
+This will help us catch missing symbols in the purgatory sooner.
 
-...
+Note this commit also removes --no-undefined from LDFLAGS_purgatory
+as that has no effect.
 
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+---
+Changes in v2:
+- Using 2 if_changed lines under a single rule does not work, then
+  1 of the 2 will always execute each build.
+  Instead add a new (unused) purgatory.chk intermediate which gets
+  linked from purgatory.ro without -r to do the missing symbols check
+- This also fixes the check generating an a.out file (oops)
+---
+ arch/s390/purgatory/.gitignore |  1 +
+ arch/s390/purgatory/Makefile   | 13 ++++++++++---
+ 2 files changed, 11 insertions(+), 3 deletions(-)
 
-> 
->>
->> Also, doesn't the interrupt handler check for the intparm already?
-> 
-> Yes, if the interrupt fires.
-> 
->>
->>> +
->>> +    senseid.cu_type = buffer[2] | (buffer[1] << 8);
->>
->> This still looks odd; why not have the ccw fill out the senseid
->> structure directly?
-> 
-> Oh sorry, you already said and I forgot to modify this.
-> thanks
-
-hum, sorry, I forgot, the sense structure is not padded so I need this.
-
-Regards,
-Pierre
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+diff --git a/arch/s390/purgatory/.gitignore b/arch/s390/purgatory/.gitign=
+ore
+index 04a03433c720..c82157f46b18 100644
+--- a/arch/s390/purgatory/.gitignore
++++ b/arch/s390/purgatory/.gitignore
+@@ -1,3 +1,4 @@
+ purgatory
++purgatory.chk
+ purgatory.lds
+ purgatory.ro
+diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+index bc0d7a0d0394..13e9a5dc0a07 100644
+--- a/arch/s390/purgatory/Makefile
++++ b/arch/s390/purgatory/Makefile
+@@ -4,7 +4,7 @@ OBJECT_FILES_NON_STANDARD :=3D y
+=20
+ purgatory-y :=3D head.o purgatory.o string.o sha256.o mem.o
+=20
+-targets +=3D $(purgatory-y) purgatory.lds purgatory purgatory.ro
++targets +=3D $(purgatory-y) purgatory.lds purgatory purgatory.chk purgat=
+ory.ro
+ PURGATORY_OBJS =3D $(addprefix $(obj)/,$(purgatory-y))
+=20
+ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+@@ -26,15 +26,22 @@ KBUILD_CFLAGS +=3D $(CLANG_FLAGS)
+ KBUILD_CFLAGS +=3D $(call cc-option,-fno-PIE)
+ KBUILD_AFLAGS :=3D $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
+=20
+-LDFLAGS_purgatory :=3D -r --no-undefined -nostdlib -z nodefaultlib -T
++# Since we link purgatory with -r unresolved symbols are not checked, so=
+ we
++# also link a purgatory.chk binary without -r to check for unresolved sy=
+mbols.
++PURGATORY_LDFLAGS :=3D -nostdlib -z nodefaultlib
++LDFLAGS_purgatory :=3D -r $(PURGATORY_LDFLAGS) -T
++LDFLAGS_purgatory.chk :=3D -e purgatory_start $(PURGATORY_LDFLAGS)
+ $(obj)/purgatory: $(obj)/purgatory.lds $(PURGATORY_OBJS) FORCE
+ 		$(call if_changed,ld)
+=20
++$(obj)/purgatory.chk: $(obj)/purgatory FORCE
++		$(call if_changed,ld)
++
+ OBJCOPYFLAGS_purgatory.ro :=3D -O elf64-s390
+ OBJCOPYFLAGS_purgatory.ro +=3D --remove-section=3D'*debug*'
+ OBJCOPYFLAGS_purgatory.ro +=3D --remove-section=3D'.comment'
+ OBJCOPYFLAGS_purgatory.ro +=3D --remove-section=3D'.note.*'
+-$(obj)/purgatory.ro: $(obj)/purgatory FORCE
++$(obj)/purgatory.ro: $(obj)/purgatory $(obj)/purgatory.chk FORCE
+ 		$(call if_changed,objcopy)
+=20
+ $(obj)/kexec-purgatory.o: $(obj)/kexec-purgatory.S $(obj)/purgatory.ro F=
+ORCE
+--=20
+2.23.0
 
