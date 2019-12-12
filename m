@@ -2,114 +2,204 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2CDE11CA09
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 10:58:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1393C11CA73
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 11:18:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728473AbfLLJ5y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Dec 2019 04:57:54 -0500
-Received: from relay.sw.ru ([185.231.240.75]:57816 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728345AbfLLJ5y (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 12 Dec 2019 04:57:54 -0500
-Received: from dhcp-172-16-25-5.sw.ru ([172.16.25.5])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <aryabinin@virtuozzo.com>)
-        id 1ifLDd-00051z-5a; Thu, 12 Dec 2019 12:57:13 +0300
-Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
-To:     Daniel Axtens <dja@axtens.net>,
-        Balbir Singh <bsingharora@gmail.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-arch@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kasan-dev@googlegroups.com,
-        christophe.leroy@c-s.fr, aneesh.kumar@linux.ibm.com,
-        Dmitry Vyukov <dvyukov@google.com>
-References: <20191210044714.27265-1-dja@axtens.net>
- <20191210044714.27265-5-dja@axtens.net>
- <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com>
- <875zincu8a.fsf@dja-thinkpad.axtens.net>
- <2e0f21e6-7552-815b-1bf3-b54b0fc5caa9@gmail.com>
- <87wob3aqis.fsf@dja-thinkpad.axtens.net>
-From:   Andrey Ryabinin <aryabinin@virtuozzo.com>
-Message-ID: <023d59f1-c007-e153-9893-3231a4caf7d1@virtuozzo.com>
-Date:   Thu, 12 Dec 2019 12:56:56 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        id S1728345AbfLLKSj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Dec 2019 05:18:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52421 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728536AbfLLKSj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Dec 2019 05:18:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1576145917;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RhdheA6GpZI1OFubnN+r2hJUi2ulCpehuF17tpTSN/o=;
+        b=FQ6Dfe9KsA43J5aTwlF0ky6sguk851EuJgCW9p7iFR4wkSaCuqbRmw3LwTj+C5swvMj7gE
+        bCnE1rz6mQLl8XI5ckf7S6isRFX0LSJ/7V3CvhbdctzxqHWAD2X4b9eXMBLhsGpA4v5N1L
+        uCZyej6sTmRAYvenl4BnPTFRJqRIjKQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-36-CVy3HQ8DMMqcqcKpoJ4YBQ-1; Thu, 12 Dec 2019 05:18:34 -0500
+X-MC-Unique: CVy3HQ8DMMqcqcKpoJ4YBQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC419800EC0;
+        Thu, 12 Dec 2019 10:18:33 +0000 (UTC)
+Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 289AF60BB9;
+        Thu, 12 Dec 2019 10:18:30 +0000 (UTC)
+Date:   Thu, 12 Dec 2019 11:18:27 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Pierre Morel <pmorel@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v4 6/9] s390x: css: stsch, enumeration
+ test
+Message-ID: <20191212111827.21f64fa3.cohuck@redhat.com>
+In-Reply-To: <1576079170-7244-7-git-send-email-pmorel@linux.ibm.com>
+References: <1576079170-7244-1-git-send-email-pmorel@linux.ibm.com>
+        <1576079170-7244-7-git-send-email-pmorel@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <87wob3aqis.fsf@dja-thinkpad.axtens.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12/11/19 5:24 PM, Daniel Axtens wrote:
-> Hi Balbir,
+On Wed, 11 Dec 2019 16:46:07 +0100
+Pierre Morel <pmorel@linux.ibm.com> wrote:
+
+> First step for testing the channel subsystem is to enumerate the css and
+> retrieve the css devices.
 > 
->>>>> +Discontiguous memory can occur when you have a machine with memory spread
->>>>> +across multiple nodes. For example, on a Talos II with 64GB of RAM:
->>>>> +
->>>>> + - 32GB runs from 0x0 to 0x0000_0008_0000_0000,
->>>>> + - then there's a gap,
->>>>> + - then the final 32GB runs from 0x0000_2000_0000_0000 to 0x0000_2008_0000_0000
->>>>> +
->>>>> +This can create _significant_ issues:
->>>>> +
->>>>> + - If we try to treat the machine as having 64GB of _contiguous_ RAM, we would
->>>>> +   assume that ran from 0x0 to 0x0000_0010_0000_0000. We'd then reserve the
->>>>> +   last 1/8th - 0x0000_000e_0000_0000 to 0x0000_0010_0000_0000 as the shadow
->>>>> +   region. But when we try to access any of that, we'll try to access pages
->>>>> +   that are not physically present.
->>>>> +
->>>>
->>>> If we reserved memory for KASAN from each node (discontig region), we might survive
->>>> this no? May be we need NUMA aware KASAN? That might be a generic change, just thinking
->>>> out loud.
->>>
->>> The challenge is that - AIUI - in inline instrumentation, the compiler
->>> doesn't generate calls to things like __asan_loadN and
->>> __asan_storeN. Instead it uses -fasan-shadow-offset to compute the
->>> checks, and only calls the __asan_report* family of functions if it
->>> detects an issue. This also matches what I can observe with objdump
->>> across outline and inline instrumentation settings.
->>>
->>> This means that for this sort of thing to work we would need to either
->>> drop back to out-of-line calls, or teach the compiler how to use a
->>> nonlinear, NUMA aware mem-to-shadow mapping.
->>
->> Yes, out of line is expensive, but seems to work well for all use cases.
+> This tests the success of STSCH I/O instruction, we do not test the
+> reaction of the VM for an instruction with wrong parameters.
 > 
-> I'm not sure this is true. Looking at scripts/Makefile.kasan, allocas,
-> stacks and globals will only be instrumented if you can provide
-> KASAN_SHADOW_OFFSET. In the case you're proposing, we can't provide a
-> static offset. I _think_ this is a compiler limitation, where some of
-> those instrumentations only work/make sense with a static offset, but
-> perhaps that's not right? Dmitry and Andrey, can you shed some light on
-> this?
-> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> ---
+>  lib/s390x/css.h     |  1 +
+>  s390x/Makefile      |  2 ++
+>  s390x/css.c         | 88 +++++++++++++++++++++++++++++++++++++++++++++
+>  s390x/unittests.cfg |  4 +++
+>  4 files changed, 95 insertions(+)
+>  create mode 100644 s390x/css.c
 
-There is no code in the kernel is poisoning/unpoisoning
-redzones/variables on stack. It's because it's always done by the compiler, it inserts
-some code in prologue/epilogue of every function.
-So compiler needs to know the shadow offset which will be used to poison/unpoison
-stack frames.
+> diff --git a/s390x/css.c b/s390x/css.c
+> new file mode 100644
+> index 0000000..dfab35f
+> --- /dev/null
+> +++ b/s390x/css.c
+> @@ -0,0 +1,88 @@
+> +/*
+> + * Channel Subsystem tests
+> + *
+> + * Copyright (c) 2019 IBM Corp
+> + *
+> + * Authors:
+> + *  Pierre Morel <pmorel@linux.ibm.com>
+> + *
+> + * This code is free software; you can redistribute it and/or modify it
+> + * under the terms of the GNU General Public License version 2.
+> + */
+> +
+> +#include <libcflat.h>
+> +#include <alloc_phys.h>
+> +#include <asm/page.h>
+> +#include <string.h>
+> +#include <interrupt.h>
+> +#include <asm/arch_def.h>
+> +#include <asm/time.h>
+> +
+> +#include <css.h>
+> +
+> +#define SID_ONE		0x00010000
+> +
+> +static struct schib schib;
+> +static int test_device_sid;
+> +
+> +static void test_enumerate(void)
+> +{
+> +	struct pmcw *pmcw = &schib.pmcw;
+> +	int cc;
+> +	int scn;
+> +	int scn_found = 0;
+> +
+> +	for (scn = 0; scn < 0xffff; scn++) {
+> +		cc = stsch(scn|SID_ONE, &schib);
+> +		switch (cc) {
+> +		case 0:		/* 0 means SCHIB stored */
+> +			break;
+> +		case 3:		/* 3 means no more channels */
+> +			goto out;
+> +		default:	/* 1 or 2 should never happened for STSCH */
+> +			report(0, "Unexpected cc=%d on scn 0x%x", cc, scn);
 
-There is no such kind of limitation on globals instrumentation. The only reason globals
-instrumentation depends on -fasan-shadow-offset is because there was some bug related to
-globals in old gcc version which didn't support -fasan-shadow-offset.
+Spell out "subchannel number"?
 
+> +			return;
+> +		}
+> +		if (cc)
+> +			break;
 
-If you want stack instrumentation with not standard mem-to-shadow mapping, the options are:
-1. Patch compiler to make it possible the poisoning/unpoisonig of stack frames via function calls.
-2. Use out-line instrumentation and do whatever mem-to-shadow mapping you want, but keep all kernel
-stacks in some special place for which standard mem-to-shadow mapping (addr >>3 +offset)
-works.
+Isn't that redundant?
 
+> +		/* We silently only support type 0, a.k.a. I/O channels */
 
-> Also, as it currently stands, the speed difference between inline and
-> outline is approximately 2x, and given that we'd like to run this
-> full-time in syzkaller I think there is value in trading off speed for
-> some limitations.
-> 
+s/silently/currently/ ?
+
+> +		if (PMCW_CHANNEL_TYPE(pmcw) != 0)
+> +			continue;
+> +		/* We ignore I/O channels without valid devices */
+> +		if (!(pmcw->flags & PMCW_DNV))
+> +			continue;
+> +		/* We keep track of the first device as our test device */
+> +		if (!test_device_sid)
+> +			test_device_sid = scn|SID_ONE;
+> +		scn_found++;
+> +	}
+> +out:
+> +	if (!scn_found) {
+> +		report(0, "Devices, Tested: %d, no I/O type found", scn);
+
+It's no I/O _devices_ found, isn't it? There might have been I/O
+subchannels, but none with a valid device...
+
+> +		return;
+> +	}
+> +	report(1, "Devices, tested: %d, I/O type: %d", scn, scn_found);
+
+As you're testing this anyway: what about tracking _all_ numbers here?
+I.e., advance a counter for I/O subchannels as well, even if !dnv, and
+have an output like
+
+"Tested subchannels: 20, I/O subchannels: 18, I/O devices: 10"
+
+or so?
+
+> +}
+> +
+> +static struct {
+> +	const char *name;
+> +	void (*func)(void);
+> +} tests[] = {
+> +	{ "enumerate (stsch)", test_enumerate },
+> +	{ NULL, NULL }
+> +};
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	int i;
+> +
+> +	report_prefix_push("Channel Sub-System");
+
+s/Channel Sub-System/Channel Subsystem/ ?
+
+> +	for (i = 0; tests[i].name; i++) {
+> +		report_prefix_push(tests[i].name);
+> +		tests[i].func();
+> +		report_prefix_pop();
+> +	}
+> +	report_prefix_pop();
+> +
+> +	return report_summary();
+> +}
+
+This basically looks sane to me now.
+
+Just some additional considerations (we can do that on top, no need to
+do surgery here right now):
+
+I currently have the (not sure how sensible) idea to add some optional
+testing for vfio-ccw, and this would obviously need some I/O routines as
+well. So, in the long run, it would be good if something like this
+stsch-loop could be factored out to a kind of library function. Just
+some thoughts for now :)
+
