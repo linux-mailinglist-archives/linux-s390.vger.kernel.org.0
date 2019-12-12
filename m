@@ -2,153 +2,166 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 06D2811B9E2
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Dec 2019 18:18:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5391311C699
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Dec 2019 08:43:46 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730586AbfLKRS3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Dec 2019 12:18:29 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:26193 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729996AbfLKRS3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 11 Dec 2019 12:18:29 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576084707;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2nTzNvMQwFVLRqcJ75m4aP3oWlJJo/C7EdSanIk3aBw=;
-        b=JTBZ6IrvjMSO+CUpvs2csCCOqw95RlvK4nZJRbUP7/7nReZohDJyu3Dkm8vqjp8wh3qD7z
-        pDMCpbfj9Ma1Cagnwvev6XLBxGrYiD5WhsmdmUzpjxD0dJxBr6iuAIcFmuOGqZb61hu+QL
-        4Dn7XlWtDU6F+E0h5kZJla1vZQqj3KY=
-Received: from mail-yb1-f199.google.com (mail-yb1-f199.google.com
- [209.85.219.199]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-432-gCXcPsVgNKO-687LvMto_g-1; Wed, 11 Dec 2019 12:18:26 -0500
-X-MC-Unique: gCXcPsVgNKO-687LvMto_g-1
-Received: by mail-yb1-f199.google.com with SMTP id n80so16978037ybf.18
-        for <linux-s390@vger.kernel.org>; Wed, 11 Dec 2019 09:18:26 -0800 (PST)
+        id S1728124AbfLLHmz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Dec 2019 02:42:55 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38868 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728095AbfLLHmz (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Dec 2019 02:42:55 -0500
+Received: by mail-lf1-f66.google.com with SMTP id r14so915323lfm.5;
+        Wed, 11 Dec 2019 23:42:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=PkUsNGoqFdl5gXqJP6bnP2J6yrhC8TrnSK9hjm92v8k=;
+        b=NMCNzYEm9Gfegz6VLnF8XP0V5Hn0WezwnX7U9NkH5MQWw+pZmvdE45rMspF3sLqxbF
+         ZZnNXwqhT2Q5GUIlC1rnmGWdvyOao7Mv2wdJk0VOhiLJ/8ruwz7CzgzsU9HcBqUHN8xb
+         OlyZ2qODoD9obyPBZzL0HLC0LDMy+X8yU/eWI5IZxzHqW/dN5qNLoU6c8k6x83yi0cTH
+         yY3XvA65/q1EilVfL5O1Awlr4X/HW8bO8iCGiDKbMOtMsyKX1Owmv2jHdInhOqTPfUY4
+         DTV3Brysx5psuGFJ/sIoP9BO6zN1aE1N5mB96sZ/Z4CD9q24KbeourzxSb0xwN0ZLlvx
+         75SA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=2nTzNvMQwFVLRqcJ75m4aP3oWlJJo/C7EdSanIk3aBw=;
-        b=YbrIrp7XZ4Eb1eMMTTToQ/tEWDgmfIkLFDCs7JC4QvLEivxatR1T0r0QZf8Kuw7vpq
-         SufbEdsaMgrCAk94z/43wNcTmtSROjRZdWQDlOfT+kb5iNLL4GpCij21hv/WMupC3aVN
-         lVeXnAmBOTgOgHIfn3F+olpyzHj/CT6n+9V0fKqftjhHHhThOXgDBzSfFqh3rnWTF51x
-         /BbeSnQvgpddMdrGIjphH1e4FXuygk8KfGo9zswFsCuzkecFAVHD8j447QGQtyXBL2Ka
-         CjxrYkDS/SJP5ZY7dXOxMD/9uWp5oWLlUbgVCSsaocJZTmOklgpS8Sdqo/LLIhDnsT/k
-         bFnA==
-X-Gm-Message-State: APjAAAW+C5/X+TZO5OWnTo5/9W2+Dr27iOvHdraH8Dn1OVtvfnD4YEUM
-        cahsVNQ++Ea59PsNnOIjV4ce0UAQD9f1iHzigAyjDKeoWUhvgktrzWHJmDQCc3W4ywxIjUVM1L4
-        FhMuBWKk0niHaeh7q0YjaTA==
-X-Received: by 2002:a81:a7c9:: with SMTP id e192mr635682ywh.421.1576084705479;
-        Wed, 11 Dec 2019 09:18:25 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwt+UYeo0zuJ1KMsCLoS6DGAXGbzz8Q9mFTJZamJRJYD6ILLm3YjsLzwVptVerayvJ6H+gEcA==
-X-Received: by 2002:a81:a7c9:: with SMTP id e192mr635653ywh.421.1576084705117;
-        Wed, 11 Dec 2019 09:18:25 -0800 (PST)
-Received: from dev.jcline.org ([136.56.87.133])
-        by smtp.gmail.com with ESMTPSA id a22sm1235547ywh.93.2019.12.11.09.18.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2019 09:18:24 -0800 (PST)
-Date:   Wed, 11 Dec 2019 12:18:22 -0500
-From:   Jeremy Cline <jcline@redhat.com>
-To:     Michal Kubecek <mkubecek@suse.cz>
-Cc:     linux-kernel@vger.kernel.org,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: Re: s390 depending on cc-options makes it difficult to configure
-Message-ID: <20191211171822.GA36366@dev.jcline.org>
-References: <20191209164155.GA78160@dev.jcline.org>
- <20191210090108.GA22512@unicorn.suse.cz>
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=PkUsNGoqFdl5gXqJP6bnP2J6yrhC8TrnSK9hjm92v8k=;
+        b=mOj+WDtPPnHdPG4E8aPRBCWurxxy+xGiOAiO9pEebtVBtcIwoDJNf3IqcXg6nUoLQE
+         b/S+mzM/W96hsjaVAxd6oeUrjoZCy3RSpYLEKgr4YnHAFAoRSklfj5j1f+r+pnFtFVve
+         R5YIK5v68FssEl3Okd4yb1dSh/YLd1Dt/Mta5bC06F+n/PeoLdUBtjRXf4w/6N6D8toI
+         SuotGfOUoFasuqJIfWAJxf+E/JKbpWFVZGNE/PgaNXqTAOX1a5dhy2BM3/l/0Xf+NcUR
+         ZM0LzGnFSg5IXy5GGeQBzG8Y+xvlduSEggSrXnOJkPJCEv9Vqyd3o16mN3dQk0N/q/Cy
+         WxzA==
+X-Gm-Message-State: APjAAAUuVgp7qZUMqixufk9JwckNMEe1vmj35rjXwXA1ku7kLi5pOdRv
+        KfIoX8EiPpIDMsb6YfIltcs=
+X-Google-Smtp-Source: APXvYqw61Nc9c1M7/MZ1ZVdl9tv4GQZF2ss+5I1aVe+a5lUKM/oLVCrLyFH8YTXcNcxBfb4SaCbXuQ==
+X-Received: by 2002:ac2:5975:: with SMTP id h21mr4695940lfp.165.1576136571817;
+        Wed, 11 Dec 2019 23:42:51 -0800 (PST)
+Received: from [192.168.68.108] (115-64-122-209.tpgi.com.au. [115.64.122.209])
+        by smtp.gmail.com with ESMTPSA id v5sm2444547ljk.67.2019.12.11.23.42.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 11 Dec 2019 23:42:51 -0800 (PST)
+Subject: Re: [PATCH v2 4/4] powerpc: Book3S 64-bit "heavyweight" KASAN support
+To:     Daniel Axtens <dja@axtens.net>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kasan-dev@googlegroups.com, christophe.leroy@c-s.fr,
+        aneesh.kumar@linux.ibm.com, Dmitry Vyukov <dvyukov@google.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>
+References: <20191210044714.27265-1-dja@axtens.net>
+ <20191210044714.27265-5-dja@axtens.net>
+ <71751e27-e9c5-f685-7a13-ca2e007214bc@gmail.com>
+ <875zincu8a.fsf@dja-thinkpad.axtens.net>
+ <2e0f21e6-7552-815b-1bf3-b54b0fc5caa9@gmail.com>
+ <87wob3aqis.fsf@dja-thinkpad.axtens.net>
+From:   Balbir Singh <bsingharora@gmail.com>
+Message-ID: <1bffad2d-db13-9808-afc9-5594f02dcf01@gmail.com>
+Date:   Thu, 12 Dec 2019 18:42:40 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191210090108.GA22512@unicorn.suse.cz>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <87wob3aqis.fsf@dja-thinkpad.axtens.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Dec 10, 2019 at 10:01:08AM +0100, Michal Kubecek wrote:
-> On Mon, Dec 09, 2019 at 11:41:55AM -0500, Jeremy Cline wrote:
-> > Hi folks,
-> > 
-> > Commit 5474080a3a0a ("s390/Kconfig: make use of 'depends on cc-option'")
-> > makes it difficult to produce an s390 configuration for Fedora and Red
-> > Hat kernels.
-> > 
-> > The issue is I have the following configurations:
-> > 
-> > CONFIG_MARCH_Z13=y
-> > CONFIG_TUNE_Z14=y
-> > # CONFIG_TUNE_DEFAULT is not set
-> > 
-> > When the configuration is prepared on a non-s390x host without a
-> > compiler with -march=z* it changes CONFIG_TUNE_DEFAULT to y which, as
-> > far as I can tell, leads to a kernel tuned for z13 instead of z14.
-> > Fedora and Red Hat build processes produce complete configurations from
-> > snippets on any available host in the build infrastructure which very
-> > frequently is *not* s390.
-> 
-> We have exactly the same problem. Our developers need to update config
-> files for different architectures and different kernel versions on their
-> machines which are usually x86_64 but that often produces different
-> configs than the real build environment.
-> 
 
-Glad (or sad?) to hear we're not the only ones hitting this.
 
-> This is not an issue for upstream development as one usually updates
-> configs on the same system where the build takes place but it's a big
-> problem for distribution maintainers.
+On 12/12/19 1:24 am, Daniel Axtens wrote:
+> Hi Balbir,
 > 
-> > I did a quick search and couldn't find any other examples of Kconfigs
-> > depending on march or mtune compiler flags and it seems like it'd
-> > generally problematic for people preparing configurations.
+>>>>> +Discontiguous memory can occur when you have a machine with memory spread
+>>>>> +across multiple nodes. For example, on a Talos II with 64GB of RAM:
+>>>>> +
+>>>>> + - 32GB runs from 0x0 to 0x0000_0008_0000_0000,
+>>>>> + - then there's a gap,
+>>>>> + - then the final 32GB runs from 0x0000_2000_0000_0000 to 0x0000_2008_0000_0000
+>>>>> +
+>>>>> +This can create _significant_ issues:
+>>>>> +
+>>>>> + - If we try to treat the machine as having 64GB of _contiguous_ RAM, we would
+>>>>> +   assume that ran from 0x0 to 0x0000_0010_0000_0000. We'd then reserve the
+>>>>> +   last 1/8th - 0x0000_000e_0000_0000 to 0x0000_0010_0000_0000 as the shadow
+>>>>> +   region. But when we try to access any of that, we'll try to access pages
+>>>>> +   that are not physically present.
+>>>>> +
+>>>>
+>>>> If we reserved memory for KASAN from each node (discontig region), we might survive
+>>>> this no? May be we need NUMA aware KASAN? That might be a generic change, just thinking
+>>>> out loud.
+>>>
+>>> The challenge is that - AIUI - in inline instrumentation, the compiler
+>>> doesn't generate calls to things like __asan_loadN and
+>>> __asan_storeN. Instead it uses -fasan-shadow-offset to compute the
+>>> checks, and only calls the __asan_report* family of functions if it
+>>> detects an issue. This also matches what I can observe with objdump
+>>> across outline and inline instrumentation settings.
+>>>
+>>> This means that for this sort of thing to work we would need to either
+>>> drop back to out-of-line calls, or teach the compiler how to use a
+>>> nonlinear, NUMA aware mem-to-shadow mapping.
+>>
+>> Yes, out of line is expensive, but seems to work well for all use cases.
 > 
-> There are more issues like this. In general, since 4.17 or 4.18, the
-> resulting config depends on both architecture and compiler version.
-> Earlier, you could simply run "ARCH=... make oldconfig" (or menuconfig)
-> to update configs for all architectures and distribution versions.
-> Today, you need to use the right compiler version (results with e.g.
-> 4.8, 7.4 and 9.2 differ) and architecture.
-> 
-
-Yeah, that's also troublesome. This is by no means the first problem
-related to the environment at configuration time, but it the most
-bothersome to work around (at least for Fedora kernel configuration).
-
-> At the moment, I'm working around the issue by using chroot environments
-> with target distributions (e.g. openSUSE Tumbleweed) and set of cross
-> compilers for supported architectures but it's far from perfect and even
-> this way, there are problemantic points, e.g. BPFILTER_UMH which depends
-> on gcc being able to not only compile but also link.
-> 
-> IMHO the key problem is that .config mixes configuration with
-> description of build environment. I have an idea of a solution which
-> would consist of
-> 
->   - an option to extract "config" options which describe build
->     environment (i.e. their values are determined by running some
->     command, rather than reading from a file or asking user) into
->     a cache file
->   - an option telling "make *config" to use such cache file for these
->     environment "config" options instead of running the test scripts
->     (and probably issue an error if an environment option is missing)
+> I'm not sure this is true. Looking at scripts/Makefile.kasan, allocas,
+> stacks and globals will only be instrumented if you can provide
+> KASAN_SHADOW_OFFSET. In the case you're proposing, we can't provide a
+> static offset. I _think_ this is a compiler limitation, where some of
+> those instrumentations only work/make sense with a static offset, but
+> perhaps that's not right? Dmitry and Andrey, can you shed some light on
+> this?
 > 
 
-I agree that the issue is mixing kernel configuration with build
-environment. I suppose a cache file would work, but it still sounds like
-a difficult process that is working around that fact that folks are
-coupling the configuration step with the build step.
+From what I can read, everything should still be supported, the info page
+for gcc states that globals, stack asan should be enabled by default.
+allocas may have limited meaning if stack-protector is turned on (no?)
 
-I would advocate that this patch be reverted and an effort made to not
-mix build environment checks into the configuration. I'm much happier
-for the build to fail because the configuration can't be satisfied by
-the environment than I am for the configuration to quietly change or for
-the tools to not allow me to make the configuration in the first place.
-Ideally the tools would warn the user if their environment won't build
-the configuration, but that's a nice-to-have.
+> Also, as it currently stands, the speed difference between inline and
+> outline is approximately 2x, and given that we'd like to run this
+> full-time in syzkaller I think there is value in trading off speed for
+> some limitations.
+> 
 
-- Jeremy
+Full speed vs actually working across different configurations?
 
+>> BTW, the current set of patches just hang if I try to make the default
+>> mode as out of line
+> 
+> Do you have CONFIG_RELOCATABLE?
+> 
+> I've tested the following process:
+> 
+> # 1) apply patches on a fresh linux-next
+> # 2) output dir
+> mkdir ../out-3s-kasan
+> 
+> # 3) merge in the relevant config snippets
+> cat > kasan.config << EOF
+> CONFIG_EXPERT=y
+> CONFIG_LD_HEAD_STUB_CATCH=y
+> 
+> CONFIG_RELOCATABLE=y
+> 
+> CONFIG_KASAN=y
+> CONFIG_KASAN_GENERIC=y
+> CONFIG_KASAN_OUTLINE=y
+> 
+> CONFIG_PHYS_MEM_SIZE_FOR_KASAN=2048
+> EOF
+> 
+
+I think I got CONFIG_PHYS_MEM_SIZE_FOR_KASN wrong, honestly I don't get why
+we need this size? The size is in MB and the default is 0. 
+
+Why does the powerpc port of KASAN need the SIZE to be explicitly specified?
+
+Balbir Singh.
