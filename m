@@ -2,54 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CDE0411F49C
-	for <lists+linux-s390@lfdr.de>; Sat, 14 Dec 2019 23:06:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5E83311F73A
+	for <lists+linux-s390@lfdr.de>; Sun, 15 Dec 2019 11:45:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727119AbfLNWFg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 14 Dec 2019 17:05:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44924 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726992AbfLNWFP (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 14 Dec 2019 17:05:15 -0500
-Subject: Re: [GIT PULL] s390 updates for 5.5-rc2
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1576361114;
-        bh=7t1evyNR7hgGjMsXzZTdRERzbmsXgpGY/ZvFLZ+Fe1o=;
-        h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=bN0yWJlGU24op1/SPS/RyIOR9L03TlEwRNjSAI1lmjgbqMiFW4g/8HAcjQ6G2wo/+
-         mwIEI58QpBzdXHnKTk5338iT7WKLLqwz78xo5wvJJzBF/Ff0G9NQz0mns7jaED9hOl
-         DYEJenflvle2xw5S1pmAewyXoFBioO7wrQgcJMiU=
-From:   pr-tracker-bot@kernel.org
-In-Reply-To: <your-ad-here.call-01576325419-ext-4863@work.hours>
-References: <your-ad-here.call-01576325419-ext-4863@work.hours>
-X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <your-ad-here.call-01576325419-ext-4863@work.hours>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.5-3
-X-PR-Tracked-Commit-Id: 3e39ce266a273e5751e5792aee248cb8d9630c8b
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: 81d559849aa4d972a2d297840eefdd20c4054131
-Message-Id: <157636111465.10255.15224540830413807139.pr-tracker-bot@kernel.org>
-Date:   Sat, 14 Dec 2019 22:05:14 +0000
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+        id S1726103AbfLOKp2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 15 Dec 2019 05:45:28 -0500
+Received: from mail.baskent.edu.tr ([193.140.164.51]:58290 "EHLO
+        mail.baskent.edu.tr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726081AbfLOKp1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 15 Dec 2019 05:45:27 -0500
+X-Greylist: delayed 1778 seconds by postgrey-1.27 at vger.kernel.org; Sun, 15 Dec 2019 05:45:25 EST
+Received: from mail.baskent.edu.tr (mail.baskent.edu.tr [193.140.164.51])
+        by mail.baskent.edu.tr (Postfix) with ESMTPA id 8F6F11AF6ED;
+        Sun, 15 Dec 2019 13:06:49 +0300 (+03)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Sun, 15 Dec 2019 04:06:48 -0600
+From:   Mr Pressley Anton <info@anton.co.za>
+To:     undisclosed-recipients:;
+Subject: Love Greetings
+Reply-To: infoantonnp@gmail.com
+Mail-Reply-To: infoantonnp@gmail.com
+Message-ID: <c5d07996cc0a087abf22fe18fce4672e@mail.baskent.edu.tr>
+X-Sender: info@anton.co.za
+User-Agent: Roundcube Webmail/1.0.12
+X-mailyeni-MailScanner-Information: Please contact the ISP for more information
+X-mailyeni-MailScanner-ID: 8F6F11AF6ED.A93DD
+X-mailyeni-MailScanner: Found to be clean
+X-mailyeni-MailScanner-SpamCheck: not spam, SpamAssassin (cached,
+        score=2.132, required 6, ALL_TRUSTED -1.00, AWL 0.43, BAYES_20 -0.00,
+        MILLION_HUNDRED 2.70)
+X-mailyeni-MailScanner-SpamScore: ss
+X-mailyeni-MailScanner-From: info@anton.co.za
+X-Spam-Status: No
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The pull request you sent on Sat, 14 Dec 2019 13:10:19 +0100:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.5-3
-
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/81d559849aa4d972a2d297840eefdd20c4054131
-
-Thank you!
 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Love Greetings
+
+I will introduce myself as Mr. Pressley Anton. a South African citizen 
+living in East London. A director of accounting who oversees the bank's 
+financial network
+
+I ask for your approval to introduce you to our bank as a business 
+partner. Ms. Surti Dahlia, a German / Dutch businesswoman and widow from 
+the Netherlands, who died in a MH370 Malaysia aircraft
+
+So we can say that their fund was worth eight million five hundred 
+thousand pounds
+
+
+
+We can legally move this amount if you are interested.
+Many thanks
+
+Greetings,
+Mr. Pressley Anton.
+E-post :infoantonnp@gmail.com
+Telephone : +27678841926
+(Director) Department International System.
+Accounting,
+Monitoring the financial network
+
+-- 
+This message has been scanned for viruses and
+dangerous content by MailScanner, and is
+believed to be clean.
+
