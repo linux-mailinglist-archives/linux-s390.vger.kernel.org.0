@@ -2,84 +2,106 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AFBEF11FAB1
-	for <lists+linux-s390@lfdr.de>; Sun, 15 Dec 2019 20:16:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C9BB411FDB8
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2019 05:56:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726426AbfLOTQC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 15 Dec 2019 14:16:02 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:44774 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726260AbfLOTQB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 15 Dec 2019 14:16:01 -0500
-Received: by mail-pl1-f196.google.com with SMTP id az3so3487451plb.11
-        for <linux-s390@vger.kernel.org>; Sun, 15 Dec 2019 11:16:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=xFfFWWdC/bnsdcTQa3y8hEjF2m53IxR9gV68m2FvqOs=;
-        b=YJQ+a3m+rMoCZ9Ljew50T1AmciTwSCpouovZXEra7BzF3yyVwRqcE6K0OrSo4iczKy
-         FKJl5QhEUDYFJhJxv7Ymq0S+oXD65ecrzmzMGBKaX1GAf37E7SkOuf1wrtkO3KXz5dPT
-         CiBhAvg6xvt55+bX9qpVfGE/jmjw9Xtq1jBShq/d4U9wHEJUTzo3OLKeuSG76zW7e7XV
-         /gfoYW2WdK6Ep8ReHS8Q2uq2Ff7nNtGapkEcbJn/NkK8B3nqlO/QoyMoGxcGsaGFPxsn
-         v0q5ItTE2RBYxu14VugRie0HJEHx9DxXUX3Ke51tavfRmteYYl8uKcdrvMk3tMgmbkKx
-         Zu8Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=xFfFWWdC/bnsdcTQa3y8hEjF2m53IxR9gV68m2FvqOs=;
-        b=QgPyyWr9EglojjUbwxEKTYFl028KAKxhq9/3FH0ux5qdA2u/rpg0UdKVjTGokh2Mmf
-         nofku2/VmjJ48Q/SDiGz2rsQ9a4ZC3RzdBkeEf0/SOt8RAV//ZtaXrmnihA3GyD3wFdK
-         mw87VwbtNuhB4e43B1FvEH2J1nvtYfkV2KQyRPZOcnYmoXNuVgYjj14GtYczUiF+b8+w
-         HAv8x7r6TVD9O0WBpZiK0WikXqKAMsb/k183VcG1iqRWpqWq8zQMUzGdUyCouO8d5zFf
-         Whq14fDaLH4VwqHXeYZMjoy3Uetv1CYVG8SMi2KLa7hahb9lmcmSCo9MBUC6sP6lw7xS
-         CPsw==
-X-Gm-Message-State: APjAAAX1O1GBWqqIuB2Rg44ssyyhqdMQJMnPYjDoatErteMWQH+iDIEB
-        b71xXPlOCeOsD8pGd8I6h9oiAw==
-X-Google-Smtp-Source: APXvYqysBvuDqIOYkKuPoop7EVPuDHYGQEncJFVqjHJ/boW9QneFrQOgYC9mNwC5OFp2ftlmYgAv0w==
-X-Received: by 2002:a17:902:43:: with SMTP id 61mr12329671pla.88.1576437361023;
-        Sun, 15 Dec 2019 11:16:01 -0800 (PST)
-Received: from cakuba.netronome.com (c-73-202-202-92.hsd1.ca.comcast.net. [73.202.202.92])
-        by smtp.gmail.com with ESMTPSA id h68sm20556537pfe.162.2019.12.15.11.16.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 15 Dec 2019 11:16:00 -0800 (PST)
-Date:   Sun, 15 Dec 2019 11:15:58 -0800
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        raspl@linux.ibm.com, ubraun@linux.ibm.com
-Subject: Re: [PATCH net] net/smc: add fallback check to connect()
-Message-ID: <20191215111558.57dfdcf9@cakuba.netronome.com>
-In-Reply-To: <20191212213558.10564-1-kgraul@linux.ibm.com>
-References: <20191212213558.10564-1-kgraul@linux.ibm.com>
-Organization: Netronome Systems, Ltd.
+        id S1726739AbfLPE4x (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 15 Dec 2019 23:56:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:39820 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726437AbfLPE4w (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 15 Dec 2019 23:56:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 67E561007;
+        Sun, 15 Dec 2019 20:56:51 -0800 (PST)
+Received: from [10.163.1.75] (unknown [10.163.1.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 158D03F718;
+        Sun, 15 Dec 2019 20:56:09 -0800 (PST)
+Subject: Re: [PATCH V11] mm/debug: Add tests validating architecture page
+ table helpers
+To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1575364731-18131-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <d433f5a8-20a5-2862-8228-9ca72633b530@arm.com>
+Date:   Mon, 16 Dec 2019 10:27:10 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1575364731-18131-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 12 Dec 2019 22:35:58 +0100, Karsten Graul wrote:
-> From: Ursula Braun <ubraun@linux.ibm.com>
-> 
-> FASTOPEN setsockopt() or sendmsg() may switch the SMC socket to fallback
-> mode. Once fallback mode is active, the native TCP socket functions are
-> called. Nevertheless there is a small race window, when FASTOPEN
-> setsockopt/sendmsg runs in parallel to a connect(), and switch the
-> socket into fallback mode before connect() takes the sock lock.
-> Make sure the SMC-specific connect setup is omitted in this case.
-> 
-> This way a syzbot-reported refcount problem is fixed, triggered by
-> different threads running non-blocking connect() and FASTOPEN_KEY
-> setsockopt.
-> 
-> Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
-> Fixes: 6d6dd528d5af ("net/smc: fix refcount non-blocking connect() -part 2")
-> Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
 
-Applied, and queued for stable, thank you!
+
+On 12/03/2019 02:48 PM, Anshuman Khandual wrote:
+> This adds tests which will validate architecture page table helpers and
+> other accessors in their compliance with expected generic MM semantics.
+> This will help various architectures in validating changes to existing
+> page table helpers or addition of new ones.
+> 
+> This test covers basic page table entry transformations including but not
+> limited to old, young, dirty, clean, write, write protect etc at various
+> level along with populating intermediate entries with next page table page
+> and validating them.
+> 
+> Test page table pages are allocated from system memory with required size
+> and alignments. The mapped pfns at page table levels are derived from a
+> real pfn representing a valid kernel text symbol. This test gets called
+> right after page_alloc_init_late().
+> 
+> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+> arm64. Going forward, other architectures too can enable this after fixing
+> build or runtime problems (if any) with their page table helpers.
+> 
+> Folks interested in making sure that a given platform's page table helpers
+> conform to expected generic MM semantics should enable the above config
+> which will just trigger this test during boot. Any non conformity here will
+> be reported as an warning which would need to be fixed. This test will help
+> catch any changes to the agreed upon semantics expected from generic MM and
+> enable platforms to accommodate it thereafter.
+
+Any updates on this ?
