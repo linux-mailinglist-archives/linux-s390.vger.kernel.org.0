@@ -2,129 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36E76120772
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2019 14:44:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9CA0D120F7B
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2019 17:31:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727807AbfLPNno (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Dec 2019 08:43:44 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:23314 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727609AbfLPNno (ORCPT
+        id S1726320AbfLPQb2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Dec 2019 11:31:28 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24194 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725805AbfLPQb2 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 16 Dec 2019 08:43:44 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGDcU1Q191464
-        for <linux-s390@vger.kernel.org>; Mon, 16 Dec 2019 08:43:42 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2wwdxybnrc-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 16 Dec 2019 08:43:42 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <oberpar@linux.ibm.com>;
-        Mon, 16 Dec 2019 13:43:40 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Dec 2019 13:43:36 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBGDhZlk46268760
+        Mon, 16 Dec 2019 11:31:28 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBGGSEOW041449;
+        Mon, 16 Dec 2019 11:31:18 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wwdpykqc0-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Dec 2019 11:31:18 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xBGGV7DK031265;
+        Mon, 16 Dec 2019 16:31:17 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma04dal.us.ibm.com with ESMTP id 2wvqc69ta1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 16 Dec 2019 16:31:17 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBGGVFTL54657466
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Dec 2019 13:43:35 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 02997AE053;
-        Mon, 16 Dec 2019 13:43:35 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E2B6AE056;
-        Mon, 16 Dec 2019 13:43:34 +0000 (GMT)
-Received: from [9.152.212.29] (unknown [9.152.212.29])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 16 Dec 2019 13:43:34 +0000 (GMT)
-Subject: Re: [RFC QEMU PATCH] pc-bios/s390-ccw: Add zipl-like "BOOT_IMAGE=x"
- to the kernel parameters
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Huth <thuth@redhat.com>, qemu-devel@nongnu.org,
-        Stefan Haberland <sth@linux.ibm.com>
-Cc:     qemu-s390x@nongnu.org, Cornelia Huck <cohuck@redhat.com>,
-        psundara@redhat.com,
-        =?UTF-8?Q?Jan_H=c3=b6ppner?= <hoeppner@linux.ibm.com>,
-        linux-s390@vger.kernel.org
-References: <20191216112432.13412-1-thuth@redhat.com>
- <ffea8f68-714b-798e-3563-12f9bf0668fa@de.ibm.com>
-From:   Peter Oberparleiter <oberpar@linux.ibm.com>
-Date:   Mon, 16 Dec 2019 14:43:33 +0100
+        Mon, 16 Dec 2019 16:31:15 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C9E93B205F;
+        Mon, 16 Dec 2019 16:31:15 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 691C0B2066;
+        Mon, 16 Dec 2019 16:31:14 +0000 (GMT)
+Received: from [9.152.96.21] (unknown [9.152.96.21])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Mon, 16 Dec 2019 16:31:14 +0000 (GMT)
+Subject: Re: [PATCH v2 6/6] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+To:     dsterba@suse.cz, Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>, linux-btrfs@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191209152948.37080-1-zaslonko@linux.ibm.com>
+ <20191209152948.37080-7-zaslonko@linux.ibm.com>
+ <97b3a11d-2e52-c710-ee25-157e562eb3d0@linux.ibm.com>
+ <20191213173526.GC3929@twin.jikos.cz>
+Cc:     "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>
+From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Message-ID: <9068869f-1ec2-f8c1-c2e2-4d38e62572cf@linux.ibm.com>
+Date:   Mon, 16 Dec 2019 17:31:19 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <ffea8f68-714b-798e-3563-12f9bf0668fa@de.ibm.com>
+In-Reply-To: <20191213173526.GC3929@twin.jikos.cz>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 19121613-0016-0000-0000-000002D564B1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121613-0017-0000-0000-0000333798B8
-Message-Id: <ea23540a-34bc-bdc3-07f2-8c7b21fe16c7@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-16_05:2019-12-16,2019-12-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 clxscore=1011 impostorscore=0
- suspectscore=1 lowpriorityscore=0 mlxlogscore=999 mlxscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912160122
+ definitions=2019-12-16_06:2019-12-16,2019-12-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ suspectscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015
+ impostorscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0 adultscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912160145
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 16.12.2019 12:29, Christian Borntraeger wrote:
+Hi David,
+
+On 13.12.2019 18:35, David Sterba wrote:
+> On Fri, Dec 13, 2019 at 05:10:10PM +0100, Zaslonko Mikhail wrote:
+>> Hello,
+>>
+>> Could you please review the patch for btrfs below.
+>>
+>> Apart from falling back to 1 page, I have set the condition to allocate 
+>> 4-pages zlib workspace buffer only if s390 Deflate-Conversion facility
+>> is installed and enabled. Thus, it will take effect on s390 architecture
+>> only.
+>>
+>> Currently in zlib_compress_pages() I always copy input pages to the workspace
+>> buffer prior to zlib_deflate call. Would that make sense, to pass the page
+>> itself, as before, based on the workspace buf_size (for 1-page buffer)?
 > 
+> Doesn't the copy back and forth kill the improvements brought by the
+> hw supported decompression?
+
+Well, I'm not sure how to avoid this copy step here. As far as I understand
+the input data in btrfs_compress_pages() doesn't always represent continuous 
+pages, so I copy input pages to a continuous buffer prior to a compression call.   
+But even with this memcpy in place, the hw supported compression shows
+significant improvements.
+What I can definitely do is to skip the copy if no s390 hardware compression
+support enabled.
+
 > 
-> On 16.12.19 12:24, Thomas Huth wrote:
->>  Note: I've marked the patch as RFC since I'm not quite sure whether
->>  this is really the right way to address this issue: It's unfortunate
->>  that we have to mess with different location in ZIPL which might also
->>  change again in the future.
-
-Having QEMU or any other tooling rely on undocumented on-disk format
-specifics of zipl is definitely wrong and prone to break with the next
-change. This is _not_ an ABI.
-
->>  As suggested by Christian on IRC last week,
->>  maybe it would make more sense to change ZIPL to add this parameter
->>  already when zipl is installed (i.e. by the Linux userspace "zipl" pro-
->>  gram), instead of adding it during boot time? Also, the BOOT_IMAGE para-
->>  meter on s390x is quite different from the BOOT_IMAGE paramter that is
->>  used on x86 - while s390x only uses one single number here, the x86
->>  variant (added by grub2, I guess) uses the boot device + full filename
->>  of the kernel on the boot partition. Should we maybe make the s390x
->>  variant more conform to x86? If so, I think this really has to be fixed
->>  in zipl userspace tool, and not in the s390-ccw bios (and zipl stage3
->>  bootloader).
+>> As for calling zlib_deflate with Z_FINISH flush parameter in a loop until
+>> Z_STREAM_END is returned, that comes in agreement with the zlib manual.
 > 
-> Yes, I actually think we should revisit the whole BOOT_IMAGE scheme on s390.
-> Maybe we should use the kernel name, or the name of the boot menu entry.
-> And maybe we should not use 0 (when the default is running) but instead
-> really use to what 0 points to.
+> The concerns are about zlib stream that take 4 pages on input and on the
+> decompression side only 1 page is available for the output. Ie. as if
+> the filesystem was created on s390 with dflcc then opened on x86 host.
 
-BOOT_IMAGE on s390 currently only exists for DASD, so any tooling that
-relies on it today would be broken for SCSI boot. The equivalent
-information for SCSI would be the boot program selector at
-/sys/firmware/ipl/bootprog. There is currently no other way to get this
-information when booting from DASD.
+I'm not sure I fully understand the concern here. If we talk of backward 
+compatibility, I do not see side effects of using larger buffers. Data in 
+the compressed state might differ indeed, but it will sill conform to zlib
+standard and thus can be decompressed. The smaller out buffer would just 
+take more zlib calls to flush the output.
 
-Also note that the format of BOOT_IMAGE is dependent on the boot loader
-that created it. The use of the menu number (and 0 for default) has the
-advantage that this number can be used, e.g. to select the same number
-for the next boot using the LOADPARM. Changing BOOT_IMAGE to show the
-kernel name would take away that use case.
 
-At this time I would suggest to start by identifying any current users
-of BOOT_IMAGE and to understand what their actual requirement is. Once
-that information is available, we can think about how this requirement
-could best be implemented. Looking at the dracut link it seems like
-their requirement cannot be met at all with the information currently
-provided on s390 via the BOOT_IMAGE parameter.
-
--- 
-Peter Oberparleiter
-Linux on Z Development - IBM Germany
-
+> The zlib_deflate(Z_FINISH) happens on the compresission side.
+> 
