@@ -2,116 +2,207 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5037A120302
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2019 11:54:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2ADB91203D2
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Dec 2019 12:24:58 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbfLPKyU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Dec 2019 05:54:20 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:37074 "EHLO
+        id S1727611AbfLPLYm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Dec 2019 06:24:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24321 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727436AbfLPKyT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Dec 2019 05:54:19 -0500
+        with ESMTP id S1727377AbfLPLYl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Dec 2019 06:24:41 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1576493658;
+        s=mimecast20190719; t=1576495480;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=NKfanrHwOpmLcOycHLXxbfC4P1nz4bcChNMeZN9SUEc=;
-        b=FmMR8ed9ECbfXGjFoVQLYd1HWJqHWpfP7yD0gmMCycUNpsQD8uR1VBzYSDlwEi8NWZ46zu
-        hpjk5Laq1316h0pCPXUzO4Ssf4j3xttsX9GvHeNnZscvxjgGcMd7mQBKHCbIPReG2GnbwU
-        muI91Q/1nc1U6MTemcDP3aq+ElxxZsA=
+         to:to:cc:cc; bh=YKCRP/dVpgNfKies76bZ+f07WU5ynnc4Xn7IKRKaXlQ=;
+        b=Z32UVXX/kE9ude9yDXR2FZL9tOlsclCvgrMB7mDPqrxTFqfysw0kM3WH2djR8cHAuBdr3/
+        5TRzK68Qqehbt5BakL+2yDBRa8BIiGDBGOBDRHVmaIZuBCFUN4tyd7H8RbyokAnLjtVyN+
+        l8uG0w4B18hPKP7hsuaiFtRrRnqh5LQ=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-35-LsjyBCTiNTSq51hB6-ezjA-1; Mon, 16 Dec 2019 05:54:16 -0500
-X-MC-Unique: LsjyBCTiNTSq51hB6-ezjA-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-146-VTqgiDmTM0uQp9jbsDB1lg-1; Mon, 16 Dec 2019 06:24:39 -0500
+X-MC-Unique: VTqgiDmTM0uQp9jbsDB1lg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 862261005502;
-        Mon, 16 Dec 2019 10:54:15 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BCB346759E;
-        Mon, 16 Dec 2019 10:54:11 +0000 (UTC)
-Date:   Mon, 16 Dec 2019 11:54:09 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v4 9/9] s390x: css: ping pong
-Message-ID: <20191216115409.3a89717a.cohuck@redhat.com>
-In-Reply-To: <bb6c04a1-501c-16c4-107b-f10ac9d1e41d@linux.ibm.com>
-References: <1576079170-7244-1-git-send-email-pmorel@linux.ibm.com>
-        <1576079170-7244-10-git-send-email-pmorel@linux.ibm.com>
-        <20191213105009.482bab48.cohuck@redhat.com>
-        <bb6c04a1-501c-16c4-107b-f10ac9d1e41d@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DAD211800D7B;
+        Mon, 16 Dec 2019 11:24:37 +0000 (UTC)
+Received: from thuth.com (ovpn-117-164.ams2.redhat.com [10.36.117.164])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C8CF619C5B;
+        Mon, 16 Dec 2019 11:24:35 +0000 (UTC)
+From:   Thomas Huth <thuth@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        qemu-devel@nongnu.org, Stefan Haberland <sth@linux.ibm.com>
+Cc:     qemu-s390x@nongnu.org, Cornelia Huck <cohuck@redhat.com>,
+        psundara@redhat.com,
+        =?UTF-8?q?Jan=20H=C3=B6ppner?= <hoeppner@linux.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [RFC QEMU PATCH] pc-bios/s390-ccw: Add zipl-like "BOOT_IMAGE=x" to the kernel parameters
+Date:   Mon, 16 Dec 2019 12:24:32 +0100
+Message-Id: <20191216112432.13412-1-thuth@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 13 Dec 2019 17:50:02 +0100
-Pierre Morel <pmorel@linux.ibm.com> wrote:
+ZIPL adds a "BOOT_IMAGE=x" to the kernel parameters to indicate which
+kernel entry has been chosen during the boot process. Apparently some
+Linux tools like "dracut" use this setting, so we should provide this
+kernel parameter with the s390-ccw bios, too.
 
-> On 2019-12-13 10:50, Cornelia Huck wrote:
+However, it's a little bit tricky to get additional parameters from the
+s390-ccw bios into the kernel command line: Since we are running the
+ZIPL stage 3 boot loader first (which then finally jumps into the Linux
+kernel), we have to adapt to the parameter conventions of ZIPL and put
+the argument into ZIPLs "COMMAND_LINE_EXTRA" area. Unfortunately, the
+location of this area changed in the course of time (it has been moved
+between ZIPL v2.9 and v2.10), so we need to detect the right version of
+ZIPL here, too. The only reasonable way that I could figure out was the
+start address of the ZIPL stage 3 bootloader which has been changed in
+almost the same timeframe - just a little bit earlier, between v2.8 and
+v2.9, so if a user is using exactly ZIPL v2.9, they won't see the new
+BOOT_IMAGE parameter (but at least the new code in s390-ccw should also
+not hurt in this case - the area where we write the parameter to is just
+the lowest part of the stack area of ZIPL, which should be unused).
 
-> > [This also got me thinking about your start_subchannel function
-> > again... do you also want to allow flags like e.g. SLI? It's not
-> > unusual for commands to return different lengths of data depending on
-> > what features are available; it might be worthwhile to allow short data
-> > if you're not sure that e.g. a command returns either the short or the
-> > long version of a structure.]  
-> 
-> I would prefer to keep simple it in this series if you agree.
+Buglink: https://bugzilla.redhat.com/show_bug.cgi?id=1782026
+Signed-off-by: Thomas Huth <thuth@redhat.com>
+---
+ Note: I've marked the patch as RFC since I'm not quite sure whether
+ this is really the right way to address this issue: It's unfortunate
+ that we have to mess with different location in ZIPL which might also
+ change again in the future. As suggested by Christian on IRC last week,
+ maybe it would make more sense to change ZIPL to add this parameter
+ already when zipl is installed (i.e. by the Linux userspace "zipl" pro-
+ gram), instead of adding it during boot time? Also, the BOOT_IMAGE para-
+ meter on s390x is quite different from the BOOT_IMAGE paramter that is
+ used on x86 - while s390x only uses one single number here, the x86
+ variant (added by grub2, I guess) uses the boot device + full filename
+ of the kernel on the boot partition. Should we maybe make the s390x
+ variant more conform to x86? If so, I think this really has to be fixed
+ in zipl userspace tool, and not in the s390-ccw bios (and zipl stage3
+ bootloader).
 
-Sure, that's fine.
+ pc-bios/s390-ccw/bootmap.c  | 56 +++++++++++++++++++++++++++++++++++--
+ pc-bios/s390-ccw/jump2ipl.c |  2 +-
+ pc-bios/s390-ccw/s390-ccw.h |  2 ++
+ 3 files changed, 57 insertions(+), 3 deletions(-)
 
-> 
-> AFAIU the current QEMU implementation use a fix length and if a short 
-> read occurs it is an error.
-> Since we test on PONG, there should be no error.
-
-It all depends on how the QEMU device is supposed to work. For a
-command reading/writing some data, I'd usually expect the following:
-
-- If SLI is not set, require the length to be the exact value expected
-  by the device; otherwise, generate an error.
-- If SLI is set, require the length to be between the minimum length
-  that makes sense and the full length of the buffer; otherwise,
-  generate an error.
-
-Of course, if minimum length == full length, SLI has no real effect :)
-
-> 
-> I agree that for a general test we should change this, but currently the 
-> goal is just to verify that the remote device is PONG.
-> 
-> If we accept variable length, we need to check the length of what we 
-> received, and this could need some infrastructure changes that I would 
-> like to do later.
-
-You mean at the device level? At the driver level (== here), you should
-simply get an error or not, I guess.
-
-> 
-> When the series is accepted I will begin to do more complicated things like:
-> - checking the exceptions for wrong parameters
->    This is the first I will add.
-
-Agreed, that's probably the most useful one.
-
-> - checking the response difference on flags (SLI, SKP)
-> - using CC and CD flags for chaining
-> - TIC, NOP, suspend/resume and PCI
-> 
-> These last one will be fun, we can also trying to play with prefetch 
-> while at it. :)
-
-I think any kind of ccw chain will already be fun :) It's probably not
-so well tested anyway, as virtio is basically single-command.
+diff --git a/pc-bios/s390-ccw/bootmap.c b/pc-bios/s390-ccw/bootmap.c
+index d13b7cbd15..bc7fa597b4 100644
+--- a/pc-bios/s390-ccw/bootmap.c
++++ b/pc-bios/s390-ccw/bootmap.c
+@@ -49,6 +49,56 @@ static inline bool is_iso_vd_valid(IsoVolDesc *vd)
+            vd->type <= VOL_DESC_TYPE_PARTITION;
+ }
+ 
++/**
++ * The ZIPL boot loader adds a BOOT_IMAGE=x to the kernel parameters
++ * (where x is the number of the selected boot entry). Since some
++ * programs might rely on this parameter, we mimic this behavior here.
++ */
++static void add_boot_image_param(uint64_t start_addr, int index)
++{
++    /* "BOOT_IMAGE=00" in EBCDIC */
++    char bootimg_str[15] = {
++        0xc2, 0xd6, 0xd6, 0xe3, 0x6d, 0xc9, 0xd4, 0xc1, 0xc7, 0xc5, 0x7e,
++        0xf0, 0xf0, 0
++    };
++
++    /* Only do it for Linux images */
++    if (memcmp((char *)LINUX_MAGIC_ADDR, "S390EP", 6) != 0) {
++        return;
++    }
++
++    if (index < 10) {
++        bootimg_str[11] = 0xf0 + index;  /* 0xf0 is '0' in EBCDIC */
++        bootimg_str[12] = 0;
++    } else if (index < 100) {
++        bootimg_str[11] = 0xf0 + index / 10;
++        bootimg_str[12] = 0xf0 + index % 10;
++    } else {
++        /* This should never happen since index should be < MAX_BOOT_ENTRIES */
++        panic("BOOT_IMAGE index too big");
++    }
++
++    /*
++     * Now write the parameter to the COMMAND_LINE_EXTRA area of the zipl
++     * stage3 boot loader that we are going to run. Unfortunately, the
++     * location of this area changed in the course of time, but we can
++     * use the stage3 start address to determine which area we have to
++     * use (unless it is zipl v2.9 - the start address already has changed
++     * there but the area has not been moved yet ... so for this version
++     * we are writing the parameters into the unused stack area instead
++     * and thus the BOOT_PARAM won't show up there)
++     */
++    if ((start_addr & 0x7fffffff) == 0xa050) {
++        *(uint64_t *)0xa020 = true;
++        memcpy((char *)0xa000 - 0x400, bootimg_str, sizeof(bootimg_str));
++    } else if ((start_addr & 0x7fffffff) == 0xa000) {
++        *(uint64_t *)0x9020 = true;
++        memcpy((char *)0xe000, bootimg_str, sizeof(bootimg_str));
++    } else {
++        sclp_print("\nWarning: Unsupported ZIPL stage 3 start address.\n");
++    }
++}
++
+ /***********************************************************************
+  * IPL an ECKD DASD (CDL or LDL/CMS format)
+  */
+@@ -480,7 +530,7 @@ static void zipl_load_segment(ComponentEntry *entry)
+ }
+ 
+ /* Run a zipl program */
+-static void zipl_run(ScsiBlockPtr *pte)
++static void zipl_run(ScsiBlockPtr *pte, int loadparm)
+ {
+     ComponentHeader *header;
+     ComponentEntry *entry;
+@@ -515,6 +565,8 @@ static void zipl_run(ScsiBlockPtr *pte)
+ 
+     IPL_assert(entry->component_type == ZIPL_COMP_ENTRY_EXEC, "No EXEC entry");
+ 
++    add_boot_image_param(entry->load_address, loadparm);
++
+     /* should not return */
+     jump_to_IPL_code(entry->load_address);
+ }
+@@ -565,7 +617,7 @@ static void ipl_scsi(void)
+     IPL_assert(loadparm < MAX_BOOT_ENTRIES, "loadparm value greater than"
+                " maximum number of boot entries allowed");
+ 
+-    zipl_run(&prog_table->entry[loadparm].scsi); /* no return */
++    zipl_run(&prog_table->entry[loadparm].scsi, loadparm); /* no return */
+ }
+ 
+ /***********************************************************************
+diff --git a/pc-bios/s390-ccw/jump2ipl.c b/pc-bios/s390-ccw/jump2ipl.c
+index 266f1502b9..36090631f9 100644
+--- a/pc-bios/s390-ccw/jump2ipl.c
++++ b/pc-bios/s390-ccw/jump2ipl.c
+@@ -77,7 +77,7 @@ void jump_to_low_kernel(void)
+      * kernel start address (when jumping to the PSW-at-zero address instead,
+      * the kernel startup code fails when we booted from a network device).
+      */
+-    if (!memcmp((char *)0x10008, "S390EP", 6)) {
++    if (!memcmp((char *)LINUX_MAGIC_ADDR, "S390EP", 6)) {
+         jump_to_IPL_code(KERN_IMAGE_START);
+     }
+ 
+diff --git a/pc-bios/s390-ccw/s390-ccw.h b/pc-bios/s390-ccw/s390-ccw.h
+index 11bce7d73c..3e23c3c400 100644
+--- a/pc-bios/s390-ccw/s390-ccw.h
++++ b/pc-bios/s390-ccw/s390-ccw.h
+@@ -46,6 +46,8 @@ typedef unsigned long long __u64;
+ 
+ #define ARRAY_SIZE(a) (sizeof(a) / sizeof((a)[0]))
+ 
++#define LINUX_MAGIC_ADDR  0x010008UL
++
+ #include "cio.h"
+ #include "iplb.h"
+ 
+-- 
+2.18.1
 
