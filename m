@@ -2,91 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 42392124BC6
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Dec 2019 16:32:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D13F6124D61
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Dec 2019 17:27:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727313AbfLRPci (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Dec 2019 10:32:38 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:22810 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727262AbfLRPci (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Dec 2019 10:32:38 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIFSY0W084187
-        for <linux-s390@vger.kernel.org>; Wed, 18 Dec 2019 10:32:37 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyncxbtj9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 18 Dec 2019 10:32:36 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Wed, 18 Dec 2019 15:32:35 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Dec 2019 15:32:32 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIFVl2348955860
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Dec 2019 15:31:48 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0A0FD52051;
-        Wed, 18 Dec 2019 15:32:31 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B516752050;
-        Wed, 18 Dec 2019 15:32:30 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        id S1727756AbfLRQYv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Dec 2019 11:24:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:52114 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726980AbfLRQYt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 18 Dec 2019 11:24:49 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B70251424;
+        Wed, 18 Dec 2019 08:24:48 -0800 (PST)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.56])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B7C003F719;
+        Wed, 18 Dec 2019 08:24:45 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+To:     Andrew Morton <akpm@linux-foundation.org>, linux-mm@kvack.org
+Cc:     Steven Price <steven.price@arm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Morse <james.morse@arm.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        "Liang, Kan" <kan.liang@linux.intel.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Stefan Raspl <raspl@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net 3/3] s390/qeth: don't return -ENOTSUPP to userspace
-Date:   Wed, 18 Dec 2019 16:32:28 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191218153228.29908-1-jwi@linux.ibm.com>
-References: <20191218153228.29908-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19121815-0008-0000-0000-000003423BB2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19121815-0009-0000-0000-00004A62515A
-Message-Id: <20191218153228.29908-4-jwi@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0
- impostorscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
- malwarescore=0 clxscore=1015 bulkscore=0 adultscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1912180127
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH v17 08/23] s390: mm: Add p?d_leaf() definitions
+Date:   Wed, 18 Dec 2019 16:23:47 +0000
+Message-Id: <20191218162402.45610-9-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191218162402.45610-1-steven.price@arm.com>
+References: <20191218162402.45610-1-steven.price@arm.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-ENOTSUPP is not uapi, use EOPNOTSUPP instead.
+walk_page_range() is going to be allowed to walk page tables other than
+those of user space. For this it needs to know when it has reached a
+'leaf' entry in the page tables. This information is provided by the
+p?d_leaf() functions/macros.
 
-Fixes: d66cb37e9664 ("qeth: Add new priority queueing options")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+For s390, pud_large() and pmd_large() are already implemented as static
+inline functions. Add a macro to provide the p?d_leaf names for the
+generic code to use.
+
+CC: Heiko Carstens <heiko.carstens@de.ibm.com>
+CC: Vasily Gorbik <gor@linux.ibm.com>
+CC: Christian Borntraeger <borntraeger@de.ibm.com>
+CC: linux-s390@vger.kernel.org
+Signed-off-by: Steven Price <steven.price@arm.com>
 ---
- drivers/s390/net/qeth_core_sys.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/include/asm/pgtable.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/s390/net/qeth_core_sys.c b/drivers/s390/net/qeth_core_sys.c
-index e81170ab6d9a..7bd86027f559 100644
---- a/drivers/s390/net/qeth_core_sys.c
-+++ b/drivers/s390/net/qeth_core_sys.c
-@@ -207,7 +207,7 @@ static ssize_t qeth_dev_prioqing_store(struct device *dev,
- 		card->qdio.default_out_queue = QETH_DEFAULT_QUEUE;
- 	} else if (sysfs_streq(buf, "prio_queueing_vlan")) {
- 		if (IS_LAYER3(card)) {
--			rc = -ENOTSUPP;
-+			rc = -EOPNOTSUPP;
- 			goto out;
- 		}
- 		card->qdio.do_prio_queueing = QETH_PRIO_Q_ING_VLAN;
+diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
+index 7b03037a8475..137a3920ca36 100644
+--- a/arch/s390/include/asm/pgtable.h
++++ b/arch/s390/include/asm/pgtable.h
+@@ -673,6 +673,7 @@ static inline int pud_none(pud_t pud)
+ 	return pud_val(pud) == _REGION3_ENTRY_EMPTY;
+ }
+ 
++#define pud_leaf	pud_large
+ static inline int pud_large(pud_t pud)
+ {
+ 	if ((pud_val(pud) & _REGION_ENTRY_TYPE_MASK) != _REGION_ENTRY_TYPE_R3)
+@@ -690,6 +691,7 @@ static inline unsigned long pud_pfn(pud_t pud)
+ 	return (pud_val(pud) & origin_mask) >> PAGE_SHIFT;
+ }
+ 
++#define pmd_leaf	pmd_large
+ static inline int pmd_large(pmd_t pmd)
+ {
+ 	return (pmd_val(pmd) & _SEGMENT_ENTRY_LARGE) != 0;
 -- 
-2.17.1
+2.20.1
 
