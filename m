@@ -2,94 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36657124B2C
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Dec 2019 16:14:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 55B04124BC2
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Dec 2019 16:32:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727369AbfLRPOJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Dec 2019 10:14:09 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:44564 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727378AbfLRPOE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 Dec 2019 10:14:04 -0500
-Received: by mail-io1-f65.google.com with SMTP id b10so2309866iof.11
-        for <linux-s390@vger.kernel.org>; Wed, 18 Dec 2019 07:14:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to
-         :content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=RfaUJbE64AqObBUWyZFAX00yFzfv+PMQBeMlfEbyOTSSIZSlP9dNPzblRe9C4/Xp5G
-         OOrfzjlEIPRCszaxaclLviha/Gl6J+8MNE2wJIlQr3g8uWJn+m5NNx6dyOIWXJDzHKAu
-         CFfw6ayoPSChbR+RAE0+B68G/pEf5o1uZqam8GCW/DM3JVJn1rrKg09G5nyaA4x8K46C
-         DidFmOGbhUnnebgzWtKvL2IYqcm0dJ4hRYsroJX5h4wZl5ygcdMBOrPylnEG0iZgtaC4
-         tctA6UVKTV1ZO7eaOpJeM3zJ9lY8Otzi6Az77Sm1wv6CYLTS/yvcKPbBaIHIL7wY9gk+
-         23sQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to:content-transfer-encoding;
-        bh=R9l9mbjTMtC+3agOxuj88vgGSGUSi1shzIvbtHPQHDA=;
-        b=NzYnNOj9iMEBfvKv/+SqjbnpU78O4OxIz0gvo0F8EQNAubHrbZsvmwsq8+HhixlXiu
-         h13M6v0wDPQy/MKIriUb441nDAmJ55GTO2eXEbFOc86+gt5yx0ONyqkci/K9f+Td1KU1
-         PawOxz7eK190QumLzR9/t68gXlo4RWDBcG11/HpUa7hNSzP4yJBinkKZN2itA4PEYDMw
-         fZ13V4UhgVTDT8eHWnJDRyCtf4YA1KMxiPCH003orgHwxxCOlKK6kDPWXKdT15GUbgxz
-         PMdSnVKKL6UIuYqYrczAjAikGX6OQrwnq36bYonl9ZKZvMPdc2GuaPqNryALsJj/qCVO
-         tD5w==
-X-Gm-Message-State: APjAAAUvNSaTQ+eWPoG36VtBNV6oZbE3a0YZwqlGjoYCHsJKQ81rdDVh
-        TFaW7ttUFW1Dw7GZyN6FI5mCMoyLe2f5oVupbA==
-X-Google-Smtp-Source: APXvYqyIz9CrpHcrXivylieLEiE1VxRyGUw+E9DXz6VIYz+kYlOCef915g/qsmML8+OoqrwbsBK3G0eW6o6RBALrF/E=
-X-Received: by 2002:a05:6638:950:: with SMTP id f16mr2789501jad.107.1576682043767;
- Wed, 18 Dec 2019 07:14:03 -0800 (PST)
-MIME-Version: 1.0
-Received: by 2002:a02:6603:0:0:0:0:0 with HTTP; Wed, 18 Dec 2019 07:14:03
- -0800 (PST)
-Reply-To: dhl.expresscourier102156@outlook.fr
-From:   "MS. MARYANNA B. THOMASON" <info.zennitbankplcnigerian@gmail.com>
-Date:   Wed, 18 Dec 2019 16:14:03 +0100
-Message-ID: <CABHzvr=Pq7-TqhY8TPvFCsr+5-DhDQy=XOg-TM13qqbFWeemfQ@mail.gmail.com>
-Subject: =?UTF-8?Q?Urgent_delivery_Notification_of_your_ATM_MASTER_CARD?=
-        =?UTF-8?Q?_Amount=2C=2415=2E800=E2=80=99000=E2=80=9900=2C?=
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+        id S1726939AbfLRPcg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Dec 2019 10:32:36 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42606 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727130AbfLRPcg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 18 Dec 2019 10:32:36 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBIFSKkS138435
+        for <linux-s390@vger.kernel.org>; Wed, 18 Dec 2019 10:32:35 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2wyp9esh4c-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 18 Dec 2019 10:32:35 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Wed, 18 Dec 2019 15:32:33 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 18 Dec 2019 15:32:31 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBIFWUjG40239506
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Dec 2019 15:32:30 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2EF4F5204F;
+        Wed, 18 Dec 2019 15:32:30 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id D812152050;
+        Wed, 18 Dec 2019 15:32:29 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Stefan Raspl <raspl@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net 0/3] s390/qeth: fixes 2019-12-18
+Date:   Wed, 18 Dec 2019 16:32:25 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19121815-0008-0000-0000-000003423BB4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19121815-0009-0000-0000-00004A625157
+Message-Id: <20191218153228.29908-1-jwi@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-18_04:2019-12-17,2019-12-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 mlxlogscore=549 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 bulkscore=0 adultscore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912180127
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Attn Dear.
+Hi Dave,
 
-Urgent delivery Notification of your ATM MASTER CARD, Dhl-Benin is
-ready for delivery of your ATM Master card worth $15.800=E2=80=99000=E2=80=
-=9900, as
-approved this morning, Date, 18/12/2019. Through the Intruction from
-INTERNATIONAL MONETARY FUNDS, I.M.F official Directors.
+please apply the following patch series to your net tree.
+This brings two fixes for initialization / teardown issues, and one
+ENOTSUPP cleanup.
 
-REGISTRATION NO :EG58945
-PARCEL NUMBER: 140479
-Delivery Schuleded now,
-Finally all we required from you is your ATM Card Proccessing Delivery
-fees $19.00 only which you must send to this DHL service to enable us
-dispatch the parcel to your destination today.
+Thanks,
+Julian
 
-Here is our receiving payment details.
-You are advised to send it Via Money Gram Service.
 
-Receiver's Name--------Alan Ude
-Country-------Benin Republic.
-City/ Address--------Cotonou
-Test Question--------In God
-Answer-------We Trust
-Amount------------$US19.00 only
-Mtcn-------------
-Sender's Name-------
+Julian Wiedmann (3):
+  s390/qeth: handle error due to unsupported transport mode
+  s390/qeth: fix promiscuous mode after reset
+  s390/qeth: don't return -ENOTSUPP to userspace
 
-Your delivery  ATM card worth $15.800=E2=80=99000=E2=80=9900,
-Is Due for delivery to your address today upon confirmation of
-required fee from you asap.
+ drivers/s390/net/qeth_core_main.c | 14 +++++++-------
+ drivers/s390/net/qeth_core_mpc.h  |  5 +++++
+ drivers/s390/net/qeth_core_sys.c  |  2 +-
+ drivers/s390/net/qeth_l2_main.c   |  1 +
+ drivers/s390/net/qeth_l2_sys.c    |  3 ++-
+ drivers/s390/net/qeth_l3_main.c   |  1 +
+ 6 files changed, 17 insertions(+), 9 deletions(-)
 
-Call us on this phone number for any inquiry. +229 62819378
-Awaiting your urgent response.
+-- 
+2.17.1
 
-MS. MARYANNA B. THOMASON, Shipment director, DHL Express
-Courier Company-Benin
