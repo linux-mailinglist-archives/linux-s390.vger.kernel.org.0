@@ -2,81 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A5B00126236
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Dec 2019 13:35:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 15C66127D10
+	for <lists+linux-s390@lfdr.de>; Fri, 20 Dec 2019 15:32:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726699AbfLSMfF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 19 Dec 2019 07:35:05 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:35069 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726668AbfLSMfE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 19 Dec 2019 07:35:04 -0500
-Received: by mail-pl1-f196.google.com with SMTP id g6so2500231plt.2
-        for <linux-s390@vger.kernel.org>; Thu, 19 Dec 2019 04:35:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=+enTLPaxJhC1TwqAq4+1F2qGOQKD/UrJ0jEU9e+3gRs=;
-        b=AVVsH4ZQJTG7PUhNZ+zAB3TrhrGWSyTSr61KlucnS3IksTaWlHRnzVi8pgdHgeg+1w
-         /uZ5etKAgSYzCHehz5PhQssEh8n/UrzhuGik1x/ZuVb3rJazdXXxnzLUu69r0Cas+cQs
-         SFjxhzqwfK1jrPKa048n7wh2Qt8gS2W+YAErnwBJbeh48orHTn38Pp5Igf5xcfVpYBmx
-         MKeZ9rn+ApvIwaeJ7BZIqX+0mH75IyOY46wrL30GKbjeoZf5tHHlKeegGi/qeNNOT1fz
-         5+kY4m7njdz2QPgniZcPK3h9DqZ8sbZjntfBVsu00swMx/ITnZKsO7+7Ebn30/vx0lDn
-         ONew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+enTLPaxJhC1TwqAq4+1F2qGOQKD/UrJ0jEU9e+3gRs=;
-        b=BuqnISaYu4t753LekNPExQs6tCqJo3AjwLlfQPUt+tCsdrBcjgtRSTDnH1i2fo4Y3n
-         mvTtD3xQAeJCFRm4KgI9+RWbR94p07yw4MpoWdSqBLmPQFmEO3ADhMRNsSGACsWgsCk4
-         uiFwQ/t0CeqrQyIVNQdD4sklXeFMluyiYAAZpbfTcF7JWUCZuiUo6Vw2bxAT+R9hNehq
-         5soWZnAm0kVgJfH0trMPSk2d53Tpxec5+vTktuhqrGs6J8b4zWOHKlNSqkWw7qk2ERaB
-         2AIlqnswMr5Xmlve6kyZiB4dnWZ/CWQpLGsYbgCkOU86PpR3lRzd7JBX42FdQxLogPJy
-         2E8g==
-X-Gm-Message-State: APjAAAX1mVdH0aIw4N/tb+uPp8c98guCL6qFPe9n/Ogx4AVJu4AWjqZn
-        kZgIBM/ENZ5CjJUkgnGPWgb+ZA==
-X-Google-Smtp-Source: APXvYqxwpK4qbhD/LMFfaxH+fRVezUHLOcOMQQEUJAWogK8KhDdXF0sZnsAkld/uIRu+uB7d3DLIEA==
-X-Received: by 2002:a17:902:6802:: with SMTP id h2mr8746717plk.233.1576758902414;
-        Thu, 19 Dec 2019 04:35:02 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.145])
-        by smtp.gmail.com with ESMTPSA id z14sm8487146pfg.57.2019.12.19.04.35.01
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 19 Dec 2019 04:35:01 -0800 (PST)
-Subject: Re: [PATCH 0/3] s390/dasd patches
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com
-References: <20191219084352.75114-1-sth@linux.ibm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <911ec978-791d-aac3-072b-dab9f3d1bf54@kernel.dk>
-Date:   Thu, 19 Dec 2019 05:35:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727733AbfLTOcY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 20 Dec 2019 09:32:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34986 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727948AbfLTOaz (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 20 Dec 2019 09:30:55 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EDE0824686;
+        Fri, 20 Dec 2019 14:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1576852254;
+        bh=n+gg0n3LejR8QTDafsZl873FhmpQrSyUohuW454i2+M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=OV99B+WAovUHUBequoUXdjfNOnhaGvKoOHuHx/07q6Mvkkg7lml9/l8BN6QkDb71i
+         PaFOoVGnwa0dSDc8gARRO1yWCgt976JeRlOR+1t5eTg5MxCAXcYUHwKrzJ91VJVwEw
+         HRBIYqo41ceAQzZOMPc6dIKw6U6OBTsAGIpqouPg=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Thomas Richter <tmricht@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 45/52] s390/cpum_sf: Adjust sampling interval to avoid hitting sample limits
+Date:   Fri, 20 Dec 2019 09:29:47 -0500
+Message-Id: <20191220142954.9500-45-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191220142954.9500-1-sashal@kernel.org>
+References: <20191220142954.9500-1-sashal@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191219084352.75114-1-sth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 12/19/19 1:43 AM, Stefan Haberland wrote:
-> Hi Jens,
-> 
-> please see the following three patches that
-> 
->  - fix a dead code path for DASD
->  - fix a memleak in DASD error case
->  - fix typo in copyright statement
+From: Thomas Richter <tmricht@linux.ibm.com>
 
-Applied for 5.5, thanks
+[ Upstream commit 39d4a501a9ef55c57b51e3ef07fc2aeed7f30b3b ]
 
+Function perf_event_ever_overflow() and perf_event_account_interrupt()
+are called every time samples are processed by the interrupt handler.
+However function perf_event_account_interrupt() has checks to avoid being
+flooded with interrupts (more then 1000 samples are received per
+task_tick).  Samples are then dropped and a PERF_RECORD_THROTTLED is
+added to the perf data. The perf subsystem limit calculation is:
+
+    maximum sample frequency := 100000 --> 1 samples per 10 us
+    task_tick = 10ms = 10000us --> 1000 samples per task_tick
+
+The work flow is
+
+measurement_alert() uses SDBT head and each SBDT points to 511
+ SDB pages, each with 126 sample entries. After processing 8 SBDs
+ and for each valid sample calling:
+
+     perf_event_overflow()
+       perf_event_account_interrupts()
+
+there is a considerable amount of samples being dropped, especially when
+the sample frequency is very high and near the 100000 limit.
+
+To avoid the high amount of samples being dropped near the end of a
+task_tick time frame, increment the sampling interval in case of
+dropped events. The CPU Measurement sampling facility on the s390
+supports only intervals, specifiing how many CPU cycles have to be
+executed before a sample is generated. Increase the interval when the
+samples being generated hit the task_tick limit.
+
+Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/perf_cpum_sf.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/arch/s390/kernel/perf_cpum_sf.c b/arch/s390/kernel/perf_cpum_sf.c
+index 3d8b12a9a6ff4..8c384e6ea36ac 100644
+--- a/arch/s390/kernel/perf_cpum_sf.c
++++ b/arch/s390/kernel/perf_cpum_sf.c
+@@ -1312,6 +1312,22 @@ static void hw_perf_event_update(struct perf_event *event, int flush_all)
+ 	if (sampl_overflow)
+ 		OVERFLOW_REG(hwc) = DIV_ROUND_UP(OVERFLOW_REG(hwc) +
+ 						 sampl_overflow, 1 + num_sdb);
++
++	/* Perf_event_overflow() and perf_event_account_interrupt() limit
++	 * the interrupt rate to an upper limit. Roughly 1000 samples per
++	 * task tick.
++	 * Hitting this limit results in a large number
++	 * of throttled REF_REPORT_THROTTLE entries and the samples
++	 * are dropped.
++	 * Slightly increase the interval to avoid hitting this limit.
++	 */
++	if (event_overflow) {
++		SAMPL_RATE(hwc) += DIV_ROUND_UP(SAMPL_RATE(hwc), 10);
++		debug_sprintf_event(sfdbg, 1, "%s: rate adjustment %ld\n",
++				    __func__,
++				    DIV_ROUND_UP(SAMPL_RATE(hwc), 10));
++	}
++
+ 	if (sampl_overflow || event_overflow)
+ 		debug_sprintf_event(sfdbg, 4, "hw_perf_event_update: "
+ 				    "overflow stats: sample=%llu event=%llu\n",
 -- 
-Jens Axboe
+2.20.1
 
