@@ -2,49 +2,81 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9D5EF12878A
-	for <lists+linux-s390@lfdr.de>; Sat, 21 Dec 2019 06:31:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 849051287B8
+	for <lists+linux-s390@lfdr.de>; Sat, 21 Dec 2019 07:14:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725829AbfLUFby (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 21 Dec 2019 00:31:54 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:56946 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725773AbfLUFby (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 21 Dec 2019 00:31:54 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EBCBE153D58BE;
-        Fri, 20 Dec 2019 21:31:53 -0800 (PST)
-Date:   Fri, 20 Dec 2019 21:31:53 -0800 (PST)
-Message-Id: <20191220.213153.1257291319387433154.davem@davemloft.net>
-To:     kgraul@linux.ibm.com
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: Re: [PATCH net] net/smc: unregister ib devices in reboot_event
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191219115113.49414-1-kgraul@linux.ibm.com>
-References: <20191219115113.49414-1-kgraul@linux.ibm.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Fri, 20 Dec 2019 21:31:54 -0800 (PST)
+        id S1725845AbfLUGO3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 21 Dec 2019 01:14:29 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41822 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725773AbfLUGO3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 21 Dec 2019 01:14:29 -0500
+Received: by mail-pg1-f194.google.com with SMTP id x8so6040195pgk.8
+        for <linux-s390@vger.kernel.org>; Fri, 20 Dec 2019 22:14:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lTnZCv2aSGwJmyGwQM3YyM4zBrhZwLDodmQtAuyxwbs=;
+        b=uIStqWHsY2Q0yPZJMb+1/Dvm8PC1uUZY6zBIPCIMzwVNT6hre/9QxCQYw9iYW+rTHb
+         wM45nomeSMh0xJ6XvbPWYdfPo+czsfE/5Wj8t1+8s5vaXTCukSTyJrE3mKrSkfywORuj
+         /99Q0stX5TC549E3MPNO4Mqs7Nzb71UKjw1sN4BnbVat8CLvazfsJIIP/1kVAVZFD6la
+         fNJdjd+vYGPFFenq6ZqHoRcS3zE3bpV44WQtgJ6prFH/haGGpS+UjR8BP8GCXOZbMSoO
+         BuZXA4XvdPhqrFUYk1zP+DQs4laQQLca1H8F/mOnXL+xlcmgH+CRAdMZllTcibbx/deR
+         3jdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=lTnZCv2aSGwJmyGwQM3YyM4zBrhZwLDodmQtAuyxwbs=;
+        b=KyXXfie1EVY+K/FpcVkD8oIf38Ixi1ncL7amwcEUIUfRHZzi8P4/Sq20Vmk3kPfYc+
+         bK7063kJYwwUtlnoGEMwXJg25BaCSvangBmg4yC9NxJhRerWMHcW/bUkRmAui4C5vVom
+         WycMTQnGOSU9TwrJQr24gtoBEnzanaBmfKmWkg3H8kVLpuR7qObv7DgKeMlMSvDsPFxy
+         +lG67UcZ8jNj18c+d7GsF9t4gxsWK2szOBg5I+5wl/9MhJZdQdngjq5X6glHEYoAKtxJ
+         0BlY0f0mLGX3F90x/DPs8BGSmdsCktMiufiF/6PmcclbZObUSrdeWPZTg4X8nNQvplSA
+         0LbQ==
+X-Gm-Message-State: APjAAAVjf5b8Xk9k6RAQr1zVzPTCPC6FQtxGDOohgDrY/sD0JaW5Cbvf
+        MRzZcSmZMvTFFr2W0ebl3/lQiEv954I=
+X-Google-Smtp-Source: APXvYqyqW9eABkcIhvBlPcFhIIQpva9r5d23KReH4J+vlaggEKLdOs7pIJ/MXkxTFzb1gJbZsWZXfA==
+X-Received: by 2002:a63:d848:: with SMTP id k8mr18191514pgj.114.1576908868439;
+        Fri, 20 Dec 2019 22:14:28 -0800 (PST)
+Received: from localhost.localdomain ([240f:31:945c:1:dc69:5342:c32f:f3e1])
+        by smtp.gmail.com with ESMTPSA id i22sm13514473pfd.19.2019.12.20.22.14.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 20 Dec 2019 22:14:27 -0800 (PST)
+From:   maholova <maholova.wda@gmail.com>
+To:     linux-s390@vger.kernel.org
+Cc:     heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, maholova <maholova.wda@gmail.com>
+Subject: [PATCH] s390: IEEE FPU emulation error in Kernel-3.16.y
+Date:   Sat, 21 Dec 2019 15:12:54 +0900
+Message-Id: <20191221061253.31997-1-maholova.wda@gmail.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
-Date: Thu, 19 Dec 2019 12:51:13 +0100
+Signed-off-by: maholova <maholova.wda@gmail.com>
+---
+ arch/s390/kernel/traps.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-> In the reboot_event handler, unregister the ib devices and enable
-> the IB layer to release the devices before the reboot.
-> 
-> Fixes: a33a803cfe64 ("net/smc: guarantee removal of link groups in reboot")
-> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-> Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
+index c5762324d9ee..fda8b571466e 100644
+--- a/arch/s390/kernel/traps.c
++++ b/arch/s390/kernel/traps.c
+@@ -19,6 +19,8 @@
+ #include <linux/sched.h>
+ #include <linux/mm.h>
+ #include "entry.h"
++#include <asm/mathemu.h>
++
+ 
+ int show_unhandled_signals = 1;
+ 
+-- 
+2.20.1
 
-Applied.
