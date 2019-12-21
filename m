@@ -2,174 +2,253 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B27191289F5
-	for <lists+linux-s390@lfdr.de>; Sat, 21 Dec 2019 16:05:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1E392128B39
+	for <lists+linux-s390@lfdr.de>; Sat, 21 Dec 2019 20:53:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727056AbfLUPFN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 21 Dec 2019 10:05:13 -0500
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:37383 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727513AbfLUPFN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 21 Dec 2019 10:05:13 -0500
-Received: by mail-ed1-f66.google.com with SMTP id cy15so11402276edb.4
-        for <linux-s390@vger.kernel.org>; Sat, 21 Dec 2019 07:05:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=tcd-ie.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=0N+893Qfq6YLP1OvUkum1ZO1qWJ01GUT6Ih8V2c80Vk=;
-        b=Ukw6PoNAZjf5krJJRS06xPvTLavrof9Akn4Pak+RjVdM62j1/NqPdGsYUU6ngGpNzI
-         ZHRA+faVKygYXpBoHQBzzSrMhFuDjDM3rPT8thlw7ti3Ya7E/2Ia2hgJGmjOkpCbhcKi
-         fWFJ41yTlMvsKGf/oqAM1MkQf60LS0RKrqZ8loUGznkUimWWsqYUsRHeSebLKMi4vBlg
-         XuhtpVGYw4uTiieNAiV6TEl+/HFnxAfvR6qkWvowyMkkJ9p39r4oe6DrrFdOAOaTjRHK
-         ZuOahTLph0HLpnOdVRH8cOKfXQ7P8kaiwem0m0P3CTEBJSk0wQflsk31c0yoR6ujnQx5
-         TqqQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=0N+893Qfq6YLP1OvUkum1ZO1qWJ01GUT6Ih8V2c80Vk=;
-        b=fdqY2g1CeSZK590TMzVK21/j6IknGYKjGDFhD2gk1S0YgzbzwaMW2cCZbwEGVe45o/
-         H3UrGoZgrvaV2ocVYb0EwIMHItK/J/m7G5/0aKyu8O3et75UfSjDoZB3LzFM2nLSd27S
-         1UboFKaA/0NnidQ5uW9Xxep7Nxf/BYSFfTnS2Ea+hqNGclnSuZFMThZZi324jZPvTFux
-         tezb96teVZg0rIk/iJaoq+/ynjRYoFzuzM/Lvk4baHeJ9wSU5B4R1zE/gX0nglQN0Zbz
-         koHkuJgtYk2U7I2pAqxNEFaOhdVc531PP/GW8lvYwJG2YGd2ea0hvocK9tJ+lqwmcK/f
-         k5iQ==
-X-Gm-Message-State: APjAAAWuGpxv2cqXEAwOHU824lNK0P7RXnvvzZvquBVQtBuKkcfCZ+sr
-        ayGVzJJzK41+5dGxZMbPEbiTFA==
-X-Google-Smtp-Source: APXvYqzYBtLgHyu41wW+pu/pR134HwMgfABxCFG7SFTaKHnLsnkRqp9tkFJSv1iaSEoyl+LQ52YyaQ==
-X-Received: by 2002:a17:906:2649:: with SMTP id i9mr22633139ejc.120.1576940711107;
-        Sat, 21 Dec 2019 07:05:11 -0800 (PST)
-Received: from localhost.localdomain ([80.233.37.20])
-        by smtp.googlemail.com with ESMTPSA id u13sm1517639ejz.69.2019.12.21.07.05.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2019 07:05:10 -0800 (PST)
-From:   Tom Murphy <murphyt7@tcd.ie>
-To:     iommu@lists.linux-foundation.org
-Cc:     Tom Murphy <murphyt7@tcd.ie>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: [PATCH 8/8] DO NOT MERGE: iommu: disable list appending in dma-iommu
-Date:   Sat, 21 Dec 2019 15:04:00 +0000
-Message-Id: <20191221150402.13868-9-murphyt7@tcd.ie>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191221150402.13868-1-murphyt7@tcd.ie>
-References: <20191221150402.13868-1-murphyt7@tcd.ie>
+        id S1726763AbfLUTxD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 21 Dec 2019 14:53:03 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12484 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726107AbfLUTxD (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 21 Dec 2019 14:53:03 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBLJr0nm101533
+        for <linux-s390@vger.kernel.org>; Sat, 21 Dec 2019 14:53:01 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2x1d6ypp19-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Sat, 21 Dec 2019 14:53:01 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
+        Sat, 21 Dec 2019 19:52:58 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Sat, 21 Dec 2019 19:52:55 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBLJqAe932571738
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Sat, 21 Dec 2019 19:52:10 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4CA48A4040;
+        Sat, 21 Dec 2019 19:52:54 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0201DA4051;
+        Sat, 21 Dec 2019 19:52:54 +0000 (GMT)
+Received: from localhost (unknown [9.145.64.91])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Sat, 21 Dec 2019 19:52:53 +0000 (GMT)
+Date:   Sat, 21 Dec 2019 20:52:52 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org
+Subject: [GIT PULL] s390 updates for 5.5-rc3
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 19122119-0012-0000-0000-000003773584
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19122119-0013-0000-0000-000021B32F01
+Message-Id: <your-ad-here.call-01576957972-ext-6011@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-21_06:2019-12-17,2019-12-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 spamscore=0
+ priorityscore=1501 mlxscore=0 adultscore=0 clxscore=1015 suspectscore=2
+ lowpriorityscore=0 bulkscore=0 impostorscore=0 malwarescore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912210175
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-ops __finalise_sg
+Hello Linus,
 
-Disable combining sg segments in the dma-iommu api.
-Combining the sg segments exposes a bug in the intel i915 driver which
-causes visual artifacts and the screen to freeze. This is most likely
-because of how the i915 handles the returned list. It probably doesn't
-respect the returned value specifying the number of elements in the list
-and instead depends on the previous behaviour of the intel iommu driver
-which would return the same number of elements in the output list as in
-the input list.
+please pull s390 changes for 5.5-rc3.
 
-Signed-off-by: Tom Murphy <murphyt7@tcd.ie>
----
- drivers/iommu/dma-iommu.c | 38 +++++++-------------------------------
- 1 file changed, 7 insertions(+), 31 deletions(-)
+Thank you,
+Vasily
 
-diff --git a/drivers/iommu/dma-iommu.c b/drivers/iommu/dma-iommu.c
-index cf778db7d84d..d7547b912c87 100644
---- a/drivers/iommu/dma-iommu.c
-+++ b/drivers/iommu/dma-iommu.c
-@@ -853,8 +853,7 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
+The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa919:
+
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git tags/s390-5.5-4
+
+for you to fetch changes up to b4adfe55915d8363e244e42386d69567db1719b9:
+
+  s390/ftrace: save traced function caller (2019-12-18 23:29:26 +0100)
+
+----------------------------------------------------------------
+s390 updates for 5.5-rc3
+
+- Fix unwinding from irq context of interrupted user process.
+
+- Add purgatory build missing symbols check. That helped to uncover and
+  fix missing symbols when built with kasan support enabled.
+
+- Couple of ftrace fixes. Avoid broken stack trace and fix recursion
+  loop in function_graph tracer.
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      s390/purgatory: do not build purgatory with kcov, kasan and friends
+
+Hans de Goede (1):
+      s390/purgatory: Make sure we fail the build if purgatory has missing symbols
+
+Sven Schnelle (1):
+      s390/ftrace: fix endless recursion in function_graph tracer
+
+Vasily Gorbik (2):
+      s390/unwind: stop gracefully at user mode pt_regs in irq stack
+      s390/ftrace: save traced function caller
+
+ arch/s390/include/asm/timex.h  |  4 ++--
+ arch/s390/kernel/mcount.S      |  1 +
+ arch/s390/kernel/unwind_bc.c   | 15 +++++++++++----
+ arch/s390/purgatory/.gitignore |  1 +
+ arch/s390/purgatory/Makefile   | 19 ++++++++++++++-----
+ arch/s390/purgatory/string.c   |  3 +++
+ 6 files changed, 32 insertions(+), 11 deletions(-)
+ create mode 100644 arch/s390/purgatory/string.c
+
+diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
+index 6da8885251d6..670f14a228e5 100644
+--- a/arch/s390/include/asm/timex.h
++++ b/arch/s390/include/asm/timex.h
+@@ -194,9 +194,9 @@ static inline unsigned long long get_tod_clock_monotonic(void)
  {
- 	struct scatterlist *s, *cur = sg;
- 	unsigned long seg_mask = dma_get_seg_boundary(dev);
--	unsigned int cur_len = 0, max_len = dma_get_max_seg_size(dev);
--	int i, count = 0;
-+	int i;
+ 	unsigned long long tod;
  
- 	for_each_sg(sg, s, nents, i) {
- 		/* Restore this segment's original unaligned fields first */
-@@ -862,39 +861,16 @@ static int __finalise_sg(struct device *dev, struct scatterlist *sg, int nents,
- 		unsigned int s_length = sg_dma_len(s);
- 		unsigned int s_iova_len = s->length;
- 
-+		if (i > 0)
-+			cur = sg_next(cur);
-+
- 		s->offset += s_iova_off;
- 		s->length = s_length;
--		sg_dma_address(s) = DMA_MAPPING_ERROR;
--		sg_dma_len(s) = 0;
--
--		/*
--		 * Now fill in the real DMA data. If...
--		 * - there is a valid output segment to append to
--		 * - and this segment starts on an IOVA page boundary
--		 * - but doesn't fall at a segment boundary
--		 * - and wouldn't make the resulting output segment too long
--		 */
--		if (cur_len && !s_iova_off && (dma_addr & seg_mask) &&
--		    (max_len - cur_len >= s_length)) {
--			/* ...then concatenate it with the previous one */
--			cur_len += s_length;
--		} else {
--			/* Otherwise start the next output segment */
--			if (i > 0)
--				cur = sg_next(cur);
--			cur_len = s_length;
--			count++;
--
--			sg_dma_address(cur) = dma_addr + s_iova_off;
--		}
--
--		sg_dma_len(cur) = cur_len;
-+		sg_dma_address(cur) = dma_addr + s_iova_off;
-+		sg_dma_len(cur) = s_length;
- 		dma_addr += s_iova_len;
--
--		if (s_length + s_iova_off < s_iova_len)
--			cur_len = 0;
- 	}
--	return count;
-+	return nents;
+-	preempt_disable();
++	preempt_disable_notrace();
+ 	tod = get_tod_clock() - *(unsigned long long *) &tod_clock_base[1];
+-	preempt_enable();
++	preempt_enable_notrace();
+ 	return tod;
  }
  
- /*
--- 
-2.20.1
+diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
+index 9e1660a6b9db..c3597d2e2ae0 100644
+--- a/arch/s390/kernel/mcount.S
++++ b/arch/s390/kernel/mcount.S
+@@ -35,6 +35,7 @@ EXPORT_SYMBOL(_mcount)
+ ENTRY(ftrace_caller)
+ 	.globl	ftrace_regs_caller
+ 	.set	ftrace_regs_caller,ftrace_caller
++	stg	%r14,(__SF_GPRS+8*8)(%r15)	# save traced function caller
+ 	lgr	%r1,%r15
+ #if !(defined(CC_USING_HOTPATCH) || defined(CC_USING_NOP_MCOUNT))
+ 	aghi	%r0,MCOUNT_RETURN_FIXUP
+diff --git a/arch/s390/kernel/unwind_bc.c b/arch/s390/kernel/unwind_bc.c
+index da2d4d4c5b0e..707fd99f6734 100644
+--- a/arch/s390/kernel/unwind_bc.c
++++ b/arch/s390/kernel/unwind_bc.c
+@@ -36,10 +36,17 @@ static bool update_stack_info(struct unwind_state *state, unsigned long sp)
+ 	return true;
+ }
+ 
+-static inline bool is_task_pt_regs(struct unwind_state *state,
+-				   struct pt_regs *regs)
++static inline bool is_final_pt_regs(struct unwind_state *state,
++				    struct pt_regs *regs)
+ {
+-	return task_pt_regs(state->task) == regs;
++	/* user mode or kernel thread pt_regs at the bottom of task stack */
++	if (task_pt_regs(state->task) == regs)
++		return true;
++
++	/* user mode pt_regs at the bottom of irq stack */
++	return state->stack_info.type == STACK_TYPE_IRQ &&
++	       state->stack_info.end - sizeof(struct pt_regs) == (unsigned long)regs &&
++	       READ_ONCE_NOCHECK(regs->psw.mask) & PSW_MASK_PSTATE;
+ }
+ 
+ bool unwind_next_frame(struct unwind_state *state)
+@@ -80,7 +87,7 @@ bool unwind_next_frame(struct unwind_state *state)
+ 			if (!on_stack(info, sp, sizeof(struct pt_regs)))
+ 				goto out_err;
+ 			regs = (struct pt_regs *) sp;
+-			if (is_task_pt_regs(state, regs))
++			if (is_final_pt_regs(state, regs))
+ 				goto out_stop;
+ 			ip = READ_ONCE_NOCHECK(regs->psw.addr);
+ 			sp = READ_ONCE_NOCHECK(regs->gprs[15]);
+diff --git a/arch/s390/purgatory/.gitignore b/arch/s390/purgatory/.gitignore
+index 04a03433c720..c82157f46b18 100644
+--- a/arch/s390/purgatory/.gitignore
++++ b/arch/s390/purgatory/.gitignore
+@@ -1,3 +1,4 @@
+ purgatory
++purgatory.chk
+ purgatory.lds
+ purgatory.ro
+diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+index bc0d7a0d0394..c57f8c40e992 100644
+--- a/arch/s390/purgatory/Makefile
++++ b/arch/s390/purgatory/Makefile
+@@ -4,7 +4,7 @@ OBJECT_FILES_NON_STANDARD := y
+ 
+ purgatory-y := head.o purgatory.o string.o sha256.o mem.o
+ 
+-targets += $(purgatory-y) purgatory.lds purgatory purgatory.ro
++targets += $(purgatory-y) purgatory.lds purgatory purgatory.chk purgatory.ro
+ PURGATORY_OBJS = $(addprefix $(obj)/,$(purgatory-y))
+ 
+ $(obj)/sha256.o: $(srctree)/lib/crypto/sha256.c FORCE
+@@ -15,8 +15,10 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
+ $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
+ 	$(call if_changed_rule,as_o_S)
+ 
+-$(obj)/string.o: $(srctree)/arch/s390/lib/string.c FORCE
+-	$(call if_changed_rule,cc_o_c)
++KCOV_INSTRUMENT := n
++GCOV_PROFILE := n
++UBSAN_SANITIZE := n
++KASAN_SANITIZE := n
+ 
+ KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes
+ KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
+@@ -26,15 +28,22 @@ KBUILD_CFLAGS += $(CLANG_FLAGS)
+ KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
+ KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
+ 
+-LDFLAGS_purgatory := -r --no-undefined -nostdlib -z nodefaultlib -T
++# Since we link purgatory with -r unresolved symbols are not checked, so we
++# also link a purgatory.chk binary without -r to check for unresolved symbols.
++PURGATORY_LDFLAGS := -nostdlib -z nodefaultlib
++LDFLAGS_purgatory := -r $(PURGATORY_LDFLAGS) -T
++LDFLAGS_purgatory.chk := -e purgatory_start $(PURGATORY_LDFLAGS)
+ $(obj)/purgatory: $(obj)/purgatory.lds $(PURGATORY_OBJS) FORCE
+ 		$(call if_changed,ld)
+ 
++$(obj)/purgatory.chk: $(obj)/purgatory FORCE
++		$(call if_changed,ld)
++
+ OBJCOPYFLAGS_purgatory.ro := -O elf64-s390
+ OBJCOPYFLAGS_purgatory.ro += --remove-section='*debug*'
+ OBJCOPYFLAGS_purgatory.ro += --remove-section='.comment'
+ OBJCOPYFLAGS_purgatory.ro += --remove-section='.note.*'
+-$(obj)/purgatory.ro: $(obj)/purgatory FORCE
++$(obj)/purgatory.ro: $(obj)/purgatory $(obj)/purgatory.chk FORCE
+ 		$(call if_changed,objcopy)
+ 
+ $(obj)/kexec-purgatory.o: $(obj)/kexec-purgatory.S $(obj)/purgatory.ro FORCE
+diff --git a/arch/s390/purgatory/string.c b/arch/s390/purgatory/string.c
+new file mode 100644
+index 000000000000..c98c22a72db7
+--- /dev/null
++++ b/arch/s390/purgatory/string.c
+@@ -0,0 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0
++#define __HAVE_ARCH_MEMCMP	/* arch function */
++#include "../lib/string.c"
 
