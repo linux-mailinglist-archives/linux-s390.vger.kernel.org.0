@@ -2,134 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F50412959B
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Dec 2019 12:41:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5571C1296C7
+	for <lists+linux-s390@lfdr.de>; Mon, 23 Dec 2019 15:03:51 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726754AbfLWLlr convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Mon, 23 Dec 2019 06:41:47 -0500
-Received: from mga11.intel.com ([192.55.52.93]:49453 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726663AbfLWLlr (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Dec 2019 06:41:47 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 03:41:45 -0800
-X-IronPort-AV: E=Sophos;i="5.69,347,1571727600"; 
-   d="scan'208";a="211530914"
-Received: from jnikula-mobl3.fi.intel.com (HELO localhost) ([10.237.66.161])
-  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 23 Dec 2019 03:41:35 -0800
-From:   Jani Nikula <jani.nikula@linux.intel.com>
-To:     Robin Murphy <robin.murphy@arm.com>, Tom Murphy <murphyt7@tcd.ie>,
-        iommu@lists.linux-foundation.org
-Cc:     Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Julien Grall <julien.grall@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Eric Auger <eric.auger@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org
-Subject: Re: [PATCH 0/8] Convert the intel iommu driver to the dma-iommu api
-In-Reply-To: <432d306c-fe9f-75b2-f0f7-27698f1467ad@arm.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-References: <20191221150402.13868-1-murphyt7@tcd.ie> <87blrzwcn8.fsf@intel.com> <432d306c-fe9f-75b2-f0f7-27698f1467ad@arm.com>
-Date:   Mon, 23 Dec 2019 13:41:33 +0200
-Message-ID: <87o8vzuv4i.fsf@intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+        id S1726829AbfLWODu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Dec 2019 09:03:50 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:43788 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726733AbfLWODu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 23 Dec 2019 09:03:50 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xBNE3I1L151422
+        for <linux-s390@vger.kernel.org>; Mon, 23 Dec 2019 09:03:49 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2x1f3c0wy7-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 23 Dec 2019 09:03:46 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Mon, 23 Dec 2019 14:03:33 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 23 Dec 2019 14:03:32 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xBNE3Utl64880882
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 23 Dec 2019 14:03:30 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 76CA9A405F;
+        Mon, 23 Dec 2019 14:03:30 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 307A9A405C;
+        Mon, 23 Dec 2019 14:03:30 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 23 Dec 2019 14:03:30 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     <netdev@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Stefan Raspl <raspl@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net 0/6] s390/qeth: fixes 2019-12-23
+Date:   Mon, 23 Dec 2019 15:03:20 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 19122314-0008-0000-0000-000003439A45
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19122314-0009-0000-0000-00004A63BDC6
+Message-Id: <20191223140326.16488-1-jwi@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-12-23_06:2019-12-23,2019-12-23 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0
+ lowpriorityscore=0 phishscore=0 impostorscore=0 mlxlogscore=943 mlxscore=0
+ adultscore=0 suspectscore=0 spamscore=0 bulkscore=0 priorityscore=1501
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1912230121
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 23 Dec 2019, Robin Murphy <robin.murphy@arm.com> wrote:
-> On 2019-12-23 10:37 am, Jani Nikula wrote:
->> On Sat, 21 Dec 2019, Tom Murphy <murphyt7@tcd.ie> wrote:
->>> This patchset converts the intel iommu driver to the dma-iommu api.
->>>
->>> While converting the driver I exposed a bug in the intel i915 driver
->>> which causes a huge amount of artifacts on the screen of my
->>> laptop. You can see a picture of it here:
->>> https://github.com/pippy360/kernelPatches/blob/master/IMG_20191219_225922.jpg
->>>
->>> This issue is most likely in the i915 driver and is most likely caused
->>> by the driver not respecting the return value of the
->>> dma_map_ops::map_sg function. You can see the driver ignoring the
->>> return value here:
->>> https://github.com/torvalds/linux/blob/7e0165b2f1a912a06e381e91f0f4e495f4ac3736/drivers/gpu/drm/i915/gem/i915_gem_dmabuf.c#L51
->>>
->>> Previously this didn’t cause issues because the intel map_sg always
->>> returned the same number of elements as the input scatter gather list
->>> but with the change to this dma-iommu api this is no longer the
->>> case. I wasn’t able to track the bug down to a specific line of code
->>> unfortunately.
->>>
->>> Could someone from the intel team look at this?
->> 
->> Let me get this straight. There is current API that on success always
->> returns the same number of elements as the input scatter gather
->> list. You propose to change the API so that this is no longer the case?
->
-> No, the API for dma_map_sg() has always been that it may return fewer 
-> DMA segments than nents - see Documentation/DMA-API.txt (and otherwise, 
-> the return value would surely be a simple success/fail condition). 
-> Relying on a particular implementation behaviour has never been strictly 
-> correct, even if it does happen to be a very common behaviour.
->
->> A quick check of various dma_map_sg() calls in the kernel seems to
->> indicate checking for 0 for errors and then ignoring the non-zero return
->> is a common pattern. Are you sure it's okay to make the change you're
->> proposing?
->
-> Various code uses tricks like just iterating the mapped list until the 
-> first segment with zero sg_dma_len(). Others may well simply have bugs.
+Hi Dave,
 
-Thanks for the clarification.
+please apply the following patch series for qeth to your net tree.
 
-BR,
-Jani.
+This brings two fixes for errors during device initialization, deals with
+several issues in the vnicc control code, and adds a missing lock.
 
->
-> Robin.
->
->> Anyway, due to the time of year and all, I'd like to ask you to file a
->> bug against i915 at [1] so this is not forgotten, and please let's not
->> merge the changes before this is resolved.
->> 
->> 
->> Thanks,
->> Jani.
->> 
->> 
->> [1] https://gitlab.freedesktop.org/drm/intel/issues/new
->> 
->> 
+Thanks,
+Julian
+
+Alexandra Winter (3):
+  s390/qeth: fix false reporting of VNIC CHAR config failure
+  s390/qeth: Fix vnicc_is_in_use if rx_bcast not set
+  s390/qeth: vnicc Fix init to default
+
+Julian Wiedmann (3):
+  s390/qeth: fix qdio teardown after early init error
+  s390/qeth: lock the card while changing its hsuid
+  s390/qeth: fix initialization on old HW
+
+ drivers/s390/net/qeth_core_main.c | 29 +++++++---------------
+ drivers/s390/net/qeth_l2_main.c   | 10 ++++----
+ drivers/s390/net/qeth_l3_main.c   |  2 +-
+ drivers/s390/net/qeth_l3_sys.c    | 40 +++++++++++++++++++++----------
+ 4 files changed, 43 insertions(+), 38 deletions(-)
 
 -- 
-Jani Nikula, Intel Open Source Graphics Center
+2.17.1
+
