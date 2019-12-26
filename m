@@ -2,101 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B6F7712A7D2
-	for <lists+linux-s390@lfdr.de>; Wed, 25 Dec 2019 13:21:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18AC312AFAC
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Dec 2019 00:24:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726289AbfLYMVH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 25 Dec 2019 07:21:07 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45643 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726106AbfLYMVH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 25 Dec 2019 07:21:07 -0500
-Received: by mail-pl1-f193.google.com with SMTP id b22so9420881pls.12;
-        Wed, 25 Dec 2019 04:21:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=Wnv0YtxvwjhRCPhA4AJ3WaBp5/g5a1eicQCrc+kMTmY=;
-        b=OMG2oDNknz48cEtssDl/vVCwRTDpy4JZD7NsViNt1A+1tVmxUvamS9au6lXuwsfsbb
-         xo7sYco5GmLylmIKjvVYxQbeDWo7CINAyrGKej02lF1ONZc7Ij+iiWgI0fvXGFVf7JIa
-         Qj2XJgg5U2BXd7VaXEQQaMqF66hMrscytGmNF2e5U1AIxdXFYRRuLw2HOn8tCGywk/Ms
-         6GJBKQjpjpc08ZZvU/gqtKv+992lHA4zqnlBS9hEkNo2vVG8z+/XPDB1Z+YjCt7hVThR
-         DO76tUarJfoxdKwQ0ewdU7FW+XrT4fVhFo0KeJgFhk0EK9f4IOaWflpfWJQnNEPLKrVb
-         wQdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=Wnv0YtxvwjhRCPhA4AJ3WaBp5/g5a1eicQCrc+kMTmY=;
-        b=swTZun40150ZKGhmHR1Xj73bjh5ha/iw13nyjwS41lG4a/RVMG4cw/gfYOmpH9g7I4
-         QsuoIU3U02i0G7vxV5eodK3w9MpuAq7nu+Bsph3Hqgo1+wT9sMvPvjhjcauDt/shDl1Y
-         N1AO3V7rxIRqUehnziNt4//9YhuVzdPdp0KV3ndAEx6J0ETB0WZoq4dvTAVFeOD49A5p
-         NeDqBObrmqFuaCcMPY3TbnRRl59hR7+kWbOucNXqxF6YLODnhIXvPJapt8C+uPxiuU9F
-         woCpPmrHRJ3HpkSB3zmcEF1Px2oFDNVNiGp/h1ntCXmx16u1PZY3q8HOX7li3U0a6LJj
-         T1tQ==
-X-Gm-Message-State: APjAAAWWfQD+/c987CkrJbhWV6Oc2gTCZSjH4aap82MCTJk5B02nC6/s
-        rtsCoDNYiAR6MDOjPC8qRa0=
-X-Google-Smtp-Source: APXvYqy58ZqVkaIvHcFkCrMhdICYlw646jVoZnTKQnvdCw8RedHK5kwZitO2+Q0vWLmz8BO97emiag==
-X-Received: by 2002:a17:902:74cb:: with SMTP id f11mr39713272plt.139.1577276466677;
-        Wed, 25 Dec 2019 04:21:06 -0800 (PST)
-Received: from nishad ([106.51.232.103])
-        by smtp.gmail.com with ESMTPSA id b65sm30400263pgc.18.2019.12.25.04.21.02
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 25 Dec 2019 04:21:06 -0800 (PST)
-Date:   Wed, 25 Dec 2019 17:50:58 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] vfio-ccw: Use the correct style for SPDX License Identifier
-Message-ID: <20191225122054.GA4598@nishad>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
+        id S1726897AbfLZXYQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Dec 2019 18:24:16 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:44578 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725909AbfLZXYQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Dec 2019 18:24:16 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1c3::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 6AE471539D836;
+        Thu, 26 Dec 2019 15:24:15 -0800 (PST)
+Date:   Thu, 26 Dec 2019 15:24:14 -0800 (PST)
+Message-Id: <20191226.152414.315032656379968442.davem@davemloft.net>
+To:     jwi@linux.ibm.com
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: Re: [PATCH net-next 0/3] s390/qeth: updates 2019-12-23
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191223142227.19500-1-jwi@linux.ibm.com>
+References: <20191223142227.19500-1-jwi@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 26 Dec 2019 15:24:15 -0800 (PST)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style in
-header file related to S/390 common i/o drivers.
-It assigns explicit block comment to the SPDX License
-Identifier.
+From: Julian Wiedmann <jwi@linux.ibm.com>
+Date: Mon, 23 Dec 2019 15:22:24 +0100
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+> please apply the following patch series for qeth to your net-next tree.
+> 
+> This reworks the RX code to use napi_gro_frags() when building non-linear
+> skbs, along with some consolidation and cleanups.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- drivers/s390/cio/vfio_ccw_trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Series applied to net-next.
 
-diff --git a/drivers/s390/cio/vfio_ccw_trace.h b/drivers/s390/cio/vfio_ccw_trace.h
-index 30162a318a8a..f5d31887d413 100644
---- a/drivers/s390/cio/vfio_ccw_trace.h
-+++ b/drivers/s390/cio/vfio_ccw_trace.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- * Tracepoints for vfio_ccw driver
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Tracepoints for vfio_ccw driver
-  *
-  * Copyright IBM Corp. 2018
-  *
--- 
-2.17.1
+> Happy holidays - and many thanks for all the effort & support over the past
+> year, to both Jakub and you. It's much appreciated.
 
+No problem :)
