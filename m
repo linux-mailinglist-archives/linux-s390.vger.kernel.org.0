@@ -2,41 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 226F312B7DD
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Dec 2019 18:52:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0442A12B6E6
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Dec 2019 18:46:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728176AbfL0RnR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 27 Dec 2019 12:43:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40660 "EHLO mail.kernel.org"
+        id S1728759AbfL0RpW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 27 Dec 2019 12:45:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43920 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728167AbfL0RnQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 27 Dec 2019 12:43:16 -0500
+        id S1728703AbfL0RpU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 27 Dec 2019 12:45:20 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2F5B024654;
-        Fri, 27 Dec 2019 17:43:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C5883206CB;
+        Fri, 27 Dec 2019 17:45:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1577468596;
-        bh=gfIGQp34RVhSZnYCRMgdzjv+nUlxz9OyufQbnXilM/g=;
+        s=default; t=1577468719;
+        bh=rf5GDJhkL4Q+n2tNS9aPD1oxmd0VP+VQAoMT3YDuq3A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=r1VPxnSe1OUI1O7HkaE0N3xnMJpRRzeeGSgzQ88gBL3MzYp1ZwqWOTbuAVIFP74Ap
-         lXc/BA1KfQWJPqy5kuFli5Eaelyjhen2r6WndBWRnx2PiYa+QzUxj6eZX+QjWrg7JK
-         E80BLzk5USgWqWEqCefva2FUtq9hvj9/4sVD02DY=
+        b=E3oMAdjN87xK1oS9IkJpf375CTNn0Idbja2m8VW7GBYXbnKCWCZ9sJPATWdlGrJI7
+         +mk4i48GHJayvKYNX0Cgv5yyWH3H7XkN4JcU8UqDEhF8jzkn7Lsbrc6d8XxdH6+XcZ
+         PQdu1BcdmgFjvI1t4nfnGAQG3Oq+PgCV50QpQVRY=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Ursula Braun <ubraun@linux.ibm.com>,
-        syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com,
-        Karsten Graul <kgraul@linux.ibm.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 117/187] net/smc: add fallback check to connect()
-Date:   Fri, 27 Dec 2019 12:39:45 -0500
-Message-Id: <20191227174055.4923-117-sashal@kernel.org>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        kbuild test robot <lkp@intel.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 73/84] s390/purgatory: do not build purgatory with kcov, kasan and friends
+Date:   Fri, 27 Dec 2019 12:43:41 -0500
+Message-Id: <20191227174352.6264-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191227174055.4923-1-sashal@kernel.org>
-References: <20191227174055.4923-1-sashal@kernel.org>
+In-Reply-To: <20191227174352.6264-1-sashal@kernel.org>
+References: <20191227174352.6264-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -46,97 +44,52 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
 
-[ Upstream commit 86434744fedf0cfe07a9eee3f4632c0e25c1d136 ]
+[ Upstream commit c23587c92f6e3260fe3b82bb75b38aa2553b9468 ]
 
-FASTOPEN setsockopt() or sendmsg() may switch the SMC socket to fallback
-mode. Once fallback mode is active, the native TCP socket functions are
-called. Nevertheless there is a small race window, when FASTOPEN
-setsockopt/sendmsg runs in parallel to a connect(), and switch the
-socket into fallback mode before connect() takes the sock lock.
-Make sure the SMC-specific connect setup is omitted in this case.
+the purgatory must not rely on functions from the "old" kernel,
+so we must disable kasan and friends. We also need to have a
+separate copy of string.c as the default does not build memcmp
+with KASAN.
 
-This way a syzbot-reported refcount problem is fixed, triggered by
-different threads running non-blocking connect() and FASTOPEN_KEY
-setsockopt.
-
-Reported-by: syzbot+96d3f9ff6a86d37e44c8@syzkaller.appspotmail.com
-Fixes: 6d6dd528d5af ("net/smc: fix refcount non-blocking connect() -part 2")
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reported-by: kbuild test robot <lkp@intel.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Reviewed-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/af_smc.c | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+ arch/s390/purgatory/Makefile | 6 ++++--
+ arch/s390/purgatory/string.c | 3 +++
+ 2 files changed, 7 insertions(+), 2 deletions(-)
+ create mode 100644 arch/s390/purgatory/string.c
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 737b49909a7a..6a6d3b2aa5a9 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -854,6 +854,8 @@ static int smc_connect(struct socket *sock, struct sockaddr *addr,
- 		goto out;
+diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
+index ce6a3f75065b..fdccb7689bb9 100644
+--- a/arch/s390/purgatory/Makefile
++++ b/arch/s390/purgatory/Makefile
+@@ -13,8 +13,10 @@ $(obj)/sha256.o: $(srctree)/lib/sha256.c FORCE
+ $(obj)/mem.o: $(srctree)/arch/s390/lib/mem.S FORCE
+ 	$(call if_changed_rule,as_o_S)
  
- 	sock_hold(&smc->sk); /* sock put in passive closing */
-+	if (smc->use_fallback)
-+		goto out;
- 	if (flags & O_NONBLOCK) {
- 		if (schedule_work(&smc->connect_work))
- 			smc->connect_nonblock = 1;
-@@ -1716,8 +1718,6 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
- 		sk->sk_err = smc->clcsock->sk->sk_err;
- 		sk->sk_error_report(sk);
- 	}
--	if (rc)
--		return rc;
+-$(obj)/string.o: $(srctree)/arch/s390/lib/string.c FORCE
+-	$(call if_changed_rule,cc_o_c)
++KCOV_INSTRUMENT := n
++GCOV_PROFILE := n
++UBSAN_SANITIZE := n
++KASAN_SANITIZE := n
  
- 	if (optlen < sizeof(int))
- 		return -EINVAL;
-@@ -1725,6 +1725,8 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
- 		return -EFAULT;
- 
- 	lock_sock(sk);
-+	if (rc || smc->use_fallback)
-+		goto out;
- 	switch (optname) {
- 	case TCP_ULP:
- 	case TCP_FASTOPEN:
-@@ -1736,15 +1738,14 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
- 			smc_switch_to_fallback(smc);
- 			smc->fallback_rsn = SMC_CLC_DECL_OPTUNSUPP;
- 		} else {
--			if (!smc->use_fallback)
--				rc = -EINVAL;
-+			rc = -EINVAL;
- 		}
- 		break;
- 	case TCP_NODELAY:
- 		if (sk->sk_state != SMC_INIT &&
- 		    sk->sk_state != SMC_LISTEN &&
- 		    sk->sk_state != SMC_CLOSED) {
--			if (val && !smc->use_fallback)
-+			if (val)
- 				mod_delayed_work(system_wq, &smc->conn.tx_work,
- 						 0);
- 		}
-@@ -1753,7 +1754,7 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
- 		if (sk->sk_state != SMC_INIT &&
- 		    sk->sk_state != SMC_LISTEN &&
- 		    sk->sk_state != SMC_CLOSED) {
--			if (!val && !smc->use_fallback)
-+			if (!val)
- 				mod_delayed_work(system_wq, &smc->conn.tx_work,
- 						 0);
- 		}
-@@ -1764,6 +1765,7 @@ static int smc_setsockopt(struct socket *sock, int level, int optname,
- 	default:
- 		break;
- 	}
-+out:
- 	release_sock(sk);
- 
- 	return rc;
+ LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib
+ LDFLAGS_purgatory.ro += -z nodefaultlib
+diff --git a/arch/s390/purgatory/string.c b/arch/s390/purgatory/string.c
+new file mode 100644
+index 000000000000..c98c22a72db7
+--- /dev/null
++++ b/arch/s390/purgatory/string.c
+@@ -0,0 +1,3 @@
++// SPDX-License-Identifier: GPL-2.0
++#define __HAVE_ARCH_MEMCMP	/* arch function */
++#include "../lib/string.c"
 -- 
 2.20.1
 
