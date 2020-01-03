@@ -2,70 +2,175 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 19ADF12F504
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Jan 2020 08:38:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 73B9312F59F
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Jan 2020 09:40:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727404AbgACHiD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 Jan 2020 02:38:03 -0500
-Received: from sonic301-30.consmr.mail.ne1.yahoo.com ([66.163.184.199]:38541
-        "EHLO sonic301-30.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727220AbgACHiA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Jan 2020 02:38:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1578037079; bh=MJdpASvZnpj3gXKZxrNskiGAl+hYYwdjGUMDZ9fMpsI=; h=Date:From:Reply-To:Subject:References:From:Subject; b=QSzh+FyK+PQqbNd1K5cuBfArUFqLiHiJAQkXv9ezOJqgEXC8QGQMQgZAHUyU4Q0YcLWtuY4D2Sr0/dr6OjadKmrFpRakTwV7xCp1Dw9f3Q8q2/NkQ+4lnuwCSU6ZzF+/SD5BmTiB2snpNWbd/vjroSKHRXVe13Ijb3DEHq61gm+41ZOBxaPDbGxUDpkZ8SREJ0VaTp1sKxjjUlqQ71XhzeDKepMbeP55ACCKICPw3k8vC84jh5JeEVKUf4+ADYt70sDmqegTPKmZMC9QOWyFjc5PX3rjn6/D10NDWKEFrjS7h/8J9Y+dKohuMDQAzRvoNR6eF6qw7FzJN6TwUm1t6Q==
-X-YMail-OSG: yXnmVBcVM1nFNSolob2gHkbHPZ3yfZSyZjIbiwo.24pXbh3OORIC9CiEzjjKfH6
- 8rSqYYnETRF7LhGLdUPzfYxNL6Gya8Ka3CCZWTtjqUbND6M5a2wBG3Y7vYCztdFqeu78uLMNZC5m
- b7EeHWZ4xaoadYgjjjfuitcXMc36jsOezDOKkecQ9TRe6DtHyC5EvQqVsYwapO8tlf4JYG6EG.FO
- fpu2auCbIRLs2MMA4vMibGMiLjZrSyX1kCZbgDexAdD_u8b6KDCrEjd.8YF8F5qs3Fs_VGdMsOR0
- jZsb6E8Efoq_Si6fVJggXbZQTFHf8MpBVXhO5euMma_ZBUlsoQi2o0U1Odi4aNmPfRfOEgmR90h.
- jdRum8_.6VtYtI_pOGkH2YCHRtFFd476aeEECdrF.AFtyXeOxs2o7H749gRc9BNV6sXxBwgMOj2E
- ShP09eiehvu.hKrhwu6x6yrDIIpsTqX7LCK0nHuyzZs1uvNd2EfdAbHabW7zBrJJLPT5PaIY4ovG
- p0Szss.hm_6Pz4O9p5anMdPoK43XMHT03yxf6swDbirj_O98EUYSPd9C6B1LXMD0iWHjuSl4tu4z
- GIkIvc5lErAM8tTr24dgvhNxDUiJjvDKO8aA9jRuhSAko29MJ2iRVxJezRLqhuWEeVdzlkskH9EI
- ZD_4G3.v4_qxcPOSs4ITL4lFHkQ3bJ1Y3Sy7rM5os5jjdtpUycMyD5TDpD__0Zyv.rpIlc3Kp6oq
- ina.QJE1E6rtxYYhIcDId1NSX8jEd6EvQxUOBktCleihXRVNPm2g0PWI_eEw1eFFFD7gOcvtR7WD
- BH75SicEpJ4UxtblvYRCgbF4nBbu07TsJlDBqpoYhXjSllQlGGLt66pzu0itIp62Il08vY2UkuvB
- 47aUc1oLbRxxjU.ZjgJiYHzj6rspZAMCHXwdber4wpv4kbkhO7B1ErJ9czk266z92WRVUmIXubFy
- xoCO4fNiGxGSeULLlJXDzuatxKFNeZOshtAHHZsIYIpy8hqudstdD960GzqSzolnSothWFrZ9lPk
- fdpDXQjhh_Bhq4AyRjbclegvE0E2Q6oVs48sZAx4e9.9jOD53UK9T51iW.8Qg4gQ7WDyjiFU097R
- zRDteTFA2hFNqSihVhw0S70tRmOJUBWFF02lceT0zzN5czDm.R0ujSijrvskZZ8FRh6voapbwD2b
- 2ZlGVZU0NAjdPxBL5xsAIPzLSSlYf_w7Z.xyZ7MCtzl.LRHZTR7.FX2iNvzladPYgxttJZOgLMCI
- m7qk3S8Vtp3MqstvSjUF8K5e9axmV8qc4Htq4lQZhpUQ8zddeP2QVwyQbhsfIP2LKdUbWexqI
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic301.consmr.mail.ne1.yahoo.com with HTTP; Fri, 3 Jan 2020 07:37:59 +0000
-Date:   Fri, 3 Jan 2020 07:37:55 +0000 (UTC)
-From:   Brian Gilvary <1brian.gilvary@gmail.com>
-Reply-To: gilvarybrian@aol.com
-Message-ID: <466166173.6197256.1578037075711@mail.yahoo.com>
-Subject: Happy New Year For Our Mutual Benefits
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-References: <466166173.6197256.1578037075711.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.14873 YMailNodin Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:71.0) Gecko/20100101 Firefox/71.0
-To:     unlisted-recipients:; (no To-header on input)
+        id S1726181AbgACIki (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Jan 2020 03:40:38 -0500
+Received: from foss.arm.com ([217.140.110.172]:53896 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726050AbgACIkh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 3 Jan 2020 03:40:37 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1F09E1FB;
+        Fri,  3 Jan 2020 00:40:37 -0800 (PST)
+Received: from p8cg001049571a15.blr.arm.com (p8cg001049571a15.blr.arm.com [10.162.40.137])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 179A53F703;
+        Fri,  3 Jan 2020 00:40:32 -0800 (PST)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC] mm/memblock: Define memblock_physmem()
+Date:   Fri,  3 Jan 2020 14:11:06 +0530
+Message-Id: <1578040866-3844-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi
+On s390 platform memblock.physmem array is being built by directly calling
+into memblock_add_range() which is a low level function not intended to be
+used outside of memblock. Hence lets conditionally add helper functions for
+physmem array when HAVE_MEMBLOCK_PHYS_MAP is enabled. Also use MAX_NUMNODES
+instead of 0 as node ID similar to memblock_add() and memblock_reserve().
+While here replace some function name strings with (%s __func__) in various
+memblock_dbg() call sites.
 
-As the Chief Financial Officer, British Petroleum Company plc (BP), I am in=
- a position to facilitate immediate transfer of =C2=A3 48,000,000.00 (Forty=
- Eight Million British Pounds Sterling), to any of your nominated Bank Acco=
-unt.
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Collin Walling <walling@linux.ibm.com>
+Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc: Philipp Rudo <prudo@linux.ibm.com>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-s390@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+---
+Only build tested for s390, will appreciate if some one can give it a try
+on a real system.
 
-Source of Funds: An over-invoiced payment from a past project executed in m=
-y department. I cannot successfully achieve this transaction without presen=
-ting you as foreign contractor who will provide the bank account to receive=
- the funds. Every documentation for the claim of the funds will be legally =
-processed and documented, so I will need your full co-operation for our mut=
-ual benefits.
+ arch/s390/kernel/setup.c | 14 ++++----------
+ include/linux/memblock.h |  3 +++
+ mm/memblock.c            | 20 ++++++++++++++++----
+ 3 files changed, 23 insertions(+), 14 deletions(-)
 
-We will discuss details if you are interested to work with me to secure thi=
-s funds, as I said for our mutual benefits. I will be looking forward to yo=
-ur prompt response.
+diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+index 9cbf490fd162..79a7b1872e5a 100644
+--- a/arch/s390/kernel/setup.c
++++ b/arch/s390/kernel/setup.c
+@@ -761,14 +761,6 @@ static void __init free_mem_detect_info(void)
+ 		memblock_free(start, size);
+ }
+ 
+-static void __init memblock_physmem_add(phys_addr_t start, phys_addr_t size)
+-{
+-	memblock_dbg("memblock_physmem_add: [%#016llx-%#016llx]\n",
+-		     start, start + size - 1);
+-	memblock_add_range(&memblock.memory, start, size, 0, 0);
+-	memblock_add_range(&memblock.physmem, start, size, 0, 0);
+-}
+-
+ static const char * __init get_mem_info_source(void)
+ {
+ 	switch (mem_detect.info_source) {
+@@ -793,8 +785,10 @@ static void __init memblock_add_mem_detect_info(void)
+ 		     get_mem_info_source(), mem_detect.info_source);
+ 	/* keep memblock lists close to the kernel */
+ 	memblock_set_bottom_up(true);
+-	for_each_mem_detect_block(i, &start, &end)
+-		memblock_physmem_add(start, end - start);
++	for_each_mem_detect_block(i, &start, &end) {
++		memblock_add(start, end - start);
++		memblock_physmem(start, end - start);
++	}
+ 	memblock_set_bottom_up(false);
+ 	memblock_dump_all();
+ }
+diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+index 1510b12de031..d17e7b841cb6 100644
+--- a/include/linux/memblock.h
++++ b/include/linux/memblock.h
+@@ -115,6 +115,9 @@ int memblock_add(phys_addr_t base, phys_addr_t size);
+ int memblock_remove(phys_addr_t base, phys_addr_t size);
+ int memblock_free(phys_addr_t base, phys_addr_t size);
+ int memblock_reserve(phys_addr_t base, phys_addr_t size);
++#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
++int memblock_physmem(phys_addr_t base, phys_addr_t size);
++#endif
+ void memblock_trim_memory(phys_addr_t align);
+ bool memblock_overlaps_region(struct memblock_type *type,
+ 			      phys_addr_t base, phys_addr_t size);
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 3e20c6ba2101..f6d17a1f30e3 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -694,7 +694,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("memblock_add: [%pa-%pa] %pS\n",
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+ 		     &base, &end, (void *)_RET_IP_);
+ 
+ 	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
+@@ -795,7 +795,7 @@ int __init_memblock memblock_remove(phys_addr_t base, phys_addr_t size)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("memblock_remove: [%pa-%pa] %pS\n",
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+ 		     &base, &end, (void *)_RET_IP_);
+ 
+ 	return memblock_remove_range(&memblock.memory, base, size);
+@@ -813,7 +813,7 @@ int __init_memblock memblock_free(phys_addr_t base, phys_addr_t size)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("   memblock_free: [%pa-%pa] %pS\n",
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+ 		     &base, &end, (void *)_RET_IP_);
+ 
+ 	kmemleak_free_part_phys(base, size);
+@@ -824,12 +824,24 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
+ {
+ 	phys_addr_t end = base + size - 1;
+ 
+-	memblock_dbg("memblock_reserve: [%pa-%pa] %pS\n",
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+ 		     &base, &end, (void *)_RET_IP_);
+ 
+ 	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
+ }
+ 
++#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
++int __init_memblock memblock_physmem(phys_addr_t base, phys_addr_t size)
++{
++	phys_addr_t end = base + size - 1;
++
++	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
++		     &base, &end, (void *)_RET_IP_);
++
++	return memblock_add_range(&memblock.physmem, base, size, MAX_NUMNODES, 0);
++}
++#endif
++
+ /**
+  * memblock_setclr_flag - set or clear flag for a memory region
+  * @base: base address of the region
+-- 
+2.20.1
 
-Best regards
-Brian Gilvary
-Chief financial officer
-BP, Plc.
