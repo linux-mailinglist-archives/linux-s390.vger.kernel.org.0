@@ -2,333 +2,201 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB70212FED9
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Jan 2020 23:33:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3D1931306D9
+	for <lists+linux-s390@lfdr.de>; Sun,  5 Jan 2020 09:59:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728825AbgACWdx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 Jan 2020 17:33:53 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48236 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728892AbgACWdq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Jan 2020 17:33:46 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 003MHIhl061152
-        for <linux-s390@vger.kernel.org>; Fri, 3 Jan 2020 17:33:44 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xa1fgw6ek-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 03 Jan 2020 17:33:44 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <zaslonko@linux.ibm.com>;
-        Fri, 3 Jan 2020 22:33:42 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Jan 2020 22:33:39 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 003MXbPx59506866
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Jan 2020 22:33:37 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6140452069;
-        Fri,  3 Jan 2020 22:33:37 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 08F0B52074;
-        Fri,  3 Jan 2020 22:33:37 +0000 (GMT)
-From:   Mikhail Zaslonko <zaslonko@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1725828AbgAEI7a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 5 Jan 2020 03:59:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57272 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725535AbgAEI7a (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 5 Jan 2020 03:59:30 -0500
+Received: from rapoport-lnx (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDC3120866;
+        Sun,  5 Jan 2020 08:59:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1578214769;
+        bh=CT4m01CpbW961uA/BU7pCA9q3wG8bPnj9nD2I6vLHfI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XX3bwu1Lw7diO7JTeZYjwMe9ckJIosm9Gh6zZFXXwF/3Rc5CZpia2aKwEArwoXPTE
+         WqvFxpk1yuMmTtLxPOOLiTaQkpDQHSsXEgTr+eFiQ5eJakrL7b5s7Z/rIRKIB2K3GT
+         k42uSjXYWL91thxgfFTP0X70bF0phS7agNEbCZtQ=
+Date:   Sun, 5 Jan 2020 10:59:22 +0200
+From:   Mike Rapoport <rppt@kernel.org>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Collin Walling <walling@linux.ibm.com>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v3 6/6] btrfs: Use larger zlib buffer for s390 hardware compression
-Date:   Fri,  3 Jan 2020 23:33:34 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200103223334.20669-1-zaslonko@linux.ibm.com>
-References: <20200103223334.20669-1-zaslonko@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20010322-4275-0000-0000-000003947D85
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010322-4276-0000-0000-000038A8632C
-Message-Id: <20200103223334.20669-7-zaslonko@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2020-01-03_06:2020-01-02,2020-01-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 malwarescore=0 bulkscore=0 adultscore=0
- mlxlogscore=999 suspectscore=0 phishscore=0 spamscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001030203
+Subject: Re: [RFC] mm/memblock: Define memblock_physmem()
+Message-ID: <20200105085921.GB7261@rapoport-lnx>
+References: <1578040866-3844-1-git-send-email-anshuman.khandual@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1578040866-3844-1-git-send-email-anshuman.khandual@arm.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-In order to benefit from s390 zlib hardware compression support,
-increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
-s390 zlib hardware support is enabled on the machine). This brings up
-to 60% better performance in hardware on s390 compared to the PAGE_SIZE
-buffer and much more compared to the software zlib processing in btrfs.
-In case of memory pressure fall back to a single page buffer during
-workspace allocation.
+Hi Anshuman,
 
-Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
----
- fs/btrfs/compression.c |   2 +-
- fs/btrfs/zlib.c        | 128 ++++++++++++++++++++++++++++++-----------
- 2 files changed, 94 insertions(+), 36 deletions(-)
+On Fri, Jan 03, 2020 at 02:11:06PM +0530, Anshuman Khandual wrote:
+> On s390 platform memblock.physmem array is being built by directly calling
+> into memblock_add_range() which is a low level function not intended to be
+> used outside of memblock. Hence lets conditionally add helper functions for
+> physmem array when HAVE_MEMBLOCK_PHYS_MAP is enabled. Also use MAX_NUMNODES
+> instead of 0 as node ID similar to memblock_add() and memblock_reserve().
+> While here replace some function name strings with (%s __func__) in various
+> memblock_dbg() call sites.
+ 
+I'd prefer to have memblock_dbg() updates as a separate patch.
 
-diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
-index ee834ef7beb4..6bd0e75a822c 100644
---- a/fs/btrfs/compression.c
-+++ b/fs/btrfs/compression.c
-@@ -1285,7 +1285,7 @@ int btrfs_decompress_buf2page(const char *buf, unsigned long buf_start,
- 	/* copy bytes from the working buffer into the pages */
- 	while (working_bytes > 0) {
- 		bytes = min_t(unsigned long, bvec.bv_len,
--				PAGE_SIZE - buf_offset);
-+				PAGE_SIZE - (buf_offset % PAGE_SIZE));
- 		bytes = min(bytes, working_bytes);
- 
- 		kaddr = kmap_atomic(bvec.bv_page);
-diff --git a/fs/btrfs/zlib.c b/fs/btrfs/zlib.c
-index a6c90a003c12..159486801631 100644
---- a/fs/btrfs/zlib.c
-+++ b/fs/btrfs/zlib.c
-@@ -20,9 +20,12 @@
- #include <linux/refcount.h>
- #include "compression.h"
- 
-+#define ZLIB_DFLTCC_BUF_SIZE    (4 * PAGE_SIZE)
-+
- struct workspace {
- 	z_stream strm;
- 	char *buf;
-+	unsigned long buf_size;
- 	struct list_head list;
- 	int level;
- };
-@@ -61,7 +64,17 @@ struct list_head *zlib_alloc_workspace(unsigned int level)
- 			zlib_inflate_workspacesize());
- 	workspace->strm.workspace = kvmalloc(workspacesize, GFP_KERNEL);
- 	workspace->level = level;
--	workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+	workspace->buf = NULL;
-+	if (zlib_deflate_dfltcc_enabled()) {
-+		workspace->buf = kmalloc(ZLIB_DFLTCC_BUF_SIZE,
-+					 __GFP_NOMEMALLOC | __GFP_NORETRY |
-+					 __GFP_NOWARN | GFP_NOIO);
-+		workspace->buf_size = ZLIB_DFLTCC_BUF_SIZE;
-+	}
-+	if (!workspace->buf) {
-+		workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+		workspace->buf_size = PAGE_SIZE;
-+	}
- 	if (!workspace->strm.workspace || !workspace->buf)
- 		goto fail;
- 
-@@ -78,6 +91,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 		unsigned long *total_in, unsigned long *total_out)
- {
- 	struct workspace *workspace = list_entry(ws, struct workspace, list);
-+	int i;
- 	int ret;
- 	char *data_in;
- 	char *cpage_out;
-@@ -85,6 +99,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	struct page *in_page = NULL;
- 	struct page *out_page = NULL;
- 	unsigned long bytes_left;
-+	unsigned long in_buf_pages;
- 	unsigned long len = *total_out;
- 	unsigned long nr_dest_pages = *out_pages;
- 	const unsigned long max_out = nr_dest_pages * PAGE_SIZE;
-@@ -102,9 +117,6 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	workspace->strm.total_in = 0;
- 	workspace->strm.total_out = 0;
- 
--	in_page = find_get_page(mapping, start >> PAGE_SHIFT);
--	data_in = kmap(in_page);
--
- 	out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
- 	if (out_page == NULL) {
- 		ret = -ENOMEM;
-@@ -114,12 +126,48 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	pages[0] = out_page;
- 	nr_pages = 1;
- 
--	workspace->strm.next_in = data_in;
-+	workspace->strm.next_in = workspace->buf;
-+	workspace->strm.avail_in = 0;
- 	workspace->strm.next_out = cpage_out;
- 	workspace->strm.avail_out = PAGE_SIZE;
--	workspace->strm.avail_in = min(len, PAGE_SIZE);
- 
- 	while (workspace->strm.total_in < len) {
-+		/* get next input pages and copy the contents to
-+		 * the workspace buffer if required
-+		 */
-+		if (workspace->strm.avail_in == 0) {
-+			bytes_left = len - workspace->strm.total_in;
-+			in_buf_pages = min(DIV_ROUND_UP(bytes_left, PAGE_SIZE),
-+					   workspace->buf_size / PAGE_SIZE);
-+			if (in_buf_pages > 1) {
-+				for (i = 0; i < in_buf_pages; i++) {
-+					if (in_page) {
-+						kunmap(in_page);
-+						put_page(in_page);
-+					}
-+					in_page = find_get_page(mapping,
-+								start >> PAGE_SHIFT);
-+					data_in = kmap(in_page);
-+					memcpy(workspace->buf + i*PAGE_SIZE,
-+					       data_in, PAGE_SIZE);
-+					start += PAGE_SIZE;
-+				}
-+				workspace->strm.next_in = workspace->buf;
-+			} else {
-+				if (in_page) {
-+					kunmap(in_page);
-+					put_page(in_page);
-+				}
-+				in_page = find_get_page(mapping,
-+							start >> PAGE_SHIFT);
-+				data_in = kmap(in_page);
-+				start += PAGE_SIZE;
-+				workspace->strm.next_in = data_in;
-+			}
-+			workspace->strm.avail_in = min(bytes_left,
-+						       workspace->buf_size);
-+		}
-+
- 		ret = zlib_deflate(&workspace->strm, Z_SYNC_FLUSH);
- 		if (ret != Z_OK) {
- 			pr_debug("BTRFS: deflate in loop returned %d\n",
-@@ -136,6 +184,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 			ret = -E2BIG;
- 			goto out;
- 		}
-+
- 		/* we need another page for writing out.  Test this
- 		 * before the total_in so we will pull in a new page for
- 		 * the stream end if required
-@@ -161,33 +210,42 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 		/* we're all done */
- 		if (workspace->strm.total_in >= len)
- 			break;
--
--		/* we've read in a full page, get a new one */
--		if (workspace->strm.avail_in == 0) {
--			if (workspace->strm.total_out > max_out)
--				break;
--
--			bytes_left = len - workspace->strm.total_in;
--			kunmap(in_page);
--			put_page(in_page);
--
--			start += PAGE_SIZE;
--			in_page = find_get_page(mapping,
--						start >> PAGE_SHIFT);
--			data_in = kmap(in_page);
--			workspace->strm.avail_in = min(bytes_left,
--							   PAGE_SIZE);
--			workspace->strm.next_in = data_in;
--		}
-+		if (workspace->strm.total_out > max_out)
-+			break;
- 	}
- 	workspace->strm.avail_in = 0;
--	ret = zlib_deflate(&workspace->strm, Z_FINISH);
--	zlib_deflateEnd(&workspace->strm);
--
--	if (ret != Z_STREAM_END) {
--		ret = -EIO;
--		goto out;
-+	/* call deflate with Z_FINISH flush parameter providing more output
-+	 * space but no more input data, until it returns with Z_STREAM_END
-+	 */
-+	while (ret != Z_STREAM_END) {
-+		ret = zlib_deflate(&workspace->strm, Z_FINISH);
-+		if (ret == Z_STREAM_END)
-+			break;
-+		if (ret != Z_OK && ret != Z_BUF_ERROR) {
-+			zlib_deflateEnd(&workspace->strm);
-+			ret = -EIO;
-+			goto out;
-+		} else if (workspace->strm.avail_out == 0) {
-+			/* get another page for the stream end */
-+			kunmap(out_page);
-+			if (nr_pages == nr_dest_pages) {
-+				out_page = NULL;
-+				ret = -E2BIG;
-+				goto out;
-+			}
-+			out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
-+			if (out_page == NULL) {
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+			cpage_out = kmap(out_page);
-+			pages[nr_pages] = out_page;
-+			nr_pages++;
-+			workspace->strm.avail_out = PAGE_SIZE;
-+			workspace->strm.next_out = cpage_out;
-+		}
- 	}
-+	zlib_deflateEnd(&workspace->strm);
- 
- 	if (workspace->strm.total_out >= workspace->strm.total_in) {
- 		ret = -E2BIG;
-@@ -231,7 +289,7 @@ int zlib_decompress_bio(struct list_head *ws, struct compressed_bio *cb)
- 
- 	workspace->strm.total_out = 0;
- 	workspace->strm.next_out = workspace->buf;
--	workspace->strm.avail_out = PAGE_SIZE;
-+	workspace->strm.avail_out = workspace->buf_size;
- 
- 	/* If it's deflate, and it's got no preset dictionary, then
- 	   we can tell zlib to skip the adler32 check. */
-@@ -270,7 +328,7 @@ int zlib_decompress_bio(struct list_head *ws, struct compressed_bio *cb)
- 		}
- 
- 		workspace->strm.next_out = workspace->buf;
--		workspace->strm.avail_out = PAGE_SIZE;
-+		workspace->strm.avail_out = workspace->buf_size;
- 
- 		if (workspace->strm.avail_in == 0) {
- 			unsigned long tmp;
-@@ -320,7 +378,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 	workspace->strm.total_in = 0;
- 
- 	workspace->strm.next_out = workspace->buf;
--	workspace->strm.avail_out = PAGE_SIZE;
-+	workspace->strm.avail_out = workspace->buf_size;
- 	workspace->strm.total_out = 0;
- 	/* If it's deflate, and it's got no preset dictionary, then
- 	   we can tell zlib to skip the adler32 check. */
-@@ -364,7 +422,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 			buf_offset = 0;
- 
- 		bytes = min(PAGE_SIZE - pg_offset,
--			    PAGE_SIZE - buf_offset);
-+			    PAGE_SIZE - (buf_offset % PAGE_SIZE));
- 		bytes = min(bytes, bytes_left);
- 
- 		kaddr = kmap_atomic(dest_page);
-@@ -375,7 +433,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 		bytes_left -= bytes;
- next:
- 		workspace->strm.next_out = workspace->buf;
--		workspace->strm.avail_out = PAGE_SIZE;
-+		workspace->strm.avail_out = workspace->buf_size;
- 	}
- 
- 	if (ret != Z_STREAM_END && bytes_left != 0)
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+> Cc: Collin Walling <walling@linux.ibm.com>
+> Cc: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+> Cc: Philipp Rudo <prudo@linux.ibm.com>
+> Cc: Mike Rapoport <rppt@linux.ibm.com>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-s390@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+> ---
+> Only build tested for s390, will appreciate if some one can give it a try
+> on a real system.
+> 
+>  arch/s390/kernel/setup.c | 14 ++++----------
+>  include/linux/memblock.h |  3 +++
+>  mm/memblock.c            | 20 ++++++++++++++++----
+>  3 files changed, 23 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
+> index 9cbf490fd162..79a7b1872e5a 100644
+> --- a/arch/s390/kernel/setup.c
+> +++ b/arch/s390/kernel/setup.c
+> @@ -761,14 +761,6 @@ static void __init free_mem_detect_info(void)
+>  		memblock_free(start, size);
+>  }
+>  
+> -static void __init memblock_physmem_add(phys_addr_t start, phys_addr_t size)
+> -{
+> -	memblock_dbg("memblock_physmem_add: [%#016llx-%#016llx]\n",
+> -		     start, start + size - 1);
+> -	memblock_add_range(&memblock.memory, start, size, 0, 0);
+> -	memblock_add_range(&memblock.physmem, start, size, 0, 0);
+> -}
+> -
+>  static const char * __init get_mem_info_source(void)
+>  {
+>  	switch (mem_detect.info_source) {
+> @@ -793,8 +785,10 @@ static void __init memblock_add_mem_detect_info(void)
+>  		     get_mem_info_source(), mem_detect.info_source);
+>  	/* keep memblock lists close to the kernel */
+>  	memblock_set_bottom_up(true);
+> -	for_each_mem_detect_block(i, &start, &end)
+> -		memblock_physmem_add(start, end - start);
+> +	for_each_mem_detect_block(i, &start, &end) {
+> +		memblock_add(start, end - start);
+> +		memblock_physmem(start, end - start);
+
+Maybe memblock_physmem_add()?
+
+And, since memblock_add_range() will actually become private, cab you
+please make it static?
+
+> +	}
+>  	memblock_set_bottom_up(false);
+>  	memblock_dump_all();
+>  }
+> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+> index 1510b12de031..d17e7b841cb6 100644
+> --- a/include/linux/memblock.h
+> +++ b/include/linux/memblock.h
+> @@ -115,6 +115,9 @@ int memblock_add(phys_addr_t base, phys_addr_t size);
+>  int memblock_remove(phys_addr_t base, phys_addr_t size);
+>  int memblock_free(phys_addr_t base, phys_addr_t size);
+>  int memblock_reserve(phys_addr_t base, phys_addr_t size);
+> +#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+> +int memblock_physmem(phys_addr_t base, phys_addr_t size);
+> +#endif
+>  void memblock_trim_memory(phys_addr_t align);
+>  bool memblock_overlaps_region(struct memblock_type *type,
+>  			      phys_addr_t base, phys_addr_t size);
+> diff --git a/mm/memblock.c b/mm/memblock.c
+> index 3e20c6ba2101..f6d17a1f30e3 100644
+> --- a/mm/memblock.c
+> +++ b/mm/memblock.c
+> @@ -694,7 +694,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
+>  {
+>  	phys_addr_t end = base + size - 1;
+>  
+> -	memblock_dbg("memblock_add: [%pa-%pa] %pS\n",
+> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>  		     &base, &end, (void *)_RET_IP_);
+>  
+>  	return memblock_add_range(&memblock.memory, base, size, MAX_NUMNODES, 0);
+> @@ -795,7 +795,7 @@ int __init_memblock memblock_remove(phys_addr_t base, phys_addr_t size)
+>  {
+>  	phys_addr_t end = base + size - 1;
+>  
+> -	memblock_dbg("memblock_remove: [%pa-%pa] %pS\n",
+> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>  		     &base, &end, (void *)_RET_IP_);
+>  
+>  	return memblock_remove_range(&memblock.memory, base, size);
+> @@ -813,7 +813,7 @@ int __init_memblock memblock_free(phys_addr_t base, phys_addr_t size)
+>  {
+>  	phys_addr_t end = base + size - 1;
+>  
+> -	memblock_dbg("   memblock_free: [%pa-%pa] %pS\n",
+> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>  		     &base, &end, (void *)_RET_IP_);
+>  
+>  	kmemleak_free_part_phys(base, size);
+> @@ -824,12 +824,24 @@ int __init_memblock memblock_reserve(phys_addr_t base, phys_addr_t size)
+>  {
+>  	phys_addr_t end = base + size - 1;
+>  
+> -	memblock_dbg("memblock_reserve: [%pa-%pa] %pS\n",
+> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+>  		     &base, &end, (void *)_RET_IP_);
+>  
+>  	return memblock_add_range(&memblock.reserved, base, size, MAX_NUMNODES, 0);
+>  }
+>  
+> +#ifdef CONFIG_HAVE_MEMBLOCK_PHYS_MAP
+> +int __init_memblock memblock_physmem(phys_addr_t base, phys_addr_t size)
+> +{
+> +	phys_addr_t end = base + size - 1;
+> +
+> +	memblock_dbg("%s: [%pa-%pa] %pS\n", __func__,
+> +		     &base, &end, (void *)_RET_IP_);
+> +
+> +	return memblock_add_range(&memblock.physmem, base, size, MAX_NUMNODES, 0);
+> +}
+> +#endif
+> +
+>  /**
+>   * memblock_setclr_flag - set or clear flag for a memory region
+>   * @base: base address of the region
+> -- 
+> 2.20.1
+> 
+> 
+
 -- 
-2.17.1
-
+Sincerely yours,
+Mike.
