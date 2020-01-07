@@ -2,86 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 80D8C132144
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jan 2020 09:21:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B73A1322D9
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jan 2020 10:47:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726651AbgAGIVQ convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 7 Jan 2020 03:21:16 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:44923 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726485AbgAGIVQ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 7 Jan 2020 03:21:16 -0500
-Received: from [IPv6:2601:646:8600:3281:c17a:5ef:6afe:4c48] ([IPv6:2601:646:8600:3281:c17a:5ef:6afe:4c48])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id 0078K3ZN3264752
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Tue, 7 Jan 2020 00:20:03 -0800
-Authentication-Results: mail.zytor.com; dkim=permerror (bad message/signature format)
-From:   "H. Peter Anvin" <hpa@zytor.com>
-Message-Id: <202001070820.0078K3ZN3264752@mail.zytor.com>
-Date:   Tue, 07 Jan 2020 00:19:53 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <CAK8P3a17GshP1KmCpvCkWGDGJLC_JrGUFQZTLbfe5+sSwTjyxw@mail.gmail.com>
-References: <20200102145552.1853992-1-arnd@arndb.de> <20200102145552.1853992-3-arnd@arndb.de> <87woa410nx.fsf@mpe.ellerman.id.au> <CAK8P3a17GshP1KmCpvCkWGDGJLC_JrGUFQZTLbfe5+sSwTjyxw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Subject: Re: [PATCH v3 02/22] compat: provide compat_ptr() on all architectures
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Michael Ellerman <mpe@ellerman.id.au>
-CC:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Robert Richter <rric@kernel.org>,
+        id S1727772AbgAGJr1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Jan 2020 04:47:27 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31711 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726558AbgAGJr1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jan 2020 04:47:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578390445;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KVqwQQQJaGP1HIeftCzj/1sPI5qZbhYLk6cQcNLcxhU=;
+        b=gDNtSJKQKw7v/HeS1wz/e0zr2/MGCOUfFDlAoY0nrltvvC4IOmh2d+oV3YD61pVFjj/3A9
+        /ifllQWp0l01PjeE2kN8l/tvqhCoChpZGvOlXQK6mMm2WMUqhDrTE6Tk3eTSfmJT20d5sL
+        ZhSmqTekHkakuJ0I/cjFmlMoL8hOiq8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-360-KkK0JwdNOtifoF9kz5DWIQ-1; Tue, 07 Jan 2020 04:47:24 -0500
+X-MC-Unique: KkK0JwdNOtifoF9kz5DWIQ-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7B93310054E3;
+        Tue,  7 Jan 2020 09:47:22 +0000 (UTC)
+Received: from gondolin (ovpn-117-222.ams2.redhat.com [10.36.117.222])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A179A7DB56;
+        Tue,  7 Jan 2020 09:47:19 +0000 (UTC)
+Date:   Tue, 7 Jan 2020 10:47:17 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
-        Parisc List <linux-parisc@vger.kernel.org>,
-        linuxppc-dev@zytor.com
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
+        <u.kleine-koenig@pengutronix.de>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] vfio-ccw: Use the correct style for SPDX License
+ Identifier
+Message-ID: <20200107104717.5447e24c.cohuck@redhat.com>
+In-Reply-To: <20191225122054.GA4598@nishad>
+References: <20191225122054.GA4598@nishad>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-<linuxppc-dev@lists.ozlabs.org>,oprofile-list@lists.sf.net,linux-s390 <linux-s390@vger.kernel.org>,sparclinux <sparclinux@vger.kernel.org>
-From: hpa@zytor.com
-Message-ID: <41625F06-D755-4C82-86DF-A9415FEEE13D@zytor.com>
+On Wed, 25 Dec 2019 17:50:58 +0530
+Nishad Kamdar <nishadkamdar@gmail.com> wrote:
 
-On January 7, 2020 12:08:31 AM PST, Arnd Bergmann <arnd@arndb.de> wrote:
->On Tue, Jan 7, 2020 at 3:05 AM Michael Ellerman <mpe@ellerman.id.au>
->wrote:
->> Arnd Bergmann <arnd@arndb.de> writes:
->> > +
->> > +static inline compat_uptr_t ptr_to_compat(void __user *uptr)
->> > +{
->> > +     return (u32)(unsigned long)uptr;
->> > +}
->>
->> Is there a reason we cast to u32 directly instead of using
->compat_uptr_t?
+> This patch corrects the SPDX License Identifier style in
+> header file related to S/390 common i/o drivers.
+> It assigns explicit block comment to the SPDX License
+> Identifier.
+> 
+> Changes made by using a script provided by Joe Perches here:
+> https://lkml.org/lkml/2019/2/7/46.
 >
->Probably Al found this to be more explicit at the time when he
->introduced
->it on all the architectures in 2005. I just moved it here and kept the
->definition.
->
->       Arnd
 
-Did compat_uptr_t exist back then?
--- 
-Sent from my Android device with K-9 Mail. Please excuse my brevity.
+Fixes: 3cd90214b70f ("vfio: ccw: add tracepoints for interesting error paths")
+ 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+> ---
+>  drivers/s390/cio/vfio_ccw_trace.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+
+Thanks, applied.
+
