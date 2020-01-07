@@ -2,117 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C906F132D8C
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Jan 2020 18:51:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 886BF132FF6
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Jan 2020 20:54:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728348AbgAGRvh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Jan 2020 12:51:37 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7136 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728430AbgAGRvh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jan 2020 12:51:37 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 007HeGpA062392
-        for <linux-s390@vger.kernel.org>; Tue, 7 Jan 2020 12:51:35 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xapd6mmfa-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 07 Jan 2020 12:51:35 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Tue, 7 Jan 2020 17:51:33 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 Jan 2020 17:51:24 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 007HpN7f58654844
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Jan 2020 17:51:23 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 485AFA405C;
-        Tue,  7 Jan 2020 17:51:23 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4789EA4062;
-        Tue,  7 Jan 2020 17:51:22 +0000 (GMT)
-Received: from osiris (unknown [9.145.85.21])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  7 Jan 2020 17:51:22 +0000 (GMT)
-Date:   Tue, 7 Jan 2020 18:51:20 +0100
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paulburton@kernel.org>,
-        James Hogan <jhogan@kernel.org>,
-        "James E.J. Bottomley" <James.Bottomley@hansenpartnership.com>,
-        Helge Deller <deller@gmx.de>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Robert Richter <rric@kernel.org>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        oprofile-list@lists.sf.net, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org
-Subject: Re: [PATCH v3 02/22] compat: provide compat_ptr() on all
- architectures
-References: <20200102145552.1853992-1-arnd@arndb.de>
- <20200102145552.1853992-3-arnd@arndb.de>
+        id S1728421AbgAGTyW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Jan 2020 14:54:22 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45905 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728630AbgAGTyU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Jan 2020 14:54:20 -0500
+Received: by mail-ed1-f67.google.com with SMTP id v28so578714edw.12
+        for <linux-s390@vger.kernel.org>; Tue, 07 Jan 2020 11:54:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Pi/olKLeaBrqhttAwoMGSoT+Sxp+y5xY3PQr7eygtLM=;
+        b=rePy6dvW+ZH47h+1V5ZzhOdHt3hyIpKxcBqRG6Yxugb8Ug55qYyaTQK4+wINdwq55f
+         jyS7yVvOQ5iMzNISAd+yiqtmzzFVbayzDS39QWeF/dmepISKDIrC01/Pyd16Jkxknswo
+         ZxY/mmXagT/Q6hX/41m7OLd2SMfr8CZO7Ci1IzWbi02KR9YYzIjtqbyhfstjO3po9RzC
+         tRdf7rgiUAYJtfRgzdFxSV7Qq5Jehd/t/PYuqt0rxIFlDCGzailtByweOtMj5bqBnwVk
+         IjZK4uPjcTNDDRooC9FKrWtSPPIiz9LQ6akzqbAN2ioBe4cx30eADGCJ98dfGgAz0k84
+         86YA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Pi/olKLeaBrqhttAwoMGSoT+Sxp+y5xY3PQr7eygtLM=;
+        b=Ta/ZSp21u7qgUc0VnmCRN6bfe3Ae24zpJAsPUCFONcxyHeorRrRUbHvEShedjcH4cQ
+         J3sLjPQqhI6FFd3AyEbVFPoQnUZSIj+/7HokEB5IhL9OgKQa+uEAl5kQkWReUQOhtDEe
+         zieXD0iTKJS1Fi/XUJij1btpmqJFH0NQRzZ/uoykk8ag3MU4uVUetMYELI4IQN4zRp+H
+         69ReLzaEjT+nCim8OaWgJMkG/KnKQZDGZTF0/JvRuQ4cZlUYkuZMcMjc9uatedbV4Gij
+         aDzs6CYbLfmPsX5g8phAEkYc1SUOQFW6onl/H2SvB4YZhLcxcK56i22uqtZNgdUsESLm
+         yY9Q==
+X-Gm-Message-State: APjAAAUtyuEZD01bUb0NVBAHaUjXjxq2pXiKmSeT0hbiwgHwfsUadxov
+        BQI0ths/ulNz5MqzLH/xKb++9dlp+KcS6vc5w/A=
+X-Google-Smtp-Source: APXvYqx1uh7JY9TsleWmDC3UVv1ETHY9DfduKRb8/JpOu+/AEBPnllkLYgtKF65Y7XFrgtyDYVY72zE2SUwJXZDirUk=
+X-Received: by 2002:a17:906:2894:: with SMTP id o20mr1108577ejd.199.1578426859045;
+ Tue, 07 Jan 2020 11:54:19 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200102145552.1853992-3-arnd@arndb.de>
-X-TM-AS-GCONF: 00
-x-cbid: 20010717-0016-0000-0000-000002DB3EDC
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010717-0017-0000-0000-0000333DB70D
-Message-Id: <20200107175120.GC4684@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-07_06:2020-01-07,2020-01-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 clxscore=1015 suspectscore=1 adultscore=0 phishscore=0
- priorityscore=1501 bulkscore=0 mlxlogscore=416 mlxscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001070140
+Received: by 2002:a17:906:72c6:0:0:0:0 with HTTP; Tue, 7 Jan 2020 11:54:18
+ -0800 (PST)
+Reply-To: dhlexpresscouriercompany.nyusa@gmail.com
+From:   "Dr. William Johnson" <currency1000000@gmail.com>
+Date:   Tue, 7 Jan 2020 20:54:18 +0100
+Message-ID: <CAPqfnSFyOwF0m-QsrOdcFV_PCC3TSBr=YQHoQHvH0baKHfeF6Q@mail.gmail.com>
+Subject: contact Dhl office New York to receive your Prepaid ATM Master Card
+ worth $15.8Million US DOLLARS now.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jan 02, 2020 at 03:55:20PM +0100, Arnd Bergmann wrote:
-> In order to avoid needless #ifdef CONFIG_COMPAT checks,
-> move the compat_ptr() definition to linux/compat.h
-> where it can be seen by any file regardless of the
-> architecture.
-> 
-> Only s390 needs a special definition, this can use the
-> self-#define trick we have elsewhere.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm64/include/asm/compat.h   | 17 -----------------
->  arch/mips/include/asm/compat.h    | 18 ------------------
->  arch/parisc/include/asm/compat.h  | 17 -----------------
->  arch/powerpc/include/asm/compat.h | 17 -----------------
->  arch/powerpc/oprofile/backtrace.c |  2 +-
->  arch/s390/include/asm/compat.h    |  6 +-----
->  arch/sparc/include/asm/compat.h   | 17 -----------------
->  arch/x86/include/asm/compat.h     | 17 -----------------
->  include/linux/compat.h            | 18 ++++++++++++++++++
->  9 files changed, 20 insertions(+), 109 deletions(-)
-
-For s390:
-
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-
+ATTN Dear Beneficiary.
+Goodnews
+I have Registered your Prepaid ATM Master Card
+worth $15.800,000.00 US DOLLARS Courier company asigned to deliver it
+to you today.
+So contact Dhl office New York to receive your Prepaid ATM Master Card
+worth $15.8Million US DOLLARS now.
+Contact Person: Mrs. Mary Michael, Director, DHL Courier Company-NY USA. 10218
+Email. dhlexpresscouriercompany.nyusa@gmail.com
+Call the office +(202) 890-8752
+Rec-Confirmed your mailing address to the office as I listed below.
+Your Full Name--------------
+House Address-----------
+Your working Phone Number----------------
+ID copy-------------------------
+Sex-----------------------------
+Note,delivery fee to your address is only $50.00. send it to this
+company urgent on itunes card today so that DHL will deliver this
+Prepaid ATM Master Card to you today according to our finally
+agreement.
+Thanks for coperations,
+Dr. William Johnson
