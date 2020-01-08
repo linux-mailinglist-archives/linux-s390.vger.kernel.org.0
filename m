@@ -2,103 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 062EC134657
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jan 2020 16:36:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 43F84134759
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jan 2020 17:13:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728950AbgAHPgJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Jan 2020 10:36:09 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:35919 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727782AbgAHPgJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jan 2020 10:36:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578497768;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6YNW0p309KoXFtpAU4UbagX3xQXhnEerfAmOwO0Imlk=;
-        b=UZiq/YeX3r3ib8T7DQGL2YBLt6bp6ha/lwB/C6QPIwe4HQNMb7tzLoEB15xwaiUZi6gvE5
-        eAAWspxFIBosqcmpoQ2it8hJxdjggspbOEn9bnelD66D7q/FdV6VJsXk00GQ/FMwNmsF36
-        +xBpKGzZ2YZpIoKJjIkHaxiqGwzfNms=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-222-GrEnqTf5Mzyw4bp6w9TOqg-1; Wed, 08 Jan 2020 10:36:04 -0500
-X-MC-Unique: GrEnqTf5Mzyw4bp6w9TOqg-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 94CB010054E3;
-        Wed,  8 Jan 2020 15:36:03 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A8CC61001938;
-        Wed,  8 Jan 2020 15:36:02 +0000 (UTC)
-Date:   Wed, 8 Jan 2020 16:36:00 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v3] KVM: s390: Add new reset vcpu API
-Message-ID: <20200108163600.54981741.cohuck@redhat.com>
-In-Reply-To: <d3370e31-ca33-567d-ce0e-1168f603a686@redhat.com>
-References: <20191205120956.50930-1-frankja@linux.ibm.com>
-        <dd724da0-9bba-079e-6b6f-756762dbc942@de.ibm.com>
-        <d0db08ef-ade9-93d4-105f-ace6fef50c81@linux.ibm.com>
-        <3ddb7aa6-96d4-246f-a8ba-fdf2408a4ff0@de.ibm.com>
-        <d3370e31-ca33-567d-ce0e-1168f603a686@redhat.com>
-Organization: Red Hat GmbH
+        id S1729382AbgAHQNZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jan 2020 11:13:25 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7418 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726186AbgAHQNZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jan 2020 11:13:25 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008GD9kY111961
+        for <linux-s390@vger.kernel.org>; Wed, 8 Jan 2020 11:13:24 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xdg31cwyq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 08 Jan 2020 11:13:23 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Wed, 8 Jan 2020 16:13:22 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 8 Jan 2020 16:13:19 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 008GDIbh47251896
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jan 2020 16:13:18 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3FA0BAE051;
+        Wed,  8 Jan 2020 16:13:18 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 02A0DAE045;
+        Wed,  8 Jan 2020 16:13:18 +0000 (GMT)
+Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.108])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  8 Jan 2020 16:13:17 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com
+Subject: [kvm-unit-tests PATCH v5 0/4] s390x: SCLP Unit test
+Date:   Wed,  8 Jan 2020 17:13:13 +0100
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20010816-4275-0000-0000-00000395D739
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20010816-4276-0000-0000-000038A9C4E0
+Message-Id: <20200108161317.268928-1-imbrenda@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-08_04:2020-01-08,2020-01-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=819
+ suspectscore=1 phishscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 spamscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001080133
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 8 Jan 2020 15:44:57 +0100
-Thomas Huth <thuth@redhat.com> wrote:
+This patchset contains some minor cleanup, some preparatory work and
+then the SCLP unit test itself.
 
-> On 08/01/2020 15.38, Christian Borntraeger wrote:
-> > 
-> > 
-> > On 08.01.20 15:35, Janosch Frank wrote:  
-> >> On 1/8/20 3:28 PM, Christian Borntraeger wrote:  
-> >>>
-> >>>
-> >>> On 05.12.19 13:09, Janosch Frank wrote:
-> >>> [...]  
-> >>>> +4.123 KVM_S390_CLEAR_RESET
-> >>>> +
-> >>>> +Capability: KVM_CAP_S390_VCPU_RESETS
-> >>>> +Architectures: s390
-> >>>> +Type: vcpu ioctl
-> >>>> +Parameters: none
-> >>>> +Returns: 0
-> >>>> +
-> >>>> +This ioctl resets VCPU registers and control structures that QEMU
-> >>>> +can't access via the kvm_run structure. The clear reset is a superset
-> >>>> +of the initial reset and additionally clears general, access, floating
-> >>>> +and vector registers.  
-> >>>
-> >>> As Thomas outlined, make it more obvious that userspace does the remaining
-> >>> parts. I do not think that we want the kernel to do the things (unless it
-> >>> helps you in some way for the ultravisor guests)  
-> >>
-> >> Ok, will do  
-> > 
-> > I changed my mind (see my other mail) but I would like Thomas, Conny or David
-> > to ack/nack.  
-> 
-> I don't mind too much as long as it is properly documented, but I also
-> slightly prefer to be consistent here, i.e. let the kernel clear the
-> rest here, too, just like we do it already with the initial reset.
+The unit test checks the following:
+    
+    * Correctly ignoring instruction bits that should be ignored
+    * Privileged instruction check
+    * Check for addressing exceptions
+    * Specification exceptions:
+      - SCCB size less than 8
+      - SCCB unaligned
+      - SCCB overlaps prefix or lowcore
+      - SCCB address higher than 2GB
+    * Return codes for
+      - Invalid command
+      - SCCB too short (but at least 8)
+      - SCCB page boundary violation
 
-I definitely agree with the 'properly documented' part :) It's probably
-enough to just state that the kernel resets the stuff, no need to go
-into details (and we also don't need to update this for later versions.)
+v4 -> v5
+* updated usage of report()
+* added SPX and STPX wrappers to the library
+* improved readability
+* addressed some more comments
+v3 -> v4
+* export sclp_setup_int instead of copying it
+* add more comments
+* rename some more variables to improve readability
+* improve the prefix test
+* improved the invalid address test
+* addressed further comments received during review
+v2 -> v3
+* generally improved the naming of variables
+* added and fixed comments
+* renamed test_one_run to test_one_simple
+* added some const where needed
+* addresed many more small comments received during review
+v1 -> v2
+* fix many small issues that came up during the first round of reviews
+* add comments to each function
+* use a static buffer for the SCCP template when used
 
-Q: Are we sure that we will always be able to reset everything from the
-kernel?
+Claudio Imbrenda (4):
+  s390x: export sclp_setup_int
+  s390x: sclp: add service call instruction wrapper
+  s390x: lib: add SPX and STPX instruction wrapper
+  s390x: SCLP unit test
+
+ s390x/Makefile           |   1 +
+ lib/s390x/asm/arch_def.h |  26 +++
+ lib/s390x/sclp.h         |   1 +
+ lib/s390x/sclp.c         |   9 +-
+ s390x/sclp.c             | 462 +++++++++++++++++++++++++++++++++++++++
+ s390x/unittests.cfg      |   8 +
+ 6 files changed, 500 insertions(+), 7 deletions(-)
+ create mode 100644 s390x/sclp.c
+
+-- 
+2.24.1
 
