@@ -2,155 +2,288 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F1D1134927
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jan 2020 18:20:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 69341134AE6
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jan 2020 19:49:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729753AbgAHRUe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Jan 2020 12:20:34 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:44280 "EHLO ale.deltatee.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729701AbgAHRUd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 8 Jan 2020 12:20:33 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ipF00-0004MS-Qh; Wed, 08 Jan 2020 10:20:05 -0700
-To:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org,
-        linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Badger <ebadger@gigaio.com>,
+        id S1728096AbgAHSsr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jan 2020 13:48:47 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38698 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727427AbgAHSsr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jan 2020 13:48:47 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008IgEFA113476;
+        Wed, 8 Jan 2020 13:48:38 -0500
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xdg31hq79-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jan 2020 13:48:38 -0500
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 008Ik6mG003704;
+        Wed, 8 Jan 2020 18:48:37 GMT
+Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
+        by ppma02dal.us.ibm.com with ESMTP id 2xajb78jya-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 08 Jan 2020 18:48:37 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 008ImZ5g39911692
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 8 Jan 2020 18:48:35 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AB509AE060;
+        Wed,  8 Jan 2020 18:48:35 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6E30DAE05F;
+        Wed,  8 Jan 2020 18:48:33 +0000 (GMT)
+Received: from [9.145.47.46] (unknown [9.145.47.46])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Wed,  8 Jan 2020 18:48:33 +0000 (GMT)
+Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+To:     Josef Bacik <josef@toxicpanda.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>
+Cc:     Richard Purdie <rpurdie@rpsys.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-References: <20200107205959.7575-1-logang@deltatee.com>
- <20200107205959.7575-7-logang@deltatee.com>
- <a5501f2a-ff8d-cea2-1540-1a70ea6bc2d2@redhat.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <9226e0e4-832b-d873-f433-f29a7853f11e@deltatee.com>
-Date:   Wed, 8 Jan 2020 10:20:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200107143058.GU3929@twin.jikos.cz>
+ <20200108105103.29028-1-zaslonko@linux.ibm.com>
+ <75a2d45c-fd7b-9542-403d-caea7d977add@toxicpanda.com>
+From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Message-ID: <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
+Date:   Wed, 8 Jan 2020 19:48:31 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <a5501f2a-ff8d-cea2-1540-1a70ea6bc2d2@redhat.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <75a2d45c-fd7b-9542-403d-caea7d977add@toxicpanda.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: borntraeger@de.ibm.com, gor@linux.ibm.com, heiko.carstens@de.ibm.com, ebadger@gigaio.com, peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, hch@lst.de, akpm@linux-foundation.org, mhocko@kernel.org, dan.j.williams@intel.com, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, david@redhat.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        MYRULES_FREE autolearn=no autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v2 6/8] s390/mm: Thread pgprot_t through
- vmem_add_mapping()
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-08_05:2020-01-08,2020-01-08 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ suspectscore=0 phishscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0
+ adultscore=0 spamscore=0 impostorscore=0 malwarescore=0 priorityscore=1501
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001080149
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hello,
 
-
-On 2020-01-08 5:43 a.m., David Hildenbrand wrote:
-> On 07.01.20 21:59, Logan Gunthorpe wrote:
->> In prepartion to support a pgprot_t argument for arch_add_memory().
+On 08.01.2020 16:08, Josef Bacik wrote:
+> On 1/8/20 5:51 AM, Mikhail Zaslonko wrote:
+>> In order to benefit from s390 zlib hardware compression support,
+>> increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
+>> s390 zlib hardware support is enabled on the machine). This brings up
+>> to 60% better performance in hardware on s390 compared to the PAGE_SIZE
+>> buffer and much more compared to the software zlib processing in btrfs.
+>> In case of memory pressure, fall back to a single page buffer during
+>> workspace allocation.
+>> The data compressed with larger input buffers will still conform to zlib
+>> standard and thus can be decompressed also on a systems that uses only
+>> PAGE_SIZE buffer for btrfs zlib.
 >>
->> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->> Cc: Vasily Gorbik <gor@linux.ibm.com>
->> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
->> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+> 
+> 
 >> ---
->>  arch/s390/include/asm/pgtable.h |  3 ++-
->>  arch/s390/mm/extmem.c           |  3 ++-
->>  arch/s390/mm/init.c             |  2 +-
->>  arch/s390/mm/vmem.c             | 10 +++++-----
->>  4 files changed, 10 insertions(+), 8 deletions(-)
+>>   fs/btrfs/compression.c |   2 +-
+>>   fs/btrfs/zlib.c        | 135 ++++++++++++++++++++++++++++++-----------
+>>   2 files changed, 101 insertions(+), 36 deletions(-)
 >>
->> diff --git a/arch/s390/include/asm/pgtable.h b/arch/s390/include/asm/pgtable.h
->> index 7b03037a8475..e667a1a96879 100644
->> --- a/arch/s390/include/asm/pgtable.h
->> +++ b/arch/s390/include/asm/pgtable.h
->> @@ -1640,7 +1640,8 @@ static inline swp_entry_t __swp_entry(unsigned long type, unsigned long offset)
->>  
->>  #define kern_addr_valid(addr)   (1)
->>  
->> -extern int vmem_add_mapping(unsigned long start, unsigned long size);
->> +extern int vmem_add_mapping(unsigned long start, unsigned long size,
->> +			    pgprot_t prot);
->>  extern int vmem_remove_mapping(unsigned long start, unsigned long size);
->>  extern int s390_enable_sie(void);
->>  extern int s390_enable_skey(void);
->> diff --git a/arch/s390/mm/extmem.c b/arch/s390/mm/extmem.c
->> index fd0dae9d10f4..6cf7029a7b35 100644
->> --- a/arch/s390/mm/extmem.c
->> +++ b/arch/s390/mm/extmem.c
->> @@ -313,7 +313,8 @@ __segment_load (char *name, int do_nonshared, unsigned long *addr, unsigned long
->>  		goto out_free;
->>  	}
->>  
->> -	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1);
->> +	rc = vmem_add_mapping(seg->start_addr, seg->end - seg->start_addr + 1,
->> +			      PAGE_KERNEL);
->>  
->>  	if (rc)
->>  		goto out_free;
->> diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
->> index a0c88c1c9ad0..ef19522ddad2 100644
->> --- a/arch/s390/mm/init.c
->> +++ b/arch/s390/mm/init.c
->> @@ -277,7 +277,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
->>  	if (WARN_ON_ONCE(modifiers->altmap))
->>  		return -EINVAL;
->>  
->> -	rc = vmem_add_mapping(start, size);
->> +	rc = vmem_add_mapping(start, size, PAGE_KERNEL);
->>  	if (rc)
->>  		return rc;
->>  
->> diff --git a/arch/s390/mm/vmem.c b/arch/s390/mm/vmem.c
->> index b403fa14847d..8a5e95f184a2 100644
->> --- a/arch/s390/mm/vmem.c
->> +++ b/arch/s390/mm/vmem.c
->> @@ -66,7 +66,7 @@ pte_t __ref *vmem_pte_alloc(void)
->>  /*
->>   * Add a physical memory range to the 1:1 mapping.
->>   */
->> -static int vmem_add_mem(unsigned long start, unsigned long size)
->> +static int vmem_add_mem(unsigned long start, unsigned long size, pgprot_t prot)
->>  {
->>  	unsigned long pgt_prot, sgt_prot, r3_prot;
->>  	unsigned long pages4k, pages1m, pages2g;
->> @@ -79,7 +79,7 @@ static int vmem_add_mem(unsigned long start, unsigned long size)
->>  	pte_t *pt_dir;
->>  	int ret = -ENOMEM;
->>  
->> -	pgt_prot = pgprot_val(PAGE_KERNEL);
->> +	pgt_prot = pgprot_val(prot);
->>  	sgt_prot = pgprot_val(SEGMENT_KERNEL);
->>  	r3_prot = pgprot_val(REGION3_KERNEL);
+>> diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
+>> index ee834ef7beb4..6bd0e75a822c 100644
+>> --- a/fs/btrfs/compression.c
+>> +++ b/fs/btrfs/compression.c
+>> @@ -1285,7 +1285,7 @@ int btrfs_decompress_buf2page(const char *buf, unsigned long buf_start,
+>>       /* copy bytes from the working buffer into the pages */
+>>       while (working_bytes > 0) {
+>>           bytes = min_t(unsigned long, bvec.bv_len,
+>> -                PAGE_SIZE - buf_offset);
+>> +                PAGE_SIZE - (buf_offset % PAGE_SIZE));
+>>           bytes = min(bytes, working_bytes);
+>>             kaddr = kmap_atomic(bvec.bv_page);
+>> diff --git a/fs/btrfs/zlib.c b/fs/btrfs/zlib.c
+>> index a6c90a003c12..05615a1099db 100644
+>> --- a/fs/btrfs/zlib.c
+>> +++ b/fs/btrfs/zlib.c
+>> @@ -20,9 +20,13 @@
+>>   #include <linux/refcount.h>
+>>   #include "compression.h"
+>>   +/* workspace buffer size for s390 zlib hardware support */
+>> +#define ZLIB_DFLTCC_BUF_SIZE    (4 * PAGE_SIZE)
+>> +
+>>   struct workspace {
+>>       z_stream strm;
+>>       char *buf;
+>> +    unsigned int buf_size;
+>>       struct list_head list;
+>>       int level;
+>>   };
+>> @@ -61,7 +65,21 @@ struct list_head *zlib_alloc_workspace(unsigned int level)
+>>               zlib_inflate_workspacesize());
+>>       workspace->strm.workspace = kvmalloc(workspacesize, GFP_KERNEL);
+>>       workspace->level = level;
+>> -    workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
+>> +    workspace->buf = NULL;
+>> +    /*
+>> +     * In case of s390 zlib hardware support, allocate lager workspace
+>> +     * buffer. If allocator fails, fall back to a single page buffer.
+>> +     */
+>> +    if (zlib_deflate_dfltcc_enabled()) {
+>> +        workspace->buf = kmalloc(ZLIB_DFLTCC_BUF_SIZE,
+>> +                     __GFP_NOMEMALLOC | __GFP_NORETRY |
+>> +                     __GFP_NOWARN | GFP_NOIO);
+>> +        workspace->buf_size = ZLIB_DFLTCC_BUF_SIZE;
+>> +    }
+>> +    if (!workspace->buf) {
+>> +        workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
+>> +        workspace->buf_size = PAGE_SIZE;
+>> +    }
+>>       if (!workspace->strm.workspace || !workspace->buf)
+>>           goto fail;
+>>   @@ -85,6 +103,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>>       struct page *in_page = NULL;
+>>       struct page *out_page = NULL;
+>>       unsigned long bytes_left;
+>> +    unsigned int in_buf_pages;
+>>       unsigned long len = *total_out;
+>>       unsigned long nr_dest_pages = *out_pages;
+>>       const unsigned long max_out = nr_dest_pages * PAGE_SIZE;
+>> @@ -102,9 +121,6 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>>       workspace->strm.total_in = 0;
+>>       workspace->strm.total_out = 0;
+>>   -    in_page = find_get_page(mapping, start >> PAGE_SHIFT);
+>> -    data_in = kmap(in_page);
+>> -
+>>       out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
+>>       if (out_page == NULL) {
+>>           ret = -ENOMEM;
+>> @@ -114,12 +130,51 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>>       pages[0] = out_page;
+>>       nr_pages = 1;
+>>   -    workspace->strm.next_in = data_in;
+>> +    workspace->strm.next_in = workspace->buf;
+>> +    workspace->strm.avail_in = 0;
+>>       workspace->strm.next_out = cpage_out;
+>>       workspace->strm.avail_out = PAGE_SIZE;
+>> -    workspace->strm.avail_in = min(len, PAGE_SIZE);
+>>         while (workspace->strm.total_in < len) {
+>> +        /*
+>> +         * Get next input pages and copy the contents to
+>> +         * the workspace buffer if required.
+>> +         */
+>> +        if (workspace->strm.avail_in == 0) {
+>> +            bytes_left = len - workspace->strm.total_in;
+>> +            in_buf_pages = min(DIV_ROUND_UP(bytes_left, PAGE_SIZE),
+>> +                       workspace->buf_size / PAGE_SIZE);
+>> +            if (in_buf_pages > 1) {
+>> +                int i;
+>> +
+>> +                for (i = 0; i < in_buf_pages; i++) {
+>> +                    if (in_page) {
+>> +                        kunmap(in_page);
+>> +                        put_page(in_page);
+>> +                    }
+>> +                    in_page = find_get_page(mapping,
+>> +                                start >> PAGE_SHIFT);
+>> +                    data_in = kmap(in_page);
+>> +                    memcpy(workspace->buf + i * PAGE_SIZE,
+>> +                           data_in, PAGE_SIZE);
+>> +                    start += PAGE_SIZE;
+>> +                }
+>> +                workspace->strm.next_in = workspace->buf;
+>> +            } else {
+>> +                if (in_page) {
+>> +                    kunmap(in_page);
+>> +                    put_page(in_page);
+>> +                }
+>> +                in_page = find_get_page(mapping,
+>> +                            start >> PAGE_SHIFT);
+>> +                data_in = kmap(in_page);
+>> +                start += PAGE_SIZE;
+>> +                workspace->strm.next_in = data_in;
+>> +            }
+>> +            workspace->strm.avail_in = min(bytes_left,
+>> +                               (unsigned long) workspace->buf_size);
+>> +        }
+>> +
+>>           ret = zlib_deflate(&workspace->strm, Z_SYNC_FLUSH);
+>>           if (ret != Z_OK) {
+>>               pr_debug("BTRFS: deflate in loop returned %d\n",
+>> @@ -161,33 +216,43 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
+>>           /* we're all done */
+>>           if (workspace->strm.total_in >= len)
+>>               break;
+>> -
+>> -        /* we've read in a full page, get a new one */
+>> -        if (workspace->strm.avail_in == 0) {
+>> -            if (workspace->strm.total_out > max_out)
+>> -                break;
+>> -
+>> -            bytes_left = len - workspace->strm.total_in;
+>> -            kunmap(in_page);
+>> -            put_page(in_page);
+>> -
+>> -            start += PAGE_SIZE;
+>> -            in_page = find_get_page(mapping,
+>> -                        start >> PAGE_SHIFT);
+>> -            data_in = kmap(in_page);
+>> -            workspace->strm.avail_in = min(bytes_left,
+>> -                               PAGE_SIZE);
+>> -            workspace->strm.next_in = data_in;
+>> -        }
+>> +        if (workspace->strm.total_out > max_out)
+>> +            break;
+>>       }
+>>       workspace->strm.avail_in = 0;
+>> -    ret = zlib_deflate(&workspace->strm, Z_FINISH);
+>> -    zlib_deflateEnd(&workspace->strm);
+>> -
+>> -    if (ret != Z_STREAM_END) {
+>> -        ret = -EIO;
+>> -        goto out;
+>> +    /*
+>> +     * Call deflate with Z_FINISH flush parameter providing more output
+>> +     * space but no more input data, until it returns with Z_STREAM_END.
+>> +     */
+>> +    while (ret != Z_STREAM_END) {
+>> +        ret = zlib_deflate(&workspace->strm, Z_FINISH);
+>> +        if (ret == Z_STREAM_END)
+>> +            break;
+>> +        if (ret != Z_OK && ret != Z_BUF_ERROR) {
+>> +            zlib_deflateEnd(&workspace->strm);
+>> +            ret = -EIO;
+>> +            goto out;
+>> +        } else if (workspace->strm.avail_out == 0) {
+>> +            /* get another page for the stream end */
+>> +            kunmap(out_page);
+>> +            if (nr_pages == nr_dest_pages) {
+>> +                out_page = NULL;
+>> +                ret = -E2BIG;
+>> +                goto out;
+>> +            }
+>> +            out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
+>> +            if (out_page == NULL) {
+>> +                ret = -ENOMEM;
+>> +                goto out;
+>> +            }
 > 
-> So, if we map as huge/gigantic pages, the protection would be discarded?
-> That looks wrong.
+> Do we need zlib_deflateEnd() for the above error cases?  Thanks,
+
+The original btrfs code did not call zlib_deflateEnd() for -E2BIG and 
+-ENOMEM cases, so I stick to the same logic.
+Unlike userspace zlib where deflateEnd() frees all dynamically allocated 
+memory, in the kernel it doesn't do much apart from setting the return 
+code (since all the memory allocations for kernel zlib are performed in advance).
+
 > 
-> s390x does not support ZONE_DEVICE yet. Maybe simply bail out for s390x
-> as you do for sh to make your life easier?
-
-Yeah, ok, makes sense to me; I'll change it for v3.
-
-Logan
+> Josef
