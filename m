@@ -2,332 +2,152 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D71C3133FAA
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jan 2020 11:51:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 65B9113419E
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Jan 2020 13:27:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726788AbgAHKvL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Jan 2020 05:51:11 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:20706 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726648AbgAHKvK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jan 2020 05:51:10 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 008AljWs104885
-        for <linux-s390@vger.kernel.org>; Wed, 8 Jan 2020 05:51:10 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xb926gmq9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 08 Jan 2020 05:51:09 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <zaslonko@linux.ibm.com>;
-        Wed, 8 Jan 2020 10:51:07 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 Jan 2020 10:51:05 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 008Ap3qv12714138
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Jan 2020 10:51:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D43364204D;
-        Wed,  8 Jan 2020 10:51:03 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6DD0D42049;
-        Wed,  8 Jan 2020 10:51:03 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Jan 2020 10:51:03 +0000 (GMT)
-From:   Mikhail Zaslonko <zaslonko@linux.ibm.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     Richard Purdie <rpurdie@rpsys.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Eduard Shishkin <edward6@linux.ibm.com>,
-        Ilya Leoshkevich <iii@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware compression
-Date:   Wed,  8 Jan 2020 11:51:03 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200107143058.GU3929@twin.jikos.cz>
-References: <20200107143058.GU3929@twin.jikos.cz>
-X-TM-AS-GCONF: 00
-x-cbid: 20010810-0008-0000-0000-000003478DA1
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010810-0009-0000-0000-00004A67D14D
-Message-Id: <20200108105103.29028-1-zaslonko@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-08_03:2020-01-08,2020-01-08 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- malwarescore=0 bulkscore=0 adultscore=0 phishscore=0 mlxscore=0
- mlxlogscore=999 priorityscore=1501 suspectscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001080092
+        id S1727789AbgAHM13 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jan 2020 07:27:29 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:24220 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727798AbgAHM13 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Jan 2020 07:27:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578486447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=YcX/h1ODx2t0WC6vtgv1THC5OeL0byNIZX5cdZODUBE=;
+        b=NIyAOmd8rLfcOaD2Clx2Hn6EPfuzjb/JT5KietrHvXsbfw9UZQ9tNKEm9GIP/UvHT+O05p
+        zEWv/+pbGVLfTrvw/IXSe7aXVr7MCmpaJd+Isb7xLLA1jUNWpJIOXCP4M1vIMpfMRQFS/H
+        0GSUFJ+ui9VPNb9/rlnJ9ONMhT674DY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-71-gQTG7dlrPFaZcQHmyglyFA-1; Wed, 08 Jan 2020 07:27:24 -0500
+X-MC-Unique: gQTG7dlrPFaZcQHmyglyFA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4FDD800D53;
+        Wed,  8 Jan 2020 12:27:19 +0000 (UTC)
+Received: from [10.36.117.90] (ovpn-117-90.ams2.redhat.com [10.36.117.90])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 38C3C19C58;
+        Wed,  8 Jan 2020 12:27:15 +0000 (UTC)
+Subject: Re: [PATCH v2 1/8] mm/memory_hotplug: Drop the flags field from
+ struct mhp_restrictions
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>
+References: <20200107205959.7575-1-logang@deltatee.com>
+ <20200107205959.7575-2-logang@deltatee.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <c3c3c475-f828-13f7-b5c9-f691ef0fe1ff@redhat.com>
+Date:   Wed, 8 Jan 2020 13:27:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20200107205959.7575-2-logang@deltatee.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-In order to benefit from s390 zlib hardware compression support,
-increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
-s390 zlib hardware support is enabled on the machine). This brings up
-to 60% better performance in hardware on s390 compared to the PAGE_SIZE
-buffer and much more compared to the software zlib processing in btrfs.
-In case of memory pressure, fall back to a single page buffer during
-workspace allocation.
-The data compressed with larger input buffers will still conform to zlib
-standard and thus can be decompressed also on a systems that uses only
-PAGE_SIZE buffer for btrfs zlib.
+On 07.01.20 21:59, Logan Gunthorpe wrote:
+> This variable is not used anywhere and should therefore be removed
+> from the structure.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> ---
+>  include/linux/memory_hotplug.h | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index ba0dca6aac6e..e47a29761088 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -55,11 +55,9 @@ enum {
+>  
+>  /*
+>   * Restrictions for the memory hotplug:
+> - * flags:  MHP_ flags
+>   * altmap: alternative allocator for memmap array
+>   */
+>  struct mhp_restrictions {
+> -	unsigned long flags;
+>  	struct vmem_altmap *altmap;
+>  };
 
-Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
----
- fs/btrfs/compression.c |   2 +-
- fs/btrfs/zlib.c        | 135 ++++++++++++++++++++++++++++++-----------
- 2 files changed, 101 insertions(+), 36 deletions(-)
+We wanted to use that for the "vmemmap on added memory" config knob. But
+that might still take some time and we might actually realize it using
+the altmap instead (hopefully :) ).
 
-diff --git a/fs/btrfs/compression.c b/fs/btrfs/compression.c
-index ee834ef7beb4..6bd0e75a822c 100644
---- a/fs/btrfs/compression.c
-+++ b/fs/btrfs/compression.c
-@@ -1285,7 +1285,7 @@ int btrfs_decompress_buf2page(const char *buf, unsigned long buf_start,
- 	/* copy bytes from the working buffer into the pages */
- 	while (working_bytes > 0) {
- 		bytes = min_t(unsigned long, bvec.bv_len,
--				PAGE_SIZE - buf_offset);
-+				PAGE_SIZE - (buf_offset % PAGE_SIZE));
- 		bytes = min(bytes, working_bytes);
- 
- 		kaddr = kmap_atomic(bvec.bv_page);
-diff --git a/fs/btrfs/zlib.c b/fs/btrfs/zlib.c
-index a6c90a003c12..05615a1099db 100644
---- a/fs/btrfs/zlib.c
-+++ b/fs/btrfs/zlib.c
-@@ -20,9 +20,13 @@
- #include <linux/refcount.h>
- #include "compression.h"
- 
-+/* workspace buffer size for s390 zlib hardware support */
-+#define ZLIB_DFLTCC_BUF_SIZE    (4 * PAGE_SIZE)
-+
- struct workspace {
- 	z_stream strm;
- 	char *buf;
-+	unsigned int buf_size;
- 	struct list_head list;
- 	int level;
- };
-@@ -61,7 +65,21 @@ struct list_head *zlib_alloc_workspace(unsigned int level)
- 			zlib_inflate_workspacesize());
- 	workspace->strm.workspace = kvmalloc(workspacesize, GFP_KERNEL);
- 	workspace->level = level;
--	workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+	workspace->buf = NULL;
-+	/*
-+	 * In case of s390 zlib hardware support, allocate lager workspace
-+	 * buffer. If allocator fails, fall back to a single page buffer.
-+	 */
-+	if (zlib_deflate_dfltcc_enabled()) {
-+		workspace->buf = kmalloc(ZLIB_DFLTCC_BUF_SIZE,
-+					 __GFP_NOMEMALLOC | __GFP_NORETRY |
-+					 __GFP_NOWARN | GFP_NOIO);
-+		workspace->buf_size = ZLIB_DFLTCC_BUF_SIZE;
-+	}
-+	if (!workspace->buf) {
-+		workspace->buf = kmalloc(PAGE_SIZE, GFP_KERNEL);
-+		workspace->buf_size = PAGE_SIZE;
-+	}
- 	if (!workspace->strm.workspace || !workspace->buf)
- 		goto fail;
- 
-@@ -85,6 +103,7 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	struct page *in_page = NULL;
- 	struct page *out_page = NULL;
- 	unsigned long bytes_left;
-+	unsigned int in_buf_pages;
- 	unsigned long len = *total_out;
- 	unsigned long nr_dest_pages = *out_pages;
- 	const unsigned long max_out = nr_dest_pages * PAGE_SIZE;
-@@ -102,9 +121,6 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	workspace->strm.total_in = 0;
- 	workspace->strm.total_out = 0;
- 
--	in_page = find_get_page(mapping, start >> PAGE_SHIFT);
--	data_in = kmap(in_page);
--
- 	out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
- 	if (out_page == NULL) {
- 		ret = -ENOMEM;
-@@ -114,12 +130,51 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 	pages[0] = out_page;
- 	nr_pages = 1;
- 
--	workspace->strm.next_in = data_in;
-+	workspace->strm.next_in = workspace->buf;
-+	workspace->strm.avail_in = 0;
- 	workspace->strm.next_out = cpage_out;
- 	workspace->strm.avail_out = PAGE_SIZE;
--	workspace->strm.avail_in = min(len, PAGE_SIZE);
- 
- 	while (workspace->strm.total_in < len) {
-+		/*
-+		 * Get next input pages and copy the contents to
-+		 * the workspace buffer if required.
-+		 */
-+		if (workspace->strm.avail_in == 0) {
-+			bytes_left = len - workspace->strm.total_in;
-+			in_buf_pages = min(DIV_ROUND_UP(bytes_left, PAGE_SIZE),
-+					   workspace->buf_size / PAGE_SIZE);
-+			if (in_buf_pages > 1) {
-+				int i;
-+
-+				for (i = 0; i < in_buf_pages; i++) {
-+					if (in_page) {
-+						kunmap(in_page);
-+						put_page(in_page);
-+					}
-+					in_page = find_get_page(mapping,
-+								start >> PAGE_SHIFT);
-+					data_in = kmap(in_page);
-+					memcpy(workspace->buf + i * PAGE_SIZE,
-+					       data_in, PAGE_SIZE);
-+					start += PAGE_SIZE;
-+				}
-+				workspace->strm.next_in = workspace->buf;
-+			} else {
-+				if (in_page) {
-+					kunmap(in_page);
-+					put_page(in_page);
-+				}
-+				in_page = find_get_page(mapping,
-+							start >> PAGE_SHIFT);
-+				data_in = kmap(in_page);
-+				start += PAGE_SIZE;
-+				workspace->strm.next_in = data_in;
-+			}
-+			workspace->strm.avail_in = min(bytes_left,
-+						       (unsigned long) workspace->buf_size);
-+		}
-+
- 		ret = zlib_deflate(&workspace->strm, Z_SYNC_FLUSH);
- 		if (ret != Z_OK) {
- 			pr_debug("BTRFS: deflate in loop returned %d\n",
-@@ -161,33 +216,43 @@ int zlib_compress_pages(struct list_head *ws, struct address_space *mapping,
- 		/* we're all done */
- 		if (workspace->strm.total_in >= len)
- 			break;
--
--		/* we've read in a full page, get a new one */
--		if (workspace->strm.avail_in == 0) {
--			if (workspace->strm.total_out > max_out)
--				break;
--
--			bytes_left = len - workspace->strm.total_in;
--			kunmap(in_page);
--			put_page(in_page);
--
--			start += PAGE_SIZE;
--			in_page = find_get_page(mapping,
--						start >> PAGE_SHIFT);
--			data_in = kmap(in_page);
--			workspace->strm.avail_in = min(bytes_left,
--							   PAGE_SIZE);
--			workspace->strm.next_in = data_in;
--		}
-+		if (workspace->strm.total_out > max_out)
-+			break;
- 	}
- 	workspace->strm.avail_in = 0;
--	ret = zlib_deflate(&workspace->strm, Z_FINISH);
--	zlib_deflateEnd(&workspace->strm);
--
--	if (ret != Z_STREAM_END) {
--		ret = -EIO;
--		goto out;
-+	/*
-+	 * Call deflate with Z_FINISH flush parameter providing more output
-+	 * space but no more input data, until it returns with Z_STREAM_END.
-+	 */
-+	while (ret != Z_STREAM_END) {
-+		ret = zlib_deflate(&workspace->strm, Z_FINISH);
-+		if (ret == Z_STREAM_END)
-+			break;
-+		if (ret != Z_OK && ret != Z_BUF_ERROR) {
-+			zlib_deflateEnd(&workspace->strm);
-+			ret = -EIO;
-+			goto out;
-+		} else if (workspace->strm.avail_out == 0) {
-+			/* get another page for the stream end */
-+			kunmap(out_page);
-+			if (nr_pages == nr_dest_pages) {
-+				out_page = NULL;
-+				ret = -E2BIG;
-+				goto out;
-+			}
-+			out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
-+			if (out_page == NULL) {
-+				ret = -ENOMEM;
-+				goto out;
-+			}
-+			cpage_out = kmap(out_page);
-+			pages[nr_pages] = out_page;
-+			nr_pages++;
-+			workspace->strm.avail_out = PAGE_SIZE;
-+			workspace->strm.next_out = cpage_out;
-+		}
- 	}
-+	zlib_deflateEnd(&workspace->strm);
- 
- 	if (workspace->strm.total_out >= workspace->strm.total_in) {
- 		ret = -E2BIG;
-@@ -231,7 +296,7 @@ int zlib_decompress_bio(struct list_head *ws, struct compressed_bio *cb)
- 
- 	workspace->strm.total_out = 0;
- 	workspace->strm.next_out = workspace->buf;
--	workspace->strm.avail_out = PAGE_SIZE;
-+	workspace->strm.avail_out = workspace->buf_size;
- 
- 	/* If it's deflate, and it's got no preset dictionary, then
- 	   we can tell zlib to skip the adler32 check. */
-@@ -270,7 +335,7 @@ int zlib_decompress_bio(struct list_head *ws, struct compressed_bio *cb)
- 		}
- 
- 		workspace->strm.next_out = workspace->buf;
--		workspace->strm.avail_out = PAGE_SIZE;
-+		workspace->strm.avail_out = workspace->buf_size;
- 
- 		if (workspace->strm.avail_in == 0) {
- 			unsigned long tmp;
-@@ -320,7 +385,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 	workspace->strm.total_in = 0;
- 
- 	workspace->strm.next_out = workspace->buf;
--	workspace->strm.avail_out = PAGE_SIZE;
-+	workspace->strm.avail_out = workspace->buf_size;
- 	workspace->strm.total_out = 0;
- 	/* If it's deflate, and it's got no preset dictionary, then
- 	   we can tell zlib to skip the adler32 check. */
-@@ -364,7 +429,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 			buf_offset = 0;
- 
- 		bytes = min(PAGE_SIZE - pg_offset,
--			    PAGE_SIZE - buf_offset);
-+			    PAGE_SIZE - (buf_offset % PAGE_SIZE));
- 		bytes = min(bytes, bytes_left);
- 
- 		kaddr = kmap_atomic(dest_page);
-@@ -375,7 +440,7 @@ int zlib_decompress(struct list_head *ws, unsigned char *data_in,
- 		bytes_left -= bytes;
- next:
- 		workspace->strm.next_out = workspace->buf;
--		workspace->strm.avail_out = PAGE_SIZE;
-+		workspace->strm.avail_out = workspace->buf_size;
- 	}
- 
- 	if (ret != Z_STREAM_END && bytes_left != 0)
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
 -- 
-2.17.1
+Thanks,
+
+David / dhildenb
 
