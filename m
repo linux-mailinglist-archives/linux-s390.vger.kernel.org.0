@@ -2,49 +2,49 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9EEA5135F8C
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jan 2020 18:44:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36FC1135FB4
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jan 2020 18:51:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388252AbgAIRom (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Jan 2020 12:44:42 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60242 "EHLO
+        id S1731911AbgAIRv2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Jan 2020 12:51:28 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47784 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388250AbgAIRom (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Jan 2020 12:44:42 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009Hc9tM002819
-        for <linux-s390@vger.kernel.org>; Thu, 9 Jan 2020 12:44:41 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xe3j8wvcx-1
+        by vger.kernel.org with ESMTP id S1731919AbgAIRv1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Jan 2020 12:51:27 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009HlrXJ144288
+        for <linux-s390@vger.kernel.org>; Thu, 9 Jan 2020 12:51:25 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xe7quju3h-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 09 Jan 2020 12:44:40 -0500
+        for <linux-s390@vger.kernel.org>; Thu, 09 Jan 2020 12:51:25 -0500
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 9 Jan 2020 17:44:39 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 9 Jan 2020 17:51:23 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 Jan 2020 17:44:36 -0000
+        Thu, 9 Jan 2020 17:51:20 -0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 009HiZ2w51839022
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 009HpJ5a16384054
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jan 2020 17:44:35 GMT
+        Thu, 9 Jan 2020 17:51:19 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C326A4055;
-        Thu,  9 Jan 2020 17:44:35 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7EB6BA4065;
+        Thu,  9 Jan 2020 17:51:19 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B205CA4051;
-        Thu,  9 Jan 2020 17:44:34 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 01D58A4057;
+        Thu,  9 Jan 2020 17:51:19 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.145.166.75])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jan 2020 17:44:34 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v6 4/4] s390x: SCLP unit test
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        borntraeger@de.ibm.com
-References: <20200109161625.154894-1-imbrenda@linux.ibm.com>
- <20200109161625.154894-5-imbrenda@linux.ibm.com>
+        Thu,  9 Jan 2020 17:51:18 +0000 (GMT)
+Subject: Re: [PATCH v4] KVM: s390: Add new reset vcpu API
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     kvm@vger.kernel.org, thuth@redhat.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, david@redhat.com
+References: <20200109155602.18985-1-frankja@linux.ibm.com>
+ <20200109180841.6843cb92.cohuck@redhat.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -88,124 +88,245 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Date:   Thu, 9 Jan 2020 18:44:34 +0100
+Date:   Thu, 9 Jan 2020 18:51:18 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200109161625.154894-5-imbrenda@linux.ibm.com>
+In-Reply-To: <20200109180841.6843cb92.cohuck@redhat.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="fAI7TKjL7K3tSxWoEJy3v5xsb8Uxl1EQN"
+ boundary="8jBGlaw2qxmqwKHASssfIF6BKVulnU4Mk"
 X-TM-AS-GCONF: 00
-x-cbid: 20010917-0020-0000-0000-0000039F510F
+x-cbid: 20010917-0028-0000-0000-000003CFBAC2
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010917-0021-0000-0000-000021F6B632
-Message-Id: <9d57b1b1-155f-8f30-0a32-3540492a8c86@linux.ibm.com>
+x-cbparentid: 20010917-0029-0000-0000-00002493D130
+Message-Id: <f79b523e-f3e8-95b8-c242-1e7ca0083012@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-09_03:2020-01-09,2020-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- priorityscore=1501 mlxscore=0 phishscore=0 adultscore=0 bulkscore=0
- lowpriorityscore=0 malwarescore=0 spamscore=0 impostorscore=0
- suspectscore=0 mlxlogscore=999 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001090145
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 impostorscore=0
+ mlxlogscore=999 phishscore=0 priorityscore=1501 suspectscore=0
+ lowpriorityscore=0 adultscore=0 clxscore=1015 malwarescore=0 bulkscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001090146
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---fAI7TKjL7K3tSxWoEJy3v5xsb8Uxl1EQN
-Content-Type: multipart/mixed; boundary="ZXR0z3ljfoIIpDxXRZfWSYvvwFW344a7r"
+--8jBGlaw2qxmqwKHASssfIF6BKVulnU4Mk
+Content-Type: multipart/mixed; boundary="XWVmLUsfnl9x0LO90BCakHrQ85T3IBgwg"
 
---ZXR0z3ljfoIIpDxXRZfWSYvvwFW344a7r
+--XWVmLUsfnl9x0LO90BCakHrQ85T3IBgwg
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 1/9/20 5:16 PM, Claudio Imbrenda wrote:
-> SCLP unit test. Testing the following:
+On 1/9/20 6:08 PM, Cornelia Huck wrote:
+> On Thu,  9 Jan 2020 10:56:01 -0500
+> Janosch Frank <frankja@linux.ibm.com> wrote:
 >=20
-> * Correctly ignoring instruction bits that should be ignored
-> * Privileged instruction check
-> * Check for addressing exceptions
-> * Specification exceptions:
->   - SCCB size less than 8
->   - SCCB unaligned
->   - SCCB overlaps prefix or lowcore
->   - SCCB address higher than 2GB
-> * Return codes for
->   - Invalid command
->   - SCCB too short (but at least 8)
->   - SCCB page boundary violation
+>> The architecture states that we need to reset local IRQs for all CPU
+>> resets. Because the old reset interface did not support the normal CPU=
+
+>> reset we never did that on a normal reset.
+>>
+>> Let's implement an interface for the missing normal and clear resets
+>> and reset all local IRQs, registers and control structures as stated
+>> in the architecture.
+>>
+>> Userspace might already reset the registers via the vcpu run struct,
+>> but as we need the interface for the interrupt clearing part anyway,
+>> we implement the resets fully and don't rely on userspace to reset the=
+
+>> rest.
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> ---
+>>
+>> I dropped the reviews, as I changed quite a lot. =20
+>>
+>> Keep in mind, that now we'll need a new parameter in normal and
+>> initial reset for protected virtualization to indicate that we need to=
+
+>> do the reset via the UV call. The Ultravisor does only accept the
+>> needed reset, not any subset resets.
 >=20
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
+> In the interface, or externally?
 
-I wonder how fast this will run under z/VM and if we need to increase
-the timeout.
-Nicely done, one comment below.
+?
 
-Acked-by: Janosch Frank <frankja@linux.ibm.com>
+>=20
+> [Apologies, but the details of the protected virt stuff are no longer
+> in my cache.
+Reworded explanation:
+I can't use a fallthrough, because the UV will reject the normal reset
+if we do an initial reset (same goes for the clear reset). To address
+this issue, I added a boolean to the normal and initial reset functions
+which tells the function if it was called directly or was called because
+of the fallthrough.
+
+Only if called directly a UV call for the reset is done, that way we can
+keep the fallthrough.
+
+>>  static int kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
+>>  {
+>> -	kvm_s390_vcpu_initial_reset(vcpu);
+>> +	/* this equals initial cpu reset in pop, but we don't switch to ESA =
+*/
+>=20
+> Maybe also mention that in the documentation?
+
+Sure
+
+>=20
+>> +	vcpu->arch.sie_block->gpsw.mask =3D 0UL;
+>> +	vcpu->arch.sie_block->gpsw.addr =3D 0UL;
+>> +	kvm_s390_set_prefix(vcpu, 0);
+>> +	kvm_s390_set_cpu_timer(vcpu, 0);
+>> +	vcpu->arch.sie_block->ckc       =3D 0UL;
+>> +	vcpu->arch.sie_block->todpr     =3D 0;
+>> +	memset(vcpu->arch.sie_block->gcr, 0, 16 * sizeof(__u64));
+>> +	vcpu->arch.sie_block->gcr[0]  =3D CR0_UNUSED_56 |
+>> +					CR0_INTERRUPT_KEY_SUBMASK |
+>> +					CR0_MEASUREMENT_ALERT_SUBMASK;
+>> +	vcpu->arch.sie_block->gcr[14] =3D CR14_UNUSED_32 |
+>> +					CR14_UNUSED_33 |
+>> +					CR14_EXTERNAL_DAMAGE_SUBMASK;
+>> +	/* make sure the new fpc will be lazily loaded */
+>> +	save_fpu_regs();
+>> +	current->thread.fpu.fpc =3D 0;
+>> +	vcpu->arch.sie_block->gbea =3D 1;
+>> +	vcpu->arch.sie_block->pp =3D 0;
+>> +	vcpu->arch.sie_block->fpf &=3D ~FPF_BPBC;
+>> +
+>=20
+> Add a comment that the remaining work will be done in normal_reset?
+
+Will do
+
+>=20
+>> +	return 0;
+>> +}
+>> +
+>> +static int kvm_arch_vcpu_ioctl_clear_reset(struct kvm_vcpu *vcpu)
+>> +{
+>> +	struct kvm_sync_regs *regs =3D &vcpu->run->s.regs;
+>> +
+>> +	memset(&regs->gprs, 0, sizeof(regs->gprs));
+>> +	/*
+>> +	 * Will be picked up via save_fpu_regs() in the initial reset
+>> +	 * fallthrough.
+>> +	 */
+>=20
+> This comment is a bit confusing... what does 'picked up' mean?
+>=20
+> (Maybe I'm just too tired, sorry...)
+
+fpus are loaded lazily, maybe I should just remove the comment.
+
+>=20
+>> +	memset(&regs->vrs, 0, sizeof(regs->vrs));
+>> +	memset(&regs->acrs, 0, sizeof(regs->acrs));
+>> +
+>> +	regs->etoken =3D 0;
+>> +	regs->etoken_extension =3D 0;
+>> +
+>> +	memset(&regs->gscb, 0, sizeof(regs->gscb));
+>> +	if (MACHINE_HAS_GS) {
+>> +		preempt_disable();
+>> +		__ctl_set_bit(2, 4);
+>> +		if (current->thread.gs_cb) {
+>> +			vcpu->arch.host_gscb =3D current->thread.gs_cb;
+>> +			save_gs_cb(vcpu->arch.host_gscb);
+>> +		}
+>> +		if (vcpu->arch.gs_enabled) {
+>> +			current->thread.gs_cb =3D (struct gs_cb *)
+>> +				&vcpu->run->s.regs.gscb;
+>> +			restore_gs_cb(current->thread.gs_cb);
+>> +		}
+>> +		preempt_enable();
+>> +	}
+>=20
+> And here that the remaining work will be done in initial_reset and
+> normal_reset?
+>=20
+>>  	return 0;
+>>  }
+>> =20
+>> @@ -4363,8 +4402,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+>>  		r =3D kvm_arch_vcpu_ioctl_set_initial_psw(vcpu, psw);
+>>  		break;
+>>  	}
+>> +
+>> +	case KVM_S390_CLEAR_RESET:
+>> +		r =3D kvm_arch_vcpu_ioctl_clear_reset(vcpu);
+>> +		/* fallthrough */
+>>  	case KVM_S390_INITIAL_RESET:
+>>  		r =3D kvm_arch_vcpu_ioctl_initial_reset(vcpu);
+>> +		/* fallthrough */
+>> +	case KVM_S390_NORMAL_RESET:
+>> +		r =3D kvm_arch_vcpu_ioctl_normal_reset(vcpu);
+>=20
+> Can any of these functions return !0 when the protected virt stuff is
+> done on top? If not, can we make them void and just set r=3D0; here?
+
+They do return > 0 if the UV call fails, so I need those r values.
+
+>=20
+>>  		break;
+>>  	case KVM_SET_ONE_REG:
+>>  	case KVM_GET_ONE_REG: {
+>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+>> index f0a16b4adbbd..4b95f9a31a2f 100644
+>> --- a/include/uapi/linux/kvm.h
+>> +++ b/include/uapi/linux/kvm.h
+>> @@ -1009,6 +1009,7 @@ struct kvm_ppc_resize_hpt {
+>>  #define KVM_CAP_PPC_GUEST_DEBUG_SSTEP 176
+>>  #define KVM_CAP_ARM_NISV_TO_USER 177
+>>  #define KVM_CAP_ARM_INJECT_EXT_DABT 178
+>> +#define KVM_CAP_S390_VCPU_RESETS 179
+>> =20
+>>  #ifdef KVM_CAP_IRQ_ROUTING
+>> =20
+>> @@ -1473,6 +1474,10 @@ struct kvm_enc_region {
+>>  /* Available with KVM_CAP_ARM_SVE */
+>>  #define KVM_ARM_VCPU_FINALIZE	  _IOW(KVMIO,  0xc2, int)
+>> =20
+>> +/* Available with  KVM_CAP_S390_VCPU_RESETS */
+>> +#define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
+>> +#define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
+>> +
+>>  /* Secure Encrypted Virtualization command */
+>>  enum sev_cmd_id {
+>>  	/* Guest initialization commands */
+>=20
 
 
-Tested under LPAR, KVM and PV
 
-> ---
->  s390x/Makefile      |   1 +
->  s390x/sclp.c        | 472 ++++++++++++++++++++++++++++++++++++++++++++=
+--XWVmLUsfnl9x0LO90BCakHrQ85T3IBgwg--
 
->  s390x/unittests.cfg |   8 +
->  3 files changed, 481 insertions(+)
->  create mode 100644 s390x/sclp.c
-[..]
-> +/**
-> + * Test SCCBs that are not 64-bit aligned.
-> + */
-> +static void test_sccb_unaligned(void)
-> +{
-> +	int offset;
-> +
-> +	for (offset =3D 1; offset < 8; offset++)
-> +		if (!test_one_simple(valid_code, offset + pagebuf, 8, 8, PGM_BIT_SPE=
-C, 0))
-> +			break;
-> +	report(offset =3D=3D 8, "SCCB unaligned");
-> +}
-> +
-> +/**
-> + * Test SCCBs whose address is in the lowcore or prefix area.
-> + */
-> +static void test_sccb_prefix(void)
-> +{
-> +	uint8_t scratch[2 * PAGE_SIZE];
-
-LC_SIZE?
-Can also be used in more places below.
-
-
---ZXR0z3ljfoIIpDxXRZfWSYvvwFW344a7r--
-
---fAI7TKjL7K3tSxWoEJy3v5xsb8Uxl1EQN
+--8jBGlaw2qxmqwKHASssfIF6BKVulnU4Mk
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl4XZoIACgkQ41TmuOI4
-ufgo1g/9GZRjyKWDC7KsAJBoClnutyU629/D4wBERtw1AUKkEWQJqUc2IBYa6hdb
-2oc8GP35iPr7eIk5W08gXRGtKRo37YZnemilCib+Xw606fwB8Z2w6ENqwuYkcfYY
-fxgtG1uUc7hTVbsmmUmWRLkkD1f+Ik1rusyjpKPpq7NxmSsN6BYQHjDD2/1auFq/
-aSrx7++GvNPwJo84Ljw42taTkCJ33jXEEsx6w7q6HHUc6XW3qV12pIdBK5q3lLqe
-CBz0UcOicK+0z/uDJ9GFPgmvMBR8Uc8mCeCKTg+fIlE1Qtru//Y4gMTFYg2QToAH
-nQc5R3f7g7hpPwYs8VzKlLPiBH5Gi1j4IPEdauzL9DfBMVHOvIKXRyssNFI4PkN8
-ctNHGPmSMB/9tsNEwIkPCi5tdlkevlSdfzWfbmJJqnFrmRm2Qa9vGcfc6IQ//222
-cQvrKyHR7Dyu7DhO/V7A2OWQec8B1LAW5QQXHHyV0ILMvaMoeMT+Op3lVgre8K/v
-IYyl2LCCRXEkterTRfhs16Z3/T4v5SApwLSIskTS/vgFef3tZ0tgU0O9q7zJf1wY
-bL7CVoFab+DJTwWNzHMKSxWWPn243SDI7omSaQlYACiwkyxrCa6uyypgXd3OtNUK
-2u81gqOkBfTJ4ns4fn/V9h8oH0kagNeCoEVdDIa0sgQLg+9UNHY=
-=1kx/
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl4XaBYACgkQ41TmuOI4
+ufhyRhAAwwVRSPsmNKeccMjeZ+1nivugQ9toHea9XHpURuscVFokCxdDaWgqQrjE
+UPPQsaly7xd7u3jLLW60zK2jKx415JkfDgWpMNS4uTRyUCV6f7tkmqgslSw1tOlF
+eX3leOJ1VaXGuhjvrFim0mcLTZ3cAlZ/jFMHFMS6iEAYx/OI6Yb6hPqBVsxiXmvO
+BHd6QEfgo4dCBoTzl/+DVglEX/nSifHBHE4FjM/IOXQnRgKhER07A3oM5EidKb79
+b49M23d7/6bRoCnqwIXjJo1XSBC7eMr3AJkfUKehyiSE0pTovYoiJ/8slihfnnd2
+dlw3x2vOQQE5BGIjXIGoXfjz9AwUouap7J21YAh5P19Xp4nlL3nfIhPJJ+naA59D
+T3jqWCELUKcjo6hfGOjrxmu/7mmbQrHNncfPqwe+s26pEy2AgetrclBsFSJXS1c3
+bG7VRYWBHLiueI1RPQgraxw5iF8Y35DnLyAK4jLEhRwAZRCxGtaKiKrqKjHOA/bR
+5xcCXuRTbR0liRTbLpFZEyd0ZA95/bYxNRJ8obIAKFIbmqDr41IFrQRBgXsbl8u3
+tXuNnFLoSpA3SlydWnvFnZy5ONR+D+yK7nBQ6By4pc0f/brC7EZGPGMsrEhPreFZ
+NI3hsOflfcVjS766wYaj8pMyNBc2BNknIDm7rEWjz2gBtbM/tZo=
+=/JuM
 -----END PGP SIGNATURE-----
 
---fAI7TKjL7K3tSxWoEJy3v5xsb8Uxl1EQN--
+--8jBGlaw2qxmqwKHASssfIF6BKVulnU4Mk--
 
