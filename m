@@ -2,118 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29127135EB0
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jan 2020 17:50:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0B73135ECF
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jan 2020 17:58:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbgAIQuh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Jan 2020 11:50:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62356 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731430AbgAIQuh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Jan 2020 11:50:37 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 009GgJZX056447
-        for <linux-s390@vger.kernel.org>; Thu, 9 Jan 2020 11:50:36 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xe6mcm14s-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 09 Jan 2020 11:50:35 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Thu, 9 Jan 2020 16:50:33 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 9 Jan 2020 16:50:30 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 009GoTx828836190
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 9 Jan 2020 16:50:29 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1F04FA404D;
-        Thu,  9 Jan 2020 16:50:29 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C87DFA4053;
-        Thu,  9 Jan 2020 16:50:28 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.152.224.108])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  9 Jan 2020 16:50:28 +0000 (GMT)
-Date:   Thu, 9 Jan 2020 17:50:27 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com
+        id S1731446AbgAIQ6X (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Jan 2020 11:58:23 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38650 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730676AbgAIQ6W (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Jan 2020 11:58:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1578589101;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=fmMOJR9weOPIVXilD4Dhlta8Z2y4A43TFMRwA1uEdfc=;
+        b=d8x2QxHvPe4KIQja7Qiz04vLWZYI8Vzc0i8ayqZ1djf2vpg+6Jc2BU+4Pz1/TPrNNmpHx0
+        4P4aiHhuF9XA0X85w+rpHf+rNqAi2piO5q9zSS9yO98iYilYulqvHag1BrRb2HrEgaY3uf
+        ktdo2NKmouhk4MXor/sFe59xcPiB7EI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45-sKWjSLd9NOyFTrX6xr3R6A-1; Thu, 09 Jan 2020 11:58:18 -0500
+X-MC-Unique: sKWjSLd9NOyFTrX6xr3R6A-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2CA72192368E;
+        Thu,  9 Jan 2020 16:58:17 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-117-32.ams2.redhat.com [10.36.117.32])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 58E9F9CA3;
+        Thu,  9 Jan 2020 16:58:13 +0000 (UTC)
 Subject: Re: [kvm-unit-tests PATCH v6 3/4] s390x: lib: add SPX and STPX
  instruction wrapper
-In-Reply-To: <5c6f563e-3d09-5274-b050-a64122097e9b@redhat.com>
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org, david@redhat.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com
 References: <20200109161625.154894-1-imbrenda@linux.ibm.com>
-        <20200109161625.154894-4-imbrenda@linux.ibm.com>
-        <5c6f563e-3d09-5274-b050-a64122097e9b@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+ <20200109161625.154894-4-imbrenda@linux.ibm.com>
+ <5c6f563e-3d09-5274-b050-a64122097e9b@redhat.com>
+ <20200109175027.362d8440@p-imbrenda>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <3dc2cf13-4829-53cd-a0a6-734fdddeb0ac@redhat.com>
+Date:   Thu, 9 Jan 2020 17:58:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200109175027.362d8440@p-imbrenda>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20010916-0008-0000-0000-00000347FF39
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20010916-0009-0000-0000-00004A6846B5
-Message-Id: <20200109175027.362d8440@p-imbrenda>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-09_03:2020-01-09,2020-01-09 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- phishscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- impostorscore=0 bulkscore=0 suspectscore=0 spamscore=0 malwarescore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001090141
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 9 Jan 2020 17:43:55 +0100
-Thomas Huth <thuth@redhat.com> wrote:
-
-> On 09/01/2020 17.16, Claudio Imbrenda wrote:
-> > Add a wrapper for the SET PREFIX and STORE PREFIX instructions, and
-> > use it instead of using inline assembly everywhere.
-> > 
-> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> > ---
-> >  lib/s390x/asm/arch_def.h | 10 ++++++++++
-> >  s390x/intercept.c        | 33 +++++++++++++--------------------
-> >  2 files changed, 23 insertions(+), 20 deletions(-)
-> > 
-> > diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> > index 1a5e3c6..465fe0f 100644
-> > --- a/lib/s390x/asm/arch_def.h
-> > +++ b/lib/s390x/asm/arch_def.h
-> > @@ -284,4 +284,14 @@ static inline int servc(uint32_t command,
-> > unsigned long sccb) return cc;
-> >  }
-> >  
-> > +static inline void spx(uint32_t *new_prefix)  
+On 09/01/2020 17.50, Claudio Imbrenda wrote:
+> On Thu, 9 Jan 2020 17:43:55 +0100
+> Thomas Huth <thuth@redhat.com> wrote:
 > 
-> Looking at this a second time ... why is new_prefix a pointer? A
-> normal value should be sufficient here, shouldn't it?
-
-no. if you look at the code in the same patch, intercept.c at some
-points needs to pass "wrong" pointers to spx and stpx in order to test
-them, so this needs to be a pointer
-
-the instructions themselves expect pointers (base register + offset)
-
-> > +{
-> > +	asm volatile("spx %0" : : "Q" (*new_prefix) : "memory");
-> > +}
-> > +
-> > +static inline void stpx(uint32_t *current_prefix)
-> > +{
-> > +	asm volatile("stpx %0" : "=Q" (*current_prefix));
-> > +}
-> > +  
+>> On 09/01/2020 17.16, Claudio Imbrenda wrote:
+>>> Add a wrapper for the SET PREFIX and STORE PREFIX instructions, and
+>>> use it instead of using inline assembly everywhere.
+>>>
+>>> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+>>> ---
+>>>  lib/s390x/asm/arch_def.h | 10 ++++++++++
+>>>  s390x/intercept.c        | 33 +++++++++++++--------------------
+>>>  2 files changed, 23 insertions(+), 20 deletions(-)
+>>>
+>>> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+>>> index 1a5e3c6..465fe0f 100644
+>>> --- a/lib/s390x/asm/arch_def.h
+>>> +++ b/lib/s390x/asm/arch_def.h
+>>> @@ -284,4 +284,14 @@ static inline int servc(uint32_t command,
+>>> unsigned long sccb) return cc;
+>>>  }
+>>>  
+>>> +static inline void spx(uint32_t *new_prefix)  
+>>
+>> Looking at this a second time ... why is new_prefix a pointer? A
+>> normal value should be sufficient here, shouldn't it?
 > 
->  Thomas
+> no. if you look at the code in the same patch, intercept.c at some
+> points needs to pass "wrong" pointers to spx and stpx in order to test
+> them, so this needs to be a pointer
 > 
+> the instructions themselves expect pointers (base register + offset)
+
+Ah, you're right, that "Q" constraint always confuses me... I guess you
+could do it without pointers when using the "r" constraint, but it's
+likely better to do it the same way as stpx, so your patch should be fine.
+
+>>> +{
+>>> +	asm volatile("spx %0" : : "Q" (*new_prefix) : "memory");
+>>> +}
+>>> +
+>>> +static inline void stpx(uint32_t *current_prefix)
+>>> +{
+>>> +	asm volatile("stpx %0" : "=Q" (*current_prefix));
+>>> +}
+>>> +  
+
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
