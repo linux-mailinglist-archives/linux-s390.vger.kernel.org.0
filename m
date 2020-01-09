@@ -2,107 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71086134B7A
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Jan 2020 20:29:29 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 409D71350E4
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jan 2020 02:10:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727436AbgAHT32 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Jan 2020 14:29:28 -0500
-Received: from ale.deltatee.com ([207.54.116.67]:47294 "EHLO ale.deltatee.com"
+        id S1726913AbgAIBKl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Jan 2020 20:10:41 -0500
+Received: from mx2.suse.de ([195.135.220.15]:36584 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727247AbgAHT32 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 8 Jan 2020 14:29:28 -0500
-Received: from s0106ac1f6bb1ecac.cg.shawcable.net ([70.73.163.230] helo=[192.168.11.155])
-        by ale.deltatee.com with esmtpsa (TLS1.3:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.92)
-        (envelope-from <logang@deltatee.com>)
-        id 1ipH0r-0006vH-74; Wed, 08 Jan 2020 12:29:06 -0700
-To:     Dan Williams <dan.j.williams@intel.com>,
-        David Hildenbrand <david@redhat.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
+        id S1726654AbgAIBKl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 8 Jan 2020 20:10:41 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id D9118AAA6;
+        Thu,  9 Jan 2020 01:10:38 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 7D357DA791; Thu,  9 Jan 2020 02:10:26 +0100 (CET)
+Date:   Thu, 9 Jan 2020 02:10:25 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Badger <ebadger@gigaio.com>
-References: <CAPcyv4hdpMs5om4_VrYUz98aWDJ9eRhj7WJr312Jwn6LCmAm9Q@mail.gmail.com>
- <5D5ED235-EB67-4072-8CCA-C046B7EC031C@redhat.com>
- <CAPcyv4jJgBm6rhLn2685HN3DnBKB1FO2ONXC1=Aftspu1hiqmA@mail.gmail.com>
-From:   Logan Gunthorpe <logang@deltatee.com>
-Message-ID: <1786a855-de7e-f9f9-d9b1-9dbe081e7360@deltatee.com>
-Date:   Wed, 8 Jan 2020 12:29:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+Message-ID: <20200109011025.GM3929@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Zaslonko Mikhail <zaslonko@linux.ibm.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
+        David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200107143058.GU3929@twin.jikos.cz>
+ <20200108105103.29028-1-zaslonko@linux.ibm.com>
+ <75a2d45c-fd7b-9542-403d-caea7d977add@toxicpanda.com>
+ <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <CAPcyv4jJgBm6rhLn2685HN3DnBKB1FO2ONXC1=Aftspu1hiqmA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 70.73.163.230
-X-SA-Exim-Rcpt-To: ebadger@gigaio.com, peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, hch@lst.de, akpm@linux-foundation.org, mhocko@kernel.org, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, david@redhat.com, dan.j.williams@intel.com
-X-SA-Exim-Mail-From: logang@deltatee.com
-X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
-X-Spam-Level: 
-X-Spam-Status: No, score=-8.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
-        GREYLIST_ISWHITE autolearn=ham autolearn_force=no version=3.4.2
-Subject: Re: [PATCH v2 2/8] mm/memory_hotplug: Rename mhp_restrictions to
- mhp_modifiers
-X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
-X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
+In-Reply-To: <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, Jan 08, 2020 at 07:48:31PM +0100, Zaslonko Mikhail wrote:
+> >> +        } else if (workspace->strm.avail_out == 0) {
+> >> +            /* get another page for the stream end */
+> >> +            kunmap(out_page);
+> >> +            if (nr_pages == nr_dest_pages) {
+> >> +                out_page = NULL;
+> >> +                ret = -E2BIG;
+> >> +                goto out;
+> >> +            }
+> >> +            out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
+> >> +            if (out_page == NULL) {
+> >> +                ret = -ENOMEM;
+> >> +                goto out;
+> >> +            }
+> > 
+> > Do we need zlib_deflateEnd() for the above error cases?  Thanks,
+> 
+> The original btrfs code did not call zlib_deflateEnd() for -E2BIG and 
+> -ENOMEM cases, so I stick to the same logic.
+> Unlike userspace zlib where deflateEnd() frees all dynamically allocated 
+> memory, in the kernel it doesn't do much apart from setting the return 
+> code (since all the memory allocations for kernel zlib are performed in advance).
 
-
-On 2020-01-08 12:13 p.m., Dan Williams wrote:
-> On Wed, Jan 8, 2020 at 11:08 AM David Hildenbrand <david@redhat.com> wrote:
->>
->>
->>
->>> Am 08.01.2020 um 20:00 schrieb Dan Williams <dan.j.williams@intel.com>:
->>>
->>> ï»¿On Wed, Jan 8, 2020 at 9:17 AM Logan Gunthorpe <logang@deltatee.com> wrote:
->>>>
->>>>
->>>>
->>>>> On 2020-01-08 5:28 a.m., David Hildenbrand wrote:
->>>>> On 07.01.20 21:59, Logan Gunthorpe wrote:
->>>>>> The mhp_restrictions struct really doesn't specify anything resembling
->>>>>> a restriction anymore so rename it to be mhp_modifiers.
->>>>>
->>>>> I wonder if something like "mhp_params" would be even better. It's
->>>>> essentially just a way to avoid changing call chains rough-out all archs
->>>>> whenever we want to add a new parameter.
->>>>
->>>> Sure, that does sound a bit nicer to me. I can change it for v3.
->>>
->>> Oh, I was just about to chime in to support "modifiers" because I
->>> would expect all parameters to folded into a "params" struct. The
->>> modifiers seem to be limited to the set of items that are only
->>> considered in a non-default / expert memory hotplug use cases.
-
->>
->> Itâ€˜s a set of extended parameters Iâ€˜d say.
-
-> Sure, we can call them "mhp_params" and just clarify that they are
-> optional / extended in the kernel-doc.
-
-Well pgprot isn't going to be optional... But I'll add something to the
-kernel_doc.
-
-Logan
-
+Agreed, deflateEnd is not necessary in the error cases.
