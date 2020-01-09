@@ -2,60 +2,60 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2DC6E135E98
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Jan 2020 17:46:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 83B61135EAD
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Jan 2020 17:49:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731399AbgAIQq0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Jan 2020 11:46:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38855 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731390AbgAIQq0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Jan 2020 11:46:26 -0500
+        id S2387866AbgAIQtR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Jan 2020 11:49:17 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:53006 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727738AbgAIQtR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Jan 2020 11:49:17 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578588385;
+        s=mimecast20190719; t=1578588556;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=wSZzBvprRoztiTIATHxsRzzyBxzHL8wN24+xg1mbWDI=;
-        b=IpM6aWMlUx8n3Kuj2PqTr27TxJ5Vb1pnUh++k5IRQ8zBPnPOnF41YNSt9PovQSXTPM0hzd
-        FprxcaRIf1W3vpa4xmdRaf+ADjTX4LCa9cgiF0xEk/FqIxdQw/hOixCR0G7WQsfA38e1L8
-        r8O31+RX3gPxwZW3vJuQPj1rq7pGy90=
+        bh=KrP42ZZX4/LcDQ7SYYauYYSKRhpk+Ugq3lsZdVo10WE=;
+        b=cTyUNFY3Z9SEI5vGMzOiOfV4TzxmXQhcELtI2leizxBpeRtWn1+tvNlHxpxP0nhm6EtnEB
+        uup3HgOrghu1RfPNpV6NzYJ7vZM+y9h5sEBV9G/x1J57RYut/M5ncUjcM/+nfMogMnTHhJ
+        ciiNLlPXPLhwPpdog3z41Ee3m8eRdDg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-222-RfgrzRnBMDGr5IycvhKDYw-1; Thu, 09 Jan 2020 11:46:21 -0500
-X-MC-Unique: RfgrzRnBMDGr5IycvhKDYw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-174-TIWoVtdbOIueIWQIrAFRXw-1; Thu, 09 Jan 2020 11:49:11 -0500
+X-MC-Unique: TIWoVtdbOIueIWQIrAFRXw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B71148E22BE;
-        Thu,  9 Jan 2020 16:46:20 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D0FB4113FD20;
+        Thu,  9 Jan 2020 16:49:10 +0000 (UTC)
 Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CC1F410013A7;
-        Thu,  9 Jan 2020 16:46:17 +0000 (UTC)
-Date:   Thu, 9 Jan 2020 17:46:15 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3C97681C2E;
+        Thu,  9 Jan 2020 16:49:07 +0000 (UTC)
+Date:   Thu, 9 Jan 2020 17:49:05 +0100
 From:   Cornelia Huck <cohuck@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
         linux-s390@vger.kernel.org
 Subject: Re: [PATCH] KVM: s390: check if kernel irqchip is actually enabled
-Message-ID: <20200109174615.5eeebab8.cohuck@redhat.com>
-In-Reply-To: <6020c443-a5b4-8064-87b6-a61e1b0b7c40@redhat.com>
+Message-ID: <20200109174905.138269ca.cohuck@redhat.com>
+In-Reply-To: <dd1ea7ee-d848-63ae-8b4d-857185e32b44@de.ibm.com>
 References: <20200109134713.14755-1-cohuck@redhat.com>
-        <6020c443-a5b4-8064-87b6-a61e1b0b7c40@redhat.com>
+        <dd1ea7ee-d848-63ae-8b4d-857185e32b44@de.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 9 Jan 2020 14:57:43 +0100
-David Hildenbrand <david@redhat.com> wrote:
+On Thu, 9 Jan 2020 15:06:22 +0100
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
 > On 09.01.20 14:47, Cornelia Huck wrote:
 > > On s390, we only allow userspace to create an in-kernel irqchip
@@ -69,7 +69,16 @@ David Hildenbrand <david@redhat.com> wrote:
 > > 
 > > A more precise check would be to add a field in kvm_arch that tracks
 > > whether an irqchip has actually been created; not sure if that is
-> > really needed.
+> > really needed.  
+> 
+> I think this is semantically wrong. We always have in-kernel irq handling.
+> It is actually not possible to not use it. So I understand where you are coming
+> from but this feels kind of wrong. 
+
+You cannot actually call create_irqchip if not enabled, though... as I
+said in my other reply, the intended semantics here are a bit unclear.
+
+> 
 > > 
 > > Found while trying to hunt down QEMU crashes with kvm-irqchip=off;
 > > this is not sufficient, though. I *think* everything but irqfds
@@ -95,17 +104,4 @@ David Hildenbrand <david@redhat.com> wrote:
 > >  #endif
 > >   
 > 
-> This function is used on s390x/common code only in
-> 
-> virt/kvm/irqchip.c:kvm_send_userspace_msi()
-> 
-> That function is only used with CONFIG_HAVE_KVM_MSI. That is not
-> selected for s390x.
-> 
-> What does this patch fix?
-
-Currently, only future callers... but maybe this should be an optional
-function instead that is only defined by the architectures that can
-actually do something useful here? TBH, I'm not completely sure what
-this function is actually supposed to indicate...
 
