@@ -2,212 +2,325 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1EDD3136962
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jan 2020 10:07:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A3671136A2B
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jan 2020 10:47:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726759AbgAJJHn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Jan 2020 04:07:43 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25213 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726694AbgAJJHn (ORCPT
+        id S1727275AbgAJJrL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 Jan 2020 04:47:11 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50122 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727219AbgAJJrL (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 Jan 2020 04:07:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1578647261;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=dHOTh2Vi6XFdyiok9eGtfx5sBLLxOtNwsFgiVjOsXeI=;
-        b=aXbYP/f07tondpXx12b+pZ1QROtifDrDUDruViCNDJaa/1Ds/sThXB89wA04R1febHFaXu
-        f/OkINdIvvKmZBbu/c17l+ee8XVp5S6eTckZGLb3Wrfyl+vLbH8nWInsxBo+wuLJPB3/5A
-        7DWXLvgAYuTA5aFjyX3uSeGNQ90yCCw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-274-fE5eUV1UPleeacOlJhxg4Q-1; Fri, 10 Jan 2020 04:07:38 -0500
-X-MC-Unique: fE5eUV1UPleeacOlJhxg4Q-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF82F800D50;
-        Fri, 10 Jan 2020 09:07:36 +0000 (UTC)
-Received: from gondolin (dhcp-192-245.str.redhat.com [10.33.192.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3341B271B7;
-        Fri, 10 Jan 2020 09:07:33 +0000 (UTC)
-Date:   Fri, 10 Jan 2020 10:07:22 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     Thomas Huth <thuth@redhat.com>, kvm@vger.kernel.org,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        david@redhat.com
-Subject: Re: [PATCH v4] KVM: s390: Add new reset vcpu API
-Message-ID: <20200110100722.6aad4fdd.cohuck@redhat.com>
-In-Reply-To: <90f65536-c2bb-9234-aef4-7941d477369e@linux.ibm.com>
-References: <20200109155602.18985-1-frankja@linux.ibm.com>
-        <20200109180841.6843cb92.cohuck@redhat.com>
-        <f79b523e-f3e8-95b8-c242-1e7ca0083012@linux.ibm.com>
-        <f18955c0-4002-c494-b14e-1b9733aad20e@redhat.com>
-        <c0049bfb-9516-a382-c69c-0693cb0fbfda@linux.ibm.com>
-        <90f65536-c2bb-9234-aef4-7941d477369e@linux.ibm.com>
-Organization: Red Hat GmbH
+        Fri, 10 Jan 2020 04:47:11 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00A9g5Ki146380
+        for <linux-s390@vger.kernel.org>; Fri, 10 Jan 2020 04:47:10 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xe0sm866h-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 10 Jan 2020 04:47:09 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Fri, 10 Jan 2020 09:47:08 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 10 Jan 2020 09:47:05 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00A9kGE042926480
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 10 Jan 2020 09:46:16 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48A1DA405C;
+        Fri, 10 Jan 2020 09:47:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 91641A405B;
+        Fri, 10 Jan 2020 09:47:02 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.153.163])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 10 Jan 2020 09:47:02 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, david@redhat.com, cohuck@redhat.com
+Subject: [PATCH v5] KVM: s390: Add new reset vcpu API
+Date:   Fri, 10 Jan 2020 04:46:59 -0500
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Mimecast-Spam-Score: 0
-Content-Type: multipart/signed; boundary="Sig_/cHU2=gSxrCBM3fdq/da8Dmf";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011009-0012-0000-0000-0000037C308F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011009-0013-0000-0000-000021B85457
+Message-Id: <20200110094659.4118-1-frankja@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-10_01:2020-01-10,2020-01-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
+ clxscore=1015 phishscore=0 adultscore=0 mlxlogscore=999 impostorscore=0
+ spamscore=0 suspectscore=1 lowpriorityscore=0 bulkscore=0 malwarescore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001100083
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/cHU2=gSxrCBM3fdq/da8Dmf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The architecture states that we need to reset local IRQs for all CPU
+resets. Because the old reset interface did not support the normal CPU
+reset we never did that on a normal reset.
 
-On Fri, 10 Jan 2020 09:43:33 +0100
-Janosch Frank <frankja@linux.ibm.com> wrote:
+Let's implement an interface for the missing normal and clear resets
+and reset all local IRQs, registers and control structures as stated
+in the architecture.
 
-> On 1/10/20 8:14 AM, Janosch Frank wrote:
-> > On 1/10/20 8:03 AM, Thomas Huth wrote: =20
-> >> On 09/01/2020 18.51, Janosch Frank wrote: =20
+Userspace might already reset the registers via the vcpu run struct,
+but as we need the interface for the interrupt clearing part anyway,
+we implement the resets fully and don't rely on userspace to reset the
+rest.
 
-> >>> Reworded explanation:
-> >>> I can't use a fallthrough, because the UV will reject the normal rese=
-t
-> >>> if we do an initial reset (same goes for the clear reset). To address
-> >>> this issue, I added a boolean to the normal and initial reset functio=
-ns
-> >>> which tells the function if it was called directly or was called beca=
-use
-> >>> of the fallthrough.
-> >>>
-> >>> Only if called directly a UV call for the reset is done, that way we =
-can
-> >>> keep the fallthrough. =20
-> >>
-> >> Sounds complicated. And do we need the fallthrough stuff here at all?
-> >> What about doing something like: =20
-> >=20
-> > That would work and I thought about it, it just comes down to taste :-)
-> > I don't have any strong feelings for a specific implementation. =20
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+---
+ Documentation/virt/kvm/api.txt |  45 +++++++++++++
+ arch/s390/kvm/kvm-s390.c       | 111 +++++++++++++++++++++++----------
+ include/uapi/linux/kvm.h       |   5 ++
+ 3 files changed, 127 insertions(+), 34 deletions(-)
 
-(...)
-
-> +=09if (kvm_s390_pv_handle_cpu(vcpu) && !chain) {
-
-I find this 'chain' thingy a bit unwieldy...
-
-> +=09=09rc =3D uv_cmd_nodata(kvm_s390_pv_handle_cpu(vcpu),
-> +=09=09=09=09   UVC_CMD_CPU_RESET, &ret);
-> +=09=09VCPU_EVENT(vcpu, 3, "PROTVIRT RESET NORMAL VCPU: cpu %d rc %x rrc =
-%x",
-> +=09=09=09   vcpu->vcpu_id, ret >> 16, ret & 0x0000ffff);
-> +=09}
-> +
-> +=09return rc;
->  }
-
-(...)
-
->=20
->  =09case KVM_S390_CLEAR_RESET:
->  =09=09r =3D kvm_arch_vcpu_ioctl_clear_reset(vcpu);
-> +=09=09if (r)
-> +=09=09=09break;
->  =09=09/* fallthrough */
->  =09case KVM_S390_INITIAL_RESET:
-> -=09=09r =3D kvm_arch_vcpu_ioctl_initial_reset(vcpu);
-> +=09=09r =3D kvm_arch_vcpu_ioctl_initial_reset(vcpu, ioctl !=3D
-> KVM_S390_INITIAL_RESET);
-> +=09=09if (r)
-> +=09=09=09break;
->  =09=09/* fallthrough */
->  =09case KVM_S390_NORMAL_RESET:
-> -=09=09r =3D kvm_arch_vcpu_ioctl_normal_reset(vcpu);
-> +=09=09r =3D kvm_arch_vcpu_ioctl_normal_reset(vcpu, ioctl !=3D
-> KVM_S390_NORMAL_RESET);
-
-...especially looking at the invocations.
-
->  =09=09break;
->  =09case KVM_SET_ONE_REG:
->  =09case KVM_GET_ONE_REG: {
->=20
-
-<bikeshed>
-What about the following?
-
-static void _do_normal_reset(struct kvm_vcpu *vcpu)
-{
-=09/* do normal reset */
-}
-
-static int kvm_arch_vcpu_ioctl_normal_reset(struct kvm_vcpu *vcpu)
-{
-=09_do_normal_reset(vcpu);
-        if (kvm_s390_pv_handle_cpu(vcpu)) {
-=09=09/* do protected virt normal reset */
-=09}
-}
-
-static void _do_initial_reset(struct kvm_vcpu *vcpu)
-{
-=09/* do initial reset */
-}
-
-static int kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
-{
-=09_do_initial_reset(vcpu);
-=09if (kvm_set_pv_handle_cpu(vcpu)) {
-=09=09/* do protected virt initial reset */
-=09}
-=09_do_normal_reset(vcpu);
-}
-
-static void _do_clear_reset(struct kvm_vcpu *vcpu)
-{
-=09/* do clear reset */
-}
-
-static int kvm_arch_vcpu_ioctl_clear_reset(struct kvm_vcpu *vcpu)
-{
-=09_do_clear_reset(vcpu);
-=09if (kvm_set_pv_handle_cpu(vcpu)) {
-=09=09/* do protected virt clear reset */
-=09}
-=09_do_initial_reset(vcpu);
-=09_do_normal_reset(vcpu);
-}
-
-And call the *_ioctl_* functions directly without fallthrough.
-
-The nice thing about this is that it makes the call chain explicit and
-does not require parameters.
-
-The drawback is that we need more functions, and that it looks a bit
-overcomplicated before the pv stuff is added.
-
-</bikeshed>
-
---Sig_/cHU2=gSxrCBM3fdq/da8Dmf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl4YPsoACgkQ3s9rk8bw
-L6+/ohAAg+vWecOgEV0vIv9zrzNNs5l7uiu2FW/AIUAelrQpP7FbpNg3GWro7Sjw
-BOaLcNtejnkZy7PdfB7V0OrrJUJeLvynbr32h/mgCmNQyhEUvwY99TxFFhzb5d8/
-VsLZ0g0z1d1MTo5xDLIIJEDsX65ULXAygj3u3C5sFkh/T01jRmGRkg3hjZCf3xm7
-Zz7VwGptEPaUQasoOMOUfi2O7l4bXuotfz8CmE5hehoRbEfMwqpTW85n0IYIj5rz
-yS8sd0kA9FSdx0c1E9JC5NiSvnSjHBKII9vtdVf/I7PDhSVGWmVVWtFewN517z0Y
-RuKOD0Z2zKX6+w2ABTiR9jggpLJEbwl871odqI6ZD/FBzmBD0N6Dq6ZauiCArwFR
-5flhd9Biqh3i0RCEZsCSNZ2q9q2soFn9/r4PR7zt+dP/9HSev4qs9yJphNx5VYCN
-kJ0KrRAmhs58VxgApDmA9yF8ZAMjoF+vve5TItuWEbLWjDUn8h0wbdhlwshASAkm
-B3tPAlzOcccirjMuSGqKC7+Paqf9NShexxIu9CEnRtDugLgH7EQftlchGQJKySzw
-4er3G58WKNHwm61WkqrUQiGC2lAv64x5y13JpKUic2UIlVxZz5JheGapErA9acnj
-DEioMavE4/rsPoa7vuBsg01vpQ3eJYivIqmI1borQW/UUe0c2R8=
-=FEWI
------END PGP SIGNATURE-----
-
---Sig_/cHU2=gSxrCBM3fdq/da8Dmf--
+diff --git a/Documentation/virt/kvm/api.txt b/Documentation/virt/kvm/api.txt
+index ebb37b34dcfc..5203d95b1a21 100644
+--- a/Documentation/virt/kvm/api.txt
++++ b/Documentation/virt/kvm/api.txt
+@@ -4168,6 +4168,44 @@ This ioctl issues an ultravisor call to terminate the secure guest,
+ unpins the VPA pages and releases all the device pages that are used to
+ track the secure pages by hypervisor.
+ 
++4.122 KVM_S390_NORMAL_RESET
++
++Capability: KVM_CAP_S390_VCPU_RESETS
++Architectures: s390
++Type: vcpu ioctl
++Parameters: none
++Returns: 0
++
++This ioctl resets VCPU registers and control structures according to
++the cpu reset definition in the POP (Principles Of Operation).
++
++4.123 KVM_S390_INITIAL_RESET
++
++Capability: none
++Architectures: s390
++Type: vcpu ioctl
++Parameters: none
++Returns: 0
++
++This ioctl resets VCPU registers and control structures according to
++the initial cpu reset definition in the POP (Principles Of
++Operation). However, the cpu is not put into ESA mode. This reset is a
++superset of the normal reset.
++
++4.124 KVM_S390_CLEAR_RESET
++
++Capability: KVM_CAP_S390_VCPU_RESETS
++Architectures: s390
++Type: vcpu ioctl
++Parameters: none
++Returns: 0
++
++This ioctl resets VCPU registers and control structures according to
++the clear cpu reset definition in the POP (Principles Of Operation).
++However, the cpu is not put into ESA mode. This reset is a superset
++of the initial reset.
++
++
+ 5. The kvm_run structure
+ ------------------------
+ 
+@@ -5396,3 +5434,10 @@ handling by KVM (as some KVM hypercall may be mistakenly treated as TLB
+ flush hypercalls by Hyper-V) so userspace should disable KVM identification
+ in CPUID and only exposes Hyper-V identification. In this case, guest
+ thinks it's running on Hyper-V and only use Hyper-V hypercalls.
++
++8.22 KVM_CAP_S390_VCPU_RESETS
++
++Architectures: s390
++
++This capability indicates that the KVM_S390_NORMAL_RESET and
++KVM_S390_CLEAR_RESET ioctls are available.
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index d9e6bf3d54f0..7ed6dc5bd481 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -529,6 +529,7 @@ int kvm_vm_ioctl_check_extension(struct kvm *kvm, long ext)
+ 	case KVM_CAP_S390_CMMA_MIGRATION:
+ 	case KVM_CAP_S390_AIS:
+ 	case KVM_CAP_S390_AIS_MIGRATION:
++	case KVM_CAP_S390_VCPU_RESETS:
+ 		r = 1;
+ 		break;
+ 	case KVM_CAP_S390_HPAGE_1M:
+@@ -2844,35 +2845,6 @@ void kvm_arch_vcpu_put(struct kvm_vcpu *vcpu)
+ 
+ }
+ 
+-static void kvm_s390_vcpu_initial_reset(struct kvm_vcpu *vcpu)
+-{
+-	/* this equals initial cpu reset in pop, but we don't switch to ESA */
+-	vcpu->arch.sie_block->gpsw.mask = 0UL;
+-	vcpu->arch.sie_block->gpsw.addr = 0UL;
+-	kvm_s390_set_prefix(vcpu, 0);
+-	kvm_s390_set_cpu_timer(vcpu, 0);
+-	vcpu->arch.sie_block->ckc       = 0UL;
+-	vcpu->arch.sie_block->todpr     = 0;
+-	memset(vcpu->arch.sie_block->gcr, 0, 16 * sizeof(__u64));
+-	vcpu->arch.sie_block->gcr[0]  = CR0_UNUSED_56 |
+-					CR0_INTERRUPT_KEY_SUBMASK |
+-					CR0_MEASUREMENT_ALERT_SUBMASK;
+-	vcpu->arch.sie_block->gcr[14] = CR14_UNUSED_32 |
+-					CR14_UNUSED_33 |
+-					CR14_EXTERNAL_DAMAGE_SUBMASK;
+-	/* make sure the new fpc will be lazily loaded */
+-	save_fpu_regs();
+-	current->thread.fpu.fpc = 0;
+-	vcpu->arch.sie_block->gbea = 1;
+-	vcpu->arch.sie_block->pp = 0;
+-	vcpu->arch.sie_block->fpf &= ~FPF_BPBC;
+-	vcpu->arch.pfault_token = KVM_S390_PFAULT_TOKEN_INVALID;
+-	kvm_clear_async_pf_completion_queue(vcpu);
+-	if (!kvm_s390_user_cpu_state_ctrl(vcpu->kvm))
+-		kvm_s390_vcpu_stop(vcpu);
+-	kvm_s390_clear_local_irqs(vcpu);
+-}
+-
+ void kvm_arch_vcpu_postcreate(struct kvm_vcpu *vcpu)
+ {
+ 	mutex_lock(&vcpu->kvm->lock);
+@@ -3287,10 +3259,74 @@ static int kvm_arch_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu,
+ 	return r;
+ }
+ 
+-static int kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
++static void kvm_arch_vcpu_ioctl_normal_reset(struct kvm_vcpu *vcpu)
+ {
+-	kvm_s390_vcpu_initial_reset(vcpu);
+-	return 0;
++	vcpu->arch.sie_block->gpsw.mask = ~PSW_MASK_RI;
++	vcpu->arch.pfault_token = KVM_S390_PFAULT_TOKEN_INVALID;
++	memset(vcpu->run->s.regs.riccb, 0, sizeof(vcpu->run->s.regs.riccb));
++
++	kvm_clear_async_pf_completion_queue(vcpu);
++	if (!kvm_s390_user_cpu_state_ctrl(vcpu->kvm))
++		kvm_s390_vcpu_stop(vcpu);
++	kvm_s390_clear_local_irqs(vcpu);
++}
++
++static void kvm_arch_vcpu_ioctl_initial_reset(struct kvm_vcpu *vcpu)
++{
++	/* this equals initial cpu reset in pop, but we don't switch to ESA */
++	vcpu->arch.sie_block->gpsw.mask = 0UL;
++	vcpu->arch.sie_block->gpsw.addr = 0UL;
++	kvm_s390_set_prefix(vcpu, 0);
++	kvm_s390_set_cpu_timer(vcpu, 0);
++	vcpu->arch.sie_block->ckc       = 0UL;
++	vcpu->arch.sie_block->todpr     = 0;
++	memset(vcpu->arch.sie_block->gcr, 0, 16 * sizeof(__u64));
++	vcpu->arch.sie_block->gcr[0]  = CR0_UNUSED_56 |
++					CR0_INTERRUPT_KEY_SUBMASK |
++					CR0_MEASUREMENT_ALERT_SUBMASK;
++	vcpu->arch.sie_block->gcr[14] = CR14_UNUSED_32 |
++					CR14_UNUSED_33 |
++					CR14_EXTERNAL_DAMAGE_SUBMASK;
++	/* make sure the new fpc will be lazily loaded */
++	save_fpu_regs();
++	current->thread.fpu.fpc = 0;
++	vcpu->arch.sie_block->gbea = 1;
++	vcpu->arch.sie_block->pp = 0;
++	vcpu->arch.sie_block->fpf &= ~FPF_BPBC;
++	/* remaining work needs to be done in normal reset */
++}
++
++static void kvm_arch_vcpu_ioctl_clear_reset(struct kvm_vcpu *vcpu)
++{
++	struct kvm_sync_regs *regs = &vcpu->run->s.regs;
++
++	memset(&regs->gprs, 0, sizeof(regs->gprs));
++	/*
++	 * Will be picked up via save_fpu_regs() in the initial reset
++	 * fallthrough.
++	 */
++	memset(&regs->vrs, 0, sizeof(regs->vrs));
++	memset(&regs->acrs, 0, sizeof(regs->acrs));
++
++	regs->etoken = 0;
++	regs->etoken_extension = 0;
++
++	memset(&regs->gscb, 0, sizeof(regs->gscb));
++	if (MACHINE_HAS_GS) {
++		preempt_disable();
++		__ctl_set_bit(2, 4);
++		if (current->thread.gs_cb) {
++			vcpu->arch.host_gscb = current->thread.gs_cb;
++			save_gs_cb(vcpu->arch.host_gscb);
++		}
++		if (vcpu->arch.gs_enabled) {
++			current->thread.gs_cb = (struct gs_cb *)
++				&vcpu->run->s.regs.gscb;
++			restore_gs_cb(current->thread.gs_cb);
++		}
++		preempt_enable();
++	}
++	/* remaining work needs to be done in initial and normal reset */
+ }
+ 
+ int kvm_arch_vcpu_ioctl_set_regs(struct kvm_vcpu *vcpu, struct kvm_regs *regs)
+@@ -4344,7 +4380,7 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 	struct kvm_vcpu *vcpu = filp->private_data;
+ 	void __user *argp = (void __user *)arg;
+ 	int idx;
+-	long r;
++	long r = 0;
+ 
+ 	vcpu_load(vcpu);
+ 
+@@ -4363,8 +4399,15 @@ long kvm_arch_vcpu_ioctl(struct file *filp,
+ 		r = kvm_arch_vcpu_ioctl_set_initial_psw(vcpu, psw);
+ 		break;
+ 	}
++
++	case KVM_S390_CLEAR_RESET:
++		kvm_arch_vcpu_ioctl_clear_reset(vcpu);
++		/* fallthrough */
+ 	case KVM_S390_INITIAL_RESET:
+-		r = kvm_arch_vcpu_ioctl_initial_reset(vcpu);
++		kvm_arch_vcpu_ioctl_initial_reset(vcpu);
++		/* fallthrough */
++	case KVM_S390_NORMAL_RESET:
++		kvm_arch_vcpu_ioctl_normal_reset(vcpu);
+ 		break;
+ 	case KVM_SET_ONE_REG:
+ 	case KVM_GET_ONE_REG: {
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index f0a16b4adbbd..4b95f9a31a2f 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1009,6 +1009,7 @@ struct kvm_ppc_resize_hpt {
+ #define KVM_CAP_PPC_GUEST_DEBUG_SSTEP 176
+ #define KVM_CAP_ARM_NISV_TO_USER 177
+ #define KVM_CAP_ARM_INJECT_EXT_DABT 178
++#define KVM_CAP_S390_VCPU_RESETS 179
+ 
+ #ifdef KVM_CAP_IRQ_ROUTING
+ 
+@@ -1473,6 +1474,10 @@ struct kvm_enc_region {
+ /* Available with KVM_CAP_ARM_SVE */
+ #define KVM_ARM_VCPU_FINALIZE	  _IOW(KVMIO,  0xc2, int)
+ 
++/* Available with  KVM_CAP_S390_VCPU_RESETS */
++#define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
++#define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
++
+ /* Secure Encrypted Virtualization command */
+ enum sev_cmd_id {
+ 	/* Guest initialization commands */
+-- 
+2.20.1
 
