@@ -2,38 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37227137973
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jan 2020 23:08:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1897A137933
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Jan 2020 23:07:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727185AbgAJWId (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Jan 2020 17:08:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51214 "EHLO mail.kernel.org"
+        id S1728070AbgAJWGC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 Jan 2020 17:06:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52382 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727526AbgAJWFd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:05:33 -0500
+        id S1728060AbgAJWGC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 10 Jan 2020 17:06:02 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E5ED220838;
-        Fri, 10 Jan 2020 22:05:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A349520866;
+        Fri, 10 Jan 2020 22:06:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693932;
-        bh=9u/22Bx1CrQ7UmrvZK+V+GRgpaK/YkuZkq0sbndgZKQ=;
+        s=default; t=1578693961;
+        bh=dBxleWCteLB8i3+5XnkNePFWIdmqegJ4IrwyoOTGAuc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ncf+xUyYZ4icgqCMrAsC5mJ7mOqC1/n4J3fuqHFvip/qNOSWpcgxjIqS3F9NK+vTi
-         +vo6sEOCwangQkm+Ajz8hwOPM2iQqeG41gxPtr+fFqlUAq/pke/CednBph1s1KLAdl
-         ziy5gUxXnMcPXCB3HWp18pnHDjmQsl9ZfKXY4mAw=
+        b=wnbHsYcmcYvHFyG+y/XAE5ODFLamGIqptA78ehwA/Z+Ghj9S+XpqZBSWziybl07cE
+         NAZLhn0tMbnMeDJhfEgR5zQfZQvuJ4UTCdT0UNqR68mt7lm/yjsQJ/nRVHZNw9cpbt
+         u4bbSHBRy55/iBXHLYXqRrVyOPI7k0dg+NSe4HnI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+Cc:     Alexandra Winter <wintera@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 15/26] s390/qeth: fix initialization on old HW
-Date:   Fri, 10 Jan 2020 17:05:08 -0500
-Message-Id: <20200110220519.28250-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 05/11] s390/qeth: fix false reporting of VNIC CHAR config failure
+Date:   Fri, 10 Jan 2020 17:05:49 -0500
+Message-Id: <20200110220556.28505-4-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110220519.28250-1-sashal@kernel.org>
-References: <20200110220519.28250-1-sashal@kernel.org>
+In-Reply-To: <20200110220556.28505-1-sashal@kernel.org>
+References: <20200110220556.28505-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -43,45 +44,48 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+From: Alexandra Winter <wintera@linux.ibm.com>
 
-[ Upstream commit 0b698c838e84149b690c7e979f78cccb6f8aa4b9 ]
+[ Upstream commit 68c57bfd52836e31bff33e5e1fc64029749d2c35 ]
 
-I stumbled over an old OSA model that claims to support DIAG_ASSIST,
-but then rejects the cmd to query its DIAG capabilities.
+Symptom: Error message "Configuring the VNIC characteristics failed"
+in dmesg whenever an OSA interface on z15 is set online.
 
-In the old code this was ok, as the returned raw error code was > 0.
-Now that we translate the raw codes to errnos, the "rc < 0" causes us
-to fail the initialization of the device.
+The VNIC characteristics get re-programmed when setting a L2 device
+online. This follows the selected 'wanted' characteristics - with the
+exception that the INVISIBLE characteristic unconditionally gets
+switched off.
 
-The fix is trivial: don't bail out when the DIAG query fails. Such an
-error is not critical, we can still use the device (with a slightly
-reduced set of features).
+For devices that don't support INVISIBLE (ie. OSA), the resulting
+IO failure raises a noisy error message
+("Configuring the VNIC characteristics failed").
+For IQD, INVISIBLE is off by default anyways.
 
-Fixes: 742d4d40831d ("s390/qeth: convert remaining legacy cmd callbacks")
+So don't unnecessarily special-case the INVISIBLE characteristic, and
+thereby suppress the misleading error message on OSA devices.
+
+Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
+Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
+Reviewed-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ drivers/s390/net/qeth_l2_main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 7320a187d66a..b60e6b3046ef 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -4963,10 +4963,8 @@ int qeth_core_hardsetup_card(struct qeth_card *card, bool *carrier_ok)
- 	}
- 	if (qeth_adp_supported(card, IPA_SETADP_SET_DIAG_ASSIST)) {
- 		rc = qeth_query_setdiagass(card);
--		if (rc < 0) {
-+		if (rc)
- 			QETH_CARD_TEXT_(card, 2, "8err%d", rc);
--			goto out;
--		}
- 	}
- 	return 0;
- out:
+diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
+index 95669d47c389..66bc6f1ffd34 100644
+--- a/drivers/s390/net/qeth_l2_main.c
++++ b/drivers/s390/net/qeth_l2_main.c
+@@ -2367,7 +2367,6 @@ static void qeth_l2_vnicc_init(struct qeth_card *card)
+ 	error = qeth_l2_vnicc_recover_timeout(card, QETH_VNICC_LEARNING,
+ 					      timeout);
+ 	chars_tmp = card->options.vnicc.wanted_chars ^ QETH_VNICC_DEFAULT;
+-	chars_tmp |= QETH_VNICC_BRIDGE_INVISIBLE;
+ 	chars_len = sizeof(card->options.vnicc.wanted_chars) * BITS_PER_BYTE;
+ 	for_each_set_bit(i, &chars_tmp, chars_len) {
+ 		vnicc = BIT(i);
 -- 
 2.20.1
 
