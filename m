@@ -2,86 +2,72 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A69EF137930
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Jan 2020 23:07:13 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7B200138B4F
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Jan 2020 06:52:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727460AbgAJWHD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Jan 2020 17:07:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52446 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728071AbgAJWGD (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 Jan 2020 17:06:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CEA052072E;
-        Fri, 10 Jan 2020 22:06:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1578693962;
-        bh=UuWWOuAb9bUEnIgY1/pbzbTQNEUgrUtxVu6Qt6xaOuY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CjDo2Y1v+peGTHf97HRQvyZqL2t+ZRQwvl+UoJhwgt/4sDvXR7euukWR0wqxH9etd
-         VrFateyLG8KMmATFmc9qhTlwcrUW968BZ4shQGW9kEarzcSrxnjuBycTknNAbJdE5w
-         jUkopSSmfwp5KXAaJs1LGlmm4JEtseQsFHWcisOI=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Alexandra Winter <wintera@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 06/11] s390/qeth: Fix vnicc_is_in_use if rx_bcast not set
-Date:   Fri, 10 Jan 2020 17:05:50 -0500
-Message-Id: <20200110220556.28505-5-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200110220556.28505-1-sashal@kernel.org>
-References: <20200110220556.28505-1-sashal@kernel.org>
+        id S1733103AbgAMFwf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 Jan 2020 00:52:35 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34095 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733208AbgAMFw0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 13 Jan 2020 00:52:26 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l136so7229675oig.1
+        for <linux-s390@vger.kernel.org>; Sun, 12 Jan 2020 21:52:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=Rjbe3pVeMfYVPdmVklZ4b2stSqI32LIYp+bn/8NyJvk=;
+        b=El5YZgtDEXJCHEtZrRB1ujEJT5GnrR9nqQvx3oNXkD1KXWKAy5lE4fahagwXmNRBuY
+         Z373bCStdjZZAvrcMmyjZhqXNYKD7qS8gpQ1uKt4Zm/CJYofbOmd6y2KCfdaIf8lu4gx
+         e04Qq2Wd5k0QzXhgODgXLh9+BTAbr7mIJG1kvrHD2cB5892G2QaMtoQjZ8YbwAsn/v/R
+         qN1ulSwy8kLJzDOOwwvDkEa6g0paOaNUUW6lO8NcaOsOsQMTh2eV34LXY/bnRxfyDcL+
+         OFIAYoYpyWTxvo4nB11oXa8J2BNLiFXnr18VfN4DCPOmpXqWPT8f/9GzmZX8VWLxs4VK
+         s+8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=Rjbe3pVeMfYVPdmVklZ4b2stSqI32LIYp+bn/8NyJvk=;
+        b=pvjPBRjVajzUeySKFyZdvDbVTO2MugEDT1TcvRFLM7imLGiVBpxa89IrpoMPDPr8xx
+         Ujx42GCImig5YerMWrqt1QaWeKNN8p2KXUoRxl+jgkNbMhyavs0XGCdov3YAxhJFUjCw
+         jUtoQIscivHwIgCOE8ZoafKyrYt5EhDvsGTfIw7Jf2dOcvupumqRougmEN4Ej9hnYVvE
+         chhIdZbDQy6LfSyrD2ckh27RK63cctvy326dS/IO5yrvGnISTW+uACISM+1BusadhE+t
+         A+SwhzJu3a2kxDyoHuFk3jtzm24NDid/VKD8l73YLktYfB+YPQf5OWZyBHNI0EK6zzO1
+         x/dA==
+X-Gm-Message-State: APjAAAU9TqyiM1X60g1Ox3qzeI45EJsCVHslRkL33ndkJth3atwBqRaO
+        J6BqBtMczXCEp1sVb+8WJ5FRgBmuf8w5Tn4Syl0=
+X-Google-Smtp-Source: APXvYqy7JhGBt0ZjJ/1t4CT74GIhTuvbOMnCynReBbsGRcTAfZPwoiLBCe9XiPA9xaK1JAPmy14eucUMWI9DLkbKsUo=
+X-Received: by 2002:a54:4713:: with SMTP id k19mr11513430oik.113.1578894745174;
+ Sun, 12 Jan 2020 21:52:25 -0800 (PST)
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a4a:41cb:0:0:0:0:0 with HTTP; Sun, 12 Jan 2020 21:52:24
+ -0800 (PST)
+Reply-To: rickschaech@gmail.com
+From:   Rick Schaech <cathben72@gmail.com>
+Date:   Mon, 13 Jan 2020 01:52:24 -0400
+Message-ID: <CAEcBxO=TAnFn5LzizHa22hUC0Db5FuiZJF28m=yX3_9m--jRqg@mail.gmail.com>
+Subject: I wait for your swift response,
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Alexandra Winter <wintera@linux.ibm.com>
+Dear, I'm Mr Rick Schaech, I am the General Account Auditor, Though i
+know we have not meet each other before but sometimes in life God have
+a reason of bringing two people from two different countries together
+as business partners or life partners.
 
-[ Upstream commit e8a66d800471e2df7f0b484e2e46898b21d1fa82 ]
+My dear friend, I have the sum of 15.7 Million USD i wish to put in
+your name due to the death of my late client who died several years
+ago as his next of kin column still remain blank. Though the internet
+medium is highly abuse these days but am assuring you that this
+transaction is legitimate and I am contacting you that we may have a
+deal, note for your cooperation and collaboration 40% of the sum will
+be for you while the other 60% will be for me as well. I wait for your
+swift response for more details. please forward your response to my
+personal E-mail: rickschaech@gmail.com
 
-Symptom: After vnicc/rx_bcast has been manually set to 0,
-	bridge_* sysfs parameters can still be set or written.
-Only occurs on HiperSockets, as OSA doesn't support changing rx_bcast.
-
-Vnic characteristics and bridgeport settings are mutually exclusive.
-rx_bcast defaults to 1, so manually setting it to 0 should disable
-bridge_* parameters.
-
-Instead it makes sense here to check the supported mask. If the card
-does not support vnicc at all, bridge commands are always allowed.
-
-Fixes: caa1f0b10d18 ("s390/qeth: add VNICC enable/disable support")
-Signed-off-by: Alexandra Winter <wintera@linux.ibm.com>
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/net/qeth_l2_main.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
-
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 66bc6f1ffd34..c238b190b3c9 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -2285,8 +2285,7 @@ int qeth_l2_vnicc_get_timeout(struct qeth_card *card, u32 *timeout)
- /* check if VNICC is currently enabled */
- bool qeth_l2_vnicc_is_in_use(struct qeth_card *card)
- {
--	/* if everything is turned off, VNICC is not active */
--	if (!card->options.vnicc.cur_chars)
-+	if (!card->options.vnicc.sup_chars)
- 		return false;
- 	/* default values are only OK if rx_bcast was not enabled by user
- 	 * or the card is offline.
--- 
-2.20.1
-
+Yours sincerely,
+Rick Schaech.
