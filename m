@@ -2,73 +2,73 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB60213ADD1
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jan 2020 16:40:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 35E7D13AF0B
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jan 2020 17:19:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbgANPkJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Jan 2020 10:40:09 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24718 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726265AbgANPkJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 14 Jan 2020 10:40:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579016408;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=EF4Ge4HsEP+X3JAUjL6dSJNrSuw+NmMOzxTt1atfmnU=;
-        b=Nbn/KFMAAeDQ7M/4h0hMW91vfheqM+X/ggKJ9EkMLqxtwRrthWP+h+oaqXO0Y1Ein0ljaC
-        lkcBdhD0uOZzj4y8sRKsa94a9K4Ol5Gx/nDYDeCBycYSK7TfZ/hXnBvl5WqDwSqDioYGV5
-        n+oUCvyjnTldU/K9Qlzq5owzahIlZLo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-408-UsUnnsxwPCiyhy_zDDNtTw-1; Tue, 14 Jan 2020 10:40:05 -0500
-X-MC-Unique: UsUnnsxwPCiyhy_zDDNtTw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 07B3164A84;
-        Tue, 14 Jan 2020 15:40:04 +0000 (UTC)
-Received: from thuth.remote.csb (unknown [10.36.118.98])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E42C41081304;
-        Tue, 14 Jan 2020 15:39:59 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 1/4] s390x: smp: Cleanup smp.c
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        david@redhat.com, cohuck@redhat.com
-References: <20200114153054.77082-1-frankja@linux.ibm.com>
- <20200114153054.77082-2-frankja@linux.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <92df9483-35a4-9276-603c-da4135bd31fe@redhat.com>
-Date:   Tue, 14 Jan 2020 16:39:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726450AbgANQTO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Jan 2020 11:19:14 -0500
+Received: from mx2.suse.de ([195.135.220.15]:32838 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726839AbgANQTO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:19:14 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6F27DAB7D;
+        Tue, 14 Jan 2020 16:19:12 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 9840CDA730; Tue, 14 Jan 2020 17:18:57 +0100 (CET)
+Date:   Tue, 14 Jan 2020 17:18:57 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+Message-ID: <20200114161857.GD3929@suse.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz,
+        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20200107143058.GU3929@twin.jikos.cz>
+ <20200108105103.29028-1-zaslonko@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200114153054.77082-2-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200108105103.29028-1-zaslonko@linux.ibm.com>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 14/01/2020 16.30, Janosch Frank wrote:
-> Let's remove a lot of badly formatted code by introducing the
-> wait_for_flag() function.
+On Wed, Jan 08, 2020 at 11:51:03AM +0100, Mikhail Zaslonko wrote:
+> In order to benefit from s390 zlib hardware compression support,
+> increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
+> s390 zlib hardware support is enabled on the machine). This brings up
+> to 60% better performance in hardware on s390 compared to the PAGE_SIZE
+> buffer and much more compared to the software zlib processing in btrfs.
+> In case of memory pressure, fall back to a single page buffer during
+> workspace allocation.
+> The data compressed with larger input buffers will still conform to zlib
+> standard and thus can be decompressed also on a systems that uses only
+> PAGE_SIZE buffer for btrfs zlib.
 > 
-> Also let's remove some stray spaces.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  s390x/smp.c | 41 +++++++++++++++++++++++------------------
->  1 file changed, 23 insertions(+), 18 deletions(-)
+> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
 
-OMG, did I really merge that original code in that shape?
-
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-
+Reviewed-by: David Sterba <dsterba@suse.com>
