@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35E7D13AF0B
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jan 2020 17:19:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1DDF313AF15
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jan 2020 17:19:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726450AbgANQTO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Jan 2020 11:19:14 -0500
-Received: from mx2.suse.de ([195.135.220.15]:32838 "EHLO mx2.suse.de"
+        id S1727102AbgANQTq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Jan 2020 11:19:46 -0500
+Received: from mx2.suse.de ([195.135.220.15]:33398 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726839AbgANQTO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 14 Jan 2020 11:19:14 -0500
+        id S1726495AbgANQTq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:19:46 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 6F27DAB7D;
-        Tue, 14 Jan 2020 16:19:12 +0000 (UTC)
+        by mx2.suse.de (Postfix) with ESMTP id C5744AB7D;
+        Tue, 14 Jan 2020 16:19:44 +0000 (UTC)
 Received: by ds.suse.cz (Postfix, from userid 10065)
-        id 9840CDA730; Tue, 14 Jan 2020 17:18:57 +0100 (CET)
-Date:   Tue, 14 Jan 2020 17:18:57 +0100
+        id 00150DA795; Tue, 14 Jan 2020 17:19:31 +0100 (CET)
+Date:   Tue, 14 Jan 2020 17:19:31 +0100
 From:   David Sterba <dsterba@suse.cz>
-To:     Mikhail Zaslonko <zaslonko@linux.ibm.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>,
+To:     Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Chris Mason <clm@fb.com>, David Sterba <dsterba@suse.com>,
         Richard Purdie <rpurdie@rpsys.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
@@ -32,13 +32,13 @@ Cc:     Andrew Morton <akpm@linux-foundation.org>,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
  compression
-Message-ID: <20200114161857.GD3929@suse.cz>
+Message-ID: <20200114161931.GE3929@suse.cz>
 Reply-To: dsterba@suse.cz
 Mail-Followup-To: dsterba@suse.cz,
-        Mikhail Zaslonko <zaslonko@linux.ibm.com>,
+        Zaslonko Mikhail <zaslonko@linux.ibm.com>,
+        Josef Bacik <josef@toxicpanda.com>,
         Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>,
-        Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>,
-        Richard Purdie <rpurdie@rpsys.net>,
+        David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -47,28 +47,50 @@ Mail-Followup-To: dsterba@suse.cz,
         linux-kernel@vger.kernel.org
 References: <20200107143058.GU3929@twin.jikos.cz>
  <20200108105103.29028-1-zaslonko@linux.ibm.com>
+ <75a2d45c-fd7b-9542-403d-caea7d977add@toxicpanda.com>
+ <94e06859-6174-c80d-3eb6-065f67fbe95d@linux.ibm.com>
+ <20200109011025.GM3929@suse.cz>
+ <62a53ff3-a515-8801-d58b-b518dbe0c55c@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200108105103.29028-1-zaslonko@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <62a53ff3-a515-8801-d58b-b518dbe0c55c@linux.ibm.com>
 User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jan 08, 2020 at 11:51:03AM +0100, Mikhail Zaslonko wrote:
-> In order to benefit from s390 zlib hardware compression support,
-> increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
-> s390 zlib hardware support is enabled on the machine). This brings up
-> to 60% better performance in hardware on s390 compared to the PAGE_SIZE
-> buffer and much more compared to the software zlib processing in btrfs.
-> In case of memory pressure, fall back to a single page buffer during
-> workspace allocation.
-> The data compressed with larger input buffers will still conform to zlib
-> standard and thus can be decompressed also on a systems that uses only
-> PAGE_SIZE buffer for btrfs zlib.
+On Mon, Jan 13, 2020 at 11:03:29AM +0100, Zaslonko Mikhail wrote:
+> Hello David,
 > 
-> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+> On 09.01.2020 02:10, David Sterba wrote:
+> > On Wed, Jan 08, 2020 at 07:48:31PM +0100, Zaslonko Mikhail wrote:
+> >>>> +        } else if (workspace->strm.avail_out == 0) {
+> >>>> +            /* get another page for the stream end */
+> >>>> +            kunmap(out_page);
+> >>>> +            if (nr_pages == nr_dest_pages) {
+> >>>> +                out_page = NULL;
+> >>>> +                ret = -E2BIG;
+> >>>> +                goto out;
+> >>>> +            }
+> >>>> +            out_page = alloc_page(GFP_NOFS | __GFP_HIGHMEM);
+> >>>> +            if (out_page == NULL) {
+> >>>> +                ret = -ENOMEM;
+> >>>> +                goto out;
+> >>>> +            }
+> >>>
+> >>> Do we need zlib_deflateEnd() for the above error cases?  Thanks,
+> >>
+> >> The original btrfs code did not call zlib_deflateEnd() for -E2BIG and 
+> >> -ENOMEM cases, so I stick to the same logic.
+> >> Unlike userspace zlib where deflateEnd() frees all dynamically allocated 
+> >> memory, in the kernel it doesn't do much apart from setting the return 
+> >> code (since all the memory allocations for kernel zlib are performed in advance).
+> > 
+> > Agreed, deflateEnd is not necessary in the error cases.
+> 
+> Can I consider this as 'Acked-by' from your side?
 
-Reviewed-by: David Sterba <dsterba@suse.com>
+Yes, I also sent rev-by to the patch.
