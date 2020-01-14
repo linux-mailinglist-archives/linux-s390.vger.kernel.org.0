@@ -2,77 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D18A913AF23
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Jan 2020 17:20:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E05313AFC1
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Jan 2020 17:46:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728057AbgANQUf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Jan 2020 11:20:35 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44045 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726053AbgANQUf (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Jan 2020 11:20:35 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1irOvA-00024a-Fo; Tue, 14 Jan 2020 17:20:00 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id B7A82101DEE; Tue, 14 Jan 2020 17:19:59 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-xtensa@linux-xtensa.org, linux-pm@vger.kernel.org
-Subject: Re: [PATCH RESEND v4] reboot: support offline CPUs before reboot
-In-Reply-To: <20200114110620.164861-1-hsinyi@chromium.org>
-References: <20200114110620.164861-1-hsinyi@chromium.org>
-Date:   Tue, 14 Jan 2020 17:19:59 +0100
-Message-ID: <87o8v6au34.fsf@nanos.tec.linutronix.de>
+        id S1728824AbgANQqF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Jan 2020 11:46:05 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55456 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728809AbgANQqF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 14 Jan 2020 11:46:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579020363;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=vOobr5Pb/jq0pC9V3IkdQmUzSf4HvxBY4jE47O36xgY=;
+        b=TE22XQuImKtHKmsAFA9fy1nXhiZ/kDSsB0nMRDznn2+uoAVHp1X1W50Q7MrK14r1riKMvt
+        24JzQLDBUpJJlhuHTCYy8XhCHuNWFs2nr3yyO62pBbJRn5DwLeCuh6bqFoEdVIj8jQRIx1
+        p4yvnKeMu6wpnjfti9twpMzaVMhFLxA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-404-qQP0Y50nM06M4jwiYa4rrg-1; Tue, 14 Jan 2020 11:46:00 -0500
+X-MC-Unique: qQP0Y50nM06M4jwiYa4rrg-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8ADE610C5683;
+        Tue, 14 Jan 2020 16:45:57 +0000 (UTC)
+Received: from thuth.remote.csb (unknown [10.36.118.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id B93235C1D6;
+        Tue, 14 Jan 2020 16:45:53 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 2/4] s390x: smp: Only use smp_cpu_setup
+ once
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        david@redhat.com, cohuck@redhat.com
+References: <20200114153054.77082-1-frankja@linux.ibm.com>
+ <20200114153054.77082-3-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <9db91398-0371-cd4a-9758-a185b74467a0@redhat.com>
+Date:   Tue, 14 Jan 2020 17:45:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20200114153054.77082-3-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hsin-Yi Wang <hsinyi@chromium.org> writes:
->
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+On 14/01/2020 16.30, Janosch Frank wrote:
+> Let's stop and start instead of using setup to run a function on a
+> cpu.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
-> Resend v4:
-> * Cc more people and mailing lists. Also fix a few nits from v4.
+>  s390x/smp.c | 19 ++++++++++++-------
+>  1 file changed, 12 insertions(+), 7 deletions(-)
+> 
+> diff --git a/s390x/smp.c b/s390x/smp.c
+> index 4dee43e..767d167 100644
+> --- a/s390x/smp.c
+> +++ b/s390x/smp.c
+> @@ -47,7 +47,7 @@ static void test_start(void)
+>  	psw.mask = extract_psw_mask();
+>  	psw.addr = (unsigned long)test_func;
+>  
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  	wait_for_flag();
+>  	report(1, "start");
+>  }
+> @@ -131,9 +131,8 @@ static void test_ecall(void)
+>  
+>  	report_prefix_push("ecall");
+>  	testflag = 0;
+> -	smp_cpu_destroy(1);
+>  
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  	wait_for_flag();
+>  	testflag = 0;
+>  	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
+> @@ -166,9 +165,8 @@ static void test_emcall(void)
+>  
+>  	report_prefix_push("emcall");
+>  	testflag = 0;
+> -	smp_cpu_destroy(1);
+>  
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  	wait_for_flag();
+>  	testflag = 0;
+>  	sigp(1, SIGP_EMERGENCY_SIGNAL, 0, NULL);
+> @@ -186,7 +184,7 @@ static void test_reset_initial(void)
+>  	psw.addr = (unsigned long)test_func;
+>  
+>  	report_prefix_push("reset initial");
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  
+>  	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
+>  	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
+> @@ -217,7 +215,7 @@ static void test_reset(void)
+>  	psw.addr = (unsigned long)test_func;
+>  
+>  	report_prefix_push("cpu reset");
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
 
-Please don't name it resend if you actually changed the patch. Resend
-wants to be an unmodified patch and the only reasons to do that are:
+I think this also fixes a memory leak in case the code did not call
+smp_cpu_destroy() inbetween (since smp_cpu_setup() allocates new memory
+for the low-core). So as far as I can see, this is a good idea:
 
- - add more people to CC
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
- - Resend it because it got ignored or dropped (do that only after a
-   couple of weeks)
-
-If you changed the patch, then it wants a new version number.
-
-Thanks,
-
-        tglx
