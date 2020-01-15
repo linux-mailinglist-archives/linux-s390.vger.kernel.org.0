@@ -2,121 +2,225 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CF0C913BDBF
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jan 2020 11:47:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8416713BE90
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jan 2020 12:34:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbgAOKrj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Jan 2020 05:47:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:34394 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729519AbgAOKrj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Jan 2020 05:47:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579085257;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=iFgL36Wg5RKPVQs49j/rpUiAgbTpz3RuOZpHSnVSHrE=;
-        b=dgjtqeH6FBy4IoXx7Dstp3dpwp8dCrTjishVmV09MUw30Z/LJjgkQZtf5ac0O0W/JAnE08
-        f3aCO7omkwwopjNSzkysOPpbMHeOfDsq+mZ5vHhrkRZyprmAyYI7zS2x0smI75TAzomaFT
-        C9aWuLfqPszc39EV/AwYJTFSzTYcq9s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-324-JxbrGLLFO4OLzkSxhzwvog-1; Wed, 15 Jan 2020 05:47:33 -0500
-X-MC-Unique: JxbrGLLFO4OLzkSxhzwvog-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D18BA18552AD;
-        Wed, 15 Jan 2020 10:47:32 +0000 (UTC)
-Received: from [10.36.118.7] (unknown [10.36.118.7])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 784C084327;
-        Wed, 15 Jan 2020 10:47:31 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 0/4] s390x: smp: Improve smp code and reset
- checks
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, cohuck@redhat.com
-References: <20200114153054.77082-1-frankja@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <cd2fd0eb-13fa-ae3e-df3b-15131cc02df5@redhat.com>
-Date:   Wed, 15 Jan 2020 11:47:30 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.1
+        id S1730009AbgAOLeo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Jan 2020 06:34:44 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:38190 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729892AbgAOLeo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Jan 2020 06:34:44 -0500
+Received: by mail-io1-f66.google.com with SMTP id i7so8991127ioo.5
+        for <linux-s390@vger.kernel.org>; Wed, 15 Jan 2020 03:34:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ojzhgAl+4gWNfYdEFpF+cmgwNJMJnLz3oDiOxYEPZfU=;
+        b=igQq5nQgETtO9SXsQX/d5w5ZM34lFaR3K5RVxqxu3f9tWbirZ2mzK54lGbQJI48oQj
+         i4iLoqi1aZcOabbmLdmKo+bFHslqju/hHn6DH2cEGn88wm9PSyop5PPZq3VzIK9UCmXv
+         ohc0iecvvkOuKoQinunIfEKUP0mD4kNes9hB8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ojzhgAl+4gWNfYdEFpF+cmgwNJMJnLz3oDiOxYEPZfU=;
+        b=IonMi3SQjO3Ho8obceueYwg5qT4nslwTh0K3GFRmbMRMjw6mvbL5ojFq6FkX34pUz9
+         MoPVikIN2pSFuBO6o8Pqtwlk5zD2VwmntwS0DeWc4xlBfv0fco9z4E6Q2S7j2xljKFpg
+         YHzZwfL1m76vE1m39I95dezvIH9TKjt1g1NbkyHIzchsGhhcgX60TstDh78je7l8M9c6
+         ZHYGC40ugIgXdYLQUXB5I0dzD/180tk/SQ02JN1NEOjwTlIm8mNynHWNGXyx2RrECWXX
+         PfFtn2O3no+++iiAUz8tWsEjFshkjwjZH2nQWaeznj1DXjOYQV1Rf8QoCRN7N1jLLlsE
+         LdHA==
+X-Gm-Message-State: APjAAAUqDWrrvIrBmXPf8seACkXJ7FrXm/UroLOFlAmloQc4iddUrsnC
+        p6+iOSG8vYAL/z+D9NQGs6tYEHVDYNDPeLRN2BBThw==
+X-Google-Smtp-Source: APXvYqyXQxo2sXMh7CF1na9rm0gQdmLHTI1jI0nmSKq3jJK/VE/cud+yxidf/6iaxqDP9aqob4Xw39/4q2FI506v3zw=
+X-Received: by 2002:a6b:3b49:: with SMTP id i70mr21933237ioa.106.1579088083140;
+ Wed, 15 Jan 2020 03:34:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200114153054.77082-1-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+References: <20200115063410.131692-1-hsinyi@chromium.org> <CAJZ5v0jng1hpPzYUcPj96G9c8aqNYCwDqLHyQEVC9tD=F1dObw@mail.gmail.com>
+In-Reply-To: <CAJZ5v0jng1hpPzYUcPj96G9c8aqNYCwDqLHyQEVC9tD=F1dObw@mail.gmail.com>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Wed, 15 Jan 2020 19:34:17 +0800
+Message-ID: <CAJMQK-jES7NOAga3w+pQUuoFW+dm0Uw3--SQ7S0BAARFCrT6qQ@mail.gmail.com>
+Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 14.01.20 16:30, Janosch Frank wrote:
-> The first two patches are badly needed cleanup for smp.c.
-> The last two improve initial reset testing.
-> 
-> Janosch Frank (4):
->   s390x: smp: Cleanup smp.c
->   s390x: smp: Only use smp_cpu_setup once
->   s390x: smp: Test all CRs on initial reset
->   s390x: smp: Dirty fpc before initial reset test
-> 
->  s390x/smp.c | 84 ++++++++++++++++++++++++++++++++++++-----------------
->  1 file changed, 58 insertions(+), 26 deletions(-)
-> 
+On Wed, Jan 15, 2020 at 5:49 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+>
+> On Wed, Jan 15, 2020 at 7:35 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+> >
+> > Currently system reboots uses architecture specific codes (smp_send_stop)
+> > to offline non reboot CPUs. Most architecture's implementation is looping
+> > through all non reboot online CPUs and call ipi function to each of them. Some
+> > architecture like arm64, arm, and x86... would set offline masks to cpu without
+> > really offline them. This causes some race condition and kernel warning comes
+> > out sometimes when system reboots.
+> >
+> > This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would offline cpus in
+> > migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
+> > checking online cpus would be an empty loop. If architecture don't enable this
+> > config, or some cpus somehow fails to offline, it would fallback to ipi
+> > function.
+> >
+> > Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
+> >
+> > Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> > ---
+> > Change from v4:
+> > * fix a few nits: naming, comments, remove Kconfig text...
+> >
+> > Change from v3:
+> > * Opt in config for architectures that support CONFIG_HOTPLUG_CPU
+> > * Merge function offline_secondary_cpus() and freeze_secondary_cpus()
+> >   with an additional flag.
+>
+> This does not seem to be a very good idea, since
+> freeze_secondary_cpus() does much more than you need for reboot.
+>
+> For reboot, you basically only need to do something like this AFAICS:
+>
+> cpu_maps_update_begin();
+>
+> for_each_online_cpu(i) {
+>         if (i != cpu)
+>                 _cpu_down(i, 1, CPUHP_OFFLINE);
+> }
+> cpu_hotplug_disabled++;
+>
+> cpu_maps_update_done();
+>
+> And you may put this into a function defined outside of CONFIG_PM_SLEEP.
+>
+v2's implementation is similar to this. The conclusion in v2[1] is
+that since these 2 functions are similar, we should merge them. I'm
+fine both ways but slightly prefer v2's. Maybe wait for others to
+comment?
 
-I assume you will resend, right? So I'll wait with queuing.
-
--- 
-Thanks,
-
-David / dhildenb
-
+[1] https://lore.kernel.org/lkml/87muarpcwm.fsf@vitty.brq.redhat.com/
+> >
+> > Change from v2:
+> > * Add another config instead of configed by CONFIG_HOTPLUG_CPU
+>
+> So why exactly is this new Kconfig option needed?
+>
+> Everybody supporting CPU hotplug seems to opt in anyway.
+>
+Currently we opt-in for all arch that supports HOTPLUG_CPU, but if
+some arch decides that this would make reboot slow (or maybe other
+reasons), they can choose to opt-out.
+I have only tested on arm64 and x86 for now.
+> [cut]
+>
+> >
+> > -int freeze_secondary_cpus(int primary)
+> > +int freeze_secondary_cpus(int primary, bool reboot)
+> >  {
+> >         int cpu, error = 0;
+> >
+> > @@ -1237,11 +1237,13 @@ int freeze_secondary_cpus(int primary)
+> >                 if (cpu == primary)
+> >                         continue;
+> >
+> > -               if (pm_wakeup_pending()) {
+> > +#ifdef CONFIG_PM_SLEEP
+> > +               if (!reboot && pm_wakeup_pending()) {
+> >                         pr_info("Wakeup pending. Abort CPU freeze\n");
+> >                         error = -EBUSY;
+> >                         break;
+> >                 }
+> > +#endif
+>
+> Please avoid using #ifdefs in function bodies.  This makes the code
+> hard to maintain in the long term.
+>
+> >
+> >                 trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
+> >                 error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
+> > @@ -1250,7 +1252,9 @@ int freeze_secondary_cpus(int primary)
+> >                         cpumask_set_cpu(cpu, frozen_cpus);
+> >                 else {
+> >                         pr_err("Error taking CPU%d down: %d\n", cpu, error);
+> > -                       break;
+> > +                       /* When rebooting, offline as many CPUs as possible. */
+> > +                       if (!reboot)
+> > +                               break;
+> >                 }
+> >         }
+> >
+> > diff --git a/kernel/reboot.c b/kernel/reboot.c
+> > index c4d472b7f1b4..12f643b66e57 100644
+> > --- a/kernel/reboot.c
+> > +++ b/kernel/reboot.c
+> > @@ -7,6 +7,7 @@
+> >
+> >  #define pr_fmt(fmt)    "reboot: " fmt
+> >
+> > +#include <linux/cpu.h>
+> >  #include <linux/ctype.h>
+> >  #include <linux/export.h>
+> >  #include <linux/kexec.h>
+> > @@ -220,7 +221,9 @@ void migrate_to_reboot_cpu(void)
+> >         /* The boot cpu is always logical cpu 0 */
+> >         int cpu = reboot_cpu;
+> >
+> > +#if !IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
+> >         cpu_hotplug_disable();
+> > +#endif
+>
+> You can write this as
+>
+> if (!IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT))
+>         cpu_hotplug_disable();
+>
+> That's what IS_ENABLED() is there for.
+>
+> >
+> >         /* Make certain the cpu I'm about to reboot on is online */
+> >         if (!cpu_online(cpu))
+> > @@ -231,6 +234,11 @@ void migrate_to_reboot_cpu(void)
+> >
+> >         /* Make certain I only run on the appropriate processor */
+> >         set_cpus_allowed_ptr(current, cpumask_of(cpu));
+> > +
+> > +#if IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
+> > +       /* Offline other cpus if possible */
+> > +       freeze_secondary_cpus(cpu, true);
+> > +#endif
+>
+> The above comment applies here too.
+>
+> >  }
+> >
+> >  /**
+> > --
