@@ -2,178 +2,205 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 469EA13BBBC
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jan 2020 10:00:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E7E7E13BCC5
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jan 2020 10:49:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbgAOJAg (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Jan 2020 04:00:36 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63214 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726513AbgAOJAg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 Jan 2020 04:00:36 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00F8s0wG139086
-        for <linux-s390@vger.kernel.org>; Wed, 15 Jan 2020 04:00:35 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xfaw0yvgh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 15 Jan 2020 04:00:34 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Wed, 15 Jan 2020 09:00:31 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 Jan 2020 09:00:29 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00F90SK234996586
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Jan 2020 09:00:28 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1AEE64C058;
-        Wed, 15 Jan 2020 09:00:28 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E1E784C05C;
-        Wed, 15 Jan 2020 09:00:27 +0000 (GMT)
-Received: from dyn-9-152-224-123.boeblingen.de.ibm.com (unknown [9.152.224.123])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Jan 2020 09:00:27 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH 2/4] s390x: smp: Only use smp_cpu_setup
- once
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, david@redhat.com
-References: <20200114153054.77082-1-frankja@linux.ibm.com>
- <20200114153054.77082-3-frankja@linux.ibm.com>
- <20200114184411.24909aae.cohuck@redhat.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Wed, 15 Jan 2020 10:00:27 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1729578AbgAOJta (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Jan 2020 04:49:30 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35278 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729559AbgAOJta (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Jan 2020 04:49:30 -0500
+Received: by mail-oi1-f193.google.com with SMTP id k4so14830271oik.2;
+        Wed, 15 Jan 2020 01:49:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xlblpk3Q7AFTy8Enno95ZSx0IUH147BofZyxZsTxPpQ=;
+        b=TucKJXUCA3iBOurtQTxVBa/z8C9REkYA7BJC4bLHsU20pWHX8G0CPEON/zgGfgROz8
+         jwyhbLr5j2JjwsgdL2GIT3EzLxo7Di8fOQrERkdEJ7U7/QiPIC90oZ50fmH92oivcX4w
+         4nk8FEs52YgRW4roJaXdtPnaDSiUZuO+jsaSeqw5obwUuylTkiKm+kAy0NqZaqaEbJGp
+         HyvO4SXZNtNmMLSezXxOt1GFZUvU8xOr9u0riNPtbG6A2o43vIEf5c94v4ZdcUQ/+rNA
+         09NbTz5Mgy/U+8mMr6AAl1/vUPkueJt0UHwsbWG3+q7l+/SeT1Za/tB2usl63ImC6Iqf
+         Y4Og==
+X-Gm-Message-State: APjAAAVX1XL4PXVWExXRv2a3FQ2mHbtqRNbZ2YgU8z0/8nYn4u+xpCf+
+        7f32MQtaREYqi5KzILq3sFk0XhhtpRHD3q7EPg8=
+X-Google-Smtp-Source: APXvYqzvsE9JWkTyA/qGCPe6FC5SfX/eWtD++abCAXNNUKmVhLTpM4TrHUCIWNo6kY2HmIQTdm2QXbcLDAmQBj9bi24=
+X-Received: by 2002:aca:d6c8:: with SMTP id n191mr21412346oig.103.1579081768509;
+ Wed, 15 Jan 2020 01:49:28 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200114184411.24909aae.cohuck@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="acuBhQRdI63FpCNTcRcqRnyKNvYaO86yE"
-X-TM-AS-GCONF: 00
-x-cbid: 20011509-0028-0000-0000-000003D13539
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011509-0029-0000-0000-000024955952
-Message-Id: <059bd7a8-506f-306d-3287-1735979d622f@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-15_01:2020-01-15,2020-01-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- suspectscore=3 adultscore=0 priorityscore=1501 lowpriorityscore=0
- malwarescore=0 phishscore=0 mlxlogscore=999 bulkscore=0 mlxscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001150074
+References: <20200115063410.131692-1-hsinyi@chromium.org>
+In-Reply-To: <20200115063410.131692-1-hsinyi@chromium.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 15 Jan 2020 10:49:17 +0100
+Message-ID: <CAJZ5v0jng1hpPzYUcPj96G9c8aqNYCwDqLHyQEVC9tD=F1dObw@mail.gmail.com>
+Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---acuBhQRdI63FpCNTcRcqRnyKNvYaO86yE
-Content-Type: multipart/mixed; boundary="vvo2Ta3iSBUT2sNLpGZTrrdz3Y2TUboq1"
+On Wed, Jan 15, 2020 at 7:35 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
+>
+> Currently system reboots uses architecture specific codes (smp_send_stop)
+> to offline non reboot CPUs. Most architecture's implementation is looping
+> through all non reboot online CPUs and call ipi function to each of them. Some
+> architecture like arm64, arm, and x86... would set offline masks to cpu without
+> really offline them. This causes some race condition and kernel warning comes
+> out sometimes when system reboots.
+>
+> This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would offline cpus in
+> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
+> checking online cpus would be an empty loop. If architecture don't enable this
+> config, or some cpus somehow fails to offline, it would fallback to ipi
+> function.
+>
+> Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
+>
+> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
+> ---
+> Change from v4:
+> * fix a few nits: naming, comments, remove Kconfig text...
+>
+> Change from v3:
+> * Opt in config for architectures that support CONFIG_HOTPLUG_CPU
+> * Merge function offline_secondary_cpus() and freeze_secondary_cpus()
+>   with an additional flag.
 
---vvo2Ta3iSBUT2sNLpGZTrrdz3Y2TUboq1
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+This does not seem to be a very good idea, since
+freeze_secondary_cpus() does much more than you need for reboot.
 
-On 1/14/20 6:44 PM, Cornelia Huck wrote:
-> On Tue, 14 Jan 2020 10:30:51 -0500
-> Janosch Frank <frankja@linux.ibm.com> wrote:
->=20
->> Let's stop and start instead of using setup to run a function on a
->> cpu.
->=20
-> Looking at the code, we only support active =3D=3D operating state and
-> !active =3D=3D stopped state anyway, right?
+For reboot, you basically only need to do something like this AFAICS:
 
-Yes, although I think it might make sense to go over the active tracking
-in the future and rather make it a setup tracking. We can always ask via
-sigp run if the cpu is running. More stuff to add to the todo...
+cpu_maps_update_begin();
 
->=20
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> ---
->>  s390x/smp.c | 19 ++++++++++++-------
->>  1 file changed, 12 insertions(+), 7 deletions(-)
->=20
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->=20
+for_each_online_cpu(i) {
+        if (i != cpu)
+                _cpu_down(i, 1, CPUHP_OFFLINE);
+}
+cpu_hotplug_disabled++;
 
+cpu_maps_update_done();
 
+And you may put this into a function defined outside of CONFIG_PM_SLEEP.
 
---vvo2Ta3iSBUT2sNLpGZTrrdz3Y2TUboq1--
+>
+> Change from v2:
+> * Add another config instead of configed by CONFIG_HOTPLUG_CPU
 
---acuBhQRdI63FpCNTcRcqRnyKNvYaO86yE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+So why exactly is this new Kconfig option needed?
 
------BEGIN PGP SIGNATURE-----
+Everybody supporting CPU hotplug seems to opt in anyway.
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl4e1KsACgkQ41TmuOI4
-ufjWshAAxkdqN2YJiKHFUKQJevg8ZXo0UEdEGGgltjOkr/et3FTib6FpBj25PMnK
-esqakbi7UE0iP6eOxjo/zKkxTOhENHCXsugdQPZukZIc0UUNU+sL915jM0s2RXCZ
-u8xWSBIy/JKALN3qPGD0FORpmQ9RYFay5xk5SEEK4egs9894XbJBdV+1VHE+TZe9
-aP/g0B1rlDB7/vPgcDtEIeT7SZ8kTNmlAbJ99qICsTb3ewxqZSlYldbg4L85av8P
-jmP7VPv/K+Xx1vmR5hzld9Pmr3ouS33THJRrBd5Azx8XlRtihDou7PpcLfOziZMJ
-uCXrTX2EcrW4RssibScQTatoDrVeXJ1iDFtjkn32tQi39lv6uWEq6Tx2+EZXOYTB
-XIMI08qpJ3BZme4Gwh0gkgzqLCrBcfvNdaKT/BUbOhX4ZsD8a+j3wv84+eHOMImS
-audmETN2Cg2pXypJqdoC/6i3oEgNViZbFVihuZEkrNNr3J/CMYROEVwMNlWXlXO8
-3oLq8f7XChJbSe+dMjtayD/7NcQSW7RKuJBT84NBv5BhK3TFSteR6o8WEdR3D4bq
-+neCJFR7bpVwuJDitXQ7RmPESdC7O1Y4jsbgIBdP7eRWFtADTKePZOgRXkF/utpC
-FTNbmhtzQ0i1b1kIt/f40b4YCMmmGO54IUX+zbV/6GbfVgP0IKY=
-=euXN
------END PGP SIGNATURE-----
+[cut]
 
---acuBhQRdI63FpCNTcRcqRnyKNvYaO86yE--
+>
+> -int freeze_secondary_cpus(int primary)
+> +int freeze_secondary_cpus(int primary, bool reboot)
+>  {
+>         int cpu, error = 0;
+>
+> @@ -1237,11 +1237,13 @@ int freeze_secondary_cpus(int primary)
+>                 if (cpu == primary)
+>                         continue;
+>
+> -               if (pm_wakeup_pending()) {
+> +#ifdef CONFIG_PM_SLEEP
+> +               if (!reboot && pm_wakeup_pending()) {
+>                         pr_info("Wakeup pending. Abort CPU freeze\n");
+>                         error = -EBUSY;
+>                         break;
+>                 }
+> +#endif
 
+Please avoid using #ifdefs in function bodies.  This makes the code
+hard to maintain in the long term.
+
+>
+>                 trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
+>                 error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
+> @@ -1250,7 +1252,9 @@ int freeze_secondary_cpus(int primary)
+>                         cpumask_set_cpu(cpu, frozen_cpus);
+>                 else {
+>                         pr_err("Error taking CPU%d down: %d\n", cpu, error);
+> -                       break;
+> +                       /* When rebooting, offline as many CPUs as possible. */
+> +                       if (!reboot)
+> +                               break;
+>                 }
+>         }
+>
+> diff --git a/kernel/reboot.c b/kernel/reboot.c
+> index c4d472b7f1b4..12f643b66e57 100644
+> --- a/kernel/reboot.c
+> +++ b/kernel/reboot.c
+> @@ -7,6 +7,7 @@
+>
+>  #define pr_fmt(fmt)    "reboot: " fmt
+>
+> +#include <linux/cpu.h>
+>  #include <linux/ctype.h>
+>  #include <linux/export.h>
+>  #include <linux/kexec.h>
+> @@ -220,7 +221,9 @@ void migrate_to_reboot_cpu(void)
+>         /* The boot cpu is always logical cpu 0 */
+>         int cpu = reboot_cpu;
+>
+> +#if !IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
+>         cpu_hotplug_disable();
+> +#endif
+
+You can write this as
+
+if (!IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT))
+        cpu_hotplug_disable();
+
+That's what IS_ENABLED() is there for.
+
+>
+>         /* Make certain the cpu I'm about to reboot on is online */
+>         if (!cpu_online(cpu))
+> @@ -231,6 +234,11 @@ void migrate_to_reboot_cpu(void)
+>
+>         /* Make certain I only run on the appropriate processor */
+>         set_cpus_allowed_ptr(current, cpumask_of(cpu));
+> +
+> +#if IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
+> +       /* Offline other cpus if possible */
+> +       freeze_secondary_cpus(cpu, true);
+> +#endif
+
+The above comment applies here too.
+
+>  }
+>
+>  /**
+> --
