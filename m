@@ -2,205 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7E7E13BCC5
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jan 2020 10:49:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C912113BCDF
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Jan 2020 10:55:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbgAOJta (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Jan 2020 04:49:30 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:35278 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729559AbgAOJta (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Jan 2020 04:49:30 -0500
-Received: by mail-oi1-f193.google.com with SMTP id k4so14830271oik.2;
-        Wed, 15 Jan 2020 01:49:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=xlblpk3Q7AFTy8Enno95ZSx0IUH147BofZyxZsTxPpQ=;
-        b=TucKJXUCA3iBOurtQTxVBa/z8C9REkYA7BJC4bLHsU20pWHX8G0CPEON/zgGfgROz8
-         jwyhbLr5j2JjwsgdL2GIT3EzLxo7Di8fOQrERkdEJ7U7/QiPIC90oZ50fmH92oivcX4w
-         4nk8FEs52YgRW4roJaXdtPnaDSiUZuO+jsaSeqw5obwUuylTkiKm+kAy0NqZaqaEbJGp
-         HyvO4SXZNtNmMLSezXxOt1GFZUvU8xOr9u0riNPtbG6A2o43vIEf5c94v4ZdcUQ/+rNA
-         09NbTz5Mgy/U+8mMr6AAl1/vUPkueJt0UHwsbWG3+q7l+/SeT1Za/tB2usl63ImC6Iqf
-         Y4Og==
-X-Gm-Message-State: APjAAAVX1XL4PXVWExXRv2a3FQ2mHbtqRNbZ2YgU8z0/8nYn4u+xpCf+
-        7f32MQtaREYqi5KzILq3sFk0XhhtpRHD3q7EPg8=
-X-Google-Smtp-Source: APXvYqzvsE9JWkTyA/qGCPe6FC5SfX/eWtD++abCAXNNUKmVhLTpM4TrHUCIWNo6kY2HmIQTdm2QXbcLDAmQBj9bi24=
-X-Received: by 2002:aca:d6c8:: with SMTP id n191mr21412346oig.103.1579081768509;
- Wed, 15 Jan 2020 01:49:28 -0800 (PST)
-MIME-Version: 1.0
-References: <20200115063410.131692-1-hsinyi@chromium.org>
-In-Reply-To: <20200115063410.131692-1-hsinyi@chromium.org>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Wed, 15 Jan 2020 10:49:17 +0100
-Message-ID: <CAJZ5v0jng1hpPzYUcPj96G9c8aqNYCwDqLHyQEVC9tD=F1dObw@mail.gmail.com>
-Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
+        id S1729519AbgAOJzK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Jan 2020 04:55:10 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55114 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729504AbgAOJzJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 Jan 2020 04:55:09 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00F9rAgZ040719;
+        Wed, 15 Jan 2020 04:54:57 -0500
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xhbprykn9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 04:54:56 -0500
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00F9pgxS030824;
+        Wed, 15 Jan 2020 09:54:56 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma03wdc.us.ibm.com with ESMTP id 2xhmf9mpcu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Jan 2020 09:54:56 +0000
+Received: from b01ledav006.gho.pok.ibm.com (b01ledav006.gho.pok.ibm.com [9.57.199.111])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00F9ss7X38404384
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Jan 2020 09:54:54 GMT
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AA9AAAC05B;
+        Wed, 15 Jan 2020 09:54:54 +0000 (GMT)
+Received: from b01ledav006.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58FDDAC059;
+        Wed, 15 Jan 2020 09:54:53 +0000 (GMT)
+Received: from [9.152.96.154] (unknown [9.152.96.154])
+        by b01ledav006.gho.pok.ibm.com (Postfix) with ESMTPS;
+        Wed, 15 Jan 2020 09:54:53 +0000 (GMT)
+Subject: Fwd: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware
+ compression
+References: <20200114161857.GD3929@suse.cz>
+To:     Andrew Morton <akpm@linux-foundation.org>
+From:   Zaslonko Mikhail <zaslonko@linux.ibm.com>
+Cc:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>,
+        Richard Purdie <rpurdie@rpsys.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eduard Shishkin <edward6@linux.ibm.com>,
+        Ilya Leoshkevich <iii@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+X-Forwarded-Message-Id: <20200114161857.GD3929@suse.cz>
+Message-ID: <e66fa494-e137-ed73-6db3-15fcbd232eb7@linux.ibm.com>
+Date:   Wed, 15 Jan 2020 10:54:53 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
+MIME-Version: 1.0
+In-Reply-To: <20200114161857.GD3929@suse.cz>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-15_01:2020-01-15,2020-01-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 clxscore=1015 lowpriorityscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 adultscore=0 spamscore=0
+ mlxscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001150084
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 7:35 AM Hsin-Yi Wang <hsinyi@chromium.org> wrote:
->
-> Currently system reboots uses architecture specific codes (smp_send_stop)
-> to offline non reboot CPUs. Most architecture's implementation is looping
-> through all non reboot online CPUs and call ipi function to each of them. Some
-> architecture like arm64, arm, and x86... would set offline masks to cpu without
-> really offline them. This causes some race condition and kernel warning comes
-> out sometimes when system reboots.
->
-> This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would offline cpus in
-> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
-> checking online cpus would be an empty loop. If architecture don't enable this
-> config, or some cpus somehow fails to offline, it would fallback to ipi
-> function.
->
-> Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
->
-> Signed-off-by: Hsin-Yi Wang <hsinyi@chromium.org>
-> ---
-> Change from v4:
-> * fix a few nits: naming, comments, remove Kconfig text...
->
-> Change from v3:
-> * Opt in config for architectures that support CONFIG_HOTPLUG_CPU
-> * Merge function offline_secondary_cpus() and freeze_secondary_cpus()
->   with an additional flag.
+Hello Andrew,
 
-This does not seem to be a very good idea, since
-freeze_secondary_cpus() does much more than you need for reboot.
+Could you please pick this V4 btrfs patch and the other five patches from V3 patch
+set (https://lkml.org/lkml/2020/1/3/568).
 
-For reboot, you basically only need to do something like this AFAICS:
+Older patches can be dropped from linux-next:
+ * ac2aeaa0f4d3 btrfs: use larger zlib buffer for s390 hardware compression
+ * ac19f15aea33 lib/zlib: add zlib_deflate_dfltcc_enabled() function
+ * 3447c9a51196 s390/boot: add dfltcc= kernel command line parameter
+ * 890060df4401 lib/zlib: add s390 hardware support for kernel zlib_inflate
+ * 148f7d060405 s390/boot: rename HEAP_SIZE due to name collision
+ * bfbef17740fd lib/zlib: add s390 hardware support for kernel zlib_deflate
 
-cpu_maps_update_begin();
+Thanks,
+Mikhail.
 
-for_each_online_cpu(i) {
-        if (i != cpu)
-                _cpu_down(i, 1, CPUHP_OFFLINE);
-}
-cpu_hotplug_disabled++;
 
-cpu_maps_update_done();
+-------- Forwarded Message --------
+Subject: Re: [PATCH v4] btrfs: Use larger zlib buffer for s390 hardware compression
+Date: Tue, 14 Jan 2020 17:18:57 +0100
+From: David Sterba <dsterba@suse.cz>
+Reply-To: dsterba@suse.cz
+To: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+CC: Andrew Morton <akpm@linux-foundation.org>, Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>, David Sterba <dsterba@suse.com>, Richard Purdie <rpurdie@rpsys.net>, Heiko Carstens <heiko.carstens@de.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eduard Shishkin <edward6@linux.ibm.com>, Ilya Leoshkevich <iii@linux.ibm.com>, linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
 
-And you may put this into a function defined outside of CONFIG_PM_SLEEP.
+On Wed, Jan 08, 2020 at 11:51:03AM +0100, Mikhail Zaslonko wrote:
+> In order to benefit from s390 zlib hardware compression support,
+> increase the btrfs zlib workspace buffer size from 1 to 4 pages (if
+> s390 zlib hardware support is enabled on the machine). This brings up
+> to 60% better performance in hardware on s390 compared to the PAGE_SIZE
+> buffer and much more compared to the software zlib processing in btrfs.
+> In case of memory pressure, fall back to a single page buffer during
+> workspace allocation.
+> The data compressed with larger input buffers will still conform to zlib
+> standard and thus can be decompressed also on a systems that uses only
+> PAGE_SIZE buffer for btrfs zlib.
+> 
+> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
 
->
-> Change from v2:
-> * Add another config instead of configed by CONFIG_HOTPLUG_CPU
-
-So why exactly is this new Kconfig option needed?
-
-Everybody supporting CPU hotplug seems to opt in anyway.
-
-[cut]
-
->
-> -int freeze_secondary_cpus(int primary)
-> +int freeze_secondary_cpus(int primary, bool reboot)
->  {
->         int cpu, error = 0;
->
-> @@ -1237,11 +1237,13 @@ int freeze_secondary_cpus(int primary)
->                 if (cpu == primary)
->                         continue;
->
-> -               if (pm_wakeup_pending()) {
-> +#ifdef CONFIG_PM_SLEEP
-> +               if (!reboot && pm_wakeup_pending()) {
->                         pr_info("Wakeup pending. Abort CPU freeze\n");
->                         error = -EBUSY;
->                         break;
->                 }
-> +#endif
-
-Please avoid using #ifdefs in function bodies.  This makes the code
-hard to maintain in the long term.
-
->
->                 trace_suspend_resume(TPS("CPU_OFF"), cpu, true);
->                 error = _cpu_down(cpu, 1, CPUHP_OFFLINE);
-> @@ -1250,7 +1252,9 @@ int freeze_secondary_cpus(int primary)
->                         cpumask_set_cpu(cpu, frozen_cpus);
->                 else {
->                         pr_err("Error taking CPU%d down: %d\n", cpu, error);
-> -                       break;
-> +                       /* When rebooting, offline as many CPUs as possible. */
-> +                       if (!reboot)
-> +                               break;
->                 }
->         }
->
-> diff --git a/kernel/reboot.c b/kernel/reboot.c
-> index c4d472b7f1b4..12f643b66e57 100644
-> --- a/kernel/reboot.c
-> +++ b/kernel/reboot.c
-> @@ -7,6 +7,7 @@
->
->  #define pr_fmt(fmt)    "reboot: " fmt
->
-> +#include <linux/cpu.h>
->  #include <linux/ctype.h>
->  #include <linux/export.h>
->  #include <linux/kexec.h>
-> @@ -220,7 +221,9 @@ void migrate_to_reboot_cpu(void)
->         /* The boot cpu is always logical cpu 0 */
->         int cpu = reboot_cpu;
->
-> +#if !IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
->         cpu_hotplug_disable();
-> +#endif
-
-You can write this as
-
-if (!IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT))
-        cpu_hotplug_disable();
-
-That's what IS_ENABLED() is there for.
-
->
->         /* Make certain the cpu I'm about to reboot on is online */
->         if (!cpu_online(cpu))
-> @@ -231,6 +234,11 @@ void migrate_to_reboot_cpu(void)
->
->         /* Make certain I only run on the appropriate processor */
->         set_cpus_allowed_ptr(current, cpumask_of(cpu));
-> +
-> +#if IS_ENABLED(CONFIG_ARCH_OFFLINE_CPUS_ON_REBOOT)
-> +       /* Offline other cpus if possible */
-> +       freeze_secondary_cpus(cpu, true);
-> +#endif
-
-The above comment applies here too.
-
->  }
->
->  /**
-> --
+Reviewed-by: David Sterba <dsterba@suse.com>
