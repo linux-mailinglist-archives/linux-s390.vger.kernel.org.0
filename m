@@ -2,143 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D7A8313DE43
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 16:07:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0374013EBC5
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 18:52:54 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726896AbgAPPF7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jan 2020 10:05:59 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28740 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726189AbgAPPF7 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jan 2020 10:05:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579187156;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=kOmwz01mePXBYnhHcPG/iYv5hOVqKYDvyGKmU7ezAzA=;
-        b=g+ARaspYq/yEOK+w3myQugj3lAkJ34Pbd612zRxxReNEFtNdSWvsXz+JxrIw6e0V8ISgcy
-        nVtZuHCRJM5qTnw3VDtMRKOh11kUyP2jDr/y8tz8ExFrEnAOMhzxakLoUOqE/wSkv/zpJo
-        cqrrYvnwGVUqG6ON/phLI4lYQBTNg6I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-295--MG8eiINP0KTyi1ma6Rk6g-1; Thu, 16 Jan 2020 10:05:52 -0500
-X-MC-Unique: -MG8eiINP0KTyi1ma6Rk6g-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2406131AbgAPRpO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jan 2020 12:45:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36822 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2406125AbgAPRpO (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:45:14 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B603D8010C1;
-        Thu, 16 Jan 2020 15:05:49 +0000 (UTC)
-Received: from gondolin (unknown [10.36.117.255])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D64F05D9C9;
-        Thu, 16 Jan 2020 15:05:45 +0000 (UTC)
-Date:   Thu, 16 Jan 2020 16:05:43 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, david@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v2 4/7] s390x: smp: Rework cpu start and
- active tracking
-Message-ID: <20200116160543.70f52cb2.cohuck@redhat.com>
-In-Reply-To: <4e4587a6-efba-6f40-306b-3704e53aafc3@linux.ibm.com>
-References: <20200116120513.2244-1-frankja@linux.ibm.com>
-        <20200116120513.2244-5-frankja@linux.ibm.com>
-        <20200116151453.186cbf94.cohuck@redhat.com>
-        <4e4587a6-efba-6f40-306b-3704e53aafc3@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 24A7524782;
+        Thu, 16 Jan 2020 17:45:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1579196713;
+        bh=TLRigZLEMBxv/4Ur70nzzxOwCvGXq8R+1qUa6DFFK34=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=aFbbPCmBW5emEDBq2h46KawHcqJvas2u3omYqjNJ6nClNYDX8qgvNAAk19foA9LMO
+         0CTt8Ph27VHpjUbYOO58ODysvp/1VCeT7eLPpIW0esiitmFw9BwKY/4K18r2fQOjGp
+         xeAiz5RRbsBUfe8fIledD2Wrxd9VFp5gecLxhgGM=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
+        netdev@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.4 102/174] net/af_iucv: always register net_device notifier
+Date:   Thu, 16 Jan 2020 12:41:39 -0500
+Message-Id: <20200116174251.24326-102-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200116174251.24326-1-sashal@kernel.org>
+References: <20200116174251.24326-1-sashal@kernel.org>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; boundary="Sig_/edF2O_rEm1wXQnnHeEgIQQj";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/edF2O_rEm1wXQnnHeEgIQQj
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Julian Wiedmann <jwi@linux.ibm.com>
 
-On Thu, 16 Jan 2020 15:44:24 +0100
-Janosch Frank <frankja@linux.ibm.com> wrote:
+[ Upstream commit 06996c1d4088a0d5f3e7789d7f96b4653cc947cc ]
 
-> On 1/16/20 3:14 PM, Cornelia Huck wrote:
-> > On Thu, 16 Jan 2020 07:05:10 -0500
-> > Janosch Frank <frankja@linux.ibm.com> wrote:
+Even when running as VM guest (ie pr_iucv != NULL), af_iucv can still
+open HiperTransport-based connections. For robust operation these
+connections require the af_iucv_netdev_notifier, so register it
+unconditionally.
 
-> >> +static int smp_cpu_restart_nolock(uint16_t addr, struct psw *psw)
-> >> +{
-> >> +=09int rc;
-> >> +=09struct cpu *cpu =3D smp_cpu_from_addr(addr);
-> >> +
-> >> +=09if (!cpu)
-> >> +=09=09return -1;
-> >> +=09if (psw) {
-> >> +=09=09cpu->lowcore->restart_new_psw.mask =3D psw->mask;
-> >> +=09=09cpu->lowcore->restart_new_psw.addr =3D psw->addr;
-> >> +=09}
-> >> +=09rc =3D sigp(addr, SIGP_RESTART, 0, NULL);
-> >> +=09if (rc)
-> >> +=09=09return rc;
-> >> +=09while (!smp_cpu_running(addr)) { mb(); } =20
-> >=20
-> > Maybe split this statement? Also, maybe add a comment =20
->=20
-> /* Wait until the target cpu is running */
-> ?
+Also handle any error that register_netdevice_notifier() returns.
 
-Fine with me as well :)
+Fixes: 9fbd87d41392 ("af_iucv: handle netdev events")
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/iucv/af_iucv.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
->=20
-> This is not QEMU with two line ifs taking up 3 lines :)
-
-Heh, it's just the style I'm used to :)
-
->=20
-> >=20
-> > /*
-> >  * The order has been accepted, but the actual restart may not
-> >  * have been performed yet, so wait until the cpu is running.
-> >  */
-> >=20
-> > ?
-> >  =20
-> >> +=09cpu->active =3D true;
-> >> +=09return 0;
-> >> +} =20
-> >=20
-> > The changes look good to me AFAICS.
-> >=20
-> > Reviewed-by: Cornelia Huck <cohuck@redhat.com> =20
->=20
-> Thanks!
->=20
->=20
-
-
---Sig_/edF2O_rEm1wXQnnHeEgIQQj
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl4ge8cACgkQ3s9rk8bw
-L6+ffA//dmfYUxNJy7AWz/pDhnlAUYTWjuVjyNWTtA2QOrrfuTNqwtluEHwd1+jV
-6mB/24dhB1ItAnPY7cvdNrotGDDI5fsIPbX4Am02H1fTVFbR7yH72vMuiGzclJSG
-bW2Cml07cVMYUKqjEmE9MzB9sM5dta9k6wV1i4WkjF+rNXDpKBDPDbb9fi00Hozq
-s1km3hclXtZVwwiFAdvMKFpX2MjpLR9vEkQCCMgHSS/KEO1O9pJQi+GwIBpnaSEe
-kpt2DfHpmkTzeEYEZbFlYrydN0HZT+3o8nfWfq1IZwm/mDsoLgcqU2VM/em98BpL
-b//VtTHxKIKz0h9z754QQS/ENRP6V5R6ReWlJo2ddzdlLniIf3B8Vdb4UgLRo3bi
-JucKJDECd3TxCd4g1zQ7BlADt0oqq+16wb1Jhm3wFjQkoFNYVd7Ad3kuHORtVpI+
-yfw4AJjWdzf9nUppCnLYm7toHqks5fos/JdfQH+95ItH/SzO+YNonar9nSjvyaT2
-98y75kIcJ+qsjEWtmgSuTJzDgJVLdbLogjJGx4FFJgK1KYigML6JVPJCsTE/Ph1M
-lo3wm5E798fheX6+Kw4obQBwR4lfbyKm5SqzILFiykvuWHsy6qpkc/UJl3PSRpur
-S1u4xEBtGiTXJpqNv5evsUqVfR107k+8j75gauKscY/GLYmFXHY=
-=I70c
------END PGP SIGNATURE-----
-
---Sig_/edF2O_rEm1wXQnnHeEgIQQj--
+diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
+index 5984cc35d508..3edffb7bf2a4 100644
+--- a/net/iucv/af_iucv.c
++++ b/net/iucv/af_iucv.c
+@@ -2392,6 +2392,13 @@ static int afiucv_iucv_init(void)
+ 	return err;
+ }
+ 
++static void afiucv_iucv_exit(void)
++{
++	device_unregister(af_iucv_dev);
++	driver_unregister(&af_iucv_driver);
++	pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++}
++
+ static int __init afiucv_init(void)
+ {
+ 	int err;
+@@ -2425,11 +2432,18 @@ static int __init afiucv_init(void)
+ 		err = afiucv_iucv_init();
+ 		if (err)
+ 			goto out_sock;
+-	} else
+-		register_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	err = register_netdevice_notifier(&afiucv_netdev_notifier);
++	if (err)
++		goto out_notifier;
++
+ 	dev_add_pack(&iucv_packet_type);
+ 	return 0;
+ 
++out_notifier:
++	if (pr_iucv)
++		afiucv_iucv_exit();
+ out_sock:
+ 	sock_unregister(PF_IUCV);
+ out_proto:
+@@ -2443,12 +2457,11 @@ static int __init afiucv_init(void)
+ static void __exit afiucv_exit(void)
+ {
+ 	if (pr_iucv) {
+-		device_unregister(af_iucv_dev);
+-		driver_unregister(&af_iucv_driver);
+-		pr_iucv->iucv_unregister(&af_iucv_handler, 0);
++		afiucv_iucv_exit();
+ 		symbol_put(iucv_if);
+-	} else
+-		unregister_netdevice_notifier(&afiucv_netdev_notifier);
++	}
++
++	unregister_netdevice_notifier(&afiucv_netdev_notifier);
+ 	dev_remove_pack(&iucv_packet_type);
+ 	sock_unregister(PF_IUCV);
+ 	proto_unregister(&iucv_proto);
+-- 
+2.20.1
 
