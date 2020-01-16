@@ -2,94 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3B0E913D8BE
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 12:12:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AAD4C13D997
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 13:06:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726513AbgAPLLY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jan 2020 06:11:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:51303 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbgAPLLY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jan 2020 06:11:24 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1is33A-00050C-K7; Thu, 16 Jan 2020 12:10:56 +0100
-Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
-        id 3D46D101B66; Thu, 16 Jan 2020 12:10:56 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Hsin-Yi Wang <hsinyi@chromium.org>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Pavankumar Kondeti <pkondeti@codeaurora.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Aaro Koskinen <aaro.koskinen@nokia.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Will Deacon <will@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        "moderated list\:ARM\/FREESCALE IMX \/ MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>, linux-csky@vger.kernel.org,
-        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
-        linux-parisc@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org,
-        Linux-sh list <linux-sh@vger.kernel.org>,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        Linux PM <linux-pm@vger.kernel.org>
-Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
-In-Reply-To: <CAJMQK-jDi+AACE1Cv_hKSMq8VhGTBeh+kyHO2U4sx9w=9bO2mA@mail.gmail.com>
-References: <20200115063410.131692-1-hsinyi@chromium.org> <8736cgxmxi.fsf@nanos.tec.linutronix.de> <CAJMQK-jDi+AACE1Cv_hKSMq8VhGTBeh+kyHO2U4sx9w=9bO2mA@mail.gmail.com>
-Date:   Thu, 16 Jan 2020 12:10:56 +0100
-Message-ID: <87h80vwta7.fsf@nanos.tec.linutronix.de>
+        id S1726890AbgAPMFb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jan 2020 07:05:31 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:52326 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726088AbgAPMFb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Jan 2020 07:05:31 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GBvR08112605
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jan 2020 07:05:30 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2xjmynd4ry-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jan 2020 07:05:30 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Thu, 16 Jan 2020 12:05:28 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 16 Jan 2020 12:05:24 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00GC5N2544761290
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Jan 2020 12:05:23 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AC6815205A;
+        Thu, 16 Jan 2020 12:05:23 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.152.224.123])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id C2E0952052;
+        Thu, 16 Jan 2020 12:05:22 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, david@redhat.com, cohuck@redhat.com
+Subject: [kvm-unit-tests PATCH v2 0/7] s390x: smp: Improve smp code and reset checks
+Date:   Thu, 16 Jan 2020 07:05:06 -0500
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20011612-4275-0000-0000-0000039813C6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20011612-4276-0000-0000-000038AC129A
+Message-Id: <20200116120513.2244-1-frankja@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-16_03:2020-01-16,2020-01-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ priorityscore=1501 suspectscore=0 clxscore=1015 lowpriorityscore=0
+ impostorscore=0 phishscore=0 spamscore=0 mlxlogscore=478 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001160103
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hsin-Yi Wang <hsinyi@chromium.org> writes:
-> On Thu, Jan 16, 2020 at 8:30 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> We saw this issue on regular reboot (not panic) on arm64: If tick
-> broadcast and smp_send_stop() happen together and the first broadcast
-> arrives to some idled CPU that hasn't already executed reboot ipi to
-> run in spinloop, it would try to broadcast to another CPU, but that
-> target CPU is already marked as offline by set_cpu_online() in reboot
-> ipi, and a warning comes out since tick_handle_oneshot_broadcast()
-> would check if it tries to broadcast to offline cpus. Most of the time
-> the CPU getting the broadcast interrupt is already in the spinloop and
-> thus isn't going to receive interrupts from the broadcast timer.
+Let's extend sigp reset testing and clean up the smp library as well.
 
-The timer broadcasting is obviously broken by the existing reboot unplug
-mechanism as the outgoing CPU should remove itself from the broadcast.
+GIT: https://github.com/frankjaa/kvm-unit-tests/tree/smp_cleanup
 
-Just addressing the broadcast issue is not sufficient as there are tons
-of other places which rely on consistency of the various cpu masks.
+v2:
+	* Added cpu stop to test_store_status()
+	* Added smp_cpu_destroy() to the end of smp.c main()
+	* New patch that prints cpu id on interrupt errors
+	* New patch that reworks cpu start in the smp library (needed for lpar)
+	* New patch that waits for cpu setup in smp_cpu_setup() (needed for lpar)
+	* nullp is now an array
 
-> If system supports hotplug, _cpu_down() would properly handle tasks
-> termination such as remove CPU from timer broadcasting by
-> tick_offline_cpu()...etc, as well as some interrupt handling.
+Janosch Frank (7):
+  s390x: smp: Cleanup smp.c
+  s390x: smp: Only use smp_cpu_setup once
+  s390x: Add cpu id to interrupt error prints
+  s390x: smp: Rework cpu start and active tracking
+  s390x: smp: Wait for cpu setup to finish
+  s390x: smp: Test all CRs on initial reset
+  s390x: smp: Dirty fpc before initial reset test
 
-Well, emphasis on 'if system supports hotplug'. If not, then you are
-back to square one. On ARM64 hotplug is selectable by a config option.
+ lib/s390x/interrupt.c | 20 +++++------
+ lib/s390x/smp.c       | 47 +++++++++++++-----------
+ s390x/cstart64.S      |  2 ++
+ s390x/smp.c           | 84 +++++++++++++++++++++++++++++--------------
+ 4 files changed, 96 insertions(+), 57 deletions(-)
 
-So either we mandate HOTPLUG_CPU for SMP and get rid of all the
-ifdeffery or we need to have a mechanism which works on !HOTPLUG_CPU as
-well.
+-- 
+2.20.1
 
-That whole reboot/shutdown stuff is an unpenetrable mess of notifiers
-and architecture hackery, so something generic and understandable is
-really required.
-
-Thanks,
-
-        tglx
