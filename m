@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0BC8E13F012
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 19:21:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3515C13EE04
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 19:06:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2392519AbgAPR16 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jan 2020 12:27:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38416 "EHLO mail.kernel.org"
+        id S2390761AbgAPSGl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jan 2020 13:06:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2392515AbgAPR15 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:27:57 -0500
+        id S2393476AbgAPRj2 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Jan 2020 12:39:28 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2773A246F7;
-        Thu, 16 Jan 2020 17:27:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9223924706;
+        Thu, 16 Jan 2020 17:39:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579195677;
-        bh=EJVoF4yoDsWrIGRFahRUz/h9EFQOzcUM9CG+TSSpZPo=;
+        s=default; t=1579196367;
+        bh=bKQT/7rZlw5vM2UzsIygk7W3zxsSBTZ3Q0mIt1PLicU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gjaFN2PPqnqVTCJyz/c8YA7vUZYaghkQx2UwuGnij1VdXb9W8TiEkswxLWp3wZyaX
-         OV5hYXmRKJm0J7JL78qssPMRSp5I9vDwhikUVTkD4HqvpdbFAPTK69NZALoNxsZOsE
-         XozWHwh8FFthJ9MSZM4yrX3DFBlOFLufSKJ8Jz4k=
+        b=DfU1ZDgfr8/6WlLjgptjyppX1O8PcwCyVTHP7vD9LVW8F3RmZ7wG6Vvikw7zlCqRC
+         RRetsxpUDlOWtF1IDwce2hHZvkqK62Kpw62mIIS1xdudAyxOXg4zjZ7N+0JAMXiZ+w
+         N2Ya483iHj++IJgvKwTOZs4gCW4P0QJq/HUYDlPM=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
@@ -30,12 +30,12 @@ Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.14 232/371] net/af_iucv: always register net_device notifier
-Date:   Thu, 16 Jan 2020 12:21:44 -0500
-Message-Id: <20200116172403.18149-175-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 155/251] net/af_iucv: always register net_device notifier
+Date:   Thu, 16 Jan 2020 12:35:04 -0500
+Message-Id: <20200116173641.22137-115-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116172403.18149-1-sashal@kernel.org>
-References: <20200116172403.18149-1-sashal@kernel.org>
+In-Reply-To: <20200116173641.22137-1-sashal@kernel.org>
+References: <20200116173641.22137-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -66,10 +66,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 20 insertions(+), 7 deletions(-)
 
 diff --git a/net/iucv/af_iucv.c b/net/iucv/af_iucv.c
-index ca98276c2709..7a9cbc9502d9 100644
+index c2dfc32eb9f2..02e10deef5b4 100644
 --- a/net/iucv/af_iucv.c
 +++ b/net/iucv/af_iucv.c
-@@ -2446,6 +2446,13 @@ static int afiucv_iucv_init(void)
+@@ -2431,6 +2431,13 @@ static int afiucv_iucv_init(void)
  	return err;
  }
  
@@ -83,7 +83,7 @@ index ca98276c2709..7a9cbc9502d9 100644
  static int __init afiucv_init(void)
  {
  	int err;
-@@ -2479,11 +2486,18 @@ static int __init afiucv_init(void)
+@@ -2464,11 +2471,18 @@ static int __init afiucv_init(void)
  		err = afiucv_iucv_init();
  		if (err)
  			goto out_sock;
@@ -104,7 +104,7 @@ index ca98276c2709..7a9cbc9502d9 100644
  out_sock:
  	sock_unregister(PF_IUCV);
  out_proto:
-@@ -2497,12 +2511,11 @@ static int __init afiucv_init(void)
+@@ -2482,12 +2496,11 @@ static int __init afiucv_init(void)
  static void __exit afiucv_exit(void)
  {
  	if (pr_iucv) {
