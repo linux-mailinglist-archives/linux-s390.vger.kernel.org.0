@@ -2,126 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D8C5A13D9A2
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 13:06:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CAB4F13D9A4
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 13:06:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726982AbgAPMFh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jan 2020 07:05:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726958AbgAPMFg (ORCPT
+        id S1726928AbgAPMFl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jan 2020 07:05:41 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55832 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726979AbgAPMFh (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:05:36 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GBvUMX062510
-        for <linux-s390@vger.kernel.org>; Thu, 16 Jan 2020 07:05:35 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xh8d64b0y-1
+        Thu, 16 Jan 2020 07:05:37 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00GBvZnn085865
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jan 2020 07:05:36 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xjkbm17d1-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 16 Jan 2020 07:05:35 -0500
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jan 2020 07:05:36 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 16 Jan 2020 12:05:33 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 16 Jan 2020 12:05:34 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 Jan 2020 12:05:31 -0000
+        Thu, 16 Jan 2020 12:05:32 -0000
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00GC5UmP57933986
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00GC5VAA31719648
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Jan 2020 12:05:30 GMT
+        Thu, 16 Jan 2020 12:05:31 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34FE852051;
-        Thu, 16 Jan 2020 12:05:30 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4925252063;
+        Thu, 16 Jan 2020 12:05:31 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.152.224.123])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 627B652052;
-        Thu, 16 Jan 2020 12:05:29 +0000 (GMT)
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6D1AF52051;
+        Thu, 16 Jan 2020 12:05:30 +0000 (GMT)
 From:   Janosch Frank <frankja@linux.ibm.com>
 To:     kvm@vger.kernel.org
 Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
         linux-s390@vger.kernel.org, david@redhat.com, cohuck@redhat.com
-Subject: [kvm-unit-tests PATCH v2 6/7] s390x: smp: Test all CRs on initial reset
-Date:   Thu, 16 Jan 2020 07:05:12 -0500
+Subject: [kvm-unit-tests PATCH v2 7/7] s390x: smp: Dirty fpc before initial reset test
+Date:   Thu, 16 Jan 2020 07:05:13 -0500
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200116120513.2244-1-frankja@linux.ibm.com>
 References: <20200116120513.2244-1-frankja@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20011612-0008-0000-0000-00000349E28A
+x-cbid: 20011612-4275-0000-0000-0000039813C9
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20011612-0009-0000-0000-00004A6A3C1D
-Message-Id: <20200116120513.2244-7-frankja@linux.ibm.com>
+x-cbparentid: 20011612-4276-0000-0000-000038AC129E
+Message-Id: <20200116120513.2244-8-frankja@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-16_03:2020-01-16,2020-01-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- malwarescore=0 mlxscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
- phishscore=0 suspectscore=1 adultscore=0 impostorscore=0 clxscore=1015
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001160103
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
+ malwarescore=0 clxscore=1015 suspectscore=1 spamscore=0 priorityscore=1501
+ mlxlogscore=859 mlxscore=0 lowpriorityscore=0 adultscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
+ definitions=main-2001160103
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-All CRs are set to 0 and CRs 0 and 14 are set to pre-defined values,
-so we also need to test 1-13 and 15 for 0.
-
-And while we're at it, let's also set some values to cr 1, 7 and 13, so
-we can actually be sure that they will be zeroed.
+Let's dirty the fpc, before we test if the initial reset sets it to 0.
 
 Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+Reviewed-by: Thomas Huth <thuth@redhat.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 ---
- s390x/smp.c | 19 ++++++++++++++++++-
- 1 file changed, 18 insertions(+), 1 deletion(-)
+ s390x/smp.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/s390x/smp.c b/s390x/smp.c
-index d430638..ce3215d 100644
+index ce3215d..97a9dda 100644
 --- a/s390x/smp.c
 +++ b/s390x/smp.c
-@@ -176,16 +176,31 @@ static void test_emcall(void)
- 	report_prefix_pop();
- }
- 
-+/* Used to dirty registers of cpu #1 before it is reset */
-+static void test_func_initial(void)
-+{
-+	lctlg(1, 0x42000UL);
-+	lctlg(7, 0x43000UL);
-+	lctlg(13, 0x44000UL);
-+	testflag = 1;
-+	mb();
-+	cpu_loop();
-+}
-+
- static void test_reset_initial(void)
+@@ -179,6 +179,9 @@ static void test_emcall(void)
+ /* Used to dirty registers of cpu #1 before it is reset */
+ static void test_func_initial(void)
  {
- 	struct cpu_status *status = alloc_pages(0);
-+	uint64_t nullp[12] = {};
- 	struct psw psw;
- 
- 	psw.mask = extract_psw_mask();
--	psw.addr = (unsigned long)test_func;
-+	psw.addr = (unsigned long)test_func_initial;
- 
- 	report_prefix_push("reset initial");
-+	testflag = 0;
-+	mb();
- 	smp_cpu_start(1, psw);
-+	wait_for_flag();
- 
- 	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
- 	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
-@@ -196,6 +211,8 @@ static void test_reset_initial(void)
- 	report(!status->fpc, "fpc");
- 	report(!status->cputm, "cpu timer");
- 	report(!status->todpr, "todpr");
-+	report(!memcmp(&status->crs[1], nullp, sizeof(status->crs[1]) * 12), "cr1-13 == 0");
-+	report(status->crs[15] == 0, "cr15 == 0");
- 	report_prefix_pop();
- 
- 	report_prefix_push("initialized");
++	asm volatile(
++		"	sfpc	%0\n"
++		: : "d" (0x11) : );
+ 	lctlg(1, 0x42000UL);
+ 	lctlg(7, 0x43000UL);
+ 	lctlg(13, 0x44000UL);
 -- 
 2.20.1
 
