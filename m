@@ -2,61 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 280AF13F87A
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 20:19:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6678513FF9A
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Jan 2020 00:44:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733013AbgAPTSu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jan 2020 14:18:50 -0500
-Received: from mail.conatel.gob.ve ([201.248.69.230]:37188 "EHLO
-        mail.conatel.gob.ve" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732137AbgAPTSr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jan 2020 14:18:47 -0500
-X-Greylist: delayed 3201 seconds by postgrey-1.27 at vger.kernel.org; Thu, 16 Jan 2020 14:18:46 EST
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.conatel.gob.ve (Postfix) with ESMTP id 8072311C6A98;
-        Thu, 16 Jan 2020 14:01:43 -0400 (-04)
-Received: from mail.conatel.gob.ve ([127.0.0.1])
-        by localhost (mail.conatel.gob.ve [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id drplbiYtSKAy; Thu, 16 Jan 2020 14:01:36 -0400 (-04)
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by mail.conatel.gob.ve (Postfix) with ESMTP id D44F911C3320;
-        Thu, 16 Jan 2020 14:01:32 -0400 (-04)
-DKIM-Filter: OpenDKIM Filter v2.9.2 mail.conatel.gob.ve D44F911C3320
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=conatel.gob.ve;
-        s=5C18DDE8-FD64-11E3-A8EF-B68B774165DB; t=1579197692;
-        bh=ONiYfY8hL3XO0+q3v6QnQFSpO+07GWJt9BD1PSEvgfw=;
-        h=Date:From:Reply-To:Message-ID:Subject:MIME-Version:Content-Type:
-         Content-Transfer-Encoding;
-        b=EpA6gFnbTQ7N52bbvxSHY+rvi8f/D91rd6tb8fnVQBEaBBmkuxC1WVrU2mBQW65Ww
-         SVVvH7VeiMouVjbAn9RsD0RA1Cq09Qu3X+3nhkjUJWFAph2SDtTUhtaMv+FY/Bo+8u
-         fMI3GffyQLNRI99gAaReCeFBFmqLFJiwca9Go2OI=
-X-Virus-Scanned: amavisd-new at conatel.gob.ve
-Received: from mail.conatel.gob.ve ([127.0.0.1])
-        by localhost (mail.conatel.gob.ve [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id zNUubbntllPR; Thu, 16 Jan 2020 14:01:32 -0400 (-04)
-Received: from mail.conatel.gob.ve (correo.conatel.int [10.1.1.21])
-        by mail.conatel.gob.ve (Postfix) with ESMTP id C722A11C4100;
-        Thu, 16 Jan 2020 14:01:18 -0400 (-04)
-Date:   Thu, 16 Jan 2020 13:31:18 -0430 (VET)
-From:   manuel franco <hmorales@conatel.gob.ve>
-Reply-To: manuel franco <manuelfrancospende11@gmail.com>
-Message-ID: <321559358.438279.1579197678607.JavaMail.zimbra@conatel.gob.ve>
-Subject: Spende von 2 Millionen Euro.
+        id S1729813AbgAPXoR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jan 2020 18:44:17 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:42704 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729354AbgAPXoR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jan 2020 18:44:17 -0500
+Received: by mail-wr1-f65.google.com with SMTP id q6so20861155wro.9;
+        Thu, 16 Jan 2020 15:44:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=dHTGBkgzigId/zi0TOnYQjBsf6HAV19Aov7etVocQr4=;
+        b=nkMxee7mkhPsFnsTSgqVfS0Up+8cTe72MvM/2bMae4kd1D0j7q1OUOdW0oLJxBbSIK
+         9Bi90ue3VO7d+kNj/BGIwnKKDFCAeb3JxpNleXMZETVXxztv1FIZFCIO66SPBeHDnkXJ
+         WDA0TAbej0BCxjfO9HgpdHtEkdbpsP2wkxY/ktTPOF9jGQpd5h0kup9rrP8UKQ+AEy9B
+         xzLvt3IZ71WZZRPbY9DQFQrKlS5Qf9aZSejvh9ePXKBHpsxk695jLXQSpp9oGijyPgno
+         CECYx2xCkwz1/b/1dPu/WExst1CjFWG8F8q7i4DfSFwFRLPE9uSSS7gyOHJu+f0PCG6F
+         1iRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=dHTGBkgzigId/zi0TOnYQjBsf6HAV19Aov7etVocQr4=;
+        b=afV3VYKGK5218MYzMGyt18Ek89FQBZP7TdmhlXWt53us5TUNdgmLdLu3GjQjBRL/h9
+         GzR1TUyf1ZbNNj4up3oLDSIco36BYQwvQB+YG3L5MVqRto5Q10GHlVRNE6WsC+1DSv+K
+         z5GR8wGXtQYD2NXWIysRUb7mz5+1DDO4Ic+LHO5kDR0snieLtW1dfEW9BScIuqmK4q/B
+         Tky3v4X+KdZ9SmHv0iTX3w+BNw13BNxg+rSfhxkzI8WvwOJDHYzKMNDMGUAtbY/onMff
+         hyWfnFtlLbQ/eUotKBw5QJG8kUg3b5/xpGk6FUyCgNKqILek4btRopbPvOnHpvZmJ9pQ
+         ZCuA==
+X-Gm-Message-State: APjAAAVrVS33ee6z61JGJWNNp4tVDEgk2G1DCv5+PSRPngVYSn76CBsq
+        imGdQZ+D1tK7T1Bdwec2MUbkkpzd9dIpKA6IqG7/bsFa
+X-Google-Smtp-Source: APXvYqzqW75Nq6g1kCwaCaY8GLY0vks1V3PmDr3vfRkYbRP+psJfmZtTg8T656o2Zp8oScWytghb39gCT2F8UkX0DLo=
+X-Received: by 2002:adf:f606:: with SMTP id t6mr5632437wrp.85.1579218254750;
+ Thu, 16 Jan 2020 15:44:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [105.0.3.30]
-X-Mailer: Zimbra 8.6.0_GA_1242 (zclient/8.6.0_GA_1242)
-Thread-Topic: Spende von 2 Millionen Euro.
-Thread-Index: eGaXi2vizQofh/wOB4UX6X5Bqx+rcA==
-To:     unlisted-recipients:; (no To-header on input)
+References: <20200113105156.25945-1-geert@linux-m68k.org>
+In-Reply-To: <20200113105156.25945-1-geert@linux-m68k.org>
+From:   Richard Weinberger <richard.weinberger@gmail.com>
+Date:   Fri, 17 Jan 2020 00:44:03 +0100
+Message-ID: <CAFLxGvxNUcKiaCxXy_oracH-3xg3MPETxkaDqgtkMkB1vp-02Q@mail.gmail.com>
+Subject: Re: [PATCH] ubifs: Fix ino_t format warnings in orphan_delete()
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Richard Weinberger <richard@nod.at>, linux-s390@vger.kernel.org,
+        linux-mtd@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        linux-alpha@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, Jan 13, 2020 at 11:52 AM Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+>
+> On alpha and s390x:
+>
+>     fs/ubifs/debug.h:158:11: warning: format =E2=80=98%lu=E2=80=99 expect=
+s argument of type =E2=80=98long unsigned int=E2=80=99, but argument 4 has =
+type =E2=80=98ino_t {aka unsigned int}=E2=80=99 [-Wformat=3D]
+>     ...
+>     fs/ubifs/orphan.c:132:3: note: in expansion of macro =E2=80=98dbg_gen=
+=E2=80=99
+>        dbg_gen("deleted twice ino %lu", orph->inum);
+>     ...
+>     fs/ubifs/orphan.c:140:3: note: in expansion of macro =E2=80=98dbg_gen=
+=E2=80=99
+>        dbg_gen("delete later ino %lu", orph->inum);
+>
+> __kernel_ino_t is "unsigned long" on most architectures, but not on
+> alpha and s390x, where it is "unsigned int".  Hence when printing an
+> ino_t, it should always be cast to "unsigned long" first.
+>
+> Fix this by re-adding the recently removed casts.
+>
+> Fixes: 8009ce956c3d2802 ("ubifs: Don't leak orphans on memory during comm=
+it")
+> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> ---
+>  fs/ubifs/orphan.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
+Applied! Thank you, Geert.
 
-
-Hallo
-Sie wurden ausgewaumlhlt, um die Summe von euro 2.000.000,00 (zwei Millionen Euro) in meinem laufenden Wohltaumltigkeitsprogramm zu erhalten. Fur  weitere Informationen senden Sie bitte ein Email: manuelfrancospende@gmail.com
+--=20
+Thanks,
+//richard
