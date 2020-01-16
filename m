@@ -2,40 +2,40 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AEBE313F2AC
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 19:37:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F27AA13F92D
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 20:23:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2436804AbgAPSgy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jan 2020 13:36:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56760 "EHLO mail.kernel.org"
+        id S1729841AbgAPQxM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jan 2020 11:53:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36810 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390616AbgAPRM5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jan 2020 12:12:57 -0500
+        id S1729610AbgAPQxM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Jan 2020 11:53:12 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3DF5420684;
-        Thu, 16 Jan 2020 17:12:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A7E9E205F4;
+        Thu, 16 Jan 2020 16:53:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579194777;
-        bh=3BOj0VQFcmveERWLpa/tuFBG9tDDPouv+gFGtCBGxDI=;
+        s=default; t=1579193591;
+        bh=z7UtFpjytQG8OQ4ULKWVO8VA52K/0wUewiNVs40n9VA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wyETtSTQUpajkOfKLHtz9ixoxz01qDjHk+svPTJ+MR0jX2NUMMncjubZoQ8o02gAM
-         E3Uw9V3AlE6qTJQkAs2QDzEzZiu0A9NsrPrgpGOBimgJQPujJ1Tw5AfSj+ZNRvUCBi
-         MQ8QAgg0F0m3mQecNr5jGBUqtL9WtnCiLAQUahwE=
+        b=BJ9oDdJkDvbAsROK7Llo4chxJhLZ1iDOMa9c6S5Oz3xiW+kMQqWZmQYHdl29FzCNl
+         XaUOOEpSOLYgs0M3Bbhk6wR+Pgl9pCH3oTn0dLEVxQBdkhF4YMc24s1wC+LPVcamJN
+         zquePOvPVcpl1P67DaEmYF4ebYP0ZPbKX8n6rYsc=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Karsten Graul <kgraul@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 594/671] net/smc: receive pending data after RCV_SHUTDOWN
-Date:   Thu, 16 Jan 2020 12:03:52 -0500
-Message-Id: <20200116170509.12787-331-sashal@kernel.org>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Markus Elfring <Markus.Elfring@web.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.4 131/205] s390/pkey: fix memory leak within _copy_apqns_from_user()
+Date:   Thu, 16 Jan 2020 11:41:46 -0500
+Message-Id: <20200116164300.6705-131-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200116170509.12787-1-sashal@kernel.org>
-References: <20200116170509.12787-1-sashal@kernel.org>
+In-Reply-To: <20200116164300.6705-1-sashal@kernel.org>
+References: <20200116164300.6705-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -45,75 +45,36 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Karsten Graul <kgraul@linux.ibm.com>
+From: Heiko Carstens <heiko.carstens@de.ibm.com>
 
-[ Upstream commit 107529e31a87acd475ff6a0f82745821b8f70fec ]
+[ Upstream commit f9cac4fd8878929c6ebff0bd272317905d77c38a ]
 
-smc_rx_recvmsg() first checks if data is available, and then if
-RCV_SHUTDOWN is set. There is a race when smc_cdc_msg_recv_action() runs
-in between these 2 checks, receives data and sets RCV_SHUTDOWN.
-In that case smc_rx_recvmsg() would return from receive without to
-process the available data.
-Fix that with a final check for data available if RCV_SHUTDOWN is set.
-Move the check for data into a function and call it twice.
-And use the existing helper smc_rx_data_available().
-
-Fixes: 952310ccf2d8 ("smc: receive data from RMBE")
-Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Fixes: f2bbc96e7cfad ("s390/pkey: add CCA AES cipher key support")
+Reported-by: Markus Elfring <Markus.Elfring@web.de>
+Reported-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/smc/smc_rx.c | 25 ++++++++++++++++++++-----
- 1 file changed, 20 insertions(+), 5 deletions(-)
+ drivers/s390/crypto/pkey_api.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/net/smc/smc_rx.c b/net/smc/smc_rx.c
-index 1ee5fdbf8284..36340912df48 100644
---- a/net/smc/smc_rx.c
-+++ b/net/smc/smc_rx.c
-@@ -262,6 +262,18 @@ static int smc_rx_recv_urg(struct smc_sock *smc, struct msghdr *msg, int len,
- 	return -EAGAIN;
- }
- 
-+static bool smc_rx_recvmsg_data_available(struct smc_sock *smc)
-+{
-+	struct smc_connection *conn = &smc->conn;
-+
-+	if (smc_rx_data_available(conn))
-+		return true;
-+	else if (conn->urg_state == SMC_URG_VALID)
-+		/* we received a single urgent Byte - skip */
-+		smc_rx_update_cons(smc, 0);
-+	return false;
-+}
-+
- /* smc_rx_recvmsg - receive data from RMBE
-  * @msg:	copy data to receive buffer
-  * @pipe:	copy data to pipe if set - indicates splice() call
-@@ -303,15 +315,18 @@ int smc_rx_recvmsg(struct smc_sock *smc, struct msghdr *msg,
- 		if (read_done >= target || (pipe && read_done))
- 			break;
- 
--		if (atomic_read(&conn->bytes_to_rcv))
-+		if (smc_rx_recvmsg_data_available(smc))
- 			goto copy;
--		else if (conn->urg_state == SMC_URG_VALID)
--			/* we received a single urgent Byte - skip */
--			smc_rx_update_cons(smc, 0);
- 
- 		if (sk->sk_shutdown & RCV_SHUTDOWN ||
--		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort)
-+		    conn->local_tx_ctrl.conn_state_flags.peer_conn_abort) {
-+			/* smc_cdc_msg_recv_action() could have run after
-+			 * above smc_rx_recvmsg_data_available()
-+			 */
-+			if (smc_rx_recvmsg_data_available(smc))
-+				goto copy;
- 			break;
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+index 9de3d46b3253..e17fac20127e 100644
+--- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -740,8 +740,10 @@ static void *_copy_apqns_from_user(void __user *uapqns, size_t nr_apqns)
+ 		kapqns = kmalloc(nbytes, GFP_KERNEL);
+ 		if (!kapqns)
+ 			return ERR_PTR(-ENOMEM);
+-		if (copy_from_user(kapqns, uapqns, nbytes))
++		if (copy_from_user(kapqns, uapqns, nbytes)) {
++			kfree(kapqns);
+ 			return ERR_PTR(-EFAULT);
 +		}
+ 	}
  
- 		if (read_done) {
- 			if (sk->sk_err ||
+ 	return kapqns;
 -- 
 2.20.1
 
