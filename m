@@ -2,45 +2,45 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 519BB13D9C5
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 13:18:51 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5DF7E13D9CB
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 13:21:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726100AbgAPMSv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jan 2020 07:18:51 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:30282 "EHLO
+        id S1726535AbgAPMUE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jan 2020 07:20:04 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:24282 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726082AbgAPMSu (ORCPT
+        by vger.kernel.org with ESMTP id S1726160AbgAPMUE (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Jan 2020 07:18:50 -0500
+        Thu, 16 Jan 2020 07:20:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579177130;
+        s=mimecast20190719; t=1579177202;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=oiEOiRbRsPm8KcTq/P7c2avyYBgFUTPmLlCZGLv1LjQ=;
-        b=hmQY6B4DyEZxcaaWWSFJb1bjomU4887kxt6+tJZ74eo5ewZEJcIyTfBSKRLm4l30Zub3zg
-        VEKz9imGQ/VPf/KONqIZGYDivk92HaQ1A40V2s9WK+VxycDpcrShyMwMRz3LPICylHkgV5
-        DKoY6k5k9HRV2wMuW9yx0qeNZTIEUFg=
+        bh=cuGDwW3NbMtrmy7VqgFLbRcKJwcplCxWFYqoPZabR1E=;
+        b=HUJBNA+ffv4xwNqx2gckjbEx45Jw7VvPPXzAtsEgTRmSN5+qGLtiTJtlx533Hu/Cuh+I+H
+        NCbuC1ABQyyhifGo28ykntFgh7qq5Unha4Bd67cweAl8bIsCQr5pTlB5YL52rQS4ltyNQB
+        kMhAcSbu/Acc5OJ7qOR4w1c9Forsay4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-253-Z4cKPBiVMvyqYmIRpxbfEw-1; Thu, 16 Jan 2020 07:18:46 -0500
-X-MC-Unique: Z4cKPBiVMvyqYmIRpxbfEw-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-62-gNyhm760OJO0BpoPmW13ug-1; Thu, 16 Jan 2020 07:19:59 -0500
+X-MC-Unique: gNyhm760OJO0BpoPmW13ug-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 29FB51005512;
-        Thu, 16 Jan 2020 12:18:45 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 045AA8D7622;
+        Thu, 16 Jan 2020 12:19:58 +0000 (UTC)
 Received: from [10.36.116.136] (ovpn-116-136.ams2.redhat.com [10.36.116.136])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C955050A8F;
-        Thu, 16 Jan 2020 12:18:43 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2 2/7] s390x: smp: Only use smp_cpu_setup
- once
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9CDC51000329;
+        Thu, 16 Jan 2020 12:19:56 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v2 5/7] s390x: smp: Wait for cpu setup to
+ finish
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
         linux-s390@vger.kernel.org, cohuck@redhat.com
 References: <20200116120513.2244-1-frankja@linux.ibm.com>
- <20200116120513.2244-3-frankja@linux.ibm.com>
+ <20200116120513.2244-6-frankja@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -86,117 +86,65 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <9847c5e8-2950-add1-e86b-0d14f0aca0bd@redhat.com>
-Date:   Thu, 16 Jan 2020 13:18:43 +0100
+Message-ID: <1a0cc6bf-07ad-2020-aee7-84df693b5317@redhat.com>
+Date:   Thu, 16 Jan 2020 13:19:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200116120513.2244-3-frankja@linux.ibm.com>
+In-Reply-To: <20200116120513.2244-6-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 16.01.20 13:05, Janosch Frank wrote:
-> Let's stop and start instead of using setup to run a function on a
-> cpu.
+> We store the user provided psw address into restart new, so a psw
+> restart does not lead us through setup again.
+> 
+> Also we wait on smp_cpu_setup() until the cpu has finished setup
+> before returning. This is necessary for z/VM and LPAR where sigp is
+> asynchronous.
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 > ---
->  s390x/smp.c | 20 +++++++++++++-------
->  1 file changed, 13 insertions(+), 7 deletions(-)
+>  lib/s390x/smp.c  | 2 ++
+>  s390x/cstart64.S | 2 ++
+>  2 files changed, 4 insertions(+)
 > 
-> diff --git a/s390x/smp.c b/s390x/smp.c
-> index 02204fd..d430638 100644
-> --- a/s390x/smp.c
-> +++ b/s390x/smp.c
-> @@ -47,7 +47,7 @@ static void test_start(void)
->  	psw.mask = extract_psw_mask();
->  	psw.addr = (unsigned long)test_func;
+> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
+> index f984a34..0a0bc1c 100644
+> --- a/lib/s390x/smp.c
+> +++ b/lib/s390x/smp.c
+> @@ -199,6 +199,8 @@ int smp_cpu_setup(uint16_t addr, struct psw psw)
 >  
-> -	smp_cpu_setup(1, psw);
-> +	smp_cpu_start(1, psw);
->  	wait_for_flag();
->  	report(1, "start");
->  }
-> @@ -132,9 +132,8 @@ static void test_ecall(void)
+>  	/* Start processing */
+>  	smp_cpu_restart_nolock(addr, NULL);
+> +	/* Wait until the cpu has finished setup and started the provided psw */
+> +	while (lc->restart_new_psw.addr != psw.addr) { mb(); }
+>  out:
+>  	spin_unlock(&lock);
+>  	return rc;
+> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+> index 86dd4c4..9af6bb3 100644
+> --- a/s390x/cstart64.S
+> +++ b/s390x/cstart64.S
+> @@ -159,6 +159,8 @@ smp_cpu_setup_state:
+>  	xgr	%r1, %r1
+>  	lmg     %r0, %r15, GEN_LC_SW_INT_GRS
+>  	lctlg   %c0, %c0, GEN_LC_SW_INT_CRS
+> +	/* We should only go once through cpu setup and not for every restart */
+> +	stg	%r14, GEN_LC_RESTART_NEW_PSW + 8
+>  	br	%r14
 >  
->  	report_prefix_push("ecall");
->  	testflag = 0;
-> -	smp_cpu_destroy(1);
->  
-> -	smp_cpu_setup(1, psw);
-> +	smp_cpu_start(1, psw);
->  	wait_for_flag();
->  	testflag = 0;
->  	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
-> @@ -167,9 +166,8 @@ static void test_emcall(void)
->  
->  	report_prefix_push("emcall");
->  	testflag = 0;
-> -	smp_cpu_destroy(1);
->  
-> -	smp_cpu_setup(1, psw);
-> +	smp_cpu_start(1, psw);
->  	wait_for_flag();
->  	testflag = 0;
->  	sigp(1, SIGP_EMERGENCY_SIGNAL, 0, NULL);
-> @@ -187,7 +185,7 @@ static void test_reset_initial(void)
->  	psw.addr = (unsigned long)test_func;
->  
->  	report_prefix_push("reset initial");
-> -	smp_cpu_setup(1, psw);
-> +	smp_cpu_start(1, psw);
->  
->  	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
->  	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
-> @@ -218,7 +216,7 @@ static void test_reset(void)
->  	psw.addr = (unsigned long)test_func;
->  
->  	report_prefix_push("cpu reset");
-> -	smp_cpu_setup(1, psw);
-> +	smp_cpu_start(1, psw);
->  
->  	sigp_retry(1, SIGP_CPU_RESET, 0, NULL);
->  	report(smp_cpu_stopped(1), "cpu stopped");
-> @@ -227,6 +225,7 @@ static void test_reset(void)
->  
->  int main(void)
->  {
-> +	struct psw psw;
->  	report_prefix_push("smp");
->  
->  	if (smp_query_num_cpus() == 1) {
-> @@ -234,6 +233,12 @@ int main(void)
->  		goto done;
->  	}
->  
-> +	/* Setting up the cpu to give it a stack and lowcore */
-> +	psw.mask = extract_psw_mask();
-> +	psw.addr = (unsigned long)cpu_loop;
-> +	smp_cpu_setup(1, psw);
-> +	smp_cpu_stop(1);
-> +
->  	test_start();
->  	test_stop();
->  	test_stop_store_status();
-> @@ -242,6 +247,7 @@ int main(void)
->  	test_emcall();
->  	test_reset();
->  	test_reset_initial();
-> +	smp_cpu_destroy(1);
->  
->  done:
->  	report_prefix_pop();
+>  pgm_int:
 > 
 
-Acked-by: David Hildenbrand <david@redhat.com>
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
