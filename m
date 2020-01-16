@@ -2,196 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BEBE13C6C5
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Jan 2020 15:59:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50CF913D126
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 01:31:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbgAOO5w (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Jan 2020 09:57:52 -0500
-Received: from mail-qv1-f68.google.com ([209.85.219.68]:40266 "EHLO
-        mail-qv1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728931AbgAOO5t (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Jan 2020 09:57:49 -0500
-Received: by mail-qv1-f68.google.com with SMTP id dp13so7458742qvb.7
-        for <linux-s390@vger.kernel.org>; Wed, 15 Jan 2020 06:57:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=NmZV6ZNor/aMnsybdf9Y2H14ROOnyA+MZIhvgXeb7nw=;
-        b=qNEZxBFuHgepbe5MkJcZ7SkeuRPDFbFExzWM7bIuACkIF5m5dMo/797c91mMptly0B
-         H1NngPZ41XCxD8QWCrw30X/lbuDzQBMZORa9RsrpkNUxmhxF8mVOJM3Iu48ojLFwy2oj
-         rgj/YU8/6+O/sa1Rin0saBAlu/uDpYTFqOUMijbptMGw8Chuj8Y4qqqvqogM4Y/Nzqxw
-         kP9GsVEvGI49TJu2rxXKSwnO247ImhbDgM2Ock70tZcMK9SK0cYHNUyOphF5uw3GGTGm
-         Q9xaW5zpK3ns4vUceei3zbtYEdwPxPrMOzbi715D13qacQeEfHfpauCiP6+nDd9CGVVi
-         pIvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=NmZV6ZNor/aMnsybdf9Y2H14ROOnyA+MZIhvgXeb7nw=;
-        b=PhCPEf2l5wVTTaa5KzoMWpyoZw/Uhzvg6QeupVnt/k0DZy+n/qwrQcsw1nsOBnc6Rj
-         2esekSst5kSMLq9xnOZ2y9ytSBrcoNQqvFbCVu2Wi9ovOR75bLQJDcZQB7YlfK83ZCq/
-         MNErlJp6FHgt/T8e+AWVkx5yKHwsdbSYqarHDHtvVsH2iu3U34f2SS+QGpduLG0qVQ01
-         ai2gAM5FBFJmp45wGiKAGS/AwRdPY7Yb0aqKoMgqAkvwjUeOSKd+ArscaEU5aHgf/L5C
-         YD0lMmAUK53xzlPixYF7S/Cbc4cmBmWBDdGjzMURISr1O8/x2JilbijLVBapPu0zw7y5
-         rP4g==
-X-Gm-Message-State: APjAAAUvFiN8BP6/vA1QtdtYk3RYqRzx+OEcBLnfgtg6LoRH3a5d8bE5
-        ffRhzQBBKNtkHOdlvZWPsLuar+ojCTOtSTWoIus/wkNg
-X-Google-Smtp-Source: APXvYqyKKbAOAcnL7Ua+91DRPLDRYsfrRxk/SORt5Ys3Ow6z9DMzw2d9BbANbyIsA0so+DK528HCnAlI3w20Lsm0ysg=
-X-Received: by 2002:ad4:4810:: with SMTP id g16mr25308035qvy.22.1579100267932;
- Wed, 15 Jan 2020 06:57:47 -0800 (PST)
+        id S1729246AbgAPAbG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Jan 2020 19:31:06 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:49671 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729110AbgAPAbG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Jan 2020 19:31:06 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1irt3S-0004QP-Qv; Thu, 16 Jan 2020 01:30:35 +0100
+Received: by nanos.tec.linutronix.de (Postfix, from userid 1000)
+        id B7BBB10121C; Thu, 16 Jan 2020 01:30:33 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Hsin-Yi Wang <hsinyi@chromium.org>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-csky@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-xtensa@linux-xtensa.org, linux-pm@vger.kernel.org
+Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
+In-Reply-To: <20200115063410.131692-1-hsinyi@chromium.org>
+References: <20200115063410.131692-1-hsinyi@chromium.org>
+Date:   Thu, 16 Jan 2020 01:30:33 +0100
+Message-ID: <8736cgxmxi.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-References: <20200115063710.15796-1-dja@axtens.net> <20200115063710.15796-2-dja@axtens.net>
- <CACT4Y+bAuaeHOcTHqp-=ckOb58fRajpGYk4khNzpS7_OyBDQYQ@mail.gmail.com> <917cc571-a25c-3d3e-547c-c537149834d6@c-s.fr>
-In-Reply-To: <917cc571-a25c-3d3e-547c-c537149834d6@c-s.fr>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 15 Jan 2020 15:57:36 +0100
-Message-ID: <CACT4Y+Y-qPLzn2sur5QnS2h4=Qb2B_5rFxwMKuzhe-hwsReGqg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] kasan: stop tests being eliminated as dead code with FORTIFY_SOURCE
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-Cc:     Daniel Axtens <dja@axtens.net>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        Linux-MM <linux-mm@kvack.org>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Alexander Potapenko <glider@google.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Jan 15, 2020 at 3:47 PM Christophe Leroy
-<christophe.leroy@c-s.fr> wrote:
->
-> Le 15/01/2020 =C3=A0 15:43, Dmitry Vyukov a =C3=A9crit :
-> > On Wed, Jan 15, 2020 at 7:37 AM Daniel Axtens <dja@axtens.net> wrote:
-> >>
-> >> 3 KASAN self-tests fail on a kernel with both KASAN and FORTIFY_SOURCE=
-:
-> >> memchr, memcmp and strlen.
-> >>
-> >> When FORTIFY_SOURCE is on, a number of functions are replaced with
-> >> fortified versions, which attempt to check the sizes of the operands.
-> >> However, these functions often directly invoke __builtin_foo() once th=
-ey
-> >> have performed the fortify check. The compiler can detect that the res=
-ults
-> >> of these functions are not used, and knows that they have no other sid=
-e
-> >> effects, and so can eliminate them as dead code.
-> >>
-> >> Why are only memchr, memcmp and strlen affected?
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >> Of string and string-like functions, kasan_test tests:
-> >>
-> >>   * strchr  ->  not affected, no fortified version
-> >>   * strrchr ->  likewise
-> >>   * strcmp  ->  likewise
-> >>   * strncmp ->  likewise
-> >>
-> >>   * strnlen ->  not affected, the fortify source implementation calls =
-the
-> >>                 underlying strnlen implementation which is instrumente=
-d, not
-> >>                 a builtin
-> >>
-> >>   * strlen  ->  affected, the fortify souce implementation calls a __b=
-uiltin
-> >>                 version which the compiler can determine is dead.
-> >>
-> >>   * memchr  ->  likewise
-> >>   * memcmp  ->  likewise
-> >>
-> >>   * memset ->   not affected, the compiler knows that memset writes to=
- its
-> >>                 first argument and therefore is not dead.
-> >>
-> >> Why does this not affect the functions normally?
-> >> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >>
-> >> In string.h, these functions are not marked as __pure, so the compiler
-> >> cannot know that they do not have side effects. If relevant functions =
-are
-> >> marked as __pure in string.h, we see the following warnings and the
-> >> functions are elided:
-> >>
-> >> lib/test_kasan.c: In function =E2=80=98kasan_memchr=E2=80=99:
-> >> lib/test_kasan.c:606:2: warning: statement with no effect [-Wunused-va=
-lue]
-> >>    memchr(ptr, '1', size + 1);
-> >>    ^~~~~~~~~~~~~~~~~~~~~~~~~~
-> >> lib/test_kasan.c: In function =E2=80=98kasan_memcmp=E2=80=99:
-> >> lib/test_kasan.c:622:2: warning: statement with no effect [-Wunused-va=
-lue]
-> >>    memcmp(ptr, arr, size+1);
-> >>    ^~~~~~~~~~~~~~~~~~~~~~~~
-> >> lib/test_kasan.c: In function =E2=80=98kasan_strings=E2=80=99:
-> >> lib/test_kasan.c:645:2: warning: statement with no effect [-Wunused-va=
-lue]
-> >>    strchr(ptr, '1');
-> >>    ^~~~~~~~~~~~~~~~
-> >> ...
-> >>
-> >> This annotation would make sense to add and could be added at any poin=
-t, so
-> >> the behaviour of test_kasan.c should change.
-> >>
-> >> The fix
-> >> =3D=3D=3D=3D=3D=3D=3D
-> >>
-> >> Make all the functions that are pure write their results to a global,
-> >> which makes them live. The strlen and memchr tests now pass.
-> >>
-> >> The memcmp test still fails to trigger, which is addressed in the next
-> >> patch.
-> >>
-> >> Cc: Daniel Micay <danielmicay@gmail.com>
-> >> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> >> Cc: Alexander Potapenko <glider@google.com>
-> >> Cc: Dmitry Vyukov <dvyukov@google.com>
-> >> Fixes: 0c96350a2d2f ("lib/test_kasan.c: add tests for several string/m=
-emory API functions")
-> >> Signed-off-by: Daniel Axtens <dja@axtens.net>
-> >> ---
-> >>   lib/test_kasan.c | 30 +++++++++++++++++++-----------
-> >>   1 file changed, 19 insertions(+), 11 deletions(-)
-> >>
-> >> diff --git a/lib/test_kasan.c b/lib/test_kasan.c
-> >> index 328d33beae36..58a8cef0d7a2 100644
-> >> --- a/lib/test_kasan.c
-> >> +++ b/lib/test_kasan.c
-> >> @@ -23,6 +23,14 @@
-> >>
-> >>   #include <asm/page.h>
-> >>
-> >> +/*
-> >> + * We assign some test results to these globals to make sure the test=
-s
-> >> + * are not eliminated as dead code.
-> >> + */
-> >> +
-> >> +int int_result;
-> >> +void *ptr_result;
-> >
-> > These are globals, but are not static and don't have kasan_ prefix.
-> > But I guess this does not matter for modules?
-> > Otherwise:
-> >
-> > Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
-> >
->
-> I think if you make them static, GCC will see they aren't used and will
-> eliminate everything still ?
+Hsin-Yi Wang <hsinyi@chromium.org> writes:
 
-static volatile? :)
+> Currently system reboots uses architecture specific codes (smp_send_stop)
+> to offline non reboot CPUs. Most architecture's implementation is looping
+> through all non reboot online CPUs and call ipi function to each of them. Some
+> architecture like arm64, arm, and x86... would set offline masks to cpu without
+> really offline them. This causes some race condition and kernel warning comes
+> out sometimes when system reboots.
+
+'some race condition and kernel warning' is pretty useless information.
+Please describe exactly which kind of issues are caused by the current
+mechanism. Especially the race conditions are the interesting part (the
+warnings are just a consequence).
+
+> This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would
+> offline cpus in
+
+Please read Documentation/process/submitting-patches.rst and search for
+'This patch'.
+
+> migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
+> checking online cpus would be an empty loop.
+
+This does not make any sense. The issues which you are trying to solve
+are going to be still there when CONFIG_HOTPLUG_CPU is disabled.
+
+> If architecture don't enable this config, or some cpus somehow fails
+> to offline, it would fallback to ipi function.
+
+This is really a half baken solution which keeps the various pointlessly
+different pseudo reboot/kexec offlining implementations around. So with
+this we have yet more code which only works depending on kernel
+configuration and has the issue of potentially not being able to offline
+a CPU. IOW this is going to fail completely in cases where a system is
+in a state which prevents regular hotplug.
+
+The existing pseudo-offline functions have timeouts and eventually a
+fallback, e.g. the NMI fallback on x86. With this proposed regular
+offline solution this will just get stuck w/o a chance to force
+recovery.
+
+While I like the idea and surely agree that the ideal solution is to
+properly shutdown the CPUs on reboot, we need to take a step back and
+look at the minimum requirements for a regular shutdown/reboot and at
+the same time have a look at the requirements for emergency shutdown and
+kexec/kcrash. Having proper information about the race conditions and
+warnings you mentioned would be a good starting point.
+
+> Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
+
+This is not opt-in. You force that on all architectures which support
+CONFIG_HOTPLUG_CPU. The way we do this normally is to provide the
+infrastructure first and then have separate patches (one per
+architecture) enabling this, which allows the architecture maintainers
+to decide individually.
+
+Thanks,
+
+        tglx
