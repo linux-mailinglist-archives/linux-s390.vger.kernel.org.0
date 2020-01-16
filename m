@@ -2,384 +2,214 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A787113D5C0
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 09:12:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0803E13D69C
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Jan 2020 10:19:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725973AbgAPILn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Jan 2020 03:11:43 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33771 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727065AbgAPILm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jan 2020 03:11:42 -0500
-Received: by mail-qk1-f196.google.com with SMTP id d71so18364913qkc.0
-        for <linux-s390@vger.kernel.org>; Thu, 16 Jan 2020 00:11:41 -0800 (PST)
+        id S1729339AbgAPJTJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Jan 2020 04:19:09 -0500
+Received: from mail-io1-f66.google.com ([209.85.166.66]:40226 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729138AbgAPJTJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Jan 2020 04:19:09 -0500
+Received: by mail-io1-f66.google.com with SMTP id x1so20945129iop.7
+        for <linux-s390@vger.kernel.org>; Thu, 16 Jan 2020 01:19:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=chromium.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=9cA48MMBOQHJK5hX776mf3AO5GIfMTcVwVO3yILYkD4=;
-        b=WlNJ9Xb/S9a5BAWXcvs0dpBmfy7BdqUi4JiGrKOjCP9jkV41PZGf4Oi6rMyovRAZvq
-         qvm1D8vqSaykV6fVwumTf73gL2+b8waCnVNM3ASdw/LAhw4F0KoTN07ph2IcByH/3E8H
-         UcllVHlxqSdBefT6FlUxk1jX0bTBW+UJ+WPDkR7iOCgcRO0/IQkonFN08sVOtCtwdfQX
-         deY4E8aJg7FMM5KN66vloDMdXE+eTfEbKL52PqxhWGtNbLq4xWDhFc0BcjdlhfzwVgeZ
-         oSOCj72vvIdKy5cXrLCADDC9Q6YksW2FaijoC2BNciG/jG8tZRK0cF9lgkYxlKRkmD31
-         pOfQ==
+        bh=DEmkOKqY6q6hAhtGO8c8rmA8wwGHpO5BilLXpdIbB7I=;
+        b=WJ5IKs9fiBTVp8BuvxnKOBaru2rIXqED/Rq0yyQSdyRNzvJcbIJ8kJqtCUd+rcV6nn
+         EhI+mwh5Bq9EkGM1UCZoYtKiXQJb5mUkVbl5DEbwzwiQ5eWJf/1j5Inwc5mtqTXN+8cZ
+         lQKMTkatnFRaRzda7WRLP3JId4g6ZavROmaK4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=9cA48MMBOQHJK5hX776mf3AO5GIfMTcVwVO3yILYkD4=;
-        b=K6KumDgMHCG2Fdz5osF9ZTXCLdST7rw7xElJXGEx8XQm5LFZnWGXhd1ABngvl0ADnb
-         YOLl3NXMCnMTztZVJoCQcLY0x7kpvjWVHsfyTiCwpaS9BRiKDyZ+Sv9i4OBTbTvZ4QdP
-         VJ7sYvXhFcDXwpCo5Obri/AiAOJJYLo1IxuSVku0IeR97cCLRJEPZh/NNDZqkaw0MaYP
-         4Olo/afQvK98zMwmNbXD4aDSDnviyq9YDke/WO6zr/jt/rw2FIjNNZocm3VxuywrWYou
-         g5u+o4P97BrSiluX04J7WqP2/rpvd4QmTG60un70n7/MBruRmDio9mBxPOYOSQzCspbK
-         1FXQ==
-X-Gm-Message-State: APjAAAU0rq19mDw75xEM/Gl9RNhIG8jvSrhwRS6MwN16q92om6xsfZz6
-        a3cpmMCF9Lw9KqUULRViKsThDiB0eqQtmKfLWAzlaA==
-X-Google-Smtp-Source: APXvYqzVTfqbrEFl2VCT1YoGAAhJykCUYmbc+BSSTk1zPOulLBb7DF8oGpEgr6uyxJitYGXfhnXfmNAJYqNCbjTfpJo=
-X-Received: by 2002:a37:e312:: with SMTP id y18mr32222475qki.250.1579162300813;
- Thu, 16 Jan 2020 00:11:40 -0800 (PST)
+        bh=DEmkOKqY6q6hAhtGO8c8rmA8wwGHpO5BilLXpdIbB7I=;
+        b=D1w+5D2k2TY6G4CfCMa7YVOFbr74a2X+ANtvNPlVBYq99X4QDJF4pvWhujhUt1YgCo
+         DTfQuf3x0okU0ZafctKHgoJP9d0nB3hc5BtCWH7PcnViqcWXyu6+tcx3SOarwSGWgPso
+         UiTjeHxsgoYP2SlNJ3GPuPZs7LbcMkHa7w7cYVikmgyohhu1zKXlI2CwKFIjO3nhyFzG
+         2tB4i2cKhww4Hc9rwrluUevkn3+D/B3ZuqXhhhwm7JBZabTeUfe1JnCR76h4fbEFlEMU
+         ImE2Y87EIE3mK15TsPusStm+Hzfxi2+OhO4g7Q2TM8k+Ed/1bw0KtNrD/hYaPuYWaLu+
+         J07w==
+X-Gm-Message-State: APjAAAWkolqhFuwt6tPmVa8msnbYKXcHonOvZKPF59vW+v2TXZfm+B5V
+        KxdQsO/nNOMPUvgmwshX5B9wPK5+0M5ewQJS9EQ1HA==
+X-Google-Smtp-Source: APXvYqzvaPrf1c/2YOtkHJqp95C4MJl+/6ictlNKs5rwIJmJYisKHyfz84aFv8nqE5MyfIb9iebBJBW44B4PJSvB2Ns=
+X-Received: by 2002:a5d:8cd6:: with SMTP id k22mr24400602iot.283.1579166348214;
+ Thu, 16 Jan 2020 01:19:08 -0800 (PST)
 MIME-Version: 1.0
-References: <20200116062625.32692-1-dja@axtens.net> <20200116062625.32692-3-dja@axtens.net>
-In-Reply-To: <20200116062625.32692-3-dja@axtens.net>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Thu, 16 Jan 2020 09:11:28 +0100
-Message-ID: <CACT4Y+ZmzN5z4kZsV_6zBX0SKyLzNKmNNa3Bixnr4SXLaWSbhw@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] string.h: fix incompatibility between
- FORTIFY_SOURCE and KASAN
-To:     Daniel Axtens <dja@axtens.net>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
+References: <20200115063410.131692-1-hsinyi@chromium.org> <8736cgxmxi.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <8736cgxmxi.fsf@nanos.tec.linutronix.de>
+From:   Hsin-Yi Wang <hsinyi@chromium.org>
+Date:   Thu, 16 Jan 2020 17:18:41 +0800
+Message-ID: <CAJMQK-jDi+AACE1Cv_hKSMq8VhGTBeh+kyHO2U4sx9w=9bO2mA@mail.gmail.com>
+Subject: Re: [PATCH v5] reboot: support offline CPUs before reboot
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Pavankumar Kondeti <pkondeti@codeaurora.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Aaro Koskinen <aaro.koskinen@nokia.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Will Deacon <will@kernel.org>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        James Morse <james.morse@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>, linux-csky@vger.kernel.org,
+        linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org,
+        linux-parisc@vger.kernel.org,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        linux-xtensa@linux-xtensa.org,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Micay <danielmicay@gmail.com>,
-        Andrey Ryabinin <aryabinin@virtuozzo.com>,
-        Alexander Potapenko <glider@google.com>
+        linux-s390@vger.kernel.org,
+        Linux-sh list <linux-sh@vger.kernel.org>,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        Linux PM <linux-pm@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Jan 16, 2020 at 7:26 AM Daniel Axtens <dja@axtens.net> wrote:
+On Thu, Jan 16, 2020 at 8:30 AM Thomas Gleixner <tglx@linutronix.de> wrote:
 >
-> The memcmp KASAN self-test fails on a kernel with both KASAN and
-> FORTIFY_SOURCE.
+> Hsin-Yi Wang <hsinyi@chromium.org> writes:
 >
-> When FORTIFY_SOURCE is on, a number of functions are replaced with
-> fortified versions, which attempt to check the sizes of the operands.
-> However, these functions often directly invoke __builtin_foo() once they
-> have performed the fortify check. Using __builtins may bypass KASAN
-> checks if the compiler decides to inline it's own implementation as
-> sequence of instructions, rather than emit a function call that goes out
-> to a KASAN-instrumented implementation.
+> > Currently system reboots uses architecture specific codes (smp_send_stop)
+> > to offline non reboot CPUs. Most architecture's implementation is looping
+> > through all non reboot online CPUs and call ipi function to each of them. Some
+> > architecture like arm64, arm, and x86... would set offline masks to cpu without
+> > really offline them. This causes some race condition and kernel warning comes
+> > out sometimes when system reboots.
 >
-> Why is only memcmp affected?
-> ============================
+> 'some race condition and kernel warning' is pretty useless information.
+> Please describe exactly which kind of issues are caused by the current
+> mechanism. Especially the race conditions are the interesting part (the
+> warnings are just a consequence).
 >
-> Of the string and string-like functions that kasan_test tests, only memcmp
-> is replaced by an inline sequence of instructions in my testing on x86 with
-> gcc version 9.2.1 20191008 (Ubuntu 9.2.1-9ubuntu2).
+> > This patch adds a config ARCH_OFFLINE_CPUS_ON_REBOOT, which would
+> > offline cpus in
 >
-> I believe this is due to compiler heuristics. For example, if I annotate
-> kmalloc calls with the alloc_size annotation (and disable some fortify
-> compile-time checking!), the compiler will replace every memset except the
-> one in kmalloc_uaf_memset with inline instructions. (I have some WIP
-> patches to add this annotation.)
+> Please read Documentation/process/submitting-patches.rst and search for
+> 'This patch'.
 >
-> Does this affect other functions in string.h?
-> =============================================
+> > migrate_to_reboot_cpu(). If non reboot cpus are all offlined here, the loop for
+> > checking online cpus would be an empty loop.
 >
-> Yes. Anything that uses __builtin_* rather than __real_* could be
-> affected. This looks like:
+> This does not make any sense. The issues which you are trying to solve
+> are going to be still there when CONFIG_HOTPLUG_CPU is disabled.
 >
->  - strncpy
->  - strcat
->  - strlen
->  - strlcpy maybe, under some circumstances?
->  - strncat under some circumstances
->  - memset
->  - memcpy
->  - memmove
->  - memcmp (as noted)
->  - memchr
->  - strcpy
+> > If architecture don't enable this config, or some cpus somehow fails
+> > to offline, it would fallback to ipi function.
 >
-> Whether a function call is emitted always depends on the compiler. Most
-> bugs should get caught by FORTIFY_SOURCE, but the missed memcmp test shows
-> that this is not always the case.
+> This is really a half baken solution which keeps the various pointlessly
+> different pseudo reboot/kexec offlining implementations around. So with
+> this we have yet more code which only works depending on kernel
+> configuration and has the issue of potentially not being able to offline
+> a CPU. IOW this is going to fail completely in cases where a system is
+> in a state which prevents regular hotplug.
 >
-> Isn't FORTIFY_SOURCE disabled with KASAN?
-> ========================================-
+> The existing pseudo-offline functions have timeouts and eventually a
+> fallback, e.g. the NMI fallback on x86. With this proposed regular
+> offline solution this will just get stuck w/o a chance to force
+> recovery.
 >
-> The string headers on all arches supporting KASAN disable fortify with
-> kasan, but only when address sanitisation is _also_ disabled. For example
-> from x86:
+> While I like the idea and surely agree that the ideal solution is to
+> properly shutdown the CPUs on reboot, we need to take a step back and
+> look at the minimum requirements for a regular shutdown/reboot and at
+> the same time have a look at the requirements for emergency shutdown and
+> kexec/kcrash. Having proper information about the race conditions and
+> warnings you mentioned would be a good starting point.
 >
->  #if defined(CONFIG_KASAN) && !defined(__SANITIZE_ADDRESS__)
->  /*
->   * For files that are not instrumented (e.g. mm/slub.c) we
->   * should use not instrumented version of mem* functions.
->   */
->  #define memcpy(dst, src, len) __memcpy(dst, src, len)
->  #define memmove(dst, src, len) __memmove(dst, src, len)
->  #define memset(s, c, n) __memset(s, c, n)
->
->  #ifndef __NO_FORTIFY
->  #define __NO_FORTIFY /* FORTIFY_SOURCE uses __builtin_memcpy, etc. */
->  #endif
->
->  #endif
->
-> This comes from commit 6974f0c4555e ("include/linux/string.h: add the
-> option of fortified string.h functions"), and doesn't work when KASAN is
-> enabled and the file is supposed to be sanitised - as with test_kasan.c
->
-> I'm pretty sure this is not wrong, but not as expansive it should be:
->
->  * we shouldn't use __builtin_memcpy etc in files where we don't have
->    instrumentation - it could devolve into a function call to memcpy,
->    which will be instrumented. Rather, we should use __memcpy which
->    by convention is not instrumented.
->
->  * we also shouldn't be using __builtin_memcpy when we have a KASAN
->    instrumented file, because it could be replaced with inline asm
->    that will not be instrumented.
->
-> What is correct behaviour?
-> ==========================
->
-> Firstly, there is some overlap between fortification and KASAN: both
-> provide some level of _runtime_ checking. Only fortify provides
-> compile-time checking.
->
-> KASAN and fortify can pick up different things at runtime:
->
->  - Some fortify functions, notably the string functions, could easily be
->    modified to consider sub-object sizes (e.g. members within a struct),
->    and I have some WIP patches to do this. KASAN cannot detect these
->    because it cannot insert poision between members of a struct.
->
->  - KASAN can detect many over-reads/over-writes when the sizes of both
->    operands are unknown, which fortify cannot.
->
-> So there are a couple of options:
->
->  1) Flip the test: disable fortify in santised files and enable it in
->     unsanitised files. This at least stops us missing KASAN checking, but
->     we lose the fortify checking.
->
->  2) Make the fortify code always call out to real versions. Do this only
->     for KASAN, for fear of losing the inlining opportunities we get from
->     __builtin_*.
->
-> (We can't use kasan_check_{read,write}: because the fortify functions are
-> _extern inline_, you can't include _static_ inline functions without a
-> compiler warning. kasan_check_{read,write} are static inline so we can't
-> use them even when they would otherwise be suitable.)
->
-> Take approach 2 and call out to real versions when KASAN is enabled.
->
-> Use __underlying_foo to distinguish from __real_foo: __real_foo always
-> refers to the kernel's implementation of foo, __underlying_foo could be
-> either the kernel implementation or the __builtin_foo implementation.
->
-> This is sometimes enough to make the memcmp test succeed with
-> FORTIFY_SOURCE enabled. It is at least enough to get the function call
-> into the module. One more fix is needed to make it reliable: see the next
-> patch.
->
-> Cc: Daniel Micay <danielmicay@gmail.com>
-> Cc: Andrey Ryabinin <aryabinin@virtuozzo.com>
-> Cc: Alexander Potapenko <glider@google.com>
-> Cc: Dmitry Vyukov <dvyukov@google.com>
-> Fixes: 6974f0c4555e ("include/linux/string.h: add the option of fortified string.h functions")
-> Signed-off-by: Daniel Axtens <dja@axtens.net>
 
-Reviewed-by: Dmitry Vyukov <dvyukov@google.com>
+We saw this issue on regular reboot (not panic) on arm64: If tick
+broadcast and smp_send_stop() happen together and the first broadcast
+arrives to some idled CPU that hasn't already executed reboot ipi to
+run in spinloop, it would try to broadcast to another CPU, but that
+target CPU is already marked as offline by set_cpu_online() in reboot
+ipi, and a warning comes out since tick_handle_oneshot_broadcast()
+would check if it tries to broadcast to offline cpus. Most of the time
+the CPU getting the broadcast interrupt is already in the spinloop and
+thus isn't going to receive interrupts from the broadcast timer.
 
-> ---
->
-> v2: add #undefs, do not drop arch code: Dmitry pointed out that we _do_ want
->     to disable fortify in non-sanitised files because of how __builtin_memcpy
->     might end up as a call to regular memcpy rather than __memcpy.
->
-> Dmitry, this might cause a few new syzkaller splats - I first picked it up
-> building from a syskaller config. Or it might not, it just depends what gets
-> replaced with an inline sequence of instructions.
+[   27.032080] Set kernel.core_pattern before fs.suid_dumpable.
+[   27.978628] reboot: Restarting system
+[   27.978919] WARNING: CPU: 3 PID: 0 at
+/mnt/host/source/src/third_party/kernel/v4.19/kernel/time/tick-broadcast.c:652
+tick_handle_oneshot_broadcast+0x1f8/0x214
+[   27.978932] Modules linked in: rfcomm uinput bridge stp llc
+nf_nat_tftp nf_conntrack_tftp nf_nat_ftp nf_conntrack_ftp esp6 ah6
+xfrm6_mode_tunnel xfrm6_mode_transport xfrm4_mode_tunnel
+xfrm4_mode_transport ip6t_REJECT ip6t_ipv6header hci_uart btqca
+bluetooth ipt_MASQUERADE ecdh_generic lzo_rle lzo_compress zram fuse
+cros_ec_sensors_sync cros_ec_sensors_ring cros_ec_light_prox
+cros_ec_sensors industrialio_triggered_buffer kfifo_buf
+cros_ec_sensors_core ath10k_sdio ath10k_core ath mac80211 cfg80211
+asix usbnet mii joydev
+[   27.979102] CPU: 3 PID: 0 Comm: swapper/3 Tainted: G S
+  4.19.56 #79
+[   27.979113] Hardware name: MediaTek krane sku176 board (DT)
+[   27.979127] pstate: 00000085 (nzcv daIf -PAN -UAO)
+[   27.979140] pc : tick_handle_oneshot_broadcast+0x1f8/0x214
+[   27.979154] lr : tick_handle_oneshot_broadcast+0x108/0x214
+[   27.979162] sp : fffffff85c851610
+[   27.979171] x29: fffffff85c851670 x28: ffffff9082785510
+[   27.979187] x27: ffffff90822da700 x26: ffffff90826169c8
+[   27.979202] x25: ffffff9082616000 x24: 0000000000000001
+[   27.979217] x23: ffffff90827854f8 x22: 000000067a6599b8
+[   27.979232] x21: 0000000000000000 x20: 7fffffffffffffff
+[   27.979248] x19: ffffff9082785508 x18: 0000000000000000
+[   27.979263] x17: 0000000000000000 x16: 0000000000000000
+[   27.979278] x15: 0000000000000000 x14: fffffff85bf08040
+[   27.979293] x13: ffffff9082785000 x12: 0000000000000069
+[   27.979308] x11: ffffff9082785000 x10: 0000000000000018
+[   27.979323] x9 : 0000000000000010 x8 : ffffff9082615000
+[   27.979338] x7 : 0000000000000000 x6 : 000000000000003f
+[   27.979353] x5 : 0000000000000040 x4 : 0000000000000102
+[   27.979367] x3 : 0000000000000000 x2 : 0000000000000007
+[   27.979383] x1 : 0000000000000008 x0 : 0000000000000008
+[   27.979399] Call trace:
+[   27.979413]  tick_handle_oneshot_broadcast+0x1f8/0x214
+[   27.979429]  mtk_syst_handler+0x34/0x44
+[   27.979443]  __handle_irq_event_percpu+0x134/0x254
+[   27.979454]  handle_irq_event_percpu+0x34/0x8c
+[   27.979465]  handle_irq_event+0x48/0x78
+[   27.979478]  handle_fasteoi_irq+0xd0/0x1a4
+[   27.979492]  __handle_domain_irq+0x84/0xc4
+[   27.979505]  gic_handle_irq+0x154/0x1a4
+[   27.979516]  el1_irq+0xb0/0x128
+[   27.979531]  cpuidle_enter_state+0x298/0x328
+[   27.979543]  cpuidle_enter+0x30/0x40
+[   27.979557]  do_idle+0x154/0x270
+[   27.979569]  cpu_startup_entry+0x24/0x28
+[   27.979584]  secondary_start_kernel+0x15c/0x168
+[   27.979594] ---[ end trace 57ed1d1fade60372 ]---
 
-If you mean new true bugs, I don't think it's changing anything on top
-of the hundreds of known existing open bugs:
-https://syzkaller.appspot.com/upstream#open
-If anything, I would say it's good to surface more true bugs.
+If system supports hotplug, _cpu_down() would properly handle tasks
+termination such as remove CPU from timer broadcasting by
+tick_offline_cpu()...etc, as well as some interrupt handling.
 
+https://lore.kernel.org/patchwork/patch/1117201/ is a previous attempt
+to solve this issue by introducing another mask in reboot ipi function
+to avoid the cpu_online_mask being looked up in too many different
+places.
 
-> checkpatch complains about some over-long lines, happy to change the format
-> if anyone has better ideas for how to lay it out.
-> ---
->  include/linux/string.h | 60 +++++++++++++++++++++++++++++++++---------
->  1 file changed, 48 insertions(+), 12 deletions(-)
+> > Opt in this config for architectures that support CONFIG_HOTPLUG_CPU.
 >
-> diff --git a/include/linux/string.h b/include/linux/string.h
-> index 3b8e8b12dd37..18d3f7a4b2b9 100644
-> --- a/include/linux/string.h
-> +++ b/include/linux/string.h
-> @@ -317,6 +317,31 @@ void __read_overflow3(void) __compiletime_error("detected read beyond size of ob
->  void __write_overflow(void) __compiletime_error("detected write beyond size of object passed as 1st parameter");
+> This is not opt-in. You force that on all architectures which support
+> CONFIG_HOTPLUG_CPU. The way we do this normally is to provide the
+> infrastructure first and then have separate patches (one per
+> architecture) enabling this, which allows the architecture maintainers
+> to decide individually.
+
+Acked, thanks.
+
 >
->  #if !defined(__NO_FORTIFY) && defined(__OPTIMIZE__) && defined(CONFIG_FORTIFY_SOURCE)
-> +
-> +#ifdef CONFIG_KASAN
-> +extern void *__underlying_memchr(const void *p, int c, __kernel_size_t size) __RENAME(memchr);
-> +extern int __underlying_memcmp(const void *p, const void *q, __kernel_size_t size) __RENAME(memcmp);
-> +extern void *__underlying_memcpy(void *p, const void *q, __kernel_size_t size) __RENAME(memcpy);
-> +extern void *__underlying_memmove(void *p, const void *q, __kernel_size_t size) __RENAME(memmove);
-> +extern void *__underlying_memset(void *p, int c, __kernel_size_t size) __RENAME(memset);
-> +extern char *__underlying_strcat(char *p, const char *q) __RENAME(strcat);
-> +extern char *__underlying_strcpy(char *p, const char *q) __RENAME(strcpy);
-> +extern __kernel_size_t __underlying_strlen(const char *p) __RENAME(strlen);
-> +extern char *__underlying_strncat(char *p, const char *q, __kernel_size_t count) __RENAME(strncat);
-> +extern char *__underlying_strncpy(char *p, const char *q, __kernel_size_t size) __RENAME(strncpy);
-> +#else
-> +#define __underlying_memchr    __builtin_memchr
-> +#define __underlying_memcmp    __builtin_memcmp
-> +#define __underlying_memcpy    __builtin_memcpy
-> +#define __underlying_memmove   __builtin_memmove
-> +#define __underlying_memset    __builtin_memset
-> +#define __underlying_strcat    __builtin_strcat
-> +#define __underlying_strcpy    __builtin_strcpy
-> +#define __underlying_strlen    __builtin_strlen
-> +#define __underlying_strncat   __builtin_strncat
-> +#define __underlying_strncpy   __builtin_strncpy
-> +#endif
-> +
->  __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
->  {
->         size_t p_size = __builtin_object_size(p, 0);
-> @@ -324,14 +349,14 @@ __FORTIFY_INLINE char *strncpy(char *p, const char *q, __kernel_size_t size)
->                 __write_overflow();
->         if (p_size < size)
->                 fortify_panic(__func__);
-> -       return __builtin_strncpy(p, q, size);
-> +       return __underlying_strncpy(p, q, size);
->  }
+> Thanks,
 >
->  __FORTIFY_INLINE char *strcat(char *p, const char *q)
->  {
->         size_t p_size = __builtin_object_size(p, 0);
->         if (p_size == (size_t)-1)
-> -               return __builtin_strcat(p, q);
-> +               return __underlying_strcat(p, q);
->         if (strlcat(p, q, p_size) >= p_size)
->                 fortify_panic(__func__);
->         return p;
-> @@ -345,7 +370,7 @@ __FORTIFY_INLINE __kernel_size_t strlen(const char *p)
->         /* Work around gcc excess stack consumption issue */
->         if (p_size == (size_t)-1 ||
->             (__builtin_constant_p(p[p_size - 1]) && p[p_size - 1] == '\0'))
-> -               return __builtin_strlen(p);
-> +               return __underlying_strlen(p);
->         ret = strnlen(p, p_size);
->         if (p_size <= ret)
->                 fortify_panic(__func__);
-> @@ -378,7 +403,7 @@ __FORTIFY_INLINE size_t strlcpy(char *p, const char *q, size_t size)
->                         __write_overflow();
->                 if (len >= p_size)
->                         fortify_panic(__func__);
-> -               __builtin_memcpy(p, q, len);
-> +               __underlying_memcpy(p, q, len);
->                 p[len] = '\0';
->         }
->         return ret;
-> @@ -391,12 +416,12 @@ __FORTIFY_INLINE char *strncat(char *p, const char *q, __kernel_size_t count)
->         size_t p_size = __builtin_object_size(p, 0);
->         size_t q_size = __builtin_object_size(q, 0);
->         if (p_size == (size_t)-1 && q_size == (size_t)-1)
-> -               return __builtin_strncat(p, q, count);
-> +               return __underlying_strncat(p, q, count);
->         p_len = strlen(p);
->         copy_len = strnlen(q, count);
->         if (p_size < p_len + copy_len + 1)
->                 fortify_panic(__func__);
-> -       __builtin_memcpy(p + p_len, q, copy_len);
-> +       __underlying_memcpy(p + p_len, q, copy_len);
->         p[p_len + copy_len] = '\0';
->         return p;
->  }
-> @@ -408,7 +433,7 @@ __FORTIFY_INLINE void *memset(void *p, int c, __kernel_size_t size)
->                 __write_overflow();
->         if (p_size < size)
->                 fortify_panic(__func__);
-> -       return __builtin_memset(p, c, size);
-> +       return __underlying_memset(p, c, size);
->  }
->
->  __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
-> @@ -423,7 +448,7 @@ __FORTIFY_INLINE void *memcpy(void *p, const void *q, __kernel_size_t size)
->         }
->         if (p_size < size || q_size < size)
->                 fortify_panic(__func__);
-> -       return __builtin_memcpy(p, q, size);
-> +       return __underlying_memcpy(p, q, size);
->  }
->
->  __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
-> @@ -438,7 +463,7 @@ __FORTIFY_INLINE void *memmove(void *p, const void *q, __kernel_size_t size)
->         }
->         if (p_size < size || q_size < size)
->                 fortify_panic(__func__);
-> -       return __builtin_memmove(p, q, size);
-> +       return __underlying_memmove(p, q, size);
->  }
->
->  extern void *__real_memscan(void *, int, __kernel_size_t) __RENAME(memscan);
-> @@ -464,7 +489,7 @@ __FORTIFY_INLINE int memcmp(const void *p, const void *q, __kernel_size_t size)
->         }
->         if (p_size < size || q_size < size)
->                 fortify_panic(__func__);
-> -       return __builtin_memcmp(p, q, size);
-> +       return __underlying_memcmp(p, q, size);
->  }
->
->  __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
-> @@ -474,7 +499,7 @@ __FORTIFY_INLINE void *memchr(const void *p, int c, __kernel_size_t size)
->                 __read_overflow();
->         if (p_size < size)
->                 fortify_panic(__func__);
-> -       return __builtin_memchr(p, c, size);
-> +       return __underlying_memchr(p, c, size);
->  }
->
->  void *__real_memchr_inv(const void *s, int c, size_t n) __RENAME(memchr_inv);
-> @@ -505,11 +530,22 @@ __FORTIFY_INLINE char *strcpy(char *p, const char *q)
->         size_t p_size = __builtin_object_size(p, 0);
->         size_t q_size = __builtin_object_size(q, 0);
->         if (p_size == (size_t)-1 && q_size == (size_t)-1)
-> -               return __builtin_strcpy(p, q);
-> +               return __underlying_strcpy(p, q);
->         memcpy(p, q, strlen(q) + 1);
->         return p;
->  }
->
-> +/* Don't use these outside the FORITFY_SOURCE implementation */
-> +#undef __underlying_memchr
-> +#undef __underlying_memcmp
-> +#undef __underlying_memcpy
-> +#undef __underlying_memmove
-> +#undef __underlying_memset
-> +#undef __underlying_strcat
-> +#undef __underlying_strcpy
-> +#undef __underlying_strlen
-> +#undef __underlying_strncat
-> +#undef __underlying_strncpy
->  #endif
->
->  /**
-> --
-> 2.20.1
->
+>         tglx
