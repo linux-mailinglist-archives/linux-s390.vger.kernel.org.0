@@ -2,147 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DDD3E142F57
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 17:11:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75C951430C5
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 18:26:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729045AbgATQLe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Jan 2020 11:11:34 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48737 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726642AbgATQLe (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 Jan 2020 11:11:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579536693;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=bl+1iGldLlL9HIjXDtMvMtEhk3VAYwXfuuCijWXWUGw=;
-        b=I0Hau+J8bKGg0NC3M84bWCFpmALKImwpzL1B6tYKdkUiRQsbTAvC5ibDiz9tYzJsKV9uf3
-        YP6FUTyJoXL6p9Q5kleZmYFWUthV2qbWbRI6F3HsNoeKi9GFoVo3PWlqFphu/4z4FauIH3
-        BjtoaSa+yTPvsK+dVQJx1ID9x85byMk=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-nm9F78hLPPGSvmyDfycHbg-1; Mon, 20 Jan 2020 11:11:31 -0500
-X-MC-Unique: nm9F78hLPPGSvmyDfycHbg-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96861477;
-        Mon, 20 Jan 2020 16:11:30 +0000 (UTC)
-Received: from gondolin (ovpn-205-161.brq.redhat.com [10.40.205.161])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 311B65C299;
-        Mon, 20 Jan 2020 16:11:25 +0000 (UTC)
-Date:   Mon, 20 Jan 2020 17:11:13 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, david@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v3 7/9] s390x: smp: Remove unneeded cpu
- loops
-Message-ID: <20200120171113.02a9b807.cohuck@redhat.com>
-In-Reply-To: <97f7f794-e0be-3984-99b2-ba229212fd3e@linux.ibm.com>
-References: <20200117104640.1983-1-frankja@linux.ibm.com>
-        <20200117104640.1983-8-frankja@linux.ibm.com>
-        <20200120122956.6879d159.cohuck@redhat.com>
-        <97f7f794-e0be-3984-99b2-ba229212fd3e@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726897AbgATR0a (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Jan 2020 12:26:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:35004 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726642AbgATR0a (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 Jan 2020 12:26:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 516D331B;
+        Mon, 20 Jan 2020 09:26:29 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C1A193F68E;
+        Mon, 20 Jan 2020 09:26:28 -0800 (PST)
+Date:   Mon, 20 Jan 2020 17:26:27 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     "Theodore Y. Ts'o" <tytso@mit.edu>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arch@vger.kernel.org,
+        Richard Henderson <richard.henderson@linaro.org>,
+        linux-s390@vger.kernel.org, herbert@gondor.apana.org.au,
+        x86@kernel.org, linux-crypto@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v2 00/10] Impveovements for random.h/archrandom.h
+Message-ID: <20200120172627.GH6852@sirena.org.uk>
+References: <20200110145422.49141-1-broonie@kernel.org>
+ <20200110155153.GG19453@zn.tnic>
+ <20200110170559.GA304349@mit.edu>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: multipart/signed; boundary="Sig_/lQlNoXBwsVuSB1_YPmt0e/f";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="AzNpbZlgThVzWita"
+Content-Disposition: inline
+In-Reply-To: <20200110170559.GA304349@mit.edu>
+X-Cookie: I invented skydiving in 1989!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/lQlNoXBwsVuSB1_YPmt0e/f
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-On Mon, 20 Jan 2020 15:41:52 +0100
-Janosch Frank <frankja@linux.ibm.com> wrote:
+--AzNpbZlgThVzWita
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> On 1/20/20 12:29 PM, Cornelia Huck wrote:
-> > On Fri, 17 Jan 2020 05:46:38 -0500
-> > Janosch Frank <frankja@linux.ibm.com> wrote:
-> >  =20
-> >> Now that we have a loop which is executed after we return from the
-> >> main function of a secondary cpu, we can remove the surplus loops.
-> >>
-> >> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> >> ---
-> >>  s390x/smp.c | 8 +-------
-> >>  1 file changed, 1 insertion(+), 7 deletions(-)
-> >>
-> >> diff --git a/s390x/smp.c b/s390x/smp.c
-> >> index 555ed72..c12a3db 100644
-> >> --- a/s390x/smp.c
-> >> +++ b/s390x/smp.c
-> >> @@ -29,15 +29,9 @@ static void wait_for_flag(void)
-> >>  =09}
-> >>  }
-> >> =20
-> >> -static void cpu_loop(void)
-> >> -{
-> >> -=09for (;;) {}
-> >> -}
-> >> -
-> >>  static void test_func(void)
-> >>  {
-> >>  =09testflag =3D 1;
-> >> -=09cpu_loop();
-> >>  }
-> >> =20
-> >>  static void test_start(void)
-> >> @@ -234,7 +228,7 @@ int main(void)
-> >> =20
-> >>  =09/* Setting up the cpu to give it a stack and lowcore */
-> >>  =09psw.mask =3D extract_psw_mask();
-> >> -=09psw.addr =3D (unsigned long)cpu_loop;
-> >> +=09psw.addr =3D (unsigned long)test_func; =20
-> >=20
-> > Before, you did not set testflag here... intended change? =20
->=20
-> Yes
-> It is set to 0 before the first test, so it shouldn't matter.
+On Fri, Jan 10, 2020 at 12:05:59PM -0500, Theodore Y. Ts'o wrote:
+> On Fri, Jan 10, 2020 at 04:51:53PM +0100, Borislav Petkov wrote:
+> > On Fri, Jan 10, 2020 at 02:54:12PM +0000, Mark Brown wrote:
 
-Hm... I got a bit lost in all those changes, so I checked your branch
-on github, and I don't see it being set to 0 before test_start() is
-called?
+> > > This is a resend of a series from Richard Henderson last posted back in
+> > > November:
 
->=20
-> >  =20
-> >>  =09smp_cpu_setup(1, psw);
-> >>  =09smp_cpu_stop(1);
-> >>   =20
-> >  =20
->=20
->=20
+> > >    https://lore.kernel.org/linux-arm-kernel/20191106141308.30535-1-rth@twiddle.net/
 
+> > > Back then Borislav said they looked good and asked if he should take
+> > > them through the tip tree but things seem to have got lost since then.
 
---Sig_/lQlNoXBwsVuSB1_YPmt0e/f
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+> > Or, alternatively, akpm could take them. In any case, if someone else
+> > ends up doing that, for the x86 bits:
+
+> Or I can take them through the random.git tree, since we have a lot of
+> changes this cycle going to Linus anyway.  Any objections?
+
+I think the important thing here is that *someone* takes the patches.
+We've now got Ted and Borislav both saying they're OK applying the
+patches, an additional proposal that Andrew takes the patches, nobody
+saying anything negative about applying the patches and yet the patches
+are not applied.  The random tree sounds like a sensible enough tree to
+take this so if Ted picks them up perhaps that's most sensible?
+
+--AzNpbZlgThVzWita
+Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl4l0SEACgkQ3s9rk8bw
-L6/7/g/7BaNIie/wuhSrCVnh3mvFbOnUGyG8MdBp3hh5/dRo6LLKPvSn78lmhXXA
-B62uO4hUtS3hmBbchQ8XDNB1/XOlc020Hl3EufE4AmG7kdmWGZQi27I2jtv67o6y
-uqW7Uy544g1lhU/q+UaXwi+/dMMzcQ4svEuvriMX0A7n3WFrU+t/K5YonhBXJsio
-4sK1fWJce6V9TU5VvoES4ESkwyROIL+qMVOj/UIMJOh8+SR9Xo4v+h1F5AiFwKI4
-GKZlYYgL2K0MdPX61k3M3SN3vzJNdQQrSHmxVn+9vGMxs7be7R1c/6LmlMfnKMVr
-WGutFp32s4nEN0c5iWTH6SnyHn+j+IM6VhTpwRUgvVNZ8khIklMfB4AwG/3q3JYr
-xF1N56dg3ryorsu7OUXC1OfAKwO7NpGfh/L+wAkeLbq/s4OVjTOIk+N5E26yg5vj
-rmtl53GbSj0WpI0klTWmfAHrJyHCGMDhn3WK/ke9GbbRpdT21UcHsBZnZrq9r0+U
-ekFBJw1yCLvu0Hu7gHlKxutda+TG0fWuDB8ZRYKyYv93pLRkjz32O9NsbWzZr6hR
-icZp+tydoF3fy+wdi2H6nd5iC8EuWQ5PVkSCP56AYMqgQuJuQKO5nDaw+bCsWR52
-CFndzm2r5oNueFIJaf8ovbPZlYjJmxlAQJzLXwq6W5RnsqKirvM=
-=a9Us
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4l4sIACgkQJNaLcl1U
+h9BxEgf/RJIHZB+Cajrjtj2rRTGbAHO9kok/m6BSU0ERJzN1CQsdp4P19aWYHYmF
+XEM/Gca6c0PICes5FwW+XWozKxRdmcpBI36CaxYgqnkdOu9ydFaCC9vVNC33ot3d
+I0mGi3O7IvbFWglmZQhpD235hFGJYleeR2C9k3ZD4kJpp6aNTdWKVy/0qtVtOjk/
+PgAxQ2xBYwxIkofP/3sE8U/AbP0e+HlQglHv4zDNAeoU366QXcO0cQ1Xzf/5vra4
+oswWcyowcg9oEm6rFpmF5/1XMnB7dJEVX8OYOsrXHoS5TZuq81GZxke7Y6TynjS7
+ZBwLT8sRsdbZeyoNDJhcjqY4VrojIg==
+=jrbn
 -----END PGP SIGNATURE-----
 
---Sig_/lQlNoXBwsVuSB1_YPmt0e/f--
-
+--AzNpbZlgThVzWita--
