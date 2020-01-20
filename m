@@ -2,605 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74F8D1431B8
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 19:43:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A496143266
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 20:32:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726874AbgATSnG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Jan 2020 13:43:06 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:52746 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726112AbgATSnG (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 Jan 2020 13:43:06 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00KIcumq084278
-        for <linux-s390@vger.kernel.org>; Mon, 20 Jan 2020 13:43:04 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xmfyy4xm3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 20 Jan 2020 13:43:04 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Mon, 20 Jan 2020 18:43:02 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 20 Jan 2020 18:43:00 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00KIgxKp48824484
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Jan 2020 18:42:59 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 282C14C040;
-        Mon, 20 Jan 2020 18:42:59 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D12824C044;
-        Mon, 20 Jan 2020 18:42:58 +0000 (GMT)
-Received: from p-imbrenda.boeblingen.de.ibm.com (unknown [9.152.224.108])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Jan 2020 18:42:58 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, david@redhat.com,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com
-Subject: [kvm-unit-tests PATCH v8 6/6] s390x: SCLP unit test
-Date:   Mon, 20 Jan 2020 19:42:56 +0100
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200120184256.188698-1-imbrenda@linux.ibm.com>
-References: <20200120184256.188698-1-imbrenda@linux.ibm.com>
+        id S1726876AbgATTct (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Jan 2020 14:32:49 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:42375 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727254AbgATTcn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 20 Jan 2020 14:32:43 -0500
+Received: by mail-ed1-f65.google.com with SMTP id e10so578387edv.9
+        for <linux-s390@vger.kernel.org>; Mon, 20 Jan 2020 11:32:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
+        b=I1roYPqxBJzWtUK/EbeI6Kt4sZi+JdSJm6qJbGHrPRZYvHUSh5jIrCeNC6L/G/f0o1
+         SOUBr7y32ZptFoyqXLV46mqkCVXIPksz6dHNenBfKH5ZmZaxgtbXfnD4DPiQngFU9XCO
+         yyR3xavKr41v/xLWwuSw91WJb2uX+wjZFxyyrAuDZ+hvXvCheAMdiLqD+HrlaysRfXCL
+         GNNQRcxyOsqzXo4wRH2J/upuPpeDO5ZRhzNY4HfuYgHfElCshp5fZYHSWkrBX0jAzQvX
+         wM9NfRj8QHz6JxUFOI+rZ3wcUi7Ikp+pHr28kaxr4n7py/KC1H5pYclpR4JTvoTIZ7Jv
+         h8rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=z7I/Kq2V0EnXiuoACdRbnwoAql3KZ080nwyXVjlruyU=;
+        b=R4jGlJQPRoaTr5R8JKaFFb6fi9PuW+G6ar8/jJJ/Wp9r1SPJK2t2kMtfYWvrvPzGwv
+         qKroIt4pYQP0vX4A5G86a286Enb8D5ppRepVbXsHvVkJfpcFyYC7C4UkWHeMX9bvSAso
+         CxpOJWM1AptIxLx5JTCGT4C7mOIIclTx+n3P1EbLmD2USadZazn4gibUUUKg/ACNrKaO
+         eyO2ECvYFZPrSU5wIVS/FT8QAeRVLx5rdIOMsLcGUy5Wc6OMDwONQTUhRciPjhRjfJV/
+         w7Vt/orfj/HA9ysoIPPxF80F+hEb9EYYKsQAMefDYA9G82y3dwh56G/OzRvviiCWVkuo
+         9R+Q==
+X-Gm-Message-State: APjAAAUbbfGCY8nvAtSxUdxozERWRHde6ZvDJyW5RRkwqbwpw2vm14n3
+        SYv5RvoPbgxqSwKje6v9CBHiorWMeA3R4UlbcxY=
+X-Google-Smtp-Source: APXvYqwKjCT5QnfvXWtJkO29cRmoOGR1uhIhw9Ol6eYz9VuYzVaqX/o8Ejt2WLDxZ+bl2CebXLO8AWZ4Emn93SBTQws=
+X-Received: by 2002:a17:906:1fcd:: with SMTP id e13mr898516ejt.333.1579548761316;
+ Mon, 20 Jan 2020 11:32:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012018-0016-0000-0000-000002DF2711
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012018-0017-0000-0000-00003341CC1D
-Message-Id: <20200120184256.188698-7-imbrenda@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-20_08:2020-01-20,2020-01-20 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
- bulkscore=0 impostorscore=0 lowpriorityscore=0 suspectscore=1
- mlxlogscore=999 clxscore=1015 mlxscore=0 spamscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001200156
+Received: by 2002:a05:6402:22dc:0:0:0:0 with HTTP; Mon, 20 Jan 2020 11:32:40
+ -0800 (PST)
+Reply-To: mcclainejohn.13@gmail.com
+From:   "Prof, William Roberts" <eco.bank1204@gmail.com>
+Date:   Mon, 20 Jan 2020 20:32:40 +0100
+Message-ID: <CAOE+jABpcHQWZWhtskhDFbtTqfBe7h065WE2kC1G+jQD+tQiTA@mail.gmail.com>
+Subject: Contact Diplomatic Agent, Mr. Mcclaine John to receive your ATM CARD
+ valued the sum of $12.8Million United States Dollars
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-SCLP unit test. Testing the following:
+Attn: Dear Beneficiary,
 
-* Correctly ignoring instruction bits that should be ignored
-* Privileged instruction check
-* Check for addressing exceptions
-* Specification exceptions:
-  - SCCB size less than 8
-  - SCCB unaligned
-  - SCCB overlaps prefix or lowcore
-  - SCCB address higher than 2GB
-* Return codes for
-  - Invalid command
-  - SCCB too short (but at least 8)
-  - SCCB page boundary violation
+I wish to inform you that the diplomatic agent conveying your ATM CARD
+valued the sum of $12.8Million United States Dollars has misplaced
+your address and he is currently stranded at (George Bush
+International Airport) Houston Texas USA now
+We required you to reconfirm the following information's below to him
+so that he can deliver your Payment CARD to you today or tomorrow
+morning as information provided with open communications via email and
+telephone for security reasons.
+HERE IS THE DETAILS  HE NEED FROM YOU URGENT
+YOUR FULL NAME:========
+ADDRESS:========
+MOBILE NO:========
+NAME OF YOUR NEAREST AIRPORT:========
+A COPY OF YOUR IDENTIFICATION :========
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-Acked-by: Janosch Frank <frankja@linux.ibm.com>
----
- s390x/Makefile      |   1 +
- s390x/sclp.c        | 474 ++++++++++++++++++++++++++++++++++++++++++++
- s390x/unittests.cfg |   8 +
- 3 files changed, 483 insertions(+)
- create mode 100644 s390x/sclp.c
+Note; do contact the diplomatic agent immediately through the
+information's listed below
+Contact Person: Diplomatic Agent, Mr. Mcclaine John
+EMAIL: mcclainejohn.13@gmail.com
+Tel:(223) 777-7518
 
-diff --git a/s390x/Makefile b/s390x/Makefile
-index 3744372..ddb4b48 100644
---- a/s390x/Makefile
-+++ b/s390x/Makefile
-@@ -16,6 +16,7 @@ tests += $(TEST_DIR)/diag288.elf
- tests += $(TEST_DIR)/stsi.elf
- tests += $(TEST_DIR)/skrf.elf
- tests += $(TEST_DIR)/smp.elf
-+tests += $(TEST_DIR)/sclp.elf
- tests_binary = $(patsubst %.elf,%.bin,$(tests))
- 
- all: directories test_cases test_cases_binary
-diff --git a/s390x/sclp.c b/s390x/sclp.c
-new file mode 100644
-index 0000000..215347e
---- /dev/null
-+++ b/s390x/sclp.c
-@@ -0,0 +1,474 @@
-+/*
-+ * Service Call tests
-+ *
-+ * Copyright (c) 2019 IBM Corp
-+ *
-+ * Authors:
-+ *  Claudio Imbrenda <imbrenda@linux.ibm.com>
-+ *
-+ * This code is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License version 2.
-+ */
-+
-+#include <libcflat.h>
-+#include <asm/page.h>
-+#include <asm/asm-offsets.h>
-+#include <asm/interrupt.h>
-+#include <sclp.h>
-+
-+#define PGM_NONE	1
-+#define PGM_BIT_SPEC	(1ULL << PGM_INT_CODE_SPECIFICATION)
-+#define PGM_BIT_ADDR	(1ULL << PGM_INT_CODE_ADDRESSING)
-+#define PGM_BIT_PRIV	(1ULL << PGM_INT_CODE_PRIVILEGED_OPERATION)
-+#define MKPTR(x) ((void *)(uint64_t)(x))
-+
-+#define LC_SIZE (2 * PAGE_SIZE)
-+
-+static uint8_t pagebuf[LC_SIZE] __attribute__((aligned(LC_SIZE)));	/* scratch pages used for some tests */
-+static uint8_t prefix_buf[LC_SIZE] __attribute__((aligned(LC_SIZE)));	/* temporary lowcore for test_sccb_prefix */
-+static uint8_t sccb_template[PAGE_SIZE];				/* SCCB template to be used */
-+static uint32_t valid_code;						/* valid command code for READ SCP INFO */
-+static struct lowcore *lc;
-+
-+/**
-+ * Perform one service call, handling exceptions and interrupts.
-+ */
-+static int sclp_service_call_test(unsigned int command, void *sccb)
-+{
-+	int cc;
-+
-+	sclp_mark_busy();
-+	sclp_setup_int();
-+	cc = servc(command, __pa(sccb));
-+	if (lc->pgm_int_code) {
-+		sclp_handle_ext();
-+		return 0;
-+	}
-+	if (!cc)
-+		sclp_wait_busy();
-+	return cc;
-+}
-+
-+/**
-+ * Perform one test at the given address, optionally using the SCCB template,
-+ * checking for the expected program interrupts and return codes.
-+ *
-+ * The parameter buf_len indicates the number of bytes of the template that
-+ * should be copied to the test address, and should be 0 when the test
-+ * address is invalid, in which case nothing is copied.
-+ *
-+ * The template is used to simplify tests where the same buffer content is
-+ * used many times in a row, at different addresses.
-+ *
-+ * Returns true in case of success or false in case of failure
-+ */
-+static bool test_one_sccb(uint32_t cmd, uint8_t *addr, uint16_t buf_len, uint64_t exp_pgm, uint16_t exp_rc)
-+{
-+	SCCBHeader *h = (SCCBHeader *)addr;
-+	int res, pgm;
-+
-+	/* Copy the template to the test address if needed */
-+	if (buf_len)
-+		memcpy(addr, sccb_template, buf_len);
-+	if (exp_pgm != PGM_NONE)
-+		expect_pgm_int();
-+	/* perform the actual call */
-+	res = sclp_service_call_test(cmd, h);
-+	if (res) {
-+		report_info("SCLP not ready (command %#x, address %p, cc %d)", cmd, addr, res);
-+		return false;
-+	}
-+	pgm = clear_pgm_int();
-+	/* Check if the program exception was one of the expected ones */
-+	if (!((1ULL << pgm) & exp_pgm)) {
-+		report_info("First failure at addr %p, buf_len %d, cmd %#x, pgm code %d",
-+				addr, buf_len, cmd, pgm);
-+		return false;
-+	}
-+	/* Check if the response code is the one expected */
-+	if (exp_rc && exp_rc != h->response_code) {
-+		report_info("First failure at addr %p, buf_len %d, cmd %#x, resp code %#x",
-+				addr, buf_len, cmd, h->response_code);
-+		return false;
-+	}
-+	return true;
-+}
-+
-+/**
-+ * Wrapper for test_one_sccb to be used when the template should not be
-+ * copied and the memory address should not be touched.
-+ */
-+static bool test_one_ro(uint32_t cmd, uint8_t *addr, uint64_t exp_pgm, uint16_t exp_rc)
-+{
-+	return test_one_sccb(cmd, addr, 0, exp_pgm, exp_rc);
-+}
-+
-+/**
-+ * Wrapper for test_one_sccb to set up a simple SCCB template.
-+ *
-+ * The parameter sccb_len indicates the value that will be saved in the SCCB
-+ * length field of the SCCB, buf_len indicates the number of bytes of
-+ * template that need to be copied to the actual test address. In many cases
-+ * it's enough to clear/copy the first 8 bytes of the buffer, while the SCCB
-+ * itself can be larger.
-+ *
-+ * Returns true in case of success or false in case of failure
-+ */
-+static bool test_one_simple(uint32_t cmd, uint8_t *addr, uint16_t sccb_len,
-+			uint16_t buf_len, uint64_t exp_pgm, uint16_t exp_rc)
-+{
-+	memset(sccb_template, 0, sizeof(sccb_template));
-+	((SCCBHeader *)sccb_template)->length = sccb_len;
-+	return test_one_sccb(cmd, addr, buf_len, exp_pgm, exp_rc);
-+}
-+
-+/**
-+ * Test SCCB lengths < 8.
-+ */
-+static void test_sccb_too_short(void)
-+{
-+	int len;
-+
-+	for (len = 0; len < 8; len++)
-+		if (!test_one_simple(valid_code, pagebuf, len, 8, PGM_BIT_SPEC, 0))
-+			break;
-+
-+	report(len == 8, "SCCB too short");
-+}
-+
-+/**
-+ * Test SCCBs that are not 64-bit aligned.
-+ */
-+static void test_sccb_unaligned(void)
-+{
-+	int offset;
-+
-+	for (offset = 1; offset < 8; offset++)
-+		if (!test_one_simple(valid_code, offset + pagebuf, 8, 8, PGM_BIT_SPEC, 0))
-+			break;
-+	report(offset == 8, "SCCB unaligned");
-+}
-+
-+/**
-+ * Test SCCBs whose address is in the lowcore or prefix area.
-+ */
-+static void test_sccb_prefix(void)
-+{
-+	uint8_t scratch[LC_SIZE];
-+	uint32_t prefix, new_prefix;
-+	int offset;
-+
-+	/*
-+	 * copy the current lowcore to the future new location, otherwise we
-+	 * will not have a valid lowcore after setting the new prefix.
-+	 */
-+	memcpy(prefix_buf, 0, LC_SIZE);
-+	/* save the current prefix (it's probably going to be 0) */
-+	prefix = get_prefix();
-+	/*
-+	 * save the current content of absolute pages 0 and 1, so we can
-+	 * restore them after we trash them later on
-+	 */
-+	memcpy(scratch, (void *)(intptr_t)prefix, LC_SIZE);
-+	/* set the new prefix to prefix_buf */
-+	new_prefix = (uint32_t)(intptr_t)prefix_buf;
-+	set_prefix(new_prefix);
-+
-+	/*
-+	 * testing with SCCB addresses in the lowcore; since we can't
-+	 * actually trash the lowcore (unsurprisingly, things break if we
-+	 * do), this will be a read-only test.
-+	 */
-+	for (offset = 0; offset < LC_SIZE; offset += 8)
-+		if (!test_one_ro(valid_code, MKPTR(offset), PGM_BIT_SPEC, 0))
-+			break;
-+	report(offset == LC_SIZE, "SCCB low pages");
-+
-+	/*
-+	 * the SCLP should not even touch the memory, but we will write the
-+	 * SCCBs all over the two pages starting at absolute address 0, thus
-+	 * trashing them; we will need to restore them later.
-+	 */
-+	for (offset = 0; offset < LC_SIZE; offset += 8)
-+		if (!test_one_simple(valid_code, MKPTR(new_prefix + offset), 8, 8, PGM_BIT_SPEC, 0))
-+			break;
-+	report(offset == LC_SIZE, "SCCB prefix pages");
-+
-+	/* restore the previous contents of absolute pages 0 and 1 */
-+	memcpy(prefix_buf, 0, LC_SIZE);
-+	/* restore the prefix to the original value */
-+	set_prefix(prefix);
-+}
-+
-+/**
-+ * Test SCCBs that are above 2GB. If outside of memory, an addressing
-+ * exception is also allowed.
-+ */
-+static void test_sccb_high(void)
-+{
-+	SCCBHeader *h = (SCCBHeader *)pagebuf;
-+	uintptr_t a[33 * 4 * 2 + 2];	/* for the list of addresses to test */
-+
-+	uint64_t maxram;
-+	int i, pgm, len = 0;
-+
-+	h->length = 8;
-+	/* addresses with 1 bit set in the first 33 bits */
-+	for (i = 0; i < 33; i++)
-+		a[len++] = 1UL << (i + 31);
-+	/* addresses with 2 consecutive bits set in the first 33 bits */
-+	for (i = 0; i < 33; i++)
-+		a[len++] = 3UL << (i + 31);
-+	/* addresses with all bits set in bits 0..N */
-+	for (i = 0; i < 33; i++)
-+		a[len++] = 0xffffffff80000000UL << i;
-+	/* addresses with all bits set in bits N..33 */
-+	a[len++] = 0x80000000;
-+	for (i = 1; i < 33; i++, len++)
-+		a[len] = a[len - 1] | (1UL << (i + 31));
-+	/* all the addresses above, but adding the offset of a valid buffer */
-+	for (i = 0; i < len; i++)
-+		a[len + i] = a[i] + (intptr_t)h;
-+	len += i;
-+	/* two more hand-crafted addresses */
-+	a[len++] = 0xdeadbeef00000000;
-+	a[len++] = 0xdeaddeadbeef0000;
-+
-+	maxram = get_ram_size();
-+	for (i = 0; i < len; i++) {
-+		pgm = PGM_BIT_SPEC | (a[i] >= maxram ? PGM_BIT_ADDR : 0);
-+		if (!test_one_ro(valid_code, (void *)a[i], pgm, 0))
-+			break;
-+	}
-+	report(i == len, "SCCB high addresses");
-+}
-+
-+/**
-+ * Test invalid commands, both invalid command detail codes and valid
-+ * ones with invalid command class code.
-+ */
-+static void test_inval(void)
-+{
-+	const uint16_t res = SCLP_RC_INVALID_SCLP_COMMAND;
-+	uint32_t cmd;
-+	int i;
-+
-+	report_prefix_push("Invalid command");
-+	for (i = 0; i < 65536; i++) {
-+		cmd = 0xdead0000 | i;
-+		if (!test_one_simple(cmd, pagebuf, PAGE_SIZE, PAGE_SIZE, PGM_NONE, res))
-+			break;
-+	}
-+	report(i == 65536, "Command detail code");
-+
-+	for (i = 0; i < 256; i++) {
-+		cmd = (valid_code & ~0xff) | i;
-+		if (cmd == valid_code)
-+			continue;
-+		if (!test_one_simple(cmd, pagebuf, PAGE_SIZE, PAGE_SIZE, PGM_NONE, res))
-+			break;
-+	}
-+	report(i == 256, "Command class code");
-+	report_prefix_pop();
-+}
-+
-+
-+/**
-+ * Test short SCCBs (but larger than 8).
-+ */
-+static void test_short(void)
-+{
-+	const uint16_t res = SCLP_RC_INSUFFICIENT_SCCB_LENGTH;
-+	int len;
-+
-+	for (len = 8; len < 144; len++)
-+		if (!test_one_simple(valid_code, pagebuf, len, len, PGM_NONE, res))
-+			break;
-+	report(len == 144, "Insufficient SCCB length (Read SCP info)");
-+
-+	for (len = 8; len < 40; len++)
-+		if (!test_one_simple(SCLP_READ_CPU_INFO, pagebuf, len, len, PGM_NONE, res))
-+			break;
-+	report(len == 40, "Insufficient SCCB length (Read CPU info)");
-+}
-+
-+/**
-+ * Test SCCB page boundary violations.
-+ */
-+static void test_boundary(void)
-+{
-+	const uint32_t cmd = SCLP_CMD_WRITE_EVENT_DATA;
-+	const uint16_t res = SCLP_RC_SCCB_BOUNDARY_VIOLATION;
-+	WriteEventData *sccb = (WriteEventData *)sccb_template;
-+	int len, offset;
-+
-+	memset(sccb_template, 0, sizeof(sccb_template));
-+	sccb->h.function_code = SCLP_FC_NORMAL_WRITE;
-+	for (len = 32; len <= 4096; len++) {
-+		offset = len & 7 ? len & ~7 : len - 8;
-+		for (offset = 4096 - offset; offset < 4096; offset += 8) {
-+			sccb->h.length = len;
-+			if (!test_one_sccb(cmd, offset + pagebuf, len, PGM_NONE, res))
-+				goto out;
-+		}
-+	}
-+out:
-+	report(len > 4096 && offset == 4096, "SCCB page boundary violation");
-+}
-+
-+/**
-+ * Test excessively long SCCBs.
-+ */
-+static void test_toolong(void)
-+{
-+	const uint32_t cmd = SCLP_CMD_WRITE_EVENT_DATA;
-+	const uint16_t res = SCLP_RC_SCCB_BOUNDARY_VIOLATION;
-+	WriteEventData *sccb = (WriteEventData *)sccb_template;
-+	int len;
-+
-+	memset(sccb_template, 0, sizeof(sccb_template));
-+	sccb->h.function_code = SCLP_FC_NORMAL_WRITE;
-+	for (len = 4097; len < 8192; len++) {
-+		sccb->h.length = len;
-+		if (!test_one_sccb(cmd, pagebuf, PAGE_SIZE, PGM_NONE, res))
-+			break;
-+	}
-+	report(len == 8192, "SCCB bigger than 4k");
-+}
-+
-+/**
-+ * Test privileged operation.
-+ */
-+static void test_priv(void)
-+{
-+	SCCBHeader *h = (SCCBHeader *)pagebuf;
-+
-+	report_prefix_push("Privileged operation");
-+	h->length = 8;
-+	expect_pgm_int();
-+	enter_pstate();
-+	servc(valid_code, __pa(h));
-+	check_pgm_int_code(PGM_INT_CODE_PRIVILEGED_OPERATION);
-+	report_prefix_pop();
-+}
-+
-+/**
-+ * Test addressing exceptions. We need to test SCCB addresses between the
-+ * end of available memory and 2GB, because after 2GB a specification
-+ * exception is also allowed.
-+ * Only applicable if the VM has less than 2GB of memory
-+ */
-+static void test_addressing(void)
-+{
-+	unsigned long i, maxram = get_ram_size();
-+
-+	/* the VM has more than 2GB of memory */
-+	if (maxram >= 0x80000000) {
-+		report_skip("Invalid SCCB address");
-+		return;
-+	}
-+	/* test all possible valid addresses immediately after the end of memory
-+	 * up to 64KB after the end of memory
-+	 */
-+	for (i = 0; i < 0x10000 && i + maxram < 0x80000000; i += 8)
-+		if (!test_one_ro(valid_code, MKPTR(i + maxram), PGM_BIT_ADDR, 0))
-+			goto out;
-+	/* test more addresses until we reach 1MB after end of memory;
-+	 * increment by a prime number (times 8) in order to test all
-+	 * possible valid offsets inside pages
-+	 */
-+	for (; i < 0x100000 && i + maxram < 0x80000000 ; i += 808)
-+		if (!test_one_ro(valid_code, MKPTR(i + maxram), PGM_BIT_ADDR, 0))
-+			goto out;
-+	/* test the remaining addresses until we reach address 2GB;
-+	 * increment by a prime number (times 8) in order to test all
-+	 * possible valid offsets inside pages
-+	 */
-+	for (; i + maxram < 0x80000000; i += 800024)
-+		if (!test_one_ro(valid_code, MKPTR(i + maxram), PGM_BIT_ADDR, 0))
-+			goto out;
-+out:
-+	report(i + maxram >= 0x80000000, "Invalid SCCB address");
-+}
-+
-+/**
-+ * Test some bits in the instruction format that are specified to be ignored.
-+ */
-+static void test_instbits(void)
-+{
-+	SCCBHeader *h = (SCCBHeader *)pagebuf;
-+	int cc;
-+
-+	sclp_mark_busy();
-+	h->length = 8;
-+	sclp_setup_int();
-+
-+	asm volatile(
-+		"       .insn   rre,0xb2204200,%1,%2\n"  /* servc %1,%2 */
-+		"       ipm     %0\n"
-+		"       srl     %0,28"
-+		: "=&d" (cc) : "d" (valid_code), "a" (__pa(pagebuf))
-+		: "cc", "memory");
-+	/* No exception, but also no command accepted, so no interrupt is
-+	 * expected. We need to clear the flag manually otherwise we will
-+	 * loop forever when we try to report failure.
-+	 */
-+	if (cc)
-+		sclp_handle_ext();
-+	else
-+		sclp_wait_busy();
-+	report(cc == 0, "Instruction format ignored bits");
-+}
-+
-+/**
-+ * Find a valid READ INFO command code; not all codes are always allowed, and
-+ * probing should be performed in the right order.
-+ */
-+static void find_valid_sclp_code(void)
-+{
-+	const unsigned int commands[] = { SCLP_CMDW_READ_SCP_INFO_FORCED,
-+					  SCLP_CMDW_READ_SCP_INFO };
-+	SCCBHeader *h = (SCCBHeader *)pagebuf;
-+	int i, cc;
-+
-+	for (i = 0; i < ARRAY_SIZE(commands); i++) {
-+		sclp_mark_busy();
-+		memset(h, 0, sizeof(*h));
-+		h->length = 4096;
-+
-+		valid_code = commands[i];
-+		cc = sclp_service_call(commands[i], h);
-+		if (cc)
-+			break;
-+		if (h->response_code == SCLP_RC_NORMAL_READ_COMPLETION)
-+			return;
-+		if (h->response_code != SCLP_RC_INVALID_SCLP_COMMAND)
-+			break;
-+	}
-+	report_abort("READ_SCP_INFO failed");
-+}
-+
-+int main(void)
-+{
-+	report_prefix_push("sclp");
-+	find_valid_sclp_code();
-+
-+	/* Test some basic things */
-+	test_instbits();
-+	test_priv();
-+	test_addressing();
-+
-+	/* Test the specification exceptions */
-+	test_sccb_too_short();
-+	test_sccb_unaligned();
-+	test_sccb_prefix();
-+	test_sccb_high();
-+
-+	/* Test the expected response codes */
-+	test_inval();
-+	test_short();
-+	test_boundary();
-+	test_toolong();
-+
-+	return report_summary();
-+}
-diff --git a/s390x/unittests.cfg b/s390x/unittests.cfg
-index f1b07cd..07013b2 100644
---- a/s390x/unittests.cfg
-+++ b/s390x/unittests.cfg
-@@ -75,3 +75,11 @@ file = stsi.elf
- [smp]
- file = smp.elf
- extra_params =-smp 2
-+
-+[sclp-1g]
-+file = sclp.elf
-+extra_params = -m 1G
-+
-+[sclp-3g]
-+file = sclp.elf
-+extra_params = -m 3G
--- 
-2.24.1
+Contact the diplomatic agent immediately
+because he is waiting to hear from you today with the needed information's.
 
+NOTE: The Diplomatic agent does not know that the content of the
+consignment box is $12.800,000,00 Million United States Dollars and on
+no circumstances should you let him know the content. The consignment
+was moved from here as family treasures, so never allow him to open
+the box. Please I have paid delivery fees for you but the only money
+you must send to Mcclaine John is your ATM CARD delivery fee $25.00
+only. text Him as you contact Him Immediately
+
+Thanks,
+with Regards.
+Prof, William Roberts
+Director DHL COURIER SERVICES-Benin
