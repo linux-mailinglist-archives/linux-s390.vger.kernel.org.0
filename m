@@ -2,62 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 521DA141F64
-	for <lists+linux-s390@lfdr.de>; Sun, 19 Jan 2020 19:44:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C8311428C7
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 12:04:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728831AbgASSoW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 19 Jan 2020 13:44:22 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35300 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728670AbgASSoT (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 19 Jan 2020 13:44:19 -0500
-Received: by mail-il1-f196.google.com with SMTP id g12so25508680ild.2
-        for <linux-s390@vger.kernel.org>; Sun, 19 Jan 2020 10:44:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:reply-to:from:date:message-id:subject:to;
-        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
-        b=MveYcniUJUB532f0dlOoihdmkjAHV60cDj8LBHI8M4h+3H+egt8ZCsWSnQoG7CEhld
-         h286H+k74rDzfRQOoY/f9M81WRQr88YRuubiH3HanhIDyXki4cyulA7bNdgdh/npcklQ
-         CvJo43u8PBPBkMgEH5HatRsI+u5tlB3wEJ1Th3FBUvpApZQxsvg7pL4HfvgLhjM/SAbt
-         Wln7BJPpvNYZtoiRQX3zkLZKrm4kgBMldFao5RktgQ8gLQFv0TsxI7xopop5Q61lnjsD
-         O+Nqof9tzp5qXVHsDImBQ0OOhN8D0ZvK4JC9Zw+KV08LpajVcASte5dFUKOIeqnCFHwC
-         Gp1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
-         :subject:to;
-        bh=/o+CA7VDRA7UR3HGeT8+/tYzwEnOXwq5B8ZHP2/HeYc=;
-        b=ey+JMQwR6ixHZ1J7bHx3SlYnD9kVwf9N7FshpQBw4wsZmajrYvXZca1Fu8Db+6nyHr
-         nRtVzQEnV1ySe8tG/pi3JLxkEutXtRydKFVWo4Ee7OAmIYihcxXKdkBwIjmQ3OgoAybq
-         pew0Fn3MLdE6M236rZDvVRRno408L83ttvYqYJ3BM9oicYTKAw50vRweDDwJHVyFndQR
-         L77HzvFIW9NycMictJ8zcn8xUxo1Un2/pMGXqlBCupFXESz96rOIMzPmX1ZFeKvS9q/y
-         5KGoZi65mQCUy7f+oL0SLVLtUO3Viq7x7+YCS17qWeBsfkdQti7ytJkxYBQy+Is4lmXI
-         yIzg==
-X-Gm-Message-State: APjAAAWRK3k/UluSiRnOZS4ZaQEjFS8P91TPZt42Arz94LYuwi1aXx2A
-        0c1M1NRPdm0cYu3otSxiH8hO8qw4H1mwCcivCSs=
-X-Google-Smtp-Source: APXvYqzrfoOpFYdPx6ke6uIX585SnMDBN6pXKvD7iN8x9MT//+KimK2aFC33ps3ZC6gjq3Pi1pIlacgfKiFCQZrpYZA=
-X-Received: by 2002:a92:d1c1:: with SMTP id u1mr7477573ilg.66.1579459459106;
- Sun, 19 Jan 2020 10:44:19 -0800 (PST)
+        id S1727101AbgATLE0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Jan 2020 06:04:26 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33899 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726465AbgATLEZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 Jan 2020 06:04:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579518265;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Gy1QgF8VJlA5zD6ybpuYbV4sRYlFxGtF/MSXbawP5Hk=;
+        b=Si9LXUvCMTYliz4dNbxmxWXhLLulACoNA27zbuw4e+cxUTGdp2yUxYVKSCLF+7QSkGkjz4
+        H/EDhHTwp1sUWctKluoqzqqkPG2U12rT/kvJjmjR7MNIu7VMH6SlD/NJB2FMFAbTYMbqLD
+        aQy5VOdXYrPB6TIp6q9kBoblEHnSKDg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-352-e39AIbXLN1eNTopVvNTfHw-1; Mon, 20 Jan 2020 06:04:21 -0500
+X-MC-Unique: e39AIbXLN1eNTopVvNTfHw-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 718BA10054E3;
+        Mon, 20 Jan 2020 11:04:20 +0000 (UTC)
+Received: from gondolin (ovpn-205-161.brq.redhat.com [10.40.205.161])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6E8AC5C21A;
+        Mon, 20 Jan 2020 11:04:16 +0000 (UTC)
+Date:   Mon, 20 Jan 2020 12:04:13 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, thuth@redhat.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, david@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v3 5/9] s390x: smp: Wait for cpu setup to
+ finish
+Message-ID: <20200120120413.48b6703a.cohuck@redhat.com>
+In-Reply-To: <20200117104640.1983-6-frankja@linux.ibm.com>
+References: <20200117104640.1983-1-frankja@linux.ibm.com>
+        <20200117104640.1983-6-frankja@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Received: by 2002:a02:95c8:0:0:0:0:0 with HTTP; Sun, 19 Jan 2020 10:44:18
- -0800 (PST)
-Reply-To: favordens@email.com
-From:   Favor Desmond <contecindy5@gmail.com>
-Date:   Sun, 19 Jan 2020 18:44:18 +0000
-Message-ID: <CAOfCPNxgSoAU_ns0j9jYL-ArKfcD=i8NkJvHsR4-OGvFBVDMZg@mail.gmail.com>
-Subject: HELLO
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Dear
-Greetings to you,I am Favor Desmond from Ivory coast currently living
-in  Togo Republic,I would like to know you more, so that i can tell
-you little amount myself and my photo, email address is
-favordens@email.com
-Thanks
-Favor
+On Fri, 17 Jan 2020 05:46:36 -0500
+Janosch Frank <frankja@linux.ibm.com> wrote:
+
+> We store the user provided psw address into restart new, so a psw
+> restart does not lead us through setup again.
+> 
+> Also we wait on smp_cpu_setup() until the cpu has finished setup
+> before returning. This is necessary for z/VM and LPAR where sigp is
+> asynchronous.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> ---
+>  lib/s390x/smp.c  | 2 ++
+>  s390x/cstart64.S | 2 ++
+>  2 files changed, 4 insertions(+)
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
