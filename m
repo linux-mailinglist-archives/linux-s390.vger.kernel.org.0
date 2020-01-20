@@ -2,44 +2,45 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C47B1429F9
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 13:02:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2E484142A05
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 13:06:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgATMCn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Jan 2020 07:02:43 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:54705 "EHLO
+        id S1726991AbgATMGV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Jan 2020 07:06:21 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41690 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726573AbgATMCm (ORCPT
+        by vger.kernel.org with ESMTP id S1726573AbgATMGV (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:02:42 -0500
+        Mon, 20 Jan 2020 07:06:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579521762;
+        s=mimecast20190719; t=1579521980;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=TT6B4ywTP9/B+XzxEnf0uhL7PvAprhmASVoLOJaAr70=;
-        b=gQpL4D/WrjNOVxLlhgmwP7142jvp8am9iuOg5vRbMGBW9ScImWN7cAhBZqPF53Udm2xBIf
-        AUuiWzMw0UHcgW405m8EFsAkI7DUHVRe279jiHvaaXIgpKP1gBhibYovUYdHnzWtxYgSO1
-        au0fZHzITLUycvvzk67k17wxxQt0yGo=
+        bh=mx8otJydwc7oJ7RlutMp5kycU68ynTEeBH1QnGihoDw=;
+        b=Bg+oNa0p0H3whumjm4B5MMz0N0Q5nYpwZZrrFuxRKAF+DLKOQNXvxHTkfEe/hOJw9lNGOh
+        p2G8C6lvVHfkfaGL7oBP++4PyTOR3Mgz9yJc/qM8Ar7QgV0hYbxj6nWchisVR/emNQwp+m
+        TTjEdWsJ1tQQGpFbJ+u+9gLSCRyapYU=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-391-iMVzU6PTOzeGAbihTX1T6Q-1; Mon, 20 Jan 2020 07:02:38 -0500
-X-MC-Unique: iMVzU6PTOzeGAbihTX1T6Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-144-r1n6XrWLOyusNFmtU54m-Q-1; Mon, 20 Jan 2020 07:06:16 -0500
+X-MC-Unique: r1n6XrWLOyusNFmtU54m-Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 792FF2F2A;
-        Mon, 20 Jan 2020 12:02:37 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 68C8C190D350;
+        Mon, 20 Jan 2020 12:06:15 +0000 (UTC)
 Received: from [10.36.118.34] (unknown [10.36.118.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1F45C5C1BB;
-        Mon, 20 Jan 2020 12:02:35 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v3 1/9] s390x: smp: Cleanup smp.c
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1219D858BE;
+        Mon, 20 Jan 2020 12:06:13 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v3 4/9] s390x: smp: Rework cpu start and
+ active tracking
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
         linux-s390@vger.kernel.org, cohuck@redhat.com
 References: <20200117104640.1983-1-frankja@linux.ibm.com>
- <20200117104640.1983-2-frankja@linux.ibm.com>
+ <20200117104640.1983-5-frankja@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -85,52 +86,80 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <7b41b492-efb0-b695-0cd7-4f82bc2db143@redhat.com>
-Date:   Mon, 20 Jan 2020 13:02:35 +0100
+Message-ID: <0f9984f0-9768-dba8-5e36-8e667bc05c88@redhat.com>
+Date:   Mon, 20 Jan 2020 13:06:13 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200117104640.1983-2-frankja@linux.ibm.com>
+In-Reply-To: <20200117104640.1983-5-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 17.01.20 11:46, Janosch Frank wrote:
-> Let's remove a lot of badly formatted code by introducing the
-> wait_for_flag() function.
+> The architecture specifies that processing sigp orders may be
+> asynchronous, and this is indeed the case on some hypervisors, so we
+> need to wait until the cpu runs before we return from the setup/start
+> function.
 > 
-> Also let's remove some stray spaces.
+> As there was a lot of duplicate code, a common function for cpu
+> restarts has been introduced.
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
 > Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 > ---
->  s390x/smp.c | 42 +++++++++++++++++++++++-------------------
->  1 file changed, 23 insertions(+), 19 deletions(-)
+>  lib/s390x/smp.c | 50 ++++++++++++++++++++++++++++---------------------
+>  1 file changed, 29 insertions(+), 21 deletions(-)
 > 
-> diff --git a/s390x/smp.c b/s390x/smp.c
-> index ab7e46c..8d8e3a5 100644
-> --- a/s390x/smp.c
-> +++ b/s390x/smp.c
-> @@ -22,6 +22,13 @@
+> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
+> index f57f420..84e681d 100644
+> --- a/lib/s390x/smp.c
+> +++ b/lib/s390x/smp.c
+> @@ -104,35 +104,46 @@ int smp_cpu_stop_store_status(uint16_t addr)
+>  	return rc;
+>  }
 >  
->  static int testflag = 0;
->  
-> +static void wait_for_flag(void)
+> +static int smp_cpu_restart_nolock(uint16_t addr, struct psw *psw)
 > +{
-> +	while (!testflag) {
-> +		mb();
+> +	int rc;
+> +	struct cpu *cpu = smp_cpu_from_addr(addr);
+
+I'd exchange these two (reverse christmas tree)
+
+> +
+> +	if (!cpu)
+> +		return -1;
+
+-EINVAL?
+
+> +	if (psw) {
+> +		cpu->lowcore->restart_new_psw.mask = psw->mask;
+> +		cpu->lowcore->restart_new_psw.addr = psw->addr;
 > +	}
 
-No need for the {}
+Does this make sense to have optional? (the other CPU will execute
+random crap if not set, won't it?)
+
+> +	rc = sigp(addr, SIGP_RESTART, 0, NULL);
+> +	if (rc)
+> +		return rc;
+> +	/*
+> +	 * The order has been accepted, but the actual restart may not
+> +	 * have been performed yet, so wait until the cpu is running.
+> +	 */
+> +	while (!smp_cpu_running(addr))
+> +		mb();
+
+Should you make sure to stop the CPU before issuing the restart?
+Otherwise you will get false positives if it is still running (but
+hasn't processed the RESTART yet)
 
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
