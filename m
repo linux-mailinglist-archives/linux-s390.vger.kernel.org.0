@@ -2,47 +2,45 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0D57142A11
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 13:08:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AF4FA142A24
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Jan 2020 13:10:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726775AbgATMIJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Jan 2020 07:08:09 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:59597 "EHLO
+        id S1726589AbgATMKQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Jan 2020 07:10:16 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29107 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726650AbgATMII (ORCPT
+        by vger.kernel.org with ESMTP id S1727031AbgATMKQ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 Jan 2020 07:08:08 -0500
+        Mon, 20 Jan 2020 07:10:16 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579522088;
+        s=mimecast20190719; t=1579522215;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=zAm/vzvQtJp5hQ6HzX9EcwVQYJSncZU7qOkaoy15jF8=;
-        b=Zimgv4FydXkZrnJa7M11J/llHIjtpG/909g65/CcSL/HqlRZDZHascmiQh8uip1N1M6Tlv
-        8TRBwKaWCX8kZIt9gNW88TEK/yRFWYNIK8wg5VANybMka8ntShaUqjrQXz1yCvs5thK8rD
-        FcSnPrpgxDUa87YPY+3BmR/FnAwoEn0=
+        bh=UhHLymzxzVIkwa649V6G8DQXNVGjVGrCVxDRGJ0fWG8=;
+        b=ZN3/BgdN2dhog6h9qPOJPrFjjG/tLWCUgOiw6E2b2TlgWn3xePmR9IRTek1rVuI4YJJxd7
+        UPWqabM7TddCQk6zFaFPdM3/n6ayoJQn0sx2QKVoE/lF1Qe/sYg/BKpm04XO6Ljc2Fatnb
+        /9JxJ+Gem1WCTZPDroV2lQgmmq6P49k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-269-CSdlhBZBP7OtkmYG29MHrQ-1; Mon, 20 Jan 2020 07:08:04 -0500
-X-MC-Unique: CSdlhBZBP7OtkmYG29MHrQ-1
+ us-mta-32-4yuIIhKcOfmYwrRZTVO7VQ-1; Mon, 20 Jan 2020 07:10:11 -0500
+X-MC-Unique: 4yuIIhKcOfmYwrRZTVO7VQ-1
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C1CEA899D1;
-        Mon, 20 Jan 2020 12:08:03 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89B9E96F6F;
+        Mon, 20 Jan 2020 12:10:10 +0000 (UTC)
 Received: from [10.36.118.34] (unknown [10.36.118.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 33F828644A;
-        Mon, 20 Jan 2020 12:07:59 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v3 6/9] s390x: smp: Loop if secondary cpu
- returns into cpu setup again
-To:     Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2BF1C84791;
+        Mon, 20 Jan 2020 12:10:09 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v3 8/9] s390x: smp: Test all CRs on initial
+ reset
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, cohuck@redhat.com
 References: <20200117104640.1983-1-frankja@linux.ibm.com>
- <20200117104640.1983-7-frankja@linux.ibm.com>
- <20200120122743.68170875.cohuck@redhat.com>
+ <20200117104640.1983-9-frankja@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -88,13 +86,13 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <5d915473-f36e-0310-11a5-69eae79649a7@redhat.com>
-Date:   Mon, 20 Jan 2020 13:07:58 +0100
+Message-ID: <15f8b733-1b81-4a1b-22fe-53099878c013@redhat.com>
+Date:   Mon, 20 Jan 2020 13:10:08 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200120122743.68170875.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200117104640.1983-9-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
@@ -103,38 +101,77 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 20.01.20 12:27, Cornelia Huck wrote:
-> On Fri, 17 Jan 2020 05:46:37 -0500
-> Janosch Frank <frankja@linux.ibm.com> wrote:
+On 17.01.20 11:46, Janosch Frank wrote:
+> All CRs are set to 0 and CRs 0 and 14 are set to pre-defined values,
+> so we also need to test 1-13 and 15 for 0.
 > 
->> Up to now a secondary cpu could have returned from the function it was
->> executing and ending up somewhere in cstart64.S. This was mostly
->> circumvented by an endless loop in the function that it executed.
->>
->> Let's add a loop to the end of the cpu setup, so we don't have to rely
->> on added loops in the tests.
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> ---
->>  s390x/cstart64.S | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
->> index 9af6bb3..5fd8d2f 100644
->> --- a/s390x/cstart64.S
->> +++ b/s390x/cstart64.S
->> @@ -162,6 +162,8 @@ smp_cpu_setup_state:
->>  	/* We should only go once through cpu setup and not for every restart */
->>  	stg	%r14, GEN_LC_RESTART_NEW_PSW + 8
->>  	br	%r14
->> +	/* If the function returns, just loop here */
->> +0:	j	0
+> And while we're at it, let's also set some values to cr 1, 7 and 13, so
+> we can actually be sure that they will be zeroed.
 > 
-> Would it make sense to e.g. load a disabled wait psw instead? Or does
-> that mess things up elsewhere?
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  s390x/smp.c | 18 +++++++++++++++++-
+>  1 file changed, 17 insertions(+), 1 deletion(-)
+> 
+> diff --git a/s390x/smp.c b/s390x/smp.c
+> index c12a3db..1385488 100644
+> --- a/s390x/smp.c
+> +++ b/s390x/smp.c
+> @@ -169,16 +169,30 @@ static void test_emcall(void)
+>  	report_prefix_pop();
+>  }
+>  
+> +/* Used to dirty registers of cpu #1 before it is reset */
+> +static void test_func_initial(void)
+> +{
+> +	lctlg(1, 0x42000UL);
+> +	lctlg(7, 0x43000UL);
+> +	lctlg(13, 0x44000UL);
+> +	mb();
+> +	testflag = 1;
+> +}
+> +
+>  static void test_reset_initial(void)
+>  {
+>  	struct cpu_status *status = alloc_pages(0);
+> +	uint64_t nullp[12] = {};
+>  	struct psw psw;
+>  
+>  	psw.mask = extract_psw_mask();
+> -	psw.addr = (unsigned long)test_func;
+> +	psw.addr = (unsigned long)test_func_initial;
+>  
+>  	report_prefix_push("reset initial");
+> +	testflag = 0;
+> +	mb();
 
-I think we can keep it like that for now (simpler than loading a PSW).
-Overall, I don't care about burning CPU cycles here :)
+maybe use a  set_flag() function like
+
+mb();
+testflag = val;
+mb();
+
+and use it everywhere you set the flag? (e.g., in test_func_initial())
+
+Apart from that
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+>  	smp_cpu_start(1, psw);
+> +	wait_for_flag();
+>  
+>  	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
+>  	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
+> @@ -189,6 +203,8 @@ static void test_reset_initial(void)
+>  	report(!status->fpc, "fpc");
+>  	report(!status->cputm, "cpu timer");
+>  	report(!status->todpr, "todpr");
+> +	report(!memcmp(&status->crs[1], nullp, sizeof(status->crs[1]) * 12), "cr1-13 == 0");
+> +	report(status->crs[15] == 0, "cr15 == 0");
+>  	report_prefix_pop();
+>  
+>  	report_prefix_push("initialized");
+> 
 
 
 -- 
