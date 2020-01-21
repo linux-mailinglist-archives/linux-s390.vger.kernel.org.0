@@ -2,43 +2,44 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4393814394D
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Jan 2020 10:18:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 524DF143953
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Jan 2020 10:18:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729016AbgAUJSH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Jan 2020 04:18:07 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:45614 "EHLO
+        id S1728890AbgAUJSr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Jan 2020 04:18:47 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:56323 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728093AbgAUJSH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Jan 2020 04:18:07 -0500
+        with ESMTP id S1728712AbgAUJSq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Jan 2020 04:18:46 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579598286;
+        s=mimecast20190719; t=1579598324;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=YmYSDZlaB4RdzKrQoF02ynMo6JUWmOQZyqY/KScvods=;
-        b=eG5V72RCpqT+t/Fb58Zg9SAyKlDJPB/ZAumX6tuNofNW3rlhNWWs9x90yTkD5SeHXc182t
-        YhNZiC8PMjP6iEvKkRgYv30aO6nLXRtIXoKlhtkTE3qDZymnEZD626v331zWSJ/hgrVyAQ
-        /lhL+V0IXIfSYOKaryrubZ3nkjEzVk4=
+        bh=mx1nCr66Nt5fu3EqGN1w0uVwVsXoAYZv12I3ewCbK4Y=;
+        b=VYBcGZr5k4R419YDrFiAP76f8ygkJkd5n132Slmg/tqa4nOC48qFFGiX+qRu/obEfjE/NA
+        Pdjpk660218SZ0Tqsk/PPmp1g0vP2L/s5TWIAdXy27wMUnITI1TCSmWyp7GOdkOkcNtrrz
+        m+enL4jWDI5eqFKRkHXhnGSkqtbUlek=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-208-NhHQkRB9NkuK19Aq_TJLTQ-1; Tue, 21 Jan 2020 04:18:02 -0500
-X-MC-Unique: NhHQkRB9NkuK19Aq_TJLTQ-1
+ us-mta-371-WvvbstiEO9OJpZygncoCHQ-1; Tue, 21 Jan 2020 04:18:41 -0500
+X-MC-Unique: WvvbstiEO9OJpZygncoCHQ-1
 Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5A3EB800D4E;
-        Tue, 21 Jan 2020 09:18:01 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BD848024CF;
+        Tue, 21 Jan 2020 09:18:40 +0000 (UTC)
 Received: from [10.36.118.56] (unknown [10.36.118.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 721102C8A0;
-        Tue, 21 Jan 2020 09:17:59 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v8 3/6] s390x: lib: fix stfl wrapper asm
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D710766838;
+        Tue, 21 Jan 2020 09:18:38 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v8 5/6] s390x: lib: fix program interrupt
+ handler if sclp_busy was set
 To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
         borntraeger@de.ibm.com, frankja@linux.ibm.com
 References: <20200120184256.188698-1-imbrenda@linux.ibm.com>
- <20200120184256.188698-4-imbrenda@linux.ibm.com>
+ <20200120184256.188698-6-imbrenda@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -84,12 +85,12 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <9f89b339-f9e1-57e5-da0a-d8a090b558cc@redhat.com>
-Date:   Tue, 21 Jan 2020 10:17:58 +0100
+Message-ID: <1b18bc33-0a73-5643-d12a-84f6183b79d8@redhat.com>
+Date:   Tue, 21 Jan 2020 10:18:38 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200120184256.188698-4-imbrenda@linux.ibm.com>
+In-Reply-To: <20200120184256.188698-6-imbrenda@linux.ibm.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -100,27 +101,38 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 20.01.20 19:42, Claudio Imbrenda wrote:
-> the stfl wrapper in lib/s390x/asm/facility.h was lacking the "memory"
-> clobber in the inline asm.
+> Fix the program interrupt handler for the case where sclp_busy is set.
+> 
+> The interrupt handler will attempt to write an error message on the
+> console using the SCLP, and will wait for sclp_busy to become false
+> before doing so. If an exception happenes between setting the flag and
+> the SCLP call, or if the call itself raises an exception, we need to
+> clear the flag so we can successfully print the error message.
 > 
 > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 > ---
->  lib/s390x/asm/facility.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  lib/s390x/interrupt.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/lib/s390x/asm/facility.h b/lib/s390x/asm/facility.h
-> index 5103dd4..e34dc2c 100644
-> --- a/lib/s390x/asm/facility.h
-> +++ b/lib/s390x/asm/facility.h
-> @@ -24,7 +24,7 @@ static inline bool test_facility(int nr)
+> diff --git a/lib/s390x/interrupt.c b/lib/s390x/interrupt.c
+> index 05f30be..ccb376a 100644
+> --- a/lib/s390x/interrupt.c
+> +++ b/lib/s390x/interrupt.c
+> @@ -106,10 +106,13 @@ static void fixup_pgm_int(void)
 >  
->  static inline void stfl(void)
+>  void handle_pgm_int(void)
 >  {
-> -	asm volatile("	stfl	0(0)\n");
-> +	asm volatile("	stfl	0(0)\n" : : : "memory");
->  }
+> -	if (!pgm_int_expected)
+> +	if (!pgm_int_expected) {
+> +		/* Force sclp_busy to false, otherwise we will loop forever */
+> +		sclp_handle_ext();
+>  		report_abort("Unexpected program interrupt: %d at %#lx, ilen %d\n",
+>  			     lc->pgm_int_code, lc->pgm_old_psw.addr,
+>  			     lc->pgm_int_id);
+> +	}
 >  
->  static inline void stfle(uint8_t *fac, unsigned int len)
+>  	pgm_int_expected = false;
+>  	fixup_pgm_int();
 > 
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
