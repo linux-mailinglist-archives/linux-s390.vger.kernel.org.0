@@ -2,94 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0B868143E5E
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Jan 2020 14:43:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C29B2143F84
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Jan 2020 15:28:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbgAUNna (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Jan 2020 08:43:30 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64070 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729317AbgAUNn1 (ORCPT
+        id S1729052AbgAUO25 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Jan 2020 09:28:57 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:28862 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727255AbgAUO24 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 Jan 2020 08:43:27 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00LDggXJ034524
-        for <linux-s390@vger.kernel.org>; Tue, 21 Jan 2020 08:43:27 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xmgbqa3u9-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 21 Jan 2020 08:43:26 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Tue, 21 Jan 2020 13:43:25 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 Jan 2020 13:43:22 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00LDhLJM51904568
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Jan 2020 13:43:21 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 591C9A405B;
-        Tue, 21 Jan 2020 13:43:21 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 786C0A4060;
-        Tue, 21 Jan 2020 13:43:20 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.152.224.211])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 21 Jan 2020 13:43:20 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, david@redhat.com, cohuck@redhat.com
-Subject: [kvm-unit-tests PATCH v4 9/9] s390x: smp: Dirty fpc before initial reset test
-Date:   Tue, 21 Jan 2020 08:42:54 -0500
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200121134254.4570-1-frankja@linux.ibm.com>
+        Tue, 21 Jan 2020 09:28:56 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579616935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=LxxNnY1rAyCDccuN/PEfPqIre2nRFy4Xi4Kq8vWTHm8=;
+        b=aSArHY7gXHaF57buO6ee+nm0R+0IE+1yklL1Uubddy7CmQUr/PbTk3PohBHcbJ09gjM/Qc
+        CcL3OY5uFJLLHCJJbnVg5+0SRdKRh69jpDQbsSbPw9KK3bRE2jaqqTlTtWLn0rgyYFkCIh
+        5yHjJSw1rU6MzoLemfBCpybVIDFz3zA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-426-y9hCvqekNWmVDr--JeUYgg-1; Tue, 21 Jan 2020 09:28:51 -0500
+X-MC-Unique: y9hCvqekNWmVDr--JeUYgg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B91D71005513;
+        Tue, 21 Jan 2020 14:28:50 +0000 (UTC)
+Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 21CF880627;
+        Tue, 21 Jan 2020 14:28:46 +0000 (UTC)
+Date:   Tue, 21 Jan 2020 15:28:44 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     kvm@vger.kernel.org, thuth@redhat.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, david@redhat.com
+Subject: Re: [kvm-unit-tests PATCH v4 6/9] s390x: smp: Loop if secondary cpu
+ returns into cpu setup again
+Message-ID: <20200121152844.22fd9e03.cohuck@redhat.com>
+In-Reply-To: <20200121134254.4570-7-frankja@linux.ibm.com>
 References: <20200121134254.4570-1-frankja@linux.ibm.com>
+        <20200121134254.4570-7-frankja@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20012113-0016-0000-0000-000002DF61D9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012113-0017-0000-0000-0000334209A5
-Message-Id: <20200121134254.4570-10-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-21_04:2020-01-21,2020-01-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=1 phishscore=0
- mlxlogscore=920 spamscore=0 malwarescore=0 lowpriorityscore=0 adultscore=0
- mlxscore=0 bulkscore=0 impostorscore=0 clxscore=1015 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1910280000
- definitions=main-2001210114
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's dirty the fpc, before we test if the initial reset sets it to 0.
+On Tue, 21 Jan 2020 08:42:51 -0500
+Janosch Frank <frankja@linux.ibm.com> wrote:
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: Thomas Huth <thuth@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
----
- s390x/smp.c | 1 +
- 1 file changed, 1 insertion(+)
+> Up to now a secondary cpu could have returned from the function it was
+> executing and ending up somewhere in cstart64.S. This was mostly
+> circumvented by an endless loop in the function that it executed.
+> 
+> Let's add a loop to the end of the cpu setup, so we don't have to rely
+> on added loops in the tests.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  s390x/cstart64.S | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+> index 9af6bb3..5fd8d2f 100644
+> --- a/s390x/cstart64.S
+> +++ b/s390x/cstart64.S
+> @@ -162,6 +162,8 @@ smp_cpu_setup_state:
+>  	/* We should only go once through cpu setup and not for every restart */
+>  	stg	%r14, GEN_LC_RESTART_NEW_PSW + 8
+>  	br	%r14
+> +	/* If the function returns, just loop here */
+> +0:	j	0
+>  
+>  pgm_int:
+>  	SAVE_REGS
 
-diff --git a/s390x/smp.c b/s390x/smp.c
-index e36ab8c..6357ac4 100644
---- a/s390x/smp.c
-+++ b/s390x/smp.c
-@@ -179,6 +179,7 @@ static void test_emcall(void)
- /* Used to dirty registers of cpu #1 before it is reset */
- static void test_func_initial(void)
- {
-+	asm volatile("sfpc %0" :: "d" (0x11));
- 	lctlg(1, 0x42000UL);
- 	lctlg(7, 0x43000UL);
- 	lctlg(13, 0x44000UL);
--- 
-2.20.1
+Acked-by: Cornelia Huck <cohuck@redhat.com>
 
