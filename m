@@ -2,229 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EDC08144114
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Jan 2020 16:58:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE0A4144363
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Jan 2020 18:36:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729081AbgAUP60 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Jan 2020 10:58:26 -0500
-Received: from condef-07.nifty.com ([202.248.20.72]:62606 "EHLO
-        condef-07.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726714AbgAUP60 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Jan 2020 10:58:26 -0500
-X-Greylist: delayed 586 seconds by postgrey-1.27 at vger.kernel.org; Tue, 21 Jan 2020 10:58:24 EST
-Received: from conssluserg-05.nifty.com ([10.126.8.84])by condef-07.nifty.com with ESMTP id 00LFiQIa017816;
-        Wed, 22 Jan 2020 00:44:26 +0900
-Received: from mail-ua1-f44.google.com (mail-ua1-f44.google.com [209.85.222.44]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id 00LFi5Mr030302;
-        Wed, 22 Jan 2020 00:44:06 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com 00LFi5Mr030302
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1579621446;
-        bh=ZtcJE4J/VnghOLG5BqGNTkLhqnSDrYqFSMA9B/PJv3k=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=22uMx27sxZ4iLBL3b5a2GCT1vzgo36uJ/LkCdpC+Q7rUalnLH5X93rBvfJ6r+Pom6
-         0o/uI4mds34zlVe9kLrre0jf42OJ0h6Gzs6WuXnE3PqgqJiehf0iyvPKh61HIb9reM
-         BK6m+Iaq+nXKGZa35YP1Knxk4wopevX6IhVA76h5v+ep8FbEuU2JO402pv2ViHJIt9
-         7Iud1SK2G/mcT+9GzKuU/rxMhwmetJtvRMMv3bXSnuBWDiS8fgTXfAPaC8RNTslYjI
-         ucrY32VBEYpSntsGXkqvTxzJ+9NFzMU9NSQRABiXCmgOsiY6dsEFA/WyMc11os2pwG
-         p7Az2qT9YUBVA==
-X-Nifty-SrcIP: [209.85.222.44]
-Received: by mail-ua1-f44.google.com with SMTP id y3so1163058uae.3;
-        Tue, 21 Jan 2020 07:44:06 -0800 (PST)
-X-Gm-Message-State: APjAAAUIX/hzPtjGqxcamIsKsUBtz/8JnpF32BOlP7pCQ7YfG0RAouv5
-        MCZ3SpbQ/fB7pbbHEmABw4EupSw5tXLktnGUuuA=
-X-Google-Smtp-Source: APXvYqxKN7+aDx4+rhRRBTGSg5TMBpRLbtTObTQdzxulxrRZeJxHYNHdH9TfFK4spH3h0GZVhCOVCIk1jgp5oP8+2Vg=
-X-Received: by 2002:ab0:7049:: with SMTP id v9mr3149137ual.95.1579621444684;
- Tue, 21 Jan 2020 07:44:04 -0800 (PST)
+        id S1729080AbgAURgs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Jan 2020 12:36:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:20220 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728186AbgAURgr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Jan 2020 12:36:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579628206;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=VYmT7wpWTHpfgCypHIluoVAlq4BZBY0iRNBZ3wLlmag=;
+        b=DCEGVkgj7q/9l8rRol1ysZJgOiHIFt/IdRfKsEy3esyTlND2QEBUXFBwLeYNaIqa3lgUVE
+        Lmb75zUgtZZmS7g/X7Wu/nzZvdlQ81K24Cio+6XZv/05obn8/ej8pT9PCkvhRkqL5/X2Tc
+        ky80ojIEipyy6Oa3bdhAYeZ0gq+p5Kw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-tGAAdU3xOseVZ-LSUJLodw-1; Tue, 21 Jan 2020 12:36:40 -0500
+X-MC-Unique: tGAAdU3xOseVZ-LSUJLodw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBEF51005513;
+        Tue, 21 Jan 2020 17:36:38 +0000 (UTC)
+Received: from [10.36.118.56] (unknown [10.36.118.56])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 92C6E845C7;
+        Tue, 21 Jan 2020 17:36:37 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v4 6/9] s390x: smp: Loop if secondary cpu
+ returns into cpu setup again
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, cohuck@redhat.com
+References: <20200121134254.4570-1-frankja@linux.ibm.com>
+ <20200121134254.4570-7-frankja@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
+ dBrn+lhhOYjjNefFQou6478faXE6o2AhmebqT4KiQoUQFV4R7y1KMEKoSyy8hQaK1umALTdL
+ QZLQMzNE74ap+GDK0wnacPQFpcG1AE9RMq3aeErY5tujekBS32jfC/7AnH7I0v1v1TbbK3Gp
+ XNeiN4QroO+5qaSr0ID2sz5jtBLRb15RMre27E1ImpaIv2Jw8NJgW0k/D1RyKCwaTsgRdwuK
+ Kx/Y91XuSBdz0uOyU/S8kM1+ag0wvsGlpBVxRR/xw/E8M7TEwuCZQArqqTCmkG6HGcXFT0V9
+ PXFNNgV5jXMQRwU0O/ztJIQqsE5LsUomE//bLwzj9IVsaQpKDqW6TAPjcdBDPLHvriq7kGjt
+ WhVhdl0qEYB8lkBEU7V2Yb+SYhmhpDrti9Fq1EsmhiHSkxJcGREoMK/63r9WLZYI3+4W2rAc
+ UucZa4OT27U5ZISjNg3Ev0rxU5UH2/pT4wJCfxwocmqaRr6UYmrtZmND89X0KigoFD/XSeVv
+ jwBRNjPAubK9/k5NoRrYqztM9W6sJqrH8+UWZ1Idd/DdmogJh0gNC0+N42Za9yBRURfIdKSb
+ B3JfpUqcWwE7vUaYrHG1nw54pLUoPG6sAA7Mehl3nd4pZUALHwARAQABtCREYXZpZCBIaWxk
+ ZW5icmFuZCA8ZGF2aWRAcmVkaGF0LmNvbT6JAlgEEwEIAEICGwMFCQlmAYAGCwkIBwMCBhUI
+ AgkKCwQWAgMBAh4BAheAFiEEG9nKrXNcTDpGDfzKTd4Q9wD/g1oFAl3pImkCGQEACgkQTd4Q
+ 9wD/g1o+VA//SFvIHUAvul05u6wKv/pIR6aICPdpF9EIgEU448g+7FfDgQwcEny1pbEzAmiw
+ zAXIQ9H0NZh96lcq+yDLtONnXk/bEYWHHUA014A1wqcYNRY8RvY1+eVHb0uu0KYQoXkzvu+s
+ Dncuguk470XPnscL27hs8PgOP6QjG4jt75K2LfZ0eAqTOUCZTJxA8A7E9+XTYuU0hs7QVrWJ
+ jQdFxQbRMrYz7uP8KmTK9/Cnvqehgl4EzyRaZppshruKMeyheBgvgJd5On1wWq4ZUV5PFM4x
+ II3QbD3EJfWbaJMR55jI9dMFa+vK7MFz3rhWOkEx/QR959lfdRSTXdxs8V3zDvChcmRVGN8U
+ Vo93d1YNtWnA9w6oCW1dnDZ4kgQZZSBIjp6iHcA08apzh7DPi08jL7M9UQByeYGr8KuR4i6e
+ RZI6xhlZerUScVzn35ONwOC91VdYiQgjemiVLq1WDDZ3B7DIzUZ4RQTOaIWdtXBWb8zWakt/
+ ztGhsx0e39Gvt3391O1PgcA7ilhvqrBPemJrlb9xSPPRbaNAW39P8ws/UJnzSJqnHMVxbRZC
+ Am4add/SM+OCP0w3xYss1jy9T+XdZa0lhUvJfLy7tNcjVG/sxkBXOaSC24MFPuwnoC9WvCVQ
+ ZBxouph3kqc4Dt5X1EeXVLeba+466P1fe1rC8MbcwDkoUo65Ag0EVcufkQEQAOfX3n0g0fZz
+ Bgm/S2zF/kxQKCEKP8ID+Vz8sy2GpDvveBq4H2Y34XWsT1zLJdvqPI4af4ZSMxuerWjXbVWb
+ T6d4odQIG0fKx4F8NccDqbgHeZRNajXeeJ3R7gAzvWvQNLz4piHrO/B4tf8svmRBL0ZB5P5A
+ 2uhdwLU3NZuK22zpNn4is87BPWF8HhY0L5fafgDMOqnf4guJVJPYNPhUFzXUbPqOKOkL8ojk
+ CXxkOFHAbjstSK5Ca3fKquY3rdX3DNo+EL7FvAiw1mUtS+5GeYE+RMnDCsVFm/C7kY8c2d0G
+ NWkB9pJM5+mnIoFNxy7YBcldYATVeOHoY4LyaUWNnAvFYWp08dHWfZo9WCiJMuTfgtH9tc75
+ 7QanMVdPt6fDK8UUXIBLQ2TWr/sQKE9xtFuEmoQGlE1l6bGaDnnMLcYu+Asp3kDT0w4zYGsx
+ 5r6XQVRH4+5N6eHZiaeYtFOujp5n+pjBaQK7wUUjDilPQ5QMzIuCL4YjVoylWiBNknvQWBXS
+ lQCWmavOT9sttGQXdPCC5ynI+1ymZC1ORZKANLnRAb0NH/UCzcsstw2TAkFnMEbo9Zu9w7Kv
+ AxBQXWeXhJI9XQssfrf4Gusdqx8nPEpfOqCtbbwJMATbHyqLt7/oz/5deGuwxgb65pWIzufa
+ N7eop7uh+6bezi+rugUI+w6DABEBAAGJAiUEGAECAA8FAlXLn5ECGwwFCQlmAYAACgkQTd4Q
+ 9wD/g1qA6w/+M+ggFv+JdVsz5+ZIc6MSyGUozASX+bmIuPeIecc9UsFRatc91LuJCKMkD9Uv
+ GOcWSeFpLrSGRQ1Z7EMzFVU//qVs6uzhsNk0RYMyS0B6oloW3FpyQ+zOVylFWQCzoyyf227y
+ GW8HnXunJSC+4PtlL2AY4yZjAVAPLK2l6mhgClVXTQ/S7cBoTQKP+jvVJOoYkpnFxWE9pn4t
+ H5QIFk7Ip8TKr5k3fXVWk4lnUi9MTF/5L/mWqdyIO1s7cjharQCstfWCzWrVeVctpVoDfJWp
+ 4LwTuQ5yEM2KcPeElLg5fR7WB2zH97oI6/Ko2DlovmfQqXh9xWozQt0iGy5tWzh6I0JrlcxJ
+ ileZWLccC4XKD1037Hy2FLAjzfoWgwBLA6ULu0exOOdIa58H4PsXtkFPrUF980EEibUp0zFz
+ GotRVekFAceUaRvAj7dh76cToeZkfsjAvBVb4COXuhgX6N4pofgNkW2AtgYu1nUsPAo+NftU
+ CxrhjHtLn4QEBpkbErnXQyMjHpIatlYGutVMS91XTQXYydCh5crMPs7hYVsvnmGHIaB9ZMfB
+ njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
+ FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
+Organization: Red Hat GmbH
+Message-ID: <2e601bc3-dd4e-9883-4c4d-e107ffcd84f7@redhat.com>
+Date:   Tue, 21 Jan 2020 18:36:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-References: <cover.1579248206.git.michal.simek@xilinx.com> <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
-In-Reply-To: <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
-From:   Masahiro Yamada <masahiroy@kernel.org>
-Date:   Wed, 22 Jan 2020 00:43:28 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-Message-ID: <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
- include/asm header
-To:     Michal Simek <michal.simek@xilinx.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Simek <monstr@monstr.eu>, git@xilinx.com,
-        Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, X86 ML <x86@kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200121134254.4570-7-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi.
-
-On Fri, Jan 17, 2020 at 5:03 PM Michal Simek <michal.simek@xilinx.com> wrote:
->
-> dma-continuguous.h is generic for all architectures except arm32 which has
-> its own version.
-
-
-
-Currently, <asm/dma-contiguous.h> is present
-for only architectures that select HAVE_DMA_CONTIGUOUS.
-
-After this commit, the other architectures will end
-up with generating the unused header.
-
-That would not be a big deal, but
-it could be mentioned in the commit message?
-
-
-
-> Similar change was done for msi.h by commit a1b39bae16a6
-> ("asm-generic: Make msi.h a mandatory include/asm header")
->
-> Suggested-by: Christoph Hellwig <hch@infradead.org>
-> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+On 21.01.20 14:42, Janosch Frank wrote:
+> Up to now a secondary cpu could have returned from the function it was
+> executing and ending up somewhere in cstart64.S. This was mostly
+> circumvented by an endless loop in the function that it executed.
+> 
+> Let's add a loop to the end of the cpu setup, so we don't have to rely
+> on added loops in the tests.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 > ---
->
-> Changes in v2:
-> - New patch suggested by Christoph
->
->  arch/arm64/include/asm/Kbuild  | 1 -
->  arch/csky/include/asm/Kbuild   | 1 -
->  arch/mips/include/asm/Kbuild   | 1 -
->  arch/riscv/include/asm/Kbuild  | 1 -
->  arch/s390/include/asm/Kbuild   | 1 -
->  arch/x86/include/asm/Kbuild    | 1 -
->  arch/xtensa/include/asm/Kbuild | 1 -
->
->  include/asm-generic/Kbuild     | 1 +
->  8 files changed, 1 insertion(+), 7 deletions(-)
->
-> diff --git a/arch/arm64/include/asm/Kbuild b/arch/arm64/include/asm/Kbuild
-> index bd23f87d6c55..d3077c991962 100644
-> --- a/arch/arm64/include/asm/Kbuild
-> +++ b/arch/arm64/include/asm/Kbuild
-> @@ -3,7 +3,6 @@ generic-y += bugs.h
->  generic-y += delay.h
->  generic-y += div64.h
->  generic-y += dma.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += early_ioremap.h
->  generic-y += emergency-restart.h
-> diff --git a/arch/csky/include/asm/Kbuild b/arch/csky/include/asm/Kbuild
-> index 4d4754e6bf89..bc15a26c782f 100644
-> --- a/arch/csky/include/asm/Kbuild
-> +++ b/arch/csky/include/asm/Kbuild
-> @@ -7,7 +7,6 @@ generic-y += delay.h
->  generic-y += device.h
->  generic-y += div64.h
->  generic-y += dma.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += emergency-restart.h
->  generic-y += exec.h
-> diff --git a/arch/mips/include/asm/Kbuild b/arch/mips/include/asm/Kbuild
-> index 61b0fc2026e6..179403ae5837 100644
-> --- a/arch/mips/include/asm/Kbuild
-> +++ b/arch/mips/include/asm/Kbuild
-> @@ -6,7 +6,6 @@ generated-y += syscall_table_64_n64.h
->  generated-y += syscall_table_64_o32.h
->  generic-y += current.h
->  generic-y += device.h
-> -generic-y += dma-contiguous.h
->  generic-y += emergency-restart.h
->  generic-y += export.h
->  generic-y += irq_work.h
-> diff --git a/arch/riscv/include/asm/Kbuild b/arch/riscv/include/asm/Kbuild
-> index 1efaeddf1e4b..ec0ca8c6ab64 100644
-> --- a/arch/riscv/include/asm/Kbuild
-> +++ b/arch/riscv/include/asm/Kbuild
-> @@ -7,7 +7,6 @@ generic-y += div64.h
->  generic-y += extable.h
->  generic-y += flat.h
->  generic-y += dma.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += emergency-restart.h
->  generic-y += exec.h
-> diff --git a/arch/s390/include/asm/Kbuild b/arch/s390/include/asm/Kbuild
-> index 2531f673f099..1832ae6442ef 100644
-> --- a/arch/s390/include/asm/Kbuild
-> +++ b/arch/s390/include/asm/Kbuild
-> @@ -7,7 +7,6 @@ generated-y += unistd_nr.h
->  generic-y += asm-offsets.h
->  generic-y += cacheflush.h
->  generic-y += device.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += div64.h
->  generic-y += emergency-restart.h
-> diff --git a/arch/x86/include/asm/Kbuild b/arch/x86/include/asm/Kbuild
-> index 8b52bc5ddf69..ea34464d6221 100644
-> --- a/arch/x86/include/asm/Kbuild
-> +++ b/arch/x86/include/asm/Kbuild
-> @@ -7,7 +7,6 @@ generated-y += unistd_32_ia32.h
->  generated-y += unistd_64_x32.h
->  generated-y += xen-hypercalls.h
->
-> -generic-y += dma-contiguous.h
->  generic-y += early_ioremap.h
->  generic-y += export.h
->  generic-y += mcs_spinlock.h
-> diff --git a/arch/xtensa/include/asm/Kbuild b/arch/xtensa/include/asm/Kbuild
-> index 3acc31e55e02..271917c24b7f 100644
-> --- a/arch/xtensa/include/asm/Kbuild
-> +++ b/arch/xtensa/include/asm/Kbuild
-> @@ -4,7 +4,6 @@ generic-y += bug.h
->  generic-y += compat.h
->  generic-y += device.h
->  generic-y += div64.h
-> -generic-y += dma-contiguous.h
->  generic-y += dma-mapping.h
->  generic-y += emergency-restart.h
->  generic-y += exec.h
-> diff --git a/include/asm-generic/Kbuild b/include/asm-generic/Kbuild
-> index ddfee1bd9dc1..cd17d50697cc 100644
-> --- a/include/asm-generic/Kbuild
-> +++ b/include/asm-generic/Kbuild
-> @@ -4,5 +4,6 @@
->  # (This file is not included when SRCARCH=um since UML borrows several
->  # asm headers from the host architecutre.)
->
-> +mandatory-y += dma-contiguous.h
->  mandatory-y += msi.h
->  mandatory-y += simd.h
-> --
-> 2.25.0
->
+>  s390x/cstart64.S | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+> index 9af6bb3..5fd8d2f 100644
+> --- a/s390x/cstart64.S
+> +++ b/s390x/cstart64.S
+> @@ -162,6 +162,8 @@ smp_cpu_setup_state:
+>  	/* We should only go once through cpu setup and not for every restart */
+>  	stg	%r14, GEN_LC_RESTART_NEW_PSW + 8
+>  	br	%r14
+> +	/* If the function returns, just loop here */
+> +0:	j	0
+>  
+>  pgm_int:
+>  	SAVE_REGS
+> 
 
+Acked-by: David Hildenbrand <david@redhat.com>
 
 -- 
-Best Regards
-Masahiro Yamada
+Thanks,
+
+David / dhildenb
+
