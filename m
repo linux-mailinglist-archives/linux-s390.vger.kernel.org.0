@@ -2,256 +2,216 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65D18144BEA
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Jan 2020 07:47:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 26D6E144D98
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Jan 2020 09:25:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725883AbgAVGrs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 Jan 2020 01:47:48 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52245 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725871AbgAVGrs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 22 Jan 2020 01:47:48 -0500
-Received: by mail-wm1-f67.google.com with SMTP id p9so5595666wmc.2
-        for <linux-s390@vger.kernel.org>; Tue, 21 Jan 2020 22:47:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=RlZojd1SiUbb/OeinLf3J4JHQYZOcdIDU8W+cj9iulk=;
-        b=y3SDRICUNCTGVEfhGZo3blD0LEuV77fDMIPVvItjjaewXSwlnd2aurAbs4B6f2ZfO9
-         noTpfd/TLhRPe73LaqAlVAlUpe9wyusPNWjzu6vJFZa2BynslasKCb7iA/W6a0OtVXEb
-         YxA0s37yA5jB/OS9ued6UM66oYP0dbwc47AWnfGEFj34PV7BBCI0X7qn8Y7f4e2k3c88
-         WOx8BMTixv+0jHe4TSUTmJYaLdx+0xE9RP3llvtF4/XJKNvYwpb6AqmKUOikzdnec5Bx
-         i5iCXi2jcxrUBOHnA0Gzz3mt7fRahb+yu5yXcDkPoIYs2Ti6M32/nnTIP7g7e4wRI1D0
-         7u2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=RlZojd1SiUbb/OeinLf3J4JHQYZOcdIDU8W+cj9iulk=;
-        b=KCv5fHvlZ5EKc6qH4muViR8ArrWV/Mv4MV9UJwTFLvzDUVojhSNvXr53UEAaqxUT7m
-         eSz6zu3X8q1pqFqwKPPTIyeJ0TpDX3/n6R8MjsoorD3r733tGZa6t3M5xvVY8W9xh0km
-         F8fdwoZLhAcFpfyI04pER3hUuR3wUEIk+nKSsLF7VmhsTideKbSsIlIyLkkDTpF5yYpb
-         ARBdEPskGrbOtig4LUscAVRY+JI15AkZovE9P1/wM18N7t5A2JW7qBa3Z25XQX17eQmc
-         buC2spnC1zgsK6ednAmGKCyKoVUluASacOyFzWoHtp4D1IK3SJesZo6ZhDz0RvkYP6S/
-         /c4w==
-X-Gm-Message-State: APjAAAVvrS7EdoaySNyGSNphMt6eaEcB+xvZt1S1ukU4HvpODwOvi2/X
-        qgooJTkeUm/4Ya7fRl4tKL7NQg==
-X-Google-Smtp-Source: APXvYqxE0JBWhtarBcJMiWajDjZfirf67dUMAGz9LTC5QD8210pTuLsvsl7JRG+MChOSyTnzZODhrQ==
-X-Received: by 2002:a7b:cf08:: with SMTP id l8mr1124469wmg.169.1579675665355;
-        Tue, 21 Jan 2020 22:47:45 -0800 (PST)
-Received: from [173.194.76.108] ([149.199.62.130])
-        by smtp.gmail.com with ESMTPSA id q19sm2532169wmc.12.2020.01.21.22.47.31
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Jan 2020 22:47:44 -0800 (PST)
-Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
- include/asm header
-To:     Masahiro Yamada <masahiroy@kernel.org>,
-        Michal Simek <michal.simek@xilinx.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        git@xilinx.com, Christoph Hellwig <hch@lst.de>,
-        Christoph Hellwig <hch@infradead.org>,
-        Paul Burton <paulburton@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>,
-        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Palmer Dabbelt <palmer@dabbelt.com>, X86 ML <x86@kernel.org>,
-        Guo Ren <guoren@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-References: <cover.1579248206.git.michal.simek@xilinx.com>
- <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
- <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <5dac2fdd-6e4e-dd16-a149-fbdd8117ac1c@monstr.eu>
-Date:   Wed, 22 Jan 2020 07:47:27 +0100
+        id S1726049AbgAVIZd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 Jan 2020 03:25:33 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39110 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725868AbgAVIZd (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 Jan 2020 03:25:33 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00M8Ml6h108909
+        for <linux-s390@vger.kernel.org>; Wed, 22 Jan 2020 03:25:32 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xp4gj7u0u-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 22 Jan 2020 03:25:32 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Wed, 22 Jan 2020 08:25:30 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 Jan 2020 08:25:27 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00M8Oa9o38928774
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Jan 2020 08:24:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5CAF452063;
+        Wed, 22 Jan 2020 08:25:26 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.86.132])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 026CC52059;
+        Wed, 22 Jan 2020 08:25:25 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v4 4/9] s390x: smp: Rework cpu start and
+ active tracking
+To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
+Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
+        linux-s390@vger.kernel.org, cohuck@redhat.com
+References: <20200121134254.4570-1-frankja@linux.ibm.com>
+ <20200121134254.4570-5-frankja@linux.ibm.com>
+ <bf356a2c-702e-0ecd-d24c-f7a1b7c18d2a@redhat.com>
+From:   Janosch Frank <frankja@linux.ibm.com>
+Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+Date:   Wed, 22 Jan 2020 09:25:25 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
+In-Reply-To: <bf356a2c-702e-0ecd-d24c-f7a1b7c18d2a@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="2dbNcSDggiI5dxMnAV22UCPQ9muiAKI4S"
+ boundary="k5dl6NC2QUxdYVH3dLuNpue1f1aXqx8i9"
+X-TM-AS-GCONF: 00
+x-cbid: 20012208-0020-0000-0000-000003A2E9B2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012208-0021-0000-0000-000021FA7CF8
+Message-Id: <b088e6ea-bdc0-4833-7271-160a5085d9cf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
+ clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0 suspectscore=0
+ spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001220076
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---2dbNcSDggiI5dxMnAV22UCPQ9muiAKI4S
-Content-Type: multipart/mixed; boundary="FbunjY3XOg7TLNQEYAVrl68e0gK20Tj5W";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-To: Masahiro Yamada <masahiroy@kernel.org>,
- Michal Simek <michal.simek@xilinx.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, git@xilinx.com,
- Christoph Hellwig <hch@lst.de>, Christoph Hellwig <hch@infradead.org>,
- Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Borislav Petkov <bp@alien8.de>, linux-mips@vger.kernel.org,
- Thomas Gleixner <tglx@linutronix.de>,
- Catalin Marinas <catalin.marinas@arm.com>,
- "open list:SIFIVE DRIVERS" <linux-riscv@lists.infradead.org>,
- linux-arch <linux-arch@vger.kernel.org>,
- linux-s390 <linux-s390@vger.kernel.org>, Palmer Dabbelt
- <palmer@dabbelt.com>, X86 ML <x86@kernel.org>, Guo Ren <guoren@kernel.org>,
- Kate Stewart <kstewart@linuxfoundation.org>,
- Wesley Terpstra <wesley@sifive.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ralf Baechle <ralf@linux-mips.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Max Filippov <jcmvbkbc@gmail.com>,
- linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Will Deacon <will@kernel.org>, Christian Borntraeger
- <borntraeger@de.ibm.com>, Deepa Dinamani <deepa.kernel@gmail.com>,
- Chris Zankel <chris@zankel.net>, Ingo Molnar <mingo@redhat.com>,
- Waiman Long <longman@redhat.com>,
- linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
- Albert Ou <aou@eecs.berkeley.edu>, Vasily Gorbik <gor@linux.ibm.com>,
- James Hogan <jhogan@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>
-Message-ID: <5dac2fdd-6e4e-dd16-a149-fbdd8117ac1c@monstr.eu>
-Subject: Re: [PATCH v2 1/2] asm-generic: Make dma-contiguous.h a mandatory
- include/asm header
-References: <cover.1579248206.git.michal.simek@xilinx.com>
- <0274919c5e3b134df19d943f99cb7e84e5135ccd.1579248206.git.michal.simek@xilinx.com>
- <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
-In-Reply-To: <CAK7LNARdiTxajZcXH0g7t6nEis-1ebv7Ta6wBdgGgS6O29O7+A@mail.gmail.com>
+--k5dl6NC2QUxdYVH3dLuNpue1f1aXqx8i9
+Content-Type: multipart/mixed; boundary="paD5wABuL9wR4OGqKgXwcI10JaUWME7Qm"
 
---FbunjY3XOg7TLNQEYAVrl68e0gK20Tj5W
-Content-Type: text/plain; charset=utf-8
+--paD5wABuL9wR4OGqKgXwcI10JaUWME7Qm
+Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
-On 21. 01. 20 16:43, Masahiro Yamada wrote:
-> Hi.
->=20
-> On Fri, Jan 17, 2020 at 5:03 PM Michal Simek <michal.simek@xilinx.com> =
-wrote:
+On 1/21/20 6:40 PM, David Hildenbrand wrote:
+> On 21.01.20 14:42, Janosch Frank wrote:
+>> The architecture specifies that processing sigp orders may be
+>> asynchronous, and this is indeed the case on some hypervisors, so we
+>> need to wait until the cpu runs before we return from the setup/start
+>> function.
 >>
->> dma-continuguous.h is generic for all architectures except arm32 which=
- has
->> its own version.
+>> As there was a lot of duplicate code, a common function for cpu
+>> restarts has been introduced.
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>> ---
+>>  lib/s390x/smp.c | 50 ++++++++++++++++++++++++++++--------------------=
+-
+>>  1 file changed, 29 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
+>> index f57f420..84e681d 100644
+>> --- a/lib/s390x/smp.c
+>> +++ b/lib/s390x/smp.c
+>> @@ -104,35 +104,46 @@ int smp_cpu_stop_store_status(uint16_t addr)
+>>  	return rc;
+>>  }
+>> =20
+>> +static int smp_cpu_restart_nolock(uint16_t addr, struct psw *psw)
+>> +{
+>> +	int rc;
+>> +	struct cpu *cpu =3D smp_cpu_from_addr(addr);
+>> +
+>> +	if (!cpu)
+>> +		return -1;
+>> +	if (psw) {
+>> +		cpu->lowcore->restart_new_psw.mask =3D psw->mask;
+>> +		cpu->lowcore->restart_new_psw.addr =3D psw->addr;
+>> +	}
+>> +	rc =3D sigp(addr, SIGP_RESTART, 0, NULL);
+>> +	if (rc)
+>> +		return rc;
+>> +	/*
+>> +	 * The order has been accepted, but the actual restart may not
+>> +	 * have been performed yet, so wait until the cpu is running.
+>> +	 */
+>> +	while (!smp_cpu_running(addr))
+>> +		mb();
+>> +	cpu->active =3D true;
+>> +	return 0;
+>> +}
+>> +
 >=20
+> Just wondering what happened to my comment
+
+It probably got lost in your other change requests :)
+
 >=20
+> "Should you make sure to stop the CPU before issuing the restart?
+> Otherwise you will get false positives if it is still running (but
+> hasn't processed the RESTART yet)"
 >=20
-> Currently, <asm/dma-contiguous.h> is present
-> for only architectures that select HAVE_DMA_CONTIGUOUS.
+> ?
 >=20
-> After this commit, the other architectures will end
-> up with generating the unused header.
->=20
-> That would not be a big deal, but
-> it could be mentioned in the commit message?
+> IOW, should we have a SIGP_STOP before issuing the SIGP_RESTART?
 
-I have not a problem with mentioning it but not sure if this was done in
-past.
-
-Thanks,
-Michal
-
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+Yes, that would be cleaner.
 
 
 
---FbunjY3XOg7TLNQEYAVrl68e0gK20Tj5W--
+--paD5wABuL9wR4OGqKgXwcI10JaUWME7Qm--
 
---2dbNcSDggiI5dxMnAV22UCPQ9muiAKI4S
+--k5dl6NC2QUxdYVH3dLuNpue1f1aXqx8i9
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXifv/wAKCRDKSWXLKUoM
-IVUkAJ9gJ/92v49cM3s26jCgIZyQ1BDZJwCggrGUMIoHH0J6KEp9UuM3wHKXoAo=
-=zquH
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl4oBvUACgkQ41TmuOI4
+ufgQNw//UpqxqREtIzIp9p8i+uVbx+1Nz+juTKfrDqcnacSV8fu0jbIAU4RQH7O+
+y4uKUBzqATDVFfiKYmTvfwNwGYPpl0XQ48gJOiHReGIS7ipDE8NqLJMMd9MjfT6G
+7hBb5UNZ2IqYSV78EoDWr82B7NADlUglI3eMcJtXf0b0aoe1Ui4xYB5fRUjVKw4A
++JVaNAe69GrjTmvg2d6ZgZCCthEjk5r6kuKdwWZmZW4uXkgqRpviEOZE0gJOLb87
+bCmkhuXHi0ku3t0HsPWkI5Lt3SqH0uo/41a6qBPH5fo0d6V+RimAc/3/CeSCwTJH
+M0f5JBEcL7TdILNaNQdwLd0c5gyRoosNU6O6GnTou4Fl6NkiBWWBIikriyDP5eXX
+dXP/ReZJ//4FKNj/KiiFsNXXNHPH6R+S7ez1KTIp6e2PcZ3f8XlWJuKO924t5bxf
+ewOVDNnQiXD3N3EWvJWHC1YjAKnp0x5Moy4jrKw9Ti51y28jXV65aUW8+L4PMp3j
+v9JUU3uvCIR1vobqUtIp867UP/KI4/jrtJ0ma9OBBw4KJOcjnVZVeB2g230eE4Iy
+ScpUvWyBVZBssgllid36FcwggL3wHXsdO+NH+EbsNzmhmJlx+GQwQVsKZmYqhkl5
+Fgbwxx1oD76tWVKpsByj5lrxJsJLXHftgKzEDh7RzQumSrbpLTE=
+=VbqB
 -----END PGP SIGNATURE-----
 
---2dbNcSDggiI5dxMnAV22UCPQ9muiAKI4S--
+--k5dl6NC2QUxdYVH3dLuNpue1f1aXqx8i9--
+
