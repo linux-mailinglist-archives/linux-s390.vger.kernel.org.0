@@ -2,216 +2,165 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 26D6E144D98
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Jan 2020 09:25:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7C0261451A7
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Jan 2020 10:55:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726049AbgAVIZd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 Jan 2020 03:25:33 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39110 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725868AbgAVIZd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 Jan 2020 03:25:33 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00M8Ml6h108909
-        for <linux-s390@vger.kernel.org>; Wed, 22 Jan 2020 03:25:32 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xp4gj7u0u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 22 Jan 2020 03:25:32 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Wed, 22 Jan 2020 08:25:30 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Jan 2020 08:25:27 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00M8Oa9o38928774
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Jan 2020 08:24:36 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5CAF452063;
-        Wed, 22 Jan 2020 08:25:26 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.86.132])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 026CC52059;
-        Wed, 22 Jan 2020 08:25:25 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v4 4/9] s390x: smp: Rework cpu start and
- active tracking
-To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, cohuck@redhat.com
-References: <20200121134254.4570-1-frankja@linux.ibm.com>
- <20200121134254.4570-5-frankja@linux.ibm.com>
- <bf356a2c-702e-0ecd-d24c-f7a1b7c18d2a@redhat.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Wed, 22 Jan 2020 09:25:25 +0100
+        id S1730156AbgAVJzk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 Jan 2020 04:55:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:33280 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729641AbgAVJzg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 22 Jan 2020 04:55:36 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1579686935;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=hA2D1tp1MOUaMC+SN1Z7aKOoMcsKz5S+HslIWa3G9WA=;
+        b=HngqqIFq/UqRPG5U30wU/bMLBA6kl8Jt8aKyHyHbbFZCzdbbQyTS6oghpxBugtA4cvLQyA
+        FLtRVQ2SvPeiMy53YCU3u9lmTEKhMOTukMPcqprtumtX60CzCrhSjT22NAjVmAK+bgoCRe
+        hOL4RlbpI5JQLFn5iq78d+xH06xgfF0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-zR5UNPvxMhurcPNGP3qg8A-1; Wed, 22 Jan 2020 04:55:32 -0500
+X-MC-Unique: zR5UNPvxMhurcPNGP3qg8A-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46380190D341;
+        Wed, 22 Jan 2020 09:55:31 +0000 (UTC)
+Received: from [10.36.117.205] (ovpn-117-205.ams2.redhat.com [10.36.117.205])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DF00F60BE0;
+        Wed, 22 Jan 2020 09:55:29 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v8 6/6] s390x: SCLP unit test
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com
+References: <20200120184256.188698-1-imbrenda@linux.ibm.com>
+ <20200120184256.188698-7-imbrenda@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <58aa7974-2b03-494a-63c3-f8db1faff749@redhat.com>
+Date:   Wed, 22 Jan 2020 10:55:29 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <bf356a2c-702e-0ecd-d24c-f7a1b7c18d2a@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="k5dl6NC2QUxdYVH3dLuNpue1f1aXqx8i9"
-X-TM-AS-GCONF: 00
-x-cbid: 20012208-0020-0000-0000-000003A2E9B2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012208-0021-0000-0000-000021FA7CF8
-Message-Id: <b088e6ea-bdc0-4833-7271-160a5085d9cf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-17_05:2020-01-16,2020-01-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxlogscore=999
- clxscore=1015 impostorscore=0 phishscore=0 mlxscore=0 suspectscore=0
- spamscore=0 malwarescore=0 adultscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-2001220076
+In-Reply-To: <20200120184256.188698-7-imbrenda@linux.ibm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---k5dl6NC2QUxdYVH3dLuNpue1f1aXqx8i9
-Content-Type: multipart/mixed; boundary="paD5wABuL9wR4OGqKgXwcI10JaUWME7Qm"
+[...]
 
---paD5wABuL9wR4OGqKgXwcI10JaUWME7Qm
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+>  all: directories test_cases test_cases_binary
+> diff --git a/s390x/sclp.c b/s390x/sclp.c
+> new file mode 100644
+> index 0000000..215347e
+> --- /dev/null
+> +++ b/s390x/sclp.c
+> @@ -0,0 +1,474 @@
+> +/*
+> + * Service Call tests
+> + *
+> + * Copyright (c) 2019 IBM Corp
 
-On 1/21/20 6:40 PM, David Hildenbrand wrote:
-> On 21.01.20 14:42, Janosch Frank wrote:
->> The architecture specifies that processing sigp orders may be
->> asynchronous, and this is indeed the case on some hypervisors, so we
->> need to wait until the cpu runs before we return from the setup/start
->> function.
->>
->> As there was a lot of duplicate code, a common function for cpu
->> restarts has been introduced.
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->> ---
->>  lib/s390x/smp.c | 50 ++++++++++++++++++++++++++++--------------------=
--
->>  1 file changed, 29 insertions(+), 21 deletions(-)
->>
->> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
->> index f57f420..84e681d 100644
->> --- a/lib/s390x/smp.c
->> +++ b/lib/s390x/smp.c
->> @@ -104,35 +104,46 @@ int smp_cpu_stop_store_status(uint16_t addr)
->>  	return rc;
->>  }
->> =20
->> +static int smp_cpu_restart_nolock(uint16_t addr, struct psw *psw)
->> +{
->> +	int rc;
->> +	struct cpu *cpu =3D smp_cpu_from_addr(addr);
->> +
->> +	if (!cpu)
->> +		return -1;
->> +	if (psw) {
->> +		cpu->lowcore->restart_new_psw.mask =3D psw->mask;
->> +		cpu->lowcore->restart_new_psw.addr =3D psw->addr;
->> +	}
->> +	rc =3D sigp(addr, SIGP_RESTART, 0, NULL);
->> +	if (rc)
->> +		return rc;
->> +	/*
->> +	 * The order has been accepted, but the actual restart may not
->> +	 * have been performed yet, so wait until the cpu is running.
->> +	 */
->> +	while (!smp_cpu_running(addr))
->> +		mb();
->> +	cpu->active =3D true;
->> +	return 0;
->> +}
->> +
->=20
-> Just wondering what happened to my comment
+Should be 2020 now. Will fix that up.
 
-It probably got lost in your other change requests :)
+[...]
 
->=20
-> "Should you make sure to stop the CPU before issuing the restart?
-> Otherwise you will get false positives if it is still running (but
-> hasn't processed the RESTART yet)"
->=20
-> ?
->=20
-> IOW, should we have a SIGP_STOP before issuing the SIGP_RESTART?
+> +/**
+> + * Perform one test at the given address, optionally using the SCCB te=
+mplate,
+> + * checking for the expected program interrupts and return codes.
+> + *
+> + * The parameter buf_len indicates the number of bytes of the template=
+ that
+> + * should be copied to the test address, and should be 0 when the test
+> + * address is invalid, in which case nothing is copied.
+> + *
+> + * The template is used to simplify tests where the same buffer conten=
+t is
+> + * used many times in a row, at different addresses.
+> + *
+> + * Returns true in case of success or false in case of failure
+> + */
+> +static bool test_one_sccb(uint32_t cmd, uint8_t *addr, uint16_t buf_le=
+n, uint64_t exp_pgm, uint16_t exp_rc)
+> +{
+> +	SCCBHeader *h =3D (SCCBHeader *)addr;
+> +	int res, pgm;
+> +
+> +	/* Copy the template to the test address if needed */
+> +	if (buf_len)
+> +		memcpy(addr, sccb_template, buf_len);
+> +	if (exp_pgm !=3D PGM_NONE)
+> +		expect_pgm_int();
 
-Yes, that would be cleaner.
+I still dislike the handling here. Any caller can simply do a
 
+expect_pgm_int();
+test_one_sccb(...)
+check_pgm_int_code(PGM_);
 
+Same thing goes for exp_rc. We really should drop exp_rc and exp_pgm
+handling from the function completely and handle it in the caller. That
+makes the tests actually readable.
 
---paD5wABuL9wR4OGqKgXwcI10JaUWME7Qm--
+But I feel like I am repeating myself. I'll queue this patch with the
+2020 fixed up and might send a fixup myself (if I find some spare minutes=
+).
 
---k5dl6NC2QUxdYVH3dLuNpue1f1aXqx8i9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+--=20
+Thanks,
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl4oBvUACgkQ41TmuOI4
-ufgQNw//UpqxqREtIzIp9p8i+uVbx+1Nz+juTKfrDqcnacSV8fu0jbIAU4RQH7O+
-y4uKUBzqATDVFfiKYmTvfwNwGYPpl0XQ48gJOiHReGIS7ipDE8NqLJMMd9MjfT6G
-7hBb5UNZ2IqYSV78EoDWr82B7NADlUglI3eMcJtXf0b0aoe1Ui4xYB5fRUjVKw4A
-+JVaNAe69GrjTmvg2d6ZgZCCthEjk5r6kuKdwWZmZW4uXkgqRpviEOZE0gJOLb87
-bCmkhuXHi0ku3t0HsPWkI5Lt3SqH0uo/41a6qBPH5fo0d6V+RimAc/3/CeSCwTJH
-M0f5JBEcL7TdILNaNQdwLd0c5gyRoosNU6O6GnTou4Fl6NkiBWWBIikriyDP5eXX
-dXP/ReZJ//4FKNj/KiiFsNXXNHPH6R+S7ez1KTIp6e2PcZ3f8XlWJuKO924t5bxf
-ewOVDNnQiXD3N3EWvJWHC1YjAKnp0x5Moy4jrKw9Ti51y28jXV65aUW8+L4PMp3j
-v9JUU3uvCIR1vobqUtIp867UP/KI4/jrtJ0ma9OBBw4KJOcjnVZVeB2g230eE4Iy
-ScpUvWyBVZBssgllid36FcwggL3wHXsdO+NH+EbsNzmhmJlx+GQwQVsKZmYqhkl5
-Fgbwxx1oD76tWVKpsByj5lrxJsJLXHftgKzEDh7RzQumSrbpLTE=
-=VbqB
------END PGP SIGNATURE-----
-
---k5dl6NC2QUxdYVH3dLuNpue1f1aXqx8i9--
+David / dhildenb
 
