@@ -2,45 +2,44 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B867146925
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Jan 2020 14:32:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D5D4146970
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Jan 2020 14:45:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726792AbgAWNcY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Jan 2020 08:32:24 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:25392 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726232AbgAWNcY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:32:24 -0500
+        id S1726771AbgAWNpN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Jan 2020 08:45:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60666 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726792AbgAWNpN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 23 Jan 2020 08:45:13 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1579786343;
+        s=mimecast20190719; t=1579787112;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Y0WNxxezezM4locPIv338v0JHx8L8ALDPsAmFY4GNSI=;
-        b=StPcEhAK82fD6imE50ExYeVz1TvBmDRGfnrUwJEVUrlZRYqv4WjrkRQnOMqwsLmOf1ZAJm
-        nxbQrx9wIKPUpNUWbMFYnIYWqQFGkPxXCIBnGGpYUfM9slmhur6md8t3PRpqcHWGI0PyGm
-        8MkXv3K+0PDKgDZAdqYixwhp2Wg3oIo=
+        bh=Y9mBwNfCNR+8yAKfT0NkKpzYQ8BdIFMw4Fl646xX4Qc=;
+        b=U+CoKJODZ/JhqK+R6o8p2jcUXHPCsqXxwT1BBZFp0ri+iGP4RcW2lPNjXCeL9ycYN1Sd5W
+        9xahHp5F5K9BGTA2Grkk9clg3Otj22SJaXTsLB2rmQu97KrK1kcd5+R2rcuys32LgIEOZQ
+        NUKj2PTbh+ir9LiUkB4v2TR0YUmbsNg=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-76-6T8PhYlpO0azCzO4zpBs0Q-1; Thu, 23 Jan 2020 08:32:17 -0500
-X-MC-Unique: 6T8PhYlpO0azCzO4zpBs0Q-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-275-dnoqv-SuOguMLacWPorZ_Q-1; Thu, 23 Jan 2020 08:45:07 -0500
+X-MC-Unique: dnoqv-SuOguMLacWPorZ_Q-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 89DB98017CC;
-        Thu, 23 Jan 2020 13:32:16 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9184B100550E;
+        Thu, 23 Jan 2020 13:45:06 +0000 (UTC)
 Received: from [10.36.117.56] (ovpn-117-56.ams2.redhat.com [10.36.117.56])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 34FF16106A;
-        Thu, 23 Jan 2020 13:32:15 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v4 6/9] s390x: smp: Loop if secondary cpu
- returns into cpu setup again
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 352025C296;
+        Thu, 23 Jan 2020 13:45:05 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v4 2/9] s390x: smp: Only use smp_cpu_setup
+ once
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
         linux-s390@vger.kernel.org, cohuck@redhat.com
 References: <20200121134254.4570-1-frankja@linux.ibm.com>
- <20200121134254.4570-7-frankja@linux.ibm.com>
+ <20200121134254.4570-3-frankja@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -86,71 +85,126 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <73f8c5f6-327a-8ff5-c4e7-b1db46e3490f@redhat.com>
-Date:   Thu, 23 Jan 2020 14:32:14 +0100
+Message-ID: <ef7894ff-4179-6730-ce28-c48e7730eff8@redhat.com>
+Date:   Thu, 23 Jan 2020 14:45:04 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <20200121134254.4570-7-frankja@linux.ibm.com>
+In-Reply-To: <20200121134254.4570-3-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 21.01.20 14:42, Janosch Frank wrote:
-> Up to now a secondary cpu could have returned from the function it was
-> executing and ending up somewhere in cstart64.S. This was mostly
-> circumvented by an endless loop in the function that it executed.
-> 
-> Let's add a loop to the end of the cpu setup, so we don't have to rely
-> on added loops in the tests.
+> Let's stop and start instead of using setup to run a function on a
+> cpu.
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: Thomas Huth <thuth@redhat.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
 > ---
->  s390x/cstart64.S | 2 ++
->  1 file changed, 2 insertions(+)
+>  s390x/smp.c | 21 ++++++++++++++-------
+>  1 file changed, 14 insertions(+), 7 deletions(-)
 > 
-> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-> index 9af6bb3..5fd8d2f 100644
-> --- a/s390x/cstart64.S
-> +++ b/s390x/cstart64.S
-> @@ -162,6 +162,8 @@ smp_cpu_setup_state:
->  	/* We should only go once through cpu setup and not for every restart */
->  	stg	%r14, GEN_LC_RESTART_NEW_PSW + 8
->  	br	%r14
-> +	/* If the function returns, just loop here */
-> +0:	j	0
+> diff --git a/s390x/smp.c b/s390x/smp.c
+> index e37eb56..3e8cf3e 100644
+> --- a/s390x/smp.c
+> +++ b/s390x/smp.c
+> @@ -53,7 +53,7 @@ static void test_start(void)
+>  	psw.addr = (unsigned long)test_func;
 >  
->  pgm_int:
->  	SAVE_REGS
+>  	set_flag(0);
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  	wait_for_flag();
+>  	report(1, "start");
+>  }
+> @@ -109,6 +109,7 @@ static void test_store_status(void)
+>  	report(1, "status written");
+>  	free_pages(status, PAGE_SIZE * 2);
+>  	report_prefix_pop();
+> +	smp_cpu_stop(1);
+>  
+>  	report_prefix_pop();
+>  }
+> @@ -137,9 +138,8 @@ static void test_ecall(void)
+>  
+>  	report_prefix_push("ecall");
+>  	set_flag(0);
+> -	smp_cpu_destroy(1);
+>  
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  	wait_for_flag();
+>  	set_flag(0);
+>  	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
+> @@ -172,9 +172,8 @@ static void test_emcall(void)
+>  
+>  	report_prefix_push("emcall");
+>  	set_flag(0);
+> -	smp_cpu_destroy(1);
+>  
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  	wait_for_flag();
+>  	set_flag(0);
+>  	sigp(1, SIGP_EMERGENCY_SIGNAL, 0, NULL);
+> @@ -192,7 +191,7 @@ static void test_reset_initial(void)
+>  	psw.addr = (unsigned long)test_func;
+>  
+>  	report_prefix_push("reset initial");
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  
+>  	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
+>  	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
+> @@ -223,7 +222,7 @@ static void test_reset(void)
+>  	psw.addr = (unsigned long)test_func;
+>  
+>  	report_prefix_push("cpu reset");
+> -	smp_cpu_setup(1, psw);
+> +	smp_cpu_start(1, psw);
+>  
+>  	sigp_retry(1, SIGP_CPU_RESET, 0, NULL);
+>  	report(smp_cpu_stopped(1), "cpu stopped");
+> @@ -232,6 +231,7 @@ static void test_reset(void)
+>  
+>  int main(void)
+>  {
+> +	struct psw psw;
+>  	report_prefix_push("smp");
+>  
+>  	if (smp_query_num_cpus() == 1) {
+> @@ -239,6 +239,12 @@ int main(void)
+>  		goto done;
+>  	}
+>  
+> +	/* Setting up the cpu to give it a stack and lowcore */
+> +	psw.mask = extract_psw_mask();
+> +	psw.addr = (unsigned long)cpu_loop;
+> +	smp_cpu_setup(1, psw);
+> +	smp_cpu_stop(1);
+> +
+>  	test_start();
+>  	test_stop();
+>  	test_stop_store_status();
+> @@ -247,6 +253,7 @@ int main(void)
+>  	test_emcall();
+>  	test_reset();
+>  	test_reset_initial();
+> +	smp_cpu_destroy(1);
+>  
+>  done:
+>  	report_prefix_pop();
 > 
 
-This patch collides with a patch I have still queued
-
-Author: Janosch Frank <frankja@linux.ibm.com>
-Date:   Wed Dec 11 06:59:22 2019 -0500
-
-    s390x: smp: Use full PSW to bringup new cpu
-    
-    Up to now we ignored the psw mask and only used the psw address when
-    bringing up a new cpu. For DAT we need to also load the mask, so let's
-    do that.
-    
-    Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-    Reviewed-by: David Hildenbrand <david@redhat.com>
-    Message-Id: <20191211115923.9191-2-frankja@linux.ibm.com>
-    Signed-off-by: David Hildenbrand <david@redhat.com>
-
-
-In that patch we use a lpswe to jump to the target code, not a br. So the
-return address will no longer be stored in %14 and this code here would stop working
-AFAIKS.
-
-Shall I drop that patch for now?
+With this patch, I get timeouts under TCG. Seems to loop forever.
 
 -- 
 Thanks,
