@@ -2,52 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D36CF146984
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Jan 2020 14:47:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6C10A1469F6
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Jan 2020 14:54:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726796AbgAWNrm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Jan 2020 08:47:42 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55632 "EHLO
+        id S1727194AbgAWNyz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Jan 2020 08:54:55 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64614 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726871AbgAWNrm (ORCPT
+        by vger.kernel.org with ESMTP id S1726796AbgAWNyy (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 Jan 2020 08:47:42 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NDl82i024573
-        for <linux-s390@vger.kernel.org>; Thu, 23 Jan 2020 08:47:41 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xp963w92c-1
+        Thu, 23 Jan 2020 08:54:54 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00NDqOPx127615
+        for <linux-s390@vger.kernel.org>; Thu, 23 Jan 2020 08:54:54 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xqa25y4g7-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 23 Jan 2020 08:47:41 -0500
+        for <linux-s390@vger.kernel.org>; Thu, 23 Jan 2020 08:54:53 -0500
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 23 Jan 2020 13:47:39 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Thu, 23 Jan 2020 13:54:51 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 23 Jan 2020 13:47:36 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00NDlZRi38273192
+        Thu, 23 Jan 2020 13:54:48 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00NDrvUH42664214
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 23 Jan 2020 13:47:36 GMT
+        Thu, 23 Jan 2020 13:53:57 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D9D8942041;
-        Thu, 23 Jan 2020 13:47:35 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C8EAC42041;
+        Thu, 23 Jan 2020 13:54:47 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EDA34203F;
-        Thu, 23 Jan 2020 13:47:35 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 85FDF4203F;
+        Thu, 23 Jan 2020 13:54:47 +0000 (GMT)
 Received: from dyn-9-152-224-146.boeblingen.de.ibm.com (unknown [9.152.224.146])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 23 Jan 2020 13:47:35 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v4 6/9] s390x: smp: Loop if secondary cpu
- returns into cpu setup again
+        Thu, 23 Jan 2020 13:54:47 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v4 2/9] s390x: smp: Only use smp_cpu_setup
+ once
 To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
         linux-s390@vger.kernel.org, cohuck@redhat.com
 References: <20200121134254.4570-1-frankja@linux.ibm.com>
- <20200121134254.4570-7-frankja@linux.ibm.com>
- <73f8c5f6-327a-8ff5-c4e7-b1db46e3490f@redhat.com>
+ <20200121134254.4570-3-frankja@linux.ibm.com>
+ <ef7894ff-4179-6730-ce28-c48e7730eff8@redhat.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -91,84 +91,173 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Date:   Thu, 23 Jan 2020 14:47:35 +0100
+Date:   Thu, 23 Jan 2020 14:54:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <73f8c5f6-327a-8ff5-c4e7-b1db46e3490f@redhat.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <ef7894ff-4179-6730-ce28-c48e7730eff8@redhat.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ protocol="application/pgp-signature";
+ boundary="V2umUpQQJqxbaQrGZ00qKqAwEO25NLbav"
 X-TM-AS-GCONF: 00
-x-cbid: 20012313-0020-0000-0000-000003A3529D
+x-cbid: 20012313-0008-0000-0000-0000034C091E
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20012313-0021-0000-0000-000021FAEC1D
-Message-Id: <c44d4347-1603-3f98-1ca1-1fbd6ae29ac0@linux.ibm.com>
+x-cbparentid: 20012313-0009-0000-0000-00004A6C7591
+Message-Id: <e09c42a7-279a-7e8b-8241-26c69940cdd0@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-23_08:2020-01-23,2020-01-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0
- priorityscore=1501 impostorscore=0 spamscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
- suspectscore=3 clxscore=1015 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1910280000 definitions=main-2001230118
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 impostorscore=0
+ suspectscore=11 priorityscore=1501 adultscore=0 spamscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001230119
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 1/23/20 2:32 PM, David Hildenbrand wrote:
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--V2umUpQQJqxbaQrGZ00qKqAwEO25NLbav
+Content-Type: multipart/mixed; boundary="5ds5ufiKTnugcR6YKVnm1LkVNANTpFlOo"
+
+--5ds5ufiKTnugcR6YKVnm1LkVNANTpFlOo
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
+
+On 1/23/20 2:45 PM, David Hildenbrand wrote:
 > On 21.01.20 14:42, Janosch Frank wrote:
->> Up to now a secondary cpu could have returned from the function it was
->> executing and ending up somewhere in cstart64.S. This was mostly
->> circumvented by an endless loop in the function that it executed.
->>
->> Let's add a loop to the end of the cpu setup, so we don't have to rely
->> on added loops in the tests.
+>> Let's stop and start instead of using setup to run a function on a
+>> cpu.
 >>
 >> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> Reviewed-by: Thomas Huth <thuth@redhat.com>
+>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>> Acked-by: David Hildenbrand <david@redhat.com>
 >> ---
->>  s390x/cstart64.S | 2 ++
->>  1 file changed, 2 insertions(+)
+>>  s390x/smp.c | 21 ++++++++++++++-------
+>>  1 file changed, 14 insertions(+), 7 deletions(-)
 >>
->> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
->> index 9af6bb3..5fd8d2f 100644
->> --- a/s390x/cstart64.S
->> +++ b/s390x/cstart64.S
->> @@ -162,6 +162,8 @@ smp_cpu_setup_state:
->>  	/* We should only go once through cpu setup and not for every restart */
->>  	stg	%r14, GEN_LC_RESTART_NEW_PSW + 8
->>  	br	%r14
->> +	/* If the function returns, just loop here */
->> +0:	j	0
->>  
->>  pgm_int:
->>  	SAVE_REGS
+>> diff --git a/s390x/smp.c b/s390x/smp.c
+>> index e37eb56..3e8cf3e 100644
+>> --- a/s390x/smp.c
+>> +++ b/s390x/smp.c
+>> @@ -53,7 +53,7 @@ static void test_start(void)
+>>  	psw.addr =3D (unsigned long)test_func;
+>> =20
+>>  	set_flag(0);
+>> -	smp_cpu_setup(1, psw);
+>> +	smp_cpu_start(1, psw);
+>>  	wait_for_flag();
+>>  	report(1, "start");
+>>  }
+>> @@ -109,6 +109,7 @@ static void test_store_status(void)
+>>  	report(1, "status written");
+>>  	free_pages(status, PAGE_SIZE * 2);
+>>  	report_prefix_pop();
+>> +	smp_cpu_stop(1);
+>> =20
+>>  	report_prefix_pop();
+>>  }
+>> @@ -137,9 +138,8 @@ static void test_ecall(void)
+>> =20
+>>  	report_prefix_push("ecall");
+>>  	set_flag(0);
+>> -	smp_cpu_destroy(1);
+>> =20
+>> -	smp_cpu_setup(1, psw);
+>> +	smp_cpu_start(1, psw);
+>>  	wait_for_flag();
+>>  	set_flag(0);
+>>  	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
+>> @@ -172,9 +172,8 @@ static void test_emcall(void)
+>> =20
+>>  	report_prefix_push("emcall");
+>>  	set_flag(0);
+>> -	smp_cpu_destroy(1);
+>> =20
+>> -	smp_cpu_setup(1, psw);
+>> +	smp_cpu_start(1, psw);
+>>  	wait_for_flag();
+>>  	set_flag(0);
+>>  	sigp(1, SIGP_EMERGENCY_SIGNAL, 0, NULL);
+>> @@ -192,7 +191,7 @@ static void test_reset_initial(void)
+>>  	psw.addr =3D (unsigned long)test_func;
+>> =20
+>>  	report_prefix_push("reset initial");
+>> -	smp_cpu_setup(1, psw);
+>> +	smp_cpu_start(1, psw);
+>> =20
+>>  	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
+>>  	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
+>> @@ -223,7 +222,7 @@ static void test_reset(void)
+>>  	psw.addr =3D (unsigned long)test_func;
+>> =20
+>>  	report_prefix_push("cpu reset");
+>> -	smp_cpu_setup(1, psw);
+>> +	smp_cpu_start(1, psw);
+>> =20
+>>  	sigp_retry(1, SIGP_CPU_RESET, 0, NULL);
+>>  	report(smp_cpu_stopped(1), "cpu stopped");
+>> @@ -232,6 +231,7 @@ static void test_reset(void)
+>> =20
+>>  int main(void)
+>>  {
+>> +	struct psw psw;
+>>  	report_prefix_push("smp");
+>> =20
+>>  	if (smp_query_num_cpus() =3D=3D 1) {
+>> @@ -239,6 +239,12 @@ int main(void)
+>>  		goto done;
+>>  	}
+>> =20
+>> +	/* Setting up the cpu to give it a stack and lowcore */
+>> +	psw.mask =3D extract_psw_mask();
+>> +	psw.addr =3D (unsigned long)cpu_loop;
+>> +	smp_cpu_setup(1, psw);
+>> +	smp_cpu_stop(1);
+>> +
+>>  	test_start();
+>>  	test_stop();
+>>  	test_stop_store_status();
+>> @@ -247,6 +253,7 @@ int main(void)
+>>  	test_emcall();
+>>  	test_reset();
+>>  	test_reset_initial();
+>> +	smp_cpu_destroy(1);
+>> =20
+>>  done:
+>>  	report_prefix_pop();
 >>
-> 
-> This patch collides with a patch I have still queued
-> 
-> Author: Janosch Frank <frankja@linux.ibm.com>
-> Date:   Wed Dec 11 06:59:22 2019 -0500
-> 
->     s390x: smp: Use full PSW to bringup new cpu
->     
->     Up to now we ignored the psw mask and only used the psw address when
->     bringing up a new cpu. For DAT we need to also load the mask, so let's
->     do that.
->     
->     Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->     Reviewed-by: David Hildenbrand <david@redhat.com>
->     Message-Id: <20191211115923.9191-2-frankja@linux.ibm.com>
->     Signed-off-by: David Hildenbrand <david@redhat.com>
-> 
-> 
-> In that patch we use a lpswe to jump to the target code, not a br. So the
-> return address will no longer be stored in %14 and this code here would stop working
-> AFAIKS.
-> 
-> Shall I drop that patch for now?
+>=20
+> With this patch, I get timeouts under TCG. Seems to loop forever.
+>=20
+The branch works on lpar and kvm without a problem.
 
-Please drop "s390x: smp: Use full PSW to bringup new cpu"
-I will send out a fixed version of that patch soonish. It will load a
-label for lpswe into r14 before doing the lpswe.
+
+--5ds5ufiKTnugcR6YKVnm1LkVNANTpFlOo--
+
+--V2umUpQQJqxbaQrGZ00qKqAwEO25NLbav
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl4ppaYACgkQ41TmuOI4
+ufiHYg//es8ywqNE5SVvTOi3PXwJpQ6dY9gTntCRh4n46OMI+KmUobQ2ZDa+RvhG
+IUglxBaqOTF5RvLOBwt5W+XdJYcVPtzeGk1KpOXzS5Atby3nxzOSru98wA0jGSdD
+a/3gMhPL+ZIuGBUziPlUXahv5WaYsc+jzBfiXFoHVppK0k+0OJDEVfA7+d2AMtEq
+yeliAAPm7LJfrnXpnX14Q/0td3LAmR699B3sPipzi3ZelL1xmhzAr80RFXOuzCor
+l2/VYDd44jeeB1K5R0JYuRyPLAYMowg8v8MaaDlIr54C+pLWhWLMYG6Lu4GuSfKa
+lraQsRztPYprgNArH7QGDQWVem2pr1Rb0jUrVcDkha87REpl9N6So+TX+fLYXt8t
+DiC9VgRoyPuq8WI5+SkyzaozVt58JMTNvvioOka3qmxI5YQYUJgvZ31q1YeVQFw9
+/jiGaJmtI3Fgpw8thSAZ6aU+pr4N/8r2uXBq+WYlQGglV6xhjPrD0DnHhHY/AIdl
+va9QpC5eyexmvrT/gOrYVrs+MQ58X7gon2ivXlx7ykCGtgbLOCD/2X6Oo5V5k639
+o1oZr/AqY9DZqicVH9lbeF5+yiAoctKUNenREeYqom/JgJxbTu1sdyhPo/wLkgvw
+OsH84nyQVHcxtcpdciJdgD5IfBlkTudaAQXzpa/DNMEwPiamxEQ=
+=mNh1
+-----END PGP SIGNATURE-----
+
+--V2umUpQQJqxbaQrGZ00qKqAwEO25NLbav--
 
