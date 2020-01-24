@@ -2,173 +2,105 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A7A61489CC
-	for <lists+linux-s390@lfdr.de>; Fri, 24 Jan 2020 15:38:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20892148AB9
+	for <lists+linux-s390@lfdr.de>; Fri, 24 Jan 2020 15:55:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387709AbgAXOhm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 24 Jan 2020 09:37:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39020 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391222AbgAXOTA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 24 Jan 2020 09:19:00 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A55720838;
-        Fri, 24 Jan 2020 14:18:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1579875539;
-        bh=aQOpUWDKW8nzsv57PXVUcVKwFvdSssAFFA6dAs6Vs6Q=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nfPMwzjh0nj3wkOQ+YVInYSgYeTN1kMsY3wfXrkRRnzZabnFJjdIsGp0HL9K64vok
-         ID7tvyy56FgVrA8NRwg5GJeZmLWb9SvwA7wP7tu6SXeJLha+IxyMdnWxbQcxILXW7J
-         0b1leoCbR/Mh3p+280yIuCjC+DYM2TGvpQyHOWlg=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 036/107] s390/zcrypt: move ap device reset from bus to driver code
-Date:   Fri, 24 Jan 2020 09:17:06 -0500
-Message-Id: <20200124141817.28793-36-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200124141817.28793-1-sashal@kernel.org>
-References: <20200124141817.28793-1-sashal@kernel.org>
-MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+        id S1730050AbgAXOzG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 24 Jan 2020 09:55:06 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51850 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730037AbgAXOzG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 24 Jan 2020 09:55:06 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00OEliIw001933
+        for <linux-s390@vger.kernel.org>; Fri, 24 Jan 2020 09:55:05 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xqmjtjm64-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 24 Jan 2020 09:55:04 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
+        Fri, 24 Jan 2020 14:55:02 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 24 Jan 2020 14:54:59 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00OEs7uY43778436
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 24 Jan 2020 14:54:07 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E4209A405B;
+        Fri, 24 Jan 2020 14:54:57 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D2E32A4054;
+        Fri, 24 Jan 2020 14:54:57 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 24 Jan 2020 14:54:57 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id 64D24E0379; Fri, 24 Jan 2020 15:54:57 +0100 (CET)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>
+Cc:     "Jason J . Herne" <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Eric Farman <farman@linux.ibm.com>
+Subject: [PATCH v1 0/1] vfio-ccw: Fix interrupt handling for HALT/CLEAR
+Date:   Fri, 24 Jan 2020 15:54:54 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20012414-0012-0000-0000-0000038053B6
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012414-0013-0000-0000-000021BC9E2C
+Message-Id: <20200124145455.51181-1-farman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-01-24_04:2020-01-24,2020-01-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 spamscore=0
+ clxscore=1015 mlxlogscore=999 suspectscore=2 phishscore=0 adultscore=0
+ lowpriorityscore=0 malwarescore=0 bulkscore=0 priorityscore=1501
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-2001240124
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+Conny,
 
-[ Upstream commit 0c874cd04292c7ee22d70eefc341fa2648f41f46 ]
+As I mentioned offline, I have been encountering some problems while
+testing the channel path code.  By pure coincidence, I found some
+really good clues that led me to this proposed fix.  I moved this
+commit to the head of my channel path v2 code, but think maybe it
+should be sent by itself so it doesn't get lost in that noise.
 
-This patch moves the reset invocation of an ap device when
-fresh detected from the ap bus to the probe() function of
-the driver responsible for this device.
+Figure 16-6 in SA22-7832-12 (POPS) goes into great detail of the
+contents of the irb.cpa based on the other bits in the IRB.
+Both the existing code and this new patch treates the irb.cpa as
+valid all the time, even though that table has many many entries
+where the cpa contents are "unpredictable."  Methinks that this
+is partially how we got into this mess, so maybe I need to write
+some smarter logic here anyway?  Thoughts?
 
-The virtualisation of ap devices makes it necessary to
-remove unconditioned resets on fresh appearing apqn devices.
-It may be that such a device is already enabled for guest
-usage. So there may be a race condition between host ap bus
-and guest ap bus doing the reset. This patch moves the
-reset from the ap bus to the zcrypt drivers. So if there
-is no zcrypt driver bound to an ap device - for example
-the ap device is bound to the vfio device driver - the
-ap device is untouched passed to the vfio device driver.
+(Disclaimer1:  I didn't go back and re-read the conversations
+that were had for the commit I marked in the "Fixes:" tag,
+but will just to make sure we didn't miss something.)
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/crypto/ap_bus.c       | 2 --
- drivers/s390/crypto/ap_bus.h       | 2 +-
- drivers/s390/crypto/ap_queue.c     | 5 +++--
- drivers/s390/crypto/zcrypt_cex2a.c | 1 +
- drivers/s390/crypto/zcrypt_cex2c.c | 2 ++
- drivers/s390/crypto/zcrypt_cex4.c  | 1 +
- 6 files changed, 8 insertions(+), 5 deletions(-)
+(Disclaimer2:  This makes my torturing-of-the-chpids test run
+quite nicely, but I didn't go back to try some of the other
+cruel-and-unusual tests at my disposable to ensure this patch
+doesn't cause any other regressions.  That's on today's agenda.)
 
-diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-index a1915061932eb..5256e3ce84e56 100644
---- a/drivers/s390/crypto/ap_bus.c
-+++ b/drivers/s390/crypto/ap_bus.c
-@@ -793,8 +793,6 @@ static int ap_device_probe(struct device *dev)
- 		drvres = ap_drv->flags & AP_DRIVER_FLAG_DEFAULT;
- 		if (!!devres != !!drvres)
- 			return -ENODEV;
--		/* (re-)init queue's state machine */
--		ap_queue_reinit_state(to_ap_queue(dev));
- 	}
- 
- 	/* Add queue/card to list of active queues/cards */
-diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
-index 433b7b64368d6..bb35ba4a8d243 100644
---- a/drivers/s390/crypto/ap_bus.h
-+++ b/drivers/s390/crypto/ap_bus.h
-@@ -261,7 +261,7 @@ void ap_queue_prepare_remove(struct ap_queue *aq);
- void ap_queue_remove(struct ap_queue *aq);
- void ap_queue_suspend(struct ap_device *ap_dev);
- void ap_queue_resume(struct ap_device *ap_dev);
--void ap_queue_reinit_state(struct ap_queue *aq);
-+void ap_queue_init_state(struct ap_queue *aq);
- 
- struct ap_card *ap_card_create(int id, int queue_depth, int raw_device_type,
- 			       int comp_device_type, unsigned int functions);
-diff --git a/drivers/s390/crypto/ap_queue.c b/drivers/s390/crypto/ap_queue.c
-index dad2be333d826..37c3bdc3642dc 100644
---- a/drivers/s390/crypto/ap_queue.c
-+++ b/drivers/s390/crypto/ap_queue.c
-@@ -638,7 +638,7 @@ struct ap_queue *ap_queue_create(ap_qid_t qid, int device_type)
- 	aq->ap_dev.device.type = &ap_queue_type;
- 	aq->ap_dev.device_type = device_type;
- 	aq->qid = qid;
--	aq->state = AP_STATE_RESET_START;
-+	aq->state = AP_STATE_UNBOUND;
- 	aq->interrupt = AP_INTR_DISABLED;
- 	spin_lock_init(&aq->lock);
- 	INIT_LIST_HEAD(&aq->list);
-@@ -771,10 +771,11 @@ void ap_queue_remove(struct ap_queue *aq)
- 	spin_unlock_bh(&aq->lock);
- }
- 
--void ap_queue_reinit_state(struct ap_queue *aq)
-+void ap_queue_init_state(struct ap_queue *aq)
- {
- 	spin_lock_bh(&aq->lock);
- 	aq->state = AP_STATE_RESET_START;
- 	ap_wait(ap_sm_event(aq, AP_EVENT_POLL));
- 	spin_unlock_bh(&aq->lock);
- }
-+EXPORT_SYMBOL(ap_queue_init_state);
-diff --git a/drivers/s390/crypto/zcrypt_cex2a.c b/drivers/s390/crypto/zcrypt_cex2a.c
-index c50f3e86cc748..7cbb384ec5352 100644
---- a/drivers/s390/crypto/zcrypt_cex2a.c
-+++ b/drivers/s390/crypto/zcrypt_cex2a.c
-@@ -175,6 +175,7 @@ static int zcrypt_cex2a_queue_probe(struct ap_device *ap_dev)
- 	zq->queue = aq;
- 	zq->online = 1;
- 	atomic_set(&zq->load, 0);
-+	ap_queue_init_state(aq);
- 	ap_queue_init_reply(aq, &zq->reply);
- 	aq->request_timeout = CEX2A_CLEANUP_TIME,
- 	aq->private = zq;
-diff --git a/drivers/s390/crypto/zcrypt_cex2c.c b/drivers/s390/crypto/zcrypt_cex2c.c
-index 35c7c6672713b..c78c0d119806f 100644
---- a/drivers/s390/crypto/zcrypt_cex2c.c
-+++ b/drivers/s390/crypto/zcrypt_cex2c.c
-@@ -220,6 +220,7 @@ static int zcrypt_cex2c_queue_probe(struct ap_device *ap_dev)
- 	zq->queue = aq;
- 	zq->online = 1;
- 	atomic_set(&zq->load, 0);
-+	ap_rapq(aq->qid);
- 	rc = zcrypt_cex2c_rng_supported(aq);
- 	if (rc < 0) {
- 		zcrypt_queue_free(zq);
-@@ -231,6 +232,7 @@ static int zcrypt_cex2c_queue_probe(struct ap_device *ap_dev)
- 	else
- 		zq->ops = zcrypt_msgtype(MSGTYPE06_NAME,
- 					 MSGTYPE06_VARIANT_NORNG);
-+	ap_queue_init_state(aq);
- 	ap_queue_init_reply(aq, &zq->reply);
- 	aq->request_timeout = CEX2C_CLEANUP_TIME;
- 	aq->private = zq;
-diff --git a/drivers/s390/crypto/zcrypt_cex4.c b/drivers/s390/crypto/zcrypt_cex4.c
-index 442e3d6162f76..6fabc906114c0 100644
---- a/drivers/s390/crypto/zcrypt_cex4.c
-+++ b/drivers/s390/crypto/zcrypt_cex4.c
-@@ -381,6 +381,7 @@ static int zcrypt_cex4_queue_probe(struct ap_device *ap_dev)
- 	zq->queue = aq;
- 	zq->online = 1;
- 	atomic_set(&zq->load, 0);
-+	ap_queue_init_state(aq);
- 	ap_queue_init_reply(aq, &zq->reply);
- 	aq->request_timeout = CEX4_CLEANUP_TIME,
- 	aq->private = zq;
+Eric Farman (1):
+  vfio-ccw: Don't free channel programs for unrelated interrupts
+
+ drivers/s390/cio/vfio_ccw_cp.c  | 11 +++++++++--
+ drivers/s390/cio/vfio_ccw_cp.h  |  2 +-
+ drivers/s390/cio/vfio_ccw_drv.c |  4 ++--
+ 3 files changed, 12 insertions(+), 5 deletions(-)
+
 -- 
-2.20.1
+2.17.1
 
