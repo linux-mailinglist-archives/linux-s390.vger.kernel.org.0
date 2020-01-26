@@ -2,60 +2,46 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 51AAC149702
-	for <lists+linux-s390@lfdr.de>; Sat, 25 Jan 2020 18:47:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CE67149A9D
+	for <lists+linux-s390@lfdr.de>; Sun, 26 Jan 2020 13:50:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726725AbgAYRrQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 25 Jan 2020 12:47:16 -0500
-Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:57361 "EHLO
-        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726448AbgAYRrP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 25 Jan 2020 12:47:15 -0500
-Received: from callcc.thunk.org (rrcs-67-53-201-206.west.biz.rr.com [67.53.201.206])
-        (authenticated bits=0)
-        (User authenticated as tytso@ATHENA.MIT.EDU)
-        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id 00PHkXAB020640
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Sat, 25 Jan 2020 12:46:36 -0500
-Received: by callcc.thunk.org (Postfix, from userid 15806)
-        id 24C63420324; Sat, 25 Jan 2020 12:46:33 -0500 (EST)
-Date:   Sat, 25 Jan 2020 12:46:33 -0500
-From:   "Theodore Y. Ts'o" <tytso@mit.edu>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arch@vger.kernel.org,
-        Richard Henderson <richard.henderson@linaro.org>,
-        linux-s390@vger.kernel.org, herbert@gondor.apana.org.au,
-        x86@kernel.org, linux-crypto@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 00/10] Impveovements for random.h/archrandom.h
-Message-ID: <20200125174633.GN1108497@mit.edu>
-References: <20200110145422.49141-1-broonie@kernel.org>
- <20200110155153.GG19453@zn.tnic>
- <20200110170559.GA304349@mit.edu>
- <20200120172627.GH6852@sirena.org.uk>
- <20200120175901.GB576@zn.tnic>
+        id S2387464AbgAZMuj convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Sun, 26 Jan 2020 07:50:39 -0500
+Received: from mail.karanganyarkab.go.id ([175.106.17.102]:56924 "EHLO
+        srv.karanganyarkab.go.id" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387398AbgAZMui (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 26 Jan 2020 07:50:38 -0500
+Received: from localhost (localhost [127.0.0.1])
+        by srv.karanganyarkab.go.id (Postfix) with ESMTP id 51E332804103E;
+        Sun, 26 Jan 2020 19:40:33 +0700 (+07)
+Received: from srv.karanganyarkab.go.id ([127.0.0.1])
+        by localhost (srv.karanganyarkab.go.id [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id 4a3dFvj3_jC2; Sun, 26 Jan 2020 19:40:32 +0700 (+07)
+Received: from localhost (localhost [127.0.0.1])
+        by srv.karanganyarkab.go.id (Postfix) with ESMTP id D8F8128041038;
+        Sun, 26 Jan 2020 19:40:32 +0700 (+07)
+X-Virus-Scanned: amavisd-new at srv.karanganyarkab.go.id
+Received: from srv.karanganyarkab.go.id ([127.0.0.1])
+        by localhost (srv.karanganyarkab.go.id [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id gQecaFpg07zt; Sun, 26 Jan 2020 19:40:32 +0700 (+07)
+Received: from DESKTOP-IB4GLF4.home (unknown [149.140.81.151])
+        by srv.karanganyarkab.go.id (Postfix) with ESMTPSA id C6D762804103E;
+        Sun, 26 Jan 2020 19:40:26 +0700 (+07)
+Content-Type: text/plain; charset="iso-8859-1"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200120175901.GB576@zn.tnic>
+Content-Transfer-Encoding: 8BIT
+Content-Description: Mail message body
+Subject: BIST DU INTERESSIERT?  26-01-2020
+To:     Recipients <Disdukcapil@karanganyarkab.go.id>
+From:   "ATANASOVA RADKA" <Disdukcapil@karanganyarkab.go.id>
+Date:   Sun, 26 Jan 2020 16:39:52 +0300
+Reply-To: atanasovaradka01@hotmail.com
+X-Antivirus: Avast (VPS 200125-0, 01/25/2020), Outbound message
+X-Antivirus-Status: Clean
+Message-Id: <20200126124026.C6D762804103E@srv.karanganyarkab.go.id>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Jan 20, 2020 at 06:59:01PM +0100, Borislav Petkov wrote:
-> On Mon, Jan 20, 2020 at 05:26:27PM +0000, Mark Brown wrote:
-> > I think the important thing here is that *someone* takes the patches.
-> > We've now got Ted and Borislav both saying they're OK applying the
-> > patches, an additional proposal that Andrew takes the patches, nobody
-> > saying anything negative about applying the patches and yet the patches
-> > are not applied.  The random tree sounds like a sensible enough tree to
-> > take this so if Ted picks them up perhaps that's most sensible?
-> 
-> Yes, Ted, pls pick them up so that we're done with this.
-
-I've picked them up and pushed them to the random tree.
-
-     	    	    	       	       - Ted
+Ich bin ATANASOVA RADKA LULCHEVA. Ich habe Ihre E-Mail-Adresse für eine Erbschaft im Wert von Millionen von Dollar ausgewählt. Bitte kontaktieren Sie mich für weitere Informationen per E-Mail: atanasovaradka01@hotmail.com
