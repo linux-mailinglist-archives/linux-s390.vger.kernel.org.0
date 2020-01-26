@@ -2,46 +2,45 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7CE67149A9D
-	for <lists+linux-s390@lfdr.de>; Sun, 26 Jan 2020 13:50:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 42350149B11
+	for <lists+linux-s390@lfdr.de>; Sun, 26 Jan 2020 15:28:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387464AbgAZMuj convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Sun, 26 Jan 2020 07:50:39 -0500
-Received: from mail.karanganyarkab.go.id ([175.106.17.102]:56924 "EHLO
-        srv.karanganyarkab.go.id" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387398AbgAZMui (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 26 Jan 2020 07:50:38 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by srv.karanganyarkab.go.id (Postfix) with ESMTP id 51E332804103E;
-        Sun, 26 Jan 2020 19:40:33 +0700 (+07)
-Received: from srv.karanganyarkab.go.id ([127.0.0.1])
-        by localhost (srv.karanganyarkab.go.id [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id 4a3dFvj3_jC2; Sun, 26 Jan 2020 19:40:32 +0700 (+07)
-Received: from localhost (localhost [127.0.0.1])
-        by srv.karanganyarkab.go.id (Postfix) with ESMTP id D8F8128041038;
-        Sun, 26 Jan 2020 19:40:32 +0700 (+07)
-X-Virus-Scanned: amavisd-new at srv.karanganyarkab.go.id
-Received: from srv.karanganyarkab.go.id ([127.0.0.1])
-        by localhost (srv.karanganyarkab.go.id [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id gQecaFpg07zt; Sun, 26 Jan 2020 19:40:32 +0700 (+07)
-Received: from DESKTOP-IB4GLF4.home (unknown [149.140.81.151])
-        by srv.karanganyarkab.go.id (Postfix) with ESMTPSA id C6D762804103E;
-        Sun, 26 Jan 2020 19:40:26 +0700 (+07)
-Content-Type: text/plain; charset="iso-8859-1"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Description: Mail message body
-Subject: BIST DU INTERESSIERT?  26-01-2020
-To:     Recipients <Disdukcapil@karanganyarkab.go.id>
-From:   "ATANASOVA RADKA" <Disdukcapil@karanganyarkab.go.id>
-Date:   Sun, 26 Jan 2020 16:39:52 +0300
-Reply-To: atanasovaradka01@hotmail.com
-X-Antivirus: Avast (VPS 200125-0, 01/25/2020), Outbound message
-X-Antivirus-Status: Clean
-Message-Id: <20200126124026.C6D762804103E@srv.karanganyarkab.go.id>
+        id S2387444AbgAZO2D (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 26 Jan 2020 09:28:03 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:57632 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387401AbgAZO2D (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 26 Jan 2020 09:28:03 -0500
+Received: from localhost (unknown [62.209.224.147])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id C6FBA15BF3419;
+        Sun, 26 Jan 2020 06:28:01 -0800 (PST)
+Date:   Sun, 26 Jan 2020 15:27:57 +0100 (CET)
+Message-Id: <20200126.152757.1376333579798530411.davem@davemloft.net>
+To:     jwi@linux.ibm.com
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, ubraun@linux.ibm.com
+Subject: Re: [PATCH net-next 0/5] s390/qeth: updates 2020-01-25
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200125155303.40971-1-jwi@linux.ibm.com>
+References: <20200125155303.40971-1-jwi@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.3
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Sun, 26 Jan 2020 06:28:02 -0800 (PST)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Ich bin ATANASOVA RADKA LULCHEVA. Ich habe Ihre E-Mail-Adresse für eine Erbschaft im Wert von Millionen von Dollar ausgewählt. Bitte kontaktieren Sie mich für weitere Informationen per E-Mail: atanasovaradka01@hotmail.com
+From: Julian Wiedmann <jwi@linux.ibm.com>
+Date: Sat, 25 Jan 2020 16:52:58 +0100
+
+> please apply the following patch series for qeth to your net-next tree.
+> 
+> This brings a number of cleanups for the init/teardown code paths.
+
+Series applied, thank you.
