@@ -2,240 +2,119 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 97B8C14B220
-	for <lists+linux-s390@lfdr.de>; Tue, 28 Jan 2020 10:58:36 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A29D614B3D6
+	for <lists+linux-s390@lfdr.de>; Tue, 28 Jan 2020 12:58:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726073AbgA1J6b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 28 Jan 2020 04:58:31 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52443 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725853AbgA1J6b (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 28 Jan 2020 04:58:31 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580205509;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=pnQO6zrmhXuovt6QHn24SPSZ5A6McOoHhJb1tVmtEYI=;
-        b=FvSWExchT2pI5AeTgOkmAZPU4Cqkn7R7C+m+wnGIVQXgfTC5BdI18vfagifhvQLVGE45b7
-        cP0yUVkARitbVqttECA7pZ9U0QHSDpN19ldH/4EFf5tgeBFIaafcFF8curMzR7tvPdFtez
-        lw1DEHZDzjpEGoVU4k1dochKQbDY7wg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-350-BfXLG5HaN0OjJKrnKxN5ZQ-1; Tue, 28 Jan 2020 04:58:25 -0500
-X-MC-Unique: BfXLG5HaN0OjJKrnKxN5ZQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9D0E813F0;
-        Tue, 28 Jan 2020 09:58:24 +0000 (UTC)
-Received: from gondolin (ovpn-116-186.ams2.redhat.com [10.36.116.186])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3E77F19C58;
-        Tue, 28 Jan 2020 09:58:23 +0000 (UTC)
-Date:   Tue, 28 Jan 2020 10:58:20 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        "Jason J . Herne" <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] vfio-ccw: Don't free channel programs for
- unrelated interrupts
-Message-ID: <20200128105820.081a4b79.cohuck@redhat.com>
-In-Reply-To: <eb3f3887-50f2-ef4d-0b98-b25936047a49@linux.ibm.com>
-References: <20200124145455.51181-1-farman@linux.ibm.com>
-        <20200124145455.51181-2-farman@linux.ibm.com>
-        <20200124163305.3d6f0d47.cohuck@redhat.com>
-        <50a0fe00-a7c1-50e4-12f5-412ee7a0e522@linux.ibm.com>
-        <20200127135235.1f783f1b.cohuck@redhat.com>
-        <eb3f3887-50f2-ef4d-0b98-b25936047a49@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1726002AbgA1L6T (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 28 Jan 2020 06:58:19 -0500
+Received: from foss.arm.com ([217.140.110.172]:55802 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725903AbgA1L6T (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 28 Jan 2020 06:58:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5AC31101E;
+        Tue, 28 Jan 2020 03:58:18 -0800 (PST)
+Received: from localhost (unknown [10.37.6.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id D65B03F52E;
+        Tue, 28 Jan 2020 03:58:17 -0800 (PST)
+Date:   Tue, 28 Jan 2020 11:58:16 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Qian Cai <cai@lca.pw>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Anshuman Khandual <Anshuman.Khandual@arm.com>,
+        Linux-MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <Mark.Rutland@arm.com>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+Message-ID: <20200128115816.GA4689@sirena.org.uk>
+References: <a7ba6d8a-6443-5994-6a34-2824aa9b054b@c-s.fr>
+ <144F3894-7934-4EC7-A9F9-C6A84CA08C65@lca.pw>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
+Content-Disposition: inline
+In-Reply-To: <144F3894-7934-4EC7-A9F9-C6A84CA08C65@lca.pw>
+X-Cookie: Doing gets it done.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 27 Jan 2020 16:28:18 -0500
-Eric Farman <farman@linux.ibm.com> wrote:
 
-> On 1/27/20 7:52 AM, Cornelia Huck wrote:
-> > On Fri, 24 Jan 2020 11:08:12 -0500
-> > Eric Farman <farman@linux.ibm.com> wrote:
-> >   
-> >> On 1/24/20 10:33 AM, Cornelia Huck wrote:  
-> >>> On Fri, 24 Jan 2020 15:54:55 +0100
-> >>> Eric Farman <farman@linux.ibm.com> wrote:  
-> >   
-> >>>> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> >>>> index e401a3d0aa57..a8ab256a217b 100644
-> >>>> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> >>>> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> >>>> @@ -90,8 +90,8 @@ static void vfio_ccw_sch_io_todo(struct work_struct *work)
-> >>>>  	is_final = !(scsw_actl(&irb->scsw) &
-> >>>>  		     (SCSW_ACTL_DEVACT | SCSW_ACTL_SCHACT));
-> >>>>  	if (scsw_is_solicited(&irb->scsw)) {
-> >>>> -		cp_update_scsw(&private->cp, &irb->scsw);
-> >>>> -		if (is_final && private->state == VFIO_CCW_STATE_CP_PENDING)
-> >>>> +		if (cp_update_scsw(&private->cp, &irb->scsw) &&
-> >>>> +		    is_final && private->state == VFIO_CCW_STATE_CP_PENDING)    
-> >>>
-> >>> ...but I still wonder why is_final is not catching non-ssch related
-> >>> interrupts, as I thought it would. We might want to adapt that check,
-> >>> instead. (Or was the scsw_is_solicited() check supposed to catch that?
-> >>> As said, too tired right now...)    
-> >>
-> >> I had looked at the (un)solicited bits at one point, and saw very few
-> >> unsolicited interrupts.  The ones that did show up didn't appear to
-> >> affect things in the way that would cause the problems I'm seeing.  
-> > 
-> > Ok, so that check is hopefully fine.
-> >   
-> >>
-> >> As for is_final...  That POPS table states that for "status pending
-> >> [alone] after termination of HALT or CLEAR ... cpa is unpredictable",
-> >> which is what happens here.  In the example above, the cpa is the same
-> >> as the previous (successful) interrupt, and thus unrelated to the
-> >> current chain.  Perhaps is_final needs to check that the function
-> >> control in the interrupt is for a start?  
-> > 
-> > I think our reasoning last time we discussed this function was that we
-> > only are in CP_PENDING if we actually did a ssch previously. Now, if we  
-> 
-> I spent a little time looking at the conversations on the patch that
-> added the CP_PENDING check.  Sadly, those patches hit the list when I
-> left for holiday so I came late to those discussions and there appears
-> some loose ends that I should've chased down at the time.  Sorry.
-> 
-> But yes, we should only be in CP_PENDING because of the SSCH, but the
-> only check of the interrupt here is the "is_final" check, and not that
-> the interrupt was for a start function.
+--5mCyUwZo2JvN/JJP
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Hm. If we are in CP_PENDING, we have issued a ssch in the past for
-which we did not get a final state yet. So getting here in CP_STANDING
-without the start function set in the fctl would indicate a bug
-elsewhere (missing state transition, or a thinko?)
+On Tue, Jan 28, 2020 at 02:12:56AM -0500, Qian Cai wrote:
+> > On Jan 28, 2020, at 1:13 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
 
-> 
-> > do a hsch/csch before we got final status for the program started by
-> > the ssch, we don't move out of the CP_PENDING, but the cpa still might
-> > not be what we're looking for.   
-> 
-> As long as we get an interrupt that's "is_final" then don't we come out
-> of CP_PENDING state at the end of this routine, regardless of whether or
-> not it does the cp_free() call?  I think your original diagnosis [1] was
-> that even if the cpa is invalid, calling cp_update_scsw() is okay
-> because garbage-in-garbage-out.  This patch makes that part of the
-> criteria for doing the cp_free(), so maybe that's too heavy?  After all,
-> it does mean that we may leave private->cp "initialized", but reset the
-> state back to IDLE.  (More on that in a minute.)
+> > ppc32 an indecent / legacy platform ? Are you kidying ?
 
-Yes, rereading this I still think it's fine to call cp_update_scsw().
+> > Powerquicc II PRO for instance is fully supported by the
+> > manufacturer and widely used in many small networking devices.
 
-If we did a clear, we will certainly not get any more solicited
-interrupts for this subchannel before we initiate a new operation. I
-think that also holds for hsch? So we probably should free and move
-state... but it seems we're still missing something.
+> Of course I forgot about embedded devices. The problem is that how
+> many developers are actually going to run this debug option on
+> embedded devices?
 
-> 
-> > So, we should probably check that we
-> > have only the start function indicated in the fctl.  
-> 
-> For the call to cp_update_scsw() or cp_free()?  Or both?
+Much fewer if the code isn't upstream than if it is.  This isn't
+something that every developer is going to enable all the time but that
+doesn't mean it's not useful, it's more for people doing work on the
+architectures or on memory management (or who suspect they're running
+into a relevant problem), and I'm sure some of the automated testing
+people will enable it.  The more barriers there are in place to getting
+the testsuite up and running the less likely it is that any of these
+groups will run it regularly.
 
-As said above, we probably don't need to do that... but I'm not sure.
+--5mCyUwZo2JvN/JJP
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> > 
-> > But if we do that, we still have a chain allocated for something that
-> > has already been terminated... how do we find the right chain to clean
-> > up, if needed?  
-> 
-> Don't we free all/none of the chains?  Ideally, since we only have one
-> set of chains per cp (and thus, per SSCH), they should either all be
-> freed or ignored.
+-----BEGIN PGP SIGNATURE-----
 
-Ah, yes. I reread the code, and I think you're correct.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl4wIdcACgkQJNaLcl1U
+h9Dslgf+KrZOvdjyO1AcLfLIlE2wA+hRmygG3Gh1YQ9wI6n+03XnA4v7f+7zZaQd
+9nylNBzkErkupokycsWYhTEFN7o/tfjVGWte16XdQ1QHQE7npjULPGC5NcVVPfyc
+qwaW2i5J5TeAuYArz3YCqLvUY6IAJefbxhZbLXTTBnwINIazuBDiAUzsAd/Uy27Y
+x0YHtX4gXucyNEepoozxS07544hKbMvjTO0tt7P8egTTGwNHz+Uz6sMfUA/Muri7
+hIJbxM03+cRn9ZKlTca/PzsXJN87ZLvWwcB0TGz+xI3Bjx2D2Q7Dn+OROr2O8e0z
+WXNLV2W9WAaBOwArY4IHdeORokpCzg==
+=j0+e
+-----END PGP SIGNATURE-----
 
-> 
-> But regardless, this patch is at least not complete, if not incorrect.
-> I left a test running for the weekend and while I don't see the storage
-> damage I saw before, there's a lot of unreleased memory because of stuff
-> like this:
-> 
-> 950.541644 06 ...sch_io_todo sch 09c5: state=3 orb.cpa=7f586f48
-
-We're in CP_PROCESSING? Maybe that's the problem? We got an interrupt
-while still setting up the cp...
-
->                                                irb.w0=00001001
-
-That's an interrupt for a csch, if I'm counting the bits right. I'm
-wondering what sequence in the guest gets us here: If we're
-CP_PROCESSING, we're still interpreting the ssch (and have not yet
-returned control to the guest again). Still, there's an interrupt for a
-csch... either the guest does not lock subchannel operations correctly
-(so that it did a csch while another cpu did a ssch), or it did a ssch
-without waiting for the interrupt for a csch. Or, of course,
-something's completely messed up on the vfio-ccw side. As Linux seems
-to run fine as a guest elsewhere, I rather suspect vfio-ccw :(
-
->                                                irb.cpa=02e35d58
-
-That's... weird. Probably the "unpredictable" part of an interrupt for
-a clear :)
-
->                                                irb.w2=0000000c
-
-The count is not meaningful for an interrupt for a clear, either.
-
->                                                ccw=0
->                                                *cda=0
-> 950.541837 06 ...sch_io_todo sch 09c5: state=2 orb.cpa=030ec750
->                                                irb.w0=00c04007
->                                                irb.cpa=7f586f50
->                                                irb.w2=0c000000
->                                                ccw=3424000c030ea840
->                                                *cda=190757ef0
-
-That one looks like a normal interrupt for a channel program; but why
-are we in IDLE?
-
-> 
-> (I was only tracing instances where vfio-ccw did NOT call cp_free() on
-> the interrupt path; so I don't have a complete history of what happened.)
-> 
-> The orb.cpa address in the first trace looks like something which came
-> from the guest, rather than something built by vfio-ccw.  The irb.cpa
-> address in the second trace is 8 bytes after the first orb.cpa address.
-> And the storage referenced by both the CP and IDAL referenced in trace 2
-> are still active when I started poking at the state of things.
-> 
-> There's a lot just to unravel just with this instance.  Like why a guest
-> CPA is in orb, and thus an irb.  Or why cp_prefetch() checks that
-> !cp->initialized, but cp_init() does no such thing.  I guess I'll put in
-> a check to see how that helps this particular situation, while I sort
-> out the other problems here.
-
-cp_init checking cp->initialized would probably be good to catch
-errors, in any case. (Maybe put a trace there, just to see if it fires?)
-
-I'm wondering if we're looking at the right part of the code. After
-rereading, I think the interrupt handling code is ok... it seems
-something goes wrong earlier (looking at that weird first trace).
-
-Have you seen this without your path handling changes? The thing that
-probably exposes the problem is that path validation etc. might do some
-extra csch, and also some extra I/O restricted to a certain path.
-
-> 
-> >   
-> 
-> [1] https://lore.kernel.org/kvm/20190702115134.790f8891.cohuck@redhat.com/
-> 
-
+--5mCyUwZo2JvN/JJP--
