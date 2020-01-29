@@ -2,204 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0169C14CEAD
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Jan 2020 17:48:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 27CF714D1AB
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Jan 2020 21:03:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726671AbgA2Qsk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Jan 2020 11:48:40 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7024 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726498AbgA2Qsk (ORCPT
+        id S1726821AbgA2UD2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Jan 2020 15:03:28 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47008 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726332AbgA2UD2 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 29 Jan 2020 11:48:40 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TGdPVg012590;
-        Wed, 29 Jan 2020 11:48:38 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xttntvjg2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 11:48:38 -0500
-Received: from m0098421.ppops.net (m0098421.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 00TGfDIA022437;
-        Wed, 29 Jan 2020 11:48:38 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xttntvjfw-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 11:48:38 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 00TGl8NN008498;
-        Wed, 29 Jan 2020 16:48:37 GMT
-Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
-        by ppma02wdc.us.ibm.com with ESMTP id 2xrda6uh0m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 29 Jan 2020 16:48:37 +0000
-Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
-        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00TGmbn033554910
+        Wed, 29 Jan 2020 15:03:28 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00TJrlaU132428
+        for <linux-s390@vger.kernel.org>; Wed, 29 Jan 2020 15:03:27 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xuagn5fxn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 29 Jan 2020 15:03:27 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
+        Wed, 29 Jan 2020 20:03:25 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 29 Jan 2020 20:03:22 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00TK2Tr644827116
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 29 Jan 2020 16:48:37 GMT
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4278EB205F;
-        Wed, 29 Jan 2020 16:48:37 +0000 (GMT)
-Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BD67FB2066;
-        Wed, 29 Jan 2020 16:48:36 +0000 (GMT)
-Received: from [9.160.91.145] (unknown [9.160.91.145])
-        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed, 29 Jan 2020 16:48:36 +0000 (GMT)
-Subject: Re: [PATCH v1 1/1] vfio-ccw: Don't free channel programs for
- unrelated interrupts
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        "Jason J . Herne" <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20200124145455.51181-1-farman@linux.ibm.com>
- <20200124145455.51181-2-farman@linux.ibm.com>
- <20200124163305.3d6f0d47.cohuck@redhat.com>
- <50a0fe00-a7c1-50e4-12f5-412ee7a0e522@linux.ibm.com>
- <20200127135235.1f783f1b.cohuck@redhat.com>
- <eb3f3887-50f2-ef4d-0b98-b25936047a49@linux.ibm.com>
- <20200128105820.081a4b79.cohuck@redhat.com>
- <6661ad52-0108-e2ae-be19-46ee95e9aa0e@linux.ibm.com>
- <9635c45f-4652-c837-d256-46f426737a5e@linux.ibm.com>
- <20200129130048.39e1b898.cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <a3a759ab-89de-c805-ac03-ddb42023a246@linux.ibm.com>
-Date:   Wed, 29 Jan 2020 11:48:36 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.3.0
+        Wed, 29 Jan 2020 20:02:29 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CE42A11C04C;
+        Wed, 29 Jan 2020 20:03:20 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3BFD611C050;
+        Wed, 29 Jan 2020 20:03:19 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.2.173])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 29 Jan 2020 20:03:19 +0000 (GMT)
+From:   Janosch Frank <frankja@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     thuth@redhat.com, borntraeger@de.ibm.com, david@redhat.com,
+        cohuck@redhat.com, linux-s390@vger.kernel.org
+Subject: [PATCH v8 0/4] KVM: s390: Add new reset vcpu API
+Date:   Wed, 29 Jan 2020 15:03:08 -0500
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <20200129130048.39e1b898.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
+x-cbid: 20012920-0028-0000-0000-000003D5957E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20012920-0029-0000-0000-00002499E1ED
+Message-Id: <20200129200312.3200-1-frankja@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-29_04:2020-01-28,2020-01-29 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- spamscore=0 impostorscore=0 phishscore=0 bulkscore=0 suspectscore=2
- adultscore=0 priorityscore=1501 mlxlogscore=999 lowpriorityscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001290136
+ definitions=2020-01-29_06:2020-01-28,2020-01-29 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ mlxlogscore=866 malwarescore=0 phishscore=0 priorityscore=1501
+ lowpriorityscore=0 spamscore=0 suspectscore=1 bulkscore=0 adultscore=0
+ mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001290154
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Let's implement the remaining resets, namely the normal and clear
+reset to improve architectural compliance. 
 
+While we're at it, let's also start testing the new API.
+Those tests are not yet complete, but will be extended in the future.
 
-On 1/29/20 7:00 AM, Cornelia Huck wrote:
-> On Tue, 28 Jan 2020 23:13:30 -0500
-> Eric Farman <farman@linux.ibm.com> wrote:
-> 
->> On 1/28/20 9:42 AM, Eric Farman wrote:
->>>
->>>
->>> On 1/28/20 4:58 AM, Cornelia Huck wrote:  
->>>> On Mon, 27 Jan 2020 16:28:18 -0500  
->>
->> ...snip...
->>
->>>>
->>>> cp_init checking cp->initialized would probably be good to catch
->>>> errors, in any case. (Maybe put a trace there, just to see if it fires?)  
->>>
->>> I did this last night, and got frustrated.  The unfortunate thing was
->>> that once it fires, we end up flooding our trace buffers with errors as
->>> the guest continually retries.  So I need to either make a smarter trace
->>> that is rate limited or just crash my host once this condition occurs.
->>> Will try to do that between meetings today.
->>>   
->>
->> I reverted the subject patch, and simply triggered
->> BUG_ON(cp->initialized) in cp_init().  It sprung VERY quickly (all
->> traces are for the same device):
->>
->> 366.399682 03 ...sch_io_todo state=4 o.cpa=03017810
->>                              i.w0=00c04007 i.cpa=03017818 i.w2=0c000000
->> 366.399832 03 ...sch_io_todo state=3 o.cpa=7f53dd30 UNSOLICITED
->>                              i.w0=00c00011 i.cpa=03017818 i.w2=85000000
->> 366.400086 03 ...sch_io_todo state=2 o.cpa=03017930
->>                              i.w0=00c04007 i.cpa=03017938 i.w2=0c000000
->> 366.400313 03 ...sch_io_todo state=3 o.cpa=03017930
->>                              i.w0=00001001 i.cpa=03017938 i.w2=00000000
->>
->> Ah, of course...  Unsolicited interrupts DO reset private->state back to
->> idle, but leave cp->initialized and any channel_program struct remains
->> allocated.  So there's one problem (a memory leak), and an easy one to
->> rectify.
-> 
-> For a moment, I suspected a deferred condition code here, but it seems
-> to be a pure unsolicited interrupt.
-> 
-> But that got me thinking: If we get an unsolicited interrupt while
-> building the cp, it means that the guest is currently executing ssch.
-> We need to get the unsolicited interrupt to the guest, while not
-> executing the ssch. So maybe we need to do the following:
-> 
-> - deliver the unsolicited interrupt to the guest
-> - make sure we don't execute the ssch, but relay a cc 1 for it back to
->   the guest
-> - clean up the cp
-> 
-> Maybe not avoiding issuing the ssch is what gets us in that pickle? We
-> either leak memory or free too much, it seems.
+Janosch Frank (3):
+  KVM: s390: Add new reset vcpu API
+  selftests: KVM: Add fpu and one reg set/get library functions
+  selftests: KVM: s390x: Add reset tests
 
-It's possible...  I'll try hacking at that for a bit.
+Pierre Morel (1):
+  selftests: KVM: testing the local IRQs resets
 
-> 
->>
->> After more than a few silly rabbit holes, I had this trace:
->>
->> 429.928480 07 ...sch_io_todo state=4 init=1 o.cpa=7fed8e10
->>                              i.w0=00001001 i.cpa=7fed8e18 i.w2=00000000
->> 429.929132 07 ...sch_io_todo state=4 init=1 o.cpa=0305aed0
->>                              i.w0=00c04007 i.cpa=0305aed8 i.w2=0c000000
->> 429.929538 07 ...sch_io_todo state=4 init=1 o.cpa=0305af30
->>                              i.w0=00c04007 i.cpa=0305af38 i.w2=0c000000
->> 467.339389 07   ...chp_event mask=0x80 event=1
->> 467.339865 03 ...sch_io_todo state=3 init=0 o.cpa=01814548
->>                              i.w0=00c02001 i.cpa=0305af38 i.w2=00000000
->>
->> So my trace is at the beginning of vfio_ccw_sch_io_todo(), but the
->> BUG_ON() is at the end of that function where private->state is
->> (possibly) updated.  Looking at the contents of the vfio_ccw_private
->> struct in the dump, the failing device is currently state=4 init=1
->> instead of 3/0 as in the above trace.  So an I/O was being built in
->> parallel here, and there's no serializing action within the stacked
->> vfio_ccw_sch_io_todo() call to ensure they don't stomp on one another.
->> The io_mutex handles the region changes, and the subchannel lock handles
->> the start/halt/clear subchannel instructions, but nothing on the
->> interrupt side, nor contention between them.  Sigh.
-> 
-> I feel we've been here a few times already, and never seem to come up
-> with a complete solution :(
-> 
-> There had been some changes by Pierre regarding locking the fsm; maybe
-> that's what's needed here?
+ Documentation/virt/kvm/api.txt                |  43 ++++
+ arch/s390/kvm/kvm-s390.c                      | 103 +++++---
+ include/uapi/linux/kvm.h                      |   5 +
+ tools/testing/selftests/kvm/Makefile          |   1 +
+ .../testing/selftests/kvm/include/kvm_util.h  |   6 +
+ tools/testing/selftests/kvm/lib/kvm_util.c    |  48 ++++
+ tools/testing/selftests/kvm/s390x/resets.c    | 222 ++++++++++++++++++
+ 7 files changed, 399 insertions(+), 29 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/s390x/resets.c
 
-Hrm...  I'd forgotten all about those.  I found them on
-patchwork.kernel.org; will see what they encompass.
+-- 
+2.20.1
 
-> 
->>
->> My brain hurts.  I re-applied this patch (with some validation that the
->> cpa is valid) to my current franken-code, and will let it run overnight.
->>  I think it's going to be racing other CPUs and I'll find a dead system
->> by morning, but who knows.  Maybe not.  :)
->>
-> 
-> I can relate to the brain hurting part :)
-> 
-
-:)
-
-My system crashed after about six hours, but not because of the BUG_ON()
-traps I placed.  Rather, dma-kmalloc-8 got clobbered again with what
-looks like x100 bytes of data from one of the other CCWs.  Of course, I
-didn't trace the CCW/IDA data this time, so I don't know when the memory
-in question was allocated/released/used.  But, there are 35 deferred
-cc=1 interrupts in the trace though, so I'll give some some thought to
-the ideas above while re-running with the full traces in place.
-
-Thanks!
