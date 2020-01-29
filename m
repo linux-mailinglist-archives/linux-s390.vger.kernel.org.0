@@ -2,163 +2,160 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74C1214C945
-	for <lists+linux-s390@lfdr.de>; Wed, 29 Jan 2020 12:10:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 116F114CA05
+	for <lists+linux-s390@lfdr.de>; Wed, 29 Jan 2020 13:01:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726177AbgA2LKA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 29 Jan 2020 06:10:00 -0500
-Received: from mail-qv1-f65.google.com ([209.85.219.65]:38314 "EHLO
-        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726067AbgA2LKA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 29 Jan 2020 06:10:00 -0500
-Received: by mail-qv1-f65.google.com with SMTP id g6so7497982qvy.5
-        for <linux-s390@vger.kernel.org>; Wed, 29 Jan 2020 03:09:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Rdg0eRE4Rs/tOFVa1nKjmhUlRl2NKOMw55LDI32OSOc=;
-        b=VJ8O0yAWe2cXlzCT1mNhPcxqqFeCKhkmfpyAWfq4oYf0VFJ3BC4CHwckKloSIN0EXg
-         v5DJKr5FfAbivbt4bmiixvzRDbgAX4zdyDY3Z7zJENEidZcJ7qqrRNPRT7y2J7WlkuAW
-         ewW0RwL5VtfuLoAx485pn8lnifxaC15SKUc8607bIEelaurpzyi5k7hkoO7yxuV3yb4d
-         hRnFShBFGIfDCfAPvTiAO0yxsNG/bViMXer6WnGqfUy8ySyDKJC0Q4H5WpZ3O51VPBPp
-         7I+z1htSl8yn6YxMeGxxXZDeFn0jXFFJZ2cfPzD73Zg0RLbASOFkEZ8dO14ZZO1X4gAp
-         ELnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Rdg0eRE4Rs/tOFVa1nKjmhUlRl2NKOMw55LDI32OSOc=;
-        b=IftPlGHKKAe4pFh+6nBOPMHat9XfntaFeJ4LHE1f9fFFInPB3NIO/LthXakTvpMkUp
-         mFrtHYHl+g/uff0LnUEHkSbhSUv7RjLsvTyDGDp1qIN8j0PwMPfNp9CKrDVDfvCvrfYK
-         W8PR4bS8tbihCaG4Uas66wvWVeDpzWpmzSGQpXcH11GhZuITr0Opz49qLswJHrmI52bY
-         MDi/Dsb1hA7+ZHC6/+WyxzyNj8t17NF3jyqCOltwQ5Nl+0vQiv2ZmkvI1K7qOBvhDf4J
-         XknB5wjeJIp2WweFNWatYrdsgB15gf7SaDYq1QrNi/62w15SwWDA6ASyQAF9IwMZaOow
-         wvmg==
-X-Gm-Message-State: APjAAAVxubcGqNY3NynhZ6/qPg9ZU2fxhkLUBzRG90g4iviFb3m0VDOG
-        cs5DvX9TifqCJuxRodeHgB1Jdg==
-X-Google-Smtp-Source: APXvYqwSo4IdEjgBam29nZ7sdiS8q0FjVa1Z465Vm5JMHa3pbBcFWxe+wcLkVFwcg7WF0RMbdVCuCg==
-X-Received: by 2002:a0c:9d4f:: with SMTP id n15mr22120161qvf.194.1580296199181;
-        Wed, 29 Jan 2020 03:09:59 -0800 (PST)
-Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id v7sm882184qtk.89.2020.01.29.03.09.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 29 Jan 2020 03:09:58 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3608.40.2.2.4\))
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-From:   Qian Cai <cai@lca.pw>
-In-Reply-To: <20200129103640.GA668562@arrakis.emea.arm.com>
-Date:   Wed, 29 Jan 2020 06:09:56 -0500
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, linux-ia64@vger.kernel.org,
-        linux-sh@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        James Hogan <jhogan@kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>, Paul Mackerras <paulus@samba.org>,
-        sparclinux@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        linux-s390@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-snps-arc@lists.infradead.org,
-        Kees Cook <keescook@chromium.org>,
-        Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mark Brown <broonie@kernel.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
-        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "David S. Miller" <davem@davemloft.net>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <50B7EFFE-1FF0-4B16-84A1-D851052B18B4@lca.pw>
-References: <20200128174709.GK655507@arrakis.emea.arm.com>
- <69091BA4-18C4-4425-A5E2-31FBE4654AF9@lca.pw>
- <20200129103640.GA668562@arrakis.emea.arm.com>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-X-Mailer: Apple Mail (2.3608.40.2.2.4)
+        id S1726177AbgA2MBG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 29 Jan 2020 07:01:06 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:57193 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726068AbgA2MBG (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 29 Jan 2020 07:01:06 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580299264;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o9z6AABaHoKdCY+CLXyFSVRKIUfvIU0jBPZ3wtNvswY=;
+        b=MPO17mXtTcA+choDAEK1HH4Gzo8avIl1yQaJ9cBs1/1EeNji3nX80RjmvK5+HEDQSbstkh
+        Xxl/7bR8ENYmnYEReVjOFd3fbu+yRUVMybUyMxQmkGX7p4aAqc1AJN1sLCvFJLNWrIbUZp
+        7pRKauva02iUxlxsJZatGuQ0q0YMnG0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-422-_l7HGGuMOpGbbSYShriwwQ-1; Wed, 29 Jan 2020 07:00:53 -0500
+X-MC-Unique: _l7HGGuMOpGbbSYShriwwQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6C15B13E5;
+        Wed, 29 Jan 2020 12:00:52 +0000 (UTC)
+Received: from gondolin (ovpn-116-225.ams2.redhat.com [10.36.116.225])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 01C525D9C5;
+        Wed, 29 Jan 2020 12:00:50 +0000 (UTC)
+Date:   Wed, 29 Jan 2020 13:00:48 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        "Jason J . Herne" <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [PATCH v1 1/1] vfio-ccw: Don't free channel programs for
+ unrelated interrupts
+Message-ID: <20200129130048.39e1b898.cohuck@redhat.com>
+In-Reply-To: <9635c45f-4652-c837-d256-46f426737a5e@linux.ibm.com>
+References: <20200124145455.51181-1-farman@linux.ibm.com>
+        <20200124145455.51181-2-farman@linux.ibm.com>
+        <20200124163305.3d6f0d47.cohuck@redhat.com>
+        <50a0fe00-a7c1-50e4-12f5-412ee7a0e522@linux.ibm.com>
+        <20200127135235.1f783f1b.cohuck@redhat.com>
+        <eb3f3887-50f2-ef4d-0b98-b25936047a49@linux.ibm.com>
+        <20200128105820.081a4b79.cohuck@redhat.com>
+        <6661ad52-0108-e2ae-be19-46ee95e9aa0e@linux.ibm.com>
+        <9635c45f-4652-c837-d256-46f426737a5e@linux.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, 28 Jan 2020 23:13:30 -0500
+Eric Farman <farman@linux.ibm.com> wrote:
 
+> On 1/28/20 9:42 AM, Eric Farman wrote:
+> > 
+> > 
+> > On 1/28/20 4:58 AM, Cornelia Huck wrote:  
+> >> On Mon, 27 Jan 2020 16:28:18 -0500  
+> 
+> ...snip...
+> 
+> >>
+> >> cp_init checking cp->initialized would probably be good to catch
+> >> errors, in any case. (Maybe put a trace there, just to see if it fires?)  
+> > 
+> > I did this last night, and got frustrated.  The unfortunate thing was
+> > that once it fires, we end up flooding our trace buffers with errors as
+> > the guest continually retries.  So I need to either make a smarter trace
+> > that is rate limited or just crash my host once this condition occurs.
+> > Will try to do that between meetings today.
+> >   
+> 
+> I reverted the subject patch, and simply triggered
+> BUG_ON(cp->initialized) in cp_init().  It sprung VERY quickly (all
+> traces are for the same device):
+> 
+> 366.399682 03 ...sch_io_todo state=4 o.cpa=03017810
+>                              i.w0=00c04007 i.cpa=03017818 i.w2=0c000000
+> 366.399832 03 ...sch_io_todo state=3 o.cpa=7f53dd30 UNSOLICITED
+>                              i.w0=00c00011 i.cpa=03017818 i.w2=85000000
+> 366.400086 03 ...sch_io_todo state=2 o.cpa=03017930
+>                              i.w0=00c04007 i.cpa=03017938 i.w2=0c000000
+> 366.400313 03 ...sch_io_todo state=3 o.cpa=03017930
+>                              i.w0=00001001 i.cpa=03017938 i.w2=00000000
+> 
+> Ah, of course...  Unsolicited interrupts DO reset private->state back to
+> idle, but leave cp->initialized and any channel_program struct remains
+> allocated.  So there's one problem (a memory leak), and an easy one to
+> rectify.
 
-> On Jan 29, 2020, at 5:36 AM, Catalin Marinas <catalin.marinas@arm.com> =
-wrote:
->=20
-> On Tue, Jan 28, 2020 at 02:07:10PM -0500, Qian Cai wrote:
->> On Jan 28, 2020, at 12:47 PM, Catalin Marinas =
-<catalin.marinas@arm.com> wrote:
->>> The primary goal here is not finding regressions but having clearly
->>> defined semantics of the page table accessors across architectures. =
-x86
->>> and arm64 are a good starting point and other architectures will be
->>> enabled as they are aligned to the same semantics.
->>=20
->> This still does not answer the fundamental question. If this test is
->> simply inefficient to find bugs,
->=20
-> Who said this is inefficient (other than you)?
+For a moment, I suspected a deferred condition code here, but it seems
+to be a pure unsolicited interrupt.
 
-Inefficient of finding bugs. It said only found a bug or two in its =
-lifetime?
+But that got me thinking: If we get an unsolicited interrupt while
+building the cp, it means that the guest is currently executing ssch.
+We need to get the unsolicited interrupt to the guest, while not
+executing the ssch. So maybe we need to do the following:
 
->=20
->> who wants to spend time to use it regularly?=20
->=20
-> Arch maintainers, mm maintainers introducing new macros or assuming
-> certain new semantics of the existing macros.
->=20
->> If this is just one off test that may get running once in a few years
->> (when introducing a new arch), how does it justify the ongoing cost =
-to
->> maintain it?
->=20
-> You are really missing the point. It's not only for a new arch but
-> changes to existing arch code. And if the arch code churn in this area
-> is relatively small, I'd expect a similarly small cost of maintaining
-> this test.
->=20
-> If you only turn DEBUG_VM on once every few years, don't generalise =
-this
-> to the rest of the kernel developers (as others pointed out, this test
-> is default y if DEBUG_VM).
+- deliver the unsolicited interrupt to the guest
+- make sure we don't execute the ssch, but relay a cc 1 for it back to
+  the guest
+- clean up the cp
 
-Quite the opposite, I am running DEBUG_VM almost daily for regression
-workload while I felt strongly this thing does not add any value mixing =
-there.
+Maybe not avoiding issuing the ssch is what gets us in that pickle? We
+either leak memory or free too much, it seems.
 
-So, I would suggest to decouple this away from DEBUG_VM, and clearly
-document that this test is not something intended for automated =
-regression
-workloads, so those people don=E2=80=99t need to waste time running =
-this.
+> 
+> After more than a few silly rabbit holes, I had this trace:
+> 
+> 429.928480 07 ...sch_io_todo state=4 init=1 o.cpa=7fed8e10
+>                              i.w0=00001001 i.cpa=7fed8e18 i.w2=00000000
+> 429.929132 07 ...sch_io_todo state=4 init=1 o.cpa=0305aed0
+>                              i.w0=00c04007 i.cpa=0305aed8 i.w2=0c000000
+> 429.929538 07 ...sch_io_todo state=4 init=1 o.cpa=0305af30
+>                              i.w0=00c04007 i.cpa=0305af38 i.w2=0c000000
+> 467.339389 07   ...chp_event mask=0x80 event=1
+> 467.339865 03 ...sch_io_todo state=3 init=0 o.cpa=01814548
+>                              i.w0=00c02001 i.cpa=0305af38 i.w2=00000000
+> 
+> So my trace is at the beginning of vfio_ccw_sch_io_todo(), but the
+> BUG_ON() is at the end of that function where private->state is
+> (possibly) updated.  Looking at the contents of the vfio_ccw_private
+> struct in the dump, the failing device is currently state=4 init=1
+> instead of 3/0 as in the above trace.  So an I/O was being built in
+> parallel here, and there's no serializing action within the stacked
+> vfio_ccw_sch_io_todo() call to ensure they don't stomp on one another.
+> The io_mutex handles the region changes, and the subchannel lock handles
+> the start/halt/clear subchannel instructions, but nothing on the
+> interrupt side, nor contention between them.  Sigh.
 
->=20
-> Anyway, I think that's a pointless discussion, so not going to reply
-> further (unless you have technical content to add).
->=20
-> --=20
-> Catalin
+I feel we've been here a few times already, and never seem to come up
+with a complete solution :(
+
+There had been some changes by Pierre regarding locking the fsm; maybe
+that's what's needed here?
+
+> 
+> My brain hurts.  I re-applied this patch (with some validation that the
+> cpa is valid) to my current franken-code, and will let it run overnight.
+>  I think it's going to be racing other CPUs and I'll find a dead system
+> by morning, but who knows.  Maybe not.  :)
+> 
+
+I can relate to the brain hurting part :)
 
