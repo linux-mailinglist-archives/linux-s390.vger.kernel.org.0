@@ -2,311 +2,309 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E001F14DC8A
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Jan 2020 15:11:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9001814DC9A
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Jan 2020 15:13:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726948AbgA3OLE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Jan 2020 09:11:04 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:65272 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726902AbgA3OLE (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Jan 2020 09:11:04 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00UE9oGT113481
-        for <linux-s390@vger.kernel.org>; Thu, 30 Jan 2020 09:11:02 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2xu5q6c2n3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 30 Jan 2020 09:11:02 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Thu, 30 Jan 2020 14:11:00 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 30 Jan 2020 14:10:57 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00UEAuVE44236936
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 30 Jan 2020 14:10:57 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA752A405F;
-        Thu, 30 Jan 2020 14:10:56 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9771AA405B;
-        Thu, 30 Jan 2020 14:10:56 +0000 (GMT)
-Received: from dyn-9-152-224-44.boeblingen.de.ibm.com (unknown [9.152.224.44])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 30 Jan 2020 14:10:56 +0000 (GMT)
-Subject: Re: [PATCH v8 2/4] selftests: KVM: Add fpu and one reg set/get
- library functions
-To:     Andrew Jones <drjones@redhat.com>, Thomas Huth <thuth@redhat.com>
-Cc:     kvm@vger.kernel.org, borntraeger@de.ibm.com, david@redhat.com,
-        cohuck@redhat.com, linux-s390@vger.kernel.org
-References: <20200129200312.3200-1-frankja@linux.ibm.com>
- <20200129200312.3200-3-frankja@linux.ibm.com>
- <72ff36e1-9170-dfb0-4050-f398f9a467eb@redhat.com>
- <20200130135512.diyyu3wvwqlwpqlx@kamzik.brq.redhat.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Thu, 30 Jan 2020 15:10:55 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        id S1727366AbgA3ONW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Jan 2020 09:13:22 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:30980 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726902AbgA3ONW (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 30 Jan 2020 09:13:22 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 487j4Z2bp9z9v2Nx;
+        Thu, 30 Jan 2020 15:13:18 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=qICZOrjf; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id uOkb5XiF-zPA; Thu, 30 Jan 2020 15:13:18 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 487j4Z13FJz9v2Nw;
+        Thu, 30 Jan 2020 15:13:18 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1580393598; bh=jiy8q+DLF/cyz8x0j+2VD0K/r6LzapCGUAMM8PPwAqg=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=qICZOrjfjgKU41D9G6qwOhWQ3f07+KjLwpAHo5DoCMTyruxB3bymqHi8naihrjRrd
+         VNgNmAI2BgWTRJKP0fo15DiJvJYT/IAWdqQGaK6fSFCsfnDbh4zU2Oj9aR7VXIDKWw
+         S5BQleimwSbi1BQRePhLQirIhOLqknAgD+VG9wXI=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 606438B875;
+        Thu, 30 Jan 2020 15:13:19 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id v9YV4qhIXl9S; Thu, 30 Jan 2020 15:13:19 +0100 (CET)
+Received: from [192.168.4.90] (unknown [192.168.4.90])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id CC2F68B874;
+        Thu, 30 Jan 2020 15:13:16 +0100 (CET)
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
+ <68ed6488-aa25-ab41-8da6-f0ddeb15d52b@c-s.fr>
+ <49754f74-53a7-0e4a-bb16-53617f8c902c@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <473d8198-3ac4-af3b-e2ec-c0698a3565d3@c-s.fr>
+Date:   Thu, 30 Jan 2020 15:13:16 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.2
 MIME-Version: 1.0
-In-Reply-To: <20200130135512.diyyu3wvwqlwpqlx@kamzik.brq.redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="F90N2UgJRM9jKCWTGktKxesdld9lYnfGG"
-X-TM-AS-GCONF: 00
-x-cbid: 20013014-0016-0000-0000-000002E2312F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20013014-0017-0000-0000-00003344FBC9
-Message-Id: <9d9e0e7a-b006-98b1-6bf0-8c46006835bc@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-01-30_04:2020-01-28,2020-01-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 mlxlogscore=999
- clxscore=1015 mlxscore=0 bulkscore=0 spamscore=0 suspectscore=3
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2001300103
+In-Reply-To: <49754f74-53a7-0e4a-bb16-53617f8c902c@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---F90N2UgJRM9jKCWTGktKxesdld9lYnfGG
-Content-Type: multipart/mixed; boundary="3qn7yA9kyZYG3nohlLHuHJgXuVItI9ozd"
 
---3qn7yA9kyZYG3nohlLHuHJgXuVItI9ozd
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
 
-On 1/30/20 2:55 PM, Andrew Jones wrote:
-> On Thu, Jan 30, 2020 at 11:36:21AM +0100, Thomas Huth wrote:
->> On 29/01/2020 21.03, Janosch Frank wrote:
->>> Add library access to more registers.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> ---
->>>  .../testing/selftests/kvm/include/kvm_util.h  |  6 +++
->>>  tools/testing/selftests/kvm/lib/kvm_util.c    | 48 +++++++++++++++++=
-++
->>>  2 files changed, 54 insertions(+)
->>>
->>> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/t=
-esting/selftests/kvm/include/kvm_util.h
->>> index 29cccaf96baf..ae0d14c2540a 100644
->>> --- a/tools/testing/selftests/kvm/include/kvm_util.h
->>> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
->>> @@ -125,6 +125,12 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t =
-vcpuid,
->>>  		    struct kvm_sregs *sregs);
->>>  int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
->>>  		    struct kvm_sregs *sregs);
->>> +void vcpu_fpu_get(struct kvm_vm *vm, uint32_t vcpuid,
->>> +		  struct kvm_fpu *fpu);
->>> +void vcpu_fpu_set(struct kvm_vm *vm, uint32_t vcpuid,
->>> +		  struct kvm_fpu *fpu);
->>> +void vcpu_get_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one=
-_reg *reg);
->>> +void vcpu_set_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one=
-_reg *reg);
->>>  #ifdef __KVM_HAVE_VCPU_EVENTS
->>>  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
->>>  		     struct kvm_vcpu_events *events);
->>> diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testi=
-ng/selftests/kvm/lib/kvm_util.c
->>> index 41cf45416060..dae117728ec6 100644
->>> --- a/tools/testing/selftests/kvm/lib/kvm_util.c
->>> +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
->>> @@ -1373,6 +1373,54 @@ int _vcpu_sregs_set(struct kvm_vm *vm, uint32_=
-t vcpuid, struct kvm_sregs *sregs)
->>>  	return ioctl(vcpu->fd, KVM_SET_SREGS, sregs);
->>>  }
->>> =20
->>> +void vcpu_fpu_get(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_fpu=
- *fpu)
->>> +{
->>> +	struct vcpu *vcpu =3D vcpu_find(vm, vcpuid);
->>> +	int ret;
->>> +
->>> +	TEST_ASSERT(vcpu !=3D NULL, "vcpu not found, vcpuid: %u", vcpuid);
->>> +
->>> +	ret =3D ioctl(vcpu->fd, KVM_GET_FPU, fpu);
->>> +	TEST_ASSERT(ret =3D=3D 0, "KVM_GET_FPU failed, rc: %i errno: %i",
->>> +		    ret, errno);
->>> +}
->>> +
->>> +void vcpu_fpu_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_fpu=
- *fpu)
->>> +{
->>> +	struct vcpu *vcpu =3D vcpu_find(vm, vcpuid);
->>> +	int ret;
->>> +
->>> +	TEST_ASSERT(vcpu !=3D NULL, "vcpu not found, vcpuid: %u", vcpuid);
->>> +
->>> +	ret =3D ioctl(vcpu->fd, KVM_SET_FPU, fpu);
->>> +	TEST_ASSERT(ret =3D=3D 0, "KVM_SET_FPU failed, rc: %i errno: %i",
->>> +		    ret, errno);
->>> +}
->>> +
->>> +void vcpu_get_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one=
-_reg *reg)
->>> +{
->>> +	struct vcpu *vcpu =3D vcpu_find(vm, vcpuid);
->>> +	int ret;
->>> +
->>> +	TEST_ASSERT(vcpu !=3D NULL, "vcpu not found, vcpuid: %u", vcpuid);
->>> +
->>> +	ret =3D ioctl(vcpu->fd, KVM_GET_ONE_REG, reg);
->>> +	TEST_ASSERT(ret =3D=3D 0, "KVM_GET_ONE_REG failed, rc: %i errno: %i=
-",
->>> +		    ret, errno);
->>> +}
->>> +
->>> +void vcpu_set_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one=
-_reg *reg)
->>> +{
->>> +	struct vcpu *vcpu =3D vcpu_find(vm, vcpuid);
->>> +	int ret;
->>> +
->>> +	TEST_ASSERT(vcpu !=3D NULL, "vcpu not found, vcpuid: %u", vcpuid);
->>> +
->>> +	ret =3D ioctl(vcpu->fd, KVM_SET_ONE_REG, reg);
->>> +	TEST_ASSERT(ret =3D=3D 0, "KVM_SET_ONE_REG failed, rc: %i errno: %i=
-",
->>> +		    ret, errno);
->>> +}
->>> +
->>>  /*
->>>   * VCPU Ioctl
->>>   *
->>>
+Le 30/01/2020 à 14:04, Anshuman Khandual a écrit :
+> 
+> On 01/28/2020 10:35 PM, Christophe Leroy wrote:
 >>
->> Reviewed-by: Thomas Huth <thuth@redhat.com>
 >>
->=20
-> How about what's below instead. It should be equivalent.
+>> Le 28/01/2020 à 02:27, Anshuman Khandual a écrit :
+>>> diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+>>> index 0b6c4042942a..fb0e76d254b3 100644
+>>> --- a/arch/x86/include/asm/pgtable_64.h
+>>> +++ b/arch/x86/include/asm/pgtable_64.h
+>>> @@ -53,6 +53,12 @@ static inline void sync_initial_page_table(void) { }
+>>>      struct mm_struct;
+>>>    +#define mm_p4d_folded mm_p4d_folded
+>>> +static inline bool mm_p4d_folded(struct mm_struct *mm)
+>>> +{
+>>> +    return !pgtable_l5_enabled();
+>>> +}
+>>> +
+>>
+>> For me this should be part of another patch, it is not directly linked to the tests.
+> 
+> We did discuss about this earlier and Kirril mentioned its not worth
+> a separate patch.
+> 
+> https://lore.kernel.org/linux-arm-kernel/20190913091305.rkds4f3fqv3yjhjy@box/
 
-With your proposed changes we loose a bit verbosity in the error
-messages. I need to think about which I like more.
+For me it would make sense to not mix this patch which implement tests, 
+and changes that are needed for the test to work (or even build) on the 
+different architectures.
 
->=20
-> Thanks,
-> drew
->=20
-> diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/tes=
-ting/selftests/kvm/include/kvm_util.h
-> index 29cccaf96baf..d96a072e69bf 100644
-> --- a/tools/testing/selftests/kvm/include/kvm_util.h
-> +++ b/tools/testing/selftests/kvm/include/kvm_util.h
-> @@ -125,6 +125,31 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t vc=
-puid,
->  		    struct kvm_sregs *sregs);
->  int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
->  		    struct kvm_sregs *sregs);
-> +
-> +static inline void
-> +vcpu_fpu_get(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_fpu *fpu)
-> +{
-> +	vcpu_ioctl(vm, vcpuid, KVM_GET_FPU, fpu);
-> +}
-> +
-> +static inline void
-> +vcpu_fpu_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_fpu *fpu)
-> +{
-> +	vcpu_ioctl(vm, vcpuid, KVM_SET_FPU, fpu);
-> +}
-> +
-> +static inline void
-> +vcpu_get_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one_reg *r=
-eg)
-> +{
-> +	vcpu_ioctl(vm, vcpuid, KVM_GET_ONE_REG, reg);
-> +}
-> +
-> +static inline void
-> +vcpu_set_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one_reg *r=
-eg)
-> +{
-> +	vcpu_ioctl(vm, vcpuid, KVM_SET_ONE_REG, reg);
-> +}
-> +
->  #ifdef __KVM_HAVE_VCPU_EVENTS
->  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
->  		     struct kvm_vcpu_events *events);
->=20
+But that's up to you.
+
+> 
+>>
+>>>    void set_pte_vaddr_p4d(p4d_t *p4d_page, unsigned long vaddr, pte_t new_pte);
+>>>    void set_pte_vaddr_pud(pud_t *pud_page, unsigned long vaddr, pte_t new_pte);
+>>>    diff --git a/include/asm-generic/pgtable.h b/include/asm-generic/pgtable.h
+>>> index 798ea36a0549..e0b04787e789 100644
+>>> --- a/include/asm-generic/pgtable.h
+>>> +++ b/include/asm-generic/pgtable.h
+>>> @@ -1208,6 +1208,12 @@ static inline bool arch_has_pfn_modify_check(void)
+>>>    # define PAGE_KERNEL_EXEC PAGE_KERNEL
+>>>    #endif
+>>>    +#ifdef CONFIG_DEBUG_VM_PGTABLE
+>>
+>> Not sure it is a good idea to put that in include/asm-generic/pgtable.h
+> 
+> Logically that is the right place, as it is related to page table but
+> not something platform related.
+
+I can't see any debug related features in that file.
+
+> 
+>>
+>> By doing this you are forcing a rebuild of almost all files, whereas only init/main.o and mm/debug_vm_pgtable.o should be rebuilt when activating this config option.
+> 
+> I agreed but whats the alternative ? We could move these into init/main.c
+> to make things simpler but will that be a right place, given its related
+> to generic page table.
+
+What about linux/mmdebug.h instead ? (I have not checked if it would 
+reduce the impact, but that's where things related to CONFIG_DEBUG_VM 
+seems to be).
+
+Otherwise, you can just create new file, for instance 
+<linux/mmdebug-pgtable.h> and include that file only in the init/main.c 
+and mm/debug_vm_pgtable.c
 
 
 
---3qn7yA9kyZYG3nohlLHuHJgXuVItI9ozd--
+> 
+>>
+>>> +extern void debug_vm_pgtable(void);
+>>
+>> Please don't use the 'extern' keyword, it is useless and not to be used for functions declaration.
+> 
+> Really ? But, there are tons of examples doing the same thing both in
+> generic and platform code as well.
 
---F90N2UgJRM9jKCWTGktKxesdld9lYnfGG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Yes, but how can we improve if we blindly copy the errors from the past 
+? Having tons of 'extern' doesn't mean we must add more.
 
------BEGIN PGP SIGNATURE-----
+I think checkpatch.pl usually complains when a patch brings a new 
+unreleval extern symbol.
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl4y4/AACgkQ41TmuOI4
-ufhTBBAAgQuSqyT9u3OkxSaggV8NMVmd7uNO0C4sbFFM0bC1wmXPtLwir82e1QDA
-Q9zQKsLzLhIKbuSV3GFXWYnunRk9yk5brGzKMpPijSIhpsjZdaModGklCMTord8y
-av518MqVsI8SZKLk5fwGqzRvjH4zOu4kEalDV5ZZ8hAYjdMpgg/OgyFpFrYpH5xp
-eAHyVo7JclKZF3DBff/vLddD/4dj/qBJRW8ls6AeibCz1FKSX20ROn7u6ElOEchz
-htJSnx84ikg5cLD64hWeU4QTv8ekFenyL3mN/agdoJ97BnqiT7lutHKHO84fxYI9
-sJ+YK+Wv5zas3x62W/Swg8qEB6TegciR5gwTqKXyR8ddlsFjjv2mJrJzCQGWYRcr
-c+OAAAvZVk//xn8UzMLzEoOrYAwUZUb2ie49tt9OI394gPjksojy0uOI+j2/5+AQ
-EpWjPGY4uV4hTpaXO8g67e2Bbfuxj4mZglU/rg7djgkNW+PpWxClQzByjMijhVP8
-U8+4VVSwRVyPMV9hdVFlU68YeFIVubPNgHkqrMptMJzzk3c+8iutPjLNImfzG29O
-QRav8LxCplpcqdhTVt7am4G5/r8O4y75ov9aYFWP69q1RU87lY3Bb6QMGGpavTv0
-tgVBH1siRq1HllNkfe5veB+hzPqXbdlhICz+ykrNaCfWAWvqcsg=
-=jcZ2
------END PGP SIGNATURE-----
+> 
+>>
+>>> +#else
+>>> +static inline void debug_vm_pgtable(void) { }
+>>> +#endif
+>>> +
+>>>    #endif /* !__ASSEMBLY__ */
+>>>      #ifndef io_remap_pfn_range
+>>> diff --git a/init/main.c b/init/main.c
+>>> index da1bc0b60a7d..5e59e6ac0780 100644
+>>> --- a/init/main.c
+>>> +++ b/init/main.c
+>>> @@ -1197,6 +1197,7 @@ static noinline void __init kernel_init_freeable(void)
+>>>        sched_init_smp();
+>>>          page_alloc_init_late();
+>>> +    debug_vm_pgtable();
+>>
+>> Wouldn't it be better to call debug_vm_pgtable() in kernel_init() between the call to async_synchronise_full() and ftrace_free_init_mem() ?
+> 
+> IIRC, proposed location is the earliest we could call debug_vm_pgtable().
+> Is there any particular benefit or reason to move it into kernel_init() ?
 
---F90N2UgJRM9jKCWTGktKxesdld9lYnfGG--
+It would avoid having it lost in the middle of drivers logs, would be 
+close to the end of init, at a place we can't miss it, close to the 
+result of other tests like CONFIG_DEBUG_RODATA_TEST for instance.
 
+At the moment, you have to look for it to be sure the test is done and 
+what the result is.
+
+> 
+>>
+>>>        /* Initialize page ext after all struct pages are initialized. */
+>>>        page_ext_init();
+>>>    diff --git a/lib/Kconfig.debug b/lib/Kconfig.debug
+>>> index 5ffe144c9794..7cceae923c05 100644
+>>> --- a/lib/Kconfig.debug
+>>> +++ b/lib/Kconfig.debug
+>>> @@ -653,6 +653,12 @@ config SCHED_STACK_END_CHECK
+>>>          data corruption or a sporadic crash at a later stage once the region
+>>>          is examined. The runtime overhead introduced is minimal.
+>>>    +config ARCH_HAS_DEBUG_VM_PGTABLE
+>>> +    bool
+>>> +    help
+>>> +      An architecture should select this when it can successfully
+>>> +      build and run DEBUG_VM_PGTABLE.
+>>> +
+>>>    config DEBUG_VM
+>>>        bool "Debug VM"
+>>>        depends on DEBUG_KERNEL
+>>> @@ -688,6 +694,22 @@ config DEBUG_VM_PGFLAGS
+>>>            If unsure, say N.
+>>>    +config DEBUG_VM_PGTABLE
+>>> +    bool "Debug arch page table for semantics compliance"
+>>> +    depends on MMU
+>>> +    depends on DEBUG_VM
+>>
+>> Does it really need to depend on DEBUG_VM ?
+> 
+> No. It seemed better to package this test along with DEBUG_VM (although I
+> dont remember the conversation around it) and hence this dependency.
+
+Yes but it perfectly work as standalone. The more easy it is to activate 
+and the more people will use it. DEBUG_VM obliges to rebuild the kernel 
+entirely and could modify the behaviour. Could the helpers we are 
+testing behave differently when DEBUG_VM is not set ? I think it's good 
+the test things as close as possible to final config.
+
+> 
+>> I think we could make it standalone and 'default y if DEBUG_VM' instead.
+> 
+> Which will yield the same result like before but in a different way. But
+> yes, this test could go about either way but unless there is a good enough
+> reason why change the current one.
+
+I think if we want people to really use it on other architectures it 
+must be possible to activate it without having to modify Kconfig. 
+Otherwise people won't even know the test exists and the architecture 
+fails the test.
+
+The purpose of a test suite is to detect bugs. If you can't run the test 
+until you have fixed the bugs, I guess nobody will ever detect the bugs 
+and they will never be fixed.
+
+So I think:
+- the test should be 'default y' when ARCH_HAS_DEBUG_VM_PGTABLE is selected
+- the test should be 'default n' when ARCH_HAS_DEBUG_VM_PGTABLE is not 
+selected, and it should be user selectable if EXPERT is selected.
+
+Something like:
+
+config DEBUG_VM_PGTABLE
+     bool "Debug arch page table for semantics compliance" if 
+ARCH_HAS_DEBUG_VM_PGTABLE || EXPERT
+     depends on MMU
+     default 'n' if !ARCH_HAS_DEBUG_VM_PGTABLE
+     default 'y' if DEBUG_VM
+
+
+> 
+>>
+>>> +    depends on ARCH_HAS_DEBUG_VM_PGTABLE
+>>> +    default y
+>>> +    help
+>>> +      This option provides a debug method which can be used to test
+>>> +      architecture page table helper functions on various platforms in
+>>> +      verifying if they comply with expected generic MM semantics. This
+>>> +      will help architecture code in making sure that any changes or
+>>> +      new additions of these helpers still conform to expected
+>>> +      semantics of the generic MM.
+>>> +
+>>> +      If unsure, say N.
+>>> +
+>>
+>> Does it make sense to make it 'default y' and say 'If unsure, say N' ?
+> 
+> No it does. Not when it defaults 'y' unconditionally. Will drop the last
+> sentence "If unsure, say N". Nice catch, thank you.
+
+Well I was not asking if 'default y' was making sense but only if 'If 
+unsure say N' was making sense due to the 'default y'. You got it.
+
+Christophe
