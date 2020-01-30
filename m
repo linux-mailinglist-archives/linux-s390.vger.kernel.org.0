@@ -2,120 +2,188 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CFC814DBF8
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Jan 2020 14:32:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 359A414DC5B
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Jan 2020 14:55:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727315AbgA3Nci (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Jan 2020 08:32:38 -0500
-Received: from foss.arm.com ([217.140.110.172]:53060 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726948AbgA3Nci (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:32:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 146671FB;
-        Thu, 30 Jan 2020 05:32:35 -0800 (PST)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0AE453F68E;
-        Thu, 30 Jan 2020 05:32:21 -0800 (PST)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Mike Rapoport <rppt@linux.ibm.com>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     Qian Cai <cai@lca.pw>, Linux-MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <Mark.Rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <14882A91-17DE-4ABD-ABF2-08E7CCEDF660@lca.pw>
- <214c0d53-eb34-9b0c-2e4e-1aa005146331@arm.com>
- <016A776F-EFD9-4D2B-A3A9-788008617D95@lca.pw>
- <20200129232044.2d133d98@thinkpad> <20200130072741.GA23707@linux.ibm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <d1668930-d9cf-0490-a100-d1c49b49b19f@arm.com>
-Date:   Thu, 30 Jan 2020 19:02:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1727393AbgA3Nz0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Jan 2020 08:55:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25814 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727265AbgA3Nz0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Jan 2020 08:55:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580392524;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=+EXk8OXVdMDsV+XpCPUKmuRviNu+cx7h797kYCqOnVw=;
+        b=c6OwXYDVj92WXsxy0lfTDyf8a6NIz2EGIBbuJir0vIF2qAe02mikMHZ2lZcgC+3cu9ZXmz
+        /eD9lQ8Zld2PJ3+S0eEDhT5zJ/kR1lD07s5G7z8QnEIspJa/1BAJpVqwtJUAkFsEwA7Y0Y
+        +bkYwwNIVfN4sGfLKZ1ep6h0wn2jTpQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-208-i7kIqlv6PCWdd1MQC77sVw-1; Thu, 30 Jan 2020 08:55:19 -0500
+X-MC-Unique: i7kIqlv6PCWdd1MQC77sVw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A8198100550E;
+        Thu, 30 Jan 2020 13:55:18 +0000 (UTC)
+Received: from kamzik.brq.redhat.com (unknown [10.43.2.160])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CF1471001B09;
+        Thu, 30 Jan 2020 13:55:14 +0000 (UTC)
+Date:   Thu, 30 Jan 2020 14:55:12 +0100
+From:   Andrew Jones <drjones@redhat.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org,
+        borntraeger@de.ibm.com, david@redhat.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org
+Subject: Re: [PATCH v8 2/4] selftests: KVM: Add fpu and one reg set/get
+ library functions
+Message-ID: <20200130135512.diyyu3wvwqlwpqlx@kamzik.brq.redhat.com>
+References: <20200129200312.3200-1-frankja@linux.ibm.com>
+ <20200129200312.3200-3-frankja@linux.ibm.com>
+ <72ff36e1-9170-dfb0-4050-f398f9a467eb@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200130072741.GA23707@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <72ff36e1-9170-dfb0-4050-f398f9a467eb@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 01/30/2020 12:57 PM, Mike Rapoport wrote:
-> On Wed, Jan 29, 2020 at 11:20:44PM +0100, Gerald Schaefer wrote:
->> On Mon, 27 Jan 2020 22:33:08 -0500
->>
->> For example, who would have thought that pXd_bad() is supposed to
->> report large entries as bad? It's not really documented anywhere,
+On Thu, Jan 30, 2020 at 11:36:21AM +0100, Thomas Huth wrote:
+> On 29/01/2020 21.03, Janosch Frank wrote:
+> > Add library access to more registers.
+> > 
+> > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> > ---
+> >  .../testing/selftests/kvm/include/kvm_util.h  |  6 +++
+> >  tools/testing/selftests/kvm/lib/kvm_util.c    | 48 +++++++++++++++++++
+> >  2 files changed, 54 insertions(+)
+> > 
+> > diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+> > index 29cccaf96baf..ae0d14c2540a 100644
+> > --- a/tools/testing/selftests/kvm/include/kvm_util.h
+> > +++ b/tools/testing/selftests/kvm/include/kvm_util.h
+> > @@ -125,6 +125,12 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
+> >  		    struct kvm_sregs *sregs);
+> >  int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
+> >  		    struct kvm_sregs *sregs);
+> > +void vcpu_fpu_get(struct kvm_vm *vm, uint32_t vcpuid,
+> > +		  struct kvm_fpu *fpu);
+> > +void vcpu_fpu_set(struct kvm_vm *vm, uint32_t vcpuid,
+> > +		  struct kvm_fpu *fpu);
+> > +void vcpu_get_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one_reg *reg);
+> > +void vcpu_set_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one_reg *reg);
+> >  #ifdef __KVM_HAVE_VCPU_EVENTS
+> >  void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
+> >  		     struct kvm_vcpu_events *events);
+> > diff --git a/tools/testing/selftests/kvm/lib/kvm_util.c b/tools/testing/selftests/kvm/lib/kvm_util.c
+> > index 41cf45416060..dae117728ec6 100644
+> > --- a/tools/testing/selftests/kvm/lib/kvm_util.c
+> > +++ b/tools/testing/selftests/kvm/lib/kvm_util.c
+> > @@ -1373,6 +1373,54 @@ int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_sregs *sregs)
+> >  	return ioctl(vcpu->fd, KVM_SET_SREGS, sregs);
+> >  }
+> >  
+> > +void vcpu_fpu_get(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_fpu *fpu)
+> > +{
+> > +	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+> > +	int ret;
+> > +
+> > +	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
+> > +
+> > +	ret = ioctl(vcpu->fd, KVM_GET_FPU, fpu);
+> > +	TEST_ASSERT(ret == 0, "KVM_GET_FPU failed, rc: %i errno: %i",
+> > +		    ret, errno);
+> > +}
+> > +
+> > +void vcpu_fpu_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_fpu *fpu)
+> > +{
+> > +	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+> > +	int ret;
+> > +
+> > +	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
+> > +
+> > +	ret = ioctl(vcpu->fd, KVM_SET_FPU, fpu);
+> > +	TEST_ASSERT(ret == 0, "KVM_SET_FPU failed, rc: %i errno: %i",
+> > +		    ret, errno);
+> > +}
+> > +
+> > +void vcpu_get_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one_reg *reg)
+> > +{
+> > +	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+> > +	int ret;
+> > +
+> > +	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
+> > +
+> > +	ret = ioctl(vcpu->fd, KVM_GET_ONE_REG, reg);
+> > +	TEST_ASSERT(ret == 0, "KVM_GET_ONE_REG failed, rc: %i errno: %i",
+> > +		    ret, errno);
+> > +}
+> > +
+> > +void vcpu_set_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one_reg *reg)
+> > +{
+> > +	struct vcpu *vcpu = vcpu_find(vm, vcpuid);
+> > +	int ret;
+> > +
+> > +	TEST_ASSERT(vcpu != NULL, "vcpu not found, vcpuid: %u", vcpuid);
+> > +
+> > +	ret = ioctl(vcpu->fd, KVM_SET_ONE_REG, reg);
+> > +	TEST_ASSERT(ret == 0, "KVM_SET_ONE_REG failed, rc: %i errno: %i",
+> > +		    ret, errno);
+> > +}
+> > +
+> >  /*
+> >   * VCPU Ioctl
+> >   *
+> > 
 > 
-> A bit off-topic,
-> 
-> @Anshuman, maybe you could start a Documentation/ patch that describes at
-> least some of the pXd_whaterver()?
-> Or that would be too much to ask? ;-)
+> Reviewed-by: Thomas Huth <thuth@redhat.com>
+>
 
-No, it would not be :) I have been documenting the expected semantics for
-the helpers in the test itself. The idea is to collate them all (have been
-working on some additional tests but waiting for this one to get merged
-first) here and once most of the test gets settled, will move semantics
-documentation from here into Documentation/ directory in a proper format.
+How about what's below instead. It should be equivalent.
 
-/*
- * Basic operations
- *
- * mkold(entry)			= An old and not a young entry
- * mkyoung(entry)		= A young and not an old entry
- * mkdirty(entry)		= A dirty and not a clean entry
- * mkclean(entry)		= A clean and not a dirty entry
- * mkwrite(entry)		= A write and not a write protected entry
- * wrprotect(entry)		= A write protected and not a write entry
- * pxx_bad(entry)		= A mapped and non-table entry
- * pxx_same(entry1, entry2)	= Both entries hold the exact same value
- */ 
+Thanks,
+drew
 
+diff --git a/tools/testing/selftests/kvm/include/kvm_util.h b/tools/testing/selftests/kvm/include/kvm_util.h
+index 29cccaf96baf..d96a072e69bf 100644
+--- a/tools/testing/selftests/kvm/include/kvm_util.h
++++ b/tools/testing/selftests/kvm/include/kvm_util.h
+@@ -125,6 +125,31 @@ void vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
+ 		    struct kvm_sregs *sregs);
+ int _vcpu_sregs_set(struct kvm_vm *vm, uint32_t vcpuid,
+ 		    struct kvm_sregs *sregs);
++
++static inline void
++vcpu_fpu_get(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_fpu *fpu)
++{
++	vcpu_ioctl(vm, vcpuid, KVM_GET_FPU, fpu);
++}
++
++static inline void
++vcpu_fpu_set(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_fpu *fpu)
++{
++	vcpu_ioctl(vm, vcpuid, KVM_SET_FPU, fpu);
++}
++
++static inline void
++vcpu_get_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one_reg *reg)
++{
++	vcpu_ioctl(vm, vcpuid, KVM_GET_ONE_REG, reg);
++}
++
++static inline void
++vcpu_set_reg(struct kvm_vm *vm, uint32_t vcpuid, struct kvm_one_reg *reg)
++{
++	vcpu_ioctl(vm, vcpuid, KVM_SET_ONE_REG, reg);
++}
++
+ #ifdef __KVM_HAVE_VCPU_EVENTS
+ void vcpu_events_get(struct kvm_vm *vm, uint32_t vcpuid,
+ 		     struct kvm_vcpu_events *events);
 
-
-> 
->> so we just checked them for sanity like normal entries, which
->> apparently worked fine so far, but for how long?
-> 
