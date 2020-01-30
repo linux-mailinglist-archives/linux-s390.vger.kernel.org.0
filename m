@@ -2,184 +2,77 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CE5CF14DB57
-	for <lists+linux-s390@lfdr.de>; Thu, 30 Jan 2020 14:12:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5F61C14DB6F
+	for <lists+linux-s390@lfdr.de>; Thu, 30 Jan 2020 14:20:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbgA3NMM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 30 Jan 2020 08:12:12 -0500
-Received: from foss.arm.com ([217.140.110.172]:52512 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727258AbgA3NMM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 30 Jan 2020 08:12:12 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 087D6328;
-        Thu, 30 Jan 2020 05:12:11 -0800 (PST)
-Received: from [192.168.0.129] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AAD5D3F68E;
-        Thu, 30 Jan 2020 05:11:57 -0800 (PST)
-Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
- table helpers
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
- <20200129232028.5a27e656@thinkpad>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <5baed7e2-fc83-6223-8bb4-dcd771f9a4ea@arm.com>
-Date:   Thu, 30 Jan 2020 18:41:49 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1727107AbgA3NUs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 30 Jan 2020 08:20:48 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:36417 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727001AbgA3NUs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 30 Jan 2020 08:20:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580390447;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=+JHBG66v9eZtyfD6jCjQDZZvvUnFhotRfAzEXNyO+cc=;
+        b=RgLjDloLXVoR61iDYyQDxcPgG5pmpGj1oQtOsnwORaplB9LeWeX/sAVbaltb3hZn6ifqvP
+        vb7jUrw62ngPl7FE9NSWZQZl1EXPq6cwrTUYYjPKMPvU65xrSfeKCUfUkMGwMSy/omNWct
+        mpL7TA7u+eMvdUocMYV70RaZye1Dlkc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-284-WdUVflfFNH6Z0PnSn-IhaQ-1; Thu, 30 Jan 2020 08:20:43 -0500
+X-MC-Unique: WdUVflfFNH6Z0PnSn-IhaQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2AFD210054E3;
+        Thu, 30 Jan 2020 13:20:42 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-117-117.ams2.redhat.com [10.36.117.117])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4125C86C4D;
+        Thu, 30 Jan 2020 13:20:38 +0000 (UTC)
+Subject: Re: [PATCH v9 2/6] KVM: s390: Cleanup initial cpu reset
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, david@redhat.com, cohuck@redhat.com,
+        linux-s390@vger.kernel.org
+References: <20200130123434.68129-1-frankja@linux.ibm.com>
+ <20200130123434.68129-3-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <3096ea7a-f3a9-e3f5-336c-13c01fef385e@redhat.com>
+Date:   Thu, 30 Jan 2020 14:20:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200129232028.5a27e656@thinkpad>
+In-Reply-To: <20200130123434.68129-3-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 30/01/2020 13.34, Janosch Frank wrote:
+> The code seems to be quite old and uses lots of unneeded spaces for
+> alignment, which doesn't really help with readability.
+> 
+> Let's:
+> * Get rid of the extra spaces
+> * Remove the ULs as they are not needed on 0s
+> * Define constants for the CR 0 and 14 initial values
+> * Use the sizeof of the gcr array to memset it to 0
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> ---
+>  arch/s390/include/asm/kvm_host.h |  5 +++++
+>  arch/s390/kvm/kvm-s390.c         | 18 +++++++-----------
+>  2 files changed, 12 insertions(+), 11 deletions(-)
 
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
-On 01/30/2020 03:50 AM, Gerald Schaefer wrote:
-> On Tue, 28 Jan 2020 06:57:53 +0530
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> 
->> This adds tests which will validate architecture page table helpers and
->> other accessors in their compliance with expected generic MM semantics.
->> This will help various architectures in validating changes to existing
->> page table helpers or addition of new ones.
->>
->> This test covers basic page table entry transformations including but not
->> limited to old, young, dirty, clean, write, write protect etc at various
->> level along with populating intermediate entries with next page table page
->> and validating them.
->>
->> Test page table pages are allocated from system memory with required size
->> and alignments. The mapped pfns at page table levels are derived from a
->> real pfn representing a valid kernel text symbol. This test gets called
->> right after page_alloc_init_late().
->>
->> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
->> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
->> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
->> arm64. Going forward, other architectures too can enable this after fixing
->> build or runtime problems (if any) with their page table helpers.
->>
->> Folks interested in making sure that a given platform's page table helpers
->> conform to expected generic MM semantics should enable the above config
->> which will just trigger this test during boot. Any non conformity here will
->> be reported as an warning which would need to be fixed. This test will help
->> catch any changes to the agreed upon semantics expected from generic MM and
->> enable platforms to accommodate it thereafter.
->>
-> 
-> [...]
-> 
->>
->> Tested-by: Christophe Leroy <christophe.leroy@c-s.fr>		#PPC32
-> 
-> Tested-by: Gerald Schaefer <gerald.schaefer@de.ibm.com> # s390
-
-Thanks for testing.
-
-> 
-> Thanks again for this effort, and for keeping up the spirit against
-> all odds and even after 12 iterations :-)
-> 
->>
->> diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
->> new file mode 100644
->> index 000000000000..f3f8111edbe3
->> --- /dev/null
->> +++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
->> @@ -0,0 +1,35 @@
->> +#
->> +# Feature name:          debug-vm-pgtable
->> +#         Kconfig:       ARCH_HAS_DEBUG_VM_PGTABLE
->> +#         description:   arch supports pgtable tests for semantics compliance
->> +#
->> +    -----------------------
->> +    |         arch |status|
->> +    -----------------------
->> +    |       alpha: | TODO |
->> +    |         arc: |  ok  |
->> +    |         arm: | TODO |
->> +    |       arm64: |  ok  |
->> +    |         c6x: | TODO |
->> +    |        csky: | TODO |
->> +    |       h8300: | TODO |
->> +    |     hexagon: | TODO |
->> +    |        ia64: | TODO |
->> +    |        m68k: | TODO |
->> +    |  microblaze: | TODO |
->> +    |        mips: | TODO |
->> +    |       nds32: | TODO |
->> +    |       nios2: | TODO |
->> +    |    openrisc: | TODO |
->> +    |      parisc: | TODO |
->> +    |  powerpc/32: |  ok  |
->> +    |  powerpc/64: | TODO |
->> +    |       riscv: | TODO |
->> +    |        s390: | TODO |
-> 
-> s390 is ok now, with my patches included in v5.5-rc1. So you can now add
-> 
-> --- a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-> +++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
-> @@ -25,7 +25,7 @@
->      |  powerpc/32: |  ok  |
->      |  powerpc/64: | TODO |
->      |       riscv: | TODO |
-> -    |        s390: | TODO |
-> +    |        s390: |  ok  |
->      |          sh: | TODO |
->      |       sparc: | TODO |
->      |          um: | TODO |
-> --- a/arch/s390/Kconfig
-> +++ b/arch/s390/Kconfig
-> @@ -59,6 +59,7 @@ config KASAN_SHADOW_OFFSET
->  config S390
->  	def_bool y
->  	select ARCH_BINFMT_ELF_STATE
-> +	select ARCH_HAS_DEBUG_VM_PGTABLE
->  	select ARCH_HAS_DEVMEM_IS_ALLOWED
->  	select ARCH_HAS_ELF_RANDOMIZE
->  	select ARCH_HAS_FORTIFY_SOURCE
-
-Sure, will add this up.
