@@ -2,50 +2,50 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2A0E14EC5E
-	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2020 13:19:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3FA6914ECA7
+	for <lists+linux-s390@lfdr.de>; Fri, 31 Jan 2020 13:47:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728514AbgAaMTA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 31 Jan 2020 07:19:00 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63288 "EHLO
+        id S1728560AbgAaMrR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 31 Jan 2020 07:47:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62446 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728484AbgAaMTA (ORCPT
+        by vger.kernel.org with ESMTP id S1728500AbgAaMrR (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 31 Jan 2020 07:19:00 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VCEx9W031765
-        for <linux-s390@vger.kernel.org>; Fri, 31 Jan 2020 07:18:59 -0500
+        Fri, 31 Jan 2020 07:47:17 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 00VCjCaF024252
+        for <linux-s390@vger.kernel.org>; Fri, 31 Jan 2020 07:47:16 -0500
 Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xvkrf91v5-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2xv7b58yvd-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 31 Jan 2020 07:18:59 -0500
+        for <linux-s390@vger.kernel.org>; Fri, 31 Jan 2020 07:47:15 -0500
 Received: from localhost
         by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 31 Jan 2020 12:18:56 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        Fri, 31 Jan 2020 12:47:13 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
         by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 31 Jan 2020 12:18:55 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00VCIs3k37224586
+        Fri, 31 Jan 2020 12:47:11 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 00VClAMX44761470
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 31 Jan 2020 12:18:54 GMT
+        Fri, 31 Jan 2020 12:47:10 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5AF5F42047;
-        Fri, 31 Jan 2020 12:18:54 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 7F76642047;
+        Fri, 31 Jan 2020 12:47:10 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2065C4203F;
-        Fri, 31 Jan 2020 12:18:54 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4733D4203F;
+        Fri, 31 Jan 2020 12:47:10 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.224.41])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 31 Jan 2020 12:18:54 +0000 (GMT)
-Subject: Re: [PATCH v10 5/6] selftests: KVM: s390x: Add reset tests
+        Fri, 31 Jan 2020 12:47:10 +0000 (GMT)
+Subject: Re: [PATCH v10 6/6] selftests: KVM: testing the local IRQs resets
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, david@redhat.com, cohuck@redhat.com,
         linux-s390@vger.kernel.org
 References: <20200131100205.74720-1-frankja@linux.ibm.com>
- <20200131100205.74720-6-frankja@linux.ibm.com>
+ <20200131100205.74720-7-frankja@linux.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -90,38 +90,48 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Fri, 31 Jan 2020 13:18:53 +0100
+Date:   Fri, 31 Jan 2020 13:47:10 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200131100205.74720-6-frankja@linux.ibm.com>
+In-Reply-To: <20200131100205.74720-7-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20013112-4275-0000-0000-0000039CC4EC
+x-cbid: 20013112-4275-0000-0000-0000039CC6F2
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20013112-4276-0000-0000-000038B0E5A4
-Message-Id: <1c3582c7-eaba-186f-ee2e-76a2f0554344@de.ibm.com>
+x-cbparentid: 20013112-4276-0000-0000-000038B0E7AF
+Message-Id: <dc5273e9-3306-3a5f-b6a8-2c72a799b349@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-01-31_03:2020-01-31,2020-01-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 adultscore=0
- spamscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0 bulkscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 clxscore=1015 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1911200001
- definitions=main-2001310108
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 phishscore=0
+ adultscore=0 malwarescore=0 clxscore=1015 priorityscore=1501
+ mlxlogscore=959 bulkscore=0 mlxscore=0 impostorscore=0 lowpriorityscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1911200001 definitions=main-2001310110
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+
+
 On 31.01.20 11:02, Janosch Frank wrote:
-> Test if the registers end up having the correct values after a normal,
-> initial and clear reset.
+> From: Pierre Morel <pmorel@linux.ibm.com>
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> Local IRQs are reset by a normal cpu reset.  The initial cpu reset and
+> the clear cpu reset, as superset of the normal reset, both clear the
+> IRQs too.
+> 
+> Let's inject an interrupt to a vCPU before calling a reset and see if
+> it is gone after the reset.
+> 
+> We choose to inject only an emergency interrupt at this point and can
+> extend the test to other types of IRQs later.
+> 
+> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>[minor fixups]
 
 thanks applied.
 
