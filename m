@@ -2,110 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BA74F14F87C
-	for <lists+linux-s390@lfdr.de>; Sat,  1 Feb 2020 16:29:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B67614F9A9
+	for <lists+linux-s390@lfdr.de>; Sat,  1 Feb 2020 19:54:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727044AbgBAP3K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 1 Feb 2020 10:29:10 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32536 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726913AbgBAP3K (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 1 Feb 2020 10:29:10 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 011FI9HP077619
-        for <linux-s390@vger.kernel.org>; Sat, 1 Feb 2020 10:29:09 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xwa6mtdyr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Sat, 01 Feb 2020 10:29:08 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Sat, 1 Feb 2020 15:29:06 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Sat, 1 Feb 2020 15:29:04 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 011FT3Pt5505172
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Sat, 1 Feb 2020 15:29:03 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5092A52051;
-        Sat,  1 Feb 2020 15:29:03 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.30.110])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 8C0205204E;
-        Sat,  1 Feb 2020 15:29:02 +0000 (GMT)
-From:   Janosch Frank <frankja@linux.ibm.com>
-To:     kvm@vger.kernel.org
-Cc:     thuth@redhat.com, borntraeger@de.ibm.com,
-        linux-s390@vger.kernel.org, david@redhat.com, cohuck@redhat.com
-Subject: [kvm-unit-tests PATCH v5 7/7] s390x: smp: Wait for cpu setup to finish
-Date:   Sat,  1 Feb 2020 10:28:51 -0500
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200201152851.82867-1-frankja@linux.ibm.com>
+        id S1727197AbgBASxW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 1 Feb 2020 13:53:22 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50476 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727551AbgBASxO (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 1 Feb 2020 13:53:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580583192;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=ynlbcXZn/fV5UG3J/76c5au0G0a+9DOQ/IKDe2dfkAo=;
+        b=M6U1GWsDaoXvLdLx7fr4Dt1q0qY+rt6M82b21sRctQ2RpY67dtJdhwtV6EgWQKeTltfuTW
+        oi9JNvSKD+/H2Rp2XYJDqJAxoO+2ZjYVPw3llRz/tDNg80+Y/VStFkjgHk3/BFLM1pZD2j
+        U9xoIc/OlokUS/o02Kf/84KrftrTDi8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-20-Rr3ImzIBPuSaMD7uug9DYQ-1; Sat, 01 Feb 2020 13:53:08 -0500
+X-MC-Unique: Rr3ImzIBPuSaMD7uug9DYQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 371D8107ACC7;
+        Sat,  1 Feb 2020 18:53:07 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-27.ams2.redhat.com [10.36.116.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4C6968642B;
+        Sat,  1 Feb 2020 18:53:03 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v5 2/7] s390x: smp: Fix ecall and emcall
+ report strings
+To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
+        david@redhat.com, cohuck@redhat.com
 References: <20200201152851.82867-1-frankja@linux.ibm.com>
+ <20200201152851.82867-3-frankja@linux.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <15009dae-26eb-e6f6-25c6-c1dc9f0ee170@redhat.com>
+Date:   Sat, 1 Feb 2020 19:53:01 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20020115-4275-0000-0000-0000039D0ED6
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020115-4276-0000-0000-000038B1311E
-Message-Id: <20200201152851.82867-8-frankja@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-01_03:2020-01-31,2020-02-01 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 adultscore=0
- mlxscore=0 bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0
- suspectscore=1 impostorscore=0 priorityscore=1501 phishscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1911200001 definitions=main-2002010113
+In-Reply-To: <20200201152851.82867-3-frankja@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-We store the user provided psw address into restart new, so a psw
-restart does not lead us through setup again.
+On 01/02/2020 16.28, Janosch Frank wrote:
+> Instead of "smp: ecall: ecall" we now get "smp: ecall: received".
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> ---
+>  s390x/smp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/s390x/smp.c b/s390x/smp.c
+> index e37eb56..93a9594 100644
+> --- a/s390x/smp.c
+> +++ b/s390x/smp.c
+> @@ -125,7 +125,7 @@ static void ecall(void)
+>  	load_psw_mask(mask);
+>  	set_flag(1);
+>  	while (lc->ext_int_code != 0x1202) { mb(); }
+> -	report(1, "ecall");
+> +	report(1, "received");
+>  	set_flag(1);
+>  }
+>  
+> @@ -160,7 +160,7 @@ static void emcall(void)
+>  	load_psw_mask(mask);
+>  	set_flag(1);
+>  	while (lc->ext_int_code != 0x1201) { mb(); }
+> -	report(1, "ecall");
+> +	report(1, "received");
+>  	set_flag(1);
+>  }
 
-Also we wait on smp_cpu_setup() until the cpu has finished setup
-before returning. This is necessary for z/VM and LPAR where sigp is
-asynchronous.
-
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
----
- lib/s390x/smp.c  | 3 +++
- s390x/cstart64.S | 2 ++
- 2 files changed, 5 insertions(+)
-
-diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
-index 4578003..3f86243 100644
---- a/lib/s390x/smp.c
-+++ b/lib/s390x/smp.c
-@@ -210,6 +210,9 @@ int smp_cpu_setup(uint16_t addr, struct psw psw)
- 
- 	/* Start processing */
- 	smp_cpu_restart_nolock(addr, NULL);
-+	/* Wait until the cpu has finished setup and started the provided psw */
-+	while (lc->restart_new_psw.addr != psw.addr)
-+		mb();
- out:
- 	spin_unlock(&lock);
- 	return rc;
-diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-index 86dd4c4..9af6bb3 100644
---- a/s390x/cstart64.S
-+++ b/s390x/cstart64.S
-@@ -159,6 +159,8 @@ smp_cpu_setup_state:
- 	xgr	%r1, %r1
- 	lmg     %r0, %r15, GEN_LC_SW_INT_GRS
- 	lctlg   %c0, %c0, GEN_LC_SW_INT_CRS
-+	/* We should only go once through cpu setup and not for every restart */
-+	stg	%r14, GEN_LC_RESTART_NEW_PSW + 8
- 	br	%r14
- 
- pgm_int:
--- 
-2.20.1
+Reviewed-by: Thomas Huth <thuth@redhat.com>
 
