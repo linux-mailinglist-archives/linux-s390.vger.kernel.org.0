@@ -2,268 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E17421518CF
-	for <lists+linux-s390@lfdr.de>; Tue,  4 Feb 2020 11:31:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 48F19151AA3
+	for <lists+linux-s390@lfdr.de>; Tue,  4 Feb 2020 13:41:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726230AbgBDKbW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 4 Feb 2020 05:31:22 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:34331 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726364AbgBDKbW (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Feb 2020 05:31:22 -0500
-Received: by mail-wr1-f67.google.com with SMTP id t2so22316155wrr.1
-        for <linux-s390@vger.kernel.org>; Tue, 04 Feb 2020 02:31:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=monstr-eu.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
-         :mime-version:in-reply-to;
-        bh=yrtra2ee+KLVOttd4bXZYdK9YXYtwBJf0l2O9Xpk63w=;
-        b=T3LmiWCzexeHLHNbYatPJHQ1Jzu/Dfe6b91IWZnWDttMbj7NlluOZ4VbcqwqVz7//x
-         LG9uDNGgWBZWg6kdJcgRrp/tWhBSC7AtLVjAG38MV1e2YuhzfYkHbTb8bESg5pYUn2g6
-         mTBy8LOv0U8zO988akhwj5miebzX2id3YKATYKcicNb+fmzgXCtiFtRUBsbnZ+4qqtyq
-         NphLTD94p3e2yfpafymvvbenC5CBwsTGmjNOQovWOOBASmREc66RhowyuOpGicGWWVAa
-         iXSNU7q8H8k/8FTuBEfHRg+VPRJWUTbCZa1jwb6Cepv2+g5QlBqWa2XjyOicuaFnEHHV
-         Lo7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to;
-        bh=yrtra2ee+KLVOttd4bXZYdK9YXYtwBJf0l2O9Xpk63w=;
-        b=tXX5jI5O2ZN+rAmIghGOXUMez3OqBWiIPvwrwFTXxEMFJB7LVrBxc2REhvhbakDfiO
-         yEulyORCQlP6NJodZJ3yEfECITYxzkJrnT1XYuW6zcdxVuekbndvODBDvsaJProWnVBF
-         zVbuYW6avDSGy0+lXyqDdZOfJCuwR1zgShiYz6Le9MT3k1bWipgq7K7DyYbZIMers4lY
-         xMFUwrx5KpvB9Eiw2IxhEwVaXRYNqED1twFxkkLdRiJ/TzoDeZKj3eAvI64+HKFNXyRl
-         /iv1C4QXO/YfHBSwE4YBZSMDRy9S1dy/YT6GHkEzJ0yXeOmANNEUnXDfSsTvAxJwlxus
-         +DSg==
-X-Gm-Message-State: APjAAAXYBsZtn9g99zuLfmkUFJcn4vmyCOnPgmVfMnhDmlnf1jeMlZ91
-        mSnCW0ANAyJzILU/HKaLhZLEWg==
-X-Google-Smtp-Source: APXvYqzbzEy2S2mIksTlB/Be+HGMhTUe5EtNkl2cNi6/3J3nu2RvrRvZ8lWYtbHpC136cTDN5i5+Ig==
-X-Received: by 2002:adf:ea8a:: with SMTP id s10mr20395994wrm.278.1580812278888;
-        Tue, 04 Feb 2020 02:31:18 -0800 (PST)
-Received: from [173.194.76.109] ([149.199.62.130])
-        by smtp.gmail.com with ESMTPSA id r5sm29620132wrt.43.2020.02.04.02.31.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 04 Feb 2020 02:31:17 -0800 (PST)
-Subject: Re: [PATCH v2 0/2] microblaze: Enable CMA
-To:     Michal Simek <michal.simek@xilinx.com>,
-        linux-kernel@vger.kernel.org, monstr@monstr.eu, git@xilinx.com,
-        Christoph Hellwig <hch@lst.de>
-Cc:     Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-riscv@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        x86@kernel.org, Guo Ren <guoren@kernel.org>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Wesley Terpstra <wesley@sifive.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        id S1727128AbgBDMlP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 4 Feb 2020 07:41:15 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:25222 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727127AbgBDMlP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 4 Feb 2020 07:41:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1580820074;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=kkwmqU8ouKlrmlUpwSyjFFOqHtkPdBPv4d9RidZ3GCg=;
+        b=A7SF4WhWCLdYWjmfB99jtibZ5DJywpdj11vrEO6zCK0aNXFYYfs89w2SPU0XD2Gtvo8XmD
+        a5vfHxLqPqCmj/B8CvzIR7LDODmWoneFbYOsdcoVRwzKV0fRoAs1YR6eKwqxm9RsdCtdlI
+        7J2tPie0UU/NF0/FgyeZ8VPtztPk00E=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-236-krWsps6ZNm2p0BQ0dVOmYQ-1; Tue, 04 Feb 2020 07:41:12 -0500
+X-MC-Unique: krWsps6ZNm2p0BQ0dVOmYQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 550AD8010E7;
+        Tue,  4 Feb 2020 12:41:10 +0000 (UTC)
+Received: from [10.36.117.121] (ovpn-117-121.ams2.redhat.com [10.36.117.121])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 547BD86C4A;
+        Tue,  4 Feb 2020 12:41:07 +0000 (UTC)
+Subject: Re: [PATCH v6 10/10] mm/memory_hotplug: Cleanup __remove_pages()
+To:     Oscar Salvador <osalvador@suse.de>
+Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        linux-xtensa@linux-xtensa.org, "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Will Deacon <will@kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Chris Zankel <chris@zankel.net>,
-        Manish Narani <manish.narani@xilinx.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Waiman Long <longman@redhat.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        James Hogan <jhogan@kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Guo Ren <ren_guo@c-sky.com>
-References: <cover.1579248206.git.michal.simek@xilinx.com>
-From:   Michal Simek <monstr@monstr.eu>
-Autocrypt: addr=monstr@monstr.eu; keydata=
- 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
- 0Z1MQlmNcq2bhOMzTxuXX2NDzUZs4aqEyZQ=
-Message-ID: <5706978d-4c9a-1123-c34b-e19e2b8aa37f@monstr.eu>
-Date:   Tue, 4 Feb 2020 11:30:56 +0100
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Wei Yang <richardw.yang@linux.intel.com>
+References: <20191006085646.5768-1-david@redhat.com>
+ <20191006085646.5768-11-david@redhat.com> <20200204094652.GE6494@linux>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <5d698f94-af18-0714-bc97-14b6c520572c@redhat.com>
+Date:   Tue, 4 Feb 2020 13:41:06 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+ Thunderbird/68.3.1
 MIME-Version: 1.0
-In-Reply-To: <cover.1579248206.git.michal.simek@xilinx.com>
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T"
+In-Reply-To: <20200204094652.GE6494@linux>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T
-Content-Type: multipart/mixed; boundary="BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ";
- protected-headers="v1"
-From: Michal Simek <monstr@monstr.eu>
-To: Michal Simek <michal.simek@xilinx.com>, linux-kernel@vger.kernel.org,
- monstr@monstr.eu, git@xilinx.com, Christoph Hellwig <hch@lst.de>
-Cc: Paul Burton <paulburton@kernel.org>, Arnd Bergmann <arnd@arndb.de>,
- Mike Rapoport <rppt@linux.ibm.com>,
- Manjukumar Matha <manjukumar.harthikote-matha@xilinx.com>,
- Borislav Petkov <bp@alien8.de>, Linus Walleij <linus.walleij@linaro.org>,
- linux-mips@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
- Geert Uytterhoeven <geert@linux-m68k.org>,
- Catalin Marinas <catalin.marinas@arm.com>, linux-riscv@lists.infradead.org,
- linux-arch@vger.kernel.org, linux-s390@vger.kernel.org,
- Palmer Dabbelt <palmer@dabbelt.com>, x86@kernel.org,
- Guo Ren <guoren@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>,
- Wesley Terpstra <wesley@sifive.com>,
- Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
- Ralf Baechle <ralf@linux-mips.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Andrew Morton <akpm@linux-foundation.org>,
- Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org,
- "H. Peter Anvin" <hpa@zytor.com>,
- "Peter Zijlstra (Intel)" <peterz@infradead.org>,
- Will Deacon <will@kernel.org>, Christian Borntraeger
- <borntraeger@de.ibm.com>, Deepa Dinamani <deepa.kernel@gmail.com>,
- Chris Zankel <chris@zankel.net>, Manish Narani <manish.narani@xilinx.com>,
- Ingo Molnar <mingo@redhat.com>, Waiman Long <longman@redhat.com>,
- linux-arm-kernel@lists.infradead.org, Albert Ou <aou@eecs.berkeley.edu>,
- Vasily Gorbik <gor@linux.ibm.com>, James Hogan <jhogan@kernel.org>,
- Masahiro Yamada <yamada.masahiro@socionext.com>,
- Heiko Carstens <heiko.carstens@de.ibm.com>, Guo Ren <ren_guo@c-sky.com>
-Message-ID: <5706978d-4c9a-1123-c34b-e19e2b8aa37f@monstr.eu>
-Subject: Re: [PATCH v2 0/2] microblaze: Enable CMA
-References: <cover.1579248206.git.michal.simek@xilinx.com>
-In-Reply-To: <cover.1579248206.git.michal.simek@xilinx.com>
+On 04.02.20 10:46, Oscar Salvador wrote:
+> On Sun, Oct 06, 2019 at 10:56:46AM +0200, David Hildenbrand wrote:
+>> Let's drop the basically unused section stuff and simplify.
+>>
+>> Also, let's use a shorter variant to calculate the number of pages to
+>> the next section boundary.
+>>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: Wei Yang <richardw.yang@linux.intel.com>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>=20
+> I have to confess that it took me while to wrap around my head
+> with the new min() change, but looks ok:
 
---BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+It's a pattern commonly used in compilers and emulators to calculate the
+number of bytes to the next block/alignment. (we're missing a macro
+(like we have ALIGN_UP/IS_ALIGNED) for that - but it's hard to come up
+with a good name (e.g., SIZE_TO_NEXT_ALIGN) .
 
-On 17. 01. 20 9:03, Michal Simek wrote:
-> Hi,
->=20
-> the patchset enable CMA on Microblaze. Based on Christoph request I hav=
-e
-> created the first patch which makes dma-continugous.h mandatory for all=
-
-> archs before Microblaze wiring.
->=20
-> Thanks,
-> Michal
->=20
-> Changes in v2:
-> - New patch suggested by Christoph
-> - Align commit message
-> - Remove adding dma-contigous.h via Kbuild because it is done by previo=
-us
->   patch
->=20
-> Michal Simek (2):
->   asm-generic: Make dma-contiguous.h a mandatory include/asm header
->   microblaze: Wire CMA allocator
->=20
->  arch/arm64/include/asm/Kbuild         | 1 -
->  arch/csky/include/asm/Kbuild          | 1 -
->  arch/microblaze/Kconfig               | 1 +
->  arch/microblaze/configs/mmu_defconfig | 2 ++
->  arch/microblaze/mm/init.c             | 4 ++++
->  arch/mips/include/asm/Kbuild          | 1 -
->  arch/riscv/include/asm/Kbuild         | 1 -
->  arch/s390/include/asm/Kbuild          | 1 -
->  arch/x86/include/asm/Kbuild           | 1 -
->  arch/xtensa/include/asm/Kbuild        | 1 -
->  include/asm-generic/Kbuild            | 1 +
->  11 files changed, 8 insertions(+), 7 deletions(-)
->=20
-
-Applied.
-
-Thanks,
-Michal
 --=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Xilinx Microblaze
-Maintainer of Linux kernel - Xilinx Zynq ARM and ZynqMP ARM64 SoCs
-U-Boot custodian - Xilinx Microblaze/Zynq/ZynqMP/Versal SoCs
+Thanks,
 
+David / dhildenb
 
-
---BbuWsr0XsV2TagfAoYrRnS0Lcvh9jdEaZ--
-
---pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iF0EARECAB0WIQQbPNTMvXmYlBPRwx7KSWXLKUoMIQUCXjlH4AAKCRDKSWXLKUoM
-IXg5AJ9J98El4wJeR5l37eVkp19mJ5smqwCdGPO/rvmeDwYSeGZMMaNPcnZNHRA=
-=bdA8
------END PGP SIGNATURE-----
-
---pBOm8rNjCoJTkwKyfl4Ed8HeJH77Ps32T--
