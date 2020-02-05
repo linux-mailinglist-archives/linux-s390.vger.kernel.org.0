@@ -2,96 +2,157 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 84E211532CE
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Feb 2020 15:26:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6267A153359
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Feb 2020 15:48:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726308AbgBEO0c (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Feb 2020 09:26:32 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27528 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726597AbgBEO0c (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Feb 2020 09:26:32 -0500
+        id S1727054AbgBEOsh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 5 Feb 2020 09:48:37 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27496 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727029AbgBEOsg (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Feb 2020 09:48:36 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580912791;
+        s=mimecast20190719; t=1580914115;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          in-reply-to:in-reply-to:references:references;
-        bh=KAdV3hA+UnlwePFUiQQxF7Qhd3fY3tGdtbme44OOFs8=;
-        b=dM56oyW0PLeC7lZcKtklhPL2Tcba9dYouSmR8HUQlYqmJoWyLefQjkvWawkoKvTCTVoo95
-        HROmfvZ4K9g/7GDR1LKIUELUzKnhIBFjgyd9cmb+oY/oXsm2SftkJs4/goXUgyEeaJeNaC
-        ux7m9uwcb90bFQeteCZzBhb2LdmFJhs=
+        bh=95aJqeVITxcGTfX0TCyAquXczebVTrMMk8jxCMfrdaA=;
+        b=WDIEmqAVB6RCikwJw3X1K1543cJgD7YCzm9e9P56XhPx/R26ZjshBFyf9Hp+3PyKlU4Sec
+        O9ubYPemZ/WduKbcMVYtFPnpStssK27ypQyYYcuFg7ptPWB85nyZAIpZjP+i3eyiTvGcol
+        ftrmqYqbXmIpnSSzNRw+JU5eeEG61lc=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-371-OBZq-5t8Nwu9IXhE-e1YOQ-1; Wed, 05 Feb 2020 09:26:26 -0500
-X-MC-Unique: OBZq-5t8Nwu9IXhE-e1YOQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-34-CRKct6xKO9GNNI26yrfXjA-1; Wed, 05 Feb 2020 09:48:20 -0500
+X-MC-Unique: CRKct6xKO9GNNI26yrfXjA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 209311081FA3;
-        Wed,  5 Feb 2020 14:26:24 +0000 (UTC)
-Received: from localhost (ovpn-12-97.pek2.redhat.com [10.72.12.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 56DD25C1B5;
-        Wed,  5 Feb 2020 14:26:20 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 22:26:18 +0800
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C1E51083E81;
+        Wed,  5 Feb 2020 14:48:18 +0000 (UTC)
+Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BC77F87B00;
+        Wed,  5 Feb 2020 14:48:14 +0000 (UTC)
+Date:   Wed, 5 Feb 2020 22:48:11 +0800
 From:   Baoquan He <bhe@redhat.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
+To:     Wei Yang <richardw.yang@linux.intel.com>
+Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
+        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
         Oscar Salvador <osalvador@suse.de>,
         Michal Hocko <mhocko@suse.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
+        Dan Williams <dan.j.williams@intel.com>
 Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
  in shrink_zone_span()
-Message-ID: <20200205142618.GE8965@MiWiFi-R3L-srv>
+Message-ID: <20200205144811.GF26758@MiWiFi-R3L-srv>
 References: <20191006085646.5768-1-david@redhat.com>
  <20191006085646.5768-9-david@redhat.com>
- <20200204142516.GD26758@MiWiFi-R3L-srv>
- <e0006cc4-d448-89c6-38c0-51da7fc08715@redhat.com>
- <20200205124329.GE26758@MiWiFi-R3L-srv>
- <cd353848-301a-025d-dd66-44d76e1bbc44@redhat.com>
- <20200205133442.GC8965@MiWiFi-R3L-srv>
- <2868343a-745b-e2b6-7e78-d5649c00ee31@redhat.com>
- <20200205141254.GD8965@MiWiFi-R3L-srv>
- <be8b9c0e-0929-4ea4-9c25-15e1f221dfb1@redhat.com>
+ <20200205095924.GC24162@richard>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <be8b9c0e-0929-4ea4-9c25-15e1f221dfb1@redhat.com>
+In-Reply-To: <20200205095924.GC24162@richard>
 User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 02/05/20 at 03:16pm, David Hildenbrand wrote:
-> >>>> Anyhow, that patch is already upstream and I don't consider this high
-> >>>> priority. Thanks :)
-> >>>
-> >>> Yeah, noticed you told Wei the status in another patch thread, I am fine
-> >>> with it, just leave it to you to decide. Thanks.
-> >>
-> >> I am fairly busy right now. Can you send a patch (double-checking and
-> >> making this eventually unconditional?). Thanks!
-> > 
-> > Understood, sorry about the noise, David. I will think about this.
-> > 
+Hi Wei Yang,
+
+On 02/05/20 at 05:59pm, Wei Yang wrote:
+> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> >index f294918f7211..8dafa1ba8d9f 100644
+> >--- a/mm/memory_hotplug.c
+> >+++ b/mm/memory_hotplug.c
+> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> > 		if (pfn) {
+> > 			zone->zone_start_pfn = pfn;
+> > 			zone->spanned_pages = zone_end_pfn - pfn;
+> >+		} else {
+> >+			zone->zone_start_pfn = 0;
+> >+			zone->spanned_pages = 0;
+> > 		}
+> > 	} else if (zone_end_pfn == end_pfn) {
+> > 		/*
+> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+> > 					       start_pfn);
+> > 		if (pfn)
+> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
+> >+		else {
+> >+			zone->zone_start_pfn = 0;
+> >+			zone->spanned_pages = 0;
+> >+		}
+> > 	}
 > 
-> No need to excuse, really, I'm very happy about review feedback!
+> If it is me, I would like to take out these two similar logic out.
+
+I also like this style. 
+> 
+> For example:
+> 
+> 	if () {
+> 	} else if () {
+> 	} else {
+> 		goto out;
+Here the last else is unnecessary, right?
+
+> 	}
+> 
 > 
 
-Glad to hear it, thanks.
+Like this, I believe both David and I will be satisfactory. Even though
+I still think his 2nd resetting is not needed :-)
 
-> The review of this series happened fairly late. Bad, because it's not
-> perfect, but good, because no serious stuff was found (so far :) ). If
-> you also don't have time to look into this, I can put it onto my todo
-> list, just let me know.
-
-Both is OK to me, as long as thing is clear to us. I will discuss with
-Wei Yang for now. You can post patch anytime if you make one.
+> 	/* The zone has no valid section */
+> 	if (!pfn) {
+> 			zone->zone_start_pfn = 0;
+> 			zone->spanned_pages = 0;
+> 	}
+> 
+> out:
+> 	zone_span_writeunlock(zone);
+> 
+> Well, this is just my personal taste :-)
+> 
+> >-
+> >-	/*
+> >-	 * The section is not biggest or smallest mem_section in the zone, it
+> >-	 * only creates a hole in the zone. So in this case, we need not
+> >-	 * change the zone. But perhaps, the zone has only hole data. Thus
+> >-	 * it check the zone has only hole or not.
+> >-	 */
+> >-	pfn = zone_start_pfn;
+> >-	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
+> >-		if (unlikely(!pfn_to_online_page(pfn)))
+> >-			continue;
+> >-
+> >-		if (page_zone(pfn_to_page(pfn)) != zone)
+> >-			continue;
+> >-
+> >-		/* Skip range to be removed */
+> >-		if (pfn >= start_pfn && pfn < end_pfn)
+> >-			continue;
+> >-
+> >-		/* If we find valid section, we have nothing to do */
+> >-		zone_span_writeunlock(zone);
+> >-		return;
+> >-	}
+> >-
+> >-	/* The zone has no valid section */
+> >-	zone->zone_start_pfn = 0;
+> >-	zone->spanned_pages = 0;
+> > 	zone_span_writeunlock(zone);
+> > }
+> > 
+> >-- 
+> >2.21.0
+> 
+> -- 
+> Wei Yang
+> Help you, Help me
+> 
 
