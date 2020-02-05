@@ -2,126 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1DC6C153BA3
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 00:08:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4295F153BD2
+	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 00:26:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727471AbgBEXIk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Feb 2020 18:08:40 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59618 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727170AbgBEXIk (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Feb 2020 18:08:40 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580944119;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=29ZTjJBKR+L3bx4WS0f/voo5oahzOM1U9ASFLBeMp4o=;
-        b=Pl0KRFDSx1dq1MP/a+/jSZatwh26VOo2MB3Mxqb/OuWkthSMm1qe06pj/nYQF8FhcrWa5I
-        Jvil4MojRAcYbBa7zapCWp36wClx0FDseA3Z4hFXJULpetvpJi2rrUXfGpzgq9U/qvMZV3
-        X6UoRSMQNP8OgZQdnJjy08ScYEj5LvQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-127-aW0bz0YAODSSJOPBtHmibQ-1; Wed, 05 Feb 2020 18:08:35 -0500
-X-MC-Unique: aW0bz0YAODSSJOPBtHmibQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44D17800D54;
-        Wed,  5 Feb 2020 23:08:33 +0000 (UTC)
-Received: from localhost (ovpn-12-19.pek2.redhat.com [10.72.12.19])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ABEAA8DC12;
-        Wed,  5 Feb 2020 23:08:29 +0000 (UTC)
-Date:   Thu, 6 Feb 2020 07:08:26 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        id S1727474AbgBEX0H (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 5 Feb 2020 18:26:07 -0500
+Received: from mga17.intel.com ([192.55.52.151]:17979 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727361AbgBEX0H (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 5 Feb 2020 18:26:07 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:26:06 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
+   d="scan'208";a="264402948"
+Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Feb 2020 15:26:03 -0800
+Date:   Thu, 6 Feb 2020 07:26:20 +0800
+From:   Wei Yang <richardw.yang@linux.intel.com>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Wei Yang <richardw.yang@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
         Oscar Salvador <osalvador@suse.de>,
         Michal Hocko <mhocko@suse.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
         Dan Williams <dan.j.williams@intel.com>
 Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
  in shrink_zone_span()
-Message-ID: <20200205230826.GF8965@MiWiFi-R3L-srv>
+Message-ID: <20200205232620.GC28446@richard>
+Reply-To: Wei Yang <richardw.yang@linux.intel.com>
 References: <20191006085646.5768-1-david@redhat.com>
  <20191006085646.5768-9-david@redhat.com>
  <20200205095924.GC24162@richard>
  <20200205144811.GF26758@MiWiFi-R3L-srv>
  <20200205225633.GA28446@richard>
+ <20200205230826.GF8965@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200205225633.GA28446@richard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+In-Reply-To: <20200205230826.GF8965@MiWiFi-R3L-srv>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 02/06/20 at 06:56am, Wei Yang wrote:
-> On Wed, Feb 05, 2020 at 10:48:11PM +0800, Baoquan He wrote:
-> >Hi Wei Yang,
-> >
-> >On 02/05/20 at 05:59pm, Wei Yang wrote:
-> >> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >> >index f294918f7211..8dafa1ba8d9f 100644
-> >> >--- a/mm/memory_hotplug.c
-> >> >+++ b/mm/memory_hotplug.c
-> >> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> >> > 		if (pfn) {
-> >> > 			zone->zone_start_pfn = pfn;
-> >> > 			zone->spanned_pages = zone_end_pfn - pfn;
-> >> >+		} else {
-> >> >+			zone->zone_start_pfn = 0;
-> >> >+			zone->spanned_pages = 0;
-> >> > 		}
-> >> > 	} else if (zone_end_pfn == end_pfn) {
-> >> > 		/*
-> >> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> >> > 					       start_pfn);
-> >> > 		if (pfn)
-> >> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
-> >> >+		else {
-> >> >+			zone->zone_start_pfn = 0;
-> >> >+			zone->spanned_pages = 0;
-> >> >+		}
-> >> > 	}
-> >> 
-> >> If it is me, I would like to take out these two similar logic out.
-> >
-> >I also like this style. 
-> >> 
-> >> For example:
-> >> 
-> >> 	if () {
-> >> 	} else if () {
-> >> 	} else {
-> >> 		goto out;
-> >Here the last else is unnecessary, right?
-> >
-> 
-> I am afraid not.
-> 
-> If the range is not the first or last, we would leave pfn not initialized.
+On Thu, Feb 06, 2020 at 07:08:26AM +0800, Baoquan He wrote:
+>On 02/06/20 at 06:56am, Wei Yang wrote:
+>> On Wed, Feb 05, 2020 at 10:48:11PM +0800, Baoquan He wrote:
+>> >Hi Wei Yang,
+>> >
+>> >On 02/05/20 at 05:59pm, Wei Yang wrote:
+>> >> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>> >> >index f294918f7211..8dafa1ba8d9f 100644
+>> >> >--- a/mm/memory_hotplug.c
+>> >> >+++ b/mm/memory_hotplug.c
+>> >> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+>> >> > 		if (pfn) {
+>> >> > 			zone->zone_start_pfn = pfn;
+>> >> > 			zone->spanned_pages = zone_end_pfn - pfn;
+>> >> >+		} else {
+>> >> >+			zone->zone_start_pfn = 0;
+>> >> >+			zone->spanned_pages = 0;
+>> >> > 		}
+>> >> > 	} else if (zone_end_pfn == end_pfn) {
+>> >> > 		/*
+>> >> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
+>> >> > 					       start_pfn);
+>> >> > 		if (pfn)
+>> >> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
+>> >> >+		else {
+>> >> >+			zone->zone_start_pfn = 0;
+>> >> >+			zone->spanned_pages = 0;
+>> >> >+		}
+>> >> > 	}
+>> >> 
+>> >> If it is me, I would like to take out these two similar logic out.
+>> >
+>> >I also like this style. 
+>> >> 
+>> >> For example:
+>> >> 
+>> >> 	if () {
+>> >> 	} else if () {
+>> >> 	} else {
+>> >> 		goto out;
+>> >Here the last else is unnecessary, right?
+>> >
+>> 
+>> I am afraid not.
+>> 
+>> If the range is not the first or last, we would leave pfn not initialized.
+>
+>Ah, you are right. I forgot that one. Then pfn can be assigned the
+>zone_start_pfn as the old code. Then the following logic is the same
+>as the original code, find_smallest_section_pfn()/find_biggest_section_pfn() 
+>have done the iteration the old for loop was doing.
+>
+>	unsigned long pfn = zone_start_pfn;	
+>	if () {
+>	} else if () {
+>	} 
+>
+>	/* The zone has no valid section */
+>	if (!pfn) {
+>        	zone->zone_start_pfn = 0;
+>        	zone->spanned_pages = 0;
+>	}
 
-Ah, you are right. I forgot that one. Then pfn can be assigned the
-zone_start_pfn as the old code. Then the following logic is the same
-as the original code, find_smallest_section_pfn()/find_biggest_section_pfn() 
-have done the iteration the old for loop was doing.
+This one look better :-)
 
-	unsigned long pfn = zone_start_pfn;	
-	if () {
-	} else if () {
-	} 
+Thanks
 
-	/* The zone has no valid section */
-	if (!pfn) {
-        	zone->zone_start_pfn = 0;
-        	zone->spanned_pages = 0;
-	}
-
+-- 
+Wei Yang
+Help you, Help me
