@@ -2,117 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 61EE51530F6
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Feb 2020 13:43:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A239215312D
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Feb 2020 13:53:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727068AbgBEMnp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Feb 2020 07:43:45 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:23307 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726575AbgBEMno (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Feb 2020 07:43:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580906623;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=s7mEVqJKQjbMj0sSKh4xXiDWpaH1dr5EPgu2ctTv8CU=;
-        b=WIc0vkYloQVaE4yPIwInu5iK8slR5G0VhX7sP04FCkMYyP1Dw5DB9vmwMxnhV7DaKRNyzA
-        u513lrNZ0v1MzIlXsTn0hvLsLOrgBZ74ABSji8VvGpxnxPFPfcolpcgf6EiuAeQqrx0WBi
-        L03DA+w9C4e0zvG9BjCJd+MI7d60j3M=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-127-7rVIiLSTMrGSBsygAly1VQ-1; Wed, 05 Feb 2020 07:43:39 -0500
-X-MC-Unique: 7rVIiLSTMrGSBsygAly1VQ-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22F4185EE6C;
-        Wed,  5 Feb 2020 12:43:36 +0000 (UTC)
-Received: from localhost (ovpn-12-97.pek2.redhat.com [10.72.12.97])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1F1B681213;
-        Wed,  5 Feb 2020 12:43:32 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 20:43:29 +0800
-From:   Baoquan He <bhe@redhat.com>
+        id S1727720AbgBEMxW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 5 Feb 2020 07:53:22 -0500
+Received: from gate.crashing.org ([63.228.1.57]:42729 "EHLO gate.crashing.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726386AbgBEMxV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 5 Feb 2020 07:53:21 -0500
+Received: from gate.crashing.org (localhost.localdomain [127.0.0.1])
+        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id 015CppFf030570;
+        Wed, 5 Feb 2020 06:51:51 -0600
+Received: (from segher@localhost)
+        by gate.crashing.org (8.14.1/8.14.1/Submit) id 015Cpn3x030569;
+        Wed, 5 Feb 2020 06:51:49 -0600
+X-Authentication-Warning: gate.crashing.org: segher set sender to segher@kernel.crashing.org using -f
+Date:   Wed, 5 Feb 2020 06:51:49 -0600
+From:   Segher Boessenkool <segher@kernel.crashing.org>
 To:     David Hildenbrand <david@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
+Cc:     Oscar Salvador <osalvador@suse.de>, linux-s390@vger.kernel.org,
+        Michal Hocko <mhocko@suse.com>, linux-ia64@vger.kernel.org,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
+        linux-sh@vger.kernel.org, x86@kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        Wei Yang <richardw.yang@linux.intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
         Dan Williams <dan.j.williams@intel.com>,
-        Wei Yang <richardw.yang@linux.intel.com>
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-Message-ID: <20200205124329.GE26758@MiWiFi-R3L-srv>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
- <20200204142516.GD26758@MiWiFi-R3L-srv>
- <e0006cc4-d448-89c6-38c0-51da7fc08715@redhat.com>
-MIME-Version: 1.0
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v6 10/10] mm/memory_hotplug: Cleanup __remove_pages()
+Message-ID: <20200205125149.GS22482@gate.crashing.org>
+References: <20191006085646.5768-1-david@redhat.com> <20191006085646.5768-11-david@redhat.com> <20200204094652.GE6494@linux> <5d698f94-af18-0714-bc97-14b6c520572c@redhat.com> <20200204131353.GJ22482@gate.crashing.org> <0e2f700c-b01b-8c16-99c2-2648967fc203@redhat.com>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <e0006cc4-d448-89c6-38c0-51da7fc08715@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+In-Reply-To: <0e2f700c-b01b-8c16-99c2-2648967fc203@redhat.com>
+User-Agent: Mutt/1.4.2.3i
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 02/04/20 at 03:42pm, David Hildenbrand wrote:
-> On 04.02.20 15:25, Baoquan He wrote:
-> > On 10/06/19 at 10:56am, David Hildenbrand wrote:
-> >> If we have holes, the holes will automatically get detected and removed
-> >> once we remove the next bigger/smaller section. The extra checks can
-> >> go.
-> >>
-> >> Cc: Andrew Morton <akpm@linux-foundation.org>
-> >> Cc: Oscar Salvador <osalvador@suse.de>
-> >> Cc: Michal Hocko <mhocko@suse.com>
-> >> Cc: David Hildenbrand <david@redhat.com>
-> >> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
-> >> Cc: Dan Williams <dan.j.williams@intel.com>
-> >> Cc: Wei Yang <richardw.yang@linux.intel.com>
-> >> Signed-off-by: David Hildenbrand <david@redhat.com>
-> >> ---
-> >>  mm/memory_hotplug.c | 34 +++++++---------------------------
-> >>  1 file changed, 7 insertions(+), 27 deletions(-)
-> >>
-> >> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >> index f294918f7211..8dafa1ba8d9f 100644
-> >> --- a/mm/memory_hotplug.c
-> >> +++ b/mm/memory_hotplug.c
-> >> @@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> >>  		if (pfn) {
-> >>  			zone->zone_start_pfn = pfn;
-> >>  			zone->spanned_pages = zone_end_pfn - pfn;
-> >> +		} else {
-> >> +			zone->zone_start_pfn = 0;
-> >> +			zone->spanned_pages = 0;
-> >>  		}
-> >>  	} else if (zone_end_pfn == end_pfn) {
-> >>  		/*
-> >> @@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> >>  					       start_pfn);
-> >>  		if (pfn)
-> >>  			zone->spanned_pages = pfn - zone_start_pfn + 1;
-> >> +		else {
-> >> +			zone->zone_start_pfn = 0;
-> >> +			zone->spanned_pages = 0;
+On Tue, Feb 04, 2020 at 02:38:51PM +0100, David Hildenbrand wrote:
+> On 04.02.20 14:13, Segher Boessenkool wrote:
+> > On Tue, Feb 04, 2020 at 01:41:06PM +0100, David Hildenbrand wrote:
+> >> It's a pattern commonly used in compilers and emulators to calculate the
+> >> number of bytes to the next block/alignment. (we're missing a macro
+> >> (like we have ALIGN_UP/IS_ALIGNED) for that - but it's hard to come up
+> >> with a good name (e.g., SIZE_TO_NEXT_ALIGN) .
+
+> > You can just write the easy to understand
 > > 
-> > Thinking in which case (zone_start_pfn != start_pfn) and it comes here.
+> >   ...  ALIGN_UP(x) - x  ...
 > 
-> Could only happen in case the zone_start_pfn would have been "out of the
-> zone already". If you ask me: unlikely :)
+> you mean
+> 
+> ALIGN_UP(x, PAGES_PER_SECTION) - x
+> 
+> but ...
+> 
+> > which is better *without* having a separate name.  Does that not
+> > generate good machine code for you?
+> 
+> 1. There is no ALIGN_UP. "SECTION_ALIGN_UP(x) - x" would be possible
 
-Yeah, I also think it's unlikely to come here.
+Erm, you started it ;-)
 
-The 'if (zone_start_pfn == start_pfn)' checking also covers the case
-(zone_start_pfn == start_pfn && zone_end_pfn == end_pfn). So this
-zone_start_pfn/spanned_pages resetting can be removed to avoid
-confusion.
+> 2. It would be wrong if x is already aligned.
+> 
+> e.g., let's use 4096 for simplicity as we all know that value by heart
+> (for both x and the block size).
+> 
+> a) -(4096 | -4096) -> 4096
+> 
+> b) #define ALIGN_UP(x, a) ((x + a - 1) & -(a))
+> 
+> ALIGN_UP(4096, 4096) - 4096 -> 0
+> 
+> Not as easy as it seems ...
 
+If you always want to return a number >= 1, it it simply
+  ALIGN_UP(x + 1) - x
+(and replace 1 by any other minimum size required).  This *also* is
+easy to read, without having to have any details (and quirks :-/ )
+of those utility functions memorised.
+
+
+Segher
