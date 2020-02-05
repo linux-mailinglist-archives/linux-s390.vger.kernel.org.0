@@ -2,95 +2,72 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6267A153359
-	for <lists+linux-s390@lfdr.de>; Wed,  5 Feb 2020 15:48:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4581D15336D
+	for <lists+linux-s390@lfdr.de>; Wed,  5 Feb 2020 15:54:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727054AbgBEOsh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Feb 2020 09:48:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27496 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727029AbgBEOsg (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Feb 2020 09:48:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1580914115;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=95aJqeVITxcGTfX0TCyAquXczebVTrMMk8jxCMfrdaA=;
-        b=WDIEmqAVB6RCikwJw3X1K1543cJgD7YCzm9e9P56XhPx/R26ZjshBFyf9Hp+3PyKlU4Sec
-        O9ubYPemZ/WduKbcMVYtFPnpStssK27ypQyYYcuFg7ptPWB85nyZAIpZjP+i3eyiTvGcol
-        ftrmqYqbXmIpnSSzNRw+JU5eeEG61lc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-34-CRKct6xKO9GNNI26yrfXjA-1; Wed, 05 Feb 2020 09:48:20 -0500
-X-MC-Unique: CRKct6xKO9GNNI26yrfXjA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8C1E51083E81;
-        Wed,  5 Feb 2020 14:48:18 +0000 (UTC)
-Received: from localhost (ovpn-12-38.pek2.redhat.com [10.72.12.38])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BC77F87B00;
-        Wed,  5 Feb 2020 14:48:14 +0000 (UTC)
-Date:   Wed, 5 Feb 2020 22:48:11 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Wei Yang <richardw.yang@linux.intel.com>
-Cc:     David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>,
+        id S1727303AbgBEOyL convert rfc822-to-8bit (ORCPT
+        <rfc822;lists+linux-s390@lfdr.de>); Wed, 5 Feb 2020 09:54:11 -0500
+Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:26893 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727178AbgBEOyL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 5 Feb 2020 09:54:11 -0500
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-224-Jt2WUK66Nai06qwrlekQ8Q-1; Wed, 05 Feb 2020 14:54:08 +0000
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Wed, 5 Feb 2020 14:54:07 +0000
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Wed, 5 Feb 2020 14:54:07 +0000
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Wei Yang' <richardw.yang@linux.intel.com>,
+        David Hildenbrand <david@redhat.com>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>,
+        "x86@kernel.org" <x86@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Oscar Salvador <osalvador@suse.de>,
         Michal Hocko <mhocko@suse.com>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
         Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
+Subject: RE: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
  in shrink_zone_span()
-Message-ID: <20200205144811.GF26758@MiWiFi-R3L-srv>
+Thread-Topic: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
+ in shrink_zone_span()
+Thread-Index: AQHV3ArwACIFpMP7Tka3ET4dDeEOaKgMr2lQ
+Date:   Wed, 5 Feb 2020 14:54:07 +0000
+Message-ID: <b8f142b9d569459d84b71949cb5efc27@AcuMS.aculab.com>
 References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
- <20200205095924.GC24162@richard>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ <20191006085646.5768-9-david@redhat.com> <20200205095924.GC24162@richard>
 In-Reply-To: <20200205095924.GC24162@richard>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
+MIME-Version: 1.0
+X-MC-Unique: Jt2WUK66Nai06qwrlekQ8Q-1
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: aculab.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Wei Yang,
-
-On 02/05/20 at 05:59pm, Wei Yang wrote:
-> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> >index f294918f7211..8dafa1ba8d9f 100644
-> >--- a/mm/memory_hotplug.c
-> >+++ b/mm/memory_hotplug.c
-> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> > 		if (pfn) {
-> > 			zone->zone_start_pfn = pfn;
-> > 			zone->spanned_pages = zone_end_pfn - pfn;
-> >+		} else {
-> >+			zone->zone_start_pfn = 0;
-> >+			zone->spanned_pages = 0;
-> > 		}
-> > 	} else if (zone_end_pfn == end_pfn) {
-> > 		/*
-> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
-> > 					       start_pfn);
-> > 		if (pfn)
-> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
-> >+		else {
-> >+			zone->zone_start_pfn = 0;
-> >+			zone->spanned_pages = 0;
-> >+		}
-> > 	}
-> 
+From: Wei Yang
+> Sent: 05 February 2020 09:59
+...
 > If it is me, I would like to take out these two similar logic out.
-
-I also like this style. 
 > 
 > For example:
 > 
@@ -98,61 +75,15 @@ I also like this style.
 > 	} else if () {
 > 	} else {
 > 		goto out;
-Here the last else is unnecessary, right?
-
 > 	}
-> 
-> 
 
-Like this, I believe both David and I will be satisfactory. Even though
-I still think his 2nd resetting is not needed :-)
+I'm pretty sure the kernel layout rules disallow 'else if'.
+It is also pretty horrid unless the conditionals are all related
+(so it is almost a switch statement).
 
-> 	/* The zone has no valid section */
-> 	if (!pfn) {
-> 			zone->zone_start_pfn = 0;
-> 			zone->spanned_pages = 0;
-> 	}
-> 
-> out:
-> 	zone_span_writeunlock(zone);
-> 
-> Well, this is just my personal taste :-)
-> 
-> >-
-> >-	/*
-> >-	 * The section is not biggest or smallest mem_section in the zone, it
-> >-	 * only creates a hole in the zone. So in this case, we need not
-> >-	 * change the zone. But perhaps, the zone has only hole data. Thus
-> >-	 * it check the zone has only hole or not.
-> >-	 */
-> >-	pfn = zone_start_pfn;
-> >-	for (; pfn < zone_end_pfn; pfn += PAGES_PER_SUBSECTION) {
-> >-		if (unlikely(!pfn_to_online_page(pfn)))
-> >-			continue;
-> >-
-> >-		if (page_zone(pfn_to_page(pfn)) != zone)
-> >-			continue;
-> >-
-> >-		/* Skip range to be removed */
-> >-		if (pfn >= start_pfn && pfn < end_pfn)
-> >-			continue;
-> >-
-> >-		/* If we find valid section, we have nothing to do */
-> >-		zone_span_writeunlock(zone);
-> >-		return;
-> >-	}
-> >-
-> >-	/* The zone has no valid section */
-> >-	zone->zone_start_pfn = 0;
-> >-	zone->spanned_pages = 0;
-> > 	zone_span_writeunlock(zone);
-> > }
-> > 
-> >-- 
-> >2.21.0
-> 
-> -- 
-> Wei Yang
-> Help you, Help me
-> 
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
