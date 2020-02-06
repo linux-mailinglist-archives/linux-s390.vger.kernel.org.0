@@ -2,132 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 82129153BFF
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 00:34:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 195D5153E77
+	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 07:11:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727519AbgBEXeP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 5 Feb 2020 18:34:15 -0500
-Received: from mga18.intel.com ([134.134.136.126]:54656 "EHLO mga18.intel.com"
+        id S1726452AbgBFGLV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 6 Feb 2020 01:11:21 -0500
+Received: from relay.sw.ru ([185.231.240.75]:39752 "EHLO relay.sw.ru"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727443AbgBEXeP (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 5 Feb 2020 18:34:15 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Feb 2020 15:34:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.70,407,1574150400"; 
-   d="scan'208";a="264405373"
-Received: from richard.sh.intel.com (HELO localhost) ([10.239.159.54])
-  by fmsmga002.fm.intel.com with ESMTP; 05 Feb 2020 15:34:12 -0800
-Date:   Thu, 6 Feb 2020 07:34:28 +0800
-From:   Wei Yang <richardw.yang@linux.intel.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Wei Yang <richardw.yang@linux.intel.com>,
-        David Hildenbrand <david@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, x86@kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oscar Salvador <osalvador@suse.de>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH v6 08/10] mm/memory_hotplug: Don't check for "all holes"
- in shrink_zone_span()
-Message-ID: <20200205233428.GD28446@richard>
-Reply-To: Wei Yang <richardw.yang@linux.intel.com>
-References: <20191006085646.5768-1-david@redhat.com>
- <20191006085646.5768-9-david@redhat.com>
- <20200205095924.GC24162@richard>
- <20200205144811.GF26758@MiWiFi-R3L-srv>
- <20200205225633.GA28446@richard>
- <20200205230826.GF8965@MiWiFi-R3L-srv>
- <20200205232620.GC28446@richard>
- <20200205233051.GG8965@MiWiFi-R3L-srv>
+        id S1725809AbgBFGLV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 6 Feb 2020 01:11:21 -0500
+Received: from vvs-ws.sw.ru ([172.16.24.21])
+        by relay.sw.ru with esmtp (Exim 4.92.3)
+        (envelope-from <vvs@virtuozzo.com>)
+        id 1izaNe-0003Qf-1e; Thu, 06 Feb 2020 09:11:14 +0300
+Subject: Re: [PATCH 0/1] s390: seq_file .next functions should increase
+ position index
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <8b5e38e4-ca07-b3c7-bdb7-4f4c3ad94233@virtuozzo.com>
+ <1b957299-9c5d-9423-3982-10da697b3fb1@de.ibm.com>
+From:   Vasily Averin <vvs@virtuozzo.com>
+Message-ID: <fd8a26fa-02a0-23f6-80a7-f3c83552c5fc@virtuozzo.com>
+Date:   Thu, 6 Feb 2020 09:11:13 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200205233051.GG8965@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1b957299-9c5d-9423-3982-10da697b3fb1@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Feb 06, 2020 at 07:30:51AM +0800, Baoquan He wrote:
->On 02/06/20 at 07:26am, Wei Yang wrote:
->> On Thu, Feb 06, 2020 at 07:08:26AM +0800, Baoquan He wrote:
->> >On 02/06/20 at 06:56am, Wei Yang wrote:
->> >> On Wed, Feb 05, 2020 at 10:48:11PM +0800, Baoquan He wrote:
->> >> >Hi Wei Yang,
->> >> >
->> >> >On 02/05/20 at 05:59pm, Wei Yang wrote:
->> >> >> >diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> >> >> >index f294918f7211..8dafa1ba8d9f 100644
->> >> >> >--- a/mm/memory_hotplug.c
->> >> >> >+++ b/mm/memory_hotplug.c
->> >> >> >@@ -393,6 +393,9 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->> >> >> > 		if (pfn) {
->> >> >> > 			zone->zone_start_pfn = pfn;
->> >> >> > 			zone->spanned_pages = zone_end_pfn - pfn;
->> >> >> >+		} else {
->> >> >> >+			zone->zone_start_pfn = 0;
->> >> >> >+			zone->spanned_pages = 0;
->> >> >> > 		}
->> >> >> > 	} else if (zone_end_pfn == end_pfn) {
->> >> >> > 		/*
->> >> >> >@@ -405,34 +408,11 @@ static void shrink_zone_span(struct zone *zone, unsigned long start_pfn,
->> >> >> > 					       start_pfn);
->> >> >> > 		if (pfn)
->> >> >> > 			zone->spanned_pages = pfn - zone_start_pfn + 1;
->> >> >> >+		else {
->> >> >> >+			zone->zone_start_pfn = 0;
->> >> >> >+			zone->spanned_pages = 0;
->> >> >> >+		}
->> >> >> > 	}
->> >> >> 
->> >> >> If it is me, I would like to take out these two similar logic out.
->> >> >
->> >> >I also like this style. 
->> >> >> 
->> >> >> For example:
->> >> >> 
->> >> >> 	if () {
->> >> >> 	} else if () {
->> >> >> 	} else {
->> >> >> 		goto out;
->> >> >Here the last else is unnecessary, right?
->> >> >
->> >> 
->> >> I am afraid not.
->> >> 
->> >> If the range is not the first or last, we would leave pfn not initialized.
->> >
->> >Ah, you are right. I forgot that one. Then pfn can be assigned the
->> >zone_start_pfn as the old code. Then the following logic is the same
->> >as the original code, find_smallest_section_pfn()/find_biggest_section_pfn() 
->> >have done the iteration the old for loop was doing.
->> >
->> >	unsigned long pfn = zone_start_pfn;	
->> >	if () {
->> >	} else if () {
->> >	} 
->> >
->> >	/* The zone has no valid section */
->> >	if (!pfn) {
->> >        	zone->zone_start_pfn = 0;
->> >        	zone->spanned_pages = 0;
->> >	}
->> 
->> This one look better :-)
->
->Thanks for your confirmation, I will make one patch like this and post.
+On 2/5/20 10:55 PM, Christian Borntraeger wrote:
+> I only got your cover letter, but not the patch itself. Can you resend?
 
-Sure :-)
+Patch itself had another subject:
+"[PATCH 1/1] cio_ignore_proc_seq_next should increase position index"
+https://www.spinics.net/lists/linux-s390/msg30430.html
 
--- 
-Wei Yang
-Help you, Help me
+It was reviewed by Cornelia Huck
+https://www.spinics.net/lists/linux-s390/msg30433.html
+
+> On 24.01.20 06:48, Vasily Averin wrote:
+>> In Aug 2018 NeilBrown noticed 
+>> commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
+>> "Some ->next functions do not increment *pos when they return NULL...
+>> Note that such ->next functions are buggy and should be fixed. 
+>> A simple demonstration is
+>>    
+>> dd if=/proc/swaps bs=1000 skip=1
+>>     
+>> Choose any block size larger than the size of /proc/swaps.  This will
+>> always show the whole last line of /proc/swaps"
+>>
+>> Described problem is still actual. If you make lseek into middle of last output line 
+>> following read will output end of last line and whole last line once again.
+>>
+>> $ dd if=/proc/swaps bs=1  # usual output
+>> Filename				Type		Size	Used	Priority
+>> /dev/dm-0                               partition	4194812	97536	-2
+>> 104+0 records in
+>> 104+0 records out
+>> 104 bytes copied
+>>
+>> $ dd if=/proc/swaps bs=40 skip=1    # last line was generated twice
+>> dd: /proc/swaps: cannot skip to specified offset
+>> v/dm-0                               partition	4194812	97536	-2
+>> /dev/dm-0                               partition	4194812	97536	-2 
+>> 3+1 records in
+>> 3+1 records out
+>> 131 bytes copied
+>>
+>> There are lot of other affected files, I've found 30+ including
+>> /proc/net/ip_tables_matches and /proc/sysvipc/*
+>>
+>> Following patch fixes s390-related file
+>>
+>> https://bugzilla.kernel.org/show_bug.cgi?id=206283
+>>
+>> Vasily Averin (1):
+>>   cio_ignore_proc_seq_next should increase position index
+>>
+>>  drivers/s390/cio/blacklist.c | 5 +++--
+>>  1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+> 
