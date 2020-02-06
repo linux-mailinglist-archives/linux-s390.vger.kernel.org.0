@@ -2,94 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 195D5153E77
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 07:11:22 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 70ACD1549EE
+	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 18:04:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726452AbgBFGLV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 6 Feb 2020 01:11:21 -0500
-Received: from relay.sw.ru ([185.231.240.75]:39752 "EHLO relay.sw.ru"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725809AbgBFGLV (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 6 Feb 2020 01:11:21 -0500
-Received: from vvs-ws.sw.ru ([172.16.24.21])
-        by relay.sw.ru with esmtp (Exim 4.92.3)
-        (envelope-from <vvs@virtuozzo.com>)
-        id 1izaNe-0003Qf-1e; Thu, 06 Feb 2020 09:11:14 +0300
-Subject: Re: [PATCH 0/1] s390: seq_file .next functions should increase
- position index
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <8b5e38e4-ca07-b3c7-bdb7-4f4c3ad94233@virtuozzo.com>
- <1b957299-9c5d-9423-3982-10da697b3fb1@de.ibm.com>
-From:   Vasily Averin <vvs@virtuozzo.com>
-Message-ID: <fd8a26fa-02a0-23f6-80a7-f3c83552c5fc@virtuozzo.com>
-Date:   Thu, 6 Feb 2020 09:11:13 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727795AbgBFRED (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 6 Feb 2020 12:04:03 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:56994 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726990AbgBFRED (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Feb 2020 12:04:03 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581008642;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=Cqvvo15drJ21tIHO7yPlH0D47TYDD5oK5I3gU6dSTkg=;
+        b=hYWnI251c/tvW7GIOJ0Jlrtp+jduzfw2bYFWlkTL5c1iu4My3/h+ok9C5Z14jFJM3R2SbZ
+        Yz/NHPKJJ7aM4SnIFgyJ5+1J+W9Ukc04g/HHg4p2iwT/KMogncSjc1c83jcRzPxkYAxtI4
+        a4D0h+n6WCiuhUmVwRpfSfR24xdYIHo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-227-2cKMQzVAPnCQm3lMtviSag-1; Thu, 06 Feb 2020 12:03:35 -0500
+X-MC-Unique: 2cKMQzVAPnCQm3lMtviSag-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 95A3F8010D6;
+        Thu,  6 Feb 2020 17:03:33 +0000 (UTC)
+Received: from localhost (dhcp-192-195.str.redhat.com [10.33.192.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 407E95C1B0;
+        Thu,  6 Feb 2020 17:03:33 +0000 (UTC)
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>
+Subject: [PULL 0/1] one vfio-ccw patch for 5.6
+Date:   Thu,  6 Feb 2020 18:03:30 +0100
+Message-Id: <20200206170331.1032-1-cohuck@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1b957299-9c5d-9423-3982-10da697b3fb1@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2/5/20 10:55 PM, Christian Borntraeger wrote:
-> I only got your cover letter, but not the patch itself. Can you resend?
+The following changes since commit d1eef1c619749b2a57e514a3fa67d9a516ffa9=
+19:
 
-Patch itself had another subject:
-"[PATCH 1/1] cio_ignore_proc_seq_next should increase position index"
-https://www.spinics.net/lists/linux-s390/msg30430.html
+  Linux 5.5-rc2 (2019-12-15 15:16:08 -0800)
 
-It was reviewed by Cornelia Huck
-https://www.spinics.net/lists/linux-s390/msg30433.html
+are available in the Git repository at:
 
-> On 24.01.20 06:48, Vasily Averin wrote:
->> In Aug 2018 NeilBrown noticed 
->> commit 1f4aace60b0e ("fs/seq_file.c: simplify seq_file iteration code and interface")
->> "Some ->next functions do not increment *pos when they return NULL...
->> Note that such ->next functions are buggy and should be fixed. 
->> A simple demonstration is
->>    
->> dd if=/proc/swaps bs=1000 skip=1
->>     
->> Choose any block size larger than the size of /proc/swaps.  This will
->> always show the whole last line of /proc/swaps"
->>
->> Described problem is still actual. If you make lseek into middle of last output line 
->> following read will output end of last line and whole last line once again.
->>
->> $ dd if=/proc/swaps bs=1  # usual output
->> Filename				Type		Size	Used	Priority
->> /dev/dm-0                               partition	4194812	97536	-2
->> 104+0 records in
->> 104+0 records out
->> 104 bytes copied
->>
->> $ dd if=/proc/swaps bs=40 skip=1    # last line was generated twice
->> dd: /proc/swaps: cannot skip to specified offset
->> v/dm-0                               partition	4194812	97536	-2
->> /dev/dm-0                               partition	4194812	97536	-2 
->> 3+1 records in
->> 3+1 records out
->> 131 bytes copied
->>
->> There are lot of other affected files, I've found 30+ including
->> /proc/net/ip_tables_matches and /proc/sysvipc/*
->>
->> Following patch fixes s390-related file
->>
->> https://bugzilla.kernel.org/show_bug.cgi?id=206283
->>
->> Vasily Averin (1):
->>   cio_ignore_proc_seq_next should increase position index
->>
->>  drivers/s390/cio/blacklist.c | 5 +++--
->>  1 file changed, 3 insertions(+), 2 deletions(-)
->>
-> 
+  https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/vfio-ccw.git ta=
+gs/vfio-ccw-20200206
+
+for you to fetch changes up to dbaf10027ae92a66f0dfad33e1e3453daa16373f:
+
+  vfio-ccw: Use the correct style for SPDX License Identifier (2020-01-07=
+ 10:37:34 +0100)
+
+----------------------------------------------------------------
+fix style of SPDX License Identifier
+
+----------------------------------------------------------------
+
+Nishad Kamdar (1):
+  vfio-ccw: Use the correct style for SPDX License Identifier
+
+ drivers/s390/cio/vfio_ccw_trace.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+--=20
+2.21.1
+
