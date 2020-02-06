@@ -2,91 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E42721549EB
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 18:03:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7FF51154E1E
+	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 22:38:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727775AbgBFRD4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 6 Feb 2020 12:03:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39503 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727773AbgBFRD4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Feb 2020 12:03:56 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581008635;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MZ+wCDHlpmj2MEIpeb0HAQG2PkMc60gWNqQ5c6sbTrw=;
-        b=aZsfbSc0wLpvWnhKN7dsWxjNQ94mKB0eTEbHt8TIRZT09Lz3zaUrQk7o6GTQO7I3qi0xXr
-        BlyHb+91EtMIBIb4JZ4CiFZchx51Me/GK84h+C6o/x47y8+3bn7i4EY62ckT2Zm+mQspuN
-        IEWGsotxXBypfKLEnB/7I/I9EPsN7UQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-281-mAVvcrbBMauYviiyOp0GoA-1; Thu, 06 Feb 2020 12:03:37 -0500
-X-MC-Unique: mAVvcrbBMauYviiyOp0GoA-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 731FA1835A24;
-        Thu,  6 Feb 2020 17:03:35 +0000 (UTC)
-Received: from localhost (dhcp-192-195.str.redhat.com [10.33.192.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1D45348;
-        Thu,  6 Feb 2020 17:03:34 +0000 (UTC)
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Eric Farman <farman@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org, Nishad Kamdar <nishadkamdar@gmail.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Subject: [PULL 1/1] vfio-ccw: Use the correct style for SPDX License Identifier
-Date:   Thu,  6 Feb 2020 18:03:31 +0100
-Message-Id: <20200206170331.1032-2-cohuck@redhat.com>
-In-Reply-To: <20200206170331.1032-1-cohuck@redhat.com>
-References: <20200206170331.1032-1-cohuck@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+        id S1727661AbgBFVio (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 6 Feb 2020 16:38:44 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64264 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727505AbgBFVid (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Feb 2020 16:38:33 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016LbnQN163233
+        for <linux-s390@vger.kernel.org>; Thu, 6 Feb 2020 16:38:32 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y0mdx6f1j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 06 Feb 2020 16:38:32 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
+        Thu, 6 Feb 2020 21:38:30 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 6 Feb 2020 21:38:27 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016LcQZh51314858
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 6 Feb 2020 21:38:26 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AF0F11C052;
+        Thu,  6 Feb 2020 21:38:26 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 37C0611C050;
+        Thu,  6 Feb 2020 21:38:26 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  6 Feb 2020 21:38:26 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id A6662E026B; Thu,  6 Feb 2020 22:38:25 +0100 (CET)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: [RFC PATCH v2 0/9] s390x/vfio-ccw: Channel Path Handling
+Date:   Thu,  6 Feb 2020 22:38:16 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20020621-4275-0000-0000-0000039EA97B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20020621-4276-0000-0000-000038B2D801
+Message-Id: <20200206213825.11444-1-farman@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=824 spamscore=0 adultscore=0 mlxscore=0 clxscore=1015
+ malwarescore=0 priorityscore=1501 phishscore=0 suspectscore=0 bulkscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002060157
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Nishad Kamdar <nishadkamdar@gmail.com>
+Here is a new pass at the channel-path handling code for vfio-ccw.
+This was initially developed by Farhan Ali this past summer, and
+picked up by me.  For my own benefit/sanity, I made a small changelog
+in the commit message for each patch, describing the changes I've
+made to his original code beyond just rebasing to master, rather than
+a giant list appended here.
 
-This patch corrects the SPDX License Identifier style in
-header file related to S/390 common i/o drivers.
-It assigns explicit block comment to the SPDX License
-Identifier.
+I had been encountering a host crash which I think was triggered by
+this code rather than existing within it.  I'd sent a potential fix
+for that separately, but need more diagnosis.  So while that is
+outstanding, I think I've gotten most (but probably not all) comments
+from v1 addressed within.
 
-Changes made by using a script provided by Joe Perches here:
-https://lkml.org/lkml/2019/2/7/46.
+With this, and the corresponding QEMU series (to be posted momentarily),
+applied I am able to configure off/on a CHPID (for example, by issuing
+"chchp -c 0/1 xx" on the host), and the guest is able to see both the
+events and reflect the updated path masks in its structures.
 
-Fixes: 3cd90214b70f ("vfio: ccw: add tracepoints for interesting error pa=
-ths")
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-Message-Id: <20191225122054.GA4598@nishad>
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
----
- drivers/s390/cio/vfio_ccw_trace.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+For reasons that are hopefully obvious, issuing chchp within the guest
+only works for the logical vary.  Configuring it off/on does not work,
+which I think is fine.
 
-diff --git a/drivers/s390/cio/vfio_ccw_trace.h b/drivers/s390/cio/vfio_cc=
-w_trace.h
-index 30162a318a8a..f5d31887d413 100644
---- a/drivers/s390/cio/vfio_ccw_trace.h
-+++ b/drivers/s390/cio/vfio_ccw_trace.h
-@@ -1,5 +1,5 @@
--/* SPDX-License-Identifier: GPL-2.0
-- * Tracepoints for vfio_ccw driver
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/* Tracepoints for vfio_ccw driver
-  *
-  * Copyright IBM Corp. 2018
-  *
---=20
-2.21.1
+v1: https://lore.kernel.org/kvm/20191115025620.19593-1-farman@linux.ibm.com/
+
+Eric Farman (4):
+  vfio-ccw: Refactor the unregister of the async regions
+  vfio-ccw: Refactor IRQ handlers
+  vfio-ccw: Add trace for CRW event
+  vfio-ccw: Remove inline get_schid() routine
+
+Farhan Ali (5):
+  vfio-ccw: Introduce new helper functions to free/destroy regions
+  vfio-ccw: Register a chp_event callback for vfio-ccw
+  vfio-ccw: Introduce a new schib region
+  vfio-ccw: Introduce a new CRW region
+  vfio-ccw: Wire up the CRW irq and CRW region
+
+ Documentation/s390/vfio-ccw.rst     |  31 ++++-
+ drivers/s390/cio/Makefile           |   2 +-
+ drivers/s390/cio/vfio_ccw_chp.c     | 136 ++++++++++++++++++++
+ drivers/s390/cio/vfio_ccw_drv.c     | 186 ++++++++++++++++++++++++++--
+ drivers/s390/cio/vfio_ccw_fsm.c     |   8 +-
+ drivers/s390/cio/vfio_ccw_ops.c     |  65 +++++++---
+ drivers/s390/cio/vfio_ccw_private.h |  16 +++
+ drivers/s390/cio/vfio_ccw_trace.c   |   1 +
+ drivers/s390/cio/vfio_ccw_trace.h   |  30 +++++
+ include/uapi/linux/vfio.h           |   3 +
+ include/uapi/linux/vfio_ccw.h       |  19 +++
+ 11 files changed, 463 insertions(+), 34 deletions(-)
+ create mode 100644 drivers/s390/cio/vfio_ccw_chp.c
+
+-- 
+2.17.1
 
