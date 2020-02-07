@@ -2,117 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F96D154E20
-	for <lists+linux-s390@lfdr.de>; Thu,  6 Feb 2020 22:38:48 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C3DCA155452
+	for <lists+linux-s390@lfdr.de>; Fri,  7 Feb 2020 10:12:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727794AbgBFVip (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 6 Feb 2020 16:38:45 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46540 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727499AbgBFVid (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 6 Feb 2020 16:38:33 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 016LaQr4138239
-        for <linux-s390@vger.kernel.org>; Thu, 6 Feb 2020 16:38:32 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2xyhmpps9h-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 06 Feb 2020 16:38:31 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
-        Thu, 6 Feb 2020 21:38:29 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 6 Feb 2020 21:38:28 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 016LcQKo47644832
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 6 Feb 2020 21:38:26 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9E77A11C054;
-        Thu,  6 Feb 2020 21:38:26 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8B16011C04A;
-        Thu,  6 Feb 2020 21:38:26 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Thu,  6 Feb 2020 21:38:26 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
-        id BBCA9E029F; Thu,  6 Feb 2020 22:38:25 +0100 (CET)
-From:   Eric Farman <farman@linux.ibm.com>
-To:     Cornelia Huck <cohuck@redhat.com>
+        id S1726915AbgBGJMd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 7 Feb 2020 04:12:33 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:34297 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726417AbgBGJMd (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 7 Feb 2020 04:12:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581066752;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5TyuWNZKysSSJUR/G19ReAR/3QYXehjLVxwZbgY9U6Y=;
+        b=Q2Lp9AV6w4VVe3rAC1+GgFM1fTE/kLcAkJEuGw+rG32AWTa5EtZuqw0aFrspg1dKH8kHHB
+        +TzJsYUPC5L/chlLJ1Tk/CDt57R7+c8djpuWoioY2B3clZE5wPLQBkPO2fYwEZAsAL0zNb
+        R9iAsPHN3u/2tWMOaWTQWPA4Y0C0oLE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-301-LfKIYUCjP1ya2sl70pfFig-1; Fri, 07 Feb 2020 04:12:26 -0500
+X-MC-Unique: LfKIYUCjP1ya2sl70pfFig-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBA6D8018A5;
+        Fri,  7 Feb 2020 09:12:24 +0000 (UTC)
+Received: from gondolin (ovpn-117-112.ams2.redhat.com [10.36.117.112])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F8AE60BF7;
+        Fri,  7 Feb 2020 09:12:23 +0000 (UTC)
+Date:   Fri, 7 Feb 2020 10:12:20 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
 Cc:     Halil Pasic <pasic@linux.ibm.com>,
         Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>,
-        Eric Farman <farman@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
         kvm@vger.kernel.org
-Subject: [RFC PATCH v2 9/9] vfio-ccw: Remove inline get_schid() routine
-Date:   Thu,  6 Feb 2020 22:38:25 +0100
-X-Mailer: git-send-email 2.17.1
+Subject: Re: [RFC PATCH v2 0/9] s390x/vfio-ccw: Channel Path Handling
+Message-ID: <20200207101220.2d057f18.cohuck@redhat.com>
 In-Reply-To: <20200206213825.11444-1-farman@linux.ibm.com>
 References: <20200206213825.11444-1-farman@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20020621-0020-0000-0000-000003A7B506
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20020621-0021-0000-0000-000021FF85F8
-Message-Id: <20200206213825.11444-10-farman@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-06_04:2020-02-06,2020-02-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 mlxlogscore=999
- impostorscore=0 lowpriorityscore=0 bulkscore=0 spamscore=0 clxscore=1015
- malwarescore=0 suspectscore=0 phishscore=0 priorityscore=1501 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002060157
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This seems misplaced in the middle of FSM, returning the schid
-field from inside the private struct.  We could move this macro
-into vfio_ccw_private.h, but this doesn't seem to simplify things
-that much.  Let's just remove it, and use the field directly.
+On Thu,  6 Feb 2020 22:38:16 +0100
+Eric Farman <farman@linux.ibm.com> wrote:
 
-Signed-off-by: Eric Farman <farman@linux.ibm.com>
----
- drivers/s390/cio/vfio_ccw_fsm.c | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+> Here is a new pass at the channel-path handling code for vfio-ccw.
+> This was initially developed by Farhan Ali this past summer, and
+> picked up by me.  For my own benefit/sanity, I made a small changelog
+> in the commit message for each patch, describing the changes I've
+> made to his original code beyond just rebasing to master, rather than
+> a giant list appended here.
+> 
+> I had been encountering a host crash which I think was triggered by
+> this code rather than existing within it.  I'd sent a potential fix
+> for that separately, but need more diagnosis.  So while that is
+> outstanding, I think I've gotten most (but probably not all) comments
+> from v1 addressed within.
+> 
+> With this, and the corresponding QEMU series (to be posted momentarily),
+> applied I am able to configure off/on a CHPID (for example, by issuing
+> "chchp -c 0/1 xx" on the host), and the guest is able to see both the
+> events and reflect the updated path masks in its structures.
+> 
+> For reasons that are hopefully obvious, issuing chchp within the guest
+> only works for the logical vary.  Configuring it off/on does not work,
+> which I think is fine.
 
-diff --git a/drivers/s390/cio/vfio_ccw_fsm.c b/drivers/s390/cio/vfio_ccw_fsm.c
-index 23e61aa638e4..c4c303645d7d 100644
---- a/drivers/s390/cio/vfio_ccw_fsm.c
-+++ b/drivers/s390/cio/vfio_ccw_fsm.c
-@@ -228,10 +228,6 @@ static void fsm_disabled_irq(struct vfio_ccw_private *private,
- 	 */
- 	cio_disable_subchannel(sch);
- }
--inline struct subchannel_id get_schid(struct vfio_ccw_private *p)
--{
--	return p->sch->schid;
--}
- 
- /*
-  * Deal with the ccw command request from the userspace.
-@@ -244,7 +240,7 @@ static void fsm_io_request(struct vfio_ccw_private *private,
- 	struct ccw_io_region *io_region = private->io_region;
- 	struct mdev_device *mdev = private->mdev;
- 	char *errstr = "request";
--	struct subchannel_id schid = get_schid(private);
-+	struct subchannel_id schid = private->sch->schid;
- 
- 	private->state = VFIO_CCW_STATE_CP_PROCESSING;
- 	memcpy(scsw, io_region->scsw_area, sizeof(*scsw));
-@@ -342,7 +338,7 @@ static void fsm_async_request(struct vfio_ccw_private *private,
- 		cmd_region->ret_code = -EINVAL;
- 	}
- 
--	trace_vfio_ccw_fsm_async_request(get_schid(private),
-+	trace_vfio_ccw_fsm_async_request(private->sch->schid,
- 					 cmd_region->command,
- 					 cmd_region->ret_code);
- }
--- 
-2.17.1
+Before I delve into this: While the basic architecture here (and in the
+QEMU part) is still similar, you changed things like handling multiple
+CRWs? That's at least the impression I got from a very high-level skim.
+
+> 
+> v1: https://lore.kernel.org/kvm/20191115025620.19593-1-farman@linux.ibm.com/
+> 
+> Eric Farman (4):
+>   vfio-ccw: Refactor the unregister of the async regions
+>   vfio-ccw: Refactor IRQ handlers
+>   vfio-ccw: Add trace for CRW event
+>   vfio-ccw: Remove inline get_schid() routine
+> 
+> Farhan Ali (5):
+>   vfio-ccw: Introduce new helper functions to free/destroy regions
+>   vfio-ccw: Register a chp_event callback for vfio-ccw
+>   vfio-ccw: Introduce a new schib region
+>   vfio-ccw: Introduce a new CRW region
+>   vfio-ccw: Wire up the CRW irq and CRW region
+> 
+>  Documentation/s390/vfio-ccw.rst     |  31 ++++-
+>  drivers/s390/cio/Makefile           |   2 +-
+>  drivers/s390/cio/vfio_ccw_chp.c     | 136 ++++++++++++++++++++
+>  drivers/s390/cio/vfio_ccw_drv.c     | 186 ++++++++++++++++++++++++++--
+>  drivers/s390/cio/vfio_ccw_fsm.c     |   8 +-
+>  drivers/s390/cio/vfio_ccw_ops.c     |  65 +++++++---
+>  drivers/s390/cio/vfio_ccw_private.h |  16 +++
+>  drivers/s390/cio/vfio_ccw_trace.c   |   1 +
+>  drivers/s390/cio/vfio_ccw_trace.h   |  30 +++++
+>  include/uapi/linux/vfio.h           |   3 +
+>  include/uapi/linux/vfio_ccw.h       |  19 +++
+>  11 files changed, 463 insertions(+), 34 deletions(-)
+>  create mode 100644 drivers/s390/cio/vfio_ccw_chp.c
+> 
 
