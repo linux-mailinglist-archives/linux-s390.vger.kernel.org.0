@@ -2,101 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81130155F88
-	for <lists+linux-s390@lfdr.de>; Fri,  7 Feb 2020 21:27:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2B407155FFC
+	for <lists+linux-s390@lfdr.de>; Fri,  7 Feb 2020 21:44:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727075AbgBGU1M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 7 Feb 2020 15:27:12 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57846 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727048AbgBGU1L (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 7 Feb 2020 15:27:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581107229;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+PIs0aogCK20rQ10EgLXcJqcuxsHbzkpWoBj+waYkxo=;
-        b=YGS4+pmeeO5i8dl4DI8nA5wRC3VuCit74gjdbulY/b61uhux7vXsZhCYcGm59G2O87hFNW
-        h17ZpdgiDzReEzL7P7VlPL111lxrn6Sh1+X1LlaVYWyoOoSkSubd474ihWpOSCz8VG38AW
-        SwqCaMoYy6N89We4H6KLxSrnhHgPRHc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-145-G1LW6OLLO12cioVzd5mrEQ-1; Fri, 07 Feb 2020 15:27:07 -0500
-X-MC-Unique: G1LW6OLLO12cioVzd5mrEQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C14B2800E21;
-        Fri,  7 Feb 2020 20:27:05 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 14E2C1BC6D;
-        Fri,  7 Feb 2020 20:27:03 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id 9B0742257D6; Fri,  7 Feb 2020 15:27:02 -0500 (EST)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        hch@infradead.org, dan.j.williams@intel.com
-Cc:     dm-devel@redhat.com, vishal.l.verma@intel.com, vgoyal@redhat.com,
-        linux-s390@vger.kernel.org
-Subject: [PATCH v3 4/7] s390,dcssblk,dax: Add dax zero_page_range operation to dcssblk driver
-Date:   Fri,  7 Feb 2020 15:26:49 -0500
-Message-Id: <20200207202652.1439-5-vgoyal@redhat.com>
-In-Reply-To: <20200207202652.1439-1-vgoyal@redhat.com>
-References: <20200207202652.1439-1-vgoyal@redhat.com>
+        id S1727556AbgBGUoK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 7 Feb 2020 15:44:10 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45614 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727117AbgBGUoJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 7 Feb 2020 15:44:09 -0500
+Received: by mail-ot1-f67.google.com with SMTP id 59so562185otp.12
+        for <linux-s390@vger.kernel.org>; Fri, 07 Feb 2020 12:44:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to;
+        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
+        b=WJgFJ9PR0yBQ+ciD08Pby60OVZzn3dTgtieZ17slfRQssKmPnwQmAwZPgDIpR6heck
+         dDY9m0nAiR73dL1CtCDLlqWI9lV6barO9i6phYUUcmMyI9lhyUunotwwGjtLNjZZXHps
+         B+ZJy7kS8IDHqb+LatDXLkBcGkPTiMku+kX9Fb92ZmFsnK1n3liOHkc4TmrSz2VBzqpm
+         gOXxQUuwBna/l8aq9nu864h1RGE/T5vMQdJwoV4IagKfmqrsTX7n4WpDLnLJobosvK0X
+         9Z7fBUirFx02ZREq+PBFhuGxFcksAi/eOnsjoHpvtfcuXe3k+tw0qtyYWnKvHtkX+Drl
+         CMWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to;
+        bh=8cDRXBFOpE9J1p6S5H+HXSQg9q3m7pUJ3iUuQ5MPcDc=;
+        b=KdK3WlotwY9oOA+aq1Z10deNluEcnwmBXUVlkfAroQjds+t6mXaVe3DoBQNxbrRJLa
+         GSj8T0d0HFNycb5VdvXVlCBsGX3B2S3W8TQbk10Tl8ot0yZ4wJ1iFGfd0Cj9aCN2MuHA
+         Tehe24CNJqm41GgX/EqHPY6kFZR/FzN5viOOTRfm4tq+kxnhhUVDPArKzw1AKZz9Y6pI
+         wgKmnvQDzw/dpDW7Rd0ol2CRTuqbYtJakvfYWpC2+eSImou6hKRvS12YQ73OZ60tw92f
+         ozm/1pYL+YbOTLkKPRb+iePtTlBYkL6bHJnkYxWtAM+JFkCpRiGrnhcyuhv5iKYbUKCM
+         WEbQ==
+X-Gm-Message-State: APjAAAUS/FlSicNG0H8ka3zKFtv8W8jgLgBWCtlz0nj8oRts4smWbigg
+        I/5Isad01x+7Psqf+/lD2qtjBjomHJu+q8ezhOk=
+X-Google-Smtp-Source: APXvYqxZ0BHxezvYatUCwR5ujJY2IO6fZCUlpHww8WEnDHAAAY+0VvtiMdEe6JnWZWwDRH8AP8uVvx3q0Y+IviYPdhQ=
+X-Received: by 2002:a9d:7305:: with SMTP id e5mr948882otk.64.1581108248790;
+ Fri, 07 Feb 2020 12:44:08 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-Content-Transfer-Encoding: quoted-printable
+Received: by 2002:a4a:d508:0:0:0:0:0 with HTTP; Fri, 7 Feb 2020 12:44:08 -0800 (PST)
+Reply-To: auch197722@gmail.com
+From:   "Mr. Theophilus Odadudu" <cristinamedina0010@gmail.com>
+Date:   Fri, 7 Feb 2020 15:44:08 -0500
+Message-ID: <CAPNvSTj-8q7w5QPmnH26+_3xCKjEWyE+9xcb8QyQs9Xie+iYgg@mail.gmail.com>
+Subject: LETTER OF INQUIRY
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add dax operation zero_page_range for dcssblk driver.
+Good Day,
 
-CC: linux-s390@vger.kernel.org
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- drivers/s390/block/dcssblk.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+I work as a clerk in a Bank here in Nigeria, I have a very
+confidential Business Proposition for you. There is a said amount of
+money floating in the bank unclaimed, belonging to the bank Foreign
+customer who die with his family in the Ethiopian Airline crash of
+March 11, 2019.
 
-diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
-index 63502ca537eb..331abab5d066 100644
---- a/drivers/s390/block/dcssblk.c
-+++ b/drivers/s390/block/dcssblk.c
-@@ -57,11 +57,28 @@ static size_t dcssblk_dax_copy_to_iter(struct dax_dev=
-ice *dax_dev,
- 	return copy_to_iter(addr, bytes, i);
- }
-=20
-+static int dcssblk_dax_zero_page_range(struct dax_device *dax_dev, u64 o=
-ffset,
-+				       size_t len)
-+{
-+	long rc;
-+	void *kaddr;
-+	pgoff_t pgoff =3D offset >> PAGE_SHIFT;
-+	unsigned page_offset =3D offset_in_page(offset);
-+
-+	rc =3D dax_direct_access(dax_dev, pgoff, 1, &kaddr, NULL);
-+	if (rc < 0)
-+		return rc;
-+	memset(kaddr + page_offset, 0, len);
-+	dax_flush(dax_dev, kaddr + page_offset, len);
-+	return 0;
-+}
-+
- static const struct dax_operations dcssblk_dax_ops =3D {
- 	.direct_access =3D dcssblk_dax_direct_access,
- 	.dax_supported =3D generic_fsdax_supported,
- 	.copy_from_iter =3D dcssblk_dax_copy_from_iter,
- 	.copy_to_iter =3D dcssblk_dax_copy_to_iter,
-+	.zero_page_range =3D dcssblk_dax_zero_page_range,
- };
-=20
- struct dcssblk_dev_info {
---=20
-2.20.1
+I seek your good collaboration to move the fund for our benefit. we
+have agreed that 40% be yours once you help claim.
 
+Do get back to with 1) Your Full Name: (2) Residential Address: (3)
+Phone, Mobile  (4) Scan Copy of Your ID. to apply for claims of the
+funds.
+
+Regards
+Theophilus Odadudu
