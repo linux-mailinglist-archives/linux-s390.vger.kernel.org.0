@@ -2,132 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 71E331565B6
-	for <lists+linux-s390@lfdr.de>; Sat,  8 Feb 2020 18:18:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 172AE1567B1
+	for <lists+linux-s390@lfdr.de>; Sat,  8 Feb 2020 21:28:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727457AbgBHRS0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 8 Feb 2020 12:18:26 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:35787 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727341AbgBHRS0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 8 Feb 2020 12:18:26 -0500
-Received: by mail-pf1-f193.google.com with SMTP id y73so1446018pfg.2
-        for <linux-s390@vger.kernel.org>; Sat, 08 Feb 2020 09:18:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=97bjEOo8NHHV0loxcFn46KhJrhrQDZe2/hrTKBrxCbU=;
-        b=MJhcoM0SRrl5HRn5pz7vMoJ8DjJawM8tIysmSsxEfyKsiCIxwykEjTvF7Gs4rYGNkH
-         kfapTWItfXC6yG580TiICh/O1EYeiyuhEc7YxdWmrdYRl3iBHpVExVKGBLKtFWssQdLH
-         NaVjavbtX7UWI4/6UZgcALrUU9yoOHm8M2eeH7UYRz9qQ6tBNHxq710Cjh0g9PjaC3Uz
-         GASQS3GzqU5vyZ7/rW1sV/x0T3RfgDMuqP65uaIy3AyOkbYXyRaOZvv1Kvpdq4y9BlzC
-         ETiFi6rNabfbCgL6UhBITTePryLaPxECMVudpQmbE2QJH1d66gv3YFg6ISsOWXHtrIgX
-         8jiQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=97bjEOo8NHHV0loxcFn46KhJrhrQDZe2/hrTKBrxCbU=;
-        b=Dfk+95lpeRgQwAKPx1pXFMIqwPj4SG7vEoXwuVNn2EJJEyneTYMLOfTU6RP9JB01xa
-         oY8V9hM/7nX5gcqGRNb+Ip7Knz1c/snqkVLl/lTrbcXPB0KKUBT1hR8FlZqaoM9yBSNa
-         t1lX37F0JDBCOeEVVTT3jHDqGevU9TIhVoOIMr7gvBi+lVCzbgPyDgOWCiNr3WELlJh+
-         zyF5gE2OPBiw4JU10RGeBidYAFBEG9jAIfMry3wEGC+f2CFfm31qWPn7U20wO3nq17FT
-         IQw6J6CryICPMcMJS9aTw8tFpb7ItAIFFbcReGmxlmMeDSjjDLPAEdHC3L4/2dkaX+Kz
-         VCxQ==
-X-Gm-Message-State: APjAAAX4z66tzt1eZrRaEFI+CEEorymwz4fpdc/PREI4Rhz58evVBzVL
-        PCxwq3/U+ptG5CEEvIB+jlsGlQITy8fx1Hh52FqQbA==
-X-Google-Smtp-Source: APXvYqyiiruyeS6UNw0CyjbnMuWpEXID4hIpT9+muDpBN3d9UdLGV1o2mBBbLXAzQOOMZJnZXDUQHFYAj2ewcJqRJ/Q=
-X-Received: by 2002:a63:d249:: with SMTP id t9mr5721230pgi.263.1581182305426;
- Sat, 08 Feb 2020 09:18:25 -0800 (PST)
-MIME-Version: 1.0
-References: <20200208140858.47970-1-natechancellor@gmail.com>
-In-Reply-To: <20200208140858.47970-1-natechancellor@gmail.com>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Sat, 8 Feb 2020 17:18:13 +0000
-Message-ID: <CAKwvOdkLy9iKyJUqjgX8K8F98xS6Bz-O8OT_jdxZCzpSrfni8A@mail.gmail.com>
-Subject: Re: [PATCH] s390/time: Fix clk type in get_tod_clock
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1727471AbgBHU2N (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 8 Feb 2020 15:28:13 -0500
+Received: from smtprelay0024.hostedemail.com ([216.40.44.24]:44932 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726192AbgBHU2N (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 8 Feb 2020 15:28:13 -0500
+X-Greylist: delayed 576 seconds by postgrey-1.27 at vger.kernel.org; Sat, 08 Feb 2020 15:28:12 EST
+Received: from smtprelay.hostedemail.com (10.5.19.251.rfc1918.com [10.5.19.251])
+        by smtpgrave03.hostedemail.com (Postfix) with ESMTP id 47D791801BD6F
+        for <linux-s390@vger.kernel.org>; Sat,  8 Feb 2020 20:18:37 +0000 (UTC)
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay07.hostedemail.com (Postfix) with ESMTP id 675AE181D3026;
+        Sat,  8 Feb 2020 20:18:35 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-Spam-Summary: 50,0,0,,d41d8cd98f00b204,joe@perches.com,:::::::::::::,RULES_HIT:41:355:379:599:800:960:967:968:973:988:989:1260:1277:1311:1313:1314:1345:1359:1437:1515:1516:1518:1534:1541:1593:1594:1711:1730:1747:1777:1792:1801:2393:2525:2560:2563:2682:2685:2828:2859:2902:2933:2937:2939:2942:2945:2947:2951:2954:3022:3138:3139:3140:3141:3142:3353:3622:3865:3866:3867:3868:3870:3871:3934:3936:3938:3941:3944:3947:3950:3953:3956:3959:4321:4605:5007:6119:7514:8957:9025:9149:10004:10400:10848:11026:11232:11473:11658:11914:12043:12048:12297:12555:12740:12760:12895:12986:13069:13311:13357:13439:14096:14097:14181:14659:14721:21080:21433:21451:21611:21627:21939:30003:30054:30070:30091,0,RBL:none,CacheIP:none,Bayesian:0.5,0.5,0.5,Netcheck:none,DomainCache:0,MSF:not bulk,SPF:,MSBL:0,DNSBL:none,Custom_rules:0:0:0,LFtime:1,LUA_SUMMARY:none
+X-HE-Tag: sort14_109d5eb21af35
+X-Filterd-Recvd-Size: 2794
+Received: from XPS-9350.home (unknown [47.151.143.254])
+        (Authenticated sender: joe@perches.com)
+        by omf05.hostedemail.com (Postfix) with ESMTPA;
+        Sat,  8 Feb 2020 20:18:34 +0000 (UTC)
+Message-ID: <ba371a74412c07c30eeb26fa25c94c25468599a9.camel@perches.com>
+Subject: Re: [PATCH] s390/kaslr: Fix casts in get_random
+From:   Joe Perches <joe@perches.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Date:   Sat, 08 Feb 2020 12:17:20 -0800
+In-Reply-To: <20200208141052.48476-1-natechancellor@gmail.com>
+References: <20200208141052.48476-1-natechancellor@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Feb 8, 2020 at 3:10 PM Nathan Chancellor
-<natechancellor@gmail.com> wrote:
->
+On Sat, 2020-02-08 at 07:10 -0700, Nathan Chancellor wrote:
 > Clang warns:
->
-> In file included from ../arch/s390/boot/startup.c:3:
-> In file included from ../include/linux/elf.h:5:
-> In file included from ../arch/s390/include/asm/elf.h:132:
-> In file included from ../include/linux/compat.h:10:
-> In file included from ../include/linux/time.h:74:
-> In file included from ../include/linux/time32.h:13:
-> In file included from ../include/linux/timex.h:65:
-> ../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
-> [16]' to parameter of type 'char *' converts between pointers to integer
+> 
+> ../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
+> of type 'const u8 *' (aka 'const unsigned char *') converts between
+> pointers to integer
 > types with different sign [-Wpointer-sign]
->         get_tod_clock_ext(clk);
->                           ^~~
-> ../arch/s390/include/asm/timex.h:149:44: note: passing argument to
-> parameter 'clk' here
-> static inline void get_tod_clock_ext(char *clk)
->                                            ^
->
-> Change clk's type to just be char so that it matches what happens in
-> get_tod_clock_ext.
->
-> Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/861
+>                                   (char *) entropy, (char *) entropy,
+>                                                     ^~~~~~~~~~~~~~~~
+> ../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
+> parameter 'src' here
+>                             u8 *dest, const u8 *src, long src_len)
+>                                                 ^
+> 2 warnings generated.
+> 
+> Fix the cast to match what else is done in this function.
+> 
+> Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/862
 > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-
-First time I've seen a `typedef` in a function. I wonder if that makes
-its definition have function scope? (re: get_tod_clock_ext())
-
 > ---
->
-> Alternatively, changing the clk type in get_tod_clock_ext to unsigned
-> which is what it was in the early 2000s.
-
-Yeah, it doesn't really matter for this case, it looks like. Either way,
-
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-
->
->  arch/s390/include/asm/timex.h | 2 +-
+>  arch/s390/boot/kaslr.c | 2 +-
 >  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
-> index 670f14a228e5..6bf3a45ccfec 100644
-> --- a/arch/s390/include/asm/timex.h
-> +++ b/arch/s390/include/asm/timex.h
-> @@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(char *clk)
->
->  static inline unsigned long long get_tod_clock(void)
->  {
-> -       unsigned char clk[STORE_CLOCK_EXT_SIZE];
-> +       char clk[STORE_CLOCK_EXT_SIZE];
->
->         get_tod_clock_ext(clk);
->         return *((unsigned long long *)&clk[1]);
-> --
-> 2.25.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "Clang Built Linux" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to clang-built-linux+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/clang-built-linux/20200208140858.47970-1-natechancellor%40gmail.com.
+> 
+> diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
+> index 5d12352545c5..5591243d673e 100644
+> --- a/arch/s390/boot/kaslr.c
+> +++ b/arch/s390/boot/kaslr.c
+> @@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
+>  		*(unsigned long *) prng.parm_block ^= seed;
+>  		for (i = 0; i < 16; i++) {
+>  			cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
+> -				  (char *) entropy, (char *) entropy,
+> +				  (u8 *) entropy, (u8 *) entropy,
+
+Why not change the function to take void *?
+
+static inline int cpacf_kmc(unsigned long func, void *param,
+			    u8 *dest, const u8 *src, long src_len)
+
+vs:
+
+static inline int cpacf_kmc(unsigned long func, void *param,
+			    void *dest, const void *src, long src_len)
+
+and remove the casts?
 
 
-
--- 
-Thanks,
-~Nick Desaulniers
