@@ -2,103 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A0AB1564B4
-	for <lists+linux-s390@lfdr.de>; Sat,  8 Feb 2020 15:11:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE2E51564DC
+	for <lists+linux-s390@lfdr.de>; Sat,  8 Feb 2020 15:55:06 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727222AbgBHOLJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 8 Feb 2020 09:11:09 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:42848 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbgBHOLJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 8 Feb 2020 09:11:09 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 66so2053864otd.9;
-        Sat, 08 Feb 2020 06:11:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cWwOu9a6Z1tLizrwqoz4gJCJrtA9tbQqyQC9xeUEbAk=;
-        b=IhgngSOUWZuvS1yoCpBIkBgYZSyuHDMJxKhnvk+9BKkLidnOBtpGJ2UYyjuXV49rtx
-         Y7QKwAzxZQHMYk1aOqyHV93VNWOd/cuOuh1zsHex5pBJnBP7Qz3qh1cwExoQfwGJwOnl
-         AY4Fjocfx7JqExG7KllMr+Q8w4PzGI+fzGTheyLHi91hFNrEHKqpxhBOkFCX58ghhrZ7
-         O5+Cv+qa2eqDfsZs+1NFITd/XiyY0eRNSfF96tSCDpSIuXjjS7qf3On2Ci20nGG0jKL3
-         KwdYlEh54/XhY6ALIDTam4B9xD0+dQu9Tw8OaV5nqf+myj/cO2H5yG/4kbrrVzCH0rVn
-         wAbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=cWwOu9a6Z1tLizrwqoz4gJCJrtA9tbQqyQC9xeUEbAk=;
-        b=ebzIAw0F53vj7ygxlsEqd+2OM0ERdotPgGS8ddPILdVTkxvdzg7NTW9JTBBT+79pNI
-         vQe90hVFZuenynlRgbhS4V7lumzRnlGyoTIAh6xKIHCEiadP/KalwgReuSVO+BCMwEa/
-         ICHrUnlSCQLOa37/0ySyTlHKNZWMKo4antb0KTSjk1JQM9TzwJ7HQItW6EjmW1QXYEUP
-         mDo0D1QQUTkCs9xJwCPJlBXuP2ZZ0iy0lx1dGrm5wDaP9JePIMRtUl4iI5M82ZwLs8bP
-         g4rG04d8FGZe+NDi2Ftn5zneZgGnheO0dNcL92B7/PwE1ZKn5f6yW6H19eq4HAQ54GXW
-         jU4Q==
-X-Gm-Message-State: APjAAAU+gRnJnHv5PT0Zq2LJsXuATXPMp0N1vQ8p+aBrai675j1jun0h
-        u1C5YAW35y3KQHDK+fQ4KSM=
-X-Google-Smtp-Source: APXvYqweQ+tULOjiAGitJKPoVJw+WP/OV7bz5HFmJf3cwWIUuPUIDbrvec0qcD37tzw7hMVA9XlnNQ==
-X-Received: by 2002:a9d:6212:: with SMTP id g18mr3705409otj.187.1581171068359;
-        Sat, 08 Feb 2020 06:11:08 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id c36sm2294461otb.55.2020.02.08.06.11.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 08 Feb 2020 06:11:08 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1727303AbgBHOzG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 8 Feb 2020 09:55:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57017 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727317AbgBHOzF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 8 Feb 2020 09:55:05 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581173703;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=1a3yQdqw8IYuIFpzy/Qyf9eqTda8rOHfhh1VPD08Oww=;
+        b=T+LYxfs2VzJ8R07aPIIYfHtcFkCkle0dEhpOBo18IYnVxiniK1VaHdQjYnnf1OLiq9otJR
+        FzuN2o3nuQj11ac68umQnjhvTwT8WLcunfDxbFPJ9PD2hogHelx/W25emgWdrKksF+FvkP
+        N+zDWdHNeadaqiGwME4j7xo3BUeNb3Q=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-413-KCVSfPdhP_ejkqhYhr8m6g-1; Sat, 08 Feb 2020 09:54:59 -0500
+X-MC-Unique: KCVSfPdhP_ejkqhYhr8m6g-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E05A18014C1;
+        Sat,  8 Feb 2020 14:54:56 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-22.ams2.redhat.com [10.36.116.22])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id BC3031001B34;
+        Sat,  8 Feb 2020 14:54:51 +0000 (UTC)
+Subject: Re: [PATCH 08/35] KVM: s390: protvirt: Add initial lifecycle handling
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Mueller <mimu@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH] s390/kaslr: Fix casts in get_random
-Date:   Sat,  8 Feb 2020 07:10:52 -0700
-Message-Id: <20200208141052.48476-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.25.0
+        Janosch Frank <frankja@linux.ibm.com>
+References: <20200207113958.7320-1-borntraeger@de.ibm.com>
+ <20200207113958.7320-9-borntraeger@de.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <2e5203d7-e162-ddd6-9281-44aa34fe32e7@redhat.com>
+Date:   Sat, 8 Feb 2020 15:54:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200207113958.7320-9-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Clang warns:
+On 07/02/2020 12.39, Christian Borntraeger wrote:
+> From: Janosch Frank <frankja@linux.ibm.com>
+> 
+> This contains 3 main changes:
+> 1. changes in SIE control block handling for secure guests
+> 2. helper functions for create/destroy/unpack secure guests
+> 3. KVM_S390_PV_COMMAND ioctl to allow userspace dealing with secure
+> machines
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  arch/s390/include/asm/kvm_host.h |  24 ++-
+>  arch/s390/include/asm/uv.h       |  69 +++++++++
+>  arch/s390/kvm/Makefile           |   2 +-
+>  arch/s390/kvm/kvm-s390.c         | 191 +++++++++++++++++++++++-
+>  arch/s390/kvm/kvm-s390.h         |  27 ++++
+>  arch/s390/kvm/pv.c               | 244 +++++++++++++++++++++++++++++++
+>  include/uapi/linux/kvm.h         |  33 +++++
+>  7 files changed, 586 insertions(+), 4 deletions(-)
+>  create mode 100644 arch/s390/kvm/pv.c
+[...]
+> +struct kvm_pv_cmd {
+> +	__u32	cmd;	/* Command to be executed */
+> +	__u16	rc;	/* Ultravisor return code */
+> +	__u16	rrc;	/* Ultravisor return reason code */
 
-../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
-of type 'const u8 *' (aka 'const unsigned char *') converts between
-pointers to integer
-types with different sign [-Wpointer-sign]
-                                  (char *) entropy, (char *) entropy,
-                                                    ^~~~~~~~~~~~~~~~
-../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
-parameter 'src' here
-                            u8 *dest, const u8 *src, long src_len)
-                                                ^
-2 warnings generated.
+What are rc and rrc good for? I currently can't spot the code where they
+are used...
 
-Fix the cast to match what else is done in this function.
+> +	__u64	data;	/* Data or address */
+> +};
+> +
+> +/* Available with KVM_CAP_S390_PROTECTED */
+> +#define KVM_S390_PV_COMMAND		_IOW(KVMIO, 0xc5, struct kvm_pv_cmd)
+> +#define KVM_S390_PV_COMMAND_VCPU	_IOW(KVMIO, 0xc6, struct kvm_pv_cmd)
 
-Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
-Link: https://github.com/ClangBuiltLinux/linux/issues/862
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
- arch/s390/boot/kaslr.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+If you intend to return values in rc and rrc, shouldn't this rather be
+declared as _IOWR instead ?
 
-diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
-index 5d12352545c5..5591243d673e 100644
---- a/arch/s390/boot/kaslr.c
-+++ b/arch/s390/boot/kaslr.c
-@@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
- 		*(unsigned long *) prng.parm_block ^= seed;
- 		for (i = 0; i < 16; i++) {
- 			cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
--				  (char *) entropy, (char *) entropy,
-+				  (u8 *) entropy, (u8 *) entropy,
- 				  sizeof(entropy));
- 			memcpy(prng.parm_block, entropy, sizeof(entropy));
- 		}
--- 
-2.25.0
+ Thomas
 
