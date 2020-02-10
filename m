@@ -2,106 +2,137 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 88410158037
-	for <lists+linux-s390@lfdr.de>; Mon, 10 Feb 2020 17:54:50 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9A7D9158107
+	for <lists+linux-s390@lfdr.de>; Mon, 10 Feb 2020 18:13:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgBJQyq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 10 Feb 2020 11:54:46 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42002 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727860AbgBJQyp (ORCPT
+        id S1727922AbgBJRNr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 10 Feb 2020 12:13:47 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:52720 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728006AbgBJRNq (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 10 Feb 2020 11:54:45 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01AGrOTu061893;
-        Mon, 10 Feb 2020 11:54:44 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u2dxesy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 11:54:44 -0500
-Received: from m0098410.ppops.net (m0098410.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01AGrctG063026;
-        Mon, 10 Feb 2020 11:54:44 -0500
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u2dxesa-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 11:54:44 -0500
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01AGrOuh024135;
-        Mon, 10 Feb 2020 16:54:43 GMT
-Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
-        by ppma02wdc.us.ibm.com with ESMTP id 2y1mm6bfky-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 10 Feb 2020 16:54:42 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01AGsfIi11862510
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 16:54:41 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6B6866E05E;
-        Mon, 10 Feb 2020 16:54:41 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D3EE06E056;
-        Mon, 10 Feb 2020 16:54:40 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.114.17.106])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Mon, 10 Feb 2020 16:54:40 +0000 (GMT)
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+        Mon, 10 Feb 2020 12:13:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581354825;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Dui8FKqnJsFDSt2ZtSX4NUWkTHV6h0B5vMA/bHSnRxg=;
+        b=KZ3ZRT2tVHf61zkl9ElbUysG5FyTf9O++nCElZrq2LVqvaQ10t8/RE2xI6u7vy/we/fqqX
+        xgN4lIICYB96JawfZoyzqvjue7Twzkt0qlPjTsyHD57H2y4Af9khwP6JQ0Pdb8HCTEu6Wh
+        edS4f0mwbGXg7krwjC78dpjD3EU3o80=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-56-5hnAoYazNv-LWUgFngxXag-1; Mon, 10 Feb 2020 12:13:26 -0500
+X-MC-Unique: 5hnAoYazNv-LWUgFngxXag-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A51C78017CC;
+        Mon, 10 Feb 2020 17:13:24 +0000 (UTC)
+Received: from gondolin (ovpn-117-244.ams2.redhat.com [10.36.117.244])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 3A57826FB2;
+        Mon, 10 Feb 2020 17:13:23 +0000 (UTC)
+Date:   Mon, 10 Feb 2020 18:13:20 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Vasily Averin <vvs@virtuozzo.com>, linux-s390@vger.kernel.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 1/1] s390/uv: Fix handling of length extensions
-Date:   Mon, 10 Feb 2020 11:54:39 -0500
-Message-Id: <20200210165439.3767-2-borntraeger@de.ibm.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20200210165439.3767-1-borntraeger@de.ibm.com>
-References: <20200210165439.3767-1-borntraeger@de.ibm.com>
+Subject: Re: [PATCH 1/1] cio_ignore_proc_seq_next should increase position
+ index
+Message-ID: <20200210181320.2fc99f66.cohuck@redhat.com>
+In-Reply-To: <51ac7c33-ea7d-d780-c9de-4858af5e5f18@de.ibm.com>
+References: <d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com>
+        <51ac7c33-ea7d-d780-c9de-4858af5e5f18@de.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-10_06:2020-02-10,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 adultscore=0 mlxlogscore=985 bulkscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100126
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-The query parameter block might contain additional information and can
-be extended in the future. If the size of the block does not suffice we
-get an error code of rc=0x100.  The buffer will contain all information
-up to the specified size and the hypervisor/guest simply do not need the
-additional information as they do not know about the new data.  That
-means that we can (and must) accept rc=0x100 as success.
+On Fri, 7 Feb 2020 14:13:05 +0100
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Cc: stable@vger.kernel.org
-Fixes: 5abb9351dfd9 ("s390/uv: introduce guest side ultravisor code")
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
----
- arch/s390/boot/uv.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> On 24.01.20 06:48, Vasily Averin wrote:
+> > if seq_file .next fuction does not change position index,
+> > read after some lseek can generate unexpected output.
+> > 
+> > https://bugzilla.kernel.org/show_bug.cgi?id=206283
+> > Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+> > ---
+> >  drivers/s390/cio/blacklist.c | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
+> > index 2a3f874..9cebff8 100644
+> > --- a/drivers/s390/cio/blacklist.c
+> > +++ b/drivers/s390/cio/blacklist.c
+> > @@ -303,8 +303,10 @@ struct ccwdev_iter {
+> >  cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+> >  {
+> >  	struct ccwdev_iter *iter;
+> > +	loff_t p = *offset;
+> >  
+> > -	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+> > +	(*offset)++;
+> > +	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+> >  		return NULL;
+> >  	iter = it;
+> >  	if (iter->devno == __MAX_SUBCHANNEL) {
+> > @@ -314,7 +316,6 @@ struct ccwdev_iter {
+> >  			return NULL;
+> >  	} else
+> >  		iter->devno++;
+> > -	(*offset)++;
+> >  	return iter;
+> >  }
+> >  
+> >   
+> 
+> I guess this fixes one aspect:
+> "dd: /proc/cio_ignore: cannot skip to specified offset"
+> is now gone. So I am tempted to apply this. 
 
-diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
-index af9e1cc93c68..c003593664cd 100644
---- a/arch/s390/boot/uv.c
-+++ b/arch/s390/boot/uv.c
-@@ -21,7 +21,7 @@ void uv_query_info(void)
- 	if (!test_facility(158))
- 		return;
- 
--	if (uv_call(0, (uint64_t)&uvcb))
-+	if (uv_call(0, (uint64_t)&uvcb) && uvcb.header.rc != 0x100)
- 		return;
- 
- 	if (IS_ENABLED(CONFIG_KVM)) {
--- 
-2.24.0
+This is definitely an improvement.
+
+> 
+> but this code is still fishy:
+
+I'm surprised it took that long; it's been 14 years since I messed
+up^W^Wwrote this and there's basically only been a memory leak fix from
+you in the meantime... that said, ...
+
+> 
+> $ cat /proc/cio_ignore 
+> 0.0.fe00-0.0.fefe
+> 0.0.ff00-0.0.ffff
+> $ dd if=/proc/cio_ignore status=none
+> 0.0.fe00-0.0.fefe
+> 0.0.ff00-0.0.ffff
+> $ dd if=/proc/cio_ignore status=none bs=10
+> 0.0.fe00-0.0.fefe
+> 0.0.ff00-0.0.ff01-0.0.ff02-0.0.ff03-0.0.ff04-0.0.ff05-0.0.ff06-0.0.ff07-0.0.ff08-0.0.ffff
+> $ dd if=/proc/cio_ignore status=none bs=10 skip=1
+> .0.fefe
+> 0.0.ff00-0.0.ff01-0.0.ff02-0.0.ff03-0.0.ff04-0.0.ff05-0.0.ff06-0.0.ff07-0.0.ff08-0.0.ffff
+
+...what we are doing is translating something that is basically a
+per-possible-device value into a range, as otherwise the output would
+be quite unreadable for humans. I'm not sure what the semantics should
+be if you read in small chunks etc., as the ranges are assembled
+on-the-fly.
+
+> Peter, any opinions on this?
+
+I *think* I originally modeled /proc/cio_ignore on a long-gone dasd
+procfs file (a very long time before converting it to a seq file); do
+we have any other examples of files that do a similar
+individual-values-to-ranges conversion?
 
