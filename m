@@ -2,51 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8CD10157021
-	for <lists+linux-s390@lfdr.de>; Mon, 10 Feb 2020 08:56:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6B0991570D9
+	for <lists+linux-s390@lfdr.de>; Mon, 10 Feb 2020 09:34:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbgBJH4K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 10 Feb 2020 02:56:10 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62832 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725468AbgBJH4K (ORCPT
+        id S1727477AbgBJIek (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 10 Feb 2020 03:34:40 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:49410 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727452AbgBJIek (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 10 Feb 2020 02:56:10 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01A7nvof027190
-        for <linux-s390@vger.kernel.org>; Mon, 10 Feb 2020 02:56:09 -0500
+        Mon, 10 Feb 2020 03:34:40 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01A8YcrZ140093
+        for <linux-s390@vger.kernel.org>; Mon, 10 Feb 2020 03:34:39 -0500
 Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1tn2bkfp-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1tncnp6m-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 10 Feb 2020 02:56:07 -0500
+        for <linux-s390@vger.kernel.org>; Mon, 10 Feb 2020 03:34:39 -0500
 Received: from localhost
         by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 10 Feb 2020 07:56:01 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        Mon, 10 Feb 2020 08:34:21 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
         by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 10 Feb 2020 07:55:47 -0000
+        Mon, 10 Feb 2020 08:34:17 -0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01A7tlFa59899928
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01A8YG7a46924156
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 10 Feb 2020 07:55:47 GMT
+        Mon, 10 Feb 2020 08:34:16 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 017AE4C04E;
-        Mon, 10 Feb 2020 07:55:47 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1CE3A4C058;
+        Mon, 10 Feb 2020 08:34:16 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE3E74C040;
-        Mon, 10 Feb 2020 07:55:46 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B62734C044;
+        Mon, 10 Feb 2020 08:34:15 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.224.61])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 10 Feb 2020 07:55:46 +0000 (GMT)
-Subject: Re: -Wtautological-constant-compare in arch/s390/include/asm/page.h
-To:     Nathan Chancellor <natechancellor@gmail.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-References: <20200208125714.GA9164@ubuntu-x2-xlarge-x86>
+        Mon, 10 Feb 2020 08:34:15 +0000 (GMT)
+Subject: Re: [PATCH 08/35] KVM: s390: protvirt: Add initial lifecycle handling
+To:     Thomas Huth <thuth@redhat.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+References: <20200207113958.7320-1-borntraeger@de.ibm.com>
+ <20200207113958.7320-9-borntraeger@de.ibm.com>
+ <c4949664-c6fd-f4d9-d42d-f2fa9426db00@redhat.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -91,26 +99,26 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 10 Feb 2020 08:55:46 +0100
+Date:   Mon, 10 Feb 2020 09:34:15 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.3.0
 MIME-Version: 1.0
-In-Reply-To: <20200208125714.GA9164@ubuntu-x2-xlarge-x86>
+In-Reply-To: <c4949664-c6fd-f4d9-d42d-f2fa9426db00@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20021007-0020-0000-0000-000003A8B3C5
+x-cbid: 20021008-0020-0000-0000-000003A8B68F
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021007-0021-0000-0000-000022008D1F
-Message-Id: <1f54ae4c-8748-496b-0833-80749d8d4f6c@de.ibm.com>
+x-cbparentid: 20021008-0021-0000-0000-000022009012
+Message-Id: <5f9da2a4-8e76-5b2e-b455-f91e60e8e505@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-10_02:2020-02-07,2020-02-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- malwarescore=0 mlxscore=0 impostorscore=0 phishscore=0 priorityscore=1501
- suspectscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0
- clxscore=1031 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002100066
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002100071
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -118,39 +126,49 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 08.02.20 13:57, Nathan Chancellor wrote:
-> Hi all,
+On 07.02.20 17:32, Thomas Huth wrote:
+> On 07/02/2020 12.39, Christian Borntraeger wrote:
+>> From: Janosch Frank <frankja@linux.ibm.com>
+>>
+>> This contains 3 main changes:
+>> 1. changes in SIE control block handling for secure guests
+>> 2. helper functions for create/destroy/unpack secure guests
+>> 3. KVM_S390_PV_COMMAND ioctl to allow userspace dealing with secure
+>> machines
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>> ---
+> [...]
+>> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
+>> index e1cef772fde1..7c21d55d2e49 100644
+>> --- a/arch/s390/include/asm/uv.h
+>> +++ b/arch/s390/include/asm/uv.h
+>> @@ -23,11 +23,19 @@
+>>  #define UVC_RC_INV_STATE	0x0003
+>>  #define UVC_RC_INV_LEN		0x0005
+>>  #define UVC_RC_NO_RESUME	0x0007
+>> +#define UVC_RC_NEED_DESTROY	0x8000
 > 
-> We noticed that you all added support for building s390 with clang,
-> which is great! I have noticed a few warnings for which I will send
-> patches but this one has me stumped.
-> 
-> In file included from ../lib/crypto/sha256.c:16:
-> In file included from ../include/linux/module.h:13:
-> In file included from ../include/linux/stat.h:19:
-> In file included from ../include/linux/time.h:6:
-> In file included from ../include/linux/seqlock.h:36:
-> In file included from ../include/linux/spinlock.h:51:
-> In file included from ../include/linux/preempt.h:78:
-> In file included from ../arch/s390/include/asm/preempt.h:6:
-> In file included from ../include/linux/thread_info.h:38:
-> In file included from ../arch/s390/include/asm/thread_info.h:26:
-> ../arch/s390/include/asm/page.h:45:6: warning: converting the result of '<<' to a boolean always evaluates to false [-Wtautological-constant-compare]
->         if (PAGE_DEFAULT_KEY)
->             ^
-> ../arch/s390/include/asm/page.h:23:44: note: expanded from macro 'PAGE_DEFAULT_KEY'
-> #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
->                                                   ^
-> 1 warning generated.
-> 
-> PAGE_DEFAULT_PAGE is always 0, meaning this function never does what it
-> is supposed to. Is this intentional? It seems that commit 0b642ede4796
-> ("[PATCH] s390: default storage key") added this and it mentions that it
-> can be overwritten at build time but I do not see any infrastructure for
-> doing that. Any clarification that you can give so we can solve this
-> warning would be much appreciated!
+> This define is never used. I'd suggest to drop it.
 
-Yes, it is a debugging tool that we use from time to time. The user would then
-change PAGE_DEFAULT_ACC in the header file when needed. It was not worth a config
-option as normal users should not use it. 
+I should be used in 
+
+diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
+index da281d8dcc92..8cc927ca061f 100644
+--- a/arch/s390/kvm/pv.c
++++ b/arch/s390/kvm/pv.c
+@@ -189,7 +189,7 @@ int kvm_s390_pv_create_vm(struct kvm *kvm)
+        /* Outputs */
+        kvm->arch.pv.handle = uvcb.guest_handle;
+ 
+-       if (rc && (uvcb.header.rc & 0x8000)) {
++       if (rc && (uvcb.header.rc & UVC_RC_NEED_DESTROY)) {
+                kvm_s390_pv_destroy_vm(kvm);
+                return -EINVAL;
+        }
+
+
+Will fix.
 
