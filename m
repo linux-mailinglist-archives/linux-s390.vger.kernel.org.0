@@ -2,138 +2,325 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CB4E3157DFD
-	for <lists+linux-s390@lfdr.de>; Mon, 10 Feb 2020 15:58:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A792157EF0
+	for <lists+linux-s390@lfdr.de>; Mon, 10 Feb 2020 16:37:31 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727008AbgBJO60 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 10 Feb 2020 09:58:26 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44282 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726627AbgBJO60 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 10 Feb 2020 09:58:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581346705;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=Ai1/Z236VGvcSi9aos29tUsyKZUbyNytyfpikXX8Exg=;
-        b=XiBf0dMx8AB+GSYvq4egmNykaWFCtgdpo4mCRb4oyLtlfl8bw7Q4A051AIRsX6gR/YXfEs
-        //1MPcWyaHH7Orni0juiEf06Unql8VWV5QAkPXiNz7/w3XE/zXVK8zyAoDGnmxWYyx0C5k
-        ax8k/VGFFNqliELXQ4DnZHW3208FAew=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-144-hvbszyYqOYihSyIlykokpQ-1; Mon, 10 Feb 2020 09:58:21 -0500
-X-MC-Unique: hvbszyYqOYihSyIlykokpQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD4D21005510;
-        Mon, 10 Feb 2020 14:58:19 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-116-219.ams2.redhat.com [10.36.116.219])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CBB1E87B2F;
-        Mon, 10 Feb 2020 14:58:12 +0000 (UTC)
-Subject: Re: [PATCH 21/35] KVM: s390/mm: handle guest unpin events
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200207113958.7320-1-borntraeger@de.ibm.com>
- <20200207113958.7320-22-borntraeger@de.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <2fd5c392-a2b7-c6b8-f079-8b87ee60f65e@redhat.com>
-Date:   Mon, 10 Feb 2020 15:58:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1727008AbgBJPha (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 10 Feb 2020 10:37:30 -0500
+Received: from foss.arm.com ([217.140.110.172]:35344 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726816AbgBJPha (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 10 Feb 2020 10:37:30 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7F75B1FB;
+        Mon, 10 Feb 2020 07:37:28 -0800 (PST)
+Received: from E121110.arm.com (C02TF0J2HF1T.cambridge.arm.com [10.1.26.172])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A4B13F68E;
+        Mon, 10 Feb 2020 07:37:18 -0800 (PST)
+Date:   Mon, 10 Feb 2020 15:37:16 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, Mark Rutland <mark.rutland@arm.com>,
+        linux-ia64@vger.kernel.org, linux-sh@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        James Hogan <jhogan@kernel.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Paul Mackerras <paulus@samba.org>, sparclinux@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        x86@kernel.org, Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Ingo Molnar <mingo@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Mark Brown <broonie@kernel.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-mips@vger.kernel.org, Ralf Baechle <ralf@linux-mips.org>,
+        linux-kernel@vger.kernel.org, Paul Burton <paul.burton@mips.com>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        "David S. Miller" <davem@davemloft.net>
+Subject: Re: [PATCH V12] mm/debug: Add tests validating architecture page
+ table helpers
+Message-ID: <20200210153716.GB9283@E121110.arm.com>
+References: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200207113958.7320-22-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1580174873-18117-1-git-send-email-anshuman.khandual@arm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 07/02/2020 12.39, Christian Borntraeger wrote:
-> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> 
-> The current code tries to first pin shared pages, if that fails (e.g.
-> because the page is not shared) it will export them. For shared pages
-> this means that we get a new intercept telling us that the guest is
-> unsharing that page. We will make the page secure at that point in time
-> and revoke the host access. This is synchronized with other host events,
-> e.g. the code will wait until host I/O has finished.
-> 
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  arch/s390/kvm/intercept.c | 24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
-> index 2a966dc52611..e155389a4a66 100644
-> --- a/arch/s390/kvm/intercept.c
-> +++ b/arch/s390/kvm/intercept.c
-> @@ -16,6 +16,7 @@
->  #include <asm/asm-offsets.h>
->  #include <asm/irq.h>
->  #include <asm/sysinfo.h>
-> +#include <asm/uv.h>
+On Tue, Jan 28, 2020 at 06:57:53AM +0530, Anshuman Khandual wrote:
+> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
+> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
+> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
+> arm64. Going forward, other architectures too can enable this after fixing
+> build or runtime problems (if any) with their page table helpers.
+
+It may be worth posting the next version to linux-arch to reach out to
+other arch maintainers.
+
+Also I've seen that you posted a v13 but it hasn't reached
+linux-arm-kernel (likely held in moderation because of the large amount
+of addresses cc'ed) and I don't normally follow LKML. I'm not cc'ed to
+this patch either (which is fine as long as you post to a list that I
+read).
+
+Since I started the reply on v12 about a week ago, I'll follow up here.
+When you post a v14, please trim the people on cc only to those strictly
+necessary (e.g. arch maintainers, linux-mm, linux-arch and lkml).
+
+> diff --git a/Documentation/features/debug/debug-vm-pgtable/arch-support.txt b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+> new file mode 100644
+> index 000000000000..f3f8111edbe3
+> --- /dev/null
+> +++ b/Documentation/features/debug/debug-vm-pgtable/arch-support.txt
+> @@ -0,0 +1,35 @@
+> +#
+> +# Feature name:          debug-vm-pgtable
+> +#         Kconfig:       ARCH_HAS_DEBUG_VM_PGTABLE
+> +#         description:   arch supports pgtable tests for semantics compliance
+> +#
+> +    -----------------------
+> +    |         arch |status|
+> +    -----------------------
+> +    |       alpha: | TODO |
+> +    |         arc: |  ok  |
+> +    |         arm: | TODO |
+
+I'm sure you can find some arm32 hardware around (or a VM) to give this
+a try ;).
+
+> diff --git a/arch/x86/include/asm/pgtable_64.h b/arch/x86/include/asm/pgtable_64.h
+> index 0b6c4042942a..fb0e76d254b3 100644
+> --- a/arch/x86/include/asm/pgtable_64.h
+> +++ b/arch/x86/include/asm/pgtable_64.h
+[...]
+> @@ -1197,6 +1197,7 @@ static noinline void __init kernel_init_freeable(void)
+>  	sched_init_smp();
 >  
->  #include "kvm-s390.h"
->  #include "gaccess.h"
-> @@ -484,12 +485,35 @@ static int handle_pv_sclp(struct kvm_vcpu *vcpu)
->  	return 0;
->  }
->  
-> +static int handle_pv_uvc(struct kvm_vcpu *vcpu)
-> +{
-> +	struct uv_cb_share *guest_uvcb = (void *)vcpu->arch.sie_block->sidad;
-> +	struct uv_cb_cts uvcb = {
-> +		.header.cmd	= UVC_CMD_UNPIN_PAGE_SHARED,
-> +		.header.len	= sizeof(uvcb),
-> +		.guest_handle	= kvm_s390_pv_handle(vcpu->kvm),
-> +		.gaddr		= guest_uvcb->paddr,
-> +	};
-> +	int rc;
+>  	page_alloc_init_late();
+> +	debug_vm_pgtable();
+>  	/* Initialize page ext after all struct pages are initialized. */
+>  	page_ext_init();
+
+I guess you could even make debug_vm_pgtable() an early_initcall(). I
+don't have a strong opinion either way.
+
+> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
+> new file mode 100644
+> index 000000000000..0f37f32d15f1
+> --- /dev/null
+> +++ b/mm/debug_vm_pgtable.c
+> @@ -0,0 +1,388 @@
+[...]
+> +/*
+> + * Basic operations
+> + *
+> + * mkold(entry)			= An old and not a young entry
+> + * mkyoung(entry)		= A young and not an old entry
+> + * mkdirty(entry)		= A dirty and not a clean entry
+> + * mkclean(entry)		= A clean and not a dirty entry
+> + * mkwrite(entry)		= A write and not a write protected entry
+> + * wrprotect(entry)		= A write protected and not a write entry
+> + * pxx_bad(entry)		= A mapped and non-table entry
+> + * pxx_same(entry1, entry2)	= Both entries hold the exact same value
+> + */
+> +#define VMFLAGS	(VM_READ|VM_WRITE|VM_EXEC)
 > +
-> +	if (guest_uvcb->header.cmd != UVC_CMD_REMOVE_SHARED_ACCESS) {
-> +		WARN_ONCE(1, "Unexpected UVC 0x%x!\n", guest_uvcb->header.cmd);
+> +/*
+> + * On s390 platform, the lower 12 bits are used to identify given page table
+> + * entry type and for other arch specific requirements. But these bits might
+> + * affect the ability to clear entries with pxx_clear(). So while loading up
+> + * the entries skip all lower 12 bits in order to accommodate s390 platform.
+> + * It does not have affect any other platform.
+> + */
+> +#define RANDOM_ORVALUE	(0xfffffffffffff000UL)
 
-Is there a way to signal the failed command to the guest, too?
+I'd suggest you generate this mask with something like
+GENMASK(BITS_PER_LONG, PAGE_SHIFT).
 
- Thomas
+> +#define RANDOM_NZVALUE	(0xff)
+> +
+> +static void __init pte_basic_tests(unsigned long pfn, pgprot_t prot)
+> +{
+> +	pte_t pte = pfn_pte(pfn, prot);
+> +
+> +	WARN_ON(!pte_same(pte, pte));
+> +	WARN_ON(!pte_young(pte_mkyoung(pte)));
+> +	WARN_ON(!pte_dirty(pte_mkdirty(pte)));
+> +	WARN_ON(!pte_write(pte_mkwrite(pte)));
+> +	WARN_ON(pte_young(pte_mkold(pte)));
+> +	WARN_ON(pte_dirty(pte_mkclean(pte)));
+> +	WARN_ON(pte_write(pte_wrprotect(pte)));
 
+Given that you start with rwx permissions set,
+some of these ops would not have any effect. For example, on arm64 at
+least, mkwrite clears a bit already cleared here. You could try with
+multiple rwx combinations values (e.g. all set and all cleared) or maybe
+something like below:
 
-> +		return 0;
-> +	}
-> +	rc = uv_make_secure(vcpu->arch.gmap, uvcb.gaddr, &uvcb);
-> +	if (rc == -EINVAL && uvcb.header.rc == 0x104)
-> +		return 0;
-> +	return rc;
+	WARN_ON(!pte_write(pte_mkwrite(pte_wrprotect(pte))));
+
+You could also try something like this:
+
+	WARN_ON(!pte_same(pte_wrprotect(pte), pte_wrprotect(pte_mkwrite(pte))));
+
+though the above approach may not work for arm64 ptep_set_wrprotect() on
+a dirty pte (if you extend these tests later).
+
 > +}
 > +
->  static int handle_pv_notification(struct kvm_vcpu *vcpu)
->  {
->  	if (vcpu->arch.sie_block->ipa == 0xb210)
->  		return handle_pv_spx(vcpu);
->  	if (vcpu->arch.sie_block->ipa == 0xb220)
->  		return handle_pv_sclp(vcpu);
-> +	if (vcpu->arch.sie_block->ipa == 0xb9a4)
-> +		return handle_pv_uvc(vcpu);
->  
->  	return handle_instruction(vcpu);
->  }
-> 
+> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
+> +static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot)
+> +{
+> +	pmd_t pmd = pfn_pmd(pfn, prot);
+> +
+> +	WARN_ON(!pmd_same(pmd, pmd));
+> +	WARN_ON(!pmd_young(pmd_mkyoung(pmd)));
+> +	WARN_ON(!pmd_dirty(pmd_mkdirty(pmd)));
+> +	WARN_ON(!pmd_write(pmd_mkwrite(pmd)));
+> +	WARN_ON(pmd_young(pmd_mkold(pmd)));
+> +	WARN_ON(pmd_dirty(pmd_mkclean(pmd)));
+> +	WARN_ON(pmd_write(pmd_wrprotect(pmd)));
+> +	/*
+> +	 * A huge page does not point to next level page table
+> +	 * entry. Hence this must qualify as pmd_bad().
+> +	 */
+> +	WARN_ON(!pmd_bad(pmd_mkhuge(pmd)));
+> +}
+> +
+> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
+> +static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot)
+> +{
+> +	pud_t pud = pfn_pud(pfn, prot);
+> +
+> +	WARN_ON(!pud_same(pud, pud));
+> +	WARN_ON(!pud_young(pud_mkyoung(pud)));
+> +	WARN_ON(!pud_write(pud_mkwrite(pud)));
+> +	WARN_ON(pud_write(pud_wrprotect(pud)));
+> +	WARN_ON(pud_young(pud_mkold(pud)));
+> +
+> +	if (mm_pmd_folded(mm) || __is_defined(ARCH_HAS_4LEVEL_HACK))
+> +		return;
+> +
+> +	/*
+> +	 * A huge page does not point to next level page table
+> +	 * entry. Hence this must qualify as pud_bad().
+> +	 */
+> +	WARN_ON(!pud_bad(pud_mkhuge(pud)));
+> +}
+> +#else
+> +static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot) { }
+> +#endif
+> +#else
+> +static void __init pmd_basic_tests(unsigned long pfn, pgprot_t prot) { }
+> +static void __init pud_basic_tests(unsigned long pfn, pgprot_t prot) { }
+> +#endif
+> +
+> +static void __init p4d_basic_tests(unsigned long pfn, pgprot_t prot)
+> +{
+> +	p4d_t p4d;
+> +
+> +	memset(&p4d, RANDOM_NZVALUE, sizeof(p4d_t));
+> +	WARN_ON(!p4d_same(p4d, p4d));
+> +}
+> +
+> +static void __init pgd_basic_tests(unsigned long pfn, pgprot_t prot)
+> +{
+> +	pgd_t pgd;
+> +
+> +	memset(&pgd, RANDOM_NZVALUE, sizeof(pgd_t));
+> +	WARN_ON(!pgd_same(pgd, pgd));
+> +}
+> +
+> +#ifndef __ARCH_HAS_4LEVEL_HACK
 
+This macro doesn't exist in the kernel anymore (it's a 5LEVEL now). But
+can you not use the __PAGETABLE_PUD_FOLDED instead?
+
+> +static void __init pud_clear_tests(struct mm_struct *mm, pud_t *pudp)
+> +{
+> +	pud_t pud = READ_ONCE(*pudp);
+> +
+> +	if (mm_pmd_folded(mm))
+> +		return;
+> +
+> +	pud = __pud(pud_val(pud) | RANDOM_ORVALUE);
+> +	WRITE_ONCE(*pudp, pud);
+> +	pud_clear(pudp);
+> +	pud = READ_ONCE(*pudp);
+> +	WARN_ON(!pud_none(pud));
+> +}
+> +
+> +static void __init pud_populate_tests(struct mm_struct *mm, pud_t *pudp,
+> +				      pmd_t *pmdp)
+> +{
+> +	pud_t pud;
+> +
+> +	if (mm_pmd_folded(mm))
+> +		return;
+> +	/*
+> +	 * This entry points to next level page table page.
+> +	 * Hence this must not qualify as pud_bad().
+> +	 */
+> +	pmd_clear(pmdp);
+> +	pud_clear(pudp);
+> +	pud_populate(mm, pudp, pmdp);
+> +	pud = READ_ONCE(*pudp);
+> +	WARN_ON(pud_bad(pud));
+> +}
+> +#else
+> +static void __init pud_clear_tests(struct mm_struct *mm, pud_t *pudp) { }
+> +static void __init pud_populate_tests(struct mm_struct *mm, pud_t *pudp,
+> +				      pmd_t *pmdp)
+> +{
+> +}
+> +#endif
+> +
+> +#ifndef __ARCH_HAS_5LEVEL_HACK
+
+Could you use __PAGETABLE_P4D_FOLDED instead?
+
+> +static void __init p4d_clear_tests(struct mm_struct *mm, p4d_t *p4dp)
+> +{
+> +	p4d_t p4d = READ_ONCE(*p4dp);
+> +
+> +	if (mm_pud_folded(mm))
+> +		return;
+> +
+> +	p4d = __p4d(p4d_val(p4d) | RANDOM_ORVALUE);
+> +	WRITE_ONCE(*p4dp, p4d);
+> +	p4d_clear(p4dp);
+> +	p4d = READ_ONCE(*p4dp);
+> +	WARN_ON(!p4d_none(p4d));
+> +}
+
+Otherwise the patch looks fine. As per the comment on v13, make sure you
+don't break the build on any architecture, so this could either be an
+opt-in or patch those architectures before this patch is applied.
+
+Thanks.
+
+-- 
+Catalin
