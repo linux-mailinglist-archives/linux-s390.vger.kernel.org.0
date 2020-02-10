@@ -2,94 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 37F4B157DB7
-	for <lists+linux-s390@lfdr.de>; Mon, 10 Feb 2020 15:47:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CB4E3157DFD
+	for <lists+linux-s390@lfdr.de>; Mon, 10 Feb 2020 15:58:26 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727881AbgBJOr4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 10 Feb 2020 09:47:56 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:29743 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727671AbgBJOr4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 10 Feb 2020 09:47:56 -0500
+        id S1727008AbgBJO60 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 10 Feb 2020 09:58:26 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44282 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726627AbgBJO60 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 10 Feb 2020 09:58:26 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581346074;
+        s=mimecast20190719; t=1581346705;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/VUZOjhgHwT3xKMQgFEK/et87DmDmqg+EbvUA2vG1GQ=;
-        b=CmrmzOLkjQ9l1BTpOVS1inYUMuMsXTt7T6mAICb6xoagIIo9+O2rgzWGda0wRlENMBmBrg
-        mfciIkMdzCRU0H36DTyhxTG6ar/A83lbIl3JHd6Cko+jN56icQRZijbiq3zjrLnL+D3MCZ
-        pTqrj7sJG1/epZkdcQM4LBa+xVvo4wY=
+         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
+        bh=Ai1/Z236VGvcSi9aos29tUsyKZUbyNytyfpikXX8Exg=;
+        b=XiBf0dMx8AB+GSYvq4egmNykaWFCtgdpo4mCRb4oyLtlfl8bw7Q4A051AIRsX6gR/YXfEs
+        //1MPcWyaHH7Orni0juiEf06Unql8VWV5QAkPXiNz7/w3XE/zXVK8zyAoDGnmxWYyx0C5k
+        ax8k/VGFFNqliELXQ4DnZHW3208FAew=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-422-rZMNOUnQPBiX0E-vNeidlw-1; Mon, 10 Feb 2020 09:47:53 -0500
-X-MC-Unique: rZMNOUnQPBiX0E-vNeidlw-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-144-hvbszyYqOYihSyIlykokpQ-1; Mon, 10 Feb 2020 09:58:21 -0500
+X-MC-Unique: hvbszyYqOYihSyIlykokpQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8179118FE862;
-        Mon, 10 Feb 2020 14:47:51 +0000 (UTC)
-Received: from gondolin (ovpn-117-244.ams2.redhat.com [10.36.117.244])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 95C6D5C1D6;
-        Mon, 10 Feb 2020 14:47:46 +0000 (UTC)
-Date:   Mon, 10 Feb 2020 15:47:43 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
-        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD4D21005510;
+        Mon, 10 Feb 2020 14:58:19 +0000 (UTC)
+Received: from thuth.remote.csb (ovpn-116-219.ams2.redhat.com [10.36.116.219])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id CBB1E87B2F;
+        Mon, 10 Feb 2020 14:58:12 +0000 (UTC)
+Subject: Re: [PATCH 21/35] KVM: s390/mm: handle guest unpin events
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         Andrea Arcangeli <aarcange@redhat.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Subject: Re: [PATCH 32/35] KVM: s390: protvirt: Mask PSW interrupt bits for
- interception 104 and 112
-Message-ID: <20200210154743.004f9bdb.cohuck@redhat.com>
-In-Reply-To: <305c63ba-b9f1-aa88-7006-709c85006cda@de.ibm.com>
+        Vasily Gorbik <gor@linux.ibm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
 References: <20200207113958.7320-1-borntraeger@de.ibm.com>
-        <20200207113958.7320-33-borntraeger@de.ibm.com>
-        <20200210142845.2188b008.cohuck@redhat.com>
-        <305c63ba-b9f1-aa88-7006-709c85006cda@de.ibm.com>
-Organization: Red Hat GmbH
+ <20200207113958.7320-22-borntraeger@de.ibm.com>
+From:   Thomas Huth <thuth@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <2fd5c392-a2b7-c6b8-f079-8b87ee60f65e@redhat.com>
+Date:   Mon, 10 Feb 2020 15:58:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200207113958.7320-22-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 10 Feb 2020 14:48:06 +0100
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+On 07/02/2020 12.39, Christian Borntraeger wrote:
+> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> 
+> The current code tries to first pin shared pages, if that fails (e.g.
+> because the page is not shared) it will export them. For shared pages
+> this means that we get a new intercept telling us that the guest is
+> unsharing that page. We will make the page secure at that point in time
+> and revoke the host access. This is synchronized with other host events,
+> e.g. the code will wait until host I/O has finished.
+> 
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  arch/s390/kvm/intercept.c | 24 ++++++++++++++++++++++++
+>  1 file changed, 24 insertions(+)
+> 
+> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
+> index 2a966dc52611..e155389a4a66 100644
+> --- a/arch/s390/kvm/intercept.c
+> +++ b/arch/s390/kvm/intercept.c
+> @@ -16,6 +16,7 @@
+>  #include <asm/asm-offsets.h>
+>  #include <asm/irq.h>
+>  #include <asm/sysinfo.h>
+> +#include <asm/uv.h>
+>  
+>  #include "kvm-s390.h"
+>  #include "gaccess.h"
+> @@ -484,12 +485,35 @@ static int handle_pv_sclp(struct kvm_vcpu *vcpu)
+>  	return 0;
+>  }
+>  
+> +static int handle_pv_uvc(struct kvm_vcpu *vcpu)
+> +{
+> +	struct uv_cb_share *guest_uvcb = (void *)vcpu->arch.sie_block->sidad;
+> +	struct uv_cb_cts uvcb = {
+> +		.header.cmd	= UVC_CMD_UNPIN_PAGE_SHARED,
+> +		.header.len	= sizeof(uvcb),
+> +		.guest_handle	= kvm_s390_pv_handle(vcpu->kvm),
+> +		.gaddr		= guest_uvcb->paddr,
+> +	};
+> +	int rc;
+> +
+> +	if (guest_uvcb->header.cmd != UVC_CMD_REMOVE_SHARED_ACCESS) {
+> +		WARN_ONCE(1, "Unexpected UVC 0x%x!\n", guest_uvcb->header.cmd);
 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index b53cabc15d9d..52a5196fe975 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4089,6 +4089,12 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->                         memcpy(vcpu->run->s.regs.gprs,
->                                sie_page->pv_grregs,
->                                sizeof(sie_page->pv_grregs));
-> +                       /*
-> +                        * We're not allowed to inject interrupts on intercepts
-> +                        * that leave the guest state in an "in-beetween" state
+Is there a way to signal the failed command to the guest, too?
 
-s/beetween/between/ here as well :)
+ Thomas
 
-> +                        * where the next SIE entry will do a continuation.
-> +                        * Fence interrupts in our "internal" PSW.
-> +                        */
->                         if (vcpu->arch.sie_block->icptcode == ICPT_PV_INSTR ||
->                             vcpu->arch.sie_block->icptcode == ICPT_PV_PREF) {
->                                 vcpu->arch.sie_block->gpsw.mask &= ~PSW_INT_MASK;
 
-With that on top,
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> +		return 0;
+> +	}
+> +	rc = uv_make_secure(vcpu->arch.gmap, uvcb.gaddr, &uvcb);
+> +	if (rc == -EINVAL && uvcb.header.rc == 0x104)
+> +		return 0;
+> +	return rc;
+> +}
+> +
+>  static int handle_pv_notification(struct kvm_vcpu *vcpu)
+>  {
+>  	if (vcpu->arch.sie_block->ipa == 0xb210)
+>  		return handle_pv_spx(vcpu);
+>  	if (vcpu->arch.sie_block->ipa == 0xb220)
+>  		return handle_pv_sclp(vcpu);
+> +	if (vcpu->arch.sie_block->ipa == 0xb9a4)
+> +		return handle_pv_uvc(vcpu);
+>  
+>  	return handle_instruction(vcpu);
+>  }
+> 
 
