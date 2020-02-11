@@ -2,38 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CA845158DD9
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 13:00:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B3572158E61
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 13:23:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbgBKMAj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Feb 2020 07:00:39 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:52112 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728198AbgBKMAi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 07:00:38 -0500
+        id S1727264AbgBKMXw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Feb 2020 07:23:52 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48651 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728540AbgBKMXw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 07:23:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581422437;
+        s=mimecast20190719; t=1581423831;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=HFoQGwqMI48EK/Nq6IgA2kqYRKEMGzNzhrvDfODlwoo=;
-        b=EyLUvR+fXVF0tRCXGas6LWDlZRlqQ1DjhBcgQ1qw9g9nQaIz2bx1F++yuBjQ+tgTfE59GS
-        3N6TUk3Y7J/y0ptpDr1oI8+Ckyng3fzzmfgX190WEcRR0g0Rp91uClzUEivvIC5n1p5xag
-        L2cwBOYKD9yhNV1lnKTqN1q0XZUVwPk=
+        bh=EqC7vP3ZSffmHke4sKuIGyItxX4oZMFilYOT6bQzcQ8=;
+        b=VfCgAy1mp2E69yKqvKO6V+fdZdE89abF3YYv36p7fWELCWz6CLmMCnrxvldEzFR/pQ+ulR
+        Vb5ndRwjaI7Puf3nXTyNjAaJ7k+VVnD0HqIl+8PlVErLhCL/ZkF5ztNKYkP/irVlCj6YR2
+        WolH9mUgL01o4Gk5HR2YnLWz6DutsDY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-18-hAf5eJXxOKqMyxjx9yOxmQ-1; Tue, 11 Feb 2020 07:00:33 -0500
-X-MC-Unique: hAf5eJXxOKqMyxjx9yOxmQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-30-n6p7h0y7NjCjF2K7-cqODg-1; Tue, 11 Feb 2020 07:23:47 -0500
+X-MC-Unique: n6p7h0y7NjCjF2K7-cqODg-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BCCE8017DF;
-        Tue, 11 Feb 2020 12:00:31 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0665C107ACC5;
+        Tue, 11 Feb 2020 12:23:46 +0000 (UTC)
 Received: from thuth.remote.csb (ovpn-116-131.ams2.redhat.com [10.36.116.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0FFC48ED02;
-        Tue, 11 Feb 2020 12:00:25 +0000 (UTC)
-Subject: Re: [PATCH 16/35] KVM: s390: protvirt: Add SCLP interrupt handling
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id A1F5560BF4;
+        Tue, 11 Feb 2020 12:23:40 +0000 (UTC)
+Subject: Re: [PATCH 35/35] DOCUMENTATION: Protected virtual machine
+ introduction and IPL
 To:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
@@ -46,171 +47,178 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
 References: <20200207113958.7320-1-borntraeger@de.ibm.com>
- <20200207113958.7320-17-borntraeger@de.ibm.com>
+ <20200207113958.7320-36-borntraeger@de.ibm.com>
 From:   Thomas Huth <thuth@redhat.com>
 Openpgp: preference=signencrypt
-Message-ID: <dbeb32f7-7cf5-ad93-fb79-94d4ac7e3d8c@redhat.com>
-Date:   Tue, 11 Feb 2020 13:00:24 +0100
+Message-ID: <5d8050a6-c730-4325-2d46-2b5c9cdc8408@redhat.com>
+Date:   Tue, 11 Feb 2020 13:23:39 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20200207113958.7320-17-borntraeger@de.ibm.com>
+In-Reply-To: <20200207113958.7320-36-borntraeger@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 07/02/2020 12.39, Christian Borntraeger wrote:
-> The sclp interrupt is kind of special. The ultravisor polices that we
-> do not inject an sclp interrupt with payload if no sccb is outstanding.
-> On the other hand we have "asynchronous" event interrupts, e.g. for
-> console input.
-> We separate both variants into sclp interrupt and sclp event interrupt.
-> The sclp interrupt is masked until a previous servc instruction has
-> finished (sie exit 108).
-> 
-> [frankja@linux.ibm.com: factoring out write_sclp]
+> From: Janosch Frank <frankja@linux.ibm.com>
+>=20
+> Add documentation about protected KVM guests and description of changes
+> that are necessary to move a KVM VM into Protected Virtualization mode.
+>=20
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> [borntraeger@de.ibm.com: fixing and conversion to rst]
 > Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 > ---
 [...]
-> diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-> index e5ee52e33d96..c28fa09cb557 100644
-> --- a/arch/s390/kvm/interrupt.c
-> +++ b/arch/s390/kvm/interrupt.c
-> @@ -325,8 +325,11 @@ static inline int gisa_tac_ipm_gisc(struct kvm_s390_gisa *gisa, u32 gisc)
->  
->  static inline unsigned long pending_irqs_no_gisa(struct kvm_vcpu *vcpu)
->  {
-> -	return vcpu->kvm->arch.float_int.pending_irqs |
-> -		vcpu->arch.local_int.pending_irqs;
-> +	unsigned long pending = vcpu->kvm->arch.float_int.pending_irqs |
-> +				vcpu->arch.local_int.pending_irqs;
+> diff --git a/Documentation/virt/kvm/s390-pv-boot.rst b/Documentation/vi=
+rt/kvm/s390-pv-boot.rst
+> new file mode 100644
+> index 000000000000..47814e53369a
+> --- /dev/null
+> +++ b/Documentation/virt/kvm/s390-pv-boot.rst
+> @@ -0,0 +1,79 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +	pending &= ~vcpu->kvm->arch.float_int.masked_irqs;
-> +	return pending;
->  }
->  
->  static inline unsigned long pending_irqs(struct kvm_vcpu *vcpu)
-> @@ -384,8 +387,10 @@ static unsigned long deliverable_irqs(struct kvm_vcpu *vcpu)
->  		__clear_bit(IRQ_PEND_EXT_CLOCK_COMP, &active_mask);
->  	if (!(vcpu->arch.sie_block->gcr[0] & CR0_CPU_TIMER_SUBMASK))
->  		__clear_bit(IRQ_PEND_EXT_CPU_TIMER, &active_mask);
-> -	if (!(vcpu->arch.sie_block->gcr[0] & CR0_SERVICE_SIGNAL_SUBMASK))
-> +	if (!(vcpu->arch.sie_block->gcr[0] & CR0_SERVICE_SIGNAL_SUBMASK)) {
->  		__clear_bit(IRQ_PEND_EXT_SERVICE, &active_mask);
-> +		__clear_bit(IRQ_PEND_EXT_SERVICE_EV, &active_mask);
-> +	}
->  	if (psw_mchk_disabled(vcpu))
->  		active_mask &= ~IRQ_PEND_MCHK_MASK;
->  	/* PV guest cpus can have a single interruption injected at a time. */
-> @@ -947,6 +952,31 @@ static int __must_check __deliver_prog(struct kvm_vcpu *vcpu)
->  	return rc ? -EFAULT : 0;
->  }
->  
-> +#define SCCB_MASK 0xFFFFFFF8
-> +#define SCCB_EVENT_PENDING 0x3
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +s390 (IBM Z) Boot/IPL of Protected VMs
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +static int write_sclp(struct kvm_vcpu *vcpu, u32 parm)
-> +{
-> +	int rc;
+> +Summary
+> +-------
+> +Protected Virtual Machines (PVM) are not accessible by I/O or the
+> +hypervisor.  When the hypervisor wants to access the memory of PVMs
+> +the memory needs to be made accessible. When doing so, the memory will
+> +be encrypted.  See :doc:`s390-pv` for details.
 > +
-> +	if (kvm_s390_pv_handle_cpu(vcpu)) {
-> +		vcpu->arch.sie_block->iictl = IICTL_CODE_EXT;
-> +		vcpu->arch.sie_block->eic = EXT_IRQ_SERVICE_SIG;
-> +		vcpu->arch.sie_block->eiparams = parm;
-> +		return 0;
-> +	}
+> +On IPL a small plaintext bootloader is started which provides
+> +information about the encrypted components and necessary metadata to
+> +KVM to decrypt the protected virtual machine.
 > +
-> +	rc  = put_guest_lc(vcpu, EXT_IRQ_SERVICE_SIG, (u16 *)__LC_EXT_INT_CODE);
-> +	rc |= put_guest_lc(vcpu, 0, (u16 *)__LC_EXT_CPU_ADDR);
-> +	rc |= write_guest_lc(vcpu, __LC_EXT_OLD_PSW,
-> +			     &vcpu->arch.sie_block->gpsw, sizeof(psw_t));
-> +	rc |= read_guest_lc(vcpu, __LC_EXT_NEW_PSW,
-> +			    &vcpu->arch.sie_block->gpsw, sizeof(psw_t));
-> +	rc |= put_guest_lc(vcpu, parm,
-> +			   (u32 *)__LC_EXT_PARAMS);
-> +	return rc;
+> +Based on this data, KVM will make the protected virtual machine known
+> +to the Ultravisor(UV) and instruct it to secure the memory of the PVM,
+> +decrypt the components and verify the data and address list hashes, to
+> +ensure integrity. Afterwards KVM can run the PVM via the SIE
+> +instruction which the UV will intercept and execute on KVM's behalf.
+> +
+> +The switch into PV mode lets us load encrypted guest executables and
 
-I think it would be nicer to move the "return rc ? -EFAULT : 0;" here
-instead of using it in the __deliver_service* functions...
+Maybe rather: "After the switch into PV mode, the guest can load ..." ?
 
-> +}
+> +data via every available method (network, dasd, scsi, direct kernel,
+> +...) without the need to change the boot process.
 > +
->  static int __must_check __deliver_service(struct kvm_vcpu *vcpu)
->  {
->  	struct kvm_s390_float_interrupt *fi = &vcpu->kvm->arch.float_int;
-> @@ -954,13 +984,17 @@ static int __must_check __deliver_service(struct kvm_vcpu *vcpu)
->  	int rc = 0;
->  
->  	spin_lock(&fi->lock);
-> -	if (!(test_bit(IRQ_PEND_EXT_SERVICE, &fi->pending_irqs))) {
-> +	if (test_bit(IRQ_PEND_EXT_SERVICE, &fi->masked_irqs) ||
-> +	    !(test_bit(IRQ_PEND_EXT_SERVICE, &fi->pending_irqs))) {
->  		spin_unlock(&fi->lock);
->  		return 0;
->  	}
->  	ext = fi->srv_signal;
->  	memset(&fi->srv_signal, 0, sizeof(ext));
->  	clear_bit(IRQ_PEND_EXT_SERVICE, &fi->pending_irqs);
-> +	clear_bit(IRQ_PEND_EXT_SERVICE_EV, &fi->pending_irqs);
-> +	if (kvm_s390_pv_is_protected(vcpu->kvm))
-> +		set_bit(IRQ_PEND_EXT_SERVICE, &fi->masked_irqs);
->  	spin_unlock(&fi->lock);
->  
->  	VCPU_EVENT(vcpu, 4, "deliver: sclp parameter 0x%x",
-> @@ -969,15 +1003,33 @@ static int __must_check __deliver_service(struct kvm_vcpu *vcpu)
->  	trace_kvm_s390_deliver_interrupt(vcpu->vcpu_id, KVM_S390_INT_SERVICE,
->  					 ext.ext_params, 0);
->  
-> -	rc  = put_guest_lc(vcpu, EXT_IRQ_SERVICE_SIG, (u16 *)__LC_EXT_INT_CODE);
-> -	rc |= put_guest_lc(vcpu, 0, (u16 *)__LC_EXT_CPU_ADDR);
-> -	rc |= write_guest_lc(vcpu, __LC_EXT_OLD_PSW,
-> -			     &vcpu->arch.sie_block->gpsw, sizeof(psw_t));
-> -	rc |= read_guest_lc(vcpu, __LC_EXT_NEW_PSW,
-> -			    &vcpu->arch.sie_block->gpsw, sizeof(psw_t));
-> -	rc |= put_guest_lc(vcpu, ext.ext_params,
-> -			   (u32 *)__LC_EXT_PARAMS);
-> +	rc = write_sclp(vcpu, ext.ext_params);
-> +	return rc ? -EFAULT : 0;
-
-... i.e. use "return write_sclp(...)" here...
-
-> +}
 > +
-> +static int __must_check __deliver_service_ev(struct kvm_vcpu *vcpu)
-> +{
-> +	struct kvm_s390_float_interrupt *fi = &vcpu->kvm->arch.float_int;
-> +	struct kvm_s390_ext_info ext;
-> +	int rc = 0;
+> +Diag308
+> +-------
+> +This diagnose instruction is the basis for VM IPL. The VM can set and
+> +retrieve IPL information blocks, that specify the IPL method/devices
+> +and request VM memory and subsystem resets, as well as IPLs.
 > +
-> +	spin_lock(&fi->lock);
-> +	if (!(test_bit(IRQ_PEND_EXT_SERVICE_EV, &fi->pending_irqs))) {
-> +		spin_unlock(&fi->lock);
-> +		return 0;
-> +	}
-> +	ext = fi->srv_signal;
-> +	/* only clear the event bit */
-> +	fi->srv_signal.ext_params &= ~SCCB_EVENT_PENDING;
-> +	clear_bit(IRQ_PEND_EXT_SERVICE_EV, &fi->pending_irqs);
-> +	spin_unlock(&fi->lock);
+> +For PVs this concept has been extended with new subcodes:
 > +
-> +	VCPU_EVENT(vcpu, 4, "%s", "deliver: sclp parameter event");
-> +	vcpu->stat.deliver_service_signal++;
-> +	trace_kvm_s390_deliver_interrupt(vcpu->vcpu_id, KVM_S390_INT_SERVICE,
-> +					 ext.ext_params, 0);
->  
-> +	rc = write_sclp(vcpu, SCCB_EVENT_PENDING);
->  	return rc ? -EFAULT : 0;
->  }
+> +Subcode 8: Set an IPL Information Block of type 5 (information block
+> +for PVMs)
+> +Subcode 9: Store the saved block in guest memory
+> +Subcode 10: Move into Protected Virtualization mode
+> +
+> +The new PV load-device-specific-parameters field specifies all data,
 
-... and here.
+remove the comma?
 
-Apart from that, patch looks ok to me.
+> +that is necessary to move into PV mode.
+> +
+> +* PV Header origin
+> +* PV Header length
+> +* List of Components composed of
+> +   * AES-XTS Tweak prefix
+> +   * Origin
+> +   * Size
+> +
+> +The PV header contains the keys and hashes, which the UV will use to
+> +decrypt and verify the PV, as well as control flags and a start PSW.
+> +
+> +The components are for instance an encrypted kernel, kernel cmd and
+
+s/kernel cmd/kernel parameters/ ?
+
+> +initrd. The components are decrypted by the UV.
+> +
+> +All non-decrypted data of the guest before it switches to protected
+> +virtualization mode are zero on first access of the PV.
+
+Before it switches to protected virtualization mode, all non-decrypted
+data of the guest are ... ?
+
+> +
+> +When running in protected mode some subcodes will result in exceptions
+> +or return error codes.
+> +
+> +Subcodes 4 and 7 will result in specification exceptions as they would
+> +not clear out the guest memory.
+> +When removing a secure VM, the UV will clear all memory, so we can't
+> +have non-clearing IPL subcodes.
+> +
+> +Subcodes 8, 9, 10 will result in specification exceptions.
+> +Re-IPL into a protected mode is only possible via a detour into non
+> +protected mode.
+> +
+> +Keys
+> +----
+> +Every CEC will have a unique public key to enable tooling to build
+> +encrypted images.
+> +See  `s390-tools <https://github.com/ibm-s390-tools/s390-tools/>`_
+> +for the tooling.
+> diff --git a/Documentation/virt/kvm/s390-pv.rst b/Documentation/virt/kv=
+m/s390-pv.rst
+> new file mode 100644
+> index 000000000000..dbe9110dfd1e
+> --- /dev/null
+> +++ b/Documentation/virt/kvm/s390-pv.rst
+> @@ -0,0 +1,116 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +s390 (IBM Z) Ultravisor and Protected VMs
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> +
+> +Summary
+> +-------
+> +Protected virtual machines (PVM) are KVM VMs, where KVM can't access
+> +the VM's state like guest memory and guest registers anymore. Instead,
+> +the PVMs are mostly managed by a new entity called Ultravisor
+> +(UV). The UV provides an API that can be used by PVMs and KVM to
+> +request management actions.
+> +
+> +Each guest starts in the non-protected mode and then may make a
+> +request to transition into protected mode. On transition, KVM
+> +registers the guest and its VCPUs with the Ultravisor and prepares
+> +everything for running it.
+> +
+> +The Ultravisor will secure and decrypt the guest's boot memory
+> +(i.e. kernel/initrd). It will safeguard state changes like VCPU
+> +starts/stops and injected interrupts while the guest is running.
+> +
+> +As access to the guest's state, such as the SIE state description, is
+> +normally needed to be able to run a VM, some changes have been made in
+> +SIE behavior. A new format 4 state description has been introduced,
+
+s/in SIE behavior/in the behavior of the SIE instruction/ ?
+
+> +where some fields have different meanings for a PVM. SIE exits are
+> +minimized as much as possible to improve speed and reduce exposed
+> +guest state.
+[...]
 
  Thomas
+
 
