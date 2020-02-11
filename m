@@ -2,154 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2162F158FB5
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 14:21:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0A589159296
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 16:11:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728197AbgBKNVd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Feb 2020 08:21:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59376 "EHLO
+        id S1728708AbgBKPLb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Feb 2020 10:11:31 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46414 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728460AbgBKNVd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 08:21:33 -0500
+        with ESMTP id S1728574AbgBKPLb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 10:11:31 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581427291;
+        s=mimecast20190719; t=1581433889;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=VvEvaSBDRVHrMA6kt83bhvPKM3ic03ikIZ0HFfjWGD0=;
-        b=aFu6X/jl0MzVv/YAuRJ914tTJ7jn1z8SGA7cscAqERfc0V6lyo1dU/qd8eCKZx4UCUA830
-        50TJAp7HAZ70qrbdC3hVsQSCM5TGLASDK/vbYX5P/F2nVzbCMazB0H+65kT8r7QaIB1HuX
-        X8OOcR+ij+TvzMh/hwwJk8XmwBOQYvI=
+        bh=xWrVwmVPWaQjEiPR8xrbcdO9jipuXVef6xbTXqC/E5c=;
+        b=TYHbyn27Y9xOA0ItZjopCSWRr6zIyE9EI470NwnqAHcdkI5pGEZXtd/DYj8eP/H8eQLZHS
+        FqS915vBrc6Fy9HlI8rIngS4TA2nmOtrPGqtmCwM2VRsmC2ajrCSgdOgauzYh9kpylp5Vz
+        tHJLFNHnN4L/v6Wjc+3cS4wCJiCm8jk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-28-0uzOiFKCMqODvXes5O9GPQ-1; Tue, 11 Feb 2020 08:21:29 -0500
-X-MC-Unique: 0uzOiFKCMqODvXes5O9GPQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-102-JdHOYAdvPNyeRD3JB0pOGA-1; Tue, 11 Feb 2020 10:11:22 -0500
+X-MC-Unique: JdHOYAdvPNyeRD3JB0pOGA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F09CDB22;
-        Tue, 11 Feb 2020 13:21:27 +0000 (UTC)
-Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C710C5C100;
-        Tue, 11 Feb 2020 13:21:22 +0000 (UTC)
-Date:   Tue, 11 Feb 2020 14:21:20 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Thomas Huth <thuth@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 21/35] KVM: s390/mm: handle guest unpin events
-Message-ID: <20200211142120.6a57b970.cohuck@redhat.com>
-In-Reply-To: <2fd5c392-a2b7-c6b8-f079-8b87ee60f65e@redhat.com>
-References: <20200207113958.7320-1-borntraeger@de.ibm.com>
-        <20200207113958.7320-22-borntraeger@de.ibm.com>
-        <2fd5c392-a2b7-c6b8-f079-8b87ee60f65e@redhat.com>
-Organization: Red Hat GmbH
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 80F7A1005514;
+        Tue, 11 Feb 2020 15:11:20 +0000 (UTC)
+Received: from horse.redhat.com (ovpn-123-66.rdu2.redhat.com [10.10.123.66])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 97B6C26FDB;
+        Tue, 11 Feb 2020 15:11:14 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 48F50220A24; Tue, 11 Feb 2020 10:11:14 -0500 (EST)
+Date:   Tue, 11 Feb 2020 10:11:14 -0500
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Cc:     linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        hch@infradead.org, dan.j.williams@intel.com, dm-devel@redhat.com,
+        vishal.l.verma@intel.com, linux-s390@vger.kernel.org
+Subject: Re: [PATCH v3 4/7] s390,dcssblk,dax: Add dax zero_page_range
+ operation to dcssblk driver
+Message-ID: <20200211151114.GA8590@redhat.com>
+References: <20200207202652.1439-1-vgoyal@redhat.com>
+ <20200207202652.1439-5-vgoyal@redhat.com>
+ <20200210215315.27b7e310@thinkpad>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200210215315.27b7e310@thinkpad>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 10 Feb 2020 15:58:11 +0100
-Thomas Huth <thuth@redhat.com> wrote:
-
-> On 07/02/2020 12.39, Christian Borntraeger wrote:
-> > From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+On Mon, Feb 10, 2020 at 09:53:15PM +0100, Gerald Schaefer wrote:
+> On Fri,  7 Feb 2020 15:26:49 -0500
+> Vivek Goyal <vgoyal@redhat.com> wrote:
+> 
+> > Add dax operation zero_page_range for dcssblk driver.
 > > 
-> > The current code tries to first pin shared pages, if that fails (e.g.
-> > because the page is not shared) it will export them. For shared pages
-> > this means that we get a new intercept telling us that the guest is
-> > unsharing that page. We will make the page secure at that point in time
-> > and revoke the host access. This is synchronized with other host events,
-> > e.g. the code will wait until host I/O has finished.
-> > 
-> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> > [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> > Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > CC: linux-s390@vger.kernel.org
+> > Suggested-by: Christoph Hellwig <hch@infradead.org>
+> > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
 > > ---
-> >  arch/s390/kvm/intercept.c | 24 ++++++++++++++++++++++++
-> >  1 file changed, 24 insertions(+)
+> >  drivers/s390/block/dcssblk.c | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
 > > 
-> > diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
-> > index 2a966dc52611..e155389a4a66 100644
-> > --- a/arch/s390/kvm/intercept.c
-> > +++ b/arch/s390/kvm/intercept.c
-> > @@ -16,6 +16,7 @@
-> >  #include <asm/asm-offsets.h>
-> >  #include <asm/irq.h>
-> >  #include <asm/sysinfo.h>
-> > +#include <asm/uv.h>
-> >  
-> >  #include "kvm-s390.h"
-> >  #include "gaccess.h"
-> > @@ -484,12 +485,35 @@ static int handle_pv_sclp(struct kvm_vcpu *vcpu)
-> >  	return 0;
+> > diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
+> > index 63502ca537eb..331abab5d066 100644
+> > --- a/drivers/s390/block/dcssblk.c
+> > +++ b/drivers/s390/block/dcssblk.c
+> > @@ -57,11 +57,28 @@ static size_t dcssblk_dax_copy_to_iter(struct dax_device *dax_dev,
+> >  	return copy_to_iter(addr, bytes, i);
 > >  }
 > >  
-> > +static int handle_pv_uvc(struct kvm_vcpu *vcpu)
+> > +static int dcssblk_dax_zero_page_range(struct dax_device *dax_dev, u64 offset,
+> > +				       size_t len)
 > > +{
-> > +	struct uv_cb_share *guest_uvcb = (void *)vcpu->arch.sie_block->sidad;
-> > +	struct uv_cb_cts uvcb = {
-> > +		.header.cmd	= UVC_CMD_UNPIN_PAGE_SHARED,
-> > +		.header.len	= sizeof(uvcb),
-> > +		.guest_handle	= kvm_s390_pv_handle(vcpu->kvm),
-> > +		.gaddr		= guest_uvcb->paddr,
-> > +	};
-> > +	int rc;
+> > +	long rc;
+> > +	void *kaddr;
+> > +	pgoff_t pgoff = offset >> PAGE_SHIFT;
+> > +	unsigned page_offset = offset_in_page(offset);
 > > +
-> > +	if (guest_uvcb->header.cmd != UVC_CMD_REMOVE_SHARED_ACCESS) {
-> > +		WARN_ONCE(1, "Unexpected UVC 0x%x!\n", guest_uvcb->header.cmd);  
+> > +	rc = dax_direct_access(dax_dev, pgoff, 1, &kaddr, NULL);
 > 
-> Is there a way to signal the failed command to the guest, too?
-
-I'm wondering at which layer the actual problem occurs here. Is it
-because a (new) command was not interpreted or rejected by the
-ultravisor so that it ended up being handled by the hypervisor? If so,
-what should the guest know?
-
+> Why do you pass only 1 page as nr_pages argument for dax_direct_access()?
+> In some other patch in this series there is a comment that this will
+> currently only be used for one page, but support for more pages might be
+> added later. Wouldn't it make sense to rather use something like
+> PAGE_ALIGN(page_offset + len) >> PAGE_SHIFT instead of 1 here, so that
+> this won't have to be changed when callers will be ready to use it
+> with more than one page?
 > 
->  Thomas
-> 
-> 
-> > +		return 0;
-> > +	}
-> > +	rc = uv_make_secure(vcpu->arch.gmap, uvcb.gaddr, &uvcb);
-> > +	if (rc == -EINVAL && uvcb.header.rc == 0x104)
+> Of course, I guess then we'd also need some check on the return value
+> from dax_direct_access(), i.e. if the returned available range is
+> large enough for the requested range.
 
-This wants a comment.
+I left it at 1 page because that's the current limitation of this
+interface and there are no callers which are zeroing across page
+boundaries.
 
-> > +		return 0;
-> > +	return rc;
-> > +}
-> > +
-> >  static int handle_pv_notification(struct kvm_vcpu *vcpu)
-> >  {
-> >  	if (vcpu->arch.sie_block->ipa == 0xb210)
-> >  		return handle_pv_spx(vcpu);
-> >  	if (vcpu->arch.sie_block->ipa == 0xb220)
-> >  		return handle_pv_sclp(vcpu);
-> > +	if (vcpu->arch.sie_block->ipa == 0xb9a4)
-> > +		return handle_pv_uvc(vcpu);
+I prefer to keep it this way and modify it when we are extending this
+interface to allow zeroing across page boundaries. Because even if I add
+that logic, I can't test it.
 
-Is it defined by the architecture what the possible commands are
-for which the hypervisor may get control? If we get something
-unexpected, is returning 0 the right strategy?
+But if you still prefer to change it, I am open to make that change.
 
-> >  
-> >  	return handle_instruction(vcpu);
-> >  }
-> >   
-> 
+Thanks
+Vivek
 
