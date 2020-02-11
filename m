@@ -2,54 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C0E5E158CAE
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 11:28:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A142158CAB
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 11:26:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728284AbgBKK2U (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Feb 2020 05:28:20 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31472 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728276AbgBKK2U (ORCPT
+        id S1727805AbgBKK0U (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Feb 2020 05:26:20 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39942 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728276AbgBKK0U (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 11 Feb 2020 05:28:20 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BAK6Vl021849
-        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 05:28:19 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u56uepn-1
+        Tue, 11 Feb 2020 05:26:20 -0500
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BAIiZ0071463
+        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 05:26:18 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y1tne33bn-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 05:28:17 -0500
+        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 05:26:18 -0500
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 11 Feb 2020 10:21:25 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 11 Feb 2020 10:26:16 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Feb 2020 10:21:23 -0000
+        Tue, 11 Feb 2020 10:26:14 -0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BALMaC37355622
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BAQCji45023444
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Feb 2020 10:21:22 GMT
+        Tue, 11 Feb 2020 10:26:12 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6CE584C050;
-        Tue, 11 Feb 2020 10:21:22 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C445A4C050;
+        Tue, 11 Feb 2020 10:26:12 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 34CBF4C046;
-        Tue, 11 Feb 2020 10:21:22 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8DDC94C04A;
+        Tue, 11 Feb 2020 10:26:12 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.98.183])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 Feb 2020 10:21:22 +0000 (GMT)
+        Tue, 11 Feb 2020 10:26:12 +0000 (GMT)
 Subject: Re: [PATCH 1/1] cio_ignore_proc_seq_next should increase position
  index
-To:     Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Vasily Averin <vvs@virtuozzo.com>, linux-s390@vger.kernel.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
+To:     Vasily Averin <vvs@virtuozzo.com>, linux-s390@vger.kernel.org
+Cc:     Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
 References: <d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com>
- <51ac7c33-ea7d-d780-c9de-4858af5e5f18@de.ibm.com>
- <2d65a0ec-2d41-9efa-b2fb-1d6a93aa4800@linux.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -94,63 +92,66 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 11 Feb 2020 11:21:22 +0100
+Date:   Tue, 11 Feb 2020 11:26:12 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <2d65a0ec-2d41-9efa-b2fb-1d6a93aa4800@linux.ibm.com>
+In-Reply-To: <d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20021110-0028-0000-0000-000003D97E97
+x-cbid: 20021110-4275-0000-0000-000003A00C81
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021110-0029-0000-0000-0000249DED33
-Message-Id: <6bebbac1-79f5-9772-8c06-b6d92e40a46a@de.ibm.com>
+x-cbparentid: 20021110-4276-0000-0000-000038B44391
+Message-Id: <818b8989-4294-b5fb-d2d5-da3f2c0b903c@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-11_02:2020-02-10,2020-02-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 bulkscore=0 priorityscore=1501
- adultscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 malwarescore=0 suspectscore=0 bulkscore=0 phishscore=0
+ impostorscore=0 adultscore=0 priorityscore=1501 clxscore=1015 mlxscore=0
+ mlxlogscore=999 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002110077
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 11.02.20 11:19, Peter Oberparleiter wrote:
-[...]
->> but this code is still fishy:
->>
->> $ cat /proc/cio_ignore 
->> 0.0.fe00-0.0.fefe
->> 0.0.ff00-0.0.ffff
->> $ dd if=/proc/cio_ignore status=none
->> 0.0.fe00-0.0.fefe
->> 0.0.ff00-0.0.ffff
->> $ dd if=/proc/cio_ignore status=none bs=10
->> 0.0.fe00-0.0.fefe
->> 0.0.ff00-0.0.ff01-0.0.ff02-0.0.ff03-0.0.ff04-0.0.ff05-0.0.ff06-0.0.ff07-0.0.ff08-0.0.ffff
->> $ dd if=/proc/cio_ignore status=none bs=10 skip=1
->> .0.fefe
->> 0.0.ff00-0.0.ff01-0.0.ff02-0.0.ff03-0.0.ff04-0.0.ff05-0.0.ff06-0.0.ff07-0.0.ff08-0.0.ffff
->>
->>
->> Peter, any opinions on this?
+On 24.01.20 06:48, Vasily Averin wrote:
+> if seq_file .next fuction does not change position index,
+> read after some lseek can generate unexpected output.
 > 
-> A correct implementation of a file read operation must result in the
-> same data being read independently of whether the file is read in one
-> go, or if it is read byte-by-byte.
-> 
-> It seems that the current cio_ignore seq-file implementation doesn't
-> meet that requirement. I don't think that this patch series is the best
-> way to address this problem though.
-> 
-> My suggestion would be to apply this patch set as is, and then I'll take
-> the to-do to fix this seq file implementation at a later time.
+> https://bugzilla.kernel.org/show_bug.cgi?id=206283
+> Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
 
-Ok, I will will Vasily patch. 
+thanks applied. 
+> ---
+>  drivers/s390/cio/blacklist.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
+> index 2a3f874..9cebff8 100644
+> --- a/drivers/s390/cio/blacklist.c
+> +++ b/drivers/s390/cio/blacklist.c
+> @@ -303,8 +303,10 @@ struct ccwdev_iter {
+>  cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
+>  {
+>  	struct ccwdev_iter *iter;
+> +	loff_t p = *offset;
+>  
+> -	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+> +	(*offset)++;
+> +	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
+>  		return NULL;
+>  	iter = it;
+>  	if (iter->devno == __MAX_SUBCHANNEL) {
+> @@ -314,7 +316,6 @@ struct ccwdev_iter {
+>  			return NULL;
+>  	} else
+>  		iter->devno++;
+> -	(*offset)++;
+>  	return iter;
+>  }
+>  
+> 
 
