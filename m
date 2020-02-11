@@ -2,84 +2,127 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id ECCA5159A4E
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 21:12:47 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5ADD9159A7B
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 21:26:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730954AbgBKUMr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Feb 2020 15:12:47 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:39168 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730945AbgBKUMr (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 15:12:47 -0500
-Received: by mail-pg1-f193.google.com with SMTP id j15so6314149pgm.6
-        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 12:12:46 -0800 (PST)
+        id S1729040AbgBKU0n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Feb 2020 15:26:43 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33027 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728918AbgBKU0n (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 15:26:43 -0500
+Received: by mail-oi1-f193.google.com with SMTP id q81so14139748oig.0;
+        Tue, 11 Feb 2020 12:26:42 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wlqJl8lJ0d/NouuQRbqG8ZhYdISr8b6hpT80DhDEOT8=;
-        b=jVeKyYKS8z8jH5uBoPw9hFUIW+3PRhcQ9FYhmiDn/VQWHcL4WYl+bDWjyVbQ9j/8PR
-         D/iAKeaeZCsBvyYEGBlOi1zFHEuFT41ohyVx2LTvDGpSy6eTX4kCLZkXRNRpf0Qh0qAg
-         jiTPSKeIRBcp5oSwbRW+YqlW8DvD/sNNESnHNuypEhkNMcfxTfqCyU5RXQOTIYBxJpCW
-         3mWgF2M4+hphJefXU1oEWWHpZQsKxQrZ0tmv1YkWJl3BAozB23Y3OlpwEriTE9nULBXz
-         SPymit1lnRbi/kmKF/fzYbdQCqbd9TSrcPy2L887Ii9iqKUZIxdLTejrl3jWZLqbgfdG
-         sTPw==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=8xXHirnYMsfW42qWffCZKCgeTYoQTR/f/eFrssIvcBc=;
+        b=S3vxb9w3RWHDDEzilj4NQtbOUARTaH1lr+ujyEc2cUA4GRiqYAZz+pZX7j7X1TijVP
+         aS5OKS/lNuJ4cLs6ntKVetezUVStwUoZW85DrzOMr4WCRRViu/bfQjPjLK6pVtko3xz9
+         LitC/zBWxG0mvqvUHY0TLMpzpuPJEZarQpBdE9hdLYBvYD60KoSch9BY/BUBtifH7PJb
+         o4soU9961YGI2+DTu2Onfeiwjh5vzuJgpxMwgp3jd+obzcSUaaaLt2y8D0Ehq3lyuRd8
+         9b9zgIeA4sN9qNQ/RhFgL/+w0WEeKOl8keMif/a/IT3EWC7kAFtM31ZojwMpez7gTvM7
+         6txw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wlqJl8lJ0d/NouuQRbqG8ZhYdISr8b6hpT80DhDEOT8=;
-        b=qj+yKCWo+EItp1LCoz+5CpKb9HXpq8bjUzLsJlGTXdzyOjAQHxdIiUnz8HRBjgTzO/
-         CuGyZIokpluD9e9CmkEBAh68Yu5PjNVyUr1wja5rHJc344JPFMRcCIFqFJRFuyeQtsNe
-         XYrEycUc/bf5rL0Aslk2WeByKeoVV/8RnnQyJ1qoXFkoWp5I9ainhFWu1AmRagSuvmF7
-         Xg/YEoHB4bhv6/TgWXBOAZRPMeGJ+by7ePtl2TOLUBUAjoMxzLxdBtvRE4qxCAQQIiiJ
-         DH32HX3KgXO/Awd9IBP3SK9H+ua4G7yuAUuAT7Ygqft+UiDHtz94kaHs90UeRhKP3SNV
-         pUog==
-X-Gm-Message-State: APjAAAXiwDJ/m67NhQqnGiuZdg5vi56w//kCwQYR7px4n4X+ndDJtvqn
-        T3YvOpr+lOCIJ3zQbecJmPrI0aCayKAOoRjaomtuTg==
-X-Google-Smtp-Source: APXvYqzKJDmBK4efnnfS6O9Kr7nvDRR2hvSR9jbboDWimwZgxO273OUqpOmZkWeQQwhUM/I503OkpzGM71fPNhEltc0=
-X-Received: by 2002:aa7:8618:: with SMTP id p24mr4896709pfn.3.1581451966090;
- Tue, 11 Feb 2020 12:12:46 -0800 (PST)
-MIME-Version: 1.0
-References: <20200208140858.47970-1-natechancellor@gmail.com>
- <your-ad-here.call-01581426728-ext-3459@work.hours> <CAKwvOd=CWKnrY_T8vP4a-KXkz-V57dFqk+6FC_krm=pVAVibyg@mail.gmail.com>
- <your-ad-here.call-01581450834-ext-0583@work.hours>
-In-Reply-To: <your-ad-here.call-01581450834-ext-0583@work.hours>
-From:   Nick Desaulniers <ndesaulniers@google.com>
-Date:   Tue, 11 Feb 2020 20:12:33 +0000
-Message-ID: <CAKwvOdk_6kOVPMWOuZ1r2HyAQ9MhE1=n56GhrO49bzghw3724g@mail.gmail.com>
-Subject: Re: [PATCH] s390/time: Fix clk type in get_tod_clock
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=8xXHirnYMsfW42qWffCZKCgeTYoQTR/f/eFrssIvcBc=;
+        b=ZgMm1heamQyFs28/zEFiGHXQXGRT4QxWxqLqTpyJrOh8gaLBfR1OK/pXdFxkW4LTPA
+         qUwFe6o9F5cjF61pyLpL0g7fVlv9PBsYctiBhm9HXm3bxUmjpIMzeoRahFdnBVfkZ7D7
+         A1FYI/QrohwVNrsH6ys4gMXbYRbgyall57FOrHfbqtIQjG0aH3YAniWkDNVY9a6uMw5+
+         WpA9WU5z/wwSvpujpsZ2ZmWu43rsJDuFMilAnEcpWbAJmo1HVQQsqQMsIFy8QwCkRAdo
+         pZWgpDL1n5NONcJloZovX1Bf+wD+9gVxipPOYH5i+aVbv+Rs6hfcVDxWkLcimrdDMTRe
+         VlhQ==
+X-Gm-Message-State: APjAAAV7yOG9Ze81QunG1xNsMD60/oRevR3PDqbB8EMnvDoEJzye6dhR
+        FaLAYGbDuxeiOQDbkyniVDwlZNYcZtM=
+X-Google-Smtp-Source: APXvYqwkLrD/lcZdWyvfZL+xRXLTYRLL+YSpy1Pi9PDEQeB2T6ELFnW6anz5shH/513wcRpK8HEPQg==
+X-Received: by 2002:aca:cf12:: with SMTP id f18mr4119986oig.81.1581452802362;
+        Tue, 11 Feb 2020 12:26:42 -0800 (PST)
+Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id 17sm1567260oty.48.2020.02.11.12.26.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 11 Feb 2020 12:26:41 -0800 (PST)
+Date:   Tue, 11 Feb 2020 13:26:40 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: -Wtautological-constant-compare in arch/s390/include/asm/page.h
+Message-ID: <20200211202640.GA12483@ubuntu-m2-xlarge-x86>
+References: <20200208125714.GA9164@ubuntu-x2-xlarge-x86>
+ <1f54ae4c-8748-496b-0833-80749d8d4f6c@de.ibm.com>
+ <your-ad-here.call-01581426089-ext-6170@work.hours>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <your-ad-here.call-01581426089-ext-6170@work.hours>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 11:54 AM Vasily Gorbik <gor@linux.ibm.com> wrote:
->
-> On Tue, Feb 11, 2020 at 05:30:24PM +0000, Nick Desaulniers wrote:
-> > On Tue, Feb 11, 2020 at 5:12 AM Vasily Gorbik <gor@linux.ibm.com> wrote:
-> > > Applied, thanks.
-> >
-> > Hi Vasily, is this the expected tree+branch that the patch will be
-> > pushed to? (I'm trying to track when+where our patches land).
-> > https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/log/?h=fixes
-> >
-> Hi Nick,
-> yes, this is correct. There might be some delay due to ci runs. But
-> this particular patch is now landed on that fixes branch.
->
+On Tue, Feb 11, 2020 at 02:01:29PM +0100, Vasily Gorbik wrote:
+> On Mon, Feb 10, 2020 at 08:55:46AM +0100, Christian Borntraeger wrote:
+> > 
+> > 
+> > On 08.02.20 13:57, Nathan Chancellor wrote:
+> > > Hi all,
+> > > 
+> > > We noticed that you all added support for building s390 with clang,
+> > > which is great! I have noticed a few warnings for which I will send
+> > > patches but this one has me stumped.
+> > > 
+> > > In file included from ../lib/crypto/sha256.c:16:
+> > > In file included from ../include/linux/module.h:13:
+> > > In file included from ../include/linux/stat.h:19:
+> > > In file included from ../include/linux/time.h:6:
+> > > In file included from ../include/linux/seqlock.h:36:
+> > > In file included from ../include/linux/spinlock.h:51:
+> > > In file included from ../include/linux/preempt.h:78:
+> > > In file included from ../arch/s390/include/asm/preempt.h:6:
+> > > In file included from ../include/linux/thread_info.h:38:
+> > > In file included from ../arch/s390/include/asm/thread_info.h:26:
+> > > ../arch/s390/include/asm/page.h:45:6: warning: converting the result of '<<' to a boolean always evaluates to false [-Wtautological-constant-compare]
+> > >         if (PAGE_DEFAULT_KEY)
+> > >             ^
+> > > ../arch/s390/include/asm/page.h:23:44: note: expanded from macro 'PAGE_DEFAULT_KEY'
+> > > #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
+> > >                                                   ^
+> > > 1 warning generated.
+> 
+> This warning only shows up for the decompressor code and purgatory which
+> have separate set of build flags not derived from top level KBUILD_CFLAGS.
+> For the rest of the code this warning is suppressed by:
+> Makefile:
+>  740 ifdef CONFIG_CC_IS_CLANG
+> ...
+>  744 # Quiet clang warning: comparison of unsigned expression < 0 is always false
+>  745 KBUILD_CFLAGS += -Wno-tautological-compare
+> 
+> At the same time both decompressor and purgatory Makefiles include
+> CLANG_FLAGS into their CFLAGS. And this -Wno-tautological-compare is
+> clang specific. So I believe this option belongs to CLANG_FLAGS
+> rather than being included into KBUILD_CFLAGS under ifdef
+> CONFIG_CC_IS_CLANG. But this raises question about other clang
+> specific options inside that ifdef CONFIG_CC_IS_CLANG. Should they all
+> be made part of CLANG_FLAGS?
 
-Ah, yeah now I see it, thanks. The aggressive patch tracking helps us
-figure out what landed where so that we can better backport patches to
-LTS (hence the Fixes tags you've seen on other patches).
--- 
-Thanks,
-~Nick Desaulniers
+Hi Vasily,
+
+I am trying to turn on -Wtautological-compare for the kernel as a whole,
+hence me trying to deal with this one now :) That flag controls a bunch
+of useful subwarnings that can point out potentially problematic code.
+
+I think that it would be worth adding warnings that we want disabled in
+all code to CLANG_FLAGS but as of right now, this is the only instance
+of this warning that I see within the s390 code so it is probably just
+worth silencing with an explicit comparison (!= 0). I will send a patch
+for this later.
+
+Cheers,
+Nathan
