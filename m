@@ -2,126 +2,154 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49ABE158F82
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 14:12:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2162F158FB5
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 14:21:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbgBKNMR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Feb 2020 08:12:17 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:8312 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728975AbgBKNMR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 11 Feb 2020 08:12:17 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BCwvVZ130452
-        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 08:12:16 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u56yxw3-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 08:12:16 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Tue, 11 Feb 2020 13:12:14 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Feb 2020 13:12:11 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BDCAtN21233696
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Feb 2020 13:12:10 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3222FA4060;
-        Tue, 11 Feb 2020 13:12:10 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C25C9A405F;
-        Tue, 11 Feb 2020 13:12:09 +0000 (GMT)
-Received: from localhost (unknown [9.145.77.145])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 11 Feb 2020 13:12:09 +0000 (GMT)
-Date:   Tue, 11 Feb 2020 14:12:08 +0100
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] s390/time: Fix clk type in get_tod_clock
-References: <20200208140858.47970-1-natechancellor@gmail.com>
+        id S1728197AbgBKNVd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Feb 2020 08:21:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59376 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728460AbgBKNVd (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 08:21:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581427291;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=VvEvaSBDRVHrMA6kt83bhvPKM3ic03ikIZ0HFfjWGD0=;
+        b=aFu6X/jl0MzVv/YAuRJ914tTJ7jn1z8SGA7cscAqERfc0V6lyo1dU/qd8eCKZx4UCUA830
+        50TJAp7HAZ70qrbdC3hVsQSCM5TGLASDK/vbYX5P/F2nVzbCMazB0H+65kT8r7QaIB1HuX
+        X8OOcR+ij+TvzMh/hwwJk8XmwBOQYvI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-28-0uzOiFKCMqODvXes5O9GPQ-1; Tue, 11 Feb 2020 08:21:29 -0500
+X-MC-Unique: 0uzOiFKCMqODvXes5O9GPQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9F09CDB22;
+        Tue, 11 Feb 2020 13:21:27 +0000 (UTC)
+Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C710C5C100;
+        Tue, 11 Feb 2020 13:21:22 +0000 (UTC)
+Date:   Tue, 11 Feb 2020 14:21:20 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Thomas Huth <thuth@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 21/35] KVM: s390/mm: handle guest unpin events
+Message-ID: <20200211142120.6a57b970.cohuck@redhat.com>
+In-Reply-To: <2fd5c392-a2b7-c6b8-f079-8b87ee60f65e@redhat.com>
+References: <20200207113958.7320-1-borntraeger@de.ibm.com>
+        <20200207113958.7320-22-borntraeger@de.ibm.com>
+        <2fd5c392-a2b7-c6b8-f079-8b87ee60f65e@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200208140858.47970-1-natechancellor@gmail.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20021113-0008-0000-0000-00000351E012
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021113-0009-0000-0000-00004A72814C
-Message-Id: <your-ad-here.call-01581426728-ext-3459@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_03:2020-02-10,2020-02-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
- mlxlogscore=999 impostorscore=0 bulkscore=0 priorityscore=1501
- adultscore=0 lowpriorityscore=0 spamscore=0 clxscore=1015 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002110100
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 07:08:59AM -0700, Nathan Chancellor wrote:
-> Clang warns:
+On Mon, 10 Feb 2020 15:58:11 +0100
+Thomas Huth <thuth@redhat.com> wrote:
+
+> On 07/02/2020 12.39, Christian Borntraeger wrote:
+> > From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> > 
+> > The current code tries to first pin shared pages, if that fails (e.g.
+> > because the page is not shared) it will export them. For shared pages
+> > this means that we get a new intercept telling us that the guest is
+> > unsharing that page. We will make the page secure at that point in time
+> > and revoke the host access. This is synchronized with other host events,
+> > e.g. the code will wait until host I/O has finished.
+> > 
+> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> > [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> > Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > ---
+> >  arch/s390/kvm/intercept.c | 24 ++++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> > 
+> > diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
+> > index 2a966dc52611..e155389a4a66 100644
+> > --- a/arch/s390/kvm/intercept.c
+> > +++ b/arch/s390/kvm/intercept.c
+> > @@ -16,6 +16,7 @@
+> >  #include <asm/asm-offsets.h>
+> >  #include <asm/irq.h>
+> >  #include <asm/sysinfo.h>
+> > +#include <asm/uv.h>
+> >  
+> >  #include "kvm-s390.h"
+> >  #include "gaccess.h"
+> > @@ -484,12 +485,35 @@ static int handle_pv_sclp(struct kvm_vcpu *vcpu)
+> >  	return 0;
+> >  }
+> >  
+> > +static int handle_pv_uvc(struct kvm_vcpu *vcpu)
+> > +{
+> > +	struct uv_cb_share *guest_uvcb = (void *)vcpu->arch.sie_block->sidad;
+> > +	struct uv_cb_cts uvcb = {
+> > +		.header.cmd	= UVC_CMD_UNPIN_PAGE_SHARED,
+> > +		.header.len	= sizeof(uvcb),
+> > +		.guest_handle	= kvm_s390_pv_handle(vcpu->kvm),
+> > +		.gaddr		= guest_uvcb->paddr,
+> > +	};
+> > +	int rc;
+> > +
+> > +	if (guest_uvcb->header.cmd != UVC_CMD_REMOVE_SHARED_ACCESS) {
+> > +		WARN_ONCE(1, "Unexpected UVC 0x%x!\n", guest_uvcb->header.cmd);  
 > 
-> In file included from ../arch/s390/boot/startup.c:3:
-> In file included from ../include/linux/elf.h:5:
-> In file included from ../arch/s390/include/asm/elf.h:132:
-> In file included from ../include/linux/compat.h:10:
-> In file included from ../include/linux/time.h:74:
-> In file included from ../include/linux/time32.h:13:
-> In file included from ../include/linux/timex.h:65:
-> ../arch/s390/include/asm/timex.h:160:20: warning: passing 'unsigned char
-> [16]' to parameter of type 'char *' converts between pointers to integer
-> types with different sign [-Wpointer-sign]
->         get_tod_clock_ext(clk);
->                           ^~~
-> ../arch/s390/include/asm/timex.h:149:44: note: passing argument to
-> parameter 'clk' here
-> static inline void get_tod_clock_ext(char *clk)
->                                            ^
+> Is there a way to signal the failed command to the guest, too?
+
+I'm wondering at which layer the actual problem occurs here. Is it
+because a (new) command was not interpreted or rejected by the
+ultravisor so that it ended up being handled by the hypervisor? If so,
+what should the guest know?
+
 > 
-> Change clk's type to just be char so that it matches what happens in
-> get_tod_clock_ext.
+>  Thomas
 > 
-> Fixes: 57b28f66316d ("[S390] s390_hypfs: Add new attributes")
-> Link: https://github.com/ClangBuiltLinux/linux/issues/861
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> ---
 > 
-> Alternatively, changing the clk type in get_tod_clock_ext to unsigned
-> which is what it was in the early 2000s.
+> > +		return 0;
+> > +	}
+> > +	rc = uv_make_secure(vcpu->arch.gmap, uvcb.gaddr, &uvcb);
+> > +	if (rc == -EINVAL && uvcb.header.rc == 0x104)
+
+This wants a comment.
+
+> > +		return 0;
+> > +	return rc;
+> > +}
+> > +
+> >  static int handle_pv_notification(struct kvm_vcpu *vcpu)
+> >  {
+> >  	if (vcpu->arch.sie_block->ipa == 0xb210)
+> >  		return handle_pv_spx(vcpu);
+> >  	if (vcpu->arch.sie_block->ipa == 0xb220)
+> >  		return handle_pv_sclp(vcpu);
+> > +	if (vcpu->arch.sie_block->ipa == 0xb9a4)
+> > +		return handle_pv_uvc(vcpu);
+
+Is it defined by the architecture what the possible commands are
+for which the hypervisor may get control? If we get something
+unexpected, is returning 0 the right strategy?
+
+> >  
+> >  	return handle_instruction(vcpu);
+> >  }
+> >   
 > 
->  arch/s390/include/asm/timex.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/s390/include/asm/timex.h b/arch/s390/include/asm/timex.h
-> index 670f14a228e5..6bf3a45ccfec 100644
-> --- a/arch/s390/include/asm/timex.h
-> +++ b/arch/s390/include/asm/timex.h
-> @@ -155,7 +155,7 @@ static inline void get_tod_clock_ext(char *clk)
->  
->  static inline unsigned long long get_tod_clock(void)
->  {
-> -	unsigned char clk[STORE_CLOCK_EXT_SIZE];
-> +	char clk[STORE_CLOCK_EXT_SIZE];
->  
->  	get_tod_clock_ext(clk);
->  	return *((unsigned long long *)&clk[1]);
-> -- 
-> 2.25.0
-> 
-Applied, thanks.
-I wonder though if Fixes: tag is really required for such changes. It
-triggers stable backports (for all stable branches since v2.6.35) and
-hence a lot of noise.
 
