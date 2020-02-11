@@ -2,43 +2,46 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B3572158E61
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 13:23:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E914A158F5D
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 14:00:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbgBKMXw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Feb 2020 07:23:52 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48651 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728540AbgBKMXw (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 07:23:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581423831;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:openpgp:openpgp;
-        bh=EqC7vP3ZSffmHke4sKuIGyItxX4oZMFilYOT6bQzcQ8=;
-        b=VfCgAy1mp2E69yKqvKO6V+fdZdE89abF3YYv36p7fWELCWz6CLmMCnrxvldEzFR/pQ+ulR
-        Vb5ndRwjaI7Puf3nXTyNjAaJ7k+VVnD0HqIl+8PlVErLhCL/ZkF5ztNKYkP/irVlCj6YR2
-        WolH9mUgL01o4Gk5HR2YnLWz6DutsDY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-n6p7h0y7NjCjF2K7-cqODg-1; Tue, 11 Feb 2020 07:23:47 -0500
-X-MC-Unique: n6p7h0y7NjCjF2K7-cqODg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0665C107ACC5;
-        Tue, 11 Feb 2020 12:23:46 +0000 (UTC)
-Received: from thuth.remote.csb (ovpn-116-131.ams2.redhat.com [10.36.116.131])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A1F5560BF4;
-        Tue, 11 Feb 2020 12:23:40 +0000 (UTC)
-Subject: Re: [PATCH 35/35] DOCUMENTATION: Protected virtual machine
- introduction and IPL
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
+        id S1728727AbgBKNAa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Feb 2020 08:00:30 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10540 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728656AbgBKNAa (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 11 Feb 2020 08:00:30 -0500
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BD0JP2008866
+        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 08:00:29 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y3pqfcsyn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 08:00:26 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 11 Feb 2020 12:59:41 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 11 Feb 2020 12:59:37 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BCxanT40829310
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 11 Feb 2020 12:59:36 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 186F252052;
+        Tue, 11 Feb 2020 12:59:36 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.98.183])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id ABA0152051;
+        Tue, 11 Feb 2020 12:59:35 +0000 (GMT)
+Subject: Re: [PATCH 25/35] KVM: s390: protvirt: Only sync fmt4 registers
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         Andrea Arcangeli <aarcange@redhat.com>,
@@ -47,178 +50,108 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
 References: <20200207113958.7320-1-borntraeger@de.ibm.com>
- <20200207113958.7320-36-borntraeger@de.ibm.com>
-From:   Thomas Huth <thuth@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <5d8050a6-c730-4325-2d46-2b5c9cdc8408@redhat.com>
-Date:   Tue, 11 Feb 2020 13:23:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ <20200207113958.7320-26-borntraeger@de.ibm.com>
+ <20200211115117.33a2e3a5.cohuck@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Tue, 11 Feb 2020 13:59:35 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200207113958.7320-36-borntraeger@de.ibm.com>
+In-Reply-To: <20200211115117.33a2e3a5.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021112-0020-0000-0000-000003A925C0
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021112-0021-0000-0000-0000220105A4
+Message-Id: <fbbe8d21-2334-469a-a1b0-34338f405e60@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-11_03:2020-02-10,2020-02-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 clxscore=1015
+ bulkscore=0 malwarescore=0 mlxlogscore=795 adultscore=0 spamscore=0
+ lowpriorityscore=0 mlxscore=0 suspectscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002110100
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 07/02/2020 12.39, Christian Borntraeger wrote:
-> From: Janosch Frank <frankja@linux.ibm.com>
->=20
-> Add documentation about protected KVM guests and description of changes
-> that are necessary to move a KVM VM into Protected Virtualization mode.
->=20
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> [borntraeger@de.ibm.com: fixing and conversion to rst]
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
-[...]
-> diff --git a/Documentation/virt/kvm/s390-pv-boot.rst b/Documentation/vi=
-rt/kvm/s390-pv-boot.rst
-> new file mode 100644
-> index 000000000000..47814e53369a
-> --- /dev/null
-> +++ b/Documentation/virt/kvm/s390-pv-boot.rst
-> @@ -0,0 +1,79 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +s390 (IBM Z) Boot/IPL of Protected VMs
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Summary
-> +-------
-> +Protected Virtual Machines (PVM) are not accessible by I/O or the
-> +hypervisor.  When the hypervisor wants to access the memory of PVMs
-> +the memory needs to be made accessible. When doing so, the memory will
-> +be encrypted.  See :doc:`s390-pv` for details.
-> +
-> +On IPL a small plaintext bootloader is started which provides
-> +information about the encrypted components and necessary metadata to
-> +KVM to decrypt the protected virtual machine.
-> +
-> +Based on this data, KVM will make the protected virtual machine known
-> +to the Ultravisor(UV) and instruct it to secure the memory of the PVM,
-> +decrypt the components and verify the data and address list hashes, to
-> +ensure integrity. Afterwards KVM can run the PVM via the SIE
-> +instruction which the UV will intercept and execute on KVM's behalf.
-> +
-> +The switch into PV mode lets us load encrypted guest executables and
 
-Maybe rather: "After the switch into PV mode, the guest can load ..." ?
 
-> +data via every available method (network, dasd, scsi, direct kernel,
-> +...) without the need to change the boot process.
-> +
-> +
-> +Diag308
-> +-------
-> +This diagnose instruction is the basis for VM IPL. The VM can set and
-> +retrieve IPL information blocks, that specify the IPL method/devices
-> +and request VM memory and subsystem resets, as well as IPLs.
-> +
-> +For PVs this concept has been extended with new subcodes:
-> +
-> +Subcode 8: Set an IPL Information Block of type 5 (information block
-> +for PVMs)
-> +Subcode 9: Store the saved block in guest memory
-> +Subcode 10: Move into Protected Virtualization mode
-> +
-> +The new PV load-device-specific-parameters field specifies all data,
+On 11.02.20 11:51, Cornelia Huck wrote:
+> On Fri,  7 Feb 2020 06:39:48 -0500
+> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+> 
+>> +static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>> +{
+>> +	/*
+>> +	 * at several places we have to modify our internal view to not do
+> 
+> s/at/In/ ?
 
-remove the comma?
+ack
 
-> +that is necessary to move into PV mode.
-> +
-> +* PV Header origin
-> +* PV Header length
-> +* List of Components composed of
-> +   * AES-XTS Tweak prefix
-> +   * Origin
-> +   * Size
-> +
-> +The PV header contains the keys and hashes, which the UV will use to
-> +decrypt and verify the PV, as well as control flags and a start PSW.
-> +
-> +The components are for instance an encrypted kernel, kernel cmd and
+> 
+>> +	 * things that are disallowed by the ultravisor. For example we must
+>> +	 * not inject interrupts after specific exits (e.g. 112). We do this
+> 
+> Spell out what 112 is?
 
-s/kernel cmd/kernel parameters/ ?
+ack.
+> 
+>> +	 * by turning off the MIE bits of our PSW copy. To avoid getting
+> 
+> And also spell out what MIE is?
 
-> +initrd. The components are decrypted by the UV.
-> +
-> +All non-decrypted data of the guest before it switches to protected
-> +virtualization mode are zero on first access of the PV.
-
-Before it switches to protected virtualization mode, all non-decrypted
-data of the guest are ... ?
-
-> +
-> +When running in protected mode some subcodes will result in exceptions
-> +or return error codes.
-> +
-> +Subcodes 4 and 7 will result in specification exceptions as they would
-> +not clear out the guest memory.
-> +When removing a secure VM, the UV will clear all memory, so we can't
-> +have non-clearing IPL subcodes.
-> +
-> +Subcodes 8, 9, 10 will result in specification exceptions.
-> +Re-IPL into a protected mode is only possible via a detour into non
-> +protected mode.
-> +
-> +Keys
-> +----
-> +Every CEC will have a unique public key to enable tooling to build
-> +encrypted images.
-> +See  `s390-tools <https://github.com/ibm-s390-tools/s390-tools/>`_
-> +for the tooling.
-> diff --git a/Documentation/virt/kvm/s390-pv.rst b/Documentation/virt/kv=
-m/s390-pv.rst
-> new file mode 100644
-> index 000000000000..dbe9110dfd1e
-> --- /dev/null
-> +++ b/Documentation/virt/kvm/s390-pv.rst
-> @@ -0,0 +1,116 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +s390 (IBM Z) Ultravisor and Protected VMs
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Summary
-> +-------
-> +Protected virtual machines (PVM) are KVM VMs, where KVM can't access
-> +the VM's state like guest memory and guest registers anymore. Instead,
-> +the PVMs are mostly managed by a new entity called Ultravisor
-> +(UV). The UV provides an API that can be used by PVMs and KVM to
-> +request management actions.
-> +
-> +Each guest starts in the non-protected mode and then may make a
-> +request to transition into protected mode. On transition, KVM
-> +registers the guest and its VCPUs with the Ultravisor and prepares
-> +everything for running it.
-> +
-> +The Ultravisor will secure and decrypt the guest's boot memory
-> +(i.e. kernel/initrd). It will safeguard state changes like VCPU
-> +starts/stops and injected interrupts while the guest is running.
-> +
-> +As access to the guest's state, such as the SIE state description, is
-> +normally needed to be able to run a VM, some changes have been made in
-> +SIE behavior. A new format 4 state description has been introduced,
-
-s/in SIE behavior/in the behavior of the SIE instruction/ ?
-
-> +where some fields have different meanings for a PVM. SIE exits are
-> +minimized as much as possible to improve speed and reduce exposed
-> +guest state.
-[...]
-
- Thomas
-
+ack
+> 
+>> +	 * validity intercepts, we do only accept the condition code from
+>> +	 * userspace.
+>> +	 */
+> 
 
