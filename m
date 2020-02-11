@@ -2,133 +2,71 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE02F1593BB
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 16:50:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 881B915962A
+	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 18:30:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729350AbgBKPuN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Feb 2020 10:50:13 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:13124 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728655AbgBKPuN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 11 Feb 2020 10:50:13 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01BFnRnT150679
-        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 10:50:12 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y3wxrkcx6-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 10:50:10 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
-        Tue, 11 Feb 2020 15:50:00 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 11 Feb 2020 15:49:57 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01BFnusZ53411946
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 11 Feb 2020 15:49:56 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27AD9A4051;
-        Tue, 11 Feb 2020 15:49:56 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CCA2DA404D;
-        Tue, 11 Feb 2020 15:49:55 +0000 (GMT)
-Received: from thinkpad (unknown [9.152.96.111])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 11 Feb 2020 15:49:55 +0000 (GMT)
-Date:   Tue, 11 Feb 2020 16:49:54 +0100
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Vivek Goyal <vgoyal@redhat.com>
-Cc:     linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        hch@infradead.org, dan.j.williams@intel.com, dm-devel@redhat.com,
-        vishal.l.verma@intel.com, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v3 4/7] s390,dcssblk,dax: Add dax zero_page_range
- operation to dcssblk driver
-In-Reply-To: <20200211151114.GA8590@redhat.com>
-References: <20200207202652.1439-1-vgoyal@redhat.com>
-        <20200207202652.1439-5-vgoyal@redhat.com>
-        <20200210215315.27b7e310@thinkpad>
-        <20200211151114.GA8590@redhat.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1727785AbgBKRaj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 11 Feb 2020 12:30:39 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46336 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729409AbgBKRah (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 12:30:37 -0500
+Received: by mail-pf1-f193.google.com with SMTP id k29so5794322pfp.13
+        for <linux-s390@vger.kernel.org>; Tue, 11 Feb 2020 09:30:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bM2xQLURwsdpapQPw/vmgOLzWTtBkTWZo2XFKd2Fc+8=;
+        b=UhUw4kZ1K/iv8XUFtbPsZE67iNVKeF3gHIfx4luTMSun/AiazJMw/EhJEbjEDMBGmB
+         IqkfDnBx6ZhCodlj5vim1mqgXSqx4dtTLeAMl1sHlPvPJrMFH+QjPQbnAhl8DRqzyE+0
+         bIMARUOacrDFUrqJe0XAE5Yej6WjDvGozDQToeELMtee1XjWWUOfbZdtE8RuI4cMQYMh
+         FSa1l1RbZdqAagpgEPYEpj3R5jY8Jt77f+SHxdbtFHupODk8rpqr6dsAe2WScGXupCO4
+         N4eiUMj6bxYgriLnjs33AThtA8d9tFc2NTnxxuziVV0X7UnODYSuSEAmeh8e8uSnsF0U
+         xyBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bM2xQLURwsdpapQPw/vmgOLzWTtBkTWZo2XFKd2Fc+8=;
+        b=h2vAeZ79qE3dXNIHRJs0WsBnPBh6KGIxS5Pl9U5rUxyZ5STWfj7FuWOL7hh6ETjTDQ
+         9ePavR9s/zP70GG2qxxRiyJDRbzVQ5VaZV+gglFyZK3CZey/aOB4PyECoB8d1NskNWfi
+         hb9ksOXeUy4ioyQ/GzDa/42UCoVvIxykJRTEdOo+nzKl/YOqRXt0j4d2v8Y8SG5j0+Mj
+         uKhaVg/9UjtF9L6sJ+79WlPH/iHaMd7pa3w+yVJWj8+f9qpudg7rIrP8VRQjzTuoLvRN
+         oBtY80VxPUZeitf5B+s+lO/qUs/c/wHySiSSiwiQGucGge9R1k7HFanemUVnYNt8gFIx
+         p0iQ==
+X-Gm-Message-State: APjAAAUoKcof1Sza8hm4+DxRid4LKK/WFfbm0pVihUhiINUFHOkQPppX
+        nAA2P2dkzYhRA/oQeFLCu1CYitlyOYn4YlupB+Loxw==
+X-Google-Smtp-Source: APXvYqx1sbmFj+6yubaRWA1F7s2PkQxLnUx1wxZkhe3GdVuGxqkwu5RKJGr9IlPthyKETEuHKtKYLUWWHfSwkJVG48Y=
+X-Received: by 2002:a63:64c5:: with SMTP id y188mr7815807pgb.10.1581442235797;
+ Tue, 11 Feb 2020 09:30:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021115-0008-0000-0000-00000351EC9C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021115-0009-0000-0000-00004A728E57
-Message-Id: <20200211164954.4df79b8b@thinkpad>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-11_04:2020-02-10,2020-02-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 adultscore=0
- impostorscore=0 priorityscore=1501 malwarescore=0 clxscore=1015
- suspectscore=0 mlxlogscore=999 spamscore=0 mlxscore=0 lowpriorityscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002110114
+References: <20200208140858.47970-1-natechancellor@gmail.com> <your-ad-here.call-01581426728-ext-3459@work.hours>
+In-Reply-To: <your-ad-here.call-01581426728-ext-3459@work.hours>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 11 Feb 2020 17:30:24 +0000
+Message-ID: <CAKwvOd=CWKnrY_T8vP4a-KXkz-V57dFqk+6FC_krm=pVAVibyg@mail.gmail.com>
+Subject: Re: [PATCH] s390/time: Fix clk type in get_tod_clock
+To:     Vasily Gorbik <gor@linux.ibm.com>
+Cc:     Nathan Chancellor <natechancellor@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        clang-built-linux <clang-built-linux@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 11 Feb 2020 10:11:14 -0500
-Vivek Goyal <vgoyal@redhat.com> wrote:
+On Tue, Feb 11, 2020 at 5:12 AM Vasily Gorbik <gor@linux.ibm.com> wrote:
+> Applied, thanks.
 
-> On Mon, Feb 10, 2020 at 09:53:15PM +0100, Gerald Schaefer wrote:
-> > On Fri,  7 Feb 2020 15:26:49 -0500
-> > Vivek Goyal <vgoyal@redhat.com> wrote:
-> > 
-> > > Add dax operation zero_page_range for dcssblk driver.
-> > > 
-> > > CC: linux-s390@vger.kernel.org
-> > > Suggested-by: Christoph Hellwig <hch@infradead.org>
-> > > Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
-> > > ---
-> > >  drivers/s390/block/dcssblk.c | 17 +++++++++++++++++
-> > >  1 file changed, 17 insertions(+)
-> > > 
-> > > diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
-> > > index 63502ca537eb..331abab5d066 100644
-> > > --- a/drivers/s390/block/dcssblk.c
-> > > +++ b/drivers/s390/block/dcssblk.c
-> > > @@ -57,11 +57,28 @@ static size_t dcssblk_dax_copy_to_iter(struct dax_device *dax_dev,
-> > >  	return copy_to_iter(addr, bytes, i);
-> > >  }
-> > >  
-> > > +static int dcssblk_dax_zero_page_range(struct dax_device *dax_dev, u64 offset,
-> > > +				       size_t len)
-> > > +{
-> > > +	long rc;
-> > > +	void *kaddr;
-> > > +	pgoff_t pgoff = offset >> PAGE_SHIFT;
-> > > +	unsigned page_offset = offset_in_page(offset);
-> > > +
-> > > +	rc = dax_direct_access(dax_dev, pgoff, 1, &kaddr, NULL);
-> > 
-> > Why do you pass only 1 page as nr_pages argument for dax_direct_access()?
-> > In some other patch in this series there is a comment that this will
-> > currently only be used for one page, but support for more pages might be
-> > added later. Wouldn't it make sense to rather use something like
-> > PAGE_ALIGN(page_offset + len) >> PAGE_SHIFT instead of 1 here, so that
-> > this won't have to be changed when callers will be ready to use it
-> > with more than one page?
-> > 
-> > Of course, I guess then we'd also need some check on the return value
-> > from dax_direct_access(), i.e. if the returned available range is
-> > large enough for the requested range.
-> 
-> I left it at 1 page because that's the current limitation of this
-> interface and there are no callers which are zeroing across page
-> boundaries.
-> 
-> I prefer to keep it this way and modify it when we are extending this
-> interface to allow zeroing across page boundaries. Because even if I add
-> that logic, I can't test it.
+Hi Vasily, is this the expected tree+branch that the patch will be
+pushed to? (I'm trying to track when+where our patches land).
+https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/log/?h=fixes
 
-OK, fine with me.
-
-Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-
+-- 
+Thanks,
+~Nick Desaulniers
