@@ -2,127 +2,437 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5ADD9159A7B
-	for <lists+linux-s390@lfdr.de>; Tue, 11 Feb 2020 21:26:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CC48A15A297
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Feb 2020 09:01:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbgBKU0n (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 11 Feb 2020 15:26:43 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33027 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728918AbgBKU0n (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 11 Feb 2020 15:26:43 -0500
-Received: by mail-oi1-f193.google.com with SMTP id q81so14139748oig.0;
-        Tue, 11 Feb 2020 12:26:42 -0800 (PST)
+        id S1728446AbgBLIBj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Feb 2020 03:01:39 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42554 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728192AbgBLIBj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 12 Feb 2020 03:01:39 -0500
+Received: by mail-pg1-f196.google.com with SMTP id w21so775333pgl.9;
+        Wed, 12 Feb 2020 00:01:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=8xXHirnYMsfW42qWffCZKCgeTYoQTR/f/eFrssIvcBc=;
-        b=S3vxb9w3RWHDDEzilj4NQtbOUARTaH1lr+ujyEc2cUA4GRiqYAZz+pZX7j7X1TijVP
-         aS5OKS/lNuJ4cLs6ntKVetezUVStwUoZW85DrzOMr4WCRRViu/bfQjPjLK6pVtko3xz9
-         LitC/zBWxG0mvqvUHY0TLMpzpuPJEZarQpBdE9hdLYBvYD60KoSch9BY/BUBtifH7PJb
-         o4soU9961YGI2+DTu2Onfeiwjh5vzuJgpxMwgp3jd+obzcSUaaaLt2y8D0Ehq3lyuRd8
-         9b9zgIeA4sN9qNQ/RhFgL/+w0WEeKOl8keMif/a/IT3EWC7kAFtM31ZojwMpez7gTvM7
-         6txw==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=bp8GhH+lTv01Fj7emi77JJtm4UgQcmSv8y6hx+7VcaM=;
+        b=V6idpjeWbkdm3Yg9WsocEttNBMzG2tMCV7v/Jnkbmv4/1mib46u42IMshvuecDSvSf
+         2yOmAMxdZpFwtzksCp1LV9a3YGgQlOoUP4SbVF+wPlttoXbtqwM0I49vJS6ae4t0YZF1
+         Z1uqi8KJ6Zau4OUy3+MsydCGC1VDnR6pplZNzS6f5PRm/C7QdWLR2luKNrgUgfxoDk00
+         Mnu2M8v5Q4cbGSnXBDWZkPnqq5qDT+Uq/KETlGpkpqsS+EHPorvjMlK0D/WxcBdtvtHj
+         +3x7nastEvjNOZhinDexpYlJjaguSs0t0W2LcIkvRDpoWHUMgRtitGbR6FzUIg40eRn+
+         GkmA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=8xXHirnYMsfW42qWffCZKCgeTYoQTR/f/eFrssIvcBc=;
-        b=ZgMm1heamQyFs28/zEFiGHXQXGRT4QxWxqLqTpyJrOh8gaLBfR1OK/pXdFxkW4LTPA
-         qUwFe6o9F5cjF61pyLpL0g7fVlv9PBsYctiBhm9HXm3bxUmjpIMzeoRahFdnBVfkZ7D7
-         A1FYI/QrohwVNrsH6ys4gMXbYRbgyall57FOrHfbqtIQjG0aH3YAniWkDNVY9a6uMw5+
-         WpA9WU5z/wwSvpujpsZ2ZmWu43rsJDuFMilAnEcpWbAJmo1HVQQsqQMsIFy8QwCkRAdo
-         pZWgpDL1n5NONcJloZovX1Bf+wD+9gVxipPOYH5i+aVbv+Rs6hfcVDxWkLcimrdDMTRe
-         VlhQ==
-X-Gm-Message-State: APjAAAV7yOG9Ze81QunG1xNsMD60/oRevR3PDqbB8EMnvDoEJzye6dhR
-        FaLAYGbDuxeiOQDbkyniVDwlZNYcZtM=
-X-Google-Smtp-Source: APXvYqwkLrD/lcZdWyvfZL+xRXLTYRLL+YSpy1Pi9PDEQeB2T6ELFnW6anz5shH/513wcRpK8HEPQg==
-X-Received: by 2002:aca:cf12:: with SMTP id f18mr4119986oig.81.1581452802362;
-        Tue, 11 Feb 2020 12:26:42 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 17sm1567260oty.48.2020.02.11.12.26.41
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=bp8GhH+lTv01Fj7emi77JJtm4UgQcmSv8y6hx+7VcaM=;
+        b=RCEvu7U76hZJV/D/9vjpEivy1lmS2sfrFFs0amsbU/62wgHGhkhLalNo8jgBIADBtG
+         ZghR4ut9oFVXtjivYiLlje45KRt8UrEnPvTZjRth9gamxuXCFpAZ+lGwdLundn1SIwEn
+         90Q5oUhYCqk0UzUScYJY0cOyrPZs0XNZxBG3wdcZZ0xWSr741YUpzmh9GwDD9N3/HWeW
+         H/QaASLIJgX4Gi3GbZww2xbK7jSDZrNXOXyMymbVhnf1YciMGeOkFb83Ta5OiMv7uG/k
+         JYJVEM2mKwPmN8SMmK8PLn/tmsPVMsDxm88yNYCAbBrBgAow1fV0wJqDAWUorb8aC/x0
+         CMXA==
+X-Gm-Message-State: APjAAAWeprDwh2oFIfchdwIeAi9PlD8yX7dS6vnqX8NxjmGBcyoW+Gti
+        7qV1g+1wwvubQER3Nwyb788utl1I
+X-Google-Smtp-Source: APXvYqxnV3nb/q4uy+L2rUWwz9UZlvNCyFsUzxgcQG4BajmKp/4rH+WqeHW/QL79FLpx5lTeAmqV6A==
+X-Received: by 2002:a63:8f5c:: with SMTP id r28mr7323021pgn.351.1581494497731;
+        Wed, 12 Feb 2020 00:01:37 -0800 (PST)
+Received: from localhost ([106.51.21.91])
+        by smtp.gmail.com with ESMTPSA id t63sm7164236pfb.70.2020.02.12.00.01.36
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 11 Feb 2020 12:26:41 -0800 (PST)
-Date:   Tue, 11 Feb 2020 13:26:40 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Vasily Gorbik <gor@linux.ibm.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: -Wtautological-constant-compare in arch/s390/include/asm/page.h
-Message-ID: <20200211202640.GA12483@ubuntu-m2-xlarge-x86>
-References: <20200208125714.GA9164@ubuntu-x2-xlarge-x86>
- <1f54ae4c-8748-496b-0833-80749d8d4f6c@de.ibm.com>
- <your-ad-here.call-01581426089-ext-6170@work.hours>
+        Wed, 12 Feb 2020 00:01:37 -0800 (PST)
+Date:   Wed, 12 Feb 2020 13:31:35 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-ia64@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org, linux-omap@vger.kernel.org,
+        linux-alpha@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: [PATCH 00/18] genirq: Remove setup_irq()
+Message-ID: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <your-ad-here.call-01581426089-ext-6170@work.hours>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Feb 11, 2020 at 02:01:29PM +0100, Vasily Gorbik wrote:
-> On Mon, Feb 10, 2020 at 08:55:46AM +0100, Christian Borntraeger wrote:
-> > 
-> > 
-> > On 08.02.20 13:57, Nathan Chancellor wrote:
-> > > Hi all,
-> > > 
-> > > We noticed that you all added support for building s390 with clang,
-> > > which is great! I have noticed a few warnings for which I will send
-> > > patches but this one has me stumped.
-> > > 
-> > > In file included from ../lib/crypto/sha256.c:16:
-> > > In file included from ../include/linux/module.h:13:
-> > > In file included from ../include/linux/stat.h:19:
-> > > In file included from ../include/linux/time.h:6:
-> > > In file included from ../include/linux/seqlock.h:36:
-> > > In file included from ../include/linux/spinlock.h:51:
-> > > In file included from ../include/linux/preempt.h:78:
-> > > In file included from ../arch/s390/include/asm/preempt.h:6:
-> > > In file included from ../include/linux/thread_info.h:38:
-> > > In file included from ../arch/s390/include/asm/thread_info.h:26:
-> > > ../arch/s390/include/asm/page.h:45:6: warning: converting the result of '<<' to a boolean always evaluates to false [-Wtautological-constant-compare]
-> > >         if (PAGE_DEFAULT_KEY)
-> > >             ^
-> > > ../arch/s390/include/asm/page.h:23:44: note: expanded from macro 'PAGE_DEFAULT_KEY'
-> > > #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
-> > >                                                   ^
-> > > 1 warning generated.
-> 
-> This warning only shows up for the decompressor code and purgatory which
-> have separate set of build flags not derived from top level KBUILD_CFLAGS.
-> For the rest of the code this warning is suppressed by:
-> Makefile:
->  740 ifdef CONFIG_CC_IS_CLANG
-> ...
->  744 # Quiet clang warning: comparison of unsigned expression < 0 is always false
->  745 KBUILD_CFLAGS += -Wno-tautological-compare
-> 
-> At the same time both decompressor and purgatory Makefiles include
-> CLANG_FLAGS into their CFLAGS. And this -Wno-tautological-compare is
-> clang specific. So I believe this option belongs to CLANG_FLAGS
-> rather than being included into KBUILD_CFLAGS under ifdef
-> CONFIG_CC_IS_CLANG. But this raises question about other clang
-> specific options inside that ifdef CONFIG_CC_IS_CLANG. Should they all
-> be made part of CLANG_FLAGS?
+While trying to understand internals of irq handling, came across a
+thread [1] in which tglx was referring to avoid usage of setup_irq().
+Existing callers of setup_irq() reached mostly via 'init_IRQ()' &
+'time_init()', while memory allocators are ready by 'mm_init()'.
 
-Hi Vasily,
+Hence instances of setup_irq() is replaced by request_irq() &
+setup_irq() (along with remove_irq()) definition deleted in the last
+patch.
 
-I am trying to turn on -Wtautological-compare for the kernel as a whole,
-hence me trying to deal with this one now :) That flag controls a bunch
-of useful subwarnings that can point out potentially problematic code.
+Seldom remove_irq() usage has been observed coupled with setup_irq(),
+wherever that has been found, it too has been replaced by free_irq().
 
-I think that it would be worth adding warnings that we want disabled in
-all code to CLANG_FLAGS but as of right now, this is the only instance
-of this warning that I see within the s390 code so it is probably just
-worth silencing with an explicit comparison (!= 0). I will send a patch
-for this later.
+Build & boot tested on ARM & x86_64 platforms (ensured that on the
+machines used for testing there was an existing setup_irq()
+invocation occuring at runtime)
 
-Cheers,
-Nathan
+Much of the changes were created using Coccinelle with an intention
+to learn it. spatch command was directly run w/ semantic patch below.
+But not everything could be automated.
+
+Searching with 'git grep -n '\Wsetup_irq('' & avoiding the irrelevant
+ones, 153 invocation's of setup_irq() were found. 112 could be replaced
+w/ cocci, of which in a few files some desired hunks were missing or
+not as expected, these were fixed up manually. Also the remaining 41
+had to be done manually.
+
+Although cocci could replace 112, because of line continue not
+happening at paranthesis for request_irq(), around 80 had to be
+manually aligned in the request_irq() statement. Problem was with my
+below cocci snippet,
+
+- setup_irq(E1,&act);
++ if (request_irq(E1,f_handler,f_flags,f_name,f_dev_id))
++ 	pr_err("request_irq() on %s failed\n", f_name);
+
+Instead of the above, if below is used, line continue happens exactly
+at paranthesis, but it lacks addition of printing on request_irq()
+failure where existing setup_irq() failure was not doing it.
+
+- setup_irq(E1,&act)
++ request_irq(E1,f_handler,f_flags,f_name,f_dev_id)
+
+Above had an additional advantage of replacing instances of
+if (setup_irq()) & BUG(setup_irq()), but luckily those instances were
+very few.
+
+So though many changes could be automated, there are a considerable
+amount of manual changes, please review carefully especially mips &
+alpha.
+
+Usage of setup_percpu_irq() is untouched w/ this series.
+
+There are 2 checkpatch warning about usage of BUG() [which was already
+there w/ setup_irq()], they are left as is as it seems appropriate for
+tick timer interrupt.
+
+[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+
+--->8---
+
+@r1@
+identifier ret;
+@@
+
+(
+setup_irq(...);
+|
+ret = setup_irq(...);
+)
+
+
+@r2 depends on r1@
+identifier act;
+@@
+
+static struct irqaction act = {
+};
+
+@r11 depends on r2@
+identifier r2.act;
+identifier f_handler;
+@@
+
+(
+- act.handler = f_handler;
+|
+static struct irqaction act = {
+ .handler = f_handler,
+};
+)
+
+@r12 depends on r2@
+identifier r2.act;
+expression f_name;
+@@
+
+(
+- act.name = f_name;
+|
+static struct irqaction act = {
+ .name = f_name,
+};
+)
+
+@r15 depends on r2@
+identifier r2.act;
+expression f_dev_id;
+@@
+
+(
+- act.dev_id = f_dev_id;
+|
+static struct irqaction act = {
+ .dev_id = f_dev_id,
+};
+)
+
+@r16 depends on r2@
+identifier r2.act;
+expression f_flags;
+@@
+
+(
+- act.flags = f_flags;
+|
+static struct irqaction act = {
+ .flags = f_flags,
+};
+)
+
+@r21 depends on r2@
+identifier r2.act;
+@@
+
+- static struct irqaction act = {
+- ...
+- };
+
+@r22 depends on r2 && r11 && r12 && r15 && r16@
+identifier r2.act;
+identifier r11.f_handler;
+expression r12.f_name;
+expression r15.f_dev_id;
+expression r16.f_flags;
+expression E1;
+identifier ret;
+@@
+
+(
+- setup_irq(E1,&act);
++ if (request_irq(E1,f_handler,f_flags,f_name,f_dev_id))
++ 	pr_err("request_irq() on %s failed\n", f_name);
+|
+- ret = setup_irq(E1,&act);
++ ret = request_irq(E1,f_handler,f_flags,f_name,f_dev_id);
+)
+
+@r23 depends on r2 && r11 && r12 && !r15 && r16@
+identifier r2.act;
+identifier r11.f_handler;
+expression r12.f_name;
+expression r16.f_flags;
+expression E1;
+identifier ret;
+@@
+
+(
+- setup_irq(E1,&act);
++ if (request_irq(E1,f_handler,f_flags,f_name,NULL))
++ 	pr_err("request_irq() on %s failed\n", f_name);
+|
+- ret = setup_irq(E1,&act);
++ ret = request_irq(E1,f_handler,f_flags,f_name,NULL);
+)
+
+@r24 depends on r2 && r11 && r12 && r15 && !r16@
+identifier r2.act;
+identifier r11.f_handler;
+expression r12.f_name;
+expression r15.f_dev_id;
+expression E1;
+identifier ret;
+@@
+
+(
+- setup_irq(E1,&act);
++ if (request_irq(E1,f_handler,0,f_name,f_dev_id))
++ 	pr_err("request_irq() on %s failed\n", f_name);
+|
+- ret = setup_irq(E1,&act);
++ ret = request_irq(E1,f_handler,0,f_name,f_dev_id);
+)
+
+@r25 depends on r2 && r11 && r12 && !r15 && !r16@
+identifier r2.act;
+identifier r11.f_handler;
+expression r12.f_name;
+expression E1;
+identifier ret;
+@@
+
+(
+- setup_irq(E1,&act);
++ if (request_irq(E1,f_handler,0,f_name,NULL))
++ 	pr_err("request_irq() on %s failed\n", f_name);
+|
+- ret = setup_irq(E1,&act);
++ ret = request_irq(E1,f_handler,0,f_name,NULL);
+)
+
+--->8---
+
+afzal mohammed (18):
+  alpha: replace setup_irq() by request_irq()
+  ARM: replace setup_irq() by request_irq()
+  c6x: replace setup_irq() by request_irq()
+  hexagon: replace setup_irq() by request_irq()
+  ia64: replace setup_irq() by request_irq()
+  m68k: Replace setup_irq() by request_irq()
+  microblaze: Replace setup_irq() by request_irq()
+  MIPS: Replace setup_irq() by request_irq()
+  parisc: Replace setup_irq() by request_irq()
+  powerpc: Replace setup_irq() by request_irq()
+  s390: replace setup_irq() by request_irq()
+  sh: replace setup_irq() by request_irq()
+  unicore32: replace setup_irq() by request_irq()
+  x86: Replace setup_irq() by request_irq()
+  xtensa: replace setup_irq() by request_irq()
+  clocksource: Replace setup_irq() by request_irq()
+  irqchip: Replace setup_irq() by request_irq()
+  genirq: Remove setup_irq() and remove_irq()
+
+ arch/alpha/kernel/irq_alpha.c                 | 29 ++-------
+ arch/alpha/kernel/irq_i8259.c                 |  8 +--
+ arch/alpha/kernel/irq_impl.h                  |  7 +--
+ arch/alpha/kernel/irq_pyxis.c                 |  3 +-
+ arch/alpha/kernel/sys_alcor.c                 |  3 +-
+ arch/alpha/kernel/sys_cabriolet.c             |  3 +-
+ arch/alpha/kernel/sys_eb64p.c                 |  3 +-
+ arch/alpha/kernel/sys_marvel.c                |  2 +-
+ arch/alpha/kernel/sys_miata.c                 |  6 +-
+ arch/alpha/kernel/sys_ruffian.c               |  3 +-
+ arch/alpha/kernel/sys_rx164.c                 |  3 +-
+ arch/alpha/kernel/sys_sx164.c                 |  3 +-
+ arch/alpha/kernel/sys_wildfire.c              |  7 +--
+ arch/alpha/kernel/time.c                      |  6 +-
+ arch/arm/mach-cns3xxx/core.c                  | 10 +---
+ arch/arm/mach-ebsa110/core.c                  | 10 +---
+ arch/arm/mach-ep93xx/timer-ep93xx.c           | 12 ++--
+ arch/arm/mach-footbridge/dc21285-timer.c      | 11 +---
+ arch/arm/mach-footbridge/isa-irq.c            |  8 +--
+ arch/arm/mach-footbridge/isa-timer.c          | 11 +---
+ arch/arm/mach-iop32x/time.c                   | 12 ++--
+ arch/arm/mach-mmp/time.c                      | 11 +---
+ arch/arm/mach-omap1/pm.c                      | 22 ++++---
+ arch/arm/mach-omap1/time.c                    | 10 +---
+ arch/arm/mach-omap1/timer32k.c                | 10 +---
+ arch/arm/mach-omap2/timer.c                   | 11 +---
+ arch/arm/mach-rpc/time.c                      |  8 +--
+ arch/arm/mach-spear/time.c                    |  9 +--
+ arch/arm/plat-orion/time.c                    | 10 +---
+ arch/c6x/platforms/timer64.c                  | 11 +---
+ arch/hexagon/kernel/smp.c                     | 17 +++---
+ arch/hexagon/kernel/time.c                    | 11 +---
+ arch/ia64/kernel/irq_ia64.c                   | 42 +++++--------
+ arch/ia64/kernel/mca.c                        | 51 +++++-----------
+ arch/m68k/68000/timers.c                      |  9 +--
+ arch/m68k/coldfire/pit.c                      |  9 +--
+ arch/m68k/coldfire/sltimers.c                 | 19 ++----
+ arch/m68k/coldfire/timers.c                   | 19 ++----
+ arch/microblaze/kernel/timer.c                | 10 +---
+ arch/mips/alchemy/common/time.c               | 11 +---
+ arch/mips/ar7/irq.c                           | 18 +++---
+ arch/mips/ath25/ar2315.c                      |  9 +--
+ arch/mips/ath25/ar5312.c                      |  9 +--
+ arch/mips/bcm63xx/irq.c                       | 38 +++++-------
+ arch/mips/cobalt/irq.c                        | 14 ++---
+ arch/mips/dec/setup.c                         | 59 ++++++++-----------
+ arch/mips/emma/markeins/irq.c                 | 20 +++----
+ arch/mips/include/asm/sni.h                   |  2 +-
+ arch/mips/jazz/irq.c                          | 12 +---
+ arch/mips/kernel/cevt-bcm1480.c               | 11 +---
+ arch/mips/kernel/cevt-ds1287.c                |  9 +--
+ arch/mips/kernel/cevt-gt641xx.c               |  9 +--
+ arch/mips/kernel/cevt-r4k.c                   |  4 +-
+ arch/mips/kernel/cevt-sb1250.c                | 11 +---
+ arch/mips/kernel/cevt-txx9.c                  | 11 +---
+ arch/mips/kernel/i8253.c                      | 10 +---
+ arch/mips/kernel/rtlx-mt.c                    |  8 +--
+ arch/mips/kernel/smp.c                        | 33 ++++-------
+ arch/mips/lasat/interrupt.c                   | 10 +---
+ arch/mips/loongson2ef/common/bonito-irq.c     |  9 +--
+ .../loongson2ef/common/cs5536/cs5536_mfgpt.c  | 10 +---
+ arch/mips/loongson2ef/fuloong-2e/irq.c        | 14 ++---
+ arch/mips/loongson2ef/lemote-2f/irq.c         | 20 ++-----
+ arch/mips/loongson32/common/irq.c             | 21 ++++---
+ arch/mips/loongson32/common/time.c            | 12 ++--
+ arch/mips/loongson64/hpet.c                   | 10 +---
+ arch/mips/mti-malta/malta-int.c               | 10 +---
+ arch/mips/netlogic/xlr/fmn.c                  |  9 +--
+ arch/mips/pmcs-msp71xx/msp_irq.c              | 28 ++++-----
+ arch/mips/pmcs-msp71xx/msp_smp.c              | 22 ++-----
+ arch/mips/pmcs-msp71xx/msp_time.c             |  7 ++-
+ arch/mips/ralink/cevt-rt3352.c                | 17 +++---
+ arch/mips/sgi-ip22/ip22-eisa.c                |  8 +--
+ arch/mips/sgi-ip22/ip22-int.c                 | 49 +++++----------
+ arch/mips/sgi-ip32/ip32-irq.c                 | 18 ++----
+ arch/mips/sni/a20r.c                          |  4 +-
+ arch/mips/sni/irq.c                           |  8 +--
+ arch/mips/sni/pcit.c                          |  8 ++-
+ arch/mips/sni/rm200.c                         | 23 +++-----
+ arch/mips/sni/time.c                          | 10 +---
+ arch/mips/vr41xx/common/irq.c                 |  9 +--
+ arch/parisc/kernel/irq.c                      | 21 ++-----
+ arch/powerpc/platforms/85xx/mpc85xx_cds.c     | 10 +---
+ arch/powerpc/platforms/8xx/cpm1.c             |  9 +--
+ arch/powerpc/platforms/8xx/m8xx_setup.c       |  9 +--
+ arch/powerpc/platforms/chrp/setup.c           | 14 ++---
+ arch/powerpc/platforms/powermac/pic.c         | 31 ++++------
+ arch/powerpc/platforms/powermac/smp.c         |  9 +--
+ arch/s390/kernel/irq.c                        |  8 +--
+ arch/sh/boards/mach-cayman/irq.c              | 18 ++----
+ arch/sh/drivers/dma/dma-pvr2.c                |  9 +--
+ arch/unicore32/kernel/time.c                  | 11 +---
+ arch/x86/kernel/irqinit.c                     | 18 +++---
+ arch/x86/kernel/time.c                        | 10 +---
+ arch/xtensa/kernel/smp.c                      |  8 +--
+ arch/xtensa/kernel/time.c                     | 10 +---
+ drivers/clocksource/bcm2835_timer.c           |  8 +--
+ drivers/clocksource/bcm_kona_timer.c          | 10 +---
+ drivers/clocksource/dw_apb_timer.c            | 11 +---
+ drivers/clocksource/exynos_mct.c              | 12 ++--
+ drivers/clocksource/mxs_timer.c               | 10 +---
+ drivers/clocksource/nomadik-mtu.c             | 11 +---
+ drivers/clocksource/samsung_pwm_timer.c       | 12 ++--
+ drivers/clocksource/timer-atlas7.c            | 50 ++++++++--------
+ drivers/clocksource/timer-cs5535.c            | 10 +---
+ drivers/clocksource/timer-efm32.c             | 10 +---
+ drivers/clocksource/timer-fsl-ftm.c           | 10 +---
+ drivers/clocksource/timer-imx-gpt.c           | 10 +---
+ drivers/clocksource/timer-integrator-ap.c     | 11 +---
+ drivers/clocksource/timer-meson6.c            | 11 +---
+ drivers/clocksource/timer-orion.c             |  9 +--
+ drivers/clocksource/timer-prima2.c            | 11 +---
+ drivers/clocksource/timer-pxa.c               | 10 +---
+ drivers/clocksource/timer-sp804.c             | 11 +---
+ drivers/clocksource/timer-u300.c              |  9 +--
+ drivers/clocksource/timer-vf-pit.c            | 10 +---
+ drivers/clocksource/timer-vt8500.c            | 11 +---
+ drivers/clocksource/timer-zevio.c             | 13 ++--
+ drivers/irqchip/irq-i8259.c                   |  9 +--
+ drivers/irqchip/irq-ingenic.c                 | 11 ++--
+ drivers/parisc/eisa.c                         |  8 +--
+ drivers/s390/cio/airq.c                       |  8 +--
+ drivers/s390/cio/cio.c                        |  8 +--
+ include/linux/dw_apb_timer.h                  |  1 -
+ include/linux/irq.h                           |  2 -
+ kernel/irq/manage.c                           | 44 --------------
+ 126 files changed, 528 insertions(+), 1111 deletions(-)
+
+
+base-commit: v5.6-rc1
+-- 
+2.24.1
+
