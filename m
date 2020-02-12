@@ -2,219 +2,256 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3421D15A905
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Feb 2020 13:23:02 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 172F915A948
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Feb 2020 13:39:30 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727007AbgBLMXB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Feb 2020 07:23:01 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:49812 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726351AbgBLMXB (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Feb 2020 07:23:01 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01CCJdEp089841
-        for <linux-s390@vger.kernel.org>; Wed, 12 Feb 2020 07:23:00 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y1u2g8gv2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 12 Feb 2020 07:23:00 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 12 Feb 2020 12:22:57 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 12 Feb 2020 12:22:55 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01CCMr0846661906
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 12 Feb 2020 12:22:53 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 86C494C058;
-        Wed, 12 Feb 2020 12:22:53 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1D7034C04A;
-        Wed, 12 Feb 2020 12:22:53 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.71])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 12 Feb 2020 12:22:53 +0000 (GMT)
-Subject: Re: [PATCH v2 RFC] KVM: s390/interrupt: do not pin adapter interrupt
- pages
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Ulrich.Weigand@de.ibm.com, aarcange@redhat.com,
-        akpm@linux-foundation.org, cohuck@redhat.com,
-        frankja@linux.vnet.ibm.com, gor@linux.ibm.com,
-        imbrenda@linux.ibm.com, kvm@vger.kernel.org, linux-mm@kvack.org,
-        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com,
-        "dgilbert@redhat.com" <dgilbert@redhat.com>
+        id S1727264AbgBLMj3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Feb 2020 07:39:29 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53353 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727041AbgBLMj3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 12 Feb 2020 07:39:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581511167;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lrOf0m5SvxP5QCA86tTGN9hUolA1Hd0GGjFfSXWjAYA=;
+        b=ZoiwioTsuOiMiNpJW9yQv4i32Q9jWS4GwFKD9eWVpkG/Qx33AmPZNJZ9udc0GTSf/e33iP
+        p2S+v5QM2gNtkTAmvSH0enExBIIP71HiNj9Yjku/GpWWT+y4f3f6q4owfDGM0xMqrYddMV
+        pu9FYAZ9ob4ewS+Jvifljfm2Oucqo8w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-208-kW5tyTK4OfajhoaOohWPdg-1; Wed, 12 Feb 2020 07:39:16 -0500
+X-MC-Unique: kW5tyTK4OfajhoaOohWPdg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 33328107ACC7;
+        Wed, 12 Feb 2020 12:39:15 +0000 (UTC)
+Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5E0B0388;
+        Wed, 12 Feb 2020 12:39:10 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 13:39:08 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     david@redhat.com, Ulrich.Weigand@de.ibm.com, aarcange@redhat.com,
+        akpm@linux-foundation.org, frankja@linux.vnet.ibm.com,
+        gor@linux.ibm.com, imbrenda@linux.ibm.com, kvm@vger.kernel.org,
+        linux-mm@kvack.org, linux-s390@vger.kernel.org, mimu@linux.ibm.com,
+        thuth@redhat.com
+Subject: Re: [PATCH v2 RFC] KVM: s390/interrupt: do not pin adapter
+ interrupt pages
+Message-ID: <20200212133908.6c6c9072.cohuck@redhat.com>
+In-Reply-To: <20200211092341.3965-1-borntraeger@de.ibm.com>
 References: <567B980B-BDA5-4EF3-A96E-1542D11F2BD4@redhat.com>
- <20200211092341.3965-1-borntraeger@de.ibm.com>
- <01d1c188-38fb-e405-83d7-6184adccba5a@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
- J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
- CmUXDYq9J7uOyQQ7TNVoQejmpp5ifR4EzwIFfmYDekxRVZDJygD0wL/EzUr8Je3/j548NLyL
- 4Uhv6CIPf3TY3/aLVKXdxz/ntbLgMcfZsDoHgDk3lY3r1iwbWwEM2+eYRdSZaR4VD+JRD7p8
- 0FBadNwWnBce1fmQp3EklodGi5y7TNZ/CKdJ+jRPAAnw7SINhSd7PhJMruDAJaUlbYaIm23A
- +82g+IGe4z9tRGQ9TAflezVMhT5J3ccu6cpIjjvwDlbxucSmtVi5VtPAMTLmfjYp7VY2Tgr+
- T92v7+V96jAfE3Zy2nq52e8RDdUo/F6faxcumdl+aLhhKLXgrozpoe2nL0Nyc2uqFjkjwXXI
- OBQiaqGeWtxeKJP+O8MIpjyGuHUGzvjNx5S/592TQO3phpT5IFWfMgbu4OreZ9yekDhf7Cvn
- /fkYsiLDz9W6Clihd/xlpm79+jlhm4E3xBPiQOPCZowmHjx57mXVAypOP2Eu+i2nyQrkapaY
- IdisDQfWPdNeHNOiPnPS3+GhVlPcqSJAIWnuO7Ofw1ZVOyg/jwARAQABzUNDaHJpc3RpYW4g
- Qm9ybnRyYWVnZXIgKDJuZCBJQk0gYWRkcmVzcykgPGJvcm50cmFlZ2VyQGxpbnV4LmlibS5j
- b20+wsF5BBMBAgAjBQJdP/hMAhsDBwsJCAcDAgEGFQgCCQoLBBYCAwECHgECF4AACgkQEXu8
- gLWmHHy/pA/+JHjpEnd01A0CCyfVnb5fmcOlQ0LdmoKWLWPvU840q65HycCBFTt6V62cDljB
- kXFFxMNA4y/2wqU0H5/CiL963y3gWIiJsZa4ent+KrHl5GK1nIgbbesfJyA7JqlB0w/E/SuY
- NRQwIWOo/uEvOgXnk/7+rtvBzNaPGoGiiV1LZzeaxBVWrqLtmdi1iulW/0X/AlQPuF9dD1Px
- hx+0mPjZ8ClLpdSp5d0yfpwgHtM1B7KMuQPQZGFKMXXTUd3ceBUGGczsgIMipZWJukqMJiJj
- QIMH0IN7XYErEnhf0GCxJ3xAn/J7iFpPFv8sFZTvukntJXSUssONnwiKuld6ttUaFhSuSoQg
- OFYR5v7pOfinM0FcScPKTkrRsB5iUvpdthLq5qgwdQjmyINt3cb+5aSvBX2nNN135oGOtlb5
- tf4dh00kUR8XFHRrFxXx4Dbaw4PKgV3QLIHKEENlqnthH5t0tahDygQPnSucuXbVQEcDZaL9
- WgJqlRAAj0pG8M6JNU5+2ftTFXoTcoIUbb0KTOibaO9zHVeGegwAvPLLNlKHiHXcgLX1tkjC
- DrvE2Z0e2/4q7wgZgn1kbvz7ZHQZB76OM2mjkFu7QNHlRJ2VXJA8tMXyTgBX6kq1cYMmd/Hl
- OhFrAU3QO1SjCsXA2CDk9MM1471mYB3CTXQuKzXckJnxHkHOwU0ETpw8+AEQAJjyNXvMQdJN
- t07BIPDtbAQk15FfB0hKuyZVs+0lsjPKBZCamAAexNRk11eVGXK/YrqwjChkk60rt3q5i42u
- PpNMO9aS8cLPOfVft89Y654Qd3Rs1WRFIQq9xLjdLfHh0i0jMq5Ty+aiddSXpZ7oU6E+ud+X
- Czs3k5RAnOdW6eV3+v10sUjEGiFNZwzN9Udd6PfKET0J70qjnpY3NuWn5Sp1ZEn6lkq2Zm+G
- 9G3FlBRVClT30OWeiRHCYB6e6j1x1u/rSU4JiNYjPwSJA8EPKnt1s/Eeq37qXXvk+9DYiHdT
- PcOa3aNCSbIygD3jyjkg6EV9ZLHibE2R/PMMid9FrqhKh/cwcYn9FrT0FE48/2IBW5mfDpAd
- YvpawQlRz3XJr2rYZJwMUm1y+49+1ZmDclaF3s9dcz2JvuywNq78z/VsUfGz4Sbxy4ShpNpG
- REojRcz/xOK+FqNuBk+HoWKw6OxgRzfNleDvScVmbY6cQQZfGx/T7xlgZjl5Mu/2z+ofeoxb
- vWWM1YCJAT91GFvj29Wvm8OAPN/+SJj8LQazd9uGzVMTz6lFjVtH7YkeW/NZrP6znAwv5P1a
- DdQfiB5F63AX++NlTiyA+GD/ggfRl68LheSskOcxDwgI5TqmaKtX1/8RkrLpnzO3evzkfJb1
- D5qh3wM1t7PZ+JWTluSX8W25ABEBAAHCwV8EGAECAAkFAk6cPPgCGwwACgkQEXu8gLWmHHz8
- 2w//VjRlX+tKF3szc0lQi4X0t+pf88uIsvR/a1GRZpppQbn1jgE44hgF559K6/yYemcvTR7r
- 6Xt7cjWGS4wfaR0+pkWV+2dbw8Xi4DI07/fN00NoVEpYUUnOnupBgychtVpxkGqsplJZQpng
- v6fauZtyEcUK3dLJH3TdVQDLbUcL4qZpzHbsuUnTWsmNmG4Vi0NsEt1xyd/Wuw+0kM/oFEH1
- 4BN6X9xZcG8GYUbVUd8+bmio8ao8m0tzo4pseDZFo4ncDmlFWU6hHnAVfkAs4tqA6/fl7RLN
- JuWBiOL/mP5B6HDQT9JsnaRdzqF73FnU2+WrZPjinHPLeE74istVgjbowvsgUqtzjPIG5pOj
- cAsKoR0M1womzJVRfYauWhYiW/KeECklci4TPBDNx7YhahSUlexfoftltJA8swRshNA/M90/
- i9zDo9ySSZHwsGxG06ZOH5/MzG6HpLja7g8NTgA0TD5YaFm/oOnsQVsf2DeAGPS2xNirmknD
- jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
- ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 12 Feb 2020 13:22:52 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        <20200211092341.3965-1-borntraeger@de.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <01d1c188-38fb-e405-83d7-6184adccba5a@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021212-0016-0000-0000-000002E620AF
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021212-0017-0000-0000-000033491BDB
-Message-Id: <b72359a7-fb4b-6862-33e2-5cba9d48ab56@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-12_06:2020-02-11,2020-02-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 malwarescore=0 adultscore=0 mlxlogscore=591 bulkscore=0
- spamscore=0 impostorscore=0 lowpriorityscore=0 mlxscore=0 suspectscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002120100
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, 11 Feb 2020 04:23:41 -0500
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
+> From: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
+> 
+> The adapter interrupt page containing the indicator bits is currently
+> pinned. That means that a guest with many devices can pin a lot of
+> memory pages in the host. This also complicates the reference tracking
+> which is needed for memory management handling of protected virtual
+> machines.
+> We can simply try to get the userspace page set the bits and free the
+> page. By storing the userspace address in the irq routing entry instead
+> of the guest address we can actually avoid many lookups and list walks
+> so that this variant is very likely not slower.
+> 
+> Signed-off-by: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
+> [borntraeger@de.ibm.com: patch simplification]
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+> quick and dirty, how this could look like
+> 
+> 
+>  arch/s390/include/asm/kvm_host.h |   3 -
+>  arch/s390/kvm/interrupt.c        | 146 +++++++++++--------------------
+>  2 files changed, 49 insertions(+), 100 deletions(-)
+> 
 
-On 12.02.20 13:16, David Hildenbrand wrote:
-> 
->> +	/*
->> +	 * We resolve the gpa to hva when setting the IRQ routing. If userspace
->> +	 * decides to mess with the memslots it better also updates the irq
->> +	 * routing. Otherwise we will write to the wrong userspace address.
->> +	 */
-> 
-> I guess this is just as old handling, where a page was pinned. But
-> slightly better :) So the pages are definitely part of guest memory.
-> 
-> Fun stuff: If (a nasty) guest (in current code) zappes this page using
-> balloon inflation and the page is re-accessed (e.g., by the guest or by
-> the host), a new page will be faulted in, and there will be an
-> inconsistency between what the guest/user space sees and what this code
-> sees. Going via the user space address looks cleaner.
-> 
-> Now, with postcopy live migration, we will also zap all guest memory
-> before starting the guest, I do wonder if that produces a similar
-> inconsistency ... usually, when pages are pinned in the kernel, we
-> inhibit the balloon and implicitly also postcopy.
-> 
-> If so, this actually fixes an issue. But might depend on the order
-> things are initialized in user space. Or I am messing up things :)
+(...)
 
-Yes, the current code has some corner cases where a guest can shoot himself
-in the foot. This variant could actually be safer. 
-> 
-> [...]
-> 
->>  static int kvm_s390_adapter_unmap(struct kvm *kvm, unsigned int id, __u64 addr)
->>  {
->> -	struct s390_io_adapter *adapter = get_io_adapter(kvm, id);
->> -	struct s390_map_info *map, *tmp;
->> -	int found = 0;
->> -
->> -	if (!adapter || !addr)
->> -		return -EINVAL;
->> -
->> -	down_write(&adapter->maps_lock);
->> -	list_for_each_entry_safe(map, tmp, &adapter->maps, list) {
->> -		if (map->guest_addr == addr) {
->> -			found = 1;
->> -			atomic_dec(&adapter->nr_maps);
->> -			list_del(&map->list);
->> -			put_page(map->page);
->> -			kfree(map);
->> -			break;
->> -		}
->> -	}
->> -	up_write(&adapter->maps_lock);
->> -
->> -	return found ? 0 : -EINVAL;
->> +	return 0;
-> 
-> Can we get rid of this function?
+> @@ -2488,83 +2485,26 @@ int kvm_s390_mask_adapter(struct kvm *kvm, unsigned int id, bool masked)
+>  
+>  static int kvm_s390_adapter_map(struct kvm *kvm, unsigned int id, __u64 addr)
+>  {
+> -	struct s390_io_adapter *adapter = get_io_adapter(kvm, id);
+> -	struct s390_map_info *map;
+> -	int ret;
+> -
+> -	if (!adapter || !addr)
+> -		return -EINVAL;
+> -
+> -	map = kzalloc(sizeof(*map), GFP_KERNEL);
+> -	if (!map) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> -	}
+> -	INIT_LIST_HEAD(&map->list);
+> -	map->guest_addr = addr;
+> -	map->addr = gmap_translate(kvm->arch.gmap, addr);
+> -	if (map->addr == -EFAULT) {
+> -		ret = -EFAULT;
+> -		goto out;
+> -	}
+> -	ret = get_user_pages_fast(map->addr, 1, FOLL_WRITE, &map->page);
+> -	if (ret < 0)
+> -		goto out;
+> -	BUG_ON(ret != 1);
+> -	down_write(&adapter->maps_lock);
+> -	if (atomic_inc_return(&adapter->nr_maps) < MAX_S390_ADAPTER_MAPS) {
+> -		list_add_tail(&map->list, &adapter->maps);
+> -		ret = 0;
+> -	} else {
+> -		put_page(map->page);
+> -		ret = -EINVAL;
+> +	/*
+> +	 * We resolve the gpa to hva when setting the IRQ routing. If userspace
+> +	 * decides to mess with the memslots it better also updates the irq
+> +	 * routing. Otherwise we will write to the wrong userspace address.
+> +	 */
+> +	return 0;
 
-And do a return in the handler? maybe yes. Will have a look.
-> 
->>  }
-> 
->> +static struct page *get_map_page(struct kvm *kvm,
->> +				 struct s390_io_adapter *adapter,
->> +				 u64 uaddr)
->>  {
->> -	struct s390_map_info *map;
->> +	struct page *page;
->> +	int ret;
->>  
->>  	if (!adapter)
->>  		return NULL;
->> -
->> -	list_for_each_entry(map, &adapter->maps, list) {
->> -		if (map->guest_addr == addr)
->> -			return map;
->> -	}
->> -	return NULL;
->> +	page = NULL;
-> 
-> struct page *page = NULL;
-> 
->> +	if (!uaddr)
->> +		return NULL;
->> +	down_read(&kvm->mm->mmap_sem);
->> +	ret = get_user_pages_remote(NULL, kvm->mm, uaddr, 1, FOLL_WRITE,
->> +				    &page, NULL, NULL);
->> +	if (ret < 1)
->> +		page = NULL;
-> 
-> Is that really necessary? According to the doc, pinned pages are stored
-> to the array.  ret < 1 means "no pages" were pinned, so nothing should
-> be stored.
+Given that this function now always returns 0, we basically get a
+completely useless roundtrip into the kernel when userspace is trying
+to setup the mappings.
 
-Probably. Will have a look.
+Can we define a new IO_ADAPTER_MAPPING_NOT_NEEDED or so capability that
+userspace can check?
+
+This change in behaviour probably wants a change in the documentation
+as well.
+
+>  	}
+> -	up_write(&adapter->maps_lock);
+> -out:
+> -	if (ret)
+> -		kfree(map);
+> -	return ret;
+> -}
+>  
+>  static int kvm_s390_adapter_unmap(struct kvm *kvm, unsigned int id, __u64 addr)
+>  {
+> -	struct s390_io_adapter *adapter = get_io_adapter(kvm, id);
+> -	struct s390_map_info *map, *tmp;
+> -	int found = 0;
+> -
+> -	if (!adapter || !addr)
+> -		return -EINVAL;
+> -
+> -	down_write(&adapter->maps_lock);
+> -	list_for_each_entry_safe(map, tmp, &adapter->maps, list) {
+> -		if (map->guest_addr == addr) {
+> -			found = 1;
+> -			atomic_dec(&adapter->nr_maps);
+> -			list_del(&map->list);
+> -			put_page(map->page);
+> -			kfree(map);
+> -			break;
+> -		}
+> -	}
+> -	up_write(&adapter->maps_lock);
+> -
+> -	return found ? 0 : -EINVAL;
+> +	return 0;
+
+Same here.
+
+>  }
+>  
+>  void kvm_s390_destroy_adapters(struct kvm *kvm)
+>  {
+>  	int i;
+> -	struct s390_map_info *map, *tmp;
+>  
+>  	for (i = 0; i < MAX_S390_IO_ADAPTERS; i++) {
+>  		if (!kvm->arch.adapters[i])
+>  			continue;
+> -		list_for_each_entry_safe(map, tmp,
+> -					 &kvm->arch.adapters[i]->maps, list) {
+> -			list_del(&map->list);
+> -			put_page(map->page);
+> -			kfree(map);
+> -		}
+>  		kfree(kvm->arch.adapters[i]);
+
+Call kfree() unconditionally?
+
+>  	}
+>  }
+> @@ -2831,19 +2771,25 @@ static unsigned long get_ind_bit(__u64 addr, unsigned long bit_nr, bool swap)
+>  	return swap ? (bit ^ (BITS_PER_LONG - 1)) : bit;
+>  }
+>  
+> -static struct s390_map_info *get_map_info(struct s390_io_adapter *adapter,
+> -					  u64 addr)
+> +static struct page *get_map_page(struct kvm *kvm,
+> +				 struct s390_io_adapter *adapter,
+> +				 u64 uaddr)
+>  {
+> -	struct s390_map_info *map;
+> +	struct page *page;
+> +	int ret;
+>  
+>  	if (!adapter)
+>  		return NULL;
+> -
+> -	list_for_each_entry(map, &adapter->maps, list) {
+> -		if (map->guest_addr == addr)
+> -			return map;
+> -	}
+> -	return NULL;
+> +	page = NULL;
+> +	if (!uaddr)
+> +		return NULL;
+> +	down_read(&kvm->mm->mmap_sem);
+> +	ret = get_user_pages_remote(NULL, kvm->mm, uaddr, 1, FOLL_WRITE,
+> +				    &page, NULL, NULL);
+> +	if (ret < 1)
+> +		page = NULL;
+> +	up_read(&kvm->mm->mmap_sem);
+> +	return page;
+>  }
+>  
+>  static int adapter_indicators_set(struct kvm *kvm,
+
+(...)
+
+> @@ -2951,12 +2900,15 @@ int kvm_set_routing_entry(struct kvm *kvm,
+>  			  const struct kvm_irq_routing_entry *ue)
+>  {
+>  	int ret;
+> +	u64 uaddr;
+>  
+>  	switch (ue->type) {
+>  	case KVM_IRQ_ROUTING_S390_ADAPTER:
+>  		e->set = set_adapter_int;
+> -		e->adapter.summary_addr = ue->u.adapter.summary_addr;
+> -		e->adapter.ind_addr = ue->u.adapter.ind_addr;
+> +		uaddr =  gmap_translate(kvm->arch.gmap, ue->u.adapter.summary_addr);
+
+Can gmap_translate() return -EFAULT here? The code above only seems to
+check for 0... do we want to return an error here?
+
+> +		e->adapter.summary_addr = uaddr;
+> +		uaddr =  gmap_translate(kvm->arch.gmap, ue->u.adapter.ind_addr);
+> +		e->adapter.ind_addr = uaddr;
+>  		e->adapter.summary_offset = ue->u.adapter.summary_offset;
+>  		e->adapter.ind_offset = ue->u.adapter.ind_offset;
+>  		e->adapter.adapter_id = ue->u.adapter.adapter_id;
 
