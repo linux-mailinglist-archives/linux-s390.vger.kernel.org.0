@@ -2,89 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9A0F15A9B1
-	for <lists+linux-s390@lfdr.de>; Wed, 12 Feb 2020 14:07:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B9FE15AA37
+	for <lists+linux-s390@lfdr.de>; Wed, 12 Feb 2020 14:42:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727439AbgBLNHn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 12 Feb 2020 08:07:43 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:54147 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727279AbgBLNHn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 12 Feb 2020 08:07:43 -0500
+        id S1727665AbgBLNm1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 12 Feb 2020 08:42:27 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58460 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727548AbgBLNm1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 12 Feb 2020 08:42:27 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581512862;
+        s=mimecast20190719; t=1581514945;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=dFhflF1hBhJOha4DSYN37Djg7mP7A+q3ubsJivvLvf0=;
-        b=iJw80NxSpT3zCZH3WlbhVue/D5Nd+0wx7lbQwKWnY1bAtnlT+dr1Lep9JAYv9VvbVbDImR
-        d6zgftNHx0DKkEaEX3NoWQEg0oEdWtoqpr9zca+YfsoOesaRoo/AHKMkNt08PgvE5y8eKs
-        wXtlHx5rpQ34xuEdZxDy4EZXOgbY8Js=
+        bh=nFMErzcYo936qHssc4z4QLiG0wmanvB4MUFteWMjHSM=;
+        b=OoNc/+fy8lGdhhAOSd763MzSF1u+6KUkol9t0yXZkx0PxgpPNNwAQ5UnYF+1HVkqQPjmYd
+        twbVyQCAizjuMANoX8QBbSvuLn3cmD8eR7W0mQBWqLVGsv6SPNqFJMF032KG9/CHy3K3SI
+        N1OTLeRvWsy5y2e2HWDY1ZycsCJA3c4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-426-1_op5JqGMYGTxKIvthVypQ-1; Wed, 12 Feb 2020 08:07:38 -0500
-X-MC-Unique: 1_op5JqGMYGTxKIvthVypQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-277-QmzSa1izPQO5kZWa0W24hA-1; Wed, 12 Feb 2020 08:42:22 -0500
+X-MC-Unique: QmzSa1izPQO5kZWa0W24hA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6475713E4;
-        Wed, 12 Feb 2020 13:07:36 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 163E4190D343;
+        Wed, 12 Feb 2020 13:42:20 +0000 (UTC)
 Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A81F219C69;
-        Wed, 12 Feb 2020 13:07:31 +0000 (UTC)
-Date:   Wed, 12 Feb 2020 14:07:29 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BD90D5C1B0;
+        Wed, 12 Feb 2020 13:42:14 +0000 (UTC)
+Date:   Wed, 12 Feb 2020 14:42:12 +0100
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     david@redhat.com, Ulrich.Weigand@de.ibm.com, aarcange@redhat.com,
-        akpm@linux-foundation.org, frankja@linux.vnet.ibm.com,
-        gor@linux.ibm.com, imbrenda@linux.ibm.com, kvm@vger.kernel.org,
-        linux-mm@kvack.org, linux-s390@vger.kernel.org, mimu@linux.ibm.com,
-        thuth@redhat.com
-Subject: Re: [PATCH v2 RFC] KVM: s390/interrupt: do not pin adapter
- interrupt pages
-Message-ID: <20200212140729.21209127.cohuck@redhat.com>
-In-Reply-To: <ba5862cd-c0ff-c0f1-bf00-8220fa407d52@de.ibm.com>
-References: <567B980B-BDA5-4EF3-A96E-1542D11F2BD4@redhat.com>
-        <20200211092341.3965-1-borntraeger@de.ibm.com>
-        <20200212133908.6c6c9072.cohuck@redhat.com>
-        <ba5862cd-c0ff-c0f1-bf00-8220fa407d52@de.ibm.com>
+Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-mm@kvack.org,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 05/35] s390/mm: provide memory management functions for
+ protected KVM guests
+Message-ID: <20200212144212.1d0b4226.cohuck@redhat.com>
+In-Reply-To: <20200207113958.7320-6-borntraeger@de.ibm.com>
+References: <20200207113958.7320-1-borntraeger@de.ibm.com>
+        <20200207113958.7320-6-borntraeger@de.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 12 Feb 2020 13:44:53 +0100
+On Fri,  7 Feb 2020 06:39:28 -0500
 Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-> On 12.02.20 13:39, Cornelia Huck wrote:
-> [...]
+> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
 > 
-> >> +	 */
-> >> +	return 0;  
-> > 
-> > Given that this function now always returns 0, we basically get a
-> > completely useless roundtrip into the kernel when userspace is trying
-> > to setup the mappings.
-> > 
-> > Can we define a new IO_ADAPTER_MAPPING_NOT_NEEDED or so capability that
-> > userspace can check?  
+> This provides the basic ultravisor calls and page table handling to cope
+> with secure guests:
+> - provide arch_make_page_accessible
+> - make pages accessible after unmapping of secure guests
+> - provide the ultravisor commands convert to/from secure
+> - provide the ultravisor commands pin/unpin shared
+> - provide callbacks to make pages secure (inacccessible)
+>  - we check for the expected pin count to only make pages secure if the
+>    host is not accessing them
+>  - we fence hugetlbfs for secure pages
 > 
-> Nack. This is one system call per initial indicator ccw. This is so seldom
-> and cheap that I do not see a point in optimizing this. 
+> Co-developed-by: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
+> Signed-off-by: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  arch/s390/include/asm/gmap.h        |   2 +
+>  arch/s390/include/asm/mmu.h         |   2 +
+>  arch/s390/include/asm/mmu_context.h |   1 +
+>  arch/s390/include/asm/page.h        |   5 +
+>  arch/s390/include/asm/pgtable.h     |  34 +++++-
+>  arch/s390/include/asm/uv.h          |  52 +++++++++
+>  arch/s390/kernel/uv.c               | 172 ++++++++++++++++++++++++++++
+>  7 files changed, 263 insertions(+), 5 deletions(-)
 
-NB that zpci also calls this. Probably a rare event there as well.
+(...)
 
-> 
-> 
-> > This change in behaviour probably wants a change in the documentation
-> > as well.  
-> 
-> Yep. 
+> +/*
+> + * Requests the Ultravisor to encrypt a guest page and make it
+> + * accessible to the host for paging (export).
+> + *
+> + * @paddr: Absolute host address of page to be exported
+> + */
+> +int uv_convert_from_secure(unsigned long paddr)
+> +{
+> +	struct uv_cb_cfs uvcb = {
+> +		.header.cmd = UVC_CMD_CONV_FROM_SEC_STOR,
+> +		.header.len = sizeof(uvcb),
+> +		.paddr = paddr
+> +	};
+> +
+> +	uv_call(0, (u64)&uvcb);
+> +
+> +	if (uvcb.header.rc == 1 || uvcb.header.rc == 0x107)
+
+I think this either wants a comment or some speaking #defines.
+
+> +		return 0;
+> +	return -EINVAL;
+> +}
+
+(...)
 
