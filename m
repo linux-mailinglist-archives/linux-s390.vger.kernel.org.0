@@ -2,138 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 158FA15BAF7
-	for <lists+linux-s390@lfdr.de>; Thu, 13 Feb 2020 09:45:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 929B215BE87
+	for <lists+linux-s390@lfdr.de>; Thu, 13 Feb 2020 13:38:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729629AbgBMIpB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 13 Feb 2020 03:45:01 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53269 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729496AbgBMIpB (ORCPT
+        id S1729526AbgBMMh5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 13 Feb 2020 07:37:57 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64472 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729673AbgBMMhz (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 13 Feb 2020 03:45:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581583500;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Hn3WrUa+llk/toxacuv4ppNzSqH2ai2ii21rs8gjazk=;
-        b=GLE6/72RYwcEe4XRv/4jbtkWUw7hV39fhpDn7HgHSJTCUpqVnSGQOAU3CLT5CsRo7YC+QU
-        ZXZMZ/KgUaEk9mKnfLAsE/N2EaU9OJcg3PYoeCJvHz8kw5KgXIt1SfF8fMAAkoCMVnzXl2
-        B0xdx1diMKtGMtfv2uQ70xxZio9SqFI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-67-oIWsehGWOHumwd_1Tred8Q-1; Thu, 13 Feb 2020 03:44:56 -0500
-X-MC-Unique: oIWsehGWOHumwd_1Tred8Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 255E08017DF;
-        Thu, 13 Feb 2020 08:44:55 +0000 (UTC)
-Received: from gondolin (ovpn-117-87.ams2.redhat.com [10.36.117.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 062785C13E;
-        Thu, 13 Feb 2020 08:44:49 +0000 (UTC)
-Date:   Thu, 13 Feb 2020 09:44:38 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
-        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 05/35] s390/mm: provide memory management functions for
- protected KVM guests
-Message-ID: <20200213094438.21204b84.cohuck@redhat.com>
-In-Reply-To: <e0642555-9781-163a-7dd3-75e769dfb2d9@de.ibm.com>
-References: <20200207113958.7320-1-borntraeger@de.ibm.com>
-        <20200207113958.7320-6-borntraeger@de.ibm.com>
-        <20200212144212.1d0b4226.cohuck@redhat.com>
-        <e0642555-9781-163a-7dd3-75e769dfb2d9@de.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Thu, 13 Feb 2020 07:37:55 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01DCZi0J035446
+        for <linux-s390@vger.kernel.org>; Thu, 13 Feb 2020 07:37:54 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y3yw977su-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 13 Feb 2020 07:37:54 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Thu, 13 Feb 2020 12:37:51 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 13 Feb 2020 12:37:48 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01DCbkJR12583112
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 13 Feb 2020 12:37:46 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BBF0852054;
+        Thu, 13 Feb 2020 12:37:46 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3FBE052057;
+        Thu, 13 Feb 2020 12:37:46 +0000 (GMT)
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: [PATCH 0/2] virtio-blk: improve handling of DMA mapping failures
+Date:   Thu, 13 Feb 2020 13:37:26 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20021312-0020-0000-0000-000003A9C68C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021312-0021-0000-0000-00002201B132
+Message-Id: <20200213123728.61216-1-pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-13_04:2020-02-12,2020-02-13 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 clxscore=1011 suspectscore=0 spamscore=0 mlxscore=0
+ phishscore=0 mlxlogscore=969 priorityscore=1501 impostorscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002130098
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 13 Feb 2020 08:43:33 +0100
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+Two patches are handling new edge cases introduced by doing DMA mappings
+(which can fail) in virtio core.
 
-> On 12.02.20 14:42, Cornelia Huck wrote:
-> > On Fri,  7 Feb 2020 06:39:28 -0500
-> > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-> >   
-> >> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> >>
-> >> This provides the basic ultravisor calls and page table handling to cope
-> >> with secure guests:
-> >> - provide arch_make_page_accessible
-> >> - make pages accessible after unmapping of secure guests
-> >> - provide the ultravisor commands convert to/from secure
-> >> - provide the ultravisor commands pin/unpin shared
-> >> - provide callbacks to make pages secure (inacccessible)
-> >>  - we check for the expected pin count to only make pages secure if the
-> >>    host is not accessing them
-> >>  - we fence hugetlbfs for secure pages
-> >>
-> >> Co-developed-by: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
-> >> Signed-off-by: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
-> >> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> >> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> >> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> >> ---
-> >>  arch/s390/include/asm/gmap.h        |   2 +
-> >>  arch/s390/include/asm/mmu.h         |   2 +
-> >>  arch/s390/include/asm/mmu_context.h |   1 +
-> >>  arch/s390/include/asm/page.h        |   5 +
-> >>  arch/s390/include/asm/pgtable.h     |  34 +++++-
-> >>  arch/s390/include/asm/uv.h          |  52 +++++++++
-> >>  arch/s390/kernel/uv.c               | 172 ++++++++++++++++++++++++++++
-> >>  7 files changed, 263 insertions(+), 5 deletions(-)  
-> > 
-> > (...)
-> >   
-> >> +/*
-> >> + * Requests the Ultravisor to encrypt a guest page and make it
-> >> + * accessible to the host for paging (export).
-> >> + *
-> >> + * @paddr: Absolute host address of page to be exported
-> >> + */
-> >> +int uv_convert_from_secure(unsigned long paddr)
-> >> +{
-> >> +	struct uv_cb_cfs uvcb = {
-> >> +		.header.cmd = UVC_CMD_CONV_FROM_SEC_STOR,
-> >> +		.header.len = sizeof(uvcb),
-> >> +		.paddr = paddr
-> >> +	};
-> >> +
-> >> +	uv_call(0, (u64)&uvcb);
-> >> +
-> >> +	if (uvcb.header.rc == 1 || uvcb.header.rc == 0x107)  
-> > 
-> > I think this either wants a comment or some speaking #defines.  
-> 
-> Yes. We will improve some other aspects of this patch, but I will add
-> 
-> 	/* Return on success or if this page was already exported */
+I stumbled upon this while stress testing I/O for Protected Virtual
+Machines. I deliberately chose a tiny swiotlb size and have generated
+load with fio. With more than one virtio-blk disk in use I experienced
+hangs.
 
-Sounds good.
+The goal of this series is to fix those hangs.
 
-> >   
-> >> +		return 0;
-> >> +	return -EINVAL;
-> >> +}  
-> > 
-> > (...)
-> >   
-> 
+Halil Pasic (2):
+  virtio-blk: fix hw_queue stopped on arbitrary error
+  virtio-blk: improve virtqueue error to BLK_STS
+
+ drivers/block/virtio_blk.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
+
+
+base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+-- 
+2.17.1
 
