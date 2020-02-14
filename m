@@ -2,73 +2,143 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0594215DB00
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 16:32:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0B94C15E0F2
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 17:16:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729416AbgBNPcR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 10:32:17 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:55190 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729294AbgBNPcR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Feb 2020 10:32:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581694336;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=bpSVv8LaGjL/WOEMCp7PdMztRTC66Pi1pm1c62D++2s=;
-        b=KHGHv3lD2OKvQC5oitBpleDcO3XnEu0P8uxignfBpe0mNr7MFBVXCR2rUZ7ti1FU6g4MI8
-        OeDQLsaLRuALLfSweW9IAV7/5o69/PMmI9r58ys1y07QrD3Fglf3B17/ibvUTVdiAS7Vas
-        QhsRnjh+xOzrifn135e6LkSA8cbMK8s=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-7-2amzhSGZO2ayyQn8CWHXYQ-1; Fri, 14 Feb 2020 10:32:15 -0500
-X-MC-Unique: 2amzhSGZO2ayyQn8CWHXYQ-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2404225AbgBNQQH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 11:16:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46676 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2404216AbgBNQQG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:16:06 -0500
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 370D3107ACCC;
-        Fri, 14 Feb 2020 15:32:13 +0000 (UTC)
-Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9EC5B17DC8;
-        Fri, 14 Feb 2020 15:32:11 +0000 (UTC)
-Date:   Fri, 14 Feb 2020 16:32:09 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     qiwuchen55@gmail.com
-Cc:     sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, linux-s390@vger.kernel.org,
-        chenqiwu <chenqiwu@xiaomi.com>
-Subject: Re: [PATCH v2] s390/cio: use kobj_to_dev() API
-Message-ID: <20200214163209.5b5e9833.cohuck@redhat.com>
-In-Reply-To: <1581688293-17283-1-git-send-email-qiwuchen55@gmail.com>
-References: <1581688293-17283-1-git-send-email-qiwuchen55@gmail.com>
-Organization: Red Hat GmbH
+        by mail.kernel.org (Postfix) with ESMTPSA id 6F48B246E1;
+        Fri, 14 Feb 2020 16:16:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1581696965;
+        bh=cF1ZhSgj1uFdLMJQbYjeVeg4+j2VvQJSgVqJXoxH8Kg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=eBSrakbCPaOJc7TYyfeuN95dkUW8dp0E1sKEPzpqzbFJq1yAYlA5Xjlhhy6Dxmrcp
+         KwmlMTiyfvKFrc2N3XIYm8XwaGfKCdUGWbeJ22qmb9OrcAmqfndJkfKENWiegAogxq
+         /D+qA7Pv7TsWy1Re4LoysgOVS/9+DLxvhK3RniBs=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     Vasily Gorbik <gor@linux.ibm.com>,
+        Sven Schnelle <sven.schnelle@ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 4.19 204/252] s390/ftrace: generate traced function stack frame
+Date:   Fri, 14 Feb 2020 11:10:59 -0500
+Message-Id: <20200214161147.15842-204-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200214161147.15842-1-sashal@kernel.org>
+References: <20200214161147.15842-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 14 Feb 2020 21:51:33 +0800
-qiwuchen55@gmail.com wrote:
+From: Vasily Gorbik <gor@linux.ibm.com>
 
-> From: chenqiwu <chenqiwu@xiaomi.com>
-> 
-> Use kobj_to_dev() API instead of container_of().
-> 
-> Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
-> Signed-off-by: chenqiwu <qiwuchen55@gmail.com>
-> ---
-> changes in v2:
->  - add signed off for my gmail adderss.
-> --- 
->  drivers/s390/cio/chp.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+[ Upstream commit 45f7a0da600d3c409b5ad8d5ddddacd98ddc8840 ]
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Currently backtrace from ftraced function does not contain ftraced
+function itself. e.g. for "path_openat":
+
+arch_stack_walk+0x15c/0x2d8
+stack_trace_save+0x50/0x68
+stack_trace_call+0x15e/0x3d8
+ftrace_graph_caller+0x0/0x1c <-- ftrace code
+do_filp_open+0x7c/0xe8 <-- ftraced function caller
+do_open_execat+0x76/0x1b8
+open_exec+0x52/0x78
+load_elf_binary+0x180/0x1160
+search_binary_handler+0x8e/0x288
+load_script+0x2a8/0x2b8
+search_binary_handler+0x8e/0x288
+__do_execve_file.isra.39+0x6fa/0xb40
+__s390x_sys_execve+0x56/0x68
+system_call+0xdc/0x2d8
+
+Ftraced function is expected in the backtrace by ftrace kselftests, which
+are now failing. It would also be nice to have it for clarity reasons.
+
+"ftrace_caller" itself is called without stack frame allocated for it
+and does not store its caller (ftraced function). Instead it simply
+allocates a stack frame for "ftrace_trace_function" and sets backchain
+to point to ftraced function stack frame (which contains ftraced function
+caller in saved r14).
+
+To fix this issue make "ftrace_caller" allocate a stack frame
+for itself just to store ftraced function for the stack unwinder.
+As a result backtrace looks like the following:
+
+arch_stack_walk+0x15c/0x2d8
+stack_trace_save+0x50/0x68
+stack_trace_call+0x15e/0x3d8
+ftrace_graph_caller+0x0/0x1c <-- ftrace code
+path_openat+0x6/0xd60  <-- ftraced function
+do_filp_open+0x7c/0xe8 <-- ftraced function caller
+do_open_execat+0x76/0x1b8
+open_exec+0x52/0x78
+load_elf_binary+0x180/0x1160
+search_binary_handler+0x8e/0x288
+load_script+0x2a8/0x2b8
+search_binary_handler+0x8e/0x288
+__do_execve_file.isra.39+0x6fa/0xb40
+__s390x_sys_execve+0x56/0x68
+system_call+0xdc/0x2d8
+
+Reported-by: Sven Schnelle <sven.schnelle@ibm.com>
+Tested-by: Sven Schnelle <sven.schnelle@ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/kernel/mcount.S | 15 ++++++++++++++-
+ 1 file changed, 14 insertions(+), 1 deletion(-)
+
+diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
+index e93fbf02490cf..83afd5b78e16a 100644
+--- a/arch/s390/kernel/mcount.S
++++ b/arch/s390/kernel/mcount.S
+@@ -25,6 +25,12 @@ ENTRY(ftrace_stub)
+ #define STACK_PTREGS	  (STACK_FRAME_OVERHEAD)
+ #define STACK_PTREGS_GPRS (STACK_PTREGS + __PT_GPRS)
+ #define STACK_PTREGS_PSW  (STACK_PTREGS + __PT_PSW)
++#ifdef __PACK_STACK
++/* allocate just enough for r14, r15 and backchain */
++#define TRACED_FUNC_FRAME_SIZE	24
++#else
++#define TRACED_FUNC_FRAME_SIZE	STACK_FRAME_OVERHEAD
++#endif
+ 
+ ENTRY(_mcount)
+ 	BR_EX	%r14
+@@ -38,9 +44,16 @@ ENTRY(ftrace_caller)
+ #if !(defined(CC_USING_HOTPATCH) || defined(CC_USING_NOP_MCOUNT))
+ 	aghi	%r0,MCOUNT_RETURN_FIXUP
+ #endif
+-	aghi	%r15,-STACK_FRAME_SIZE
++	# allocate stack frame for ftrace_caller to contain traced function
++	aghi	%r15,-TRACED_FUNC_FRAME_SIZE
+ 	stg	%r1,__SF_BACKCHAIN(%r15)
++	stg	%r0,(__SF_GPRS+8*8)(%r15)
++	stg	%r15,(__SF_GPRS+9*8)(%r15)
++	# allocate pt_regs and stack frame for ftrace_trace_function
++	aghi	%r15,-STACK_FRAME_SIZE
+ 	stg	%r1,(STACK_PTREGS_GPRS+15*8)(%r15)
++	aghi	%r1,-TRACED_FUNC_FRAME_SIZE
++	stg	%r1,__SF_BACKCHAIN(%r15)
+ 	stg	%r0,(STACK_PTREGS_PSW+8)(%r15)
+ 	stmg	%r2,%r14,(STACK_PTREGS_GPRS+2*8)(%r15)
+ #ifdef CONFIG_HAVE_MARCH_Z196_FEATURES
+-- 
+2.20.1
 
