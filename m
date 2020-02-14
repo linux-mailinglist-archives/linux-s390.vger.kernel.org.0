@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3F4DF15F034
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 18:54:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D3BCB15EE93
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 18:41:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388528AbgBNP6O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 10:58:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41928 "EHLO mail.kernel.org"
+        id S2390224AbgBNRlj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 12:41:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51022 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388159AbgBNP6N (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 14 Feb 2020 10:58:13 -0500
+        id S2389706AbgBNQDj (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:03:39 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D592C24676;
-        Fri, 14 Feb 2020 15:58:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E5652187F;
+        Fri, 14 Feb 2020 16:03:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581695892;
-        bh=ooos8tpZKnXbpVHIh/6tszTvkd3+TRtE+CbR4oBMCBk=;
+        s=default; t=1581696219;
+        bh=ZknrHGTXKbZ2v9A+wXYcE5FK+LWxVzwyBYWT016O4gg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=1Bm8+S1CngBdhyKK4Dg53HjGBIu6ZbM94/gJAAZsJWq7W9IHmfNSD9UhVtGaSI8St
-         hvDGTrx8GJW6OdoLgzFSNTStyW+vq4KAyLiepEl6JYg9t85FPjrHzyCsupUPL7M00k
-         9bsuYzvz7t060TPFBYBx8XqjmD9HCQa0oTvNznBE=
+        b=l+tSMKypG8ZAZcxG7MNZLSWErzIgmgaH5EZD18PSGfcHyhGExUVUkPMUmY3mI8UMs
+         Lp3GhjCDDR30/pL0XTDhFw6VE8oNCEtwBvOu1+Sspobl9ayMeymnAqUJ4sYfGtdnlY
+         W+WHFpZHso4Zt58maAUpA4May+uBi3MR6UnazYiI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Sven Schnelle <svens@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+Cc:     Niklas Schnelle <schnelle@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 435/542] s390: fix __EMIT_BUG() macro
-Date:   Fri, 14 Feb 2020 10:47:07 -0500
-Message-Id: <20200214154854.6746-435-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 082/459] s390/pci: Fix possible deadlock in recover_store()
+Date:   Fri, 14 Feb 2020 10:55:32 -0500
+Message-Id: <20200214160149.11681-82-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214154854.6746-1-sashal@kernel.org>
-References: <20200214154854.6746-1-sashal@kernel.org>
+In-Reply-To: <20200214160149.11681-1-sashal@kernel.org>
+References: <20200214160149.11681-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -44,199 +44,214 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Sven Schnelle <svens@linux.ibm.com>
+From: Niklas Schnelle <schnelle@linux.ibm.com>
 
-[ Upstream commit 17248ea0367465f4aaef728f6af661ed38e38cf1 ]
+[ Upstream commit 576c75e36c689bec6a940e807bae27291ab0c0de ]
 
-Setting a kprobe on getname_flags() failed:
+With zpci_disable() working, lockdep detected a potential deadlock
+(lockdep output at the end).
 
-$ echo 'p:tmr1 getname_flags +0(%r2):ustring' > kprobe_events
--bash: echo: write error: Invalid argument
+The deadlock is between recovering a PCI function via the
 
-Debugging the kprobes code showed that the address of
-getname_flags() is contained in the __bug_table. Kprobes
-doesn't allow to set probes at BUG() locations.
+/sys/bus/pci/devices/<dev>/recover
 
-$ objdump -j  __bug_table -x build/fs/namei.o
-[..]
-0000000000000108 R_390_PC32        .text+0x00000000000075a8
-000000000000010c R_390_PC32        .L223+0x0000000000000004
+attribute vs powering it off via
 
-I was expecting getname_flags() to start with a BUG(), but:
+/sys/bus/pci/slots/<slot>/power.
 
-7598:       e3 20 10 00 00 04       lg      %r2,0(%r1)
-759e:       c0 f4 00 00 00 00       jg      759e <putname+0x7e>
-75a0: R_390_PLT32DBL    kmem_cache_free+0x2
-75a4:       a7 f4 00 01             j       75a6 <putname+0x86>
+The fix is analogous to the changes in commit 0ee223b2e1f6 ("scsi: core:
+Avoid that SCSI device removal through sysfs triggers a deadlock")
+that fixed a potential deadlock on removing a SCSI device via sysfs.
 
-00000000000075a8 <getname_flags>:
-75a8:       c0 04 00 00 00 00       brcl    0,75a8 <getname_flags>
-75ae:       eb 6f f0 48 00 24       stmg    %r6,%r15,72(%r15)
-75b4:       b9 04 00 ef             lgr     %r14,%r15
-75b8:       e3 f0 ff a8 ff 71       lay     %r15,-88(%r15)
+[  204.830107] ======================================================
+[  204.830109] WARNING: possible circular locking dependency detected
+[  204.830111] 5.5.0-rc2-06072-gbc03ecc9a672 #6 Tainted: G        W
+[  204.830112] ------------------------------------------------------
+[  204.830113] bash/1034 is trying to acquire lock:
+[  204.830115] 0000000192a1a610 (kn->count#200){++++}, at: kernfs_remove_by_name_ns+0x5c/0xa8
+[  204.830122]
+               but task is already holding lock:
+[  204.830123] 00000000c16134a8 (pci_rescan_remove_lock){+.+.}, at: pci_stop_and_remove_bus_device_locked+0x26/0x48
+[  204.830128]
+               which lock already depends on the new lock.
 
-So the BUG() is actually the last opcode of the previous function.
-Fix this by switching to using the MONITOR CALL (MC) instruction,
-and set the entry in __bug_table to the beginning of that MC.
+[  204.830129]
+               the existing dependency chain (in reverse order) is:
+[  204.830130]
+               -> #1 (pci_rescan_remove_lock){+.+.}:
+[  204.830134]        validate_chain+0x93a/0xd08
+[  204.830136]        __lock_acquire+0x4ae/0x9d0
+[  204.830137]        lock_acquire+0x114/0x280
+[  204.830140]        __mutex_lock+0xa2/0x960
+[  204.830142]        mutex_lock_nested+0x32/0x40
+[  204.830145]        recover_store+0x4c/0xa8
+[  204.830147]        kernfs_fop_write+0xe6/0x218
+[  204.830151]        vfs_write+0xb0/0x1b8
+[  204.830152]        ksys_write+0x6c/0xf8
+[  204.830154]        system_call+0xd8/0x2d8
+[  204.830155]
+               -> #0 (kn->count#200){++++}:
+[  204.830187]        check_noncircular+0x1e6/0x240
+[  204.830189]        check_prev_add+0xfc/0xdb0
+[  204.830190]        validate_chain+0x93a/0xd08
+[  204.830192]        __lock_acquire+0x4ae/0x9d0
+[  204.830193]        lock_acquire+0x114/0x280
+[  204.830194]        __kernfs_remove.part.0+0x2e4/0x360
+[  204.830196]        kernfs_remove_by_name_ns+0x5c/0xa8
+[  204.830198]        remove_files.isra.0+0x4c/0x98
+[  204.830199]        sysfs_remove_group+0x66/0xc8
+[  204.830201]        sysfs_remove_groups+0x46/0x68
+[  204.830204]        device_remove_attrs+0x52/0x90
+[  204.830207]        device_del+0x182/0x418
+[  204.830208]        pci_remove_bus_device+0x8a/0x130
+[  204.830210]        pci_stop_and_remove_bus_device_locked+0x3a/0x48
+[  204.830212]        disable_slot+0x68/0x100
+[  204.830213]        power_write_file+0x7c/0x130
+[  204.830215]        kernfs_fop_write+0xe6/0x218
+[  204.830217]        vfs_write+0xb0/0x1b8
+[  204.830218]        ksys_write+0x6c/0xf8
+[  204.830220]        system_call+0xd8/0x2d8
+[  204.830221]
+               other info that might help us debug this:
 
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+[  204.830223]  Possible unsafe locking scenario:
+
+[  204.830224]        CPU0                    CPU1
+[  204.830225]        ----                    ----
+[  204.830226]   lock(pci_rescan_remove_lock);
+[  204.830227]                                lock(kn->count#200);
+[  204.830229]                                lock(pci_rescan_remove_lock);
+[  204.830231]   lock(kn->count#200);
+[  204.830233]
+                *** DEADLOCK ***
+
+[  204.830234] 4 locks held by bash/1034:
+[  204.830235]  #0: 00000001b6fbc498 (sb_writers#4){.+.+}, at: vfs_write+0x158/0x1b8
+[  204.830239]  #1: 000000018c9f5090 (&of->mutex){+.+.}, at: kernfs_fop_write+0xaa/0x218
+[  204.830242]  #2: 00000001f7da0810 (kn->count#235){.+.+}, at: kernfs_fop_write+0xb6/0x218
+[  204.830245]  #3: 00000000c16134a8 (pci_rescan_remove_lock){+.+.}, at: pci_stop_and_remove_bus_device_locked+0x26/0x48
+[  204.830248]
+               stack backtrace:
+[  204.830250] CPU: 2 PID: 1034 Comm: bash Tainted: G        W         5.5.0-rc2-06072-gbc03ecc9a672 #6
+[  204.830252] Hardware name: IBM 8561 T01 703 (LPAR)
+[  204.830253] Call Trace:
+[  204.830257]  [<00000000c05e10c0>] show_stack+0x88/0xf0
+[  204.830260]  [<00000000c112dca4>] dump_stack+0xa4/0xe0
+[  204.830261]  [<00000000c0694c06>] check_noncircular+0x1e6/0x240
+[  204.830263]  [<00000000c0695bec>] check_prev_add+0xfc/0xdb0
+[  204.830264]  [<00000000c06971da>] validate_chain+0x93a/0xd08
+[  204.830266]  [<00000000c06994c6>] __lock_acquire+0x4ae/0x9d0
+[  204.830267]  [<00000000c069867c>] lock_acquire+0x114/0x280
+[  204.830269]  [<00000000c09ca15c>] __kernfs_remove.part.0+0x2e4/0x360
+[  204.830270]  [<00000000c09cb5c4>] kernfs_remove_by_name_ns+0x5c/0xa8
+[  204.830272]  [<00000000c09cee14>] remove_files.isra.0+0x4c/0x98
+[  204.830274]  [<00000000c09cf2ae>] sysfs_remove_group+0x66/0xc8
+[  204.830276]  [<00000000c09cf356>] sysfs_remove_groups+0x46/0x68
+[  204.830278]  [<00000000c0e3dfe2>] device_remove_attrs+0x52/0x90
+[  204.830280]  [<00000000c0e40382>] device_del+0x182/0x418
+[  204.830281]  [<00000000c0dcfd7a>] pci_remove_bus_device+0x8a/0x130
+[  204.830283]  [<00000000c0dcfe92>] pci_stop_and_remove_bus_device_locked+0x3a/0x48
+[  204.830285]  [<00000000c0de7190>] disable_slot+0x68/0x100
+[  204.830286]  [<00000000c0de6514>] power_write_file+0x7c/0x130
+[  204.830288]  [<00000000c09cc846>] kernfs_fop_write+0xe6/0x218
+[  204.830290]  [<00000000c08f3480>] vfs_write+0xb0/0x1b8
+[  204.830291]  [<00000000c08f378c>] ksys_write+0x6c/0xf8
+[  204.830293]  [<00000000c1154374>] system_call+0xd8/0x2d8
+[  204.830294] INFO: lockdep is turned off.
+
+Signed-off-by: Niklas Schnelle <schnelle@linux.ibm.com>
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/boot/head.S        |  2 +-
- arch/s390/include/asm/bug.h  | 16 ++++++--------
- arch/s390/kernel/entry.h     |  1 +
- arch/s390/kernel/pgm_check.S |  2 +-
- arch/s390/kernel/traps.c     | 41 +++++++++++++++++++++++++++++++-----
- 5 files changed, 46 insertions(+), 16 deletions(-)
+ arch/s390/pci/pci_sysfs.c | 63 ++++++++++++++++++++++++++-------------
+ 1 file changed, 42 insertions(+), 21 deletions(-)
 
-diff --git a/arch/s390/boot/head.S b/arch/s390/boot/head.S
-index 4b86a8d3c1219..dae10961d0724 100644
---- a/arch/s390/boot/head.S
-+++ b/arch/s390/boot/head.S
-@@ -329,7 +329,7 @@ ENTRY(startup_kdump)
- 	.quad	.Lduct			# cr5: primary-aste origin
- 	.quad	0			# cr6:	I/O interrupts
- 	.quad	0			# cr7:	secondary space segment table
--	.quad	0			# cr8:	access registers translation
-+	.quad	0x0000000000008000	# cr8:	access registers translation
- 	.quad	0			# cr9:	tracing off
- 	.quad	0			# cr10: tracing off
- 	.quad	0			# cr11: tracing off
-diff --git a/arch/s390/include/asm/bug.h b/arch/s390/include/asm/bug.h
-index a2b11ac00f607..7725f8006fdfb 100644
---- a/arch/s390/include/asm/bug.h
-+++ b/arch/s390/include/asm/bug.h
-@@ -10,15 +10,14 @@
+diff --git a/arch/s390/pci/pci_sysfs.c b/arch/s390/pci/pci_sysfs.c
+index a433ba01a3175..215f17437a4f6 100644
+--- a/arch/s390/pci/pci_sysfs.c
++++ b/arch/s390/pci/pci_sysfs.c
+@@ -13,6 +13,8 @@
+ #include <linux/stat.h>
+ #include <linux/pci.h>
  
- #define __EMIT_BUG(x) do {					\
- 	asm_inline volatile(					\
--		"0:	j	0b+2\n"				\
--		"1:\n"						\
-+		"0:	mc	0,0\n"				\
- 		".section .rodata.str,\"aMS\",@progbits,1\n"	\
--		"2:	.asciz	\""__FILE__"\"\n"		\
-+		"1:	.asciz	\""__FILE__"\"\n"		\
- 		".previous\n"					\
- 		".section __bug_table,\"awM\",@progbits,%2\n"	\
--		"3:	.long	1b-3b,2b-3b\n"			\
-+		"2:	.long	0b-2b,1b-2b\n"			\
- 		"	.short	%0,%1\n"			\
--		"	.org	3b+%2\n"			\
-+		"	.org	2b+%2\n"			\
- 		".previous\n"					\
- 		: : "i" (__LINE__),				\
- 		    "i" (x),					\
-@@ -29,12 +28,11 @@
++#include "../../../drivers/pci/pci.h"
++
+ #include <asm/sclp.h>
  
- #define __EMIT_BUG(x) do {					\
- 	asm_inline volatile(					\
--		"0:	j	0b+2\n"				\
--		"1:\n"						\
-+		"0:	mc	0,0\n"				\
- 		".section __bug_table,\"awM\",@progbits,%1\n"	\
--		"2:	.long	1b-2b\n"			\
-+		"1:	.long	0b-1b\n"			\
- 		"	.short	%0\n"				\
--		"	.org	2b+%1\n"			\
-+		"	.org	1b+%1\n"			\
- 		".previous\n"					\
- 		: : "i" (x),					\
- 		    "i" (sizeof(struct bug_entry)));		\
-diff --git a/arch/s390/kernel/entry.h b/arch/s390/kernel/entry.h
-index b2956d49b6ad7..1d3927e01a5fd 100644
---- a/arch/s390/kernel/entry.h
-+++ b/arch/s390/kernel/entry.h
-@@ -45,6 +45,7 @@ void specification_exception(struct pt_regs *regs);
- void transaction_exception(struct pt_regs *regs);
- void translation_exception(struct pt_regs *regs);
- void vector_exception(struct pt_regs *regs);
-+void monitor_event_exception(struct pt_regs *regs);
- 
- void do_per_trap(struct pt_regs *regs);
- void do_report_trap(struct pt_regs *regs, int si_signo, int si_code, char *str);
-diff --git a/arch/s390/kernel/pgm_check.S b/arch/s390/kernel/pgm_check.S
-index 59dee9d3bebf1..eee3a482195a6 100644
---- a/arch/s390/kernel/pgm_check.S
-+++ b/arch/s390/kernel/pgm_check.S
-@@ -81,7 +81,7 @@ PGM_CHECK_DEFAULT			/* 3c */
- PGM_CHECK_DEFAULT			/* 3d */
- PGM_CHECK_DEFAULT			/* 3e */
- PGM_CHECK_DEFAULT			/* 3f */
--PGM_CHECK_DEFAULT			/* 40 */
-+PGM_CHECK(monitor_event_exception)	/* 40 */
- PGM_CHECK_DEFAULT			/* 41 */
- PGM_CHECK_DEFAULT			/* 42 */
- PGM_CHECK_DEFAULT			/* 43 */
-diff --git a/arch/s390/kernel/traps.c b/arch/s390/kernel/traps.c
-index 164c0282b41ae..dc75588d78943 100644
---- a/arch/s390/kernel/traps.c
-+++ b/arch/s390/kernel/traps.c
-@@ -53,11 +53,6 @@ void do_report_trap(struct pt_regs *regs, int si_signo, int si_code, char *str)
-                 if (fixup)
- 			regs->psw.addr = extable_fixup(fixup);
- 		else {
--			enum bug_trap_type btt;
+ #define zpci_attr(name, fmt, member)					\
+@@ -49,31 +51,50 @@ static DEVICE_ATTR_RO(mio_enabled);
+ static ssize_t recover_store(struct device *dev, struct device_attribute *attr,
+ 			     const char *buf, size_t count)
+ {
++	struct kernfs_node *kn;
+ 	struct pci_dev *pdev = to_pci_dev(dev);
+ 	struct zpci_dev *zdev = to_zpci(pdev);
+-	int ret;
 -
--			btt = report_bug(regs->psw.addr, regs);
--			if (btt == BUG_TRAP_TYPE_WARN)
--				return;
- 			die(regs, str);
- 		}
-         }
-@@ -245,6 +240,27 @@ void space_switch_exception(struct pt_regs *regs)
- 	do_trap(regs, SIGILL, ILL_PRVOPC, "space switch event");
- }
- 
-+void monitor_event_exception(struct pt_regs *regs)
-+{
-+	const struct exception_table_entry *fixup;
+-	if (!device_remove_file_self(dev, attr))
+-		return count;
+-
++	int ret = 0;
 +
-+	if (user_mode(regs))
-+		return;
++	/* Can't use device_remove_self() here as that would lead us to lock
++	 * the pci_rescan_remove_lock while holding the device' kernfs lock.
++	 * This would create a possible deadlock with disable_slot() which is
++	 * not directly protected by the device' kernfs lock but takes it
++	 * during the device removal which happens under
++	 * pci_rescan_remove_lock.
++	 *
++	 * This is analogous to sdev_store_delete() in
++	 * drivers/scsi/scsi_sysfs.c
++	 */
++	kn = sysfs_break_active_protection(&dev->kobj, &attr->attr);
++	WARN_ON_ONCE(!kn);
++	/* device_remove_file() serializes concurrent calls ignoring all but
++	 * the first
++	 */
++	device_remove_file(dev, attr);
 +
-+	switch (report_bug(regs->psw.addr - (regs->int_code >> 16), regs)) {
-+	case BUG_TRAP_TYPE_NONE:
-+		fixup = s390_search_extables(regs->psw.addr);
-+		if (fixup)
-+			regs->psw.addr = extable_fixup(fixup);
-+		break;
-+	case BUG_TRAP_TYPE_WARN:
-+		break;
-+	case BUG_TRAP_TYPE_BUG:
-+		die(regs, "monitor event");
-+		break;
++	/* A concurrent call to recover_store() may slip between
++	 * sysfs_break_active_protection() and the sysfs file removal.
++	 * Once it unblocks from pci_lock_rescan_remove() the original pdev
++	 * will already be removed.
++	 */
+ 	pci_lock_rescan_remove();
+-	pci_stop_and_remove_bus_device(pdev);
+-	ret = zpci_disable_device(zdev);
+-	if (ret)
+-		goto error;
+-
+-	ret = zpci_enable_device(zdev);
+-	if (ret)
+-		goto error;
+-
+-	pci_rescan_bus(zdev->bus);
++	if (pci_dev_is_added(pdev)) {
++		pci_stop_and_remove_bus_device(pdev);
++		ret = zpci_disable_device(zdev);
++		if (ret)
++			goto out;
++
++		ret = zpci_enable_device(zdev);
++		if (ret)
++			goto out;
++		pci_rescan_bus(zdev->bus);
 +	}
-+}
-+
- void kernel_stack_overflow(struct pt_regs *regs)
- {
- 	bust_spinlocks(1);
-@@ -255,8 +271,23 @@ void kernel_stack_overflow(struct pt_regs *regs)
++out:
+ 	pci_unlock_rescan_remove();
+-
+-	return count;
+-
+-error:
+-	pci_unlock_rescan_remove();
+-	return ret;
++	if (kn)
++		sysfs_unbreak_active_protection(kn);
++	return ret ? ret : count;
  }
- NOKPROBE_SYMBOL(kernel_stack_overflow);
+ static DEVICE_ATTR_WO(recover);
  
-+static void test_monitor_call(void)
-+{
-+	int val = 1;
-+
-+	asm volatile(
-+		"	mc	0,0\n"
-+		"0:	xgr	%0,%0\n"
-+		"1:\n"
-+		EX_TABLE(0b,1b)
-+		: "+d" (val));
-+	if (!val)
-+		panic("Monitor call doesn't work!\n");
-+}
-+
- void __init trap_init(void)
- {
- 	sort_extable(__start_dma_ex_table, __stop_dma_ex_table);
- 	local_mcck_enable();
-+	test_monitor_call();
- }
 -- 
 2.20.1
 
