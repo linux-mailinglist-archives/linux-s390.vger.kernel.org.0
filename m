@@ -2,283 +2,271 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE07A15F78A
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 21:13:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 888E215F7CA
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 21:35:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388622AbgBNUN5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 15:13:57 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42896 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388430AbgBNUN4 (ORCPT
+        id S2387753AbgBNUfs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 15:35:48 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28524 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387526AbgBNUfr (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 14 Feb 2020 15:13:56 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EK3ZaQ107661
-        for <linux-s390@vger.kernel.org>; Fri, 14 Feb 2020 15:13:55 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y4j885j55-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 14 Feb 2020 15:13:55 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 14 Feb 2020 20:13:48 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 14 Feb 2020 20:13:46 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01EKDi6R35848488
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 14 Feb 2020 20:13:44 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BE6FBA4057;
-        Fri, 14 Feb 2020 20:13:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D43D0A4055;
-        Fri, 14 Feb 2020 20:13:43 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.191.169])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 14 Feb 2020 20:13:43 +0000 (GMT)
-Subject: Re: [PATCH 07/35] KVM: s390: add new variants of UV CALL
-To:     David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
+        Fri, 14 Feb 2020 15:35:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581712546;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=gKGSem1dzrqQDUCpnIBkoTFM/3tiLutlhEzCn0ZVwrI=;
+        b=Xumm3s1WKeNN/uFQyOtdkGtQww/zJgE/8TONNnKwgOkBglN8g/fZRt2uC51VCMbMtNS2v+
+        mWca26Y3ZyGMXFlJAzFEhbEHkNvijXlJIGRiOHTa5e1KBZXVD9MOYyHDClTEoDaw/G5N7A
+        S8LiZWnTf6psTqrsxJ9VNslgvQk/ulA=
+Received: from mail-ot1-f72.google.com (mail-ot1-f72.google.com
+ [209.85.210.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-391-AEwRzq5gPhiYChCQg61gNQ-1; Fri, 14 Feb 2020 15:35:41 -0500
+X-MC-Unique: AEwRzq5gPhiYChCQg61gNQ-1
+Received: by mail-ot1-f72.google.com with SMTP id q13so5845399otm.18
+        for <linux-s390@vger.kernel.org>; Fri, 14 Feb 2020 12:35:41 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=gKGSem1dzrqQDUCpnIBkoTFM/3tiLutlhEzCn0ZVwrI=;
+        b=Ej6fga5MQBx2Q9Qwtep/JomQhRvSc+0It88WFou0g6kXnU2UfY6jUGrw/4oCeS7NE4
+         oIEVNeeRM9Qwdupr2/gvkSG/4PiIVpMkPvlujNbntn/xbe0r1F2e39NhBkbEomnGXQz5
+         CmyBXEUIL2Pt8zuSSW3QS6acpOpuu3+gQCfYzCqKojhNOVU23vIqBLQmUD2yD6jzpDip
+         sSZyb1+bHv/L1f+ytXdXKvMNe73o/TWL92MMDcOX2ukdfizk/sHJaCKcMn2Ga0KJTaT0
+         21lDQ3hnosEKr9ppSAp/42Vp6pd1dv2AUdomD4jLxPte3gr450IVzjJ+lg5RxHZbd41e
+         WaSA==
+X-Gm-Message-State: APjAAAVaac8lqAuFVwm+bjsNnZHNUMnnHAlVGrJIIqeXOJg8koqOZvbi
+        PYl1bbPiyYWdVxHHi1Sru35vJwejiK2Fd0z0HU124ams5NaL+Liivs3T+2/cSmwTzYrmfG183nL
+        jyUzyCeNs/6SpnEVt2kkd7Q==
+X-Received: by 2002:a9d:4e99:: with SMTP id v25mr3826992otk.363.1581712540437;
+        Fri, 14 Feb 2020 12:35:40 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwxMKspHpRTfCVBpbXvOLfHx1q8SGCvwZDA++Ohy6zq9CnfmhQPlRhGlpxgFHd5TUPaaSMiGA==
+X-Received: by 2002:a9d:4e99:: with SMTP id v25mr3826964otk.363.1581712540000;
+        Fri, 14 Feb 2020 12:35:40 -0800 (PST)
+Received: from laptop.jcline.org (108-197-12-186.lightspeed.rlghnc.sbcglobal.net. [108.197.12.186])
+        by smtp.gmail.com with ESMTPSA id c123sm2085384oib.34.2020.02.14.12.35.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 14 Feb 2020 12:35:39 -0800 (PST)
+Date:   Fri, 14 Feb 2020 15:35:36 -0500
+From:   Jeremy Cline <jcline@redhat.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     Philipp Rudo <prudo@linux.ibm.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-References: <20200207113958.7320-1-borntraeger@de.ibm.com>
- <20200207113958.7320-8-borntraeger@de.ibm.com>
- <b9988313-74d1-6e68-efef-d012aae30d6d@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Fri, 14 Feb 2020 21:13:43 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: s390 depending on cc-options makes it difficult to configure
+Message-ID: <20200214203536.GA133402@laptop.jcline.org>
+References: <20191209164155.GA78160@dev.jcline.org>
+ <20191210090108.GA22512@unicorn.suse.cz>
+ <20191211171822.GA36366@dev.jcline.org>
+ <20200210194936.511ef603@laptop2-ibm.local>
+ <CAK7LNATL3Oyn=FLKm0TcB9SkJLuCOWV06a_t-FRtFiFp9Vda1g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <b9988313-74d1-6e68-efef-d012aae30d6d@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021420-0020-0000-0000-000003AA3474
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021420-0021-0000-0000-0000220224F6
-Message-Id: <bb832871-8caa-30c3-1597-27bce32aa9b4@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-14_07:2020-02-14,2020-02-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
- phishscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0
- impostorscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 clxscore=1015
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002140146
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAK7LNATL3Oyn=FLKm0TcB9SkJLuCOWV06a_t-FRtFiFp9Vda1g@mail.gmail.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Fri, Feb 14, 2020 at 12:31:05PM +0900, Masahiro Yamada wrote:
+> Hi.
+> 
+> On Tue, Feb 11, 2020 at 3:49 AM Philipp Rudo <prudo@linux.ibm.com> wrote:
+> >
+> > Hey Jeremy,
+> > Hey Michal,
+> >
+> > sorry for the late response. The mail got lost in the pre-xmas rush...
+> >
+> > In my opinion the problem goes beyond s390 and the commit you mentioned. So I'm
+> > also adding Masahiro as Kconfig maintainer and author of cc-option.
+> 
+> 
+> I did not notice the former discussion.
+> Thanks for CC'ing me.
+> 
+> 
+> 
+> 
+> > On Wed, 11 Dec 2019 12:18:22 -0500
+> > Jeremy Cline <jcline@redhat.com> wrote:
+> >
+> > > On Tue, Dec 10, 2019 at 10:01:08AM +0100, Michal Kubecek wrote:
+> > > > On Mon, Dec 09, 2019 at 11:41:55AM -0500, Jeremy Cline wrote:
+> > > > > Hi folks,
+> > > > >
+> > > > > Commit 5474080a3a0a ("s390/Kconfig: make use of 'depends on cc-option'")
+> > > > > makes it difficult to produce an s390 configuration for Fedora and Red
+> > > > > Hat kernels.
+> > > > >
+> > > > > The issue is I have the following configurations:
+> > > > >
+> > > > > CONFIG_MARCH_Z13=y
+> > > > > CONFIG_TUNE_Z14=y
+> > > > > # CONFIG_TUNE_DEFAULT is not set
+> > > > >
+> > > > > When the configuration is prepared on a non-s390x host without a
+> > > > > compiler with -march=z* it changes CONFIG_TUNE_DEFAULT to y which, as
+> > > > > far as I can tell, leads to a kernel tuned for z13 instead of z14.
+> > > > > Fedora and Red Hat build processes produce complete configurations from
+> > > > > snippets on any available host in the build infrastructure which very
+> > > > > frequently is *not* s390.
+> > > >
+> > > > We have exactly the same problem. Our developers need to update config
+> > > > files for different architectures and different kernel versions on their
+> > > > machines which are usually x86_64 but that often produces different
+> > > > configs than the real build environment.
+> > > >
+> > > > This is not an issue for upstream development as one usually updates
+> > > > configs on the same system where the build takes place but it's a big
+> > > > problem for distribution maintainers.
+> >
+> > If I recall correct the goal was to avoid trouble with clang, as it does not
+> > support all processor types with -march. But yeah, in the original
+> > consideration we only thought about upstream development and forgot the
+> > distros.
+> > > > > I did a quick search and couldn't find any other examples of Kconfigs
+> > > > > depending on march or mtune compiler flags and it seems like it'd
+> > > > > generally problematic for people preparing configurations.
+> >
+> > True, but not the whole story. Power and Arm64 use cc-option to check for
+> > -mstack-protector*, which do not exist on s390. So you have the same problem
+> > when you prepare a config for any of them on s390. Thus simply reverting the
+> > commit you mentioned above does not solve the problem but merely hides one
+> > symptom. Which also means that the original problem will return over and over
+> > again in the future.
+> >
+> > An other reason why I don't think it makes sens to revert the commit is that it
+> > would make cc-option as a whole useless. What's the benefit in having cc-option
+> > when you are not allowed to use it? Or less provocative, in which use cases is
+> > allowed to use cc-option?
+> 
+> 
+> You are right.
+> Reverting the particular s390 commit is not the solution.
+> 
+> 
+> > > > There are more issues like this. In general, since 4.17 or 4.18, the
+> > > > resulting config depends on both architecture and compiler version.
+> > > > Earlier, you could simply run "ARCH=... make oldconfig" (or menuconfig)
+> > > > to update configs for all architectures and distribution versions.
+> > > > Today, you need to use the right compiler version (results with e.g.
+> > > > 4.8, 7.4 and 9.2 differ) and architecture.
+> > > >
+> > >
+> > > Yeah, that's also troublesome. This is by no means the first problem
+> > > related to the environment at configuration time, but it the most
+> > > bothersome to work around (at least for Fedora kernel configuration).
+> > >
+> > > > At the moment, I'm working around the issue by using chroot environments
+> > > > with target distributions (e.g. openSUSE Tumbleweed) and set of cross
+> > > > compilers for supported architectures but it's far from perfect and even
+> > > > this way, there are problemantic points, e.g. BPFILTER_UMH which depends
+> > > > on gcc being able to not only compile but also link.
+> > > >
+> > > > IMHO the key problem is that .config mixes configuration with
+> > > > description of build environment. I have an idea of a solution which
+> > > > would consist of
+> > > >
+> > > >   - an option to extract "config" options which describe build
+> > > >     environment (i.e. their values are determined by running some
+> > > >     command, rather than reading from a file or asking user) into
+> > > >     a cache file
+> > > >   - an option telling "make *config" to use such cache file for these
+> > > >     environment "config" options instead of running the test scripts
+> > > >     (and probably issue an error if an environment option is missing)
+> > > >
+> > >
+> > > I agree that the issue is mixing kernel configuration with build
+> > > environment. I suppose a cache file would work, but it still sounds like
+> > > a difficult process that is working around that fact that folks are
+> > > coupling the configuration step with the build step.
+> >
+> > An other solution would be a "I know better" switch which simply disables
+> > cc-option for that run. That would allow the use of cc-option for upstream
+> > development and provide a simple way for distros to turn it off.
+> >
+> > > I would advocate that this patch be reverted and an effort made to not
+> > > mix build environment checks into the configuration. I'm much happier
+> > > for the build to fail because the configuration can't be satisfied by
+> > > the environment than I am for the configuration to quietly change or for
+> > > the tools to not allow me to make the configuration in the first place.
+> > > Ideally the tools would warn the user if their environment won't build
+> > > the configuration, but that's a nice-to-have.
+> >
+> > I too would prefer to have a warning instead of the config being silently
+> > changed. But again, the problem goes beyond what was reported.
+> >
+> > @Masahiro: What do you think about it?
+> >
+> > Thanks
+> > Philipp
+> >
+> 
+> 
+> The problem for Jeremy and Michal is,
+> it is difficult to get a full-feature cross-compiler
+> for every arch.
+> 
 
+Indeed.
 
-On 14.02.20 19:28, David Hildenbrand wrote:
-> On 07.02.20 12:39, Christian Borntraeger wrote:
->> From: Janosch Frank <frankja@linux.ibm.com>
->>
->> This add 2 new variants of the UV CALL.
->>
->> The first variant handles UV CALLs that might have longer busy
->> conditions or just need longer when doing partial completion. We should
->> schedule when necessary.
->>
->> The second variant handles UV CALLs that only need the handle but have
->> no payload (e.g. destroying a VM). We can provide a simple wrapper for
->> those.
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
->> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
->> ---
->>  arch/s390/include/asm/uv.h | 59 ++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 59 insertions(+)
->>
->> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
->> index 1b97230a57ba..e1cef772fde1 100644
->> --- a/arch/s390/include/asm/uv.h
->> +++ b/arch/s390/include/asm/uv.h
->> @@ -14,6 +14,7 @@
->>  #include <linux/types.h>
->>  #include <linux/errno.h>
->>  #include <linux/bug.h>
->> +#include <linux/sched.h>
->>  #include <asm/page.h>
->>  #include <asm/gmap.h>
->>  
->> @@ -91,6 +92,19 @@ struct uv_cb_cfs {
->>  	u64 paddr;
->>  } __packed __aligned(8);
->>  
->> +/*
->> + * A common UV call struct for calls that take no payload
->> + * Examples:
->> + * Destroy cpu/config
->> + * Verify
->> + */
->> +struct uv_cb_nodata {
->> +	struct uv_cb_header header;
->> +	u64 reserved08[2];
->> +	u64 handle;
->> +	u64 reserved20[4];
->> +} __packed __aligned(8);
->> +
->>  struct uv_cb_share {
->>  	struct uv_cb_header header;
->>  	u64 reserved08[3];
->> @@ -98,6 +112,31 @@ struct uv_cb_share {
->>  	u64 reserved28;
->>  } __packed __aligned(8);
->>  
->> +/*
->> + * Low level uv_call that takes r1 and r2 as parameter and avoids
->> + * stalls for long running busy conditions by doing schedule
->> + */
->> +static inline int uv_call_sched(unsigned long r1, unsigned long r2)
->> +{
->> +	int cc;
->> +
->> +	do {
->> +		asm volatile(
->> +			"0:	.insn rrf,0xB9A40000,%[r1],%[r2],0,0\n"
+> One idea to workaround this is
+> to use a fake script that accepts any flag,
+> and use it as $(CC) in Kconfig.
 > 
-> label not necessary
+> RFC patch is attached.
+> 
+> This is not a perfect solution, of course.
+> 
 
-ack
-> 
->> +			"		ipm	%[cc]\n"
->> +			"		srl	%[cc],28\n"
->> +			: [cc] "=d" (cc)
->> +			: [r1] "d" (r1), [r2] "d" (r2)
->> +			: "memory", "cc");
-> 
-> I was wondering if we could reuse uv_call() - something like
-> 
-> static inline int __uv_call(unsigned long r1, unsigned long r2)
-> {
-> 	int cc;
-> 
-> 	asm volatile(
-> 		"	.insn rrf,0xB9A40000,%[r1],%[r2],0,0\n"
-> 		"		ipm	%[cc]\n"
-> 		"		srl	%[cc],28\n"
-> 		: [cc] "=d" (cc)
-> 		: [r1] "a" (r1), [r2] "a" (r2)
-> 		: "memory", "cc");
-> 	return cc;
-> }
-> 
-> static inline int uv_call(unsigned long r1, unsigned long r2)
-> {
-> 	int rc;
-> 
-> 	do {
-> 		cc = __uv_call(unsigned long r1, unsigned long r2);
-> 	} while (cc > 1)
-> 	return rc;
-
-This will likely generate less efficient assembly code but it is certainly
-easier to read. WIll change. 
-> }
-> 
-> static inline int uv_call_sched(unsigned long r1, unsigned long r2)
-> {
-> 	int rc;
-> 
-> 	do {
-> 		cc = __uv_call(unsigned long r1, unsigned long r2);
-> 		cond_resched();
-> 	} while (rc > 1)
-> 	return rc;
-> }
+The attached patch doesn't looks like it'd work for what we need,
+although I wonder if it's easier to just check when cc-options is
+defined for an environment variable or something and always return y
+instead of calling out to $(CC) at all. Comes to the same thing, I
+suppose.
 
 > 
->> +		if (need_resched())
->> +			schedule();
+> Evaluating the compiler in the Kconfig stage
+> conceptually has a conflict with the workflow
+> of distro maintainers.
 > 
-> cond_resched();
+> I think the only way to solve it completely is,
+> ultimately, go back to pre 4.18 situation.
+> But, I am not sure if upstream people want to do it.
+> At least, Linus was happy to do compiler-tests
+> in Kconfig.
+> 
+> I already got several criticism about the
+> new feature in Kconfig because it broke the
+> workflow of distro maintainers. Sorry about that.
+> 
 
-ack
+No worries, it's a tough balancing act between upstream users and
+distros. It's not caused me *that* much bother.
 
 > 
->> +	} while (cc > 1);
->> +	return cc;
->> +}
->> +
->> +/*
->> + * Low level uv_call that takes r1 and r2 as parameter
->> + */
+> The idea from Michal, separation of the build environment
+> description, would work too.
+> IIRC, the crosstool-ng project generates some
+> Kconfig files based on the environment.
+> In hindsight, Kconfig did not need to have cc-option
+> but it was how I implemented. I just thought it would be cleaner to
+> put cc-option and the CONFIG option depending on it very close.
 > 
-> This "r1 and r2" does not sound like relevant news. Same for the other
-> variant above.
+> Anyway, comments to the attachment are appreciated.
 > 
->>  static inline int uv_call(unsigned long r1, unsigned long r2)
->>  {
->>  	int cc;
->> @@ -113,6 +152,26 @@ static inline int uv_call(unsigned long r1, unsigned long r2)
->>  	return cc;
->>  }
->>  
->> +/*
->> + * special variant of uv_call that only transports the cpu or guest
->> + * handle and the command, like destroy or verify.
->> + */
->> +static inline int uv_cmd_nodata(u64 handle, u16 cmd, u32 *ret)
-> 
-> uv_call_sched_simple() ?
 
-I think nodata is actually a better description
+I believe it would solve our problem so from that perspective, it looks
+good to me.
+
+Thanks,
+Jeremy
 
