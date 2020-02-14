@@ -2,247 +2,191 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1A5BE15F200
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 19:09:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7CEE815F46B
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 19:23:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388878AbgBNSFd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 13:05:33 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44397 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2391587AbgBNSFY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Feb 2020 13:05:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581703523;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=rUebluGvxWOJGeiBzNgaSQxX4d6as30a+TdaEoqZTN8=;
-        b=Dt65xmSVfJt8JXSnlMVVOxagamQZOWs2avTag21zq/zHHcmXvZYtuEFk9jYF9BxsoGfuK/
-        h1X2v7RQPZob2JSovwmBpy5NvD3f20dA3zXgEoE45ys/Z6By2J4VFVSgWXe5mWCxl0nG5L
-        hn/jK7y1yMIH9X5FnjyaGmW9z+eGGs0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-213-KzCU7JD1PpGMPrkIduZr3Q-1; Fri, 14 Feb 2020 13:05:15 -0500
-X-MC-Unique: KzCU7JD1PpGMPrkIduZr3Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF535800D50;
-        Fri, 14 Feb 2020 18:05:12 +0000 (UTC)
-Received: from [10.36.118.137] (unknown [10.36.118.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1FF161001B2C;
-        Fri, 14 Feb 2020 18:05:09 +0000 (UTC)
-Subject: Re: [PATCH 06/35] s390/mm: add (non)secure page access exceptions
- handlers
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Janosch Frank <frankja@linux.ibm.com>
-References: <20200207113958.7320-1-borntraeger@de.ibm.com>
- <20200207113958.7320-7-borntraeger@de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <c05f8672-dc29-271a-66d2-73138406cf21@redhat.com>
-Date:   Fri, 14 Feb 2020 19:05:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S2394847AbgBNSVD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 13:21:03 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:41814 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2394848AbgBNSVC (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Feb 2020 13:21:02 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EI3VHl196053;
+        Fri, 14 Feb 2020 18:20:50 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=ms4iA00x1ArMuDwrt3pft/x2ZeWkVZEQyNUSw2WaYZo=;
+ b=CuD9FNp30w7T8m8ssyzrr4l7sXj3agWAFfoA+VW1bHYkwRIK1RlRyNhswzW81Sdb1Y8q
+ PmHuvL9c4ikg6TbxW9vZCLe6166900etUbmnueCaJOzkQXSe1rhWZFsJBa3NH/xG0SiL
+ vFdrt6kORzixTMXgPNfcN6JiYgUUCOnXQad7uw2za8cZoio8M4IQfJkmUw7wR00FUB1b
+ R6dSIvvDSrovepDq1AbquW1LQSdnmF/8rufm1S0+OnVA4Yrkfmscrazxq6HrEUU772p2
+ WBdu4Gf0UPgOu+H1XXxljUnYmNyxDqzqy0G4t7L4SBY8Txte0hWArs6ej6O+MtCc4sDr bw== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2y2p3t2w6r-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 18:20:50 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01EI1vST040507;
+        Fri, 14 Feb 2020 18:20:49 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2y4k82jxf9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 18:20:49 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01EIKk7o010802;
+        Fri, 14 Feb 2020 18:20:46 GMT
+Received: from dhcp-10-211-46-32.usdhcp.oraclecorp.com (/10.211.46.32)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Fri, 14 Feb 2020 10:20:45 -0800
+Subject: Re: [PATCH 1/2] virtio-blk: fix hw_queue stopped on arbitrary error
+To:     Halil Pasic <pasic@linux.ibm.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-s390@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>, linux-kernel@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+References: <20200213123728.61216-1-pasic@linux.ibm.com>
+ <20200213123728.61216-2-pasic@linux.ibm.com>
+From:   dongli.zhang@oracle.com
+Organization: Oracle Corporation
+Message-ID: <d46e3fc1-9637-b82c-f986-3889fb0ca612@oracle.com>
+Date:   Fri, 14 Feb 2020 10:20:44 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:68.0)
+ Gecko/20100101 Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <20200207113958.7320-7-borntraeger@de.ibm.com>
+In-Reply-To: <20200213123728.61216-2-pasic@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 adultscore=0
+ suspectscore=4 mlxscore=0 bulkscore=0 malwarescore=0 phishscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002140136
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9531 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 mlxscore=0 malwarescore=0
+ suspectscore=4 mlxlogscore=999 priorityscore=1501 clxscore=1011
+ impostorscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002140136
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 07.02.20 12:39, Christian Borntraeger wrote:
-> From: Vasily Gorbik <gor@linux.ibm.com>
+Hi Halil,
+
+When swiotlb full is hit for virtio_blk, there is below warning for once (the
+warning is not by this patch set). Is this expected or just false positive?
+
+[   54.767257] virtio-pci 0000:00:04.0: swiotlb buffer is full (sz: 16 bytes),
+total 32768 (slots), used 258 (slots)
+[   54.767260] virtio-pci 0000:00:04.0: overflow 0x0000000075770110+16 of DMA
+mask ffffffffffffffff bus limit 0
+[   54.769192] ------------[ cut here ]------------
+[   54.769200] WARNING: CPU: 3 PID: 102 at kernel/dma/direct.c:35
+report_addr+0x71/0x77
+[   54.769200] Modules linked in:
+[   54.769203] CPU: 3 PID: 102 Comm: kworker/u8:2 Not tainted 5.6.0-rc1+ #2
+[   54.769204] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+rel-1.12.0-59-gc9ba5276e321-prebuilt.qemu.org 04/01/2014
+[   54.769208] Workqueue: writeback wb_workfn (flush-253:0)
+[   54.769211] RIP: 0010:report_addr+0x71/0x77
+... ...
+[   54.769226] Call Trace:
+[   54.769241]  dma_direct_map_page+0xc9/0xe0
+[   54.769245]  virtqueue_add+0x172/0xaa0
+[   54.769248]  virtqueue_add_sgs+0x85/0xa0
+[   54.769251]  virtio_queue_rq+0x292/0x480
+[   54.769255]  __blk_mq_try_issue_directly+0x13e/0x1f0
+[   54.769257]  blk_mq_request_issue_directly+0x48/0xa0
+[   54.769259]  blk_mq_try_issue_list_directly+0x3c/0xb0
+[   54.769261]  blk_mq_sched_insert_requests+0xb6/0x100
+[   54.769263]  blk_mq_flush_plug_list+0x146/0x210
+[   54.769264]  blk_flush_plug_list+0xba/0xe0
+[   54.769266]  blk_mq_make_request+0x331/0x5b0
+[   54.769268]  generic_make_request+0x10d/0x2e0
+[   54.769270]  submit_bio+0x69/0x130
+[   54.769273]  ext4_io_submit+0x44/0x50
+[   54.769275]  ext4_writepages+0x56f/0xd30
+[   54.769278]  ? cpumask_next_and+0x19/0x20
+[   54.769280]  ? find_busiest_group+0x11a/0xa40
+[   54.769283]  do_writepages+0x15/0x70
+[   54.769288]  __writeback_single_inode+0x38/0x330
+[   54.769290]  writeback_sb_inodes+0x219/0x4c0
+[   54.769292]  __writeback_inodes_wb+0x82/0xb0
+[   54.769293]  wb_writeback+0x267/0x300
+[   54.769295]  wb_workfn+0x1aa/0x430
+[   54.769298]  process_one_work+0x156/0x360
+[   54.769299]  worker_thread+0x41/0x3b0
+[   54.769300]  kthread+0xf3/0x130
+[   54.769302]  ? process_one_work+0x360/0x360
+[   54.769303]  ? kthread_bind+0x10/0x10
+[   54.769305]  ret_from_fork+0x35/0x40
+[   54.769307] ---[ end trace 923a87a9ce0e777a ]---
+
+Thank you very much!
+
+Dongli Zhang
+
+On 2/13/20 4:37 AM, Halil Pasic wrote:
+> Since nobody else is going to restart our hw_queue for us, the
+> blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
+> necessarily sufficient to ensure that the queue will get started again.
+> In case of global resource outage (-ENOMEM because mapping failure,
+> because of swiotlb full) our virtqueue may be empty and we can get
+> stuck with a stopped hw_queue.
 > 
-> Add exceptions handlers performing transparent transition of non-secure
-> pages to secure (import) upon guest access and secure pages to
-> non-secure (export) upon hypervisor access.
+> Let us not stop the queue on arbitrary errors, but only on -EONSPC which
+> indicates a full virtqueue, where the hw_queue is guaranteed to get
+> started by virtblk_done() before when it makes sense to carry on
+> submitting requests. Let us also remove a stale comment.
 > 
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-> [frankja@linux.ibm.com: adding checks for failures]
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> [imbrenda@linux.ibm.com:  adding a check for gmap fault]
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Fixes: f7728002c1c7 ("virtio_ring: fix return code on DMA mapping fails")
 > ---
->  arch/s390/kernel/pgm_check.S |  4 +-
->  arch/s390/mm/fault.c         | 86 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 88 insertions(+), 2 deletions(-)
 > 
-> diff --git a/arch/s390/kernel/pgm_check.S b/arch/s390/kernel/pgm_check.S
-> index 59dee9d3bebf..27ac4f324c70 100644
-> --- a/arch/s390/kernel/pgm_check.S
-> +++ b/arch/s390/kernel/pgm_check.S
-> @@ -78,8 +78,8 @@ PGM_CHECK(do_dat_exception)		/* 39 */
->  PGM_CHECK(do_dat_exception)		/* 3a */
->  PGM_CHECK(do_dat_exception)		/* 3b */
->  PGM_CHECK_DEFAULT			/* 3c */
-> -PGM_CHECK_DEFAULT			/* 3d */
-> -PGM_CHECK_DEFAULT			/* 3e */
-> +PGM_CHECK(do_secure_storage_access)	/* 3d */
-> +PGM_CHECK(do_non_secure_storage_access)	/* 3e */
->  PGM_CHECK_DEFAULT			/* 3f */
->  PGM_CHECK_DEFAULT			/* 40 */
->  PGM_CHECK_DEFAULT			/* 41 */
-> diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-> index 7b0bb475c166..fab4219fa0be 100644
-> --- a/arch/s390/mm/fault.c
-> +++ b/arch/s390/mm/fault.c
-> @@ -38,6 +38,7 @@
->  #include <asm/irq.h>
->  #include <asm/mmu_context.h>
->  #include <asm/facility.h>
-> +#include <asm/uv.h>
->  #include "../kernel/entry.h"
->  
->  #define __FAIL_ADDR_MASK -4096L
-> @@ -816,3 +817,88 @@ static int __init pfault_irq_init(void)
->  early_initcall(pfault_irq_init);
->  
->  #endif /* CONFIG_PFAULT */
-> +
-> +#if IS_ENABLED(CONFIG_KVM)
-> +void do_secure_storage_access(struct pt_regs *regs)
-> +{
-> +	unsigned long addr = regs->int_parm_long & __FAIL_ADDR_MASK;
-> +	struct vm_area_struct *vma;
-> +	struct mm_struct *mm;
-> +	struct page *page;
-> +	int rc;
-> +
-> +	switch (get_fault_type(regs)) {
-> +	case USER_FAULT:
-> +		mm = current->mm;
-> +		down_read(&mm->mmap_sem);
-> +		vma = find_vma(mm, addr);
-> +		if (!vma) {
-> +			up_read(&mm->mmap_sem);
-> +			do_fault_error(regs, VM_READ | VM_WRITE, VM_FAULT_BADMAP);
-> +			break;
-> +		}
-> +		page = follow_page(vma, addr, FOLL_WRITE | FOLL_GET);
-> +		if (IS_ERR_OR_NULL(page)) {
-> +			up_read(&mm->mmap_sem);
-> +			break;
-> +		}
-> +		if (arch_make_page_accessible(page))
-> +			send_sig(SIGSEGV, current, 0);
-> +		put_page(page);
-> +		up_read(&mm->mmap_sem);
-> +		break;
-> +	case KERNEL_FAULT:
-> +		page = phys_to_page(addr);
-> +		if (unlikely(!try_get_page(page)))
-> +			break;
-> +		rc = arch_make_page_accessible(page);
-> +		put_page(page);
-> +		if (rc)
-> +			BUG();
-> +		break;
-> +	case VDSO_FAULT:
-> +		/* fallthrough */
-> +	case GMAP_FAULT:
-> +		/* fallthrough */
-
-Could we ever get here from the SIE?
-
-> +	default:
-> +		do_fault_error(regs, VM_READ | VM_WRITE, VM_FAULT_BADMAP);
-> +		WARN_ON_ONCE(1);
-> +	}
-> +}
-> +NOKPROBE_SYMBOL(do_secure_storage_access);
-> +
-> +void do_non_secure_storage_access(struct pt_regs *regs)
-> +{
-> +	unsigned long gaddr = regs->int_parm_long & __FAIL_ADDR_MASK;
-> +	struct gmap *gmap = (struct gmap *)S390_lowcore.gmap;
-> +	struct uv_cb_cts uvcb = {
-> +		.header.cmd = UVC_CMD_CONV_TO_SEC_STOR,
-> +		.header.len = sizeof(uvcb),
-> +		.guest_handle = gmap->guest_handle,
-> +		.gaddr = gaddr,
-> +	};
-> +	int rc;
-> +
-> +	if (get_fault_type(regs) != GMAP_FAULT) {
-> +		do_fault_error(regs, VM_READ | VM_WRITE, VM_FAULT_BADMAP);
-> +		WARN_ON_ONCE(1);
-> +		return;
-> +	}
-> +
-> +	rc = uv_make_secure(gmap, gaddr, &uvcb);
-> +	if (rc == -EINVAL && uvcb.header.rc != 0x104)
-> +		send_sig(SIGSEGV, current, 0);
-
-
-Looks good to me, but I don't feel like being ready for an r-b. I'll
-have to let that sink in :)
-
-Assumed-is-okay-by: David Hildenbrand <david@redhat.com>
-
-
--- 
-Thanks,
-
-David / dhildenb
-
+> I'm in doubt with regards to the Fixes tag. The thing is, virtio-blk
+> probably made an assumption on virtqueue_add: the failure is either
+> because the virtqueue is full, or the failure is fatal. In both cases it
+> seems acceptable to stop the queue, although the fatal case is arguable.
+> Since commit f7728002c1c7 it the dma mapping has failed returns -ENOMEM
+> and not -EIO, and thus we have a recoverable failure that ain't
+> virtqueue full. So I lean towards to a fixes tag that references that
+> commit, although it ain't broken. Alternatively one could say 'Fixes:
+> e467cde23818 ("Block driver using virtio.")', if the aforementioned
+> assumption shouldn't have made in the first place.
+> ---
+>  drivers/block/virtio_blk.c | 8 +++++---
+>  1 file changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/block/virtio_blk.c b/drivers/block/virtio_blk.c
+> index 54158766334b..adfe43f5ffe4 100644
+> --- a/drivers/block/virtio_blk.c
+> +++ b/drivers/block/virtio_blk.c
+> @@ -245,10 +245,12 @@ static blk_status_t virtio_queue_rq(struct blk_mq_hw_ctx *hctx,
+>  	err = virtblk_add_req(vblk->vqs[qid].vq, vbr, vbr->sg, num);
+>  	if (err) {
+>  		virtqueue_kick(vblk->vqs[qid].vq);
+> -		blk_mq_stop_hw_queue(hctx);
+> +		/* Don't stop the queue if -ENOMEM: we may have failed to
+> +		 * bounce the buffer due to global resource outage.
+> +		 */
+> +		if (err == -ENOSPC)
+> +			blk_mq_stop_hw_queue(hctx);
+>  		spin_unlock_irqrestore(&vblk->vqs[qid].lock, flags);
+> -		/* Out of mem doesn't actually happen, since we fall back
+> -		 * to direct descriptors */
+>  		if (err == -ENOMEM || err == -ENOSPC)
+>  			return BLK_STS_DEV_RESOURCE;
+>  		return BLK_STS_IOERR;
+> 
