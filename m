@@ -2,119 +2,168 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4A6AB15D259
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 07:46:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 282D215D2E0
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 08:35:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725990AbgBNGqb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 01:46:31 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:44805 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725955AbgBNGqb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Feb 2020 01:46:31 -0500
-Received: by mail-ot1-f68.google.com with SMTP id h9so8140396otj.11;
-        Thu, 13 Feb 2020 22:46:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=RKB2u4zCoEkjwdZrkIjqRIz/kGGuU98/UeeGnME5DaU=;
-        b=ttCnz5S7kxwNor+Pg9JqXzpmTLKABDEHvB7sGge2iEYkklLODvA9iLE16n0zCr0md5
-         LeKRss6HpKBr36JLi8jhVz9ViNQIYqZyGE4wpLx82HCrThF5XBPY01BUY0TySsuWtiX7
-         rBwqw+4xI6lw1sUiH+5YlYeRK3aOPhms+VSGSgl6748lUDIgwRJ0DGHWYTWgExt6EUlP
-         1zjlhXi6eqJSdUliR4iBiefnczuQX3DEUtEffTFeWf0dFW084tA2boUDhTYlpKqrnSA8
-         4H/JWoQZhQvVtd7tO98D0weOOZ1Z4313MtBmtKd1xIbo02a3icnu8ZC3zA+0zRY+h8Gq
-         BUFg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=RKB2u4zCoEkjwdZrkIjqRIz/kGGuU98/UeeGnME5DaU=;
-        b=EoeNREgU4mEe5aeQAifVsfUHjplk2we95vMwhfbzItN+hiJntNJJwdb5QjOjVqBvHm
-         ODb74B/Zv49jRuMP9KvBbJO9jZ/HXPaNKZAjE01A3QsybPC8ZZd795gZ5jxkQy8hJrJs
-         /fyNVE+WJ9teloYP2kwWAjp6g5nHCgBFzmyEbNizdpxPwMPrbOVVWHW52JKJZj80cLqd
-         EgbixJK8GX/BBAVSkhJ6ICnUchaKhZiEBpeWlLR9mzOb3IGePVECw9EX8YW0zx8axJRn
-         yb+5+ilPFi88cnKLuw0bX66Zt5gFiULyGbxLKcb4i9clV/SqYJXwZPzYDHu0JHIHm/LG
-         Ec1g==
-X-Gm-Message-State: APjAAAWYQCsHJS1uxFUiND4lStilHSN65svfre0lFMTdMLw28KujHhAg
-        xCnQBbmW3JolbdeUP4w2By0=
-X-Google-Smtp-Source: APXvYqxitUmGPjrOI8tNqeeGYBJnMjQ984lWNAoWDD0tVEQdx5xYbkwh5EjRMoQiZimnWfEESY1pHw==
-X-Received: by 2002:a9d:6f85:: with SMTP id h5mr1082932otq.19.1581662790329;
-        Thu, 13 Feb 2020 22:46:30 -0800 (PST)
-Received: from ubuntu-m2-xlarge-x86 ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id r2sm1676849otk.22.2020.02.13.22.46.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Thu, 13 Feb 2020 22:46:29 -0800 (PST)
-Date:   Thu, 13 Feb 2020 23:46:28 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        id S1728918AbgBNHe4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 02:34:56 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12436 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728841AbgBNHe4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 14 Feb 2020 02:34:56 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01E7YlBb098720
+        for <linux-s390@vger.kernel.org>; Fri, 14 Feb 2020 02:34:56 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y4qytvnww-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 14 Feb 2020 02:34:55 -0500
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Fri, 14 Feb 2020 07:34:53 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 14 Feb 2020 07:34:37 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01E7YaEo60227764
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 07:34:37 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E2E2BA4066;
+        Fri, 14 Feb 2020 07:34:36 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9D47A405B;
+        Fri, 14 Feb 2020 07:34:36 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.211])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Feb 2020 07:34:36 +0000 (GMT)
+Subject: Re: [PATCH] s390/mm: Explicitly compare PAGE_DEFAULT_KEY against zero
+ in storage_key_init_range
+To:     Nathan Chancellor <natechancellor@gmail.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] s390/kaslr: Fix casts in get_random
-Message-ID: <20200214064628.GA14336@ubuntu-m2-xlarge-x86>
-References: <20200208141052.48476-1-natechancellor@gmail.com>
- <ba371a74412c07c30eeb26fa25c94c25468599a9.camel@perches.com>
+References: <20200214064207.10381-1-natechancellor@gmail.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Fri, 14 Feb 2020 08:34:36 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <ba371a74412c07c30eeb26fa25c94c25468599a9.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20200214064207.10381-1-natechancellor@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021407-0020-0000-0000-000003AA036C
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021407-0021-0000-0000-00002201F0FE
+Message-Id: <e93b8ff2-0203-445c-c226-df482e542cb0@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-14_01:2020-02-12,2020-02-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 phishscore=0
+ priorityscore=1501 suspectscore=0 mlxlogscore=999 lowpriorityscore=0
+ impostorscore=0 spamscore=0 bulkscore=0 adultscore=0 mlxscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002140061
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sat, Feb 08, 2020 at 12:17:20PM -0800, Joe Perches wrote:
-> On Sat, 2020-02-08 at 07:10 -0700, Nathan Chancellor wrote:
-> > Clang warns:
-> > 
-> > ../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
-> > of type 'const u8 *' (aka 'const unsigned char *') converts between
-> > pointers to integer
-> > types with different sign [-Wpointer-sign]
-> >                                   (char *) entropy, (char *) entropy,
-> >                                                     ^~~~~~~~~~~~~~~~
-> > ../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
-> > parameter 'src' here
-> >                             u8 *dest, const u8 *src, long src_len)
-> >                                                 ^
-> > 2 warnings generated.
-> > 
-> > Fix the cast to match what else is done in this function.
-> > 
-> > Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
-> > Link: https://github.com/ClangBuiltLinux/linux/issues/862
-> > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > ---
-> >  arch/s390/boot/kaslr.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
-> > index 5d12352545c5..5591243d673e 100644
-> > --- a/arch/s390/boot/kaslr.c
-> > +++ b/arch/s390/boot/kaslr.c
-> > @@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
-> >  		*(unsigned long *) prng.parm_block ^= seed;
-> >  		for (i = 0; i < 16; i++) {
-> >  			cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
-> > -				  (char *) entropy, (char *) entropy,
-> > +				  (u8 *) entropy, (u8 *) entropy,
-> 
-> Why not change the function to take void *?
-> 
-> static inline int cpacf_kmc(unsigned long func, void *param,
-> 			    u8 *dest, const u8 *src, long src_len)
-> 
-> vs:
-> 
-> static inline int cpacf_kmc(unsigned long func, void *param,
-> 			    void *dest, const void *src, long src_len)
-> 
-> and remove the casts?
 
-I can certainly do that if the maintainers prefer it.
 
-Cheers,
-Nathan
+On 14.02.20 07:42, Nathan Chancellor wrote:
+> Clang warns:
+> 
+>  In file included from ../arch/s390/purgatory/purgatory.c:10:
+>  In file included from ../include/linux/kexec.h:18:
+>  In file included from ../include/linux/crash_core.h:6:
+>  In file included from ../include/linux/elfcore.h:5:
+>  In file included from ../include/linux/user.h:1:
+>  In file included from ../arch/s390/include/asm/user.h:11:
+>  ../arch/s390/include/asm/page.h:45:6: warning: converting the result of
+>  '<<' to a boolean always evaluates to false
+>  [-Wtautological-constant-compare]
+>          if (PAGE_DEFAULT_KEY)
+>             ^
+>  ../arch/s390/include/asm/page.h:23:44: note: expanded from macro
+>  'PAGE_DEFAULT_KEY'
+>  #define PAGE_DEFAULT_KEY        (PAGE_DEFAULT_ACC << 4)
+>                                                   ^
+>  1 warning generated.
+> 
+> Explicitly compare this against zero to silence the warning as it is
+> intended to be used in a boolean context.
+> 
+> Fixes: de3fa841e429 ("s390/mm: fix compile for PAGE_DEFAULT_KEY != 0")
+> Link: https://github.com/ClangBuiltLinux/linux/issues/860
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+
+Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+
+> ---
+>  arch/s390/include/asm/page.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+> index 85e944f04c70..1019efd85b9d 100644
+> --- a/arch/s390/include/asm/page.h
+> +++ b/arch/s390/include/asm/page.h
+> @@ -42,7 +42,7 @@ void __storage_key_init_range(unsigned long start, unsigned long end);
+>  
+>  static inline void storage_key_init_range(unsigned long start, unsigned long end)
+>  {
+> -	if (PAGE_DEFAULT_KEY)
+> +	if (PAGE_DEFAULT_KEY != 0)
+>  		__storage_key_init_range(start, end);
+>  }
+>  
+> 
+
