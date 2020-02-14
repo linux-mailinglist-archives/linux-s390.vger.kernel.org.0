@@ -2,143 +2,186 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1D56015E3AE
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 17:32:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 46C4715E45C
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 17:35:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2406532AbgBNQbn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 11:31:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36208 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2406275AbgBNQ0D (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:26:03 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C291247CB;
-        Fri, 14 Feb 2020 16:26:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697562;
-        bh=VRnjWlSGoHS9Lvi/rHGpj+NTxoiIIGFFCtZMdu5pXnI=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QKt3bn9UzwB6O8uCoqyVctZfOwrpi8dcwx4VLjphvNCydRe2CDE8rlRQiG+WsSZHs
-         qvCLK7eJ3FKNLQUMZUYZJW2Jv7sX/PmEnsRtSqctS+bdbWia3LkPdSvt55qWCimHgv
-         lWXFGMcKyI2MJ/LdQxy2eqMGsOT2HB7pEG5qFa/Y=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Sven Schnelle <sven.schnelle@ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 078/100] s390/ftrace: generate traced function stack frame
-Date:   Fri, 14 Feb 2020 11:24:02 -0500
-Message-Id: <20200214162425.21071-78-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
-References: <20200214162425.21071-1-sashal@kernel.org>
+        id S2393560AbgBNQfh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 11:35:37 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:6580 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2405960AbgBNQYn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:24:43 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01EGNYLI018992;
+        Fri, 14 Feb 2020 11:24:42 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y4j87xwa7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Feb 2020 11:24:42 -0500
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01EGNbjH019260;
+        Fri, 14 Feb 2020 11:24:42 -0500
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y4j87xw9h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Feb 2020 11:24:42 -0500
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01EGMISb012454;
+        Fri, 14 Feb 2020 16:24:40 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma05wdc.us.ibm.com with ESMTP id 2y5bbyqqtp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 14 Feb 2020 16:24:40 +0000
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01EGOeLA51773768
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 14 Feb 2020 16:24:40 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 51897B2065;
+        Fri, 14 Feb 2020 16:24:40 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D0489B2064;
+        Fri, 14 Feb 2020 16:24:39 +0000 (GMT)
+Received: from [9.160.20.216] (unknown [9.160.20.216])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Fri, 14 Feb 2020 16:24:39 +0000 (GMT)
+Subject: Re: [RFC PATCH v2 7/9] vfio-ccw: Wire up the CRW irq and CRW region
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <20200206213825.11444-1-farman@linux.ibm.com>
+ <20200206213825.11444-8-farman@linux.ibm.com>
+ <20200214143400.175c9e5e.cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <75bb9119-8692-c18e-1e7b-c7598d8ef25a@linux.ibm.com>
+Date:   Fri, 14 Feb 2020 11:24:39 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20200214143400.175c9e5e.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-14_05:2020-02-12,2020-02-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 bulkscore=0
+ phishscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0
+ impostorscore=0 malwarescore=0 spamscore=0 mlxlogscore=837 clxscore=1015
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002140126
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Vasily Gorbik <gor@linux.ibm.com>
 
-[ Upstream commit 45f7a0da600d3c409b5ad8d5ddddacd98ddc8840 ]
 
-Currently backtrace from ftraced function does not contain ftraced
-function itself. e.g. for "path_openat":
+On 2/14/20 8:34 AM, Cornelia Huck wrote:
+> On Thu,  6 Feb 2020 22:38:23 +0100
+> Eric Farman <farman@linux.ibm.com> wrote:
+> 
+>> From: Farhan Ali <alifm@linux.ibm.com>
+>>
+>> Use an IRQ to notify userspace that there is a CRW
+>> pending in the region, related to path-availability
+>> changes on the passthrough subchannel.
+>>
+>> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+>> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+>> ---
+>>
+>> Notes:
+>>     v1->v2:
+>>      - Remove extraneous 0x0 in crw.rsid assignment [CH]
+>>      - Refactor the building/queueing of a crw into its own routine [EF]
+>>     
+>>     v0->v1: [EF]
+>>      - Place the non-refactoring changes from the previous patch here
+>>      - Clean up checkpatch (whitespace) errors
+>>      - s/chp_crw/crw/
+>>      - Move acquire/release of io_mutex in vfio_ccw_crw_region_read()
+>>        into patch that introduces that region
+>>      - Remove duplicate include from vfio_ccw_drv.c
+>>      - Reorder include in vfio_ccw_private.h
+>>
+>>  drivers/s390/cio/vfio_ccw_chp.c     |  5 ++
+>>  drivers/s390/cio/vfio_ccw_drv.c     | 73 +++++++++++++++++++++++++++++
+>>  drivers/s390/cio/vfio_ccw_ops.c     |  4 ++
+>>  drivers/s390/cio/vfio_ccw_private.h |  9 ++++
+>>  include/uapi/linux/vfio.h           |  1 +
+>>  5 files changed, 92 insertions(+)
+>>
+> (...)
+>> +static void vfio_ccw_alloc_crw(struct vfio_ccw_private *private,
+>> +			       struct chp_link *link,
+>> +			       unsigned int erc)
+>> +{
+>> +	struct vfio_ccw_crw *vc_crw;
+>> +	struct crw *crw;
+>> +
+>> +	/*
+>> +	 * If unable to allocate a CRW, just drop the event and
+>> +	 * carry on.  The guest will either see a later one or
+>> +	 * learn when it issues its own store subchannel.
+>> +	 */
+>> +	vc_crw = kzalloc(sizeof(*vc_crw), GFP_ATOMIC);
+>> +	if (!vc_crw)
+>> +		return;
+>> +
+>> +	/*
+>> +	 * Build in the first CRW space, but don't chain anything
+>> +	 * into the second one even though the space exists.
+>> +	 */
+>> +	crw = &vc_crw->crw[0];
+>> +
+>> +	/*
+>> +	 * Presume every CRW we handle is reported by a channel-path.
+>> +	 * Maybe not future-proof, but good for what we're doing now.
+> 
+> You could pass in a source indication, maybe? Presumably, at least one
+> of the callers further up the chain knows...
 
-arch_stack_walk+0x15c/0x2d8
-stack_trace_save+0x50/0x68
-stack_trace_call+0x15e/0x3d8
-ftrace_graph_caller+0x0/0x1c <-- ftrace code
-do_filp_open+0x7c/0xe8 <-- ftraced function caller
-do_open_execat+0x76/0x1b8
-open_exec+0x52/0x78
-load_elf_binary+0x180/0x1160
-search_binary_handler+0x8e/0x288
-load_script+0x2a8/0x2b8
-search_binary_handler+0x8e/0x288
-__do_execve_file.isra.39+0x6fa/0xb40
-__s390x_sys_execve+0x56/0x68
-system_call+0xdc/0x2d8
+The "chain" is the vfio_ccw_chp_event() function called off the
+.chp_event callback, and then to this point.  So I don't think there's
+much we can get back from our callchain, other than the CHP_xxxLINE
+event that got us here.
 
-Ftraced function is expected in the backtrace by ftrace kselftests, which
-are now failing. It would also be nice to have it for clarity reasons.
+> 
+>> +	 *
+>> +	 * FIXME Sort of a lie, since we're converting a CRW
+>> +	 * reported by a channel-path into one issued to each
+>> +	 * subchannel, but still saying it's coming from the path.
+> 
+> It's still channel-path related, though :)
+> 
+> The important point is probably is that userspace needs to be aware
+> that the same channel-path related event is reported on all affected
+> subchannels, and they therefore need some appropriate handling on their
+> side.
 
-"ftrace_caller" itself is called without stack frame allocated for it
-and does not store its caller (ftraced function). Instead it simply
-allocates a stack frame for "ftrace_trace_function" and sets backchain
-to point to ftraced function stack frame (which contains ftraced function
-caller in saved r14).
+This is true.  And the fact that the RSC and RSID fields will be in
+agreement is helpful.  But yes, the fact that userspace should expect
+the possibility of more than one CRW per channel path is the thing I'm
+still not enjoying.  Mostly because of the race between queueing
+additional ones, and unqueuing them on the other side.  So probably not
+much that can be done here but awareness.
 
-To fix this issue make "ftrace_caller" allocate a stack frame
-for itself just to store ftraced function for the stack unwinder.
-As a result backtrace looks like the following:
-
-arch_stack_walk+0x15c/0x2d8
-stack_trace_save+0x50/0x68
-stack_trace_call+0x15e/0x3d8
-ftrace_graph_caller+0x0/0x1c <-- ftrace code
-path_openat+0x6/0xd60  <-- ftraced function
-do_filp_open+0x7c/0xe8 <-- ftraced function caller
-do_open_execat+0x76/0x1b8
-open_exec+0x52/0x78
-load_elf_binary+0x180/0x1160
-search_binary_handler+0x8e/0x288
-load_script+0x2a8/0x2b8
-search_binary_handler+0x8e/0x288
-__do_execve_file.isra.39+0x6fa/0xb40
-__s390x_sys_execve+0x56/0x68
-system_call+0xdc/0x2d8
-
-Reported-by: Sven Schnelle <sven.schnelle@ibm.com>
-Tested-by: Sven Schnelle <sven.schnelle@ibm.com>
-Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/kernel/mcount.S | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
-index 6c1c7d399bf95..78ba14546e007 100644
---- a/arch/s390/kernel/mcount.S
-+++ b/arch/s390/kernel/mcount.S
-@@ -23,6 +23,12 @@ ENTRY(ftrace_stub)
- #define STACK_PTREGS	  (STACK_FRAME_OVERHEAD)
- #define STACK_PTREGS_GPRS (STACK_PTREGS + __PT_GPRS)
- #define STACK_PTREGS_PSW  (STACK_PTREGS + __PT_PSW)
-+#ifdef __PACK_STACK
-+/* allocate just enough for r14, r15 and backchain */
-+#define TRACED_FUNC_FRAME_SIZE	24
-+#else
-+#define TRACED_FUNC_FRAME_SIZE	STACK_FRAME_OVERHEAD
-+#endif
- 
- ENTRY(_mcount)
- 	BR_EX	%r14
-@@ -34,9 +40,16 @@ ENTRY(ftrace_caller)
- #ifndef CC_USING_HOTPATCH
- 	aghi	%r0,MCOUNT_RETURN_FIXUP
- #endif
--	aghi	%r15,-STACK_FRAME_SIZE
-+	# allocate stack frame for ftrace_caller to contain traced function
-+	aghi	%r15,-TRACED_FUNC_FRAME_SIZE
- 	stg	%r1,__SF_BACKCHAIN(%r15)
-+	stg	%r0,(__SF_GPRS+8*8)(%r15)
-+	stg	%r15,(__SF_GPRS+9*8)(%r15)
-+	# allocate pt_regs and stack frame for ftrace_trace_function
-+	aghi	%r15,-STACK_FRAME_SIZE
- 	stg	%r1,(STACK_PTREGS_GPRS+15*8)(%r15)
-+	aghi	%r1,-TRACED_FUNC_FRAME_SIZE
-+	stg	%r1,__SF_BACKCHAIN(%r15)
- 	stg	%r0,(STACK_PTREGS_PSW+8)(%r15)
- 	stmg	%r2,%r14,(STACK_PTREGS_GPRS+2*8)(%r15)
- #ifdef CONFIG_HAVE_MARCH_Z196_FEATURES
--- 
-2.20.1
-
+> 
+>> +	 */
+>> +	crw->rsc = CRW_RSC_CPATH;
+>> +	crw->rsid = (link->chpid.cssid << 8) | link->chpid.id;
+>> +	crw->erc = erc;
+>> +
+>> +	list_add_tail(&vc_crw->next, &private->crw);
+>> +	queue_work(vfio_ccw_work_q, &private->crw_work);
+>> +}
+>> +
+>>  static int vfio_ccw_chp_event(struct subchannel *sch,
+>>  			      struct chp_link *link, int event)
+>>  {
+> (...)
+> 
