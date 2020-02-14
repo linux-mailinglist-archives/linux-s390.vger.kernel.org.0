@@ -2,39 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59B3E15E4C9
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 17:38:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1D56015E3AE
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 17:32:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393810AbgBNQiC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 11:38:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60184 "EHLO mail.kernel.org"
+        id S2406532AbgBNQbn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 11:31:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36208 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2405704AbgBNQXm (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 14 Feb 2020 11:23:42 -0500
+        id S2406275AbgBNQ0D (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 14 Feb 2020 11:26:03 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E535324772;
-        Fri, 14 Feb 2020 16:23:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2C291247CB;
+        Fri, 14 Feb 2020 16:26:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1581697421;
-        bh=Y3pyy1a91dcT2uOGt0m1i2q0UP8gkIqP0mq2PHR0szo=;
+        s=default; t=1581697562;
+        bh=VRnjWlSGoHS9Lvi/rHGpj+NTxoiIIGFFCtZMdu5pXnI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sUv4mQTJ7B5e0E1t2WAXL4YdhYQoRHg4dzlojiRwQa5r7fjCVTwhq8nRLJLBzoehV
-         0hXVpCtLwEF5EPoYmw7Cmxd17tXEpBbNfwgMQkQYTVOBuFPB3QSdj/8xiBaJW0kEuI
-         0zegpJ3NGtTS+DSV96tT4G8uSne+KSReqXWMjNiU=
+        b=QKt3bn9UzwB6O8uCoqyVctZfOwrpi8dcwx4VLjphvNCydRe2CDE8rlRQiG+WsSZHs
+         qvCLK7eJ3FKNLQUMZUYZJW2Jv7sX/PmEnsRtSqctS+bdbWia3LkPdSvt55qWCimHgv
+         lWXFGMcKyI2MJ/LdQxy2eqMGsOT2HB7pEG5qFa/Y=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vasily Gorbik <gor@linux.ibm.com>,
         Sven Schnelle <sven.schnelle@ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 111/141] s390/ftrace: generate traced function stack frame
-Date:   Fri, 14 Feb 2020 11:20:51 -0500
-Message-Id: <20200214162122.19794-111-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.4 078/100] s390/ftrace: generate traced function stack frame
+Date:   Fri, 14 Feb 2020 11:24:02 -0500
+Message-Id: <20200214162425.21071-78-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200214162122.19794-1-sashal@kernel.org>
-References: <20200214162122.19794-1-sashal@kernel.org>
+In-Reply-To: <20200214162425.21071-1-sashal@kernel.org>
+References: <20200214162425.21071-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -105,10 +105,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 14 insertions(+), 1 deletion(-)
 
 diff --git a/arch/s390/kernel/mcount.S b/arch/s390/kernel/mcount.S
-index be75e8e49e43d..802a4ded9a626 100644
+index 6c1c7d399bf95..78ba14546e007 100644
 --- a/arch/s390/kernel/mcount.S
 +++ b/arch/s390/kernel/mcount.S
-@@ -24,6 +24,12 @@ ENTRY(ftrace_stub)
+@@ -23,6 +23,12 @@ ENTRY(ftrace_stub)
  #define STACK_PTREGS	  (STACK_FRAME_OVERHEAD)
  #define STACK_PTREGS_GPRS (STACK_PTREGS + __PT_GPRS)
  #define STACK_PTREGS_PSW  (STACK_PTREGS + __PT_PSW)
@@ -121,7 +121,7 @@ index be75e8e49e43d..802a4ded9a626 100644
  
  ENTRY(_mcount)
  	BR_EX	%r14
-@@ -37,9 +43,16 @@ ENTRY(ftrace_caller)
+@@ -34,9 +40,16 @@ ENTRY(ftrace_caller)
  #ifndef CC_USING_HOTPATCH
  	aghi	%r0,MCOUNT_RETURN_FIXUP
  #endif
