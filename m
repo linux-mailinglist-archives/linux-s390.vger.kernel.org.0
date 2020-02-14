@@ -2,40 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6823B15F13E
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 19:03:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1A5BE15F200
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 19:09:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388499AbgBNSAJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 13:00:09 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49746 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389045AbgBNSAH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 14 Feb 2020 13:00:07 -0500
+        id S2388878AbgBNSFd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 13:05:33 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:44397 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391587AbgBNSFY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Feb 2020 13:05:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581703206;
+        s=mimecast20190719; t=1581703523;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=OuDO+sSywNgXzlWY3guw8t9e6po0cdRyDcCwaceV5Yk=;
-        b=gEuEOUPzFsnFUcYsS2zs/nxeFEbZSk28mybf7Vglc83VYEld+I6J2zk21RxCqUb3k0iuAW
-        jZJZ4z8IScGsmd3S1DmRUDKKs9dB4XUKOuuqewPsEtO+/L/e1XDPDF97Man7WVN8uuBnGC
-        VYco2QXKOOykmxW7+j16yoFKMNDfqOA=
+        bh=rUebluGvxWOJGeiBzNgaSQxX4d6as30a+TdaEoqZTN8=;
+        b=Dt65xmSVfJt8JXSnlMVVOxagamQZOWs2avTag21zq/zHHcmXvZYtuEFk9jYF9BxsoGfuK/
+        h1X2v7RQPZob2JSovwmBpy5NvD3f20dA3zXgEoE45ys/Z6By2J4VFVSgWXe5mWCxl0nG5L
+        hn/jK7y1yMIH9X5FnjyaGmW9z+eGGs0=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-30-ytRYOxW3PDOllMc1JQYSEQ-1; Fri, 14 Feb 2020 13:00:00 -0500
-X-MC-Unique: ytRYOxW3PDOllMc1JQYSEQ-1
+ us-mta-213-KzCU7JD1PpGMPrkIduZr3Q-1; Fri, 14 Feb 2020 13:05:15 -0500
+X-MC-Unique: KzCU7JD1PpGMPrkIduZr3Q-1
 Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE468800D53;
-        Fri, 14 Feb 2020 17:59:58 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EF535800D50;
+        Fri, 14 Feb 2020 18:05:12 +0000 (UTC)
 Received: from [10.36.118.137] (unknown [10.36.118.137])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 07B0B1001B2C;
-        Fri, 14 Feb 2020 17:59:55 +0000 (UTC)
-Subject: Re: [PATCH 05/35] s390/mm: provide memory management functions for
- protected KVM guests
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1FF161001B2C;
+        Fri, 14 Feb 2020 18:05:09 +0000 (UTC)
+Subject: Re: [PATCH 06/35] s390/mm: add (non)secure page access exceptions
+ handlers
 To:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
@@ -46,9 +45,10 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Michael Mueller <mimu@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>, linux-mm@kvack.org,
-        Andrew Morton <akpm@linux-foundation.org>
+        Andrew Morton <akpm@linux-foundation.org>,
+        Janosch Frank <frankja@linux.ibm.com>
 References: <20200207113958.7320-1-borntraeger@de.ibm.com>
- <20200207113958.7320-6-borntraeger@de.ibm.com>
+ <20200207113958.7320-7-borntraeger@de.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -94,276 +94,154 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <1fb4da22-bab4-abe3-847b-5a7d79d84774@redhat.com>
-Date:   Fri, 14 Feb 2020 18:59:55 +0100
+Message-ID: <c05f8672-dc29-271a-66d2-73138406cf21@redhat.com>
+Date:   Fri, 14 Feb 2020 19:05:09 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200207113958.7320-6-borntraeger@de.ibm.com>
+In-Reply-To: <20200207113958.7320-7-borntraeger@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-> =20
->  /*
-> @@ -1086,12 +1106,16 @@ static inline pte_t ptep_get_and_clear_full(str=
-uct mm_struct *mm,
->  					    unsigned long addr,
->  					    pte_t *ptep, int full)
->  {
-> +	pte_t res;
-
-Empty line missing.
-
->  	if (full) {
-> -		pte_t pte =3D *ptep;
-> +		res =3D *ptep;
->  		*ptep =3D __pte(_PAGE_INVALID);
-> -		return pte;
-> +	} else {
-> +		res =3D ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
->  	}
-> -	return ptep_xchg_lazy(mm, addr, ptep, __pte(_PAGE_INVALID));
-> +	if (mm_is_protected(mm) && pte_present(res))
-> +		uv_convert_from_secure(pte_val(res) & PAGE_MASK);
-> +	return res;
->  }
-
-[...]
-
-> +int uv_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)=
-;
-> +int uv_convert_from_secure(unsigned long paddr);
-> +
-> +static inline int uv_convert_to_secure(struct gmap *gmap, unsigned lon=
-g gaddr)
-> +{
-> +	struct uv_cb_cts uvcb =3D {
-> +		.header.cmd =3D UVC_CMD_CONV_TO_SEC_STOR,
-> +		.header.len =3D sizeof(uvcb),
-> +		.guest_handle =3D gmap->guest_handle,
-> +		.gaddr =3D gaddr,
-> +	};
-> +
-> +	return uv_make_secure(gmap, gaddr, &uvcb);
-> +}
-
-I'd actually suggest to name everything that eats a gmap "gmap_",
-
-e.g., "gmap_make_secure()"
-
-[...]
-
-> =20
->  #if defined(CONFIG_PROTECTED_VIRTUALIZATION_GUEST) ||                 =
-         \
-> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
-> index a06a628a88da..15ac598a3d8d 100644
-> --- a/arch/s390/kernel/uv.c
-> +++ b/arch/s390/kernel/uv.c
-> @@ -9,6 +9,8 @@
->  #include <linux/sizes.h>
->  #include <linux/bitmap.h>
->  #include <linux/memblock.h>
-> +#include <linux/pagemap.h>
-> +#include <linux/swap.h>
+On 07.02.20 12:39, Christian Borntraeger wrote:
+> From: Vasily Gorbik <gor@linux.ibm.com>
+> 
+> Add exceptions handlers performing transparent transition of non-secure
+> pages to secure (import) upon guest access and secure pages to
+> non-secure (export) upon hypervisor access.
+> 
+> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> [frankja@linux.ibm.com: adding checks for failures]
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> [imbrenda@linux.ibm.com:  adding a check for gmap fault]
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  arch/s390/kernel/pgm_check.S |  4 +-
+>  arch/s390/mm/fault.c         | 86 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 88 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/pgm_check.S b/arch/s390/kernel/pgm_check.S
+> index 59dee9d3bebf..27ac4f324c70 100644
+> --- a/arch/s390/kernel/pgm_check.S
+> +++ b/arch/s390/kernel/pgm_check.S
+> @@ -78,8 +78,8 @@ PGM_CHECK(do_dat_exception)		/* 39 */
+>  PGM_CHECK(do_dat_exception)		/* 3a */
+>  PGM_CHECK(do_dat_exception)		/* 3b */
+>  PGM_CHECK_DEFAULT			/* 3c */
+> -PGM_CHECK_DEFAULT			/* 3d */
+> -PGM_CHECK_DEFAULT			/* 3e */
+> +PGM_CHECK(do_secure_storage_access)	/* 3d */
+> +PGM_CHECK(do_non_secure_storage_access)	/* 3e */
+>  PGM_CHECK_DEFAULT			/* 3f */
+>  PGM_CHECK_DEFAULT			/* 40 */
+>  PGM_CHECK_DEFAULT			/* 41 */
+> diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
+> index 7b0bb475c166..fab4219fa0be 100644
+> --- a/arch/s390/mm/fault.c
+> +++ b/arch/s390/mm/fault.c
+> @@ -38,6 +38,7 @@
+>  #include <asm/irq.h>
+>  #include <asm/mmu_context.h>
 >  #include <asm/facility.h>
->  #include <asm/sections.h>
->  #include <asm/uv.h>
-> @@ -99,4 +101,174 @@ void adjust_to_uv_max(unsigned long *vmax)
->  	if (prot_virt_host && *vmax > uv_info.max_sec_stor_addr)
->  		*vmax =3D uv_info.max_sec_stor_addr;
->  }
+> +#include <asm/uv.h>
+>  #include "../kernel/entry.h"
+>  
+>  #define __FAIL_ADDR_MASK -4096L
+> @@ -816,3 +817,88 @@ static int __init pfault_irq_init(void)
+>  early_initcall(pfault_irq_init);
+>  
+>  #endif /* CONFIG_PFAULT */
 > +
-> +static int __uv_pin_shared(unsigned long paddr)
+> +#if IS_ENABLED(CONFIG_KVM)
+> +void do_secure_storage_access(struct pt_regs *regs)
 > +{
-> +	struct uv_cb_cfs uvcb =3D {
-> +		.header.cmd	=3D UVC_CMD_PIN_PAGE_SHARED,
-> +		.header.len	=3D sizeof(uvcb),
-> +		.paddr		=3D paddr,
-
-please drop all the superfluous spaces (just as in the other uv calls).
-
-> +	};
-> +
-> +	if (uv_call(0, (u64)&uvcb))
-> +		return -EINVAL;
-> +	return 0;
-> +}
-
-[...]
-
-> +static int make_secure_pte(pte_t *ptep, unsigned long addr, void *data=
-)
-> +{
-> +	struct conv_params *params =3D data;
-> +	pte_t entry =3D READ_ONCE(*ptep);
-> +	struct page *page;
-> +	int expected, rc =3D 0;
-> +
-> +	if (!pte_present(entry))
-> +		return -ENXIO;
-> +	if (pte_val(entry) & (_PAGE_INVALID | _PAGE_PROTECT))
-> +		return -ENXIO;
-> +
-> +	page =3D pte_page(entry);
-> +	if (page !=3D params->page)
-> +		return -ENXIO;
-> +
-> +	if (PageWriteback(page))
-> +		return -EAGAIN;
-> +	expected =3D expected_page_refs(page);
-
-I do wonder if we could factor out expected_page_refs() and reuse from
-other sources ...
-
-I do wonder about huge page backing of guests, and especially
-hpage_nr_pages(page) used in mm/migrate.c:expected_page_refs(). But I
-can spot some hugepage exclusion below ... This needs comments.
-
-> +	if (!page_ref_freeze(page, expected))
-> +		return -EBUSY;
-> +	set_bit(PG_arch_1, &page->flags);
-
-Can we please document somewhere how PG_arch_1 is used on s390x? (page)
-
-"The generic code guarantees that this bit is cleared for a page when it
-first is entered into the page cache" - should not be an issue, right?
-
-> +	rc =3D uv_call(0, (u64)params->uvcb);
-> +	page_ref_unfreeze(page, expected);
-> +	if (rc)
-> +		rc =3D (params->uvcb->rc =3D=3D 0x10a) ? -ENXIO : -EINVAL;
-> +	return rc;
-> +}
-> +
-> +/*
-> + * Requests the Ultravisor to make a page accessible to a guest.
-> + * If it's brought in the first time, it will be cleared. If
-> + * it has been exported before, it will be decrypted and integrity
-> + * checked.
-> + *
-> + * @gmap: Guest mapping
-> + * @gaddr: Guest 2 absolute address to be imported
-
-I'd just drop the the (incomplete) parameter documentation, everybody
-reaching this point should now what a gmap and what a gaddr is ...
-
-> + */
-> +int uv_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
-> +{
-> +	struct conv_params params =3D { .uvcb =3D uvcb };
+> +	unsigned long addr = regs->int_parm_long & __FAIL_ADDR_MASK;
 > +	struct vm_area_struct *vma;
-> +	unsigned long uaddr;
-> +	int rc, local_drain =3D 0;
+> +	struct mm_struct *mm;
+> +	struct page *page;
+> +	int rc;
 > +
-> +again:
-> +	rc =3D -EFAULT;
-> +	down_read(&gmap->mm->mmap_sem);
-> +
-> +	uaddr =3D __gmap_translate(gmap, gaddr);
-> +	if (IS_ERR_VALUE(uaddr))
-> +		goto out;
-> +	vma =3D find_vma(gmap->mm, uaddr);
-> +	if (!vma)
-> +		goto out;
-> +	if (is_vm_hugetlb_page(vma))
-> +		goto out;
-
-Hah there it is! How is it enforced on upper layers/excluded? Will
-hpage=3Dtrue fail with prot virt? What if a guest is not a protected gues=
-t
-but wants to sue huge pages? This needs comments/patch description.
-
-> +
-> +	rc =3D -ENXIO;
-> +	params.page =3D follow_page(vma, uaddr, FOLL_WRITE | FOLL_NOWAIT);
-> +	if (IS_ERR_OR_NULL(params.page))
-> +		goto out;
-> +
-> +	lock_page(params.page);
-> +	rc =3D apply_to_page_range(gmap->mm, uaddr, PAGE_SIZE, make_secure_pt=
-e, &params);
-
-Ehm, isn't it just always a single page?
-
-> +	unlock_page(params.page);
-> +out:
-> +	up_read(&gmap->mm->mmap_sem);
-> +
-> +	if (rc =3D=3D -EBUSY) {
-> +		if (local_drain) {
-> +			lru_add_drain_all();
-> +			return -EAGAIN;
+> +	switch (get_fault_type(regs)) {
+> +	case USER_FAULT:
+> +		mm = current->mm;
+> +		down_read(&mm->mmap_sem);
+> +		vma = find_vma(mm, addr);
+> +		if (!vma) {
+> +			up_read(&mm->mmap_sem);
+> +			do_fault_error(regs, VM_READ | VM_WRITE, VM_FAULT_BADMAP);
+> +			break;
 > +		}
-> +		lru_add_drain();
+> +		page = follow_page(vma, addr, FOLL_WRITE | FOLL_GET);
+> +		if (IS_ERR_OR_NULL(page)) {
+> +			up_read(&mm->mmap_sem);
+> +			break;
+> +		}
+> +		if (arch_make_page_accessible(page))
+> +			send_sig(SIGSEGV, current, 0);
+> +		put_page(page);
+> +		up_read(&mm->mmap_sem);
+> +		break;
+> +	case KERNEL_FAULT:
+> +		page = phys_to_page(addr);
+> +		if (unlikely(!try_get_page(page)))
+> +			break;
+> +		rc = arch_make_page_accessible(page);
+> +		put_page(page);
+> +		if (rc)
+> +			BUG();
+> +		break;
+> +	case VDSO_FAULT:
+> +		/* fallthrough */
+> +	case GMAP_FAULT:
+> +		/* fallthrough */
 
-comments please why that is performed.
+Could we ever get here from the SIE?
 
-> +		local_drain =3D 1;
-> +		goto again;
-
-Could we end up in an endless loop?
-
-> +	} else if (rc =3D=3D -ENXIO) {
-> +		if (gmap_fault(gmap, gaddr, FAULT_FLAG_WRITE))
-> +			return -EFAULT;
-> +		return -EAGAIN;
+> +	default:
+> +		do_fault_error(regs, VM_READ | VM_WRITE, VM_FAULT_BADMAP);
+> +		WARN_ON_ONCE(1);
 > +	}
-> +	return rc;
 > +}
-> +EXPORT_SYMBOL_GPL(uv_make_secure);
+> +NOKPROBE_SYMBOL(do_secure_storage_access);
 > +
-> +/**
-> + * To be called with the page locked or with an extra reference!
-> + */
-> +int arch_make_page_accessible(struct page *page)
+> +void do_non_secure_storage_access(struct pt_regs *regs)
 > +{
-> +	int rc =3D 0;
+> +	unsigned long gaddr = regs->int_parm_long & __FAIL_ADDR_MASK;
+> +	struct gmap *gmap = (struct gmap *)S390_lowcore.gmap;
+> +	struct uv_cb_cts uvcb = {
+> +		.header.cmd = UVC_CMD_CONV_TO_SEC_STOR,
+> +		.header.len = sizeof(uvcb),
+> +		.guest_handle = gmap->guest_handle,
+> +		.gaddr = gaddr,
+> +	};
+> +	int rc;
 > +
-> +	if (PageHuge(page))
-> +		return 0;
-
-Ah, another instance. Comment please why
-
-> +
-> +	if (!test_bit(PG_arch_1, &page->flags))
-> +		return 0;
-
-"Can you describe the meaning of this bit with three words"? Or a couple
-more? :D
-
-"once upon a time, the page was secure and still might be" ?
-"the page is secure and therefore inaccessible" ?
-
-> +
-> +	rc =3D __uv_pin_shared(page_to_phys(page));
-> +	if (!rc) {
-> +		clear_bit(PG_arch_1, &page->flags);
-> +		return 0;
+> +	if (get_fault_type(regs) != GMAP_FAULT) {
+> +		do_fault_error(regs, VM_READ | VM_WRITE, VM_FAULT_BADMAP);
+> +		WARN_ON_ONCE(1);
+> +		return;
 > +	}
 > +
-> +	rc =3D uv_convert_from_secure(page_to_phys(page));
-> +	if (!rc) {
-> +		clear_bit(PG_arch_1, &page->flags);
-> +		return 0;
-> +	}
-> +
-> +	return rc;
-> +}
-> +EXPORT_SYMBOL_GPL(arch_make_page_accessible);
-> +
->  #endif
->=20
+> +	rc = uv_make_secure(gmap, gaddr, &uvcb);
+> +	if (rc == -EINVAL && uvcb.header.rc != 0x104)
+> +		send_sig(SIGSEGV, current, 0);
 
-More code comments would be highly appreciated!
 
---=20
+Looks good to me, but I don't feel like being ready for an r-b. I'll
+have to let that sink in :)
+
+Assumed-is-okay-by: David Hildenbrand <david@redhat.com>
+
+
+-- 
 Thanks,
 
 David / dhildenb
