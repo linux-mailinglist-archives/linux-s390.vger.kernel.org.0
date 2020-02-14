@@ -2,146 +2,96 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 35AB815D88A
-	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 14:34:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E67615D8C7
+	for <lists+linux-s390@lfdr.de>; Fri, 14 Feb 2020 14:51:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728121AbgBNNeI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 14 Feb 2020 08:34:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27800 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728083AbgBNNeI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Feb 2020 08:34:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581687247;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=l7aMxDi0mAhQvw9oGCvK/t3d5+SiBEkXdJDHyytIXQc=;
-        b=SkFzIdNEmMZNqUt+dwGowooLJjmlt48ad1aszW1m2xLd2obty/L5MYr6hZCaNLJsKTte7o
-        p8wPq3VGmv7NCjWgK0+xAXNeshZ0LjyGCQPITfJmlv2oOiyHnXZFqKp+VOVQYb956qkz+P
-        nM/alJ1XwK7htGGwo+c8wLmzGxo+ZP8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-44-eMAnR9l5N-24-ILozPcilg-1; Fri, 14 Feb 2020 08:34:05 -0500
-X-MC-Unique: eMAnR9l5N-24-ILozPcilg-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AEEA1107B7D4;
-        Fri, 14 Feb 2020 13:34:03 +0000 (UTC)
-Received: from gondolin (dhcp-192-195.str.redhat.com [10.33.192.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 921B826FB6;
-        Fri, 14 Feb 2020 13:34:02 +0000 (UTC)
-Date:   Fri, 14 Feb 2020 14:34:00 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH v2 7/9] vfio-ccw: Wire up the CRW irq and CRW region
-Message-ID: <20200214143400.175c9e5e.cohuck@redhat.com>
-In-Reply-To: <20200206213825.11444-8-farman@linux.ibm.com>
-References: <20200206213825.11444-1-farman@linux.ibm.com>
-        <20200206213825.11444-8-farman@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+        id S1729252AbgBNNvj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 14 Feb 2020 08:51:39 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41679 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728336AbgBNNvi (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 14 Feb 2020 08:51:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id j9so4923742pfa.8
+        for <linux-s390@vger.kernel.org>; Fri, 14 Feb 2020 05:51:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=Rv1ZG70VJM4cecj0RUqEn63+ZwDOcQfIvz06DQDDe98=;
+        b=HtR3ub45NmCrRKKvtsPa8UdaxXxYSMkxuxmDZDDii2+y6sGIe9dKOKEuBOqTNuBSXf
+         LHwz5TH5Qd0LoXl34ym3bhnNKRcD1FkeWhO7VwAWo2kcoCXwukrs6BKJRrO8tpoo5y0D
+         qg/nVFOxlBvCQ/3KJoYFLhLObadT2d3ie9r2IkRb0yuHQ4G1j/ZF8Y18yaAL/9LxelFX
+         VL4CDWdBY31odywl9yZdurpPEbh8IA/fCSul0D8THE0wRQRDgRtzy0oHN9nB0midMcJw
+         4+Kne/6az0/iexShTwvjUhhyovn9fR6uz/GYKAhmkAAJuemVzm3guF3FFiZ1Nt7bcZ8u
+         pWpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=Rv1ZG70VJM4cecj0RUqEn63+ZwDOcQfIvz06DQDDe98=;
+        b=Hnnn7Zy7iGEnRGoVDbqzKXBEJm9dx17tNOwa5DczAM53oTBlIxae/2I44tBrfiDvII
+         TTCn7+pGwe8bUr950dIF6gBhsYn4ne+8havVyWd+YBRrjWbu9Yu3/SdBN7IlkJqRkTQK
+         4WqlTuVjgqq2f4lADqvQuumRk17lgte2KgKHsgjDb2moSLscHOzZiWiPlvUZEigEaknF
+         hy10yjdag/ff0Dv6NeomVaix1ODEv07aq4anLV8aIRNWiRpOUIGP1q6xfJ+2perWJzkg
+         obxY4FDuJv6ll0trYPR8iy43O/eZO+2V970OY+iD4e1k9Hki2tVUnhA8KKt97P7b6pUZ
+         MnbA==
+X-Gm-Message-State: APjAAAX6bbGZKop30ktSjrftS4ApBFuKK4jP0jcRhM6Uit1h8IMEkZ9S
+        U8TcPutZaxmbyxAIiEl/T1o=
+X-Google-Smtp-Source: APXvYqz5PUqqm32WrktmeThe1QSoSknnb2hRUhvIjesCsEOuaU8cIEGhGD6dWi5wN6Qph9OAuHTERw==
+X-Received: by 2002:a63:5f8e:: with SMTP id t136mr3514954pgb.411.1581688298248;
+        Fri, 14 Feb 2020 05:51:38 -0800 (PST)
+Received: from localhost ([43.224.245.179])
+        by smtp.gmail.com with ESMTPSA id x28sm7197547pgc.83.2020.02.14.05.51.37
+        (version=TLS1_2 cipher=AES128-SHA bits=128/128);
+        Fri, 14 Feb 2020 05:51:37 -0800 (PST)
+From:   qiwuchen55@gmail.com
+To:     sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com
+Cc:     linux-s390@vger.kernel.org, chenqiwu <chenqiwu@xiaomi.com>,
+        chenqiwu <qiwuchen55@gmail.com>
+Subject: [PATCH v2] s390/cio: use kobj_to_dev() API
+Date:   Fri, 14 Feb 2020 21:51:33 +0800
+Message-Id: <1581688293-17283-1-git-send-email-qiwuchen55@gmail.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu,  6 Feb 2020 22:38:23 +0100
-Eric Farman <farman@linux.ibm.com> wrote:
+From: chenqiwu <chenqiwu@xiaomi.com>
 
-> From: Farhan Ali <alifm@linux.ibm.com>
-> 
-> Use an IRQ to notify userspace that there is a CRW
-> pending in the region, related to path-availability
-> changes on the passthrough subchannel.
-> 
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> ---
-> 
-> Notes:
->     v1->v2:
->      - Remove extraneous 0x0 in crw.rsid assignment [CH]
->      - Refactor the building/queueing of a crw into its own routine [EF]
->     
->     v0->v1: [EF]
->      - Place the non-refactoring changes from the previous patch here
->      - Clean up checkpatch (whitespace) errors
->      - s/chp_crw/crw/
->      - Move acquire/release of io_mutex in vfio_ccw_crw_region_read()
->        into patch that introduces that region
->      - Remove duplicate include from vfio_ccw_drv.c
->      - Reorder include in vfio_ccw_private.h
-> 
->  drivers/s390/cio/vfio_ccw_chp.c     |  5 ++
->  drivers/s390/cio/vfio_ccw_drv.c     | 73 +++++++++++++++++++++++++++++
->  drivers/s390/cio/vfio_ccw_ops.c     |  4 ++
->  drivers/s390/cio/vfio_ccw_private.h |  9 ++++
->  include/uapi/linux/vfio.h           |  1 +
->  5 files changed, 92 insertions(+)
-> 
-(...)
-> +static void vfio_ccw_alloc_crw(struct vfio_ccw_private *private,
-> +			       struct chp_link *link,
-> +			       unsigned int erc)
-> +{
-> +	struct vfio_ccw_crw *vc_crw;
-> +	struct crw *crw;
-> +
-> +	/*
-> +	 * If unable to allocate a CRW, just drop the event and
-> +	 * carry on.  The guest will either see a later one or
-> +	 * learn when it issues its own store subchannel.
-> +	 */
-> +	vc_crw = kzalloc(sizeof(*vc_crw), GFP_ATOMIC);
-> +	if (!vc_crw)
-> +		return;
-> +
-> +	/*
-> +	 * Build in the first CRW space, but don't chain anything
-> +	 * into the second one even though the space exists.
-> +	 */
-> +	crw = &vc_crw->crw[0];
-> +
-> +	/*
-> +	 * Presume every CRW we handle is reported by a channel-path.
-> +	 * Maybe not future-proof, but good for what we're doing now.
+Use kobj_to_dev() API instead of container_of().
 
-You could pass in a source indication, maybe? Presumably, at least one
-of the callers further up the chain knows...
+Signed-off-by: chenqiwu <chenqiwu@xiaomi.com>
+Signed-off-by: chenqiwu <qiwuchen55@gmail.com>
+---
+changes in v2:
+ - add signed off for my gmail adderss.
+--- 
+ drivers/s390/cio/chp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +	 *
-> +	 * FIXME Sort of a lie, since we're converting a CRW
-> +	 * reported by a channel-path into one issued to each
-> +	 * subchannel, but still saying it's coming from the path.
-
-It's still channel-path related, though :)
-
-The important point is probably is that userspace needs to be aware
-that the same channel-path related event is reported on all affected
-subchannels, and they therefore need some appropriate handling on their
-side.
-
-> +	 */
-> +	crw->rsc = CRW_RSC_CPATH;
-> +	crw->rsid = (link->chpid.cssid << 8) | link->chpid.id;
-> +	crw->erc = erc;
-> +
-> +	list_add_tail(&vc_crw->next, &private->crw);
-> +	queue_work(vfio_ccw_work_q, &private->crw_work);
-> +}
-> +
->  static int vfio_ccw_chp_event(struct subchannel *sch,
->  			      struct chp_link *link, int event)
->  {
-(...)
+diff --git a/drivers/s390/cio/chp.c b/drivers/s390/cio/chp.c
+index 51038ec..dfcbe54 100644
+--- a/drivers/s390/cio/chp.c
++++ b/drivers/s390/cio/chp.c
+@@ -135,7 +135,7 @@ static ssize_t chp_measurement_chars_read(struct file *filp,
+ 	struct channel_path *chp;
+ 	struct device *device;
+ 
+-	device = container_of(kobj, struct device, kobj);
++	device = kobj_to_dev(kobj);
+ 	chp = to_channelpath(device);
+ 	if (chp->cmg == -1)
+ 		return 0;
+@@ -184,7 +184,7 @@ static ssize_t chp_measurement_read(struct file *filp, struct kobject *kobj,
+ 	struct device *device;
+ 	unsigned int size;
+ 
+-	device = container_of(kobj, struct device, kobj);
++	device = kobj_to_dev(kobj);
+ 	chp = to_channelpath(device);
+ 	css = to_css(chp->dev.parent);
+ 
+-- 
+1.9.1
 
