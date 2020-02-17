@@ -2,131 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 36B6616189B
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 18:14:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CDB60161989
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 19:17:17 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729600AbgBQRNy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 17 Feb 2020 12:13:54 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12862 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729595AbgBQRNy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:13:54 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HH8uEr035467
-        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 12:13:53 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6adr2fk4-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 12:13:53 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Mon, 17 Feb 2020 17:13:51 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Feb 2020 17:13:47 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HHDkK636503712
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 17:13:46 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 65D8D42047;
-        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2133E4203F;
-        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
-Received: from localhost (unknown [9.152.212.204])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
-Date:   Mon, 17 Feb 2020 18:13:44 +0100
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Joe Perches <joe@perches.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH] s390/kaslr: Fix casts in get_random
-References: <20200208141052.48476-1-natechancellor@gmail.com>
- <ba371a74412c07c30eeb26fa25c94c25468599a9.camel@perches.com>
- <20200214064628.GA14336@ubuntu-m2-xlarge-x86>
+        id S1729861AbgBQSRR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 17 Feb 2020 13:17:17 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:58184 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729837AbgBQSRR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 17 Feb 2020 13:17:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1581963435;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cnevXfGVEDsFBctQatqNzlbLF8HNLGY3ShXMHssDWiQ=;
+        b=Pz8NqM1HnHJL/EO7Fl1CtgWeuBx1Xyo3fDMJKAbdg4YaqZFzMkIkG32bchzQxBzcRCGtyS
+        /FIjd0FCxQtuXOqUOlRxFOIYvjG4ReCo3ZGNoVSMjWuv7cI4wgmgHPkSOl9eYRuGuinPud
+        7kimQ2QrzZjs/hIwgHzOKUJC7kGX48g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-104-dmSXdQaTPBOZm99vJnhJ6w-1; Mon, 17 Feb 2020 13:17:12 -0500
+X-MC-Unique: dmSXdQaTPBOZm99vJnhJ6w-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72677100DFDC;
+        Mon, 17 Feb 2020 18:17:11 +0000 (UTC)
+Received: from horse.redhat.com (unknown [10.18.25.35])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 719635DA84;
+        Mon, 17 Feb 2020 18:17:08 +0000 (UTC)
+Received: by horse.redhat.com (Postfix, from userid 10451)
+        id 106712257D6; Mon, 17 Feb 2020 13:17:08 -0500 (EST)
+From:   Vivek Goyal <vgoyal@redhat.com>
+To:     linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
+        hch@infradead.org, dan.j.williams@intel.com
+Cc:     dm-devel@redhat.com, vishal.l.verma@intel.com, vgoyal@redhat.com,
+        linux-s390@vger.kernel.org,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: [PATCH v4 4/7] s390,dcssblk,dax: Add dax zero_page_range operation to dcssblk driver
+Date:   Mon, 17 Feb 2020 13:16:50 -0500
+Message-Id: <20200217181653.4706-5-vgoyal@redhat.com>
+In-Reply-To: <20200217181653.4706-1-vgoyal@redhat.com>
+References: <20200217181653.4706-1-vgoyal@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200214064628.GA14336@ubuntu-m2-xlarge-x86>
-X-TM-AS-GCONF: 00
-x-cbid: 20021717-4275-0000-0000-000003A2DB4B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021717-4276-0000-0000-000038B6E05F
-Message-Id: <your-ad-here.call-01581959624-ext-8482@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-17_11:2020-02-17,2020-02-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- suspectscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 spamscore=0 bulkscore=0 clxscore=1015
- mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002170140
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Feb 13, 2020 at 11:46:28PM -0700, Nathan Chancellor wrote:
-> On Sat, Feb 08, 2020 at 12:17:20PM -0800, Joe Perches wrote:
-> > On Sat, 2020-02-08 at 07:10 -0700, Nathan Chancellor wrote:
-> > > Clang warns:
-> > > 
-> > > ../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
-> > > of type 'const u8 *' (aka 'const unsigned char *') converts between
-> > > pointers to integer
-> > > types with different sign [-Wpointer-sign]
-> > >                                   (char *) entropy, (char *) entropy,
-> > >                                                     ^~~~~~~~~~~~~~~~
-> > > ../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
-> > > parameter 'src' here
-> > >                             u8 *dest, const u8 *src, long src_len)
-> > >                                                 ^
-> > > 2 warnings generated.
-> > > 
-> > > Fix the cast to match what else is done in this function.
-> > > 
-> > > Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
-> > > Link: https://github.com/ClangBuiltLinux/linux/issues/862
-> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-> > > ---
-> > >  arch/s390/boot/kaslr.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > 
-> > > diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
-> > > index 5d12352545c5..5591243d673e 100644
-> > > --- a/arch/s390/boot/kaslr.c
-> > > +++ b/arch/s390/boot/kaslr.c
-> > > @@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
-> > >  		*(unsigned long *) prng.parm_block ^= seed;
-> > >  		for (i = 0; i < 16; i++) {
-> > >  			cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
-> > > -				  (char *) entropy, (char *) entropy,
-> > > +				  (u8 *) entropy, (u8 *) entropy,
-> > 
-> > Why not change the function to take void *?
-> > 
-> > static inline int cpacf_kmc(unsigned long func, void *param,
-> > 			    u8 *dest, const u8 *src, long src_len)
-> > 
-> > vs:
-> > 
-> > static inline int cpacf_kmc(unsigned long func, void *param,
-> > 			    void *dest, const void *src, long src_len)
-> > 
-> > and remove the casts?
-> 
-> I can certainly do that if the maintainers prefer it.
-> 
-> Cheers,
-> Nathan
-KBUILD_CFLAGS contains -Wno-pointer-sign but special arch/s390/boot code
-has a separate set of build flags. Anyhow the change makes sense as it is.
-Applied to fixes, thanks
+Add dax operation zero_page_range for dcssblk driver.
+
+CC: linux-s390@vger.kernel.org
+Suggested-by: Christoph Hellwig <hch@infradead.org>
+Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
+---
+ drivers/s390/block/dcssblk.c | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
+index 63502ca537eb..331abab5d066 100644
+--- a/drivers/s390/block/dcssblk.c
++++ b/drivers/s390/block/dcssblk.c
+@@ -57,11 +57,28 @@ static size_t dcssblk_dax_copy_to_iter(struct dax_dev=
+ice *dax_dev,
+ 	return copy_to_iter(addr, bytes, i);
+ }
+=20
++static int dcssblk_dax_zero_page_range(struct dax_device *dax_dev, u64 o=
+ffset,
++				       size_t len)
++{
++	long rc;
++	void *kaddr;
++	pgoff_t pgoff =3D offset >> PAGE_SHIFT;
++	unsigned page_offset =3D offset_in_page(offset);
++
++	rc =3D dax_direct_access(dax_dev, pgoff, 1, &kaddr, NULL);
++	if (rc < 0)
++		return rc;
++	memset(kaddr + page_offset, 0, len);
++	dax_flush(dax_dev, kaddr + page_offset, len);
++	return 0;
++}
++
+ static const struct dax_operations dcssblk_dax_ops =3D {
+ 	.direct_access =3D dcssblk_dax_direct_access,
+ 	.dax_supported =3D generic_fsdax_supported,
+ 	.copy_from_iter =3D dcssblk_dax_copy_from_iter,
+ 	.copy_to_iter =3D dcssblk_dax_copy_to_iter,
++	.zero_page_range =3D dcssblk_dax_zero_page_range,
+ };
+=20
+ struct dcssblk_dev_info {
+--=20
+2.20.1
 
