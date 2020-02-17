@@ -2,107 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C3F2C161885
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 18:08:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 36B6616189B
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 18:14:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726977AbgBQRIz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 17 Feb 2020 12:08:55 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:13048 "EHLO
+        id S1729600AbgBQRNy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 17 Feb 2020 12:13:54 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:12862 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727601AbgBQRIy (ORCPT
+        by vger.kernel.org with ESMTP id S1729595AbgBQRNy (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 17 Feb 2020 12:08:54 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HH8rgA138040
-        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 12:08:53 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e1gmqc2-1
+        Mon, 17 Feb 2020 12:13:54 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HH8uEr035467
+        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 12:13:53 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6adr2fk4-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 12:08:52 -0500
+        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 12:13:53 -0500
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Mon, 17 Feb 2020 17:08:33 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Mon, 17 Feb 2020 17:13:51 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Feb 2020 17:08:32 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HH8U3P49152106
+        Mon, 17 Feb 2020 17:13:47 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HHDkK636503712
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 17:08:30 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78205A4053;
-        Mon, 17 Feb 2020 17:08:30 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3509CA4051;
-        Mon, 17 Feb 2020 17:08:30 +0000 (GMT)
+        Mon, 17 Feb 2020 17:13:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 65D8D42047;
+        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2133E4203F;
+        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
 Received: from localhost (unknown [9.152.212.204])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 17 Feb 2020 17:08:30 +0000 (GMT)
-Date:   Mon, 17 Feb 2020 18:08:28 +0100
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 17 Feb 2020 17:13:46 +0000 (GMT)
+Date:   Mon, 17 Feb 2020 18:13:44 +0100
 From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Geert Uytterhoeven <geert+renesas@glider.be>
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Joe Perches <joe@perches.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jiri Kosina <trivial@kernel.org>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH trivial] s390/pkey/zcrypt: spelling s/crytp/crypt/
-References: <20200212084622.9219-1-geert+renesas@glider.be>
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com
+Subject: Re: [PATCH] s390/kaslr: Fix casts in get_random
+References: <20200208141052.48476-1-natechancellor@gmail.com>
+ <ba371a74412c07c30eeb26fa25c94c25468599a9.camel@perches.com>
+ <20200214064628.GA14336@ubuntu-m2-xlarge-x86>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200212084622.9219-1-geert+renesas@glider.be>
+In-Reply-To: <20200214064628.GA14336@ubuntu-m2-xlarge-x86>
 X-TM-AS-GCONF: 00
-x-cbid: 20021717-0016-0000-0000-000002E7ABB5
+x-cbid: 20021717-4275-0000-0000-000003A2DB4B
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021717-0017-0000-0000-0000334ABC42
-Message-Id: <your-ad-here.call-01581959308-ext-9465@work.hours>
+x-cbparentid: 20021717-4276-0000-0000-000038B6E05F
+Message-Id: <your-ad-here.call-01581959624-ext-8482@work.hours>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-17_11:2020-02-17,2020-02-17 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 spamscore=0 adultscore=0 mlxscore=0
- impostorscore=0 malwarescore=0 phishscore=0 suspectscore=1 mlxlogscore=988
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ suspectscore=0 priorityscore=1501 adultscore=0 mlxlogscore=999
+ malwarescore=0 phishscore=0 spamscore=0 bulkscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002170140
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Feb 12, 2020 at 09:46:22AM +0100, Geert Uytterhoeven wrote:
-> Fix typos in a comments.
+On Thu, Feb 13, 2020 at 11:46:28PM -0700, Nathan Chancellor wrote:
+> On Sat, Feb 08, 2020 at 12:17:20PM -0800, Joe Perches wrote:
+> > On Sat, 2020-02-08 at 07:10 -0700, Nathan Chancellor wrote:
+> > > Clang warns:
+> > > 
+> > > ../arch/s390/boot/kaslr.c:78:25: warning: passing 'char *' to parameter
+> > > of type 'const u8 *' (aka 'const unsigned char *') converts between
+> > > pointers to integer
+> > > types with different sign [-Wpointer-sign]
+> > >                                   (char *) entropy, (char *) entropy,
+> > >                                                     ^~~~~~~~~~~~~~~~
+> > > ../arch/s390/include/asm/cpacf.h:280:28: note: passing argument to
+> > > parameter 'src' here
+> > >                             u8 *dest, const u8 *src, long src_len)
+> > >                                                 ^
+> > > 2 warnings generated.
+> > > 
+> > > Fix the cast to match what else is done in this function.
+> > > 
+> > > Fixes: b2d24b97b2a9 ("s390/kernel: add support for kernel address space layout randomization (KASLR)")
+> > > Link: https://github.com/ClangBuiltLinux/linux/issues/862
+> > > Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> > > ---
+> > >  arch/s390/boot/kaslr.c | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/arch/s390/boot/kaslr.c b/arch/s390/boot/kaslr.c
+> > > index 5d12352545c5..5591243d673e 100644
+> > > --- a/arch/s390/boot/kaslr.c
+> > > +++ b/arch/s390/boot/kaslr.c
+> > > @@ -75,7 +75,7 @@ static unsigned long get_random(unsigned long limit)
+> > >  		*(unsigned long *) prng.parm_block ^= seed;
+> > >  		for (i = 0; i < 16; i++) {
+> > >  			cpacf_kmc(CPACF_KMC_PRNG, prng.parm_block,
+> > > -				  (char *) entropy, (char *) entropy,
+> > > +				  (u8 *) entropy, (u8 *) entropy,
+> > 
+> > Why not change the function to take void *?
+> > 
+> > static inline int cpacf_kmc(unsigned long func, void *param,
+> > 			    u8 *dest, const u8 *src, long src_len)
+> > 
+> > vs:
+> > 
+> > static inline int cpacf_kmc(unsigned long func, void *param,
+> > 			    void *dest, const void *src, long src_len)
+> > 
+> > and remove the casts?
 > 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
->  drivers/s390/crypto/zcrypt_ep11misc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> I can certainly do that if the maintainers prefer it.
 > 
-> diff --git a/drivers/s390/crypto/zcrypt_ep11misc.c b/drivers/s390/crypto/zcrypt_ep11misc.c
-> index d4caf46ff9df1559..2afe2153b34e32e9 100644
-> --- a/drivers/s390/crypto/zcrypt_ep11misc.c
-> +++ b/drivers/s390/crypto/zcrypt_ep11misc.c
-> @@ -887,7 +887,7 @@ static int ep11_unwrapkey(u16 card, u16 domain,
->  	/* empty pin tag */
->  	*p++ = 0x04;
->  	*p++ = 0;
-> -	/* encrytped key value tag and bytes */
-> +	/* encrypted key value tag and bytes */
->  	p += asn1tag_write(p, 0x04, enckey, enckeysize);
->  
->  	/* reply cprb and payload */
-> @@ -1095,7 +1095,7 @@ int ep11_clr2keyblob(u16 card, u16 domain, u32 keybitsize, u32 keygenflags,
->  
->  	/* Step 1: generate AES 256 bit random kek key */
->  	rc = ep11_genaeskey(card, domain, 256,
-> -			    0x00006c00, /* EN/DECRYTP, WRAP/UNWRAP */
-> +			    0x00006c00, /* EN/DECRYPT, WRAP/UNWRAP */
->  			    kek, &keklen);
->  	if (rc) {
->  		DEBUG_ERR(
-> -- 
-> 2.17.1
-> 
-Applied, thanks
+> Cheers,
+> Nathan
+KBUILD_CFLAGS contains -Wno-pointer-sign but special arch/s390/boot code
+has a separate set of build flags. Anyhow the change makes sense as it is.
+Applied to fixes, thanks
 
