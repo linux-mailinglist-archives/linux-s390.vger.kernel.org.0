@@ -2,60 +2,54 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 52C45161556
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 16:00:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 59F3616156C
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 16:02:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729307AbgBQPAo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 17 Feb 2020 10:00:44 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41626 "EHLO
+        id S1729315AbgBQPC4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 17 Feb 2020 10:02:56 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:14228 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729317AbgBQPAn (ORCPT
+        by vger.kernel.org with ESMTP id S1729222AbgBQPC4 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 17 Feb 2020 10:00:43 -0500
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HEvfUC059147
-        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 10:00:42 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6dp89rff-1
+        Mon, 17 Feb 2020 10:02:56 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HEwsFv111473
+        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 10:02:55 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e1ggcqf-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 10:00:42 -0500
+        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 10:02:55 -0500
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 17 Feb 2020 15:00:40 -0000
+        Mon, 17 Feb 2020 15:02:52 -0000
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 17 Feb 2020 15:00:38 -0000
+        Mon, 17 Feb 2020 15:02:50 -0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HF0Y1i37224628
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HF2lUV62914606
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 17 Feb 2020 15:00:34 GMT
+        Mon, 17 Feb 2020 15:02:47 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5FA98A4070;
-        Mon, 17 Feb 2020 15:00:34 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id EC787A405F;
+        Mon, 17 Feb 2020 15:02:46 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 162D9A4060;
-        Mon, 17 Feb 2020 15:00:34 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 983CCA405C;
+        Mon, 17 Feb 2020 15:02:46 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.224.211])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 17 Feb 2020 15:00:34 +0000 (GMT)
-Subject: Re: [PATCH v2 20/42] KVM: S390: protvirt: Introduce instruction data
- area bounce buffer
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-References: <20200214222658.12946-1-borntraeger@de.ibm.com>
- <20200214222658.12946-21-borntraeger@de.ibm.com>
- <ad84934a-3d18-d56e-5658-1d8b8292f6b3@redhat.com>
- <d16b7ba2-38fc-5128-bd40-587d96e7936f@linux.ibm.com>
+        Mon, 17 Feb 2020 15:02:46 +0000 (GMT)
+Subject: Re: [PATCH 2/2] merge vm/cpu create
+To:     Janosch Frank <frankja@linux.ibm.com>, david@redhat.com
+Cc:     Ulrich.Weigand@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.vnet.ibm.com, gor@linux.ibm.com,
+        imbrenda@linux.ibm.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
+References: <c77dbb1b-0f4b-e40a-52a4-7110aec75e32@redhat.com>
+ <20200217145302.19085-1-borntraeger@de.ibm.com>
+ <20200217145302.19085-3-borntraeger@de.ibm.com>
+ <5c0b4baa-4113-d183-5bc6-c1e7b1f3032c@linux.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -100,26 +94,26 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 17 Feb 2020 16:00:33 +0100
+Date:   Mon, 17 Feb 2020 16:02:46 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <d16b7ba2-38fc-5128-bd40-587d96e7936f@linux.ibm.com>
+In-Reply-To: <5c0b4baa-4113-d183-5bc6-c1e7b1f3032c@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20021715-0020-0000-0000-000003AAF742
+x-cbid: 20021715-0008-0000-0000-00000353CE89
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021715-0021-0000-0000-00002202EEC2
-Message-Id: <f98d702f-1e71-c051-6bd0-efb639658822@de.ibm.com>
+x-cbparentid: 20021715-0009-0000-0000-00004A74D4E8
+Message-Id: <fe034c64-2924-9a5d-60bd-d982c53e2e4a@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-17_08:2020-02-17,2020-02-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 bulkscore=0 impostorscore=0
- clxscore=1015 spamscore=0 priorityscore=1501 mlxscore=0 lowpriorityscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002170124
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ bulkscore=0 priorityscore=1501 spamscore=0 adultscore=0 mlxscore=0
+ impostorscore=0 malwarescore=0 phishscore=0 suspectscore=0 mlxlogscore=864
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002170124
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -127,45 +121,56 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 17.02.20 15:47, Janosch Frank wrote:
-> On 2/17/20 12:08 PM, David Hildenbrand wrote:
->>> @@ -4460,6 +4489,10 @@ static long kvm_s390_guest_mem_op(struct kvm_vcpu *vcpu,
->>>  
->>>  	switch (mop->op) {
->>>  	case KVM_S390_MEMOP_LOGICAL_READ:
->>> +		if (kvm_s390_pv_is_protected(vcpu->kvm)) {
->>> +			r = -EINVAL;
->>> +			break;
->>> +		}
+On 17.02.20 16:00, Janosch Frank wrote:
+> On 2/17/20 3:53 PM, Christian Borntraeger wrote:
+>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>> ---
+>>  arch/s390/kvm/kvm-s390.c | 55 +++++++++++++++++++++++++++++-----------
+>>  1 file changed, 40 insertions(+), 15 deletions(-)
 >>
->> Could we have a possible race with disabling code, especially while
->> concurrently freeing? (sorry if I ask again, there was just a flood of
->> emails)
-
-see my other reply. Hopefully fixed soon.[...]
-
->>> diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
->>> index 207915488502..0fdee1bc3798 100644
->>> --- a/include/uapi/linux/kvm.h
->>> +++ b/include/uapi/linux/kvm.h
->>> @@ -475,11 +475,15 @@ struct kvm_s390_mem_op {
->>>  	__u32 op;		/* type of operation */
->>>  	__u64 buf;		/* buffer in userspace */
->>>  	__u8 ar;		/* the access register number */
->>> -	__u8 reserved[31];	/* should be set to 0 */
->>> +	__u8 reserved21[3];	/* should be set to 0 */
->>> +	__u32 sida_offset;	/* offset into the sida */
->>> +	__u8 reserved28[24];	/* should be set to 0 */
->>>  };
->>
->> As discussed, I'd prefer an overlaying layout for the sida, as the ar
->> does not make any sense (correct me if I'm wrong :) )
+>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>> index a095d9695f18..10b20e17a7fe 100644
+>> --- a/arch/s390/kvm/kvm-s390.c
+>> +++ b/arch/s390/kvm/kvm-s390.c
+>> @@ -2171,9 +2171,41 @@ static int kvm_s390_set_cmma_bits(struct kvm *kvm,
+>>  	return r;
+>>  }
+>>  
+>> +static int kvm_s390_switch_from_pv(struct kvm *kvm, u16 *rc, u16 *rrc)
+>> +{
+>> +	int i, r = 0;
+>> +
+>> +	struct kvm_vcpu *vcpu;
+>> +
+>> +	kvm_for_each_vcpu(i, vcpu, kvm) {
+>> +		r = kvm_s390_pv_destroy_cpu(vcpu, rc, rrc);
+>> +		if (r)
+>> +			break;
+>> +	}
+>> +	return r;
+>> +}
+>> +
+>> +static int kvm_s390_switch_to_pv(struct kvm *kvm, u16 *rc, u16 *rrc)
+>> +{
+>> +	int i, r = 0;
+>> +	u16 dummy;
+>> +
+>> +	struct kvm_vcpu *vcpu;
+>> +
+>> +	kvm_for_each_vcpu(i, vcpu, kvm) {
+>> +		r = kvm_s390_pv_create_cpu(vcpu, rc, rrc);
+>> +		if (r)
+>> +			break;
+>> +	}
+>> +	if (r)
+>> +		kvm_s390_switch_from_pv(kvm,&dummy, &dummy);
+>> +	return r;
+>> +}
 > 
-> That wouldn't work, because we still check mop->ar < 16 in
-> kvm_s390_guest_mem_op(). Also we currently check mop contents twice
-> because we overload mem_op() with the SIDA operations.
-> 
-> Using a separate IOCTL is cleaner...
+> Why does that only affect the cpus?
+> If we have a switch function it should do VM and VCPUs, no?
 
-I would rather use the current patch instead of adding a new ioctl.
+It is a helper function for the function below. 
+
+FWIW, it also needs to take the cpu->mutex for each cpu.
 
