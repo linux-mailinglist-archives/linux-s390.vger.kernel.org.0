@@ -2,39 +2,44 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 81B0E1610D0
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 12:14:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1920B16111A
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 12:29:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728002AbgBQLOI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 17 Feb 2020 06:14:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48406 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728217AbgBQLOH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 17 Feb 2020 06:14:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581938045;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=YonfJVIwC/v+Xn842kkV4pd+naT9dZux8ByvrYXBlO8=;
-        b=Ck2KWoHOqI0/1gCEZ9Vg0SOQSBrMhRfI8lLReEp9K5w5/dBf4cjZPE3A/WFX3l6LmOB11b
-        kncDeMwGnZoLqHlw8TKLyAJffKc2uYt0NMXRo0RZAX3EXx2TUEaVpEeoifMxDBuJXMwQ0P
-        vKZV4gj1W54ODk8e1ZKoKzXMPjl2kT0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-98-CmSq1M60P5aqEs-85YbbWg-1; Mon, 17 Feb 2020 06:14:00 -0500
-X-MC-Unique: CmSq1M60P5aqEs-85YbbWg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3746C1005516;
-        Mon, 17 Feb 2020 11:13:59 +0000 (UTC)
-Received: from [10.36.117.64] (ovpn-117-64.ams2.redhat.com [10.36.117.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD67960BEC;
-        Mon, 17 Feb 2020 11:13:53 +0000 (UTC)
-Subject: Re: [PATCH v2 03/42] s390/protvirt: introduce host side setup
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        id S1727991AbgBQL3H (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 17 Feb 2020 06:29:07 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:18208 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727171AbgBQL3H (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 17 Feb 2020 06:29:07 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01HBSuSM076920
+        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 06:29:06 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6adqp49a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 17 Feb 2020 06:29:06 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 17 Feb 2020 11:29:04 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 17 Feb 2020 11:29:00 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01HBSxco45088942
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 17 Feb 2020 11:28:59 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EBD4052052;
+        Mon, 17 Feb 2020 11:28:58 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.152.224.211])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 9BE655205F;
+        Mon, 17 Feb 2020 11:28:58 +0000 (GMT)
+Subject: Re: [PATCH v2 05/42] s390/mm: provide memory management functions for
+ protected KVM guests
+To:     David Hildenbrand <david@redhat.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Thomas Huth <thuth@redhat.com>,
@@ -42,319 +47,355 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org
 References: <20200214222658.12946-1-borntraeger@de.ibm.com>
- <20200214222658.12946-4-borntraeger@de.ibm.com>
- <8b6f790f-8d41-f9a8-1c9c-df900d22fa47@redhat.com>
- <66cf54a2-8fec-e992-18a9-d72b22d46b97@de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <2d46521e-97d4-ec48-36c3-5bf769a2d97d@redhat.com>
-Date:   Mon, 17 Feb 2020 12:13:51 +0100
+ <20200214222658.12946-6-borntraeger@de.ibm.com>
+ <f5523486-ee76-e6c1-9563-658bca7f3b0d@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Mon, 17 Feb 2020 12:28:58 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <66cf54a2-8fec-e992-18a9-d72b22d46b97@de.ibm.com>
+In-Reply-To: <f5523486-ee76-e6c1-9563-658bca7f3b0d@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021711-0028-0000-0000-000003DBBCE5
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021711-0029-0000-0000-000024A0C284
+Message-Id: <87742e00-9a8d-b7b4-ab96-05e8c9d39534@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-17_06:2020-02-17,2020-02-17 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=2 priorityscore=1501 adultscore=0 mlxlogscore=999
+ malwarescore=0 phishscore=0 spamscore=0 bulkscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002170099
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 17.02.20 12:11, Christian Borntraeger wrote:
-> 
-> 
-> On 17.02.20 10:53, David Hildenbrand wrote:
->> On 14.02.20 23:26, Christian Borntraeger wrote:
->>> From: Vasily Gorbik <gor@linux.ibm.com>
->>>
->>> Add "prot_virt" command line option which controls if the kernel
->>> protected VMs support is enabled at early boot time. This has to be
->>> done early, because it needs large amounts of memory and will disable
->>> some features like STP time sync for the lpar.
->>>
->>> Extend ultravisor info definitions and expose it via uv_info struct
->>> filled in during startup.
->>>
->>> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
->>> Reviewed-by: Thomas Huth <thuth@redhat.com>
->>> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
->>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
->>> ---
->>>  .../admin-guide/kernel-parameters.txt         |  5 ++
->>>  arch/s390/boot/Makefile                       |  2 +-
->>>  arch/s390/boot/uv.c                           | 21 +++++++-
->>>  arch/s390/include/asm/uv.h                    | 45 +++++++++++++++-
->>>  arch/s390/kernel/Makefile                     |  1 +
->>>  arch/s390/kernel/setup.c                      |  4 --
->>>  arch/s390/kernel/uv.c                         | 52 +++++++++++++++++++
->>>  7 files changed, 122 insertions(+), 8 deletions(-)
->>>  create mode 100644 arch/s390/kernel/uv.c
->>>
->>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->>> index dbc22d684627..b0beae9b9e36 100644
->>> --- a/Documentation/admin-guide/kernel-parameters.txt
->>> +++ b/Documentation/admin-guide/kernel-parameters.txt
->>> @@ -3795,6 +3795,11 @@
->>>  			before loading.
->>>  			See Documentation/admin-guide/blockdev/ramdisk.rst.
->>>  
->>> +	prot_virt=	[S390] enable hosting protected virtual machines
->>> +			isolated from the hypervisor (if hardware supports
->>> +			that).
->>> +			Format: <bool>
->>> +
->>>  	psi=		[KNL] Enable or disable pressure stall information
->>>  			tracking.
->>>  			Format: <bool>
->>> diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
->>> index e2c47d3a1c89..30f1811540c5 100644
->>> --- a/arch/s390/boot/Makefile
->>> +++ b/arch/s390/boot/Makefile
->>> @@ -37,7 +37,7 @@ CFLAGS_sclp_early_core.o += -I$(srctree)/drivers/s390/char
->>>  obj-y	:= head.o als.o startup.o mem_detect.o ipl_parm.o ipl_report.o
->>>  obj-y	+= string.o ebcdic.o sclp_early_core.o mem.o ipl_vmparm.o cmdline.o
->>>  obj-y	+= version.o pgm_check_info.o ctype.o text_dma.o
->>> -obj-$(CONFIG_PROTECTED_VIRTUALIZATION_GUEST)	+= uv.o
->>> +obj-$(findstring y, $(CONFIG_PROTECTED_VIRTUALIZATION_GUEST) $(CONFIG_PGSTE))	+= uv.o
->>>  obj-$(CONFIG_RELOCATABLE)	+= machine_kexec_reloc.o
->>>  obj-$(CONFIG_RANDOMIZE_BASE)	+= kaslr.o
->>>  targets	:= bzImage startup.a section_cmp.boot.data section_cmp.boot.preserved.data $(obj-y)
->>> diff --git a/arch/s390/boot/uv.c b/arch/s390/boot/uv.c
->>> index ed007f4a6444..af9e1cc93c68 100644
->>> --- a/arch/s390/boot/uv.c
->>> +++ b/arch/s390/boot/uv.c
->>> @@ -3,7 +3,13 @@
->>>  #include <asm/facility.h>
->>>  #include <asm/sections.h>
->>>  
->>> +/* will be used in arch/s390/kernel/uv.c */
->>> +#ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
->>>  int __bootdata_preserved(prot_virt_guest);
->>> +#endif
->>> +#if IS_ENABLED(CONFIG_KVM)
->>> +struct uv_info __bootdata_preserved(uv_info);
->>> +#endif
->>>  
->>>  void uv_query_info(void)
->>>  {
->>> @@ -18,7 +24,20 @@ void uv_query_info(void)
->>>  	if (uv_call(0, (uint64_t)&uvcb))
->>>  		return;
->>>  
->>> -	if (test_bit_inv(BIT_UVC_CMD_SET_SHARED_ACCESS, (unsigned long *)uvcb.inst_calls_list) &&
->>> +	if (IS_ENABLED(CONFIG_KVM)) {
->>> +		memcpy(uv_info.inst_calls_list, uvcb.inst_calls_list, sizeof(uv_info.inst_calls_list));
->>> +		uv_info.uv_base_stor_len = uvcb.uv_base_stor_len;
->>> +		uv_info.guest_base_stor_len = uvcb.conf_base_phys_stor_len;
->>> +		uv_info.guest_virt_base_stor_len = uvcb.conf_base_virt_stor_len;
->>> +		uv_info.guest_virt_var_stor_len = uvcb.conf_virt_var_stor_len;
->>> +		uv_info.guest_cpu_stor_len = uvcb.cpu_stor_len;
->>> +		uv_info.max_sec_stor_addr = ALIGN(uvcb.max_guest_stor_addr, PAGE_SIZE);
->>> +		uv_info.max_num_sec_conf = uvcb.max_num_sec_conf;
->>> +		uv_info.max_guest_cpus = uvcb.max_guest_cpus;
->>> +	}
->>> +
->>> +	if (IS_ENABLED(CONFIG_PROTECTED_VIRTUALIZATION_GUEST) &&
->>> +	    test_bit_inv(BIT_UVC_CMD_SET_SHARED_ACCESS, (unsigned long *)uvcb.inst_calls_list) &&
->>>  	    test_bit_inv(BIT_UVC_CMD_REMOVE_SHARED_ACCESS, (unsigned long *)uvcb.inst_calls_list))
->>>  		prot_virt_guest = 1;
->>>  }
->>> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
->>> index 4093a2856929..34b1114dcc38 100644
->>> --- a/arch/s390/include/asm/uv.h
->>> +++ b/arch/s390/include/asm/uv.h
->>> @@ -44,7 +44,19 @@ struct uv_cb_qui {
->>>  	struct uv_cb_header header;
->>>  	u64 reserved08;
->>>  	u64 inst_calls_list[4];
->>> -	u64 reserved30[15];
->>> +	u64 reserved30[2];
->>> +	u64 uv_base_stor_len;
->>> +	u64 reserved48;
->>> +	u64 conf_base_phys_stor_len;
->>> +	u64 conf_base_virt_stor_len;
->>> +	u64 conf_virt_var_stor_len;
->>> +	u64 cpu_stor_len;
->>> +	u32 reserved70[3];
->>> +	u32 max_num_sec_conf;
->>> +	u64 max_guest_stor_addr;
->>> +	u8  reserved88[158-136];
->>> +	u16 max_guest_cpus;
->>> +	u64 reserveda0;
->>>  } __packed __aligned(8);
->>>  
->>>  struct uv_cb_share {
->>> @@ -69,6 +81,19 @@ static inline int uv_call(unsigned long r1, unsigned long r2)
->>>  	return cc;
->>>  }
->>>  
->>> +struct uv_info {
->>> +	unsigned long inst_calls_list[4];
->>> +	unsigned long uv_base_stor_len;
->>> +	unsigned long guest_base_stor_len;
->>> +	unsigned long guest_virt_base_stor_len;
->>> +	unsigned long guest_virt_var_stor_len;
->>> +	unsigned long guest_cpu_stor_len;
->>> +	unsigned long max_sec_stor_addr;
->>> +	unsigned int max_num_sec_conf;
->>> +	unsigned short max_guest_cpus;
->>> +};
->>> +extern struct uv_info uv_info;
->>> +
->>>  #ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
->>>  extern int prot_virt_guest;
->>>  
->>> @@ -121,11 +146,27 @@ static inline int uv_remove_shared(unsigned long addr)
->>>  	return share(addr, UVC_CMD_REMOVE_SHARED_ACCESS);
->>>  }
->>>  
->>> -void uv_query_info(void);
->>>  #else
->>>  #define is_prot_virt_guest() 0
->>>  static inline int uv_set_shared(unsigned long addr) { return 0; }
->>>  static inline int uv_remove_shared(unsigned long addr) { return 0; }
->>> +#endif
->>> +
->>> +#if IS_ENABLED(CONFIG_KVM)
->>> +extern int prot_virt_host;
->>> +
->>> +static inline int is_prot_virt_host(void)
->>> +{
->>> +	return prot_virt_host;
->>> +}
->>> +#else
->>> +#define is_prot_virt_host() 0
->>> +#endif
->>> +
->>> +#if defined(CONFIG_PROTECTED_VIRTUALIZATION_GUEST) ||                          \
->>> +	IS_ENABLED(CONFIG_KVM)
->>> +void uv_query_info(void);
->>> +#else
->>>  static inline void uv_query_info(void) {}
->>>  #endif
->>>  
->>> diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
->>> index 2b1203cf7be6..22bfb8d5084e 100644
->>> --- a/arch/s390/kernel/Makefile
->>> +++ b/arch/s390/kernel/Makefile
->>> @@ -78,6 +78,7 @@ obj-$(CONFIG_PERF_EVENTS)	+= perf_cpum_cf_events.o perf_regs.o
->>>  obj-$(CONFIG_PERF_EVENTS)	+= perf_cpum_cf_diag.o
->>>  
->>>  obj-$(CONFIG_TRACEPOINTS)	+= trace.o
->>> +obj-$(findstring y, $(CONFIG_PROTECTED_VIRTUALIZATION_GUEST) $(CONFIG_PGSTE))	+= uv.o
->>>  
->>>  # vdso
->>>  obj-y				+= vdso64/
->>> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
->>> index b2c2f75860e8..a2496382175e 100644
->>> --- a/arch/s390/kernel/setup.c
->>> +++ b/arch/s390/kernel/setup.c
->>> @@ -92,10 +92,6 @@ char elf_platform[ELF_PLATFORM_SIZE];
->>>  
->>>  unsigned long int_hwcap = 0;
->>>  
->>> -#ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
->>> -int __bootdata_preserved(prot_virt_guest);
->>> -#endif
->>> -
->>>  int __bootdata(noexec_disabled);
->>>  int __bootdata(memory_end_set);
->>>  unsigned long __bootdata(memory_end);
->>> diff --git a/arch/s390/kernel/uv.c b/arch/s390/kernel/uv.c
->>> new file mode 100644
->>> index 000000000000..b1f936710360
->>> --- /dev/null
->>> +++ b/arch/s390/kernel/uv.c
->>> @@ -0,0 +1,52 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/*
->>> + * Common Ultravisor functions and initialization
->>> + *
->>> + * Copyright IBM Corp. 2019, 2020
->>> + */
->>> +#define KMSG_COMPONENT "prot_virt"
->>> +#define pr_fmt(fmt) KMSG_COMPONENT ": " fmt
->>> +
->>> +#include <linux/kernel.h>
->>> +#include <linux/types.h>
->>> +#include <linux/sizes.h>
->>> +#include <linux/bitmap.h>
->>> +#include <linux/memblock.h>
->>> +#include <asm/facility.h>
->>> +#include <asm/sections.h>
->>> +#include <asm/uv.h>
->>> +
->>> +/* the bootdata_preserved fields come from ones in arch/s390/boot/uv.c */
->>> +#ifdef CONFIG_PROTECTED_VIRTUALIZATION_GUEST
->>> +int __bootdata_preserved(prot_virt_guest);
->>> +#endif
->>> +
->>> +#if IS_ENABLED(CONFIG_KVM)
->>
->>
->> Why is that glued to CONFIG_KVM? Can't we glue all that stuff to
->> CONFIG_PROTECTED_VIRTUALIZATION_GUEST and make in kconfig
->> CONFIG_PROTECTED_VIRTUALIZATION_GUEST depend on CONFIG_KVM?
-> 
-> 
-> CONFIG_PROTECTED_VIRTUALIZATION_GUEST is for the GUEST part (the virtio-ccw changes
-> inside the guest). The other thing is for the host and here we bind it
-> to CONFIG_KVM (or PGSTE for mm code).
 
-Ahh, sorry messed that up. Think I had another (in previous versions?)
-config option in mind.
 
-Makes sense
+On 17.02.20 11:21, David Hildenbrand wrote:
+>> diff --git a/arch/s390/include/asm/page.h b/arch/s390/include/asm/page.h
+>> index 85e944f04c70..4ebcf891ff3c 100644
+>> --- a/arch/s390/include/asm/page.h
+>> +++ b/arch/s390/include/asm/page.h
+>> @@ -153,6 +153,11 @@ static inline int devmem_is_allowed(unsigned long pfn)
+>>  #define HAVE_ARCH_FREE_PAGE
+>>  #define HAVE_ARCH_ALLOC_PAGE
+>>  
+>> +#if IS_ENABLED(CONFIG_PGSTE)
+>> +int arch_make_page_accessible(struct page *page);
+>> +#define HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
+>> +#endif
+>> +
+> 
+> Feels like this should have been one of the (CONFIG_)ARCH_HAVE_XXX
+> thingies defined via kconfig instead.
+> 
+> E.g., like (CONFIG_)HAVE_ARCH_TRANSPARENT_HUGEPAGE
+> 
+> [...]
 
--- 
-Thanks,
+This looks more or less like HAVE_ARCH_ALLOC_PAGE. You will find both
+variants.
+I think I will leave it that way for now until we need it to be a config
+or the mm maintainers have a preference.
 
-David / dhildenb
+
+> 
+>> +
+>> +/*
+>> + * Requests the Ultravisor to encrypt a guest page and make it
+>> + * accessible to the host for paging (export).
+>> + *
+>> + * @paddr: Absolute host address of page to be exported
+>> + */
+>> +int uv_convert_from_secure(unsigned long paddr)
+>> +{
+>> +	struct uv_cb_cfs uvcb = {
+>> +		.header.cmd = UVC_CMD_CONV_FROM_SEC_STOR,
+>> +		.header.len = sizeof(uvcb),
+>> +		.paddr = paddr
+>> +	};
+>> +
+>> +	if (uv_call(0, (u64)&uvcb))
+>> +		return -EINVAL;
+>> +	return 0;
+>> +}
+>> +
+>> +/*
+>> + * Calculate the expected ref_count for a page that would otherwise have no
+>> + * further pins. This was cribbed from similar functions in other places in
+>> + * the kernel, but with some slight modifications. We know that a secure
+>> + * page can not be a huge page for example.
+> 
+> s/ca not cannot/
+
+ack.
+
+
+> 
+>> + */
+>> +static int expected_page_refs(struct page *page)
+>> +{
+>> +	int res;
+>> +
+>> +	res = page_mapcount(page);
+>> +	if (PageSwapCache(page)) {
+>> +		res++;
+>> +	} else if (page_mapping(page)) {
+>> +		res++;
+>> +		if (page_has_private(page))
+>> +			res++;
+>> +	}
+>> +	return res;
+>> +}
+>> +
+>> +static int make_secure_pte(pte_t *ptep, unsigned long addr,
+>> +			   struct page *exp_page, struct uv_cb_header *uvcb)
+>> +{
+>> +	pte_t entry = READ_ONCE(*ptep);
+>> +	struct page *page;
+>> +	int expected, rc = 0;
+>> +
+>> +	if (!pte_present(entry))
+>> +		return -ENXIO;
+>> +	if (pte_val(entry) & _PAGE_INVALID)
+>> +		return -ENXIO;
+>> +
+>> +	page = pte_page(entry);
+>> +	if (page != exp_page)
+>> +		return -ENXIO;
+>> +	if (PageWriteback(page))
+>> +		return -EAGAIN;
+>> +	expected = expected_page_refs(page);
+>> +	if (!page_ref_freeze(page, expected))
+>> +		return -EBUSY;
+>> +	set_bit(PG_arch_1, &page->flags);
+>> +	rc = uv_call(0, (u64)uvcb);
+>> +	page_ref_unfreeze(page, expected);
+>> +	/* Return -ENXIO if the page was not mapped, -EINVAL otherwise */
+>> +	if (rc)
+>> +		rc = uvcb->rc == 0x10a ? -ENXIO : -EINVAL;
+>> +	return rc;
+>> +}
+>> +
+>> +/*
+>> + * Requests the Ultravisor to make a page accessible to a guest.
+>> + * If it's brought in the first time, it will be cleared. If
+>> + * it has been exported before, it will be decrypted and integrity
+>> + * checked.
+>> + */
+>> +int gmap_make_secure(struct gmap *gmap, unsigned long gaddr, void *uvcb)
+>> +{
+>> +	struct vm_area_struct *vma;
+>> +	unsigned long uaddr;
+>> +	struct page *page;
+>> +	int rc, local_drain = 0;
+> 
+> local_drain could have been a bool.
+
+ack
+> 
+>> +	spinlock_t *ptelock;
+>> +	pte_t *ptep;
+>> +
+>> +again:
+>> +	rc = -EFAULT;
+>> +	down_read(&gmap->mm->mmap_sem);
+>> +
+>> +	uaddr = __gmap_translate(gmap, gaddr);
+>> +	if (IS_ERR_VALUE(uaddr))
+>> +		goto out;
+>> +	vma = find_vma(gmap->mm, uaddr);
+>> +	if (!vma)
+>> +		goto out;
+>> +	/*
+>> +	 * Secure pages cannot be huge and userspace should not combine both.
+>> +	 * In case userspace does it anyway this will result in an -EFAULT for
+>> +	 * the unpack. The guest is thus never reaching secure mode. If
+>> +	 * userspace is playing dirty tricky with mapping huge pages later
+>> +	 * on this will result in a segmenation fault.
+> 
+> s/segmenation/segmentation/
+
+ack.
+> 
+>> +	 */
+>> +	if (is_vm_hugetlb_page(vma))
+>> +		goto out;
+>> +
+>> +	rc = -ENXIO;
+>> +	page = follow_page(vma, uaddr, FOLL_WRITE);
+>> +	if (IS_ERR_OR_NULL(page))
+>> +		goto out;
+>> +
+>> +	lock_page(page);
+>> +	ptep = get_locked_pte(gmap->mm, uaddr, &ptelock);
+>> +	rc = make_secure_pte(ptep, uaddr, page, uvcb);
+>> +	pte_unmap_unlock(ptep, ptelock);
+>> +	unlock_page(page);
+>> +out:
+>> +	up_read(&gmap->mm->mmap_sem);
+>> +
+>> +	if (rc == -EAGAIN) {
+>> +		wait_on_page_writeback(page);
+>> +	} else if (rc == -EBUSY) {
+>> +		/*
+>> +		 * If we have tried a local drain and the page refcount
+>> +		 * still does not match our expected safe value, try with a
+>> +		 * system wide drain. This is needed if the pagevecs holding
+>> +		 * the page are on a different CPU.
+>> +		 */
+>> +		if (local_drain) {
+>> +			lru_add_drain_all();
+> 
+> I do wonder if that is valid to be called with all the locks at this point.
+
+This function uses per cpu workers and needs no other locks. Also verified 
+with lockdep. 
+
+> 
+>> +			/* We give up here, and let the caller try again */
+>> +			return -EAGAIN;
+>> +		}
+>> +		/*
+>> +		 * We are here if the page refcount does not match the
+>> +		 * expected safe value. The main culprits are usually
+>> +		 * pagevecs. With lru_add_drain() we drain the pagevecs
+>> +		 * on the local CPU so that hopefully the refcount will
+>> +		 * reach the expected safe value.
+>> +		 */
+>> +		lru_add_drain();
+> 
+> dito ...
+
+dito. 
+
+> 
+>> +		local_drain = 1;
+>> +		/* And now we try again immediately after draining */
+>> +		goto again;
+>> +	} else if (rc == -ENXIO) {
+>> +		if (gmap_fault(gmap, gaddr, FAULT_FLAG_WRITE))
+>> +			return -EFAULT;
+>> +		return -EAGAIN;
+>> +	}
+>> +	return rc;
+>> +}
+>> +EXPORT_SYMBOL_GPL(gmap_make_secure);
+>> +
+>> +int gmap_convert_to_secure(struct gmap *gmap, unsigned long gaddr)
+>> +{
+>> +	struct uv_cb_cts uvcb = {
+>> +		.header.cmd = UVC_CMD_CONV_TO_SEC_STOR,
+>> +		.header.len = sizeof(uvcb),
+>> +		.guest_handle = gmap->guest_handle,
+>> +		.gaddr = gaddr,
+>> +	};
+>> +
+>> +	return gmap_make_secure(gmap, gaddr, &uvcb);
+>> +}
+>> +EXPORT_SYMBOL_GPL(gmap_convert_to_secure);
+>> +
+>> +/**
+>> + * To be called with the page locked or with an extra reference!
+> 
+> Can we have races here? (IOW, two callers concurrently for the same page)
+
+That would be fine and is part of the design. The ultravisor calls will
+either make the page accessible or will be a (mostly) no-op.
+In fact, we allow for slight over-indication of "needs to be exported"
+
+What about:
+
+/*
+ * To be called with the page locked or with an extra reference! This will
+ * prevent gmap_make_secure from touching the page concurrently. Having 2
+ * parallel make_page_accessible is fine, as the UV calls will become a 
+ * no-op if the page is already exported.
+ */
+
+
+> 
+>> + */
+>> +int arch_make_page_accessible(struct page *page)
+>> +{
+>> +	int rc = 0;
+>> +
+>> +	/* Hugepage cannot be protected, so nothing to do */
+>> +	if (PageHuge(page))
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * PG_arch_1 is used in 3 places:
+>> +	 * 1. for kernel page tables during early boot
+>> +	 * 2. for storage keys of huge pages and KVM
+>> +	 * 3. As an indication that this page might be secure. This can
+>> +	 *    overindicate, e.g. we set the bit before calling
+>> +	 *    convert_to_secure.
+>> +	 * As secure pages are never huge, all 3 variants can co-exists.
+>> +	 */
+>> +	if (!test_bit(PG_arch_1, &page->flags))
+>> +		return 0;
+>> +
+>> +	rc = uv_pin_shared(page_to_phys(page));
+>> +	if (!rc) {
+>> +		clear_bit(PG_arch_1, &page->flags);
+>> +		return 0;
+>> +	}
+> 
+> Overall, looks sane to me. (I am mostly concerned about possible races,
+> e.g., when two gmaps would be created for a single VM and nasty stuff be
+> done with them). But yeah, I guess you guys thought about this ;)
+
 
