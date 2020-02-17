@@ -2,40 +2,40 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7D69716119D
-	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 13:07:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C4D041611AA
+	for <lists+linux-s390@lfdr.de>; Mon, 17 Feb 2020 13:10:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbgBQMH5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 17 Feb 2020 07:07:57 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:50584 "EHLO
+        id S1729126AbgBQMKP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 17 Feb 2020 07:10:15 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31764 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728897AbgBQMH5 (ORCPT
+        by vger.kernel.org with ESMTP id S1728897AbgBQMKO (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 17 Feb 2020 07:07:57 -0500
+        Mon, 17 Feb 2020 07:10:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1581941275;
+        s=mimecast20190719; t=1581941413;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=G2WV/Fy4w9gzboiTDDn8mTCv2bOKjGURBCd3cvjDn8I=;
-        b=bg/JINYSw5YtkU7BjtS77H7BaOVVQQ0sB5o26OVneU2uwfHd88DUUyfpHHO4AKZA9G+pFk
-        YtWmYJ1570UbJOJtJ/N1v2yJlk/hCN7+FQrpDdn/t0/aJQD8RRE2fuGV7MtJ+Ge+fQHXS1
-        xc6pCrMU0sWXdRnSb4C0d4Muv0CwEZM=
+        bh=GizBNqcPCNda/KEbOtq1P3Gg7oLUoQHsBpvdytSbWKQ=;
+        b=APx94QqW2rdzOkStI2CMzBmdGbuetBP90WKgkIwZWE4qQ53wqtSk13xsAfFwZNEsSR4Hz4
+        XBntl/fS/WhaQsZEVFkVHdPOcT0bHzt5FE+1L6XFv8uuGSdIb+18wOt03l471GMpF4Z/oU
+        TApv8RRDWr/F3URPE5lzy5gHYwkTW54=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-316-Lmx_ABc2O1a6Z0IChl-k9A-1; Mon, 17 Feb 2020 07:07:53 -0500
-X-MC-Unique: Lmx_ABc2O1a6Z0IChl-k9A-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-411-SP3cK5BKNXKG5XcjlieqgA-1; Mon, 17 Feb 2020 07:10:08 -0500
+X-MC-Unique: SP3cK5BKNXKG5XcjlieqgA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B55C107ACC5;
-        Mon, 17 Feb 2020 12:07:52 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C97D68010F2;
+        Mon, 17 Feb 2020 12:10:06 +0000 (UTC)
 Received: from [10.36.117.64] (ovpn-117-64.ams2.redhat.com [10.36.117.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 17BD9101D484;
-        Mon, 17 Feb 2020 12:07:45 +0000 (UTC)
-Subject: Re: [PATCH v2 05/42] s390/mm: provide memory management functions for
- protected KVM guests
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 534BB9076E;
+        Mon, 17 Feb 2020 12:09:59 +0000 (UTC)
+Subject: Re: [PATCH v2 09/42] KVM: s390: protvirt: Add initial vm and cpu
+ lifecycle handling
 To:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
@@ -45,11 +45,11 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Michael Mueller <mimu@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org
+        Janosch Frank <frankja@linux.ibm.com>
 References: <20200214222658.12946-1-borntraeger@de.ibm.com>
- <20200214222658.12946-6-borntraeger@de.ibm.com>
- <f5523486-ee76-e6c1-9563-658bca7f3b0d@redhat.com>
- <87742e00-9a8d-b7b4-ab96-05e8c9d39534@de.ibm.com>
+ <20200214222658.12946-10-borntraeger@de.ibm.com>
+ <9cac0f98-e593-b6ae-9d53-d3c77ea090a1@redhat.com>
+ <f70b97fe-fbaf-2e5a-cc7d-a7529a8943f4@de.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -95,53 +95,76 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <31c45ff8-a01a-6ec1-c169-9f52ace9f1f3@redhat.com>
-Date:   Mon, 17 Feb 2020 13:07:43 +0100
+Message-ID: <c77dbb1b-0f4b-e40a-52a4-7110aec75e32@redhat.com>
+Date:   Mon, 17 Feb 2020 13:09:58 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <87742e00-9a8d-b7b4-ab96-05e8c9d39534@de.ibm.com>
+In-Reply-To: <f70b97fe-fbaf-2e5a-cc7d-a7529a8943f4@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
->>> +		if (local_drain) {
->>> +			lru_add_drain_all();
+On 17.02.20 13:04, Christian Borntraeger wrote:
+> 
+> 
+> On 17.02.20 11:56, David Hildenbrand wrote:
+>> [...]
+>>>  
+>>> +static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
+>>> +{
+>>> +	int r = 0;
+>>> +	void __user *argp = (void __user *)cmd->data;
+>>> +
+>>> +	switch (cmd->cmd) {
+>>> +	case KVM_PV_VM_CREATE: {
+>>> +		r = -EINVAL;
+>>> +		if (kvm_s390_pv_is_protected(kvm))
+>>> +			break;
 >>
->> I do wonder if that is valid to be called with all the locks at this point.
+>> Isn't this racy? I think there has to be a way to make sure the PV state
+>> can't change. Is there any and I am missing something obvious? (is
+>> suspect we need the kvm->lock)
 > 
-> This function uses per cpu workers and needs no other locks. Also verified 
-> with lockdep. 
+> 
+> Yes, kvm->lock around kvm_s390_handle_pv is safer.
+> 
+> Something like
 
-Okay, perfect.
+Yes. Probably a lockdep_assert_held() inside kvm_s390_pv_is_protected()
+would make sense to catch other races.
+[...]
 
->>> +/**
->>> + * To be called with the page locked or with an extra reference!
 >>
->> Can we have races here? (IOW, two callers concurrently for the same page)
+>> With an explicit KVM_PV_VCPU_CREATE, this does not belong here. When
+>> hotplugging CPUs, user space has to do that manually. But as I said
+>> already, this user space API could be improved. (below)
 > 
-> That would be fine and is part of the design. The ultravisor calls will
-> either make the page accessible or will be a (mostly) no-op.
-> In fact, we allow for slight over-indication of "needs to be exported"
+> With your proposed API this would stay.
+
+Yes
+
+[...]
+>>
+>>
+>> Can we please discuss why we can't
+>>
+>> - Get rid of KVM_S390_PV_COMMAND_VCPU
+>> - Do the allocation in KVM_PV_VM_CREATE
+>> - Rename KVM_PV_VM_CREATE -> KVM_PV_ENABLE
+>> - Rename KVM_PV_VM_DESTROY -> KVM_PV_DISABLE
+>>
+>> This user space API is unnecessary complicated and confusing.
 > 
-> What about:
+> I will have a look if this is feasible.
 > 
-> /*
->  * To be called with the page locked or with an extra reference! This will
->  * prevent gmap_make_secure from touching the page concurrently. Having 2
->  * parallel make_page_accessible is fine, as the UV calls will become a 
->  * no-op if the page is already exported.
->  */
 
-Yes, much clearer, thanks!
-
-
+Okay, thanks!
 
 -- 
 Thanks,
