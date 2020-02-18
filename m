@@ -2,40 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 99E2516238F
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 10:39:27 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 113341623C3
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 10:45:47 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbgBRJjV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Feb 2020 04:39:21 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39215 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726193AbgBRJjV (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:39:21 -0500
+        id S1726360AbgBRJpH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Feb 2020 04:45:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:27258 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726383AbgBRJpH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 Feb 2020 04:45:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582018760;
+        s=mimecast20190719; t=1582019105;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Bhxsn1zL0jzRCDXn2kGIHLqyP/YRsOO43CmQjq0FFws=;
-        b=OQ9G6jIyqiSvObdm0G284EUs1WDe9yO8QDz38QuSxjAFD6K2Agi2T6+aRxv3bi2rNmstYN
-        C7Mg/FrJhm7QjS6jL+GeT2dCp21JHGdn5IWV9TIOozPXKxxn0L8ctd274sMaoQ1Yj/q/B4
-        FAa7wSEuFl9xXJDqS5HidQ3t1YbEPlY=
+        bh=M9Rq/mGONnf1JU5Gpf0yCyO4ni4wy6mqtywwvHDL97s=;
+        b=a3451oRMD4L1tC0SLLMBOaBnnaqXM9dJSi1+CE4EO/YPUXRLylA91CZiHOhfPiRkvGrmGX
+        bAQwGE6SRKs5TPtkaiJ0DJY/3V5TjjZUwYEsGpEpJO8h0CRNWbM/ScNyF3SBHY0mIfiVVX
+        9v9WUEaIyb6IwO1Y268B5WKt5dAe4i4=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-326-mGWp-DxIMMKNww0FUiwQ-Q-1; Tue, 18 Feb 2020 04:39:15 -0500
-X-MC-Unique: mGWp-DxIMMKNww0FUiwQ-Q-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+ us-mta-160-eHn-CqNyNhWwFUPSS4wRHA-1; Tue, 18 Feb 2020 04:44:59 -0500
+X-MC-Unique: eHn-CqNyNhWwFUPSS4wRHA-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6710107ACC9;
-        Tue, 18 Feb 2020 09:39:13 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5042713E4;
+        Tue, 18 Feb 2020 09:44:58 +0000 (UTC)
 Received: from [10.36.116.190] (ovpn-116-190.ams2.redhat.com [10.36.116.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9ADD78B550;
-        Tue, 18 Feb 2020 09:39:11 +0000 (UTC)
-Subject: Re: [PATCH v2 28/42] KVM: s390: protvirt: Add program exception
- injection
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F49790533;
+        Tue, 18 Feb 2020 09:44:55 +0000 (UTC)
+Subject: Re: [PATCH v2 30/42] KVM: s390: protvirt: UV calls in support of
+ diag308 0, 1
 To:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
@@ -47,9 +46,7 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
 References: <20200214222658.12946-1-borntraeger@de.ibm.com>
- <20200214222658.12946-29-borntraeger@de.ibm.com>
- <0911c8c1-0877-047b-0da5-4c7f79aef3ae@redhat.com>
- <2374ea8d-0244-f710-36b9-54ec1e9b4b7f@de.ibm.com>
+ <20200214222658.12946-31-borntraeger@de.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -95,43 +92,95 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <e0af7b49-bda2-ef73-a06e-ea9cd60978ef@redhat.com>
-Date:   Tue, 18 Feb 2020 10:39:10 +0100
+Message-ID: <53a04585-b49c-6b61-5439-9624bd46d3f0@redhat.com>
+Date:   Tue, 18 Feb 2020 10:44:55 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <2374ea8d-0244-f710-36b9-54ec1e9b4b7f@de.ibm.com>
+In-Reply-To: <20200214222658.12946-31-borntraeger@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 18.02.20 10:37, Christian Borntraeger wrote:
+On 14.02.20 23:26, Christian Borntraeger wrote:
+> From: Janosch Frank <frankja@linux.ibm.com>
 > 
+> diag 308 subcode 0 and 1 require several KVM and Ultravisor interactions.
+> Specific to these "soft" reboots are
 > 
-> On 18.02.20 10:33, David Hildenbrand wrote:
-> eliver_prog(struct kvm_vcpu *vcpu)
->>>  {
->>>  	struct kvm_s390_local_interrupt *li = &vcpu->arch.local_int;
->>> @@ -856,6 +871,9 @@ static int __must_check __deliver_prog(struct kvm_vcpu *vcpu)
->>>  	trace_kvm_s390_deliver_interrupt(vcpu->vcpu_id, KVM_S390_PROGRAM_INT,
->>>  					 pgm_info.code, 0);
->>>  
->>> +	if (kvm_s390_pv_is_protected(vcpu->kvm))
->>
->> Can we actually ever have PER set, and what would happen if so?
->> Shouldn't we also return -EINVAL?
+> * The "unshare all" UVC
+> * The "prepare for reset" UVC
 > 
-> The ultravisor would add a concurrent PER event if appropriate.
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  arch/s390/include/asm/uv.h |  4 ++++
+>  arch/s390/kvm/kvm-s390.c   | 22 ++++++++++++++++++++++
+>  include/uapi/linux/kvm.h   |  2 ++
+>  3 files changed, 28 insertions(+)
 > 
+> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
+> index 839cb3a89986..254d5769d136 100644
+> --- a/arch/s390/include/asm/uv.h
+> +++ b/arch/s390/include/asm/uv.h
+> @@ -36,6 +36,8 @@
+>  #define UVC_CMD_SET_SEC_CONF_PARAMS	0x0300
+>  #define UVC_CMD_UNPACK_IMG		0x0301
+>  #define UVC_CMD_VERIFY_IMG		0x0302
+> +#define UVC_CMD_PREPARE_RESET		0x0320
+> +#define UVC_CMD_SET_UNSHARE_ALL		0x0340
+>  #define UVC_CMD_PIN_PAGE_SHARED		0x0341
+>  #define UVC_CMD_UNPIN_PAGE_SHARED	0x0342
+>  #define UVC_CMD_SET_SHARED_ACCESS	0x1000
+> @@ -56,6 +58,8 @@ enum uv_cmds_inst {
+>  	BIT_UVC_CMD_SET_SEC_PARMS = 11,
+>  	BIT_UVC_CMD_UNPACK_IMG = 13,
+>  	BIT_UVC_CMD_VERIFY_IMG = 14,
+> +	BIT_UVC_CMD_PREPARE_RESET = 18,
+> +	BIT_UVC_CMD_UNSHARE_ALL = 20,
+>  	BIT_UVC_CMD_PIN_PAGE_SHARED = 21,
+>  	BIT_UVC_CMD_UNPIN_PAGE_SHARED = 22,
+>  };
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index f96c1f530cc2..ad84c1144908 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -2285,6 +2285,28 @@ static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
+>  			     cmd->rrc);
+>  		break;
+>  	}
+> +	case KVM_PV_VM_PREP_RESET: {
+> +		r = -EINVAL;
+> +		if (!kvm_s390_pv_is_protected(kvm))
+> +			break;
+> +
+> +		r = uv_cmd_nodata(kvm_s390_pv_handle(kvm),
+> +				  UVC_CMD_PREPARE_RESET, &cmd->rc, &cmd->rrc);
+> +		KVM_UV_EVENT(kvm, 3, "PROTVIRT PREP RESET: rc %x rrc %x",
+> +			     cmd->rc, cmd->rrc);
+> +		break;
+> +	}
+> +	case KVM_PV_VM_UNSHARE_ALL: {
+> +		r = -EINVAL;
+> +		if (!kvm_s390_pv_is_protected(kvm))
+> +			break;
+> +
+> +		r = uv_cmd_nodata(kvm_s390_pv_handle(kvm),
+> +				  UVC_CMD_SET_UNSHARE_ALL, &cmd->rc, &cmd->rrc);
+> +		KVM_UV_EVENT(kvm, 3, "PROTVIRT UNSHARE: rc %x rrc %x",
+> +			     cmd->rc, cmd->rrc);
 
-Please add that to the patch description.
+I do wonder if that has any possible races with CPUs currently running,
+which try to mark pages shared. That no other VCPUs are running is not
+enforced here AFAIKs.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Apart from that, looks good to me.
 
 -- 
 Thanks,
