@@ -2,152 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1384816292E
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 16:18:25 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 051D21629BC
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 16:46:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726875AbgBRPSV convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Tue, 18 Feb 2020 10:18:21 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:32530 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726666AbgBRPSU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 18 Feb 2020 10:18:20 -0500
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01IFFAUh023458
-        for <linux-s390@vger.kernel.org>; Tue, 18 Feb 2020 10:18:20 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6e1hrta5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 18 Feb 2020 10:18:18 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <sth@linux.ibm.com>;
-        Tue, 18 Feb 2020 15:18:16 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Feb 2020 15:18:12 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01IFIBAe27132044
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 15:18:11 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E9B6642047;
-        Tue, 18 Feb 2020 15:18:10 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B814542045;
-        Tue, 18 Feb 2020 15:18:10 +0000 (GMT)
-Received: from dyn-9-152-212-151.boeblingen.de.ibm.com (unknown [9.152.212.151])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Feb 2020 15:18:10 +0000 (GMT)
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200217165525.5187-1-krzk@kernel.org>
- <20200218121713.GA3956@osiris>
-From:   Stefan Haberland <sth@linux.ibm.com>
-Autocrypt: addr=sth@linux.ibm.com; keydata=
- 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
- cH4TNHyhiR0KAbxE8qKx3Jc=
-Subject: Re: [PATCH] s390: Cleanup removed IOSCHED_DEADLINE
-Date:   Tue, 18 Feb 2020 16:18:10 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726399AbgBRPqM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Feb 2020 10:46:12 -0500
+Received: from mga02.intel.com ([134.134.136.20]:26197 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726360AbgBRPqM (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 18 Feb 2020 10:46:12 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 18 Feb 2020 07:46:11 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.70,456,1574150400"; 
+   d="scan'208";a="258592417"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.202])
+  by fmsmga004.fm.intel.com with ESMTP; 18 Feb 2020 07:46:10 -0800
+Date:   Tue, 18 Feb 2020 07:46:10 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v2 01/42] mm:gup/writeback: add callbacks for
+ inaccessible pages
+Message-ID: <20200218154610.GB27565@linux.intel.com>
+References: <20200214222658.12946-1-borntraeger@de.ibm.com>
+ <20200214222658.12946-2-borntraeger@de.ibm.com>
+ <107a8a72-b745-26f2-5805-c4d99ce77b35@redhat.com>
+ <dd33cc1a-214d-b949-8f5e-9c2d40a8e518@de.ibm.com>
+ <a8f8786e-1ed0-0c44-08d0-ebc58f43ae40@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200218121713.GA3956@osiris>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-TM-AS-GCONF: 00
-x-cbid: 20021815-0012-0000-0000-0000038800DD
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021815-0013-0000-0000-000021C4918D
-Message-Id: <60998205-90ba-c343-b3f3-c9c25ee6fef1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-18_02:2020-02-17,2020-02-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- bulkscore=0 priorityscore=1501 spamscore=0 adultscore=0 mlxscore=0
- impostorscore=0 malwarescore=0 phishscore=0 suspectscore=3 mlxlogscore=999
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180118
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a8f8786e-1ed0-0c44-08d0-ebc58f43ae40@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Am 18.02.20 um 13:17 schrieb Heiko Carstens:
-> On Mon, Feb 17, 2020 at 05:55:25PM +0100, Krzysztof Kozlowski wrote:
->> CONFIG_IOSCHED_DEADLINE is gone since commit f382fb0bcef4 ("block:
->> remove legacy IO schedulers").
->>
->> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> Thanks! I'll leave it up to Stefan and Jan to decide what to do with this.
+On Tue, Feb 18, 2020 at 09:27:20AM +0100, David Hildenbrand wrote:
+> On 17.02.20 12:10, Christian Borntraeger wrote:
+> > So yes, if everything is setup properly this should not fail in real life
+> > and only we have a kernel (or firmware) bug.
+> > 
+> 
+> Then, without feedback from other possible users, this should be a void
+> function. So either introduce error handling or convert it to a void for
+> now (and add e.g., BUG_ON and a comment inside the s390x implementation).
 
-I will apply the patch. Thanks.
-
->
->> ---
->>  drivers/s390/block/Kconfig | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/drivers/s390/block/Kconfig b/drivers/s390/block/Kconfig
->> index a8682f69effc..1f06b19cb290 100644
->> --- a/drivers/s390/block/Kconfig
->> +++ b/drivers/s390/block/Kconfig
->> @@ -26,7 +26,7 @@ config DASD
->>  	def_tristate y
->>  	prompt "Support for DASD devices"
->>  	depends on CCW && BLOCK
->> -	select IOSCHED_DEADLINE
->> +	select MQ_IOSCHED_DEADLINE
->>  	help
->>  	  Enable this option if you want to access DASDs directly utilizing
->>  	  S/390s channel subsystem commands. This is necessary for running
->> -- 
->> 2.17.1
->>
-
-
+My preference would also be for a void function (versus ignoring an int
+return).
