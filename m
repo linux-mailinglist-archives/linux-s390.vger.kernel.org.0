@@ -2,40 +2,40 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D165E16238C
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 10:39:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99E2516238F
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 10:39:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbgBRJi7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Feb 2020 04:38:59 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:36163 "EHLO
+        id S1726281AbgBRJjV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Feb 2020 04:39:21 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:39215 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726225AbgBRJi7 (ORCPT
+        by vger.kernel.org with ESMTP id S1726193AbgBRJjV (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 18 Feb 2020 04:38:59 -0500
+        Tue, 18 Feb 2020 04:39:21 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582018738;
+        s=mimecast20190719; t=1582018760;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=zOPjK5HGbTpAMidXghI3GICnOdMqEUCd4p8NkeKXbi0=;
-        b=c1VVnMV8ydvWQST+7qqe5MO22Xe/8qIJAQUrJVmdltb8oE3iZ+X9Hess7qzvvarHOHmnJP
-        flB50UmFJnDTWz7h7kov8vweEFflMAodgBE64BR3J5baO6+y+b1gqnR+MphuDlkxGkhqx9
-        STGyvPWw977YSTDfXAqBdE0oD8OExAo=
+        bh=Bhxsn1zL0jzRCDXn2kGIHLqyP/YRsOO43CmQjq0FFws=;
+        b=OQ9G6jIyqiSvObdm0G284EUs1WDe9yO8QDz38QuSxjAFD6K2Agi2T6+aRxv3bi2rNmstYN
+        C7Mg/FrJhm7QjS6jL+GeT2dCp21JHGdn5IWV9TIOozPXKxxn0L8ctd274sMaoQ1Yj/q/B4
+        FAa7wSEuFl9xXJDqS5HidQ3t1YbEPlY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-205-eOP7Ztv-POK9P_sm_jvAqg-1; Tue, 18 Feb 2020 04:38:53 -0500
-X-MC-Unique: eOP7Ztv-POK9P_sm_jvAqg-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-326-mGWp-DxIMMKNww0FUiwQ-Q-1; Tue, 18 Feb 2020 04:39:15 -0500
+X-MC-Unique: mGWp-DxIMMKNww0FUiwQ-Q-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 38124100550E;
-        Tue, 18 Feb 2020 09:38:52 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6710107ACC9;
+        Tue, 18 Feb 2020 09:39:13 +0000 (UTC)
 Received: from [10.36.116.190] (ovpn-116-190.ams2.redhat.com [10.36.116.190])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DB29B60BF3;
-        Tue, 18 Feb 2020 09:38:49 +0000 (UTC)
-Subject: Re: [PATCH v2 29/42] KVM: s390: protvirt: Add diag 308 subcode 8 - 10
- handling
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9ADD78B550;
+        Tue, 18 Feb 2020 09:39:11 +0000 (UTC)
+Subject: Re: [PATCH v2 28/42] KVM: s390: protvirt: Add program exception
+ injection
 To:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
@@ -47,7 +47,9 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
 References: <20200214222658.12946-1-borntraeger@de.ibm.com>
- <20200214222658.12946-30-borntraeger@de.ibm.com>
+ <20200214222658.12946-29-borntraeger@de.ibm.com>
+ <0911c8c1-0877-047b-0da5-4c7f79aef3ae@redhat.com>
+ <2374ea8d-0244-f710-36b9-54ec1e9b4b7f@de.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -93,66 +95,43 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <9e5e7409-aaa2-47af-812f-169c2d290e18@redhat.com>
-Date:   Tue, 18 Feb 2020 10:38:49 +0100
+Message-ID: <e0af7b49-bda2-ef73-a06e-ea9cd60978ef@redhat.com>
+Date:   Tue, 18 Feb 2020 10:39:10 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200214222658.12946-30-borntraeger@de.ibm.com>
+In-Reply-To: <2374ea8d-0244-f710-36b9-54ec1e9b4b7f@de.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 14.02.20 23:26, Christian Borntraeger wrote:
-> From: Janosch Frank <frankja@linux.ibm.com>
+On 18.02.20 10:37, Christian Borntraeger wrote:
 > 
-> If the host initialized the Ultravisor, we can set stfle bit 161
-> (protected virtual IPL enhancements facility), which indicates that
-> the IPL subcodes 8, 9, and 10 are valid. These subcodes are used by a
-> normal guest to set/retrieve an IPL information block of type 5 (for
-> protected virtual machines) and transition into protected mode.
 > 
-> Once in protected mode, the Ultravisor will conceal the facility bit.
-> Therefore each boot into protected mode has to go through
-> non-protected mode. There is no secure re-ipl with subcode 10 without
-> a previous subcode 3.
+> On 18.02.20 10:33, David Hildenbrand wrote:
+> eliver_prog(struct kvm_vcpu *vcpu)
+>>>  {
+>>>  	struct kvm_s390_local_interrupt *li = &vcpu->arch.local_int;
+>>> @@ -856,6 +871,9 @@ static int __must_check __deliver_prog(struct kvm_vcpu *vcpu)
+>>>  	trace_kvm_s390_deliver_interrupt(vcpu->vcpu_id, KVM_S390_PROGRAM_INT,
+>>>  					 pgm_info.code, 0);
+>>>  
+>>> +	if (kvm_s390_pv_is_protected(vcpu->kvm))
+>>
+>> Can we actually ever have PER set, and what would happen if so?
+>> Shouldn't we also return -EINVAL?
 > 
-> In protected mode, there is no subcode 4 available, as the VM has no
-> more access to its memory from non-protected mode. I.e., only a IPL
-> clear is possible.
+> The ultravisor would add a concurrent PER event if appropriate.
 > 
-> The error cases will all be handled in userspace.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  arch/s390/kvm/kvm-s390.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 4a97d3b7840e..f96c1f530cc2 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2621,6 +2621,11 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
->  	if (css_general_characteristics.aiv && test_facility(65))
->  		set_kvm_facility(kvm->arch.model.fac_mask, 65);
->  
-> +	if (is_prot_virt_host()) {
-> +		set_kvm_facility(kvm->arch.model.fac_mask, 161);
-> +		set_kvm_facility(kvm->arch.model.fac_list, 161);
-> +	}
-> +
 
-Aren't these IPL subcodes completely emulated in QEMU? If so, rather
-QEMU with support should enable them when the kernel capability for PV
-(=== is_prot_virt_host()) is in place.
+Please add that to the patch description.
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 -- 
 Thanks,
