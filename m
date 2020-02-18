@@ -2,62 +2,59 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A3E5B16210C
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 07:45:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 195B216220E
+	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 09:10:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726134AbgBRGph (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Feb 2020 01:45:37 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:12714 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726074AbgBRGph (ORCPT
+        id S1726127AbgBRIKE (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Feb 2020 03:10:04 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1266 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726105AbgBRIKE (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 18 Feb 2020 01:45:37 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01I6jWoM043266
-        for <linux-s390@vger.kernel.org>; Tue, 18 Feb 2020 01:45:35 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y87e65rqm-1
+        Tue, 18 Feb 2020 03:10:04 -0500
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01I88vXa019009
+        for <linux-s390@vger.kernel.org>; Tue, 18 Feb 2020 03:10:03 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y6adrrcjr-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 18 Feb 2020 01:45:33 -0500
+        for <linux-s390@vger.kernel.org>; Tue, 18 Feb 2020 03:10:02 -0500
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 18 Feb 2020 06:44:57 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 18 Feb 2020 08:10:00 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 18 Feb 2020 06:44:53 -0000
+        Tue, 18 Feb 2020 08:09:58 -0000
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01I6iq4e36896974
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01I89s1U57147530
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 18 Feb 2020 06:44:52 GMT
+        Tue, 18 Feb 2020 08:09:54 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2C6EEA4055;
-        Tue, 18 Feb 2020 06:44:52 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B666CA4057;
+        Tue, 18 Feb 2020 08:09:54 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60BCCA4040;
-        Tue, 18 Feb 2020 06:44:51 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.188.142])
+        by IMSVA (Postfix) with ESMTP id EF18AA4055;
+        Tue, 18 Feb 2020 08:09:53 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.13.52])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 18 Feb 2020 06:44:51 +0000 (GMT)
-Subject: Re: [PATCH 01/35] mm:gup/writeback: add callbacks for inaccessible
- pages
-To:     "Tian, Kevin" <kevin.tian@intel.com>,
+        Tue, 18 Feb 2020 08:09:53 +0000 (GMT)
+Subject: Re: [PATCH v2 09/42] KVM: s390: protvirt: Add initial vm and cpu
+ lifecycle handling
+To:     David Hildenbrand <david@redhat.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
         Thomas Huth <thuth@redhat.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Michael Mueller <mimu@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200207113958.7320-1-borntraeger@de.ibm.com>
- <20200207113958.7320-2-borntraeger@de.ibm.com>
- <AADFC41AFE54684AB9EE6CBC0274A5D19D78AA37@SHSMSX104.ccr.corp.intel.com>
+        Janosch Frank <frankja@linux.ibm.com>
+References: <20200214222658.12946-1-borntraeger@de.ibm.com>
+ <20200214222658.12946-10-borntraeger@de.ibm.com>
+ <9cac0f98-e593-b6ae-9d53-d3c77ea090a1@redhat.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -102,48 +99,38 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 18 Feb 2020 07:44:50 +0100
+Date:   Tue, 18 Feb 2020 09:09:53 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <AADFC41AFE54684AB9EE6CBC0274A5D19D78AA37@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <9cac0f98-e593-b6ae-9d53-d3c77ea090a1@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20021806-0020-0000-0000-000003AB2A3B
+x-cbid: 20021808-0008-0000-0000-0000035405FC
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021806-0021-0000-0000-0000220323E9
-Message-Id: <16c66640-85bf-b158-9685-ea59359d1771@de.ibm.com>
+x-cbparentid: 20021808-0009-0000-0000-00004A750E19
+Message-Id: <b5a0bd38-d8b6-f4ca-6402-df58212c7883@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-17_14:2020-02-17,2020-02-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
- impostorscore=0 phishscore=0 malwarescore=0 mlxlogscore=943
- lowpriorityscore=0 bulkscore=0 clxscore=1015 priorityscore=1501
- spamscore=0 adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002180054
+ definitions=2020-02-18_01:2020-02-17,2020-02-18 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 priorityscore=1501 adultscore=0 mlxlogscore=840
+ malwarescore=0 phishscore=0 spamscore=0 bulkscore=0 clxscore=1015
+ mlxscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002180066
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-On 18.02.20 04:36, Tian, Kevin wrote:
->> From: Christian Borntraeger
->> Sent: Friday, February 7, 2020 7:39 PM
->>
->> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
->>
->> With the introduction of protected KVM guests on s390 there is now a
->> concept of inaccessible pages. These pages need to be made accessible
->> before the host can access them.
->>
->> While cpu accesses will trigger a fault that can be resolved, I/O
->> accesses will just fail.  We need to add a callback into architecture
->> code for places that will do I/O, namely when writeback is started or
->> when a page reference is taken.
-> 
-> What about hooking the callback to DMA API ops?
 
-Not all device drivers do use the DMA API so it wont work for us.
+On 17.02.20 11:56, David Hildenbrand wrote:
+>> +	}
+>> +	case KVM_PV_VM_SET_SEC_PARMS: {
+> 
+> I'd name this "KVM_PV_VM_SET_PARMS" instead.
+
+I would stick with the SEC name as this is more similar to the UV call name.
 
