@@ -2,46 +2,46 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4C44E1643B6
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 12:53:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 18108164490
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 13:45:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726495AbgBSLxX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Feb 2020 06:53:23 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19938 "EHLO
+        id S1726789AbgBSMpz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Feb 2020 07:45:55 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20982 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726548AbgBSLxX (ORCPT
+        by vger.kernel.org with ESMTP id S1726771AbgBSMpz (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 19 Feb 2020 06:53:23 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JBp8O0113700
-        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 06:53:21 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubn9csy-1
+        Wed, 19 Feb 2020 07:45:55 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JCiKbC018027
+        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 07:45:53 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8xdnecu1-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 06:53:21 -0500
+        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 07:45:53 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 19 Feb 2020 11:53:19 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Wed, 19 Feb 2020 12:45:51 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 11:53:17 -0000
+        Wed, 19 Feb 2020 12:45:50 -0000
 Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JBrD9H37093614
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JCiouf50200850
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 11:53:13 GMT
+        Wed, 19 Feb 2020 12:44:50 GMT
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7079511C05B;
-        Wed, 19 Feb 2020 11:53:13 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 5C3CD11C050;
+        Wed, 19 Feb 2020 12:45:46 +0000 (GMT)
 Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D14B111C058;
-        Wed, 19 Feb 2020 11:53:12 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id B5A9411C054;
+        Wed, 19 Feb 2020 12:45:45 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.166.21])
         by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Feb 2020 11:53:12 +0000 (GMT)
-Subject: Re: [PATCH v2 30/42] KVM: s390: protvirt: UV calls in support of
- diag308 0, 1
+        Wed, 19 Feb 2020 12:45:45 +0000 (GMT)
+Subject: Re: [PATCH v2 29/42] KVM: s390: protvirt: Add diag 308 subcode 8 - 10
+ handling
 To:     David Hildenbrand <david@redhat.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
@@ -53,8 +53,8 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
 References: <20200214222658.12946-1-borntraeger@de.ibm.com>
- <20200214222658.12946-31-borntraeger@de.ibm.com>
- <53a04585-b49c-6b61-5439-9624bd46d3f0@redhat.com>
+ <20200214222658.12946-30-borntraeger@de.ibm.com>
+ <9e5e7409-aaa2-47af-812f-169c2d290e18@redhat.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -99,26 +99,26 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 19 Feb 2020 12:53:12 +0100
+Date:   Wed, 19 Feb 2020 13:45:45 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <53a04585-b49c-6b61-5439-9624bd46d3f0@redhat.com>
+In-Reply-To: <9e5e7409-aaa2-47af-812f-169c2d290e18@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20021911-0008-0000-0000-00000354662A
+x-cbid: 20021912-0028-0000-0000-000003DC6AE1
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021911-0009-0000-0000-00004A75728C
-Message-Id: <0a09a062-3b3f-172c-f82d-0ac2bed7ff94@de.ibm.com>
+x-cbparentid: 20021912-0029-0000-0000-000024A1779B
+Message-Id: <1ff8a25b-6998-b88f-763e-71f6db08c3fe@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
- priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 phishscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ impostorscore=0 mlxlogscore=591 mlxscore=0 priorityscore=1501 adultscore=0
+ lowpriorityscore=0 suspectscore=0 clxscore=1015 spamscore=0 bulkscore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190091
+ definitions=main-2002190097
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -126,88 +126,21 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 18.02.20 10:44, David Hildenbrand wrote:
-> On 14.02.20 23:26, Christian Borntraeger wrote:
->> From: Janosch Frank <frankja@linux.ibm.com>
->>
->> diag 308 subcode 0 and 1 require several KVM and Ultravisor interactions.
->> Specific to these "soft" reboots are
->>
->> * The "unshare all" UVC
->> * The "prepare for reset" UVC
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
->> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
->> ---
->>  arch/s390/include/asm/uv.h |  4 ++++
->>  arch/s390/kvm/kvm-s390.c   | 22 ++++++++++++++++++++++
->>  include/uapi/linux/kvm.h   |  2 ++
->>  3 files changed, 28 insertions(+)
->>
->> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
->> index 839cb3a89986..254d5769d136 100644
->> --- a/arch/s390/include/asm/uv.h
->> +++ b/arch/s390/include/asm/uv.h
->> @@ -36,6 +36,8 @@
->>  #define UVC_CMD_SET_SEC_CONF_PARAMS	0x0300
->>  #define UVC_CMD_UNPACK_IMG		0x0301
->>  #define UVC_CMD_VERIFY_IMG		0x0302
->> +#define UVC_CMD_PREPARE_RESET		0x0320
->> +#define UVC_CMD_SET_UNSHARE_ALL		0x0340
->>  #define UVC_CMD_PIN_PAGE_SHARED		0x0341
->>  #define UVC_CMD_UNPIN_PAGE_SHARED	0x0342
->>  #define UVC_CMD_SET_SHARED_ACCESS	0x1000
->> @@ -56,6 +58,8 @@ enum uv_cmds_inst {
->>  	BIT_UVC_CMD_SET_SEC_PARMS = 11,
->>  	BIT_UVC_CMD_UNPACK_IMG = 13,
->>  	BIT_UVC_CMD_VERIFY_IMG = 14,
->> +	BIT_UVC_CMD_PREPARE_RESET = 18,
->> +	BIT_UVC_CMD_UNSHARE_ALL = 20,
->>  	BIT_UVC_CMD_PIN_PAGE_SHARED = 21,
->>  	BIT_UVC_CMD_UNPIN_PAGE_SHARED = 22,
->>  };
->> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->> index f96c1f530cc2..ad84c1144908 100644
->> --- a/arch/s390/kvm/kvm-s390.c
->> +++ b/arch/s390/kvm/kvm-s390.c
->> @@ -2285,6 +2285,28 @@ static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
->>  			     cmd->rrc);
->>  		break;
->>  	}
->> +	case KVM_PV_VM_PREP_RESET: {
->> +		r = -EINVAL;
->> +		if (!kvm_s390_pv_is_protected(kvm))
->> +			break;
->> +
->> +		r = uv_cmd_nodata(kvm_s390_pv_handle(kvm),
->> +				  UVC_CMD_PREPARE_RESET, &cmd->rc, &cmd->rrc);
->> +		KVM_UV_EVENT(kvm, 3, "PROTVIRT PREP RESET: rc %x rrc %x",
->> +			     cmd->rc, cmd->rrc);
->> +		break;
+On 18.02.20 10:38, David Hildenbrand wrote:
+[...]
+
+set_kvm_facility(kvm->arch.model.fac_mask, 65);
+>>  
+>> +	if (is_prot_virt_host()) {
+>> +		set_kvm_facility(kvm->arch.model.fac_mask, 161);
+>> +		set_kvm_facility(kvm->arch.model.fac_list, 161);
 >> +	}
->> +	case KVM_PV_VM_UNSHARE_ALL: {
->> +		r = -EINVAL;
->> +		if (!kvm_s390_pv_is_protected(kvm))
->> +			break;
 >> +
->> +		r = uv_cmd_nodata(kvm_s390_pv_handle(kvm),
->> +				  UVC_CMD_SET_UNSHARE_ALL, &cmd->rc, &cmd->rrc);
->> +		KVM_UV_EVENT(kvm, 3, "PROTVIRT UNSHARE: rc %x rrc %x",
->> +			     cmd->rc, cmd->rrc);
 > 
-> I do wonder if that has any possible races with CPUs currently running,
-> which try to mark pages shared. That no other VCPUs are running is not
-> enforced here AFAIKs.
+> Aren't these IPL subcodes completely emulated in QEMU? If so, rather
+> QEMU with support should enable them when the kernel capability for PV
+> (=== is_prot_virt_host()) is in place.
 
-The only concern would be that the newly bootet guest (e.g. via kexec/kdump) will
-have pages shared that it dont want to share. As it is the responsiblity of the
-ultravisor to prevent data leakage, it is enforced that we do an UNSHARE all on 
-diag 308 subcode 0 and 1. At the same time the ultravisor will enforce that no
-CPU will run before we have finished  the full dance of reset activity.  (The 
-ultravisor must guarantee guest secrecy and integrity no matter what KVM does). 
+ack. will drop this patch.
 
-> 
-> Apart from that, looks good to me.
-> 
 
