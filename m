@@ -2,40 +2,47 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AE23C164302
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 12:08:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4C44E1643B6
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 12:53:24 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726777AbgBSLIO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Feb 2020 06:08:14 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39748 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726487AbgBSLIO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 19 Feb 2020 06:08:14 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582110492;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=AFEIH9gxVZrgkXfd9B4wXCd3/dL0kW42EzykpYsDkwQ=;
-        b=Epnw7rI6qRoOl5b7vIg0D0NtyTf8aS+7vzGNcM7KXN7LZWuwg7hqrYXRcVD1d0ToF7DP0n
-        UnyzAbBKeudPcIsx/rQCQiRkyjqD29fC7cl96g/NPi4vLd+D5X94WBmieDMGvNO6U/Qjwl
-        xrbezH5+pXSP/yZhnSZsNgk6k4lnXCQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-137-omOO8luONZOi1-ukqa0p0Q-1; Wed, 19 Feb 2020 06:08:08 -0500
-X-MC-Unique: omOO8luONZOi1-ukqa0p0Q-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6B40018C8C3C;
-        Wed, 19 Feb 2020 11:08:06 +0000 (UTC)
-Received: from [10.36.116.151] (ovpn-116-151.ams2.redhat.com [10.36.116.151])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0FBC75C541;
-        Wed, 19 Feb 2020 11:08:03 +0000 (UTC)
-Subject: Re: [PATCH v2 32/42] KVM: s390: protvirt: Support cmd 5 operation
- state
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        id S1726495AbgBSLxX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Feb 2020 06:53:23 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:19938 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726548AbgBSLxX (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 19 Feb 2020 06:53:23 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JBp8O0113700
+        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 06:53:21 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubn9csy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 06:53:21 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Wed, 19 Feb 2020 11:53:19 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 19 Feb 2020 11:53:17 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JBrD9H37093614
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 19 Feb 2020 11:53:13 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7079511C05B;
+        Wed, 19 Feb 2020 11:53:13 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D14B111C058;
+        Wed, 19 Feb 2020 11:53:12 +0000 (GMT)
+Received: from oc7455500831.ibm.com (unknown [9.145.166.21])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Feb 2020 11:53:12 +0000 (GMT)
+Subject: Re: [PATCH v2 30/42] KVM: s390: protvirt: UV calls in support of
+ diag308 0, 1
+To:     David Hildenbrand <david@redhat.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Thomas Huth <thuth@redhat.com>,
@@ -46,153 +53,161 @@ Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
 References: <20200214222658.12946-1-borntraeger@de.ibm.com>
- <20200214222658.12946-33-borntraeger@de.ibm.com>
- <f84bdd3a-a305-9bc1-af92-0b1ff36bfca8@redhat.com>
- <31c40864-4f34-42b2-0435-f0580033f1d1@de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <312a4c40-265c-612f-9326-9214bdcd93f5@redhat.com>
-Date:   Wed, 19 Feb 2020 12:08:03 +0100
+ <20200214222658.12946-31-borntraeger@de.ibm.com>
+ <53a04585-b49c-6b61-5439-9624bd46d3f0@redhat.com>
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
+ 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
+ nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
+Date:   Wed, 19 Feb 2020 12:53:12 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <31c40864-4f34-42b2-0435-f0580033f1d1@de.ibm.com>
+In-Reply-To: <53a04585-b49c-6b61-5439-9624bd46d3f0@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20021911-0008-0000-0000-00000354662A
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20021911-0009-0000-0000-00004A75728C
+Message-Id: <0a09a062-3b3f-172c-f82d-0ac2bed7ff94@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 malwarescore=0 phishscore=0 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002190091
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 19.02.20 12:06, Christian Borntraeger wrote:
-> 
-> 
-> On 18.02.20 10:50, David Hildenbrand wrote:
->> On 14.02.20 23:26, Christian Borntraeger wrote:
->>> From: Janosch Frank <frankja@linux.ibm.com>
->>>
->>> Code 5 for the set cpu state UV call tells the UV to load a PSW from
->>> the SE header (first IPL) or from guest location 0x0 (diag 308 subcode
->>> 0/1). Also it sets the cpu into operating state afterwards, so we can
->>> start it.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> Reviewed-by: Thomas Huth <thuth@redhat.com>
->>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
->>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
->>> ---
->>>  arch/s390/include/asm/uv.h | 1 +
->>>  arch/s390/kvm/kvm-s390.c   | 8 ++++++++
->>>  include/uapi/linux/kvm.h   | 1 +
->>>  3 files changed, 10 insertions(+)
->>>
->>> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
->>> index 7b82881ec3b4..d59825d95b9d 100644
->>> --- a/arch/s390/include/asm/uv.h
->>> +++ b/arch/s390/include/asm/uv.h
->>> @@ -169,6 +169,7 @@ struct uv_cb_unp {
->>>  #define PV_CPU_STATE_OPR	1
->>>  #define PV_CPU_STATE_STP	2
->>>  #define PV_CPU_STATE_CHKSTP	3
->>> +#define PV_CPU_STATE_OPR_LOAD	5
->>>  
->>>  struct uv_cb_cpu_set_state {
->>>  	struct uv_cb_header header;
->>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->>> index 5426b01e3da1..b6113285f47f 100644
->>> --- a/arch/s390/kvm/kvm-s390.c
->>> +++ b/arch/s390/kvm/kvm-s390.c
->>> @@ -4656,6 +4656,14 @@ static int kvm_s390_handle_pv_vcpu(struct kvm_vcpu *vcpu,
->>>  		r = kvm_s390_pv_destroy_cpu(vcpu, &cmd->rc, &cmd->rrc);
->>>  		break;
->>>  	}
->>> +	case KVM_PV_VCPU_SET_IPL_PSW: {
->>> +		if (!kvm_s390_pv_handle_cpu(vcpu))
->>> +			return -EINVAL;
->>> +
->>> +		r = kvm_s390_pv_set_cpu_state(vcpu, PV_CPU_STATE_OPR_LOAD,
->>> +					      &cmd->rc, &cmd->rrc);
->>
->> Can we squeeze that into kvm_arch_vcpu_ioctl_set_mpstate() instead? The
->> interface seems to do exactly what you want it to do.
->>
->> KVM_MP_STATE_OPERATING_LOAD
->>
->> Allow it only when in PV.
-> 
-> Ack, something like this seems to work.
-> 
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index a95c82089386..9496616cccc7 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -3710,6 +3710,12 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
->                 kvm_s390_vcpu_start(vcpu);
->                 break;
->         case KVM_MP_STATE_LOAD:
-> +               if (!kvm_s390_pv_cpu_is_protected(vcpu)) {
-> +                       rc = -ENXIO;
-> +                       break;
-> +               }
-> +               kvm_s390_pv_set_cpu_state(vcpu, PV_CPU_STATE_OPR_LOAD);
-> +               break;
->         case KVM_MP_STATE_CHECK_STOP:
->                 /* fall through - CHECK_STOP and LOAD are not supported yet */
->         default:
-> 
 
-We might want to allow KVM_MP_STATE_LOAD always. Without PV, it's
-currently just a NOP. Whatever you think is best.
 
--- 
-Thanks,
+On 18.02.20 10:44, David Hildenbrand wrote:
+> On 14.02.20 23:26, Christian Borntraeger wrote:
+>> From: Janosch Frank <frankja@linux.ibm.com>
+>>
+>> diag 308 subcode 0 and 1 require several KVM and Ultravisor interactions.
+>> Specific to these "soft" reboots are
+>>
+>> * The "unshare all" UVC
+>> * The "prepare for reset" UVC
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>> ---
+>>  arch/s390/include/asm/uv.h |  4 ++++
+>>  arch/s390/kvm/kvm-s390.c   | 22 ++++++++++++++++++++++
+>>  include/uapi/linux/kvm.h   |  2 ++
+>>  3 files changed, 28 insertions(+)
+>>
+>> diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
+>> index 839cb3a89986..254d5769d136 100644
+>> --- a/arch/s390/include/asm/uv.h
+>> +++ b/arch/s390/include/asm/uv.h
+>> @@ -36,6 +36,8 @@
+>>  #define UVC_CMD_SET_SEC_CONF_PARAMS	0x0300
+>>  #define UVC_CMD_UNPACK_IMG		0x0301
+>>  #define UVC_CMD_VERIFY_IMG		0x0302
+>> +#define UVC_CMD_PREPARE_RESET		0x0320
+>> +#define UVC_CMD_SET_UNSHARE_ALL		0x0340
+>>  #define UVC_CMD_PIN_PAGE_SHARED		0x0341
+>>  #define UVC_CMD_UNPIN_PAGE_SHARED	0x0342
+>>  #define UVC_CMD_SET_SHARED_ACCESS	0x1000
+>> @@ -56,6 +58,8 @@ enum uv_cmds_inst {
+>>  	BIT_UVC_CMD_SET_SEC_PARMS = 11,
+>>  	BIT_UVC_CMD_UNPACK_IMG = 13,
+>>  	BIT_UVC_CMD_VERIFY_IMG = 14,
+>> +	BIT_UVC_CMD_PREPARE_RESET = 18,
+>> +	BIT_UVC_CMD_UNSHARE_ALL = 20,
+>>  	BIT_UVC_CMD_PIN_PAGE_SHARED = 21,
+>>  	BIT_UVC_CMD_UNPIN_PAGE_SHARED = 22,
+>>  };
+>> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+>> index f96c1f530cc2..ad84c1144908 100644
+>> --- a/arch/s390/kvm/kvm-s390.c
+>> +++ b/arch/s390/kvm/kvm-s390.c
+>> @@ -2285,6 +2285,28 @@ static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
+>>  			     cmd->rrc);
+>>  		break;
+>>  	}
+>> +	case KVM_PV_VM_PREP_RESET: {
+>> +		r = -EINVAL;
+>> +		if (!kvm_s390_pv_is_protected(kvm))
+>> +			break;
+>> +
+>> +		r = uv_cmd_nodata(kvm_s390_pv_handle(kvm),
+>> +				  UVC_CMD_PREPARE_RESET, &cmd->rc, &cmd->rrc);
+>> +		KVM_UV_EVENT(kvm, 3, "PROTVIRT PREP RESET: rc %x rrc %x",
+>> +			     cmd->rc, cmd->rrc);
+>> +		break;
+>> +	}
+>> +	case KVM_PV_VM_UNSHARE_ALL: {
+>> +		r = -EINVAL;
+>> +		if (!kvm_s390_pv_is_protected(kvm))
+>> +			break;
+>> +
+>> +		r = uv_cmd_nodata(kvm_s390_pv_handle(kvm),
+>> +				  UVC_CMD_SET_UNSHARE_ALL, &cmd->rc, &cmd->rrc);
+>> +		KVM_UV_EVENT(kvm, 3, "PROTVIRT UNSHARE: rc %x rrc %x",
+>> +			     cmd->rc, cmd->rrc);
+> 
+> I do wonder if that has any possible races with CPUs currently running,
+> which try to mark pages shared. That no other VCPUs are running is not
+> enforced here AFAIKs.
 
-David / dhildenb
+The only concern would be that the newly bootet guest (e.g. via kexec/kdump) will
+have pages shared that it dont want to share. As it is the responsiblity of the
+ultravisor to prevent data leakage, it is enforced that we do an UNSHARE all on 
+diag 308 subcode 0 and 1. At the same time the ultravisor will enforce that no
+CPU will run before we have finished  the full dance of reset activity.  (The 
+ultravisor must guarantee guest secrecy and integrity no matter what KVM does). 
+
+> 
+> Apart from that, looks good to me.
+> 
 
