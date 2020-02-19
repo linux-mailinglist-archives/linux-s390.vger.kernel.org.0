@@ -2,163 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 059731647DE
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 16:09:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F0AC61648F2
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 16:42:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726703AbgBSPJd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Feb 2020 10:09:33 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:7624 "EHLO
+        id S1726768AbgBSPm3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Feb 2020 10:42:29 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54410 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726677AbgBSPJd (ORCPT
+        by vger.kernel.org with ESMTP id S1726703AbgBSPm3 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:09:33 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JF90kU038770
-        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 10:09:32 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ubngsu9-1
+        Wed, 19 Feb 2020 10:42:29 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JFZuBe075263
+        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 10:42:28 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8uc02ctq-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 10:09:31 -0500
+        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 10:42:28 -0500
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <bblock@linux.ibm.com>;
-        Wed, 19 Feb 2020 15:09:30 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Wed, 19 Feb 2020 15:42:25 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 15:09:27 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JF9PgR54788154
+        Wed, 19 Feb 2020 15:42:21 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JFgKeq20906272
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 15:09:25 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 61E0C52057;
-        Wed, 19 Feb 2020 15:09:25 +0000 (GMT)
-Received: from t480-pf1aa2c2 (unknown [9.152.212.144])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 4FD1F5204F;
-        Wed, 19 Feb 2020 15:09:25 +0000 (GMT)
-Received: from bblock by t480-pf1aa2c2 with local (Exim 4.92.3)
-        (envelope-from <bblock@linux.ibm.com>)
-        id 1j4Qyb-0047kL-1z; Wed, 19 Feb 2020 16:09:25 +0100
-From:   Benjamin Block <bblock@linux.ibm.com>
-To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     Benjamin Block <bblock@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        Wed, 19 Feb 2020 15:42:20 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 494E74C046;
+        Wed, 19 Feb 2020 15:42:20 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D27A94C040;
+        Wed, 19 Feb 2020 15:42:19 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.98.43])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 19 Feb 2020 15:42:19 +0000 (GMT)
+Date:   Wed, 19 Feb 2020 16:42:18 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     Ming Lei <tom.leiming@gmail.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: [PATCH] zfcp: fix wrong data and display format of SFP+ temperature
-Date:   Wed, 19 Feb 2020 16:09:25 +0100
-X-Mailer: git-send-email 2.24.1
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Subject: Re: [PATCH 1/2] virtio-blk: fix hw_queue stopped on arbitrary error
+In-Reply-To: <CACVXFVPBPCzr+sfQ4HOw1DNPGnEfp+5BLqQkXWQgkaBKqr3yVQ@mail.gmail.com>
+References: <20200213123728.61216-1-pasic@linux.ibm.com>
+        <20200213123728.61216-2-pasic@linux.ibm.com>
+        <CACVXFVNiADTW_vLVc1bUSa0CoViLbVzoMnSJW4=sx=MCE-xUPw@mail.gmail.com>
+        <20200218133531.3eb08120.pasic@linux.ibm.com>
+        <CACVXFVPBPCzr+sfQ4HOw1DNPGnEfp+5BLqQkXWQgkaBKqr3yVQ@mail.gmail.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20021915-0016-0000-0000-000002E84E59
+x-cbid: 20021915-0012-0000-0000-0000038853E3
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021915-0017-0000-0000-0000334B672F
-Message-Id: <d6e3be5428da5c9490cfff4df7cae868bc9f1a7e.1582039501.git.bblock@linux.ibm.com>
+x-cbparentid: 20021915-0013-0000-0000-000021C4E7E3
+Message-Id: <20200219164218.6164cb17.pasic@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1011
- priorityscore=1501 suspectscore=0 spamscore=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 lowpriorityscore=0 malwarescore=0 phishscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ phishscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501
+ lowpriorityscore=0 bulkscore=0 clxscore=1015 suspectscore=0 malwarescore=0
  classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190116
+ definitions=main-2002190118
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-When implementing support for retrieval of local diagnostic data from
-the FCP channel, the wrong data format was assumed for the temperature
-of the local SFP+ connector. The Fibre Channel Link Services (FC-LS-3)
-specification is not clear on the format of the stored integer, and only
-after consulting the SNIA specification SFF-8472 did we realize it is
-stored as two's complement. Thus, the used data and display format is
-wrong, and highly misleading for users when the temperature should drop
-below 0°C (however unlikely that may be).
+On Wed, 19 Feb 2020 09:46:56 +0800
+Ming Lei <tom.leiming@gmail.com> wrote:
 
-To fix this, change the data format in `struct fsf_qtcb_bottom_port`
-from unsigned to signed, and change the printf format string used to
-generate `zfcp_sysfs_adapter_diag_sfp_temperature_show()` from `%hu` to
-`%hd`.
+> On Tue, Feb 18, 2020 at 8:35 PM Halil Pasic <pasic@linux.ibm.com> wrote:
+> >
+> > On Tue, 18 Feb 2020 10:21:18 +0800
+> > Ming Lei <tom.leiming@gmail.com> wrote:
+> >
+> > > On Thu, Feb 13, 2020 at 8:38 PM Halil Pasic <pasic@linux.ibm.com> wrote:
+> > > >
+> > > > Since nobody else is going to restart our hw_queue for us, the
+> > > > blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
+> > > > necessarily sufficient to ensure that the queue will get started again.
+> > > > In case of global resource outage (-ENOMEM because mapping failure,
+> > > > because of swiotlb full) our virtqueue may be empty and we can get
+> > > > stuck with a stopped hw_queue.
+> > > >
+> > > > Let us not stop the queue on arbitrary errors, but only on -EONSPC which
+> > > > indicates a full virtqueue, where the hw_queue is guaranteed to get
+> > > > started by virtblk_done() before when it makes sense to carry on
+> > > > submitting requests. Let us also remove a stale comment.
+> > >
+> > > The generic solution may be to stop queue only when there is any
+> > > in-flight request
+> > > not completed.
+> > >
+> >
+> > I think this is a pretty close to that. The queue is stopped only on
+> > ENOSPC, which means virtqueue is full.
+> >
+> > > Checking -ENOMEM may not be enough, given -EIO can be returned from
+> > > virtqueue_add()
+> > > too in case of dma map failure.
+> >
+> > I'm not checking on -ENOMEM. So the queue would not be stopped on EIO.
+> > Maybe I'm misunderstanding something In any case, please have another
+> > look at the diff, and if your concerns persist please help me understand.
+> 
+> Looks I misread the patch, and this patch is fine:
+> 
+> Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
-Fixes: a10a61e807b0 ("scsi: zfcp: support retrieval of SFP Data via Exchange Port Data")
-Fixes: 6028f7c4cd87 ("scsi: zfcp: introduce sysfs interface for diagnostics of local SFP transceiver")
-Cc: <stable@vger.kernel.org> # 5.5+
-Reviewed-by: Jens Remus <jremus@linux.ibm.com>
-Reviewed-by: Fedor Loshakov <loshakov@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com>
-Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
----
+Thank you very much!
 
-Hello James, Martin,
+Regards,
+Halil
 
-please consider this patch to be included in scsi-fixes, I also tagged
-it for stable. It fixes a bug I found with the exposed hardware
-diagnostics we introduced with 5.5.
-
-Tests have been done by injecting negative temperatures in the used data
-structures, in the same format specified in SNIA's SFF-8472 (Table
-9-2).
-
-    crash vmlinux /proc/kcore
-    p ((struct zfcp_adapter *)((struct ccw_device *)0x00000001be250800)->dev.driver_data)->diagnostics->port_data.data.temperature
-    $8 = 0xffff
-    crash> ^Z
-    [1]+  Stopped                 crash vmlinux /proc/kcore
-    ~ # cat /sys/bus/ccw/drivers/zfcp/0.0.1900/diagnostics/temperature
-    -1
-
-    crash vmlinux /proc/kcore
-    p ((struct zfcp_adapter *)((struct ccw_device *)0x00000001be250800)->dev.driver_data)->diagnostics->port_data.data.temperature
-    $9 = 0xff00
-    crash> ^Z
-    [1]+  Stopped                 crash vmlinux /proc/kcore
-    ~ # cat /sys/bus/ccw/drivers/zfcp/0.0.1900/diagnostics/temperature
-    -256
-
-Reviews and comments are welcome :-).
-
-
- drivers/s390/scsi/zfcp_fsf.h   | 2 +-
- drivers/s390/scsi/zfcp_sysfs.c | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/s390/scsi/zfcp_fsf.h b/drivers/s390/scsi/zfcp_fsf.h
-index 2b1e4da1944f..4bfb79f20588 100644
---- a/drivers/s390/scsi/zfcp_fsf.h
-+++ b/drivers/s390/scsi/zfcp_fsf.h
-@@ -410,7 +410,7 @@ struct fsf_qtcb_bottom_port {
- 	u8 cb_util;
- 	u8 a_util;
- 	u8 res2;
--	u16 temperature;
-+	s16 temperature;
- 	u16 vcc;
- 	u16 tx_bias;
- 	u16 tx_power;
-diff --git a/drivers/s390/scsi/zfcp_sysfs.c b/drivers/s390/scsi/zfcp_sysfs.c
-index 494b9fe9cc94..a711a0d15100 100644
---- a/drivers/s390/scsi/zfcp_sysfs.c
-+++ b/drivers/s390/scsi/zfcp_sysfs.c
-@@ -800,7 +800,7 @@ static ZFCP_DEV_ATTR(adapter_diag, b2b_credit, 0400,
- 	static ZFCP_DEV_ATTR(adapter_diag_sfp, _name, 0400,		       \
- 			     zfcp_sysfs_adapter_diag_sfp_##_name##_show, NULL)
- 
--ZFCP_DEFINE_DIAG_SFP_ATTR(temperature, temperature, 5, "%hu");
-+ZFCP_DEFINE_DIAG_SFP_ATTR(temperature, temperature, 6, "%hd");
- ZFCP_DEFINE_DIAG_SFP_ATTR(vcc, vcc, 5, "%hu");
- ZFCP_DEFINE_DIAG_SFP_ATTR(tx_bias, tx_bias, 5, "%hu");
- ZFCP_DEFINE_DIAG_SFP_ATTR(tx_power, tx_power, 5, "%hu");
--- 
-2.24.1
+> 
+> 
+> Thanks,
+> Ming Lei
 
