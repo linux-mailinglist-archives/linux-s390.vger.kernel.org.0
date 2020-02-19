@@ -2,103 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE06D16355C
-	for <lists+linux-s390@lfdr.de>; Tue, 18 Feb 2020 22:49:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 99D6016398D
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 02:47:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727979AbgBRVtD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 18 Feb 2020 16:49:03 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:50792 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727982AbgBRVtD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 Feb 2020 16:49:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582062541;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cnevXfGVEDsFBctQatqNzlbLF8HNLGY3ShXMHssDWiQ=;
-        b=bwAmmk/tRY0QIF0C3xm6HscuO56L73fIUB2b0EsdS0AsMjWfVeT8zo1ZactK4sU5HjRdwQ
-        ADhxNpmCEE6oBU8+oSZ5cBY8hElATqT5FUYUkfhlLirnaUUDhHydiGtDYUwuMUku6LF4ar
-        5jPIYHOFaVNdjWRFmgmVJSiPWd7jgKM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-405-_qRODWZyNFm7pCqRV7mn4w-1; Tue, 18 Feb 2020 16:48:57 -0500
-X-MC-Unique: _qRODWZyNFm7pCqRV7mn4w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6AE20190B2AB;
-        Tue, 18 Feb 2020 21:48:56 +0000 (UTC)
-Received: from horse.redhat.com (unknown [10.18.25.35])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 4557D90089;
-        Tue, 18 Feb 2020 21:48:56 +0000 (UTC)
-Received: by horse.redhat.com (Postfix, from userid 10451)
-        id AE6712257D7; Tue, 18 Feb 2020 16:48:52 -0500 (EST)
-From:   Vivek Goyal <vgoyal@redhat.com>
-To:     linux-fsdevel@vger.kernel.org, linux-nvdimm@lists.01.org,
-        hch@infradead.org, dan.j.williams@intel.com
-Cc:     dm-devel@redhat.com, vishal.l.verma@intel.com, vgoyal@redhat.com,
-        linux-s390@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: [PATCH v5 5/8] s390,dcssblk,dax: Add dax zero_page_range operation to dcssblk driver
-Date:   Tue, 18 Feb 2020 16:48:38 -0500
-Message-Id: <20200218214841.10076-6-vgoyal@redhat.com>
-In-Reply-To: <20200218214841.10076-1-vgoyal@redhat.com>
-References: <20200218214841.10076-1-vgoyal@redhat.com>
+        id S1727533AbgBSBrL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 18 Feb 2020 20:47:11 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51822 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726655AbgBSBrL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 18 Feb 2020 20:47:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id t23so4736938wmi.1;
+        Tue, 18 Feb 2020 17:47:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0fVrJXKQFBq1+DGIaqCpMFpVnwhHK6KBaU4A547suOs=;
+        b=YLgqtn1vXiFmrY2qtcO4cITsJLHu/AVbBSZEJXUjgEko2za6mFlRXo65+dWkQXKRgO
+         oyBH45ZP6ovZa90w72vhBPA/kdwQ5l4Wb6ww2v4tsfqrpiNr7wJJr6qDkQxGAq6UNzYu
+         7/x8FMTWoPNKGNhE4+jxj9C/trMmqmjjwxMJZujH5pncP7uKTDGvYc9sUwjK8KZYa6Nb
+         fGR0/n70ccFqpNmW5VzoivbPHUQrUmfIbjH3P/GH2fkkj2J908pE1+IOMjtK0wRvkR64
+         3oBrPq0e4MK8O9EwGEEJSyHaZUvoBsFww7Px/X0M//l5pky9UaU1PoheuYo2Bn2CYrML
+         ehUQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0fVrJXKQFBq1+DGIaqCpMFpVnwhHK6KBaU4A547suOs=;
+        b=MXkOhgX6Ei82z1ra9Cc8UKEvBMCe+y8M5/JhbL1DtDG++2Q+REwCO/8jFl6EgOfoyv
+         jFt9+RuY3ynXqv/SzVUpXtbEsqZJvtpyb4Fdtg4EftXrbaAJ3uUSvW3KCfGyIVqVhZqk
+         zO8R5Prr6jyb2cn7+XExSomrk3Grrnw2xONSPIV7AegeHX8go2Y5ji7tiYmHlUXjZcV4
+         pkgfPSrDzft3lL9Ln4YVTf/6kV2Je6H9g5382t27UK4fk6LxSXAVNLoEM302vhOOkvTv
+         7YOwKZet2QH3Y/Sp40M0KqUhP7G+3yGIHz+m0f2ds4iIxJn4lD+lC4wEAjxgvIZW74fe
+         EWOQ==
+X-Gm-Message-State: APjAAAWrPWoLW1ZZNDfNZyWBn8LJHmgAlEWgEaGoCf1d5iRPuoSNTZTy
+        WGuW9ht9DO1P1lQ3jFF80WZyChMaQWq9FtxPp8Y=
+X-Google-Smtp-Source: APXvYqz/18W0f7bNjt6tGI58SVmP1FmnZYrDg6ZokZyrHZqy2s5BaPpIsHcEE+bP4h8WKGWdiuCoYqOW2DZrhZYGBqA=
+X-Received: by 2002:a1c:5441:: with SMTP id p1mr6603389wmi.161.1582076827865;
+ Tue, 18 Feb 2020 17:47:07 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-Content-Transfer-Encoding: quoted-printable
+References: <20200213123728.61216-1-pasic@linux.ibm.com> <20200213123728.61216-2-pasic@linux.ibm.com>
+ <CACVXFVNiADTW_vLVc1bUSa0CoViLbVzoMnSJW4=sx=MCE-xUPw@mail.gmail.com> <20200218133531.3eb08120.pasic@linux.ibm.com>
+In-Reply-To: <20200218133531.3eb08120.pasic@linux.ibm.com>
+From:   Ming Lei <tom.leiming@gmail.com>
+Date:   Wed, 19 Feb 2020 09:46:56 +0800
+Message-ID: <CACVXFVPBPCzr+sfQ4HOw1DNPGnEfp+5BLqQkXWQgkaBKqr3yVQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] virtio-blk: fix hw_queue stopped on arbitrary error
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
+        linux-block <linux-block@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Virtualization <virtualization@lists.linux-foundation.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Add dax operation zero_page_range for dcssblk driver.
+On Tue, Feb 18, 2020 at 8:35 PM Halil Pasic <pasic@linux.ibm.com> wrote:
+>
+> On Tue, 18 Feb 2020 10:21:18 +0800
+> Ming Lei <tom.leiming@gmail.com> wrote:
+>
+> > On Thu, Feb 13, 2020 at 8:38 PM Halil Pasic <pasic@linux.ibm.com> wrote:
+> > >
+> > > Since nobody else is going to restart our hw_queue for us, the
+> > > blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
+> > > necessarily sufficient to ensure that the queue will get started again.
+> > > In case of global resource outage (-ENOMEM because mapping failure,
+> > > because of swiotlb full) our virtqueue may be empty and we can get
+> > > stuck with a stopped hw_queue.
+> > >
+> > > Let us not stop the queue on arbitrary errors, but only on -EONSPC which
+> > > indicates a full virtqueue, where the hw_queue is guaranteed to get
+> > > started by virtblk_done() before when it makes sense to carry on
+> > > submitting requests. Let us also remove a stale comment.
+> >
+> > The generic solution may be to stop queue only when there is any
+> > in-flight request
+> > not completed.
+> >
+>
+> I think this is a pretty close to that. The queue is stopped only on
+> ENOSPC, which means virtqueue is full.
+>
+> > Checking -ENOMEM may not be enough, given -EIO can be returned from
+> > virtqueue_add()
+> > too in case of dma map failure.
+>
+> I'm not checking on -ENOMEM. So the queue would not be stopped on EIO.
+> Maybe I'm misunderstanding something In any case, please have another
+> look at the diff, and if your concerns persist please help me understand.
 
-CC: linux-s390@vger.kernel.org
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Reviewed-by: Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Signed-off-by: Vivek Goyal <vgoyal@redhat.com>
----
- drivers/s390/block/dcssblk.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+Looks I misread the patch, and this patch is fine:
 
-diff --git a/drivers/s390/block/dcssblk.c b/drivers/s390/block/dcssblk.c
-index 63502ca537eb..331abab5d066 100644
---- a/drivers/s390/block/dcssblk.c
-+++ b/drivers/s390/block/dcssblk.c
-@@ -57,11 +57,28 @@ static size_t dcssblk_dax_copy_to_iter(struct dax_dev=
-ice *dax_dev,
- 	return copy_to_iter(addr, bytes, i);
- }
-=20
-+static int dcssblk_dax_zero_page_range(struct dax_device *dax_dev, u64 o=
-ffset,
-+				       size_t len)
-+{
-+	long rc;
-+	void *kaddr;
-+	pgoff_t pgoff =3D offset >> PAGE_SHIFT;
-+	unsigned page_offset =3D offset_in_page(offset);
-+
-+	rc =3D dax_direct_access(dax_dev, pgoff, 1, &kaddr, NULL);
-+	if (rc < 0)
-+		return rc;
-+	memset(kaddr + page_offset, 0, len);
-+	dax_flush(dax_dev, kaddr + page_offset, len);
-+	return 0;
-+}
-+
- static const struct dax_operations dcssblk_dax_ops =3D {
- 	.direct_access =3D dcssblk_dax_direct_access,
- 	.dax_supported =3D generic_fsdax_supported,
- 	.copy_from_iter =3D dcssblk_dax_copy_from_iter,
- 	.copy_to_iter =3D dcssblk_dax_copy_to_iter,
-+	.zero_page_range =3D dcssblk_dax_zero_page_range,
- };
-=20
- struct dcssblk_dev_info {
---=20
-2.20.1
+Reviewed-by: Ming Lei <ming.lei@redhat.com>
 
+
+Thanks,
+Ming Lei
