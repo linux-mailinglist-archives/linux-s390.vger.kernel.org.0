@@ -2,138 +2,113 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id F0AC61648F2
-	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 16:42:37 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03E04164D25
+	for <lists+linux-s390@lfdr.de>; Wed, 19 Feb 2020 18:58:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726768AbgBSPm3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 19 Feb 2020 10:42:29 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54410 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726703AbgBSPm3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 19 Feb 2020 10:42:29 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01JFZuBe075263
-        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 10:42:28 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8uc02ctq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 19 Feb 2020 10:42:28 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Wed, 19 Feb 2020 15:42:25 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 19 Feb 2020 15:42:21 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01JFgKeq20906272
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 19 Feb 2020 15:42:20 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 494E74C046;
-        Wed, 19 Feb 2020 15:42:20 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D27A94C040;
-        Wed, 19 Feb 2020 15:42:19 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.98.43])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 19 Feb 2020 15:42:19 +0000 (GMT)
-Date:   Wed, 19 Feb 2020 16:42:18 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Ming Lei <tom.leiming@gmail.com>
+        id S1726643AbgBSR6K (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 19 Feb 2020 12:58:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:34700 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726760AbgBSR6J (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 19 Feb 2020 12:58:09 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582135087;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=osE6Os536TzWa3Iu36fjeW3PyeJPL+4fg4AlWyJ2Fe8=;
+        b=drYbqUA1xg3lpJxhAz5S6eh0DMSDTZVRycjQDl28eeWPmrk0QuwGSWlTUscQ84DLRvypYn
+        pwLyFsDiro18/y8He0somEQUUR+FX1m5wLMwhroTYayZmZAmQ3QKgV2UyHSwwYA3sLcedR
+        UFtv5XZIPNXuOhVDgIBshJWe7q24Ir4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-313-Bt2leHTQP2q-fUD22d082g-1; Wed, 19 Feb 2020 12:57:59 -0500
+X-MC-Unique: Bt2leHTQP2q-fUD22d082g-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1470D100550E;
+        Wed, 19 Feb 2020 17:57:57 +0000 (UTC)
+Received: from localhost (unknown [10.36.118.184])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id BE60648;
+        Wed, 19 Feb 2020 17:57:53 +0000 (UTC)
+Date:   Wed, 19 Feb 2020 15:11:34 +0000
+From:   Stefan Hajnoczi <stefanha@redhat.com>
+To:     Halil Pasic <pasic@linux.ibm.com>
 Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>, Jens Axboe <axboe@kernel.dk>,
-        linux-block <linux-block@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+        Jason Wang <jasowang@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        virtualization@lists.linux-foundation.org,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
         Cornelia Huck <cohuck@redhat.com>,
         Ram Pai <linuxram@us.ibm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux Virtualization <virtualization@lists.linux-foundation.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>
-Subject: Re: [PATCH 1/2] virtio-blk: fix hw_queue stopped on arbitrary error
-In-Reply-To: <CACVXFVPBPCzr+sfQ4HOw1DNPGnEfp+5BLqQkXWQgkaBKqr3yVQ@mail.gmail.com>
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH 0/2] virtio-blk: improve handling of DMA mapping failures
+Message-ID: <20200219151134.GI1078625@stefanha-x1.localdomain>
 References: <20200213123728.61216-1-pasic@linux.ibm.com>
-        <20200213123728.61216-2-pasic@linux.ibm.com>
-        <CACVXFVNiADTW_vLVc1bUSa0CoViLbVzoMnSJW4=sx=MCE-xUPw@mail.gmail.com>
-        <20200218133531.3eb08120.pasic@linux.ibm.com>
-        <CACVXFVPBPCzr+sfQ4HOw1DNPGnEfp+5BLqQkXWQgkaBKqr3yVQ@mail.gmail.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20021915-0012-0000-0000-0000038853E3
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20021915-0013-0000-0000-000021C4E7E3
-Message-Id: <20200219164218.6164cb17.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-19_03:2020-02-19,2020-02-19 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- phishscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 clxscore=1015 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002190118
+In-Reply-To: <20200213123728.61216-1-pasic@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="zqjkMoGlbUJ91oFe"
+Content-Disposition: inline
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 19 Feb 2020 09:46:56 +0800
-Ming Lei <tom.leiming@gmail.com> wrote:
+--zqjkMoGlbUJ91oFe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Tue, Feb 18, 2020 at 8:35 PM Halil Pasic <pasic@linux.ibm.com> wrote:
-> >
-> > On Tue, 18 Feb 2020 10:21:18 +0800
-> > Ming Lei <tom.leiming@gmail.com> wrote:
-> >
-> > > On Thu, Feb 13, 2020 at 8:38 PM Halil Pasic <pasic@linux.ibm.com> wrote:
-> > > >
-> > > > Since nobody else is going to restart our hw_queue for us, the
-> > > > blk_mq_start_stopped_hw_queues() is in virtblk_done() is not sufficient
-> > > > necessarily sufficient to ensure that the queue will get started again.
-> > > > In case of global resource outage (-ENOMEM because mapping failure,
-> > > > because of swiotlb full) our virtqueue may be empty and we can get
-> > > > stuck with a stopped hw_queue.
-> > > >
-> > > > Let us not stop the queue on arbitrary errors, but only on -EONSPC which
-> > > > indicates a full virtqueue, where the hw_queue is guaranteed to get
-> > > > started by virtblk_done() before when it makes sense to carry on
-> > > > submitting requests. Let us also remove a stale comment.
-> > >
-> > > The generic solution may be to stop queue only when there is any
-> > > in-flight request
-> > > not completed.
-> > >
-> >
-> > I think this is a pretty close to that. The queue is stopped only on
-> > ENOSPC, which means virtqueue is full.
-> >
-> > > Checking -ENOMEM may not be enough, given -EIO can be returned from
-> > > virtqueue_add()
-> > > too in case of dma map failure.
-> >
-> > I'm not checking on -ENOMEM. So the queue would not be stopped on EIO.
-> > Maybe I'm misunderstanding something In any case, please have another
-> > look at the diff, and if your concerns persist please help me understand.
-> 
-> Looks I misread the patch, and this patch is fine:
-> 
-> Reviewed-by: Ming Lei <ming.lei@redhat.com>
+On Thu, Feb 13, 2020 at 01:37:26PM +0100, Halil Pasic wrote:
+> Two patches are handling new edge cases introduced by doing DMA mappings
+> (which can fail) in virtio core.
+>=20
+> I stumbled upon this while stress testing I/O for Protected Virtual
+> Machines. I deliberately chose a tiny swiotlb size and have generated
+> load with fio. With more than one virtio-blk disk in use I experienced
+> hangs.
+>=20
+> The goal of this series is to fix those hangs.
+>=20
+> Halil Pasic (2):
+>   virtio-blk: fix hw_queue stopped on arbitrary error
+>   virtio-blk: improve virtqueue error to BLK_STS
+>=20
+>  drivers/block/virtio_blk.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+>=20
+>=20
+> base-commit: 39bed42de2e7d74686a2d5a45638d6a5d7e7d473
+> --=20
+> 2.17.1
+>=20
 
-Thank you very much!
+Reviewed-by: Stefan Hajnoczi <stefanha@redhat.com>
 
-Regards,
-Halil
+--zqjkMoGlbUJ91oFe
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> 
-> Thanks,
-> Ming Lei
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEhpWov9P5fNqsNXdanKSrs4Grc8gFAl5NUCYACgkQnKSrs4Gr
+c8j5Pgf+MI41fd9a93cz9zlmiW7E/b+B99Zg/shlPYBcQXo0INymDnvknnpzLpqK
+uHn5ZGq85kM6+ls29Zhh4w7bxiJlBBNRzCkIIRxe5CwyOptQPcKHONreD1suCGT0
+boXaZtrbU1Wt1bWRBK4F9OLZcyIFxUESQ36b1r1VddZsKeFETUXAwjpSEU9bVCZ6
+qJfDp9RLYVvFISB17avVnsqyw8xO9mVI3RyIdzQATERL9W3DVxaacULruMmlBHvq
+T3nt4WcQjbTHEmTjvpnwGg2Oz4uvaRGm617bv082XAOP+Xr0h9uNU119WKCYk1Qk
+VML23VMN5owhMcib+gUXV3/9bQQkYQ==
+=GsRc
+-----END PGP SIGNATURE-----
+
+--zqjkMoGlbUJ91oFe--
 
