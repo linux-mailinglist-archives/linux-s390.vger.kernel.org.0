@@ -2,133 +2,202 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DECC8165C2E
-	for <lists+linux-s390@lfdr.de>; Thu, 20 Feb 2020 11:53:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7D688165D27
+	for <lists+linux-s390@lfdr.de>; Thu, 20 Feb 2020 13:01:23 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgBTKxL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Feb 2020 05:53:11 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43815 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727274AbgBTKxL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 20 Feb 2020 05:53:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582195990;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=lU/+kj17bUiwTIlbkhXOaHuBkzu/0bTIHwntv3+XyUI=;
-        b=Vlc6R30++ZYrw0zf541xCYMjuS3OXE+SNaZIETD3V9gTtdixQ3qMxNGQET6xv/9B2KeH4U
-        b79WDZY9eM7yvw6o4ZvycOa0iTT08O0cO7UD9PiexI7Tir6HddE5isOsvusEWiKF27Ic16
-        onywm58IzrquDdSxUlT4um2T3BqrEig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-244-7K-z2ZwOOLOwI8r4YaX1WA-1; Thu, 20 Feb 2020 05:53:04 -0500
-X-MC-Unique: 7K-z2ZwOOLOwI8r4YaX1WA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BC3E48010F5;
-        Thu, 20 Feb 2020 10:53:02 +0000 (UTC)
-Received: from [10.36.118.29] (unknown [10.36.118.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8F20C8AC45;
-        Thu, 20 Feb 2020 10:52:59 +0000 (UTC)
-Subject: Re: [PATCH v2 31/42] KVM: s390: protvirt: Report CPU state to
- Ultravisor
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-References: <20200214222658.12946-1-borntraeger@de.ibm.com>
- <20200214222658.12946-32-borntraeger@de.ibm.com>
- <33cffbe7-9d87-d94f-dc56-6d31ea2e56eb@redhat.com>
- <7e74ad84-b0ae-9dc1-91cc-52be989d6c34@de.ibm.com>
- <95f7cd6a-c8d4-a119-d87e-7b25929e0b5c@de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <10c4673e-120c-2cce-73ab-9f96ca1a4e1a@redhat.com>
-Date:   Thu, 20 Feb 2020 11:52:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <95f7cd6a-c8d4-a119-d87e-7b25929e0b5c@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        id S1728085AbgBTMBU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Feb 2020 07:01:20 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11474 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728003AbgBTMBU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 20 Feb 2020 07:01:20 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01KC1Amh014621
+        for <linux-s390@vger.kernel.org>; Thu, 20 Feb 2020 07:01:19 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8ucn0t0n-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 20 Feb 2020 07:01:17 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Thu, 20 Feb 2020 12:00:48 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 20 Feb 2020 12:00:45 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01KC0iox23068750
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 20 Feb 2020 12:00:44 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3601CAE051;
+        Thu, 20 Feb 2020 12:00:44 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 08CA1AE055;
+        Thu, 20 Feb 2020 12:00:44 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.152.222.41])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Thu, 20 Feb 2020 12:00:43 +0000 (GMT)
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, thuth@redhat.com, cohuck@redhat.com
+Subject: [kvm-unit-tests PATCH v5 00/10] s390x: Testing the Channel Subsystem I/O
+Date:   Thu, 20 Feb 2020 13:00:33 +0100
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 20022012-0016-0000-0000-000002E893E2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022012-0017-0000-0000-0000334BAFF8
+Message-Id: <1582200043-21760-1-git-send-email-pmorel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_03:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 adultscore=0
+ impostorscore=0 spamscore=0 phishscore=0 mlxlogscore=999
+ priorityscore=1501 clxscore=1015 suspectscore=1 bulkscore=0 mlxscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002200091
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 19.02.20 20:46, Christian Borntraeger wrote:
-> I could add a comment to all other users of kvm_s390_vcpu_start/stop like
-> 
-> 
->         /*
->          * no need to check the return value of vcpu_stop as it can only have
->          * an error for protvirt, but protvirt means user cpu state
->          */
->         if (!kvm_s390_user_cpu_state_ctrl(vcpu->kvm))
->                 kvm_s390_vcpu_stop(vcpu);
-> 
-> 
-> to make clear why we do not check the return everywhere
-> 
+Goal of the series is to have a framwork to test Channel-Subsystem I/O with
+QEMU/KVM.
+  
+To be able to support interrupt for CSS I/O and for SCLP we need to modify
+the interrupt framework to allow re-entrant interruptions.
+  
+We add a registration for IRQ callbacks to the test programm to define its own
+interrupt handler. We need to do special work under interrupt like acknoledging
+the interrupt.
+  
+Being working on PSW bits to allow I/O interrupt, we define new PSW bits
+in arch_def.h and use __ASSEMBLER__ define to be able to include this header
+in an assembler source file.
 
-Makes sense!
+This series presents four major tests:
+- Enumeration:
+        The CSS is enumerated using the STSCH instruction recursively on all
+        potentially existing channels.
+        Keeping the first channel found as a reference for future use.
+        Checks STSCH
+ 
+- Enable:
+        If the enumeration succeeded the tests enables the reference
+        channel with MSCH and verifies with STSCH that the channel is
+        effectively enabled  
+        Checks MSCH       
+ 
+- Sense:
+        If the channel is enabled this test sends a SENSE_ID command
+        to the reference channel, analysing the answer and expecting
+        the Control unit type being 0xc0ca
+        Checks SSCH(READ) and IO-IRQ
+
+- ping-pong:
+        If the reference channel leads to the PONG device (0xc0ca),
+        the test exchanges a string containing a 9 digit number with
+        the PONG device and expecting this number to be incremented
+        by the PONG device.
+        Checks SSCH(WRITE)
+
+
+Pierre Morel (10):
+  s390x: saving regs for interrupts
+  s390x: Use PSW bits definitions in cstart
+  s390x: cr0: adding AFP-register control bit
+  s390x: interrupt registration
+  s390x: export the clock get_clock_ms() utility
+  s390x: Library resources for CSS tests
+  s390x: css: stsch, enumeration test
+  s390x: css: msch, enable test
+  s390x: css: ssch/tsch with sense and interrupt
+  s390x: css: ping pong
+
+ lib/s390x/asm/arch_def.h |  19 ++-
+ lib/s390x/asm/time.h     |  36 +++++
+ lib/s390x/css.h          | 277 +++++++++++++++++++++++++++++++
+ lib/s390x/css_dump.c     | 157 ++++++++++++++++++
+ lib/s390x/css_lib.c      |  55 +++++++
+ lib/s390x/interrupt.c    |  22 ++-
+ lib/s390x/interrupt.h    |   7 +
+ s390x/Makefile           |   3 +
+ s390x/css.c              | 341 +++++++++++++++++++++++++++++++++++++++
+ s390x/cstart64.S         |  40 +++--
+ s390x/intercept.c        |  11 +-
+ s390x/unittests.cfg      |   4 +
+ 12 files changed, 946 insertions(+), 26 deletions(-)
+ create mode 100644 lib/s390x/asm/time.h
+ create mode 100644 lib/s390x/css.h
+ create mode 100644 lib/s390x/css_dump.c
+ create mode 100644 lib/s390x/css_lib.c
+ create mode 100644 lib/s390x/interrupt.h
+ create mode 100644 s390x/css.c
 
 -- 
-Thanks,
+2.17.0
 
-David / dhildenb
+Changelog:
+from v4 to v5
+- add a patch to explicitely define the initial_cr0
+  value
+  (Janosch)
+- add RB from Janosh on interrupt registration
+- several formating, typo correction and removing
+  unnecessary initialization in "linrary resources..."
+  (Janosch)
+- several formating and typo corrections on
+  "stsch enumeration test"
+  (Connie)
+- reworking the msch test
+  (Connie)
+- reworking of ssch test, pack the sense-id structure
+  (Connie)
+
+from v3 to v4
+- add RB from David and Thomas for patchs 
+  (3) irq registration and (4) clock export
+- rework the PSW bit definitions
+  (Thomas)
+- Suppress undef DEBUG from css_dump
+  (Thomas)
+- rework report() functions using new scheme
+  (Thomas)
+- suppress un-necessary report_info()
+- more spelling corrections
+- add a loop around enable bit testing
+  (Connie)
+- rework IRQ testing
+  (Connie)
+- Test data addresses to be under 2G
+  (Connie)
+
+from v2 to v3:
+- Rework spelling
+  (Connie)
+- More descriptions
+  (Connie)
+- use __ASSEMBLER__ preprocessing to keep
+  bits definitions and C structures in the same file
+  (David)
+- rename the new file clock.h as time.h
+  (Janosch, David?)
+- use registration for the IO interruption
+  (David, Thomas)
+- test the SCHIB to verify it has really be modified
+  (Connie)
+- Lot of simplifications in the tests
+  (Connie)
+
+from v1 to v2:
+- saving floating point registers (David, Janosh)
+- suppress unused PSW bits defintions (Janosh)
+- added Thomas reviewed-by
+- style and comments modifications (Connie, Janosh)
+- moved get_clock_ms() into headers and use it (Thomas)
+- separate header and library utility from tests
+- Suppress traces, separate tests, make better usage of reports
 
