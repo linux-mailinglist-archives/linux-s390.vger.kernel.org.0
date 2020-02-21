@@ -2,58 +2,49 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A8771669E5
-	for <lists+linux-s390@lfdr.de>; Thu, 20 Feb 2020 22:33:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 79B1A166C3B
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 02:18:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729173AbgBTVdq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Feb 2020 16:33:46 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:32528 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729170AbgBTVdp (ORCPT
+        id S1729476AbgBUBSF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Feb 2020 20:18:05 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:55524 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729456AbgBUBSE (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 20 Feb 2020 16:33:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582234425;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=4krYsiGh4Qek2SxgzuI/KbmEgksVX0a4JTAhD8CZkok=;
-        b=i7KIDtT2qzdeIwMS+kdn6IK52lTALdEjC6u6zrd+LdWkpf3nqi5gn3luBkzwAhm9gtJDzu
-        NscLpGEswyyFnrtTbuAorD8wtz3Ig0n1jgs27oJG4RJB4k4cGkPcQz35Ex3I9zzLKSGy0H
-        hIXgpbJBSWKHSpBLWyfBPgBSVFH84nE=
-Received: from mail-qt1-f198.google.com (mail-qt1-f198.google.com
- [209.85.160.198]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-Rs7jEboLOyKFloJl4eP7Dw-1; Thu, 20 Feb 2020 16:33:43 -0500
-X-MC-Unique: Rs7jEboLOyKFloJl4eP7Dw-1
-Received: by mail-qt1-f198.google.com with SMTP id t4so110359qtd.3
-        for <linux-s390@vger.kernel.org>; Thu, 20 Feb 2020 13:33:43 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=4krYsiGh4Qek2SxgzuI/KbmEgksVX0a4JTAhD8CZkok=;
-        b=JyQ3F3r92IwF9P8RqLsZCZjOW/d2brRR0WtIA1V4pY2KCd0NSGSGaECUf3vNP2dEoh
-         F4uvTKStE9kKUCJb42fTak4bP3cRz5Gwg3jdHgsAgG0KhojJHxw9s23TECPbrbQD6qay
-         aFdQjsr1rbYeO89FFhriAKa0GUPKFqLEKxh0x0ksLeAp+ezovdUbMgOTVijY51Eax72G
-         uacFSIOgpLUwMZ5z0xeBOXExucByhMa0r4k4QzOYgChpdpVujuPRCnSgraMMU0riWaiF
-         e0I7TsPwAzt2d2oS136rFDPlnt1mNx2TrUKJMUbkvIIo7p8OAOyEaAUbjuXc5al5o7ck
-         hQuQ==
-X-Gm-Message-State: APjAAAUyWZXD80MZ1MjfsLet5DgiB779TPkqkgPV41juHdHMawOkyvgE
-        Wpx02df47Qhbai+uxxlOr+Q15IwXlnHaSmMlco+q3g0Zv0DKXh2AvjUCW1dBIrXzyOjMjaDv4po
-        D26VyhCoHo52PogKaOcSr2w==
-X-Received: by 2002:ac8:4886:: with SMTP id i6mr27992244qtq.160.1582234423178;
-        Thu, 20 Feb 2020 13:33:43 -0800 (PST)
-X-Google-Smtp-Source: APXvYqykw+sIvY+6jifxdk4U8bBDoR068zA6NinyMfSe1te1gvQyzZNHuu8TE0YuobirJ95QLhxL3g==
-X-Received: by 2002:ac8:4886:: with SMTP id i6mr27992229qtq.160.1582234422979;
-        Thu, 20 Feb 2020 13:33:42 -0800 (PST)
-Received: from redhat.com (bzq-109-67-14-209.red.bezeqint.net. [109.67.14.209])
-        by smtp.gmail.com with ESMTPSA id z27sm440818qtv.11.2020.02.20.13.33.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 20 Feb 2020 13:33:42 -0800 (PST)
-Date:   Thu, 20 Feb 2020 16:33:35 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Halil Pasic <pasic@linux.ibm.com>
-Cc:     Jason Wang <jasowang@redhat.com>,
+        Thu, 20 Feb 2020 20:18:04 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01L1877L165523
+        for <linux-s390@vger.kernel.org>; Thu, 20 Feb 2020 20:18:03 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2y92xeybfq-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 20 Feb 2020 20:18:02 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Fri, 21 Feb 2020 01:18:01 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 01:17:57 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01L1HtsE41419040
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 01:17:55 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C748D4203F;
+        Fri, 21 Feb 2020 01:17:55 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C2A642045;
+        Fri, 21 Feb 2020 01:17:51 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.85.188.83])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Fri, 21 Feb 2020 01:17:51 +0000 (GMT)
+Date:   Thu, 20 Feb 2020 17:17:48 -0800
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Jason Wang <jasowang@redhat.com>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Robin Murphy <robin.murphy@arm.com>,
         Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
@@ -63,49 +54,83 @@ Cc:     Jason Wang <jasowang@redhat.com>,
         Janosch Frank <frankja@linux.ibm.com>,
         Viktor Mihajlovski <mihajlov@linux.ibm.com>,
         Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         David Gibson <david@gibson.dropbear.id.au>,
         "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
         Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-Message-ID: <20200220163055-mutt-send-email-mst@kernel.org>
+Reply-To: Ram Pai <linuxram@us.ibm.com>
 References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <20200220160606.53156-3-pasic@linux.ibm.com>
+ <20200220154904-mutt-send-email-mst@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200220160606.53156-1-pasic@linux.ibm.com>
+In-Reply-To: <20200220154904-mutt-send-email-mst@kernel.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 20022101-0016-0000-0000-000002E8C975
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022101-0017-0000-0000-0000334BE816
+Message-Id: <20200221011748.GE5713@oc0525413822.ibm.com>
+Subject: RE: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is protected
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-20_19:2020-02-19,2020-02-20 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ clxscore=1011 lowpriorityscore=0 phishscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 malwarescore=0 priorityscore=1501 impostorscore=0
+ mlxlogscore=989 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210006
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Feb 20, 2020 at 05:06:04PM +0100, Halil Pasic wrote:
-> For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
-> effect The vhost code assumes it the addresses on the virtio descriptor
-> ring are not guest physical addresses but iova's, and insists on doing a
-> translation of these regardless of what transport is used (e.g. whether
-> we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
-> "vhost: new device IOTLB API".) On s390 this results in severe
-> performance degradation (c.a. factor 10). BTW with ccw I/O there is
-> (architecturally) no IOMMU, so the whole address translation makes no
-> sense in the context of virtio-ccw.
+On Thu, Feb 20, 2020 at 03:55:14PM -0500, Michael S. Tsirkin wrote:
+> On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+> > Currently the advanced guest memory protection technologies (AMD SEV,
+> > powerpc secure guest technology and s390 Protected VMs) abuse the
+> > VIRTIO_F_IOMMU_PLATFORM flag to make virtio core use the DMA API, which
+> > is in turn necessary, to make IO work with guest memory protection.
+> > 
+> > But VIRTIO_F_IOMMU_PLATFORM a.k.a. VIRTIO_F_ACCESS_PLATFORM is really a
+> > different beast: with virtio devices whose implementation runs on an SMP
+> > CPU we are still fine with doing all the usual optimizations, it is just
+> > that we need to make sure that the memory protection mechanism does not
+> > get in the way. The VIRTIO_F_ACCESS_PLATFORM mandates more work on the
+> > side of the guest (and possibly he host side as well) than we actually
+> > need.
+> > 
+> > An additional benefit of teaching the guest to make the right decision
+> > (and use DMA API) on it's own is: removing the need, to mandate special
+> > VM configuration for guests that may run with protection. This is
+> > especially interesting for s390 as VIRTIO_F_IOMMU_PLATFORM pushes all
+> > the virtio control structures into the first 2G of guest memory:
+> > something we don't necessarily want to do per-default.
+> > 
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > Tested-by: Ram Pai <linuxram@us.ibm.com>
+> > Tested-by: Michael Mueller <mimu@linux.ibm.com>
+> 
+> This might work for you but it's fragile, since without
+> VIRTIO_F_ACCESS_PLATFORM hypervisor assumes it gets
+> GPA's, not DMA addresses.
+> 
+> 
+> 
+> IOW this looks like another iteration of:
+> 
+> 	virtio: Support encrypted memory on powerpc secure guests
+> 
+> which I was under the impression was abandoned as unnecessary.
 
-So it sounds like a host issue: the emulation of s390 unnecessarily complicated.
-Working around it by the guest looks wrong ...
+It has been abondoned on powerpc. We enabled VIRTIO_F_ACCESS_PLATFORM;
+by default, flag on powerpc.
 
-> Halil Pasic (2):
->   mm: move force_dma_unencrypted() to mem_encrypt.h
->   virtio: let virtio use DMA API when guest RAM is protected
-> 
->  drivers/virtio/virtio_ring.c |  3 +++
->  include/linux/dma-direct.h   |  9 ---------
->  include/linux/mem_encrypt.h  | 10 ++++++++++
->  3 files changed, 13 insertions(+), 9 deletions(-)
-> 
-> 
-> base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-> -- 
-> 2.17.1
+We would like to enable secure guests on powerpc without this flag
+aswell enabled, but past experience has educated us that its not a easy
+path.  However if Halil makes some inroads in this path for s390, we
+will like to support him.
+
+
+RP
 
