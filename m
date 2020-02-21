@@ -2,174 +2,159 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 94B4F168639
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 19:16:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id C7633168670
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 19:25:19 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbgBUSQz convert rfc822-to-8bit (ORCPT
-        <rfc822;lists+linux-s390@lfdr.de>); Fri, 21 Feb 2020 13:16:55 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14018 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725947AbgBUSQz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 21 Feb 2020 13:16:55 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LIGfvJ140002
-        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 13:16:54 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2y8uc2uk92-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 13:16:53 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 21 Feb 2020 18:16:34 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 18:16:29 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LIGRl854984706
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 18:16:27 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6FE7C52051;
-        Fri, 21 Feb 2020 18:16:27 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.149])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E10EA5204E;
-        Fri, 21 Feb 2020 18:16:26 +0000 (GMT)
-Date:   Fri, 21 Feb 2020 19:16:25 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
- protected
-In-Reply-To: <20200221163938.GC10054@lst.de>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
-        <20200220160606.53156-3-pasic@linux.ibm.com>
-        <20200220161309.GB12709@lst.de>
-        <20200221153340.4cdcde81.pasic@linux.ibm.com>
-        <20200221163938.GC10054@lst.de>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        id S1728105AbgBUSZS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Feb 2020 13:25:18 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:59100 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725947AbgBUSZS (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 21 Feb 2020 13:25:18 -0500
+Received: from cgy1-donard.priv.deltatee.com ([172.16.1.31])
+        by ale.deltatee.com with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1j5CzA-00057k-6t; Fri, 21 Feb 2020 11:25:14 -0700
+Received: from gunthorp by cgy1-donard.priv.deltatee.com with local (Exim 4.92)
+        (envelope-from <gunthorp@deltatee.com>)
+        id 1j5Cz2-0007NZ-VO; Fri, 21 Feb 2020 11:25:05 -0700
+From:   Logan Gunthorpe <logang@deltatee.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>,
+        Logan Gunthorpe <logang@deltatee.com>
+Date:   Fri, 21 Feb 2020 11:24:56 -0700
+Message-Id: <20200221182503.28317-1-logang@deltatee.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 20022118-0008-0000-0000-00000355389C
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022118-0009-0000-0000-00004A764C38
-Message-Id: <20200221191625.1d589ea7.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_06:2020-02-21,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
- phishscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501
- lowpriorityscore=0 bulkscore=0 clxscore=1015 suspectscore=0 malwarescore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002210139
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 172.16.1.31
+X-SA-Exim-Rcpt-To: linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-mm@kvack.org, dan.j.williams@intel.com, akpm@linux-foundation.org, hch@lst.de, catalin.marinas@arm.com, benh@kernel.crashing.org, tglx@linutronix.de, david@redhat.com, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, mhocko@kernel.org, will@kernel.org, luto@kernel.org, peterz@infradead.org, ebadger@gigaio.com, logang@deltatee.com
+X-SA-Exim-Mail-From: gunthorp@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-8.7 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        GREYLIST_ISWHITE,MYRULES_NO_TEXT autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: [PATCH v3 0/7] Allow setting caching mode in arch_add_memory() for P2PDMA
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Feb 2020 17:39:38 +0100
-Christoph Hellwig <hch@lst.de> wrote:
+Hi,
 
-> On Fri, Feb 21, 2020 at 03:33:40PM +0100, Halil Pasic wrote:
-> > > Hell no.  This is a detail of the platform DMA direct implementation.
-> > 
-> > I beg to differ. If it was a detail of the DMA direct implementation, it
-> > should have/would have been private to kernel/dma/direct.c. 
-> 
-> It can't given that platforms have to implement it.  It is an arch hook
-> for dma-direct.
-> 
-> > Consider what would we have to do to make PCI devices do I/O trough
-> > pages that were shared when the guest is running in a protected VM. The
-> > s390_pci_dma_ops would also need to know whether to 'force dma uencrypted'
-> > or not, and it's the exact same logic. I doubt simply using DMA direct
-> > for zPCI would do, because we still have to do all the Z specific IOMMU
-> > management.
-> 
-> And your IOMMU can't deal with the encryption bit?
+This is v3 of the patchset which cleans up a number of minor issues
+from the feedback of v2 and rebases onto v5.6-rc2. Additional feedback
+is welcome.
 
-There is no encrypt bit, and our memory is not encrypted, but protected.
-Means e.g. when buggy/malicious hypervisor tries to read a protected
-page it wont get ciphertext, but a slap on its finger. In order do make
-memory accessible to the hypervisor (or another guest, or a real device)
-the guest must make a so called utlravisor call (talk to the firmware)
-and share the respective page.
+Thanks,
 
-We tapped into the memory encryption infrastructure, because both is
-protecting the guest memory form the host (just by different means), and
-because it made no sense to build up something in parallel when most of
-the stuff we need was already there. But most unfortunately the names
-are deceiving when it comes to s390 protected virtualization and it's
-guest I/O enablement.
+Logan
+
+--
+
+Changes in v3:
+ * Rebased onto v5.6-rc2
+ * Rename mhp_modifiers to mhp_params per David with an updated kernel
+   doc per Dan
+ * Drop support for s390 per David seeing it does not support
+   ZONE_DEVICE yet and there was a potential problem with huge pages.
+ * Added WARN_ON_ONCE in cases where arches recieve non PAGE_KERNEL
+   parameters
+ * Collected David and Micheal's Reviewed-By and Acked-by Tags
+
+Changes in v2:
+ * Rebased onto v5.5-rc5
+ * Renamed mhp_restrictions to mhp_modifiers and added the pgprot field
+   to that structure instead of using an argument for
+   arch_add_memory().
+ * Add patch to drop the unused flags field in mhp_restrictions
+
+A git branch is available here:
+
+https://github.com/sbates130272/linux-p2pmem remap_pages_cache_v3
+
+--
+
+Currently, the page tables created using memremap_pages() are always
+created with the PAGE_KERNEL cacheing mode. However, the P2PDMA code
+is creating pages for PCI BAR memory which should never be accessed
+through the cache and instead use either WC or UC. This still works in
+most cases, on x86, because the MTRR registers typically override the
+caching settings in the page tables for all of the IO memory to be
+UC-. However, this tends not to work so well on other arches or
+some rare x86 machines that have firmware which does not setup the
+MTRR registers in this way.
+
+Instead of this, this series proposes a change to arch_add_memory()
+to take the pgprot required by the mapping which allows us to
+explicitly set pagetable entries for P2PDMA memory to WC.
+
+This changes is pretty routine for most of the arches: x86_64, s390, arm64
+and powerpc simply need to thread the pgprot through to where the page
+tables are setup. x86_32 unfortunately sets up the page tables at boot so
+must use _set_memory_prot() to change their caching mode. ia64 and sh
+don't appear to have an easy way to change the page tables so, for now
+at least, we just return -EINVAL on such mappings and thus they will
+not support P2PDMA memory until the work for this is done.
+
+--
+
+Logan Gunthorpe (7):
+  mm/memory_hotplug: Drop the flags field from struct mhp_restrictions
+  mm/memory_hotplug: Rename mhp_restrictions to mhp_params
+  x86/mm: Thread pgprot_t through init_memory_mapping()
+  x86/mm: Introduce _set_memory_prot()
+  powerpc/mm: Thread pgprot_t through create_section_mapping()
+  mm/memory_hotplug: Add pgprot_t to mhp_params
+  mm/memremap: Set caching mode for PCI P2PDMA memory to WC
+
+ arch/arm64/mm/mmu.c                        |  7 ++--
+ arch/ia64/mm/init.c                        |  7 ++--
+ arch/powerpc/include/asm/book3s/64/hash.h  |  3 +-
+ arch/powerpc/include/asm/book3s/64/radix.h |  3 +-
+ arch/powerpc/include/asm/sparsemem.h       |  3 +-
+ arch/powerpc/mm/book3s64/hash_utils.c      |  5 +--
+ arch/powerpc/mm/book3s64/pgtable.c         |  7 ++--
+ arch/powerpc/mm/book3s64/radix_pgtable.c   | 18 ++++++----
+ arch/powerpc/mm/mem.c                      | 10 +++---
+ arch/s390/mm/init.c                        |  9 +++--
+ arch/sh/mm/init.c                          |  7 ++--
+ arch/x86/include/asm/page_types.h          |  3 --
+ arch/x86/include/asm/pgtable.h             |  3 ++
+ arch/x86/include/asm/set_memory.h          |  1 +
+ arch/x86/kernel/amd_gart_64.c              |  3 +-
+ arch/x86/mm/init.c                         |  9 ++---
+ arch/x86/mm/init_32.c                      | 12 +++++--
+ arch/x86/mm/init_64.c                      | 40 ++++++++++++----------
+ arch/x86/mm/mm_internal.h                  |  3 +-
+ arch/x86/mm/pat/set_memory.c               |  7 ++++
+ arch/x86/platform/uv/bios_uv.c             |  3 +-
+ include/linux/memory_hotplug.h             | 20 +++++------
+ mm/memory_hotplug.c                        | 11 +++---
+ mm/memremap.c                              | 17 +++++----
+ 24 files changed, 130 insertions(+), 81 deletions(-)
 
 
->  In the case we
-> could think of allowing IOMMU implementation to access it.  But the
-> point that it is an internal detail of the DMA implementation and by
-> now means for drivers.
-
-From the perspective, that any driver that does anything remotely DMAish,
-that is, some external entity (possibly a hypervisor, possibly a channel
-subsystem, possibly a DMA controller) to should the memory, should do
-DMA API first, to make sure, the DMAish goes well, your argument makes
-perfect sense. But form that perspective !F_ACCESS_PLATFORM is also a
-DMAish. And the virtio spec mandates that !F_ACCESS_PLATFORM implies
-GPA's.
-
-For virtio-ccw I want GPA's and not IOVA's on s390, for virtio-pci,
-which we also support in general but not with protected virtualization,
-well, it's a different story.
-
-With protected visualization however I must make sure all I/O goes
-through shared pages. We use swiotlb for that. But then the old
-infrastructure won't cut it. Jet we still need GPA's on the ring (with
-the extra requirement that the page must be shared). 
-
-DMA API is a nice fit there because we can allocate DMA coherent memory
-(such that what comes back from our DMA ops is a GPA), so we have shared
-memory that the hypervisor and the guest is allowed to look at
-concurrently, and for the buffers that are going to be put on the vring,
-we can use the streaming API, which uses bounce buffers. The returned
-IOVA (in DMA API speak) is a GPA of the bounce buffer, and the guest is
-not allowed to peek until it unmaps, so everything is cozy. But for that
-to work, we all (AMD SEV, power, and s390) must go through the DMA API,
-because the old infrastructure in virtio core simply won't cut it. And
-it has nothing to do with the device. David explained it very well.
-
-My series is about controlling virtio-core's usage of DMA API. I believe,
-I did it in a way that doesn't hurt any arch at the moment.
-
-Maybe the conflict can be resolved if the transport gets a say in
-whether to use the DMA API or not. In the end the VIRTIO spec does say
-that "Whether accesses are actually limited or translated is described
-by platform-specific means."
-
-Regards,
-Halil
-
-
-
-
-
-
- 
-
+base-commit: 11a48a5a18c63fd7621bb050228cebf13566e4d8
+--
+2.20.1
