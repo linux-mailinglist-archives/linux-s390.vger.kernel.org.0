@@ -2,108 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 67A95166D82
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 04:28:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B0F69166DD0
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 04:37:00 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729663AbgBUD1w (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 20 Feb 2020 22:27:52 -0500
-Received: from ozlabs.org ([203.11.71.1]:38589 "EHLO ozlabs.org"
+        id S1729539AbgBUDhA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 20 Feb 2020 22:37:00 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:59179 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729229AbgBUD1v (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 20 Feb 2020 22:27:51 -0500
+        id S1729632AbgBUDhA (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 20 Feb 2020 22:37:00 -0500
 Received: by ozlabs.org (Postfix, from userid 1007)
-        id 48Nxjc3QBLz9sRk; Fri, 21 Feb 2020 14:27:48 +1100 (AEDT)
+        id 48Nxw96pvRz9sS3; Fri, 21 Feb 2020 14:36:57 +1100 (AEDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1582255668;
-        bh=y3lVtMpiI83RZRQFRmOykg/5zxHYT5D2zzjV2uwjV3s=;
+        d=gibson.dropbear.id.au; s=201602; t=1582256217;
+        bh=023zimJNppk3UBUgHQ61G7caK9h50x5C45Mcz1ME6eA=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=AzVjCTlMyorNgEHOIaIpCqwmc5f/HP95xbBaFBc3b6BE149F7e/ZfSyTrQYJcAhWg
-         UsHiPoIQtmjVabo+7H9zIstBLyAgo3Pda472sqcCTQUopX4set3xYqJ7sSrBgq2kM6
-         TnKBFOgI5IOo+NmbVrJgt4SEJKsed3roEsQY9FCo=
-Date:   Fri, 21 Feb 2020 14:27:27 +1100
+        b=e3zdRwhjeJUcGi8UjR/bkaGU7iqvokZ0xSIereTY15GrOforn7fnCxaUAuHbxiZM4
+         emwuWpBssUMeLJe/wGXWIiu66flWbyJ4cJ4MGXqogR27W3pz7uFchHhFUzLrqu3Y2+
+         PplWrOzzPS2DH7Rn+fVEvIcvBGYlpQZH/yJb1Ohw=
+Date:   Fri, 21 Feb 2020 14:29:07 +1100
 From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+To:     Ram Pai <linuxram@us.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
         Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
         Jason Wang <jasowang@redhat.com>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>,
         Viktor Mihajlovski <mihajlov@linux.ibm.com>,
         Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>,
         "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
         Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 1/2] mm: move force_dma_unencrypted() to mem_encrypt.h
-Message-ID: <20200221032727.GC2298@umbus.fritz.box>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+Message-ID: <20200221032907.GD2298@umbus.fritz.box>
 References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <20200220160606.53156-2-pasic@linux.ibm.com>
- <20200220161146.GA12709@lst.de>
- <4369f099-e4e4-4a58-b38b-642cf53ccca6@de.ibm.com>
- <20200220163135.GA13192@lst.de>
+ <20200220160606.53156-3-pasic@linux.ibm.com>
+ <20200220154904-mutt-send-email-mst@kernel.org>
+ <20200221011748.GE5713@oc0525413822.ibm.com>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="xesSdrSSBC0PokLI"
+        protocol="application/pgp-signature"; boundary="RhUH2Ysw6aD5utA4"
 Content-Disposition: inline
-In-Reply-To: <20200220163135.GA13192@lst.de>
+In-Reply-To: <20200221011748.GE5713@oc0525413822.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
---xesSdrSSBC0PokLI
+--RhUH2Ysw6aD5utA4
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Feb 20, 2020 at 05:31:35PM +0100, Christoph Hellwig wrote:
-> On Thu, Feb 20, 2020 at 05:23:20PM +0100, Christian Borntraeger wrote:
-> > >From a users perspective it makes absolutely perfect sense to use the
-> > bounce buffers when they are NEEDED.=20
-> > Forcing the user to specify iommu_platform just because you need bounce=
- buffers
-> > really feels wrong. And obviously we have a severe performance issue
-> > because of the indirections.
+On Thu, Feb 20, 2020 at 05:17:48PM -0800, Ram Pai wrote:
+> On Thu, Feb 20, 2020 at 03:55:14PM -0500, Michael S. Tsirkin wrote:
+> > On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+> > > Currently the advanced guest memory protection technologies (AMD SEV,
+> > > powerpc secure guest technology and s390 Protected VMs) abuse the
+> > > VIRTIO_F_IOMMU_PLATFORM flag to make virtio core use the DMA API, whi=
+ch
+> > > is in turn necessary, to make IO work with guest memory protection.
+> > >=20
+> > > But VIRTIO_F_IOMMU_PLATFORM a.k.a. VIRTIO_F_ACCESS_PLATFORM is really=
+ a
+> > > different beast: with virtio devices whose implementation runs on an =
+SMP
+> > > CPU we are still fine with doing all the usual optimizations, it is j=
+ust
+> > > that we need to make sure that the memory protection mechanism does n=
+ot
+> > > get in the way. The VIRTIO_F_ACCESS_PLATFORM mandates more work on the
+> > > side of the guest (and possibly he host side as well) than we actually
+> > > need.
+> > >=20
+> > > An additional benefit of teaching the guest to make the right decision
+> > > (and use DMA API) on it's own is: removing the need, to mandate speci=
+al
+> > > VM configuration for guests that may run with protection. This is
+> > > especially interesting for s390 as VIRTIO_F_IOMMU_PLATFORM pushes all
+> > > the virtio control structures into the first 2G of guest memory:
+> > > something we don't necessarily want to do per-default.
+> > >=20
+> > > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > > Tested-by: Ram Pai <linuxram@us.ibm.com>
+> > > Tested-by: Michael Mueller <mimu@linux.ibm.com>
+> >=20
+> > This might work for you but it's fragile, since without
+> > VIRTIO_F_ACCESS_PLATFORM hypervisor assumes it gets
+> > GPA's, not DMA addresses.
+> >=20
+> >=20
+> >=20
+> > IOW this looks like another iteration of:
+> >=20
+> > 	virtio: Support encrypted memory on powerpc secure guests
+> >=20
+> > which I was under the impression was abandoned as unnecessary.
 >=20
-> The point is that the user should not have to specify iommu_platform.
-> We need to make sure any new hypervisor (especially one that might require
-> bounce buffering) always sets it,
+> It has been abondoned on powerpc. We enabled VIRTIO_F_ACCESS_PLATFORM;
+> by default, flag on powerpc.
 
-So, I have draft qemu patches which enable iommu_platform by default.
-But that's really because of other problems with !iommu_platform, not
-anything to do with bounce buffering or secure VMs.
+Uh... we haven't yet, though we're working on it.
 
-The thing is that the hypervisor *doesn't* require bounce buffering.
-In the POWER (and maybe s390 as well) models for Secure VMs, it's the
-*guest*'s choice to enter secure mode, so the hypervisor has no reason
-to know whether the guest needs bounce buffering.  As far as the
-hypervisor and qemu are concerned that's a guest internal detail, it
-just expects to get addresses it can access whether those are GPAs
-(iommu_platform=3Doff) or IOVAs (iommu_platform=3Don).
-
-> as was a rather bogus legacy hack
-
-It was certainly a bad idea, but it was a bad idea that went into a
-public spec and has been widely deployed for many years.  We can't
-just pretend it didn't happen and move on.
-
-Turning iommu_platform=3Don by default breaks old guests, some of which
-we still care about.  We can't (automatically) do it only for guests
-that need bounce buffering, because the hypervisor doesn't know that
-ahead of time.
-
-> that isn't extensibe for cases that for example require bounce buffering.
-
-In fact bounce buffering isn't really the issue from the hypervisor
-(or spec's) point of view.  It's the fact that not all of guest memory
-is accessible to the hypervisor.  Bounce buffering is just one way the
-guest might deal with that.
+> We would like to enable secure guests on powerpc without this flag
+> aswell enabled, but past experience has educated us that its not a easy
+> path.  However if Halil makes some inroads in this path for s390, we
+> will like to support him.
+>=20
+>=20
+> RP
+>=20
 
 --=20
 David Gibson			| I'll have my music baroque, and my code
@@ -111,24 +126,24 @@ david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
 				| _way_ _around_!
 http://www.ozlabs.org/~dgibson
 
---xesSdrSSBC0PokLI
+--RhUH2Ysw6aD5utA4
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5PTh0ACgkQbDjKyiDZ
-s5KxuA/8Dp0u3ClHJcvgYS9sPsWYf3cIiL0ssD718l7m06uHYCC8BZhGbCeMhbfK
-jDV3bIOPMI6f+L4KTSrPkH71KAYKLKbt52Si354kI/7xkDmCu3B8SmL/u+ptC0Y/
-UYD0ZFkgyOLQaOS/jN5zMae3337n6qPRZuOP12epFWZ9QpP4v55Dba2ICuJXkbU1
-5QaQIcCLwSBcEYxZOuLqc7s7tWfOt/NeNmvgMnCGJie035XlK0c8q2v7XqRnH8ec
-5tej0mQvwOyKgZkYhr35Q/4t2V0LxPDvD+8W636WdH0O9h6wjeMeKlVoq8IpgMyz
-NkYNX7yaPfnkh3fvqWa7NMmmi32Rt9/85Kk/3I4YD1KCMSzv7AGJ1TBnUMumisYJ
-F2rB+Q07oGi/r/UNg2VSUE2S4rGgq1k9hD2Xb0yE+3+l1TvowJ+2ly30W1TSo5Hu
-LZZ/XX0uzsCnrlw4aqzyh4+u4++QcgnlwvDgdfadNXVd3gQdPEoxAP+vV6FhTinx
-29Dus3s83/aCpkNeU63NfDWXSIOPTUspWC8Ny1qGE1Vt0Dfie5K+6j7iZdYX0HZT
-duIb419GYkR2DBTS0vS6jFh9QFN+jThVs4qc4uRqR6ibwocNlXSdxt+jT7QNkaqO
-8HtGwkfqQZCCm4Z0uNnoFv4NY9kLB21wa/z0xOVmDJZtVD8Jgto=
-=NO4r
+iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5PToIACgkQbDjKyiDZ
+s5L9mw//e6UlWdIjS0sVfS3LR0dfVU8WuWvcWGPlHsAvqf8ahlSYAPlyL8YHIHwe
+kntSk9WXkEn3jRCsD+nHK+dAu10C1hiGl18RH+S0yisKRnH+WabU1oesIh5cDwaV
+r+bZsU3HPaTwHS83yVNRYjoic3ZjV97karqDYGMHSnWWbVqCDZDnREwxG3VE1jm7
+7sdJak8rTIZ1AUezQwSKgfIy4lkCGVoaUC9ZKIvdWVIHywQvtXDn2ikbGENaY3E3
+MaU7NicXVogmy+beOzkOWNst0Xfm6N+oGHw2O/8zRpsmk95YAg84UGYEg4GfTEKE
+UGjNeeMDAL5lMYRbqdbzBve+wGmgnyThjGwt3PeivwATqEiL3j8AmOelUmQ9SY2y
+qPOTzprDVU+Vu0A+6NHBPuzvhFZr5dVpD4n5kF+TeH6lp+m4GC9YCIN6hT6NE+DG
+/yc/2QUJk14otNc/h7Nk+RqVm1+ZORWoDqiISB/M3U2t3kaai0hczJ6q2tDjl1pJ
+cDx9sX8mVAhyOT3LSxvfOrRDsUwyzuUjrqJCh9gnXv073cc8E6VnFb7g+Cj+NUYP
+tbh3wOC7KKoovvfI4x2YrPNpkDSAOE91h5gaM1sFtmsB0leF77mrbDAwncZHC5C8
+2EWMVf3S2sJLq9s1CulJ8Zc27iCG9F/71Bd88Nitf2HIvFqDSZs=
+=5mIy
 -----END PGP SIGNATURE-----
 
---xesSdrSSBC0PokLI--
+--RhUH2Ysw6aD5utA4--
