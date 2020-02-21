@@ -2,166 +2,203 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0D628167E03
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 14:08:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 50C5A167E1D
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 14:12:48 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbgBUNIn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Feb 2020 08:08:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:49333 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728264AbgBUNIn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 21 Feb 2020 08:08:43 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582290521;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=6c6/JExma3YPXdLI5LQPuU37h8us8F0SaHv7J9dNDoM=;
-        b=asRdhey2oUPsw+K38ZQ5GHaoJAt1AB9dWSWxRA0I4UBXkwV3OyU9dqhmHol/mIndV8hx3R
-        d1aIlypE4Xs5K0CyPeysWHInBCPrukeS3GcHA0pEp3r6h2pZwB8d6pw79GCuS0JeB+u2BM
-        SY/wXmfJpz+Z6A1T69N/EnUzyz63NS8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-261-bnFaNX9DPd-u-7gQVwHh8w-1; Fri, 21 Feb 2020 08:08:37 -0500
-X-MC-Unique: bnFaNX9DPd-u-7gQVwHh8w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2A76E1005513;
-        Fri, 21 Feb 2020 13:08:36 +0000 (UTC)
-Received: from [10.36.117.197] (ovpn-117-197.ams2.redhat.com [10.36.117.197])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E37095C553;
-        Fri, 21 Feb 2020 13:08:33 +0000 (UTC)
-Subject: Re: [PATCH v3.1 09/37] KVM: s390: protvirt: Add initial vm and cpu
- lifecycle handling
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Ulrich.Weigand@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, frankja@linux.vnet.ibm.com,
-        gor@linux.ibm.com, imbrenda@linux.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
-References: <b9aa96ce-9701-cefb-68d8-76d1cba4d5c7@de.ibm.com>
- <20200221080742.10233-1-borntraeger@de.ibm.com>
- <08f6ad60-1046-f281-ce81-539f2c967f30@redhat.com>
- <ddff81cb-180b-5b7e-1e13-f0a01f121b75@de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <69debaf4-2429-31f5-9c04-164df3a79084@redhat.com>
-Date:   Fri, 21 Feb 2020 14:08:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728396AbgBUNMm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Feb 2020 08:12:42 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48138 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727053AbgBUNMm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 21 Feb 2020 08:12:42 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LD9BVp085382
+        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 08:12:40 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8uby1hd6-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 08:12:40 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Fri, 21 Feb 2020 13:12:38 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 21 Feb 2020 13:12:34 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LDCWSN42467504
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 21 Feb 2020 13:12:32 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7841B11C04C;
+        Fri, 21 Feb 2020 13:12:32 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EF8AB11C04A;
+        Fri, 21 Feb 2020 13:12:31 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 21 Feb 2020 13:12:31 +0000 (GMT)
+Date:   Fri, 21 Feb 2020 14:12:30 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
+ protected
+In-Reply-To: <20200220154904-mutt-send-email-mst@kernel.org>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220160606.53156-3-pasic@linux.ibm.com>
+        <20200220154904-mutt-send-email-mst@kernel.org>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <ddff81cb-180b-5b7e-1e13-f0a01f121b75@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022113-0012-0000-0000-00000388FC69
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022113-0013-0000-0000-000021C59639
+Message-Id: <20200221141230.13eebc35.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 spamscore=0 suspectscore=0 mlxlogscore=999
+ clxscore=1015 malwarescore=0 adultscore=0 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210101
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 21.02.20 14:03, Christian Borntraeger wrote:
+On Thu, 20 Feb 2020 15:55:14 -0500
+"Michael S. Tsirkin" <mst@redhat.com> wrote:
+
+> On Thu, Feb 20, 2020 at 05:06:06PM +0100, Halil Pasic wrote:
+> > Currently the advanced guest memory protection technologies (AMD SEV,
+> > powerpc secure guest technology and s390 Protected VMs) abuse the
+> > VIRTIO_F_IOMMU_PLATFORM flag to make virtio core use the DMA API, which
+> > is in turn necessary, to make IO work with guest memory protection.
+> > 
+> > But VIRTIO_F_IOMMU_PLATFORM a.k.a. VIRTIO_F_ACCESS_PLATFORM is really a
+> > different beast: with virtio devices whose implementation runs on an SMP
+> > CPU we are still fine with doing all the usual optimizations, it is just
+> > that we need to make sure that the memory protection mechanism does not
+> > get in the way. The VIRTIO_F_ACCESS_PLATFORM mandates more work on the
+> > side of the guest (and possibly he host side as well) than we actually
+> > need.
+> > 
+> > An additional benefit of teaching the guest to make the right decision
+> > (and use DMA API) on it's own is: removing the need, to mandate special
+> > VM configuration for guests that may run with protection. This is
+> > especially interesting for s390 as VIRTIO_F_IOMMU_PLATFORM pushes all
+> > the virtio control structures into the first 2G of guest memory:
+> > something we don't necessarily want to do per-default.
+> > 
+> > Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+> > Tested-by: Ram Pai <linuxram@us.ibm.com>
+> > Tested-by: Michael Mueller <mimu@linux.ibm.com>
+> 
+> This might work for you but it's fragile, since without
+> VIRTIO_F_ACCESS_PLATFORM hypervisor assumes it gets
+> GPA's, not DMA addresses.
+> 
+
+Thanks for your constructive approach. I do want the hypervisor to
+assume it gets GPA's. My train of thought was that the guys that need
+to use IOVA's that are not GPA's when force_dma_unencrypted() will have
+to to specify VIRTIO_F_ACCESS_PLATFORM (at the device) anyway, because
+otherwise it won't work. But I see your point: in case of a
+mis-configuration and provided the DMA API returns IOVA's one could end
+up trying to touch wrong memory locations. But this should be similar to
+what would happen if DMA ops are not used, and memory is not made accessible.
+
 > 
 > 
-> On 21.02.20 12:45, David Hildenbrand wrote:
->>
->>> +static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
->>> +{
->>> +	int r = 0;
->>> +	u16 dummy;
->>> +	void __user *argp = (void __user *)cmd->data;
->>> +
->>> +	switch (cmd->cmd) {
->>> +	case KVM_PV_ENABLE: {
->>> +		r = -EINVAL;
->>> +		if (kvm_s390_pv_is_protected(kvm))
->>> +			break;
->>> +
->>> +		r = kvm_s390_pv_alloc_vm(kvm);
->>> +		if (r)
->>> +			break;
->>> +
->>
->> To make this nicer, can we simply merge alloc+create into init
->>
->> 	/* FMT 4 SIE needs esca */
->> 	r = sca_switch_to_extended(kvm);
->> 	if (r)
->> 		break;
->> 	
->> 	r = kvm_s390_pv_init_vm();
->> 	if (r)
->> 		break;
->>
->> 	r = kvm_s390_cpus_to_pv(kvm, &cmd->rc, &cmd->rrc);
->> 	if (r)
->> 		kvm_s390_pv_deinit_vm();
->> 	break;
->>
->> I remember the split dates back to an earlier UAPI interface.
->>
->> Similarly from deinit.
->>
->> The you can just make deinit never fail and handle that freeing
->> special-case in there and add a comment.
+> IOW this looks like another iteration of:
 > 
-> We want to tell userspace that PV_DISABLE failed, so I need the return.
-> But I can still simplify things a bit.
+> 	virtio: Support encrypted memory on powerpc secure guests
+> 
+> which I was under the impression was abandoned as unnecessary.
 
-Yes, makes sense. But having handling wrapped in a single function makes
-sense.
+Unnecessary for powerpc because they do normal PCI. In the context of
+CCW there are only guest physical addresses (CCW I/O has no concept of
+IOMMU or IOVAs).
 
-> Will send an 3.2. I still have the alloc/dealloc as static helpers inside
-> pv.c
+> 
+> 
+> To summarize, the necessary conditions for a hack along these lines
+> (using DMA API without VIRTIO_F_ACCESS_PLATFORM) are that we detect that:
+> 
+>   - secure guest mode is enabled - so we know that since we don't share
+>     most memory regular virtio code won't
+>     work, even though the buggy hypervisor didn't set VIRTIO_F_ACCESS_PLATFORM
 
-Ack.
+force_dma_unencrypted(&vdev->dev) is IMHO exactly about this.
 
--- 
-Thanks,
+>   - DMA API is giving us addresses that are actually also physical
+>     addresses
 
-David / dhildenb
+In case of s390 this is given. I talked with the power people before
+posting this, and they ensured me they can are willing to deal with
+this. I was hoping to talk abut this with the AMD SEV people here (hence
+the cc).
+
+>   - Hypervisor is buggy and didn't enable VIRTIO_F_ACCESS_PLATFORM
+> 
+
+I don't get this point. The argument where the hypervisor is buggy is a
+bit hard to follow for me. If hypervisor is buggy we have already lost
+anyway most of the time, or?
+ 
+> I don't see how this patch does this.
+
+I do get your point. I don't know of a good way to check that DMA API
+is giving us addresses that are actually physical addresses, and the
+situation you describe definitely has some risk to it.
+
+Let me comment on other ideas that came up. I would be very happy to go
+with the best one. Thank you very much.
+
+Regards,
+Halil
+
+> 
+> 
+> > ---
+> >  drivers/virtio/virtio_ring.c | 3 +++
+> >  1 file changed, 3 insertions(+)
+> > 
+> > diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+> > index 867c7ebd3f10..fafc8f924955 100644
+> > --- a/drivers/virtio/virtio_ring.c
+> > +++ b/drivers/virtio/virtio_ring.c
+> > @@ -243,6 +243,9 @@ static bool vring_use_dma_api(struct virtio_device *vdev)
+> >  	if (!virtio_has_iommu_quirk(vdev))
+> >  		return true;
+> >  
+> > +	if (force_dma_unencrypted(&vdev->dev))
+> > +		return true;
+> > +
+> >  	/* Otherwise, we are left to guess. */
+> >  	/*
+> >  	 * In theory, it's possible to have a buggy QEMU-supposed
+> > -- 
+> > 2.17.1
+> 
 
