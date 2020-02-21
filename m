@@ -2,174 +2,238 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E1AEB1680EE
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 15:56:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id ECEB2168185
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 16:26:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729037AbgBUO4O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Feb 2020 09:56:14 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:16580 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728824AbgBUO4O (ORCPT
+        id S1728985AbgBUP0O (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Feb 2020 10:26:14 -0500
+Received: from gateway21.websitewelcome.com ([192.185.45.38]:29104 "EHLO
+        gateway21.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728846AbgBUP0O (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 21 Feb 2020 09:56:14 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LEtfxc002138
-        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 09:56:12 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8uc0wmyg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 09:56:12 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
-        Fri, 21 Feb 2020 14:56:10 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 14:56:05 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LEu3jL46924190
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 14:56:03 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C874B4C046;
-        Fri, 21 Feb 2020 14:56:03 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 424374C04E;
-        Fri, 21 Feb 2020 14:56:03 +0000 (GMT)
-Received: from oc2783563651 (unknown [9.152.224.149])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 14:56:03 +0000 (GMT)
-Date:   Fri, 21 Feb 2020 15:56:02 +0100
-From:   Halil Pasic <pasic@linux.ibm.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Fri, 21 Feb 2020 10:26:14 -0500
+X-Greylist: delayed 1363 seconds by postgrey-1.27 at vger.kernel.org; Fri, 21 Feb 2020 10:26:13 EST
+Received: from cm13.websitewelcome.com (cm13.websitewelcome.com [100.42.49.6])
+        by gateway21.websitewelcome.com (Postfix) with ESMTP id 370DC400D1FDE
+        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 09:03:30 -0600 (CST)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id 59pyjPeT6RP4z59pyjpUlL; Fri, 21 Feb 2020 09:03:30 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
+        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TuEkwNZ6abk0dgqShh1c2Fq2egiakxYWlYBo+Zgc8WU=; b=x5yRZJgjXzVicfceegBOAKBOdJ
+        Q2jboBFw7Q+2WEItU6X2mnaKFGW9xZqw4FYg0/SzY1AoIwOsIZzQDXlRz7JJC5FuMcGCt70pYrPkT
+        G/8GyingLPF7ZcV8950kLcZEcJWIB1b+OrZV2w8vMIBUHvDKBTd8ZgqK7szI4LdDp0NMQEgPcDO30
+        A6/bZzTz6ehOXR0cGRBycJPw+PPLjMSo08DwQ6miVqQPfv5/lMsLKC1geJjNybCcZgYUtuxdSRQD3
+        WeQCxVjk0XYNsfyVnaMCmQIxaNdm0AU5cVUzhbGfGhPvPJMkSqZCXvooo0sOo5WGis/kv27AZjiC5
+        HDJ3iamQ==;
+Received: from [200.68.141.13] (port=18984 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.92)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1j59pw-003Uak-6R; Fri, 21 Feb 2020 09:03:28 -0600
+Date:   Fri, 21 Feb 2020 09:06:12 -0600
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-In-Reply-To: <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
-        <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] s390: Replace zero-length array with flexible-array member
+Message-ID: <20200221150612.GA9717@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20022114-0020-0000-0000-000003AC5719
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022114-0021-0000-0000-000022046169
-Message-Id: <20200221155602.4de41fa7.pasic@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-21_04:2020-02-21,2020-02-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 clxscore=1015 malwarescore=0 adultscore=0 mlxlogscore=999
- spamscore=0 suspectscore=0 mlxscore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210115
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 200.68.141.13
+X-Source-L: No
+X-Exim-ID: 1j59pw-003Uak-6R
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [200.68.141.13]:18984
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 9
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 21 Feb 2020 14:22:26 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+The current codebase makes use of the zero-length array language
+extension to the C90 standard, but the preferred mechanism to declare
+variable-length types such as these ones is a flexible array member[1][2],
+introduced in C99:
 
-> 
-> On 2020/2/21 上午12:06, Halil Pasic wrote:
-> > Currently if one intends to run a memory protection enabled VM with
-> > virtio devices and linux as the guest OS, one needs to specify the
-> > VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the guest
-> > linux use the DMA API, which in turn handles the memory
-> > encryption/protection stuff if the guest decides to turn itself into
-> > a protected one. This however makes no sense due to multiple reasons:
-> > * The device is not changed by the fact that the guest RAM is
-> > protected. The so called IOMMU bypass quirk is not affected.
-> > * This usage is not congruent with  standardised semantics of
-> > VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reason
-> > for using DMA API in virtio (orthogonal with respect to what is
-> > expressed by VIRTIO_F_IOMMU_PLATFORM).
-> >
-> > This series aims to decouple 'have to use DMA API because my (guest) RAM
-> > is protected' and 'have to use DMA API because the device told me
-> > VIRTIO_F_IOMMU_PLATFORM'.
-> >
-> > Please find more detailed explanations about the conceptual aspects in
-> > the individual patches. There is however also a very practical problem
-> > that is addressed by this series.
-> >
-> > For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
-> > effect The vhost code assumes it the addresses on the virtio descriptor
-> > ring are not guest physical addresses but iova's, and insists on doing a
-> > translation of these regardless of what transport is used (e.g. whether
-> > we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
-> > "vhost: new device IOTLB API".) On s390 this results in severe
-> > performance degradation (c.a. factor 10).
-> 
-> 
-> Do you see a consistent degradation on the performance, or it only 
-> happen when for during the beginning of the test?
-> 
+struct foo {
+        int stuff;
+        struct boo array[];
+};
 
-AFAIK the degradation is consistent.
+By making use of the mechanism above, we will get a compiler warning
+in case the flexible array does not occur last in the structure, which
+will help us prevent some kind of undefined behavior bugs from being
+inadvertently introduced[3] to the codebase from now on.
 
-> 
-> > BTW with ccw I/O there is
-> > (architecturally) no IOMMU, so the whole address translation makes no
-> > sense in the context of virtio-ccw.
-> 
-> 
-> I suspect we can do optimization in qemu side.
-> 
-> E.g send memtable entry via IOTLB API when vIOMMU is not enabled.
-> 
-> If this makes sense, I can draft patch to see if there's any difference.
+Also, notice that, dynamic memory allocations won't be affected by
+this change:
 
-Frankly I would prefer to avoid IOVAs on the descriptor ring (and the
-then necessary translation) for virtio-ccw altogether. But Michael
-voiced his opinion that we should mandate F_IOMMU_PLATFORM for devices
-that could be used with guests running in protected mode. I don't share
-his opinion, but that's an ongoing discussion.
+"Flexible array members have incomplete type, and so the sizeof operator
+may not be applied. As a quirk of the original implementation of
+zero-length arrays, sizeof evaluates to zero."[1]
 
-Should we end up having to do translation from IOVA in vhost, we are
-very interested in that translation being fast and efficient.
+This issue was found with the help of Coccinelle.
 
-In that sense we would be very happy to test any optimization that aim
-into that direction.
+[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+[2] https://github.com/KSPP/linux/issues/21
+[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
 
-Thank you very much for your input!
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+---
+ arch/s390/appldata/appldata_os.c      | 2 +-
+ drivers/s390/block/dasd_diag.c        | 2 +-
+ drivers/s390/block/dasd_eckd.h        | 2 +-
+ drivers/s390/char/raw3270.h           | 2 +-
+ drivers/s390/char/sclp_pci.c          | 2 +-
+ drivers/s390/cio/idset.c              | 2 +-
+ drivers/s390/crypto/pkey_api.c        | 2 +-
+ drivers/s390/crypto/zcrypt_ccamisc.h  | 2 +-
+ drivers/s390/crypto/zcrypt_msgtype6.c | 2 +-
+ 9 files changed, 9 insertions(+), 9 deletions(-)
 
-Regards,
-Halil
-
-> 
-> Thanks
-> 
-> 
-> >
-> > Halil Pasic (2):
-> >    mm: move force_dma_unencrypted() to mem_encrypt.h
-> >    virtio: let virtio use DMA API when guest RAM is protected
-> >
-> >   drivers/virtio/virtio_ring.c |  3 +++
-> >   include/linux/dma-direct.h   |  9 ---------
-> >   include/linux/mem_encrypt.h  | 10 ++++++++++
-> >   3 files changed, 13 insertions(+), 9 deletions(-)
-> >
-> >
-> > base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-> 
+diff --git a/arch/s390/appldata/appldata_os.c b/arch/s390/appldata/appldata_os.c
+index 54f375627532..8bf46d705957 100644
+--- a/arch/s390/appldata/appldata_os.c
++++ b/arch/s390/appldata/appldata_os.c
+@@ -75,7 +75,7 @@ struct appldata_os_data {
+ 				   (waiting for I/O)               */
+ 
+ 	/* per cpu data */
+-	struct appldata_os_per_cpu os_cpu[0];
++	struct appldata_os_per_cpu os_cpu[];
+ } __attribute__((packed));
+ 
+ static struct appldata_os_data *appldata_os_data;
+diff --git a/drivers/s390/block/dasd_diag.c b/drivers/s390/block/dasd_diag.c
+index 8d4971645cf1..facb588d09e4 100644
+--- a/drivers/s390/block/dasd_diag.c
++++ b/drivers/s390/block/dasd_diag.c
+@@ -58,7 +58,7 @@ struct dasd_diag_private {
+ 
+ struct dasd_diag_req {
+ 	unsigned int block_count;
+-	struct dasd_diag_bio bio[0];
++	struct dasd_diag_bio bio[];
+ };
+ 
+ static const u8 DASD_DIAG_CMS1[] = { 0xc3, 0xd4, 0xe2, 0xf1 };/* EBCDIC CMS1 */
+diff --git a/drivers/s390/block/dasd_eckd.h b/drivers/s390/block/dasd_eckd.h
+index 6943508d0f1d..ca24a78a256e 100644
+--- a/drivers/s390/block/dasd_eckd.h
++++ b/drivers/s390/block/dasd_eckd.h
+@@ -220,7 +220,7 @@ struct LRE_eckd_data {
+ 	__u8 imbedded_count;
+ 	__u8 extended_operation;
+ 	__u16 extended_parameter_length;
+-	__u8 extended_parameter[0];
++	__u8 extended_parameter[];
+ } __attribute__ ((packed));
+ 
+ /* Prefix data for format 0x00 and 0x01 */
+diff --git a/drivers/s390/char/raw3270.h b/drivers/s390/char/raw3270.h
+index 3afaa35f7351..08f36e973b43 100644
+--- a/drivers/s390/char/raw3270.h
++++ b/drivers/s390/char/raw3270.h
+@@ -211,7 +211,7 @@ struct string
+ 	struct list_head update;
+ 	unsigned long size;
+ 	unsigned long len;
+-	char string[0];
++	char string[];
+ } __attribute__ ((aligned(8)));
+ 
+ static inline struct string *
+diff --git a/drivers/s390/char/sclp_pci.c b/drivers/s390/char/sclp_pci.c
+index 995e9196852e..a3e5a5fb0c1e 100644
+--- a/drivers/s390/char/sclp_pci.c
++++ b/drivers/s390/char/sclp_pci.c
+@@ -39,7 +39,7 @@ struct err_notify_evbuf {
+ 	u8 atype;
+ 	u32 fh;
+ 	u32 fid;
+-	u8 data[0];
++	u8 data[];
+ } __packed;
+ 
+ struct err_notify_sccb {
+diff --git a/drivers/s390/cio/idset.c b/drivers/s390/cio/idset.c
+index 835de44dbbcc..77d0ea7b381b 100644
+--- a/drivers/s390/cio/idset.c
++++ b/drivers/s390/cio/idset.c
+@@ -13,7 +13,7 @@
+ struct idset {
+ 	int num_ssid;
+ 	int num_id;
+-	unsigned long bitmap[0];
++	unsigned long bitmap[];
+ };
+ 
+ static inline unsigned long bitmap_size(int num_ssid, int num_id)
+diff --git a/drivers/s390/crypto/pkey_api.c b/drivers/s390/crypto/pkey_api.c
+index 2f33c5fcf676..74e63ec49068 100644
+--- a/drivers/s390/crypto/pkey_api.c
++++ b/drivers/s390/crypto/pkey_api.c
+@@ -80,7 +80,7 @@ struct clearaeskeytoken {
+ 	u8  res1[3];
+ 	u32 keytype;	 /* key type, one of the PKEY_KEYTYPE values */
+ 	u32 len;	 /* bytes actually stored in clearkey[] */
+-	u8  clearkey[0]; /* clear key value */
++	u8  clearkey[]; /* clear key value */
+ } __packed;
+ 
+ /*
+diff --git a/drivers/s390/crypto/zcrypt_ccamisc.h b/drivers/s390/crypto/zcrypt_ccamisc.h
+index 3a9876d5ab0e..8b7a641671c9 100644
+--- a/drivers/s390/crypto/zcrypt_ccamisc.h
++++ b/drivers/s390/crypto/zcrypt_ccamisc.h
+@@ -90,7 +90,7 @@ struct cipherkeytoken {
+ 	u16 kmf1;     /* key management field 1 */
+ 	u16 kmf2;     /* key management field 2 */
+ 	u16 kmf3;     /* key management field 3 */
+-	u8  vdata[0]; /* variable part data follows */
++	u8  vdata[]; /* variable part data follows */
+ } __packed;
+ 
+ /* Some defines for the CCA AES cipherkeytoken kmf1 field */
+diff --git a/drivers/s390/crypto/zcrypt_msgtype6.c b/drivers/s390/crypto/zcrypt_msgtype6.c
+index a36251d138fb..eadd3a438a4b 100644
+--- a/drivers/s390/crypto/zcrypt_msgtype6.c
++++ b/drivers/s390/crypto/zcrypt_msgtype6.c
+@@ -590,7 +590,7 @@ struct type86x_reply {
+ 	struct CPRBX cprbx;
+ 	unsigned char pad[4];	/* 4 byte function code/rules block ? */
+ 	unsigned short length;
+-	char text[0];
++	char text[];
+ } __packed;
+ 
+ struct type86_ep11_reply {
+-- 
+2.25.0
 
