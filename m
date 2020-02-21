@@ -2,54 +2,57 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0819167B77
-	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 12:05:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 01B80167B9C
+	for <lists+linux-s390@lfdr.de>; Fri, 21 Feb 2020 12:13:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727277AbgBULFj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 21 Feb 2020 06:05:39 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:21362 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726100AbgBULFi (ORCPT
+        id S1726325AbgBULN0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 21 Feb 2020 06:13:26 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:62144 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726268AbgBULNZ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 21 Feb 2020 06:05:38 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LB5KN6123556
-        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 06:05:37 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2y8uc0p58j-1
+        Fri, 21 Feb 2020 06:13:25 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01LBATo2020634
+        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 06:13:24 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ya6e6dj10-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 06:05:37 -0500
+        for <linux-s390@vger.kernel.org>; Fri, 21 Feb 2020 06:13:24 -0500
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Fri, 21 Feb 2020 11:05:35 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Fri, 21 Feb 2020 11:13:22 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 21 Feb 2020 11:05:33 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LB5V8754722712
+        Fri, 21 Feb 2020 11:13:18 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01LBCLSt39649622
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 21 Feb 2020 11:05:31 GMT
+        Fri, 21 Feb 2020 11:12:21 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 809C042047;
-        Fri, 21 Feb 2020 11:05:31 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4A0D84203F;
+        Fri, 21 Feb 2020 11:13:17 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F35A042045;
-        Fri, 21 Feb 2020 11:05:30 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C18A64204C;
+        Fri, 21 Feb 2020 11:13:16 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.54.21])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 21 Feb 2020 11:05:30 +0000 (GMT)
-Subject: Re: [PATCH v3.1 02/37] KVM: s390/interrupt: do not pin adapter
- interrupt pages
+        Fri, 21 Feb 2020 11:13:16 +0000 (GMT)
+Subject: Re: [PATCH v3 36/37] KVM: s390: rstify new ioctls in api.rst
 To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Ulrich.Weigand@de.ibm.com, david@redhat.com,
-        frankja@linux.vnet.ibm.com, gor@linux.ibm.com,
-        imbrenda@linux.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
-References: <20200220104020.5343-3-borntraeger@de.ibm.com>
- <20200221080942.10334-1-borntraeger@de.ibm.com>
- <20200221114158.2eeca512.cohuck@redhat.com>
+Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20200220104020.5343-1-borntraeger@de.ibm.com>
+ <20200220104020.5343-37-borntraeger@de.ibm.com>
+ <20200221115132.60b0fbde.cohuck@redhat.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -94,26 +97,26 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Fri, 21 Feb 2020 12:05:30 +0100
+Date:   Fri, 21 Feb 2020 12:13:16 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200221114158.2eeca512.cohuck@redhat.com>
+In-Reply-To: <20200221115132.60b0fbde.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022111-4275-0000-0000-000003A41F53
+x-cbid: 20022111-0020-0000-0000-000003AC428E
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022111-4276-0000-0000-000038B82E54
-Message-Id: <83b4d4e6-3143-a7bb-84b8-bd0feced0d6f@de.ibm.com>
+x-cbparentid: 20022111-0021-0000-0000-000022044C41
+Message-Id: <67b9a5ee-559b-6a21-4a03-40092a9fd41a@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-21_03:2020-02-19,2020-02-21 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- phishscore=0 clxscore=1015 malwarescore=0 adultscore=0 mlxlogscore=839
- spamscore=0 suspectscore=2 mlxscore=0 bulkscore=0 impostorscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002210084
+ suspectscore=0 phishscore=0 adultscore=0 clxscore=1015 impostorscore=0
+ malwarescore=0 spamscore=0 bulkscore=0 priorityscore=1501 mlxscore=0
+ mlxlogscore=739 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002210085
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -121,86 +124,25 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 21.02.20 11:41, Cornelia Huck wrote:
-> On Fri, 21 Feb 2020 03:09:42 -0500
+On 21.02.20 11:51, Cornelia Huck wrote:
+> On Thu, 20 Feb 2020 05:40:19 -0500
 > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 > 
->> From: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
+>> We also need to rstify the new ioctls that we added in parallel to the
+>> rstification of the kvm docs.
+> 
+> This looks like it could be merged independently of the protected virt
+> patches?
+> 
+Yes, but I did that while doing the other patch. Will go via kvm/master.
+
+
 >>
->> The adapter interrupt page containing the indicator bits is currently
->> pinned. That means that a guest with many devices can pin a lot of
->> memory pages in the host. This also complicates the reference tracking
->> which is needed for memory management handling of protected virtual
->> machines. It might also have some strange side effects for madvise
->> MADV_DONTNEED and other things.
->>
->> We can simply try to get the userspace page set the bits and free the
->> page. By storing the userspace address in the irq routing entry instead
->> of the guest address we can actually avoid many lookups and list walks
->> so that this variant is very likely not slower.
->>
->> If userspace messes around with the memory slots the worst thing that
->> can happen is that we write to some other memory within that process.
->> As we get the the page with FOLL_WRITE this can also not be used to
->> write to shared read-only pages.
->>
->> Signed-off-by: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
->> [borntraeger@de.ibm.com: patch simplification]
 >> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 >> ---
->>  Documentation/virt/kvm/devices/s390_flic.rst |  11 +-
->>  arch/s390/include/asm/kvm_host.h             |   3 -
->>  arch/s390/kvm/interrupt.c                    | 172 ++++++-------------
->>  3 files changed, 52 insertions(+), 134 deletions(-)
+>>  Documentation/virt/kvm/api.rst | 33 ++++++++++++++++++---------------
+>>  1 file changed, 18 insertions(+), 15 deletions(-)
 > 
-> (...)
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 > 
->> @@ -2456,12 +2378,13 @@ static int modify_io_adapter(struct kvm_device *dev,
->>  		if (ret > 0)
->>  			ret = 0;
->>  		break;
->> +	/*
->> +	 * We resolve the gpa to hva when setting the IRQ routing. the set_irq
->> +	 * code uses get_user_pages_remote() to do the actual write.
->> +	 */
-> 
-> What about:
-> 
-> "The following operations are no longer needed and therefore no-ops.
-> The gpa to hva translation is done when an IRQ route is set up. The
-> set_irq code uses get_user_pages_remote() to do the actual write."
-
-ack, reads better.
-
-> 
->>  	case KVM_S390_IO_ADAPTER_MAP:
->> -		ret = kvm_s390_adapter_map(dev->kvm, req.id, req.addr);
->> -		break;
->>  	case KVM_S390_IO_ADAPTER_UNMAP:
->> -		ret = kvm_s390_adapter_unmap(dev->kvm, req.id, req.addr);
->> -		break;
->> +		return 0;
-> 
-> I think
-> 		ret = 0;
-> 		break;
-> would be better, as the other cases do not do a direct return, either.
-
-fine with me. ack
-> 
->>  	default:
->>  		ret = -EINVAL;
->>  	}
->> @@ -2699,19 +2622,17 @@ static unsigned long get_ind_bit(__u64 addr, unsigned long bit_nr, bool swap)
->>  	return swap ? (bit ^ (BITS_PER_LONG - 1)) : bit;
->>  }
->>  
->> -static struct s390_map_info *get_map_info(struct s390_io_adapter *adapter,
->> -					  u64 addr)
->> +static struct page *get_map_page(struct kvm *kvm,
->> +				 struct s390_io_adapter *adapter,
-> 
-> adapter seems to be unused in this function now? Should we remove it from the parameter list?
-
-yep, thanks. removed.
 
