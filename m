@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CD19A169555
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2020 03:37:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 9B40A1694DA
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2020 03:34:09 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727366AbgBWCVe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 22 Feb 2020 21:21:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49918 "EHLO mail.kernel.org"
+        id S1727378AbgBWCdj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 22 Feb 2020 21:33:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51914 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727324AbgBWCVd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:21:33 -0500
+        id S1727376AbgBWCWs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:22:48 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9721020702;
-        Sun, 23 Feb 2020 02:21:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 81DD221D56;
+        Sun, 23 Feb 2020 02:22:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424492;
+        s=default; t=1582424567;
         bh=ei/qJ1cDoWBzhLFyGCeTDGbkltMK9KuM10yAFIG97wE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CBBkDeBTjBd7qK6FinI3a8q4+CwLgoazQ3UMeZnJp/oEu51eBdCw1IfBDe90yYtF5
-         m5LfwrcRkRZalfKMANTIW1mIOAORbQTgAiZMeCtRO4eUs26B82lHdDzJVh8pSqRfn5
-         ZFrjyNKJuHnLbZlhfvqWx4gOw/lWWPqqPY63OjJA=
+        b=f26+RUM4R08fCDTKW6zDmxAkjSS9XopWnMz4ekTBSCMKdU5IwAxrxhd8l1LfFLVpA
+         GL8+C1D/8K8ul+Qi3EQUhFRIrippawYLi0i2YwdSQBhPPvzr8DAufxuUgIxWBJdaXZ
+         Fkjx06ndNDmFgLg2gHe5UvLyFZFEQJJgv/vPygZU=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Harald Freudenberger <freude@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 10/58] s390/zcrypt: fix card and queue total counter wrap
-Date:   Sat, 22 Feb 2020 21:20:31 -0500
-Message-Id: <20200223022119.707-10-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 09/50] s390/zcrypt: fix card and queue total counter wrap
+Date:   Sat, 22 Feb 2020 21:21:54 -0500
+Message-Id: <20200223022235.1404-9-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
-References: <20200223022119.707-1-sashal@kernel.org>
+In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
+References: <20200223022235.1404-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
