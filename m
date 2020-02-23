@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 70093169469
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2020 03:30:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CD19A169555
+	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2020 03:37:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727709AbgBWCaV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 22 Feb 2020 21:30:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53542 "EHLO mail.kernel.org"
+        id S1727366AbgBWCVe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 22 Feb 2020 21:21:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49918 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728823AbgBWCXt (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:23:49 -0500
+        id S1727324AbgBWCVd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 22 Feb 2020 21:21:33 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F046922464;
-        Sun, 23 Feb 2020 02:23:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9721020702;
+        Sun, 23 Feb 2020 02:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424628;
-        bh=aB3TXAkzTHdlcxoRAps//aXWMLGnkW/Qazh6jB3T+1U=;
+        s=default; t=1582424492;
+        bh=ei/qJ1cDoWBzhLFyGCeTDGbkltMK9KuM10yAFIG97wE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=OZYm93MjAk7eyRfvigmEZX/lX7Pf8Y8XDHOcvzgjXFYCR6PFLSdj24fo+C5G2vgWR
-         x93ZmkGD3bcxikJFwHBMnrmI99ZVd/bL9pB71qBBiiCG+/QChIn8GnByzbwrKT3LBQ
-         xU5kW87ABpt2i0I5MjsBnaCvl1o2h2PAzGHk47Kc=
+        b=CBBkDeBTjBd7qK6FinI3a8q4+CwLgoazQ3UMeZnJp/oEu51eBdCw1IfBDe90yYtF5
+         m5LfwrcRkRZalfKMANTIW1mIOAORbQTgAiZMeCtRO4eUs26B82lHdDzJVh8pSqRfn5
+         ZFrjyNKJuHnLbZlhfvqWx4gOw/lWWPqqPY63OjJA=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Harald Freudenberger <freude@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 07/25] s390/zcrypt: fix card and queue total counter wrap
-Date:   Sat, 22 Feb 2020 21:23:21 -0500
-Message-Id: <20200223022339.1885-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 10/58] s390/zcrypt: fix card and queue total counter wrap
+Date:   Sat, 22 Feb 2020 21:20:31 -0500
+Message-Id: <20200223022119.707-10-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022339.1885-1-sashal@kernel.org>
-References: <20200223022339.1885-1-sashal@kernel.org>
+In-Reply-To: <20200223022119.707-1-sashal@kernel.org>
+References: <20200223022119.707-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -68,10 +68,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  4 files changed, 18 insertions(+), 16 deletions(-)
 
 diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
-index 7e85d238767ba..1c799ddd97092 100644
+index bb35ba4a8d243..4348fdff1c61e 100644
 --- a/drivers/s390/crypto/ap_bus.h
 +++ b/drivers/s390/crypto/ap_bus.h
-@@ -158,7 +158,7 @@ struct ap_card {
+@@ -162,7 +162,7 @@ struct ap_card {
  	unsigned int functions;		/* AP device function bitfield. */
  	int queue_depth;		/* AP queue depth.*/
  	int id;				/* AP card number. */
@@ -80,7 +80,7 @@ index 7e85d238767ba..1c799ddd97092 100644
  };
  
  #define to_ap_card(x) container_of((x), struct ap_card, ap_dev.device)
-@@ -175,7 +175,7 @@ struct ap_queue {
+@@ -179,7 +179,7 @@ struct ap_queue {
  	enum ap_state state;		/* State of the AP device. */
  	int pendingq_count;		/* # requests on pendingq list. */
  	int requestq_count;		/* # requests on requestq list. */
@@ -120,10 +120,10 @@ index 63b4cc6cd7e59..e85bfca1ed163 100644
  	return count;
  }
 diff --git a/drivers/s390/crypto/ap_queue.c b/drivers/s390/crypto/ap_queue.c
-index 576ac08777c50..e1647da122f7f 100644
+index 37c3bdc3642dc..a317ab4849320 100644
 --- a/drivers/s390/crypto/ap_queue.c
 +++ b/drivers/s390/crypto/ap_queue.c
-@@ -470,12 +470,12 @@ static ssize_t request_count_show(struct device *dev,
+@@ -479,12 +479,12 @@ static ssize_t request_count_show(struct device *dev,
  				  char *buf)
  {
  	struct ap_queue *aq = to_ap_queue(dev);
@@ -138,7 +138,7 @@ index 576ac08777c50..e1647da122f7f 100644
  }
  
  static ssize_t request_count_store(struct device *dev,
-@@ -667,7 +667,7 @@ void ap_queue_message(struct ap_queue *aq, struct ap_message *ap_msg)
+@@ -676,7 +676,7 @@ void ap_queue_message(struct ap_queue *aq, struct ap_message *ap_msg)
  	list_add_tail(&ap_msg->list, &aq->requestq);
  	aq->requestq_count++;
  	aq->total_request_count++;
@@ -148,10 +148,10 @@ index 576ac08777c50..e1647da122f7f 100644
  	ap_wait(ap_sm_event_loop(aq, AP_EVENT_POLL));
  	spin_unlock_bh(&aq->lock);
 diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index b2737bfeb8bb6..23c24a699cefe 100644
+index 9157e728a362d..7fa0262e91af0 100644
 --- a/drivers/s390/crypto/zcrypt_api.c
 +++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -190,8 +190,8 @@ static inline bool zcrypt_card_compare(struct zcrypt_card *zc,
+@@ -605,8 +605,8 @@ static inline bool zcrypt_card_compare(struct zcrypt_card *zc,
  	weight += atomic_read(&zc->load);
  	pref_weight += atomic_read(&pref_zc->load);
  	if (weight == pref_weight)
@@ -162,7 +162,7 @@ index b2737bfeb8bb6..23c24a699cefe 100644
  	return weight > pref_weight;
  }
  
-@@ -719,11 +719,12 @@ static void zcrypt_qdepth_mask(char qdepth[], size_t max_adapters)
+@@ -1216,11 +1216,12 @@ static void zcrypt_qdepth_mask(char qdepth[], size_t max_adapters)
  	spin_unlock(&zcrypt_list_lock);
  }
  
@@ -176,7 +176,7 @@ index b2737bfeb8bb6..23c24a699cefe 100644
  
  	memset(reqcnt, 0, sizeof(int) * max_adapters);
  	spin_lock(&zcrypt_list_lock);
-@@ -735,8 +736,9 @@ static void zcrypt_perdev_reqcnt(int reqcnt[], size_t max_adapters)
+@@ -1232,8 +1233,9 @@ static void zcrypt_perdev_reqcnt(int reqcnt[], size_t max_adapters)
  			    || card >= max_adapters)
  				continue;
  			spin_lock(&zq->queue->lock);
@@ -187,7 +187,7 @@ index b2737bfeb8bb6..23c24a699cefe 100644
  		}
  	}
  	local_bh_enable();
-@@ -907,9 +909,9 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
+@@ -1411,9 +1413,9 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
  		return 0;
  	}
  	case ZCRYPT_PERDEV_REQCNT: {
@@ -199,7 +199,7 @@ index b2737bfeb8bb6..23c24a699cefe 100644
  		if (!reqcnt)
  			return -ENOMEM;
  		zcrypt_perdev_reqcnt(reqcnt, AP_DEVICES);
-@@ -966,7 +968,7 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
+@@ -1470,7 +1472,7 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
  	}
  	case Z90STAT_PERDEV_REQCNT: {
  		/* the old ioctl supports only 64 adapters */
