@@ -2,40 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3485516A153
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 10:12:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B701516A223
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 10:26:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728484AbgBXJMO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Feb 2020 04:12:14 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24729 "EHLO
+        id S1726744AbgBXJ0Z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Feb 2020 04:26:25 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:48864 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728277AbgBXJMN (ORCPT
+        by vger.kernel.org with ESMTP id S1726452AbgBXJ0Y (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 24 Feb 2020 04:12:13 -0500
+        Mon, 24 Feb 2020 04:26:24 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582535531;
+        s=mimecast20190719; t=1582536383;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=dmb0RTH1axsQyoKZK4Qs+mYxX0tLJ+ZXHM8KfTxIyzU=;
-        b=gGHUPqIep3le9PziAWCmaHPJtNm65JLd0ZtciuZPHgXQoL1ahJVcV5fEaIS+fSsgUwhCVM
-        TF6hwEHoMSn/3EYo+j8jeqGhNn4MgxerjPlWdycfs45zNauN9d7Glvg+XON+PcBmkgkJUt
-        O13JJSBA0cKkWvH66lKxc3FkuRHIxBY=
+        bh=KUCOF29KOAZJfBYTZTmxlhi9QLH0dnFOTdpSULpaiUE=;
+        b=hLSSeo/bgWquhsL1GA+4yiYaJ7iNvki8tOjm+xAmnNi88Im8OKiGYoJ1rWvrBBKFw4jpUs
+        sJLkBdShTU6OrufOLL0DIlrEMN2M5ZCC4xgVm5HjCYE//zehsAgDRwaEL3aOXWHKouzU+0
+        6wKJpsewASRcxoAGg0rJNyqfTRzKmw8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-345-IGyW_UW9MfSb-QdX7lWO8w-1; Mon, 24 Feb 2020 04:12:07 -0500
-X-MC-Unique: IGyW_UW9MfSb-QdX7lWO8w-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-83-Y3bnuID5PIas-s_Qbj27dA-1; Mon, 24 Feb 2020 04:26:21 -0500
+X-MC-Unique: Y3bnuID5PIas-s_Qbj27dA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A7EB185735C;
-        Mon, 24 Feb 2020 09:12:04 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CD943107ACC9;
+        Mon, 24 Feb 2020 09:26:17 +0000 (UTC)
 Received: from [10.36.118.8] (unknown [10.36.118.8])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 93D0E393;
-        Mon, 24 Feb 2020 09:11:53 +0000 (UTC)
-Subject: Re: [PATCH v3 2/7] mm/memory_hotplug: Rename mhp_restrictions to
- mhp_params
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9603E5C21B;
+        Mon, 24 Feb 2020 09:26:11 +0000 (UTC)
+Subject: Re: [PATCH v3 6/7] mm/memory_hotplug: Add pgprot_t to mhp_params
 To:     Logan Gunthorpe <logang@deltatee.com>,
         linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
@@ -53,9 +52,10 @@ Cc:     Christoph Hellwig <hch@lst.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
         Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        Eric Badger <ebadger@gigaio.com>
+        Eric Badger <ebadger@gigaio.com>,
+        Michal Hocko <mhocko@suse.com>
 References: <20200221182503.28317-1-logang@deltatee.com>
- <20200221182503.28317-3-logang@deltatee.com>
+ <20200221182503.28317-7-logang@deltatee.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -101,29 +101,65 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <e428521d-3509-5403-f8d8-c584a7d4d320@redhat.com>
-Date:   Mon, 24 Feb 2020 10:11:52 +0100
+Message-ID: <09de85e5-4e66-2d36-2d1c-65f7d341b7f0@redhat.com>
+Date:   Mon, 24 Feb 2020 10:26:10 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200221182503.28317-3-logang@deltatee.com>
+In-Reply-To: <20200221182503.28317-7-logang@deltatee.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 21.02.20 19:24, Logan Gunthorpe wrote:
-> The mhp_restrictions struct really doesn't specify anything resembling
-> a restriction anymore so rename it to be mhp_params as it is a list
-> of extended parameters.
+On 21.02.20 19:25, Logan Gunthorpe wrote:
+> devm_memremap_pages() is currently used by the PCI P2PDMA code to create
+> struct page mappings for IO memory. At present, these mappings are created
+> with PAGE_KERNEL which implies setting the PAT bits to be WB. However, on
+> x86, an mtrr register will typically override this and force the cache
+> type to be UC-. In the case firmware doesn't set this register it is
+> effectively WB and will typically result in a machine check exception
+> when it's accessed.
 > 
+> Other arches are not currently likely to function correctly seeing they
+> don't have any MTRR registers to fall back on.
+> 
+> To solve this, provide a way to specify the pgprot value explicitly to
+> arch_add_memory().
+> 
+> Of the arches that support MEMORY_HOTPLUG: x86_64, and arm64 need a simple
+> change to pass the pgprot_t down to their respective functions which set
+> up the page tables. For x86_32, set the page tables explicitly using
+> _set_memory_prot() (seeing they are already mapped). For ia64, s390 and
+> sh, reject anything but PAGE_KERNEL settings -- this should be fine,
+> for now, seeing these architectures don't support ZONE_DEVICE.
+> 
+> A check in __add_pages() is also added to ensure the pgprot parameter was
+> set for all arches.
+> 
+> Cc: Dan Williams <dan.j.williams@intel.com>
 > Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+> Acked-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Michal Hocko <mhocko@suse.com>
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+[...]
+
+> diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+> index c5df1b3dada0..30d6c1b8847e 100644
+> --- a/include/linux/memory_hotplug.h
+> +++ b/include/linux/memory_hotplug.h
+> @@ -56,9 +56,11 @@ enum {
+>  /*
+>   * Extended parameters for memory hotplug:
+>   * altmap: alternative allocator for memmap array (optional)
+> + * pgprot: page protection flags to apply to newly added page tables (required)
+
+s/added/created/?
+
 
 
 -- 
