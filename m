@@ -2,97 +2,151 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 668E516AE08
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 18:52:30 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 88D9616AE92
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 19:21:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727785AbgBXRwa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Feb 2020 12:52:30 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:55354 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727426AbgBXRw3 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Feb 2020 12:52:29 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OHmTxJ084403;
-        Mon, 24 Feb 2020 17:52:27 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
- from : references : date : in-reply-to : message-id : mime-version :
- content-type : content-transfer-encoding; s=corp-2020-01-29;
- bh=qmgUgu24Yy0HVd+aU67Awpt3MrSwhtOcS9FZzwYaVTo=;
- b=LwaNxJdGyxXXuQE3FTg/B0ds5e2+ySht3hUU1tTeYjddQnlV2OX538y/Jo78chiF00tu
- En6ZvVbImyz07Hha0YGbE5vZhgI1lJwRWdvLo7aAV6kOjFYMEx+GKLQ1z8pFyRBxg4bC
- 7NX8hrXdxdQv9g5DtHvLtajNAP+ODeiLTZFHjmyE7J5Jvi04q0Bck31z3rn0CsvLKS8B
- ex9MEVBrecqFw7Aog2JYZmT1sK5SOVL4cHaKa4YURMGt/twq3loRoizECcY64saqV3mu
- fGRJyYxQXAtOuhxSp1aCmLU0Dlpc6FTC2CN6Pzq3SlCvEOFtgIKbG1Ieh5Z6t9D2zEVZ Fg== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2120.oracle.com with ESMTP id 2yavxrgy4a-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 17:52:27 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 01OHm6kB030445;
-        Mon, 24 Feb 2020 17:52:26 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2yby5cyq1f-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 17:52:26 +0000
-Received: from abhmp0016.oracle.com (abhmp0016.oracle.com [141.146.116.22])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 01OHqQnr013155;
-        Mon, 24 Feb 2020 17:52:26 GMT
-Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 24 Feb 2020 09:52:25 -0800
-To:     Benjamin Block <bblock@linux.ibm.com>
-Cc:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Fedor Loshakov <loshakov@linux.ibm.com>,
-        Jens Remus <jremus@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] zfcp: fix wrong data and display format of SFP+ temperature
-From:   "Martin K. Petersen" <martin.petersen@oracle.com>
-Organization: Oracle Corporation
-References: <d6e3be5428da5c9490cfff4df7cae868bc9f1a7e.1582039501.git.bblock@linux.ibm.com>
-Date:   Mon, 24 Feb 2020 12:52:22 -0500
-In-Reply-To: <d6e3be5428da5c9490cfff4df7cae868bc9f1a7e.1582039501.git.bblock@linux.ibm.com>
-        (Benjamin Block's message of "Wed, 19 Feb 2020 16:09:25 +0100")
-Message-ID: <yq14kvfhnzd.fsf@oracle.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
+        id S1726208AbgBXSVc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Feb 2020 13:21:32 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38179 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727483AbgBXSVc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Feb 2020 13:21:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582568490;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=22uVNHaiuWfKHhhBJTGhF6H/dSMMZVH5DUi8EL/UkUc=;
+        b=InkPsN90LF05O2JMeF5cJlV2PX75qBg0oIeLw/qlVQ8QPiMEs8KoAMfC2faE+uZvSYwp/O
+        uRlqTqfAmVGkrvyphuvxunlO3dLQ0E7eRbcbTQ4ZZatQxtKpQKXTvc1eC8HanYbYc4nPli
+        bmcLj6Ah4asCWhnwRIy7Kq6K7Qe/xZ8=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-464-2T59NpEUMgevvsHj4Lh41w-1; Mon, 24 Feb 2020 13:21:29 -0500
+X-MC-Unique: 2T59NpEUMgevvsHj4Lh41w-1
+Received: by mail-wr1-f69.google.com with SMTP id d15so5991888wru.1
+        for <linux-s390@vger.kernel.org>; Mon, 24 Feb 2020 10:21:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=22uVNHaiuWfKHhhBJTGhF6H/dSMMZVH5DUi8EL/UkUc=;
+        b=XCde6J1rsviBzzCpxRBSe6AvbHhEIPs9MLtqajKonv9BNFxh+AeBnDelwyPC6QTGBv
+         jsJl1MNYxJHtD5ll+OFxTYXyy9JmvotGCq86C6JIH9GvgasG5uYQw2F9Safdpts0eWNA
+         lPv5VB136YVd5HI6iIZEk2TpK/Ar6HwBuPW/TRVtOwnKmV/H0CScKrxymBizfbukspoy
+         e6pikxezTqcWW4OXuMVbzN3SEYEC/K2INZ/H+5hrP3uQzWEXa0JgNhQJLG96rwucVNsl
+         lDLkCepKR+C1aZ1QQpALeNqyKwYeQ8Y9DTA55E/o2dgbVvJDwGcNHPnGP0F/yiXEJA/M
+         nkoA==
+X-Gm-Message-State: APjAAAW/xsOE9SeX2kDReOFAYjvLt3a/OI+fYOgj8C09KVZT1YOfEJIM
+        dNPDQwZ58ynPcSBZsmwhFVPnqUs48BoTAXSmrAUtzqL9FTIrgw3KhlmwJgwqZlxqOIVqfNoBfk2
+        wWyK7vUK8xVvpNPddCjLujg==
+X-Received: by 2002:a5d:4443:: with SMTP id x3mr8111012wrr.379.1582568487744;
+        Mon, 24 Feb 2020 10:21:27 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxwUb4YPWt2bhIfMZjR+E3L/6ZIAGSXq4ZuCvQsFLbX+N/YQ4OUc3JnmFjkCIcuGWCrqk5bsQ==
+X-Received: by 2002:a5d:4443:: with SMTP id x3mr8111004wrr.379.1582568487502;
+        Mon, 24 Feb 2020 10:21:27 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:60c6:7e02:8eeb:a041? ([2001:b07:6468:f312:60c6:7e02:8eeb:a041])
+        by smtp.gmail.com with ESMTPSA id h2sm19964314wrt.45.2020.02.24.10.21.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 24 Feb 2020 10:21:27 -0800 (PST)
+Subject: Re: [PATCH 1/1] KVM: s390: rstify new ioctls in api.rst
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Jonathan Corbet <corbet@lwn.net>
+References: <20200224101559.27405-1-borntraeger@de.ibm.com>
+ <20200224101559.27405-2-borntraeger@de.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <d17d7aa2-c472-1efb-79eb-fdbe3af0fccc@redhat.com>
+Date:   Mon, 24 Feb 2020 19:21:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 mlxscore=0 bulkscore=0
- suspectscore=0 mlxlogscore=999 phishscore=0 adultscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002240132
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9541 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 clxscore=1011 suspectscore=0 bulkscore=0 mlxlogscore=999
- malwarescore=0 phishscore=0 adultscore=0 priorityscore=1501 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002240132
+In-Reply-To: <20200224101559.27405-2-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 24/02/20 11:15, Christian Borntraeger wrote:
+> We also need to rstify the new ioctls that we added in parallel to the
+> rstification of the kvm docs.
+> 
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> ---
+>  Documentation/virt/kvm/api.rst | 33 ++++++++++++++++++---------------
+>  1 file changed, 18 insertions(+), 15 deletions(-)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 97a72a53fa4b..ebd383fba939 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -4611,35 +4611,38 @@ unpins the VPA pages and releases all the device pages that are used to
+>  track the secure pages by hypervisor.
+>  
+>  4.122 KVM_S390_NORMAL_RESET
+> +---------------------------
+>  
+> -Capability: KVM_CAP_S390_VCPU_RESETS
+> -Architectures: s390
+> -Type: vcpu ioctl
+> -Parameters: none
+> -Returns: 0
+> +:Capability: KVM_CAP_S390_VCPU_RESETS
+> +:Architectures: s390
+> +:Type: vcpu ioctl
+> +:Parameters: none
+> +:Returns: 0
+>  
+>  This ioctl resets VCPU registers and control structures according to
+>  the cpu reset definition in the POP (Principles Of Operation).
+>  
+>  4.123 KVM_S390_INITIAL_RESET
+> +----------------------------
+>  
+> -Capability: none
+> -Architectures: s390
+> -Type: vcpu ioctl
+> -Parameters: none
+> -Returns: 0
+> +:Capability: none
+> +:Architectures: s390
+> +:Type: vcpu ioctl
+> +:Parameters: none
+> +:Returns: 0
+>  
+>  This ioctl resets VCPU registers and control structures according to
+>  the initial cpu reset definition in the POP. However, the cpu is not
+>  put into ESA mode. This reset is a superset of the normal reset.
+>  
+>  4.124 KVM_S390_CLEAR_RESET
+> +--------------------------
+>  
+> -Capability: KVM_CAP_S390_VCPU_RESETS
+> -Architectures: s390
+> -Type: vcpu ioctl
+> -Parameters: none
+> -Returns: 0
+> +:Capability: KVM_CAP_S390_VCPU_RESETS
+> +:Architectures: s390
+> +:Type: vcpu ioctl
+> +:Parameters: none
+> +:Returns: 0
+>  
+>  This ioctl resets VCPU registers and control structures according to
+>  the clear cpu reset definition in the POP. However, the cpu is not put
+> 
 
-Benjamin,
+Applied, thanks.
 
-> When implementing support for retrieval of local diagnostic data from
-> the FCP channel, the wrong data format was assumed for the temperature
-> of the local SFP+ connector. The Fibre Channel Link Services (FC-LS-3)
-> specification is not clear on the format of the stored integer, and
-> only after consulting the SNIA specification SFF-8472 did we realize
-> it is stored as two's complement. Thus, the used data and display
-> format is wrong, and highly misleading for users when the temperature
-> should drop below 0=C2=B0C (however unlikely that may be).
+Paolo
 
-Applied to 5.6/scsi-fixes, thanks!
-
---=20
-Martin K. Petersen	Oracle Linux Engineering
