@@ -2,212 +2,270 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9B40A1694DA
-	for <lists+linux-s390@lfdr.de>; Sun, 23 Feb 2020 03:34:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 75111169B5D
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 01:47:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727378AbgBWCdj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 22 Feb 2020 21:33:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51914 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727376AbgBWCWs (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 22 Feb 2020 21:22:48 -0500
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 81DD221D56;
-        Sun, 23 Feb 2020 02:22:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1582424567;
-        bh=ei/qJ1cDoWBzhLFyGCeTDGbkltMK9KuM10yAFIG97wE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f26+RUM4R08fCDTKW6zDmxAkjSS9XopWnMz4ekTBSCMKdU5IwAxrxhd8l1LfFLVpA
-         GL8+C1D/8K8ul+Qi3EQUhFRIrippawYLi0i2YwdSQBhPPvzr8DAufxuUgIxWBJdaXZ
-         Fkjx06ndNDmFgLg2gHe5UvLyFZFEQJJgv/vPygZU=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Harald Freudenberger <freude@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 09/50] s390/zcrypt: fix card and queue total counter wrap
-Date:   Sat, 22 Feb 2020 21:21:54 -0500
-Message-Id: <20200223022235.1404-9-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200223022235.1404-1-sashal@kernel.org>
-References: <20200223022235.1404-1-sashal@kernel.org>
+        id S1727170AbgBXArQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 23 Feb 2020 19:47:16 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46861 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727151AbgBXArQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 23 Feb 2020 19:47:16 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y8so3321776pll.13;
+        Sun, 23 Feb 2020 16:47:14 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=NGZulyvP6eeKZRuNg6oqElKEJJKue2aiE15uYLFokJ4=;
+        b=PCBjXDV2zJyWyUYKXQD7Jm6R1zYT5v9A16XrzB4xrFI0uL56BWSUxYsbb3pgfHjJM4
+         3ipAexIiEslMZDwOOaa94nPIsSoQ7vBuYVX6dPIAz0p2Fx2e5QQdAiBXet/rp2e859QD
+         C/ntghzO2NWtyylyCoarUR80PjFo18wm6WZQX5YNL8p8CwAcHXNe1j6xGh3lKp3ZO6ee
+         G/p372+XBSLe3aOhAHwK2gkC8twzKPK5ZzM3rNV+gztlq9wAIKohcox+ymJPnNuQBYdh
+         NYxVp8PYBgoDNKDfBWpN1DdEgWacKJZsio9gzz4ZlxNacNr3RnzWuh/b3pRGLpArdV9I
+         h7Og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=NGZulyvP6eeKZRuNg6oqElKEJJKue2aiE15uYLFokJ4=;
+        b=VB1TReNvINo+ytbSohXUtTC4AQv6JazBRmVT+oW2KpiwSoTdXHfHjB5JSBTS7sXodS
+         86u6seejH0yxGTw2cZqlgES1dfdSRHnkhE8xyTqvt7Z+r6MDRDn2Q9sAc/OCA/0B3YGx
+         XZZrx2S+pv8xOWL9cI5U0GrUWiXgia/kLLppbYHhmqwYkaAviRQSTbBkmCkW9L1WLjjG
+         /JCEWK1lJsswNenScktZYDXw1gbpVQoikX/6KD3I5NYUSsxd+V/P8bNGWIh6r2voz/zP
+         1bdDLFwwu2MvguDiisEou647jKpo13+M6nV7rtYZqFscFuCLuCj5ZmGZX4o0A0/lYJs3
+         7taQ==
+X-Gm-Message-State: APjAAAUDO4ATTFOAi1jGJuDH2RhNenoFwjXFNLwjxkcK1/hYPevvzjQg
+        tpPAIzQKpDRliKWbdZBqHo8NUyeb5XY=
+X-Google-Smtp-Source: APXvYqzsrg2HiD2xn64NNxjB867u34XuwSUi1T0w+UBfhB69kaB63NtC9WJD72JPVEqh7kGl2/xMKw==
+X-Received: by 2002:a17:90a:5285:: with SMTP id w5mr17583711pjh.77.1582505233395;
+        Sun, 23 Feb 2020 16:47:13 -0800 (PST)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id k3sm5291565pgh.34.2020.02.23.16.47.12
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Sun, 23 Feb 2020 16:47:12 -0800 (PST)
+Date:   Mon, 24 Feb 2020 06:17:11 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-ia64@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org, linux-omap@vger.kernel.org,
+        linux-alpha@vger.kernel.org
+Cc:     Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH v2 00/18] genirq: Remove setup_irq()
+Message-ID: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Harald Freudenberger <freude@linux.ibm.com>
+While trying to understand internals of irq handling, came across a
+thread [1] in which tglx was referring to avoid usage of setup_irq().
+The early boot setup_irq() invocations happen either via 'init_IRQ()'
+or 'time_init()', while memory allocators are ready by 'mm_init()'.
 
-[ Upstream commit fcd98d4002539f1e381916fc1b6648938c1eac76 ]
+Hence instances of setup_irq() are replaced by request_irq() &
+setup_irq() [along with remove_irq()] definition deleted in the last
+patch.
 
-The internal statistic counters for the total number of
-requests processed per card and per queue used integers. So they do
-wrap after a rather huge amount of crypto requests processed. This
-patch introduces uint64 counters which should hold much longer but
-still may wrap. The sysfs attributes request_count for card and queue
-also used only %ld and now display the counter value with %llu.
+Seldom remove_irq() usage has been observed coupled with setup_irq(),
+wherever that has been found, it too has been replaced by free_irq().
 
-This is not a security relevant fix. The int overflow which happened
-is not in any way exploitable as a security breach.
+Build & boot tested on ARM & x86_64 platforms (ensured that on the
+machines used for testing, modifications made in this series is being
+exercised at runtime)
 
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/crypto/ap_bus.h     |  4 ++--
- drivers/s390/crypto/ap_card.c    |  8 ++++----
- drivers/s390/crypto/ap_queue.c   |  6 +++---
- drivers/s390/crypto/zcrypt_api.c | 16 +++++++++-------
- 4 files changed, 18 insertions(+), 16 deletions(-)
+Much of the changes were created using Coccinelle with an intention
+to learn it. But not everything could be automated.
 
-diff --git a/drivers/s390/crypto/ap_bus.h b/drivers/s390/crypto/ap_bus.h
-index bb35ba4a8d243..4348fdff1c61e 100644
---- a/drivers/s390/crypto/ap_bus.h
-+++ b/drivers/s390/crypto/ap_bus.h
-@@ -162,7 +162,7 @@ struct ap_card {
- 	unsigned int functions;		/* AP device function bitfield. */
- 	int queue_depth;		/* AP queue depth.*/
- 	int id;				/* AP card number. */
--	atomic_t total_request_count;	/* # requests ever for this AP device.*/
-+	atomic64_t total_request_count;	/* # requests ever for this AP device.*/
- };
- 
- #define to_ap_card(x) container_of((x), struct ap_card, ap_dev.device)
-@@ -179,7 +179,7 @@ struct ap_queue {
- 	enum ap_state state;		/* State of the AP device. */
- 	int pendingq_count;		/* # requests on pendingq list. */
- 	int requestq_count;		/* # requests on requestq list. */
--	int total_request_count;	/* # requests ever for this AP device.*/
-+	u64 total_request_count;	/* # requests ever for this AP device.*/
- 	int request_timeout;		/* Request timeout in jiffies. */
- 	struct timer_list timeout;	/* Timer for request timeouts. */
- 	struct list_head pendingq;	/* List of message sent to AP queue. */
-diff --git a/drivers/s390/crypto/ap_card.c b/drivers/s390/crypto/ap_card.c
-index 63b4cc6cd7e59..e85bfca1ed163 100644
---- a/drivers/s390/crypto/ap_card.c
-+++ b/drivers/s390/crypto/ap_card.c
-@@ -63,13 +63,13 @@ static ssize_t request_count_show(struct device *dev,
- 				  char *buf)
- {
- 	struct ap_card *ac = to_ap_card(dev);
--	unsigned int req_cnt;
-+	u64 req_cnt;
- 
- 	req_cnt = 0;
- 	spin_lock_bh(&ap_list_lock);
--	req_cnt = atomic_read(&ac->total_request_count);
-+	req_cnt = atomic64_read(&ac->total_request_count);
- 	spin_unlock_bh(&ap_list_lock);
--	return snprintf(buf, PAGE_SIZE, "%d\n", req_cnt);
-+	return snprintf(buf, PAGE_SIZE, "%llu\n", req_cnt);
- }
- 
- static ssize_t request_count_store(struct device *dev,
-@@ -83,7 +83,7 @@ static ssize_t request_count_store(struct device *dev,
- 	for_each_ap_queue(aq, ac)
- 		aq->total_request_count = 0;
- 	spin_unlock_bh(&ap_list_lock);
--	atomic_set(&ac->total_request_count, 0);
-+	atomic64_set(&ac->total_request_count, 0);
- 
- 	return count;
- }
-diff --git a/drivers/s390/crypto/ap_queue.c b/drivers/s390/crypto/ap_queue.c
-index 37c3bdc3642dc..a317ab4849320 100644
---- a/drivers/s390/crypto/ap_queue.c
-+++ b/drivers/s390/crypto/ap_queue.c
-@@ -479,12 +479,12 @@ static ssize_t request_count_show(struct device *dev,
- 				  char *buf)
- {
- 	struct ap_queue *aq = to_ap_queue(dev);
--	unsigned int req_cnt;
-+	u64 req_cnt;
- 
- 	spin_lock_bh(&aq->lock);
- 	req_cnt = aq->total_request_count;
- 	spin_unlock_bh(&aq->lock);
--	return snprintf(buf, PAGE_SIZE, "%d\n", req_cnt);
-+	return snprintf(buf, PAGE_SIZE, "%llu\n", req_cnt);
- }
- 
- static ssize_t request_count_store(struct device *dev,
-@@ -676,7 +676,7 @@ void ap_queue_message(struct ap_queue *aq, struct ap_message *ap_msg)
- 	list_add_tail(&ap_msg->list, &aq->requestq);
- 	aq->requestq_count++;
- 	aq->total_request_count++;
--	atomic_inc(&aq->card->total_request_count);
-+	atomic64_inc(&aq->card->total_request_count);
- 	/* Send/receive as many request from the queue as possible. */
- 	ap_wait(ap_sm_event_loop(aq, AP_EVENT_POLL));
- 	spin_unlock_bh(&aq->lock);
-diff --git a/drivers/s390/crypto/zcrypt_api.c b/drivers/s390/crypto/zcrypt_api.c
-index 9157e728a362d..7fa0262e91af0 100644
---- a/drivers/s390/crypto/zcrypt_api.c
-+++ b/drivers/s390/crypto/zcrypt_api.c
-@@ -605,8 +605,8 @@ static inline bool zcrypt_card_compare(struct zcrypt_card *zc,
- 	weight += atomic_read(&zc->load);
- 	pref_weight += atomic_read(&pref_zc->load);
- 	if (weight == pref_weight)
--		return atomic_read(&zc->card->total_request_count) >
--			atomic_read(&pref_zc->card->total_request_count);
-+		return atomic64_read(&zc->card->total_request_count) >
-+			atomic64_read(&pref_zc->card->total_request_count);
- 	return weight > pref_weight;
- }
- 
-@@ -1216,11 +1216,12 @@ static void zcrypt_qdepth_mask(char qdepth[], size_t max_adapters)
- 	spin_unlock(&zcrypt_list_lock);
- }
- 
--static void zcrypt_perdev_reqcnt(int reqcnt[], size_t max_adapters)
-+static void zcrypt_perdev_reqcnt(u32 reqcnt[], size_t max_adapters)
- {
- 	struct zcrypt_card *zc;
- 	struct zcrypt_queue *zq;
- 	int card;
-+	u64 cnt;
- 
- 	memset(reqcnt, 0, sizeof(int) * max_adapters);
- 	spin_lock(&zcrypt_list_lock);
-@@ -1232,8 +1233,9 @@ static void zcrypt_perdev_reqcnt(int reqcnt[], size_t max_adapters)
- 			    || card >= max_adapters)
- 				continue;
- 			spin_lock(&zq->queue->lock);
--			reqcnt[card] = zq->queue->total_request_count;
-+			cnt = zq->queue->total_request_count;
- 			spin_unlock(&zq->queue->lock);
-+			reqcnt[card] = (cnt < UINT_MAX) ? (u32) cnt : UINT_MAX;
- 		}
- 	}
- 	local_bh_enable();
-@@ -1411,9 +1413,9 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
- 		return 0;
- 	}
- 	case ZCRYPT_PERDEV_REQCNT: {
--		int *reqcnt;
-+		u32 *reqcnt;
- 
--		reqcnt = kcalloc(AP_DEVICES, sizeof(int), GFP_KERNEL);
-+		reqcnt = kcalloc(AP_DEVICES, sizeof(u32), GFP_KERNEL);
- 		if (!reqcnt)
- 			return -ENOMEM;
- 		zcrypt_perdev_reqcnt(reqcnt, AP_DEVICES);
-@@ -1470,7 +1472,7 @@ static long zcrypt_unlocked_ioctl(struct file *filp, unsigned int cmd,
- 	}
- 	case Z90STAT_PERDEV_REQCNT: {
- 		/* the old ioctl supports only 64 adapters */
--		int reqcnt[MAX_ZDEV_CARDIDS];
-+		u32 reqcnt[MAX_ZDEV_CARDIDS];
- 
- 		zcrypt_perdev_reqcnt(reqcnt, MAX_ZDEV_CARDIDS);
- 		if (copy_to_user((int __user *) arg, reqcnt, sizeof(reqcnt)))
+Searching with 'git grep -n '\Wsetup_irq('' & avoiding the irrelevant
+ones, 153 invocation's of setup_irq() were found. 112 could be replaced
+w/ cocci, of which in a few files some desired hunks were missing or
+not as expected, these were fixed up manually. Also the remaining 41
+had to be done manually.
+
+Although cocci could replace 112, because of line continue not
+happening at paranthesis for request_irq(), around 80 had to be
+manually aligned in the request_irq() statement.
+
+So though many changes could be automated, there are a considerable
+amount of manual changes, please review carefully especially mips &
+alpha.
+
+Usage of setup_percpu_irq() is untouched w/ this series.
+
+There are 2 checkpatch warning about usage of BUG(), they were already
+present w/ setup_irq(), status quo maintained.
+
+[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
+
+Since changes from v1 are trivial as below, tags received has been
+applied to the relevant patches, if any objections, please shout.
+
+v2:
+ * Replace pr_err("request_irq() on %s failed" by
+           pr_err("%s: request_irq() failed"
+ * m68k: remove now irrelevant comment separation comment lines
+ * Commit message massage
+
+
+afzal mohammed (18):
+  alpha: replace setup_irq() by request_irq()
+  ARM: replace setup_irq() by request_irq()
+  c6x: replace setup_irq() by request_irq()
+  hexagon: replace setup_irq() by request_irq()
+  ia64: replace setup_irq() by request_irq()
+  m68k: Replace setup_irq() by request_irq()
+  microblaze: Replace setup_irq() by request_irq()
+  MIPS: Replace setup_irq() by request_irq()
+  parisc: Replace setup_irq() by request_irq()
+  powerpc: Replace setup_irq() by request_irq()
+  s390: replace setup_irq() by request_irq()
+  sh: replace setup_irq() by request_irq()
+  unicore32: replace setup_irq() by request_irq()
+  x86: Replace setup_irq() by request_irq()
+  xtensa: replace setup_irq() by request_irq()
+  clocksource: Replace setup_irq() by request_irq()
+  irqchip: Replace setup_irq() by request_irq()
+  genirq: Remove setup_irq() and remove_irq()
+
+ arch/alpha/kernel/irq_alpha.c                 | 29 ++-------
+ arch/alpha/kernel/irq_i8259.c                 |  8 +--
+ arch/alpha/kernel/irq_impl.h                  |  7 +--
+ arch/alpha/kernel/irq_pyxis.c                 |  3 +-
+ arch/alpha/kernel/sys_alcor.c                 |  3 +-
+ arch/alpha/kernel/sys_cabriolet.c             |  3 +-
+ arch/alpha/kernel/sys_eb64p.c                 |  3 +-
+ arch/alpha/kernel/sys_marvel.c                |  2 +-
+ arch/alpha/kernel/sys_miata.c                 |  6 +-
+ arch/alpha/kernel/sys_ruffian.c               |  3 +-
+ arch/alpha/kernel/sys_rx164.c                 |  3 +-
+ arch/alpha/kernel/sys_sx164.c                 |  3 +-
+ arch/alpha/kernel/sys_wildfire.c              |  7 +--
+ arch/alpha/kernel/time.c                      |  6 +-
+ arch/arm/mach-cns3xxx/core.c                  | 10 +---
+ arch/arm/mach-ebsa110/core.c                  | 10 +---
+ arch/arm/mach-ep93xx/timer-ep93xx.c           | 12 ++--
+ arch/arm/mach-footbridge/dc21285-timer.c      | 11 +---
+ arch/arm/mach-footbridge/isa-irq.c            |  8 +--
+ arch/arm/mach-footbridge/isa-timer.c          | 11 +---
+ arch/arm/mach-iop32x/time.c                   | 12 ++--
+ arch/arm/mach-mmp/time.c                      | 11 +---
+ arch/arm/mach-omap1/pm.c                      | 22 ++++---
+ arch/arm/mach-omap1/time.c                    | 10 +---
+ arch/arm/mach-omap1/timer32k.c                | 10 +---
+ arch/arm/mach-omap2/timer.c                   | 11 +---
+ arch/arm/mach-rpc/time.c                      |  8 +--
+ arch/arm/mach-spear/time.c                    |  9 +--
+ arch/arm/plat-orion/time.c                    | 10 +---
+ arch/c6x/platforms/timer64.c                  | 11 +---
+ arch/hexagon/kernel/smp.c                     | 17 +++---
+ arch/hexagon/kernel/time.c                    | 11 +---
+ arch/ia64/kernel/irq_ia64.c                   | 42 +++++--------
+ arch/ia64/kernel/mca.c                        | 51 +++++-----------
+ arch/m68k/68000/timers.c                      | 11 +---
+ arch/m68k/coldfire/pit.c                      | 11 +---
+ arch/m68k/coldfire/sltimers.c                 | 19 ++----
+ arch/m68k/coldfire/timers.c                   | 21 ++-----
+ arch/microblaze/kernel/timer.c                | 10 +---
+ arch/mips/alchemy/common/time.c               | 11 +---
+ arch/mips/ar7/irq.c                           | 18 +++---
+ arch/mips/ath25/ar2315.c                      |  9 +--
+ arch/mips/ath25/ar5312.c                      |  9 +--
+ arch/mips/bcm63xx/irq.c                       | 38 +++++-------
+ arch/mips/cobalt/irq.c                        | 14 ++---
+ arch/mips/dec/setup.c                         | 59 ++++++++-----------
+ arch/mips/emma/markeins/irq.c                 | 20 +++----
+ arch/mips/include/asm/sni.h                   |  2 +-
+ arch/mips/jazz/irq.c                          | 12 +---
+ arch/mips/kernel/cevt-bcm1480.c               | 11 +---
+ arch/mips/kernel/cevt-ds1287.c                |  9 +--
+ arch/mips/kernel/cevt-gt641xx.c               |  9 +--
+ arch/mips/kernel/cevt-r4k.c                   |  4 +-
+ arch/mips/kernel/cevt-sb1250.c                | 11 +---
+ arch/mips/kernel/cevt-txx9.c                  | 11 +---
+ arch/mips/kernel/i8253.c                      | 10 +---
+ arch/mips/kernel/rtlx-mt.c                    |  8 +--
+ arch/mips/kernel/smp.c                        | 33 ++++-------
+ arch/mips/lasat/interrupt.c                   | 10 +---
+ arch/mips/loongson2ef/common/bonito-irq.c     |  9 +--
+ .../loongson2ef/common/cs5536/cs5536_mfgpt.c  | 10 +---
+ arch/mips/loongson2ef/fuloong-2e/irq.c        | 14 ++---
+ arch/mips/loongson2ef/lemote-2f/irq.c         | 20 ++-----
+ arch/mips/loongson32/common/irq.c             | 21 ++++---
+ arch/mips/loongson32/common/time.c            | 12 ++--
+ arch/mips/loongson64/hpet.c                   | 10 +---
+ arch/mips/mti-malta/malta-int.c               | 10 +---
+ arch/mips/netlogic/xlr/fmn.c                  |  9 +--
+ arch/mips/pmcs-msp71xx/msp_irq.c              | 28 ++++-----
+ arch/mips/pmcs-msp71xx/msp_smp.c              | 22 ++-----
+ arch/mips/pmcs-msp71xx/msp_time.c             |  7 ++-
+ arch/mips/ralink/cevt-rt3352.c                | 17 +++---
+ arch/mips/sgi-ip22/ip22-eisa.c                |  8 +--
+ arch/mips/sgi-ip22/ip22-int.c                 | 49 +++++----------
+ arch/mips/sgi-ip32/ip32-irq.c                 | 18 ++----
+ arch/mips/sni/a20r.c                          |  4 +-
+ arch/mips/sni/irq.c                           |  8 +--
+ arch/mips/sni/pcit.c                          |  8 ++-
+ arch/mips/sni/rm200.c                         | 23 +++-----
+ arch/mips/sni/time.c                          | 10 +---
+ arch/mips/vr41xx/common/irq.c                 |  9 +--
+ arch/parisc/kernel/irq.c                      | 21 ++-----
+ arch/powerpc/platforms/85xx/mpc85xx_cds.c     | 10 +---
+ arch/powerpc/platforms/8xx/cpm1.c             |  9 +--
+ arch/powerpc/platforms/8xx/m8xx_setup.c       |  9 +--
+ arch/powerpc/platforms/chrp/setup.c           | 14 ++---
+ arch/powerpc/platforms/powermac/pic.c         | 31 ++++------
+ arch/powerpc/platforms/powermac/smp.c         |  9 +--
+ arch/s390/kernel/irq.c                        |  8 +--
+ arch/sh/boards/mach-cayman/irq.c              | 18 ++----
+ arch/sh/drivers/dma/dma-pvr2.c                |  9 +--
+ arch/unicore32/kernel/time.c                  | 11 +---
+ arch/x86/kernel/irqinit.c                     | 18 +++---
+ arch/x86/kernel/time.c                        | 10 +---
+ arch/xtensa/kernel/smp.c                      |  8 +--
+ arch/xtensa/kernel/time.c                     | 10 +---
+ drivers/clocksource/bcm2835_timer.c           |  8 +--
+ drivers/clocksource/bcm_kona_timer.c          | 10 +---
+ drivers/clocksource/dw_apb_timer.c            | 11 +---
+ drivers/clocksource/exynos_mct.c              | 12 ++--
+ drivers/clocksource/mxs_timer.c               | 10 +---
+ drivers/clocksource/nomadik-mtu.c             | 11 +---
+ drivers/clocksource/samsung_pwm_timer.c       | 12 ++--
+ drivers/clocksource/timer-atlas7.c            | 50 ++++++++--------
+ drivers/clocksource/timer-cs5535.c            | 10 +---
+ drivers/clocksource/timer-efm32.c             | 10 +---
+ drivers/clocksource/timer-fsl-ftm.c           | 10 +---
+ drivers/clocksource/timer-imx-gpt.c           | 10 +---
+ drivers/clocksource/timer-integrator-ap.c     | 11 +---
+ drivers/clocksource/timer-meson6.c            | 11 +---
+ drivers/clocksource/timer-orion.c             |  9 +--
+ drivers/clocksource/timer-prima2.c            | 11 +---
+ drivers/clocksource/timer-pxa.c               | 10 +---
+ drivers/clocksource/timer-sp804.c             | 11 +---
+ drivers/clocksource/timer-u300.c              |  9 +--
+ drivers/clocksource/timer-vf-pit.c            | 10 +---
+ drivers/clocksource/timer-vt8500.c            | 11 +---
+ drivers/clocksource/timer-zevio.c             | 13 ++--
+ drivers/irqchip/irq-i8259.c                   |  9 +--
+ drivers/irqchip/irq-ingenic.c                 | 11 ++--
+ drivers/parisc/eisa.c                         |  8 +--
+ drivers/s390/cio/airq.c                       |  8 +--
+ drivers/s390/cio/cio.c                        |  8 +--
+ include/linux/dw_apb_timer.h                  |  1 -
+ include/linux/irq.h                           |  2 -
+ kernel/irq/manage.c                           | 44 --------------
+ 126 files changed, 528 insertions(+), 1117 deletions(-)
+
+
+base-commit: v5.6-rc1
 -- 
-2.20.1
+2.25.1
 
