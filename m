@@ -2,165 +2,347 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59EB116A521
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 12:41:41 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 5402616A762
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 14:40:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727513AbgBXLlY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Feb 2020 06:41:24 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15042 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727185AbgBXLlS (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 24 Feb 2020 06:41:18 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OBdhoR094583;
-        Mon, 24 Feb 2020 06:41:17 -0500
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yax44adcu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Feb 2020 06:41:16 -0500
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01OBdhES094620;
-        Mon, 24 Feb 2020 06:41:16 -0500
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yax44adch-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Feb 2020 06:41:16 -0500
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01OBcGmk018396;
-        Mon, 24 Feb 2020 11:41:15 GMT
-Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
-        by ppma03wdc.us.ibm.com with ESMTP id 2yaux6331d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 24 Feb 2020 11:41:15 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01OBfDbG46792960
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 24 Feb 2020 11:41:13 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8D5EC2805C;
-        Mon, 24 Feb 2020 11:41:13 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7473C28059;
-        Mon, 24 Feb 2020 11:41:13 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.114.17.106])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 24 Feb 2020 11:41:13 +0000 (GMT)
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        David Hildenbrand <david@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Subject: [PATCH v4 36/36] KVM: s390: protvirt: Add KVM api documentation
-Date:   Mon, 24 Feb 2020 06:41:07 -0500
-Message-Id: <20200224114107.4646-37-borntraeger@de.ibm.com>
-X-Mailer: git-send-email 2.25.0
-In-Reply-To: <20200224114107.4646-1-borntraeger@de.ibm.com>
-References: <20200224114107.4646-1-borntraeger@de.ibm.com>
+        id S1727464AbgBXNkk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Feb 2020 08:40:40 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42586 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727378AbgBXNkj (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Feb 2020 08:40:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582551638;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PZLvpz3KL3hcQZqXig2m3yrQ87ZacoCyeVdZ86y6lXs=;
+        b=GRJT1aNA/k3cgdp8pcMfOsHvU5zEKQtQVBHdSqxi9Q+ez6yqlSs+CTcFDadigBfa98p1/p
+        N7ze/ZtMye9xJ4Ec5UEySIWhhrUu6Hq/+s/x1HKPVx9fOduIfdzw+rPN/R1XglareXe1NO
+        j1eripHzNYBnz6bkExffltp717WO0VY=
+Received: from mail-qt1-f197.google.com (mail-qt1-f197.google.com
+ [209.85.160.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-401-99k9xWsePMGuyAf5jqSdQQ-1; Mon, 24 Feb 2020 08:40:37 -0500
+X-MC-Unique: 99k9xWsePMGuyAf5jqSdQQ-1
+Received: by mail-qt1-f197.google.com with SMTP id d9so10688411qtq.13
+        for <linux-s390@vger.kernel.org>; Mon, 24 Feb 2020 05:40:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=PZLvpz3KL3hcQZqXig2m3yrQ87ZacoCyeVdZ86y6lXs=;
+        b=gxhXpuW0CiVaGdb8FKNCRnoPZb1WhhDORYZyWW5hLkg47Oal2ZLuTLZqDsFvsvgOKV
+         5tHDqGca2p3RjBv7yzJOGHJ15CBKkOuMAXT0ZXLeNCsjOSDoGOCTMAxNWvKuu/v2BO3b
+         X+Y3/uGW03dkYsYCflGe/SPDlrNgT4I/FxueZ50aXpAelZ5hMcD3Nxu/BpFyqcmoQOde
+         fCTCTz1tGy0MvnamBP5X3gOFp1bmyOuciwaTznZeCiiAM/ppXCfJa/PTYA7Z24tXwFFO
+         NoPcjaLNDRmYHK9nZ9iGNvUSNlDRFliuNG7pmAqW0nTI46FrdmmAmg+PbBiJltg23kIe
+         /SDQ==
+X-Gm-Message-State: APjAAAU/K6ihJeNrAeF29v8RzrC6599z6KJPgrOH8qFOhkvlZ+CDv9bv
+        q3esJu0aEwEEdhK6y+nBSJLTo1r97PbWBBNqIttMX/q2V99aYfYpkd8JeY9a95Xv15NGktxynIC
+        2Z2RyvYUKr4kwEeXSIWpZrQ==
+X-Received: by 2002:ac8:7550:: with SMTP id b16mr157573qtr.114.1582551636534;
+        Mon, 24 Feb 2020 05:40:36 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyt6oN5U/oTa2csPXnfRXiMAKAD9AwlAa2uq7VfRJWX7cd4YRox+4h9pKNIpt/2MVkBYa2GaQ==
+X-Received: by 2002:ac8:7550:: with SMTP id b16mr157532qtr.114.1582551636198;
+        Mon, 24 Feb 2020 05:40:36 -0800 (PST)
+Received: from redhat.com (bzq-79-178-2-214.red.bezeqint.net. [79.178.2.214])
+        by smtp.gmail.com with ESMTPSA id a192sm5892195qkb.53.2020.02.24.05.40.31
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 24 Feb 2020 05:40:35 -0800 (PST)
+Date:   Mon, 24 Feb 2020 08:40:29 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
+ VIRTIO_F_IOMMU_PLATFORM
+Message-ID: <20200224083845-mutt-send-email-mst@kernel.org>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
+ <20200221155602.4de41fa7.pasic@linux.ibm.com>
+ <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
+ <20200224010607-mutt-send-email-mst@kernel.org>
+ <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
+ <20200224024641-mutt-send-email-mst@kernel.org>
+ <08d6bdfb-9b49-c278-3c0b-2e02376cf0cf@redhat.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-24_02:2020-02-21,2020-02-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- adultscore=0 mlxlogscore=999 suspectscore=0 spamscore=0 priorityscore=1501
- impostorscore=0 mlxscore=0 malwarescore=0 phishscore=0 bulkscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002240099
+In-Reply-To: <08d6bdfb-9b49-c278-3c0b-2e02376cf0cf@redhat.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Janosch Frank <frankja@linux.ibm.com>
+On Mon, Feb 24, 2020 at 05:26:20PM +0800, Jason Wang wrote:
+> 
+> On 2020/2/24 下午3:48, Michael S. Tsirkin wrote:
+> > On Mon, Feb 24, 2020 at 02:45:03PM +0800, Jason Wang wrote:
+> > > On 2020/2/24 下午2:06, Michael S. Tsirkin wrote:
+> > > > On Mon, Feb 24, 2020 at 12:01:57PM +0800, Jason Wang wrote:
+> > > > > On 2020/2/21 下午10:56, Halil Pasic wrote:
+> > > > > > On Fri, 21 Feb 2020 14:22:26 +0800
+> > > > > > Jason Wang <jasowang@redhat.com> wrote:
+> > > > > > 
+> > > > > > > On 2020/2/21 上午12:06, Halil Pasic wrote:
+> > > > > > > > Currently if one intends to run a memory protection enabled VM with
+> > > > > > > > virtio devices and linux as the guest OS, one needs to specify the
+> > > > > > > > VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the guest
+> > > > > > > > linux use the DMA API, which in turn handles the memory
+> > > > > > > > encryption/protection stuff if the guest decides to turn itself into
+> > > > > > > > a protected one. This however makes no sense due to multiple reasons:
+> > > > > > > > * The device is not changed by the fact that the guest RAM is
+> > > > > > > > protected. The so called IOMMU bypass quirk is not affected.
+> > > > > > > > * This usage is not congruent with  standardised semantics of
+> > > > > > > > VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reason
+> > > > > > > > for using DMA API in virtio (orthogonal with respect to what is
+> > > > > > > > expressed by VIRTIO_F_IOMMU_PLATFORM).
+> > > > > > > > 
+> > > > > > > > This series aims to decouple 'have to use DMA API because my (guest) RAM
+> > > > > > > > is protected' and 'have to use DMA API because the device told me
+> > > > > > > > VIRTIO_F_IOMMU_PLATFORM'.
+> > > > > > > > 
+> > > > > > > > Please find more detailed explanations about the conceptual aspects in
+> > > > > > > > the individual patches. There is however also a very practical problem
+> > > > > > > > that is addressed by this series.
+> > > > > > > > 
+> > > > > > > > For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
+> > > > > > > > effect The vhost code assumes it the addresses on the virtio descriptor
+> > > > > > > > ring are not guest physical addresses but iova's, and insists on doing a
+> > > > > > > > translation of these regardless of what transport is used (e.g. whether
+> > > > > > > > we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
+> > > > > > > > "vhost: new device IOTLB API".) On s390 this results in severe
+> > > > > > > > performance degradation (c.a. factor 10).
+> > > > > > > Do you see a consistent degradation on the performance, or it only
+> > > > > > > happen when for during the beginning of the test?
+> > > > > > > 
+> > > > > > AFAIK the degradation is consistent.
+> > > > > > 
+> > > > > > > > BTW with ccw I/O there is
+> > > > > > > > (architecturally) no IOMMU, so the whole address translation makes no
+> > > > > > > > sense in the context of virtio-ccw.
+> > > > > > > I suspect we can do optimization in qemu side.
+> > > > > > > 
+> > > > > > > E.g send memtable entry via IOTLB API when vIOMMU is not enabled.
+> > > > > > > 
+> > > > > > > If this makes sense, I can draft patch to see if there's any difference.
+> > > > > > Frankly I would prefer to avoid IOVAs on the descriptor ring (and the
+> > > > > > then necessary translation) for virtio-ccw altogether. But Michael
+> > > > > > voiced his opinion that we should mandate F_IOMMU_PLATFORM for devices
+> > > > > > that could be used with guests running in protected mode. I don't share
+> > > > > > his opinion, but that's an ongoing discussion.
+> > > > > > 
+> > > > > > Should we end up having to do translation from IOVA in vhost, we are
+> > > > > > very interested in that translation being fast and efficient.
+> > > > > > 
+> > > > > > In that sense we would be very happy to test any optimization that aim
+> > > > > > into that direction.
+> > > > > > 
+> > > > > > Thank you very much for your input!
+> > > > > Using IOTLB API on platform without IOMMU support is not intended. Please
+> > > > > try the attached patch to see if it helps.
+> > > > > 
+> > > > > Thanks
+> > > > > 
+> > > > > 
+> > > > > > Regards,
+> > > > > > Halil
+> > > > > > 
+> > > > > > > Thanks
+> > > > > > > 
+> > > > > > > 
+> > > > > > > > Halil Pasic (2):
+> > > > > > > >       mm: move force_dma_unencrypted() to mem_encrypt.h
+> > > > > > > >       virtio: let virtio use DMA API when guest RAM is protected
+> > > > > > > > 
+> > > > > > > >      drivers/virtio/virtio_ring.c |  3 +++
+> > > > > > > >      include/linux/dma-direct.h   |  9 ---------
+> > > > > > > >      include/linux/mem_encrypt.h  | 10 ++++++++++
+> > > > > > > >      3 files changed, 13 insertions(+), 9 deletions(-)
+> > > > > > > > 
+> > > > > > > > 
+> > > > > > > > base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+> > > > > >From 66fa730460875ac99e81d7db2334cd16bb1d2b27 Mon Sep 17 00:00:00 2001
+> > > > > From: Jason Wang <jasowang@redhat.com>
+> > > > > Date: Mon, 24 Feb 2020 12:00:10 +0800
+> > > > > Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
+> > > > > 
+> > > > > When transport does not support IOMMU, we should clear IOMMU_PLATFORM
+> > > > > even if the device and vhost claims to support that. This help to
+> > > > > avoid the performance overhead caused by unnecessary IOTLB miss/update
+> > > > > transactions on such platform.
+> > > > > 
+> > > > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > > > ---
+> > > > >    hw/virtio/virtio-bus.c | 6 +++---
+> > > > >    1 file changed, 3 insertions(+), 3 deletions(-)
+> > > > > 
+> > > > > diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
+> > > > > index d6332d45c3..2741b9fdd2 100644
+> > > > > --- a/hw/virtio/virtio-bus.c
+> > > > > +++ b/hw/virtio/virtio-bus.c
+> > > > > @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
+> > > > >        VirtioBusState *bus = VIRTIO_BUS(qbus);
+> > > > >        VirtioBusClass *klass = VIRTIO_BUS_GET_CLASS(bus);
+> > > > >        VirtioDeviceClass *vdc = VIRTIO_DEVICE_GET_CLASS(vdev);
+> > > > > -    bool has_iommu = virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> > > > >        Error *local_err = NULL;
+> > > > >        DPRINTF("%s: plug device.\n", qbus->name);
+> > > > > @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
+> > > > >            return;
+> > > > >        }
+> > > > > -    if (klass->get_dma_as != NULL && has_iommu) {
+> > > > > -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
+> > > > > +    if (false && klass->get_dma_as != NULL &&
+> > > > > +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
+> > > > >            vdev->dma_as = klass->get_dma_as(qbus->parent);
+> > > > >        } else {
+> > > > > +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
+> > > > >            vdev->dma_as = &address_space_memory;
+> > > > >        }
+> > > > >    }
+> > > > This seems to clear it unconditionally. I guess it's just a debugging
+> > > > patch, the real one will come later?
+> > > 
+> > > My bad, here's the correct one.
+> > > 
+> > > Thanks
+> > > 
+> > > 
+> > > > > -- 
+> > > > > 2.19.1
+> > > > > 
+> > > >From b8a8b582f46bb86c7a745b272db7b744779e5cc7 Mon Sep 17 00:00:00 2001
+> > > From: Jason Wang <jasowang@redhat.com>
+> > > Date: Mon, 24 Feb 2020 12:00:10 +0800
+> > > Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
+> > > 
+> > > When transport does not support IOMMU, we should clear IOMMU_PLATFORM
+> > > even if the device and vhost claims to support that. This help to
+> > > avoid the performance overhead caused by unnecessary IOTLB miss/update
+> > > transactions on such platform.
+> > > 
+> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > ---
+> > >   hw/virtio/virtio-bus.c | 6 +++---
+> > >   1 file changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
+> > > index d6332d45c3..4be64e193e 100644
+> > > --- a/hw/virtio/virtio-bus.c
+> > > +++ b/hw/virtio/virtio-bus.c
+> > > @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
+> > >       VirtioBusState *bus = VIRTIO_BUS(qbus);
+> > >       VirtioBusClass *klass = VIRTIO_BUS_GET_CLASS(bus);
+> > >       VirtioDeviceClass *vdc = VIRTIO_DEVICE_GET_CLASS(vdev);
+> > > -    bool has_iommu = virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> > >       Error *local_err = NULL;
+> > >       DPRINTF("%s: plug device.\n", qbus->name);
+> > > @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
+> > >           return;
+> > >       }
+> > > -    if (klass->get_dma_as != NULL && has_iommu) {
+> > > -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
+> > So it looks like this line is unnecessary, but it's an unrelated
+> > cleanup, right?
+> 
+> 
+> Yes.
+> 
+> 
+> > 
+> > > +    if (klass->get_dma_as != NULL &&
+> > > +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
+> > >           vdev->dma_as = klass->get_dma_as(qbus->parent);
+> > >       } else {
+> > > +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
+> > 
+> > Of course any change like that will have to affect migration compat, etc.
+> > Can't we clear the bit when we are sending the features to vhost
+> > instead?
+> 
+> 
+> That's better.
+> 
+> How about attached?
+> 
+> Thanks
+> 
+> 
+> > 
+> > 
+> > >           vdev->dma_as = &address_space_memory;
+> > >       }
+> > >   }
+> > > -- 
+> > > 2.19.1
+> > > 
 
-Add documentation for KVM_CAP_S390_PROTECTED capability and the
-KVM_S390_PV_COMMAND ioctl.
+> >From 3177c5194c729f3056b84c67664c59b9b949bb76 Mon Sep 17 00:00:00 2001
+> From: Jason Wang <jasowang@redhat.com>
+> Date: Mon, 24 Feb 2020 17:24:14 +0800
+> Subject: [PATCH] vhost: do not set VIRTIO_F_IOMMU_PLATFORM when IOMMU is not
+>  used
+> 
+> We enable device IOTLB unconditionally when VIRTIO_F_IOMMU_PLATFORM is
+> negotiated. This lead unnecessary IOTLB miss/update transactions when
+> IOMMU is used. This patch fixes this.
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  hw/net/virtio-net.c | 3 +++
+>  hw/virtio/vhost.c   | 4 +---
+>  2 files changed, 4 insertions(+), 3 deletions(-)
+> 
+> diff --git a/hw/net/virtio-net.c b/hw/net/virtio-net.c
+> index 3627bb1717..0d50e8bd34 100644
+> --- a/hw/net/virtio-net.c
+> +++ b/hw/net/virtio-net.c
+> @@ -879,6 +879,9 @@ static void virtio_net_set_features(VirtIODevice *vdev, uint64_t features)
+>          virtio_net_apply_guest_offloads(n);
+>      }
+>  
+> +    if (vdev->dma_as == &address_space_memory)
+> +        features &= ~(1ULL << VIRTIO_F_IOMMU_PLATFORM);
+> +
+>      for (i = 0;  i < n->max_queues; i++) {
+>          NetClientState *nc = qemu_get_subqueue(n->nic, i);
 
-Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-[borntraeger@de.ibm.com: patch merging, splitting, fixing]
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
----
- Documentation/virt/kvm/api.rst | 55 ++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+This pokes at acked features. I think they are also
+guest visible ...
 
-diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-index 7505d7a6c0d8..20abb8b2594e 100644
---- a/Documentation/virt/kvm/api.rst
-+++ b/Documentation/virt/kvm/api.rst
-@@ -4648,6 +4648,51 @@ the clear cpu reset definition in the POP. However, the cpu is not put
- into ESA mode. This reset is a superset of the initial reset.
- 
- 
-+4.125 KVM_S390_PV_COMMAND
-+-------------------------
-+
-+:Capability: KVM_CAP_S390_PROTECTED
-+:Architectures: s390
-+:Type: vm ioctl
-+:Parameters: struct kvm_pv_cmd
-+:Returns: 0 on success, < 0 on error
-+
-+::
-+
-+  struct kvm_pv_cmd {
-+	__u32 cmd;	/* Command to be executed */
-+	__u16 rc;	/* Ultravisor return code */
-+	__u16 rrc;	/* Ultravisor return reason code */
-+	__u64 data;	/* Data or address */
-+	__u32 flags;    /* flags for future extensions. Must be 0 for now */
-+	__u32 reserved[3];
-+  };
-+
-+cmd values:
-+
-+KVM_PV_ENABLE
-+  Allocate memory and register the VM with the Ultravisor, thereby
-+  donating memory to the Ultravisor making it inaccessible to KVM.
-+  Also converts all existing CPUs to protected ones. Future hotplug
-+  CPUs will become protected during creation.
-+
-+KVM_PV_DISABLE
-+  Deregisters the VM from the Ultravisor and frees memory that was
-+  donated, so the kernel can use it again. All registered VCPUs are
-+  converted back to non-protected ones.
-+
-+KVM_PV_VM_SET_SEC_PARMS
-+  Pass the image header from VM memory to the Ultravisor in
-+  preparation of image unpacking and verification.
-+
-+KVM_PV_VM_UNPACK
-+  Unpack (protect and decrypt) a page of the encrypted boot image.
-+
-+KVM_PV_VM_VERIFY
-+  Verify the integrity of the unpacked image. Only if this succeeds,
-+  KVM is allowed to start protected VCPUs.
-+
-+
- 5. The kvm_run structure
- ========================
- 
-@@ -6026,3 +6071,13 @@ Architectures: s390
- 
- This capability indicates that the KVM_S390_NORMAL_RESET and
- KVM_S390_CLEAR_RESET ioctls are available.
-+
-+8.23 KVM_CAP_S390_PROTECTED
-+
-+Architecture: s390
-+
-+This capability indicates that KVM can start protected VMs and the
-+Ultravisor has therefore been initialized.
-+This will provide the new KVM_S390_PV_COMMAND ioctl and it will allow
-+KVM_MP_STATE_LOAD as new MP_STATE. KVM_SET_MP_STATE can now fail for
-+protected guests when the state change is invalid.
--- 
-2.25.0
+> diff --git a/hw/virtio/vhost.c b/hw/virtio/vhost.c
+> index 9edfadc81d..711b1136f6 100644
+> --- a/hw/virtio/vhost.c
+> +++ b/hw/virtio/vhost.c
+> @@ -288,9 +288,7 @@ static inline void vhost_dev_log_resize(struct vhost_dev *dev, uint64_t size)
+>  
+>  static int vhost_dev_has_iommu(struct vhost_dev *dev)
+>  {
+> -    VirtIODevice *vdev = dev->vdev;
+> -
+> -    return virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> +    return virtio_has_feature(dev->acked_features, VIRTIO_F_IOMMU_PLATFORM);
+>  }
+>  
+>  static void *vhost_memory_map(struct vhost_dev *dev, hwaddr addr,
+> -- 
+> 2.19.1
+> 
 
