@@ -2,155 +2,132 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BA56169FFA
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 09:28:52 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3485516A153
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 10:12:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727239AbgBXI2t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Feb 2020 03:28:49 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:34292 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726509AbgBXI2P (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Feb 2020 03:28:15 -0500
-Received: by mail-il1-f200.google.com with SMTP id l13so17084807ils.1
-        for <linux-s390@vger.kernel.org>; Mon, 24 Feb 2020 00:28:14 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=Ki7/rIQ43NZNL7i9XZxO5j0m7be84RSH01sLpgV+brk=;
-        b=Lrxd/E5z87a1HMFPJOtnx2aft12J03nO5GbIpeEjrcVHnOT0GS3ifuD65DGBuerh/4
-         sTFqcaQKOf0L7PAov3llhwa3p5eh9eVumP7xIkDWbwP5RKPbMm5KzopF2KOPTtPKjJ6X
-         iKtVXhdRjoRHFJ5HiRs7M/2wLdfn6F20ubqIqqLfzBE1qXf0C6UYrtWOpKgY5G0m98vo
-         2f0RXYTQPhy6Zfg8IXuKtffq8TbTcBoTGZu44Rpx6V62fs4ouSB4V/8Cuo9M3qOJKhmw
-         ArEGJg+OHGqwIBVt9EJsxTJdmdmIXsbiAC62dvZWeCyXGvFHq+X9igckd1csOtKPV2C9
-         8VAg==
-X-Gm-Message-State: APjAAAXHPzY8ADnvvMxlPx02U61tRidrdF4bwh1dAs01IojNyzWvl0AO
-        4/Fn5m5BE5WVj0lAXfsQq1r9g3lM9OIGoJNqaTsF3JVQntGg
-X-Google-Smtp-Source: APXvYqx6wSbvdhrhgLyvmokd++y+Rr8y2docF4cg58sfgAgwCXjrlPkJ3+tNBtiKM07na6bLEgVBv8Ai9YVKymV9PgGfH/n4Q+Xj
+        id S1728484AbgBXJMO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Feb 2020 04:12:14 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24729 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728277AbgBXJMN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 24 Feb 2020 04:12:13 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582535531;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=dmb0RTH1axsQyoKZK4Qs+mYxX0tLJ+ZXHM8KfTxIyzU=;
+        b=gGHUPqIep3le9PziAWCmaHPJtNm65JLd0ZtciuZPHgXQoL1ahJVcV5fEaIS+fSsgUwhCVM
+        TF6hwEHoMSn/3EYo+j8jeqGhNn4MgxerjPlWdycfs45zNauN9d7Glvg+XON+PcBmkgkJUt
+        O13JJSBA0cKkWvH66lKxc3FkuRHIxBY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-345-IGyW_UW9MfSb-QdX7lWO8w-1; Mon, 24 Feb 2020 04:12:07 -0500
+X-MC-Unique: IGyW_UW9MfSb-QdX7lWO8w-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4A7EB185735C;
+        Mon, 24 Feb 2020 09:12:04 +0000 (UTC)
+Received: from [10.36.118.8] (unknown [10.36.118.8])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 93D0E393;
+        Mon, 24 Feb 2020 09:11:53 +0000 (UTC)
+Subject: Re: [PATCH v3 2/7] mm/memory_hotplug: Rename mhp_restrictions to
+ mhp_params
+To:     Logan Gunthorpe <logang@deltatee.com>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>
+References: <20200221182503.28317-1-logang@deltatee.com>
+ <20200221182503.28317-3-logang@deltatee.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <e428521d-3509-5403-f8d8-c584a7d4d320@redhat.com>
+Date:   Mon, 24 Feb 2020 10:11:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Received: by 2002:a02:c787:: with SMTP id n7mr50309193jao.85.1582532894078;
- Mon, 24 Feb 2020 00:28:14 -0800 (PST)
-Date:   Mon, 24 Feb 2020 00:28:14 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ff4686059f4e26ac@google.com>
-Subject: general protection fault in smc_ib_remove_dev
-From:   syzbot <syzbot+84484ccebdd4e5451d91@syzkaller.appspotmail.com>
-To:     akpm@linux-foundation.org, arvid.brodin@alten.se,
-        davem@davemloft.net, hch@lst.de, kgraul@linux.ibm.com,
-        kuba@kernel.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
-        ubraun@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200221182503.28317-3-logang@deltatee.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
+On 21.02.20 19:24, Logan Gunthorpe wrote:
+> The mhp_restrictions struct really doesn't specify anything resembling
+> a restriction anymore so rename it to be mhp_params as it is a list
+> of extended parameters.
+> 
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 
-syzbot found the following crash on:
-
-HEAD commit:    36a44bcd Merge branch 'bnxt_en-shutdown-and-kexec-kdump-re..
-git tree:       net
-console output: https://syzkaller.appspot.com/x/log.txt?x=15b5774ee00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
-dashboard link: https://syzkaller.appspot.com/bug?extid=84484ccebdd4e5451d91
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=100eda7ee00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c3fdd9e00000
-
-The bug was bisected to:
-
-commit cbd34da7dc9afd521e0bea5e7d12701f4a9da7c7
-Author: Christoph Hellwig <hch@lst.de>
-Date:   Fri Jul 12 03:57:28 2019 +0000
-
-    mm: move the powerpc hugepd code to mm/gup.c
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15ea4265e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=17ea4265e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=13ea4265e00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+84484ccebdd4e5451d91@syzkaller.appspotmail.com
-Fixes: cbd34da7dc9a ("mm: move the powerpc hugepd code to mm/gup.c")
-
-infiniband syz1: RDMA CMA: cma_listen_on_dev, error -98
-netlink: 'syz-executor837': attribute type 1 has an invalid length.
-netlink: 21 bytes leftover after parsing attributes in process `syz-executor837'.
-general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN
-KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-CPU: 0 PID: 9928 Comm: syz-executor837 Not tainted 5.6.0-rc1-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:__list_del_entry_valid+0x22/0xf5 lib/list_debug.c:42
-Code: 0e fe 48 8b 75 e8 eb b2 48 b8 00 00 00 00 00 fc ff df 55 48 89 e5 41 56 49 89 fe 48 83 c7 08 48 89 fa 41 55 48 c1 ea 03 41 54 <80> 3c 02 00 0f 85 a1 00 00 00 4c 89 f2 4d 8b 66 08 48 b8 00 00 00
-RSP: 0018:ffffc900053d7440 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffffffff87b4e490 RCX: ffffffff815c1ba9
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000008
-RBP: ffffc900053d7458 R08: 0000000000000004 R09: fffff52000a7ae7b
-R10: fffff52000a7ae7a R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000008 R14: 0000000000000000 R15: ffffffff8a98b880
-FS:  0000000000ea3880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020003028 CR3: 0000000091874000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- __list_del_entry include/linux/list.h:132 [inline]
- list_del_init include/linux/list.h:204 [inline]
- smc_ib_remove_dev+0x52/0x2e0 net/smc/smc_ib.c:578
- remove_client_context+0xc7/0x120 drivers/infiniband/core/device.c:724
- disable_device+0x14c/0x230 drivers/infiniband/core/device.c:1268
- __ib_unregister_device+0x9c/0x190 drivers/infiniband/core/device.c:1435
- ib_unregister_device_and_put+0x5f/0x80 drivers/infiniband/core/device.c:1498
- nldev_dellink+0x222/0x340 drivers/infiniband/core/nldev.c:1568
- rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
- rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
- rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
- netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
- netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
- netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
- sock_sendmsg_nosec net/socket.c:652 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:672
- __sys_sendto+0x262/0x380 net/socket.c:1998
- __do_sys_sendto net/socket.c:2010 [inline]
- __se_sys_sendto net/socket.c:2006 [inline]
- __x64_sys_sendto+0xe1/0x1a0 net/socket.c:2006
- do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4404d9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffdb793fb28 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004404d9
-RDX: 0000000000010a73 RSI: 0000000020000000 RDI: 0000000000000004
-RBP: 00000000006ca018 R08: 0000000000000000 R09: 4b6ae4f95a5de35b
-R10: 00000000000008c0 R11: 0000000000000246 R12: 0000000000401d60
-R13: 0000000000401df0 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace 79db9bfdece7383f ]---
-RIP: 0010:__list_del_entry_valid+0x22/0xf5 lib/list_debug.c:42
-Code: 0e fe 48 8b 75 e8 eb b2 48 b8 00 00 00 00 00 fc ff df 55 48 89 e5 41 56 49 89 fe 48 83 c7 08 48 89 fa 41 55 48 c1 ea 03 41 54 <80> 3c 02 00 0f 85 a1 00 00 00 4c 89 f2 4d 8b 66 08 48 b8 00 00 00
-RSP: 0018:ffffc900053d7440 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffffffff87b4e490 RCX: ffffffff815c1ba9
-RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000008
-RBP: ffffc900053d7458 R08: 0000000000000004 R09: fffff52000a7ae7b
-R10: fffff52000a7ae7a R11: 0000000000000003 R12: 0000000000000000
-R13: 0000000000000008 R14: 0000000000000000 R15: ffffffff8a98b880
-FS:  0000000000ea3880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020003028 CR3: 0000000091874000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Reviewed-by: David Hildenbrand <david@redhat.com>
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+-- 
+Thanks,
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+David / dhildenb
+
