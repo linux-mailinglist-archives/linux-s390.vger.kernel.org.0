@@ -2,287 +2,155 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4F56169F78
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 08:49:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BA56169FFA
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 09:28:52 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726765AbgBXHtM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Feb 2020 02:49:12 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44051 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726452AbgBXHtL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 24 Feb 2020 02:49:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582530549;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=UJzRHJfOvqED/QVB11a8FY9iUPPI3dbD0rzXCYDhwc0=;
-        b=AYKvfRb+dvh6s+nQSmNoJs8I1zakq3ANxT7qmg3OQ9x8xSYIGp37vt7XY9Q+s7pasiRO5A
-        6fXkjTdH8Z3IUDrDZg4G17d4/IaI8cpVoBNJCONynES7jzuoirW6jnEu7TdEnBkZshkVpU
-        oCYA/PT3WSjBF+xgi562N/8xSkPeZIs=
-Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
- [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-212-TPgPnIfaPm6UlB2N5qYh8A-1; Mon, 24 Feb 2020 02:49:08 -0500
-X-MC-Unique: TPgPnIfaPm6UlB2N5qYh8A-1
-Received: by mail-qk1-f200.google.com with SMTP id r142so9725258qke.3
-        for <linux-s390@vger.kernel.org>; Sun, 23 Feb 2020 23:49:08 -0800 (PST)
+        id S1727239AbgBXI2t (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Feb 2020 03:28:49 -0500
+Received: from mail-il1-f200.google.com ([209.85.166.200]:34292 "EHLO
+        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726509AbgBXI2P (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Feb 2020 03:28:15 -0500
+Received: by mail-il1-f200.google.com with SMTP id l13so17084807ils.1
+        for <linux-s390@vger.kernel.org>; Mon, 24 Feb 2020 00:28:14 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=UJzRHJfOvqED/QVB11a8FY9iUPPI3dbD0rzXCYDhwc0=;
-        b=cqrnDV2TWb8SggPLNlCbTtsljzZ0El0grMieAo4qjkzFvoBQZEELPcvN0oiPNhrbgV
-         +O8UPW36j1drzsXr3id1rbR34zbr89qtjWip9l1R9nQYubPDkGr6ClmOQ+mqbRDKddsP
-         NoJD3NDDaElATxX5X1dEHxRDMAnGoVQHpU82pJ14+00PkH4ode7L8uFGbX8aQR9knkvS
-         6F7TsuwEGV7Jk6OOzqC4w5t+AeZhOnt2R3p5880JclqeeUvS55pF0z/27dHFIv+Sr9L0
-         hZ89cAxuJa/Ghr1O8pFs9ocYQ5wWS1hCWI3sADtpEJxN/X4sRInxDlfVe7Pa7GHtYCUr
-         rUbA==
-X-Gm-Message-State: APjAAAXuKJ9lSNxK1oeWZ3HeLNIWkt3NsJ3QS5kWlbbtBR8OmPWYBWzC
-        oPNWXvFnXxPSqiuSa3kfhGrSbEgm0nbsQ/e9K1fXBAyyJFUfo4jnjZJNBTUbayhA8PEJ3af243E
-        8VQpT4xuoPscFmWoR0A3oIg==
-X-Received: by 2002:a05:620a:95c:: with SMTP id w28mr44288185qkw.428.1582530547830;
-        Sun, 23 Feb 2020 23:49:07 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzzBrfPKkWekVzDtkE3twmNvbfgy+awAYxrqVqXXAqxHi9BwToMW+Zbt9HgNgV5bAhK+LRpaQ==
-X-Received: by 2002:a05:620a:95c:: with SMTP id w28mr44288158qkw.428.1582530547478;
-        Sun, 23 Feb 2020 23:49:07 -0800 (PST)
-Received: from redhat.com (bzq-79-178-2-214.red.bezeqint.net. [79.178.2.214])
-        by smtp.gmail.com with ESMTPSA id r37sm5593220qtj.44.2020.02.23.23.49.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2020 23:49:06 -0800 (PST)
-Date:   Mon, 24 Feb 2020 02:48:59 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
- VIRTIO_F_IOMMU_PLATFORM
-Message-ID: <20200224024641-mutt-send-email-mst@kernel.org>
-References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
- <20200221155602.4de41fa7.pasic@linux.ibm.com>
- <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
- <20200224010607-mutt-send-email-mst@kernel.org>
- <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=Ki7/rIQ43NZNL7i9XZxO5j0m7be84RSH01sLpgV+brk=;
+        b=Lrxd/E5z87a1HMFPJOtnx2aft12J03nO5GbIpeEjrcVHnOT0GS3ifuD65DGBuerh/4
+         sTFqcaQKOf0L7PAov3llhwa3p5eh9eVumP7xIkDWbwP5RKPbMm5KzopF2KOPTtPKjJ6X
+         iKtVXhdRjoRHFJ5HiRs7M/2wLdfn6F20ubqIqqLfzBE1qXf0C6UYrtWOpKgY5G0m98vo
+         2f0RXYTQPhy6Zfg8IXuKtffq8TbTcBoTGZu44Rpx6V62fs4ouSB4V/8Cuo9M3qOJKhmw
+         ArEGJg+OHGqwIBVt9EJsxTJdmdmIXsbiAC62dvZWeCyXGvFHq+X9igckd1csOtKPV2C9
+         8VAg==
+X-Gm-Message-State: APjAAAXHPzY8ADnvvMxlPx02U61tRidrdF4bwh1dAs01IojNyzWvl0AO
+        4/Fn5m5BE5WVj0lAXfsQq1r9g3lM9OIGoJNqaTsF3JVQntGg
+X-Google-Smtp-Source: APXvYqx6wSbvdhrhgLyvmokd++y+Rr8y2docF4cg58sfgAgwCXjrlPkJ3+tNBtiKM07na6bLEgVBv8Ai9YVKymV9PgGfH/n4Q+Xj
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
+X-Received: by 2002:a02:c787:: with SMTP id n7mr50309193jao.85.1582532894078;
+ Mon, 24 Feb 2020 00:28:14 -0800 (PST)
+Date:   Mon, 24 Feb 2020 00:28:14 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000ff4686059f4e26ac@google.com>
+Subject: general protection fault in smc_ib_remove_dev
+From:   syzbot <syzbot+84484ccebdd4e5451d91@syzkaller.appspotmail.com>
+To:     akpm@linux-foundation.org, arvid.brodin@alten.se,
+        davem@davemloft.net, hch@lst.de, kgraul@linux.ibm.com,
+        kuba@kernel.org, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, netdev@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, torvalds@linux-foundation.org,
+        ubraun@linux.ibm.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Feb 24, 2020 at 02:45:03PM +0800, Jason Wang wrote:
-> 
-> On 2020/2/24 下午2:06, Michael S. Tsirkin wrote:
-> > On Mon, Feb 24, 2020 at 12:01:57PM +0800, Jason Wang wrote:
-> > > On 2020/2/21 下午10:56, Halil Pasic wrote:
-> > > > On Fri, 21 Feb 2020 14:22:26 +0800
-> > > > Jason Wang <jasowang@redhat.com> wrote:
-> > > > 
-> > > > > On 2020/2/21 上午12:06, Halil Pasic wrote:
-> > > > > > Currently if one intends to run a memory protection enabled VM with
-> > > > > > virtio devices and linux as the guest OS, one needs to specify the
-> > > > > > VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the guest
-> > > > > > linux use the DMA API, which in turn handles the memory
-> > > > > > encryption/protection stuff if the guest decides to turn itself into
-> > > > > > a protected one. This however makes no sense due to multiple reasons:
-> > > > > > * The device is not changed by the fact that the guest RAM is
-> > > > > > protected. The so called IOMMU bypass quirk is not affected.
-> > > > > > * This usage is not congruent with  standardised semantics of
-> > > > > > VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reason
-> > > > > > for using DMA API in virtio (orthogonal with respect to what is
-> > > > > > expressed by VIRTIO_F_IOMMU_PLATFORM).
-> > > > > > 
-> > > > > > This series aims to decouple 'have to use DMA API because my (guest) RAM
-> > > > > > is protected' and 'have to use DMA API because the device told me
-> > > > > > VIRTIO_F_IOMMU_PLATFORM'.
-> > > > > > 
-> > > > > > Please find more detailed explanations about the conceptual aspects in
-> > > > > > the individual patches. There is however also a very practical problem
-> > > > > > that is addressed by this series.
-> > > > > > 
-> > > > > > For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
-> > > > > > effect The vhost code assumes it the addresses on the virtio descriptor
-> > > > > > ring are not guest physical addresses but iova's, and insists on doing a
-> > > > > > translation of these regardless of what transport is used (e.g. whether
-> > > > > > we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
-> > > > > > "vhost: new device IOTLB API".) On s390 this results in severe
-> > > > > > performance degradation (c.a. factor 10).
-> > > > > Do you see a consistent degradation on the performance, or it only
-> > > > > happen when for during the beginning of the test?
-> > > > > 
-> > > > AFAIK the degradation is consistent.
-> > > > 
-> > > > > > BTW with ccw I/O there is
-> > > > > > (architecturally) no IOMMU, so the whole address translation makes no
-> > > > > > sense in the context of virtio-ccw.
-> > > > > I suspect we can do optimization in qemu side.
-> > > > > 
-> > > > > E.g send memtable entry via IOTLB API when vIOMMU is not enabled.
-> > > > > 
-> > > > > If this makes sense, I can draft patch to see if there's any difference.
-> > > > Frankly I would prefer to avoid IOVAs on the descriptor ring (and the
-> > > > then necessary translation) for virtio-ccw altogether. But Michael
-> > > > voiced his opinion that we should mandate F_IOMMU_PLATFORM for devices
-> > > > that could be used with guests running in protected mode. I don't share
-> > > > his opinion, but that's an ongoing discussion.
-> > > > 
-> > > > Should we end up having to do translation from IOVA in vhost, we are
-> > > > very interested in that translation being fast and efficient.
-> > > > 
-> > > > In that sense we would be very happy to test any optimization that aim
-> > > > into that direction.
-> > > > 
-> > > > Thank you very much for your input!
-> > > 
-> > > Using IOTLB API on platform without IOMMU support is not intended. Please
-> > > try the attached patch to see if it helps.
-> > > 
-> > > Thanks
-> > > 
-> > > 
-> > > > Regards,
-> > > > Halil
-> > > > 
-> > > > > Thanks
-> > > > > 
-> > > > > 
-> > > > > > Halil Pasic (2):
-> > > > > >      mm: move force_dma_unencrypted() to mem_encrypt.h
-> > > > > >      virtio: let virtio use DMA API when guest RAM is protected
-> > > > > > 
-> > > > > >     drivers/virtio/virtio_ring.c |  3 +++
-> > > > > >     include/linux/dma-direct.h   |  9 ---------
-> > > > > >     include/linux/mem_encrypt.h  | 10 ++++++++++
-> > > > > >     3 files changed, 13 insertions(+), 9 deletions(-)
-> > > > > > 
-> > > > > > 
-> > > > > > base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
-> > > >From 66fa730460875ac99e81d7db2334cd16bb1d2b27 Mon Sep 17 00:00:00 2001
-> > > From: Jason Wang <jasowang@redhat.com>
-> > > Date: Mon, 24 Feb 2020 12:00:10 +0800
-> > > Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
-> > > 
-> > > When transport does not support IOMMU, we should clear IOMMU_PLATFORM
-> > > even if the device and vhost claims to support that. This help to
-> > > avoid the performance overhead caused by unnecessary IOTLB miss/update
-> > > transactions on such platform.
-> > > 
-> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
-> > > ---
-> > >   hw/virtio/virtio-bus.c | 6 +++---
-> > >   1 file changed, 3 insertions(+), 3 deletions(-)
-> > > 
-> > > diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
-> > > index d6332d45c3..2741b9fdd2 100644
-> > > --- a/hw/virtio/virtio-bus.c
-> > > +++ b/hw/virtio/virtio-bus.c
-> > > @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
-> > >       VirtioBusState *bus = VIRTIO_BUS(qbus);
-> > >       VirtioBusClass *klass = VIRTIO_BUS_GET_CLASS(bus);
-> > >       VirtioDeviceClass *vdc = VIRTIO_DEVICE_GET_CLASS(vdev);
-> > > -    bool has_iommu = virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
-> > >       Error *local_err = NULL;
-> > >       DPRINTF("%s: plug device.\n", qbus->name);
-> > > @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
-> > >           return;
-> > >       }
-> > > -    if (klass->get_dma_as != NULL && has_iommu) {
-> > > -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
-> > > +    if (false && klass->get_dma_as != NULL &&
-> > > +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
-> > >           vdev->dma_as = klass->get_dma_as(qbus->parent);
-> > >       } else {
-> > > +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
-> > >           vdev->dma_as = &address_space_memory;
-> > >       }
-> > >   }
-> > 
-> > This seems to clear it unconditionally. I guess it's just a debugging
-> > patch, the real one will come later?
-> 
-> 
-> My bad, here's the correct one.
-> 
-> Thanks
-> 
-> 
-> > 
-> > > -- 
-> > > 2.19.1
-> > > 
+Hello,
 
-> >From b8a8b582f46bb86c7a745b272db7b744779e5cc7 Mon Sep 17 00:00:00 2001
-> From: Jason Wang <jasowang@redhat.com>
-> Date: Mon, 24 Feb 2020 12:00:10 +0800
-> Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
-> 
-> When transport does not support IOMMU, we should clear IOMMU_PLATFORM
-> even if the device and vhost claims to support that. This help to
-> avoid the performance overhead caused by unnecessary IOTLB miss/update
-> transactions on such platform.
-> 
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  hw/virtio/virtio-bus.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
-> index d6332d45c3..4be64e193e 100644
-> --- a/hw/virtio/virtio-bus.c
-> +++ b/hw/virtio/virtio-bus.c
-> @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
->      VirtioBusState *bus = VIRTIO_BUS(qbus);
->      VirtioBusClass *klass = VIRTIO_BUS_GET_CLASS(bus);
->      VirtioDeviceClass *vdc = VIRTIO_DEVICE_GET_CLASS(vdev);
-> -    bool has_iommu = virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
->      Error *local_err = NULL;
->  
->      DPRINTF("%s: plug device.\n", qbus->name);
-> @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
->          return;
->      }
->  
-> -    if (klass->get_dma_as != NULL && has_iommu) {
-> -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
+syzbot found the following crash on:
 
-So it looks like this line is unnecessary, but it's an unrelated
-cleanup, right?
+HEAD commit:    36a44bcd Merge branch 'bnxt_en-shutdown-and-kexec-kdump-re..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=15b5774ee00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=768cc3d3e277cc16
+dashboard link: https://syzkaller.appspot.com/bug?extid=84484ccebdd4e5451d91
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=100eda7ee00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=11c3fdd9e00000
 
-> +    if (klass->get_dma_as != NULL &&
-> +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
->          vdev->dma_as = klass->get_dma_as(qbus->parent);
->      } else {
-> +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
+The bug was bisected to:
+
+commit cbd34da7dc9afd521e0bea5e7d12701f4a9da7c7
+Author: Christoph Hellwig <hch@lst.de>
+Date:   Fri Jul 12 03:57:28 2019 +0000
+
+    mm: move the powerpc hugepd code to mm/gup.c
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=15ea4265e00000
+final crash:    https://syzkaller.appspot.com/x/report.txt?x=17ea4265e00000
+console output: https://syzkaller.appspot.com/x/log.txt?x=13ea4265e00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+84484ccebdd4e5451d91@syzkaller.appspotmail.com
+Fixes: cbd34da7dc9a ("mm: move the powerpc hugepd code to mm/gup.c")
+
+infiniband syz1: RDMA CMA: cma_listen_on_dev, error -98
+netlink: 'syz-executor837': attribute type 1 has an invalid length.
+netlink: 21 bytes leftover after parsing attributes in process `syz-executor837'.
+general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN
+KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+CPU: 0 PID: 9928 Comm: syz-executor837 Not tainted 5.6.0-rc1-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:__list_del_entry_valid+0x22/0xf5 lib/list_debug.c:42
+Code: 0e fe 48 8b 75 e8 eb b2 48 b8 00 00 00 00 00 fc ff df 55 48 89 e5 41 56 49 89 fe 48 83 c7 08 48 89 fa 41 55 48 c1 ea 03 41 54 <80> 3c 02 00 0f 85 a1 00 00 00 4c 89 f2 4d 8b 66 08 48 b8 00 00 00
+RSP: 0018:ffffc900053d7440 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffffffff87b4e490 RCX: ffffffff815c1ba9
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000008
+RBP: ffffc900053d7458 R08: 0000000000000004 R09: fffff52000a7ae7b
+R10: fffff52000a7ae7a R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000008 R14: 0000000000000000 R15: ffffffff8a98b880
+FS:  0000000000ea3880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020003028 CR3: 0000000091874000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ __list_del_entry include/linux/list.h:132 [inline]
+ list_del_init include/linux/list.h:204 [inline]
+ smc_ib_remove_dev+0x52/0x2e0 net/smc/smc_ib.c:578
+ remove_client_context+0xc7/0x120 drivers/infiniband/core/device.c:724
+ disable_device+0x14c/0x230 drivers/infiniband/core/device.c:1268
+ __ib_unregister_device+0x9c/0x190 drivers/infiniband/core/device.c:1435
+ ib_unregister_device_and_put+0x5f/0x80 drivers/infiniband/core/device.c:1498
+ nldev_dellink+0x222/0x340 drivers/infiniband/core/nldev.c:1568
+ rdma_nl_rcv_msg drivers/infiniband/core/netlink.c:195 [inline]
+ rdma_nl_rcv_skb drivers/infiniband/core/netlink.c:239 [inline]
+ rdma_nl_rcv+0x5d9/0x980 drivers/infiniband/core/netlink.c:259
+ netlink_unicast_kernel net/netlink/af_netlink.c:1303 [inline]
+ netlink_unicast+0x59e/0x7e0 net/netlink/af_netlink.c:1329
+ netlink_sendmsg+0x91c/0xea0 net/netlink/af_netlink.c:1918
+ sock_sendmsg_nosec net/socket.c:652 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:672
+ __sys_sendto+0x262/0x380 net/socket.c:1998
+ __do_sys_sendto net/socket.c:2010 [inline]
+ __se_sys_sendto net/socket.c:2006 [inline]
+ __x64_sys_sendto+0xe1/0x1a0 net/socket.c:2006
+ do_syscall_64+0xfa/0x790 arch/x86/entry/common.c:294
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x4404d9
+Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 0f 83 fb 13 fc ff c3 66 2e 0f 1f 84 00 00 00 00
+RSP: 002b:00007ffdb793fb28 EFLAGS: 00000246 ORIG_RAX: 000000000000002c
+RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004404d9
+RDX: 0000000000010a73 RSI: 0000000020000000 RDI: 0000000000000004
+RBP: 00000000006ca018 R08: 0000000000000000 R09: 4b6ae4f95a5de35b
+R10: 00000000000008c0 R11: 0000000000000246 R12: 0000000000401d60
+R13: 0000000000401df0 R14: 0000000000000000 R15: 0000000000000000
+Modules linked in:
+---[ end trace 79db9bfdece7383f ]---
+RIP: 0010:__list_del_entry_valid+0x22/0xf5 lib/list_debug.c:42
+Code: 0e fe 48 8b 75 e8 eb b2 48 b8 00 00 00 00 00 fc ff df 55 48 89 e5 41 56 49 89 fe 48 83 c7 08 48 89 fa 41 55 48 c1 ea 03 41 54 <80> 3c 02 00 0f 85 a1 00 00 00 4c 89 f2 4d 8b 66 08 48 b8 00 00 00
+RSP: 0018:ffffc900053d7440 EFLAGS: 00010202
+RAX: dffffc0000000000 RBX: ffffffff87b4e490 RCX: ffffffff815c1ba9
+RDX: 0000000000000001 RSI: 0000000000000004 RDI: 0000000000000008
+RBP: ffffc900053d7458 R08: 0000000000000004 R09: fffff52000a7ae7b
+R10: fffff52000a7ae7a R11: 0000000000000003 R12: 0000000000000000
+R13: 0000000000000008 R14: 0000000000000000 R15: ffffffff8a98b880
+FS:  0000000000ea3880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020003028 CR3: 0000000091874000 CR4: 00000000001406f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
 
 
-Of course any change like that will have to affect migration compat, etc.
-Can't we clear the bit when we are sending the features to vhost
-instead?
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-
->          vdev->dma_as = &address_space_memory;
->      }
->  }
-> -- 
-> 2.19.1
-> 
-
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
