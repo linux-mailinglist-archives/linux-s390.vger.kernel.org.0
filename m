@@ -2,151 +2,312 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 88D9616AE92
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 19:21:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4E9C816AFAB
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 19:50:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726208AbgBXSVc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Feb 2020 13:21:32 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:38179 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727483AbgBXSVc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Feb 2020 13:21:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582568490;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=22uVNHaiuWfKHhhBJTGhF6H/dSMMZVH5DUi8EL/UkUc=;
-        b=InkPsN90LF05O2JMeF5cJlV2PX75qBg0oIeLw/qlVQ8QPiMEs8KoAMfC2faE+uZvSYwp/O
-        uRlqTqfAmVGkrvyphuvxunlO3dLQ0E7eRbcbTQ4ZZatQxtKpQKXTvc1eC8HanYbYc4nPli
-        bmcLj6Ah4asCWhnwRIy7Kq6K7Qe/xZ8=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-464-2T59NpEUMgevvsHj4Lh41w-1; Mon, 24 Feb 2020 13:21:29 -0500
-X-MC-Unique: 2T59NpEUMgevvsHj4Lh41w-1
-Received: by mail-wr1-f69.google.com with SMTP id d15so5991888wru.1
-        for <linux-s390@vger.kernel.org>; Mon, 24 Feb 2020 10:21:28 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=22uVNHaiuWfKHhhBJTGhF6H/dSMMZVH5DUi8EL/UkUc=;
-        b=XCde6J1rsviBzzCpxRBSe6AvbHhEIPs9MLtqajKonv9BNFxh+AeBnDelwyPC6QTGBv
-         jsJl1MNYxJHtD5ll+OFxTYXyy9JmvotGCq86C6JIH9GvgasG5uYQw2F9Safdpts0eWNA
-         lPv5VB136YVd5HI6iIZEk2TpK/Ar6HwBuPW/TRVtOwnKmV/H0CScKrxymBizfbukspoy
-         e6pikxezTqcWW4OXuMVbzN3SEYEC/K2INZ/H+5hrP3uQzWEXa0JgNhQJLG96rwucVNsl
-         lDLkCepKR+C1aZ1QQpALeNqyKwYeQ8Y9DTA55E/o2dgbVvJDwGcNHPnGP0F/yiXEJA/M
-         nkoA==
-X-Gm-Message-State: APjAAAW/xsOE9SeX2kDReOFAYjvLt3a/OI+fYOgj8C09KVZT1YOfEJIM
-        dNPDQwZ58ynPcSBZsmwhFVPnqUs48BoTAXSmrAUtzqL9FTIrgw3KhlmwJgwqZlxqOIVqfNoBfk2
-        wWyK7vUK8xVvpNPddCjLujg==
-X-Received: by 2002:a5d:4443:: with SMTP id x3mr8111012wrr.379.1582568487744;
-        Mon, 24 Feb 2020 10:21:27 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxwUb4YPWt2bhIfMZjR+E3L/6ZIAGSXq4ZuCvQsFLbX+N/YQ4OUc3JnmFjkCIcuGWCrqk5bsQ==
-X-Received: by 2002:a5d:4443:: with SMTP id x3mr8111004wrr.379.1582568487502;
-        Mon, 24 Feb 2020 10:21:27 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:60c6:7e02:8eeb:a041? ([2001:b07:6468:f312:60c6:7e02:8eeb:a041])
-        by smtp.gmail.com with ESMTPSA id h2sm19964314wrt.45.2020.02.24.10.21.26
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2020 10:21:27 -0800 (PST)
-Subject: Re: [PATCH 1/1] KVM: s390: rstify new ioctls in api.rst
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Jonathan Corbet <corbet@lwn.net>
-References: <20200224101559.27405-1-borntraeger@de.ibm.com>
- <20200224101559.27405-2-borntraeger@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d17d7aa2-c472-1efb-79eb-fdbe3af0fccc@redhat.com>
-Date:   Mon, 24 Feb 2020 19:21:26 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1726664AbgBXSuR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Feb 2020 13:50:17 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57818 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726652AbgBXSuR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 24 Feb 2020 13:50:17 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01OInevJ022848
+        for <linux-s390@vger.kernel.org>; Mon, 24 Feb 2020 13:50:16 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yaygp4ef8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 24 Feb 2020 13:50:16 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pasic@linux.ibm.com>;
+        Mon, 24 Feb 2020 18:50:13 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 24 Feb 2020 18:50:10 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01OIo84236110674
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 24 Feb 2020 18:50:08 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7B23511C052;
+        Mon, 24 Feb 2020 18:50:08 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E96A211C04C;
+        Mon, 24 Feb 2020 18:50:07 +0000 (GMT)
+Received: from oc2783563651 (unknown [9.152.224.149])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Mon, 24 Feb 2020 18:50:07 +0000 (GMT)
+Date:   Mon, 24 Feb 2020 19:49:53 +0100
+From:   Halil Pasic <pasic@linux.ibm.com>
+To:     David Gibson <david@gibson.dropbear.id.au>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Jason Wang <jasowang@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+Subject: Re: [PATCH 1/2] mm: move force_dma_unencrypted() to mem_encrypt.h
+In-Reply-To: <20200224033314.GC1751@umbus.fritz.box>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+        <20200220160606.53156-2-pasic@linux.ibm.com>
+        <20200220161146.GA12709@lst.de>
+        <4369f099-e4e4-4a58-b38b-642cf53ccca6@de.ibm.com>
+        <20200220163135.GA13192@lst.de>
+        <20200221032727.GC2298@umbus.fritz.box>
+        <20200221140639.54928efe.pasic@linux.ibm.com>
+        <20200221104724-mutt-send-email-mst@kernel.org>
+        <20200221190702.68fd57fc.pasic@linux.ibm.com>
+        <20200224033314.GC1751@umbus.fritz.box>
+Organization: IBM
+X-Mailer: Claws Mail 3.11.1 (GTK+ 2.24.31; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200224101559.27405-2-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ boundary="Sig_/vGHA3vF9dtV+mrvkwT/xAt3"; protocol="application/pgp-signature"
+X-TM-AS-GCONF: 00
+x-cbid: 20022418-0012-0000-0000-00000389E105
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022418-0013-0000-0000-000021C68166
+Message-Id: <20200224194953.37c0d6b8.pasic@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-24_07:2020-02-21,2020-02-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 suspectscore=0
+ bulkscore=0 malwarescore=0 adultscore=0 priorityscore=1501 spamscore=0
+ phishscore=0 clxscore=1015 impostorscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002240137
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24/02/20 11:15, Christian Borntraeger wrote:
-> We also need to rstify the new ioctls that we added in parallel to the
-> rstification of the kvm docs.
-> 
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> ---
->  Documentation/virt/kvm/api.rst | 33 ++++++++++++++++++---------------
->  1 file changed, 18 insertions(+), 15 deletions(-)
-> 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 97a72a53fa4b..ebd383fba939 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -4611,35 +4611,38 @@ unpins the VPA pages and releases all the device pages that are used to
->  track the secure pages by hypervisor.
->  
->  4.122 KVM_S390_NORMAL_RESET
-> +---------------------------
->  
-> -Capability: KVM_CAP_S390_VCPU_RESETS
-> -Architectures: s390
-> -Type: vcpu ioctl
-> -Parameters: none
-> -Returns: 0
-> +:Capability: KVM_CAP_S390_VCPU_RESETS
-> +:Architectures: s390
-> +:Type: vcpu ioctl
-> +:Parameters: none
-> +:Returns: 0
->  
->  This ioctl resets VCPU registers and control structures according to
->  the cpu reset definition in the POP (Principles Of Operation).
->  
->  4.123 KVM_S390_INITIAL_RESET
-> +----------------------------
->  
-> -Capability: none
-> -Architectures: s390
-> -Type: vcpu ioctl
-> -Parameters: none
-> -Returns: 0
-> +:Capability: none
-> +:Architectures: s390
-> +:Type: vcpu ioctl
-> +:Parameters: none
-> +:Returns: 0
->  
->  This ioctl resets VCPU registers and control structures according to
->  the initial cpu reset definition in the POP. However, the cpu is not
->  put into ESA mode. This reset is a superset of the normal reset.
->  
->  4.124 KVM_S390_CLEAR_RESET
-> +--------------------------
->  
-> -Capability: KVM_CAP_S390_VCPU_RESETS
-> -Architectures: s390
-> -Type: vcpu ioctl
-> -Parameters: none
-> -Returns: 0
-> +:Capability: KVM_CAP_S390_VCPU_RESETS
-> +:Architectures: s390
-> +:Type: vcpu ioctl
-> +:Parameters: none
-> +:Returns: 0
->  
->  This ioctl resets VCPU registers and control structures according to
->  the clear cpu reset definition in the POP. However, the cpu is not put
-> 
+--Sig_/vGHA3vF9dtV+mrvkwT/xAt3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Applied, thanks.
+On Mon, 24 Feb 2020 14:33:14 +1100
+David Gibson <david@gibson.dropbear.id.au> wrote:
 
-Paolo
+> On Fri, Feb 21, 2020 at 07:07:02PM +0100, Halil Pasic wrote:
+> > On Fri, 21 Feb 2020 10:48:15 -0500
+> > "Michael S. Tsirkin" <mst@redhat.com> wrote:
+> >=20
+> > > On Fri, Feb 21, 2020 at 02:06:39PM +0100, Halil Pasic wrote:
+> > > > On Fri, 21 Feb 2020 14:27:27 +1100
+> > > > David Gibson <david@gibson.dropbear.id.au> wrote:
+> > > >=20
+> > > > > On Thu, Feb 20, 2020 at 05:31:35PM +0100, Christoph Hellwig wrote:
+> > > > > > On Thu, Feb 20, 2020 at 05:23:20PM +0100, Christian Borntraeger=
+ wrote:
+> > > > > > > >From a users perspective it makes absolutely perfect sense t=
+o use the
+> > > > > > > bounce buffers when they are NEEDED.=20
+> > > > > > > Forcing the user to specify iommu_platform just because you n=
+eed bounce buffers
+> > > > > > > really feels wrong. And obviously we have a severe performanc=
+e issue
+> > > > > > > because of the indirections.
+> > > > > >=20
+> > > > > > The point is that the user should not have to specify iommu_pla=
+tform.
+> > > > > > We need to make sure any new hypervisor (especially one that mi=
+ght require
+> > > > > > bounce buffering) always sets it,
+> > > > >=20
+> > > > > So, I have draft qemu patches which enable iommu_platform by defa=
+ult.
+> > > > > But that's really because of other problems with !iommu_platform,=
+ not
+> > > > > anything to do with bounce buffering or secure VMs.
+> > > > >=20
+> > > > > The thing is that the hypervisor *doesn't* require bounce bufferi=
+ng.
+> > > > > In the POWER (and maybe s390 as well) models for Secure VMs, it's=
+ the
+> > > > > *guest*'s choice to enter secure mode, so the hypervisor has no r=
+eason
+> > > > > to know whether the guest needs bounce buffering.  As far as the
+> > > > > hypervisor and qemu are concerned that's a guest internal detail,=
+ it
+> > > > > just expects to get addresses it can access whether those are GPAs
+> > > > > (iommu_platform=3Doff) or IOVAs (iommu_platform=3Don).
+> > > >=20
+> > > > I very much agree!
+> > > >=20
+> > > > >=20
+> > > > > > as was a rather bogus legacy hack
+> > > > >=20
+> > > > > It was certainly a bad idea, but it was a bad idea that went into=
+ a
+> > > > > public spec and has been widely deployed for many years.  We can't
+> > > > > just pretend it didn't happen and move on.
+> > > > >=20
+> > > > > Turning iommu_platform=3Don by default breaks old guests, some of=
+ which
+> > > > > we still care about.  We can't (automatically) do it only for gue=
+sts
+> > > > > that need bounce buffering, because the hypervisor doesn't know t=
+hat
+> > > > > ahead of time.
+> > > >=20
+> > > > Turning iommu_platform=3Don for virtio-ccw makes no sense whatsover,
+> > > > because for CCW I/O there is no such thing as IOMMU and the address=
+es
+> > > > are always physical addresses.
+> > >=20
+> > > Fix the name then. The spec calls is ACCESS_PLATFORM now, which
+> > > makes much more sense.
+> >=20
+> > I don't quite get it. Sorry. Maybe I will revisit this later.
+>=20
+> Halil, I think I can clarify this.
+>=20
+> The "iommu_platform" flag doesn't necessarily have anything to do with
+> an iommu, although it often will.  Basically it means "access guest
+> memory via the bus's normal DMA mechanism" rather than "access guest
+> memory using GPA, because you're the hypervisor and you can do that".
+>=20
+
+Unfortunately, I don't think this is what is conveyed to the end users.
+Let's see what do we have documented:
+
+Neither Qemu user documentation
+(https://www.qemu.org/docs/master/qemu-doc.html) nor online help:
+qemu-system-s390x -device virtio-net-ccw,?|grep iommu
+  iommu_platform=3D<bool>  - on/off (default: false)
+has any documentation on it.
+
+But libvirt does have have documenttion on the knob that contros
+iommu_platform for QEMU (when  QEMU is managed by libvirt):
+"""
+Virtio-related options=20
+
+QEMU's virtio devices have some attributes related to the virtio
+transport under the driver element: The iommu attribute enables the use
+of emulated IOMMU by the device. The attribute ats controls the Address
+Translation Service support for PCIe devices. This is needed to make use
+of IOTLB support (see IOMMU device). Possible values are on or off.
+Since 3.5.0=20
+"""
+(https://libvirt.org/formatdomain.html#elementsVirtio)
+
+Thus it seems the only available documentation says that it "enables the use
+of emulated IOMMU by the device".
+
+And for vhost-user we have
+"""
+When the ``VIRTIO_F_IOMMU_PLATFORM`` feature has not been negotiated:
+
+* Guest addresses map to the vhost memory region containing that guest
+  address.
+
+When the ``VIRTIO_F_IOMMU_PLATFORM`` feature has been negotiated:
+
+* Guest addresses are also called I/O virtual addresses (IOVAs).  They are
+  translated to user addresses via the IOTLB.
+"""
+(docs/interop/vhost-user.rst)
+
+> For the case of ccw, both mechanisms end up being the same thing,
+> since CCW's normal DMA *is* untranslated GPA access.
+>=20
+
+Nod.
+
+> For this reason, the flag in the spec was renamed to ACCESS_PLATFORM,
+> but the flag in qemu still has the old name.
+>=20
+
+Yes, the name in the spec is more neutral.
+
+> AIUI, Michael is saying you could trivially change the name in qemu
+> (obviously you'd need to alias the old name to the new one for
+> compatibility).
+>=20
+
+I could, and the I could also ask the libvirt guys to change <driver
+iommu=3D'X'> to <driver access_platform=3D'X'> or similar and to change
+their documentation to something that is harder to comprehend. Although
+I'm not sure they would like the idea.
+
+>=20
+> Actually, the fact that ccw has no translation makes things easier for
+> you: you don't really have any impediment to turning ACCESS_PLATFORM
+> on by default, since it doesn't make any real change to how things
+> work.
+
+Yeah, it should not, in theory, but currently it does in practice.
+Currently vhost will try to do the IOTLB dance (Jason has a patch that
+should help with that), and we get the 'use dma api' side effects in the
+guest (e.g. virtqueue's data go <2G + some overhead).
+
+>=20
+> The remaining difficulty is that the virtio driver - since it can sit
+> on multiple buses - won't know this, and will reject the
+> ACCESS_PLATFORM flag, even though it could just do what it normally
+> does on ccw and it would work.
+
+Right ACCESS_PLATFORM is a funny feature where the device refuses to
+work if the driver does not ack.
+
+>=20
+> For that case, we could consider a hack in qemu where for virtio-ccw
+> devices *only* we allow the guest to nack the ACCESS_PLATFORM flag and
+> carry on anyway.  Normally we insist that the guest accept the
+> ACCESS_PLATFORM flag if offered, because on most platforms they
+> *don't* amount to the same thing.
+
+Jason found a nice way to differentiate between needs translation and
+does not need translation. But that patch still requires the ack by the
+driver (and as Michael has pointed out we have to consider migration).
+
+I'm afraid that  F_IOMMU_PLATFORM means different things in different
+contexts, and that this ain't sufficiently documented. I'm tempted to do
+a proper write-up on this (let's hope my motivation will and my time
+will allow). I would also very much like to have Conny's opinion on this.
+
+Regards,
+Halil
+
+
+
+
+
+
+
+--Sig_/vGHA3vF9dtV+mrvkwT/xAt3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJeVBreAAoJEA0vhuyXGx0ARbkP/30RsQqiAI89yXrLcS/g7x69
+ZQSI71PL1cJaSoeOO8NZBLMOS2Hk8qJgacIUsTTqqt/qMge4DYLZMh74ZPA7GXdc
+bzgYA2zM8Y0eyM/5fCEKNROhI8XQdYVnjmy4ah0KcwJp8328lKx5TJ84AyCPyfT7
+n++IdVLuzXOoVV5QkKD+bttvTVXt9zjJFayTgkJcoyCGoyVkIw/HRkTCw/XCDXQR
+2TmVTtJhu04VKxue9knWDLH6twnG5MBL/BXJ8bQdTLl228RW4yDHUgvx99HZqH+1
+VNSIk9fRCGG7INH/0ZjMjk9wfll2yrB97YOviQ+muj1pC4mOKoTuJjjoT+EVfuz/
+4Wwot29ZqE4WVDhMeHr1sJRYH83911zgrXCDXfbNnEn4qp4XuWUyzRj9d82n+kVx
+2yUq3u8tleBGNqN85xnpfpK5LppvgFkR3xJTRDPLkdUlZ4jSYKpCLmx/9i4KMvl/
+P96EX9ZRLU3oxb8Ju7tZIAskIJP0uwtnHf8XpT3WQZxp0dIISv9/qh86C868jble
+NMx37+iXXLQV3MA/rG08a1VyTHSqGeEdSB8ZstdKC+K6adadnn+jHUUOa2NKF1aI
+X8D/xJ/mTKj+CbsE7K5S8NFAShko5RexZ0gkJWTHnT8j6Jw/aNwbeJezCxihKpRg
+PaQRUIF0348PSE4t0rEt
+=lt9E
+-----END PGP SIGNATURE-----
+
+--Sig_/vGHA3vF9dtV+mrvkwT/xAt3--
 
