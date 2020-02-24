@@ -2,170 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79553169B77
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 01:51:45 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CACF5169C09
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 02:58:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbgBXAvo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 23 Feb 2020 19:51:44 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:37638 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727165AbgBXAvo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 23 Feb 2020 19:51:44 -0500
-Received: by mail-pf1-f196.google.com with SMTP id p14so4456817pfn.4;
-        Sun, 23 Feb 2020 16:51:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=VsG4BeuVio7/IOcNePuekG7++39/uybEVsFZxG/8vQI=;
-        b=N23VItJ61aSj1MCeDYlg10QYF0y3CMgpIojPPayY5qEj83Tuw3SW7a6YSJSt797PnT
-         j5noqvGTh2W9YQJqBBKPgZ12bVjrOAof4ox3n6c8xcNA9UXw2V4+PFmerRdl6Abx80wD
-         zS5T7PlMn18L0E1Zc25oDv/SK2AZHmOWx2heFIUNTIJbOXxIV6BtcyireVicc7FQ/NeK
-         GO7jEWFvYrY+DZQ5LqR8nFTnzu/Oz9QoM6SoT8ZULTnCobaLAYfNxlvHy05RJK/TAuhi
-         XnWps2MerkhrTd1xKOpJf1e2qA4JszViIgn5cX/1lToyzHsG2fzdVLTSnFHxZxBnE0Wh
-         C6dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=VsG4BeuVio7/IOcNePuekG7++39/uybEVsFZxG/8vQI=;
-        b=ud6Y4Y11dD3Pf8jEGM74PJFGeQwHuNL5VlhHAYuOagFQkMqpViIF1SWpyVT6nsDyPh
-         wId4uEz9ov7bZgfZ+Rg4Tz/LnykWYhTg65sY9mF/Yn5Yof+i7kOvRb+Q4c35edvnSrjy
-         ES7eDSoemE4TXcTCamrsFKrIi34qiOZk3xSCdgSDViw7lqLvAH87uPGbTzkKsUtSogC4
-         AWDOtJMR51xWBxVhWpoegQa0ZVeBPshqcJ5K8AIQdJkcc8hk/Uon+QUa8LcwfSu9B7Gu
-         nisdDwobwbg/esphYG4d2ExwLWqSJeue+LEsexhgZme/+nZfwpSZAAOE0DDTfwEpI+EJ
-         z9ew==
-X-Gm-Message-State: APjAAAWBIjBzZgQ+je1qoAI6q/cm2YmrJcaGRLa4sfHIHoi8OTPalBiF
-        KnerAazIST7Ax5qPVj4FAF3CQEP2ZeQ=
-X-Google-Smtp-Source: APXvYqwTODQUNFGcjpNBYdU3UGo0LmYiK+k1AlOtmFEreGarXuk9vWPcgNPXZt8t4tMJQzzJyXK66g==
-X-Received: by 2002:aa7:9a42:: with SMTP id x2mr49346060pfj.71.1582505503702;
-        Sun, 23 Feb 2020 16:51:43 -0800 (PST)
-Received: from localhost ([106.51.232.35])
-        by smtp.gmail.com with ESMTPSA id i27sm9957493pgn.76.2020.02.23.16.51.42
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 23 Feb 2020 16:51:43 -0800 (PST)
-Date:   Mon, 24 Feb 2020 06:21:41 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1727183AbgBXB6z (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 23 Feb 2020 20:58:55 -0500
+Received: from foss.arm.com ([217.140.110.172]:55792 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727151AbgBXB6y (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 23 Feb 2020 20:58:54 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E20D41FB;
+        Sun, 23 Feb 2020 17:58:53 -0800 (PST)
+Received: from [10.162.16.95] (p8cg001049571a15.blr.arm.com [10.162.16.95])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 97E1F3F6CF;
+        Sun, 23 Feb 2020 17:58:46 -0800 (PST)
+Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
+ table helpers
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sebastian Ott <sebott@linux.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH v2 11/18] s390: replace setup_irq() by request_irq()
-Message-ID: <463586b1fb5ca6dd60b4b5264312f86924281552.1582471508.git.afzal.mohd.ma@gmail.com>
-References: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Christophe Leroy <christophe.leroy@c-s.fr>
+References: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <fac4f03a-0cd3-29ad-b5e2-9aca2dd07b39@arm.com>
+Date:   Mon, 24 Feb 2020 07:28:46 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1582471508.git.afzal.mohd.ma@gmail.com>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-request_irq() is preferred over setup_irq(). The early boot setup_irq()
-invocations happen either via 'init_IRQ()' or 'time_init()', while
-memory allocators are ready by 'mm_init()'.
+On 02/17/2020 08:47 AM, Anshuman Khandual wrote:
+> This adds a test validation for architecture exported page table helpers.
+> Patch adds basic transformation tests at various levels of the page table.
+> 
+> This test was originally suggested by Catalin during arm64 THP migration
+> RFC discussion earlier. Going forward it can include more specific tests
+> with respect to various generic MM functions like THP, HugeTLB etc and
+> platform specific tests.
+> 
+> https://lore.kernel.org/linux-mm/20190628102003.GA56463@arrakis.emea.arm.com/
+> 
+> Needs to be applied on linux V5.6-rc2
+> 
+> Changes in V14:
+> 
+> - Disabled DEBUG_VM_PGFLAGS for IA64 and ARM (32 Bit) per Andrew and Christophe
+> - Updated DEBUG_VM_PGFLAGS documentation wrt EXPERT and disabled platforms
+> - Updated RANDOM_[OR|NZ]VALUE open encodings with GENMASK() per Catalin
+> - Updated s390 constraint bits from 12 to 4 (S390_MASK_BITS) per Gerald
+> - Updated in-code documentation for RANDOM_ORVALUE per Gerald
+> - Updated pxx_basic_tests() to use invert functions first per Catalin
+> - Dropped ARCH_HAS_4LEVEL_HACK check from pud_basic_tests()
+> - Replaced __ARCH_HAS_[4|5]LEVEL_HACK with __PAGETABLE_[PUD|P4D]_FOLDED per Catalin
+> - Trimmed the CC list on the commit message per Catalin
 
-Per tglx[1], setup_irq() existed in olden days when allocators were not
-ready by the time early interrupts were initialized.
+Hello Andrew,
 
-Hence replace setup_irq() by request_irq().
+As there are no further comments on this patch from last week, wondering
+if you would possibly consider this patch. But if you feel there is still
+something which need to be taken care here, please do let me know.
 
-Seldom remove_irq() usage has been observed coupled with setup_irq(),
-wherever that has been found, it too has been replaced by free_irq().
+Thank you.
 
-[1] https://lkml.kernel.org/r/alpine.DEB.2.20.1710191609480.1971@nanos
-
-Signed-off-by: afzal mohammed <afzal.mohd.ma@gmail.com>
----
-
-v2:
- * Replace pr_err("request_irq() on %s failed" by
-           pr_err("%s: request_irq() failed"
- * Commit message massage
-
- arch/s390/kernel/irq.c  | 8 ++------
- drivers/s390/cio/airq.c | 8 ++------
- drivers/s390/cio/cio.c  | 8 ++------
- 3 files changed, 6 insertions(+), 18 deletions(-)
-
-diff --git a/arch/s390/kernel/irq.c b/arch/s390/kernel/irq.c
-index 8371855042dc..2cbe7296f069 100644
---- a/arch/s390/kernel/irq.c
-+++ b/arch/s390/kernel/irq.c
-@@ -294,11 +294,6 @@ static irqreturn_t do_ext_interrupt(int irq, void *dummy)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction external_interrupt = {
--	.name	 = "EXT",
--	.handler = do_ext_interrupt,
--};
--
- void __init init_ext_interrupts(void)
- {
- 	int idx;
-@@ -308,7 +303,8 @@ void __init init_ext_interrupts(void)
- 
- 	irq_set_chip_and_handler(EXT_INTERRUPT,
- 				 &dummy_irq_chip, handle_percpu_irq);
--	setup_irq(EXT_INTERRUPT, &external_interrupt);
-+	if (request_irq(EXT_INTERRUPT, do_ext_interrupt, 0, "EXT", NULL))
-+		pr_err("%s: request_irq() failed\n", "EXT");
- }
- 
- static DEFINE_SPINLOCK(irq_subclass_lock);
-diff --git a/drivers/s390/cio/airq.c b/drivers/s390/cio/airq.c
-index 427b2e24a8ce..8d062d8ff669 100644
---- a/drivers/s390/cio/airq.c
-+++ b/drivers/s390/cio/airq.c
-@@ -105,16 +105,12 @@ static irqreturn_t do_airq_interrupt(int irq, void *dummy)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction airq_interrupt = {
--	.name	 = "AIO",
--	.handler = do_airq_interrupt,
--};
--
- void __init init_airq_interrupts(void)
- {
- 	irq_set_chip_and_handler(THIN_INTERRUPT,
- 				 &dummy_irq_chip, handle_percpu_irq);
--	setup_irq(THIN_INTERRUPT, &airq_interrupt);
-+	if (request_irq(THIN_INTERRUPT, do_airq_interrupt, 0, "AIO", NULL))
-+		pr_err("%s: request_irq() failed\n", "AIO");
- }
- 
- static inline unsigned long iv_size(unsigned long bits)
-diff --git a/drivers/s390/cio/cio.c b/drivers/s390/cio/cio.c
-index 18f5458f90e8..703265786756 100644
---- a/drivers/s390/cio/cio.c
-+++ b/drivers/s390/cio/cio.c
-@@ -563,16 +563,12 @@ static irqreturn_t do_cio_interrupt(int irq, void *dummy)
- 	return IRQ_HANDLED;
- }
- 
--static struct irqaction io_interrupt = {
--	.name	 = "I/O",
--	.handler = do_cio_interrupt,
--};
--
- void __init init_cio_interrupts(void)
- {
- 	irq_set_chip_and_handler(IO_INTERRUPT,
- 				 &dummy_irq_chip, handle_percpu_irq);
--	setup_irq(IO_INTERRUPT, &io_interrupt);
-+	if (request_irq(IO_INTERRUPT, do_cio_interrupt, 0, "I/O", NULL))
-+		pr_err("%s: request_irq() failed\n", "I/O");
- }
- 
- #ifdef CONFIG_CCW_CONSOLE
--- 
-2.25.1
-
+- Anshuman
