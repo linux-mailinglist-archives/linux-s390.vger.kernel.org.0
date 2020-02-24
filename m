@@ -2,33 +2,63 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7F95B169ECD
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 07:51:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B4F56169F78
+	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 08:49:12 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726997AbgBXGv1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Feb 2020 01:51:27 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45701 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726990AbgBXGv1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 24 Feb 2020 01:51:27 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 48Qt596JR7z9sRQ; Mon, 24 Feb 2020 17:51:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1582527085;
-        bh=4toq+o4FWYWnXZF2qhVnr45b/rNEVYKG5cy9H9uQF6w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=gMA87Wx6tBiuJB6UgG+glqvbxC6ABwj/iRhqAEx62Xk9uiswratDNTSr3AAa71CXv
-         GPUNJKQ/bDn7vXGBXFm2T/BC6o2tFusk2R+id/HezhrRbfqJ0xpErOvpDBEnHAlL93
-         576GQ8Ja7NR/3iFZTxbI/J02SIr0x/x5yeKPtEZk=
-Date:   Mon, 24 Feb 2020 17:50:53 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Christoph Hellwig <hch@lst.de>
+        id S1726765AbgBXHtM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Feb 2020 02:49:12 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:44051 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726452AbgBXHtL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 24 Feb 2020 02:49:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582530549;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=UJzRHJfOvqED/QVB11a8FY9iUPPI3dbD0rzXCYDhwc0=;
+        b=AYKvfRb+dvh6s+nQSmNoJs8I1zakq3ANxT7qmg3OQ9x8xSYIGp37vt7XY9Q+s7pasiRO5A
+        6fXkjTdH8Z3IUDrDZg4G17d4/IaI8cpVoBNJCONynES7jzuoirW6jnEu7TdEnBkZshkVpU
+        oCYA/PT3WSjBF+xgi562N/8xSkPeZIs=
+Received: from mail-qk1-f200.google.com (mail-qk1-f200.google.com
+ [209.85.222.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-212-TPgPnIfaPm6UlB2N5qYh8A-1; Mon, 24 Feb 2020 02:49:08 -0500
+X-MC-Unique: TPgPnIfaPm6UlB2N5qYh8A-1
+Received: by mail-qk1-f200.google.com with SMTP id r142so9725258qke.3
+        for <linux-s390@vger.kernel.org>; Sun, 23 Feb 2020 23:49:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=UJzRHJfOvqED/QVB11a8FY9iUPPI3dbD0rzXCYDhwc0=;
+        b=cqrnDV2TWb8SggPLNlCbTtsljzZ0El0grMieAo4qjkzFvoBQZEELPcvN0oiPNhrbgV
+         +O8UPW36j1drzsXr3id1rbR34zbr89qtjWip9l1R9nQYubPDkGr6ClmOQ+mqbRDKddsP
+         NoJD3NDDaElATxX5X1dEHxRDMAnGoVQHpU82pJ14+00PkH4ode7L8uFGbX8aQR9knkvS
+         6F7TsuwEGV7Jk6OOzqC4w5t+AeZhOnt2R3p5880JclqeeUvS55pF0z/27dHFIv+Sr9L0
+         hZ89cAxuJa/Ghr1O8pFs9ocYQ5wWS1hCWI3sADtpEJxN/X4sRInxDlfVe7Pa7GHtYCUr
+         rUbA==
+X-Gm-Message-State: APjAAAXuKJ9lSNxK1oeWZ3HeLNIWkt3NsJ3QS5kWlbbtBR8OmPWYBWzC
+        oPNWXvFnXxPSqiuSa3kfhGrSbEgm0nbsQ/e9K1fXBAyyJFUfo4jnjZJNBTUbayhA8PEJ3af243E
+        8VQpT4xuoPscFmWoR0A3oIg==
+X-Received: by 2002:a05:620a:95c:: with SMTP id w28mr44288185qkw.428.1582530547830;
+        Sun, 23 Feb 2020 23:49:07 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzzBrfPKkWekVzDtkE3twmNvbfgy+awAYxrqVqXXAqxHi9BwToMW+Zbt9HgNgV5bAhK+LRpaQ==
+X-Received: by 2002:a05:620a:95c:: with SMTP id w28mr44288158qkw.428.1582530547478;
+        Sun, 23 Feb 2020 23:49:07 -0800 (PST)
+Received: from redhat.com (bzq-79-178-2-214.red.bezeqint.net. [79.178.2.214])
+        by smtp.gmail.com with ESMTPSA id r37sm5593220qtj.44.2020.02.23.23.49.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 23 Feb 2020 23:49:06 -0800 (PST)
+Date:   Mon, 24 Feb 2020 02:48:59 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
 Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
         Marek Szyprowski <m.szyprowski@samsung.com>,
         Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
         virtualization@lists.linux-foundation.org,
         linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
         Christian Borntraeger <borntraeger@de.ibm.com>,
@@ -37,91 +67,222 @@ Cc:     Halil Pasic <pasic@linux.ibm.com>,
         Cornelia Huck <cohuck@redhat.com>,
         Ram Pai <linuxram@us.ibm.com>,
         Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
         "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
         Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 2/2] virtio: let virtio use DMA API when guest RAM is
- protected
-Message-ID: <20200224065053.GM1751@umbus.fritz.box>
+Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
+ VIRTIO_F_IOMMU_PLATFORM
+Message-ID: <20200224024641-mutt-send-email-mst@kernel.org>
 References: <20200220160606.53156-1-pasic@linux.ibm.com>
- <20200220160606.53156-3-pasic@linux.ibm.com>
- <20200220161309.GB12709@lst.de>
- <20200221025915.GB2298@umbus.fritz.box>
- <20200221163645.GB10054@lst.de>
+ <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
+ <20200221155602.4de41fa7.pasic@linux.ibm.com>
+ <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
+ <20200224010607-mutt-send-email-mst@kernel.org>
+ <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tv2SIFopg1r47n4a"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20200221163645.GB10054@lst.de>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, Feb 24, 2020 at 02:45:03PM +0800, Jason Wang wrote:
+> 
+> On 2020/2/24 下午2:06, Michael S. Tsirkin wrote:
+> > On Mon, Feb 24, 2020 at 12:01:57PM +0800, Jason Wang wrote:
+> > > On 2020/2/21 下午10:56, Halil Pasic wrote:
+> > > > On Fri, 21 Feb 2020 14:22:26 +0800
+> > > > Jason Wang <jasowang@redhat.com> wrote:
+> > > > 
+> > > > > On 2020/2/21 上午12:06, Halil Pasic wrote:
+> > > > > > Currently if one intends to run a memory protection enabled VM with
+> > > > > > virtio devices and linux as the guest OS, one needs to specify the
+> > > > > > VIRTIO_F_IOMMU_PLATFORM flag for each virtio device to make the guest
+> > > > > > linux use the DMA API, which in turn handles the memory
+> > > > > > encryption/protection stuff if the guest decides to turn itself into
+> > > > > > a protected one. This however makes no sense due to multiple reasons:
+> > > > > > * The device is not changed by the fact that the guest RAM is
+> > > > > > protected. The so called IOMMU bypass quirk is not affected.
+> > > > > > * This usage is not congruent with  standardised semantics of
+> > > > > > VIRTIO_F_IOMMU_PLATFORM. Guest memory protected is an orthogonal reason
+> > > > > > for using DMA API in virtio (orthogonal with respect to what is
+> > > > > > expressed by VIRTIO_F_IOMMU_PLATFORM).
+> > > > > > 
+> > > > > > This series aims to decouple 'have to use DMA API because my (guest) RAM
+> > > > > > is protected' and 'have to use DMA API because the device told me
+> > > > > > VIRTIO_F_IOMMU_PLATFORM'.
+> > > > > > 
+> > > > > > Please find more detailed explanations about the conceptual aspects in
+> > > > > > the individual patches. There is however also a very practical problem
+> > > > > > that is addressed by this series.
+> > > > > > 
+> > > > > > For vhost-net the feature VIRTIO_F_IOMMU_PLATFORM has the following side
+> > > > > > effect The vhost code assumes it the addresses on the virtio descriptor
+> > > > > > ring are not guest physical addresses but iova's, and insists on doing a
+> > > > > > translation of these regardless of what transport is used (e.g. whether
+> > > > > > we emulate a PCI or a CCW device). (For details see commit 6b1e6cc7855b
+> > > > > > "vhost: new device IOTLB API".) On s390 this results in severe
+> > > > > > performance degradation (c.a. factor 10).
+> > > > > Do you see a consistent degradation on the performance, or it only
+> > > > > happen when for during the beginning of the test?
+> > > > > 
+> > > > AFAIK the degradation is consistent.
+> > > > 
+> > > > > > BTW with ccw I/O there is
+> > > > > > (architecturally) no IOMMU, so the whole address translation makes no
+> > > > > > sense in the context of virtio-ccw.
+> > > > > I suspect we can do optimization in qemu side.
+> > > > > 
+> > > > > E.g send memtable entry via IOTLB API when vIOMMU is not enabled.
+> > > > > 
+> > > > > If this makes sense, I can draft patch to see if there's any difference.
+> > > > Frankly I would prefer to avoid IOVAs on the descriptor ring (and the
+> > > > then necessary translation) for virtio-ccw altogether. But Michael
+> > > > voiced his opinion that we should mandate F_IOMMU_PLATFORM for devices
+> > > > that could be used with guests running in protected mode. I don't share
+> > > > his opinion, but that's an ongoing discussion.
+> > > > 
+> > > > Should we end up having to do translation from IOVA in vhost, we are
+> > > > very interested in that translation being fast and efficient.
+> > > > 
+> > > > In that sense we would be very happy to test any optimization that aim
+> > > > into that direction.
+> > > > 
+> > > > Thank you very much for your input!
+> > > 
+> > > Using IOTLB API on platform without IOMMU support is not intended. Please
+> > > try the attached patch to see if it helps.
+> > > 
+> > > Thanks
+> > > 
+> > > 
+> > > > Regards,
+> > > > Halil
+> > > > 
+> > > > > Thanks
+> > > > > 
+> > > > > 
+> > > > > > Halil Pasic (2):
+> > > > > >      mm: move force_dma_unencrypted() to mem_encrypt.h
+> > > > > >      virtio: let virtio use DMA API when guest RAM is protected
+> > > > > > 
+> > > > > >     drivers/virtio/virtio_ring.c |  3 +++
+> > > > > >     include/linux/dma-direct.h   |  9 ---------
+> > > > > >     include/linux/mem_encrypt.h  | 10 ++++++++++
+> > > > > >     3 files changed, 13 insertions(+), 9 deletions(-)
+> > > > > > 
+> > > > > > 
+> > > > > > base-commit: ca7e1fd1026c5af6a533b4b5447e1d2f153e28f2
+> > > >From 66fa730460875ac99e81d7db2334cd16bb1d2b27 Mon Sep 17 00:00:00 2001
+> > > From: Jason Wang <jasowang@redhat.com>
+> > > Date: Mon, 24 Feb 2020 12:00:10 +0800
+> > > Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
+> > > 
+> > > When transport does not support IOMMU, we should clear IOMMU_PLATFORM
+> > > even if the device and vhost claims to support that. This help to
+> > > avoid the performance overhead caused by unnecessary IOTLB miss/update
+> > > transactions on such platform.
+> > > 
+> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > ---
+> > >   hw/virtio/virtio-bus.c | 6 +++---
+> > >   1 file changed, 3 insertions(+), 3 deletions(-)
+> > > 
+> > > diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
+> > > index d6332d45c3..2741b9fdd2 100644
+> > > --- a/hw/virtio/virtio-bus.c
+> > > +++ b/hw/virtio/virtio-bus.c
+> > > @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
+> > >       VirtioBusState *bus = VIRTIO_BUS(qbus);
+> > >       VirtioBusClass *klass = VIRTIO_BUS_GET_CLASS(bus);
+> > >       VirtioDeviceClass *vdc = VIRTIO_DEVICE_GET_CLASS(vdev);
+> > > -    bool has_iommu = virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
+> > >       Error *local_err = NULL;
+> > >       DPRINTF("%s: plug device.\n", qbus->name);
+> > > @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
+> > >           return;
+> > >       }
+> > > -    if (klass->get_dma_as != NULL && has_iommu) {
+> > > -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
+> > > +    if (false && klass->get_dma_as != NULL &&
+> > > +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
+> > >           vdev->dma_as = klass->get_dma_as(qbus->parent);
+> > >       } else {
+> > > +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
+> > >           vdev->dma_as = &address_space_memory;
+> > >       }
+> > >   }
+> > 
+> > This seems to clear it unconditionally. I guess it's just a debugging
+> > patch, the real one will come later?
+> 
+> 
+> My bad, here's the correct one.
+> 
+> Thanks
+> 
+> 
+> > 
+> > > -- 
+> > > 2.19.1
+> > > 
 
---tv2SIFopg1r47n4a
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> >From b8a8b582f46bb86c7a745b272db7b744779e5cc7 Mon Sep 17 00:00:00 2001
+> From: Jason Wang <jasowang@redhat.com>
+> Date: Mon, 24 Feb 2020 12:00:10 +0800
+> Subject: [PATCH] virtio: turn on IOMMU_PLATFORM properly
+> 
+> When transport does not support IOMMU, we should clear IOMMU_PLATFORM
+> even if the device and vhost claims to support that. This help to
+> avoid the performance overhead caused by unnecessary IOTLB miss/update
+> transactions on such platform.
+> 
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  hw/virtio/virtio-bus.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/hw/virtio/virtio-bus.c b/hw/virtio/virtio-bus.c
+> index d6332d45c3..4be64e193e 100644
+> --- a/hw/virtio/virtio-bus.c
+> +++ b/hw/virtio/virtio-bus.c
+> @@ -47,7 +47,6 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
+>      VirtioBusState *bus = VIRTIO_BUS(qbus);
+>      VirtioBusClass *klass = VIRTIO_BUS_GET_CLASS(bus);
+>      VirtioDeviceClass *vdc = VIRTIO_DEVICE_GET_CLASS(vdev);
+> -    bool has_iommu = virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM);
+>      Error *local_err = NULL;
+>  
+>      DPRINTF("%s: plug device.\n", qbus->name);
+> @@ -77,10 +76,11 @@ void virtio_bus_device_plugged(VirtIODevice *vdev, Error **errp)
+>          return;
+>      }
+>  
+> -    if (klass->get_dma_as != NULL && has_iommu) {
+> -        virtio_add_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
 
-On Fri, Feb 21, 2020 at 05:36:45PM +0100, Christoph Hellwig wrote:
-> On Fri, Feb 21, 2020 at 01:59:15PM +1100, David Gibson wrote:
-> > > Hell no.  This is a detail of the platform DMA direct implementation.
-> > > Drivers have no business looking at this flag, and virtio finally nee=
-ds
-> > > to be fixed to use the DMA API properly for everything but legacy dev=
-ices.
-> >=20
-> > So, this patch definitely isn't right as it stands, but I'm struggling
-> > to understand what it is you're saying is the right way.
-> >=20
-> > By "legacy devices" I assume you mean pre-virtio-1.0 devices, that
-> > lack the F_VERSION_1 feature flag.  Is that right?  Because I don't
-> > see how being a legacy device or not relates to use of the DMA API.
->=20
-> No.   "legacy" is anything that does not set F_ACCESS_PLATFORM.
+So it looks like this line is unnecessary, but it's an unrelated
+cleanup, right?
 
-Hm, I see.
+> +    if (klass->get_dma_as != NULL &&
+> +        virtio_host_has_feature(vdev, VIRTIO_F_IOMMU_PLATFORM)) {
+>          vdev->dma_as = klass->get_dma_as(qbus->parent);
+>      } else {
+> +        virtio_clear_feature(&vdev->host_features, VIRTIO_F_IOMMU_PLATFORM);
 
-The trouble is I think we can only reasonably call things "legacy"
-when essentially all currently in use OSes have support for the new,
-better way of doing things.  That is, alas, not really the case for
-F_ACCESS_PLATFORM.
 
-> > I *think* what you are suggesting here is that virtio devices that
-> > have !F_IOMMU_PLATFORM should have their dma_ops set up so that the
-> > DMA API treats IOVA=3D=3DPA, which will satisfy what the device expects.
-> > Then the virtio driver can use the DMA API the same way for both
-> > F_IOMMU_PLATFORM and !F_IOMMU_PLATFORM devices.
->=20
-> No.  Those should just keep using the existing legacy non-dma ops
-> case and be done with it.  No changes to that and most certainly
-> no new features.
->=20
+Of course any change like that will have to affect migration compat, etc.
+Can't we clear the bit when we are sending the features to vhost
+instead?
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
 
---tv2SIFopg1r47n4a
-Content-Type: application/pgp-signature; name="signature.asc"
+>          vdev->dma_as = &address_space_memory;
+>      }
+>  }
+> -- 
+> 2.19.1
+> 
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5TckoACgkQbDjKyiDZ
-s5K3ZRAAhMCdmN1OrUKfgLFhJWQQeC89dOZY69wRPSGHIRGqp2vdz/84iVFYTXtM
-KJIVtt/k4q5tdpB8FDlRYkPkBjAxZxwUXCQ5ErZ8bUW+1l9qidMcmM81ud6CuDo5
-JnNILm61f05ut+aJtoH8N9pHLWVp6Xd7D0U2EuZm3O1E1Ru7eWh89XVqZszqy/0v
-wU+HF11K6jWai0ZBUmsbHzRzklrXB832SfHRxREYTgaAnfIJciC+VoYClfLDdz5l
-IHqFw/HkmOM0gbiuTsirWTmIZYgdiGm2luvqn3UJRSUeMur5r1KAQb54VdTXoxm6
-85M7AILjY82m3QKG4xWbSzH778IFxv3fhbfNo1lOT0f4IAn3bJ3xNrlP72vmzq03
-mnU3XYWDD7Bi7ohPJmNL/KatbmLDSBGW55f6VxdcydKUEWC4EOdLhAm3D1L9GOI7
-m9MOyhkKifhvysv3yA4+Wu6lEhJS7C/xLLzZIKuXS/2YWeplK4meqBoIgBnLD9L1
-oD4EK/yI9AQu0WLj2SPUP5jWzMxaUzKHrseBf8Lzk1i/IrMrOxqYF3+Mz6hHZkey
-+3lNPAAPuD+FeZC34MWsH7jL/JPT3RPDGHjtIf7fP2f/VPZygVJCOUh5/vYnX4dI
-v2Jd5yIETXGCRsGnZcxnszGVK3J0zN+skCNsyIZKwRBsZuBTLj0=
-=Q89/
------END PGP SIGNATURE-----
-
---tv2SIFopg1r47n4a--
