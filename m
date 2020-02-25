@@ -2,220 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C9A8316EA3A
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 16:35:42 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6318416EA8C
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 16:51:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731069AbgBYPfm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Feb 2020 10:35:42 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24656 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731019AbgBYPfl (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Feb 2020 10:35:41 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PFZZRw016704
-        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 10:35:40 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb1qdx335-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 10:35:38 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <kgraul@linux.ibm.com>;
-        Tue, 25 Feb 2020 15:34:45 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Feb 2020 15:34:42 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PFYf8e51511542
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 15:34:41 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 32E4111C04A;
-        Tue, 25 Feb 2020 15:34:41 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id ED2E911C04C;
-        Tue, 25 Feb 2020 15:34:40 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 25 Feb 2020 15:34:40 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net] net/smc: fix cleanup for linkgroup setup failures
-Date:   Tue, 25 Feb 2020 16:34:36 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20022515-0016-0000-0000-000002EA2AAA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022515-0017-0000-0000-0000334D56B6
-Message-Id: <20200225153436.26498-1-kgraul@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-25_05:2020-02-21,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- spamscore=0 clxscore=1015 impostorscore=0 suspectscore=3 phishscore=0
- mlxlogscore=999 bulkscore=0 mlxscore=0 adultscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250121
+        id S1729207AbgBYPvQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Feb 2020 10:51:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46385 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728096AbgBYPvP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 25 Feb 2020 10:51:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582645874;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Z0DlAdI9/sKGf97eqVEbAeNHhd5i8GxwMNlFZqYH+6A=;
+        b=HJqcXfaTr/nB9eaa68eIDFTD1WwvUYpgEDNIJhtdSI4ijVVkHCF1WiMFTD3okbyIBmGVvd
+        xcLKFjrj3M3CJBznVV2N9hGTSi1CGNg7mo5FK7aR7U9N6VA0RgnWSEyyb/IbZ+kcHSqBZr
+        kVe5MoNjJ8Md3HFfqS6lmrIJ+Svd4Eg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-64-0xYdur1VPuedMPipNBG-IA-1; Tue, 25 Feb 2020 10:51:10 -0500
+X-MC-Unique: 0xYdur1VPuedMPipNBG-IA-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 115DC1902EA8;
+        Tue, 25 Feb 2020 15:51:09 +0000 (UTC)
+Received: from gondolin (dhcp-192-175.str.redhat.com [10.33.192.175])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B18065D9CD;
+        Tue, 25 Feb 2020 15:51:01 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 16:50:59 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH v4 36/36] KVM: s390: protvirt: Add KVM api documentation
+Message-ID: <20200225165059.5a2f48a5.cohuck@redhat.com>
+In-Reply-To: <20200224114107.4646-37-borntraeger@de.ibm.com>
+References: <20200224114107.4646-1-borntraeger@de.ibm.com>
+        <20200224114107.4646-37-borntraeger@de.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Ursula Braun <ubraun@linux.ibm.com>
+On Mon, 24 Feb 2020 06:41:07 -0500
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-If an SMC connection to a certain peer is setup the first time,
-a new linkgroup is created. In case of setup failures, such a
-linkgroup is unusable and should disappear. As a first step the
-linkgroup is removed from the linkgroup list in smc_lgr_forget().
+> From: Janosch Frank <frankja@linux.ibm.com>
+> 
+> Add documentation for KVM_CAP_S390_PROTECTED capability and the
+> KVM_S390_PV_COMMAND ioctl.
+> 
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  Documentation/virt/kvm/api.rst | 55 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+> 
+> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+> index 7505d7a6c0d8..20abb8b2594e 100644
+> --- a/Documentation/virt/kvm/api.rst
+> +++ b/Documentation/virt/kvm/api.rst
+> @@ -4648,6 +4648,51 @@ the clear cpu reset definition in the POP. However, the cpu is not put
+>  into ESA mode. This reset is a superset of the initial reset.
+>  
+>  
+> +4.125 KVM_S390_PV_COMMAND
+> +-------------------------
+> +
+> +:Capability: KVM_CAP_S390_PROTECTED
+> +:Architectures: s390
+> +:Type: vm ioctl
+> +:Parameters: struct kvm_pv_cmd
+> +:Returns: 0 on success, < 0 on error
+> +
+> +::
+> +
+> +  struct kvm_pv_cmd {
+> +	__u32 cmd;	/* Command to be executed */
+> +	__u16 rc;	/* Ultravisor return code */
+> +	__u16 rrc;	/* Ultravisor return reason code */
+> +	__u64 data;	/* Data or address */
+> +	__u32 flags;    /* flags for future extensions. Must be 0 for now */
+> +	__u32 reserved[3];
+> +  };
+> +
+> +cmd values:
+> +
+> +KVM_PV_ENABLE
+> +  Allocate memory and register the VM with the Ultravisor, thereby
+> +  donating memory to the Ultravisor making it inaccessible to KVM.
+> +  Also converts all existing CPUs to protected ones. Future hotplug
+> +  CPUs will become protected during creation.
 
-There are 2 problems:
-smc_listen_decline() might be called before linkgroup creation
-resulting in a crash due to calling smc_lgr_forget() with
-parameter NULL.
-If a setup failure occurs after linkgroup creation, the connection
-is never unregistered from the linkgroup, preventing linkgroup
-freeing.
+"Allocate memory and register the VM with the Ultravisor, thereby
+donating memory to the Ultravisor that will become inaccsessible to
+KVM. All existing CPUs are converted to protected ones. After this
+command has succeeded, any CPU added via hotplug will become protected
+during its creation as well."
 
-This patch introduces an enhanced smc_lgr_cleanup_early() function
-which
-* contains a linkgroup check for early smc_listen_decline()
-  invocations
-* invokes smc_conn_free() to guarantee unregistering of the
-  connection.
-* schedules fast linkgroup removal of the unusable linkgroup
+> +
+> +KVM_PV_DISABLE
+> +  Deregisters the VM from the Ultravisor and frees memory that was
+> +  donated, so the kernel can use it again. All registered VCPUs are
+> +  converted back to non-protected ones.
 
-And the unused function smcd_conn_free() is removed from smc_core.h.
+"Deregister the VM from the Ultravisor and reclaim the memory that had
+been donated to the Ultravisor, making it usable by the kernel again.
+..."
 
-Fixes: 3b2dec2603d5b ("net/smc: restructure client and server code in af_smc")
-Fixes: 2a0674fffb6bc ("net/smc: improve abnormal termination of link groups")
-Signed-off-by: Ursula Braun <ubraun@linux.ibm.com>
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/af_smc.c   | 25 +++++++++++++++----------
- net/smc/smc_core.c | 12 ++++++++++++
- net/smc/smc_core.h |  2 +-
- 3 files changed, 28 insertions(+), 11 deletions(-)
+> +
+> +KVM_PV_VM_SET_SEC_PARMS
+> +  Pass the image header from VM memory to the Ultravisor in
+> +  preparation of image unpacking and verification.
+> +
+> +KVM_PV_VM_UNPACK
+> +  Unpack (protect and decrypt) a page of the encrypted boot image.
+> +
+> +KVM_PV_VM_VERIFY
+> +  Verify the integrity of the unpacked image. Only if this succeeds,
+> +  KVM is allowed to start protected VCPUs.
+> +
+> +
+>  5. The kvm_run structure
+>  ========================
+>  
+> @@ -6026,3 +6071,13 @@ Architectures: s390
+>  
+>  This capability indicates that the KVM_S390_NORMAL_RESET and
+>  KVM_S390_CLEAR_RESET ioctls are available.
+> +
+> +8.23 KVM_CAP_S390_PROTECTED
+> +
+> +Architecture: s390
+> +
+> +This capability indicates that KVM can start protected VMs and the
+> +Ultravisor has therefore been initialized.
 
-diff --git a/net/smc/af_smc.c b/net/smc/af_smc.c
-index 90988a511cd5..6fd44bdb0fc3 100644
---- a/net/smc/af_smc.c
-+++ b/net/smc/af_smc.c
-@@ -512,15 +512,18 @@ static int smc_connect_decline_fallback(struct smc_sock *smc, int reason_code)
- static int smc_connect_abort(struct smc_sock *smc, int reason_code,
- 			     int local_contact)
- {
-+	bool is_smcd = smc->conn.lgr->is_smcd;
-+
- 	if (local_contact == SMC_FIRST_CONTACT)
--		smc_lgr_forget(smc->conn.lgr);
--	if (smc->conn.lgr->is_smcd)
-+		smc_lgr_cleanup_early(&smc->conn);
-+	else
-+		smc_conn_free(&smc->conn);
-+	if (is_smcd)
- 		/* there is only one lgr role for SMC-D; use server lock */
- 		mutex_unlock(&smc_server_lgr_pending);
- 	else
- 		mutex_unlock(&smc_client_lgr_pending);
- 
--	smc_conn_free(&smc->conn);
- 	smc->connect_nonblock = 0;
- 	return reason_code;
- }
-@@ -1091,7 +1094,6 @@ static void smc_listen_out_err(struct smc_sock *new_smc)
- 	if (newsmcsk->sk_state == SMC_INIT)
- 		sock_put(&new_smc->sk); /* passive closing */
- 	newsmcsk->sk_state = SMC_CLOSED;
--	smc_conn_free(&new_smc->conn);
- 
- 	smc_listen_out(new_smc);
- }
-@@ -1102,12 +1104,13 @@ static void smc_listen_decline(struct smc_sock *new_smc, int reason_code,
- {
- 	/* RDMA setup failed, switch back to TCP */
- 	if (local_contact == SMC_FIRST_CONTACT)
--		smc_lgr_forget(new_smc->conn.lgr);
-+		smc_lgr_cleanup_early(&new_smc->conn);
-+	else
-+		smc_conn_free(&new_smc->conn);
- 	if (reason_code < 0) { /* error, no fallback possible */
- 		smc_listen_out_err(new_smc);
- 		return;
- 	}
--	smc_conn_free(&new_smc->conn);
- 	smc_switch_to_fallback(new_smc);
- 	new_smc->fallback_rsn = reason_code;
- 	if (reason_code && reason_code != SMC_CLC_DECL_PEERDECL) {
-@@ -1170,16 +1173,18 @@ static int smc_listen_ism_init(struct smc_sock *new_smc,
- 			    new_smc->conn.lgr->vlan_id,
- 			    new_smc->conn.lgr->smcd)) {
- 		if (ini->cln_first_contact == SMC_FIRST_CONTACT)
--			smc_lgr_forget(new_smc->conn.lgr);
--		smc_conn_free(&new_smc->conn);
-+			smc_lgr_cleanup_early(&new_smc->conn);
-+		else
-+			smc_conn_free(&new_smc->conn);
- 		return SMC_CLC_DECL_SMCDNOTALK;
- 	}
- 
- 	/* Create send and receive buffers */
- 	if (smc_buf_create(new_smc, true)) {
- 		if (ini->cln_first_contact == SMC_FIRST_CONTACT)
--			smc_lgr_forget(new_smc->conn.lgr);
--		smc_conn_free(&new_smc->conn);
-+			smc_lgr_cleanup_early(&new_smc->conn);
-+		else
-+			smc_conn_free(&new_smc->conn);
- 		return SMC_CLC_DECL_MEM;
- 	}
- 
-diff --git a/net/smc/smc_core.c b/net/smc/smc_core.c
-index 2249de5379ee..5b085efa3bce 100644
---- a/net/smc/smc_core.c
-+++ b/net/smc/smc_core.c
-@@ -162,6 +162,18 @@ static void smc_lgr_unregister_conn(struct smc_connection *conn)
- 	conn->lgr = NULL;
- }
- 
-+void smc_lgr_cleanup_early(struct smc_connection *conn)
-+{
-+	struct smc_link_group *lgr = conn->lgr;
-+
-+	if (!lgr)
-+		return;
-+
-+	smc_conn_free(conn);
-+	smc_lgr_forget(lgr);
-+	smc_lgr_schedule_free_work_fast(lgr);
-+}
-+
- /* Send delete link, either as client to request the initiation
-  * of the DELETE LINK sequence from server; or as server to
-  * initiate the delete processing. See smc_llc_rx_delete_link().
-diff --git a/net/smc/smc_core.h b/net/smc/smc_core.h
-index c472e12951d1..234ae25f0025 100644
---- a/net/smc/smc_core.h
-+++ b/net/smc/smc_core.h
-@@ -296,6 +296,7 @@ struct smc_clc_msg_accept_confirm;
- struct smc_clc_msg_local;
- 
- void smc_lgr_forget(struct smc_link_group *lgr);
-+void smc_lgr_cleanup_early(struct smc_connection *conn);
- void smc_lgr_terminate(struct smc_link_group *lgr, bool soft);
- void smc_port_terminate(struct smc_ib_device *smcibdev, u8 ibport);
- void smc_smcd_terminate(struct smcd_dev *dev, u64 peer_gid,
-@@ -316,7 +317,6 @@ int smc_vlan_by_tcpsk(struct socket *clcsock, struct smc_init_info *ini);
- 
- void smc_conn_free(struct smc_connection *conn);
- int smc_conn_create(struct smc_sock *smc, struct smc_init_info *ini);
--void smcd_conn_free(struct smc_connection *conn);
- void smc_lgr_schedule_free_work_fast(struct smc_link_group *lgr);
- int smc_core_init(void);
- void smc_core_exit(void);
--- 
-2.17.1
+"This capability indicates that the Ultravisor has been initialized and
+KVM can therefore start protected VMs."
+
+> +This will provide the new KVM_S390_PV_COMMAND ioctl and it will allow
+> +KVM_MP_STATE_LOAD as new MP_STATE. KVM_SET_MP_STATE can now fail for
+> +protected guests when the state change is invalid.
+
+"This capability governs the KVM_S390_PV_COMMAND ioctl and the
+KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
+guests when the state change is invalid."
 
