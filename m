@@ -2,128 +2,168 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 57F4F16C190
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 14:02:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DFDC716C1AC
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 14:06:55 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729856AbgBYNCD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Feb 2020 08:02:03 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23380 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729852AbgBYNCC (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Feb 2020 08:02:02 -0500
+        id S1730193AbgBYNGx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Feb 2020 08:06:53 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22357 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730187AbgBYNGw (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 25 Feb 2020 08:06:52 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582635721;
+        s=mimecast20190719; t=1582636011;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=V74O8WaAFCh9o57K0pW1wsY1UghQBBpm/WuMhKnChp8=;
-        b=a5gLiT14mK3f3TZo1opahTUuKYXKDnVk70tWRlL140MA0V9m3oQEP7p1FUT1tfxI5C+iyW
-        aW5ccNSrGQUciETx4fQ+rj38MyBGwXdrEmzgOTsMX2WFY41YiAK6BURVBJ3SnfFbeAylXg
-        gkXyLDNaeeqP342THWXAqPi7+scBXFc=
+        bh=LNm9lSbVmQFnvdkE0qs0rRMiPX4JjkaR9zNGk6sTLiQ=;
+        b=BcOMQ6STIE2Zfkne4M4+Veb3AuZcCE+yM4Xex0NH7XdBP6G9nEDwXwBtVR8La1+8MfNQCU
+        VAgjLkNjjWWS2HX1KS8l90v4a4GODT26FQQ3sQ2WmooMMoCTaQB/OkXVByvoldu5QHGwPN
+        IHL81GJ7Fl8ztIjCMmIUKfeCK1L5utY=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-404-hr5gydBENMy9spuw2aA7Qw-1; Tue, 25 Feb 2020 08:01:57 -0500
-X-MC-Unique: hr5gydBENMy9spuw2aA7Qw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-42-v7albTMjOS-GZwGOR3S6EQ-1; Tue, 25 Feb 2020 08:06:46 -0500
+X-MC-Unique: v7albTMjOS-GZwGOR3S6EQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E7C78801E53;
-        Tue, 25 Feb 2020 13:01:55 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5543A190B2A7;
+        Tue, 25 Feb 2020 13:06:45 +0000 (UTC)
 Received: from gondolin (dhcp-192-175.str.redhat.com [10.33.192.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 15720271A0;
-        Tue, 25 Feb 2020 13:01:53 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 14:01:51 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id AE9BE909F5;
+        Tue, 25 Feb 2020 13:06:40 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 14:06:29 +0100
 From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     David Hildenbrand <david@redhat.com>,
+To:     Janosch Frank <frankja@linux.ibm.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>,
-        KVM <kvm@vger.kernel.org>, Thomas Huth <thuth@redhat.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Subject: Re: [PATCH v4 28/36] KVM: s390: protvirt: Report CPU state to
- Ultravisor
-Message-ID: <20200225140151.5e639df1.cohuck@redhat.com>
-In-Reply-To: <d75b4759-9fff-fef0-e6ec-09dd81a01355@de.ibm.com>
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v4 24/36] KVM: s390: protvirt: Do only reset registers
+ that are accessible
+Message-ID: <20200225140629.7e018f72.cohuck@redhat.com>
+In-Reply-To: <4726aa70-7c53-1985-8ada-3bfbea57e72f@linux.ibm.com>
 References: <20200224114107.4646-1-borntraeger@de.ibm.com>
-        <20200224114107.4646-29-borntraeger@de.ibm.com>
-        <3c653e60-5ef4-4b81-3bbd-4d72144b9d0b@redhat.com>
-        <d75b4759-9fff-fef0-e6ec-09dd81a01355@de.ibm.com>
+        <20200224114107.4646-25-borntraeger@de.ibm.com>
+        <20200225133252.479644ea.cohuck@redhat.com>
+        <4726aa70-7c53-1985-8ada-3bfbea57e72f@linux.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/signed; boundary="Sig_/MTkazsgnlZ.7D3NM4.JjOI_";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 25 Feb 2020 09:29:42 +0100
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+--Sig_/MTkazsgnlZ.7D3NM4.JjOI_
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-> On 24.02.20 20:05, David Hildenbrand wrote:
-> > On 24.02.20 12:40, Christian Borntraeger wrote:  
+On Tue, 25 Feb 2020 13:51:12 +0100
+Janosch Frank <frankja@linux.ibm.com> wrote:
+
+> On 2/25/20 1:32 PM, Cornelia Huck wrote:
+> > On Mon, 24 Feb 2020 06:40:55 -0500
+> > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+> >  =20
 > >> From: Janosch Frank <frankja@linux.ibm.com>
 > >>
-> >> VCPU states have to be reported to the ultravisor for SIGP
-> >> interpretation, kdump, kexec and reboot.
+> >> For protected VMs the hypervisor can not access guest breaking event
+> >> address, program parameter, bpbc and todpr. Do not reset those fields
+> >> as the control block does not provide access to these fields.
 > >>
 > >> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> >> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> >> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+> >> Reviewed-by: David Hildenbrand <david@redhat.com>
 > >> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> >> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>  
-> > 
+> >> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> >> ---
+> >>  arch/s390/kvm/kvm-s390.c | 10 ++++++----
+> >>  1 file changed, 6 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> >> index 6ab4c88f2e1d..c734e89235f9 100644
+> >> --- a/arch/s390/kvm/kvm-s390.c
+> >> +++ b/arch/s390/kvm/kvm-s390.c
+> >> @@ -3499,14 +3499,16 @@ static void kvm_arch_vcpu_ioctl_initial_reset(=
+struct kvm_vcpu *vcpu)
+> >>  =09kvm_s390_set_prefix(vcpu, 0);
+> >>  =09kvm_s390_set_cpu_timer(vcpu, 0);
+> >>  =09vcpu->arch.sie_block->ckc =3D 0;
+> >> -=09vcpu->arch.sie_block->todpr =3D 0;
+> >>  =09memset(vcpu->arch.sie_block->gcr, 0, sizeof(vcpu->arch.sie_block->=
+gcr));
+> >>  =09vcpu->arch.sie_block->gcr[0] =3D CR0_INITIAL_MASK;
+> >>  =09vcpu->arch.sie_block->gcr[14] =3D CR14_INITIAL_MASK;
+> >>  =09vcpu->run->s.regs.fpc =3D 0;
+> >> -=09vcpu->arch.sie_block->gbea =3D 1;
+> >> -=09vcpu->arch.sie_block->pp =3D 0;
+> >> -=09vcpu->arch.sie_block->fpf &=3D ~FPF_BPBC;
+> >> +=09if (!kvm_s390_pv_cpu_is_protected(vcpu)) {
+> >> +=09=09vcpu->arch.sie_block->gbea =3D 1;
+> >> +=09=09vcpu->arch.sie_block->pp =3D 0;
+> >> +=09=09vcpu->arch.sie_block->fpf &=3D ~FPF_BPBC;
+> >> +=09=09vcpu->arch.sie_block->todpr =3D 0; =20
+> >=20
+> > What happens if we do change those values? Is it just ignored or will
+> > we get an exception on the next SIE entry? =20
+>=20
+> Well, changing gbea is a bad idea because of the sida overlay.
+> I don't think that any other is checked, but I'd need to look up the
+> todpr changes to be completely sure.
 
-> Looks now like:
-> 
-> @@ -4445,18 +4451,27 @@ static void __enable_ibs_on_vcpu(struct kvm_vcpu *vcpu)
->         kvm_s390_sync_request(KVM_REQ_ENABLE_IBS, vcpu);
->  }
-> 
-> -void kvm_s390_vcpu_start(struct kvm_vcpu *vcpu)
-> +int kvm_s390_vcpu_start(struct kvm_vcpu *vcpu)
->  {
-> -       int i, online_vcpus, started_vcpus = 0;
-> +       int i, online_vcpus, r = 0, started_vcpus = 0;
-> 
->         if (!is_vcpu_stopped(vcpu))
-> -               return;
-> +               return 0;
-> 
->         trace_kvm_s390_vcpu_start_stop(vcpu->vcpu_id, 1);
->         /* Only one cpu at a time may enter/leave the STOPPED state. */
->         spin_lock(&vcpu->kvm->arch.start_stop_lock);
->         online_vcpus = atomic_read(&vcpu->kvm->online_vcpus);
-> 
-> +       /* Let's tell the UV that we want to change into the operating state */
-> +       if (kvm_s390_pv_cpu_is_protected(vcpu)) {
-> +               r = kvm_s390_pv_set_cpu_state(vcpu, PV_CPU_STATE_OPR);
-> +               if (r) {
-> +                       spin_unlock(&vcpu->kvm->arch.start_stop_lock);
-> +                       return r;
-> +               }
-> +       }
-> +
->         for (i = 0; i < online_vcpus; i++) {
->                 if (!is_vcpu_stopped(vcpu->kvm->vcpus[i]))
->                         started_vcpus++;
-> @@ -4481,22 +4496,31 @@ void kvm_s390_vcpu_start(struct kvm_vcpu *vcpu)
->          */
->         kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
->         spin_unlock(&vcpu->kvm->arch.start_stop_lock);
-> -       return;
-> +       return r;
->  }
-> 
-> 
+Maybe add a comment
 
-Hm, this is actually one of the cases where posting a new patch would
-be less confusing than not doing so :)
+/*
+ * Do not reset these registers in the protected case, as some of
+ * them are overlayed and they are not accessible in this case
+ * anyway.
+ */
+
+?
+
+Just to avoid headscratching once this dropped out of our caches.
+
+>=20
+> >  =20
+> >> +=09}
+> >>  }
+> >> =20
+> >>  static void kvm_arch_vcpu_ioctl_clear_reset(struct kvm_vcpu *vcpu) =
+=20
+> >  =20
+>=20
+>=20
+
+
+--Sig_/MTkazsgnlZ.7D3NM4.JjOI_
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEEw9DWbcNiT/aowBjO3s9rk8bwL68FAl5VG9UACgkQ3s9rk8bw
+L69LmA/+L17RLx/DZhc+8zVJzY5xzAT+AblS5hkbeRVfhlFGowp7RdsKfy8iu5Ey
+tHNCLY+AqNA21Ks3XYCrU9Ejora8T3p6gbYoAFVk2uSjfx6rVeDekqQkuqCxLAkg
+4R6mezr6Nsct8zJtsMfKS7xzJ+x/xRWXkMw8IWrz30d8CP7EoOfgBasyW9dsfSJM
+j8+LTJlP7xKFMYw0wq7RlR7wDS6rVXEgcDSb1AySVvVEM/cxRXUxzBeXYmR6G5To
+RbwJWRBGEUUEzqpFpBaueiYWwGkUIWx+0zeqYmq6hIdPlVxbOq8+cPMjCaamz/M5
+JSdkQxCbsa3NqXLtWsJ5SVO7BiSGfxtQHi6TFubrirau8JhVuuumg6TS4FCF5nxV
+QkK4ffh3SAe0+jX0RBUmuwVVp8cVouPwxICMpdaf0rHlIp7b0cUeGIrgCJAcRvCA
+hXzav1FinU85f8h//PMZux1VxodffhzeDfnkv+vFsB3AjqslWXtxkrOoGsLBnfNy
+VSc/BlG/YNhNSRoOcSExlchJYxG6fiHkt+pMPGXl4z8aKP10Uj6oGOaaiB2zqPFy
+9IJ9eSX/W8d31pboWnt8EHrgCxu7c41Abgf0hDbNbo6GQz0Lu0slfiDIYUIOCTTc
+CC9yUcOnpmQobLNisHxu/iCPQlT4QRYGwo8cEAF7pUOp6dbj/kw=
+=lCO+
+-----END PGP SIGNATURE-----
+
+--Sig_/MTkazsgnlZ.7D3NM4.JjOI_--
 
