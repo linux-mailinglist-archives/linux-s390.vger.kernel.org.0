@@ -2,82 +2,121 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E295716C2A2
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 14:44:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 696DD16C2F1
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 14:57:22 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729377AbgBYNoY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Feb 2020 08:44:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50055 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729142AbgBYNoY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 25 Feb 2020 08:44:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582638262;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cGATNmipDFnh71UqOj75hrsgfb7evbo7MX7vJzGdUYY=;
-        b=S5zrY3JHtpJTjkfd7SA9Vv/2UUN8+4gcg4/l9Vjp7f2n9PjJqBuiOttfQSujjVCp5p2Qz5
-        rWDobFN9gzxLLNAwdbdmSEjv/0SGuyRykAybxbYZnz+STIDFu6uTLkLaQiSJVvMph1GvWx
-        q+ZUWdoSq0WRPWn7+rHugny8hXDqRcE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-246-ARZN6QY6Mput5bBHhwKlrA-1; Tue, 25 Feb 2020 08:44:20 -0500
-X-MC-Unique: ARZN6QY6Mput5bBHhwKlrA-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BE82C107ACC4;
-        Tue, 25 Feb 2020 13:44:18 +0000 (UTC)
-Received: from gondolin (dhcp-192-175.str.redhat.com [10.33.192.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6D99C5C28C;
-        Tue, 25 Feb 2020 13:44:14 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 14:44:12 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Ulrich.Weigand@de.ibm.com, david@redhat.com, frankja@linux.ibm.com,
-        frankja@linux.vnet.ibm.com, gor@linux.ibm.com,
-        imbrenda@linux.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
-Subject: Re: [PATCH v4 28/36] KVM: s390: protvirt: Report CPU state to
- Ultravisor
-Message-ID: <20200225144412.52250925.cohuck@redhat.com>
-In-Reply-To: <20200225132106.637817-1-borntraeger@de.ibm.com>
-References: <20200225140151.5e639df1.cohuck@redhat.com>
-        <20200225132106.637817-1-borntraeger@de.ibm.com>
-Organization: Red Hat GmbH
+        id S1729721AbgBYN5V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Feb 2020 08:57:21 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:15354 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729421AbgBYN5V (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 25 Feb 2020 08:57:21 -0500
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PDtXmW015344
+        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 08:57:20 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ycy1pvng2-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 08:57:20 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
+        Tue, 25 Feb 2020 13:57:18 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 25 Feb 2020 13:57:15 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PDvDMn42271034
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 25 Feb 2020 13:57:13 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B6BD7A405F;
+        Tue, 25 Feb 2020 13:57:13 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6EDBCA4060;
+        Tue, 25 Feb 2020 13:57:13 +0000 (GMT)
+Received: from localhost (unknown [9.152.212.204])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 25 Feb 2020 13:57:13 +0000 (GMT)
+Date:   Tue, 25 Feb 2020 14:57:12 +0100
+From:   Vasily Gorbik <gor@linux.ibm.com>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        Sebastian Ott <sebott@linux.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] s390: Replace zero-length array with flexible-array
+ member
+References: <20200221150612.GA9717@embeddedor>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200221150612.GA9717@embeddedor>
+X-TM-AS-GCONF: 00
+x-cbid: 20022513-0008-0000-0000-000003564BDD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022513-0009-0000-0000-00004A7767BB
+Message-Id: <your-ad-here.call-01582639032-ext-1911@work.hours>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-25_04:2020-02-21,2020-02-25 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
+ lowpriorityscore=0 mlxlogscore=533 priorityscore=1501 phishscore=0
+ malwarescore=0 adultscore=0 spamscore=0 mlxscore=0 suspectscore=0
+ clxscore=1015 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2001150001 definitions=main-2002250109
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 25 Feb 2020 08:21:06 -0500
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-
-> From: Janosch Frank <frankja@linux.ibm.com>
+On Fri, Feb 21, 2020 at 09:06:12AM -0600, Gustavo A. R. Silva wrote:
+> The current codebase makes use of the zero-length array language
+> extension to the C90 standard, but the preferred mechanism to declare
+> variable-length types such as these ones is a flexible array member[1][2],
+> introduced in C99:
 > 
-> VCPU states have to be reported to the ultravisor for SIGP
-> interpretation, kdump, kexec and reboot.
+> struct foo {
+>         int stuff;
+>         struct boo array[];
+> };
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> By making use of the mechanism above, we will get a compiler warning
+> in case the flexible array does not occur last in the structure, which
+> will help us prevent some kind of undefined behavior bugs from being
+> inadvertently introduced[3] to the codebase from now on.
+> 
+> Also, notice that, dynamic memory allocations won't be affected by
+> this change:
+> 
+> "Flexible array members have incomplete type, and so the sizeof operator
+> may not be applied. As a quirk of the original implementation of
+> zero-length arrays, sizeof evaluates to zero."[1]
+> 
+> This issue was found with the help of Coccinelle.
+> 
+> [1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
+> [2] https://github.com/KSPP/linux/issues/21
+> [3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 > ---
->  arch/s390/include/asm/uv.h | 15 +++++++++++++
->  arch/s390/kvm/diag.c       |  6 +++++-
->  arch/s390/kvm/intercept.c  |  4 ++++
->  arch/s390/kvm/kvm-s390.c   | 44 +++++++++++++++++++++++++++++---------
->  arch/s390/kvm/kvm-s390.h   |  5 +++--
->  arch/s390/kvm/pv.c         | 18 ++++++++++++++++
->  6 files changed, 79 insertions(+), 13 deletions(-)
+>  arch/s390/appldata/appldata_os.c      | 2 +-
+>  drivers/s390/block/dasd_diag.c        | 2 +-
+>  drivers/s390/block/dasd_eckd.h        | 2 +-
+>  drivers/s390/char/raw3270.h           | 2 +-
+>  drivers/s390/char/sclp_pci.c          | 2 +-
+>  drivers/s390/cio/idset.c              | 2 +-
+>  drivers/s390/crypto/pkey_api.c        | 2 +-
+>  drivers/s390/crypto/zcrypt_ccamisc.h  | 2 +-
+>  drivers/s390/crypto/zcrypt_msgtype6.c | 2 +-
+>  9 files changed, 9 insertions(+), 9 deletions(-)
+> 
 
-Looks good.
+Applied, thanks
 
