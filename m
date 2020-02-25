@@ -2,47 +2,46 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E39DF16EE28
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 19:39:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A1B1516EF04
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 20:30:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731439AbgBYSjj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Feb 2020 13:39:39 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:57936 "EHLO
+        id S1728753AbgBYTan (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Feb 2020 14:30:43 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2238 "EHLO
         mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731611AbgBYSji (ORCPT
+        by vger.kernel.org with ESMTP id S1731411AbgBYTam (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Feb 2020 13:39:38 -0500
+        Tue, 25 Feb 2020 14:30:42 -0500
 Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PIcND6173362
-        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 13:39:37 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb00apq1g-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PJOHwR137751
+        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 14:30:41 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yb00aqy4u-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 13:39:36 -0500
+        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 14:30:41 -0500
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 25 Feb 2020 18:39:35 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 25 Feb 2020 19:30:39 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Feb 2020 18:39:32 -0000
+        Tue, 25 Feb 2020 19:30:37 -0000
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PIdTN255312618
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PJUY4651183628
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 18:39:29 GMT
+        Tue, 25 Feb 2020 19:30:34 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 16CA952050;
-        Tue, 25 Feb 2020 18:39:29 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 1591D52050;
+        Tue, 25 Feb 2020 19:30:34 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.53.31])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7E6DE5204F;
-        Tue, 25 Feb 2020 18:39:28 +0000 (GMT)
-Subject: Re: [PATCH v4 18/36] KVM: S390: protvirt: Introduce instruction data
- area bounce buffer
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 7FFAE5204E;
+        Tue, 25 Feb 2020 19:30:33 +0000 (GMT)
+Subject: Re: [PATCH v4 36/36] KVM: s390: protvirt: Add KVM api documentation
 To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        KVM <kvm@vger.kernel.org>, Thomas Huth <thuth@redhat.com>,
+Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
         Claudio Imbrenda <imbrenda@linux.ibm.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
@@ -50,10 +49,8 @@ Cc:     David Hildenbrand <david@redhat.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
 References: <20200224114107.4646-1-borntraeger@de.ibm.com>
- <20200224114107.4646-19-borntraeger@de.ibm.com>
- <3db82b2d-ad79-8178-e027-c19889d96558@redhat.com>
- <f8d7321e-400e-ed82-471e-166a2d18ede6@de.ibm.com>
- <20200225182142.37fbf6c3.cohuck@redhat.com>
+ <20200224114107.4646-37-borntraeger@de.ibm.com>
+ <20200225165059.5a2f48a5.cohuck@redhat.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -98,26 +95,26 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 25 Feb 2020 19:39:28 +0100
+Date:   Tue, 25 Feb 2020 20:30:33 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200225182142.37fbf6c3.cohuck@redhat.com>
+In-Reply-To: <20200225165059.5a2f48a5.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022518-0008-0000-0000-000003565CB5
+x-cbid: 20022519-4275-0000-0000-000003A569DD
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022518-0009-0000-0000-00004A777948
-Message-Id: <452dbb48-dc21-1983-b70e-f4ad04540636@de.ibm.com>
+x-cbparentid: 20022519-4276-0000-0000-000038B98074
+Message-Id: <a392d135-c0aa-3513-b633-70aa6c7e88bd@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-25_07:2020-02-25,2020-02-25 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0
  priorityscore=1501 lowpriorityscore=0 clxscore=1015 impostorscore=0
- suspectscore=2 adultscore=0 phishscore=0 mlxlogscore=769 malwarescore=0
+ suspectscore=0 adultscore=0 phishscore=0 mlxlogscore=999 malwarescore=0
  mlxscore=0 spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002250131
+ engine=8.12.0-2001150001 definitions=main-2002250136
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -125,38 +122,120 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 25.02.20 18:21, Cornelia Huck wrote:
-> On Tue, 25 Feb 2020 08:50:47 +0100
+On 25.02.20 16:50, Cornelia Huck wrote:
+> On Mon, 24 Feb 2020 06:41:07 -0500
 > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 > 
->> This is the guest breaking event address. So a guest (and QEMU) can read it.
->> It is kind of overlaid sida and gbea. Something like this:
+>> From: Janosch Frank <frankja@linux.ibm.com>
 >>
->> diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
->> index cd81a58349a9..055bf0ec8fbb 100644
->> --- a/arch/s390/kvm/pv.c
->> +++ b/arch/s390/kvm/pv.c
->> @@ -39,6 +39,11 @@ int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc)
->>         vcpu->arch.sie_block->pv_handle_config = 0;
->>         memset(&vcpu->arch.pv, 0, sizeof(vcpu->arch.pv));
->>         vcpu->arch.sie_block->sdf = 0;
->> +       /*
->> +        * the sidad field (for sdf == 2) is now the gbea field (for sdf == 0).
+>> Add documentation for KVM_CAP_S390_PROTECTED capability and the
+>> KVM_S390_PV_COMMAND ioctl.
+>>
+>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+>> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+>> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>> ---
+>>  Documentation/virt/kvm/api.rst | 55 ++++++++++++++++++++++++++++++++++
+>>  1 file changed, 55 insertions(+)
+>>
+>> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
+>> index 7505d7a6c0d8..20abb8b2594e 100644
+>> --- a/Documentation/virt/kvm/api.rst
+>> +++ b/Documentation/virt/kvm/api.rst
+>> @@ -4648,6 +4648,51 @@ the clear cpu reset definition in the POP. However, the cpu is not put
+>>  into ESA mode. This reset is a superset of the initial reset.
+>>  
+>>  
+>> +4.125 KVM_S390_PV_COMMAND
+>> +-------------------------
+>> +
+>> +:Capability: KVM_CAP_S390_PROTECTED
+>> +:Architectures: s390
+>> +:Type: vm ioctl
+>> +:Parameters: struct kvm_pv_cmd
+>> +:Returns: 0 on success, < 0 on error
+>> +
+>> +::
+>> +
+>> +  struct kvm_pv_cmd {
+>> +	__u32 cmd;	/* Command to be executed */
+>> +	__u16 rc;	/* Ultravisor return code */
+>> +	__u16 rrc;	/* Ultravisor return reason code */
+>> +	__u64 data;	/* Data or address */
+>> +	__u32 flags;    /* flags for future extensions. Must be 0 for now */
+>> +	__u32 reserved[3];
+>> +  };
+>> +
+>> +cmd values:
+>> +
+>> +KVM_PV_ENABLE
+>> +  Allocate memory and register the VM with the Ultravisor, thereby
+>> +  donating memory to the Ultravisor making it inaccessible to KVM.
+>> +  Also converts all existing CPUs to protected ones. Future hotplug
+>> +  CPUs will become protected during creation.
 > 
-> s/the sidad/The sidad/
+> "Allocate memory and register the VM with the Ultravisor, thereby
+> donating memory to the Ultravisor that will become inaccsessible to
+> KVM. All existing CPUs are converted to protected ones. After this
+> command has succeeded, any CPU added via hotplug will become protected
+> during its creation as well."
 
-ack
+
+ok
+
+>> +
+>> +KVM_PV_DISABLE
+>> +  Deregisters the VM from the Ultravisor and frees memory that was
+>> +  donated, so the kernel can use it again. All registered VCPUs are
+>> +  converted back to non-protected ones.
 > 
->> +        * Use the reset value of gbea to not leak the kernel pointer of the
-> 
-> s/to not leak/to avoid leaking/
+> "Deregister the VM from the Ultravisor and reclaim the memory that had
+> been donated to the Ultravisor, making it usable by the kernel again.
+> ..."
+
+ok
 
 > 
->> +        * just free sida
-> 
-> s/free sida/freed sida./
+>> +
+>> +KVM_PV_VM_SET_SEC_PARMS
+>> +  Pass the image header from VM memory to the Ultravisor in
+>> +  preparation of image unpacking and verification.
+>> +
+>> +KVM_PV_VM_UNPACK
+>> +  Unpack (protect and decrypt) a page of the encrypted boot image.
+>> +
+>> +KVM_PV_VM_VERIFY
+>> +  Verify the integrity of the unpacked image. Only if this succeeds,
+>> +  KVM is allowed to start protected VCPUs.
+>> +
+>> +
+>>  5. The kvm_run structure
+>>  ========================
+>>  
+>> @@ -6026,3 +6071,13 @@ Architectures: s390
+>>  
+>>  This capability indicates that the KVM_S390_NORMAL_RESET and
+>>  KVM_S390_CLEAR_RESET ioctls are available.
+>> +
+>> +8.23 KVM_CAP_S390_PROTECTED
+>> +
+>> +Architecture: s390
+>> +
+>> +This capability indicates that KVM can start protected VMs and the
+>> +Ultravisor has therefore been initialized.> 
+> "This capability indicates that the Ultravisor has been initialized and
+> KVM can therefore start protected VMs."
 
-ack
-
+ok.
 > 
+>> +This will provide the new KVM_S390_PV_COMMAND ioctl and it will allow
+>> +KVM_MP_STATE_LOAD as new MP_STATE. KVM_SET_MP_STATE can now fail for
+>> +protected guests when the state change is invalid.
+> 
+
+> "This capability governs the KVM_S390_PV_COMMAND ioctl and the
+> KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
+> guests when the state change is invalid."
+
+ok
 
