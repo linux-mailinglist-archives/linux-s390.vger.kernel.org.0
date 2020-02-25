@@ -2,561 +2,982 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5EFAD16F156
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 22:44:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6774416F15F
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 22:48:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726130AbgBYVox (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Feb 2020 16:44:53 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5412 "EHLO
+        id S1726607AbgBYVsd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Feb 2020 16:48:33 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:27752 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726465AbgBYVow (ORCPT
+        by vger.kernel.org with ESMTP id S1726130AbgBYVsc (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Feb 2020 16:44:52 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PLY4S0054093
-        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 16:44:51 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yd98bmepr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 25 Feb 2020 16:44:51 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 25 Feb 2020 21:44:49 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 25 Feb 2020 21:44:45 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PLhjEo43516414
+        Tue, 25 Feb 2020 16:48:32 -0500
+Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01PLZh5I120828;
+        Tue, 25 Feb 2020 16:48:31 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ybu14gb1h-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Feb 2020 16:48:31 -0500
+Received: from m0187473.ppops.net (m0187473.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 01PLaDe9121725;
+        Tue, 25 Feb 2020 16:48:30 -0500
+Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ybu14gb12-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Feb 2020 16:48:30 -0500
+Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
+        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 01PLk6Vt001419;
+        Tue, 25 Feb 2020 21:48:29 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma04dal.us.ibm.com with ESMTP id 2yaux6yc2n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 25 Feb 2020 21:48:29 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01PLmPHL56492522
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 25 Feb 2020 21:43:45 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F2C6C52051;
-        Tue, 25 Feb 2020 21:44:41 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.53.31])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 263BA5204E;
-        Tue, 25 Feb 2020 21:44:41 +0000 (GMT)
-Subject: Re: [PATCH v4 09/36] KVM: s390: protvirt: Add initial vm and cpu
- lifecycle handling
-To:     David Hildenbrand <david@redhat.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-References: <20200224114107.4646-1-borntraeger@de.ibm.com>
- <20200224114107.4646-10-borntraeger@de.ibm.com>
- <f80a0b58-5ed2-33b7-5292-2c4899d765b7@redhat.com>
+        Tue, 25 Feb 2020 21:48:25 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 58507BE056;
+        Tue, 25 Feb 2020 21:48:25 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7AA05BE051;
+        Tue, 25 Feb 2020 21:48:24 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.114.17.106])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 25 Feb 2020 21:48:24 +0000 (GMT)
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 25 Feb 2020 22:44:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
-MIME-Version: 1.0
+To:     david@redhat.com
+Cc:     Ulrich.Weigand@de.ibm.com, borntraeger@de.ibm.com,
+        cohuck@redhat.com, frankja@linux.ibm.com,
+        frankja@linux.vnet.ibm.com, gor@linux.ibm.com,
+        imbrenda@linux.ibm.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
+Subject: [PATCH v4.5 09/36] KVM: s390: protvirt: Add initial vm and cpu lifecycle handling
+Date:   Tue, 25 Feb 2020 16:48:22 -0500
+Message-Id: <20200225214822.3611-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.0
 In-Reply-To: <f80a0b58-5ed2-33b7-5292-2c4899d765b7@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+References: <f80a0b58-5ed2-33b7-5292-2c4899d765b7@redhat.com>
+MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022521-0008-0000-0000-000003566501
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022521-0009-0000-0000-00004A7781E0
-Message-Id: <24689dd9-139d-3a0b-a57c-9f13ebda142b@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-25_08:2020-02-25,2020-02-25 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- impostorscore=0 spamscore=0 clxscore=1015 phishscore=0 malwarescore=0
- bulkscore=0 adultscore=0 suspectscore=2 mlxlogscore=999 priorityscore=1501
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 suspectscore=4
+ malwarescore=0 bulkscore=0 phishscore=0 mlxlogscore=999 spamscore=0
+ adultscore=0 impostorscore=0 mlxscore=0 lowpriorityscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002250151
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+From: Janosch Frank <frankja@linux.ibm.com>
 
+This contains 3 main changes:
+1. changes in SIE control block handling for secure guests
+2. helper functions for create/destroy/unpack secure guests
+3. KVM_S390_PV_COMMAND ioctl to allow userspace dealing with secure
+machines
 
-On 25.02.20 18:46, David Hildenbrand wrote:
-> On 24.02.20 12:40, Christian Borntraeger wrote:
->> From: Janosch Frank <frankja@linux.ibm.com>
->>
->> This contains 3 main changes:
->> 1. changes in SIE control block handling for secure guests
->> 2. helper functions for create/destroy/unpack secure guests
->> 3. KVM_S390_PV_COMMAND ioctl to allow userspace dealing with secure
->> machines
-> 
-> side note: I really dislike such patch descriptions (lists!) and
-> squashing a whole bunch of things that could be nicely split up into
-> separat patches (with much nicer patch descriptions) into a single
-> patch. E.g., enable/disable would be sufficiently complicated to review.
-> 
-> This makes review unnecessary complicated. But here we are in v4, so
-> I'll try my best for (hopefully) the second last time ;)
-> 
-> [...]
-> 
->> +static int kvm_s390_cpus_from_pv(struct kvm *kvm, u16 *rcp, u16 *rrcp)
->> +{
->> +	struct kvm_vcpu *vcpu;
->> +	bool failed = false;
->> +	u16 rc, rrc;
->> +	int cc = 0;
->> +	int i;
->> +
->> +	/*
->> +	 * we ignore failures and try to destroy as many CPUs as possible.
-> 
-> nit: "We"
+Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+[borntraeger@de.ibm.com: patch merging, splitting, fixing]
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+---
+ arch/s390/include/asm/kvm_host.h |  24 ++-
+ arch/s390/include/asm/uv.h       |  69 ++++++++
+ arch/s390/kvm/Makefile           |   2 +-
+ arch/s390/kvm/kvm-s390.c         | 209 +++++++++++++++++++++++-
+ arch/s390/kvm/kvm-s390.h         |  33 ++++
+ arch/s390/kvm/pv.c               | 269 +++++++++++++++++++++++++++++++
+ include/uapi/linux/kvm.h         |  31 ++++
+ 7 files changed, 633 insertions(+), 4 deletions(-)
+ create mode 100644 arch/s390/kvm/pv.c
 
-ack
-
-> 
->> +	 * At the same time we must not free the assigned resources when
->> +	 * this fails, as the ultravisor has still access to that memory.
->> +	 * So kvm_s390_pv_destroy_cpu can leave a "wanted" memory leak
->> +	 * behind.
->> +	 * We want to return the first failure rc and rrc though.
-> 
-> nit, ", though".
-
-ack
-> 
->> +	 */
->> +	kvm_for_each_vcpu(i, vcpu, kvm) {
->> +		mutex_lock(&vcpu->mutex);
->> +		if (kvm_s390_pv_destroy_cpu(vcpu, &rc, &rrc) && !failed) {
->> +			*rcp = rc;
->> +			*rrcp = rrc;
->> +			cc = 1;
->> +			failed = true;
-> 
-> no need for "failed". Just check against cc != 0 instead.
-
-ack
-
-> 
->> +		}
->> +		mutex_unlock(&vcpu->mutex);
->> +	}
->> +	return cc;
-> 
-> The question will repeat a couple of times in the patch: Do we want to
-> convert that to a proper error (e.g., EBUSY, EINVAL, EWHATSOEVER)
-> instead of returning "1" to user space (whoch looks weird).
-
-Not sure about the right error code. 
--EIO for cc == 1?
-
-
-
-> 
->> +}
->> +
->> +static int kvm_s390_cpus_to_pv(struct kvm *kvm, u16 *rc, u16 *rrc)
->> +{
->> +	int i, r = 0;
->> +	u16 dummy;
->> +
->> +	struct kvm_vcpu *vcpu;
->> +
->> +	kvm_for_each_vcpu(i, vcpu, kvm) {
->> +		mutex_lock(&vcpu->mutex);
->> +		r = kvm_s390_pv_create_cpu(vcpu, rc, rrc);
->> +		mutex_unlock(&vcpu->mutex);
->> +		if (r)
->> +			break;
->> +	}
->> +	if (r)
->> +		kvm_s390_cpus_from_pv(kvm, &dummy, &dummy);
->> +	return r;
->> +}
-> 
-> [...]
-> 
->> @@ -0,0 +1,266 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Hosting Secure Execution virtual machines
-> 
-> Just wondering "Protected Virtualization" vs. "Secure Execution".
-
-No name yet, will use protected virtual machines as an independent term.
-
-> 
-> [...]
-> 
->> +int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc)
->> +{
->> +	int cc = 0;
->> +
->> +	if (kvm_s390_pv_cpu_get_handle(vcpu)) {
->> +		cc = uv_cmd_nodata(kvm_s390_pv_cpu_get_handle(vcpu),
->> +				   UVC_CMD_DESTROY_SEC_CPU, rc, rrc);
->> +
->> +		KVM_UV_EVENT(vcpu->kvm, 3,
->> +			     "PROTVIRT DESTROY VCPU %d: rc %x rrc %x",
->> +			     vcpu->vcpu_id, *rc, *rrc);
->> +		WARN_ONCE(cc, "protvirt destroy cpu failed rc %x rrc %x",
->> +			  *rc, *rrc);
->> +	}
-> 
-> /* Intended memory leak for something that should never happen. */
-
-ack
-> 
->> +	if (!cc)
->> +		free_pages(vcpu->arch.pv.stor_base,
->> +			   get_order(uv_info.guest_cpu_stor_len));
-> 
-> Should we clear arch.pv.handle?
-
-this is done in the memset below
-> 
-> Also, I do wonder if it makes sense to
-> 
-> vcpu->arch.pv.stor_base = NULL;
-
-same. We could do 4 single assignments instead, but the memset is probably ok?
-
-> 
-> So really remove any traces and act like the error never happened. Only
-> skip the freeing. Makes sense? Then we're not stuck with a
-> half-initialized VM state.
-
-I think this is what we do with the memset.
-
-> 
-> 
->> +	vcpu->arch.sie_block->pv_handle_cpu = 0;
->> +	vcpu->arch.sie_block->pv_handle_config = 0;
->> +	memset(&vcpu->arch.pv, 0, sizeof(vcpu->arch.pv));
->> +	vcpu->arch.sie_block->sdf = 0;
->> +	kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
->> +
->> +	return cc;
-> 
-> Convert to a proper error?
-
--EIO?
-
-> 
->> +}
->> +
->> +int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc)
->> +{
->> +	struct uv_cb_csc uvcb = {
->> +		.header.cmd = UVC_CMD_CREATE_SEC_CPU,
->> +		.header.len = sizeof(uvcb),
->> +	};
->> +	int cc;
->> +
->> +	if (kvm_s390_pv_cpu_get_handle(vcpu))
->> +		return -EINVAL;
->> +
->> +	vcpu->arch.pv.stor_base = __get_free_pages(GFP_KERNEL,
->> +						   get_order(uv_info.guest_cpu_stor_len));
->> +	if (!vcpu->arch.pv.stor_base)
->> +		return -ENOMEM;
->> +
->> +	/* Input */
->> +	uvcb.guest_handle = kvm_s390_pv_get_handle(vcpu->kvm);
->> +	uvcb.num = vcpu->arch.sie_block->icpua;
->> +	uvcb.state_origin = (u64)vcpu->arch.sie_block;
->> +	uvcb.stor_origin = (u64)vcpu->arch.pv.stor_base;
->> +
->> +	cc = uv_call(0, (u64)&uvcb);
->> +	*rc = uvcb.header.rc;
->> +	*rrc = uvcb.header.rrc;
->> +	KVM_UV_EVENT(vcpu->kvm, 3,
->> +		     "PROTVIRT CREATE VCPU: cpu %d handle %llx rc %x rrc %x",
->> +		     vcpu->vcpu_id, uvcb.cpu_handle, uvcb.header.rc,
->> +		     uvcb.header.rrc);
->> +
->> +	if (cc) {
->> +		u16 dummy;
->> +
->> +		kvm_s390_pv_destroy_cpu(vcpu, &dummy, &dummy);
->> +		return -EINVAL;
-> 
-> Ah, here we convert from cc to an actual error :)
-
-also EIO then?
-> 
->> +	}
->> +
->> +	/* Output */
->> +	vcpu->arch.pv.handle = uvcb.cpu_handle;
->> +	vcpu->arch.sie_block->pv_handle_cpu = uvcb.cpu_handle;
->> +	vcpu->arch.sie_block->pv_handle_config = kvm_s390_pv_get_handle(vcpu->kvm);
->> +	vcpu->arch.sie_block->sdf = 2;
->> +	kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
->> +	return 0;
->> +}
->> +
->> +/* only free resources when the destroy was successful */
-> 
-> s/destroy/deinit/
-
-Not really. deinit is destroy + dealloc. And we only dealloc when destroy was ok.
-
-
-
-> 
->> +static void kvm_s390_pv_dealloc_vm(struct kvm *kvm)
->> +{
->> +	vfree(kvm->arch.pv.stor_var);
->> +	free_pages(kvm->arch.pv.stor_base,
->> +		   get_order(uv_info.guest_base_stor_len));
->> +	memset(&kvm->arch.pv, 0, sizeof(kvm->arch.pv));
->> +}
->> +
->> +static int kvm_s390_pv_alloc_vm(struct kvm *kvm)
->> +{
->> +	unsigned long base = uv_info.guest_base_stor_len;
->> +	unsigned long virt = uv_info.guest_virt_var_stor_len;
->> +	unsigned long npages = 0, vlen = 0;
->> +	struct kvm_memory_slot *memslot;
->> +
->> +	kvm->arch.pv.stor_var = NULL;
->> +	kvm->arch.pv.stor_base = __get_free_pages(GFP_KERNEL, get_order(base));
->> +	if (!kvm->arch.pv.stor_base)
->> +		return -ENOMEM;
->> +
->> +	/*
->> +	 * Calculate current guest storage for allocation of the
->> +	 * variable storage, which is based on the length in MB.
->> +	 *
->> +	 * Slots are sorted by GFN
->> +	 */
->> +	mutex_lock(&kvm->slots_lock);
->> +	memslot = kvm_memslots(kvm)->memslots;
->> +	npages = memslot->base_gfn + memslot->npages;
-> 
-> I remember I asked this question already, maybe I missed the reply :(
-> 
-> 1. What if we have multiple slots?
-
-memslot 0 is the last one, so this should actually have the last memory address
-so this should be ok.
-
-> 2. What is expected to happen if new slots are added (e.g., memory
-> hotplug in the future?)
-> 
-> Shouldn't you bail out if there is more than one slot and make sure that
-> no new ones can be added as long as pv is active (I remember the latter
-> should be very easy from an arch callback)?
-
-Yes, that should be easy, something like the following I guess
-
+diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
+index d058289385a5..1aa2382fe363 100644
+--- a/arch/s390/include/asm/kvm_host.h
++++ b/arch/s390/include/asm/kvm_host.h
+@@ -160,7 +160,13 @@ struct kvm_s390_sie_block {
+ 	__u8	reserved08[4];		/* 0x0008 */
+ #define PROG_IN_SIE (1<<0)
+ 	__u32	prog0c;			/* 0x000c */
+-	__u8	reserved10[16];		/* 0x0010 */
++	union {
++		__u8	reserved10[16];		/* 0x0010 */
++		struct {
++			__u64	pv_handle_cpu;
++			__u64	pv_handle_config;
++		};
++	};
+ #define PROG_BLOCK_SIE	(1<<0)
+ #define PROG_REQUEST	(1<<1)
+ 	atomic_t prog20;		/* 0x0020 */
+@@ -233,7 +239,7 @@ struct kvm_s390_sie_block {
+ #define ECB3_RI  0x01
+ 	__u8    ecb3;			/* 0x0063 */
+ 	__u32	scaol;			/* 0x0064 */
+-	__u8	reserved68;		/* 0x0068 */
++	__u8	sdf;			/* 0x0068 */
+ 	__u8    epdx;			/* 0x0069 */
+ 	__u8    reserved6a[2];		/* 0x006a */
+ 	__u32	todpr;			/* 0x006c */
+@@ -645,6 +651,11 @@ struct kvm_guestdbg_info_arch {
+ 	unsigned long last_bp;
+ };
+ 
++struct kvm_s390_pv_vcpu {
++	u64 handle;
++	unsigned long stor_base;
++};
++
+ struct kvm_vcpu_arch {
+ 	struct kvm_s390_sie_block *sie_block;
+ 	/* if vsie is active, currently executed shadow sie control block */
+@@ -673,6 +684,7 @@ struct kvm_vcpu_arch {
+ 	__u64 cputm_start;
+ 	bool gs_enabled;
+ 	bool skey_enabled;
++	struct kvm_s390_pv_vcpu pv;
+ };
+ 
+ struct kvm_vm_stat {
+@@ -843,6 +855,13 @@ struct kvm_s390_gisa_interrupt {
+ 	DECLARE_BITMAP(kicked_mask, KVM_MAX_VCPUS);
+ };
+ 
++struct kvm_s390_pv {
++	u64 handle;
++	u64 guest_len;
++	unsigned long stor_base;
++	void *stor_var;
++};
++
+ struct kvm_arch{
+ 	void *sca;
+ 	int use_esca;
+@@ -878,6 +897,7 @@ struct kvm_arch{
+ 	DECLARE_BITMAP(cpu_feat, KVM_S390_VM_CPU_FEAT_NR_BITS);
+ 	DECLARE_BITMAP(idle_mask, KVM_MAX_VCPUS);
+ 	struct kvm_s390_gisa_interrupt gisa_int;
++	struct kvm_s390_pv pv;
+ };
+ 
+ #define KVM_HVA_ERR_BAD		(-1UL)
+diff --git a/arch/s390/include/asm/uv.h b/arch/s390/include/asm/uv.h
+index a81af06507a9..09dc6dba94a4 100644
+--- a/arch/s390/include/asm/uv.h
++++ b/arch/s390/include/asm/uv.h
+@@ -23,11 +23,19 @@
+ #define UVC_RC_INV_STATE	0x0003
+ #define UVC_RC_INV_LEN		0x0005
+ #define UVC_RC_NO_RESUME	0x0007
++#define UVC_RC_NEED_DESTROY	0x8000
+ 
+ #define UVC_CMD_QUI			0x0001
+ #define UVC_CMD_INIT_UV			0x000f
++#define UVC_CMD_CREATE_SEC_CONF		0x0100
++#define UVC_CMD_DESTROY_SEC_CONF	0x0101
++#define UVC_CMD_CREATE_SEC_CPU		0x0120
++#define UVC_CMD_DESTROY_SEC_CPU		0x0121
+ #define UVC_CMD_CONV_TO_SEC_STOR	0x0200
+ #define UVC_CMD_CONV_FROM_SEC_STOR	0x0201
++#define UVC_CMD_SET_SEC_CONF_PARAMS	0x0300
++#define UVC_CMD_UNPACK_IMG		0x0301
++#define UVC_CMD_VERIFY_IMG		0x0302
+ #define UVC_CMD_PIN_PAGE_SHARED		0x0341
+ #define UVC_CMD_UNPIN_PAGE_SHARED	0x0342
+ #define UVC_CMD_SET_SHARED_ACCESS	0x1000
+@@ -37,10 +45,17 @@
+ enum uv_cmds_inst {
+ 	BIT_UVC_CMD_QUI = 0,
+ 	BIT_UVC_CMD_INIT_UV = 1,
++	BIT_UVC_CMD_CREATE_SEC_CONF = 2,
++	BIT_UVC_CMD_DESTROY_SEC_CONF = 3,
++	BIT_UVC_CMD_CREATE_SEC_CPU = 4,
++	BIT_UVC_CMD_DESTROY_SEC_CPU = 5,
+ 	BIT_UVC_CMD_CONV_TO_SEC_STOR = 6,
+ 	BIT_UVC_CMD_CONV_FROM_SEC_STOR = 7,
+ 	BIT_UVC_CMD_SET_SHARED_ACCESS = 8,
+ 	BIT_UVC_CMD_REMOVE_SHARED_ACCESS = 9,
++	BIT_UVC_CMD_SET_SEC_PARMS = 11,
++	BIT_UVC_CMD_UNPACK_IMG = 13,
++	BIT_UVC_CMD_VERIFY_IMG = 14,
+ 	BIT_UVC_CMD_PIN_PAGE_SHARED = 21,
+ 	BIT_UVC_CMD_UNPIN_PAGE_SHARED = 22,
+ };
+@@ -52,6 +67,7 @@ struct uv_cb_header {
+ 	u16 rrc;	/* Return Reason Code */
+ } __packed __aligned(8);
+ 
++/* Query Ultravisor Information */
+ struct uv_cb_qui {
+ 	struct uv_cb_header header;
+ 	u64 reserved08;
+@@ -71,6 +87,7 @@ struct uv_cb_qui {
+ 	u8  reserveda0[200 - 160];
+ } __packed __aligned(8);
+ 
++/* Initialize Ultravisor */
+ struct uv_cb_init {
+ 	struct uv_cb_header header;
+ 	u64 reserved08[2];
+@@ -79,6 +96,35 @@ struct uv_cb_init {
+ 	u64 reserved28[4];
+ } __packed __aligned(8);
+ 
++/* Create Guest Configuration */
++struct uv_cb_cgc {
++	struct uv_cb_header header;
++	u64 reserved08[2];
++	u64 guest_handle;
++	u64 conf_base_stor_origin;
++	u64 conf_virt_stor_origin;
++	u64 reserved30;
++	u64 guest_stor_origin;
++	u64 guest_stor_len;
++	u64 guest_sca;
++	u64 guest_asce;
++	u64 reserved58[5];
++} __packed __aligned(8);
++
++/* Create Secure CPU */
++struct uv_cb_csc {
++	struct uv_cb_header header;
++	u64 reserved08[2];
++	u64 cpu_handle;
++	u64 guest_handle;
++	u64 stor_origin;
++	u8  reserved30[6];
++	u16 num;
++	u64 state_origin;
++	u64 reserved40[4];
++} __packed __aligned(8);
++
++/* Convert to Secure */
+ struct uv_cb_cts {
+ 	struct uv_cb_header header;
+ 	u64 reserved08[2];
+@@ -86,12 +132,34 @@ struct uv_cb_cts {
+ 	u64 gaddr;
+ } __packed __aligned(8);
+ 
++/* Convert from Secure / Pin Page Shared */
+ struct uv_cb_cfs {
+ 	struct uv_cb_header header;
+ 	u64 reserved08[2];
+ 	u64 paddr;
+ } __packed __aligned(8);
+ 
++/* Set Secure Config Parameter */
++struct uv_cb_ssc {
++	struct uv_cb_header header;
++	u64 reserved08[2];
++	u64 guest_handle;
++	u64 sec_header_origin;
++	u32 sec_header_len;
++	u32 reserved2c;
++	u64 reserved30[4];
++} __packed __aligned(8);
++
++/* Unpack */
++struct uv_cb_unp {
++	struct uv_cb_header header;
++	u64 reserved08[2];
++	u64 guest_handle;
++	u64 gaddr;
++	u64 tweak[2];
++	u64 reserved38[3];
++} __packed __aligned(8);
++
+ /*
+  * A common UV call struct for calls that take no payload
+  * Examples:
+@@ -105,6 +173,7 @@ struct uv_cb_nodata {
+ 	u64 reserved20[4];
+ } __packed __aligned(8);
+ 
++/* Set Shared Access */
+ struct uv_cb_share {
+ 	struct uv_cb_header header;
+ 	u64 reserved08[3];
+diff --git a/arch/s390/kvm/Makefile b/arch/s390/kvm/Makefile
+index 05ee90a5ea08..12decca22e7c 100644
+--- a/arch/s390/kvm/Makefile
++++ b/arch/s390/kvm/Makefile
+@@ -9,6 +9,6 @@ common-objs = $(KVM)/kvm_main.o $(KVM)/eventfd.o  $(KVM)/async_pf.o $(KVM)/irqch
+ ccflags-y := -Ivirt/kvm -Iarch/s390/kvm
+ 
+ kvm-objs := $(common-objs) kvm-s390.o intercept.o interrupt.o priv.o sigp.o
+-kvm-objs += diag.o gaccess.o guestdbg.o vsie.o
++kvm-objs += diag.o gaccess.o guestdbg.o vsie.o pv.o
+ 
+ obj-$(CONFIG_KVM) += kvm.o
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 7e4a982bfea3..1e5e70d44748 100644
 --- a/arch/s390/kvm/kvm-s390.c
 +++ b/arch/s390/kvm/kvm-s390.c
-@@ -4744,6 +4744,9 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
-        if (mem->guest_phys_addr + mem->memory_size > kvm->arch.mem_limit)
-                return -EINVAL;
+@@ -44,6 +44,7 @@
+ #include <asm/cpacf.h>
+ #include <asm/timex.h>
+ #include <asm/ap.h>
++#include <asm/uv.h>
+ #include "kvm-s390.h"
+ #include "gaccess.h"
  
-+       /* When we are protected we should not change the memory slots */
-+       if (kvm_s390_pv_is_protected(kvm))
-+               return -EINVAL;
-        return 0;
+@@ -234,8 +235,10 @@ int kvm_arch_check_processor_compat(void)
+ 	return 0;
  }
  
-
-
-
-I think we can extend that later to actually use
-the memorysize from kvm->arch.mem_limit as long as this is reasonably small.
-This should then be done when we implement memory hotplug.
-
-
-> 
->> +	mutex_unlock(&kvm->slots_lock);
->> +
->> +	kvm->arch.pv.guest_len = npages * PAGE_SIZE;
->> +
->> +	/* Allocate variable storage */
->> +	vlen = ALIGN(virt * ((npages * PAGE_SIZE) / HPAGE_SIZE), PAGE_SIZE);
->> +	vlen += uv_info.guest_virt_base_stor_len;
->> +	kvm->arch.pv.stor_var = vzalloc(vlen);
->> +	if (!kvm->arch.pv.stor_var)
->> +		goto out_err;
->> +	return 0;
->> +
->> +out_err:
->> +	kvm_s390_pv_dealloc_vm(kvm);
->> +	return -ENOMEM;
->> +}
->> +
->> +/* this should not fail, but if it does we must not free the donated memory */
->> +int kvm_s390_pv_deinit_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
->> +{
->> +	int cc;
->> +
->> +	cc = uv_cmd_nodata(kvm_s390_pv_get_handle(kvm),
->> +			   UVC_CMD_DESTROY_SEC_CONF, rc, rrc);
-> 
-> Could convert to
-> 
-> int cc = ...
-there will be a call to s390_reset_acc in a later patch that sneaks in here.
-> 
->> +	WRITE_ONCE(kvm->arch.gmap->guest_handle, 0);
->> +	atomic_set(&kvm->mm->context.is_protected, 0);
->> +	KVM_UV_EVENT(kvm, 3, "PROTVIRT DESTROY VM: rc %x rrc %x", *rc, *rrc);
->> +	WARN_ONCE(cc, "protvirt destroy vm failed rc %x rrc %x", *rc, *rrc);
->> +	if (!cc)
->> +		kvm_s390_pv_dealloc_vm(kvm);
-> 
-> Similar to the VCPU path, should be set all pointers to NULL but skip
-> the freeing? With a similar comment /* Inteded memory leak ... */
-
-This is done in kvm_s390_pv_dealloc_vm. And I think it makes sense to keep
-the VM thing linked to the KVM struct. This will prevent the user from doing
-another PV_ENABLE on this guest.
-
-> 
->> +	return cc;
-> 
-> Does it make more sense to translate that to a proper error? (EBUSY,
-> EINVAL etc.) I'd assume we translate that to a proper error - if any.
-> Returning e.g., "1" does not make too much sense IMHO.
-
--EIO?
-
-> 
->> +}
->> +
->> +int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
->> +{
->> +	u16 drc, drrc;
->> +	int cc, ret;
->> +
-> 
-> superfluous empty line.
-> 
-
-ack
-
->> +	struct uv_cb_cgc uvcb = {
->> +		.header.cmd = UVC_CMD_CREATE_SEC_CONF,
->> +		.header.len = sizeof(uvcb)
->> +	};
-> 
-> maybe
-> 
-> int ret = kvm_s390_pv_alloc_vm(kvm);
-> 
-> no strong feelings.
-> 
->> +
->> +	ret = kvm_s390_pv_alloc_vm(kvm);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Inputs */
->> +	uvcb.guest_stor_origin = 0; /* MSO is 0 for KVM */
->> +	uvcb.guest_stor_len = kvm->arch.pv.guest_len;
->> +	uvcb.guest_asce = kvm->arch.gmap->asce;
->> +	uvcb.guest_sca = (unsigned long)kvm->arch.sca;
->> +	uvcb.conf_base_stor_origin = (u64)kvm->arch.pv.stor_base;
->> +	uvcb.conf_virt_stor_origin = (u64)kvm->arch.pv.stor_var;
->> +
->> +	cc = uv_call(0, (u64)&uvcb);
->> +	*rc = uvcb.header.rc;
->> +	*rrc = uvcb.header.rrc;
->> +	KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len %llx rc %x rrc %x",
->> +		     uvcb.guest_handle, uvcb.guest_stor_len, *rc, *rrc);
->> +
-
-
-
->> +	/* Outputs */
->> +	kvm->arch.pv.handle = uvcb.guest_handle;
->> +
->> +	if (cc && (uvcb.header.rc & UVC_RC_NEED_DESTROY)) {
-> 
-> So, in case cc!=0 and UVC_RC_NEED_DESTROY is not set, we would return an
-> error (!=0 from this function) and not even try to deinit the vm?
-> 
-> This is honestly confusing stuff.
-> 
->> +		if (!kvm_s390_pv_deinit_vm(kvm, &drc, &drrc))
->> +			kvm_s390_pv_dealloc_vm(kvm);
-> 
-> kvm_s390_pv_deinit_vm() will already call kvm_s390_pv_dealloc_vm().
-
-right. Will do 
-
-        if (cc) {
-                if (uvcb.header.rc & UVC_RC_NEED_DESTROY)
-                        kvm_s390_pv_deinit_vm(kvm, &dummy, &dummy);
-                else
-                        kvm_s390_pv_dealloc_vm(kvm);
-                return -EIO;
-        }
-
-
-
-> 
->> +		return -EINVAL;
->> +	}
->> +	kvm->arch.gmap->guest_handle = uvcb.guest_handle;
->> +	atomic_set(&kvm->mm->context.is_protected, 1);
->> +	return cc;
-> 
-> Convert to a proper error?
-
--EIO (I think I will keep -EINVAL for the mpstate ioctl).
-> 
-> 
-> Feel free to send a new version of this patch only on top. I'll try to
-> review it very fast :)
-> 
++/* forward declarations */
+ static void kvm_gmap_notifier(struct gmap *gmap, unsigned long start,
+ 			      unsigned long end);
++static int sca_switch_to_extended(struct kvm *kvm);
+ 
+ static void kvm_clock_sync_scb(struct kvm_s390_sie_block *scb, u64 delta)
+ {
+@@ -2165,6 +2168,160 @@ static int kvm_s390_set_cmma_bits(struct kvm *kvm,
+ 	return r;
+ }
+ 
++static int kvm_s390_cpus_from_pv(struct kvm *kvm, u16 *rcp, u16 *rrcp)
++{
++	struct kvm_vcpu *vcpu;
++	u16 rc, rrc;
++	int ret = 0;
++	int i;
++
++	/*
++	 * We ignore failures and try to destroy as many CPUs as possible.
++	 * At the same time we must not free the assigned resources when
++	 * this fails, as the ultravisor has still access to that memory.
++	 * So kvm_s390_pv_destroy_cpu can leave a "wanted" memory leak
++	 * behind.
++	 * We want to return the first failure rc and rrc, though.
++	 */
++	kvm_for_each_vcpu(i, vcpu, kvm) {
++		mutex_lock(&vcpu->mutex);
++		if (kvm_s390_pv_destroy_cpu(vcpu, &rc, &rrc) && !ret) {
++			*rcp = rc;
++			*rrcp = rrc;
++			ret = -EIO;
++		}
++		mutex_unlock(&vcpu->mutex);
++	}
++	return ret;
++}
++
++static int kvm_s390_cpus_to_pv(struct kvm *kvm, u16 *rc, u16 *rrc)
++{
++	int i, r = 0;
++	u16 dummy;
++
++	struct kvm_vcpu *vcpu;
++
++	kvm_for_each_vcpu(i, vcpu, kvm) {
++		mutex_lock(&vcpu->mutex);
++		r = kvm_s390_pv_create_cpu(vcpu, rc, rrc);
++		mutex_unlock(&vcpu->mutex);
++		if (r)
++			break;
++	}
++	if (r)
++		kvm_s390_cpus_from_pv(kvm, &dummy, &dummy);
++	return r;
++}
++
++static int kvm_s390_handle_pv(struct kvm *kvm, struct kvm_pv_cmd *cmd)
++{
++	int r = 0;
++	u16 dummy;
++	void __user *argp = (void __user *)cmd->data;
++
++	switch (cmd->cmd) {
++	case KVM_PV_ENABLE: {
++		r = -EINVAL;
++		if (kvm_s390_pv_is_protected(kvm))
++			break;
++
++		/*
++		 *  FMT 4 SIE needs esca. As we never switch back to bsca from
++		 *  esca, we need no cleanup in the error cases below
++		 */
++		r = sca_switch_to_extended(kvm);
++		if (r)
++			break;
++
++		r = kvm_s390_pv_init_vm(kvm, &cmd->rc, &cmd->rrc);
++		if (r)
++			break;
++
++		r = kvm_s390_cpus_to_pv(kvm, &cmd->rc, &cmd->rrc);
++		if (r)
++			kvm_s390_pv_deinit_vm(kvm, &dummy, &dummy);
++		break;
++	}
++	case KVM_PV_DISABLE: {
++		r = -EINVAL;
++		if (!kvm_s390_pv_is_protected(kvm))
++			break;
++
++		r = kvm_s390_cpus_from_pv(kvm, &cmd->rc, &cmd->rrc);
++		/*
++		 * If a CPU could not be destroyed, destroy VM will also fail.
++		 * There is no point in trying to destroy it. Instead return
++		 * the rc and rrc from the first CPU that failed destroying.
++		 */
++		if (r)
++			break;
++		r = kvm_s390_pv_deinit_vm(kvm, &cmd->rc, &cmd->rrc);
++		break;
++	}
++	case KVM_PV_SET_SEC_PARMS: {
++		struct kvm_s390_pv_sec_parm parms = {};
++		void *hdr;
++
++		r = -EINVAL;
++		if (!kvm_s390_pv_is_protected(kvm))
++			break;
++
++		r = -EFAULT;
++		if (copy_from_user(&parms, argp, sizeof(parms)))
++			break;
++
++		/* Currently restricted to 8KB */
++		r = -EINVAL;
++		if (parms.length > PAGE_SIZE * 2)
++			break;
++
++		r = -ENOMEM;
++		hdr = vmalloc(parms.length);
++		if (!hdr)
++			break;
++
++		r = -EFAULT;
++		if (!copy_from_user(hdr, (void __user *)parms.origin,
++				    parms.length))
++			r = kvm_s390_pv_set_sec_parms(kvm, hdr, parms.length,
++						      &cmd->rc, &cmd->rrc);
++
++		vfree(hdr);
++		break;
++	}
++	case KVM_PV_UNPACK: {
++		struct kvm_s390_pv_unp unp = {};
++
++		r = -EINVAL;
++		if (!kvm_s390_pv_is_protected(kvm))
++			break;
++
++		r = -EFAULT;
++		if (copy_from_user(&unp, argp, sizeof(unp)))
++			break;
++
++		r = kvm_s390_pv_unpack(kvm, unp.addr, unp.size, unp.tweak,
++				       &cmd->rc, &cmd->rrc);
++		break;
++	}
++	case KVM_PV_VERIFY: {
++		r = -EINVAL;
++		if (!kvm_s390_pv_is_protected(kvm))
++			break;
++
++		r = uv_cmd_nodata(kvm_s390_pv_get_handle(kvm),
++				  UVC_CMD_VERIFY_IMG, &cmd->rc, &cmd->rrc);
++		KVM_UV_EVENT(kvm, 3, "PROTVIRT VERIFY: rc %x rrc %x", cmd->rc,
++			     cmd->rrc);
++		break;
++	}
++	default:
++		return -ENOTTY;
++	}
++	return r;
++}
++
+ long kvm_arch_vm_ioctl(struct file *filp,
+ 		       unsigned int ioctl, unsigned long arg)
+ {
+@@ -2262,6 +2419,27 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 		mutex_unlock(&kvm->slots_lock);
+ 		break;
+ 	}
++	case KVM_S390_PV_COMMAND: {
++		struct kvm_pv_cmd args;
++
++		r = 0;
++		if (!is_prot_virt_host()) {
++			r = -EINVAL;
++			break;
++		}
++		if (copy_from_user(&args, argp, sizeof(args))) {
++			r = -EFAULT;
++			break;
++		}
++		mutex_lock(&kvm->lock);
++		r = kvm_s390_handle_pv(kvm, &args);
++		mutex_unlock(&kvm->lock);
++		if (copy_to_user(argp, &args, sizeof(args))) {
++			r = -EFAULT;
++			break;
++		}
++		break;
++	}
+ 	default:
+ 		r = -ENOTTY;
+ 	}
+@@ -2525,6 +2703,8 @@ int kvm_arch_init_vm(struct kvm *kvm, unsigned long type)
+ 
+ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+ {
++	u16 rc, rrc;
++
+ 	VCPU_EVENT(vcpu, 3, "%s", "free cpu");
+ 	trace_kvm_s390_destroy_vcpu(vcpu->vcpu_id);
+ 	kvm_s390_clear_local_irqs(vcpu);
+@@ -2537,6 +2717,9 @@ void kvm_arch_vcpu_destroy(struct kvm_vcpu *vcpu)
+ 
+ 	if (vcpu->kvm->arch.use_cmma)
+ 		kvm_s390_vcpu_unsetup_cmma(vcpu);
++	/* We can not hold the vcpu mutex here, we are already dying */
++	if (kvm_s390_pv_cpu_get_handle(vcpu))
++		kvm_s390_pv_destroy_cpu(vcpu, &rc, &rrc);
+ 	free_page((unsigned long)(vcpu->arch.sie_block));
+ }
+ 
+@@ -2558,10 +2741,19 @@ static void kvm_free_vcpus(struct kvm *kvm)
+ 
+ void kvm_arch_destroy_vm(struct kvm *kvm)
+ {
++	u16 rc, rrc;
+ 	kvm_free_vcpus(kvm);
+ 	sca_dispose(kvm);
+-	debug_unregister(kvm->arch.dbf);
+ 	kvm_s390_gisa_destroy(kvm);
++	/*
++	 * We are already at the end of life and kvm->lock is not taken.
++	 * This is ok as the file descriptor is closed by now and nobody
++	 * can mess with the pv state. To avoid lockdep_assert_held from
++	 * complaining we do not use kvm_s390_pv_is_protected.
++	 */
++	if (kvm_s390_pv_get_handle(kvm))
++		kvm_s390_pv_deinit_vm(kvm, &rc, &rrc);
++	debug_unregister(kvm->arch.dbf);
+ 	free_page((unsigned long)kvm->arch.sie_page2);
+ 	if (!kvm_is_ucontrol(kvm))
+ 		gmap_remove(kvm->arch.gmap);
+@@ -2657,6 +2849,9 @@ static int sca_switch_to_extended(struct kvm *kvm)
+ 	unsigned int vcpu_idx;
+ 	u32 scaol, scaoh;
+ 
++	if (kvm->arch.use_esca)
++		return 0;
++
+ 	new_sca = alloc_pages_exact(sizeof(*new_sca), GFP_KERNEL|__GFP_ZERO);
+ 	if (!new_sca)
+ 		return -ENOMEM;
+@@ -2908,6 +3103,7 @@ static void kvm_s390_vcpu_setup_model(struct kvm_vcpu *vcpu)
+ static int kvm_s390_vcpu_setup(struct kvm_vcpu *vcpu)
+ {
+ 	int rc = 0;
++	u16 uvrc, uvrrc;
+ 
+ 	atomic_set(&vcpu->arch.sie_block->cpuflags, CPUSTAT_ZARCH |
+ 						    CPUSTAT_SM |
+@@ -2975,6 +3171,14 @@ static int kvm_s390_vcpu_setup(struct kvm_vcpu *vcpu)
+ 
+ 	kvm_s390_vcpu_crypto_setup(vcpu);
+ 
++	mutex_lock(&vcpu->kvm->lock);
++	if (kvm_s390_pv_is_protected(vcpu->kvm)) {
++		rc = kvm_s390_pv_create_cpu(vcpu, &uvrc, &uvrrc);
++		if (rc)
++			kvm_s390_vcpu_unsetup_cmma(vcpu);
++	}
++	mutex_unlock(&vcpu->kvm->lock);
++
+ 	return rc;
+ }
+ 
+@@ -4540,6 +4744,9 @@ int kvm_arch_prepare_memory_region(struct kvm *kvm,
+ 	if (mem->guest_phys_addr + mem->memory_size > kvm->arch.mem_limit)
+ 		return -EINVAL;
+ 
++	/* When we are protected we should not change the memory slots */
++	if (kvm_s390_pv_is_protected(kvm))
++		return -EINVAL;
+ 	return 0;
+ }
+ 
+diff --git a/arch/s390/kvm/kvm-s390.h b/arch/s390/kvm/kvm-s390.h
+index be55b4b99bd3..13e6986596ed 100644
+--- a/arch/s390/kvm/kvm-s390.h
++++ b/arch/s390/kvm/kvm-s390.h
+@@ -15,6 +15,7 @@
+ #include <linux/hrtimer.h>
+ #include <linux/kvm.h>
+ #include <linux/kvm_host.h>
++#include <linux/lockdep.h>
+ #include <asm/facility.h>
+ #include <asm/processor.h>
+ #include <asm/sclp.h>
+@@ -207,6 +208,38 @@ static inline int kvm_s390_user_cpu_state_ctrl(struct kvm *kvm)
+ 	return kvm->arch.user_cpu_state_ctrl != 0;
+ }
+ 
++/* implemented in pv.c */
++int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc);
++int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc);
++int kvm_s390_pv_deinit_vm(struct kvm *kvm, u16 *rc, u16 *rrc);
++int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc);
++int kvm_s390_pv_set_sec_parms(struct kvm *kvm, void *hdr, u64 length, u16 *rc,
++			      u16 *rrc);
++int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned long size,
++		       unsigned long tweak, u16 *rc, u16 *rrc);
++
++static inline u64 kvm_s390_pv_get_handle(struct kvm *kvm)
++{
++	return kvm->arch.pv.handle;
++}
++
++static inline u64 kvm_s390_pv_cpu_get_handle(struct kvm_vcpu *vcpu)
++{
++	return vcpu->arch.pv.handle;
++}
++
++static inline bool kvm_s390_pv_is_protected(struct kvm *kvm)
++{
++	lockdep_assert_held(&kvm->lock);
++	return !!kvm_s390_pv_get_handle(kvm);
++}
++
++static inline bool kvm_s390_pv_cpu_is_protected(struct kvm_vcpu *vcpu)
++{
++	lockdep_assert_held(&vcpu->mutex);
++	return !!kvm_s390_pv_cpu_get_handle(vcpu);
++}
++
+ /* implemented in interrupt.c */
+ int kvm_s390_handle_wait(struct kvm_vcpu *vcpu);
+ void kvm_s390_vcpu_wakeup(struct kvm_vcpu *vcpu);
+diff --git a/arch/s390/kvm/pv.c b/arch/s390/kvm/pv.c
+new file mode 100644
+index 000000000000..e7b525d06e4c
+--- /dev/null
++++ b/arch/s390/kvm/pv.c
+@@ -0,0 +1,269 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Hosting Protected Virtual Machines
++ *
++ * Copyright IBM Corp. 2019, 2020
++ *    Author(s): Janosch Frank <frankja@linux.ibm.com>
++ */
++#include <linux/kvm.h>
++#include <linux/kvm_host.h>
++#include <linux/pagemap.h>
++#include <linux/sched/signal.h>
++#include <asm/pgalloc.h>
++#include <asm/gmap.h>
++#include <asm/uv.h>
++#include <asm/gmap.h>
++#include <asm/mman.h>
++#include "kvm-s390.h"
++
++int kvm_s390_pv_destroy_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc)
++{
++	int cc = 0;
++
++	if (kvm_s390_pv_cpu_get_handle(vcpu)) {
++		cc = uv_cmd_nodata(kvm_s390_pv_cpu_get_handle(vcpu),
++				   UVC_CMD_DESTROY_SEC_CPU, rc, rrc);
++
++		KVM_UV_EVENT(vcpu->kvm, 3,
++			     "PROTVIRT DESTROY VCPU %d: rc %x rrc %x",
++			     vcpu->vcpu_id, *rc, *rrc);
++		WARN_ONCE(cc, "protvirt destroy cpu failed rc %x rrc %x",
++			  *rc, *rrc);
++	}
++	/* Intended memory leak for something that should never happen. */
++	if (!cc)
++		free_pages(vcpu->arch.pv.stor_base,
++			   get_order(uv_info.guest_cpu_stor_len));
++	vcpu->arch.sie_block->pv_handle_cpu = 0;
++	vcpu->arch.sie_block->pv_handle_config = 0;
++	memset(&vcpu->arch.pv, 0, sizeof(vcpu->arch.pv));
++	vcpu->arch.sie_block->sdf = 0;
++	kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
++
++	return cc ? EIO : 0;
++}
++
++int kvm_s390_pv_create_cpu(struct kvm_vcpu *vcpu, u16 *rc, u16 *rrc)
++{
++	struct uv_cb_csc uvcb = {
++		.header.cmd = UVC_CMD_CREATE_SEC_CPU,
++		.header.len = sizeof(uvcb),
++	};
++	int cc;
++
++	if (kvm_s390_pv_cpu_get_handle(vcpu))
++		return -EINVAL;
++
++	vcpu->arch.pv.stor_base = __get_free_pages(GFP_KERNEL,
++						   get_order(uv_info.guest_cpu_stor_len));
++	if (!vcpu->arch.pv.stor_base)
++		return -ENOMEM;
++
++	/* Input */
++	uvcb.guest_handle = kvm_s390_pv_get_handle(vcpu->kvm);
++	uvcb.num = vcpu->arch.sie_block->icpua;
++	uvcb.state_origin = (u64)vcpu->arch.sie_block;
++	uvcb.stor_origin = (u64)vcpu->arch.pv.stor_base;
++
++	cc = uv_call(0, (u64)&uvcb);
++	*rc = uvcb.header.rc;
++	*rrc = uvcb.header.rrc;
++	KVM_UV_EVENT(vcpu->kvm, 3,
++		     "PROTVIRT CREATE VCPU: cpu %d handle %llx rc %x rrc %x",
++		     vcpu->vcpu_id, uvcb.cpu_handle, uvcb.header.rc,
++		     uvcb.header.rrc);
++
++	if (cc) {
++		u16 dummy;
++
++		kvm_s390_pv_destroy_cpu(vcpu, &dummy, &dummy);
++		return -EIO;
++	}
++
++	/* Output */
++	vcpu->arch.pv.handle = uvcb.cpu_handle;
++	vcpu->arch.sie_block->pv_handle_cpu = uvcb.cpu_handle;
++	vcpu->arch.sie_block->pv_handle_config = kvm_s390_pv_get_handle(vcpu->kvm);
++	vcpu->arch.sie_block->sdf = 2;
++	kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
++	return 0;
++}
++
++/* only free resources when the destroy was successful */
++static void kvm_s390_pv_dealloc_vm(struct kvm *kvm)
++{
++	vfree(kvm->arch.pv.stor_var);
++	free_pages(kvm->arch.pv.stor_base,
++		   get_order(uv_info.guest_base_stor_len));
++	memset(&kvm->arch.pv, 0, sizeof(kvm->arch.pv));
++}
++
++static int kvm_s390_pv_alloc_vm(struct kvm *kvm)
++{
++	unsigned long base = uv_info.guest_base_stor_len;
++	unsigned long virt = uv_info.guest_virt_var_stor_len;
++	unsigned long npages = 0, vlen = 0;
++	struct kvm_memory_slot *memslot;
++
++	kvm->arch.pv.stor_var = NULL;
++	kvm->arch.pv.stor_base = __get_free_pages(GFP_KERNEL, get_order(base));
++	if (!kvm->arch.pv.stor_base)
++		return -ENOMEM;
++
++	/*
++	 * Calculate current guest storage for allocation of the
++	 * variable storage, which is based on the length in MB.
++	 *
++	 * Slots are sorted by GFN
++	 */
++	mutex_lock(&kvm->slots_lock);
++	memslot = kvm_memslots(kvm)->memslots;
++	npages = memslot->base_gfn + memslot->npages;
++	mutex_unlock(&kvm->slots_lock);
++
++	kvm->arch.pv.guest_len = npages * PAGE_SIZE;
++
++	/* Allocate variable storage */
++	vlen = ALIGN(virt * ((npages * PAGE_SIZE) / HPAGE_SIZE), PAGE_SIZE);
++	vlen += uv_info.guest_virt_base_stor_len;
++	kvm->arch.pv.stor_var = vzalloc(vlen);
++	if (!kvm->arch.pv.stor_var)
++		goto out_err;
++	return 0;
++
++out_err:
++	kvm_s390_pv_dealloc_vm(kvm);
++	return -ENOMEM;
++}
++
++/* this should not fail, but if it does we must not free the donated memory */
++int kvm_s390_pv_deinit_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
++{
++	int cc;
++
++	cc = uv_cmd_nodata(kvm_s390_pv_get_handle(kvm),
++			   UVC_CMD_DESTROY_SEC_CONF, rc, rrc);
++	WRITE_ONCE(kvm->arch.gmap->guest_handle, 0);
++	atomic_set(&kvm->mm->context.is_protected, 0);
++	KVM_UV_EVENT(kvm, 3, "PROTVIRT DESTROY VM: rc %x rrc %x", *rc, *rrc);
++	WARN_ONCE(cc, "protvirt destroy vm failed rc %x rrc %x", *rc, *rrc);
++	/* Inteded memory leak on "impossible" error */
++	if (!cc)
++		kvm_s390_pv_dealloc_vm(kvm);
++	return cc ? -EIO : 0;
++}
++
++int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
++{
++		struct uv_cb_cgc uvcb = {
++		.header.cmd = UVC_CMD_CREATE_SEC_CONF,
++		.header.len = sizeof(uvcb)
++	};
++	int cc, ret;
++	u16 dummy;
++
++	ret = kvm_s390_pv_alloc_vm(kvm);
++	if (ret)
++		return ret;
++
++	/* Inputs */
++	uvcb.guest_stor_origin = 0; /* MSO is 0 for KVM */
++	uvcb.guest_stor_len = kvm->arch.pv.guest_len;
++	uvcb.guest_asce = kvm->arch.gmap->asce;
++	uvcb.guest_sca = (unsigned long)kvm->arch.sca;
++	uvcb.conf_base_stor_origin = (u64)kvm->arch.pv.stor_base;
++	uvcb.conf_virt_stor_origin = (u64)kvm->arch.pv.stor_var;
++
++	cc = uv_call(0, (u64)&uvcb);
++	*rc = uvcb.header.rc;
++	*rrc = uvcb.header.rrc;
++	KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len %llx rc %x rrc %x",
++		     uvcb.guest_handle, uvcb.guest_stor_len, *rc, *rrc);
++
++	/* Outputs */
++	kvm->arch.pv.handle = uvcb.guest_handle;
++
++	if (cc) {
++		if (uvcb.header.rc & UVC_RC_NEED_DESTROY)
++			kvm_s390_pv_deinit_vm(kvm, &dummy, &dummy);
++		else
++			kvm_s390_pv_dealloc_vm(kvm);
++		return -EIO;
++	}
++	kvm->arch.gmap->guest_handle = uvcb.guest_handle;
++	atomic_set(&kvm->mm->context.is_protected, 1);
++	return 0;
++}
++
++int kvm_s390_pv_set_sec_parms(struct kvm *kvm, void *hdr, u64 length, u16 *rc,
++			      u16 *rrc)
++{
++	struct uv_cb_ssc uvcb = {
++		.header.cmd = UVC_CMD_SET_SEC_CONF_PARAMS,
++		.header.len = sizeof(uvcb),
++		.sec_header_origin = (u64)hdr,
++		.sec_header_len = length,
++		.guest_handle = kvm_s390_pv_get_handle(kvm),
++	};
++	int cc = uv_call(0, (u64)&uvcb);
++
++	*rc = uvcb.header.rc;
++	*rrc = uvcb.header.rrc;
++	KVM_UV_EVENT(kvm, 3, "PROTVIRT VM SET PARMS: rc %x rrc %x",
++		     *rc, *rrc);
++	if (cc)
++		return -EINVAL;
++	return 0;
++}
++
++static int unpack_one(struct kvm *kvm, unsigned long addr, u64 tweak,
++		      u64 offset, u16 *rc, u16 *rrc)
++{
++	struct uv_cb_unp uvcb = {
++		.header.cmd = UVC_CMD_UNPACK_IMG,
++		.header.len = sizeof(uvcb),
++		.guest_handle = kvm_s390_pv_get_handle(kvm),
++		.gaddr = addr,
++		.tweak[0] = tweak,
++		.tweak[1] = offset,
++	};
++	int ret = gmap_make_secure(kvm->arch.gmap, addr, &uvcb);
++
++	*rc = uvcb.header.rc;
++	*rrc = uvcb.header.rrc;
++
++	if (ret && ret != -EAGAIN)
++		KVM_UV_EVENT(kvm, 3, "PROTVIRT VM UNPACK: failed addr %llx with rc %x rrc %x",
++			     uvcb.gaddr, *rc, *rrc);
++	return ret;
++}
++
++int kvm_s390_pv_unpack(struct kvm *kvm, unsigned long addr, unsigned long size,
++		       unsigned long tweak, u16 *rc, u16 *rrc)
++{
++	u64 offset = 0;
++	int ret = 0;
++
++	if (addr & ~PAGE_MASK || !size || size & ~PAGE_MASK)
++		return -EINVAL;
++
++	KVM_UV_EVENT(kvm, 3, "PROTVIRT VM UNPACK: start addr %lx size %lx",
++		     addr, size);
++
++	while (offset < size) {
++		ret = unpack_one(kvm, addr, tweak, offset, rc, rrc);
++		if (ret == -EAGAIN) {
++			cond_resched();
++			if (fatal_signal_pending(current))
++				break;
++			continue;
++		}
++		if (ret)
++			break;
++		addr += PAGE_SIZE;
++		offset += PAGE_SIZE;
++	}
++	if (!ret)
++		KVM_UV_EVENT(kvm, 3, "%s", "PROTVIRT VM UNPACK: successful");
++	return ret;
++}
+diff --git a/include/uapi/linux/kvm.h b/include/uapi/linux/kvm.h
+index 4b95f9a31a2f..ad69817f7792 100644
+--- a/include/uapi/linux/kvm.h
++++ b/include/uapi/linux/kvm.h
+@@ -1478,6 +1478,37 @@ struct kvm_enc_region {
+ #define KVM_S390_NORMAL_RESET	_IO(KVMIO,   0xc3)
+ #define KVM_S390_CLEAR_RESET	_IO(KVMIO,   0xc4)
+ 
++struct kvm_s390_pv_sec_parm {
++	__u64 origin;
++	__u64 length;
++};
++
++struct kvm_s390_pv_unp {
++	__u64 addr;
++	__u64 size;
++	__u64 tweak;
++};
++
++enum pv_cmd_id {
++	KVM_PV_ENABLE,
++	KVM_PV_DISABLE,
++	KVM_PV_SET_SEC_PARMS,
++	KVM_PV_UNPACK,
++	KVM_PV_VERIFY,
++};
++
++struct kvm_pv_cmd {
++	__u32 cmd;	/* Command to be executed */
++	__u16 rc;	/* Ultravisor return code */
++	__u16 rrc;	/* Ultravisor return reason code */
++	__u64 data;	/* Data or address */
++	__u32 flags;    /* flags for future extensions. Must be 0 for now */
++	__u32 reserved[3];
++};
++
++/* Available with KVM_CAP_S390_PROTECTED */
++#define KVM_S390_PV_COMMAND		_IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
++
+ /* Secure Encrypted Virtualization command */
+ enum sev_cmd_id {
+ 	/* Guest initialization commands */
+-- 
+2.25.0
 
