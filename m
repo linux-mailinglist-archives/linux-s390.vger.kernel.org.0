@@ -2,150 +2,171 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7105F16B01A
-	for <lists+linux-s390@lfdr.de>; Mon, 24 Feb 2020 20:14:14 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F05BA16B812
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 04:30:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727310AbgBXTON (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 24 Feb 2020 14:14:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:35228 "EHLO
+        id S1728843AbgBYDaf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 24 Feb 2020 22:30:35 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:28693 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726664AbgBXTON (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Feb 2020 14:14:13 -0500
+        with ESMTP id S1726962AbgBYDaf (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 24 Feb 2020 22:30:35 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582571652;
+        s=mimecast20190719; t=1582601434;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=v7kM+gzqgwCAAWb3syMgHG0vfA4+d1OABe6bPGDfaJg=;
-        b=QKqj53lUqrEw0O4syynqKt4de1KWRnAEPMt5jqklIOy34Fm7o6eyFasEhZn0pXCeHE5EjR
-        x7zpsM3iJPanlCFgcDsS6ak2niUufFDjpbIrZCm3ejR+s/hciNR12p15DevtPnd88BG+TV
-        Wyl2UMhngp6z56wXDGRTvxT1Ry/bqU0=
+         in-reply-to:in-reply-to:references:references;
+        bh=Of3nosS8oU936PJEYpW7qNnO8kX+HHJe6v2iVwoEUOg=;
+        b=WwiY7o+GDu0/k2lejkAlLjqg45gH8UcpTHV0R/AdgcJZJh1MH1t88jDeAhYWuWafviuOYJ
+        zUIYjC3fOsdPfgB7BACDmVuIi/4AHD8K1wBmkT53xrDV7+hnyPwdjcZ5MF25ErZwx3emla
+        BujL5djTk39XFl+KKbcwOawG3xxCm0M=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-77-NyVaMPLYMza70haoEWLQXw-1; Mon, 24 Feb 2020 14:14:08 -0500
-X-MC-Unique: NyVaMPLYMza70haoEWLQXw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-431-L7yu7l6DPj2oybCYzxfyBw-1; Mon, 24 Feb 2020 22:30:30 -0500
+X-MC-Unique: L7yu7l6DPj2oybCYzxfyBw-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8488E800D53;
-        Mon, 24 Feb 2020 19:14:06 +0000 (UTC)
-Received: from [10.36.116.78] (ovpn-116-78.ams2.redhat.com [10.36.116.78])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 44FF839B;
-        Mon, 24 Feb 2020 19:14:04 +0000 (UTC)
-Subject: Re: [PATCH v4 16/36] KVM: s390: protvirt: Handle spec exception loops
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        Thomas Huth <thuth@redhat.com>,
-        Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-References: <20200224114107.4646-1-borntraeger@de.ibm.com>
- <20200224114107.4646-17-borntraeger@de.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <67cd8b46-2b9a-e7a0-bf60-ca7018d3be56@redhat.com>
-Date:   Mon, 24 Feb 2020 20:14:03 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C410AB0E3F;
+        Tue, 25 Feb 2020 03:30:27 +0000 (UTC)
+Received: from [10.72.13.170] (ovpn-13-170.pek2.redhat.com [10.72.13.170])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 84CCB620D8;
+        Tue, 25 Feb 2020 03:30:18 +0000 (UTC)
+Subject: Re: [PATCH 0/2] virtio: decouple protected guest RAM form
+ VIRTIO_F_IOMMU_PLATFORM
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Ram Pai <linuxram@us.ibm.com>,
+        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
+        Michael Mueller <mimu@linux.ibm.com>
+References: <20200220160606.53156-1-pasic@linux.ibm.com>
+ <426e6972-0565-c931-e171-da0f58fbf856@redhat.com>
+ <20200221155602.4de41fa7.pasic@linux.ibm.com>
+ <0181712c-e533-fcfd-2638-8a0649d713dd@redhat.com>
+ <20200224010607-mutt-send-email-mst@kernel.org>
+ <b3c52c67-c740-a50e-2595-fe04d179c881@redhat.com>
+ <20200224024641-mutt-send-email-mst@kernel.org>
+ <08d6bdfb-9b49-c278-3c0b-2e02376cf0cf@redhat.com>
+ <20200224145607.2729f47b.pasic@linux.ibm.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <1b2673e7-56ff-7d69-af2d-503a97408d95@redhat.com>
+Date:   Tue, 25 Feb 2020 11:30:16 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20200224114107.4646-17-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200224145607.2729f47b.pasic@linux.ibm.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24.02.20 12:40, Christian Borntraeger wrote:
-> From: Janosch Frank <frankja@linux.ibm.com>
-> 
-> SIE intercept code 8 is used only on exception loops for protected
-> guests. That means we need to stop the guest when we see it. This is
-> done by userspace.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  arch/s390/kvm/intercept.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/s390/kvm/intercept.c b/arch/s390/kvm/intercept.c
-> index 00a79442a428..331e620dcfdf 100644
-> --- a/arch/s390/kvm/intercept.c
-> +++ b/arch/s390/kvm/intercept.c
-> @@ -231,6 +231,13 @@ static int handle_prog(struct kvm_vcpu *vcpu)
->  
->  	vcpu->stat.exit_program_interruption++;
->  
-> +	/*
-> +	 * Intercept 8 indicates a loop of specification exceptions
-> +	 * for protected guests.
-> +	 */
-> +	if (kvm_s390_pv_cpu_is_protected(vcpu))
-> +		return -EOPNOTSUPP;
-> +
->  	if (guestdbg_enabled(vcpu) && per_event(vcpu)) {
->  		rc = kvm_s390_handle_per_event(vcpu);
->  		if (rc)
-> 
 
-Acked-by: David Hildenbrand <david@redhat.com>
+On 2020/2/24 =E4=B8=8B=E5=8D=889:56, Halil Pasic wrote:
+> On Mon, 24 Feb 2020 17:26:20 +0800
+> Jason Wang <jasowang@redhat.com> wrote:
+>
+>> That's better.
+>>
+>> How about attached?
+>>
+>> Thanks
+> Thanks Jason! It does avoid the translation overhead in vhost.
+>
+> Tested-by: Halil Pasic <pasic@linux.ibm.com>
+>
+> Regarding the code, you fence it in virtio-net.c, but AFAIU this featur=
+e
+> has relevance for other vhost devices as well. E.g. what about vhost
+> user? Would it be the responsibility of each virtio device to fence thi=
+s
+> on its own?
 
--- 
-Thanks,
 
-David / dhildenb
+Yes, it looks to me it's better to do that in virtio_set_features_nocheck=
+()
+
+
+>
+> I'm also a bit confused about the semantics of the vhost feature bit
+> F_ACCESS_PLATFORM. What we have specified on virtio level is:
+> """
+> This feature indicates that the device can be used on a platform where
+> device access to data in memory is limited and/or translated. E.g. this
+> is the case if the device can be located behind an IOMMU that translate=
+s
+> bus addresses from the device into physical addresses in memory, if the
+> device can be limited to only access certain memory addresses or if
+> special commands such as a cache flush can be needed to synchronise dat=
+a
+> in memory with the device. Whether accesses are actually limited or
+> translated is described by platform-specific means. If this feature bit
+> is set to 0, then the device has same access to memory addresses
+> supplied to it as the driver has. In particular, the device will always
+> use physical addresses matching addresses used by the driver (typically
+> meaning physical addresses used by the CPU) and not translated further,
+> and can access any address supplied to it by the driver. When clear,
+> this overrides any platform-specific description of whether device
+> access is limited or translated in any way, e.g. whether an IOMMU may b=
+e
+> present.
+> """
+>
+> I read this like the addresses may be IOVAs which require
+> IMMU translation or GPAs which don't.
+>
+> On the vhost level however, it seems that F_IOMMU_PLATFORM means that
+> vhost has to do the translation (via IOTLB API).
+
+
+Yes.
+
+
+>
+> Do I understand this correctly? If yes, I believe we should document
+> this properly.
+
+
+Good point. I think it was probably wrong to tie F_IOMMU_PLATFORM to=20
+IOTLB API. Technically IOTLB can work with GPA->HVA mapping. I=20
+originally use a dedicated feature bit (you can see that from commit=20
+log), but for some reason Michael tweak it to virtio feature bit. I=20
+guess it was probably because at that time there's no way to specify e.g=20
+backend capability but now we have VHOST_GET_BACKEND_FEATURES.
+
+For now, it was probably too late to fix that but document or we can add=20
+the support of enabling IOTLB via new backend features.
+
+
+>
+> BTW I'm still not 100% on the purpose and semantics of the
+> F_ACCESS_PLATFORM feature bit. But that is a different problem.
+
+
+Yes, I aggree that we should decouple the features that does not belongs=20
+to device (protected, encrypted, swiotlb etc) from F_IOMMU_PLATFORM. But=20
+Michael and other have their points as well.
+
+Thanks
+
+
+>
+> Regards,
+> Halil
+>
 
