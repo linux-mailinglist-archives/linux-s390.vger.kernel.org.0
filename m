@@ -2,38 +2,39 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6318416EA8C
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 16:51:16 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8F64C16EB4C
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 17:23:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbgBYPvQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Feb 2020 10:51:16 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46385 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728096AbgBYPvP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 25 Feb 2020 10:51:15 -0500
+        id S1730488AbgBYQXJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Feb 2020 11:23:09 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49514 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729992AbgBYQXJ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 25 Feb 2020 11:23:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582645874;
+        s=mimecast20190719; t=1582647788;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Z0DlAdI9/sKGf97eqVEbAeNHhd5i8GxwMNlFZqYH+6A=;
-        b=HJqcXfaTr/nB9eaa68eIDFTD1WwvUYpgEDNIJhtdSI4ijVVkHCF1WiMFTD3okbyIBmGVvd
-        xcLKFjrj3M3CJBznVV2N9hGTSi1CGNg7mo5FK7aR7U9N6VA0RgnWSEyyb/IbZ+kcHSqBZr
-        kVe5MoNjJ8Md3HFfqS6lmrIJ+Svd4Eg=
+        bh=j/IjXhdVlr5pZ8Jhv/yD2ubdhQC1M9yGGOPP9+zVvv0=;
+        b=g2otmVIfeDhpefRJxkilVWE0e6xugOYwHltF7l6qDwHyn9pSQeYPyo86qX8AQMoLyAUdF1
+        uWurzja6iWd2FSwB91EaOoxkrAibuWl/XL+RLeMomkO0CohqGOEMBpHA+XAarTHmzZkIjA
+        rjbncYWdwH0YfaIKVQYB9UNOSk+3MpA=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-64-0xYdur1VPuedMPipNBG-IA-1; Tue, 25 Feb 2020 10:51:10 -0500
-X-MC-Unique: 0xYdur1VPuedMPipNBG-IA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-68-5cK85T5iPG6pZvj0jeEtsA-1; Tue, 25 Feb 2020 11:23:04 -0500
+X-MC-Unique: 5cK85T5iPG6pZvj0jeEtsA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 115DC1902EA8;
-        Tue, 25 Feb 2020 15:51:09 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6FD7118A6EC0;
+        Tue, 25 Feb 2020 16:23:02 +0000 (UTC)
 Received: from gondolin (dhcp-192-175.str.redhat.com [10.33.192.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B18065D9CD;
-        Tue, 25 Feb 2020 15:51:01 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 16:50:59 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EBBA588859;
+        Tue, 25 Feb 2020 16:22:57 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 17:22:55 +0100
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Christian Borntraeger <borntraeger@de.ibm.com>
 Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
@@ -45,124 +46,147 @@ Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
         Michael Mueller <mimu@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Janosch Frank <frankja@linux.ibm.com>
-Subject: Re: [PATCH v4 36/36] KVM: s390: protvirt: Add KVM api documentation
-Message-ID: <20200225165059.5a2f48a5.cohuck@redhat.com>
-In-Reply-To: <20200224114107.4646-37-borntraeger@de.ibm.com>
+Subject: Re: [PATCH v4 33/36] DOCUMENTATION: Protected virtual machine
+ introduction and IPL
+Message-ID: <20200225172255.6ec8e7ac.cohuck@redhat.com>
+In-Reply-To: <20200224114107.4646-34-borntraeger@de.ibm.com>
 References: <20200224114107.4646-1-borntraeger@de.ibm.com>
-        <20200224114107.4646-37-borntraeger@de.ibm.com>
+        <20200224114107.4646-34-borntraeger@de.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 24 Feb 2020 06:41:07 -0500
+On Mon, 24 Feb 2020 06:41:04 -0500
 Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
 > From: Janosch Frank <frankja@linux.ibm.com>
 > 
-> Add documentation for KVM_CAP_S390_PROTECTED capability and the
-> KVM_S390_PV_COMMAND ioctl.
+> Add documentation about protected KVM guests and description of changes
+> that are necessary to move a KVM VM into Protected Virtualization mode.
 > 
 > Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> [borntraeger@de.ibm.com: fixing and conversion to rst]
 > Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 > ---
->  Documentation/virt/kvm/api.rst | 55 ++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
+>  Documentation/virt/kvm/index.rst        |   2 +
+>  Documentation/virt/kvm/s390-pv-boot.rst |  83 +++++++++++++++++
+>  Documentation/virt/kvm/s390-pv.rst      | 116 ++++++++++++++++++++++++
+>  MAINTAINERS                             |   1 +
+>  4 files changed, 202 insertions(+)
+>  create mode 100644 Documentation/virt/kvm/s390-pv-boot.rst
+>  create mode 100644 Documentation/virt/kvm/s390-pv.rst
 > 
-> diff --git a/Documentation/virt/kvm/api.rst b/Documentation/virt/kvm/api.rst
-> index 7505d7a6c0d8..20abb8b2594e 100644
-> --- a/Documentation/virt/kvm/api.rst
-> +++ b/Documentation/virt/kvm/api.rst
-> @@ -4648,6 +4648,51 @@ the clear cpu reset definition in the POP. However, the cpu is not put
->  into ESA mode. This reset is a superset of the initial reset.
->  
->  
-> +4.125 KVM_S390_PV_COMMAND
-> +-------------------------
+(...)
+> diff --git a/Documentation/virt/kvm/s390-pv-boot.rst b/Documentation/virt/kvm/s390-pv-boot.rst
+> new file mode 100644
+> index 000000000000..b762df206ab7
+> --- /dev/null
+> +++ b/Documentation/virt/kvm/s390-pv-boot.rst
+> @@ -0,0 +1,83 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +:Capability: KVM_CAP_S390_PROTECTED
-> +:Architectures: s390
-> +:Type: vm ioctl
-> +:Parameters: struct kvm_pv_cmd
-> +:Returns: 0 on success, < 0 on error
+> +======================================
+> +s390 (IBM Z) Boot/IPL of Protected VMs
+> +======================================
 > +
-> +::
+> +Summary
+> +-------
+> +The memory of Protected Virtual Machines (PVMs) is not accessible to
+> +I/O or the hypervisor. In those cases where the hypervisor needs to
+> +access the memory of a PVM, that memory must be made accessible.
+> +Memory made accessible to the hypervisor will be encrypted. See
+> +:doc:`s390-pv` for details."
 > +
-> +  struct kvm_pv_cmd {
-> +	__u32 cmd;	/* Command to be executed */
-> +	__u16 rc;	/* Ultravisor return code */
-> +	__u16 rrc;	/* Ultravisor return reason code */
-> +	__u64 data;	/* Data or address */
-> +	__u32 flags;    /* flags for future extensions. Must be 0 for now */
-> +	__u32 reserved[3];
-> +  };
+> +On IPL (boot) a small plaintext bootloader is started, which provides
+> +information about the encrypted components and necessary metadata to
+> +KVM to decrypt the protected virtual machine.
 > +
-> +cmd values:
-> +
-> +KVM_PV_ENABLE
-> +  Allocate memory and register the VM with the Ultravisor, thereby
-> +  donating memory to the Ultravisor making it inaccessible to KVM.
-> +  Also converts all existing CPUs to protected ones. Future hotplug
-> +  CPUs will become protected during creation.
+> +Based on this data, KVM will make the protected virtual machine known
+> +to the Ultravisor(UV) and instruct it to secure the memory of the PVM,
 
-"Allocate memory and register the VM with the Ultravisor, thereby
-donating memory to the Ultravisor that will become inaccsessible to
-KVM. All existing CPUs are converted to protected ones. After this
-command has succeeded, any CPU added via hotplug will become protected
-during its creation as well."
+s/Ultravisor(UV)/Ultravisor (UV)/
 
-> +
-> +KVM_PV_DISABLE
-> +  Deregisters the VM from the Ultravisor and frees memory that was
-> +  donated, so the kernel can use it again. All registered VCPUs are
-> +  converted back to non-protected ones.
+> +decrypt the components and verify the data and address list hashes, to
+> +ensure integrity. Afterwards KVM can run the PVM via the SIE
+> +instruction which the UV will intercept and execute on KVM's behalf.
+(...)
+> +Subcodes 4 and 7, which specify operations that do not clear the guest
+> +memory, will result in specification exceptions. This is because the
+> +UV will clear all memory when a secure VM is removed, and therefore
+> +non-clearing IPL subcodes are not allowed."
 
-"Deregister the VM from the Ultravisor and reclaim the memory that had
-been donated to the Ultravisor, making it usable by the kernel again.
-..."
+stray '"'
 
+(...)
+> diff --git a/Documentation/virt/kvm/s390-pv.rst b/Documentation/virt/kvm/s390-pv.rst
+> new file mode 100644
+> index 000000000000..27fe03eaeaad
+> --- /dev/null
+> +++ b/Documentation/virt/kvm/s390-pv.rst
+> @@ -0,0 +1,116 @@
+> +.. SPDX-License-Identifier: GPL-2.0
 > +
-> +KVM_PV_VM_SET_SEC_PARMS
-> +  Pass the image header from VM memory to the Ultravisor in
-> +  preparation of image unpacking and verification.
+> +=========================================
+> +s390 (IBM Z) Ultravisor and Protected VMs
+> +=========================================
 > +
-> +KVM_PV_VM_UNPACK
-> +  Unpack (protect and decrypt) a page of the encrypted boot image.
+> +Summary
+> +-------
+> +Protected virtual machines (PVM) are KVM VMs that do not allow KVM to
+> +access VM state like guest memory or guest registers. Instead, the
+> +PVMs are mostly managed by a new entity called Ultravisor (UV). The UV
+> +provides an API that can be used by PVMs and KVM to request management
+> +actions.
 > +
-> +KVM_PV_VM_VERIFY
-> +  Verify the integrity of the unpacked image. Only if this succeeds,
-> +  KVM is allowed to start protected VCPUs.
-> +
-> +
->  5. The kvm_run structure
->  ========================
->  
-> @@ -6026,3 +6071,13 @@ Architectures: s390
->  
->  This capability indicates that the KVM_S390_NORMAL_RESET and
->  KVM_S390_CLEAR_RESET ioctls are available.
-> +
-> +8.23 KVM_CAP_S390_PROTECTED
-> +
-> +Architecture: s390
-> +
-> +This capability indicates that KVM can start protected VMs and the
-> +Ultravisor has therefore been initialized.
+> +Each guest starts in the non-protected mode and then may make a
 
-"This capability indicates that the Ultravisor has been initialized and
-KVM can therefore start protected VMs."
+s/in the/in/
 
-> +This will provide the new KVM_S390_PV_COMMAND ioctl and it will allow
-> +KVM_MP_STATE_LOAD as new MP_STATE. KVM_SET_MP_STATE can now fail for
-> +protected guests when the state change is invalid.
+> +request to transition into protected mode. On transition, KVM
+> +registers the guest and its VCPUs with the Ultravisor and prepares
+> +everything for running it.
+(...)
+> +
+> +Mask notification interceptions
+> +-------------------------------
+> +In order to be notified when a PVM enables a certain class of
+> +interrupt, KVM cannot intercept lctl(g) and lpsw(e) anymore. As a
 
-"This capability governs the KVM_S390_PV_COMMAND ioctl and the
-KVM_MP_STATE_LOAD MP_STATE. KVM_SET_MP_STATE can fail for protected
-guests when the state change is invalid."
+"KVM cannot intercept (...) in order to notified..." might read a bit
+better.
+
+> +replacement, two new interception codes have been introduced: One
+> +indicating that the contents of CRs 0, 6, or 14 have been changed,
+> +indicating different interruption subclasses; and one indicating that
+> +PSW bit 13 has been changed, indicating that a machine check
+> +intervention was requested and those are now enabled.
+> +
+> +Instruction emulation
+> +---------------------
+> +With the format 4 state description for PVMs, the SIE instruction already
+> +interprets more instructions than it does with format 2. It is not able
+> +to interpret every instruction, but needs to hand some tasks to KVM;
+> +therefore, the SIE and the ultravisor safeguard emulation inputs and outputs.
+> +
+> +The control structures associated with SIE provide the Secure
+> +Instruction Data Area (SIDA), the Interception Parameters (IP) and the
+> +Secure Interception General Register Save Area.  Guest GRs and most of
+> +the instruction data, such as I/O data structures, are filtered.
+> +Instruction data is copied to and from the Secure Instruction Data
+> +Area (SIDA) when needed.  Guest GRs are put into / retrieved from the
+
+I think you can use 'SIDA' directly the second time.
+
+> +Secure Interception General Register Save Area.
+
+(...)
+
+Otherwise,
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
