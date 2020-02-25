@@ -2,43 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B047016BECC
-	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 11:32:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id AE48D16BEF0
+	for <lists+linux-s390@lfdr.de>; Tue, 25 Feb 2020 11:38:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730186AbgBYKci (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 25 Feb 2020 05:32:38 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:24729 "EHLO
+        id S1730335AbgBYKiM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 25 Feb 2020 05:38:12 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:25764 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730175AbgBYKci (ORCPT
+        by vger.kernel.org with ESMTP id S1729417AbgBYKiJ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 25 Feb 2020 05:32:38 -0500
+        Tue, 25 Feb 2020 05:38:09 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582626758;
+        s=mimecast20190719; t=1582627088;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bSFp9RK5MneR4PlyDcZVrTa7qsdq0LY6sCOpJNi5knU=;
-        b=Dwi5QjBAVrXpRzppnz/YhI2LSfJrG3SwgsE+fqXS+gAOgmyGtfboQR9nd1IJb7VQXL5/gU
-        0I7tqvLIIkdCzmQtxLbr44Xxj+IiXffTuSalY5IRCH5mOQmFk++XW0Mv5hCV54WkxNMUvb
-        5+n4JcVyQVUf9oL1QUC6YBoTMGIEghs=
+        bh=Jqnld3IWzEPhjTNh7/Ue+5D/9dR2OPNa17JHf0tlptE=;
+        b=BLYWWM2p7brG/2CsgPzRV1si7eaWEphVWo2XxXWYQNFuDs5VO8iU13CazmqquHOZDKPlJ/
+        c9uBxm6ntkN4phYoOafH7xQWEyrIT/uGOOoXFVrn/fim4vd8snqSkgtyX2FmO+PZNNklkT
+        5GR1UoOjRdCfwtg2cQA5W98f9G1xPsI=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-tXPLjMVCNLW7NB3_hEHfYg-1; Tue, 25 Feb 2020 05:32:34 -0500
-X-MC-Unique: tXPLjMVCNLW7NB3_hEHfYg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-230-j9R5V388NRyyd7Eo30mLZQ-1; Tue, 25 Feb 2020 05:38:04 -0500
+X-MC-Unique: j9R5V388NRyyd7Eo30mLZQ-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AE7E4190D341;
-        Tue, 25 Feb 2020 10:32:32 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5538E800D54;
+        Tue, 25 Feb 2020 10:38:03 +0000 (UTC)
 Received: from gondolin (dhcp-192-175.str.redhat.com [10.33.192.175])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E4C1F909E9;
-        Tue, 25 Feb 2020 10:32:27 +0000 (UTC)
-Date:   Tue, 25 Feb 2020 11:32:25 +0100
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 07C6F19C58;
+        Tue, 25 Feb 2020 10:37:58 +0000 (UTC)
+Date:   Tue, 25 Feb 2020 11:37:56 +0100
 From:   Cornelia Huck <cohuck@redhat.com>
 To:     Christian Borntraeger <borntraeger@de.ibm.com>
 Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
         KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
         Thomas Huth <thuth@redhat.com>,
         Ulrich Weigand <Ulrich.Weigand@de.ibm.com>,
@@ -46,82 +45,45 @@ Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Michael Mueller <mimu@linux.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Andrea Arcangeli <aarcange@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH v4 05/36] s390/mm: provide memory management functions
- for protected KVM guests
-Message-ID: <20200225113225.2721d469.cohuck@redhat.com>
-In-Reply-To: <20200224114107.4646-6-borntraeger@de.ibm.com>
+        Janosch Frank <frankja@linux.ibm.com>
+Subject: Re: [PATCH v4 06/36] s390/mm: add (non)secure page access
+ exceptions handlers
+Message-ID: <20200225113756.3f182952.cohuck@redhat.com>
+In-Reply-To: <20200224114107.4646-7-borntraeger@de.ibm.com>
 References: <20200224114107.4646-1-borntraeger@de.ibm.com>
-        <20200224114107.4646-6-borntraeger@de.ibm.com>
+        <20200224114107.4646-7-borntraeger@de.ibm.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 24 Feb 2020 06:40:36 -0500
+On Mon, 24 Feb 2020 06:40:37 -0500
 Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-> From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> From: Vasily Gorbik <gor@linux.ibm.com>
 > 
-> This provides the basic ultravisor calls and page table handling to cope
-> with secure guests:
-> - provide arch_make_page_accessible
-> - make pages accessible after unmapping of secure guests
-> - provide the ultravisor commands convert to/from secure
-> - provide the ultravisor commands pin/unpin shared
-> - provide callbacks to make pages secure (inacccessible)
->  - we check for the expected pin count to only make pages secure if the
->    host is not accessing them
->  - we fence hugetlbfs for secure pages
-> - add missing radix-tree include into gmap.h
+> Add exceptions handlers performing transparent transition of non-secure
+> pages to secure (import) upon guest access and secure pages to
+> non-secure (export) upon hypervisor access.
 > 
-> The basic idea is that a page can have 3 states: secure, normal or
-> shared. The hypervisor can call into a firmware function called
-> ultravisor that allows to change the state of a page: convert from/to
-> secure. The convert from secure will encrypt the page and make it
-> available to the host and host I/O. The convert to secure will remove
-> the host capability to access this page.
-> The design is that on convert to secure we will wait until writeback and
-> page refs are indicating no host usage. At the same time the convert
-> from secure (export to host) will be called in common code when the
-> refcount or the writeback bit is already set. This avoids races between
-> convert from and to secure.
-> 
-> Then there is also the concept of shared pages. Those are kind of secure
-> where the host can still access those pages. We need to be notified when
-> the guest "unshares" such a page, basically doing a convert to secure by
-> then. There is a call "pin shared page" that we use instead of convert
-> from secure when possible.
-> 
-> We do use PG_arch_1 as an optimization to minimize the convert from
-> secure/pin shared.
-> 
-> Several comments have been added in the code to explain the logic in
-> the relevant places.
-> 
-> Co-developed-by: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
-> Signed-off-by: Ulrich Weigand <Ulrich.Weigand@de.ibm.com>
-> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 > Acked-by: David Hildenbrand <david@redhat.com>
+> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> [frankja@linux.ibm.com: adding checks for failures]
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> [imbrenda@linux.ibm.com:  adding a check for gmap fault]
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 > Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
 > [borntraeger@de.ibm.com: patch merging, splitting, fixing]
 > Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 > ---
->  arch/s390/include/asm/gmap.h        |   4 +
->  arch/s390/include/asm/mmu.h         |   2 +
->  arch/s390/include/asm/mmu_context.h |   1 +
->  arch/s390/include/asm/page.h        |   5 +
->  arch/s390/include/asm/pgtable.h     |  35 ++++-
->  arch/s390/include/asm/uv.h          |  31 ++++
->  arch/s390/kernel/uv.c               | 227 ++++++++++++++++++++++++++++
->  7 files changed, 300 insertions(+), 5 deletions(-)
-
-My mm-fu is not very strong; but this looks sane to me.
+>  arch/s390/kernel/pgm_check.S |  4 +-
+>  arch/s390/mm/fault.c         | 78 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 80 insertions(+), 2 deletions(-)
 
 Acked-by: Cornelia Huck <cohuck@redhat.com>
 
