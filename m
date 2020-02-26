@@ -2,135 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E7714170325
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 16:52:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 215631704E1
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 17:53:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728585AbgBZPwD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Feb 2020 10:52:03 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:44077 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728515AbgBZPwD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 26 Feb 2020 10:52:03 -0500
-Received: by mail-qk1-f193.google.com with SMTP id f140so2419866qke.11
-        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 07:52:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=message-id:subject:from:to:cc:date:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4GYwlf0Xa2QHt1cHVU8f4uTPVQEe66S6tW8iKIjB1EY=;
-        b=PEkBC2gGo9Wp0CTNFzcX/uGLGqh45la2h+234pEbgb0JKCTWiVwR5CK2qWd8o7GV9+
-         vZ0V3mJmWDxwpkokIiWuE2AK5D0JvSuKri12uT1Y5ZmnM2+2x1lk6TfjQrITZNEH8kqT
-         OpLenMqGsrmR+s2Jh+PZTctbpw7UkSpOJj3m46DAs7sTe9V+A8PrxIZxTU0Jx2ozkU+h
-         l2FfR5Vf/ZZGO7KqofRi3aS6TzSV2SHQoTpS42nUl+B16nz+oN/qYJaqXNzKW0WQZswg
-         b+O0gHwTc4Y9Ju+CjJy1uD3JRDYV9kySWYvBERLoM4RJvQwJnkBJANxBmrBhZlFtAjqz
-         NmYA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4GYwlf0Xa2QHt1cHVU8f4uTPVQEe66S6tW8iKIjB1EY=;
-        b=h1vRNUBDbGF5y0kUoqyIL8YiQaRFqNZDNKNOqUA09ige1oqgvfVwEvW2ZzDd6QVgBR
-         bAfjRhxHh70yZ5vSt/zfwDjiyM1jHxhLO0M/d+/OtmH8qI+MFbg6peM2qGUKb222B+9J
-         r8VvTNMf8MASFxBEjD2G87L+mqp6MY6gZYvRwVwoFScBk4WIb9SzvkzSzpXYTBVXQevp
-         I2MbPIW2BLebPVzD5i4KF3oED6JZ54wZdmDTo3Xi8oTivxA4rvjdPvPDmkrIL6nzbnUs
-         YuU/xz3SJkPJ+BadwWi01ZW22BSIXGui1cOLL4VKLqSYyraRsNGDwi65HYcc3od3skDn
-         KVfQ==
-X-Gm-Message-State: APjAAAUkJIL+XL6ixSqrMLHcyEI2TAOaJzCpmvquRxU9bQ8++DWit0a4
-        qEB0kDq4Mk8mRJr7lrcED51tNw==
-X-Google-Smtp-Source: APXvYqxycYwltSMF6mRZHm7TjXsCzQqI/GC2y1t3waZQf56agLdqkPAjaYu5yvSrjxUQYf0tQtgA0w==
-X-Received: by 2002:a37:64cb:: with SMTP id y194mr5808427qkb.364.1582732321799;
-        Wed, 26 Feb 2020 07:52:01 -0800 (PST)
-Received: from dhcp-41-57.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id 3sm1332599qte.59.2020.02.26.07.51.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 26 Feb 2020 07:52:01 -0800 (PST)
-Message-ID: <1582732318.7365.129.camel@lca.pw>
-Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
- table helpers
-From:   Qian Cai <cai@lca.pw>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Wed, 26 Feb 2020 10:51:58 -0500
-In-Reply-To: <7c707b7f-ce3d-993b-8042-44fdc1ed28bf@c-s.fr>
-References: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
-         <1582726182.7365.123.camel@lca.pw>
-         <7c707b7f-ce3d-993b-8042-44fdc1ed28bf@c-s.fr>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6 (3.22.6-10.el7) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        id S1727207AbgBZQxR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Feb 2020 11:53:17 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18774 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726151AbgBZQxQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 26 Feb 2020 11:53:16 -0500
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QGoA1R086256
+        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 11:53:15 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydqfuuwkn-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 11:53:15 -0500
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <kgraul@linux.ibm.com>;
+        Wed, 26 Feb 2020 16:53:13 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 26 Feb 2020 16:53:12 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QGqDxt40698284
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 16:52:13 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BAE5AAE055;
+        Wed, 26 Feb 2020 16:53:10 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 77421AE04D;
+        Wed, 26 Feb 2020 16:53:10 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Feb 2020 16:53:10 +0000 (GMT)
+From:   Karsten Graul <kgraul@linux.ibm.com>
+To:     davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
+        ubraun@linux.ibm.com
+Subject: [PATCH net] net/smc: check for valid ib_client_data
+Date:   Wed, 26 Feb 2020 17:52:46 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20022616-0028-0000-0000-000003DE3D3F
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022616-0029-0000-0000-000024A359C4
+Message-Id: <20200226165246.3426-1-kgraul@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_06:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
+ malwarescore=0 suspectscore=1 priorityscore=1501 phishscore=0 adultscore=0
+ bulkscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=754 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002260113
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 2020-02-26 at 15:45 +0100, Christophe Leroy wrote:
-> 
-> Le 26/02/2020 à 15:09, Qian Cai a écrit :
-> > On Mon, 2020-02-17 at 08:47 +0530, Anshuman Khandual wrote:
-> > > This adds tests which will validate architecture page table helpers and
-> > > other accessors in their compliance with expected generic MM semantics.
-> > > This will help various architectures in validating changes to existing
-> > > page table helpers or addition of new ones.
-> > > 
-> > > This test covers basic page table entry transformations including but not
-> > > limited to old, young, dirty, clean, write, write protect etc at various
-> > > level along with populating intermediate entries with next page table page
-> > > and validating them.
-> > > 
-> > > Test page table pages are allocated from system memory with required size
-> > > and alignments. The mapped pfns at page table levels are derived from a
-> > > real pfn representing a valid kernel text symbol. This test gets called
-> > > inside kernel_init() right after async_synchronize_full().
-> > > 
-> > > This test gets built and run when CONFIG_DEBUG_VM_PGTABLE is selected. Any
-> > > architecture, which is willing to subscribe this test will need to select
-> > > ARCH_HAS_DEBUG_VM_PGTABLE. For now this is limited to arc, arm64, x86, s390
-> > > and ppc32 platforms where the test is known to build and run successfully.
-> > > Going forward, other architectures too can subscribe the test after fixing
-> > > any build or runtime problems with their page table helpers. Meanwhile for
-> > > better platform coverage, the test can also be enabled with CONFIG_EXPERT
-> > > even without ARCH_HAS_DEBUG_VM_PGTABLE.
-> > > 
-> > > Folks interested in making sure that a given platform's page table helpers
-> > > conform to expected generic MM semantics should enable the above config
-> > > which will just trigger this test during boot. Any non conformity here will
-> > > be reported as an warning which would need to be fixed. This test will help
-> > > catch any changes to the agreed upon semantics expected from generic MM and
-> > > enable platforms to accommodate it thereafter.
-> > 
-> > How useful is this that straightly crash the powerpc?
-> > 
-> > [   23.263425][    T1] debug_vm_pgtable: debug_vm_pgtable: Validating
-> > architecture page table helpers
-> > [   23.263625][    T1] ------------[ cut here ]------------
-> > [   23.263649][    T1] kernel BUG at arch/powerpc/mm/pgtable.c:274!
-> 
-> The problem on PPC64 is known and has to be investigated and fixed.
+In smc_ib_remove_dev() check if the provided ib device was actually
+initialized for SMC before.
 
-It might be interesting to hear what powerpc64 maintainers would say about it
-and if it is actually worth "fixing" in the arch code, but that BUG_ON() was
-there since 2009 and had not been exposed until this patch comes alone?
+Reported-by: syzbot+84484ccebdd4e5451d91@syzkaller.appspotmail.com
+Fixes: a4cf0443c414 ("smc: introduce SMC as an IB-client")
+Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+---
+ net/smc/smc_ib.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
+index 6756bd5a3fe4..da18871f360f 100644
+--- a/net/smc/smc_ib.c
++++ b/net/smc/smc_ib.c
+@@ -587,6 +587,8 @@ static void smc_ib_remove_dev(struct ib_device *ibdev, void *client_data)
+ 	struct smc_ib_device *smcibdev;
+ 
+ 	smcibdev = ib_get_client_data(ibdev, &smc_ib_client);
++	if (!smcibdev || smcibdev->ibdev != ibdev)
++		return;
+ 	ib_set_client_data(ibdev, &smc_ib_client, NULL);
+ 	spin_lock(&smc_ib_devices.lock);
+ 	list_del_init(&smcibdev->list); /* remove from smc_ib_devices */
+-- 
+2.17.1
+
