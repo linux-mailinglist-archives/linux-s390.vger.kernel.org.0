@@ -2,92 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 215631704E1
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 17:53:18 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E23451704E5
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 17:54:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727207AbgBZQxR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Feb 2020 11:53:17 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:18774 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726151AbgBZQxQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 26 Feb 2020 11:53:16 -0500
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QGoA1R086256
-        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 11:53:15 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydqfuuwkn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 11:53:15 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <kgraul@linux.ibm.com>;
-        Wed, 26 Feb 2020 16:53:13 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 26 Feb 2020 16:53:12 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QGqDxt40698284
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 16:52:13 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BAE5AAE055;
-        Wed, 26 Feb 2020 16:53:10 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 77421AE04D;
-        Wed, 26 Feb 2020 16:53:10 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Feb 2020 16:53:10 +0000 (GMT)
-From:   Karsten Graul <kgraul@linux.ibm.com>
-To:     davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, raspl@linux.ibm.com,
-        ubraun@linux.ibm.com
-Subject: [PATCH net] net/smc: check for valid ib_client_data
-Date:   Wed, 26 Feb 2020 17:52:46 +0100
-X-Mailer: git-send-email 2.17.1
-X-TM-AS-GCONF: 00
-x-cbid: 20022616-0028-0000-0000-000003DE3D3F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022616-0029-0000-0000-000024A359C4
-Message-Id: <20200226165246.3426-1-kgraul@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-26_06:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 clxscore=1015
- malwarescore=0 suspectscore=1 priorityscore=1501 phishscore=0 adultscore=0
- bulkscore=0 impostorscore=0 lowpriorityscore=0 mlxlogscore=754 mlxscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
- definitions=main-2002260113
+        id S1727341AbgBZQyn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Feb 2020 11:54:43 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:56305 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727314AbgBZQyn (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 26 Feb 2020 11:54:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1582736081;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=zLEBy3N/nFHO4csKCSJ96YktbetH2yn5sA9QJ3LgZ9Y=;
+        b=c9UCtD8wUGkR9N/bLTHMPbTs2lVQkZLPKigS0ZjBhFjUkz6FxJnPEZPPzgyp5z0qRTJBhU
+        KBVv2PyNvZ94q3PuU4oOBBG5Uhf2aHfcBtHKJfPPJvKxuF5JgK/Fj/wJtFteTIbYq/bOaa
+        ay+7lH3xQD66s+Xv6TMFCGCMbHJH+G0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-24-iRsgvlU1Pm29plBincJ5RQ-1; Wed, 26 Feb 2020 11:54:37 -0500
+X-MC-Unique: iRsgvlU1Pm29plBincJ5RQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D227C800D53;
+        Wed, 26 Feb 2020 16:54:35 +0000 (UTC)
+Received: from gondolin (ovpn-117-69.ams2.redhat.com [10.36.117.69])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 031205DA76;
+        Wed, 26 Feb 2020 16:54:30 +0000 (UTC)
+Date:   Wed, 26 Feb 2020 17:54:28 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     david@redhat.com, Ulrich.Weigand@de.ibm.com, frankja@linux.ibm.com,
+        frankja@linux.vnet.ibm.com, gor@linux.ibm.com,
+        imbrenda@linux.ibm.com, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
+Subject: Re: [PATCH v4.5 09/36] KVM: s390: protvirt: Add initial vm and cpu
+ lifecycle handling
+Message-ID: <20200226175428.40143164.cohuck@redhat.com>
+In-Reply-To: <dcd80ccd-2d66-502f-62a1-3c794cfcde65@de.ibm.com>
+References: <f80a0b58-5ed2-33b7-5292-2c4899d765b7@redhat.com>
+        <20200225214822.3611-1-borntraeger@de.ibm.com>
+        <20200226132640.36c32fd3.cohuck@redhat.com>
+        <dcd80ccd-2d66-502f-62a1-3c794cfcde65@de.ibm.com>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-In smc_ib_remove_dev() check if the provided ib device was actually
-initialized for SMC before.
+On Wed, 26 Feb 2020 14:31:36 +0100
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Reported-by: syzbot+84484ccebdd4e5451d91@syzkaller.appspotmail.com
-Fixes: a4cf0443c414 ("smc: introduce SMC as an IB-client")
-Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
----
- net/smc/smc_ib.c | 2 ++
- 1 file changed, 2 insertions(+)
+> On 26.02.20 13:26, Cornelia Huck wrote:
+> > On Tue, 25 Feb 2020 16:48:22 -0500
+> > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+> >   
+> >> From: Janosch Frank <frankja@linux.ibm.com>
+> >>
+> >> This contains 3 main changes:
+> >> 1. changes in SIE control block handling for secure guests
+> >> 2. helper functions for create/destroy/unpack secure guests
+> >> 3. KVM_S390_PV_COMMAND ioctl to allow userspace dealing with secure
+> >> machines
+> >>
+> >> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
+> >> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
+> >> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> >> ---
+> >>  arch/s390/include/asm/kvm_host.h |  24 ++-
+> >>  arch/s390/include/asm/uv.h       |  69 ++++++++
+> >>  arch/s390/kvm/Makefile           |   2 +-
+> >>  arch/s390/kvm/kvm-s390.c         | 209 +++++++++++++++++++++++-
+> >>  arch/s390/kvm/kvm-s390.h         |  33 ++++
+> >>  arch/s390/kvm/pv.c               | 269 +++++++++++++++++++++++++++++++
+> >>  include/uapi/linux/kvm.h         |  31 ++++
+> >>  7 files changed, 633 insertions(+), 4 deletions(-)
+> >>  create mode 100644 arch/s390/kvm/pv.c  
 
-diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
-index 6756bd5a3fe4..da18871f360f 100644
---- a/net/smc/smc_ib.c
-+++ b/net/smc/smc_ib.c
-@@ -587,6 +587,8 @@ static void smc_ib_remove_dev(struct ib_device *ibdev, void *client_data)
- 	struct smc_ib_device *smcibdev;
- 
- 	smcibdev = ib_get_client_data(ibdev, &smc_ib_client);
-+	if (!smcibdev || smcibdev->ibdev != ibdev)
-+		return;
- 	ib_set_client_data(ibdev, &smc_ib_client, NULL);
- 	spin_lock(&smc_ib_devices.lock);
- 	list_del_init(&smcibdev->list); /* remove from smc_ib_devices */
--- 
-2.17.1
+> >> @@ -2262,6 +2419,27 @@ long kvm_arch_vm_ioctl(struct file *filp,
+> >>  		mutex_unlock(&kvm->slots_lock);
+> >>  		break;
+> >>  	}
+> >> +	case KVM_S390_PV_COMMAND: {
+> >> +		struct kvm_pv_cmd args;
+> >> +
+> >> +		r = 0;
+> >> +		if (!is_prot_virt_host()) {
+> >> +			r = -EINVAL;
+> >> +			break;
+> >> +		}
+> >> +		if (copy_from_user(&args, argp, sizeof(args))) {
+> >> +			r = -EFAULT;
+> >> +			break;
+> >> +		}  
+> > 
+> > The api states that args.flags must be 0... better enforce that?  
+> 
+> 
+> yes
+> @@ -2431,6 +2431,10 @@ long kvm_arch_vm_ioctl(struct file *filp,
+>                         r = -EFAULT;
+>                         break;
+>                 }
+> +               if (args.flags) {
+> +                       r = -EINVAL;
+> +                       break;
+> +               }
+>                 mutex_lock(&kvm->lock);
+>                 r = kvm_s390_handle_pv(kvm, &args);
+>                 mutex_unlock(&kvm->lock);
+
+Looks good.
 
