@@ -2,44 +2,44 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 2C83B16FC87
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 11:52:53 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 20A9B16FCE4
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 12:03:43 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727362AbgBZKww (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Feb 2020 05:52:52 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:27852 "EHLO
+        id S1728048AbgBZLDm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Feb 2020 06:03:42 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30148 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727191AbgBZKww (ORCPT
+        by vger.kernel.org with ESMTP id S1727686AbgBZLDm (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 26 Feb 2020 05:52:52 -0500
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QAo2SQ028566
-        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 05:52:50 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yde1v0k4m-1
+        Wed, 26 Feb 2020 06:03:42 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QAu3qY189015
+        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 06:03:40 -0500
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yden0yqnv-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 05:52:48 -0500
+        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 06:03:36 -0500
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 26 Feb 2020 10:52:32 -0000
+        Wed, 26 Feb 2020 11:03:22 -0000
 Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 26 Feb 2020 10:52:30 -0000
+        Wed, 26 Feb 2020 11:03:21 -0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QAqQ5Z61276290
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QB3HN755574780
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 10:52:26 GMT
+        Wed, 26 Feb 2020 11:03:17 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 735634C044;
-        Wed, 26 Feb 2020 10:52:26 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6C3A24C052;
+        Wed, 26 Feb 2020 11:03:17 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 152114C04A;
-        Wed, 26 Feb 2020 10:52:26 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 0D7064C04E;
+        Wed, 26 Feb 2020 11:03:17 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.224.219])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Feb 2020 10:52:26 +0000 (GMT)
+        Wed, 26 Feb 2020 11:03:16 +0000 (GMT)
 Subject: Re: [PATCH v4.5 09/36] KVM: s390: protvirt: Add initial vm and cpu
  lifecycle handling
 To:     Cornelia Huck <cohuck@redhat.com>
@@ -49,7 +49,7 @@ Cc:     david@redhat.com, Ulrich.Weigand@de.ibm.com, frankja@linux.ibm.com,
         linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
 References: <f80a0b58-5ed2-33b7-5292-2c4899d765b7@redhat.com>
  <20200225214822.3611-1-borntraeger@de.ibm.com>
- <20200226110144.4677ac60.cohuck@redhat.com>
+ <20200226113840.46880055.cohuck@redhat.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -94,26 +94,26 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 26 Feb 2020 11:52:25 +0100
+Date:   Wed, 26 Feb 2020 12:03:16 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200226110144.4677ac60.cohuck@redhat.com>
+In-Reply-To: <20200226113840.46880055.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022610-0028-0000-0000-000003DE1D91
+x-cbid: 20022611-0020-0000-0000-000003ADB8CC
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022610-0029-0000-0000-000024A33905
-Message-Id: <9a098ba3-d52a-6b1a-8708-8e0707b6e6cc@de.ibm.com>
+x-cbparentid: 20022611-0021-0000-0000-00002205D335
+Message-Id: <ce81be7c-c62e-735d-7989-920daa9abadd@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-26_03:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- adultscore=0 mlxlogscore=999 lowpriorityscore=0 suspectscore=2
- priorityscore=1501 malwarescore=0 bulkscore=0 phishscore=0 mlxscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002260082
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 priorityscore=1501
+ impostorscore=0 phishscore=0 clxscore=1015 malwarescore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002260083
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -121,7 +121,7 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 26.02.20 11:01, Cornelia Huck wrote:
+On 26.02.20 11:38, Cornelia Huck wrote:
 > On Tue, 25 Feb 2020 16:48:22 -0500
 > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 > 
@@ -147,97 +147,98 @@ On 26.02.20 11:01, Cornelia Huck wrote:
 >>  7 files changed, 633 insertions(+), 4 deletions(-)
 >>  create mode 100644 arch/s390/kvm/pv.c
 > 
-> (...)
-> 
->> @@ -2165,6 +2168,160 @@ static int kvm_s390_set_cmma_bits(struct kvm *kvm,
->>  	return r;
->>  }
->>  
->> +static int kvm_s390_cpus_from_pv(struct kvm *kvm, u16 *rcp, u16 *rrcp)
+>> +int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
 >> +{
->> +	struct kvm_vcpu *vcpu;
->> +	u16 rc, rrc;
->> +	int ret = 0;
->> +	int i;
->> +
->> +	/*
->> +	 * We ignore failures and try to destroy as many CPUs as possible.
+>> +		struct uv_cb_cgc uvcb = {
 > 
-> What is this 'destroying'? Is that really the right terminology? From a
-> quick glance, I would expect something more in the vein of cpu
-> unplugging, and I don't think that's what is happening here.
+> Broken indentation.
 
-It is destroying the secure CPU at the ultravisor (its even the name of
-the ultravisor call) so I think destroy fits nicely.
+Fixes.
 
 > 
-> (I have obviously not yet read the whole thing, please give people some
-> more time to review this huge patch.)
-> 
->> +	 * At the same time we must not free the assigned resources when
->> +	 * this fails, as the ultravisor has still access to that memory.
->> +	 * So kvm_s390_pv_destroy_cpu can leave a "wanted" memory leak
->> +	 * behind.
->> +	 * We want to return the first failure rc and rrc, though.
->> +	 */
->> +	kvm_for_each_vcpu(i, vcpu, kvm) {
->> +		mutex_lock(&vcpu->mutex);
->> +		if (kvm_s390_pv_destroy_cpu(vcpu, &rc, &rrc) && !ret) {
->> +			*rcp = rc;
->> +			*rrcp = rrc;
->> +			ret = -EIO;
->> +		}
->> +		mutex_unlock(&vcpu->mutex);
->> +	}
->> +	return ret;
->> +}
->> +
->> +static int kvm_s390_cpus_to_pv(struct kvm *kvm, u16 *rc, u16 *rrc)
->> +{
->> +	int i, r = 0;
+>> +		.header.cmd = UVC_CMD_CREATE_SEC_CONF,
+>> +		.header.len = sizeof(uvcb)
+>> +	};
+>> +	int cc, ret;
 >> +	u16 dummy;
 >> +
->> +	struct kvm_vcpu *vcpu;
+>> +	ret = kvm_s390_pv_alloc_vm(kvm);
+>> +	if (ret)
+>> +		return ret;
 >> +
->> +	kvm_for_each_vcpu(i, vcpu, kvm) {
->> +		mutex_lock(&vcpu->mutex);
->> +		r = kvm_s390_pv_create_cpu(vcpu, rc, rrc);
->> +		mutex_unlock(&vcpu->mutex);
->> +		if (r)
->> +			break;
+>> +	/* Inputs */
+>> +	uvcb.guest_stor_origin = 0; /* MSO is 0 for KVM */
+> 
+> What is 'MSO'? (i.e., where is that 'M' coming from?)
+
+Origin. (the one for the sie block).
+
+> 
+>> +	uvcb.guest_stor_len = kvm->arch.pv.guest_len;
+>> +	uvcb.guest_asce = kvm->arch.gmap->asce;
+>> +	uvcb.guest_sca = (unsigned long)kvm->arch.sca;
+>> +	uvcb.conf_base_stor_origin = (u64)kvm->arch.pv.stor_base;
+>> +	uvcb.conf_virt_stor_origin = (u64)kvm->arch.pv.stor_var;
+>> +
+>> +	cc = uv_call(0, (u64)&uvcb);
+>> +	*rc = uvcb.header.rc;
+>> +	*rrc = uvcb.header.rrc;
+>> +	KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len %llx rc %x rrc %x",
+>> +		     uvcb.guest_handle, uvcb.guest_stor_len, *rc, *rrc);
+>> +
+>> +	/* Outputs */
+>> +	kvm->arch.pv.handle = uvcb.guest_handle;
+> 
+> Is this valid if the call failed?
+
+if not we would clear it below
+> 
+>> +
+>> +	if (cc) {
+>> +		if (uvcb.header.rc & UVC_RC_NEED_DESTROY)
+>> +			kvm_s390_pv_deinit_vm(kvm, &dummy, &dummy);
+
+		here
+
+>> +		else
+>> +			kvm_s390_pv_dealloc_vm(kvm);
+
+		or here
+
+>> +		return -EIO;
 >> +	}
->> +	if (r)
->> +		kvm_s390_cpus_from_pv(kvm, &dummy, &dummy);
+>> +	kvm->arch.gmap->guest_handle = uvcb.guest_handle;
 > 
-> This is a rather unlikely case, so we don't need to optimize this,
-> right?
+> ...especially as you assign that handle only down here.
 
-Right. All the error cases here are "should not happen"
 
 > 
-> Would rc/rrc from the rollback contain anything of interest if the
-> create fails (that is, anything more interesting than what that
-> function returns?
-
-I think all rc/rrc from rollback would depend on the first error,
-so this is what we return to userspace. 
-Good thing is that we log all those in the debug feature so if anyone
-wants to see the full things its there in /sys/kernel/debug/s390dbf/kvm-uv/sprintf
-> 
-> Similar comment for the 'create' as for the 'destroy' above. (Not
-> trying to nitpick, just a bit confused.)
-> 
-> Or is that not the cpu that is created/destroyed, but something else?
-> Sorry, just trying to understand where this is coming from.
-
-Its the CPU instance in the ultravisor.
-> 
->> +	return r;
+>> +	atomic_set(&kvm->mm->context.is_protected, 1);
+>> +	return 0;
 >> +}
+>> +
+>> +int kvm_s390_pv_set_sec_parms(struct kvm *kvm, void *hdr, u64 length, u16 *rc,
+>> +			      u16 *rrc)
+>> +{
+>> +	struct uv_cb_ssc uvcb = {
+>> +		.header.cmd = UVC_CMD_SET_SEC_CONF_PARAMS,
+>> +		.header.len = sizeof(uvcb),
+>> +		.sec_header_origin = (u64)hdr,
+>> +		.sec_header_len = length,
+>> +		.guest_handle = kvm_s390_pv_get_handle(kvm),
+>> +	};
+>> +	int cc = uv_call(0, (u64)&uvcb);
+>> +
+>> +	*rc = uvcb.header.rc;
+>> +	*rrc = uvcb.header.rrc;
+>> +	KVM_UV_EVENT(kvm, 3, "PROTVIRT VM SET PARMS: rc %x rrc %x",
+>> +		     *rc, *rrc);
+>> +	if (cc)
+>> +		return -EINVAL;
+>> +	return 0;
 > 
-> (...)
-> 
-> Will look at the remainder of the patch later, maybe I understand the
-> stuff above better after that.
-> 
+> Maybe
+> 	return cc ? -EINVAL : 0;
+
+Yes.
 
