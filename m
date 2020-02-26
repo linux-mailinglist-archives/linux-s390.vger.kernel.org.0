@@ -2,86 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C17A170598
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 18:08:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EC598170888
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 20:11:27 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727936AbgBZRIe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Feb 2020 12:08:34 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22329 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727141AbgBZRIe (ORCPT
+        id S1727141AbgBZTL1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Feb 2020 14:11:27 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:2628 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726996AbgBZTL1 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 26 Feb 2020 12:08:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1582736913;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=RiVwEifw8zuF7zAuDeFJ0On+X58XyhYY0dWkpf+3+uQ=;
-        b=jWIn8XTb1h/QZvGQwh+mtnmPPLn6AUgBGJnEXs5CnIKaVs+A8iBLZ4CZZK6Wo1SR6bQdoH
-        BGR8DNsNtQnI79wJWjPArEkY5VuMdrG/gir+KzFoPaTmkXL1EHfA7nXBQvOtcy9nHRNyVb
-        GDUBYBxu9VsXJrTfcereG1CXNRb4pd8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-142-Q7Lqt4vHN_2bd7k8ItajtQ-1; Wed, 26 Feb 2020 12:08:29 -0500
-X-MC-Unique: Q7Lqt4vHN_2bd7k8ItajtQ-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1C680800053;
-        Wed, 26 Feb 2020 17:08:28 +0000 (UTC)
-Received: from gondolin (ovpn-117-69.ams2.redhat.com [10.36.117.69])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1C87F5D9CD;
-        Wed, 26 Feb 2020 17:08:21 +0000 (UTC)
-Date:   Wed, 26 Feb 2020 18:08:19 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Ulrich.Weigand@de.ibm.com, david@redhat.com, frankja@linux.ibm.com,
-        frankja@linux.vnet.ibm.com, gor@linux.ibm.com,
-        imbrenda@linux.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
-Subject: Re: [PATCH v4.6 09/36] KVM: s390: protvirt: Add initial vm and cpu
- lifecycle handling
-Message-ID: <20200226180819.5fd59e1e.cohuck@redhat.com>
-In-Reply-To: <20200226170020.9061-1-borntraeger@de.ibm.com>
-References: <20200226175428.40143164.cohuck@redhat.com>
-        <20200226170020.9061-1-borntraeger@de.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+        Wed, 26 Feb 2020 14:11:27 -0500
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QJBJ2R120441
+        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 14:11:25 -0500
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ydcngshkm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 14:11:21 -0500
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <nayna@linux.ibm.com>;
+        Wed, 26 Feb 2020 19:10:18 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 26 Feb 2020 19:10:15 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QJAEhm53674226
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 26 Feb 2020 19:10:14 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0150C11C04C;
+        Wed, 26 Feb 2020 19:10:14 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 71B3111C058;
+        Wed, 26 Feb 2020 19:10:11 +0000 (GMT)
+Received: from swastik.ibm.com (unknown [9.160.92.140])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 26 Feb 2020 19:10:11 +0000 (GMT)
+From:   Nayna Jain <nayna@linux.ibm.com>
+To:     linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-efi@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>, zohar@linux.ibm.com,
+        linux-kernel@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>
+Subject: [PATCH] ima: add a new CONFIG for loading arch-specific policies
+Date:   Wed, 26 Feb 2020 14:10:07 -0500
+X-Mailer: git-send-email 1.8.3.1
+X-TM-AS-GCONF: 00
+x-cbid: 20022619-0008-0000-0000-00000356B53E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022619-0009-0000-0000-00004A77D515
+Message-Id: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-26_07:2020-02-26,2020-02-26 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ phishscore=0 spamscore=0 suspectscore=0 impostorscore=0 clxscore=1011
+ mlxscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002260119
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 26 Feb 2020 12:00:20 -0500
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+Every time a new architecture defines the IMA architecture specific
+functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+include file needs to be updated. To avoid this "noise", this patch
+defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+the different architectures to select it.
 
-> From: Janosch Frank <frankja@linux.ibm.com>
-> 
-> This contains 3 main changes:
-> 1. changes in SIE control block handling for secure guests
-> 2. helper functions for create/destroy/unpack secure guests
-> 3. KVM_S390_PV_COMMAND ioctl to allow userspace dealing with secure
-> machines
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
-> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> ---
->  arch/s390/include/asm/kvm_host.h |  24 ++-
->  arch/s390/include/asm/uv.h       |  69 ++++++++
->  arch/s390/kvm/Makefile           |   2 +-
->  arch/s390/kvm/kvm-s390.c         | 214 ++++++++++++++++++++++++-
->  arch/s390/kvm/kvm-s390.h         |  33 ++++
->  arch/s390/kvm/pv.c               | 267 +++++++++++++++++++++++++++++++
->  include/uapi/linux/kvm.h         |  31 ++++
->  7 files changed, 636 insertions(+), 4 deletions(-)
->  create mode 100644 arch/s390/kvm/pv.c
+Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Philipp Rudo <prudo@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+---
+ arch/powerpc/Kconfig           | 2 +-
+ arch/s390/Kconfig              | 1 +
+ arch/x86/Kconfig               | 1 +
+ include/linux/ima.h            | 3 +--
+ security/integrity/ima/Kconfig | 9 +++++++++
+ 5 files changed, 13 insertions(+), 3 deletions(-)
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 497b7d0b2d7e..b8ce1b995633 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -246,6 +246,7 @@ config PPC
+ 	select SYSCTL_EXCEPTION_TRACE
+ 	select THREAD_INFO_IN_TASK
+ 	select VIRT_TO_BUS			if !PPC64
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT	if PPC_SECURE_BOOT
+ 	#
+ 	# Please keep this list sorted alphabetically.
+ 	#
+@@ -978,7 +979,6 @@ config PPC_SECURE_BOOT
+ 	prompt "Enable secure boot support"
+ 	bool
+ 	depends on PPC_POWERNV
+-	depends on IMA_ARCH_POLICY
+ 	help
+ 	  Systems with firmware secure boot enabled need to define security
+ 	  policies to extend secure boot to the OS. This config allows a user
+diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+index 8abe77536d9d..90ff3633ade6 100644
+--- a/arch/s390/Kconfig
++++ b/arch/s390/Kconfig
+@@ -195,6 +195,7 @@ config S390
+ 	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+ 	select SWIOTLB
+ 	select GENERIC_ALLOCATOR
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT
+ 
+ 
+ config SCHED_OMIT_FRAME_POINTER
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index beea77046f9b..cafa66313fe2 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -230,6 +230,7 @@ config X86
+ 	select VIRT_TO_BUS
+ 	select X86_FEATURE_NAMES		if PROC_FS
+ 	select PROC_PID_ARCH_STATUS		if PROC_FS
++	select IMA_SECURE_AND_OR_TRUSTED_BOOT	if EFI
+ 
+ config INSTRUCTION_DECODER
+ 	def_bool y
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 1659217e9b60..aefe758f4466 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+ extern void ima_add_kexec_buffer(struct kimage *image);
+ #endif
+ 
+-#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+-	|| defined(CONFIG_PPC_SECURE_BOOT)
++#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+ extern bool arch_ima_get_secureboot(void);
+ extern const char * const *arch_get_ima_policy(void);
+ #else
+diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+index 3f3ee4e2eb0d..d17972aa413a 100644
+--- a/security/integrity/ima/Kconfig
++++ b/security/integrity/ima/Kconfig
+@@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+ 	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+ 	depends on SYSTEM_TRUSTED_KEYRING
+ 	default y
++
++config IMA_SECURE_AND_OR_TRUSTED_BOOT
++	bool
++	depends on IMA
++	depends on IMA_ARCH_POLICY
++	default n
++	help
++	   This option is selected by architectures to enable secure and/or
++	   trusted boot based on IMA runtime policies.
+-- 
+2.18.1
 
