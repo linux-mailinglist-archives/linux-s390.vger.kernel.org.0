@@ -2,55 +2,51 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 20A9B16FCE4
-	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 12:03:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04BA816FD0F
+	for <lists+linux-s390@lfdr.de>; Wed, 26 Feb 2020 12:12:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728048AbgBZLDm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 26 Feb 2020 06:03:42 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:30148 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727686AbgBZLDm (ORCPT
+        id S1726787AbgBZLMf (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 26 Feb 2020 06:12:35 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11156 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727362AbgBZLMf (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 26 Feb 2020 06:03:42 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QAu3qY189015
-        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 06:03:40 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yden0yqnv-1
+        Wed, 26 Feb 2020 06:12:35 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01QB9lYN129873
+        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 06:12:34 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydkf90qqu-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 06:03:36 -0500
+        for <linux-s390@vger.kernel.org>; Wed, 26 Feb 2020 06:12:34 -0500
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 26 Feb 2020 11:03:22 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Wed, 26 Feb 2020 11:12:31 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 26 Feb 2020 11:03:21 -0000
+        Wed, 26 Feb 2020 11:12:28 -0000
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QB3HN755574780
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01QBCRcu37945602
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 26 Feb 2020 11:03:17 GMT
+        Wed, 26 Feb 2020 11:12:27 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6C3A24C052;
-        Wed, 26 Feb 2020 11:03:17 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 622EE4C044;
+        Wed, 26 Feb 2020 11:12:27 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0D7064C04E;
-        Wed, 26 Feb 2020 11:03:17 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 333194C040;
+        Wed, 26 Feb 2020 11:12:27 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.152.224.219])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 26 Feb 2020 11:03:16 +0000 (GMT)
-Subject: Re: [PATCH v4.5 09/36] KVM: s390: protvirt: Add initial vm and cpu
- lifecycle handling
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     david@redhat.com, Ulrich.Weigand@de.ibm.com, frankja@linux.ibm.com,
-        frankja@linux.vnet.ibm.com, gor@linux.ibm.com,
-        imbrenda@linux.ibm.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, mimu@linux.ibm.com, thuth@redhat.com
-References: <f80a0b58-5ed2-33b7-5292-2c4899d765b7@redhat.com>
- <20200225214822.3611-1-borntraeger@de.ibm.com>
- <20200226113840.46880055.cohuck@redhat.com>
+        Wed, 26 Feb 2020 11:12:27 +0000 (GMT)
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     linux-mm@kvack.org, kvm list <kvm@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: mm/gup/writeback: add callbacks for inaccessible pages: fixup for
+ linux-next
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
  J34pLNJDmDVEdeb+brtpwC9JEZOLVE0nb+SR83CsAINJYKG3V1b3Kfs0hydseYKsBYqJTN2j
@@ -94,151 +90,75 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 26 Feb 2020 12:03:16 +0100
+Date:   Wed, 26 Feb 2020 12:12:27 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <20200226113840.46880055.cohuck@redhat.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 20022611-0020-0000-0000-000003ADB8CC
+x-cbid: 20022611-0012-0000-0000-0000038A6941
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022611-0021-0000-0000-00002205D335
-Message-Id: <ce81be7c-c62e-735d-7989-920daa9abadd@de.ibm.com>
+x-cbparentid: 20022611-0013-0000-0000-000021C70EDA
+Message-Id: <1da2ebcf-59bd-65a1-222a-26af953ac7c5@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-26_03:2020-02-26,2020-02-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 adultscore=0 spamscore=0 suspectscore=0 priorityscore=1501
- impostorscore=0 phishscore=0 clxscore=1015 malwarescore=0 mlxscore=0
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002260083
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=729
+ suspectscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 adultscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2002260085
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Claudio,
 
+the patch with the arch callbacks has a (simple) merge conflict with
+the longterm pinning changes in next. Can you maybe re-do this patch
+on top of linux-next and send this patch to Andrew. This actually 
+also means that this patch should ideally go via Andrew and not via
+my tree.
 
-On 26.02.20 11:38, Cornelia Huck wrote:
-> On Tue, 25 Feb 2020 16:48:22 -0500
-> Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-> 
->> From: Janosch Frank <frankja@linux.ibm.com>
->>
->> This contains 3 main changes:
->> 1. changes in SIE control block handling for secure guests
->> 2. helper functions for create/destroy/unpack secure guests
->> 3. KVM_S390_PV_COMMAND ioctl to allow userspace dealing with secure
->> machines
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> [borntraeger@de.ibm.com: patch merging, splitting, fixing]
->> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
->> ---
->>  arch/s390/include/asm/kvm_host.h |  24 ++-
->>  arch/s390/include/asm/uv.h       |  69 ++++++++
->>  arch/s390/kvm/Makefile           |   2 +-
->>  arch/s390/kvm/kvm-s390.c         | 209 +++++++++++++++++++++++-
->>  arch/s390/kvm/kvm-s390.h         |  33 ++++
->>  arch/s390/kvm/pv.c               | 269 +++++++++++++++++++++++++++++++
->>  include/uapi/linux/kvm.h         |  31 ++++
->>  7 files changed, 633 insertions(+), 4 deletions(-)
->>  create mode 100644 arch/s390/kvm/pv.c
-> 
->> +int kvm_s390_pv_init_vm(struct kvm *kvm, u16 *rc, u16 *rrc)
->> +{
->> +		struct uv_cb_cgc uvcb = {
-> 
-> Broken indentation.
+Patch is here.
 
-Fixes.
+https://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git/commit/?h=next&id=732b80e677b80813e2f862ce92448436540222a3
 
-> 
->> +		.header.cmd = UVC_CMD_CREATE_SEC_CONF,
->> +		.header.len = sizeof(uvcb)
->> +	};
->> +	int cc, ret;
->> +	u16 dummy;
->> +
->> +	ret = kvm_s390_pv_alloc_vm(kvm);
->> +	if (ret)
->> +		return ret;
->> +
->> +	/* Inputs */
->> +	uvcb.guest_stor_origin = 0; /* MSO is 0 for KVM */
-> 
-> What is 'MSO'? (i.e., where is that 'M' coming from?)
+this is my quick attempt to fix this up
 
-Origin. (the one for the sie block).
-
-> 
->> +	uvcb.guest_stor_len = kvm->arch.pv.guest_len;
->> +	uvcb.guest_asce = kvm->arch.gmap->asce;
->> +	uvcb.guest_sca = (unsigned long)kvm->arch.sca;
->> +	uvcb.conf_base_stor_origin = (u64)kvm->arch.pv.stor_base;
->> +	uvcb.conf_virt_stor_origin = (u64)kvm->arch.pv.stor_var;
->> +
->> +	cc = uv_call(0, (u64)&uvcb);
->> +	*rc = uvcb.header.rc;
->> +	*rrc = uvcb.header.rrc;
->> +	KVM_UV_EVENT(kvm, 3, "PROTVIRT CREATE VM: handle %llx len %llx rc %x rrc %x",
->> +		     uvcb.guest_handle, uvcb.guest_stor_len, *rc, *rrc);
->> +
->> +	/* Outputs */
->> +	kvm->arch.pv.handle = uvcb.guest_handle;
-> 
-> Is this valid if the call failed?
-
-if not we would clear it below
-> 
->> +
->> +	if (cc) {
->> +		if (uvcb.header.rc & UVC_RC_NEED_DESTROY)
->> +			kvm_s390_pv_deinit_vm(kvm, &dummy, &dummy);
-
-		here
-
->> +		else
->> +			kvm_s390_pv_dealloc_vm(kvm);
-
-		or here
-
->> +		return -EIO;
->> +	}
->> +	kvm->arch.gmap->guest_handle = uvcb.guest_handle;
-> 
-> ...especially as you assign that handle only down here.
-
-
-> 
->> +	atomic_set(&kvm->mm->context.is_protected, 1);
->> +	return 0;
->> +}
->> +
->> +int kvm_s390_pv_set_sec_parms(struct kvm *kvm, void *hdr, u64 length, u16 *rc,
->> +			      u16 *rrc)
->> +{
->> +	struct uv_cb_ssc uvcb = {
->> +		.header.cmd = UVC_CMD_SET_SEC_CONF_PARAMS,
->> +		.header.len = sizeof(uvcb),
->> +		.sec_header_origin = (u64)hdr,
->> +		.sec_header_len = length,
->> +		.guest_handle = kvm_s390_pv_get_handle(kvm),
->> +	};
->> +	int cc = uv_call(0, (u64)&uvcb);
->> +
->> +	*rc = uvcb.header.rc;
->> +	*rrc = uvcb.header.rrc;
->> +	KVM_UV_EVENT(kvm, 3, "PROTVIRT VM SET PARMS: rc %x rrc %x",
->> +		     *rc, *rrc);
->> +	if (cc)
->> +		return -EINVAL;
->> +	return 0;
-> 
-> Maybe
-> 	return cc ? -EINVAL : 0;
-
-Yes.
+diff --cc mm/gup.c
+index f589299b0d4a,354bcfbd844b..a025d28ffbfd
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@@ -470,11 -269,18 +468,17 @@@ retry
+                goto retry;
+        }
+  
+ -      if (flags & FOLL_GET) {
+ -              if (unlikely(!try_get_page(page))) {
+ -                      page = ERR_PTR(-ENOMEM);
+ -                      goto out;
+ -              }
+ -              ret = arch_make_page_accessible(page);
+ -              if (ret) {
+ -                      put_page(page);
+ -                      page = ERR_PTR(ret);
+ -                      goto out;
+ -              }
+ +      /* try_grab_page() does nothing unless FOLL_GET or FOLL_PIN is set. */
+ +      if (unlikely(!try_grab_page(page, flags))) {
+ +              page = ERR_PTR(-ENOMEM);
+ +              goto out;
+ +      }
+++      ret = arch_make_page_accessible(page);
+++      if (ret) {
+++              put_page(page);
+++              page = ERR_PTR(ret);
+++              goto out;
++       }
+        if (flags & FOLL_TOUCH) {
+                if ((flags & FOLL_WRITE) &&
+                    !pte_dirty(pte) && !PageDirty(page))
 
