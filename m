@@ -2,44 +2,44 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CA4B172497
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Feb 2020 18:09:06 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 07E9017249B
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Feb 2020 18:09:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729786AbgB0RI2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Feb 2020 12:08:28 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42334 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729375AbgB0RI2 (ORCPT
+        id S1729454AbgB0RI3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Feb 2020 12:08:29 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53714 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729746AbgB0RI2 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
         Thu, 27 Feb 2020 12:08:28 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RH6ovK012711
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RH6787086833
         for <linux-s390@vger.kernel.org>; Thu, 27 Feb 2020 12:08:27 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydxre7fv3-1
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydkfarp3e-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 27 Feb 2020 12:08:26 -0500
+        for <linux-s390@vger.kernel.org>; Thu, 27 Feb 2020 12:08:27 -0500
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
         Thu, 27 Feb 2020 17:08:25 -0000
 Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Feb 2020 17:08:23 -0000
+        Thu, 27 Feb 2020 17:08:24 -0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01RH8MRd51314772
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01RH8MnA51314776
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
         Thu, 27 Feb 2020 17:08:22 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3E5CDA4062;
+        by IMSVA (Postfix) with ESMTP id 8D361A4060;
         Thu, 27 Feb 2020 17:08:22 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF673A405B;
-        Thu, 27 Feb 2020 17:08:21 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 4A9F3A405B;
+        Thu, 27 Feb 2020 17:08:22 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Feb 2020 17:08:21 +0000 (GMT)
+        Thu, 27 Feb 2020 17:08:22 +0000 (GMT)
 From:   Julian Wiedmann <jwi@linux.ibm.com>
 To:     David Miller <davem@davemloft.net>
 Cc:     netdev <netdev@vger.kernel.org>,
@@ -47,54 +47,59 @@ Cc:     netdev <netdev@vger.kernel.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Ursula Braun <ubraun@linux.ibm.com>,
         Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 0/8] s390/qeth: updates 2020-02-27
-Date:   Thu, 27 Feb 2020 18:08:08 +0100
+Subject: [PATCH net-next 1/8] s390/qeth: remove dead code in qeth_l3_iqd_read_initial_mac()
+Date:   Thu, 27 Feb 2020 18:08:09 +0100
 X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20200227170816.101286-1-jwi@linux.ibm.com>
+References: <20200227170816.101286-1-jwi@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 20022717-4275-0000-0000-000003A6144A
+x-cbid: 20022717-0020-0000-0000-000003AE3353
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022717-4276-0000-0000-000038BA679F
-Message-Id: <20200227170816.101286-1-jwi@linux.ibm.com>
+x-cbparentid: 20022717-0021-0000-0000-0000220653A4
+Message-Id: <20200227170816.101286-2-jwi@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-02-27_05:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- malwarescore=0 clxscore=1015 mlxlogscore=728 impostorscore=0 adultscore=0
- spamscore=0 mlxscore=0 lowpriorityscore=0 suspectscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxlogscore=999
+ suspectscore=0 malwarescore=0 mlxscore=0 priorityscore=1501
+ lowpriorityscore=0 clxscore=1015 bulkscore=0 adultscore=0 phishscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2001150001 definitions=main-2002270126
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Dave,
+card->info.unique_id is always 0 for IQD devices, so don't bother with
+copying it into the 0-initialized cmd.
 
-please apply the following patch series for qeth to netdev's net-next
-tree.
+Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
+---
+ drivers/s390/net/qeth_l3_main.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-This adds support for ETHTOOL_RX_COPYBREAK, along with small cleanups
-and fine-tuning.
-
-Thanks,
-Julian
-
-Julian Wiedmann (8):
-  s390/qeth: remove dead code in qeth_l3_iqd_read_initial_mac()
-  s390/qeth: clean up CREATE_ADDR cmd code
-  s390/qeth: validate device-provided MAC address
-  s390/qeth: remove unused cmd definitions
-  s390/qeth: reset seqnos on connection startup
-  s390/qeth: don't re-start read cmd when IDX has terminated
-  s390/qeth: don't check for IFF_UP when scheduling napi
-  s390/qeth: support configurable RX copybreak
-
- drivers/s390/net/qeth_core.h      | 10 +++++----
- drivers/s390/net/qeth_core_main.c | 36 +++++++++++++++++--------------
- drivers/s390/net/qeth_core_mpc.h  | 10 +++------
- drivers/s390/net/qeth_ethtool.c   | 31 ++++++++++++++++++++++++++
- drivers/s390/net/qeth_l3_main.c   | 16 +++++---------
- 5 files changed, 65 insertions(+), 38 deletions(-)
-
+diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
+index 317d56647a4a..1c953981f73f 100644
+--- a/drivers/s390/net/qeth_l3_main.c
++++ b/drivers/s390/net/qeth_l3_main.c
+@@ -930,7 +930,6 @@ static int qeth_l3_iqd_read_initial_mac(struct qeth_card *card)
+ {
+ 	int rc = 0;
+ 	struct qeth_cmd_buffer *iob;
+-	struct qeth_ipa_cmd *cmd;
+ 
+ 	QETH_CARD_TEXT(card, 2, "hsrmac");
+ 
+@@ -938,9 +937,6 @@ static int qeth_l3_iqd_read_initial_mac(struct qeth_card *card)
+ 				 IPA_DATA_SIZEOF(create_destroy_addr));
+ 	if (!iob)
+ 		return -ENOMEM;
+-	cmd = __ipa_cmd(iob);
+-	*((__u16 *) &cmd->data.create_destroy_addr.unique_id[6]) =
+-			card->info.unique_id;
+ 
+ 	rc = qeth_send_ipa_cmd(card, iob, qeth_l3_iqd_read_initial_mac_cb,
+ 				NULL);
 -- 
 2.17.1
 
