@@ -2,240 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 537361724A4
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Feb 2020 18:09:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 261861724D2
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Feb 2020 18:17:18 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729983AbgB0RId (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Feb 2020 12:08:33 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16948 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729988AbgB0RId (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 27 Feb 2020 12:08:33 -0500
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01RH6MGG122401
-        for <linux-s390@vger.kernel.org>; Thu, 27 Feb 2020 12:08:32 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ydh92jmp5-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 27 Feb 2020 12:08:32 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Thu, 27 Feb 2020 17:08:29 -0000
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 27 Feb 2020 17:08:26 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01RH8OKP41418978
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 27 Feb 2020 17:08:24 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B7008A405C;
-        Thu, 27 Feb 2020 17:08:24 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7E42FA4054;
-        Thu, 27 Feb 2020 17:08:24 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu, 27 Feb 2020 17:08:24 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 8/8] s390/qeth: support configurable RX copybreak
-Date:   Thu, 27 Feb 2020 18:08:16 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200227170816.101286-1-jwi@linux.ibm.com>
-References: <20200227170816.101286-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20022717-0028-0000-0000-000003DE988A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20022717-0029-0000-0000-000024A3B8BB
-Message-Id: <20200227170816.101286-9-jwi@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-02-27_05:2020-02-26,2020-02-27 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- malwarescore=0 priorityscore=1501 lowpriorityscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 bulkscore=0 mlxscore=0 suspectscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2002270126
+        id S1729677AbgB0RRH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Feb 2020 12:17:07 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:37611 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729678AbgB0RRH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Feb 2020 12:17:07 -0500
+Received: by mail-qv1-f65.google.com with SMTP id ci20so1912105qvb.4
+        for <linux-s390@vger.kernel.org>; Thu, 27 Feb 2020 09:17:06 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ARo9Rla66Kxeu/Z2V78mx/ehDWu077QNPWdzDFxfOJY=;
+        b=dth2WWWZKp9HGsnWrcnEGnyDwu2blK8iDXb8vLMtoeR2VaMJ3fz37+cGHyNAha/rWV
+         dK1sGTg22oiYuz24KPwTF2AS2YzOdqQyu6b+TiUBCYZk9V0zbua+mDMo3YTMUSvN9nIT
+         EMJKHUaXkpfsveCsIHveNriBa6Vtjb0vFsMy7lGIqEqrtAiZ99Xs/sQZQxUbkx1mzgHf
+         AVJsII2Jxg233IpQwYAVVL3i04SYIDZ8pS2nl8aTFh1Sh2y4snmhOeu+kOn7LsejaKvN
+         5rYQfvFElRSnuNIftRZI411+PoKrYCAMkJ59tu4Fy8L8tWs1KfJP0Uu0uqOwYZUWVb/k
+         btJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ARo9Rla66Kxeu/Z2V78mx/ehDWu077QNPWdzDFxfOJY=;
+        b=gow4HCkxUiWNFbK7wYHAclKPH1B45YtLv8mNJ6k4UFyr9htqlhNB7p399KZuo9MUAT
+         U8qXDhJ+z4dsKBQbmNTH7Mm81AxDCka8nVJqUhf8gJ/oDCFQyUW8OfMOkH8y8EDlvQ/Q
+         wjI5VpRWA03Vp+QW8RgDIf/JkHv4/OYijQe9MVezhe4hdmmDjgHAUDcA3eaKG/PVSwf2
+         eq5C7uIV7Zw92L7fvTNJ1V2UHUtzE3NtvfSikOvgJ7Z8r4ho/RESYnCJs98v6pxVFv6k
+         ipj6eZdYzow7bUQP8UfPOT9NuB4SxNYBIQZ/Ps/l9drMj9BPIPeJl8Ipv99mYKxFRArk
+         ovig==
+X-Gm-Message-State: APjAAAULqsIw3vMviaKCVBjyAnfQPjhhmgUVozYMRxolHAAgY21EMgy8
+        LiTJONQ+lzddC5AaZSl4W5Rjcw==
+X-Google-Smtp-Source: APXvYqzIGS93ngPFOoj3vliIAB10vgE4M/ehyQsI06gG80887mNylpBqlEfVijkpuc5v919Oz9PGMQ==
+X-Received: by 2002:ad4:5429:: with SMTP id g9mr757799qvt.134.1582823826213;
+        Thu, 27 Feb 2020 09:17:06 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-68-57-212.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.57.212])
+        by smtp.gmail.com with ESMTPSA id x14sm3375572qkf.99.2020.02.27.09.17.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 09:17:05 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1j7MmW-0003YD-SC; Thu, 27 Feb 2020 13:17:04 -0400
+Date:   Thu, 27 Feb 2020 13:17:04 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org, linux-mm@kvack.org,
+        Dan Williams <dan.j.williams@intel.com>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>
+Subject: Re: [PATCH v3 0/7] Allow setting caching mode in arch_add_memory()
+ for P2PDMA
+Message-ID: <20200227171704.GK31668@ziepe.ca>
+References: <20200221182503.28317-1-logang@deltatee.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200221182503.28317-1-logang@deltatee.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Implement the ethtool hooks for the ETHTOOL_RX_COPYBREAK tunable.
+On Fri, Feb 21, 2020 at 11:24:56AM -0700, Logan Gunthorpe wrote:
+> Hi,
+> 
+> This is v3 of the patchset which cleans up a number of minor issues
+> from the feedback of v2 and rebases onto v5.6-rc2. Additional feedback
+> is welcome.
+> 
+> Thanks,
+> 
+> Logan
+> 
+> --
+> 
+> Changes in v3:
+>  * Rebased onto v5.6-rc2
+>  * Rename mhp_modifiers to mhp_params per David with an updated kernel
+>    doc per Dan
+>  * Drop support for s390 per David seeing it does not support
+>    ZONE_DEVICE yet and there was a potential problem with huge pages.
+>  * Added WARN_ON_ONCE in cases where arches recieve non PAGE_KERNEL
+>    parameters
+>  * Collected David and Micheal's Reviewed-By and Acked-by Tags
+> 
+> Changes in v2:
+>  * Rebased onto v5.5-rc5
+>  * Renamed mhp_restrictions to mhp_modifiers and added the pgprot field
+>    to that structure instead of using an argument for
+>    arch_add_memory().
+>  * Add patch to drop the unused flags field in mhp_restrictions
+> 
+> A git branch is available here:
+> 
+> https://github.com/sbates130272/linux-p2pmem remap_pages_cache_v3
+> 
+> --
+> 
+> Currently, the page tables created using memremap_pages() are always
+> created with the PAGE_KERNEL cacheing mode. However, the P2PDMA code
+> is creating pages for PCI BAR memory which should never be accessed
+> through the cache and instead use either WC or UC. This still works in
+> most cases, on x86, because the MTRR registers typically override the
+> caching settings in the page tables for all of the IO memory to be
+> UC-. However, this tends not to work so well on other arches or
+> some rare x86 machines that have firmware which does not setup the
+> MTRR registers in this way.
+> 
+> Instead of this, this series proposes a change to arch_add_memory()
+> to take the pgprot required by the mapping which allows us to
+> explicitly set pagetable entries for P2PDMA memory to WC.
 
-The copybreak is stored into netdev_priv, so that we automatically go
-back to the default value if the netdev is re-allocated.
+Is there a particular reason why WC was selected here? I thought for
+the p2pdma cases there was no kernel user that touched the memory?
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core.h      | 10 ++++++----
- drivers/s390/net/qeth_core_main.c | 17 +++++++++++------
- drivers/s390/net/qeth_ethtool.c   | 31 +++++++++++++++++++++++++++++++
- 3 files changed, 48 insertions(+), 10 deletions(-)
+I definitely forsee devices where we want UC instead.
 
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index 9575a627a1e1..b7d64690ea38 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -189,6 +189,8 @@ struct qeth_vnicc_info {
- #define QETH_IQD_MIN_TXQ	2	/* One for ucast, one for mcast. */
- #define QETH_IQD_MCAST_TXQ	0
- #define QETH_IQD_MIN_UCAST_TXQ	1
-+
-+#define QETH_RX_COPYBREAK      (PAGE_SIZE >> 1)
- #define QETH_IN_BUF_SIZE_DEFAULT 65536
- #define QETH_IN_BUF_COUNT_DEFAULT 64
- #define QETH_IN_BUF_COUNT_HSDEFAULT 128
-@@ -219,9 +221,6 @@ struct qeth_vnicc_info {
- #define QETH_HIGH_WATERMARK_PACK 5
- #define QETH_WATERMARK_PACK_FUZZ 1
- 
--/* large receive scatter gather copy break */
--#define QETH_RX_SG_CB (PAGE_SIZE >> 1)
--
- struct qeth_hdr_layer3 {
- 	__u8  id;
- 	__u8  flags;
-@@ -711,7 +710,6 @@ struct qeth_card_options {
- 	struct qeth_vnicc_info vnicc; /* VNICC options */
- 	int fake_broadcast;
- 	enum qeth_discipline_id layer;
--	int rx_sg_cb;
- 	enum qeth_ipa_isolation_modes isolation;
- 	enum qeth_ipa_isolation_modes prev_isolation;
- 	int sniffer;
-@@ -770,6 +768,10 @@ struct qeth_switch_info {
- 	__u32 settings;
- };
- 
-+struct qeth_priv {
-+	unsigned int rx_copybreak;
-+};
-+
- #define QETH_NAPI_WEIGHT NAPI_POLL_WEIGHT
- 
- struct qeth_card {
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index cbd2b4c46ea4..1bcac50bb395 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -1257,7 +1257,6 @@ static void qeth_set_initial_options(struct qeth_card *card)
- {
- 	card->options.route4.type = NO_ROUTER;
- 	card->options.route6.type = NO_ROUTER;
--	card->options.rx_sg_cb = QETH_RX_SG_CB;
- 	card->options.isolation = ISOLATION_MODE_NONE;
- 	card->options.cq = QETH_CQ_DISABLED;
- 	card->options.layer = QETH_DISCIPLINE_UNDETERMINED;
-@@ -5268,6 +5267,7 @@ static int qeth_extract_skb(struct qeth_card *card,
- 			    int *__offset)
- {
- 	struct qdio_buffer_element *element = *__element;
-+	struct qeth_priv *priv = netdev_priv(card->dev);
- 	struct qdio_buffer *buffer = qethbuffer->buffer;
- 	struct napi_struct *napi = &card->napi;
- 	unsigned int linear_len = 0;
-@@ -5343,7 +5343,7 @@ static int qeth_extract_skb(struct qeth_card *card,
- 	}
- 
- 	use_rx_sg = (card->options.cq == QETH_CQ_ENABLED) ||
--		    (skb_len > card->options.rx_sg_cb &&
-+		    (skb_len > READ_ONCE(priv->rx_copybreak) &&
- 		     !atomic_read(&card->force_alloc_skb) &&
- 		     !IS_OSN(card));
- 
-@@ -5892,25 +5892,30 @@ static void qeth_clear_dbf_list(void)
- static struct net_device *qeth_alloc_netdev(struct qeth_card *card)
- {
- 	struct net_device *dev;
-+	struct qeth_priv *priv;
- 
- 	switch (card->info.type) {
- 	case QETH_CARD_TYPE_IQD:
--		dev = alloc_netdev_mqs(0, "hsi%d", NET_NAME_UNKNOWN,
-+		dev = alloc_netdev_mqs(sizeof(*priv), "hsi%d", NET_NAME_UNKNOWN,
- 				       ether_setup, QETH_MAX_QUEUES, 1);
- 		break;
- 	case QETH_CARD_TYPE_OSM:
--		dev = alloc_etherdev(0);
-+		dev = alloc_etherdev(sizeof(*priv));
- 		break;
- 	case QETH_CARD_TYPE_OSN:
--		dev = alloc_netdev(0, "osn%d", NET_NAME_UNKNOWN, ether_setup);
-+		dev = alloc_netdev(sizeof(*priv), "osn%d", NET_NAME_UNKNOWN,
-+				   ether_setup);
- 		break;
- 	default:
--		dev = alloc_etherdev_mqs(0, QETH_MAX_QUEUES, 1);
-+		dev = alloc_etherdev_mqs(sizeof(*priv), QETH_MAX_QUEUES, 1);
- 	}
- 
- 	if (!dev)
- 		return NULL;
- 
-+	priv = netdev_priv(dev);
-+	priv->rx_copybreak = QETH_RX_COPYBREAK;
-+
- 	dev->ml_priv = card;
- 	dev->watchdog_timeo = QETH_TX_TIMEOUT;
- 	dev->min_mtu = IS_OSN(card) ? 64 : 576;
-diff --git a/drivers/s390/net/qeth_ethtool.c b/drivers/s390/net/qeth_ethtool.c
-index ab59bc975719..9052c72d5b8f 100644
---- a/drivers/s390/net/qeth_ethtool.c
-+++ b/drivers/s390/net/qeth_ethtool.c
-@@ -175,6 +175,35 @@ static void qeth_get_channels(struct net_device *dev,
- 	channels->combined_count = 0;
- }
- 
-+static int qeth_get_tunable(struct net_device *dev,
-+			    const struct ethtool_tunable *tuna, void *data)
-+{
-+	struct qeth_priv *priv = netdev_priv(dev);
-+
-+	switch (tuna->id) {
-+	case ETHTOOL_RX_COPYBREAK:
-+		*(u32 *)data = priv->rx_copybreak;
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
-+static int qeth_set_tunable(struct net_device *dev,
-+			    const struct ethtool_tunable *tuna,
-+			    const void *data)
-+{
-+	struct qeth_priv *priv = netdev_priv(dev);
-+
-+	switch (tuna->id) {
-+	case ETHTOOL_RX_COPYBREAK:
-+		WRITE_ONCE(priv->rx_copybreak, *(u32 *)data);
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- /* Helper function to fill 'advertising' and 'supported' which are the same. */
- /* Autoneg and full-duplex are supported and advertised unconditionally.     */
- /* Always advertise and support all speeds up to specified, and only one     */
-@@ -381,6 +410,8 @@ const struct ethtool_ops qeth_ethtool_ops = {
- 	.get_sset_count = qeth_get_sset_count,
- 	.get_drvinfo = qeth_get_drvinfo,
- 	.get_channels = qeth_get_channels,
-+	.get_tunable = qeth_get_tunable,
-+	.set_tunable = qeth_set_tunable,
- 	.get_link_ksettings = qeth_get_link_ksettings,
- };
- 
--- 
-2.17.1
+Even so, the whole idea looks like the right direction to me.
 
+Jason
