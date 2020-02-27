@@ -2,101 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5C08417153D
-	for <lists+linux-s390@lfdr.de>; Thu, 27 Feb 2020 11:42:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 536BB1715A4
+	for <lists+linux-s390@lfdr.de>; Thu, 27 Feb 2020 12:07:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728845AbgB0Kmx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Feb 2020 05:42:53 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:49496 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728844AbgB0Kmx (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 27 Feb 2020 05:42:53 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48Sq4p6C5jz9tyhj;
-        Thu, 27 Feb 2020 11:42:50 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=S2lr/JhY; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id RBUcz2GDDss6; Thu, 27 Feb 2020 11:42:50 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48Sq4p546Vz9tyhl;
-        Thu, 27 Feb 2020 11:42:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1582800170; bh=5jVgSlMtkWu6tY2vWvxiJHRV/VXhxhn9Ff1N2fIt2UU=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=S2lr/JhYZ+BGylLoddvoIQ9iQhySwoByCGIjiV2jJ0PeIWGuHFGwJKoDCDBlMX134
-         i5DDDsfMVW33gpJWXfhaNVZkRAjliFDf2imHM3gIFbd6vhCt20XFgykuEBdbkrcViD
-         lQGvXfjqGVwxK9iazQgdwBp51saPHe4oEmbNBr5A=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id BCB398B875;
-        Thu, 27 Feb 2020 11:42:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id FEU3XPlFNEyZ; Thu, 27 Feb 2020 11:42:51 +0100 (CET)
-Received: from [192.168.4.90] (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 20C4A8B879;
-        Thu, 27 Feb 2020 11:42:48 +0100 (CET)
-Subject: Re: [PATCH] mm/debug: Add tests validating arch page table helpers
- for core features
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-riscv@lists.infradead.org,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-snps-arc@lists.infradead.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
+        id S1728876AbgB0LHT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 27 Feb 2020 06:07:19 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:36781 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728761AbgB0LHS (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 27 Feb 2020 06:07:18 -0500
+Received: by mail-pl1-f193.google.com with SMTP id a6so1000999plm.3;
+        Thu, 27 Feb 2020 03:07:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lmJQ36No1Gca/vcFrG4Eq9htTy7KPRzUbksdwrxz8LI=;
+        b=FY89/SsX+eLNCZfl66UEb1ue7T2rDlxc39BUUNyQcUvYHLhQYmTZm8AV265dDcZriC
+         n+pnoFgE+Sf8zXMbshaCCS6PUdHyFAtJ6zdH/VH1FXYuwfzu7iVLsjLF6SXNOrrDux5S
+         VamD+96xP7YyeTt6xJaJYHlRfPSsbdooqEZo5JblB/xTNMzIpcuEBudbBh1o9hd+8Pp3
+         VCC1Cl49y6FD+xnV0DQbsVUKowy7XWxJSXmwRChAoXpyUp1BbPkGQQ1IWMsgmCulUb0i
+         idnYS7ecLxRWLTUTaFORqK3tstLgLRTwqSSk0D4o9TOL/U8ZbVv3Bk/xfDvuCNpgSmSI
+         BGEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lmJQ36No1Gca/vcFrG4Eq9htTy7KPRzUbksdwrxz8LI=;
+        b=B7feNdwjh5TqNbMKHGaFRUmb0LEZVI3udn9LqR1WtmSU5BNehdbZhO/LCW4wWt2kY1
+         Hd1M62LNST72ZMH62bJjgFdhYY2HIp5yoDZYDU3e8p/6kKQ25gQJ4xLHHrS+P7TXNO5d
+         k/NHR+dO7Y5iBrR1ViLPHNwZmDmpBHIqY7jnMYNnQ8fXD3VLcqwy3gnlROLGnP8etXRo
+         RfqOrOcNltSWjfMAAb6BS60kh9eH3v7oZpoStYmlEYMYScYgusAjiSw/XGsnPsG62b7+
+         3zNVbGXiELxRCmpALBIb7VZzpUI0L6x4tlTrohpnKBGzqvA7nMoQzxQy+GsciFBx+FlC
+         zlkw==
+X-Gm-Message-State: APjAAAUOf6w8sbfVyKcn0SEoeoz1+JCCGXDTdudsgVdtGnZSJFgmIeZV
+        fY0MeI1uRkSmdKBE3G+S6QI=
+X-Google-Smtp-Source: APXvYqxWerA+MNtWPhmtZePrzWtN41f/X1PPHbm1Zy+BYl6m6MsiGmn5uHRszUhnUu+SXUCNhUoPbQ==
+X-Received: by 2002:a17:902:8b89:: with SMTP id ay9mr3891143plb.309.1582801636613;
+        Thu, 27 Feb 2020 03:07:16 -0800 (PST)
+Received: from localhost ([106.51.232.35])
+        by smtp.gmail.com with ESMTPSA id c5sm6662799pfi.10.2020.02.27.03.07.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 27 Feb 2020 03:07:15 -0800 (PST)
+Date:   Thu, 27 Feb 2020 16:37:13 +0530
+From:   afzal mohammed <afzal.mohd.ma@gmail.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org,
         linux-arm-kernel@lists.infradead.org,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <1582799637-11786-1-git-send-email-anshuman.khandual@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <51421bb3-9075-d7e9-1750-0553a1ebe64a@c-s.fr>
-Date:   Thu, 27 Feb 2020 11:42:33 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        linux-samsung-soc@vger.kernel.org, x86@kernel.org,
+        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
+        linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
+        linux-ia64@vger.kernel.org, linux-hexagon@vger.kernel.org,
+        linux-c6x-dev@linux-c6x.org, linux-omap@vger.kernel.org,
+        linux-alpha@vger.kernel.org, Julia Lawall <Julia.Lawall@lip6.fr>,
+        Gilles Muller <Gilles.Muller@lip6.fr>,
+        Nicolas Palix <nicolas.palix@imag.fr>,
+        Michal Marek <michal.lkml@markovi.net>
+Subject: Re: [PATCH 00/18] genirq: Remove setup_irq()
+Message-ID: <20200227110713.GA5708@afzalpc>
+References: <cover.1581478323.git.afzal.mohd.ma@gmail.com>
+ <87y2somido.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1582799637-11786-1-git-send-email-anshuman.khandual@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <87y2somido.fsf@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.3 (2018-01-21)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi Thomas,
 
+On Thu, Feb 27, 2020 at 11:31:15AM +0100, Thomas Gleixner wrote:
 
-Le 27/02/2020 à 11:33, Anshuman Khandual a écrit :
-> This adds new tests validating arch page table helpers for these following
-> core memory features. These tests create and test specific mapping types at
-> various page table levels.
+> Vs. merging this series, I suggest the following approach:
 > 
-> * SPECIAL mapping
-> * PROTNONE mapping
-> * DEVMAP mapping
-> * SOFTDIRTY mapping
-> * SWAP mapping
-> * MIGRATION mapping
-> * HUGETLB mapping
+>    - Resubmit the individual changes as single patches or small series
+>      to the relevant maintainers and subsystem mailing lists. They have
+>      no dependency on a core change and can be applied where they belong
+>      to.
+> 
+>    - After 5.6-rc6, verify which parts have made their way into
+>      linux-next and resubmit the ignored ones as a series to me along
+>      with the removal of the core parts.
+> 
+> That way we can avoid conflicting changes between subsystems and the tip
+> irq/core branch as much as possible.
 
-For testing HUGETLB mappings, you also have to include tests of hugepd 
-functions/helpers. Not all archictures have hugepage size which matches 
-with page tables levels (e.g. powerpc). Those architectures use hugepd_t.
+Okay, i will do accordingly.
 
-Christophe
+[ your mail crossed my v3 (only one patch) posting ]
+
+Regards
+afzal
