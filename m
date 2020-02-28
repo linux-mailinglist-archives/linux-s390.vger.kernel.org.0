@@ -2,86 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6EA3E1733A9
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Feb 2020 10:20:21 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B1549173BF3
+	for <lists+linux-s390@lfdr.de>; Fri, 28 Feb 2020 16:43:35 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726440AbgB1JUV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 28 Feb 2020 04:20:21 -0500
-Received: from foss.arm.com ([217.140.110.172]:35394 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726207AbgB1JUU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 28 Feb 2020 04:20:20 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2C8E1FB;
-        Fri, 28 Feb 2020 01:20:19 -0800 (PST)
-Received: from [10.163.1.119] (unknown [10.163.1.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E52C03F7B4;
-        Fri, 28 Feb 2020 01:20:10 -0800 (PST)
-Subject: Re: [PATCH] mm/debug: Add tests validating arch page table helpers
- for core features
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Paul Mackerras <paulus@samba.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, linux-riscv@lists.infradead.org,
-        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
-        linux-s390@vger.kernel.org, x86@kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        linux-snps-arc@lists.infradead.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org,
-        Vineet Gupta <vgupta@synopsys.com>,
-        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev@lists.ozlabs.org
-References: <1582799637-11786-1-git-send-email-anshuman.khandual@arm.com>
- <51421bb3-9075-d7e9-1750-0553a1ebe64a@c-s.fr>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <f99692be-5d38-fdb7-46f1-205c7cc7481c@arm.com>
-Date:   Fri, 28 Feb 2020 14:50:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        id S1727209AbgB1Pnd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 28 Feb 2020 10:43:33 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34586 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727159AbgB1Pnd (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 28 Feb 2020 10:43:33 -0500
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 01SFYdtD013478
+        for <linux-s390@vger.kernel.org>; Fri, 28 Feb 2020 10:43:31 -0500
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yepxk3f6a-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 28 Feb 2020 10:43:31 -0500
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Fri, 28 Feb 2020 15:43:29 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 28 Feb 2020 15:43:25 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 01SFgQ3b48365950
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 28 Feb 2020 15:42:26 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A054AE045;
+        Fri, 28 Feb 2020 15:43:24 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 6CD88AE04D;
+        Fri, 28 Feb 2020 15:43:23 +0000 (GMT)
+Received: from p-imbrenda.emea.ibm.com (unknown [9.145.11.131])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 28 Feb 2020 15:43:23 +0000 (GMT)
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     linux-next@vger.kernel.org, akpm@linux-foundation.org
+Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [RFC v1 0/2] add callbacks for inaccessible pages
+Date:   Fri, 28 Feb 2020 16:43:19 +0100
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <51421bb3-9075-d7e9-1750-0553a1ebe64a@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20022815-0012-0000-0000-0000038B3506
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20022815-0013-0000-0000-000021C7E259
+Message-Id: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-02-28_04:2020-02-28,2020-02-28 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 clxscore=1015
+ impostorscore=0 priorityscore=1501 spamscore=0 suspectscore=0 mlxscore=0
+ malwarescore=0 phishscore=0 lowpriorityscore=0 bulkscore=0 mlxlogscore=424
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2001150001
+ definitions=main-2002280124
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+This patchset has a fixup for gup/mm, and provides the necessary arch
+hooks to enable protected virtualization.
 
+Claudio Imbrenda (2):
+  mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track FOLL_PIN pages"
+  mm/gup/writeback: add callbacks for inaccessible pages
 
-On 02/27/2020 04:12 PM, Christophe Leroy wrote:
-> 
-> 
-> Le 27/02/2020 à 11:33, Anshuman Khandual a écrit :
->> This adds new tests validating arch page table helpers for these following
->> core memory features. These tests create and test specific mapping types at
->> various page table levels.
->>
->> * SPECIAL mapping
->> * PROTNONE mapping
->> * DEVMAP mapping
->> * SOFTDIRTY mapping
->> * SWAP mapping
->> * MIGRATION mapping
->> * HUGETLB mapping
-> 
-> For testing HUGETLB mappings, you also have to include tests of hugepd functions/helpers. Not all archictures have hugepage size which matches with page tables levels (e.g. powerpc). Those architectures use hugepd_t.
+ include/linux/gfp.h |  6 ++++++
+ mm/gup.c            | 24 ++++++++++++++++++++----
+ mm/page-writeback.c |  5 +++++
+ 3 files changed, 31 insertions(+), 4 deletions(-)
 
-Dont see much hugepd_t in generic HugeTLB. Just wondering which generic
-hugepd helpers can be tested here. Could you please be bit more specific.
-As we have not yet started looking for arch specific page table helpers
-test requirements, all the test scenarios here need to be generic.
+-- 
+2.24.1
 
-> 
-> Christophe
-> 
