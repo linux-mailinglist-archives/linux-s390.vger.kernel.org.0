@@ -2,177 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BBA3D172DEF
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Feb 2020 02:05:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6EA3E1733A9
+	for <lists+linux-s390@lfdr.de>; Fri, 28 Feb 2020 10:20:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730148AbgB1BEy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 27 Feb 2020 20:04:54 -0500
-Received: from ozlabs.org ([203.11.71.1]:54715 "EHLO ozlabs.org"
+        id S1726440AbgB1JUV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 28 Feb 2020 04:20:21 -0500
+Received: from foss.arm.com ([217.140.110.172]:35394 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729984AbgB1BEy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 27 Feb 2020 20:04:54 -0500
-Received: by ozlabs.org (Postfix, from userid 1007)
-        id 48TBCR4GXXz9sRR; Fri, 28 Feb 2020 12:04:51 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-        d=gibson.dropbear.id.au; s=201602; t=1582851891;
-        bh=bDF0YnZ0Ji7KIpNOME8A9+GnboyyHLm+51d5sgfbrXg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=VSExQPM54mGS3q5ixPtCfJOcB9KtQ+FzWatNARyCA4xu7wLfK+gz0Ez94swVm2PMe
-         q1bWrFrri/Ez/GKUaD8+ihbfU4GfFrXbRLT5HU3YbFqjaXhlU3udppCAi/1KL39awy
-         DJTBNnHoW/jk6W+//WwyOVIHhKC7g/W256PliEQk=
-Date:   Fri, 28 Feb 2020 11:23:53 +1100
-From:   David Gibson <david@gibson.dropbear.id.au>
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
+        id S1726207AbgB1JUU (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 28 Feb 2020 04:20:20 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E2C8E1FB;
+        Fri, 28 Feb 2020 01:20:19 -0800 (PST)
+Received: from [10.163.1.119] (unknown [10.163.1.119])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E52C03F7B4;
+        Fri, 28 Feb 2020 01:20:10 -0800 (PST)
+Subject: Re: [PATCH] mm/debug: Add tests validating arch page table helpers
+ for core features
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Paul Mackerras <paulus@samba.org>,
+        "H. Peter Anvin" <hpa@zytor.com>, linux-riscv@lists.infradead.org,
+        Will Deacon <will@kernel.org>, linux-arch@vger.kernel.org,
+        linux-s390@vger.kernel.org, x86@kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-s390@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Janosch Frank <frankja@linux.ibm.com>,
-        Viktor Mihajlovski <mihajlov@linux.ibm.com>,
-        Ram Pai <linuxram@us.ibm.com>,
-        Thiago Jung Bauermann <bauerman@linux.ibm.com>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>,
-        Michael Mueller <mimu@linux.ibm.com>
-Subject: Re: [PATCH 1/2] mm: move force_dma_unencrypted() to mem_encrypt.h
-Message-ID: <20200228002353.GA1842@umbus.fritz.box>
-References: <20200220161146.GA12709@lst.de>
- <4369f099-e4e4-4a58-b38b-642cf53ccca6@de.ibm.com>
- <20200220163135.GA13192@lst.de>
- <20200221032727.GC2298@umbus.fritz.box>
- <20200221140639.54928efe.pasic@linux.ibm.com>
- <20200221104724-mutt-send-email-mst@kernel.org>
- <20200221190702.68fd57fc.pasic@linux.ibm.com>
- <20200224033314.GC1751@umbus.fritz.box>
- <20200224194953.37c0d6b8.pasic@linux.ibm.com>
- <20200225190802.753cffef.cohuck@redhat.com>
+        Ingo Molnar <mingo@redhat.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-snps-arc@lists.infradead.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org,
+        Vineet Gupta <vgupta@synopsys.com>,
+        linux-kernel@vger.kernel.org, Palmer Dabbelt <palmer@dabbelt.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linuxppc-dev@lists.ozlabs.org
+References: <1582799637-11786-1-git-send-email-anshuman.khandual@arm.com>
+ <51421bb3-9075-d7e9-1750-0553a1ebe64a@c-s.fr>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <f99692be-5d38-fdb7-46f1-205c7cc7481c@arm.com>
+Date:   Fri, 28 Feb 2020 14:50:09 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
-Content-Disposition: inline
-In-Reply-To: <20200225190802.753cffef.cohuck@redhat.com>
+In-Reply-To: <51421bb3-9075-d7e9-1750-0553a1ebe64a@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
---HcAYCG3uE/tztfnV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Feb 25, 2020 at 07:08:02PM +0100, Cornelia Huck wrote:
-> On Mon, 24 Feb 2020 19:49:53 +0100
-> Halil Pasic <pasic@linux.ibm.com> wrote:
->=20
-> > On Mon, 24 Feb 2020 14:33:14 +1100
-> > David Gibson <david@gibson.dropbear.id.au> wrote:
-> >=20
-> > > On Fri, Feb 21, 2020 at 07:07:02PM +0100, Halil Pasic wrote: =20
-> > > > On Fri, 21 Feb 2020 10:48:15 -0500
-> > > > "Michael S. Tsirkin" <mst@redhat.com> wrote:
-> > > >  =20
-> > > > > On Fri, Feb 21, 2020 at 02:06:39PM +0100, Halil Pasic wrote: =20
-> > > > > > On Fri, 21 Feb 2020 14:27:27 +1100
-> > > > > > David Gibson <david@gibson.dropbear.id.au> wrote:
-> > > > > >  =20
-> > > > > > > On Thu, Feb 20, 2020 at 05:31:35PM +0100, Christoph Hellwig w=
-rote: =20
-> > > > > > > > On Thu, Feb 20, 2020 at 05:23:20PM +0100, Christian Borntra=
-eger wrote: =20
-> > > > > > > > > >From a users perspective it makes absolutely perfect sen=
-se to use the =20
-> > > > > > > > > bounce buffers when they are NEEDED.=20
-> > > > > > > > > Forcing the user to specify iommu_platform just because y=
-ou need bounce buffers
-> > > > > > > > > really feels wrong. And obviously we have a severe perfor=
-mance issue
-> > > > > > > > > because of the indirections. =20
-> > > > > > > >=20
-> > > > > > > > The point is that the user should not have to specify iommu=
-_platform.
-> > > > > > > > We need to make sure any new hypervisor (especially one tha=
-t might require
-> > > > > > > > bounce buffering) always sets it, =20
-> > > > > > >=20
-> > > > > > > So, I have draft qemu patches which enable iommu_platform by =
-default.
-> > > > > > > But that's really because of other problems with !iommu_platf=
-orm, not
-> > > > > > > anything to do with bounce buffering or secure VMs.
-> > > > > > >=20
-> > > > > > > The thing is that the hypervisor *doesn't* require bounce buf=
-fering.
-> > > > > > > In the POWER (and maybe s390 as well) models for Secure VMs, =
-it's the
-> > > > > > > *guest*'s choice to enter secure mode, so the hypervisor has =
-no reason
-> > > > > > > to know whether the guest needs bounce buffering.  As far as =
-the
-> > > > > > > hypervisor and qemu are concerned that's a guest internal det=
-ail, it
-> > > > > > > just expects to get addresses it can access whether those are=
- GPAs
-> > > > > > > (iommu_platform=3Doff) or IOVAs (iommu_platform=3Don). =20
-> > > > > >=20
-> > > > > > I very much agree!
-> > > > > >  =20
-> > > > > > >  =20
-> > > > > > > > as was a rather bogus legacy hack =20
-> > > > > > >=20
-> > > > > > > It was certainly a bad idea, but it was a bad idea that went =
-into a
-> > > > > > > public spec and has been widely deployed for many years.  We =
-can't
-> > > > > > > just pretend it didn't happen and move on.
-> > > > > > >=20
-> > > > > > > Turning iommu_platform=3Don by default breaks old guests, som=
-e of which
-> > > > > > > we still care about.  We can't (automatically) do it only for=
- guests
-> > > > > > > that need bounce buffering, because the hypervisor doesn't kn=
-ow that
-> > > > > > > ahead of time. =20
->=20
-> We could default to iommu_platform=3Don on s390 when the host has active
-> support for protected virtualization... but that's just another kind of
-> horrible, so let's just pretend I didn't suggest it.
+On 02/27/2020 04:12 PM, Christophe Leroy wrote:
+> 
+> 
+> Le 27/02/2020 à 11:33, Anshuman Khandual a écrit :
+>> This adds new tests validating arch page table helpers for these following
+>> core memory features. These tests create and test specific mapping types at
+>> various page table levels.
+>>
+>> * SPECIAL mapping
+>> * PROTNONE mapping
+>> * DEVMAP mapping
+>> * SOFTDIRTY mapping
+>> * SWAP mapping
+>> * MIGRATION mapping
+>> * HUGETLB mapping
+> 
+> For testing HUGETLB mappings, you also have to include tests of hugepd functions/helpers. Not all archictures have hugepage size which matches with page tables levels (e.g. powerpc). Those architectures use hugepd_t.
 
-Yeah, that would break migration between hosts with the feature and
-hosts without - for everything, not just protected guests.  In general
-any kind of guest visible configuration change based on host
-properties is incompatible with the qemu/KVM migration model.
+Dont see much hugepd_t in generic HugeTLB. Just wondering which generic
+hugepd helpers can be tested here. Could you please be bit more specific.
+As we have not yet started looking for arch specific page table helpers
+test requirements, all the test scenarios here need to be generic.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---HcAYCG3uE/tztfnV
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEdfRlhq5hpmzETofcbDjKyiDZs5IFAl5YXZcACgkQbDjKyiDZ
-s5LdKA//U9QbJilQoiEQCinA1xGVHP1Hm7w/1rqgbm4B30D4A7I3ioERM/uwdqkQ
-ks4shzQNPfx3O2Bkiit5DGE/A4C9CODYVqjvPw0pDpMaYJI6tDVcjd3bgYhyE2QI
-Gp5oQ4l40a4C5oUH9YYoOS7eyx0rg6q1HstQDyTtTUP8MURr5XsqMIU4086N8bDI
-JrYkBRXTU/W5FCuHnKR8wUwuKGUqTu64yEtzlT40YuWCrUw2PRtaG6jjP9CMisqL
-BS2ISdY2UeTZXNnavX0LycUAwUDo4gy/ux4TcSuzSii7A0ztiqqrbs/UFNs/GCUg
-pfcr9JbU7dsT4po/YKERdQ/6PiYuVufHASLOhDdDw6pNVLyuTnzHgmRkWSrRV4NP
-haSVx1u2JbRmJmO66RgJdt774tVxyDVIRhZprWlvg5yX0ad0TAHvx2MqitDgjCiV
-XZdu7rCfKQVCXU35ODteapV9n+CguP8f2KYIVWXJIHCbjLg65nVr4moJNupn/5nd
-kvhC+2MOoszj0PXtMEPTWe7N/H9KDfp4Vv861JhZL5pe3GluF9qsHDk/vHWuovCK
-Vab8lroMXU5o345o4w70Cu/X+PO1lkVeml+MTI3c+hfZHcaGlvnsVehQGDYhwX4I
-XvNb0jeVjkJJRHVxOIIgzD4PxiBaYtpfFV+cBvysaDf5aaCX2Zk=
-=MCKa
------END PGP SIGNATURE-----
-
---HcAYCG3uE/tztfnV--
+> 
+> Christophe
+> 
