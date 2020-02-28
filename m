@@ -2,85 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98D3917417E
-	for <lists+linux-s390@lfdr.de>; Fri, 28 Feb 2020 22:31:17 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E680B1742AB
+	for <lists+linux-s390@lfdr.de>; Sat, 29 Feb 2020 00:08:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726860AbgB1VbR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 28 Feb 2020 16:31:17 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:43915 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbgB1VbR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 28 Feb 2020 16:31:17 -0500
-Received: by mail-ot1-f67.google.com with SMTP id j5so3067880otn.10
-        for <linux-s390@vger.kernel.org>; Fri, 28 Feb 2020 13:31:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=E57qmAYxRULljTteoL9BnNM233t9xRFNSPdb4qSFmz4=;
-        b=FOSXg/gDLnMTvsFKrROzrWHQkymULqZ4VWWSzkxbCpGWafrvoL1DbhvWHkNA1awmFJ
-         mqZ4yc3Xu7lUtGU0lnzzTMrQrhjDoBb0aAi0O834VNv0Xx2wr1FRPluT436M+3L6Uu3P
-         OeEfO9GHrkLM+a5+P9XzccUiCN5lVGpuO1RMFe6qheaZSXTBuWXwalcRrw3HRO/r9ITu
-         dbpQvHayrSz63xS3XZJvxFAo9ni5zPDlHcVTL49HtS1LUdDaUyRpVgHEgZqSQiaYscIw
-         1HyAUUJ1ehUcyfKMFiPZLd4BrozyOvRYXTSs34KN1qjk4Mke8taeKrGC90q2MJWKZrKw
-         q4mQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=E57qmAYxRULljTteoL9BnNM233t9xRFNSPdb4qSFmz4=;
-        b=jRK6d0wSRW6K6kpJa+hozXe5plNk9LHDkWDa+hluGHGkzMJExX8u3/wgJcxNJWspfW
-         OsUvMQJIwa8Zb9H6Tf2YpETkZIlmYMtiP5rBB/EDyk8hWhyU1kLurEX3EB9WZARSwk83
-         d2UK5cqQTBjvXq8siwHd4IE5ogG/o0mhpVPVzyhTRd0wtbgLOX8+1I+uL2hCHgDg0RGj
-         77N3qnpiHc2PO/XT0q2F1B4cMz/iOBZE1ZpH2++ltAo26/19s0VMK/1PhSoDOPdoBmhN
-         lflikIn7Kh9CTeKw5WVG51j+eWHvrPVA8k9pbbxOs6SGjXsUCOpNuHb0NexrhTy2qqXW
-         N9JQ==
-X-Gm-Message-State: APjAAAVyYHtux2Z3nblvuzOqYKRCHwgWbtSP/GLqrC5cQaDb6cZH+D0s
-        0RDuz89xJHp+q+EwhAW8XuBNuZ+N8ry0FhO9C0jjUg==
-X-Google-Smtp-Source: APXvYqw3lx5wUMOoXp5Dz6+9E6dRQ6P4Q87wBR0C2ISCuvp93d5At8nQ1nTZ6ODRu1fC1blNWg8tMcQbt7eE8AgCHRU=
-X-Received: by 2002:a9d:64d8:: with SMTP id n24mr4607004otl.71.1582925476085;
- Fri, 28 Feb 2020 13:31:16 -0800 (PST)
+        id S1726151AbgB1XIh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 28 Feb 2020 18:08:37 -0500
+Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:11367 "EHLO
+        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726046AbgB1XIh (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 28 Feb 2020 18:08:37 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5e599d230000>; Fri, 28 Feb 2020 15:07:15 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Fri, 28 Feb 2020 15:08:35 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Fri, 28 Feb 2020 15:08:35 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Fri, 28 Feb
+ 2020 23:08:35 +0000
+Subject: Re: [RFC v1 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track
+ FOLL_PIN pages"
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>
+CC:     <borntraeger@de.ibm.com>, <david@redhat.com>,
+        <aarcange@redhat.com>, <linux-mm@kvack.org>,
+        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+ <20200228154322.329228-3-imbrenda@linux.ibm.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
+Date:   Fri, 28 Feb 2020 15:08:35 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-References: <20200221182503.28317-1-logang@deltatee.com> <20200221182503.28317-2-logang@deltatee.com>
-In-Reply-To: <20200221182503.28317-2-logang@deltatee.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Fri, 28 Feb 2020 13:31:05 -0800
-Message-ID: <CAPcyv4gFiCBN_Bz5eZrWXV0PEaWhwdHDkgEW7e5z0xZkp6a83w@mail.gmail.com>
-Subject: Re: [PATCH v3 1/7] mm/memory_hotplug: Drop the flags field from
- struct mhp_restrictions
-To:     Logan Gunthorpe <logang@deltatee.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-ia64@vger.kernel.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Linux-sh <linux-sh@vger.kernel.org>,
-        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        David Hildenbrand <david@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Eric Badger <ebadger@gigaio.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20200228154322.329228-3-imbrenda@linux.ibm.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1582931235; bh=xcptddGGOzZ75nvLWP6gD2gojRvwMOSomkPx4Uxwnp8=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=L80xB8UCmWKM+d/AUbUv0fM3LJ1zGwddosILzHsBVsQVivwddBN0KJ0ltimxFs1FJ
+         KVKKudVabSVBujRfnmWZE+aldbr4IhErAKbUS5rqvUmjd4ItI9K2TVWJdOjm0DEb2g
+         KmXsmVFrDcH9ttErOJPsCxf+sICKL/f3g6vvef0uTg1f2x3ocaHRy7MXL2WiNgcOEZ
+         D1mB/H29puGQVN4bk4GLEpLVC7vDcyIH17QwnIWBeKg3wjHHpAflKbN5aed/U0mvD8
+         IkwQuoxv4Iy/4PtTmxxkwetmG9VSCgCvWcB5GCI0PSL9WhA9sAq62VnnkaqpWTbHLz
+         0hQ2pCTT05rlw==
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
->
-> This variable is not used anywhere and should therefore be removed
-> from the structure.
->
-> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
+On 2/28/20 7:43 AM, Claudio Imbrenda wrote:
+> In case pin fails, we need to unpin, a simple put_page will not be enough
+> 
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> ---
+>  mm/gup.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index f589299b0d4a..0b9a806898f3 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -2134,7 +2134,10 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
+>  			goto pte_unmap;
+>  
+>  		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
+> -			put_page(head);
+> +			if (flags & FOLL_GET)
+> +				put_page(head);
+> +			else if (flags & FOLL_PIN)
+> +				unpin_user_page(head);
 
-Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+Hi Claudio,
+
+Instead, I think that should actually be:
+
+		put_compound_head(page, 1, flags);
+
+which does a bit more (bug checks and /proc/vmstat instrumentation) than your diff,
+but has the same basic idea: call the right "put" function.  
+
+...oh, actually, I see you have the commit hash in the subject line. Instead, it should 
+be in the commit description. Let's maybe change the subject line to approx:
+
+    mm/gup: Fix a missing put_compound_head() call in gup_pte_range()
+
+And the write up...how about something like this, if you like it:
+
+
+try_grab_compound_head() must be undone via put_compound_head(), not put_page().
+This was missed in the original implementation of the gup/dma tracking patch, so
+fix it now.
+
+Fixes: 0ea2781c3de4 ("mm/gup: track FOLL_PIN pages")
+
+
+    
+(Aside: I'm using the linux-next commit hash. How does one get the correct hash before
+it goes to mainline? I guess maintainer scripts fix all those up?)
+
+It's also good to Cc some reviewers in case I'm overlooking something, so I'm adding
+Jan and Kirill.
+
+thanks,
+-- 
+John Hubbard
+NVIDIA
+>  			goto pte_unmap;
+>  		}
+>  
+> 
+
+
