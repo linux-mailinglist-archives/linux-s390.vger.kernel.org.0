@@ -2,81 +2,86 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E145A174916
-	for <lists+linux-s390@lfdr.de>; Sat, 29 Feb 2020 21:09:20 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1415174960
+	for <lists+linux-s390@lfdr.de>; Sat, 29 Feb 2020 21:44:45 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727194AbgB2UJR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 29 Feb 2020 15:09:17 -0500
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:1756 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727102AbgB2UJR (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sat, 29 Feb 2020 15:09:17 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e5ac49b0000>; Sat, 29 Feb 2020 12:07:55 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Sat, 29 Feb 2020 12:09:16 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Sat, 29 Feb 2020 12:09:16 -0800
-Received: from ngvpn01-175-70.dyn.scz.us.nvidia.com (10.124.1.5) by
- HQMAIL107.nvidia.com (172.20.187.13) with Microsoft SMTP Server (TLS) id
- 15.0.1473.3; Sat, 29 Feb 2020 20:09:16 +0000
-Subject: Re: [RFC v1 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track
- FOLL_PIN pages"
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-CC:     <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
-        <borntraeger@de.ibm.com>, <david@redhat.com>,
-        <aarcange@redhat.com>, <linux-mm@kvack.org>,
-        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
-        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-        Jan Kara <jack@suse.cz>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>
-References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
- <20200228154322.329228-3-imbrenda@linux.ibm.com>
- <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
- <20200229115119.3562c73e@p-imbrenda>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <a48a6fee-babe-45fd-5ff5-881fbdabf79b@nvidia.com>
-Date:   Sat, 29 Feb 2020 12:09:15 -0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
- Gecko/20100101 Thunderbird/68.5.0
+        id S1727257AbgB2Uop (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 29 Feb 2020 15:44:45 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35971 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727170AbgB2Uoo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sat, 29 Feb 2020 15:44:44 -0500
+Received: by mail-ot1-f68.google.com with SMTP id j14so1704439otq.3
+        for <linux-s390@vger.kernel.org>; Sat, 29 Feb 2020 12:44:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rqrrnhnAhDxDR8DToJ03L+juASOs6Wy8PQ3rH1ycKSY=;
+        b=TYpFojaFQdUqaHBll6wgyaBq0JuxhRQyFCiHl2aCihv5uMBc1KFDLDDeMczLWyt8tD
+         qnLbcLplw+2WoNzbCgJnxTLzJUgibDfZbhT9vNbt0/enEuXTff8alC+u6o+URMJGyNJ6
+         ou1NISRDvkqJtex7bh+3kcVgLSIao7pALFZD+un2PFXr3PJS3k+VeI1R+qVg2jI4wJXw
+         L5hTOFFVEbsKWNM3uV0YKQ+t9u+eM/SZ1W/MR2NG+K24z72IjJI5pZ4CTLDqOY2K4PT1
+         nii7SoL/cAdaHD/p50gusTVN3y7GcODdwr9wZ2TLWb8bhxiKX9kOGosaY8MhItMZJRCE
+         nAQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rqrrnhnAhDxDR8DToJ03L+juASOs6Wy8PQ3rH1ycKSY=;
+        b=KR2+696I4mTfnPQHua8fjwEx9A8EifuIiUkGndqojryIPnW3JnQU4HlTlFvw94btfJ
+         oxIUq9zOv7u+SS+OzpEsxTdFHqgE9CE6hztN5rbvA75R+uB9eYgLUJy4kNrYqnlULl3x
+         GSjClZPgZUZe24PCQIvj1uOLWjR4Koc1IOswzhtpntn2aMW8JDtvL0GiJiTf+H0+CsFV
+         zhfKnLRDWt9UnJrlPr4njXBb/rTHUINLL2YSYpbyOZTfOUR9HNA4cb1kvUBqnRHw9QfI
+         CDEHuEylmwGlsJdJM/4WW+D1aazdB64AHK4zpU7cNUHGHYobFWLaCoHX7RNc5JtGtfHI
+         W4kQ==
+X-Gm-Message-State: APjAAAU6zRCbvISZo8W9fAukfrtiu7CSAi1wMKFukQqSh2JnDpp4NRYz
+        irYdfqW4c2rLI7pTi5p9eAXQXgQK7PZeTDRtk14heg==
+X-Google-Smtp-Source: APXvYqwuD7hXgqDuHa7bNKr2aGN5ZsRtxcfrMKKpE5k3aRoSjSLBCzEO28z30FjlnmPqDSMCgEWPc3EsieveZxFwGeE=
+X-Received: by 2002:a05:6830:134c:: with SMTP id r12mr7849308otq.126.1583009084306;
+ Sat, 29 Feb 2020 12:44:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20200229115119.3562c73e@p-imbrenda>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL101.nvidia.com (172.20.187.10) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1583006875; bh=WYN4LBwZnbCVylzszIAE5BmxzjTnkAdGTg75EzquRoE=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=JSI3aFQgZbVSOB3uJJewzN/4XIcaXLXuDKnWsTB9acmpJZ0pf3zdF3PHxzxVQIbDJ
-         nw0ONXApu4MoL/0WQUqvEEkkfzZFCU/d8+HLXWqdaE5cAPiI3pVGJh9a0pgvllNgj6
-         3nqRRr1oRtHQxOcAbzef1VqrFd1rQvOGC816uUKjvr7YzKPWiS6KyccU09K7ZjEiQb
-         u4IQpFX2zoRSCl5oNCAdBWc06cElblIYN6rohCGnfbSJ9O3b6/1uYn7p8r0QBOuD07
-         JbKn64MyhRp31i44QV60wHcWEFLMZ8xNUAIHjLHErHx6bQ3MypiliSvu/gk7E/p2n8
-         a5hrdo7TKjZDQ==
+References: <20200221182503.28317-1-logang@deltatee.com> <20200221182503.28317-3-logang@deltatee.com>
+In-Reply-To: <20200221182503.28317-3-logang@deltatee.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Sat, 29 Feb 2020 12:44:29 -0800
+Message-ID: <CAPcyv4hLvciwxSnsQRye9SuB-sy9fm+_6CwZSuHifkmbWQs-+g@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] mm/memory_hotplug: Rename mhp_restrictions to mhp_params
+To:     Logan Gunthorpe <logang@deltatee.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Linux-sh <linux-sh@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 2/29/20 2:51 AM, Claudio Imbrenda wrote:
+On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+>
+> The mhp_restrictions struct really doesn't specify anything resembling
+> a restriction anymore so rename it to be mhp_params as it is a list
+> of extended parameters.
+>
+> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
 
-> my idea was that my patch should be used as fix-up, so the actual
-> content of the commit message is not relevant
-> 
+Tests ok, and looks good to me:
 
-
-aha, OK. Yes, a fixup would be nice.
-
-
-thanks,
--- 
-John Hubbard
-NVIDIA
+Reviewed-by: Dan Williams <dan.j.williams@intel.com>
