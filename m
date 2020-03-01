@@ -2,111 +2,61 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 749941752FD
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2020 06:11:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 04BC717538A
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2020 07:13:29 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726968AbgCBFLP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Mar 2020 00:11:15 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:36946 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726545AbgCBFLO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Mar 2020 00:11:14 -0500
-Received: by mail-il1-f199.google.com with SMTP id e70so2378156ill.4
-        for <linux-s390@vger.kernel.org>; Sun, 01 Mar 2020 21:11:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=rVXWG6I2Docu/l6TEelQQ6kA2g+m3kqyIZlYlybmkwo=;
-        b=TZizBrIhDioaaxcHFosRS6dAiG4HO5TakCgVM+yfaeGvf6sY+zthKmf2af4tBN/nRb
-         K4oFQLIZl9jxjhrjhjZ7sw2ipRtRToh8fuKAAlHETZiY/XpjkxVmGM+iZkk1svxtwpGd
-         mg8R8DuK6NhcBe7lQqo1VM3FYCdsCC+/DSIjTI6msBr1aAN07Mg6PwZ0deZ+LU1ZuJMM
-         pbmUvVqVa6ahUi6P19P4jvz/KRaIM3/voeeIOQaioHRB+NjHH5Sz7rj3SaoUirJBnkJD
-         mkFVl8U7rDO08IWFdwKnR6vE6o8AiUyMcGKUES1XE/oKH6h/uNsgAZB8KwVhZ/yfDAbl
-         s+gA==
-X-Gm-Message-State: APjAAAVU56aXyJTgI9m9SJlIVrEegvC0BLxK9DU6PZX1qHMzql+0KGQf
-        qfVDh88AFp1XzqieOUNn8rz1iJJme3PINve10Nbpah99Zmzk
-X-Google-Smtp-Source: APXvYqzSc8GFjXA/MA2ZmJf4WdSfc+oPzmo1obgWuI1E/TAeLQhVwX4Lovym2prkbzqMESaqM5uZyT9kuTbPIiV1PcLWyrdKBa6F
+        id S1726282AbgCBGN0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Mar 2020 01:13:26 -0500
+Received: from mail.dsns.gov.ua ([194.0.148.101]:47304 "EHLO mail.dsns.gov.ua"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725446AbgCBGNZ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 2 Mar 2020 01:13:25 -0500
+X-Greylist: delayed 25093 seconds by postgrey-1.27 at vger.kernel.org; Mon, 02 Mar 2020 01:13:21 EST
+Received: from localhost (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id BBE291FC7B1A;
+        Sun,  1 Mar 2020 22:27:30 +0200 (EET)
+Received: from mail.dsns.gov.ua ([127.0.0.1])
+        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10032)
+        with ESMTP id S75rTB7JEydT; Sun,  1 Mar 2020 22:27:30 +0200 (EET)
+Received: from localhost (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id 5BA411FA620B;
+        Sun,  1 Mar 2020 22:21:45 +0200 (EET)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.dsns.gov.ua 5BA411FA620B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=dsns.gov.ua;
+        s=1E60DAC0-2607-11E9-81E6-7A77C2B36653; t=1583094106;
+        bh=njlCkWFc0hcw8eBX6ul4CN7Q0eDgIqGtksJn7ge99kc=;
+        h=Date:From:Message-ID:MIME-Version;
+        b=MNqv7wxPb5ptLZpegGrPa1iHEdOJdTNOKGb2U9Q58t3BFdT49XFh6vgS/zn8rC/5g
+         kv0SFE7rEwzovJv/Mhtz0k+GVvpPt7OCD6QywRS3XLVVTQ78OZWx7bJkET3c0Qby4R
+         GlMOw+XvvGVgeWiXN9SkeMoUw7yQdk4qHeiKR3brBdFqXyTdhi1fcOA0x5ea9y4Mdf
+         uJ+lLv+3ajPY0nYC6Y5zKKiMiGl1+zwhzFU1RmzBc/0/750Vn7x0OrSXsrCa3svrBg
+         LELzoQhKe29LUs7spnxLrcWYu/C9WVYycts6au+voFgGIbvN7QkHkUp9tFmmQWi/eZ
+         UlVPHz07I6+5Q==
+X-Virus-Scanned: amavisd-new at dsns.gov.ua
+Received: from mail.dsns.gov.ua ([127.0.0.1])
+        by localhost (mail.dsns.gov.ua [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id 6j_p4uF_JICh; Sun,  1 Mar 2020 22:21:45 +0200 (EET)
+Received: from mail.dsns.gov.ua (localhost [127.0.0.1])
+        by mail.dsns.gov.ua (Postfix) with ESMTP id A04FF1FC5450;
+        Sun,  1 Mar 2020 21:59:28 +0200 (EET)
+Date:   Sun, 1 Mar 2020 21:59:28 +0200 (EET)
+From:   Peter Wong <sport08@dsns.gov.ua>
+Reply-To: petrwong@hotmail.com
+Message-ID: <464635221.3674166.1583092768623.JavaMail.zimbra@dsns.gov.ua>
+Subject: Hello
 MIME-Version: 1.0
-X-Received: by 2002:a92:798d:: with SMTP id u135mr15743801ilc.49.1583125872396;
- Sun, 01 Mar 2020 21:11:12 -0800 (PST)
-Date:   Sun, 01 Mar 2020 21:11:12 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000004251e4059fd83720@google.com>
-Subject: WARNING: ODEBUG bug in smc_ib_remove_dev
-From:   syzbot <syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kgraul@linux.ibm.com, kuba@kernel.org,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        ubraun@linux.ibm.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [5.154.174.49, 172.68.102.151]
+X-Mailer: Zimbra 8.8.15_GA_3899 (zclient/8.8.15_GA_3899)
+Thread-Index: 3O/8ccrlbZdxQ9U2SgkVgLNKDcW1Og==
+Thread-Topic: Hello
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    63623fd4 Merge tag 'for-linus' of git://git.kernel.org/pub..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=12873645e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=9833e26bab355358
-dashboard link: https://syzkaller.appspot.com/bug?extid=b297c6825752e7a07272
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-ODEBUG: free active (active state 0) object type: work_struct hint: smc_ib_port_event_work+0x0/0x350 net/smc/smc_ib.c:312
-WARNING: CPU: 0 PID: 14236 at lib/debugobjects.c:485 debug_print_object+0x168/0x250 lib/debugobjects.c:485
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 14236 Comm: kworker/u4:10 Not tainted 5.6.0-rc3-syzkaller #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Workqueue: events_unbound ib_unregister_work
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x197/0x210 lib/dump_stack.c:118
- panic+0x2e3/0x75c kernel/panic.c:221
- __warn.cold+0x2f/0x3e kernel/panic.c:582
- report_bug+0x289/0x300 lib/bug.c:195
- fixup_bug arch/x86/kernel/traps.c:174 [inline]
- fixup_bug arch/x86/kernel/traps.c:169 [inline]
- do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:267
- do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:286
- invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1027
-RIP: 0010:debug_print_object+0x168/0x250 lib/debugobjects.c:485
-Code: dd 00 e7 91 88 48 89 fa 48 c1 ea 03 80 3c 02 00 0f 85 b5 00 00 00 48 8b 14 dd 00 e7 91 88 48 c7 c7 60 dc 91 88 e8 07 6e 9f fd <0f> 0b 83 05 03 6c ff 06 01 48 83 c4 20 5b 41 5c 41 5d 41 5e 5d c3
-RSP: 0018:ffffc90001807ae0 EFLAGS: 00010086
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff815ebe46 RDI: fffff52000300f4e
-RBP: ffffc90001807b20 R08: ffff8880485a61c0 R09: ffffed1015d045c9
-R10: ffffed1015d045c8 R11: ffff8880ae822e43 R12: 0000000000000001
-R13: ffffffff89b7a220 R14: ffffffff814c8610 R15: ffff88806058e348
- __debug_check_no_obj_freed lib/debugobjects.c:967 [inline]
- debug_check_no_obj_freed+0x2d6/0x441 lib/debugobjects.c:998
- kfree+0xf8/0x2c0 mm/slab.c:3756
- smc_ib_remove_dev+0x1a9/0x2e0 net/smc/smc_ib.c:583
- remove_client_context+0xc7/0x120 drivers/infiniband/core/device.c:724
- disable_device+0x14c/0x230 drivers/infiniband/core/device.c:1268
- __ib_unregister_device+0x9c/0x190 drivers/infiniband/core/device.c:1435
- ib_unregister_work+0x19/0x30 drivers/infiniband/core/device.c:1545
- process_one_work+0xa05/0x17a0 kernel/workqueue.c:2264
- worker_thread+0x98/0xe40 kernel/workqueue.c:2410
- kthread+0x361/0x430 kernel/kthread.c:255
- ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Can we talk now?
