@@ -2,174 +2,123 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 87F73175DAC
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2020 15:57:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7AB8A176318
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2020 19:47:33 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727113AbgCBO5J (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Mar 2020 09:57:09 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44004 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727137AbgCBO5J (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Mar 2020 09:57:09 -0500
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 022EsNj9100324
-        for <linux-s390@vger.kernel.org>; Mon, 2 Mar 2020 09:57:08 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfnccmtwj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 02 Mar 2020 09:57:08 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Mon, 2 Mar 2020 14:57:06 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 2 Mar 2020 14:57:01 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 022Ev0Pt23396720
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 2 Mar 2020 14:57:00 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2A225AE051;
-        Mon,  2 Mar 2020 14:57:00 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 08EFBAE053;
-        Mon,  2 Mar 2020 14:56:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.229.179])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  2 Mar 2020 14:56:58 +0000 (GMT)
-Subject: Re: [PATCH] ima: add a new CONFIG for loading arch-specific policies
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Ard Biesheuvel <ardb@kernel.org>
-Cc:     Nayna Jain <nayna@linux.ibm.com>,
-        linux-integrity <linux-integrity@vger.kernel.org>,
+        id S1727408AbgCBSr0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Mar 2020 13:47:26 -0500
+Received: from ale.deltatee.com ([207.54.116.67]:56870 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726451AbgCBSr0 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 2 Mar 2020 13:47:26 -0500
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.92)
+        (envelope-from <logang@deltatee.com>)
+        id 1j8q54-0005pv-89; Mon, 02 Mar 2020 11:46:19 -0700
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-ia64@vger.kernel.org,
         linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Date:   Mon, 02 Mar 2020 09:56:58 -0500
-In-Reply-To: <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
-References: <1582744207-25969-1-git-send-email-nayna@linux.ibm.com>
-         <1583160524.8544.91.camel@linux.ibm.com>
-         <CAKv+Gu_E9O05xB7i2Y8KiMJUjtZoq54GxSbHnyTFePcF6fqQNA@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20030214-0020-0000-0000-000003AF9FA8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030214-0021-0000-0000-00002207CB39
-Message-Id: <1583161018.8544.96.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-02_05:2020-03-02,2020-03-02 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- priorityscore=1501 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015
- impostorscore=0 mlxlogscore=999 spamscore=0 malwarescore=0 phishscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003020110
+        Linux-sh <linux-sh@vger.kernel.org>,
+        platform-driver-x86@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Christoph Hellwig <hch@lst.de>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Eric Badger <ebadger@gigaio.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>
+References: <20200221182503.28317-1-logang@deltatee.com>
+ <20200221182503.28317-5-logang@deltatee.com>
+ <CAPcyv4j=bZ5KBPp6PbViERdDe+HZpV_W6qbSJupTNAzyfiK6xg@mail.gmail.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <1be997b0-e17a-5d48-efad-a01d84d5e496@deltatee.com>
+Date:   Mon, 2 Mar 2020 11:46:13 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <CAPcyv4j=bZ5KBPp6PbViERdDe+HZpV_W6qbSJupTNAzyfiK6xg@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: x86@kernel.org, hpa@zytor.com, ebadger@gigaio.com, peterz@infradead.org, luto@kernel.org, dave.hansen@linux.intel.com, bp@alien8.de, mingo@redhat.com, tglx@linutronix.de, benh@kernel.crashing.org, will@kernel.org, catalin.marinas@arm.com, hch@lst.de, akpm@linux-foundation.org, david@redhat.com, mhocko@kernel.org, linux-mm@kvack.org, platform-driver-x86@vger.kernel.org, linux-sh@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-ia64@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dan.j.williams@intel.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+X-Spam-Checker-Version: SpamAssassin 3.4.2 (2018-09-13) on ale.deltatee.com
+X-Spam-Level: 
+X-Spam-Status: No, score=-6.9 required=5.0 tests=ALL_TRUSTED,BAYES_00,
+        SURBL_BLOCKED,URIBL_BLOCKED autolearn=ham autolearn_force=no
+        version=3.4.2
+Subject: Re: [PATCH v3 4/7] x86/mm: Introduce _set_memory_prot()
+X-SA-Exim-Version: 4.2.1 (built Wed, 08 May 2019 21:11:16 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 2020-03-02 at 15:52 +0100, Ard Biesheuvel wrote:
-> On Mon, 2 Mar 2020 at 15:48, Mimi Zohar <zohar@linux.ibm.com> wrote:
-> >
-> > On Wed, 2020-02-26 at 14:10 -0500, Nayna Jain wrote:
-> > > Every time a new architecture defines the IMA architecture specific
-> > > functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
-> > > include file needs to be updated. To avoid this "noise", this patch
-> > > defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
-> > > the different architectures to select it.
-> > >
-> > > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> > > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> > > Cc: Ard Biesheuvel <ardb@kernel.org>
-> > > Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-> > > Cc: Philipp Rudo <prudo@linux.ibm.com>
-> > > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > > ---
-> > >  arch/powerpc/Kconfig           | 2 +-
-> > >  arch/s390/Kconfig              | 1 +
-> > >  arch/x86/Kconfig               | 1 +
-> > >  include/linux/ima.h            | 3 +--
-> > >  security/integrity/ima/Kconfig | 9 +++++++++
-> > >  5 files changed, 13 insertions(+), 3 deletions(-)
-> > >
-> > > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > > index 497b7d0b2d7e..b8ce1b995633 100644
-> > > --- a/arch/powerpc/Kconfig
-> > > +++ b/arch/powerpc/Kconfig
-> > > @@ -246,6 +246,7 @@ config PPC
-> > >       select SYSCTL_EXCEPTION_TRACE
-> > >       select THREAD_INFO_IN_TASK
-> > >       select VIRT_TO_BUS                      if !PPC64
-> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if PPC_SECURE_BOOT
-> > >       #
-> > >       # Please keep this list sorted alphabetically.
-> > >       #
-> > > @@ -978,7 +979,6 @@ config PPC_SECURE_BOOT
-> > >       prompt "Enable secure boot support"
-> > >       bool
-> > >       depends on PPC_POWERNV
-> > > -     depends on IMA_ARCH_POLICY
-> > >       help
-> > >         Systems with firmware secure boot enabled need to define security
-> > >         policies to extend secure boot to the OS. This config allows a user
-> > > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-> > > index 8abe77536d9d..90ff3633ade6 100644
-> > > --- a/arch/s390/Kconfig
-> > > +++ b/arch/s390/Kconfig
-> > > @@ -195,6 +195,7 @@ config S390
-> > >       select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-> > >       select SWIOTLB
-> > >       select GENERIC_ALLOCATOR
-> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT
-> > >
-> > >
-> > >  config SCHED_OMIT_FRAME_POINTER
-> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> > > index beea77046f9b..cafa66313fe2 100644
-> > > --- a/arch/x86/Kconfig
-> > > +++ b/arch/x86/Kconfig
-> > > @@ -230,6 +230,7 @@ config X86
-> > >       select VIRT_TO_BUS
-> > >       select X86_FEATURE_NAMES                if PROC_FS
-> > >       select PROC_PID_ARCH_STATUS             if PROC_FS
-> > > +     select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI
-> >
-> > Not everyone is interested in enabling IMA or requiring IMA runtime
-> > policies.  With this patch, enabling IMA_ARCH_POLICY is therefore
-> > still left up to the person building the kernel.  As a result, I'm
-> > seeing the following warning, which is kind of cool.
-> >
-> > WARNING: unmet direct dependencies detected for
-> > IMA_SECURE_AND_OR_TRUSTED_BOOT
-> >   Depends on [n]: INTEGRITY [=y] && IMA [=y] && IMA_ARCH_POLICY [=n]
-> >   Selected by [y]:
-> >   - X86 [=y] && EFI [=y]
-> >
-> > Ard, Michael, Martin, just making sure this type of warning is
-> > acceptable before upstreaming this patch.  I would appreciate your
-> > tags.
-> >
-> 
-> Ehm, no, warnings like these are not really acceptable. It means there
-> is an inconsistency in the way the Kconfig dependencies are defined.
-> 
-> Does this help:
-> 
->   select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
-> 
-> ?
 
-Yes, that's fine for x86.  Michael, Martin, do you want something
-similar or would you prefer actually selecting IMA_ARCH_POLICY?
 
-Mimi
+On 2020-02-29 3:33 p.m., Dan Williams wrote:
+> On Fri, Feb 21, 2020 at 10:25 AM Logan Gunthorpe <logang@deltatee.com> wrote:
+>>
+>> For use in the 32bit arch_add_memory() to set the pgprot type of the
+>> memory to add.
+>>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: x86@kernel.org
+>> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+>> Cc: Andy Lutomirski <luto@kernel.org>
+>> Cc: Peter Zijlstra <peterz@infradead.org>
+>> Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+>> ---
+>>  arch/x86/include/asm/set_memory.h | 1 +
+>>  arch/x86/mm/pat/set_memory.c      | 7 +++++++
+>>  2 files changed, 8 insertions(+)
+>>
+>> diff --git a/arch/x86/include/asm/set_memory.h b/arch/x86/include/asm/set_memory.h
+>> index 64c3dce374e5..0aca959cf9a4 100644
+>> --- a/arch/x86/include/asm/set_memory.h
+>> +++ b/arch/x86/include/asm/set_memory.h
+>> @@ -34,6 +34,7 @@
+>>   * The caller is required to take care of these.
+>>   */
+>>
+>> +int _set_memory_prot(unsigned long addr, int numpages, pgprot_t prot);
+> 
+> I wonder if this should be separated from the naming convention of the
+> other routines because this is only an internal helper for code paths
+> where the prot was established by an upper layer. For example, I
+> expect that the kernel does not want new usages to make the mistake of
+> calling:
+> 
+>    _set_memory_prot(..., pgprot_writecombine(pgprot))
+> 
+> ...instead of
+> 
+>     _set_memory_wc()
+> 
+> I'm thinking just a double underscore rename (__set_memory_prot) and a
+> kerneldoc comment for that  pointing people to use the direct
+> _set_memory_<cachemode> helpers.
 
+Thanks! Will do. Note, though, that even _set_memory_wc() is an internal
+x86-specific function. But the extra comment and underscore still make
+sense.
+
+> With that you can add:
+> 
+> Reviewed-by: Dan Williams <dan.j.williams@intel.com>
+> 
