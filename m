@@ -2,319 +2,70 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B5C6717540F
-	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2020 07:48:24 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D78AC175C04
+	for <lists+linux-s390@lfdr.de>; Mon,  2 Mar 2020 14:46:59 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726545AbgCBGsY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Mar 2020 01:48:24 -0500
-Received: from foss.arm.com ([217.140.110.172]:56786 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725911AbgCBGsY (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 2 Mar 2020 01:48:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CA3EC1045;
-        Sun,  1 Mar 2020 22:48:22 -0800 (PST)
-Received: from p8cg001049571a15.arm.com (unknown [10.163.1.119])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 439B13F6CF;
-        Sun,  1 Mar 2020 22:52:09 -0800 (PST)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-To:     linux-mm@kvack.org
-Cc:     Anshuman Khandual <anshuman.khandual@arm.com>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Salter <msalter@redhat.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Rob Springer <rspringer@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        nios2-dev@lists.rocketboards.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: [RFC 2/3] mm/vma: Introduce VM_ACCESS_FLAGS
-Date:   Mon,  2 Mar 2020 12:17:45 +0530
-Message-Id: <1583131666-15531-3-git-send-email-anshuman.khandual@arm.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1583131666-15531-1-git-send-email-anshuman.khandual@arm.com>
-References: <1583131666-15531-1-git-send-email-anshuman.khandual@arm.com>
+        id S1726829AbgCBNq7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Mar 2020 08:46:59 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44922 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbgCBNq6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 2 Mar 2020 08:46:58 -0500
+Received: by mail-wr1-f66.google.com with SMTP id n7so4755026wrt.11;
+        Mon, 02 Mar 2020 05:46:57 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=EsNI7T8fx9/zJXjOHaygab/3xTyRqQbHWTw10t+dBzA=;
+        b=jZZiwCACFxH1dWhm1nAaqz/yKHB7KknhPpSizcZguUpTair8VZuvNld6PdLyqo9uMH
+         VC5PFVLz3nYJT4Af2BJA7gam3vS3rFpLSJvFumgWCJy0RxA2KFHjUh+M4140Sk+YH64O
+         HEqZr7E57HSROrw4ZfnvRYqKu84pmKSc2O9s1Dzl0XclO3AibWqkYEAtg+Jn4b4ckwbY
+         ulNGxRXlDIcR/vfLaY37y10GGYXPMKc3sgcDn8v8CHEvqdsHWCq1jJuuNd6v7Fsn0OYA
+         18sK8C4I97WRv3mx9TnwjGdMix8FOTp20C//OlgOhonvNichSIjJ4x8THVi/KVTtYgdM
+         3nzw==
+X-Gm-Message-State: ANhLgQ1IeTfJ6SSFkme+reMSANyEb8sR7JWeKUo5aEbJswPpIjm71zyY
+        QGya1Ax74E7stqsbbMkxRq4FhUYF
+X-Google-Smtp-Source: ADFU+vsk/lNuhHwpxpNwBVIC3coW7NDluM9AGC/3y86Bm7OKnhdIXSzQoDViXc7JHCsYkjCUFwi+xQ==
+X-Received: by 2002:a5d:5643:: with SMTP id j3mr9174610wrw.337.1583156816652;
+        Mon, 02 Mar 2020 05:46:56 -0800 (PST)
+Received: from localhost (prg-ext-pat.suse.com. [213.151.95.130])
+        by smtp.gmail.com with ESMTPSA id z2sm23174843wrq.95.2020.03.02.05.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 02 Mar 2020 05:46:55 -0800 (PST)
+Date:   Mon, 2 Mar 2020 14:46:55 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [RFC v1 1/2] mm/gup: fixup for 9947ea2c1e608e32 "mm/gup: track
+ FOLL_PIN pages"
+Message-ID: <20200302134655.GL4380@dhcp22.suse.cz>
+References: <20200228154322.329228-1-imbrenda@linux.ibm.com>
+ <20200228154322.329228-3-imbrenda@linux.ibm.com>
+ <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c98038da-cf52-27f5-1aed-b69287a5dec0@nvidia.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-There are many places where all basic VMA access flags (read, write, exec)
-are initialized or checked against as a group. One such example is during
-page fault. Existing vma_is_accessible() wrapper already creates the notion
-of VMA accessibility as a group access permissions. Hence lets just create
-VM_ACCESS_FLAGS (VM_READ|VM_WRITE|VM_EXEC) which will not only reduce code
-duplication but also extend the VMA accessibility concept in general.
+On Fri 28-02-20 15:08:35, John Hubbard wrote:
+[...]
+> (Aside: I'm using the linux-next commit hash. How does one get the correct hash before
+> it goes to mainline? I guess maintainer scripts fix all those up?)
 
-Cc: Russell King <linux@armlinux.org.uk>
-CC: Catalin Marinas <catalin.marinas@arm.com>
-CC: Mark Salter <msalter@redhat.com>
-Cc: Nick Hu <nickhu@andestech.com>
-CC: Ley Foon Tan <ley.foon.tan@intel.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Cc: Guan Xuetao <gxt@pku.edu.cn>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Rob Springer <rspringer@google.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-c6x-dev@linux-c6x.org
-Cc: nios2-dev@lists.rocketboards.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-s390@vger.kernel.org
-Cc: linux-sh@vger.kernel.org
-Cc: devel@driverdev.osuosl.org
-Cc: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
----
- arch/arm/mm/fault.c                  | 2 +-
- arch/arm64/mm/fault.c                | 2 +-
- arch/c6x/include/asm/processor.h     | 2 +-
- arch/nds32/mm/fault.c                | 2 +-
- arch/nios2/include/asm/processor.h   | 2 +-
- arch/powerpc/mm/book3s64/pkeys.c     | 2 +-
- arch/s390/mm/fault.c                 | 2 +-
- arch/sh/include/asm/processor_64.h   | 2 +-
- arch/unicore32/mm/fault.c            | 2 +-
- arch/x86/mm/pkeys.c                  | 2 +-
- drivers/staging/gasket/gasket_core.c | 2 +-
- include/linux/mm.h                   | 4 +++-
- mm/mmap.c                            | 4 ++--
- mm/mprotect.c                        | 7 +++----
- 14 files changed, 19 insertions(+), 18 deletions(-)
-
-diff --git a/arch/arm/mm/fault.c b/arch/arm/mm/fault.c
-index bd0f4821f7e1..2c71028d9d6b 100644
---- a/arch/arm/mm/fault.c
-+++ b/arch/arm/mm/fault.c
-@@ -189,7 +189,7 @@ void do_bad_area(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
-  */
- static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
- {
--	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
-+	unsigned int mask = VM_ACCESS_FLAGS;
- 
- 	if ((fsr & FSR_WRITE) && !(fsr & FSR_CM))
- 		mask = VM_WRITE;
-diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
-index 85566d32958f..63f31206a12e 100644
---- a/arch/arm64/mm/fault.c
-+++ b/arch/arm64/mm/fault.c
-@@ -445,7 +445,7 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
- 	const struct fault_info *inf;
- 	struct mm_struct *mm = current->mm;
- 	vm_fault_t fault, major = 0;
--	unsigned long vm_flags = VM_READ | VM_WRITE | VM_EXEC;
-+	unsigned long vm_flags = VM_ACCESS_FLAGS;
- 	unsigned int mm_flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
- 
- 	if (kprobe_page_fault(regs, esr))
-diff --git a/arch/c6x/include/asm/processor.h b/arch/c6x/include/asm/processor.h
-index 1456f5e11de3..77372b8c28d7 100644
---- a/arch/c6x/include/asm/processor.h
-+++ b/arch/c6x/include/asm/processor.h
-@@ -57,7 +57,7 @@ struct thread_struct {
- }
- 
- #define INIT_MMAP { \
--	&init_mm, 0, 0, NULL, PAGE_SHARED, VM_READ | VM_WRITE | VM_EXEC, 1, \
-+	&init_mm, 0, 0, NULL, PAGE_SHARED, VM_ACCESS_FLAGS, 1, \
- 	NULL, NULL }
- 
- #define task_pt_regs(task) \
-diff --git a/arch/nds32/mm/fault.c b/arch/nds32/mm/fault.c
-index 906dfb25353c..55387a31bf42 100644
---- a/arch/nds32/mm/fault.c
-+++ b/arch/nds32/mm/fault.c
-@@ -79,7 +79,7 @@ void do_page_fault(unsigned long entry, unsigned long addr,
- 	struct vm_area_struct *vma;
- 	int si_code;
- 	vm_fault_t fault;
--	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
-+	unsigned int mask = VM_ACCESS_FLAGS;
- 	unsigned int flags = FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_KILLABLE;
- 
- 	error_code = error_code & (ITYPE_mskINST | ITYPE_mskETYPE);
-diff --git a/arch/nios2/include/asm/processor.h b/arch/nios2/include/asm/processor.h
-index 94bcb86f679f..fbfb3ab14cfc 100644
---- a/arch/nios2/include/asm/processor.h
-+++ b/arch/nios2/include/asm/processor.h
-@@ -51,7 +51,7 @@ struct thread_struct {
- };
- 
- #define INIT_MMAP \
--	{ &init_mm, (0), (0), __pgprot(0x0), VM_READ | VM_WRITE | VM_EXEC }
-+	{ &init_mm, (0), (0), __pgprot(0x0), VM_ACCESS_FLAGS }
- 
- # define INIT_THREAD {			\
- 	.kregs	= NULL,			\
-diff --git a/arch/powerpc/mm/book3s64/pkeys.c b/arch/powerpc/mm/book3s64/pkeys.c
-index 59e0ebbd8036..11fd52b24f68 100644
---- a/arch/powerpc/mm/book3s64/pkeys.c
-+++ b/arch/powerpc/mm/book3s64/pkeys.c
-@@ -315,7 +315,7 @@ int __execute_only_pkey(struct mm_struct *mm)
- static inline bool vma_is_pkey_exec_only(struct vm_area_struct *vma)
- {
- 	/* Do this check first since the vm_flags should be hot */
--	if ((vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC)) != VM_EXEC)
-+	if ((vma->vm_flags & VM_ACCESS_FLAGS) != VM_EXEC)
- 		return false;
- 
- 	return (vma_pkey(vma) == vma->vm_mm->context.execute_only_pkey);
-diff --git a/arch/s390/mm/fault.c b/arch/s390/mm/fault.c
-index 7b0bb475c166..b2cb3c0d0e1a 100644
---- a/arch/s390/mm/fault.c
-+++ b/arch/s390/mm/fault.c
-@@ -584,7 +584,7 @@ void do_dat_exception(struct pt_regs *regs)
- 	int access;
- 	vm_fault_t fault;
- 
--	access = VM_READ | VM_EXEC | VM_WRITE;
-+	access = VM_ACCESS_FLAGS;
- 	fault = do_exception(regs, access);
- 	if (unlikely(fault))
- 		do_fault_error(regs, access, fault);
-diff --git a/arch/sh/include/asm/processor_64.h b/arch/sh/include/asm/processor_64.h
-index 53efc9f51ef1..3b8187284e3f 100644
---- a/arch/sh/include/asm/processor_64.h
-+++ b/arch/sh/include/asm/processor_64.h
-@@ -121,7 +121,7 @@ struct thread_struct {
- };
- 
- #define INIT_MMAP \
--{ &init_mm, 0, 0, NULL, PAGE_SHARED, VM_READ | VM_WRITE | VM_EXEC, 1, NULL, NULL }
-+{ &init_mm, 0, 0, NULL, PAGE_SHARED, VM_ACCESS_FLAGS, 1, NULL, NULL }
- 
- #define INIT_THREAD  {				\
- 	.sp		= sizeof(init_stack) +	\
-diff --git a/arch/unicore32/mm/fault.c b/arch/unicore32/mm/fault.c
-index 76342de9cf8c..fc27c274d358 100644
---- a/arch/unicore32/mm/fault.c
-+++ b/arch/unicore32/mm/fault.c
-@@ -149,7 +149,7 @@ void do_bad_area(unsigned long addr, unsigned int fsr, struct pt_regs *regs)
-  */
- static inline bool access_error(unsigned int fsr, struct vm_area_struct *vma)
- {
--	unsigned int mask = VM_READ | VM_WRITE | VM_EXEC;
-+	unsigned int mask = VM_ACCESS_FLAGS;
- 
- 	if (!(fsr ^ 0x12))	/* write? */
- 		mask = VM_WRITE;
-diff --git a/arch/x86/mm/pkeys.c b/arch/x86/mm/pkeys.c
-index c6f84c0b5d7a..8873ed1438a9 100644
---- a/arch/x86/mm/pkeys.c
-+++ b/arch/x86/mm/pkeys.c
-@@ -63,7 +63,7 @@ int __execute_only_pkey(struct mm_struct *mm)
- static inline bool vma_is_pkey_exec_only(struct vm_area_struct *vma)
- {
- 	/* Do this check first since the vm_flags should be hot */
--	if ((vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC)) != VM_EXEC)
-+	if ((vma->vm_flags & VM_ACCESS_FLAGS) != VM_EXEC)
- 		return false;
- 	if (vma_pkey(vma) != vma->vm_mm->context.execute_only_pkey)
- 		return false;
-diff --git a/drivers/staging/gasket/gasket_core.c b/drivers/staging/gasket/gasket_core.c
-index be6b50f454b4..81bb7d58dc49 100644
---- a/drivers/staging/gasket/gasket_core.c
-+++ b/drivers/staging/gasket/gasket_core.c
-@@ -689,7 +689,7 @@ static bool gasket_mmap_has_permissions(struct gasket_dev *gasket_dev,
- 
- 	/* Make sure that no wrong flags are set. */
- 	requested_permissions =
--		(vma->vm_flags & (VM_WRITE | VM_READ | VM_EXEC));
-+		(vma->vm_flags & VM_ACCESS_FLAGS);
- 	if (requested_permissions & ~(bar_permissions)) {
- 		dev_dbg(gasket_dev->dev,
- 			"Attempting to map a region with requested permissions "
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 7a764ae6ab68..525026df1e58 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -368,6 +368,8 @@ extern unsigned int kobjsize(const void *objp);
- #endif
- 
- #define VM_STACK_FLAGS	(VM_STACK | VM_STACK_DEFAULT_FLAGS | VM_ACCOUNT)
-+#define VM_ACCESS_FLAGS (VM_READ | VM_WRITE | VM_EXEC)
-+
- 
- /*
-  * Special vmas that are non-mergable, non-mlock()able.
-@@ -558,7 +560,7 @@ static inline bool vma_is_anonymous(struct vm_area_struct *vma)
- 
- static inline bool vma_is_accessible(struct vm_area_struct *vma)
- {
--	return vma->vm_flags & (VM_READ | VM_WRITE | VM_EXEC);
-+	return vma->vm_flags & VM_ACCESS_FLAGS;
- }
- 
- #ifdef CONFIG_SHMEM
-diff --git a/mm/mmap.c b/mm/mmap.c
-index 0d295f49b24d..f9a01763857b 100644
---- a/mm/mmap.c
-+++ b/mm/mmap.c
-@@ -106,7 +106,7 @@ static inline pgprot_t arch_filter_pgprot(pgprot_t prot)
- pgprot_t vm_get_page_prot(unsigned long vm_flags)
- {
- 	pgprot_t ret = __pgprot(pgprot_val(protection_map[vm_flags &
--				(VM_READ|VM_WRITE|VM_EXEC|VM_SHARED)]) |
-+				(VM_ACCESS_FLAGS | VM_SHARED)]) |
- 			pgprot_val(arch_vm_get_page_prot(vm_flags)));
- 
- 	return arch_filter_pgprot(ret);
-@@ -1221,7 +1221,7 @@ static int anon_vma_compatible(struct vm_area_struct *a, struct vm_area_struct *
- 	return a->vm_end == b->vm_start &&
- 		mpol_equal(vma_policy(a), vma_policy(b)) &&
- 		a->vm_file == b->vm_file &&
--		!((a->vm_flags ^ b->vm_flags) & ~(VM_READ|VM_WRITE|VM_EXEC|VM_SOFTDIRTY)) &&
-+		!((a->vm_flags ^ b->vm_flags) & ~(VM_ACCESS_FLAGS | VM_SOFTDIRTY)) &&
- 		b->vm_pgoff == a->vm_pgoff + ((b->vm_start - a->vm_start) >> PAGE_SHIFT);
- }
- 
-diff --git a/mm/mprotect.c b/mm/mprotect.c
-index 7a8e84f86831..4921a4211c6b 100644
---- a/mm/mprotect.c
-+++ b/mm/mprotect.c
-@@ -359,7 +359,7 @@ mprotect_fixup(struct vm_area_struct *vma, struct vm_area_struct **pprev,
- 	 */
- 	if (arch_has_pfn_modify_check() &&
- 	    (vma->vm_flags & (VM_PFNMAP|VM_MIXEDMAP)) &&
--	    (newflags & (VM_READ|VM_WRITE|VM_EXEC)) == 0) {
-+	    (newflags & VM_ACCESS_FLAGS) == 0) {
- 		pgprot_t new_pgprot = vm_get_page_prot(newflags);
- 
- 		error = walk_page_range(current->mm, start, end,
-@@ -530,15 +530,14 @@ static int do_mprotect_pkey(unsigned long start, size_t len,
- 		 * If a permission is not passed to mprotect(), it must be
- 		 * cleared from the VMA.
- 		 */
--		mask_off_old_flags = VM_READ | VM_WRITE | VM_EXEC |
--					VM_FLAGS_CLEAR;
-+		mask_off_old_flags = VM_ACCESS_FLAGS | VM_FLAGS_CLEAR;
- 
- 		new_vma_pkey = arch_override_mprotect_pkey(vma, prot, pkey);
- 		newflags = calc_vm_prot_bits(prot, new_vma_pkey);
- 		newflags |= (vma->vm_flags & ~mask_off_old_flags);
- 
- 		/* newflags >> 4 shift VM_MAY% in place of VM_% */
--		if ((newflags & ~(newflags >> 4)) & (VM_READ | VM_WRITE | VM_EXEC)) {
-+		if ((newflags & ~(newflags >> 4)) & VM_ACCESS_FLAGS) {
- 			error = -EACCES;
- 			goto out;
- 		}
+There is no such maging going on AFAIK. Please just do not use sha1 from
+linux-next unless it is really clear that those are not going to change.
+So essentially everything from mmotm is out of question.
 -- 
-2.20.1
-
+Michal Hocko
+SUSE Labs
