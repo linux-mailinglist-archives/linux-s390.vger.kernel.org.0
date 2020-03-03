@@ -2,127 +2,264 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 63B591770C4
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2020 09:07:43 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 879311771FC
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2020 10:08:13 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727769AbgCCIHn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 3 Mar 2020 03:07:43 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:28616 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727600AbgCCIHm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Mar 2020 03:07:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1583222862;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=0aX36qOPt/yCnRhWmF9+GTZakm9TiWMX2SbH+lEYOq4=;
-        b=PbsJqiG38CpND1nAPdg/tPMFyYpP6VELPJq8AhEF+s9TdZTW0/7GFIGvNeQQ9kmbXngYgL
-        S236yQpos+eKOrQ+FcbPOpfletIo11W3Sfaglq0tpNqMvlOYNdMTle4RimlX7zOxEmfjOn
-        WyL3TkmOOwUbMLVd1ohqNCO63jV4Scc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-L8avuwzQO1eW5hKaU4mqWQ-1; Tue, 03 Mar 2020 03:07:38 -0500
-X-MC-Unique: L8avuwzQO1eW5hKaU4mqWQ-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4B7F418FF671;
-        Tue,  3 Mar 2020 08:07:36 +0000 (UTC)
-Received: from [10.36.117.113] (ovpn-117-113.ams2.redhat.com [10.36.117.113])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2F67B385;
-        Tue,  3 Mar 2020 08:07:33 +0000 (UTC)
-Subject: Re: [PATCH v2 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        linux-next@vger.kernel.org, akpm@linux-foundation.org,
-        jack@suse.cz, kirill@shutemov.name
-Cc:     borntraeger@de.ibm.com, aarcange@redhat.com, linux-mm@kvack.org,
-        frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Will Deacon <will@kernel.org>
-References: <20200303002506.173957-1-imbrenda@linux.ibm.com>
- <20200303002506.173957-3-imbrenda@linux.ibm.com>
- <99903e77-7720-678e-35c5-6eb9e35e7fcb@nvidia.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <21c62e25-c0f8-a9d4-5501-49fd660c6c81@redhat.com>
-Date:   Tue, 3 Mar 2020 09:07:32 +0100
+        id S1727706AbgCCJIM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 3 Mar 2020 04:08:12 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46580 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727741AbgCCJIM (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 3 Mar 2020 04:08:12 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0238xYnP139386
+        for <linux-s390@vger.kernel.org>; Tue, 3 Mar 2020 04:08:09 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yfk5mut16-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 03 Mar 2020 04:08:08 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Tue, 3 Mar 2020 09:08:06 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 3 Mar 2020 09:08:03 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 023982vG40435816
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 3 Mar 2020 09:08:02 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D18D4C04E;
+        Tue,  3 Mar 2020 09:08:02 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 44B864C05E;
+        Tue,  3 Mar 2020 09:08:02 +0000 (GMT)
+Received: from [9.145.12.79] (unknown [9.145.12.79])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  3 Mar 2020 09:08:02 +0000 (GMT)
+Subject: Re: Crashes due to "s390/qeth: don't check for IFF_UP when scheduling
+ napi"
+To:     Qian Cai <cai@lca.pw>
+Cc:     David Miller <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        ubraun@linux.ibm.com
+References: <5281E33C-21F3-4879-A539-52826D82AFBD@lca.pw>
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+Date:   Tue, 3 Mar 2020 10:08:02 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-In-Reply-To: <99903e77-7720-678e-35c5-6eb9e35e7fcb@nvidia.com>
+In-Reply-To: <5281E33C-21F3-4879-A539-52826D82AFBD@lca.pw>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030309-0016-0000-0000-000002ECA532
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030309-0017-0000-0000-0000334FEB46
+Message-Id: <713fa071-8d87-f728-371e-867e8c1438d9@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-03_02:2020-03-03,2020-03-03 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 phishscore=0
+ mlxlogscore=513 clxscore=1015 impostorscore=0 spamscore=0 malwarescore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 adultscore=0
+ suspectscore=27 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003030071
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-> Your style earlier in the patch was easier on the reader, why not stay consistent
-> with that (and with this file, which tends also to do this), so:
-> 
-> 		if (flags & FOLL_PIN) {
-> 			ret = arch_make_page_accessible(page);
-> 			if (ret) {
-> 				unpin_user_page(page);
-> 				goto pte_unmap;
-> 			}
-> 		}
+On 03.03.20 04:30, Qian Cai wrote:
+> Reverted the linux-next commit 3d35dbe6224e “s390/qeth: don't check for IFF_UP when scheduling napi”
+> fixed several crashes could happen during boot,
 > 
 
-+1
+Yep, that check did have a funny smell to it. Thanks for reporting, I think I see
+what's going on - shouldn't be difficult to fix.
 
--- 
-Thanks,
-
-David / dhildenb
+> 01: [   79.051526] XFS (dm-2): Mounting V5 Filesystem                           
+> 00: [   79.420398] XFS (dm-2): Ending clean mount                               
+> 00: [   79.439284] xfs filesystem being mounted at /home supports timestamps unt
+> 00: il 2038 (0x7fffffff)                                                        
+> 00: [   98.203218] ------------[ cut here ]------------                         
+> 00: [   98.203640] kernel BUG at include/linux/netdevice.h:516!                 
+> 00: [   98.203725] monitor event: 0040 ilc:2 [#1] SMP DEBUG_PAGEALLOC           
+> 00: [   98.203744] Modules linked in: ip_tables x_tables xfs dasd_fba_mod dasd_e
+> 00: ckd_mod dm_mirror dm_region_hash dm_log dm_mod                              
+> 00: [   98.203779] CPU: 0 PID: 1127 Comm: NetworkManager Not tainted 5.6.0-rc3-n
+> 00: ext-20200302+ #4                                                            
+> 00: [   98.203794] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)                 
+> 00: [   98.203808] Krnl PSW : 0704c00180000000 00000000309cccc4 (qeth_open+0x2f4
+> 00: /0x320)                                                                     
+> 00: [   98.203836]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:0 PM:0
+> 00:  RI:0 EA:3                                                                  
+> 00: [   98.203853] Krnl GPRS: 0000000000000001 0000000000000010 000000004eca57bf
+> 00:  000000004eca57bf                                                           
+> 00: [   98.203870]            0000030000000000 00000000309ccb02 00000000384e5400
+> 00:  00000000384e5408                                                           
+> 00: [   98.203885]            000000004eca57a8 000000004eca57b8 00000000384e5000
+> 00:  000000004eca5000                                                           
+> 00: [   98.203902]            0000000030fdd900 0000000030d78d00 00000000309ccb02
+> 00:  000003e00412ea88                                                           
+> 00: [   98.203940] Krnl Code: 00000000309cccb4: c0200052cce6        larl    %r2,
+> 00: 0000000031426680                                                            
+> 00: [   98.203940]            00000000309cccba: c0e5fff5bf4f        brasl   %r14
+> 00: ,0000000030884b58                                                           
+> 00: [   98.203940]           #00000000309cccc0: af000000            mc      0,0 
+> 00: [   98.203940]           >00000000309cccc4: c0200052ccfe        larl    %r2,
+> 00: 00000000314266c0                                                            
+> 00: [   98.203940]            00000000309cccca: c0e5fff5bf47        brasl   %r14
+> 00: ,0000000030884b58                                                           
+> 00: [   98.203940]            00000000309cccd0: a728fffb            lhi     %r2,
+> 00: -5                                                                          
+> 00: [   98.203940]            00000000309cccd4: a7f4ff55            brc     15,0
+> 00: 0000000309ccb7e                                                             
+> 00: [   98.203940]            00000000309cccd8: b9040039            lgr     %r3,
+> 00: %r9                                                                         
+> 00: [   98.204221] Call Trace:                                                  
+> 00: [   98.204277]  [<00000000309cccc4>] qeth_open+0x2f4/0x320  
+> napi_enable at include/linux/netdevice.h:516
+> (inlined by) qeth_open at drivers/s390/net/qeth_core_main.c:6591                
+> 00: [   98.204292] ([<00000000309ccaf8>] qeth_open+0x128/0x320)                 
+> 00: [   98.204308]  [<0000000030a3c778>] __dev_open+0x190/0x268                 
+> 00: [   98.204324]  [<0000000030a3ce80>] __dev_change_flags+0x2e8/0x378         
+> 00: [   98.204340]  [<0000000030a3cf6e>] dev_change_flags+0x5e/0xb0             
+> 00: [   98.204357]  [<0000000030a60a16>] do_setlink+0x59e/0x1728                
+> 00: [   98.204372]  [<0000000030a62750>] __rtnl_newlink+0x708/0xbd0             
+> 00: [   98.204388]  [<0000000030a62c86>] rtnl_newlink+0x6e/0x90                 
+> 00: [   98.204404]  [<0000000030a59004>] rtnetlink_rcv_msg+0x29c/0x6e0          
+> 00: [   98.204421]  [<0000000030aa9cd2>] netlink_rcv_skb+0xea/0x218             
+> 00: [   98.204436]  [<0000000030aa8f5a>] netlink_unicast+0x2d2/0x3a0            
+> 00: [   98.204451]  [<0000000030aa95dc>] netlink_sendmsg+0x5b4/0x6c0            
+> 00: [   98.204469]  [<00000000309e76a6>] ____sys_sendmsg+0x32e/0x3c8            
+> 00: [   98.204485]  [<00000000309e8d08>] ___sys_sendmsg+0x108/0x148             
+> 00: [   98.204500]  [<00000000309ec2a8>] __sys_sendmsg+0xe0/0x148               
+> 00: [   98.204515]  [<00000000309ecda6>] __s390x_sys_socketcall+0x356/0x430     
+> 00: [   98.204532]  [<0000000030be3568>] system_call+0xd8/0x2b4                 
+> 00: [   98.204544] INFO: lockdep is turned off.                                 
+> 00: [   98.204555] Last Breaking-Event-Address:                                 
+> 00: [   98.204568]  [<00000000309ccb0c>] qeth_open+0x13c/0x320                  
+> 00: [   98.204585] Kernel panic - not syncing: Fatal exception: panic_on_oops   
+> 01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
+>  CPU 01.                                                                        
+> 01: HCPGSP2629I The virtual machine is placed in CP mode due to a SIGP stop from
+>  CPU 00.                                                                        
+> 00: HCPGIR450W CP entered; disabled wait PSW 00020001 80000000 00000000 302A66EE
+> 
+> 
+> 
+> 00: [   28.095006] illegal operation: 0001 ilc:1 [#1] SMP DEBUG_PAGEALLOC        
+> 00: [   28.095045] Modules linked in: dm_mirror dm_region_hash dm_log dm_mod     
+> 00: [   28.095075] CPU: 0 PID: 432 Comm: ccw_init Not tainted 5.6.0-rc3-next-20  
+> 00: 00302+ #2                                                                    
+> 00: [   28.095090] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)                  
+> 00: [   28.095103] Krnl PSW : 0704e00180000000 0000000000000002 (0x2)            
+> 00: [   28.095124]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 
+> 00:  RI:0 EA:3                                                                   
+> 00: [   28.095141] Krnl GPRS: 0000000000000001 0000000000000000 00000000475597a8 
+> 00:  0000000000000000                                                            
+> 00: [   28.095157]            0000030000000000 0000000005e6b280 000000000639d197 
+> 00:  00000000475597a8                                                            
+> 00: [   28.095174]            000003e000000000 000003e00014fc78 000003e00014fbf8 
+> 00:  00000000475597a8                                                            
+> 00: [   28.095189]            000000000640d900 00000000061a8aa0 0000000005e6b29a 
+> 00:  000003e00014fa68                                                            
+> 00: [   28.095210] Krnl Code:#0000000000000000: 0000                illegal      
+> 00: [   28.095210]           >0000000000000002: 0000                illegal      
+> 00: [   28.095210]            0000000000000004: 0000                illegal      
+> 00: [   28.095210]            0000000000000006: 0000                illegal      
+> 00: [   28.095210]            0000000000000008: 0000                illegal      
+> 00: [   28.095210]            000000000000000a: 0000                illegal      
+> 00: [   28.095210]            000000000000000c: 0000                illegal      
+> 00: [   28.095210]            000000000000000e: 0000                illegal      
+> 00: [   28.095279] Call Trace:                                                   
+> 00: [   28.095290]  [<0000000000000002>] 0x2                                     
+> 00: [   28.095318] ([<0000000005e6b254>] net_rx_action+0x2c4/0x9e0)    
+> arch_test_bit at arch/s390/include/asm/bitops.h:219
+> (inlined by) test_bit at include/asm-generic/bitops/instrumented-non-atomic.h:111
+> (inlined by) napi_poll at net/core/dev.c:6569
+> (inlined by) net_rx_action at net/core/dev.c:6638          
+> 00: [   28.095338]  [<00000000060147f2>] __do_softirq+0x1da/0xa28                
+> 00: [   28.095362]  [<00000000056d488c>] do_softirq_own_stack+0xe4/0x100         
+> 00: [   28.095665]  [<000000000571f438>] irq_exit+0x148/0x1c0                    
+> 00: [   28.095684]  [<00000000056d4048>] do_IRQ+0xb8/0x108                       
+> 00: [   28.095702]  [<0000000006013a3c>] io_int_handler+0x12c/0x2b8              
+> 00: [   28.095719]  [<00000000057d4f48>] lock_acquire+0x248/0x460                
+> 00: [   28.095735] ([<00000000057d4f12>] lock_acquire+0x212/0x460)               
+> 00: [   28.095754]  [<0000000005a8c994>] lock_page_memcg+0x54/0x180              
+> 00: [   28.095772]  [<00000000059f0dd2>] page_remove_rmap+0x17a/0x8c0            
+> 00: [   28.095787]  [<00000000059cdde6>] unmap_page_range+0x956/0x1690           
+> 00: [   28.095801]  [<00000000059cebe0>] unmap_single_vma+0xc0/0x148             
+> 00: [   28.095816]  [<00000000059ceed4>] unmap_vmas+0x54/0x88                    
+> 00: [   28.095831]  [<00000000059e3198>] exit_mmap+0x1b0/0x2a8                   
+> 00: [   28.095846]  [<0000000005709ef6>] mmput+0xce/0x230                        
+> 00: [   28.095860]  [<000000000571c750>] do_exit+0x5b0/0x1538                    
+> 00: [   28.095875]  [<000000000571d7ce>] do_group_exit+0x7e/0x150                
+> 00: [   28.095889]  [<000000000571d8d2>] __s390x_sys_exit_group+0x32/0x38        
+> 00: [   28.095905]  [<00000000060136b6>] system_call+0x296/0x2b4                 
+> 00: [   28.095917] INFO: lockdep is turned off.                                  
+> 00: [   28.095928] Last Breaking-Event-Address:                                  
+> 00: [   28.095944]  [<0000000005e6b298>] net_rx_action+0x308/0x9e0    
+> napi_poll at net/core/dev.c:6570
+> (inlined by) net_rx_action at net/core/dev.c:6638           
+> 00: [   28.095964] Kernel panic - not syncing: Fatal exception in interrupt
+> 
+> 
+> 00: [   28.034050] qeth 0.0.8000: MAC address 02:de:ad:be:ef:87 successfully reg 
+> 00: istered                                                                      
+> 00: [   28.040202] illegal operation: 0001 ilc:1 [#1] SMP DEBUG_PAGEALLOC        
+> 00: [   28.040226] Modules linked in: dm_mirror dm_region_hash dm_log dm_mod     
+> 00: [   28.040254] CPU: 0 PID: 402 Comm: systemd-udevd Not tainted 5.6.0-rc3-nex 
+> 00: t-20200302+ #3                                                               
+> 00: [   28.040271] Hardware name: IBM 2964 N96 400 (z/VM 6.4.0)                  
+> 00: [   28.040286] Krnl PSW : 0704e00180000000 0000000000000002 (0x2)            
+> 00: [   28.040307]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3 CC:2 PM:0 
+> 00:  RI:0 EA:3                                                                   
+> 00: [   28.040324] Krnl GPRS: 0000000000000001 0000000000000000 0000000001b517a8 
+> 00:  0000000000000000                                                            
+> 00: [   28.040340]            0000030000000000 00000000303eb2f0 000000003091d197 
+> 00:  0000000001b517a8                                                            
+> 00: [   28.040356]            000003e000000000 000003e00014fc78 000003e00014fbf8 
+> 00:  0000000001b517a8                                                            
+> 00: [   28.040371]            000000003098d900 0000000030728aa0 00000000303eb30  
+> 00:  000003e00014fa68                                                            
+> 00: [   28.040393] Krnl Code:#0000000000000000: 0000                illegal      
+> 00: [   28.040393]           >0000000000000002: 0000                illegal      
+> 00: [   28.040393]            0000000000000004: 0000                illegal      
+> 00: [   28.040393]            0000000000000006: 0000                illegal      
+> 00: [   28.040393]            0000000000000008: 0000                illegal      
+> 00: [   28.040393]            000000000000000a: 0000                illegal      
+> 00: [   28.040393]            000000000000000c: 0000                illegal      
+> 00: [   28.040393]            000000000000000e: 0000                illegal      
+> 00: [   28.040462] Call Trace:                                                   
+> 00: [   28.040792]  [<0000000000000002>] 0x2                                     
+> 00: [   28.040907] ([<00000000303eb2c4>] net_rx_action+0x2c4/0x9e0)              
+> 00: [   28.040927]  [<0000000030594862>] __do_softirq+0x1da/0xa28                
+> 00: [   28.040949]  [<000000002fc5488c>] do_softirq_own_stack+0xe4/0x100         
+> 00: [   28.040966]  [<000000002fc9f438>] irq_exit+0x148/0x1c0                    
+> 00: [   28.040981]  [<000000002fc54048>] do_IRQ+0xb8/0x108                       
+> 00: [   28.040995]  [<0000000030593aac>] io_int_handler+0x12c/0x2b8              
+> 00: [   28.041014]  [<000000002ffe55b0>] __asan_store8+0x10/0x98                 
+> 00: [   28.041032] ([<000000002fc5fa90>] unwind_next_frame+0x168/0x3e0)          
+> 00: [   28.041048]  [<000000002fc669b2>] arch_stack_walk+0x10a/0x178             
+> 00: [   28.041065]  [<000000002fda0232>] stack_trace_save+0xba/0xd0              
+> 00: [   28.041083]  [<0000000030025d7e>] create_object+0x1d6/0x5c8               
+> 00: [   28.041113]  [<000000002ffdb6f2>] kmem_cache_alloc+0x1f2/0x548            
+> 00: [   28.041141]  [<000000002ff72ece>] anon_vma_clone+0x96/0x248               
+> 00: [   28.041157]  [<000000002ff730de>] anon_vma_fork+0x5e/0x1f0                
+> 00: [   28.041175]  [<000000002fc8b9a6>] dup_mm+0x88e/0xa80                      
+> 00: [   28.041190]  [<000000002fc8dc26>] copy_process+0x183e/0x2d20              
+> 00: [   28.041205]  [<000000002fc8f504>] _do_fork+0x134/0xab0                    
+> 00: [   28.041220]  [<000000002fc9009e>] __do_sys_clone+0xce/0x110               
+> 00: [   28.041235]  [<000000002fc9038a>] __s390x_sys_clone+0x22/0x30             
+> 00: [   28.041251]  [<0000000030593726>] system_call+0x296/0x2b4                 
+> 00: [   28.041263] INFO: lockdep is turned off.                                  
+> 00: [   28.041274] Last Breaking-Event-Address:                                  
+> 00: [   28.041289]  [<00000000303eb308>] net_rx_action+0x308/0x9e0               
+> 00: [   28.041308] Kernel panic - not syncing: Fatal exception in interrupt
+> 
 
