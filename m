@@ -2,38 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 79AC2176D0C
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2020 04:01:00 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id E1AE3176D00
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2020 04:00:32 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbgCCDAl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Mar 2020 22:00:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42176 "EHLO mail.kernel.org"
+        id S1727146AbgCCDAW (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Mar 2020 22:00:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42376 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727534AbgCCCrR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:17 -0500
+        id S1728000AbgCCCrX (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:23 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EC0322465E;
-        Tue,  3 Mar 2020 02:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 52C4B246BB;
+        Tue,  3 Mar 2020 02:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203636;
-        bh=Pce17n4kXXik2iJgqEED4wY8qyQRweUllkE4jufNxi8=;
+        s=default; t=1583203643;
+        bh=BVyEN67TtDpCiNbaG8wcbtPddkG6IrosjShyMCm7+jc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wFYCytarPtZL8dan5+JuUeDzAdmQmdisj93p3UPRvUNRdvSAZEq/67xxplWj3w0GS
-         F2e7DTs5alvzFyCbNB9INUABTctUpqj2eF4NeTYULJKmtiuNMlxWm+e9FcoIY/WH33
-         PhGZVxy/k1aIPE0mPaIQDHPvUPyao3v8zDaMWs3I=
+        b=W3dVZmekq40ErOiFoqkWzuvB4ZG1OKnzdPrTTjcEytkPwW+gZYkQuk942ZWwA3C1T
+         seNV8dofrwVocuOzHk9uGCZCdXII5Yz3t8Cltw6h+T0qq7KvkX0Mylr5s71WG6t4gz
+         f2GKhJYEfITtj1aNbGHUoxrbfsGWymZzSyIbfqVs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Alexandra Winter <wintera@linux.ibm.com>,
-        Steffen Maier <maier@linux.ibm.com>,
-        Benjamin Block <bblock@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 48/66] s390/qdio: fill SL with absolute addresses
-Date:   Mon,  2 Mar 2020 21:45:57 -0500
-Message-Id: <20200303024615.8889-48-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 54/66] s390/qeth: fix off-by-one in RX copybreak check
+Date:   Mon,  2 Mar 2020 21:46:03 -0500
+Message-Id: <20200303024615.8889-54-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -48,108 +45,32 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit e9091ffd6a0aaced111b5d6ead5eaab5cd7101bc ]
+[ Upstream commit 54a61fbc020fd2e305680871c453abcf7fc0339b ]
 
-As the comment says, sl->sbal holds an absolute address. qeth currently
-solves this through wild casting, while zfcp doesn't care.
+The RX copybreak is intended as the _max_ value where the frame's data
+should be copied. So for frame_len == copybreak, don't build an SG skb.
 
-Handle this properly in the code that actually builds the SL.
-
+Fixes: 4a71df50047f ("qeth: new qeth device driver")
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
-Reviewed-by: Steffen Maier <maier@linux.ibm.com> [for qdio]
-Reviewed-by: Benjamin Block <bblock@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/include/asm/qdio.h      |  2 +-
- drivers/s390/cio/qdio_setup.c     |  3 ++-
- drivers/s390/net/qeth_core_main.c | 23 +++++++++++------------
- 3 files changed, 14 insertions(+), 14 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/s390/include/asm/qdio.h b/arch/s390/include/asm/qdio.h
-index 71e3f0146cda0..7870cf8345334 100644
---- a/arch/s390/include/asm/qdio.h
-+++ b/arch/s390/include/asm/qdio.h
-@@ -227,7 +227,7 @@ struct qdio_buffer {
-  * @sbal: absolute SBAL address
-  */
- struct sl_element {
--	unsigned long sbal;
-+	u64 sbal;
- } __attribute__ ((packed));
- 
- /**
-diff --git a/drivers/s390/cio/qdio_setup.c b/drivers/s390/cio/qdio_setup.c
-index dc430bd86ade9..58eaac70dba7f 100644
---- a/drivers/s390/cio/qdio_setup.c
-+++ b/drivers/s390/cio/qdio_setup.c
-@@ -8,6 +8,7 @@
- #include <linux/kernel.h>
- #include <linux/slab.h>
- #include <linux/export.h>
-+#include <linux/io.h>
- #include <asm/qdio.h>
- 
- #include "cio.h"
-@@ -205,7 +206,7 @@ static void setup_storage_lists(struct qdio_q *q, struct qdio_irq *irq_ptr,
- 
- 	/* fill in sl */
- 	for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++)
--		q->sl->element[j].sbal = (unsigned long)q->sbal[j];
-+		q->sl->element[j].sbal = virt_to_phys(q->sbal[j]);
- }
- 
- static void setup_queues(struct qdio_irq *irq_ptr,
 diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 29facb9136715..623475717183e 100644
+index 623475717183e..4fd7b0ceb4ffd 100644
 --- a/drivers/s390/net/qeth_core_main.c
 +++ b/drivers/s390/net/qeth_core_main.c
-@@ -4749,10 +4749,10 @@ static void qeth_qdio_establish_cq(struct qeth_card *card,
- 	if (card->options.cq == QETH_CQ_ENABLED) {
- 		int offset = QDIO_MAX_BUFFERS_PER_Q *
- 			     (card->qdio.no_in_queues - 1);
--		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--			in_sbal_ptrs[offset + i] = (struct qdio_buffer *)
--				virt_to_phys(card->qdio.c_q->bufs[i].buffer);
--		}
-+
-+		for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+			in_sbal_ptrs[offset + i] =
-+				card->qdio.c_q->bufs[i].buffer;
- 
- 		queue_start_poll[card->qdio.no_in_queues - 1] = NULL;
+@@ -5141,7 +5141,7 @@ struct sk_buff *qeth_core_get_next_skb(struct qeth_card *card,
  	}
-@@ -4786,10 +4786,9 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_qib_param;
- 	}
--	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; ++i) {
--		in_sbal_ptrs[i] = (struct qdio_buffer *)
--			virt_to_phys(card->qdio.in_q->bufs[i].buffer);
--	}
-+
-+	for (i = 0; i < QDIO_MAX_BUFFERS_PER_Q; i++)
-+		in_sbal_ptrs[i] = card->qdio.in_q->bufs[i].buffer;
  
- 	queue_start_poll = kcalloc(card->qdio.no_in_queues, sizeof(void *),
- 				   GFP_KERNEL);
-@@ -4810,11 +4809,11 @@ static int qeth_qdio_establish(struct qeth_card *card)
- 		rc = -ENOMEM;
- 		goto out_free_queue_start_poll;
- 	}
-+
- 	for (i = 0, k = 0; i < card->qdio.no_out_queues; ++i)
--		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; ++j, ++k) {
--			out_sbal_ptrs[k] = (struct qdio_buffer *)virt_to_phys(
--				card->qdio.out_qs[i]->bufs[j]->buffer);
--		}
-+		for (j = 0; j < QDIO_MAX_BUFFERS_PER_Q; j++, k++)
-+			out_sbal_ptrs[k] =
-+				card->qdio.out_qs[i]->bufs[j]->buffer;
+ 	use_rx_sg = (card->options.cq == QETH_CQ_ENABLED) ||
+-		    ((skb_len >= card->options.rx_sg_cb) &&
++		    (skb_len > card->options.rx_sg_cb &&
+ 		     !atomic_read(&card->force_alloc_skb) &&
+ 		     !IS_OSN(card));
  
- 	memset(&init_data, 0, sizeof(struct qdio_initialize));
- 	init_data.cdev                   = CARD_DDEV(card);
 -- 
 2.20.1
 
