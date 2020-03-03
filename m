@@ -2,27 +2,27 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8BED8176B89
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2020 03:51:07 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0618A176D1C
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2020 04:01:15 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729228AbgCCCuh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Mar 2020 21:50:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47624 "EHLO mail.kernel.org"
+        id S1727837AbgCCDBM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Mar 2020 22:01:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729223AbgCCCuh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:50:37 -0500
+        id S1727860AbgCCCrE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:04 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 99D2A246EA;
-        Tue,  3 Mar 2020 02:50:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06D5B246A1;
+        Tue,  3 Mar 2020 02:47:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203836;
-        bh=bh71+yUWZJ2KgQTnvoKcgRM0pieJSYtq5owc9PoROas=;
+        s=default; t=1583203623;
+        bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=H/2SbyVmag9Thr/kDLggG+yQ1OzsxM9MweIcQ5SvUoyIfj+B+4J3dgQzcSMJS8Bz5
-         pBKmI+96MXfJ+zEvMuE6YWzd65TZq4vLWsnnLHl4hAHrO9FN9PBqqEotJUtX4FGrCV
-         UXYMZGh3aw+D89FIUABPxyvzPbFNiCSh2HkHlZAY=
+        b=Ia49MGVPmT6wXju8M0oMcgaxDsmiEBrNC9YkTKDQy/YFaM3CKv1WztWG7YosibU4n
+         WS+BVT50noDMBqRPpwUISYtaMYLt3pjcXxC1kvY1wYui/e00cLv4qlJtLVQGkjDTra
+         27OdY7hJVeiPqIfZjbCRqfqFO3ZtsNoO4drtLUoI=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Vasily Averin <vvs@virtuozzo.com>,
@@ -30,12 +30,12 @@ Cc:     Vasily Averin <vvs@virtuozzo.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.4 11/11] s390/cio: cio_ignore_proc_seq_next should increase position index
-Date:   Mon,  2 Mar 2020 21:50:21 -0500
-Message-Id: <20200303025021.10754-11-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 38/66] s390/cio: cio_ignore_proc_seq_next should increase position index
+Date:   Mon,  2 Mar 2020 21:45:47 -0500
+Message-Id: <20200303024615.8889-38-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200303025021.10754-1-sashal@kernel.org>
-References: <20200303025021.10754-1-sashal@kernel.org>
+In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
+References: <20200303024615.8889-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -64,7 +64,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
-index 20314aad7ab7d..f329459cadf14 100644
+index 2a3f874a21d54..9cebff8e8d740 100644
 --- a/drivers/s390/cio/blacklist.c
 +++ b/drivers/s390/cio/blacklist.c
 @@ -303,8 +303,10 @@ static void *
