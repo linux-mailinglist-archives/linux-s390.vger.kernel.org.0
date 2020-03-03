@@ -2,37 +2,35 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0618A176D1C
-	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2020 04:01:15 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A64C176D1B
+	for <lists+linux-s390@lfdr.de>; Tue,  3 Mar 2020 04:01:14 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbgCCDBM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 2 Mar 2020 22:01:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41842 "EHLO mail.kernel.org"
+        id S1727880AbgCCCrH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 2 Mar 2020 21:47:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41866 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727860AbgCCCrE (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 2 Mar 2020 21:47:04 -0500
+        id S1727866AbgCCCrF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 2 Mar 2020 21:47:05 -0500
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06D5B246A1;
-        Tue,  3 Mar 2020 02:47:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42399246BB;
+        Tue,  3 Mar 2020 02:47:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583203623;
-        bh=Xvrs5Tl05cV7m4ac4tT9EVzboSu3Qc+AUWzumDZp8DI=;
+        s=default; t=1583203624;
+        bh=iOTOzWvnEBWJ2lYE1qrTSa8s9PYi2HDkCLTTQGhOrkc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ia49MGVPmT6wXju8M0oMcgaxDsmiEBrNC9YkTKDQy/YFaM3CKv1WztWG7YosibU4n
-         WS+BVT50noDMBqRPpwUISYtaMYLt3pjcXxC1kvY1wYui/e00cLv4qlJtLVQGkjDTra
-         27OdY7hJVeiPqIfZjbCRqfqFO3ZtsNoO4drtLUoI=
+        b=Cp9y9VJ7MGtW5ayrnILm78boSCCa6BVwzU92mj1AhBISI7+RrnnN50aN/vsmiA9qk
+         in7mXhWb2hoT7jKFgah4wqM5sCHhubPa9p7jr1Hpktmz43108NKMf+uKa9EFVaRSil
+         Afy2sXirlsR6jhKqTY894jXxgb99mZiwPr1qRubk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Vasily Averin <vvs@virtuozzo.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
+Cc:     Masahiro Yamada <masahiroy@kernel.org>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 38/66] s390/cio: cio_ignore_proc_seq_next should increase position index
-Date:   Mon,  2 Mar 2020 21:45:47 -0500
-Message-Id: <20200303024615.8889-38-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.5 39/66] s390: make 'install' not depend on vmlinux
+Date:   Mon,  2 Mar 2020 21:45:48 -0500
+Message-Id: <20200303024615.8889-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200303024615.8889-1-sashal@kernel.org>
 References: <20200303024615.8889-1-sashal@kernel.org>
@@ -45,47 +43,50 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Vasily Averin <vvs@virtuozzo.com>
+From: Masahiro Yamada <masahiroy@kernel.org>
 
-[ Upstream commit 8b101a5e14f2161869636ff9cb4907b7749dc0c2 ]
+[ Upstream commit 94e90f727f7424d827256023cace829cad6896f4 ]
 
-if seq_file .next fuction does not change position index,
-read after some lseek can generate unexpected output.
+For the same reason as commit 19514fc665ff ("arm, kbuild: make "make
+install" not depend on vmlinux"), the install targets should never
+trigger the rebuild of the kernel.
 
-Link: https://bugzilla.kernel.org/show_bug.cgi?id=206283
-Link: https://lore.kernel.org/r/d44c53a7-9bc1-15c7-6d4a-0c10cb9dffce@virtuozzo.com
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Vasily Averin <vvs@virtuozzo.com>
+The variable, CONFIGURE, is not set by anyone. Remove it as well.
+
+Link: https://lkml.kernel.org/r/20200216144829.27023-1-masahiroy@kernel.org
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/cio/blacklist.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/s390/Makefile      | 2 +-
+ arch/s390/boot/Makefile | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/s390/cio/blacklist.c b/drivers/s390/cio/blacklist.c
-index 2a3f874a21d54..9cebff8e8d740 100644
---- a/drivers/s390/cio/blacklist.c
-+++ b/drivers/s390/cio/blacklist.c
-@@ -303,8 +303,10 @@ static void *
- cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
- {
- 	struct ccwdev_iter *iter;
-+	loff_t p = *offset;
+diff --git a/arch/s390/Makefile b/arch/s390/Makefile
+index e0e3a465bbfd6..8dfa2cf1f05c7 100644
+--- a/arch/s390/Makefile
++++ b/arch/s390/Makefile
+@@ -146,7 +146,7 @@ all: bzImage
+ #KBUILD_IMAGE is necessary for packaging targets like rpm-pkg, deb-pkg...
+ KBUILD_IMAGE	:= $(boot)/bzImage
  
--	if (*offset >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
-+	(*offset)++;
-+	if (p >= (__MAX_SUBCHANNEL + 1) * (__MAX_SSID + 1))
- 		return NULL;
- 	iter = it;
- 	if (iter->devno == __MAX_SUBCHANNEL) {
-@@ -314,7 +316,6 @@ cio_ignore_proc_seq_next(struct seq_file *s, void *it, loff_t *offset)
- 			return NULL;
- 	} else
- 		iter->devno++;
--	(*offset)++;
- 	return iter;
- }
+-install: vmlinux
++install:
+ 	$(Q)$(MAKE) $(build)=$(boot) $@
+ 
+ bzImage: vmlinux
+diff --git a/arch/s390/boot/Makefile b/arch/s390/boot/Makefile
+index e2c47d3a1c891..0ff9261c915e3 100644
+--- a/arch/s390/boot/Makefile
++++ b/arch/s390/boot/Makefile
+@@ -70,7 +70,7 @@ $(obj)/compressed/vmlinux: $(obj)/startup.a FORCE
+ $(obj)/startup.a: $(OBJECTS) FORCE
+ 	$(call if_changed,ar)
+ 
+-install: $(CONFIGURE) $(obj)/bzImage
++install:
+ 	sh -x  $(srctree)/$(obj)/install.sh $(KERNELRELEASE) $(obj)/bzImage \
+ 	      System.map "$(INSTALL_PATH)"
  
 -- 
 2.20.1
