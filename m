@@ -2,54 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3DA44178A5C
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Mar 2020 06:53:05 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B212E178AD0
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Mar 2020 07:49:08 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725791AbgCDFw5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Mar 2020 00:52:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:56118 "EHLO foss.arm.com"
+        id S1725977AbgCDGtF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Mar 2020 01:49:05 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:7396 "EHLO pegase1.c-s.fr"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725271AbgCDFw5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 4 Mar 2020 00:52:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E08EF30E;
-        Tue,  3 Mar 2020 21:52:55 -0800 (PST)
-Received: from [10.163.1.88] (unknown [10.163.1.88])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DCC5B3F6CF;
-        Tue,  3 Mar 2020 21:52:48 -0800 (PST)
-Subject: Re: [RFC 2/3] mm/vma: Introduce VM_ACCESS_FLAGS
-To:     Vlastimil Babka <vbabka@suse.cz>, linux-mm@kvack.org
-Cc:     Russell King <linux@armlinux.org.uk>,
+        id S1725283AbgCDGtF (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 4 Mar 2020 01:49:05 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 48XPcF5vVkz9v0st;
+        Wed,  4 Mar 2020 07:49:01 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=TjnV6xMQ; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id dW39OVxTZgd8; Wed,  4 Mar 2020 07:49:01 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 48XPcF4ZcKz9v0ss;
+        Wed,  4 Mar 2020 07:49:01 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1583304541; bh=wrQNL9rvesEDlWoNS4tGcfPvGhYnLZNAbgZHq9fGbnE=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=TjnV6xMQKz2IO1bGDE4HAZJMFDjYTtnjTtNNjZEsh1GJH/DNUiegOPbfzQzRdUJdq
+         mfbcsqR6vxFcKaMgtar20QBjEJl5cDZGZqEWM5VabMwt/qfmG0b/5ARzKJJU0pQlpP
+         HX98Thi1AQonukArlC4ShOrxhDCLgoABIqbXgKFo=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 784788B826;
+        Wed,  4 Mar 2020 07:49:02 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id oPUcSMTN_Vcy; Wed,  4 Mar 2020 07:49:02 +0100 (CET)
+Received: from [172.25.230.100] (po15451.idsi0.si.c-s.fr [172.25.230.100])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 2A1098B820;
+        Wed,  4 Mar 2020 07:49:02 +0100 (CET)
+Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
+ table helpers
+To:     Qian Cai <cai@lca.pw>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     Linux Memory Management List <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
-        Mark Salter <msalter@redhat.com>,
-        Nick Hu <nickhu@andestech.com>,
-        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Guan Xuetao <gxt@pku.edu.cn>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Rob Springer <rspringer@google.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        nios2-dev@lists.rocketboards.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-References: <1583131666-15531-1-git-send-email-anshuman.khandual@arm.com>
- <1583131666-15531-3-git-send-email-anshuman.khandual@arm.com>
- <52b4565f-2dab-c3e5-ead8-d76258f43a10@suse.cz>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <d00c5b01-fb69-3a83-3eae-36231c5b08e9@arm.com>
-Date:   Wed, 4 Mar 2020 11:22:46 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-s390@vger.kernel.org, linux-riscv@lists.infradead.org,
+        the arch/x86 maintainers <x86@kernel.org>,
+        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
+References: <1581909460-19148-1-git-send-email-anshuman.khandual@arm.com>
+ <1582726182.7365.123.camel@lca.pw>
+ <7c707b7f-ce3d-993b-8042-44fdc1ed28bf@c-s.fr>
+ <1582732318.7365.129.camel@lca.pw> <1583178042.7365.146.camel@lca.pw>
+ <e8516497-f1b9-b222-e219-73b68880ac75@arm.com>
+ <12260F9A-695D-40F8-932F-61D86D77D441@lca.pw>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
+Date:   Wed, 4 Mar 2020 07:48:54 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <52b4565f-2dab-c3e5-ead8-d76258f43a10@suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <12260F9A-695D-40F8-932F-61D86D77D441@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -57,45 +93,28 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 03/03/2020 11:18 PM, Vlastimil Babka wrote:
-> On 3/2/20 7:47 AM, Anshuman Khandual wrote:
->> There are many places where all basic VMA access flags (read, write, exec)
->> are initialized or checked against as a group. One such example is during
->> page fault. Existing vma_is_accessible() wrapper already creates the notion
->> of VMA accessibility as a group access permissions. Hence lets just create
->> VM_ACCESS_FLAGS (VM_READ|VM_WRITE|VM_EXEC) which will not only reduce code
->> duplication but also extend the VMA accessibility concept in general.
->>
->> Cc: Russell King <linux@armlinux.org.uk>
->> CC: Catalin Marinas <catalin.marinas@arm.com>
->> CC: Mark Salter <msalter@redhat.com>
->> Cc: Nick Hu <nickhu@andestech.com>
->> CC: Ley Foon Tan <ley.foon.tan@intel.com>
->> Cc: Michael Ellerman <mpe@ellerman.id.au>
->> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
->> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
->> Cc: Guan Xuetao <gxt@pku.edu.cn>
->> Cc: Dave Hansen <dave.hansen@linux.intel.com>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: Rob Springer <rspringer@google.com>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-c6x-dev@linux-c6x.org
->> Cc: nios2-dev@lists.rocketboards.org
->> Cc: linuxppc-dev@lists.ozlabs.org
->> Cc: linux-s390@vger.kernel.org
->> Cc: linux-sh@vger.kernel.org
->> Cc: devel@driverdev.osuosl.org
->> Cc: linux-mm@kvack.org
->> Cc: linux-kernel@vger.kernel.org
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+Le 04/03/2020 à 02:39, Qian Cai a écrit :
 > 
-> Dunno. Such mask seems ok for testing flags, but it's a bit awkward when
-> initializing flags, where it covers just one of many combinations that seem
-> used. But no strong opinions, patch looks correct.
+>> Below is slightly modified version of your change above and should still
+>> prevent the bug on powerpc. Will it be possible for you to re-test this
+>> ? Once confirmed, will send a patch enabling this test on powerpc64
+>> keeping your authorship. Thank you.
+> 
+> This works fine on radix MMU but I decided to go a bit future to test hash
+> MMU. The kernel will stuck here below. I did confirm that pte_alloc_map_lock()
+> was successful, so I don’t understand hash MMU well enough to tell why
+> it could still take an interrupt at pte_clear_tests() even before we calls
+> pte_unmap_unlock()?
 
-Fair enough. The fact that it covers only one of the many init combinations
-used at various places, is indeed a good point. The page fault handlers does
-start with VMA flags mask as VM_ACCESS_FLAGS, hence will keep them and drop
-other init cases here.
+AFAIU, you are not taking an interrupt here. You are stuck in the 
+pte_update(), most likely due to nested locks. Try with LOCKDEP ?
+
+Christophe
+
+> 
+> [   33.881515][    T1] ok 8 - property-entry
+> [   33.883653][    T1] debug_vm_pgtable: debug_vm_pgtable: Validating
+> architecture page table helpers
+> [   60.418885][    C8] watchdog: BUG: soft lockup - CPU#8 stuck for 23s!
+> [swapper/0:1]
+
