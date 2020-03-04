@@ -2,97 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E5228178F95
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Mar 2020 12:32:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A0A3B17907D
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Mar 2020 13:35:21 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387772AbgCDL30 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Mar 2020 06:29:26 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:40756 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728998AbgCDL30 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Mar 2020 06:29:26 -0500
-Received: by mail-qk1-f195.google.com with SMTP id m2so1173934qka.7
-        for <linux-s390@vger.kernel.org>; Wed, 04 Mar 2020 03:29:25 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=content-transfer-encoding:from:mime-version:subject:date:message-id
-         :references:cc:in-reply-to:to;
-        bh=Jx+iSwpjH1MMUgtvqiqrwQ2sYugCQ9UmLyXay35eB1Q=;
-        b=qUya1I+ID7bIC0Bkj4Q0zp0EdHdSdO6ykJWvMXw4HKDFjWyXV8ds3Bs9MArm+vdQdc
-         RpunjqglWR6mGJe2Lv7g9advYS1SvRo9LA3gCW5QqI/AMIgsHiHRUFAsdYeij2rtzyTk
-         sNSh4wHESGW+6lSzw7OKW4psbfNeqxjoimBZufpM/BoHmrYBRoQNs3Xc2GtPgWnsfXPf
-         igl3aC/5VPWbzpP3KfCNQ0wpC8Mh4VlwHq19u+9gw6f3Ulw8FCMZG8YCqNbscon2aj4Z
-         WYfZ5PGzedI3tG7vyVtTX+unDExTi5VMHoWYOeG+xlDzhECpmkCqkM7aufo6LUVMsIwj
-         NApA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:content-transfer-encoding:from:mime-version
-         :subject:date:message-id:references:cc:in-reply-to:to;
-        bh=Jx+iSwpjH1MMUgtvqiqrwQ2sYugCQ9UmLyXay35eB1Q=;
-        b=SbMrji2u3+J2UiN/fXdGKm3SESI/Ccmk/rX3RNuWbpf+4NhM3pNKpPyPgRIBdUZUP+
-         ZZndX/vxobcNAxkXin7WuaTyk4JmZ7qNobIynhjCo4w4idxXZECMMu+/vcr5NbWgucf6
-         fG3H+pnTd2VThN79Mk+wyI//aU3+8hp7YKxQmHS/dUyHXqyrdh50UDAm96/MSb14yZKE
-         ndk5p+5+F7oEmUFz8gbaKTDs2jKCQq2oW4qWXms/bgM33h3/+WWP7khlOskph721evU4
-         k9LY4q50U7oJl8nZ0zAa2S9b7wYRppbk9qlcEmdlnxY7JAbanykeKH3ztVVARhwsdf9X
-         OuAA==
-X-Gm-Message-State: ANhLgQ3NuhzN2qiPl4jmcJ4oHiPzFc2UteQruVjjatjX+ustSYgVM81/
-        Sr4fWO/5F/8/ewA2572qKKJ5vg==
-X-Google-Smtp-Source: ADFU+vsraAELUldtqJkt+JLHLEkp9XWZWryntOEccYsrwg70reKk2W+439zfYVSLClVswo3lxz5LLw==
-X-Received: by 2002:a37:6115:: with SMTP id v21mr2464683qkb.105.1583321365177;
-        Wed, 04 Mar 2020 03:29:25 -0800 (PST)
-Received: from [192.168.1.183] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
-        by smtp.gmail.com with ESMTPSA id u48sm85943qtc.79.2020.03.04.03.29.24
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 04 Mar 2020 03:29:24 -0800 (PST)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: quoted-printable
-From:   Qian Cai <cai@lca.pw>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page table helpers
-Date:   Wed, 4 Mar 2020 06:29:23 -0500
-Message-Id: <11F41980-97CF-411F-8120-41287DC1A382@lca.pw>
-References: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
-Cc:     Anshuman Khandual <Anshuman.Khandual@arm.com>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
+        id S1729384AbgCDMfU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Mar 2020 07:35:20 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10204 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728953AbgCDMfU (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Mar 2020 07:35:20 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024CTfeu030744
+        for <linux-s390@vger.kernel.org>; Wed, 4 Mar 2020 07:35:19 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yhw6nxmcd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 04 Mar 2020 07:35:19 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <zohar@linux.ibm.com>;
+        Wed, 4 Mar 2020 12:35:17 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 4 Mar 2020 12:35:13 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024CZBJP38928546
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 4 Mar 2020 12:35:11 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8565711C052;
+        Wed,  4 Mar 2020 12:35:11 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C57811C054;
+        Wed,  4 Mar 2020 12:35:10 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.80.200.112])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 12:35:10 +0000 (GMT)
+Subject: Re: [PATCH v2] ima: add a new CONFIG for loading arch-specific
+ policies
+From:   Mimi Zohar <zohar@linux.ibm.com>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Nayna Jain <nayna@linux.ibm.com>,
+        linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-efi@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Ard Biesheuvel <ardb@kernel.org>,
+        Philipp Rudo <prudo@linux.ibm.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org, linux-riscv@lists.infradead.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-In-Reply-To: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
-To:     Christophe Leroy <christophe.leroy@c-s.fr>
-X-Mailer: iPhone Mail (17D50)
+        linux-kernel@vger.kernel.org
+Date:   Wed, 04 Mar 2020 07:35:09 -0500
+In-Reply-To: <1583307813.3907.4.camel@HansenPartnership.com>
+References: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
+         <1583307813.3907.4.camel@HansenPartnership.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20030412-0016-0000-0000-000002ED176D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20030412-0017-0000-0000-0000335064A5
+Message-Id: <1583325309.6264.23.camel@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-04_03:2020-03-04,2020-03-04 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ priorityscore=1501 lowpriorityscore=0 bulkscore=0 spamscore=0
+ suspectscore=0 adultscore=0 mlxscore=0 mlxlogscore=976 impostorscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040096
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Tue, 2020-03-03 at 23:43 -0800, James Bottomley wrote:
+> On Tue, 2020-03-03 at 21:33 -0500, Nayna Jain wrote:
 
+> > diff --git a/security/integrity/ima/Kconfig
+> > b/security/integrity/ima/Kconfig
+> > index 3f3ee4e2eb0d..d17972aa413a 100644
+> > --- a/security/integrity/ima/Kconfig
+> > +++ b/security/integrity/ima/Kconfig
+> > @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+> >  	depends on IMA_MEASURE_ASYMMETRIC_KEYS
+> >  	depends on SYSTEM_TRUSTED_KEYRING
+> >  	default y
+> > +
+> > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> > +	bool
+> > +	depends on IMA
+> > +	depends on IMA_ARCH_POLICY
+> > +	default n
+> 
+> You can't do this: a symbol designed to be selected can't depend on
+> other symbols because Kconfig doesn't see the dependencies during
+> select.  We even have a doc for this now:
+> 
+> Documentation/kbuild/Kconfig.select-break
 
-> On Mar 4, 2020, at 1:49 AM, Christophe Leroy <christophe.leroy@c-s.fr> wro=
-te:
->=20
-> AFAIU, you are not taking an interrupt here. You are stuck in the pte_upda=
-te(), most likely due to nested locks. Try with LOCKDEP ?
+The document is discussing a circular dependency, where C selects B.
+ IMA_SECURE_AND_OR_TRUSTED_BOOT is not selecting anything, but is
+being selected.  All of the Kconfig's are now dependent on
+IMA_ARCH_POLICY being enabled before selecting
+IMA_SECURE_AND_OR_TRUSTED_BOOT.
 
-Not exactly sure what did you mean here, but the kernel has all lockdep enab=
-led and did not flag anything here.=
+As Ard pointed out, both IMA and IMA_ARCH_POLICY are not needed, as
+IMA_ARCH_POLICY is already dependent on IMA.
+
+Mimi
+
