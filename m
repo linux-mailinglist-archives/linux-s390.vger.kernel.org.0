@@ -2,209 +2,210 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 865F41790DA
-	for <lists+linux-s390@lfdr.de>; Wed,  4 Mar 2020 14:07:09 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8C1AD179146
+	for <lists+linux-s390@lfdr.de>; Wed,  4 Mar 2020 14:26:07 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388091AbgCDNHI (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 4 Mar 2020 08:07:08 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:45452 "EHLO
+        id S2387919AbgCDN0G (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 4 Mar 2020 08:26:06 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26296 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729386AbgCDNHI (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Mar 2020 08:07:08 -0500
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024D6hnM163404
-        for <linux-s390@vger.kernel.org>; Wed, 4 Mar 2020 08:07:07 -0500
+        by vger.kernel.org with ESMTP id S2388158AbgCDN0G (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 4 Mar 2020 08:26:06 -0500
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 024DJtit077463
+        for <linux-s390@vger.kernel.org>; Wed, 4 Mar 2020 08:26:04 -0500
 Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhsv3r7nb-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yhyxqsrgh-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 04 Mar 2020 08:07:06 -0500
+        for <linux-s390@vger.kernel.org>; Wed, 04 Mar 2020 08:26:03 -0500
 Received: from localhost
         by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Wed, 4 Mar 2020 13:07:04 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        for <linux-s390@vger.kernel.org> from <prudo@linux.ibm.com>;
+        Wed, 4 Mar 2020 13:25:51 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
         by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 4 Mar 2020 13:07:01 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024D70qP2032122
+        Wed, 4 Mar 2020 13:25:47 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 024DPjTg44106154
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 4 Mar 2020 13:07:00 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C2EA42042;
-        Wed,  4 Mar 2020 13:07:00 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 62D104204D;
-        Wed,  4 Mar 2020 13:06:59 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.0.1])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  4 Mar 2020 13:06:59 +0000 (GMT)
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
-        jack@suse.cz, kirill@shutemov.name
-Cc:     borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>
-Subject: [PATCH v3 2/2] mm/gup/writeback: add callbacks for inaccessible pages
-Date:   Wed,  4 Mar 2020 14:06:55 +0100
-X-Mailer: git-send-email 2.24.1
-In-Reply-To: <20200304130655.462517-1-imbrenda@linux.ibm.com>
-References: <20200304130655.462517-1-imbrenda@linux.ibm.com>
+        Wed, 4 Mar 2020 13:25:45 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 87476A4053;
+        Wed,  4 Mar 2020 13:25:45 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 348D8A405F;
+        Wed,  4 Mar 2020 13:25:45 +0000 (GMT)
+Received: from laptop2-ibm.local (unknown [9.152.212.60])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  4 Mar 2020 13:25:45 +0000 (GMT)
+Date:   Wed, 4 Mar 2020 14:25:44 +0100
+From:   Philipp Rudo <prudo@linux.ibm.com>
+To:     Mimi Zohar <zohar@linux.ibm.com>
+Cc:     Ard Biesheuvel <ardb@kernel.org>, Nayna Jain <nayna@linux.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-integrity <linux-integrity@vger.kernel.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        x86@kernel.org
+Subject: Re: [PATCH v2] ima: add a new CONFIG for loading arch-specific
+ policies
+In-Reply-To: <1583326538.6264.32.camel@linux.ibm.com>
+References: <1583289211-5420-1-git-send-email-nayna@linux.ibm.com>
+        <CAKv+Gu831SRo+Di6WgKTex40TcOVqNQAdeNLtfQpPdgnvrxucw@mail.gmail.com>
+        <1583326538.6264.32.camel@linux.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20030413-0028-0000-0000-000003E0CFDE
+x-cbid: 20030413-0028-0000-0000-000003E0D20D
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030413-0029-0000-0000-000024A60068
-Message-Id: <20200304130655.462517-3-imbrenda@linux.ibm.com>
+x-cbparentid: 20030413-0029-0000-0000-000024A602B5
+Message-Id: <20200304142544.1c165852@laptop2-ibm.local>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
  definitions=2020-03-04_05:2020-03-04,2020-03-04 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 mlxscore=0
- clxscore=1015 mlxlogscore=671 impostorscore=0 malwarescore=0 adultscore=0
- phishscore=0 suspectscore=2 spamscore=0 lowpriorityscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003040099
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ malwarescore=0 mlxlogscore=999 phishscore=0 lowpriorityscore=0
+ priorityscore=1501 clxscore=1015 impostorscore=0 adultscore=0
+ suspectscore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003040102
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-With the introduction of protected KVM guests on s390 there is now a
-concept of inaccessible pages. These pages need to be made accessible
-before the host can access them.
+On Wed, 04 Mar 2020 07:55:38 -0500
+Mimi Zohar <zohar@linux.ibm.com> wrote:
 
-While cpu accesses will trigger a fault that can be resolved, I/O
-accesses will just fail.  We need to add a callback into architecture
-code for places that will do I/O, namely when writeback is started or
-when a page reference is taken.
+> [Cc'ing Thomas Gleixner and x86 mailing list]
+> 
+> On Wed, 2020-03-04 at 08:14 +0100, Ard Biesheuvel wrote:
+> > On Wed, 4 Mar 2020 at 03:34, Nayna Jain <nayna@linux.ibm.com> wrote:  
+> > >
+> > > Every time a new architecture defines the IMA architecture specific
+> > > functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
+> > > include file needs to be updated. To avoid this "noise", this patch
+> > > defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
+> > > the different architectures to select it.
+> > >
+> > > Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
+> > > Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> > > Cc: Ard Biesheuvel <ardb@kernel.org>
+> > > Cc: Philipp Rudo <prudo@linux.ibm.com>
+> > > Cc: Michael Ellerman <mpe@ellerman.id.au>  
+> > 
+> > Acked-by: Ard Biesheuvel <ardb@kernel.org>  
+> 
+> Thanks, Ard.
+> > 
+> > for the x86 bits, but I'm not an x86 maintainer. Also, you may need to
+> > split this if you want to permit arch maintainers to pick up their
+> > parts individually.  
+> 
+> Michael, Philipp, Thomas, do you prefer separate patches?
 
-This is not only to enable paging, file backing etc, it is also
-necessary to protect the host against a malicious user space.  For
-example a bad QEMU could simply start direct I/O on such protected
-memory.  We do not want userspace to be able to trigger I/O errors and
-thus the logic is "whenever somebody accesses that page (gup) or does
-I/O, make sure that this page can be accessed".  When the guest tries
-to access that page we will wait in the page fault handler for
-writeback to have finished and for the page_ref to be the expected
-value.
+I don't think splitting this patch makes sense. Otherwise you would break the
+build for all architectures until they picked up their line of code.
 
-On s390x the function is not supposed to fail, so it is ok to use a
-WARN_ON on failure. If we ever need some more finegrained handling
-we can tackle this when we know the details.
+I'm fine with the patch as is.
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Acked-by: Will Deacon <will@kernel.org>
-Reviewed-by: David Hildenbrand <david@redhat.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
----
- include/linux/gfp.h |  6 ++++++
- mm/gup.c            | 30 +++++++++++++++++++++++++++---
- mm/page-writeback.c |  5 +++++
- 3 files changed, 38 insertions(+), 3 deletions(-)
+Thanks
+Philipp
 
-diff --git a/include/linux/gfp.h b/include/linux/gfp.h
-index e5b817cb86e7..be2754841369 100644
---- a/include/linux/gfp.h
-+++ b/include/linux/gfp.h
-@@ -485,6 +485,12 @@ static inline void arch_free_page(struct page *page, int order) { }
- #ifndef HAVE_ARCH_ALLOC_PAGE
- static inline void arch_alloc_page(struct page *page, int order) { }
- #endif
-+#ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
-+static inline int arch_make_page_accessible(struct page *page)
-+{
-+	return 0;
-+}
-+#endif
- 
- struct page *
- __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int preferred_nid,
-diff --git a/mm/gup.c b/mm/gup.c
-index 81a95fbe9901..d0c4c6f336bb 100644
---- a/mm/gup.c
-+++ b/mm/gup.c
-@@ -413,6 +413,7 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 	struct page *page;
- 	spinlock_t *ptl;
- 	pte_t *ptep, pte;
-+	int ret;
- 
- 	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
- 	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
-@@ -471,8 +472,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 		if (is_zero_pfn(pte_pfn(pte))) {
- 			page = pte_page(pte);
- 		} else {
--			int ret;
--
- 			ret = follow_pfn_pte(vma, address, ptep, flags);
- 			page = ERR_PTR(ret);
- 			goto out;
-@@ -480,7 +479,6 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 	}
- 
- 	if (flags & FOLL_SPLIT && PageTransCompound(page)) {
--		int ret;
- 		get_page(page);
- 		pte_unmap_unlock(ptep, ptl);
- 		lock_page(page);
-@@ -497,6 +495,19 @@ static struct page *follow_page_pte(struct vm_area_struct *vma,
- 		page = ERR_PTR(-ENOMEM);
- 		goto out;
- 	}
-+	/*
-+	 * We need to make the page accessible if and only if we are going
-+	 * to access its content (the FOLL_PIN case).  Please see
-+	 * Documentation/core-api/pin_user_pages.rst for details.
-+	 */
-+	if (flags & FOLL_PIN) {
-+		ret = arch_make_page_accessible(page);
-+		if (ret) {
-+			unpin_user_page(page);
-+			page = ERR_PTR(ret);
-+			goto out;
-+		}
-+	}
- 	if (flags & FOLL_TOUCH) {
- 		if ((flags & FOLL_WRITE) &&
- 		    !pte_dirty(pte) && !PageDirty(page))
-@@ -2162,6 +2173,19 @@ static int gup_pte_range(pmd_t pmd, unsigned long addr, unsigned long end,
- 
- 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
- 
-+		/*
-+		 * We need to make the page accessible if and only if we are
-+		 * going to access its content (the FOLL_PIN case).  Please
-+		 * see Documentation/core-api/pin_user_pages.rst for
-+		 * details.
-+		 */
-+		if (flags & FOLL_PIN) {
-+			ret = arch_make_page_accessible(page);
-+			if (ret) {
-+				unpin_user_page(page);
-+				goto pte_unmap;
-+			}
-+		}
- 		SetPageReferenced(page);
- 		pages[*nr] = page;
- 		(*nr)++;
-diff --git a/mm/page-writeback.c b/mm/page-writeback.c
-index ab5a3cee8ad3..8384be5a2758 100644
---- a/mm/page-writeback.c
-+++ b/mm/page-writeback.c
-@@ -2807,6 +2807,11 @@ int __test_set_page_writeback(struct page *page, bool keep_write)
- 		inc_zone_page_state(page, NR_ZONE_WRITE_PENDING);
- 	}
- 	unlock_page_memcg(page);
-+	/*
-+	 * If writeback has been triggered on a page that cannot be made
-+	 * accessible, it is too late.
-+	 */
-+	WARN_ON(arch_make_page_accessible(page));
- 	return ret;
- 
- }
--- 
-2.24.1
+> >   
+> > > ---
+> > > v2:
+> > > * Fixed the issue identified by Mimi. Thanks Mimi, Ard, Heiko and Michael for
+> > > discussing the fix.
+> > >
+> > >  arch/powerpc/Kconfig           | 1 +
+> > >  arch/s390/Kconfig              | 1 +
+> > >  arch/x86/Kconfig               | 1 +
+> > >  include/linux/ima.h            | 3 +--
+> > >  security/integrity/ima/Kconfig | 9 +++++++++
+> > >  5 files changed, 13 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> > > index 497b7d0b2d7e..a5cfde432983 100644
+> > > --- a/arch/powerpc/Kconfig
+> > > +++ b/arch/powerpc/Kconfig
+> > > @@ -979,6 +979,7 @@ config PPC_SECURE_BOOT
+> > >         bool
+> > >         depends on PPC_POWERNV
+> > >         depends on IMA_ARCH_POLICY
+> > > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT
+> > >         help
+> > >           Systems with firmware secure boot enabled need to define security
+> > >           policies to extend secure boot to the OS. This config allows a user
+> > > diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
+> > > index 8abe77536d9d..4a502fbcb800 100644
+> > > --- a/arch/s390/Kconfig
+> > > +++ b/arch/s390/Kconfig
+> > > @@ -195,6 +195,7 @@ config S390
+> > >         select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+> > >         select SWIOTLB
+> > >         select GENERIC_ALLOCATOR
+> > > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT if IMA_ARCH_POLICY
+> > >
+> > >
+> > >  config SCHED_OMIT_FRAME_POINTER
+> > > diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> > > index beea77046f9b..7f5bfaf0cbd2 100644
+> > > --- a/arch/x86/Kconfig
+> > > +++ b/arch/x86/Kconfig
+> > > @@ -230,6 +230,7 @@ config X86
+> > >         select VIRT_TO_BUS
+> > >         select X86_FEATURE_NAMES                if PROC_FS
+> > >         select PROC_PID_ARCH_STATUS             if PROC_FS
+> > > +       select IMA_SECURE_AND_OR_TRUSTED_BOOT   if EFI && IMA_ARCH_POLICY
+> > >
+> > >  config INSTRUCTION_DECODER
+> > >         def_bool y
+> > > diff --git a/include/linux/ima.h b/include/linux/ima.h
+> > > index 1659217e9b60..aefe758f4466 100644
+> > > --- a/include/linux/ima.h
+> > > +++ b/include/linux/ima.h
+> > > @@ -30,8 +30,7 @@ extern void ima_kexec_cmdline(const void *buf, int size);
+> > >  extern void ima_add_kexec_buffer(struct kimage *image);
+> > >  #endif
+> > >
+> > > -#if (defined(CONFIG_X86) && defined(CONFIG_EFI)) || defined(CONFIG_S390) \
+> > > -       || defined(CONFIG_PPC_SECURE_BOOT)
+> > > +#ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+> > >  extern bool arch_ima_get_secureboot(void);
+> > >  extern const char * const *arch_get_ima_policy(void);
+> > >  #else
+> > > diff --git a/security/integrity/ima/Kconfig b/security/integrity/ima/Kconfig
+> > > index 3f3ee4e2eb0d..d17972aa413a 100644
+> > > --- a/security/integrity/ima/Kconfig
+> > > +++ b/security/integrity/ima/Kconfig
+> > > @@ -327,3 +327,12 @@ config IMA_QUEUE_EARLY_BOOT_KEYS
+> > >         depends on IMA_MEASURE_ASYMMETRIC_KEYS
+> > >         depends on SYSTEM_TRUSTED_KEYRING
+> > >         default y
+> > > +
+> > > +config IMA_SECURE_AND_OR_TRUSTED_BOOT
+> > > +       bool
+> > > +       depends on IMA
+> > > +       depends on IMA_ARCH_POLICY  
+> > 
+> > Doesn't the latter already depend on the former?  
+> 
+> Yes, there's no need for the first.
+> 
+> Mimi
+> >   
+> > > +       default n
+> > > +       help
+> > > +          This option is selected by architectures to enable secure and/or
+> > > +          trusted boot based on IMA runtime policies.
+> > > --
+> > > 2.13.6
+> > >  
+> 
 
