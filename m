@@ -2,104 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76F66179FE8
-	for <lists+linux-s390@lfdr.de>; Thu,  5 Mar 2020 07:23:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0E6FB17A033
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Mar 2020 07:50:40 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725858AbgCEGXX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Mar 2020 01:23:23 -0500
-Received: from foss.arm.com ([217.140.110.172]:43564 "EHLO foss.arm.com"
+        id S1725974AbgCEGuh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Mar 2020 01:50:37 -0500
+Received: from foss.arm.com ([217.140.110.172]:43770 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725839AbgCEGXX (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 5 Mar 2020 01:23:23 -0500
+        id S1725818AbgCEGuh (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 5 Mar 2020 01:50:37 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 17EB71FB;
-        Wed,  4 Mar 2020 22:23:23 -0800 (PST)
-Received: from [10.163.1.88] (unknown [10.163.1.88])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4D1843F534;
-        Wed,  4 Mar 2020 22:27:09 -0800 (PST)
-Subject: Re: [PATCH V14] mm/debug: Add tests validating architecture page
- table helpers
-To:     Christophe Leroy <christophe.leroy@c-s.fr>, Qian Cai <cai@lca.pw>
-Cc:     Linux Memory Management List <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-s390@vger.kernel.org, linux-riscv@lists.infradead.org,
-        the arch/x86 maintainers <x86@kernel.org>,
-        linux-arch@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-References: <c022e863-0807-fab1-cd41-3c320381f448@c-s.fr>
- <11F41980-97CF-411F-8120-41287DC1A382@lca.pw>
- <57a3bc61-bbd5-e251-9621-7bc28f7901a1@arm.com>
- <bcba7b7f-f351-4ee7-d74e-004a0bfbee47@c-s.fr>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0A9561FB;
+        Wed,  4 Mar 2020 22:50:36 -0800 (PST)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.88])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id E134A3F534;
+        Wed,  4 Mar 2020 22:54:23 -0800 (PST)
 From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <d198fc5a-5337-c346-a21c-1ff133202e68@arm.com>
-Date:   Thu, 5 Mar 2020 11:53:12 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
-MIME-Version: 1.0
-In-Reply-To: <bcba7b7f-f351-4ee7-d74e-004a0bfbee47@c-s.fr>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+To:     linux-mm@kvack.org
+Cc:     hughd@google.com, vbabka@suse.cz,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        uclinux-h8-devel@lists.sourceforge.jp,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org
+Subject: [PATCH 0/2]  mm/vma: some new flags
+Date:   Thu,  5 Mar 2020 12:20:12 +0530
+Message-Id: <1583391014-8170-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+The motivation here is to consolidate VMA flag combinations commonly used
+across platforms and reduce code duplication while making it uncluttered
+in general.
 
+This first introduces a default VM_DATA_DEFAULT_FLAGS which platforms can
+easily fall back on without requiring to define any similar data flag
+combinations as they currently do. This also adds some more common data
+flag combinations which are generally used when the platforms decide to
+override the default.
 
-On 03/05/2020 11:13 AM, Christophe Leroy wrote:
-> 
-> 
-> Le 05/03/2020 à 01:54, Anshuman Khandual a écrit :
->>
->>
->> On 03/04/2020 04:59 PM, Qian Cai wrote:
->>>
->>>
->>>> On Mar 4, 2020, at 1:49 AM, Christophe Leroy <christophe.leroy@c-s.fr> wrote:
->>>>
->>>> AFAIU, you are not taking an interrupt here. You are stuck in the pte_update(), most likely due to nested locks. Try with LOCKDEP ?
->>>
->>> Not exactly sure what did you mean here, but the kernel has all lockdep enabled and did not flag anything here.
->>
->> As the patch has been dropped from Linux next (next-20200304) perhaps in
->> order to fold back the __pa_symbol() fix [1], so I am planning to respin
->> the original patch once more as V15 while adding Qian's signed off by for
->> the powerpc part. For now lets enable radix MMU ppc64 along with existing
->> ppc32. As PPC_RADIX_MMU depends on PPC_BOOK3S_64, the following change
->> should be good enough ?
-> 
-> I don't think so, even if you have the Radix MMU compiled in, hash MMU is used when Radix is not available or disabled. So until the Hash MMU problem is fixed, you cannot enable it by default.
+The second patch consolidates VM_READ, VM_WRITE, VM_EXEC as VM_ACCESS_FLAGS
+extending the existing VMA accessibility concept via vma_is_accessibility().
+VM_ACCESS_FLAGS replaces many other instances which used check all three
+VMA access flags simultaneously.
 
-So this implies, that with DEBUG_VM given kernel compiled with Radix MMU will
-get stuck in soft lock up when forced to use hash MMU in cases where Radix MMU
-is either not available or is disabled. Hence, we cannot enable that.
+This series is based on v5.6-rc4 after applying these.
 
-I will still fold the changes from Qian without enabling ppc64 Radix MMU and
-respin V15. These new changes dont hurt, build every where and works good
-on arm64 and x86 platforms. More over we know that they also fix a problem
-for ppc64 Radix MMU platforms. Hence unless there are some other concerns we
-should fold them in.
+1. https://patchwork.kernel.org/cover/11399319/
+2. https://patchwork.kernel.org/patch/11399379/
 
-> 
-> Christophe
-> 
+Changes in V1:
+
+- Dropped the [PATCH 3/3] which was adding more vma_is_* wrappers
+- Used VM_DATA_FLAGS_EXEC for VM_DATA_DEFAULT_FLAGS instead per Vlastimil
+- Dropped init use cases for VM_ACCESS_FLAGS as suggested by Vlastimil
+
+Changes in RFC: (https://patchwork.kernel.org/project/linux-mm/list/?series=249733)
+
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-c6x-dev@linux-c6x.org
+Cc: uclinux-h8-devel@lists.sourceforge.jp
+Cc: linux-hexagon@vger.kernel.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: nios2-dev@lists.rocketboards.org
+Cc: openrisc@lists.librecores.org
+Cc: linux-parisc@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-riscv@lists.infradead.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-sh@vger.kernel.org
+Cc: sparclinux@vger.kernel.org
+Cc: linux-um@lists.infradead.org
+Cc: linux-xtensa@linux-xtensa.org
+Cc: linux-mm@kvack.org
+
+Anshuman Khandual (2):
+  mm/vma: Define a default value for VM_DATA_DEFAULT_FLAGS
+  mm/vma: Introduce VM_ACCESS_FLAGS
+
+ arch/alpha/include/asm/page.h        |  3 ---
+ arch/arc/include/asm/page.h          |  2 +-
+ arch/arm/include/asm/page.h          |  4 +---
+ arch/arm/mm/fault.c                  |  2 +-
+ arch/arm64/include/asm/page.h        |  4 +---
+ arch/arm64/mm/fault.c                |  2 +-
+ arch/c6x/include/asm/page.h          |  5 +----
+ arch/csky/include/asm/page.h         |  3 ---
+ arch/h8300/include/asm/page.h        |  2 --
+ arch/hexagon/include/asm/page.h      |  3 +--
+ arch/ia64/include/asm/page.h         |  5 +----
+ arch/m68k/include/asm/page.h         |  3 ---
+ arch/microblaze/include/asm/page.h   |  2 --
+ arch/mips/include/asm/page.h         |  5 +----
+ arch/nds32/include/asm/page.h        |  3 ---
+ arch/nds32/mm/fault.c                |  2 +-
+ arch/nios2/include/asm/page.h        |  3 +--
+ arch/openrisc/include/asm/page.h     |  5 -----
+ arch/parisc/include/asm/page.h       |  3 ---
+ arch/powerpc/include/asm/page.h      |  9 ++-------
+ arch/powerpc/include/asm/page_64.h   |  7 ++-----
+ arch/powerpc/mm/book3s64/pkeys.c     |  2 +-
+ arch/riscv/include/asm/page.h        |  3 +--
+ arch/s390/include/asm/page.h         |  3 +--
+ arch/s390/mm/fault.c                 |  2 +-
+ arch/sh/include/asm/page.h           |  3 ---
+ arch/sparc/include/asm/page_32.h     |  3 ---
+ arch/sparc/include/asm/page_64.h     |  3 ---
+ arch/unicore32/include/asm/page.h    |  3 ---
+ arch/unicore32/mm/fault.c            |  2 +-
+ arch/x86/include/asm/page_types.h    |  4 +---
+ arch/x86/mm/pkeys.c                  |  2 +-
+ arch/x86/um/asm/vm-flags.h           | 10 ++--------
+ arch/xtensa/include/asm/page.h       |  3 ---
+ drivers/staging/gasket/gasket_core.c |  2 +-
+ include/linux/mm.h                   | 20 +++++++++++++++++++-
+ mm/mmap.c                            |  2 +-
+ mm/mprotect.c                        |  4 ++--
+ 38 files changed, 47 insertions(+), 101 deletions(-)
+
+-- 
+2.20.1
+
