@@ -2,86 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3EF2217A3E0
-	for <lists+linux-s390@lfdr.de>; Thu,  5 Mar 2020 12:16:19 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A8ADC17A4F1
+	for <lists+linux-s390@lfdr.de>; Thu,  5 Mar 2020 13:11:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727388AbgCELQS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 5 Mar 2020 06:16:18 -0500
-Received: from ulan.pagasa.dost.gov.ph ([202.90.128.205]:47754 "EHLO
-        mailgw.pagasa.dost.gov.ph" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725880AbgCELQQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 5 Mar 2020 06:16:16 -0500
-X-Greylist: delayed 1274 seconds by postgrey-1.27 at vger.kernel.org; Thu, 05 Mar 2020 06:16:06 EST
-Received: from webmail.pagasa.dost.int ([10.10.11.8])
-        by mailgw.pagasa.dost.gov.ph  with ESMTP id 025AseSK006737-025AseSM006737
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Thu, 5 Mar 2020 18:54:40 +0800
-Received: from localhost (localhost [127.0.0.1])
-        by webmail.pagasa.dost.int (Postfix) with ESMTP id 2FB4F2981A90;
-        Thu,  5 Mar 2020 18:46:49 +0800 (PST)
-Received: from webmail.pagasa.dost.int ([127.0.0.1])
-        by localhost (webmail.pagasa.dost.int [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id r7J1A0N3aHYl; Thu,  5 Mar 2020 18:46:48 +0800 (PST)
-Received: from localhost (localhost [127.0.0.1])
-        by webmail.pagasa.dost.int (Postfix) with ESMTP id 2232C2981A4C;
-        Thu,  5 Mar 2020 18:46:48 +0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.10.3 webmail.pagasa.dost.int 2232C2981A4C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=pagasa.dost.gov.ph;
-        s=96B9A03E-48B0-11EA-A7E8-92F42F537CE2; t=1583405208;
-        bh=RC75T5p3JPNk7JUNB+lH0UfaFQO1Ac584gPL3SIL6h8=;
-        h=Date:From:Message-ID:MIME-Version;
-        b=vwxX3L8Z7uHnDJPZBIix9IBQi0XMBiY4sLQTc/9+h6pT2FHeTz61v6B+3f3w6WhXh
-         jUdnW3+FuZCvkf1pcG3LkjpsYvCQO7zO587a10BanpMqFFL6zPGTaTUsrqnCnsqpAd
-         CtN8Atz3iXBEFHZeiXsfNfnWSfk0n7tqEffbmBy8=
-X-Virus-Scanned: amavisd-new at pagasa.dost.int
-Received: from webmail.pagasa.dost.int ([127.0.0.1])
-        by localhost (webmail.pagasa.dost.int [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id WT2tTJV-1oie; Thu,  5 Mar 2020 18:46:47 +0800 (PST)
-Received: from webmail.pagasa.dost.int (webmail.pagasa.dost.int [10.11.1.8])
-        by webmail.pagasa.dost.int (Postfix) with ESMTP id 5119729819D2;
-        Thu,  5 Mar 2020 18:46:46 +0800 (PST)
-Date:   Thu, 5 Mar 2020 18:46:46 +0800 (PST)
-From:   "Juanito S. Galang" <juanito.galang@pagasa.dost.gov.ph>
-Message-ID: <1980644409.3575157.1583405206290.JavaMail.zimbra@pagasa.dost.gov.ph>
-Subject: 
+        id S1725816AbgCEMLw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 5 Mar 2020 07:11:52 -0500
+Received: from mx2.suse.de ([195.135.220.15]:35278 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbgCEMLw (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 5 Mar 2020 07:11:52 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 0F5D6B080;
+        Thu,  5 Mar 2020 12:11:50 +0000 (UTC)
+Subject: Re: [PATCH 2/2] mm/vma: Introduce VM_ACCESS_FLAGS
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     hughd@google.com, Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Salter <msalter@redhat.com>,
+        Nick Hu <nickhu@andestech.com>,
+        Ley Foon Tan <ley.foon.tan@intel.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Guan Xuetao <gxt@pku.edu.cn>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Rob Springer <rspringer@google.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+References: <1583391014-8170-1-git-send-email-anshuman.khandual@arm.com>
+ <1583391014-8170-3-git-send-email-anshuman.khandual@arm.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <b3ab3943-7c3a-9c0a-17ba-bea254c5d5df@suse.cz>
+Date:   Thu, 5 Mar 2020 13:11:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
+In-Reply-To: <1583391014-8170-3-git-send-email-anshuman.khandual@arm.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Zimbra 8.8.15_GA_3899 (ZimbraWebClient - GC79 (Win)/8.8.15_GA_3895)
-Thread-Index: lWYDQbv6QI/eIWKrWUD3NPCXqIIr9A==
-Thread-Topic: 
-X-FEAS-DKIM: Valid
-Authentication-Results: mailgw.pagasa.dost.gov.ph;
-        dkim=pass header.i=@pagasa.dost.gov.ph
-To:     unlisted-recipients:; (no To-header on input)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On 3/5/20 7:50 AM, Anshuman Khandual wrote:
+> There are many places where all basic VMA access flags (read, write, exec)
+> are initialized or checked against as a group. One such example is during
+> page fault. Existing vma_is_accessible() wrapper already creates the notion
+> of VMA accessibility as a group access permissions. Hence lets just create
+> VM_ACCESS_FLAGS (VM_READ|VM_WRITE|VM_EXEC) which will not only reduce code
+> duplication but also extend the VMA accessibility concept in general.
+> 
+> Cc: Russell King <linux@armlinux.org.uk>
+> CC: Catalin Marinas <catalin.marinas@arm.com>
+> CC: Mark Salter <msalter@redhat.com>
+> Cc: Nick Hu <nickhu@andestech.com>
+> CC: Ley Foon Tan <ley.foon.tan@intel.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+> Cc: Guan Xuetao <gxt@pku.edu.cn>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Rob Springer <rspringer@google.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-s390@vger.kernel.org
+> Cc: devel@driverdev.osuosl.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
 
+Reviewed-by: Vlastimil Babka <vbabka@suse.cz>
 
-Herzlichen Gl=C3=BCckwunsch Lieber Beg=C3=BCnstigter,Sie erhalten diese E-M=
-ail von der Robert Bailey Foundation. Ich bin ein pensionierter Regierungsa=
-ngestellter aus Harlem und ein Gewinner des Powerball Lottery Jackpot im We=
-rt von 343,8 Millionen US-Dollar. Ich bin der gr=C3=B6=C3=9Fte Jackpot-Gewi=
-nner in der Geschichte der New Yorker Lotterie im US-Bundesstaat Amerika. I=
-ch habe diese Lotterie am 27. Oktober 2018 gewonnen und m=C3=B6chte Sie dar=
-=C3=BCber informieren, dass Google in Zusammenarbeit mit Microsoft Ihre "E-=
-Mail-Adresse" auf meine Bitte, einen Spendenbetrag von 3.000.000,00 Million=
-en Euro zu erhalten, =C3=BCbermittelt hat. Ich spende diese 3 Millionen Eur=
-o an Sie, um den Wohlt=C3=A4tigkeitsheimen und armen Menschen in Ihrer Geme=
-inde zu helfen, damit wir die Welt f=C3=BCr alle verbessern k=C3=B6nnen.Wei=
-tere Informationen finden Sie auf der folgenden Website, damit Sie nicht sk=
-eptisch sind
-Diese Spende von 3 Mio. EUR.https://nypost.com/2018/11/14/meet-the-winner-o=
-f-the-biggest-lottery-jackpot-in-new-york-history/Sie k=C3=B6nnen auch mein=
- YouTube f=C3=BCr mehr Best=C3=A4tigung aufpassen:
-https://www.youtube.com/watch?v=3DH5vT18Ysavc
-Bitte beachten Sie, dass alle Antworten an (robertdonation7@gmail.com=C2=A0=
- ) gesendet werden, damit wir das k=C3=B6nnen
-Fahren Sie fort, um das gespendete Geld an Sie zu =C3=BCberweisen.E-Mail: r=
-obertdonation7@gmail.comFreundliche Gr=C3=BC=C3=9Fe,
-Robert Bailey
-* * * * * * * * * * * * * * * *
-Powerball Jackpot Gewinner
+Thanks.
