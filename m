@@ -2,161 +2,272 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id EED9917B826
-	for <lists+linux-s390@lfdr.de>; Fri,  6 Mar 2020 09:13:26 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id A03BD17BB76
+	for <lists+linux-s390@lfdr.de>; Fri,  6 Mar 2020 12:18:44 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726182AbgCFIN0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 6 Mar 2020 03:13:26 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:58416 "EHLO
+        id S1726025AbgCFLSl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 6 Mar 2020 06:18:41 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22916 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726034AbgCFINZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Mar 2020 03:13:25 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02689rsS126489
-        for <linux-s390@vger.kernel.org>; Fri, 6 Mar 2020 03:13:24 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yk4jps74x-1
+        by vger.kernel.org with ESMTP id S1726190AbgCFLSk (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 6 Mar 2020 06:18:40 -0500
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 026BFF6U027882
+        for <linux-s390@vger.kernel.org>; Fri, 6 Mar 2020 06:18:39 -0500
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yk8hmqsfr-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 06 Mar 2020 03:13:24 -0500
+        for <linux-s390@vger.kernel.org>; Fri, 06 Mar 2020 06:18:39 -0500
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Fri, 6 Mar 2020 08:13:21 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Fri, 6 Mar 2020 11:18:36 -0000
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 6 Mar 2020 08:13:18 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0268DHiL40108418
+        Fri, 6 Mar 2020 11:18:32 -0000
+Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 026BIUs553805080
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 6 Mar 2020 08:13:17 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 68B00A405F;
-        Fri,  6 Mar 2020 08:13:17 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2F039A4068;
-        Fri,  6 Mar 2020 08:13:17 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  6 Mar 2020 08:13:17 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 2/2] s390/qeth: remove VNICC callback parameter struct
-Date:   Fri,  6 Mar 2020 09:13:11 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200306081311.50635-1-jwi@linux.ibm.com>
-References: <20200306081311.50635-1-jwi@linux.ibm.com>
+        Fri, 6 Mar 2020 11:18:30 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8BCFB42045;
+        Fri,  6 Mar 2020 11:18:30 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D44C342041;
+        Fri,  6 Mar 2020 11:18:29 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.0.1])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri,  6 Mar 2020 11:18:29 +0000 (GMT)
+Date:   Fri, 6 Mar 2020 12:18:23 +0100
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     <linux-next@vger.kernel.org>, <akpm@linux-foundation.org>,
+        <jack@suse.cz>, <kirill@shutemov.name>, <borntraeger@de.ibm.com>,
+        <david@redhat.com>, <aarcange@redhat.com>, <linux-mm@kvack.org>,
+        <frankja@linux.ibm.com>, <sfr@canb.auug.org.au>,
+        <linux-kernel@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v3 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+In-Reply-To: <f58b6839-5233-5ccf-1f1d-60b3b8aaf417@nvidia.com>
+References: <20200304130655.462517-1-imbrenda@linux.ibm.com>
+        <20200304130655.462517-3-imbrenda@linux.ibm.com>
+        <f58b6839-5233-5ccf-1f1d-60b3b8aaf417@nvidia.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20030608-0020-0000-0000-000003B1013F
+x-cbid: 20030611-0028-0000-0000-000003E1731E
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20030608-0021-0000-0000-00002209409F
-Message-Id: <20200306081311.50635-3-jwi@linux.ibm.com>
+x-cbparentid: 20030611-0029-0000-0000-000024A6AB23
+Message-Id: <20200306121823.50d253ac@p-imbrenda>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-06_02:2020-03-05,2020-03-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=970
- priorityscore=1501 lowpriorityscore=0 malwarescore=0 mlxscore=0
- impostorscore=0 clxscore=1015 spamscore=0 suspectscore=0 bulkscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003060057
+ definitions=2020-03-06_03:2020-03-06,2020-03-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 adultscore=0
+ phishscore=0 suspectscore=2 mlxlogscore=920 impostorscore=0
+ priorityscore=1501 spamscore=0 mlxscore=0 bulkscore=0 malwarescore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003060081
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-After recent cleanups this is just a complicated wrapper around an u32*.
+On Thu, 5 Mar 2020 14:30:03 -0800
+John Hubbard <jhubbard@nvidia.com> wrote:
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Reviewed-by: Alexandra Winter <wintera@linux.ibm.com>
----
- drivers/s390/net/qeth_l2_main.c | 29 ++++-------------------------
- 1 file changed, 4 insertions(+), 25 deletions(-)
+> On 3/4/20 5:06 AM, Claudio Imbrenda wrote:
+> > With the introduction of protected KVM guests on s390 there is now a
+> > concept of inaccessible pages. These pages need to be made
+> > accessible before the host can access them.
+> > 
+> > While cpu accesses will trigger a fault that can be resolved, I/O
+> > accesses will just fail.  We need to add a callback into
+> > architecture code for places that will do I/O, namely when
+> > writeback is started or when a page reference is taken.
+> > 
+> > This is not only to enable paging, file backing etc, it is also
+> > necessary to protect the host against a malicious user space.  For
+> > example a bad QEMU could simply start direct I/O on such protected
+> > memory.  We do not want userspace to be able to trigger I/O errors
+> > and thus the logic is "whenever somebody accesses that page (gup)
+> > or does I/O, make sure that this page can be accessed".  When the
+> > guest tries to access that page we will wait in the page fault
+> > handler for writeback to have finished and for the page_ref to be
+> > the expected value.
+> > 
+> > On s390x the function is not supposed to fail, so it is ok to use a
+> > WARN_ON on failure. If we ever need some more finegrained handling
+> > we can tackle this when we know the details.
+> > 
+> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> > Acked-by: Will Deacon <will@kernel.org>
+> > Reviewed-by: David Hildenbrand <david@redhat.com>
+> > Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > ---
+> >  include/linux/gfp.h |  6 ++++++
+> >  mm/gup.c            | 30 +++++++++++++++++++++++++++---
+> >  mm/page-writeback.c |  5 +++++
+> >  3 files changed, 38 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/gfp.h b/include/linux/gfp.h
+> > index e5b817cb86e7..be2754841369 100644
+> > --- a/include/linux/gfp.h
+> > +++ b/include/linux/gfp.h
+> > @@ -485,6 +485,12 @@ static inline void arch_free_page(struct page
+> > *page, int order) { } #ifndef HAVE_ARCH_ALLOC_PAGE
+> >  static inline void arch_alloc_page(struct page *page, int order) {
+> > } #endif
+> > +#ifndef HAVE_ARCH_MAKE_PAGE_ACCESSIBLE
+> > +static inline int arch_make_page_accessible(struct page *page)
+> > +{
+> > +	return 0;
+> > +}
+> > +#endif
+> >  
+> >  struct page *
+> >  __alloc_pages_nodemask(gfp_t gfp_mask, unsigned int order, int
+> > preferred_nid, diff --git a/mm/gup.c b/mm/gup.c
+> > index 81a95fbe9901..d0c4c6f336bb 100644
+> > --- a/mm/gup.c
+> > +++ b/mm/gup.c
+> > @@ -413,6 +413,7 @@ static struct page *follow_page_pte(struct
+> > vm_area_struct *vma, struct page *page;
+> >  	spinlock_t *ptl;
+> >  	pte_t *ptep, pte;
+> > +	int ret;
+> >  
+> >  	/* FOLL_GET and FOLL_PIN are mutually exclusive. */
+> >  	if (WARN_ON_ONCE((flags & (FOLL_PIN | FOLL_GET)) ==
+> > @@ -471,8 +472,6 @@ static struct page *follow_page_pte(struct
+> > vm_area_struct *vma, if (is_zero_pfn(pte_pfn(pte))) {
+> >  			page = pte_page(pte);
+> >  		} else {
+> > -			int ret;
+> > -
+> >  			ret = follow_pfn_pte(vma, address, ptep,
+> > flags); page = ERR_PTR(ret);
+> >  			goto out;
+> > @@ -480,7 +479,6 @@ static struct page *follow_page_pte(struct
+> > vm_area_struct *vma, }
+> >  
+> >  	if (flags & FOLL_SPLIT && PageTransCompound(page)) {
+> > -		int ret;
+> >  		get_page(page);
+> >  		pte_unmap_unlock(ptep, ptl);
+> >  		lock_page(page);
+> > @@ -497,6 +495,19 @@ static struct page *follow_page_pte(struct
+> > vm_area_struct *vma, page = ERR_PTR(-ENOMEM);
+> >  		goto out;
+> >  	}
+> > +	/*
+> > +	 * We need to make the page accessible if and only if we
+> > are going
+> > +	 * to access its content (the FOLL_PIN case).  Please see
+> > +	 * Documentation/core-api/pin_user_pages.rst for details.
+> > +	 */
+> > +	if (flags & FOLL_PIN) {
+> > +		ret = arch_make_page_accessible(page);
+> > +		if (ret) {
+> > +			unpin_user_page(page);
+> > +			page = ERR_PTR(ret);
+> > +			goto out;
+> > +		}
+> > +	}
+> >  	if (flags & FOLL_TOUCH) {
+> >  		if ((flags & FOLL_WRITE) &&
+> >  		    !pte_dirty(pte) && !PageDirty(page))
+> > @@ -2162,6 +2173,19 @@ static int gup_pte_range(pmd_t pmd, unsigned
+> > long addr, unsigned long end, 
+> >  		VM_BUG_ON_PAGE(compound_head(page) != head, page);
+> >  
+> > +		/*
+> > +		 * We need to make the page accessible if and only
+> > if we are
+> > +		 * going to access its content (the FOLL_PIN
+> > case).  Please
+> > +		 * see Documentation/core-api/pin_user_pages.rst
+> > for
+> > +		 * details.
+> > +		 */
+> > +		if (flags & FOLL_PIN) {
+> > +			ret = arch_make_page_accessible(page);
+> > +			if (ret) {
+> > +				unpin_user_page(page);
+> > +				goto pte_unmap;
+> > +			}
+> > +		}
+> >  		SetPageReferenced(page);
+> >  		pages[*nr] = page;
+> >  		(*nr)++;
+> > diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> > index ab5a3cee8ad3..8384be5a2758 100644
+> > --- a/mm/page-writeback.c
+> > +++ b/mm/page-writeback.c
+> > @@ -2807,6 +2807,11 @@ int __test_set_page_writeback(struct page
+> > *page, bool keep_write) inc_zone_page_state(page,
+> > NR_ZONE_WRITE_PENDING); }
+> >  	unlock_page_memcg(page);
+> > +	/*
+> > +	 * If writeback has been triggered on a page that cannot
+> > be made
+> > +	 * accessible, it is too late.
+> > +	 */
+> > +	WARN_ON(arch_make_page_accessible(page));  
+> 
+> Hi,
+> 
+> Sorry for not commenting on this earlier. After looking at this a
+> bit, I think a tiny tweak would be helpful, because:
+> 
+> a) WARN_ON() is a big problem for per-page issues, because, like
+> ants, pages are prone to show up in large groups. And a warning and
+> backtrace for each such page can easily bring a system to a crawl.
+> 
+> b) Based on your explanation of how this works, what your situation
+> really seems to call for is the standard "crash hard in DEBUG builds,
+> in order to keep developers out of trouble, but continue on in
+> non-DEBUG builds".
+> 
+> So maybe you'd be better protected with this instead:
+> 
+> diff --git a/mm/page-writeback.c b/mm/page-writeback.c
+> index ab5a3cee8ad3..b7f3d0766a5f 100644
+> --- a/mm/page-writeback.c
+> +++ b/mm/page-writeback.c
+> @@ -2764,7 +2764,7 @@ int test_clear_page_writeback(struct page *page)
+>  int __test_set_page_writeback(struct page *page, bool keep_write)
+>  {
+>         struct address_space *mapping = page_mapping(page);
+> -       int ret;
+> +       int ret, access_ret;
+>  
+>         lock_page_memcg(page);
+>         if (mapping && mapping_use_writeback_tags(mapping)) {
+> @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page
+> *page, bool keep_write) inc_zone_page_state(page,
+> NR_ZONE_WRITE_PENDING); }
+>         unlock_page_memcg(page);
+> +       access_ret = arch_make_page_accessible(page);
+> +       /*
+> +        * If writeback has been triggered on a page that cannot be
+> made
+> +        * accessible, it is too late to recover here.
+> +        */
+> +       VM_BUG_ON_PAGE(access_ret != 0, page);
+> +
+>         return ret;
+>  
+>  }
+> 
+> Assuming that's acceptable, you can add:
+> 
+>       Reviewed-by: John Hubbard <jhubbard@nvidia.com>
+> 
+> to the updated patch.  
 
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 9972d96820f3..0bf5e7133229 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -1567,23 +1567,11 @@ static int qeth_l2_vnicc_makerc(struct qeth_card *card, u16 ipa_rc)
- 	return rc;
- }
- 
--/* generic VNICC request call back control */
--struct _qeth_l2_vnicc_request_cbctl {
--	struct {
--		union{
--			u32 *sup_cmds;
--			u32 *timeout;
--		};
--	} result;
--};
--
- /* generic VNICC request call back */
- static int qeth_l2_vnicc_request_cb(struct qeth_card *card,
- 				    struct qeth_reply *reply,
- 				    unsigned long data)
- {
--	struct _qeth_l2_vnicc_request_cbctl *cbctl =
--		(struct _qeth_l2_vnicc_request_cbctl *) reply->param;
- 	struct qeth_ipa_cmd *cmd = (struct qeth_ipa_cmd *) data;
- 	struct qeth_ipacmd_vnicc *rep = &cmd->data.vnicc;
- 	u32 sub_cmd = cmd->data.vnicc.hdr.sub_command;
-@@ -1596,9 +1584,9 @@ static int qeth_l2_vnicc_request_cb(struct qeth_card *card,
- 	card->options.vnicc.cur_chars = rep->vnicc_cmds.enabled;
- 
- 	if (sub_cmd == IPA_VNICC_QUERY_CMDS)
--		*cbctl->result.sup_cmds = rep->data.query_cmds.sup_cmds;
-+		*(u32 *)reply->param = rep->data.query_cmds.sup_cmds;
- 	else if (sub_cmd == IPA_VNICC_GET_TIMEOUT)
--		*cbctl->result.timeout = rep->data.getset_timeout.timeout;
-+		*(u32 *)reply->param = rep->data.getset_timeout.timeout;
- 
- 	return 0;
- }
-@@ -1639,7 +1627,6 @@ static int qeth_l2_vnicc_query_chars(struct qeth_card *card)
- static int qeth_l2_vnicc_query_cmds(struct qeth_card *card, u32 vnic_char,
- 				    u32 *sup_cmds)
- {
--	struct _qeth_l2_vnicc_request_cbctl cbctl;
- 	struct qeth_cmd_buffer *iob;
- 
- 	QETH_CARD_TEXT(card, 2, "vniccqcm");
-@@ -1650,10 +1637,7 @@ static int qeth_l2_vnicc_query_cmds(struct qeth_card *card, u32 vnic_char,
- 
- 	__ipa_cmd(iob)->data.vnicc.data.query_cmds.vnic_char = vnic_char;
- 
--	/* prepare callback control */
--	cbctl.result.sup_cmds = sup_cmds;
--
--	return qeth_send_ipa_cmd(card, iob, qeth_l2_vnicc_request_cb, &cbctl);
-+	return qeth_send_ipa_cmd(card, iob, qeth_l2_vnicc_request_cb, sup_cmds);
- }
- 
- /* VNICC enable/disable characteristic request */
-@@ -1677,7 +1661,6 @@ static int qeth_l2_vnicc_getset_timeout(struct qeth_card *card, u32 vnicc,
- 					u32 cmd, u32 *timeout)
- {
- 	struct qeth_vnicc_getset_timeout *getset_timeout;
--	struct _qeth_l2_vnicc_request_cbctl cbctl;
- 	struct qeth_cmd_buffer *iob;
- 
- 	QETH_CARD_TEXT(card, 2, "vniccgst");
-@@ -1692,11 +1675,7 @@ static int qeth_l2_vnicc_getset_timeout(struct qeth_card *card, u32 vnicc,
- 	if (cmd == IPA_VNICC_SET_TIMEOUT)
- 		getset_timeout->timeout = *timeout;
- 
--	/* prepare callback control */
--	if (cmd == IPA_VNICC_GET_TIMEOUT)
--		cbctl.result.timeout = timeout;
--
--	return qeth_send_ipa_cmd(card, iob, qeth_l2_vnicc_request_cb, &cbctl);
-+	return qeth_send_ipa_cmd(card, iob, qeth_l2_vnicc_request_cb, timeout);
- }
- 
- /* set current VNICC flag state; called from sysfs store function */
--- 
-2.17.1
+I will send an updated patch, thanks a lot for the feedback!
 
