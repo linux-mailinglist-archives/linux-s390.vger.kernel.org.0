@@ -2,84 +2,52 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 422CD17D453
-	for <lists+linux-s390@lfdr.de>; Sun,  8 Mar 2020 16:01:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EA45717D572
+	for <lists+linux-s390@lfdr.de>; Sun,  8 Mar 2020 19:20:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726340AbgCHPBL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 8 Mar 2020 11:01:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34952 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726338AbgCHPBK (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sun, 8 Mar 2020 11:01:10 -0400
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8091020637;
-        Sun,  8 Mar 2020 15:01:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583679670;
-        bh=VpgbOOFBzVtoxDq1q/wUlZQ9GMxkGUXSKmqQWxzjTzQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=t+pMUgQnDPYDcCYn6Pj0FZKSmSx/hPA/A/Fysb4ygadDvxXX6JjvcEWJC3Q8bV2Em
-         skFOPokPhc6ohxuDkv1LdS1KTg5sxWq/JUNjlfaa9v6jDC1HadWUXxXVXETA66JtKd
-         fpGoPIl1eYJIxQ1o1OoDXaScyyoWhBezW/W9sKtQ=
-Date:   Sun, 8 Mar 2020 17:01:07 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        raspl@linux.ibm.com, ubraun@linux.ibm.com
-Subject: Re: [PATCH net] net/smc: cancel event worker during device removal
-Message-ID: <20200308150107.GC11496@unreal>
-References: <20200306134518.84416-1-kgraul@linux.ibm.com>
+        id S1726347AbgCHSUQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 8 Mar 2020 14:20:16 -0400
+Received: from www752.sakura.ne.jp ([59.106.19.202]:59273 "EHLO
+        www752.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726279AbgCHSUP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Sun, 8 Mar 2020 14:20:15 -0400
+X-Greylist: delayed 8362 seconds by postgrey-1.27 at vger.kernel.org; Sun, 08 Mar 2020 14:20:13 EDT
+Received: from fsav305.sakura.ne.jp (fsav305.sakura.ne.jp [153.120.85.136])
+        by www752.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 028Ft3K9062230;
+        Mon, 9 Mar 2020 00:55:04 +0900 (JST)
+        (envelope-from postmaster@hokusetubad.sakura.ne.jp)
+Received: from www752.sakura.ne.jp (59.106.19.202)
+ by fsav305.sakura.ne.jp (F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp);
+ Mon, 09 Mar 2020 00:55:03 +0900 (JST)
+X-Virus-Status: clean(F-Secure/fsigk_smtp/550/fsav305.sakura.ne.jp)
+Received: from www752.sakura.ne.jp (localhost [127.0.0.1])
+        by www752.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id 028Ft2GU062217;
+        Mon, 9 Mar 2020 00:55:03 +0900 (JST)
+        (envelope-from postmaster@hokusetubad.sakura.ne.jp)
+Received: (from hokusetubad@localhost)
+        by www752.sakura.ne.jp (8.15.2/8.15.2/Submit) id 028Ft2lu062216;
+        Mon, 9 Mar 2020 00:55:02 +0900 (JST)
+        (envelope-from postmaster@hokusetubad.sakura.ne.jp)
+Message-Id: <202003081555.028Ft2lu062216@www752.sakura.ne.jp>
+X-Authentication-Warning: www752.sakura.ne.jp: hokusetubad set sender to postmaster@hokusetubad.sakura.ne.jp using -f
+Subject: BUSINESS PROPOSAL
+From:   postmaster@hokusetubad.sakura.ne.jp
+Reply-To: abulkareem461@gmail.com
+To:     mitch.a.williams@intel.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200306134518.84416-1-kgraul@linux.ibm.com>
+Date:   Mon, 09 Mar 2020 00:55:02 +0900
+Content-Type: text/plain; charset="ISO-2022-JP"
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, Mar 06, 2020 at 02:45:18PM +0100, Karsten Graul wrote:
-> During IB device removal, cancel the event worker before the device
-> structure is freed. In the worker, check if the device is being
-> terminated and do not proceed with the event work in that case.
->
-> Fixes: a4cf0443c414 ("smc: introduce SMC as an IB-client")
-> Reported-by: syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com
-> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-> Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-> ---
->  net/smc/smc_ib.c | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
-> index d6ba186f67e2..5e4e64a9aa4b 100644
-> --- a/net/smc/smc_ib.c
-> +++ b/net/smc/smc_ib.c
-> @@ -240,6 +240,9 @@ static void smc_ib_port_event_work(struct work_struct *work)
->  		work, struct smc_ib_device, port_event_work);
->  	u8 port_idx;
->
-> +	if (list_empty(&smcibdev->list))
-> +		return;
-> +
+Dearest Friend
 
-How can it be true if you are not holding "smc_ib_devices.lock" during
-execution of smc_ib_port_event_work()?
-
->  	for_each_set_bit(port_idx, &smcibdev->port_event_mask, SMC_MAX_PORTS) {
->  		smc_ib_remember_port_attr(smcibdev, port_idx + 1);
->  		clear_bit(port_idx, &smcibdev->port_event_mask);
-> @@ -582,6 +585,7 @@ static void smc_ib_remove_dev(struct ib_device *ibdev, void *client_data)
->  	smc_smcr_terminate_all(smcibdev);
->  	smc_ib_cleanup_per_ibdev(smcibdev);
->  	ib_unregister_event_handler(&smcibdev->event_handler);
-> +	cancel_work_sync(&smcibdev->port_event_work);
->  	kfree(smcibdev);
->  }
->
-> --
-> 2.17.1
->
+I am Mr Abdul Kareem working with Emirate NBD Bank Dubai,United Arab Emirate as Finance Manager.
+I have a very profitable Business that concerns you and will benefit both of us after completion.
+Kindly get back to me for more details.
+Awaiting your response.
+Regards
+Abdul Kareem
