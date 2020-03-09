@@ -2,133 +2,87 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4D42217E0F7
-	for <lists+linux-s390@lfdr.de>; Mon,  9 Mar 2020 14:20:03 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 442EA17E2F3
+	for <lists+linux-s390@lfdr.de>; Mon,  9 Mar 2020 16:00:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726411AbgCINUD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 9 Mar 2020 09:20:03 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726403AbgCINUC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 9 Mar 2020 09:20:02 -0400
-Received: from localhost (unknown [213.57.247.131])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C7A621D7E;
-        Mon,  9 Mar 2020 13:20:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1583760002;
-        bh=mTYF3Bq6EdJCPqBBqVyScqkv2S+EqItcwvhxhO6i2Wg=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XpDeXvMS7J8pObDeny8vgk0AveNLKS712PdY6+01ZE6tgvtGcj/OdsHI/+VerScp4
-         S3KCYjiovSEmstkZFvILqrHVatGrBRGJqsD9B6Jab6LEgCmfFTSdXFcVEaLxM6rw59
-         plo9MKH+fok9p2CQT6FLVe/nHLmpKxirlq1rPpFI=
-Date:   Mon, 9 Mar 2020 15:19:56 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Karsten Graul <kgraul@linux.ibm.com>
-Cc:     davem@davemloft.net, netdev@vger.kernel.org,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        raspl@linux.ibm.com, ubraun@linux.ibm.com
-Subject: Re: [PATCH net] net/smc: cancel event worker during device removal
-Message-ID: <20200309131956.GB172334@unreal>
-References: <20200306134518.84416-1-kgraul@linux.ibm.com>
- <20200308150107.GC11496@unreal>
- <0b5d992d-2447-1606-f8ce-73801643160a@linux.ibm.com>
- <20200309080439.GJ11496@unreal>
- <49a3e4fc-66c3-e658-c95f-6651c4336510@linux.ibm.com>
+        id S1726676AbgCIPAl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 9 Mar 2020 11:00:41 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24888 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726617AbgCIPAl (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 9 Mar 2020 11:00:41 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 029F09I9118259;
+        Mon, 9 Mar 2020 11:00:40 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ym8k7ss6v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Mar 2020 11:00:39 -0400
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 029F0dUG122814;
+        Mon, 9 Mar 2020 11:00:39 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ym8k7ss2f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Mar 2020 11:00:38 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 029F0Zvw004783;
+        Mon, 9 Mar 2020 15:00:35 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+        by ppma02wdc.us.ibm.com with ESMTP id 2ym386b3tf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 09 Mar 2020 15:00:35 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 029F0YB319661106
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 9 Mar 2020 15:00:34 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9FF1A2805E;
+        Mon,  9 Mar 2020 15:00:34 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 84CA928060;
+        Mon,  9 Mar 2020 15:00:34 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.114.17.106])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon,  9 Mar 2020 15:00:34 +0000 (GMT)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
+        David Hildenbrand <david@redhat.com>,
+        Thomas Huth <thuth@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: [PATCH 0/4] KVM: s390: reset selftest and fixes
+Date:   Mon,  9 Mar 2020 11:00:22 -0400
+Message-Id: <20200309150026.4329-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <49a3e4fc-66c3-e658-c95f-6651c4336510@linux.ibm.com>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-09_06:2020-03-09,2020-03-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxscore=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1015 impostorscore=0
+ bulkscore=0 priorityscore=1501 adultscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=946 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003090104
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Mar 09, 2020 at 10:40:16AM +0100, Karsten Graul wrote:
-> On 09/03/2020 09:04, Leon Romanovsky wrote:
-> > On Sun, Mar 08, 2020 at 08:59:33PM +0100, Karsten Graul wrote:
-> >> On 08/03/2020 16:01, Leon Romanovsky wrote:
-> >>> On Fri, Mar 06, 2020 at 02:45:18PM +0100, Karsten Graul wrote:
-> >>>> During IB device removal, cancel the event worker before the device
-> >>>> structure is freed. In the worker, check if the device is being
-> >>>> terminated and do not proceed with the event work in that case.
-> >>>>
-> >>>> Fixes: a4cf0443c414 ("smc: introduce SMC as an IB-client")
-> >>>> Reported-by: syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com
-> >>>> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
-> >>>> Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
-> >>>> ---
-> >>>>  net/smc/smc_ib.c | 4 ++++
-> >>>>  1 file changed, 4 insertions(+)
-> >>>>
-> >>>> diff --git a/net/smc/smc_ib.c b/net/smc/smc_ib.c
-> >>>> index d6ba186f67e2..5e4e64a9aa4b 100644
-> >>>> --- a/net/smc/smc_ib.c
-> >>>> +++ b/net/smc/smc_ib.c
-> >>>> @@ -240,6 +240,9 @@ static void smc_ib_port_event_work(struct work_struct *work)
-> >>>>  		work, struct smc_ib_device, port_event_work);
-> >>>>  	u8 port_idx;
-> >>>>
-> >>>> +	if (list_empty(&smcibdev->list))
-> >>>> +		return;
-> >>>> +
-> >>>
-> >>> How can it be true if you are not holding "smc_ib_devices.lock" during
-> >>> execution of smc_ib_port_event_work()?
-> >>>
-> >>
-> >> It is true when smc_ib_remove_dev() runs before the work actually started.
-> >> Other than that its only a shortcut to return earlier, when the item is
-> >> removed from the list after the check then the processing just takes a
-> >> little bit longer...its still save.
-> >
-> > The check itself maybe safe, but it can't fix syzkaller bug reported above.
-> > As you said, the smc_ib_remove_dev() can be called immediately after
-> > your list_empty() check and we return to original behavior.
-> >
-> > The correct design will be to ensure that smc_ib_port_event_work() is
-> > executed only smcibdev->list is not empty.
-> >
-> > Thanks
-> >
->
-> The fix I had in mind was the
->
-> 	cancel_work_sync(&smcibdev->port_event_work);
->
-> to wait for a running port_event_work to finish before smcibdev is freed.
-> I can remove the list_empty() check if that is too confusing.
+By adding more testcases to the reset test, I even found a bug.
 
-Yes, please.
+Christian Borntraeger (4):
+  selftests: KVM: s390: fix early guest crash
+  selftests: KVM: s390: test more register variants for the reset ioctl
+  KVM: s390: Also reset registers in sync regs for initial cpu reset
+  selftests: KVM: s390: check for registers to NOT change on reset
 
-Thanks
+ arch/s390/kvm/kvm-s390.c                   |  18 ++-
+ tools/testing/selftests/kvm/s390x/resets.c | 130 +++++++++++++++++----
+ 2 files changed, 123 insertions(+), 25 deletions(-)
 
->
-> >>
-> >>>>  	for_each_set_bit(port_idx, &smcibdev->port_event_mask, SMC_MAX_PORTS) {
-> >>>>  		smc_ib_remember_port_attr(smcibdev, port_idx + 1);
-> >>>>  		clear_bit(port_idx, &smcibdev->port_event_mask);
-> >>>> @@ -582,6 +585,7 @@ static void smc_ib_remove_dev(struct ib_device *ibdev, void *client_data)
-> >>>>  	smc_smcr_terminate_all(smcibdev);
-> >>>>  	smc_ib_cleanup_per_ibdev(smcibdev);
-> >>>>  	ib_unregister_event_handler(&smcibdev->event_handler);
-> >>>> +	cancel_work_sync(&smcibdev->port_event_work);
-> >>>>  	kfree(smcibdev);
-> >>>>  }
-> >>>>
-> >>>> --
-> >>>> 2.17.1
-> >>>>
-> >>
-> >> --
-> >> Karsten
-> >>
-> >> (I'm a dude)
-> >>
->
-> --
-> Karsten
->
-> (I'm a dude)
->
+-- 
+2.25.0
+
