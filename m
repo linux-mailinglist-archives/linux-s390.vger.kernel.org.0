@@ -2,74 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B14017FC55
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Mar 2020 14:20:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 6A30017FCA5
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Mar 2020 14:22:25 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729306AbgCJNUS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Mar 2020 09:20:18 -0400
-Received: from mail.11d01.mspz7.gob.ec ([190.152.145.91]:43954 "EHLO
-        mail.11d01.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730712AbgCJNHm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 10 Mar 2020 09:07:42 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTP id D57E22F6347C;
-        Tue, 10 Mar 2020 04:38:40 -0500 (-05)
-Received: from mail.11d01.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d01.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id gE4SrFsovpj4; Tue, 10 Mar 2020 04:38:39 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTP id EBD592F71E8B;
-        Tue, 10 Mar 2020 04:02:00 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.9.2 mail.11d01.mspz7.gob.ec EBD592F71E8B
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=11d01.mspz7.gob.ec;
-        s=50CBC7E4-8BED-11E9-AF6C-F1A741A224D3; t=1583830922;
-        bh=o+H3O7n1+zJcXo0FhJs7spyf8HmE4ClnBa/Y2Gk0DL0=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Reply-To:Message-Id;
-        b=kGa4CSn/AZBy3SwZAeSVaHxZcbjPG/HWY5E/4VeoGQTRqMcXTEDC5mlUZ/siy7Gol
-         4qejWjl3rNev7hFRicPfeHl2bQpr1Cn1vN9j4uEU2mngW/xqAc0zZYS/VfOy24Ia8f
-         r9y+4kywXcMaL5vfWtoOk1aCvZULpHl8tAynwuZE=
-X-Virus-Scanned: amavisd-new at 11d01.mspz7.gob.ec
-Received: from mail.11d01.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d01.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id cqPdzkPwrrfZ; Tue, 10 Mar 2020 04:02:00 -0500 (-05)
-Received: from [10.19.167.32] (unknown [105.0.4.171])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTPSA id 8995C2F6B2E5;
-        Tue, 10 Mar 2020 03:19:12 -0500 (-05)
-Content-Type: text/plain; charset="utf-8"
+        id S1730315AbgCJNWP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Mar 2020 09:22:15 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:33740 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730309AbgCJNBs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 10 Mar 2020 09:01:48 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ACxjpj137733;
+        Tue, 10 Mar 2020 09:01:47 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ynr9dc1mx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 09:01:47 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02AD0qgK009377;
+        Tue, 10 Mar 2020 09:01:46 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2ynr9dc1mb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 09:01:46 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02ACtbBU024222;
+        Tue, 10 Mar 2020 13:01:46 GMT
+Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
+        by ppma02wdc.us.ibm.com with ESMTP id 2ym386jqhd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 10 Mar 2020 13:01:46 +0000
+Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
+        by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02AD1jBT12518034
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 10 Mar 2020 13:01:45 GMT
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A9BAD28060;
+        Tue, 10 Mar 2020 13:01:45 +0000 (GMT)
+Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9B6F128058;
+        Tue, 10 Mar 2020 13:01:45 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.114.17.106])
+        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
+        Tue, 10 Mar 2020 13:01:45 +0000 (GMT)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Andrew Jones <drjones@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH 0/5] selftests: KVM: s390: Accumulated fixes and extensions
+Date:   Tue, 10 Mar 2020 09:01:39 -0400
+Message-Id: <20200310130144.9921-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: =?utf-8?q?Wohlt=C3=A4tigkeitsspende_von_2=2E000=2E000_Millionen_Euro?=
-To:     Recipients <ronald.pena@11d01.mspz7.gob.ec>
-From:   ''Michael weirsky'' <ronald.pena@11d01.mspz7.gob.ec>
-Date:   Tue, 10 Mar 2020 10:48:40 +0200
-Reply-To: mikeweirskyspende@gmail.com
-Message-Id: <20200310081913.8995C2F6B2E5@mail.11d01.mspz7.gob.ec>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-10_06:2020-03-10,2020-03-10 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 malwarescore=0 adultscore=0 mlxscore=0 bulkscore=0
+ lowpriorityscore=0 clxscore=1015 impostorscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003100087
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Lieber Freund,
+- do more and better testing for reset
+- fix fprintf formats (thanks to Andrew Jones)
 
-Ich bin Herr Mike Weirsky, New Jersey, Vereinigte Staaten von Amerika, der =
-Mega-Gewinner von $ 273million In Mega Millions Jackpot, spende ich an 5 zu=
-f=C3=A4llige Personen, wenn Sie diese E-Mail erhalten, dann wurde Ihre E-Ma=
-il nach einem Spinball ausgew=C3=A4hlt.Ich habe den gr=C3=B6=C3=9Ften Teil =
-meines Verm=C3=B6gens auf eine Reihe von Wohlt=C3=A4tigkeitsorganisationen =
-und Organisationen verteilt.Ich habe mich freiwillig dazu entschieden, die =
-Summe von =E2=82=AC 2.000.000,00 an Sie als eine der ausgew=C3=A4hlten 5 zu=
- spenden, um meine Gewinne zu =C3=BCberpr=C3=BCfen.
-Das ist dein Spendencode: [MW530342019]
-www.youtube.com/watch?v=3Dun8yRTmrYMY
+Paolo, I would schedule this for next and not for master. ok?
 
-Antworten Sie mit dem SPENDE-CODE an diese =
+Christian Borntraeger (5):
+  selftests: KVM: s390: fix early guest crash
+  selftests: KVM: s390: test more register variants for the reset ioctl
+  selftests: KVM: s390: check for registers to NOT change on reset
+  selftests: KVM: s390: fixup fprintf format error in reset.c
+  selftests: KVM: s390: fix format strings for access reg test
 
+ tools/testing/selftests/kvm/s390x/resets.c    | 132 ++++++++++++++----
+ .../selftests/kvm/s390x/sync_regs_test.c      |  11 +-
+ 2 files changed, 116 insertions(+), 27 deletions(-)
 
-E-Mail:mikeweirskyspende@gmail.com
+-- 
+2.25.0
 
-Ich hoffe, Sie und Ihre Familie gl=C3=BCcklich zu machen.
-
-Gr=C3=BC=C3=9Fe
-Herr Mike Weirsky
