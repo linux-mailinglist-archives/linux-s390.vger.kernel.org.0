@@ -2,87 +2,51 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E8573180B12
-	for <lists+linux-s390@lfdr.de>; Tue, 10 Mar 2020 23:01:38 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D81A6180BC8
+	for <lists+linux-s390@lfdr.de>; Tue, 10 Mar 2020 23:41:16 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727732AbgCJWB2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 10 Mar 2020 18:01:28 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34347 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727688AbgCJWB1 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 10 Mar 2020 18:01:27 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 48cTZF1NB6z9s3x;
-        Wed, 11 Mar 2020 09:01:25 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1583877685;
-        bh=wzZzebi45AhIS8HGeVFhdyHkTlG8O3pVyWnqNN9rlqQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jVjC6Nju7T0T9y+wjzfdyl/mtjA8IR7sw+h4jd/f7Ti0Pd40VyYazZf2eRRWGU2mJ
-         PMqLMtTwnNkj3c/CHqenS59dGXobbwChG76kOW9xmamf5QnIyr5FK1eRI1sIZ2FaB0
-         Bwjj+3QYsrECTk7K6BrA2eptDTkI3Hb+C8mSO6rAoAAkGKAcS54fhRGdya0LcP2sfd
-         wpJVBUW/zwHo0xZaI0kF0wMR5/8TnYhOkOsZOuYz/Le8XteAsq7frdw8bLNcGq6mLf
-         RwgMpX1YvHtGgNcFe5CG/0TlaZv7FMXzY3cKdh2nbwpGk2WgXWjeR8sJ/knchFE/9w
-         1tv7+owRHiwVw==
-Date:   Wed, 11 Mar 2020 09:01:15 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        KVM <kvm@vger.kernel.org>, S390 <linux-s390@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: linux-next: Fixes tag needs some work in the kvms390-fixes tree
-Message-ID: <20200311090115.3967bbc6@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/kv.9uJJpUfaryogAyL3K1zT";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        id S1726307AbgCJWlQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 10 Mar 2020 18:41:16 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:43424 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbgCJWlP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 10 Mar 2020 18:41:15 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f00:477::3d5])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 28C4514C0FF11;
+        Tue, 10 Mar 2020 15:41:15 -0700 (PDT)
+Date:   Tue, 10 Mar 2020 15:41:14 -0700 (PDT)
+Message-Id: <20200310.154114.1100646908686438492.davem@davemloft.net>
+To:     kgraul@linux.ibm.com
+Cc:     leon@kernel.org, netdev@vger.kernel.org,
+        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
+        raspl@linux.ibm.com, ubraun@linux.ibm.com
+Subject: Re: [PATCH v2 net] net/smc: cancel event worker during device
+ removal
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20200310083330.90427-1-kgraul@linux.ibm.com>
+References: <20200310083330.90427-1-kgraul@linux.ibm.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 10 Mar 2020 15:41:15 -0700 (PDT)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---Sig_/kv.9uJJpUfaryogAyL3K1zT
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Karsten Graul <kgraul@linux.ibm.com>
+Date: Tue, 10 Mar 2020 09:33:30 +0100
 
-Hi all,
+> During IB device removal, cancel the event worker before the device
+> structure is freed.
+> 
+> Fixes: a4cf0443c414 ("smc: introduce SMC as an IB-client")
+> Reported-by: syzbot+b297c6825752e7a07272@syzkaller.appspotmail.com
+> Signed-off-by: Karsten Graul <kgraul@linux.ibm.com>
+> Reviewed-by: Ursula Braun <ubraun@linux.ibm.com>
 
-In commit
-
-  b5de9eede579 ("KVM: s390: Also reset registers in sync regs for initial c=
-pu reset")
-
-Fixes tag
-
-  Fixes: 7de3f1423ff ("KVM: s390: Add new reset vcpu API")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/kv.9uJJpUfaryogAyL3K1zT
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl5oDisACgkQAVBC80lX
-0GzYaAf9FXBdN/sPL0m1wS/M8NvQrp0wWqykM2mze0kNV+wY77eqasWuk3dSkCZQ
-YOWpjCN/T6FTBwJpiNLZMtgoKYOKFwkPToNXjCNkl+3sXrp/8xhKREmnobTSpqyP
-XWhIzMfqyXRn5/5gWg44M/pVIE5KIDeDxZzeU4tbcDCCsoHOeqkdne1n7KOkRk+L
-yTw1hgzfqPeT6uegHLvSwgO1K1XwLDZagZJrPzdMgr5wGvMMEe6J4gk7msoXBpia
-3n+gZjDjDeYb8erVrRxqR7niqGb7vIPeeKkP4PNVKxnVoIg2N0/kLrQHHvnZGEaU
-prhFRX7EBNh0WELfnGmQDRa/L3c75Q==
-=IiMa
------END PGP SIGNATURE-----
-
---Sig_/kv.9uJJpUfaryogAyL3K1zT--
+Applied and queued up for -stable, thank you.
