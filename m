@@ -2,100 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE32B181CB4
-	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2020 16:45:58 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 86722181EB3
+	for <lists+linux-s390@lfdr.de>; Wed, 11 Mar 2020 18:07:28 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729977AbgCKPp6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 11 Mar 2020 11:45:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64142 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729921AbgCKPp5 (ORCPT
+        id S1730378AbgCKRH0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 11 Mar 2020 13:07:26 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3870 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730059AbgCKRHY (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 11 Mar 2020 11:45:57 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BFjETL049003
-        for <linux-s390@vger.kernel.org>; Wed, 11 Mar 2020 11:45:56 -0400
+        Wed, 11 Mar 2020 13:07:24 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02BGxJLA144307
+        for <linux-s390@vger.kernel.org>; Wed, 11 Mar 2020 13:07:23 -0400
 Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yq0yqdv14-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yq15v9199-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 11 Mar 2020 11:45:55 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 11 Mar 2020 13:07:23 -0400
 Received: from localhost
         by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 11 Mar 2020 15:43:01 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Wed, 11 Mar 2020 17:07:21 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
         by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 11 Mar 2020 15:42:58 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BFgv4T64749706
+        Wed, 11 Mar 2020 17:07:18 -0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02BH7G8A45810170
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 11 Mar 2020 15:42:57 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C816A406A;
-        Wed, 11 Mar 2020 15:42:57 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 820A6A4060;
-        Wed, 11 Mar 2020 15:42:55 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.80.220.140])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 11 Mar 2020 15:42:55 +0000 (GMT)
-Subject: Re: [PATCH v3] ima: add a new CONFIG for loading arch-specific
- policies
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Nayna Jain <nayna@linux.ibm.com>, linux-integrity@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-efi@vger.kernel.org,
-        linux-s390@vger.kernel.org, x86@kernel.org
-Cc:     Ard Biesheuvel <ardb@kernel.org>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, Nayna Jain <nayna@linux.vnet.ibm.com>
-Date:   Wed, 11 Mar 2020 11:42:55 -0400
-In-Reply-To: <1583715471-15525-1-git-send-email-nayna@linux.ibm.com>
-References: <1583715471-15525-1-git-send-email-nayna@linux.ibm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 11 Mar 2020 17:07:17 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D5A8852052;
+        Wed, 11 Mar 2020 17:07:16 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 91CDF5204E;
+        Wed, 11 Mar 2020 17:07:16 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net 0/3] s390/qeth: fixes 2020-03-11
+Date:   Wed, 11 Mar 2020 18:07:08 +0100
+X-Mailer: git-send-email 2.17.1
 X-TM-AS-GCONF: 00
-x-cbid: 20031115-0020-0000-0000-000003B2CB40
+x-cbid: 20031117-0020-0000-0000-000003B2D271
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031115-0021-0000-0000-0000220B1BF5
-Message-Id: <1583941375.5293.33.camel@linux.ibm.com>
+x-cbparentid: 20031117-0021-0000-0000-0000220B2374
+Message-Id: <20200311170711.50376-1-jwi@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-11_06:2020-03-11,2020-03-11 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=998
- lowpriorityscore=0 impostorscore=0 spamscore=0 malwarescore=0 adultscore=0
- priorityscore=1501 bulkscore=0 suspectscore=0 mlxscore=0 phishscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003110098
+ definitions=2020-03-11_07:2020-03-11,2020-03-11 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ phishscore=0 suspectscore=0 clxscore=1015 adultscore=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 lowpriorityscore=0 mlxscore=0 spamscore=0
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003110101
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, 2020-03-08 at 20:57 -0400, Nayna Jain wrote:
-> From: Nayna Jain <nayna@linux.vnet.ibm.com>
-> 
-> Every time a new architecture defines the IMA architecture specific
-> functions - arch_ima_get_secureboot() and arch_ima_get_policy(), the IMA
-> include file needs to be updated. To avoid this "noise", this patch
-> defines a new IMA Kconfig IMA_SECURE_AND_OR_TRUSTED_BOOT option, allowing
-> the different architectures to select it.
-> 
-> Suggested-by: Linus Torvalds <torvalds@linux-foundation.org>
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> Acked-by: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Philipp Rudo <prudo@linux.ibm.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
+Hi Dave,
 
-Thanks, Michael for the suggestion of using "imply".  Seems to be
-working nicely.  Thanks, Nayna.  I pushed this patch out to next-
-integrity-testing.  Could we get some tags on this version of the
-patch?
+please apply the following patch series for qeth to netdev's net tree.
 
-thanks,
+Just one fix to get the RX buffer pool resizing right, with two
+preparatory cleanups.
+This is on the larger side given where we are in the -rc cycle, but a
+big chunk of the delta is just refactoring to make the fix look nice.
 
-Mimi
+I intentionally split these off from yesterday's series. No objections
+if you'd rather punt them to net-next, the series should apply cleanly.
+
+Thanks,
+Julian
+
+Julian Wiedmann (3):
+  s390/qeth: use page pointers to manage RX buffer pool
+  s390/qeth: refactor buffer pool code
+  s390/qeth: implement smarter resizing of the RX buffer pool
+
+ drivers/s390/net/qeth_core.h      |   4 +-
+ drivers/s390/net/qeth_core_main.c | 161 ++++++++++++++++++++----------
+ drivers/s390/net/qeth_core_sys.c  |   9 +-
+ drivers/s390/net/qeth_l3_sys.c    |   9 +-
+ 4 files changed, 119 insertions(+), 64 deletions(-)
+
+-- 
+2.17.1
 
