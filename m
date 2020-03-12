@@ -2,23 +2,23 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B4489182D6F
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Mar 2020 11:26:12 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id DBD85182E60
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Mar 2020 11:57:02 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726395AbgCLK0M (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Mar 2020 06:26:12 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:59840 "EHLO
+        id S1726558AbgCLK5C (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Mar 2020 06:57:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:39980 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726310AbgCLK0L (ORCPT
+        by vger.kernel.org with ESMTP id S1725978AbgCLK5C (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 12 Mar 2020 06:26:11 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CAPxew187686
-        for <linux-s390@vger.kernel.org>; Thu, 12 Mar 2020 06:26:11 -0400
+        Thu, 12 Mar 2020 06:57:02 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CAv0BS139609
+        for <linux-s390@vger.kernel.org>; Thu, 12 Mar 2020 06:57:00 -0400
 Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yq9b64g4u-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yqkbys8nf-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 12 Mar 2020 06:18:34 -0400
+        for <linux-s390@vger.kernel.org>; Thu, 12 Mar 2020 06:49:13 -0400
 Received: from localhost
         by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <freude@linux.ibm.com>;
@@ -63,12 +63,12 @@ X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
 x-cbparentid: 20031210-0017-0000-0000-000033534AFA
 Message-Id: <b098aca8-6a90-6b0d-408f-2f86a6e73032@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-12_01:2020-03-11,2020-03-12 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 adultscore=0 suspectscore=0
- priorityscore=1501 malwarescore=0 mlxlogscore=999 impostorscore=0
- mlxscore=0 bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2001150001 definitions=main-2003120056
+ definitions=2020-03-12_02:2020-03-11,2020-03-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ adultscore=0 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ malwarescore=0 phishscore=0 impostorscore=0 mlxlogscore=999 spamscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003120059
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
