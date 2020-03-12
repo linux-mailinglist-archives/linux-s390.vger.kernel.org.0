@@ -2,80 +2,104 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 74341183143
-	for <lists+linux-s390@lfdr.de>; Thu, 12 Mar 2020 14:25:11 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id F1F051832F8
+	for <lists+linux-s390@lfdr.de>; Thu, 12 Mar 2020 15:28:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726028AbgCLNZK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 12 Mar 2020 09:25:10 -0400
-Received: from mail-il1-f194.google.com ([209.85.166.194]:43354 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725978AbgCLNZK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 12 Mar 2020 09:25:10 -0400
-Received: by mail-il1-f194.google.com with SMTP id d14so4898129ilq.10
-        for <linux-s390@vger.kernel.org>; Thu, 12 Mar 2020 06:25:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=ndnidSMgbYt+qzNKk/4/2bWrrY0w3HilPAmXJWDTL4Q=;
-        b=j2fLK1yQ1ortgRcw1ToWl7Hgm1ON4eyInI1+OmtrgO45378Qr26uVfDVijiLCIANfe
-         3m75de7r1G7OH1qDVA14pkMvjl4mrZXxCvjG7CBt8iq/PVpNUQSFHQTcM+cBbZC6t9fF
-         XgPerNx+CEciaR6t/q/FHYxdqf/VQYgDYmOtcrnvVsHv5PXjVJr6+ELT2LxI15QiJXzp
-         QgcEjU6zaKR6CpLxrVB6jXVV43ZzuVskpjdOB4THEnoDAdC4GQb5baSYVhByFlAMAAI6
-         XpJP8oxV1khVe4gPOpmf6GL9TSOTgBWipleYxau/FURYUMWyiHTQVJj1f8Pk28evbWNQ
-         h/DQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ndnidSMgbYt+qzNKk/4/2bWrrY0w3HilPAmXJWDTL4Q=;
-        b=s90eit0mEe1s71kcBe5wu6WubxR44/5Y3rz/IpEt26tsxHDvy0JXOoT3hIeh6Wu9yY
-         O3zFIgyRudN5wGUebXbgBWRTpk8E+u5u+NECxvPGsnWegPjOUyUk9ciNvJc+HNIotyuT
-         /0V3QpAFV3ycAfaD2llevytJ8mxtFMoEzy/gWGEzr0XQ38wqLhTjrL/E5GO8/bB+ZZzi
-         aMYvgLVvEkvqZC+0uXbLm+tknlOnKbJ2V8NUNGDYsUEGUaAuDNShwAL7mCMrtUsFUBLi
-         Umt+MoresM3M+MVjUewqaOqZxgauh7ze4q6tWPofYHmbnhhALXfvy3SnsZl3jsEpOK84
-         yUmw==
-X-Gm-Message-State: ANhLgQ2LfTZTMLjxpzbheDAASgfYR0YUwshdp1eieTOG2y8fjJKx87ET
-        Ztlo8Kph6Hy+A+zc+k9oUQ8jpA==
-X-Google-Smtp-Source: ADFU+vt5nQOomXXOScFsa6s0vY6t1+4y/eXJEjAl2SpQxRch9HKvoVi3xB9ozUDslttbY15KnzmlQw==
-X-Received: by 2002:a92:9642:: with SMTP id g63mr8726810ilh.223.1584019509797;
-        Thu, 12 Mar 2020 06:25:09 -0700 (PDT)
-Received: from [192.168.1.159] ([65.144.74.34])
-        by smtp.gmail.com with ESMTPSA id 27sm4909513ilv.75.2020.03.12.06.25.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 12 Mar 2020 06:25:09 -0700 (PDT)
-Subject: Re: [PATCH 0/1] s390/dasd: fix data corruption
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com
-References: <20200312131715.72621-1-sth@linux.ibm.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <cd6a5017-7db4-3d66-c58d-40d8b0fda61c@kernel.dk>
-Date:   Thu, 12 Mar 2020 07:25:07 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.4.1
+        id S1727492AbgCLO2i (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 12 Mar 2020 10:28:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:20092 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727208AbgCLO2i (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 12 Mar 2020 10:28:38 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02CEMPJZ063261
+        for <linux-s390@vger.kernel.org>; Thu, 12 Mar 2020 10:28:36 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yqksa85rb-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 12 Mar 2020 10:28:36 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Thu, 12 Mar 2020 14:27:55 -0000
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 12 Mar 2020 14:27:52 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02CERpUF44302818
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 12 Mar 2020 14:27:51 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4AC2B11C054;
+        Thu, 12 Mar 2020 14:27:51 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 34F2111C04C;
+        Thu, 12 Mar 2020 14:27:51 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu, 12 Mar 2020 14:27:51 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id D9006E02CF; Thu, 12 Mar 2020 15:27:50 +0100 (CET)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [GIT PULL 0/1] KVM: s390: Fix for 5.6
+Date:   Thu, 12 Mar 2020 15:27:49 +0100
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-In-Reply-To: <20200312131715.72621-1-sth@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20031214-4275-0000-0000-000003AB325B
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20031214-4276-0000-0000-000038C0514D
+Message-Id: <20200312142750.3603-1-borntraeger@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
+ definitions=2020-03-12_06:2020-03-11,2020-03-12 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ suspectscore=0 adultscore=0 mlxscore=0 lowpriorityscore=0 bulkscore=0
+ spamscore=0 phishscore=0 mlxlogscore=586 malwarescore=0 clxscore=1015
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2001150001 definitions=main-2003120078
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 3/12/20 7:17 AM, Stefan Haberland wrote:
-> Hi Jens,
-> 
-> please find following patch that fixes a likely data corruption when using
-> devices with thin provisioning support.
-> As this is a severe issue I hope this will make it into RC6. If not, please
-> let me know.
+Paolo,
 
-Applied for 5.6, thanks.
+one fix for the reset that was detected by some improved selftests:
 
--- 
-Jens Axboe
+The following changes since commit d718fdc3e752ba51ddb2b5554d3db98a09355cc2:
+
+  KVM: x86: remove stale comment from struct x86_emulate_ctxt (2020-03-03 17:38:22 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.6-1
+
+for you to fetch changes up to e93fc7b4544a5475cfdbc22f87e89f9829bf801c:
+
+  KVM: s390: Also reset registers in sync regs for initial cpu reset (2020-03-11 08:25:26 +0100)
+
+----------------------------------------------------------------
+KVM: s390: Fully do the CPU resets as intended
+
+With 7de3f1423ff9 ("KVM: s390: Add new reset vcpu API") we clarified
+the meaning of the reset ioctl to fully reset the CPU and not only the
+parts that can not be handled by userspace. Turns out that we missed
+some parts.
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      KVM: s390: Also reset registers in sync regs for initial cpu reset
+
+ arch/s390/kvm/kvm-s390.c | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
