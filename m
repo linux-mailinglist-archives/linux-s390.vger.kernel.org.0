@@ -2,241 +2,83 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E2E72185ED8
-	for <lists+linux-s390@lfdr.de>; Sun, 15 Mar 2020 19:15:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F2FB186A51
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2020 12:45:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729001AbgCOSPj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 15 Mar 2020 14:15:39 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:46911 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729030AbgCOSPj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 15 Mar 2020 14:15:39 -0400
+        id S1730888AbgCPLph (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Mar 2020 07:45:37 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:46455 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729043AbgCPLph (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 16 Mar 2020 07:45:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1584296136;
+        s=mimecast20190719; t=1584359135;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=Vq2kWuZasR+WQA2BBEH7AqgF0yh9m5uiRfdUPcimgXE=;
-        b=HOIybUCwDrAjMtS7PnjlNQ3KT/jMngdX/5+9IPDWAPqaPBxF0p56PHs4QKcMyC3XlOXn9s
-        VkL6GRe8nmepI5v3UDajYyozFbQU7zC1swJFsxIb/F7fXNxjt6ZhlVTy1asppcM73qa6MX
-        t/MBGL/6srONAnrlv/nSYI1o+/ysgJM=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-GTyRCZFrPi-ioK7bZmDaFg-1; Sun, 15 Mar 2020 14:15:32 -0400
-X-MC-Unique: GTyRCZFrPi-ioK7bZmDaFg-1
-Received: by mail-wm1-f70.google.com with SMTP id s20so3899039wmj.2
-        for <linux-s390@vger.kernel.org>; Sun, 15 Mar 2020 11:15:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Vq2kWuZasR+WQA2BBEH7AqgF0yh9m5uiRfdUPcimgXE=;
-        b=qEbRogThTZLWlZcLQApQhv+uXhxKXYkHxKsNOBd78lajWlk1afMpc2bjUieL7bReX5
-         pC+62NuyJX5eG0QKd1Ndq49H18vr3Lw2YOquhMZDcWDTlZ0c9QBcf1Sdtn8NP7Gau7we
-         PagTLasgulOsJ9a26xVtoNopm8ZbQ22o2zFfDydjWuC8SAY53PoBcI3ACcFRPmRdiWm1
-         gmhahG6b0gfP8xJ8y8ubSUD7b4sihhUfULHjxbAaCBtuZlYKpS0g7B1Dxv5S/p3xWDj1
-         4zaNnDUplHW5Qe0oJCft5Ry4XDM3JjW0EO0dJDKNLgG8eABJEiFhCxvW9t0fEaoV3h0P
-         sphQ==
-X-Gm-Message-State: ANhLgQ0S7FkC4IqgYl93HzcC+vu6dSSj+pGzH80TJE9/CAvWy6S3tPrt
-        fB79dS96HrmkAslRslPMaRUHJGoeWidpFivKG52n94s1ED7qGtSry3jXkmsfzdq3a8DkMC7XPBB
-        34SlEwLB39im1DmsM71YX0w==
-X-Received: by 2002:a1c:de41:: with SMTP id v62mr10738139wmg.60.1584296131568;
-        Sun, 15 Mar 2020 11:15:31 -0700 (PDT)
-X-Google-Smtp-Source: ADFU+vvT06PDxKWaXMSuE3KdMdBv7/zkifq93xHvHk+dUXmFvcoVAfWXWq4N8G0L67fPwXRWOoftig==
-X-Received: by 2002:a1c:de41:: with SMTP id v62mr10738115wmg.60.1584296131210;
-        Sun, 15 Mar 2020 11:15:31 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:40d4:87da:1ffc:e462? ([2001:b07:6468:f312:40d4:87da:1ffc:e462])
-        by smtp.gmail.com with ESMTPSA id w19sm25568848wmc.22.2020.03.15.11.15.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sun, 15 Mar 2020 11:15:30 -0700 (PDT)
-Subject: Re: [GIT PULL 00/36] KVM: s390: Features and Enhancements for 5.7
- part1
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>,
+        bh=fjC5eyqiVh4MSP5+mfLOvVmb5WFAsqeD54Xi4bPf+uc=;
+        b=WqQD2PtlJMOkwxZgPAFw7Js7CxudVnbksOGvNUS748Szac4iL4PFZE9zeXRtvodbnSvi0j
+        Qd13+vkCAUXIJ9YCtI+auq3nrLhHzGW5akBx6P+dY9CuLxt7OnyKa2L+KX3QCf5Drfxrwi
+        QL40wlZF3XWOcCU8zNWlYrPgM8q1Y1w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-286-qBH6rYb2OOC7Rsz_bGiHjg-1; Mon, 16 Mar 2020 07:45:33 -0400
+X-MC-Unique: qBH6rYb2OOC7Rsz_bGiHjg-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ABFFF18A8CBE;
+        Mon, 16 Mar 2020 11:45:32 +0000 (UTC)
+Received: from gondolin (ovpn-117-70.ams2.redhat.com [10.36.117.70])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4CD497388E;
+        Mon, 16 Mar 2020 11:45:27 +0000 (UTC)
+Date:   Mon, 16 Mar 2020 12:45:25 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
         Janosch Frank <frankja@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Ulrich Weigand <uweigand@de.ibm.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>
-References: <20200309085126.3334302-1-borntraeger@de.ibm.com>
- <323ef53d-1aab-5971-72cf-0d385f844ea8@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <d05efc66-603b-39dd-97e5-65aa91722c47@redhat.com>
-Date:   Sun, 15 Mar 2020 19:15:31 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        KVM <kvm@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>, stable@vger.kernel.org
+Subject: Re: [PATCH v2] KVM: s390: Also reset registers in sync regs for
+ initial cpu reset
+Message-ID: <20200316124525.3bc099f9.cohuck@redhat.com>
+In-Reply-To: <8bdef3aa-01b5-93a1-c54a-46768d47dfa4@redhat.com>
+References: <20200310131223.10287-1-borntraeger@de.ibm.com>
+        <8bdef3aa-01b5-93a1-c54a-46768d47dfa4@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <323ef53d-1aab-5971-72cf-0d385f844ea8@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 14/03/20 16:58, Christian Borntraeger wrote:
-> ping.
+On Tue, 10 Mar 2020 14:21:23 +0100
+David Hildenbrand <david@redhat.com> wrote:
 
-Sorry, I wanted to get kvm/queue sorted out first.  I have now run my
-battery of x86 tests and will pull it tomorrow (QEMU soft freeze is also
-incoming but I should make it).
-
-Thanks,
-
-Paolo
-
-> On 09.03.20 09:50, Christian Borntraeger wrote:
->> Paolo,
->>
->> an early pull request containing mostly the protected virtualization guest
->> support. Some remarks:
->>
->> 1.To avoid conflicts I would rather add this early. We do have in KVM
->> common code:
->> - a new capability KVM_CAP_S390_PROTECTED = 180
->> - a new ioctl  KVM_S390_PV_COMMAND =  _IOWR(KVMIO, 0xc5, struct kvm_pv_cmd)
->> - data structures for KVM_S390_PV_COMMAND
->> - new MEMOP ioctl subfunctions
->> - new files under Documentation
->> - additions to api.rst 4.125 KVM_S390_PV_COMMAND
->>
->> 2. There is an mm patch in Andrews mm tree which is needed for full
->> functionality. The patch is not necessary to build KVM or to run non
->> protected KVM though. So this can go independently.
->>
->> 3. I created a topic branch for the non-kvm s390x parts that I merged
->> in. Vasily, Heiko or myself will pull that into the s390 tree if there
->> will be a conflict.
->>
->>
->> The following changes since commit 11a48a5a18c63fd7621bb050228cebf13566e4d8:
->>
->>   Linux 5.6-rc2 (2020-02-16 13:16:59 -0800)
->>
->> are available in the Git repository at:
->>
->>   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.7-1
->>
->> for you to fetch changes up to cc674ef252f4750bdcea1560ff491081bb960954:
->>
->>   KVM: s390: introduce module parameter kvm.use_gisa (2020-02-27 19:47:13 +0100)
->>
->> ----------------------------------------------------------------
->> KVM: s390: Features and Enhancements for 5.7 part1
->>
->> 1. Allow to disable gisa
->> 2. protected virtual machines
->>   Protected VMs (PVM) are KVM VMs, where KVM can't access the VM's
->>   state like guest memory and guest registers anymore. Instead the
->>   PVMs are mostly managed by a new entity called Ultravisor (UV),
->>   which provides an API, so KVM and the PV can request management
->>   actions.
->>
->>   PVMs are encrypted at rest and protected from hypervisor access
->>   while running.  They switch from a normal operation into protected
->>   mode, so we can still use the standard boot process to load a
->>   encrypted blob and then move it into protected mode.
->>
->>   Rebooting is only possible by passing through the unprotected/normal
->>   mode and switching to protected again.
->>
->>   One mm related patch will go via Andrews mm tree ( mm/gup/writeback:
->>   add callbacks for inaccessible pages)
->>
->> ----------------------------------------------------------------
->> Christian Borntraeger (5):
->>       Merge branch 'pvbase' of git://git.kernel.org/.../kvms390/linux into HEAD
->>       KVM: s390/mm: Make pages accessible before destroying the guest
->>       KVM: s390: protvirt: Add SCLP interrupt handling
->>       KVM: s390: protvirt: do not inject interrupts after start
->>       KVM: s390: protvirt: introduce and enable KVM_CAP_S390_PROTECTED
->>
->> Claudio Imbrenda (2):
->>       s390/mm: provide memory management functions for protected KVM guests
->>       KVM: s390/mm: handle guest unpin events
->>
->> Janosch Frank (24):
->>       s390/protvirt: Add sysfs firmware interface for Ultravisor information
->>       KVM: s390: protvirt: Add UV debug trace
->>       KVM: s390: add new variants of UV CALL
->>       KVM: s390: protvirt: Add initial vm and cpu lifecycle handling
->>       KVM: s390: protvirt: Secure memory is not mergeable
->>       KVM: s390: protvirt: Handle SE notification interceptions
->>       KVM: s390: protvirt: Instruction emulation
->>       KVM: s390: protvirt: Handle spec exception loops
->>       KVM: s390: protvirt: Add new gprs location handling
->>       KVM: S390: protvirt: Introduce instruction data area bounce buffer
->>       KVM: s390: protvirt: handle secure guest prefix pages
->>       KVM: s390: protvirt: Write sthyi data to instruction data area
->>       KVM: s390: protvirt: STSI handling
->>       KVM: s390: protvirt: disallow one_reg
->>       KVM: s390: protvirt: Do only reset registers that are accessible
->>       KVM: s390: protvirt: Only sync fmt4 registers
->>       KVM: s390: protvirt: Add program exception injection
->>       KVM: s390: protvirt: UV calls in support of diag308 0, 1
->>       KVM: s390: protvirt: Report CPU state to Ultravisor
->>       KVM: s390: protvirt: Support cmd 5 operation state
->>       KVM: s390: protvirt: Mask PSW interrupt bits for interception 104 and 112
->>       KVM: s390: protvirt: Add UV cpu reset calls
->>       DOCUMENTATION: Protected virtual machine introduction and IPL
->>       KVM: s390: protvirt: Add KVM api documentation
->>
->> Michael Mueller (2):
->>       KVM: s390: protvirt: Implement interrupt injection
->>       KVM: s390: introduce module parameter kvm.use_gisa
->>
->> Ulrich Weigand (1):
->>       KVM: s390/interrupt: do not pin adapter interrupt pages
->>
->> Vasily Gorbik (3):
->>       s390/protvirt: introduce host side setup
->>       s390/protvirt: add ultravisor initialization
->>       s390/mm: add (non)secure page access exceptions handlers
->>
->>  Documentation/admin-guide/kernel-parameters.txt |   5 +
->>  Documentation/virt/kvm/api.rst                  |  65 ++-
->>  Documentation/virt/kvm/devices/s390_flic.rst    |  11 +-
->>  Documentation/virt/kvm/index.rst                |   2 +
->>  Documentation/virt/kvm/s390-pv-boot.rst         |  84 ++++
->>  Documentation/virt/kvm/s390-pv.rst              | 116 +++++
->>  MAINTAINERS                                     |   1 +
->>  arch/s390/boot/Makefile                         |   2 +-
->>  arch/s390/boot/uv.c                             |  20 +
->>  arch/s390/include/asm/gmap.h                    |   6 +
->>  arch/s390/include/asm/kvm_host.h                | 113 ++++-
->>  arch/s390/include/asm/mmu.h                     |   2 +
->>  arch/s390/include/asm/mmu_context.h             |   1 +
->>  arch/s390/include/asm/page.h                    |   5 +
->>  arch/s390/include/asm/pgtable.h                 |  35 +-
->>  arch/s390/include/asm/uv.h                      | 251 ++++++++++-
->>  arch/s390/kernel/Makefile                       |   1 +
->>  arch/s390/kernel/entry.h                        |   2 +
->>  arch/s390/kernel/pgm_check.S                    |   4 +-
->>  arch/s390/kernel/setup.c                        |   9 +-
->>  arch/s390/kernel/uv.c                           | 414 +++++++++++++++++
->>  arch/s390/kvm/Makefile                          |   2 +-
->>  arch/s390/kvm/diag.c                            |   6 +-
->>  arch/s390/kvm/intercept.c                       | 122 ++++-
->>  arch/s390/kvm/interrupt.c                       | 399 ++++++++++-------
->>  arch/s390/kvm/kvm-s390.c                        | 567 +++++++++++++++++++++---
->>  arch/s390/kvm/kvm-s390.h                        |  51 ++-
->>  arch/s390/kvm/priv.c                            |  13 +-
->>  arch/s390/kvm/pv.c                              | 303 +++++++++++++
->>  arch/s390/mm/fault.c                            |  78 ++++
->>  arch/s390/mm/gmap.c                             |  65 ++-
->>  include/uapi/linux/kvm.h                        |  43 +-
->>  32 files changed, 2488 insertions(+), 310 deletions(-)
->>  create mode 100644 Documentation/virt/kvm/s390-pv-boot.rst
->>  create mode 100644 Documentation/virt/kvm/s390-pv.rst
->>  create mode 100644 arch/s390/kernel/uv.c
->>  create mode 100644 arch/s390/kvm/pv.c
->>
+> On 10.03.20 14:12, Christian Borntraeger wrote:
+> > When we do the initial CPU reset we must not only clear the registers
+> > in the internal data structures but also in kvm_run sync_regs. For
+> > modern userspace sync_regs is the only place that it looks at.
+> > 
+> > Cc: stable@vger.kernel.org  
 > 
+> # v?
+> 
+> > Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > ---
+> >  arch/s390/kvm/kvm-s390.c | 18 +++++++++++++++++-
+> >  1 file changed, 17 insertions(+), 1 deletion(-)
+
+> However, I do wonder if that ioctl *originally* was designed for that -
+> IOW if this is rally a stable patch or just some change that makes
+> sense. IIRC, userspace/QEMU always did the right thing, no? There was no
+> documentation about the guarantees AFAIK.
+
+The documentation only refers to the PoP for what is actually reset...
+should it also mention the sync regs?
 
