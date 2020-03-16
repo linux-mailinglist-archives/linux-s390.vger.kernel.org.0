@@ -2,111 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 66905186CF5
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2020 15:22:46 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4F646186D75
+	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2020 15:41:56 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730724AbgCPOWp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Mar 2020 10:22:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10922 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731443AbgCPOWp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 16 Mar 2020 10:22:45 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02GELZhe098302
-        for <linux-s390@vger.kernel.org>; Mon, 16 Mar 2020 10:22:44 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ytb0y8d7x-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 16 Mar 2020 10:22:44 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Mon, 16 Mar 2020 14:22:41 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 16 Mar 2020 14:22:39 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02GELcED27263460
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 16 Mar 2020 14:21:38 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BA5CA5206B;
-        Mon, 16 Mar 2020 14:22:38 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.15.61])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 6096452051;
-        Mon, 16 Mar 2020 14:22:38 +0000 (GMT)
-Date:   Mon, 16 Mar 2020 15:22:36 +0100
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     David Hildenbrand <david@redhat.com>
-Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        KVM <kvm@vger.kernel.org>, Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH] KVM: s390: mark sie block as 512 byte aligned
-In-Reply-To: <3b70e28f-a7d8-adfb-8f0b-de838d9c3b65@redhat.com>
-References: <20200311083304.3725276-1-borntraeger@de.ibm.com>
-        <20200316131009.381a8692@p-imbrenda>
-        <3b70e28f-a7d8-adfb-8f0b-de838d9c3b65@redhat.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1731646AbgCPOlt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Mar 2020 10:41:49 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:35362 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731534AbgCPOlt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Mar 2020 10:41:49 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 7so9885297pgr.2
+        for <linux-s390@vger.kernel.org>; Mon, 16 Mar 2020 07:41:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Eirw1+CPEwOm9XDny2XZP8XgLLmqTIbu051zNlJl2YI=;
+        b=BcUu/qEEKClkKnpXgI3q3V6khj8IpC2a07GWHZIS/cr6Fb4nNDLbhXbdOCHRroK6L4
+         ro0wccURxr4wDaYw64s/ljpNl9dLHr13jsdHV0PenUisf6MFApAooUzSDzk3FScrWx9w
+         5oyNFyPrxI4bHYDB9aiLGSRTMV+C567KMX5ZUWurCcceMY9ukOeszTlbNv3bqbZoHDkO
+         e8R6LNu97lmLaJS7qWq7BRJET51MFPKGp205IP40HYNWxNtM1Kgdz5gNdvvQb96b4LDZ
+         YnuLBV+ZR4loerJ5CsjUhI5DyQsqML8V95JuVNawxivCDa1bi1gUBQAhRzPTMcwBP5i3
+         qE0A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Eirw1+CPEwOm9XDny2XZP8XgLLmqTIbu051zNlJl2YI=;
+        b=uBDfXDiteujMxtr8/NUkkV0QEBIv5QdSouC5pAV1gM6zVswze1BvDPE4k5dS+1lwue
+         plPVRikk7eCORK1J63sqac/Tjc4vQ5OUIILn0YwdBRoJMwwHgW7Utiotfqr6Wu/MbSmR
+         IfahfFdAYSOTRH1eiHG9U7hvsM8cb6+RVqyQbgrkWFlxLFz0OOs+J6TugH4HltJ5093/
+         cKYaqmOoSZjMJm+7c/eB+wZzt6cMiDhk238mnLDcKKeI6CDEhiYinQyTWousBJBJ7GYX
+         V+AhsRMNQ4fh2Af8XrjJuhrBzBt2w8051GDbgndb7c+PfIoBVDcpCXRVX7sx76ho28Bq
+         xoyA==
+X-Gm-Message-State: ANhLgQ3JLfGDg4DKWYpWqoyqPa2xwoLWLbrYg+0DQoPAhV4YtzaLZ4yR
+        8QCQGotkNwZOvBURLGX04QtFGg==
+X-Google-Smtp-Source: ADFU+vtmKxkjoaf5j4+z2trd3YLJQDV0qB59iuP8qelC8HGL/enlXyLmnej0EP3ur2rgqjBHdpEtcw==
+X-Received: by 2002:a65:5a8a:: with SMTP id c10mr160621pgt.315.1584369708294;
+        Mon, 16 Mar 2020 07:41:48 -0700 (PDT)
+Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
+        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.41.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 16 Mar 2020 07:41:47 -0700 (PDT)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
+Subject: [PATCHv2 28/50] s390: Add show_stack_loglvl()
+Date:   Mon, 16 Mar 2020 14:38:54 +0000
+Message-Id: <20200316143916.195608-29-dima@arista.com>
+X-Mailer: git-send-email 2.25.1
+In-Reply-To: <20200316143916.195608-1-dima@arista.com>
+References: <20200316143916.195608-1-dima@arista.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20031614-0020-0000-0000-000003B552FB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031614-0021-0000-0000-0000220DB2EE
-Message-Id: <20200316152236.78ac27f9@p-imbrenda>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.572
- definitions=2020-03-16_03:2020-03-12,2020-03-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- bulkscore=0 lowpriorityscore=0 malwarescore=0 suspectscore=0 spamscore=0
- mlxlogscore=999 priorityscore=1501 clxscore=1015 adultscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003160067
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 16 Mar 2020 13:11:30 +0100
-David Hildenbrand <david@redhat.com> wrote:
+Currently, the log-level of show_stack() depends on a platform
+realization. It creates situations where the headers are printed with
+lower log level or higher than the stacktrace (depending on
+a platform or user).
 
-> On 16.03.20 13:10, Claudio Imbrenda wrote:
-> > On Wed, 11 Mar 2020 09:33:04 +0100
-> > Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-> >   
-> >> The sie block must be aligned to 512 bytes. Mark it as such.
-> >>
-> >> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> >> ---
-> >>  arch/s390/include/asm/kvm_host.h | 2 +-
-> >>  1 file changed, 1 insertion(+), 1 deletion(-)
-> >>
-> >> diff --git a/arch/s390/include/asm/kvm_host.h
-> >> b/arch/s390/include/asm/kvm_host.h index 0ea82152d2f7..2d50f6c432e2
-> >> 100644 --- a/arch/s390/include/asm/kvm_host.h
-> >> +++ b/arch/s390/include/asm/kvm_host.h
-> >> @@ -344,7 +344,7 @@ struct kvm_s390_sie_block {
-> >>  	__u64	itdba;			/* 0x01e8 */
-> >>  	__u64   riccbd;			/* 0x01f0 */
-> >>  	__u64	gvrd;			/* 0x01f8 */
-> >> -} __attribute__((packed));
-> >> +} __packed __aligned(512);
-> >>  
-> >>  struct kvm_s390_itdb {
-> >>  	__u8	data[256];  
-> > 
-> > I agree with the addition of aligned, but did you really have to
-> > remove packed? it makes me a little uncomfortable.  
-> 
-> There is still "__packed".
-> 
+Furthermore, it forces the logic decision from user to an architecture
+side. In result, some users as sysrq/kdb/etc are doing tricks with
+temporary rising console_loglevel while printing their messages.
+And in result it not only may print unwanted messages from other CPUs,
+but also omit printing at all in the unlucky case where the printk()
+was deferred.
 
-I had somehow totally missed it
+Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
+an easier approach than introducing more printk buffers.
+Also, it will consolidate printings with headers.
 
-this is what happens when you start working before actually waking up :D
+Introduce show_stack_loglvl(), that eventually will substitute
+show_stack().
+
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: linux-s390@vger.kernel.org
+[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ arch/s390/kernel/dumpstack.c | 16 +++++++++++-----
+ 1 file changed, 11 insertions(+), 5 deletions(-)
+
+diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
+index 2c122d8bab93..887a054919fc 100644
+--- a/arch/s390/kernel/dumpstack.c
++++ b/arch/s390/kernel/dumpstack.c
+@@ -126,18 +126,24 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
+ 	return -EINVAL;
+ }
+ 
+-void show_stack(struct task_struct *task, unsigned long *stack)
++void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
++		       const char *loglvl)
+ {
+ 	struct unwind_state state;
+ 
+-	printk("Call Trace:\n");
++	printk("%sCall Trace:\n", loglvl);
+ 	unwind_for_each_frame(&state, task, NULL, (unsigned long) stack)
+-		printk(state.reliable ? " [<%016lx>] %pSR \n" :
+-					"([<%016lx>] %pSR)\n",
+-		       state.ip, (void *) state.ip);
++		printk(state.reliable ? "%s [<%016lx>] %pSR \n" :
++					"%s([<%016lx>] %pSR)\n",
++		       loglvl, state.ip, (void *) state.ip);
+ 	debug_show_held_locks(task ? : current);
+ }
+ 
++void show_stack(struct task_struct *task, unsigned long *stack)
++{
++	show_stack_loglvl(task, stack, KERN_DEFAULT);
++}
++
+ static void show_last_breaking_event(struct pt_regs *regs)
+ {
+ 	printk("Last Breaking-Event-Address:\n");
+-- 
+2.25.1
 
