@@ -2,138 +2,74 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 4F646186D75
-	for <lists+linux-s390@lfdr.de>; Mon, 16 Mar 2020 15:41:56 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 0EC49187694
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2020 01:11:49 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731646AbgCPOlt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 16 Mar 2020 10:41:49 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:35362 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731534AbgCPOlt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 16 Mar 2020 10:41:49 -0400
-Received: by mail-pg1-f194.google.com with SMTP id 7so9885297pgr.2
-        for <linux-s390@vger.kernel.org>; Mon, 16 Mar 2020 07:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Eirw1+CPEwOm9XDny2XZP8XgLLmqTIbu051zNlJl2YI=;
-        b=BcUu/qEEKClkKnpXgI3q3V6khj8IpC2a07GWHZIS/cr6Fb4nNDLbhXbdOCHRroK6L4
-         ro0wccURxr4wDaYw64s/ljpNl9dLHr13jsdHV0PenUisf6MFApAooUzSDzk3FScrWx9w
-         5oyNFyPrxI4bHYDB9aiLGSRTMV+C567KMX5ZUWurCcceMY9ukOeszTlbNv3bqbZoHDkO
-         e8R6LNu97lmLaJS7qWq7BRJET51MFPKGp205IP40HYNWxNtM1Kgdz5gNdvvQb96b4LDZ
-         YnuLBV+ZR4loerJ5CsjUhI5DyQsqML8V95JuVNawxivCDa1bi1gUBQAhRzPTMcwBP5i3
-         qE0A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Eirw1+CPEwOm9XDny2XZP8XgLLmqTIbu051zNlJl2YI=;
-        b=uBDfXDiteujMxtr8/NUkkV0QEBIv5QdSouC5pAV1gM6zVswze1BvDPE4k5dS+1lwue
-         plPVRikk7eCORK1J63sqac/Tjc4vQ5OUIILn0YwdBRoJMwwHgW7Utiotfqr6Wu/MbSmR
-         IfahfFdAYSOTRH1eiHG9U7hvsM8cb6+RVqyQbgrkWFlxLFz0OOs+J6TugH4HltJ5093/
-         cKYaqmOoSZjMJm+7c/eB+wZzt6cMiDhk238mnLDcKKeI6CDEhiYinQyTWousBJBJ7GYX
-         V+AhsRMNQ4fh2Af8XrjJuhrBzBt2w8051GDbgndb7c+PfIoBVDcpCXRVX7sx76ho28Bq
-         xoyA==
-X-Gm-Message-State: ANhLgQ3JLfGDg4DKWYpWqoyqPa2xwoLWLbrYg+0DQoPAhV4YtzaLZ4yR
-        8QCQGotkNwZOvBURLGX04QtFGg==
-X-Google-Smtp-Source: ADFU+vtmKxkjoaf5j4+z2trd3YLJQDV0qB59iuP8qelC8HGL/enlXyLmnej0EP3ur2rgqjBHdpEtcw==
-X-Received: by 2002:a65:5a8a:: with SMTP id c10mr160621pgt.315.1584369708294;
-        Mon, 16 Mar 2020 07:41:48 -0700 (PDT)
-Received: from Mindolluin.aristanetworks.com ([2a02:8084:e84:2480:228:f8ff:fe6f:83a8])
-        by smtp.gmail.com with ESMTPSA id i2sm81524pjs.21.2020.03.16.07.41.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Mar 2020 07:41:47 -0700 (PDT)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: [PATCHv2 28/50] s390: Add show_stack_loglvl()
-Date:   Mon, 16 Mar 2020 14:38:54 +0000
-Message-Id: <20200316143916.195608-29-dima@arista.com>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200316143916.195608-1-dima@arista.com>
-References: <20200316143916.195608-1-dima@arista.com>
+        id S1733088AbgCQALo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 16 Mar 2020 20:11:44 -0400
+Received: from mail.uic.edu.hk ([61.143.62.86]:48979 "EHLO umgp.uic.edu.hk"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1733047AbgCQALn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 16 Mar 2020 20:11:43 -0400
+X-IronPort-AV: E=Sophos;i="5.43,368,1503331200"; 
+   d="scan'208";a="17243176"
+Received: from unknown (HELO zpmail.uic.edu.hk) ([192.168.111.249])
+  by umgp.uic.edu.hk with ESMTP; 17 Mar 2020 08:11:35 +0800
+Received: from zpmail.uic.edu.hk (localhost [127.0.0.1])
+        by zpmail.uic.edu.hk (Postfix) with ESMTPS id D96D941C05A3;
+        Tue, 17 Mar 2020 08:11:32 +0800 (CST)
+Received: from localhost (localhost [127.0.0.1])
+        by zpmail.uic.edu.hk (Postfix) with ESMTP id D554341C0957;
+        Tue, 17 Mar 2020 08:11:31 +0800 (CST)
+DKIM-Filter: OpenDKIM Filter v2.10.3 zpmail.uic.edu.hk D554341C0957
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uic.edu.hk;
+        s=6465647E-9D7B-11E8-B17B-42130C7FA3B9; t=1584403892;
+        bh=Wn2BcVyAdGxyDvB/5AnVfCr/iJTzisyuX4dwKssec6E=;
+        h=Date:From:Message-ID:MIME-Version;
+        b=N1pNhkd2l8zz69kDtEsPH5n7SDL70Ak/Rgb/NYqC0+ZCBZFg/G0QkldxXmMRPmztz
+         HwkJ6HHAibMur3rytYhnqKeG349hpGDQCbhvoJdZWkvkFCa93STWbitRqMynzR+Wj5
+         wLEdN7i9CyVDDhspocQMykx6lSGq645dTckJSCrsFHg+uR95rTW6kz2/3F5tST7+Uo
+         ELvvW8oTRw+C3DdE82L8ao85KfwNAx6BRhhB+sNBssPbo3CqQ69/PO1/J9gy3aGO+s
+         FwDrxpCEm2RIo68N7oaYrAjY/FUGCbKk/MsqrV+VDqizldOqfTDFamlvQc82rVkjYy
+         rx6v80NBgwdtg==
+Received: from zpmail.uic.edu.hk ([127.0.0.1])
+        by localhost (zpmail.uic.edu.hk [127.0.0.1]) (amavisd-new, port 10026)
+        with ESMTP id gCmMIXxwS0HE; Tue, 17 Mar 2020 08:11:31 +0800 (CST)
+Received: from zpmail.uic.edu.hk (zpmail.uic.edu.hk [192.168.111.249])
+        by zpmail.uic.edu.hk (Postfix) with ESMTP id 1549641C058D;
+        Tue, 17 Mar 2020 08:11:27 +0800 (CST)
+Date:   Tue, 17 Mar 2020 08:11:26 +0800 (CST)
+From:   David Ibe <ylawrence@uic.edu.hk>
+Reply-To: David Ibe <davidibe718@gmail.com>
+Message-ID: <2065446646.63699156.1584403886963.JavaMail.zimbra@uic.edu.hk>
+Subject: 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [192.168.111.160]
+X-Mailer: Zimbra 8.8.15_GA_3829 (ZimbraWebClient - GC80 (Win)/8.8.15_GA_3829)
+Thread-Index: 8IMjdxPQWBZshE+F+QJEttpRaFVxcQ==
+Thread-Topic: 
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Currently, the log-level of show_stack() depends on a platform
-realization. It creates situations where the headers are printed with
-lower log level or higher than the stacktrace (depending on
-a platform or user).
 
-Furthermore, it forces the logic decision from user to an architecture
-side. In result, some users as sysrq/kdb/etc are doing tricks with
-temporary rising console_loglevel while printing their messages.
-And in result it not only may print unwanted messages from other CPUs,
-but also omit printing at all in the unlucky case where the printk()
-was deferred.
 
-Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
-an easier approach than introducing more printk buffers.
-Also, it will consolidate printings with headers.
+Good Day,                
 
-Introduce show_stack_loglvl(), that eventually will substitute
-show_stack().
+I am Mr. David Ibe, I work with the International Standards on Auditing, I have seen on records, that several times people has divert your funds into their own personal accounts.
 
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
-[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
-Signed-off-by: Dmitry Safonov <dima@arista.com>
----
- arch/s390/kernel/dumpstack.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+Now I am writing to you in respect of the amount which I have been able to send to you through our International United Nations accredited and approved Diplomat, who has arrived Africa, I want you to know that the diplomat would deliver the funds which I have packaged as a diplomatic compensation to you and the amount in the consignment is  $10,000,000.00 United State Dollars.
 
-diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
-index 2c122d8bab93..887a054919fc 100644
---- a/arch/s390/kernel/dumpstack.c
-+++ b/arch/s390/kernel/dumpstack.c
-@@ -126,18 +126,24 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
- 	return -EINVAL;
- }
- 
--void show_stack(struct task_struct *task, unsigned long *stack)
-+void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
-+		       const char *loglvl)
- {
- 	struct unwind_state state;
- 
--	printk("Call Trace:\n");
-+	printk("%sCall Trace:\n", loglvl);
- 	unwind_for_each_frame(&state, task, NULL, (unsigned long) stack)
--		printk(state.reliable ? " [<%016lx>] %pSR \n" :
--					"([<%016lx>] %pSR)\n",
--		       state.ip, (void *) state.ip);
-+		printk(state.reliable ? "%s [<%016lx>] %pSR \n" :
-+					"%s([<%016lx>] %pSR)\n",
-+		       loglvl, state.ip, (void *) state.ip);
- 	debug_show_held_locks(task ? : current);
- }
- 
-+void show_stack(struct task_struct *task, unsigned long *stack)
-+{
-+	show_stack_loglvl(task, stack, KERN_DEFAULT);
-+}
-+
- static void show_last_breaking_event(struct pt_regs *regs)
- {
- 	printk("Last Breaking-Event-Address:\n");
--- 
-2.25.1
+I did not disclose the contents to the diplomat, but I told him that it is your compensation from the Auditing Corporate Governance and Stewardship, Auditing and Assurance Standards Board. I want you to know that these funds would help with your financial status as I have seen in records that you have spent a lot trying to receive these funds and I am not demanding so much from you but only 30% for my stress and logistics.
 
+I would like you to get back to me with your personal contact details, so that I can give you the contact information's of the diplomat who has arrived Africa and has been waiting to get your details so that he can proceed with the delivery to you.
+
+Yours Sincerely,
+Kindly forward your details to: mrdavidibe966@gmail.com
+Mr. David Ibe
+International Auditor,
+Corporate Governance and Stewardship
