@@ -2,62 +2,84 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CFFDF18835D
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2020 13:12:01 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 63B6F188BDC
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2020 18:17:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726541AbgCQMLr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Mar 2020 08:11:47 -0400
-Received: from sonic307-2.consmr.mail.ne1.yahoo.com ([66.163.190.121]:37772
-        "EHLO sonic307-2.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726825AbgCQMLq (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 17 Mar 2020 08:11:46 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1584447105; bh=kcevCRoll2+Bsa3FDERpIV72LVcB1A4YV1b5N2AWYBk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=Mm+amEABuqOJSxEgMJ/+nsPA/ert+WBMiBEAweTDEsx0N036ol3lmnkGKYWfx1C2elo7X2MRdIotA+1oIY3R33KgQYVWZPOomU9AK+h0oYREGlTeqU6XgPE8Hm4IMzgjKLifqesthHoal8PP8ZNv5J/Rs4JtryuX+7H6/zqwwNqpCB8gMjj1IOA11oJY10PxvQ8kq2gzmJYi8JFmaIovHksWCkDP2+khyElBjOAwmHHqoEgc3O6qHrU8EA5jJvBTCWL180Y1bbtqpD4D3F6cMF0bErwQBIDmrVVWDIWiJYdSEfKS2QbzeAXQJJg3unqJTzWmN7nkDdLYNJLh27eZ9g==
-X-YMail-OSG: meabeLkVM1kj4Qo1UjIKZPmYD57gR7gOgoKWAJhAgndzEP8FpYomA0vodT2zgoo
- 7sGgK.kVySqbLaFz.W_wkblfN0jMp5w9BAW3QXr902Dv_G_zrhaCZzbV5wPqfES1rrrtb6SPZI2E
- pznk8b9RjhucMPpNVS8_iBj4VWaQIr2RxGjq9ZKK4xgUkbNwEwq6EtwDvQHBuiYmue13bfoywmx2
- ClCujEeJt7CoC_GmYMMhTuOo.QP8U6.RI222je7MxVK7SrULUS6l_osTHUuteMP78NY7l.PDTFqI
- glY09FeQ0qMvYADM6VZ3OClo8hcWXRW3GaWATtORTGYFet9mMRuAwZWM5u_26HoYyw1zYKFGoPIC
- XB5nswWjghnuoqXAeGtZEsjRUJG9LhgJyQDkc6cL00qYKir_uCXfE1Yf7R1cImjyWjTnPgQeTSVw
- hOECgCxqGfQYp5I2rVed9WhPiBiRwnoZFuW3cafYUeDVyV4didE8dS2uk8cXhBKMqLOnTpkdGG6O
- a2oeCSGv49CgeOKgZLD3f7bm.eabxtUAqIOV__b9udeCc0lIGeXVuaWknhwAPPHX.aOJJS7Wo0mT
- Cb_15kkvpBs00Oq6cyHwGkrUG71QGXQ.kzSe708iYcSGZ4IFFBQZq3U78tQBVT6zmKdemUY7Qsx9
- mg6El.vRbjJzEP74i_gaHx.6dKnENZZvFNvnNuIcb8zklHvgwZS01Df.tDJBa01xGoq_DEwEm_O3
- N48x7AVSyU1OVZEI2EvOyGtTY6NeRsSPSKMSO5RcC_22Sj0aClWQOt.0IMou5DfrakujXXz3I4ov
- h4LGzvx5Sm45iKCZS79a84ZEerqaaENotu.40RYrtsD8TmX2QsMijpduFznz3YG_I08.c1tT4Rel
- 9BbD_vtcKKmNYLyyDqT6z.yEN0Icq51wncO4XK.oa9Uw8AzfLGRRigifle87lSIMPipCGDhig3IQ
- Vh.oMt8wiWk0gz0XNhVvu3GUxmyHRYPNHd6KpvsHfcXHPIfg4FgodNhyKAn1VC33D5DHi3fQI0I3
- NFDezcnyxTcoaUPJFtPpGiD8TUuWg_hI2QjLiIy8SgfpB4WLyhya2F3EBGQFwyc9Guxnw4..ROt7
- Wtq27ankkDbapMf80Xq0xAN762_4GTU2kJD6CNytnpBfJmiTPXjn.ZWmg3kbg5_Xm5D3Tv05X4uy
- M_OA4zS72HdEIFhqlBXy0zJaQye7Sje767SEvPxEr7kvrF7SD0GZzLXAGOxQO8xrD21jWAdDZiX4
- R3kAEKZk7kjrfXPZ1akGXosn4j4uYPL4Ou1rjpKlhq76S8vU4JOiZ_tK872l7DM84Qy965IpeihH
- P8YIG.GJzM0xKyipjV76O7oiBQWA-
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Tue, 17 Mar 2020 12:11:45 +0000
-Date:   Tue, 17 Mar 2020 12:09:44 +0000 (UTC)
-From:   Stephen Li <stenn6@gabg.net>
-Reply-To: stephli947701@gmail.com
-Message-ID: <2047002212.1846736.1584446984727@mail.yahoo.com>
-Subject: REF
+        id S1726386AbgCQRRT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Mar 2020 13:17:19 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:59288 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726250AbgCQRRT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 17 Mar 2020 13:17:19 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HH8rT7103617;
+        Tue, 17 Mar 2020 17:17:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2020-01-29;
+ bh=Pk+OLHOqJDBoWVyrHACr30/yvGlB9boWlzLxMqe48O0=;
+ b=hpwtXs63NIdDptSB9h8p9HGNscVjtEsJQhe64BDBvugHO488nTkwJzf9CZXxNS3NejtQ
+ gwtx2MDcVISiiB2pBdV6mOYp/ZTJrVBoGIyyfx4EvTThcSZCan+BUzDDLRi2fcWO5qod
+ CxrMNvrWxXcNwUiPDtdLanIb0GCfrMUoYidRGIcSvSogtoWZHeJCMKawwYw+ob8r4861
+ cjro7fgCa5XE5dpaWNoTXo9G8WRt9PidjazjcVOOF2o+r+lxo14oBzi+z9WCcylsxsIM
+ OFsUiSeUt1NWf+7PoDp5qe0WbjttiPPCSdBYATJlRevDSoouJrKLIO6aT7f8XQZtMR31 Qw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2yrppr69na-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 17:17:16 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02HGp5Ax017311;
+        Tue, 17 Mar 2020 17:17:16 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2ys8rf9vmj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 17 Mar 2020 17:17:15 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02HHHEv6010202;
+        Tue, 17 Mar 2020 17:17:14 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 17 Mar 2020 10:17:14 -0700
+To:     Steffen Maier <maier@linux.ibm.com>
+Cc:     "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
+        Benjamin Block <bblock@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH 00/10] zfcp features for v5.7
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20200312174505.51294-1-maier@linux.ibm.com>
+Date:   Tue, 17 Mar 2020 13:17:11 -0400
+In-Reply-To: <20200312174505.51294-1-maier@linux.ibm.com> (Steffen Maier's
+        message of "Thu, 12 Mar 2020 18:44:55 +0100")
+Message-ID: <yq1fte6oq94.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-References: <2047002212.1846736.1584446984727.ref@mail.yahoo.com>
-X-Mailer: WebService/1.1.15342 YMailNodin Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9563 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 spamscore=0 bulkscore=0 phishscore=0
+ malwarescore=0 mlxscore=0 mlxlogscore=897 adultscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003170068
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9563 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 bulkscore=0
+ suspectscore=0 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1015
+ impostorscore=0 priorityscore=1501 spamscore=0 mlxlogscore=974 mlxscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003170068
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
+Steffen,
 
-Greetings,
-I was searching through a local business directory when I found your
-profile. I am Soliciting On-Behalf of my private client who is
-interested in having a serious business investment in your country. If
-you have a valid business, investment or project he can invest
-back to me for more details. Your swift response is highly needed.
-Sincerely
-Stephen Li
-Please response back to me with is my private email below for more details
-stephli947701@gmail.com
+> one small zfcp fix and 2 features for v5.7.
+
+Applied to 5.7/scsi-queue, thank you!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
