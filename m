@@ -2,257 +2,62 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8158F1881B0
-	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2020 12:20:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CFFDF18835D
+	for <lists+linux-s390@lfdr.de>; Tue, 17 Mar 2020 13:12:01 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbgCQLSZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 17 Mar 2020 07:18:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:45496 "EHLO mx2.suse.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727881AbgCQLSZ (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 17 Mar 2020 07:18:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx2.suse.de (Postfix) with ESMTP id 429AFAD71;
-        Tue, 17 Mar 2020 11:18:21 +0000 (UTC)
-Date:   Tue, 17 Mar 2020 12:18:23 +0100
-From:   Borislav Petkov <bp@suse.de>
-To:     lkml <linux-kernel@vger.kernel.org>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, x86@kernel.org,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Christoph Hellwig <hch@lst.de>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org,
-        Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH] treewide: Rename "unencrypted" to "decrypted"
-Message-ID: <20200317111822.GA15609@zn.tnic>
+        id S1726541AbgCQMLr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 17 Mar 2020 08:11:47 -0400
+Received: from sonic307-2.consmr.mail.ne1.yahoo.com ([66.163.190.121]:37772
+        "EHLO sonic307-2.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726825AbgCQMLq (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 17 Mar 2020 08:11:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1584447105; bh=kcevCRoll2+Bsa3FDERpIV72LVcB1A4YV1b5N2AWYBk=; h=Date:From:Reply-To:Subject:References:From:Subject; b=Mm+amEABuqOJSxEgMJ/+nsPA/ert+WBMiBEAweTDEsx0N036ol3lmnkGKYWfx1C2elo7X2MRdIotA+1oIY3R33KgQYVWZPOomU9AK+h0oYREGlTeqU6XgPE8Hm4IMzgjKLifqesthHoal8PP8ZNv5J/Rs4JtryuX+7H6/zqwwNqpCB8gMjj1IOA11oJY10PxvQ8kq2gzmJYi8JFmaIovHksWCkDP2+khyElBjOAwmHHqoEgc3O6qHrU8EA5jJvBTCWL180Y1bbtqpD4D3F6cMF0bErwQBIDmrVVWDIWiJYdSEfKS2QbzeAXQJJg3unqJTzWmN7nkDdLYNJLh27eZ9g==
+X-YMail-OSG: meabeLkVM1kj4Qo1UjIKZPmYD57gR7gOgoKWAJhAgndzEP8FpYomA0vodT2zgoo
+ 7sGgK.kVySqbLaFz.W_wkblfN0jMp5w9BAW3QXr902Dv_G_zrhaCZzbV5wPqfES1rrrtb6SPZI2E
+ pznk8b9RjhucMPpNVS8_iBj4VWaQIr2RxGjq9ZKK4xgUkbNwEwq6EtwDvQHBuiYmue13bfoywmx2
+ ClCujEeJt7CoC_GmYMMhTuOo.QP8U6.RI222je7MxVK7SrULUS6l_osTHUuteMP78NY7l.PDTFqI
+ glY09FeQ0qMvYADM6VZ3OClo8hcWXRW3GaWATtORTGYFet9mMRuAwZWM5u_26HoYyw1zYKFGoPIC
+ XB5nswWjghnuoqXAeGtZEsjRUJG9LhgJyQDkc6cL00qYKir_uCXfE1Yf7R1cImjyWjTnPgQeTSVw
+ hOECgCxqGfQYp5I2rVed9WhPiBiRwnoZFuW3cafYUeDVyV4didE8dS2uk8cXhBKMqLOnTpkdGG6O
+ a2oeCSGv49CgeOKgZLD3f7bm.eabxtUAqIOV__b9udeCc0lIGeXVuaWknhwAPPHX.aOJJS7Wo0mT
+ Cb_15kkvpBs00Oq6cyHwGkrUG71QGXQ.kzSe708iYcSGZ4IFFBQZq3U78tQBVT6zmKdemUY7Qsx9
+ mg6El.vRbjJzEP74i_gaHx.6dKnENZZvFNvnNuIcb8zklHvgwZS01Df.tDJBa01xGoq_DEwEm_O3
+ N48x7AVSyU1OVZEI2EvOyGtTY6NeRsSPSKMSO5RcC_22Sj0aClWQOt.0IMou5DfrakujXXz3I4ov
+ h4LGzvx5Sm45iKCZS79a84ZEerqaaENotu.40RYrtsD8TmX2QsMijpduFznz3YG_I08.c1tT4Rel
+ 9BbD_vtcKKmNYLyyDqT6z.yEN0Icq51wncO4XK.oa9Uw8AzfLGRRigifle87lSIMPipCGDhig3IQ
+ Vh.oMt8wiWk0gz0XNhVvu3GUxmyHRYPNHd6KpvsHfcXHPIfg4FgodNhyKAn1VC33D5DHi3fQI0I3
+ NFDezcnyxTcoaUPJFtPpGiD8TUuWg_hI2QjLiIy8SgfpB4WLyhya2F3EBGQFwyc9Guxnw4..ROt7
+ Wtq27ankkDbapMf80Xq0xAN762_4GTU2kJD6CNytnpBfJmiTPXjn.ZWmg3kbg5_Xm5D3Tv05X4uy
+ M_OA4zS72HdEIFhqlBXy0zJaQye7Sje767SEvPxEr7kvrF7SD0GZzLXAGOxQO8xrD21jWAdDZiX4
+ R3kAEKZk7kjrfXPZ1akGXosn4j4uYPL4Ou1rjpKlhq76S8vU4JOiZ_tK872l7DM84Qy965IpeihH
+ P8YIG.GJzM0xKyipjV76O7oiBQWA-
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic307.consmr.mail.ne1.yahoo.com with HTTP; Tue, 17 Mar 2020 12:11:45 +0000
+Date:   Tue, 17 Mar 2020 12:09:44 +0000 (UTC)
+From:   Stephen Li <stenn6@gabg.net>
+Reply-To: stephli947701@gmail.com
+Message-ID: <2047002212.1846736.1584446984727@mail.yahoo.com>
+Subject: REF
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+References: <2047002212.1846736.1584446984727.ref@mail.yahoo.com>
+X-Mailer: WebService/1.1.15342 YMailNodin Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi all,
 
-this hasn't been fully tested yet but it is mechanical rename only so
-there shouldn't be any problems (famous last words :-)).
 
-I'll run it through the randconfig bench today and take it through tip if
-there are no objections.
-
-Thx.
-
----
-
-Back then when the whole SME machinery started getting mainlined, it
-was agreed that for simplicity, clarity and sanity's sake, the terms
-denoting encrypted and not-encrypted memory should be "encrypted" and
-"decrypted". And the majority of the code sticks to that convention
-except those two. So rename them.
-
-No functional changes.
-
-Signed-off-by: Borislav Petkov <bp@suse.de>
----
- arch/powerpc/platforms/pseries/Kconfig |  2 +-
- arch/s390/Kconfig                      |  2 +-
- arch/x86/Kconfig                       |  2 +-
- arch/x86/mm/mem_encrypt.c              |  4 ++--
- include/linux/dma-direct.h             |  8 ++++----
- kernel/dma/Kconfig                     |  2 +-
- kernel/dma/direct.c                    | 14 +++++++-------
- kernel/dma/mapping.c                   |  2 +-
- 8 files changed, 18 insertions(+), 18 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
-index 24c18362e5ea..a78e2c3e1d92 100644
---- a/arch/powerpc/platforms/pseries/Kconfig
-+++ b/arch/powerpc/platforms/pseries/Kconfig
-@@ -151,7 +151,7 @@ config PPC_SVM
- 	depends on PPC_PSERIES
- 	select SWIOTLB
- 	select ARCH_HAS_MEM_ENCRYPT
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	help
- 	 There are certain POWER platforms which support secure guests using
- 	 the Protected Execution Facility, with the help of an Ultravisor
-diff --git a/arch/s390/Kconfig b/arch/s390/Kconfig
-index 8abe77536d9d..ab1dbb7415b4 100644
---- a/arch/s390/Kconfig
-+++ b/arch/s390/Kconfig
-@@ -192,7 +192,7 @@ config S390
- 	select VIRT_CPU_ACCOUNTING
- 	select ARCH_HAS_SCALED_CPUTIME
- 	select HAVE_NMI
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	select SWIOTLB
- 	select GENERIC_ALLOCATOR
- 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index beea77046f9b..2ae904f505e1 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1525,7 +1525,7 @@ config AMD_MEM_ENCRYPT
- 	depends on X86_64 && CPU_SUP_AMD
- 	select DYNAMIC_PHYSICAL_MASK
- 	select ARCH_USE_MEMREMAP_PROT
--	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_FORCE_DMA_DECRYPTED
- 	---help---
- 	  Say yes to enable support for the encryption of system memory.
- 	  This requires an AMD processor that supports Secure Memory
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index a03614bd3e1a..66d09f269e6d 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -350,8 +350,8 @@ bool sev_active(void)
- 	return sme_me_mask && sev_enabled;
- }
- 
--/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
--bool force_dma_unencrypted(struct device *dev)
-+/* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_DECRYPTED */
-+bool force_dma_decrypted(struct device *dev)
- {
- 	/*
- 	 * For SEV, all DMA must be to unencrypted addresses.
-diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
-index 24b8684aa21d..9f955844e9c7 100644
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@ -26,14 +26,14 @@ static inline phys_addr_t __dma_to_phys(struct device *dev, dma_addr_t dev_addr)
- }
- #endif /* !CONFIG_ARCH_HAS_PHYS_TO_DMA */
- 
--#ifdef CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED
--bool force_dma_unencrypted(struct device *dev);
-+#ifdef CONFIG_ARCH_HAS_FORCE_DMA_DECRYPTED
-+bool force_dma_decrypted(struct device *dev);
- #else
--static inline bool force_dma_unencrypted(struct device *dev)
-+static inline bool force_dma_decrypted(struct device *dev)
- {
- 	return false;
- }
--#endif /* CONFIG_ARCH_HAS_FORCE_DMA_UNENCRYPTED */
-+#endif /* CONFIG_ARCH_HAS_FORCE_DMA_DECRYPTED */
- 
- /*
-  * If memory encryption is supported, phys_to_dma will set the memory encryption
-diff --git a/kernel/dma/Kconfig b/kernel/dma/Kconfig
-index 4c103a24e380..55c4147bb2b1 100644
---- a/kernel/dma/Kconfig
-+++ b/kernel/dma/Kconfig
-@@ -51,7 +51,7 @@ config ARCH_HAS_SYNC_DMA_FOR_CPU_ALL
- config ARCH_HAS_DMA_PREP_COHERENT
- 	bool
- 
--config ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+config ARCH_HAS_FORCE_DMA_DECRYPTED
- 	bool
- 
- config DMA_NONCOHERENT_CACHE_SYNC
-diff --git a/kernel/dma/direct.c b/kernel/dma/direct.c
-index ac7956c38f69..a0576c0ccacd 100644
---- a/kernel/dma/direct.c
-+++ b/kernel/dma/direct.c
-@@ -26,7 +26,7 @@ unsigned int zone_dma_bits __ro_after_init = 24;
- static inline dma_addr_t phys_to_dma_direct(struct device *dev,
- 		phys_addr_t phys)
- {
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		return __phys_to_dma(dev, phys);
- 	return phys_to_dma(dev, phys);
- }
-@@ -49,7 +49,7 @@ static gfp_t __dma_direct_optimal_gfp_mask(struct device *dev, u64 dma_mask,
- {
- 	u64 dma_limit = min_not_zero(dma_mask, dev->bus_dma_limit);
- 
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		*phys_limit = __dma_to_phys(dev, dma_limit);
- 	else
- 		*phys_limit = dma_to_phys(dev, dma_limit);
-@@ -138,7 +138,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 		return NULL;
- 
- 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
--	    !force_dma_unencrypted(dev)) {
-+	    !force_dma_decrypted(dev)) {
- 		/* remove any dirty cache lines on the kernel alias */
- 		if (!PageHighMem(page))
- 			arch_dma_prep_coherent(page, size);
-@@ -179,7 +179,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 	}
- 
- 	ret = page_address(page);
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		set_memory_decrypted((unsigned long)ret, 1 << get_order(size));
- 
- 	memset(ret, 0, size);
-@@ -190,7 +190,7 @@ void *dma_direct_alloc_pages(struct device *dev, size_t size,
- 		ret = uncached_kernel_address(ret);
- 	}
- done:
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		*dma_handle = __phys_to_dma(dev, page_to_phys(page));
- 	else
- 		*dma_handle = phys_to_dma(dev, page_to_phys(page));
-@@ -203,7 +203,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- 	unsigned int page_order = get_order(size);
- 
- 	if ((attrs & DMA_ATTR_NO_KERNEL_MAPPING) &&
--	    !force_dma_unencrypted(dev)) {
-+	    !force_dma_decrypted(dev)) {
- 		/* cpu_addr is a struct page cookie, not a kernel address */
- 		dma_free_contiguous(dev, cpu_addr, size);
- 		return;
-@@ -213,7 +213,7 @@ void dma_direct_free_pages(struct device *dev, size_t size, void *cpu_addr,
- 	    dma_free_from_pool(cpu_addr, PAGE_ALIGN(size)))
- 		return;
- 
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
- 
- 	if (IS_ENABLED(CONFIG_DMA_REMAP) && is_vmalloc_addr(cpu_addr))
-diff --git a/kernel/dma/mapping.c b/kernel/dma/mapping.c
-index 98e3d873792e..dbd0605a39c5 100644
---- a/kernel/dma/mapping.c
-+++ b/kernel/dma/mapping.c
-@@ -154,7 +154,7 @@ EXPORT_SYMBOL(dma_get_sgtable_attrs);
-  */
- pgprot_t dma_pgprot(struct device *dev, pgprot_t prot, unsigned long attrs)
- {
--	if (force_dma_unencrypted(dev))
-+	if (force_dma_decrypted(dev))
- 		prot = pgprot_decrypted(prot);
- 	if (dev_is_dma_coherent(dev) ||
- 	    (IS_ENABLED(CONFIG_DMA_NONCOHERENT_CACHE_SYNC) &&
--- 
-2.21.0
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Greetings,
+I was searching through a local business directory when I found your
+profile. I am Soliciting On-Behalf of my private client who is
+interested in having a serious business investment in your country. If
+you have a valid business, investment or project he can invest
+back to me for more details. Your swift response is highly needed.
+Sincerely
+Stephen Li
+Please response back to me with is my private email below for more details
+stephli947701@gmail.com
