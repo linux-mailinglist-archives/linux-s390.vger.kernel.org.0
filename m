@@ -2,40 +2,40 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id CC4A0189C60
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Mar 2020 13:55:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 8E7F3189C69
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Mar 2020 13:55:42 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726988AbgCRMzd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Mar 2020 08:55:33 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44090 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        id S1726940AbgCRMzY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Mar 2020 08:55:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31158 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
         by vger.kernel.org with ESMTP id S1726857AbgCRMzY (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
         Wed, 18 Mar 2020 08:55:24 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ICaDEO065265
-        for <linux-s390@vger.kernel.org>; Wed, 18 Mar 2020 08:55:24 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ICdf5m057524
+        for <linux-s390@vger.kernel.org>; Wed, 18 Mar 2020 08:55:23 -0400
 Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yua2avcf4-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2yuk25a1qw-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 18 Mar 2020 08:55:24 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 18 Mar 2020 08:55:22 -0400
 Received: from localhost
         by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Wed, 18 Mar 2020 12:55:22 -0000
+        Wed, 18 Mar 2020 12:55:20 -0000
 Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
         by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Wed, 18 Mar 2020 12:55:19 -0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ICsGOE50856374
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ICsGEf50856378
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 12:54:16 GMT
+        Wed, 18 Mar 2020 12:54:17 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7948EA405C;
+        by IMSVA (Postfix) with ESMTP id BB840A4054;
         Wed, 18 Mar 2020 12:55:17 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42362A4054;
+        by IMSVA (Postfix) with ESMTP id 84DFEA405B;
         Wed, 18 Mar 2020 12:55:17 +0000 (GMT)
 Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
@@ -47,100 +47,142 @@ Cc:     netdev <netdev@vger.kernel.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Ursula Braun <ubraun@linux.ibm.com>,
         Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 05/11] s390/qeth: allow configuration of TX queues for IQD devices
-Date:   Wed, 18 Mar 2020 13:54:49 +0100
+Subject: [PATCH net-next 06/11] s390/qeth: balance the TX queue selection for IQD devices
+Date:   Wed, 18 Mar 2020 13:54:50 +0100
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20200318125455.5838-1-jwi@linux.ibm.com>
 References: <20200318125455.5838-1-jwi@linux.ibm.com>
 X-TM-AS-GCONF: 00
-x-cbid: 20031812-0028-0000-0000-000003E6E675
+x-cbid: 20031812-0028-0000-0000-000003E6E676
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031812-0029-0000-0000-000024AC3E63
-Message-Id: <20200318125455.5838-6-jwi@linux.ibm.com>
+x-cbparentid: 20031812-0029-0000-0000-000024AC3E64
+Message-Id: <20200318125455.5838-7-jwi@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
  definitions=2020-03-18_05:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 malwarescore=0 suspectscore=0 clxscore=1015 phishscore=0
- priorityscore=1501 adultscore=0 bulkscore=0 spamscore=0 mlxscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
+ phishscore=0 bulkscore=0 clxscore=1015 spamscore=0 malwarescore=0
+ mlxlogscore=999 adultscore=0 suspectscore=0 lowpriorityscore=0
  impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003180059
+ engine=8.12.0-2003020000 definitions=main-2003180061
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Similar to the support for z/VM NICs, but we need to take extra care
-about the dedicated mcast queue:
+For ucast traffic, qeth_iqd_select_queue() falls back to
+netdev_pick_tx(). This will potentially use skb_tx_hash() to distribute
+the flow over all active TX queues - so txq 0 is a valid selection, and
+qeth_iqd_select_queue() needs to check for this and put it on some other
+queue. As a result, the distribution for ucast flows is unbalanced and
+hits QETH_IQD_MIN_UCAST_TXQ heavier than the other queues.
 
-1. netdev_pick_tx() is unaware of this limitation and might select the
-   mcast txq. Catch this.
-2. require at least _two_ TX queues - one for ucast, one for mcast.
-3. when reducing the number of TX queues, there's a potential race
-   where netdev_cap_txqueue() over-rules the selected txq index and
-   falls back to index 0. This would place ucast traffic on the mcast
-   queue, and result in TX errors.
-   So for IQD, reject a reduction while the interface is running.
+Open-coding a custom variant of skb_tx_hash() isn't an option, since
+netdev_pick_tx() also gives us eg. access to XPS. But we can pull a
+little trick: add a single TC class that excludes the mcast txq, and
+thus encourage skb_tx_hash() to not pick the mcast txq.
 
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 ---
- drivers/s390/net/qeth_core_main.c |  6 +++++-
- drivers/s390/net/qeth_ethtool.c   | 19 ++++++++++++++++---
- 2 files changed, 21 insertions(+), 4 deletions(-)
+ drivers/s390/net/qeth_core.h      |  1 +
+ drivers/s390/net/qeth_core_main.c | 45 ++++++++++++++++++++++++++++++-
+ drivers/s390/net/qeth_ethtool.c   |  2 +-
+ 3 files changed, 46 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
+index 94cd39631eee..b8b356aca674 100644
+--- a/drivers/s390/net/qeth_core.h
++++ b/drivers/s390/net/qeth_core.h
+@@ -1061,6 +1061,7 @@ netdev_features_t qeth_features_check(struct sk_buff *skb,
+ 				      struct net_device *dev,
+ 				      netdev_features_t features);
+ void qeth_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats);
++int qeth_set_real_num_tx_queues(struct qeth_card *card, unsigned int count);
+ u16 qeth_iqd_select_queue(struct net_device *dev, struct sk_buff *skb,
+ 			  u8 cast_type, struct net_device *sb_dev);
+ int qeth_open(struct net_device *dev);
 diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index f13495d9209b..aa493edc0082 100644
+index aa493edc0082..e1d984c29e1f 100644
 --- a/drivers/s390/net/qeth_core_main.c
 +++ b/drivers/s390/net/qeth_core_main.c
-@@ -6644,9 +6644,13 @@ EXPORT_SYMBOL_GPL(qeth_get_stats64);
+@@ -6025,7 +6025,7 @@ int qeth_setup_netdev(struct qeth_card *card)
+ 		num_tx_queues = dev->real_num_tx_queues;
+ 	}
+ 
+-	return netif_set_real_num_tx_queues(dev, num_tx_queues);
++	return qeth_set_real_num_tx_queues(card, num_tx_queues);
+ }
+ EXPORT_SYMBOL_GPL(qeth_setup_netdev);
+ 
+@@ -6641,6 +6641,47 @@ void qeth_get_stats64(struct net_device *dev, struct rtnl_link_stats64 *stats)
+ }
+ EXPORT_SYMBOL_GPL(qeth_get_stats64);
+ 
++#define TC_IQD_UCAST   0
++static void qeth_iqd_set_prio_tc_map(struct net_device *dev,
++				     unsigned int ucast_txqs)
++{
++	unsigned int prio;
++
++	/* IQD requires mcast traffic to be placed on a dedicated queue, and
++	 * qeth_iqd_select_queue() deals with this.
++	 * For unicast traffic, we defer the queue selection to the stack.
++	 * By installing a trivial prio map that spans over only the unicast
++	 * queues, we can encourage the stack to spread the ucast traffic evenly
++	 * without selecting the mcast queue.
++	 */
++
++	/* One traffic class, spanning over all active ucast queues: */
++	netdev_set_num_tc(dev, 1);
++	netdev_set_tc_queue(dev, TC_IQD_UCAST, ucast_txqs,
++			    QETH_IQD_MIN_UCAST_TXQ);
++
++	/* Map all priorities to this traffic class: */
++	for (prio = 0; prio <= TC_BITMASK; prio++)
++		netdev_set_prio_tc_map(dev, prio, TC_IQD_UCAST);
++}
++
++int qeth_set_real_num_tx_queues(struct qeth_card *card, unsigned int count)
++{
++	struct net_device *dev = card->dev;
++	int rc;
++
++	/* Per netif_setup_tc(), adjust the mapping first: */
++	if (IS_IQD(card))
++		qeth_iqd_set_prio_tc_map(dev, count - 1);
++
++	rc = netif_set_real_num_tx_queues(dev, count);
++
++	if (rc && IS_IQD(card))
++		qeth_iqd_set_prio_tc_map(dev, dev->real_num_tx_queues - 1);
++
++	return rc;
++}
++
  u16 qeth_iqd_select_queue(struct net_device *dev, struct sk_buff *skb,
  			  u8 cast_type, struct net_device *sb_dev)
  {
-+	u16 txq;
-+
+@@ -6648,6 +6689,8 @@ u16 qeth_iqd_select_queue(struct net_device *dev, struct sk_buff *skb,
+ 
  	if (cast_type != RTN_UNICAST)
  		return QETH_IQD_MCAST_TXQ;
--	return QETH_IQD_MIN_UCAST_TXQ;
-+
-+	txq = netdev_pick_tx(dev, skb, sb_dev);
-+	return (txq == QETH_IQD_MCAST_TXQ) ? QETH_IQD_MIN_UCAST_TXQ : txq;
- }
- EXPORT_SYMBOL_GPL(qeth_iqd_select_queue);
++	if (dev->real_num_tx_queues == QETH_IQD_MIN_TXQ)
++		return QETH_IQD_MIN_UCAST_TXQ;
  
+ 	txq = netdev_pick_tx(dev, skb, sb_dev);
+ 	return (txq == QETH_IQD_MCAST_TXQ) ? QETH_IQD_MIN_UCAST_TXQ : txq;
 diff --git a/drivers/s390/net/qeth_ethtool.c b/drivers/s390/net/qeth_ethtool.c
-index 19b9c8302d36..715ee0015847 100644
+index 715ee0015847..079b695032ef 100644
 --- a/drivers/s390/net/qeth_ethtool.c
 +++ b/drivers/s390/net/qeth_ethtool.c
-@@ -180,14 +180,27 @@ static int qeth_set_channels(struct net_device *dev,
- {
- 	struct qeth_card *card = dev->ml_priv;
+@@ -201,7 +201,7 @@ static int qeth_set_channels(struct net_device *dev,
+ 			return -EOPNOTSUPP;
+ 	}
  
--	if (IS_IQD(card) || !IS_VM_NIC(card))
--		return -EOPNOTSUPP;
--
- 	if (channels->rx_count == 0 || channels->tx_count == 0)
- 		return -EINVAL;
- 	if (channels->tx_count > card->qdio.no_out_queues)
- 		return -EINVAL;
- 
-+	if (IS_IQD(card)) {
-+		if (channels->tx_count < QETH_IQD_MIN_TXQ)
-+			return -EINVAL;
-+
-+		/* Reject downgrade while running. It could push displaced
-+		 * ucast flows onto txq0, which is reserved for mcast.
-+		 */
-+		if (netif_running(dev) &&
-+		    channels->tx_count < dev->real_num_tx_queues)
-+			return -EPERM;
-+	} else {
-+		/* OSA still uses the legacy prio-queue mechanism: */
-+		if (!IS_VM_NIC(card))
-+			return -EOPNOTSUPP;
-+	}
-+
- 	return netif_set_real_num_tx_queues(dev, channels->tx_count);
+-	return netif_set_real_num_tx_queues(dev, channels->tx_count);
++	return qeth_set_real_num_tx_queues(card, channels->tx_count);
  }
  
+ static int qeth_get_tunable(struct net_device *dev,
 -- 
 2.17.1
 
