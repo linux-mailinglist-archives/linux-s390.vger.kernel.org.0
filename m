@@ -2,100 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 457C118A620
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Mar 2020 22:06:04 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B8BF118A7AB
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Mar 2020 23:09:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbgCRUyq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Mar 2020 16:54:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:54596 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727977AbgCRUyp (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:54:45 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 743A22173E;
-        Wed, 18 Mar 2020 20:54:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564885;
-        bh=pCcuB+pWkl42Rhm34auNydPrvo+nVOHuntQjPPkv8N0=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tHpTrIw/ohUUD58W+TZkBjTO2yP8sRN/Btro6FSLybAkW5zHuyQ4WqX9MyXm8gxCn
-         Jzxuru+C/bGkT1FD1B6q2FPdhAIE3TGDzTH0eWldzpVPrunFmbAuIMBG20Y/Z7invw
-         heLjSIhRJPwmnfFx1OViI7QIaw8iH269BBZOaRuo=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        id S1727258AbgCRWHt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Mar 2020 18:07:49 -0400
+Received: from userp2120.oracle.com ([156.151.31.85]:59426 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726663AbgCRWHs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 18 Mar 2020 18:07:48 -0400
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ILvmT0077845;
+        Wed, 18 Mar 2020 22:06:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2020-01-29; bh=s1pMLzutcA2e/hf3OvlXjDnIfQPhs95bJayfMQOUxME=;
+ b=FGED8sOeZH7vZegY5KTbymmNwi6RTCwH53GlXQ5Z8MkOBREidu2uKWXTr9CUnP2UU50v
+ 3g9pxzX4LX+mJxpPSPbLQc/izyIzA+fNY73oaab+Qz5r/bAQFXTgx7cVJEFa7/X0KB78
+ XCnEHj9Ydk/Ic9oK6rnyT2aVqigXRKtHnH2paGht1i7rne7tnwM1R80+f2oxcif+foMT
+ rDa8RNHkxhUPTR8az1yINaNjXPsCSt/u24S704F9NM/VuprmE4UEARi6ZiQ9V6Z3VHvK
+ DrZ9+i2u4c/OlxO+oxKkLXRY5Ilry1YPhe97NfHJpEnRTeflyxsWz/1/Z+NyJJskqQfv jg== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2yub2753n1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 22:06:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02ILuqsD058502;
+        Wed, 18 Mar 2020 22:06:48 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3030.oracle.com with ESMTP id 2ys8tutekx-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 18 Mar 2020 22:06:48 +0000
+Received: from abhmp0008.oracle.com (abhmp0008.oracle.com [141.146.116.14])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02IM6fZG003470;
+        Wed, 18 Mar 2020 22:06:41 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 18 Mar 2020 15:06:41 -0700
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.4 54/73] s390/qeth: handle error when backing RX buffer
-Date:   Wed, 18 Mar 2020 16:53:18 -0400
-Message-Id: <20200318205337.16279-54-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
-References: <20200318205337.16279-1-sashal@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH 0/4] Clean up hugetlb boot command line processing
+Date:   Wed, 18 Mar 2020 15:06:30 -0700
+Message-Id: <20200318220634.32100-1-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.24.1
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
 Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 suspectscore=0 mlxlogscore=999 spamscore=0 bulkscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003180094
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9564 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 impostorscore=0
+ mlxlogscore=999 mlxscore=0 phishscore=0 adultscore=0 suspectscore=0
+ clxscore=1011 priorityscore=1501 lowpriorityscore=0 bulkscore=0
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003180094
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Julian Wiedmann <jwi@linux.ibm.com>
+Longpeng(Mike) reported a weird message from hugetlb command line processing
+and proposed a solution [1].  While the proposed patch does address the
+specific issue, there are other related issues in command line processing.
+As hugetlbfs evolved, updates to command line processing have been made to
+meet immediate needs and not necessarily in a coordinated manner.  The result
+is that some processing is done in arch specific code, some is done in arch
+independent code and coordination is problematic.  Semantics can vary between
+architectures.
 
-[ Upstream commit 17413852804d7e86e6f0576cca32c1541817800e ]
+The following patch series does the following:
+- Define arch specific arch_hugetlb_valid_size routine used to validate
+  passed huge page sizes.
+- Move hugepagesz= command line parsing out of arch specific code and into
+  an arch independent routine.
+- Clean up command line processing to follow desired semantics and
+  document those semantics.
 
-qeth_init_qdio_queues() fills the RX ring with an initial set of
-RX buffers. If qeth_init_input_buffer() fails to back one of the RX
-buffers with memory, we need to bail out and report the error.
+[1] https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.com
 
-Fixes: 4a71df50047f ("qeth: new qeth device driver")
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/s390/net/qeth_core_main.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+Mike Kravetz (4):
+  hugetlbfs: add arch_hugetlb_valid_size
+  hugetlbfs: move hugepagesz= parsing to arch independent code
+  hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+  hugetlbfs: clean up command line processing
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index ac8ad951a4203..fe70e9875bde0 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2633,12 +2633,12 @@ static int qeth_init_input_buffer(struct qeth_card *card,
- 		buf->rx_skb = netdev_alloc_skb(card->dev,
- 					       QETH_RX_PULL_LEN + ETH_HLEN);
- 		if (!buf->rx_skb)
--			return 1;
-+			return -ENOMEM;
- 	}
- 
- 	pool_entry = qeth_find_free_buffer_pool_entry(card);
- 	if (!pool_entry)
--		return 1;
-+		return -ENOBUFS;
- 
- 	/*
- 	 * since the buffer is accessed only from the input_tasklet
-@@ -2670,10 +2670,15 @@ int qeth_init_qdio_queues(struct qeth_card *card)
- 	/* inbound queue */
- 	qdio_reset_buffers(card->qdio.in_q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	memset(&card->rx, 0, sizeof(struct qeth_rx));
-+
- 	qeth_initialize_working_pool_list(card);
- 	/*give only as many buffers to hardware as we have buffer pool entries*/
--	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; ++i)
--		qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
-+	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; i++) {
-+		rc = qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	card->qdio.in_q->next_buf_to_init =
- 		card->qdio.in_buf_pool.buf_count - 1;
- 	rc = do_QDIO(CARD_DDEV(card), QDIO_FLAG_SYNC_INPUT, 0, 0,
+ Documentation/admin-guide/mm/hugetlbpage.rst |  26 ++++
+ arch/arm64/include/asm/hugetlb.h             |   2 +
+ arch/arm64/mm/hugetlbpage.c                  |  30 ++---
+ arch/powerpc/include/asm/hugetlb.h           |   3 +
+ arch/powerpc/mm/hugetlbpage.c                |  30 ++---
+ arch/riscv/include/asm/hugetlb.h             |   3 +
+ arch/riscv/mm/hugetlbpage.c                  |  24 ++--
+ arch/s390/include/asm/hugetlb.h              |   3 +
+ arch/s390/mm/hugetlbpage.c                   |  24 ++--
+ arch/sparc/include/asm/hugetlb.h             |   3 +
+ arch/sparc/mm/init_64.c                      |  42 ++-----
+ arch/x86/include/asm/hugetlb.h               |   3 +
+ arch/x86/mm/hugetlbpage.c                    |  23 ++--
+ include/linux/hugetlb.h                      |   8 +-
+ mm/hugetlb.c                                 | 126 ++++++++++++++-----
+ 15 files changed, 198 insertions(+), 152 deletions(-)
+
 -- 
-2.20.1
+2.24.1
 
