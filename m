@@ -2,38 +2,38 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6298818A4C8
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Mar 2020 21:57:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 984F618A622
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Mar 2020 22:06:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbgCRUzq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Mar 2020 16:55:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56282 "EHLO mail.kernel.org"
+        id S1727092AbgCRUyp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Mar 2020 16:54:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54528 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728447AbgCRUzq (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Mar 2020 16:55:46 -0400
+        id S1727968AbgCRUyo (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 18 Mar 2020 16:54:44 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF1F820A8B;
-        Wed, 18 Mar 2020 20:55:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 607F4208E0;
+        Wed, 18 Mar 2020 20:54:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1584564945;
-        bh=OtpKH4sa7WjFFEqXU6hQbOx0/zIIZm3na15gYI4GVjY=;
+        s=default; t=1584564884;
+        bh=St995Wd1RmOD++GY9bUxVb2UFud/otFNFnRTSJ7OFns=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lCWAILFi5ALnbhzQuO/m6tGMnozHNb/czFrbsg3Zt0O1hehOea1lgYlfyL5urQHc6
-         DoYbRaPJrDnXv3z8QPhx0NbZ2Rt9YQrbP1qbBb6JmU9YPVBieBTk6fQjgzx6VtVW74
-         GTGoMMdMMu+Ecq1hGJh7fhq2gkKnvG30K0wGnca8=
+        b=QVV7HQgw6WFxJZHpShz4BvF2s1NzA4nxs2cPpoEAS4h1CygWakUHF8qmRbYTc+eZ1
+         3tgzUqhHlSkZR3PREs4oNR8xUemjccO/o9fxeJM8foMuIgobuvOVI15n070pgon4CL
+         YtmshjsbzeemIPTPmWgh0qgmVjmZWqFPTQVNf8bk=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
 Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         "David S . Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.19 30/37] s390/qeth: handle error when backing RX buffer
-Date:   Wed, 18 Mar 2020 16:55:02 -0400
-Message-Id: <20200318205509.17053-30-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 53/73] s390/qeth: don't reset default_out_queue
+Date:   Wed, 18 Mar 2020 16:53:17 -0400
+Message-Id: <20200318205337.16279-53-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200318205509.17053-1-sashal@kernel.org>
-References: <20200318205509.17053-1-sashal@kernel.org>
+In-Reply-To: <20200318205337.16279-1-sashal@kernel.org>
+References: <20200318205337.16279-1-sashal@kernel.org>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
@@ -45,57 +45,39 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 From: Julian Wiedmann <jwi@linux.ibm.com>
 
-[ Upstream commit 17413852804d7e86e6f0576cca32c1541817800e ]
+[ Upstream commit 240c1948491b81cfe40f84ea040a8f2a4966f101 ]
 
-qeth_init_qdio_queues() fills the RX ring with an initial set of
-RX buffers. If qeth_init_input_buffer() fails to back one of the RX
-buffers with memory, we need to bail out and report the error.
+When an OSA device in prio-queue setup is reduced to 1 TX queue due to
+HW restrictions, we reset its the default_out_queue to 0.
 
-Fixes: 4a71df50047f ("qeth: new qeth device driver")
+In the old code this was needed so that qeth_get_priority_queue() gets
+the queue selection right. But with proper multiqueue support we already
+reduced dev->real_num_tx_queues to 1, and so the stack puts all traffic
+on txq 0 without even calling .ndo_select_queue.
+
+Thus we can preserve the user's configuration, and apply it if the OSA
+device later re-gains support for multiple TX queues.
+
+Fixes: 73dc2daf110f ("s390/qeth: add TX multiqueue support for OSA devices")
 Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/s390/net/qeth_core_main.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
+ drivers/s390/net/qeth_core_main.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index d99bfbfcafb76..5f59e2dfc7db9 100644
+index b727d1e34523e..ac8ad951a4203 100644
 --- a/drivers/s390/net/qeth_core_main.c
 +++ b/drivers/s390/net/qeth_core_main.c
-@@ -2811,12 +2811,12 @@ static int qeth_init_input_buffer(struct qeth_card *card,
- 		buf->rx_skb = netdev_alloc_skb(card->dev,
- 					       QETH_RX_PULL_LEN + ETH_HLEN);
- 		if (!buf->rx_skb)
--			return 1;
-+			return -ENOMEM;
- 	}
+@@ -1244,7 +1244,6 @@ static int qeth_osa_set_output_queues(struct qeth_card *card, bool single)
+ 	if (count == 1)
+ 		dev_info(&card->gdev->dev, "Priority Queueing not supported\n");
  
- 	pool_entry = qeth_find_free_buffer_pool_entry(card);
- 	if (!pool_entry)
--		return 1;
-+		return -ENOBUFS;
- 
- 	/*
- 	 * since the buffer is accessed only from the input_tasklet
-@@ -2848,10 +2848,15 @@ int qeth_init_qdio_queues(struct qeth_card *card)
- 	/* inbound queue */
- 	qdio_reset_buffers(card->qdio.in_q->qdio_bufs, QDIO_MAX_BUFFERS_PER_Q);
- 	memset(&card->rx, 0, sizeof(struct qeth_rx));
-+
- 	qeth_initialize_working_pool_list(card);
- 	/*give only as many buffers to hardware as we have buffer pool entries*/
--	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; ++i)
--		qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
-+	for (i = 0; i < card->qdio.in_buf_pool.buf_count - 1; i++) {
-+		rc = qeth_init_input_buffer(card, &card->qdio.in_q->bufs[i]);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	card->qdio.in_q->next_buf_to_init =
- 		card->qdio.in_buf_pool.buf_count - 1;
- 	rc = do_QDIO(CARD_DDEV(card), QDIO_FLAG_SYNC_INPUT, 0, 0,
+-	card->qdio.default_out_queue = single ? 0 : QETH_DEFAULT_QUEUE;
+ 	card->qdio.no_out_queues = count;
+ 	return 0;
+ }
 -- 
 2.20.1
 
