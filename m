@@ -2,215 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 16C9A189C5B
-	for <lists+linux-s390@lfdr.de>; Wed, 18 Mar 2020 13:55:31 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id B219A189C90
+	for <lists+linux-s390@lfdr.de>; Wed, 18 Mar 2020 14:07:37 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726983AbgCRMz1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 18 Mar 2020 08:55:27 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36626 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726968AbgCRMzZ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 18 Mar 2020 08:55:25 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02ICYBsw137602
-        for <linux-s390@vger.kernel.org>; Wed, 18 Mar 2020 08:55:25 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2yu8brg7cr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 18 Mar 2020 08:55:24 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Wed, 18 Mar 2020 12:55:22 -0000
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 18 Mar 2020 12:55:20 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02ICtJ5u54984934
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 18 Mar 2020 12:55:19 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 437EFA405F;
-        Wed, 18 Mar 2020 12:55:19 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0B842A4060;
-        Wed, 18 Mar 2020 12:55:19 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 18 Mar 2020 12:55:18 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev <netdev@vger.kernel.org>,
+        id S1726801AbgCRNHh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 18 Mar 2020 09:07:37 -0400
+Received: from mail-eopbgr40062.outbound.protection.outlook.com ([40.107.4.62]:53000
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726638AbgCRNHg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 18 Mar 2020 09:07:36 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=LA9pOCW5bjJGAOESTqaNfKEkQdOw65Nm3lIgwouFAYfgmqGYn3LKoH3H4INaNRdhJqxPvHKmpS4wNFQPoM3EIshZLNmdee5NYh/kPeB73js9yYABTk44LxxcHJ6Ll9UWGq+EpjqHhzc+2N2wtqham5XtY1AIfVZU2ehdrJonTq0L/XNz4qSaHQTWoVYs5OFXtMzyENaGsMBkJkw37tU1Xmc3F4JoDJ0fNcK7EBUrTD8wFQTZ0XE/h9ookqDixE0vvZc49aLuBM77iNwEa+op6CbNM8ammItFsqVtQt7tzlTCjAVbmoC4u52TgH9QmrfcJQ9fndqNBDSyEPBbwWuwsg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JtZNwiXc/MdbPQ/wpTDfV933hBOKEZXAqy5Y5Ut3Azg=;
+ b=c91OqbIcLiQcAqHfU1mjK5ujl+eMcHB9hBOXCI14tzahGgO0FUy/bSwAqUi4YgqZCwgPRk9EhbpVJpxS69fH0rfDhESA5twzHhgCMuI+mT5/wmZGQFzMWjjoq82uwaNp73xhoc/D3l1zvr8odiJGRUr364AqFuDZrUUfVsdP0lhZA9D1ScJimgP7rwjLixOdHW9aXBQQOWU06eMlcWpV8Z75hpzSgzL6988HGZfpj4XlQKiWhM+7YW8EsGLh5Wq1F/qfxuNmlNQfeh3b96FHtP5fcd3K3L7uJEUXPYnNCNvtLw3QKwebvIE8qYaXRWukRDI0ni6Fz8/1K2S659ps2Q==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=JtZNwiXc/MdbPQ/wpTDfV933hBOKEZXAqy5Y5Ut3Azg=;
+ b=WWIcAU2i3B1HBNHQbY2UkGjI8VNADNVi0aRkkvswrmYPm5cdXPOXU3sdxzJ9T/iuZvxqHZ/3BNcNmIAw9+kKp0DI5clVy47UAkqWze+lSZpvv5cXFjNklK7KMzGYPiCa+xGuMAPwip59SHuGyWI/qyqMIZz5yzYDWfNMQo3IO+Q=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=leonro@mellanox.com; 
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com (20.179.5.215) by
+ AM6PR05MB5016.eurprd05.prod.outlook.com (20.177.36.29) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2814.18; Wed, 18 Mar 2020 13:07:34 +0000
+Received: from AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::c99f:9130:561f:dea0]) by AM6PR05MB6408.eurprd05.prod.outlook.com
+ ([fe80::c99f:9130:561f:dea0%3]) with mapi id 15.20.2814.021; Wed, 18 Mar 2020
+ 13:07:34 +0000
+Date:   Wed, 18 Mar 2020 15:07:20 +0200
+From:   Leon Romanovsky <leonro@mellanox.com>
+To:     Julian Wiedmann <jwi@linux.ibm.com>
+Cc:     David Miller <davem@davemloft.net>,
+        netdev <netdev@vger.kernel.org>,
         linux-s390 <linux-s390@vger.kernel.org>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 11/11] s390/qeth: use dev->reg_state
-Date:   Wed, 18 Mar 2020 13:54:55 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200318125455.5838-1-jwi@linux.ibm.com>
+        Ursula Braun <ubraun@linux.ibm.com>
+Subject: Re: [PATCH net-next 08/11] s390/qeth: don't report hard-coded driver
+ version
+Message-ID: <20200318130720.GW3351@unreal>
 References: <20200318125455.5838-1-jwi@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20031812-0008-0000-0000-0000035F5796
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20031812-0009-0000-0000-00004A80B1EF
-Message-Id: <20200318125455.5838-12-jwi@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-18_05:2020-03-18,2020-03-18 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- lowpriorityscore=0 adultscore=0 priorityscore=1501 bulkscore=0
- suspectscore=0 malwarescore=0 mlxlogscore=999 spamscore=0 phishscore=0
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003180061
+ <20200318125455.5838-9-jwi@linux.ibm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200318125455.5838-9-jwi@linux.ibm.com>
+X-ClientProxiedBy: AM0PR01CA0041.eurprd01.prod.exchangelabs.com
+ (2603:10a6:208:e6::18) To AM6PR05MB6408.eurprd05.prod.outlook.com
+ (2603:10a6:20b:b8::23)
+MIME-Version: 1.0
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from localhost (2a00:a040:183:2d::393) by AM0PR01CA0041.eurprd01.prod.exchangelabs.com (2603:10a6:208:e6::18) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2835.15 via Frontend Transport; Wed, 18 Mar 2020 13:07:29 +0000
+X-Originating-IP: [2a00:a040:183:2d::393]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: b8c7a9ce-8be3-4050-dc73-08d7cb3d501a
+X-MS-TrafficTypeDiagnostic: AM6PR05MB5016:
+X-Microsoft-Antispam-PRVS: <AM6PR05MB50160712A9E944C36EF28E2CB0F70@AM6PR05MB5016.eurprd05.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:5236;
+X-Forefront-PRVS: 03468CBA43
+X-Forefront-Antispam-Report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(39860400002)(136003)(366004)(376002)(396003)(346002)(199004)(16526019)(186003)(33656002)(6666004)(8936002)(6496006)(52116002)(86362001)(1076003)(4744005)(478600001)(66946007)(66556008)(66476007)(6486002)(9686003)(4326008)(2906002)(8676002)(6916009)(54906003)(316002)(81166006)(5660300002)(81156014)(33716001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM6PR05MB5016;H:AM6PR05MB6408.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;
+Received-SPF: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: tzEvqAFYmYSr9aPVNHde+kntU85AmuaB/czFR4RfYZEzCTjxgUCsAxS3EzMBywaH079sGhV88bdBP714tJR8nfkneNeUben+r4Yn7BTXCYWez3dwqab+Tu3bLnJQxWpJQmnMqYFNeqUBolwOvHqTp5GQKPo1n0wNrLCtSNgn0jdNfr1nTcQxEREARfcUosfkuZ7qzw9BuXBgmlN5X2Uw+KNxrx/uwu1bes0JFkK8hsT9ic2pFhDte/4dyKIYRzNT7pwWuqNL3cItjSWyodhMPvY4WvFNGzzJAXhKTjnbunSr61F3TPhfYBttbdAGVQDSLE416/SnZIw2sleFumvk9LqNgTc+uMu0JRNxg3PCCdbtz9y02xJ38zgwta+xrrNNiC2mQbSCKukxyIuhh7EeiFgbUT9bOXQOu/D/0bWjSXgg4GyRQpowCldcgcFyWFJ4
+X-MS-Exchange-AntiSpam-MessageData: sMb/2ybHg7hshYdu2q/dTrqHFjc1IrDAdnAv7frCG12Q/zWN8FIjcR+toC9XXCxedR/9o1J8AyVeSzSsK4gih3HRN2R2zSOfuWXKnigVlnPfRtenCfMtC7gfwhK3YlvZ9T/YvDmq3HAu1qmawsjW37LNYtB28xTJFP357Ih9O3o=
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b8c7a9ce-8be3-4050-dc73-08d7cb3d501a
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 18 Mar 2020 13:07:31.3104
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: lwSK+7qCyR3CxXzjPNG0NajwMI29rRCsVzS3PFoIdyonf40qB1w5qv3U7IatKH5WxfMzg/BiEck++xBkNtHJ4Q==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM6PR05MB5016
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-To check whether a netdevice has already been registered, look at
-NETREG_REGISTERED to replace some hacks I added a while ago.
+On Wed, Mar 18, 2020 at 01:54:52PM +0100, Julian Wiedmann wrote:
+> Versions are meaningless for an in-kernel driver.
+> Instead use the UTS_RELEASE that is set by ethtool_get_drvinfo().
+>
+> Cc: Leon Romanovsky <leonro@mellanox.com>
+> Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
+> ---
+>  drivers/s390/net/qeth_ethtool.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core.h    |  5 -----
- drivers/s390/net/qeth_l2_main.c | 19 ++++++++-----------
- drivers/s390/net/qeth_l3_main.c | 22 +++++++++-------------
- 3 files changed, 17 insertions(+), 29 deletions(-)
-
-diff --git a/drivers/s390/net/qeth_core.h b/drivers/s390/net/qeth_core.h
-index b8b356aca674..6eb431c194bd 100644
---- a/drivers/s390/net/qeth_core.h
-+++ b/drivers/s390/net/qeth_core.h
-@@ -847,11 +847,6 @@ struct qeth_trap_id {
- /*some helper functions*/
- #define QETH_CARD_IFNAME(card) (((card)->dev)? (card)->dev->name : "")
- 
--static inline bool qeth_netdev_is_registered(struct net_device *dev)
--{
--	return dev->netdev_ops != NULL;
--}
--
- static inline u16 qeth_iqd_translate_txq(struct net_device *dev, u16 txq)
- {
- 	if (txq == QETH_IQD_MCAST_TXQ)
-diff --git a/drivers/s390/net/qeth_l2_main.c b/drivers/s390/net/qeth_l2_main.c
-index 2aaf5e3779ce..73cb363b1fab 100644
---- a/drivers/s390/net/qeth_l2_main.c
-+++ b/drivers/s390/net/qeth_l2_main.c
-@@ -613,7 +613,7 @@ static void qeth_l2_remove_device(struct ccwgroup_device *cgdev)
- 		qeth_set_offline(card, false);
- 
- 	cancel_work_sync(&card->close_dev_work);
--	if (qeth_netdev_is_registered(card->dev))
-+	if (card->dev->reg_state == NETREG_REGISTERED)
- 		unregister_netdev(card->dev);
- }
- 
-@@ -651,7 +651,7 @@ static const struct net_device_ops qeth_osn_netdev_ops = {
- 	.ndo_tx_timeout		= qeth_tx_timeout,
- };
- 
--static int qeth_l2_setup_netdev(struct qeth_card *card, bool carrier_ok)
-+static int qeth_l2_setup_netdev(struct qeth_card *card)
- {
- 	int rc;
- 
-@@ -711,13 +711,7 @@ static int qeth_l2_setup_netdev(struct qeth_card *card, bool carrier_ok)
- 
- add_napi:
- 	netif_napi_add(card->dev, &card->napi, qeth_poll, QETH_NAPI_WEIGHT);
--	rc = register_netdev(card->dev);
--	if (!rc && carrier_ok)
--		netif_carrier_on(card->dev);
--
--	if (rc)
--		card->dev->netdev_ops = NULL;
--	return rc;
-+	return register_netdev(card->dev);
- }
- 
- static void qeth_l2_trace_features(struct qeth_card *card)
-@@ -790,10 +784,13 @@ static int qeth_l2_set_online(struct qeth_card *card)
- 
- 	qeth_set_allowed_threads(card, 0xffffffff, 0);
- 
--	if (!qeth_netdev_is_registered(dev)) {
--		rc = qeth_l2_setup_netdev(card, carrier_ok);
-+	if (dev->reg_state != NETREG_REGISTERED) {
-+		rc = qeth_l2_setup_netdev(card);
- 		if (rc)
- 			goto out_remove;
-+
-+		if (carrier_ok)
-+			netif_carrier_on(dev);
- 	} else {
- 		rtnl_lock();
- 		if (carrier_ok)
-diff --git a/drivers/s390/net/qeth_l3_main.c b/drivers/s390/net/qeth_l3_main.c
-index 81ec0d2b7ea5..83ae75cf1389 100644
---- a/drivers/s390/net/qeth_l3_main.c
-+++ b/drivers/s390/net/qeth_l3_main.c
-@@ -1918,7 +1918,7 @@ static const struct net_device_ops qeth_l3_osa_netdev_ops = {
- 	.ndo_neigh_setup	= qeth_l3_neigh_setup,
- };
- 
--static int qeth_l3_setup_netdev(struct qeth_card *card, bool carrier_ok)
-+static int qeth_l3_setup_netdev(struct qeth_card *card)
- {
- 	unsigned int headroom;
- 	int rc;
-@@ -1972,7 +1972,7 @@ static int qeth_l3_setup_netdev(struct qeth_card *card, bool carrier_ok)
- 
- 		rc = qeth_l3_iqd_read_initial_mac(card);
- 		if (rc)
--			goto out;
-+			return rc;
- 	} else
- 		return -ENODEV;
- 
-@@ -1987,14 +1987,7 @@ static int qeth_l3_setup_netdev(struct qeth_card *card, bool carrier_ok)
- 				       PAGE_SIZE * (QETH_MAX_BUFFER_ELEMENTS(card) - 1));
- 
- 	netif_napi_add(card->dev, &card->napi, qeth_poll, QETH_NAPI_WEIGHT);
--	rc = register_netdev(card->dev);
--	if (!rc && carrier_ok)
--		netif_carrier_on(card->dev);
--
--out:
--	if (rc)
--		card->dev->netdev_ops = NULL;
--	return rc;
-+	return register_netdev(card->dev);
- }
- 
- static const struct device_type qeth_l3_devtype = {
-@@ -2041,7 +2034,7 @@ static void qeth_l3_remove_device(struct ccwgroup_device *cgdev)
- 		qeth_set_offline(card, false);
- 
- 	cancel_work_sync(&card->close_dev_work);
--	if (qeth_netdev_is_registered(card->dev))
-+	if (card->dev->reg_state == NETREG_REGISTERED)
- 		unregister_netdev(card->dev);
- 
- 	flush_workqueue(card->cmd_wq);
-@@ -2088,10 +2081,13 @@ static int qeth_l3_set_online(struct qeth_card *card)
- 	qeth_set_allowed_threads(card, 0xffffffff, 0);
- 	qeth_l3_recover_ip(card);
- 
--	if (!qeth_netdev_is_registered(dev)) {
--		rc = qeth_l3_setup_netdev(card, carrier_ok);
-+	if (dev->reg_state != NETREG_REGISTERED) {
-+		rc = qeth_l3_setup_netdev(card);
- 		if (rc)
- 			goto out_remove;
-+
-+		if (carrier_ok)
-+			netif_carrier_on(dev);
- 	} else {
- 		rtnl_lock();
- 		if (carrier_ok)
--- 
-2.17.1
-
+Thanks a lot for the patch,
+Reviewed-by: Leon Romanovsky <leonro@mellanox.com>
