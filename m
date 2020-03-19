@@ -2,24 +2,34 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3CA8E18B20D
-	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2020 12:06:33 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id EB7F718B23E
+	for <lists+linux-s390@lfdr.de>; Thu, 19 Mar 2020 12:20:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726802AbgCSLGc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 19 Mar 2020 07:06:32 -0400
-Received: from foss.arm.com ([217.140.110.172]:33408 "EHLO foss.arm.com"
+        id S1726802AbgCSLUu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 19 Mar 2020 07:20:50 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:36672 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbgCSLGc (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 19 Mar 2020 07:06:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4BB731B;
-        Thu, 19 Mar 2020 04:06:31 -0700 (PDT)
-Received: from [192.168.1.123] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id F2A993F305;
-        Thu, 19 Mar 2020 04:06:25 -0700 (PDT)
-Subject: Re: [PATCH -v2] treewide: Rename "unencrypted" to "decrypted"
-To:     Borislav Petkov <bp@alien8.de>, Christoph Hellwig <hch@lst.de>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
+        id S1725787AbgCSLUu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 19 Mar 2020 07:20:50 -0400
+Received: from zn.tnic (p200300EC2F0A850065FC6DE3D46B17C3.dip0.t-ipconnect.de [IPv6:2003:ec:2f0a:8500:65fc:6de3:d46b:17c3])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id DCF9F1EC085F;
+        Thu, 19 Mar 2020 12:20:48 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1584616849;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=IlMyw2jWgHGOB/uFSKCAtl/3A39ugp/rgom8OdfSKmc=;
+        b=XE6cHInWOykMJewXB+HpQ43S3ZQrlzEAhf//Ouf5Qimx2SKQA9/gvUhLWvplfK6878RP+v
+        ZqLYTWIZthoqXO6tVrkIxYVE1pcVuGHGY61Fde74hzfcGiK9dOuneS2M+Jk5sfOhuyCzWq
+        w4QHxgKVH2Zv2Ff20bGX9PTvSDxGf0s=
+Date:   Thu, 19 Mar 2020 12:20:54 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robin Murphy <robin.murphy@arm.com>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        lkml <linux-kernel@vger.kernel.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
@@ -35,49 +45,52 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
         iommu@lists.linux-foundation.org,
         Tom Lendacky <thomas.lendacky@amd.com>
-References: <20200317111822.GA15609@zn.tnic> <20200319101657.GB13073@zn.tnic>
- <20200319102011.GA3617@lst.de> <20200319102834.GC13073@zn.tnic>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <8d6d3b6c-7e4e-7d9e-3e19-38f7d4477c72@arm.com>
-Date:   Thu, 19 Mar 2020 11:06:15 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+Subject: Re: [PATCH -v2] treewide: Rename "unencrypted" to "decrypted"
+Message-ID: <20200319112054.GD13073@zn.tnic>
+References: <20200317111822.GA15609@zn.tnic>
+ <20200319101657.GB13073@zn.tnic>
+ <20200319102011.GA3617@lst.de>
+ <20200319102834.GC13073@zn.tnic>
+ <8d6d3b6c-7e4e-7d9e-3e19-38f7d4477c72@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200319102834.GC13073@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <8d6d3b6c-7e4e-7d9e-3e19-38f7d4477c72@arm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-[since this is in my inbox...]
-
-On 2020-03-19 10:28 am, Borislav Petkov wrote:
-> On Thu, Mar 19, 2020 at 11:20:11AM +0100, Christoph Hellwig wrote:
->> I thought we agreed that decrypted is absolutely the wrong term.
+On Thu, Mar 19, 2020 at 11:06:15AM +0000, Robin Murphy wrote:
+> Let me add another vote from a native English speaker that "unencrypted" is
+> the appropriate term to imply the *absence* of encryption, whereas
+> "decrypted" implies the *reversal* of applied encryption.
 > 
-> I don't think we did. At least I don't know where we did that.
-> 
->> So NAK - if you want to change things it needs to go the other way.
-> 
-> We are already using "decrypted" everywhere in arch/x86/. Changing that
-> would be a *lot* more churn.
-> 
-> And it is just a term, for chrissakes, to denote memory which is not
-> encrypted. And it would make our lifes easier if we had only *two* terms
-> instead of three or more. Especially if the concept we denote with this
-> is a binary one: encrypted memory and *not* encrypted memory.
+> Naming things is famously hard, for good reason - names are *important* for
+> understanding. Just because a decision was already made one way doesn't mean
+> that that decision was necessarily right. Churning one area to be
+> consistently inaccurate just because it's less work than churning another
+> area to be consistently accurate isn't really the best excuse.
 
-Let me add another vote from a native English speaker that "unencrypted" 
-is the appropriate term to imply the *absence* of encryption, whereas 
-"decrypted" implies the *reversal* of applied encryption.
+Well, the reason we chose "decrypted" vs something else is so to be as
+different from "encrypted" as possible. If we called it "unencrypted"
+you'd have stuff like:
 
-Naming things is famously hard, for good reason - names are *important* 
-for understanding. Just because a decision was already made one way 
-doesn't mean that that decision was necessarily right. Churning one area 
-to be consistently inaccurate just because it's less work than churning 
-another area to be consistently accurate isn't really the best excuse.
+       if (force_dma_unencrypted(dev))
+                set_memory_encrypted((unsigned long)cpu_addr, 1 << page_order);
 
-Robin.
+and I *betcha* people will misread this and maybe even introduce bugs.
+
+So I don't think renaming it to "unencrypted" is better. And yes, I'm
+deliberately putting the language semantics here on a second place
+because of readability examples like the one above.
+
+But ok, since people don't want this, we can leave it as is. It's not
+like I don't have anything better to do.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
