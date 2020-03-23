@@ -2,228 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 65CC518FC77
-	for <lists+linux-s390@lfdr.de>; Mon, 23 Mar 2020 19:12:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 68926190211
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 00:43:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727091AbgCWSMy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Mar 2020 14:12:54 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55838 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727011AbgCWSMy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Mar 2020 14:12:54 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02NI2flh034404
-        for <linux-s390@vger.kernel.org>; Mon, 23 Mar 2020 14:12:53 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywf0n4t68-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 23 Mar 2020 14:12:53 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
-        Mon, 23 Mar 2020 18:12:50 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 23 Mar 2020 18:12:47 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02NIClPK30605418
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 23 Mar 2020 18:12:47 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 299B9A405C;
-        Mon, 23 Mar 2020 18:12:47 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D544BA4060;
-        Mon, 23 Mar 2020 18:12:46 +0000 (GMT)
-Received: from osiris (unknown [9.145.0.112])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 23 Mar 2020 18:12:46 +0000 (GMT)
-Date:   Mon, 23 Mar 2020 19:12:45 +0100
-From:   Heiko Carstens <heiko.carstens@de.ibm.com>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org
-Subject: s390: removal of hibernate support
+        id S1727161AbgCWXne (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 23 Mar 2020 19:43:34 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:45934 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727137AbgCWXnc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 23 Mar 2020 19:43:32 -0400
+Received: by mail-oi1-f193.google.com with SMTP id l22so5918544oii.12
+        for <linux-s390@vger.kernel.org>; Mon, 23 Mar 2020 16:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=QEuYlxaghpgWF2p5OUfw9hRKqdJnGRCmq90AXOuejGU=;
+        b=JGS9qhFfhzpnjEAVbAAMHJj8in5e/nOn1IICF83YfSbXJY3qg9DEVBEwgVof62szn8
+         +wcr6ReeQRfgWIdq3IXB2OeCk9osydynfhtZIMTCNHSyFiVP/P5Caj8dhLtq2BGgXDI9
+         z9RWzC11+dTOKTK7uz6IWkRq0sE8ke2sODVks25xtxNeNkP0j/LZ0ZWRVSUO0ISXmDFY
+         OXhQuh5V+0FA6tHkTdix9SbRKnBOQB6GwgxG+jXmCWPfN3smHYwjJomfsyJOxbvZNvce
+         W9L18k9PNSoTMlcmWM5mVcddQaDKgk7ayZqZ1lqcZwPmZb1GF+ztYj4NfcNcdWQ/KL+9
+         +iKQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=QEuYlxaghpgWF2p5OUfw9hRKqdJnGRCmq90AXOuejGU=;
+        b=ok7zrO2mtMoiswfWxCRuXcerbEe6LYVv22Lq+8YGuOjexS+NIYfXFVAcpJWVqw7sCu
+         +TLe8/VwtOJM+8F3kLOIPBtRKZJzdLoD4q1FvHuby7ifUFBXODdQgBah9R+4OzChQYrF
+         XLX7v24+x+ST9vmLIm3MJXwxmXu7adhRIIhkHrLVQmCmEaJ2WPdbdXzTwlu395Oou7wq
+         WTAWgr4zZgvaNhxbXsHPD7V5J+EBXtKAju6L0/0fL6kFOl+LqD5oqkRNGGiaOKva8/Tv
+         z5UbOJoZBOlOToqlqZmrDZqNZUjZyl42YO1Q9Q35zCUsBrO4lTzMnnRfogV3ia2Vx4i5
+         f9Kw==
+X-Gm-Message-State: ANhLgQ12V2KFfi+D0+HuRCmRTb10l0dTTgdO8cr5jNpAx0jTOu93EaC0
+        uWa65h++ZROvFxEo4mTCtSWASc7tMtgJIkg08+DHcw==
+X-Google-Smtp-Source: ADFU+vtBxnTz2QBJIDkSVPYlpKleGGK1ca0DAH/injUpPrVGWi+vIqGYuB7A1hrRam1e7/mwSm5ajjiQswx4Jwdrhqo=
+X-Received: by 2002:aca:5d83:: with SMTP id r125mr1504637oib.8.1585007011359;
+ Mon, 23 Mar 2020 16:43:31 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 20032318-0016-0000-0000-000002F66047
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032318-0017-0000-0000-00003359FA7F
-Message-Id: <20200323181245.GJ4288@osiris>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-23_07:2020-03-23,2020-03-23 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- phishscore=0 impostorscore=0 malwarescore=0 mlxlogscore=999 spamscore=0
- clxscore=1015 lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0
- mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003230092
+References: <20200318220634.32100-1-mike.kravetz@oracle.com> <20200318220634.32100-2-mike.kravetz@oracle.com>
+In-Reply-To: <20200318220634.32100-2-mike.kravetz@oracle.com>
+From:   Mina Almasry <almasrymina@google.com>
+Date:   Mon, 23 Mar 2020 16:43:19 -0700
+Message-ID: <CAHS8izMnxF9e-QDmA1WL4Kjgt=Uu0Xk64WZB1-bbvO4A+2fZiA@mail.gmail.com>
+Subject: Re: [PATCH 1/4] hugetlbfs: add arch_hugetlb_valid_size
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Linux-MM <linux-mm@kvack.org>,
+        open list <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Rafael,
+On Wed, Mar 18, 2020 at 3:07 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
+>
+> The architecture independent routine hugetlb_default_setup sets up
+> the default huge pages size.  It has no way to verify if the passed
+> value is valid, so it accepts it and attempts to validate at a later
+> time.  This requires undocumented cooperation between the arch specific
+> and arch independent code.
+>
+> For architectures that support more than one huge page size, provide
+> a routine arch_hugetlb_valid_size to validate a huge page size.
+> hugetlb_default_setup can use this to validate passed values.
+>
+> arch_hugetlb_valid_size will also be used in a subsequent patch to
+> move processing of the "hugepagesz=" in arch specific code to a common
+> routine in arch independent code.
+>
+> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> ---
+>  arch/arm64/include/asm/hugetlb.h   |  2 ++
+>  arch/arm64/mm/hugetlbpage.c        | 19 ++++++++++++++-----
+>  arch/powerpc/include/asm/hugetlb.h |  3 +++
+>  arch/powerpc/mm/hugetlbpage.c      | 20 +++++++++++++-------
+>  arch/riscv/include/asm/hugetlb.h   |  3 +++
+>  arch/riscv/mm/hugetlbpage.c        | 28 ++++++++++++++++++----------
+>  arch/s390/include/asm/hugetlb.h    |  3 +++
+>  arch/s390/mm/hugetlbpage.c         | 18 +++++++++++++-----
+>  arch/sparc/include/asm/hugetlb.h   |  3 +++
+>  arch/sparc/mm/init_64.c            | 23 ++++++++++++++++-------
+>  arch/x86/include/asm/hugetlb.h     |  3 +++
+>  arch/x86/mm/hugetlbpage.c          | 21 +++++++++++++++------
+>  include/linux/hugetlb.h            |  7 +++++++
+>  mm/hugetlb.c                       | 16 +++++++++++++---
+>  14 files changed, 126 insertions(+), 43 deletions(-)
+>
 
-we are going to remove hibernate support on s390, since it is
-- broken since many years
-- there is no real use case which justifies keeping and maintaining
-  the code
-
-See also https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=394216275c7d503d966317da9a01ad6626a6091d
-
-This in turn allows also to remove s390 specific hooks in generic
-power management code (see patch below). The patch below is currently
-also on the same features branch.
-I silently assume(d) that you don't mind to get rid of otherwise dead
-code, or do you have any objections?
-
-From 086b2d78375cffe58f5341359bebec0650793811 Mon Sep 17 00:00:00 2001
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
-Date: Wed, 18 Mar 2020 20:55:20 +0100
-Subject: [PATCH] PM: remove s390 specific callbacks
-
-ARCH_SAVE_PAGE_KEYS has been introduced in order to be able to save
-and restore s390 specific storage keys into a hibernation image.
-With hibernation support removed from s390 there is no point in
-keeping the callbacks.
-
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
----
- include/linux/suspend.h | 34 ----------------------------------
- kernel/power/Kconfig    |  3 ---
- kernel/power/snapshot.c | 18 ------------------
- 3 files changed, 55 deletions(-)
-
-diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-index 2b2055b035ee..4fcc6fd0cbd6 100644
---- a/include/linux/suspend.h
-+++ b/include/linux/suspend.h
-@@ -566,38 +566,4 @@ static inline void queue_up_suspend_work(void) {}
- 
- #endif /* !CONFIG_PM_AUTOSLEEP */
- 
--#ifdef CONFIG_ARCH_SAVE_PAGE_KEYS
--/*
-- * The ARCH_SAVE_PAGE_KEYS functions can be used by an architecture
-- * to save/restore additional information to/from the array of page
-- * frame numbers in the hibernation image. For s390 this is used to
-- * save and restore the storage key for each page that is included
-- * in the hibernation image.
-- */
--unsigned long page_key_additional_pages(unsigned long pages);
--int page_key_alloc(unsigned long pages);
--void page_key_free(void);
--void page_key_read(unsigned long *pfn);
--void page_key_memorize(unsigned long *pfn);
--void page_key_write(void *address);
--
--#else /* !CONFIG_ARCH_SAVE_PAGE_KEYS */
--
--static inline unsigned long page_key_additional_pages(unsigned long pages)
--{
--	return 0;
--}
--
--static inline int  page_key_alloc(unsigned long pages)
--{
--	return 0;
--}
--
--static inline void page_key_free(void) {}
--static inline void page_key_read(unsigned long *pfn) {}
--static inline void page_key_memorize(unsigned long *pfn) {}
--static inline void page_key_write(void *address) {}
--
--#endif /* !CONFIG_ARCH_SAVE_PAGE_KEYS */
--
- #endif /* _LINUX_SUSPEND_H */
-diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-index 7cbfbeacd68a..c208566c844b 100644
---- a/kernel/power/Kconfig
-+++ b/kernel/power/Kconfig
-@@ -80,9 +80,6 @@ config HIBERNATION
- 
- 	  For more information take a look at <file:Documentation/power/swsusp.rst>.
- 
--config ARCH_SAVE_PAGE_KEYS
--	bool
--
- config PM_STD_PARTITION
- 	string "Default resume partition"
- 	depends on HIBERNATION
-diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-index ddade80ad276..e99d13b0b8fc 100644
---- a/kernel/power/snapshot.c
-+++ b/kernel/power/snapshot.c
-@@ -1744,9 +1744,6 @@ int hibernate_preallocate_memory(void)
- 	count += highmem;
- 	count -= totalreserve_pages;
- 
--	/* Add number of pages required for page keys (s390 only). */
--	size += page_key_additional_pages(saveable);
--
- 	/* Compute the maximum number of saveable pages to leave in memory. */
- 	max_size = (count - (size + PAGES_FOR_IO)) / 2
- 			- 2 * DIV_ROUND_UP(reserved_size, PAGE_SIZE);
-@@ -2075,8 +2072,6 @@ static inline void pack_pfns(unsigned long *buf, struct memory_bitmap *bm)
- 		buf[j] = memory_bm_next_pfn(bm);
- 		if (unlikely(buf[j] == BM_END_OF_MAP))
- 			break;
--		/* Save page key for data page (s390 only). */
--		page_key_read(buf + j);
- 	}
- }
- 
-@@ -2226,9 +2221,6 @@ static int unpack_orig_pfns(unsigned long *buf, struct memory_bitmap *bm)
- 		if (unlikely(buf[j] == BM_END_OF_MAP))
- 			break;
- 
--		/* Extract and buffer page key for data page (s390 only). */
--		page_key_memorize(buf + j);
--
- 		if (pfn_valid(buf[j]) && memory_bm_pfn_present(bm, buf[j]))
- 			memory_bm_set_bit(bm, buf[j]);
- 		else
-@@ -2623,11 +2615,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
- 		if (error)
- 			return error;
- 
--		/* Allocate buffer for page keys. */
--		error = page_key_alloc(nr_copy_pages);
--		if (error)
--			return error;
--
- 		hibernate_restore_protection_begin();
- 	} else if (handle->cur <= nr_meta_pages + 1) {
- 		error = unpack_orig_pfns(buffer, &copy_bm);
-@@ -2649,8 +2636,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
- 		}
- 	} else {
- 		copy_last_highmem_page();
--		/* Restore page key for data page (s390 only). */
--		page_key_write(handle->buffer);
- 		hibernate_restore_protect_page(handle->buffer);
- 		handle->buffer = get_buffer(&orig_bm, &ca);
- 		if (IS_ERR(handle->buffer))
-@@ -2673,9 +2658,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
- void snapshot_write_finalize(struct snapshot_handle *handle)
- {
- 	copy_last_highmem_page();
--	/* Restore page key for data page (s390 only). */
--	page_key_write(handle->buffer);
--	page_key_free();
- 	hibernate_restore_protect_page(handle->buffer);
- 	/* Do that only if we have loaded the image entirely */
- 	if (handle->cur > 1 && handle->cur > nr_meta_pages + nr_copy_pages) {
--- 
-2.17.1
-
+With build fixes:
+Acked-by: Mina Almasry <almasrymina@google.com>
