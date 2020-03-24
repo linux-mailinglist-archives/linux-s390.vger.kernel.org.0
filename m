@@ -2,322 +2,139 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 59BB61903EB
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 04:47:44 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id CE7551904DE
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 06:23:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727063AbgCXDrn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 23 Mar 2020 23:47:43 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:12181 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727060AbgCXDrn (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 23 Mar 2020 23:47:43 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 7CA9B539151FD28DDA6A;
-        Tue, 24 Mar 2020 11:47:38 +0800 (CST)
-Received: from [10.173.228.124] (10.173.228.124) by smtp.huawei.com
- (10.3.19.202) with Microsoft SMTP Server (TLS) id 14.3.487.0; Tue, 24 Mar
- 2020 11:47:36 +0800
-Subject: Re: [PATCH 4/4] hugetlbfs: clean up command line processing
-To:     Mina Almasry <almasrymina@google.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-CC:     Linux-MM <linux-mm@kvack.org>,
-        open list <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-riscv@lists.infradead.org>,
-        <linux-s390@vger.kernel.org>, <sparclinux@vger.kernel.org>,
-        <linux-doc@vger.kernel.org>,
+        id S1726245AbgCXFXU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Mar 2020 01:23:20 -0400
+Received: from foss.arm.com ([217.140.110.172]:57454 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725923AbgCXFXT (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 24 Mar 2020 01:23:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4CB3F30E;
+        Mon, 23 Mar 2020 22:23:19 -0700 (PDT)
+Received: from p8cg001049571a15.arm.com (unknown [10.163.1.71])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 6AE573F7C3;
+        Mon, 23 Mar 2020 22:27:15 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+To:     linux-mm@kvack.org
+Cc:     christophe.leroy@c-s.fr,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will@kernel.org>,
-        "Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        "Christian Borntraeger" <borntraeger@de.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "Jonathan Corbet" <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200318220634.32100-1-mike.kravetz@oracle.com>
- <20200318220634.32100-5-mike.kravetz@oracle.com>
- <CAHS8izOhjvNVDXsx_SqP_oUQhCw-i_xcG9hxbvV86fFDeY_SAw@mail.gmail.com>
-From:   "Longpeng (Mike, Cloud Infrastructure Service Product Dept.)" 
-        <longpeng2@huawei.com>
-Message-ID: <d067c5d1-89b8-a71b-7b71-a8bbbd613efa@huawei.com>
-Date:   Tue, 24 Mar 2020 11:47:35 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <CAHS8izOhjvNVDXsx_SqP_oUQhCw-i_xcG9hxbvV86fFDeY_SAw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.173.228.124]
-X-CFilter-Loop: Reflected
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+Date:   Tue, 24 Mar 2020 10:52:52 +0530
+Message-Id: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+This series adds more arch page table helper tests. The new tests here are
+either related to core memory functions and advanced arch pgtable helpers.
+This also creates a documentation file enlisting all expected semantics as
+suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
 
+This series has been tested on arm64 and x86 platforms. There is just one
+expected failure on arm64 that will be fixed when we enable THP migration.
 
-On 2020/3/24 8:43, Mina Almasry wrote:
-> On Wed, Mar 18, 2020 at 3:07 PM Mike Kravetz <mike.kravetz@oracle.com> wrote:
->>
->> With all hugetlb page processing done in a single file clean up code.
-> 
-> Now that all hugepage page processing is done in a single file, clean
-> up the code.
-> 
->> - Make code match desired semantics
->>   - Update documentation with semantics
->> - Make all warnings and errors messages start with 'HugeTLB:'.
->> - Consistently name command line parsing routines.
->> - Add comments to code
->>   - Describe some of the subtle interactions
->>   - Describe semantics of command line arguments
->>
->> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
->> ---
->>  Documentation/admin-guide/mm/hugetlbpage.rst | 26 +++++++
->>  mm/hugetlb.c                                 | 78 +++++++++++++++-----
->>  2 files changed, 87 insertions(+), 17 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/mm/hugetlbpage.rst b/Documentation/admin-guide/mm/hugetlbpage.rst
->> index 1cc0bc78d10e..afc8888f33c3 100644
->> --- a/Documentation/admin-guide/mm/hugetlbpage.rst
->> +++ b/Documentation/admin-guide/mm/hugetlbpage.rst
->> @@ -100,6 +100,32 @@ with a huge page size selection parameter "hugepagesz=<size>".  <size> must
->>  be specified in bytes with optional scale suffix [kKmMgG].  The default huge
->>  page size may be selected with the "default_hugepagesz=<size>" boot parameter.
->>
->> +Hugetlb boot command line parameter semantics
->> +hugepagesz - Specify a huge page size.  Used in conjunction with hugepages
->> +       parameter to preallocate a number of huge pages of the specified
->> +       size.  Hence, hugepagesz and hugepages are typically specified in
->> +       pairs such as:
->> +               hugepagesz=2M hugepages=512
->> +       hugepagesz can only be specified once on the command line for a
->> +       specific huge page size.  Valid huge page sizes are architecture
->> +       dependent.
->> +hugepages - Specify the number of huge pages to preallocate.  This typically
->> +       follows a valid hugepagesz parameter.  However, if hugepages is the
->> +       first or only hugetlb command line parameter it specifies the number
->> +       of huge pages of default size to allocate.  The number of huge pages
->> +       of default size specified in this manner can be overwritten by a
->> +       hugepagesz,hugepages parameter pair for the default size.
->> +       For example, on an architecture with 2M default huge page size:
->> +               hugepages=256 hugepagesz=2M hugepages=512
->> +       will result in 512 2M huge pages being allocated.  If a hugepages
->> +       parameter is preceded by an invalid hugepagesz parameter, it will
->> +       be ignored.
->> +default_hugepagesz - Specify the default huge page size.  This parameter can
->> +       only be specified on the command line.  No other hugetlb command line
->> +       parameter is associated with default_hugepagesz.  Therefore, it can
->> +       appear anywhere on the command line.  Valid default huge page size is
->> +       architecture dependent.
-> 
-> Maybe specify what happens/should happen in a case like:
-> 
-> hugepages=100 default_hugepagesz=1G
-> 
-> Does that allocate 100 2MB pages or 100 1G pages? Assuming the default
-> size is 2MB.
-> 
-> Also, regarding Randy's comment. It may be nice to keep these docs in
-> one place only, so we don't have to maintain 2 docs in sync.
-> 
-> 
->> +
->>  When multiple huge page sizes are supported, ``/proc/sys/vm/nr_hugepages``
->>  indicates the current number of pre-allocated huge pages of the default size.
->>  Thus, one can use the following command to dynamically allocate/deallocate
->> diff --git a/mm/hugetlb.c b/mm/hugetlb.c
->> index cc85b4f156ca..2b9bf01db2b6 100644
->> --- a/mm/hugetlb.c
->> +++ b/mm/hugetlb.c
->> @@ -2954,7 +2954,7 @@ static void __init hugetlb_sysfs_init(void)
->>                 err = hugetlb_sysfs_add_hstate(h, hugepages_kobj,
->>                                          hstate_kobjs, &hstate_attr_group);
->>                 if (err)
->> -                       pr_err("Hugetlb: Unable to add hstate %s", h->name);
->> +                       pr_err("HugeTLB: Unable to add hstate %s", h->name);
->>         }
->>  }
->>
->> @@ -3058,7 +3058,7 @@ static void hugetlb_register_node(struct node *node)
->>                                                 nhs->hstate_kobjs,
->>                                                 &per_node_hstate_attr_group);
->>                 if (err) {
->> -                       pr_err("Hugetlb: Unable to add hstate %s for node %d\n",
->> +                       pr_err("HugeTLB: Unable to add hstate %s for node %d\n",
->>                                 h->name, node->dev.id);
->>                         hugetlb_unregister_node(node);
->>                         break;
->> @@ -3109,19 +3109,35 @@ static int __init hugetlb_init(void)
->>         if (!hugepages_supported())
->>                 return 0;
->>
->> -       if (!size_to_hstate(default_hstate_size)) {
->> -               if (default_hstate_size != 0) {
->> -                       pr_err("HugeTLB: unsupported default_hugepagesz %lu. Reverting to %lu\n",
->> -                              default_hstate_size, HPAGE_SIZE);
->> -               }
->> -
->> +       /*
->> +        * Make sure HPAGE_SIZE (HUGETLB_PAGE_ORDER) hstate exists.  Some
->> +        * architectures depend on setup being done here.
->> +        *
->> +        * If a valid default huge page size was specified on the command line,
->> +        * add associated hstate if necessary.  If not, set default_hstate_size
->> +        * to default size.  default_hstate_idx is used at runtime to identify
->> +        * the default huge page size/hstate.
->> +        */
->> +       hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
->> +       if (default_hstate_size)
->> +               hugetlb_add_hstate(ilog2(default_hstate_size) - PAGE_SHIFT);
->> +       else
->>                 default_hstate_size = HPAGE_SIZE;
->> -               hugetlb_add_hstate(HUGETLB_PAGE_ORDER);
->> -       }
->>         default_hstate_idx = hstate_index(size_to_hstate(default_hstate_size));
->> +
->> +       /*
->> +        * default_hstate_max_huge_pages != 0 indicates a count (hugepages=)
->> +        * specified before a size (hugepagesz=).  Use this count for the
->> +        * default huge page size, unless a specific value was specified for
->> +        * this size in a hugepagesz/hugepages pair.
->> +        */
->>         if (default_hstate_max_huge_pages) {
->>                 if (!default_hstate.max_huge_pages)
->> -                       default_hstate.max_huge_pages = default_hstate_max_huge_pages;
->> +                       default_hstate.max_huge_pages =
->> +                               default_hstate_max_huge_pages;
->> +               else
->> +                       pr_warn("HugeTLB: First hugepages=%lu kB ignored\n",
->> +                               default_hstate_max_huge_pages);
->>         }
->>
->>         hugetlb_init_hstates();
->> @@ -3174,20 +3190,27 @@ void __init hugetlb_add_hstate(unsigned int order)
->>         parsed_hstate = h;
->>  }
->>
->> -static int __init hugetlb_nrpages_setup(char *s)
->> +/*
->> + * hugepages command line processing
->> + * hugepages must normally follows a valid hugepagsz specification.  If not,
-> 
-> 'hugepages must' or 'hugepages normally follows'
->> + * ignore the hugepages value.  hugepages can also be the first huge page
->> + * command line option in which case it specifies the number of huge pages
->> + * for the default size.
->> + */
->> +static int __init hugepages_setup(char *s)
->>  {
->>         unsigned long *mhp;
->>         static unsigned long *last_mhp;
->>
->>         if (!parsed_valid_hugepagesz) {
->> -               pr_warn("hugepages = %s preceded by "
->> +               pr_warn("HugeTLB: hugepages = %s preceded by "
->>                         "an unsupported hugepagesz, ignoring\n", s);
->>                 parsed_valid_hugepagesz = true;
->>                 return 1;
->>         }
->>         /*
->> -        * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter yet,
->> -        * so this hugepages= parameter goes to the "default hstate".
->> +        * !hugetlb_max_hstate means we haven't parsed a hugepagesz= parameter
->> +        * yet, so this hugepages= parameter goes to the "default hstate".
->>          */
->>         else if (!hugetlb_max_hstate)
->>                 mhp = &default_hstate_max_huge_pages;
-> 
-> We don't set parsed_valid_hugepagesz to false at the end of this
-> function, shouldn't we? Parsing a hugepages= value should 'consume' a
-> previously defined hugepagesz= value, so that this is invalid IIUC:
-> 
-> hugepagesz=x hugepages=z hugepages=y
-> 
-In this case, we'll get:
-"HugeTLB: hugepages= specified twice without interleaving hugepagesz=, ignoring
-hugepages=y"
+[   21.741634] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:782
 
->> @@ -3195,7 +3218,8 @@ static int __init hugetlb_nrpages_setup(char *s)
->>                 mhp = &parsed_hstate->max_huge_pages;
->>
->>         if (mhp == last_mhp) {
->> -               pr_warn("hugepages= specified twice without interleaving hugepagesz=, ignoring\n");
->> +               pr_warn("HugeTLB: hugepages= specified twice without interleaving hugepagesz=, ignoring hugepages=%s\n",
->> +                       s);
->>                 return 1;
->>         }
->>
->> @@ -3214,8 +3238,15 @@ static int __init hugetlb_nrpages_setup(char *s)
->>
->>         return 1;
->>  }
->> -__setup("hugepages=", hugetlb_nrpages_setup);
->> +__setup("hugepages=", hugepages_setup);
->>
->> +/*
->> + * hugepagesz command line processing
->> + * A specific huge page size can only be specified once with hugepagesz.
->> + * hugepagesz is followed by hugepages on the commnad line.  The global
->> + * variable 'parsed_valid_hugepagesz' is used to determine if prior
->> + * hugepagesz argument was valid.
->> + */
->>  static int __init hugepagesz_setup(char *s)
->>  {
->>         unsigned long long size;
->> @@ -3230,16 +3261,23 @@ static int __init hugepagesz_setup(char *s)
->>         }
->>
->>         if (size_to_hstate(size)) {
->> +               parsed_valid_hugepagesz = false;
->>                 pr_warn("HugeTLB: hugepagesz %s specified twice, ignoring\n",
->>                         saved_s);
->>                 return 0;
->>         }
->>
->> +       parsed_valid_hugepagesz = true;
->>         hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT);
->>         return 1;
->>  }
->>  __setup("hugepagesz=", hugepagesz_setup);
->>
->> +/*
->> + * default_hugepagesz command line input
->> + * Only one instance of default_hugepagesz allowed on command line.  Do not
->> + * add hstate here as that will confuse hugepagesz/hugepages processing.
->> + */
->>  static int __init default_hugepagesz_setup(char *s)
->>  {
->>         unsigned long long size;
->> @@ -3252,6 +3290,12 @@ static int __init default_hugepagesz_setup(char *s)
->>                 return 0;
->>         }
->>
->> +       if (default_hstate_size) {
->> +               pr_err("HugeTLB: default_hugepagesz previously specified, ignoring %s\n",
->> +                       saved_s);
->> +               return 0;
->> +       }
->> +
->>         default_hstate_size = size;
->>         return 1;
->>  }
->> --
->> 2.24.1
->>
->>
-> .
->
----
-Regards,
-Longpeng(Mike)
+which corresponds to
+
+WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd))))
+
+There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
+ifdefs scattered across the test. But consolidating all the fallback stubs
+is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
+not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
+
+This series has been build tested on many platforms including the ones that
+subscribe the test through ARCH_HAS_DEBUG_VM_PGTABLE.
+
+This series is based on v5.6-rc7 after applying these following patches.
+
+1. https://patchwork.kernel.org/patch/11431277/
+2. https://patchwork.kernel.org/patch/11452185/
+
+Changes in V2:
+
+- Dropped CONFIG_ARCH_HAS_PTE_SPECIAL per Christophe
+- Dropped CONFIG_NUMA_BALANCING per Christophe
+- Dropped CONFIG_HAVE_ARCH_SOFT_DIRTY per Christophe
+- Dropped CONFIG_MIGRATION per Christophe
+- Replaced CONFIG_S390 with __HAVE_ARCH_PMDP_INVALIDATE
+- Moved page allocation & free inside swap_migration_tests() per Christophe
+- Added CONFIG_TRANSPARENT_HUGEPAGE to protect pfn_pmd()
+- Added CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD to protect pfn_pud()
+- Added a patch for other arch advanced page table helper tests
+- Added a patch creating a documentation for page table helper semantics
+
+Changes in V1: (https://patchwork.kernel.org/patch/11408253/)
+
+Cc: Jonathan Corbet <corbet@lwn.net>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Vineet Gupta <vgupta@synopsys.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Kirill A. Shutemov <kirill@shutemov.name>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: Palmer Dabbelt <palmer@dabbelt.com>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-riscv@lists.infradead.org
+Cc: x86@kernel.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+
+Anshuman Khandual (3):
+  mm/debug: Add tests validating arch page table helpers for core features
+  mm/debug: Add tests validating arch advanced page table helpers
+  Documentation/mm: Add descriptions for arch page table helpers
+
+ Documentation/vm/arch_pgtable_helpers.rst | 256 ++++++++++
+ mm/debug_vm_pgtable.c                     | 594 +++++++++++++++++++++-
+ 2 files changed, 839 insertions(+), 11 deletions(-)
+ create mode 100644 Documentation/vm/arch_pgtable_helpers.rst
+
+-- 
+2.20.1
+
