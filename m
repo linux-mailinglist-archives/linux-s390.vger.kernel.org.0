@@ -2,113 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AF8DD1918FD
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 19:25:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 850A71919AB
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 20:11:38 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727937AbgCXSZH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Mar 2020 14:25:07 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:65250 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727957AbgCXSZG (ORCPT
+        id S1727747AbgCXTLh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Mar 2020 15:11:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:24742 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727657AbgCXTLh (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 24 Mar 2020 14:25:06 -0400
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OI3NKM037454
-        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 14:25:05 -0400
+        Tue, 24 Mar 2020 15:11:37 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OJ2qrR072327
+        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 15:11:36 -0400
 Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywejwp2me-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yynky66yq-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 14:25:04 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 15:11:36 -0400
 Received: from localhost
         by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
-        Tue, 24 Mar 2020 18:24:59 -0000
+        for <linux-s390@vger.kernel.org> from <heiko.carstens@de.ibm.com>;
+        Tue, 24 Mar 2020 19:11:31 -0000
 Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
         by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 24 Mar 2020 18:24:56 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02OIOvTR41484450
+        Tue, 24 Mar 2020 19:11:28 -0000
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02OJBUHq52756532
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 18:24:58 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3DF5A405B;
-        Tue, 24 Mar 2020 18:24:57 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD0A7A405C;
-        Tue, 24 Mar 2020 18:24:57 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 24 Mar 2020 18:24:57 +0000 (GMT)
-From:   Julian Wiedmann <jwi@linux.ibm.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     netdev <netdev@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        Julian Wiedmann <jwi@linux.ibm.com>
-Subject: [PATCH net-next 11/11] s390/qeth: modernize two list helpers
-Date:   Tue, 24 Mar 2020 19:24:48 +0100
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20200324182448.95362-1-jwi@linux.ibm.com>
-References: <20200324182448.95362-1-jwi@linux.ibm.com>
+        Tue, 24 Mar 2020 19:11:30 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1E5A0AE045;
+        Tue, 24 Mar 2020 19:11:30 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C339AAE04D;
+        Tue, 24 Mar 2020 19:11:29 +0000 (GMT)
+Received: from osiris (unknown [9.145.15.117])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 24 Mar 2020 19:11:29 +0000 (GMT)
+Date:   Tue, 24 Mar 2020 20:11:28 +0100
+From:   Heiko Carstens <heiko.carstens@de.ibm.com>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>
+Subject: Re: s390: removal of hibernate support
+References: <20200323181245.GJ4288@osiris>
+ <CAJZ5v0hzf=kQBcR=K2KL1kEVtA6oLPtLDaeeaVuWMPsXomhJHw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0hzf=kQBcR=K2KL1kEVtA6oLPtLDaeeaVuWMPsXomhJHw@mail.gmail.com>
 X-TM-AS-GCONF: 00
-x-cbid: 20032418-0020-0000-0000-000003BA4DAA
+x-cbid: 20032419-0020-0000-0000-000003BA52EA
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032418-0021-0000-0000-00002212CFCF
-Message-Id: <20200324182448.95362-12-jwi@linux.ibm.com>
+x-cbparentid: 20032419-0021-0000-0000-00002212D547
+Message-Id: <20200324191128.GA3822@osiris>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_06:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
- suspectscore=2 spamscore=0 mlxscore=0 mlxlogscore=966 adultscore=0
- bulkscore=0 phishscore=0 lowpriorityscore=0 priorityscore=1501
- impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003240091
+ definitions=2020-03-24_07:2020-03-23,2020-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
+ mlxscore=0 bulkscore=0 phishscore=0 adultscore=0 mlxlogscore=792
+ impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003240092
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Replace list_for_each() with list_for_each_entry(), and
-list_entry(head.next) with list_first_entry().
+Hi Rafael,
 
-Signed-off-by: Julian Wiedmann <jwi@linux.ibm.com>
----
- drivers/s390/net/qeth_core_main.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+> On Mon, Mar 23, 2020 at 7:12 PM Heiko Carstens
+> <heiko.carstens@de.ibm.com> wrote:
+> > we are going to remove hibernate support on s390, since it is
+> > - broken since many years
+> > - there is no real use case which justifies keeping and maintaining
+> >   the code
+> >
+> > See also https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=394216275c7d503d966317da9a01ad6626a6091d
+> >
+> > This in turn allows also to remove s390 specific hooks in generic
+> > power management code (see patch below). The patch below is currently
+> > also on the same features branch.
+> > I silently assume(d) that you don't mind to get rid of otherwise dead
+> > code, or do you have any objections?
+> >
+> > From 086b2d78375cffe58f5341359bebec0650793811 Mon Sep 17 00:00:00 2001
+> > From: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > Date: Wed, 18 Mar 2020 20:55:20 +0100
+> > Subject: [PATCH] PM: remove s390 specific callbacks
+> >
+> > ARCH_SAVE_PAGE_KEYS has been introduced in order to be able to save
+> > and restore s390 specific storage keys into a hibernation image.
+> > With hibernation support removed from s390 there is no point in
+> > keeping the callbacks.
+> >
+> > Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> > Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+> > Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+> > Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> 
+> Can I take this patch or would it be better to route it differently?
 
-diff --git a/drivers/s390/net/qeth_core_main.c b/drivers/s390/net/qeth_core_main.c
-index 4940e4fb556e..79a92761e50a 100644
---- a/drivers/s390/net/qeth_core_main.c
-+++ b/drivers/s390/net/qeth_core_main.c
-@@ -2629,15 +2629,13 @@ static void qeth_initialize_working_pool_list(struct qeth_card *card)
- static struct qeth_buffer_pool_entry *qeth_find_free_buffer_pool_entry(
- 					struct qeth_card *card)
- {
--	struct list_head *plh;
- 	struct qeth_buffer_pool_entry *entry;
- 	int i, free;
- 
- 	if (list_empty(&card->qdio.in_buf_pool.entry_list))
- 		return NULL;
- 
--	list_for_each(plh, &card->qdio.in_buf_pool.entry_list) {
--		entry = list_entry(plh, struct qeth_buffer_pool_entry, list);
-+	list_for_each_entry(entry, &card->qdio.in_buf_pool.entry_list, list) {
- 		free = 1;
- 		for (i = 0; i < QETH_MAX_BUFFER_ELEMENTS(card); ++i) {
- 			if (page_count(entry->elements[i]) > 1) {
-@@ -2652,8 +2650,8 @@ static struct qeth_buffer_pool_entry *qeth_find_free_buffer_pool_entry(
- 	}
- 
- 	/* no free buffer in pool so take first one and swap pages */
--	entry = list_entry(card->qdio.in_buf_pool.entry_list.next,
--			struct qeth_buffer_pool_entry, list);
-+	entry = list_first_entry(&card->qdio.in_buf_pool.entry_list,
-+				 struct qeth_buffer_pool_entry, list);
- 	for (i = 0; i < QETH_MAX_BUFFER_ELEMENTS(card); ++i) {
- 		if (page_count(entry->elements[i]) > 1) {
- 			struct page *page = dev_alloc_page();
--- 
-2.17.1
+The patch is already on the s390 features branch and is supposed to be
+part of the first pull request for the next merge window (actually the
+patch is already in linux-next).
+So I'd say the easiest thing would be to route it through the s390 tree.
 
