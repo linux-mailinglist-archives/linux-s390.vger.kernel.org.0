@@ -2,128 +2,216 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CDD9191247
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 14:59:10 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 29B3B19150C
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 16:42:57 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727674AbgCXN6V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Mar 2020 09:58:21 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:50328 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726188AbgCXN6U (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 24 Mar 2020 09:58:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585058299;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=bBQ5X1xIXO9R19Gk4rRRsSNh0sMkDLAErblkw+/9zMk=;
-        b=hOx4ZzpA6GWP7yUX92SR3wYPdkG6OzuqCnsKO72xGneUpvOvUo31g12Ml8A3iLYKMxd1Bx
-        PwNCkHCi+Czx/26pjuZ01Ci1UzDxKgqCqf7rofq25SeNmMPHhuCIIl7EVUR9ad2nRfQv6n
-        SRMdZjWOAtFR3O5vOUBAU7qAcui1EL0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-360-oZDc8g_8On-FIqBdFyJSag-1; Tue, 24 Mar 2020 09:58:15 -0400
-X-MC-Unique: oZDc8g_8On-FIqBdFyJSag-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4EF9BDBAC;
-        Tue, 24 Mar 2020 13:58:14 +0000 (UTC)
-Received: from [10.36.112.232] (ovpn-112-232.ams2.redhat.com [10.36.112.232])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 94FAF10016EB;
-        Tue, 24 Mar 2020 13:58:12 +0000 (UTC)
-Subject: Re: [PATCH 1/2] s390x: add myself as reviewer
-To:     Janosch Frank <frankja@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, Thomas Huth <thuth@redhat.com>
-References: <20200324121722.9776-1-cohuck@redhat.com>
- <20200324121722.9776-2-cohuck@redhat.com>
- <2556051f-99d8-4d18-80eb-f6bdf7e886a1@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <906eeeb8-0fbc-3b15-0fb7-50873e91de7e@redhat.com>
-Date:   Tue, 24 Mar 2020 14:58:11 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728034AbgCXPk2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Mar 2020 11:40:28 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:43734 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727216AbgCXPk2 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Mar 2020 11:40:28 -0400
+Received: by mail-ot1-f65.google.com with SMTP id a6so17347217otb.10;
+        Tue, 24 Mar 2020 08:40:27 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=x91Gn6ctV7uAtmkacQ15CXSKd6r2ddccL8V3P9sMjNA=;
+        b=pfMj7row9sTrv4thwk7KfT+caqwHdG3s0euotqjGzU/BWsPbKbqETn4/g4QA0SwOnw
+         phHxte+faIoNTkFkvpxllaze69d464k7Q28h33EKHRCogupdQwfpGaWLbFFhwRLXUySN
+         +K5MO+KB57qvUERrTle7Bbws7rUYWXvDhU80Lg5y8ORS9cAsCRhvYJ2QxIENESqS6d5W
+         9xswU66yaQPNaEYHymbzuTa6lSWXSP/sG5FTqHuO7q//bZrSfe/RPOikCCf/eu3kxCPh
+         33zwkZNI4fU9csqKcTLfCF9Ul7hQu2B0s1vtQSL/GLBeH1EVz7FWFwYardutuTFpaK4g
+         xYmA==
+X-Gm-Message-State: ANhLgQ13gTc1DZVMqob/dBWdpFQT5XWnWUgr2nMpzjh6OhsgltX8FIQ7
+        JRQkI60XIz3iGjAVU+0fRjbRAlT5FLUSZPrslATkUA==
+X-Google-Smtp-Source: ADFU+vtOOAmaA25O7ZsrbfelAo4/GiymbQ4narnzwPJk3U/bOgQJEAOi/z87tKAKA8y4280wJe3a3HGwWFYAk+n4Vj8=
+X-Received: by 2002:a9d:1d07:: with SMTP id m7mr21308652otm.167.1585064427356;
+ Tue, 24 Mar 2020 08:40:27 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <2556051f-99d8-4d18-80eb-f6bdf7e886a1@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-Content-Transfer-Encoding: quoted-printable
+References: <20200323181245.GJ4288@osiris>
+In-Reply-To: <20200323181245.GJ4288@osiris>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 24 Mar 2020 16:40:16 +0100
+Message-ID: <CAJZ5v0hzf=kQBcR=K2KL1kEVtA6oLPtLDaeeaVuWMPsXomhJHw@mail.gmail.com>
+Subject: Re: s390: removal of hibernate support
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        linux-s390@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 24.03.20 13:25, Janosch Frank wrote:
-> On 3/24/20 1:17 PM, Cornelia Huck wrote:
->> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
->> ---
->>  MAINTAINERS | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 48da1dbdd1ac..471767a355c6 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -81,6 +81,7 @@ S390X
->>  M: Thomas Huth <thuth@redhat.com>
->>  M: David Hildenbrand <david@redhat.com>
->>  R: Janosch Frank <frankja@linux.ibm.com>
->=20
-> Hmm, so the patch to make me maintainer hasn't yet been pulled. Oo
-> @David, did it go missing once Thomas went on leave?
+Hi,
 
-Ehm, good question. I will pick that one up next week when I'm back from
-paid leave ("Balkonien"), along with these two patches. Thanks!
+On Mon, Mar 23, 2020 at 7:12 PM Heiko Carstens
+<heiko.carstens@de.ibm.com> wrote:
+>
+> Hi Rafael,
+>
+> we are going to remove hibernate support on s390, since it is
+> - broken since many years
+> - there is no real use case which justifies keeping and maintaining
+>   the code
+>
+> See also https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=394216275c7d503d966317da9a01ad6626a6091d
+>
+> This in turn allows also to remove s390 specific hooks in generic
+> power management code (see patch below). The patch below is currently
+> also on the same features branch.
+> I silently assume(d) that you don't mind to get rid of otherwise dead
+> code, or do you have any objections?
+>
+> From 086b2d78375cffe58f5341359bebec0650793811 Mon Sep 17 00:00:00 2001
+> From: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Date: Wed, 18 Mar 2020 20:55:20 +0100
+> Subject: [PATCH] PM: remove s390 specific callbacks
+>
+> ARCH_SAVE_PAGE_KEYS has been introduced in order to be able to save
+> and restore s390 specific storage keys into a hibernation image.
+> With hibernation support removed from s390 there is no point in
+> keeping the callbacks.
+>
+> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
+> Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 
---
+Can I take this patch or would it be better to route it differently?
 
-David / dhildenb
-
+> ---
+>  include/linux/suspend.h | 34 ----------------------------------
+>  kernel/power/Kconfig    |  3 ---
+>  kernel/power/snapshot.c | 18 ------------------
+>  3 files changed, 55 deletions(-)
+>
+> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
+> index 2b2055b035ee..4fcc6fd0cbd6 100644
+> --- a/include/linux/suspend.h
+> +++ b/include/linux/suspend.h
+> @@ -566,38 +566,4 @@ static inline void queue_up_suspend_work(void) {}
+>
+>  #endif /* !CONFIG_PM_AUTOSLEEP */
+>
+> -#ifdef CONFIG_ARCH_SAVE_PAGE_KEYS
+> -/*
+> - * The ARCH_SAVE_PAGE_KEYS functions can be used by an architecture
+> - * to save/restore additional information to/from the array of page
+> - * frame numbers in the hibernation image. For s390 this is used to
+> - * save and restore the storage key for each page that is included
+> - * in the hibernation image.
+> - */
+> -unsigned long page_key_additional_pages(unsigned long pages);
+> -int page_key_alloc(unsigned long pages);
+> -void page_key_free(void);
+> -void page_key_read(unsigned long *pfn);
+> -void page_key_memorize(unsigned long *pfn);
+> -void page_key_write(void *address);
+> -
+> -#else /* !CONFIG_ARCH_SAVE_PAGE_KEYS */
+> -
+> -static inline unsigned long page_key_additional_pages(unsigned long pages)
+> -{
+> -       return 0;
+> -}
+> -
+> -static inline int  page_key_alloc(unsigned long pages)
+> -{
+> -       return 0;
+> -}
+> -
+> -static inline void page_key_free(void) {}
+> -static inline void page_key_read(unsigned long *pfn) {}
+> -static inline void page_key_memorize(unsigned long *pfn) {}
+> -static inline void page_key_write(void *address) {}
+> -
+> -#endif /* !CONFIG_ARCH_SAVE_PAGE_KEYS */
+> -
+>  #endif /* _LINUX_SUSPEND_H */
+> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
+> index 7cbfbeacd68a..c208566c844b 100644
+> --- a/kernel/power/Kconfig
+> +++ b/kernel/power/Kconfig
+> @@ -80,9 +80,6 @@ config HIBERNATION
+>
+>           For more information take a look at <file:Documentation/power/swsusp.rst>.
+>
+> -config ARCH_SAVE_PAGE_KEYS
+> -       bool
+> -
+>  config PM_STD_PARTITION
+>         string "Default resume partition"
+>         depends on HIBERNATION
+> diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
+> index ddade80ad276..e99d13b0b8fc 100644
+> --- a/kernel/power/snapshot.c
+> +++ b/kernel/power/snapshot.c
+> @@ -1744,9 +1744,6 @@ int hibernate_preallocate_memory(void)
+>         count += highmem;
+>         count -= totalreserve_pages;
+>
+> -       /* Add number of pages required for page keys (s390 only). */
+> -       size += page_key_additional_pages(saveable);
+> -
+>         /* Compute the maximum number of saveable pages to leave in memory. */
+>         max_size = (count - (size + PAGES_FOR_IO)) / 2
+>                         - 2 * DIV_ROUND_UP(reserved_size, PAGE_SIZE);
+> @@ -2075,8 +2072,6 @@ static inline void pack_pfns(unsigned long *buf, struct memory_bitmap *bm)
+>                 buf[j] = memory_bm_next_pfn(bm);
+>                 if (unlikely(buf[j] == BM_END_OF_MAP))
+>                         break;
+> -               /* Save page key for data page (s390 only). */
+> -               page_key_read(buf + j);
+>         }
+>  }
+>
+> @@ -2226,9 +2221,6 @@ static int unpack_orig_pfns(unsigned long *buf, struct memory_bitmap *bm)
+>                 if (unlikely(buf[j] == BM_END_OF_MAP))
+>                         break;
+>
+> -               /* Extract and buffer page key for data page (s390 only). */
+> -               page_key_memorize(buf + j);
+> -
+>                 if (pfn_valid(buf[j]) && memory_bm_pfn_present(bm, buf[j]))
+>                         memory_bm_set_bit(bm, buf[j]);
+>                 else
+> @@ -2623,11 +2615,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
+>                 if (error)
+>                         return error;
+>
+> -               /* Allocate buffer for page keys. */
+> -               error = page_key_alloc(nr_copy_pages);
+> -               if (error)
+> -                       return error;
+> -
+>                 hibernate_restore_protection_begin();
+>         } else if (handle->cur <= nr_meta_pages + 1) {
+>                 error = unpack_orig_pfns(buffer, &copy_bm);
+> @@ -2649,8 +2636,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
+>                 }
+>         } else {
+>                 copy_last_highmem_page();
+> -               /* Restore page key for data page (s390 only). */
+> -               page_key_write(handle->buffer);
+>                 hibernate_restore_protect_page(handle->buffer);
+>                 handle->buffer = get_buffer(&orig_bm, &ca);
+>                 if (IS_ERR(handle->buffer))
+> @@ -2673,9 +2658,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
+>  void snapshot_write_finalize(struct snapshot_handle *handle)
+>  {
+>         copy_last_highmem_page();
+> -       /* Restore page key for data page (s390 only). */
+> -       page_key_write(handle->buffer);
+> -       page_key_free();
+>         hibernate_restore_protect_page(handle->buffer);
+>         /* Do that only if we have loaded the image entirely */
+>         if (handle->cur > 1 && handle->cur > nr_meta_pages + nr_copy_pages) {
+> --
+> 2.17.1
+>
