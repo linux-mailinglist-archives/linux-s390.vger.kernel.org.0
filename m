@@ -2,444 +2,128 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BC9FE191093
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 14:31:32 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 1CDD9191247
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 14:59:10 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727496AbgCXN3v (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Mar 2020 09:29:51 -0400
-Received: from hqnvemgate24.nvidia.com ([216.228.121.143]:12908 "EHLO
-        hqnvemgate24.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727912AbgCXN3u (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Mar 2020 09:29:50 -0400
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqnvemgate24.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5e7a0af10000>; Tue, 24 Mar 2020 06:28:17 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 24 Mar 2020 06:29:47 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 24 Mar 2020 06:29:47 -0700
-Received: from [10.2.172.201] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 24 Mar
- 2020 13:29:44 +0000
-From:   Zi Yan <ziy@nvidia.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-CC:     <linux-mm@kvack.org>, <christophe.leroy@c-s.fr>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        <linux-snps-arc@lists.infradead.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <linux-s390@vger.kernel.org>,
-        <linux-riscv@lists.infradead.org>, <x86@kernel.org>,
-        <linux-arch@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH V2 1/3] mm/debug: Add tests validating arch page table
- helpers for core features
-Date:   Tue, 24 Mar 2020 09:29:42 -0400
-X-Mailer: MailMate (1.13.1r5680)
-Message-ID: <89E72C74-A32F-4A5B-B5F3-8A63428507A5@nvidia.com>
-In-Reply-To: <1585027375-9997-2-git-send-email-anshuman.khandual@arm.com>
-References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
- <1585027375-9997-2-git-send-email-anshuman.khandual@arm.com>
+        id S1727674AbgCXN6V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Mar 2020 09:58:21 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:50328 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726188AbgCXN6U (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 24 Mar 2020 09:58:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585058299;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=bBQ5X1xIXO9R19Gk4rRRsSNh0sMkDLAErblkw+/9zMk=;
+        b=hOx4ZzpA6GWP7yUX92SR3wYPdkG6OzuqCnsKO72xGneUpvOvUo31g12Ml8A3iLYKMxd1Bx
+        PwNCkHCi+Czx/26pjuZ01Ci1UzDxKgqCqf7rofq25SeNmMPHhuCIIl7EVUR9ad2nRfQv6n
+        SRMdZjWOAtFR3O5vOUBAU7qAcui1EL0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-360-oZDc8g_8On-FIqBdFyJSag-1; Tue, 24 Mar 2020 09:58:15 -0400
+X-MC-Unique: oZDc8g_8On-FIqBdFyJSag-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4EF9BDBAC;
+        Tue, 24 Mar 2020 13:58:14 +0000 (UTC)
+Received: from [10.36.112.232] (ovpn-112-232.ams2.redhat.com [10.36.112.232])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 94FAF10016EB;
+        Tue, 24 Mar 2020 13:58:12 +0000 (UTC)
+Subject: Re: [PATCH 1/2] s390x: add myself as reviewer
+To:     Janosch Frank <frankja@linux.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, Thomas Huth <thuth@redhat.com>
+References: <20200324121722.9776-1-cohuck@redhat.com>
+ <20200324121722.9776-2-cohuck@redhat.com>
+ <2556051f-99d8-4d18-80eb-f6bdf7e886a1@linux.ibm.com>
+From:   David Hildenbrand <david@redhat.com>
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Red Hat GmbH
+Message-ID: <906eeeb8-0fbc-3b15-0fb7-50873e91de7e@redhat.com>
+Date:   Tue, 24 Mar 2020 14:58:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: multipart/signed;
-        boundary="=_MailMate_046CEE80-FCB0-4D68-A105-63926BAC0137_=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1585056497; bh=4ikSg4p6PP+bNqmA8W5EMUgiZFHBG0mP9JOo9AGSpUA=;
-        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
-         In-Reply-To:References:MIME-Version:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type;
-        b=aB0bcyZjHyC+Dp4OM7g3sK+HlwK3q5o5rw87wA+9nPRiyZifhbmSMDZfvbDwUSnsq
-         paubw3nd6jr4NBtTitJmDFuuqWiBZfh4pZmJIC8Lttc+sRvGI25Ph/6GGr9LTZ21bz
-         2vr3Us6kMw01ZE/1jrDItYZ+/z0TBz6pGQ1qN6Oi+LJCI0TE0Ou29nuyvV7Ohzr+Ga
-         HXsfztGJjRu+1bcEIhb6x3aqKfsc6MdqAg+joWUXOOe7/JZ3zkBrz9D4DXbQCxWoL4
-         4ZsYHoLi6n61vtECtmppTn5fZP/9bhnew1Q5wHRMEPogY8E7pOxiMXL2sjFsonY2vC
-         5m1fnUCWZqDsQ==
+In-Reply-To: <2556051f-99d8-4d18-80eb-f6bdf7e886a1@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
---=_MailMate_046CEE80-FCB0-4D68-A105-63926BAC0137_=
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On 24.03.20 13:25, Janosch Frank wrote:
+> On 3/24/20 1:17 PM, Cornelia Huck wrote:
+>> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+>> ---
+>>  MAINTAINERS | 1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/MAINTAINERS b/MAINTAINERS
+>> index 48da1dbdd1ac..471767a355c6 100644
+>> --- a/MAINTAINERS
+>> +++ b/MAINTAINERS
+>> @@ -81,6 +81,7 @@ S390X
+>>  M: Thomas Huth <thuth@redhat.com>
+>>  M: David Hildenbrand <david@redhat.com>
+>>  R: Janosch Frank <frankja@linux.ibm.com>
+>=20
+> Hmm, so the patch to make me maintainer hasn't yet been pulled. Oo
+> @David, did it go missing once Thomas went on leave?
 
-On 24 Mar 2020, at 1:22, Anshuman Khandual wrote:
+Ehm, good question. I will pick that one up next week when I'm back from
+paid leave ("Balkonien"), along with these two patches. Thanks!
 
-> This adds new tests validating arch page table helpers for these follow=
-ing
-> core memory features. These tests create and test specific mapping type=
-s at
-> various page table levels.
->
-> 1. SPECIAL mapping
-> 2. PROTNONE mapping
-> 3. DEVMAP mapping
-> 4. SOFTDIRTY mapping
-> 5. SWAP mapping
-> 6. MIGRATION mapping
-> 7. HUGETLB mapping
-> 8. THP mapping
->
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Mike Rapoport <rppt@linux.ibm.com>
-> Cc: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Kirill A. Shutemov <kirill@shutemov.name>
-> Cc: Paul Walmsley <paul.walmsley@sifive.com>
-> Cc: Palmer Dabbelt <palmer@dabbelt.com>
-> Cc: linux-snps-arc@lists.infradead.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-s390@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: x86@kernel.org
-> Cc: linux-arch@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Suggested-by: Catalin Marinas <catalin.marinas@arm.com>
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
-> ---
->  mm/debug_vm_pgtable.c | 291 +++++++++++++++++++++++++++++++++++++++++-=
+--
 
->  1 file changed, 290 insertions(+), 1 deletion(-)
->
-> diff --git a/mm/debug_vm_pgtable.c b/mm/debug_vm_pgtable.c
-> index 98990a515268..15055a8f6478 100644
-> --- a/mm/debug_vm_pgtable.c
-> +++ b/mm/debug_vm_pgtable.c
-> @@ -289,6 +289,267 @@ static void __init pmd_populate_tests(struct mm_s=
-truct *mm, pmd_t *pmdp,
->  	WARN_ON(pmd_bad(pmd));
->  }
->
-> +static void __init pte_special_tests(unsigned long pfn, pgprot_t prot)=
+David / dhildenb
 
-> +{
-> +	pte_t pte =3D pfn_pte(pfn, prot);
-> +
-> +	if (!IS_ENABLED(CONFIG_ARCH_HAS_PTE_SPECIAL))
-> +		return;
-> +
-> +	WARN_ON(!pte_special(pte_mkspecial(pte)));
-> +}
-> +
-> +static void __init pte_protnone_tests(unsigned long pfn, pgprot_t prot=
-)
-> +{
-> +	pte_t pte =3D pfn_pte(pfn, prot);
-> +
-> +	if (!IS_ENABLED(CONFIG_NUMA_BALANCING))
-> +		return;
-> +
-> +	WARN_ON(!pte_protnone(pte));
-> +	WARN_ON(!pte_present(pte));
-> +}
-> +
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +static void __init pmd_protnone_tests(unsigned long pfn, pgprot_t prot=
-)
-> +{
-> +	pmd_t pmd =3D pfn_pmd(pfn, prot);
-> +
-> +	if (!IS_ENABLED(CONFIG_NUMA_BALANCING))
-> +		return;
-> +
-> +	WARN_ON(!pmd_protnone(pmd));
-> +	WARN_ON(!pmd_present(pmd));
-> +}
-> +#else
-> +static void __init pmd_protnone_tests(unsigned long pfn, pgprot_t prot=
-) { }
-> +#endif
-> +
-> +#ifdef CONFIG_ARCH_HAS_PTE_DEVMAP
-> +static void __init pte_devmap_tests(unsigned long pfn, pgprot_t prot)
-> +{
-> +	pte_t pte =3D pfn_pte(pfn, prot);
-> +
-> +	WARN_ON(!pte_devmap(pte_mkdevmap(pte)));
-> +}
-> +
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +static void __init pmd_devmap_tests(unsigned long pfn, pgprot_t prot)
-> +{
-> +	pmd_t pmd =3D pfn_pmd(pfn, prot);
-> +
-> +	WARN_ON(!pmd_devmap(pmd_mkdevmap(pmd)));
-> +}
-> +
-> +#ifdef CONFIG_HAVE_ARCH_TRANSPARENT_HUGEPAGE_PUD
-> +static void __init pud_devmap_tests(unsigned long pfn, pgprot_t prot)
-> +{
-> +	pud_t pud =3D pfn_pud(pfn, prot);
-> +
-> +	WARN_ON(!pud_devmap(pud_mkdevmap(pud)));
-> +}
-> +#else
-> +static void __init pud_devmap_tests(unsigned long pfn, pgprot_t prot) =
-{ }
-> +#endif
-> +#else
-> +static void __init pmd_devmap_tests(unsigned long pfn, pgprot_t prot) =
-{ }
-> +static void __init pud_devmap_tests(unsigned long pfn, pgprot_t prot) =
-{ }
-> +#endif
-> +#else
-> +static void __init pte_devmap_tests(unsigned long pfn, pgprot_t prot) =
-{ }
-> +static void __init pmd_devmap_tests(unsigned long pfn, pgprot_t prot) =
-{ }
-> +static void __init pud_devmap_tests(unsigned long pfn, pgprot_t prot) =
-{ }
-> +#endif
-> +
-> +static void __init pte_soft_dirty_tests(unsigned long pfn, pgprot_t pr=
-ot)
-> +{
-> +	pte_t pte =3D pfn_pte(pfn, prot);
-> +
-> +	if (!IS_ENABLED(CONFIG_HAVE_ARCH_SOFT_DIRTY))
-> +		return;
-> +
-> +	WARN_ON(!pte_soft_dirty(pte_mksoft_dirty(pte)));
-> +	WARN_ON(pte_soft_dirty(pte_clear_soft_dirty(pte)));
-> +}
-> +
-> +static void __init pte_swap_soft_dirty_tests(unsigned long pfn, pgprot=
-_t prot)
-> +{
-> +	pte_t pte =3D pfn_pte(pfn, prot);
-> +
-> +	if (!IS_ENABLED(CONFIG_HAVE_ARCH_SOFT_DIRTY))
-> +		return;
-> +
-> +	WARN_ON(!pte_swp_soft_dirty(pte_swp_mksoft_dirty(pte)));
-> +	WARN_ON(pte_swp_soft_dirty(pte_swp_clear_soft_dirty(pte)));
-> +}
-> +
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +static void __init pmd_soft_dirty_tests(unsigned long pfn, pgprot_t pr=
-ot)
-> +{
-> +	pmd_t pmd =3D pfn_pmd(pfn, prot);
-> +
-> +	if (!IS_ENABLED(CONFIG_HAVE_ARCH_SOFT_DIRTY))
-> +		return;
-> +
-> +	WARN_ON(!pmd_soft_dirty(pmd_mksoft_dirty(pmd)));
-> +	WARN_ON(pmd_soft_dirty(pmd_clear_soft_dirty(pmd)));
-> +}
-> +
-> +static void __init pmd_swap_soft_dirty_tests(unsigned long pfn, pgprot=
-_t prot)
-> +{
-> +	pmd_t pmd =3D pfn_pmd(pfn, prot);
-> +
-> +	if (!IS_ENABLED(CONFIG_HAVE_ARCH_SOFT_DIRTY) ||
-> +		!IS_ENABLED(CONFIG_ARCH_ENABLE_THP_MIGRATION))
-> +		return;
-> +
-> +	WARN_ON(!pmd_swp_soft_dirty(pmd_swp_mksoft_dirty(pmd)));
-> +	WARN_ON(pmd_swp_soft_dirty(pmd_swp_clear_soft_dirty(pmd)));
-> +}
-> +#else
-> +static void __init pmd_soft_dirty_tests(unsigned long pfn, pgprot_t pr=
-ot) { }
-> +static void __init pmd_swap_soft_dirty_tests(unsigned long pfn, pgprot=
-_t prot)
-> +{
-> +}
-> +#endif
-> +
-> +static void __init pte_swap_tests(unsigned long pfn, pgprot_t prot)
-> +{
-> +	swp_entry_t swp;
-> +	pte_t pte;
-> +
-> +	pte =3D pfn_pte(pfn, prot);
-> +	swp =3D __pte_to_swp_entry(pte);
-> +	WARN_ON(!pte_same(pte, __swp_entry_to_pte(swp)));
-> +}
-> +
-> +#ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-> +static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
-> +{
-> +	swp_entry_t swp;
-> +	pmd_t pmd;
-> +
-> +	pmd =3D pfn_pmd(pfn, prot);
-> +	swp =3D __pmd_to_swp_entry(pmd);
-> +	WARN_ON(!pmd_same(pmd, __swp_entry_to_pmd(swp)));
-> +}
-> +#else
-> +static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { =
-}
-> +#endif
-> +
-> +static void __init swap_migration_tests(void)
-> +{
-> +	struct page *page;
-> +	swp_entry_t swp;
-> +
-> +	if (!IS_ENABLED(CONFIG_MIGRATION))
-> +		return;
-> +	/*
-> +	 * swap_migration_tests() requires a dedicated page as it needs to
-> +	 * be locked before creating a migration entry from it. Locking the
-> +	 * page that actually maps kernel text ('start_kernel') can be real
-> +	 * problematic. Lets allocate a dedicated page explicitly for this
-> +	 * purpose that will be freed subsequently.
-> +	 */
-> +	page =3D alloc_page(GFP_KERNEL);
-> +	if (!page) {
-> +		pr_err("page allocation failed\n");
-> +		return;
-> +	}
-> +
-> +	/*
-> +	 * make_migration_entry() expects given page to be
-> +	 * locked, otherwise it stumbles upon a BUG_ON().
-> +	 */
-> +	__SetPageLocked(page);
-> +	swp =3D make_migration_entry(page, 1);
-> +	WARN_ON(!is_migration_entry(swp));
-> +	WARN_ON(!is_write_migration_entry(swp));
-> +
-> +	make_migration_entry_read(&swp);
-> +	WARN_ON(!is_migration_entry(swp));
-> +	WARN_ON(is_write_migration_entry(swp));
-> +
-> +	swp =3D make_migration_entry(page, 0);
-> +	WARN_ON(!is_migration_entry(swp));
-> +	WARN_ON(is_write_migration_entry(swp));
-> +	__ClearPageLocked(page);
-> +	__free_page(page);
-> +}
-> +
-> +#ifdef CONFIG_HUGETLB_PAGE
-> +static void __init hugetlb_basic_tests(unsigned long pfn, pgprot_t pro=
-t)
-> +{
-> +	struct page *page;
-> +	pte_t pte;
-> +
-> +	/*
-> +	 * Accessing the page associated with the pfn is safe here,
-> +	 * as it was previously derived from a real kernel symbol.
-> +	 */
-> +	page =3D pfn_to_page(pfn);
-> +	pte =3D mk_huge_pte(page, prot);
-> +
-> +	WARN_ON(!huge_pte_dirty(huge_pte_mkdirty(pte)));
-> +	WARN_ON(!huge_pte_write(huge_pte_mkwrite(huge_pte_wrprotect(pte))));
-> +	WARN_ON(huge_pte_write(huge_pte_wrprotect(huge_pte_mkwrite(pte))));
-> +
-> +#ifdef CONFIG_ARCH_WANT_GENERAL_HUGETLB
-> +	pte =3D pfn_pte(pfn, prot);
-> +
-> +	WARN_ON(!pte_huge(pte_mkhuge(pte)));
-> +#endif
-> +}
-> +#else
-> +static void __init hugetlb_basic_tests(unsigned long pfn, pgprot_t pro=
-t) { }
-> +#endif
-> +
-> +#ifdef CONFIG_TRANSPARENT_HUGEPAGE
-> +static void __init pmd_thp_tests(unsigned long pfn, pgprot_t prot)
-> +{
-> +	pmd_t pmd;
-> +
-> +	/*
-> +	 * pmd_trans_huge() and pmd_present() must return positive
-> +	 * after MMU invalidation with pmd_mknotpresent().
-> +	 */
-> +	pmd =3D pfn_pmd(pfn, prot);
-> +	WARN_ON(!pmd_trans_huge(pmd_mkhuge(pmd)));
-> +
-> +#ifndef __HAVE_ARCH_PMDP_INVALIDATE
-> +	WARN_ON(!pmd_trans_huge(pmd_mknotpresent(pmd_mkhuge(pmd))));
-> +	WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd))));
-> +#endif
-
-I think we need a better comment here, because requiring pmd_trans_huge()=
- and
-pmd_present() returning true after pmd_mknotpresent() is not straightforw=
-ard.
-
-According to Andrea Arcangeli=E2=80=99s email (https://lore.kernel.org/li=
-nux-mm/20181017020930.GN30832@redhat.com/),
-This behavior is an optimization for transparent huge page.
-pmd_trans_huge() must be true if pmd_page() returns you a valid THP to av=
-oid
-taking the pmd_lock when others walk over non transhuge pmds (i.e. there =
-are no
-THP allocated). Especially when we split a THP, removing the present bit =
-from
-the pmd, pmd_trans_huge() still needs to return true. pmd_present() shoul=
-d
-be true whenever pmd_trans_huge() returns true.
-
-I think it is also worth either putting Andres=E2=80=99s email or the lin=
-k to it
-in the rst file in your 3rd patch. It is a good documentation for this sp=
-ecial
-case.
-
-=E2=80=94
-Best Regards,
-Yan Zi
-
---=_MailMate_046CEE80-FCB0-4D68-A105-63926BAC0137_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAl56C0YPHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKW00P/iN1ZY08hQbVe4FKHPJo1Zbcvcn3uCy8z7CF
-/Fm9KlppaM+oRtB9H57botPd2+3+zwCPLHc0lZfHDICSbrrunnTTimytEXs/wh4C
-d08kXSEQD8bJPmFgNq/DWNkXe1YNuInKUmIVvi4nblXCFphhfHQfxY6PsxDrB/Zh
-BadAUxxtrn9e5DvCiNaVkvN4BGuFV8rLfE7StLVmkH0E5cv2ogEogkvklP4UWEip
-I1PSOmxsldp45EGMVPJ0RrVxGfh+jDXRz3YyfiT+1uv4zaZUhg+wPcJvzYVd+M7N
-zNVYBQcyByQrQCkmIDqzMCmEkxd5Uu4BX37zTA7sEb7CnY/9lBNU8e+WbG6Mobcp
-bQP3ln/664NVejeSQIGYMN+GtntwcrxJLPxNybmcZgAcDBEd6xnueNLexlI5TvrP
-u/pVo/MyKeAoPyf2behwcaLVmvfr9x+7rI+8LyQ7NIrusQySczhsmeUcZ2es5QiN
-cH09sDzAon0zei0ExCfqJS4g2i2SnKZW+sU7t53AD+XkxJ+9A2mybWVFLkknxvr9
-bunUy0+43b4H88j4EIuzsosFmCiQadUGaxxyfBA6pdnVkbxQFWIf5L+qOjFVgZYs
-u1TcgS2BPI3/f24ogKamrk3EOGphnS/+AUVpQD3P6WMAg8mL8hhTTCo9Hll0hP9Q
-+ljdSslj
-=pDdF
------END PGP SIGNATURE-----
-
---=_MailMate_046CEE80-FCB0-4D68-A105-63926BAC0137_=--
