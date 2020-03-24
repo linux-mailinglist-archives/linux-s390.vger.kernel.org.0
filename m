@@ -2,216 +2,151 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 29B3B19150C
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 16:42:57 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id D585F19158A
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 17:00:20 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728034AbgCXPk2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Mar 2020 11:40:28 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:43734 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727216AbgCXPk2 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 24 Mar 2020 11:40:28 -0400
-Received: by mail-ot1-f65.google.com with SMTP id a6so17347217otb.10;
-        Tue, 24 Mar 2020 08:40:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=x91Gn6ctV7uAtmkacQ15CXSKd6r2ddccL8V3P9sMjNA=;
-        b=pfMj7row9sTrv4thwk7KfT+caqwHdG3s0euotqjGzU/BWsPbKbqETn4/g4QA0SwOnw
-         phHxte+faIoNTkFkvpxllaze69d464k7Q28h33EKHRCogupdQwfpGaWLbFFhwRLXUySN
-         +K5MO+KB57qvUERrTle7Bbws7rUYWXvDhU80Lg5y8ORS9cAsCRhvYJ2QxIENESqS6d5W
-         9xswU66yaQPNaEYHymbzuTa6lSWXSP/sG5FTqHuO7q//bZrSfe/RPOikCCf/eu3kxCPh
-         33zwkZNI4fU9csqKcTLfCF9Ul7hQu2B0s1vtQSL/GLBeH1EVz7FWFwYardutuTFpaK4g
-         xYmA==
-X-Gm-Message-State: ANhLgQ13gTc1DZVMqob/dBWdpFQT5XWnWUgr2nMpzjh6OhsgltX8FIQ7
-        JRQkI60XIz3iGjAVU+0fRjbRAlT5FLUSZPrslATkUA==
-X-Google-Smtp-Source: ADFU+vtOOAmaA25O7ZsrbfelAo4/GiymbQ4narnzwPJk3U/bOgQJEAOi/z87tKAKA8y4280wJe3a3HGwWFYAk+n4Vj8=
-X-Received: by 2002:a9d:1d07:: with SMTP id m7mr21308652otm.167.1585064427356;
- Tue, 24 Mar 2020 08:40:27 -0700 (PDT)
+        id S1728550AbgCXP7G (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Mar 2020 11:59:06 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:54841 "EHLO
+        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728513AbgCXP7E (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 24 Mar 2020 11:59:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585065543;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=g9GH0AxTxxPnTMHoFAwV0WldN4rEqKu8hLAG7FJIXO4=;
+        b=cz7NKrPL3hSddhC280qIjsg/azQAbf4v0gmP0arZklhGzG3CvHmmiecP8lSiGUPGTMYZwl
+        vl0X4ImTj2HSSP6I4OD9gF9LtOeSU+hyzhe+EYQiT29Eia1hE0o7fJwDNf1KySKkZ3KTIq
+        my0TnFDn8f5q5McRAz6wyMpdcSgisSM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-480-OPqt8yezM1qi376RPohOXA-1; Tue, 24 Mar 2020 11:58:59 -0400
+X-MC-Unique: OPqt8yezM1qi376RPohOXA-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5B4C013FC;
+        Tue, 24 Mar 2020 15:58:58 +0000 (UTC)
+Received: from gondolin (ovpn-113-109.ams2.redhat.com [10.36.113.109])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id ECE7519C70;
+        Tue, 24 Mar 2020 15:58:56 +0000 (UTC)
+Date:   Tue, 24 Mar 2020 16:58:54 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [RFC PATCH v2 2/9] vfio-ccw: Register a chp_event callback for
+ vfio-ccw
+Message-ID: <20200324165854.3d862d5b.cohuck@redhat.com>
+In-Reply-To: <459a60d1-699d-2f16-bb59-23f11b817b81@linux.ibm.com>
+References: <20200206213825.11444-1-farman@linux.ibm.com>
+        <20200206213825.11444-3-farman@linux.ibm.com>
+        <20200214131147.0a98dd7d.cohuck@redhat.com>
+        <459a60d1-699d-2f16-bb59-23f11b817b81@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200323181245.GJ4288@osiris>
-In-Reply-To: <20200323181245.GJ4288@osiris>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 24 Mar 2020 16:40:16 +0100
-Message-ID: <CAJZ5v0hzf=kQBcR=K2KL1kEVtA6oLPtLDaeeaVuWMPsXomhJHw@mail.gmail.com>
-Subject: Re: s390: removal of hibernate support
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        linux-s390@vger.kernel.org, Linux PM <linux-pm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi,
+On Fri, 14 Feb 2020 11:35:21 -0500
+Eric Farman <farman@linux.ibm.com> wrote:
 
-On Mon, Mar 23, 2020 at 7:12 PM Heiko Carstens
-<heiko.carstens@de.ibm.com> wrote:
->
-> Hi Rafael,
->
-> we are going to remove hibernate support on s390, since it is
-> - broken since many years
-> - there is no real use case which justifies keeping and maintaining
->   the code
->
-> See also https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git/commit/?h=features&id=394216275c7d503d966317da9a01ad6626a6091d
->
-> This in turn allows also to remove s390 specific hooks in generic
-> power management code (see patch below). The patch below is currently
-> also on the same features branch.
-> I silently assume(d) that you don't mind to get rid of otherwise dead
-> code, or do you have any objections?
->
-> From 086b2d78375cffe58f5341359bebec0650793811 Mon Sep 17 00:00:00 2001
-> From: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Date: Wed, 18 Mar 2020 20:55:20 +0100
-> Subject: [PATCH] PM: remove s390 specific callbacks
->
-> ARCH_SAVE_PAGE_KEYS has been introduced in order to be able to save
-> and restore s390 specific storage keys into a hibernation image.
-> With hibernation support removed from s390 there is no point in
-> keeping the callbacks.
->
-> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-> Acked-by: Peter Oberparleiter <oberpar@linux.ibm.com>
-> Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-> Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+> On 2/14/20 7:11 AM, Cornelia Huck wrote:
+> > On Thu,  6 Feb 2020 22:38:18 +0100
+> > Eric Farman <farman@linux.ibm.com> wrote:
 
-Can I take this patch or would it be better to route it differently?
+> > (...)  
+> >> @@ -257,6 +258,48 @@ static int vfio_ccw_sch_event(struct subchannel *sch, int process)
+> >>  	return rc;
+> >>  }
+> >>  
+> >> +static int vfio_ccw_chp_event(struct subchannel *sch,
+> >> +			      struct chp_link *link, int event)
+> >> +{
+> >> +	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
+> >> +	int mask = chp_ssd_get_mask(&sch->ssd_info, link);
+> >> +	int retry = 255;
+> >> +
+> >> +	if (!private || !mask)
+> >> +		return 0;
+> >> +
+> >> +	VFIO_CCW_MSG_EVENT(2, "%pUl (%x.%x.%04x): mask=0x%x event=%d\n",
+> >> +			   mdev_uuid(private->mdev), sch->schid.cssid,
+> >> +			   sch->schid.ssid, sch->schid.sch_no,
+> >> +			   mask, event);
+> >> +
+> >> +	if (cio_update_schib(sch))
+> >> +		return -ENODEV;
+> >> +
+> >> +	switch (event) {
+> >> +	case CHP_VARY_OFF:
+> >> +		/* Path logically turned off */
+> >> +		sch->opm &= ~mask;
+> >> +		sch->lpm &= ~mask;
+> >> +		break;
+> >> +	case CHP_OFFLINE:
+> >> +		/* Path is gone */
+> >> +		cio_cancel_halt_clear(sch, &retry);  
+> > 
+> > Any reason you do this only for CHP_OFFLINE and not for CHP_VARY_OFF?  
+> 
+> Hrm...  No reason that I can think of.  I can fix this.
+> 
+> >   
+> >> +		break;
+> >> +	case CHP_VARY_ON:
+> >> +		/* Path logically turned on */
+> >> +		sch->opm |= mask;
+> >> +		sch->lpm |= mask;
+> >> +		break;
+> >> +	case CHP_ONLINE:
+> >> +		/* Path became available */
+> >> +		sch->lpm |= mask & sch->opm;  
+> > 
+> > If I'm not mistaken, this patch introduces the first usage of sch->opm
+> > in the vfio-ccw code.   
+> 
+> Correct.
+> 
+> > Are we missing something?  
+> 
+> Maybe?  :)
+> 
+> >Or am I missing
+> > something? :)
+> >   
+> 
+> Since it's only used in this code, for acting as a step between
+> vary/config off/on, maybe this only needs to be dealing with the lpm
+> field itself?
 
-> ---
->  include/linux/suspend.h | 34 ----------------------------------
->  kernel/power/Kconfig    |  3 ---
->  kernel/power/snapshot.c | 18 ------------------
->  3 files changed, 55 deletions(-)
->
-> diff --git a/include/linux/suspend.h b/include/linux/suspend.h
-> index 2b2055b035ee..4fcc6fd0cbd6 100644
-> --- a/include/linux/suspend.h
-> +++ b/include/linux/suspend.h
-> @@ -566,38 +566,4 @@ static inline void queue_up_suspend_work(void) {}
->
->  #endif /* !CONFIG_PM_AUTOSLEEP */
->
-> -#ifdef CONFIG_ARCH_SAVE_PAGE_KEYS
-> -/*
-> - * The ARCH_SAVE_PAGE_KEYS functions can be used by an architecture
-> - * to save/restore additional information to/from the array of page
-> - * frame numbers in the hibernation image. For s390 this is used to
-> - * save and restore the storage key for each page that is included
-> - * in the hibernation image.
-> - */
-> -unsigned long page_key_additional_pages(unsigned long pages);
-> -int page_key_alloc(unsigned long pages);
-> -void page_key_free(void);
-> -void page_key_read(unsigned long *pfn);
-> -void page_key_memorize(unsigned long *pfn);
-> -void page_key_write(void *address);
-> -
-> -#else /* !CONFIG_ARCH_SAVE_PAGE_KEYS */
-> -
-> -static inline unsigned long page_key_additional_pages(unsigned long pages)
-> -{
-> -       return 0;
-> -}
-> -
-> -static inline int  page_key_alloc(unsigned long pages)
-> -{
-> -       return 0;
-> -}
-> -
-> -static inline void page_key_free(void) {}
-> -static inline void page_key_read(unsigned long *pfn) {}
-> -static inline void page_key_memorize(unsigned long *pfn) {}
-> -static inline void page_key_write(void *address) {}
-> -
-> -#endif /* !CONFIG_ARCH_SAVE_PAGE_KEYS */
-> -
->  #endif /* _LINUX_SUSPEND_H */
-> diff --git a/kernel/power/Kconfig b/kernel/power/Kconfig
-> index 7cbfbeacd68a..c208566c844b 100644
-> --- a/kernel/power/Kconfig
-> +++ b/kernel/power/Kconfig
-> @@ -80,9 +80,6 @@ config HIBERNATION
->
->           For more information take a look at <file:Documentation/power/swsusp.rst>.
->
-> -config ARCH_SAVE_PAGE_KEYS
-> -       bool
-> -
->  config PM_STD_PARTITION
->         string "Default resume partition"
->         depends on HIBERNATION
-> diff --git a/kernel/power/snapshot.c b/kernel/power/snapshot.c
-> index ddade80ad276..e99d13b0b8fc 100644
-> --- a/kernel/power/snapshot.c
-> +++ b/kernel/power/snapshot.c
-> @@ -1744,9 +1744,6 @@ int hibernate_preallocate_memory(void)
->         count += highmem;
->         count -= totalreserve_pages;
->
-> -       /* Add number of pages required for page keys (s390 only). */
-> -       size += page_key_additional_pages(saveable);
-> -
->         /* Compute the maximum number of saveable pages to leave in memory. */
->         max_size = (count - (size + PAGES_FOR_IO)) / 2
->                         - 2 * DIV_ROUND_UP(reserved_size, PAGE_SIZE);
-> @@ -2075,8 +2072,6 @@ static inline void pack_pfns(unsigned long *buf, struct memory_bitmap *bm)
->                 buf[j] = memory_bm_next_pfn(bm);
->                 if (unlikely(buf[j] == BM_END_OF_MAP))
->                         break;
-> -               /* Save page key for data page (s390 only). */
-> -               page_key_read(buf + j);
->         }
->  }
->
-> @@ -2226,9 +2221,6 @@ static int unpack_orig_pfns(unsigned long *buf, struct memory_bitmap *bm)
->                 if (unlikely(buf[j] == BM_END_OF_MAP))
->                         break;
->
-> -               /* Extract and buffer page key for data page (s390 only). */
-> -               page_key_memorize(buf + j);
-> -
->                 if (pfn_valid(buf[j]) && memory_bm_pfn_present(bm, buf[j]))
->                         memory_bm_set_bit(bm, buf[j]);
->                 else
-> @@ -2623,11 +2615,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
->                 if (error)
->                         return error;
->
-> -               /* Allocate buffer for page keys. */
-> -               error = page_key_alloc(nr_copy_pages);
-> -               if (error)
-> -                       return error;
-> -
->                 hibernate_restore_protection_begin();
->         } else if (handle->cur <= nr_meta_pages + 1) {
->                 error = unpack_orig_pfns(buffer, &copy_bm);
-> @@ -2649,8 +2636,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
->                 }
->         } else {
->                 copy_last_highmem_page();
-> -               /* Restore page key for data page (s390 only). */
-> -               page_key_write(handle->buffer);
->                 hibernate_restore_protect_page(handle->buffer);
->                 handle->buffer = get_buffer(&orig_bm, &ca);
->                 if (IS_ERR(handle->buffer))
-> @@ -2673,9 +2658,6 @@ int snapshot_write_next(struct snapshot_handle *handle)
->  void snapshot_write_finalize(struct snapshot_handle *handle)
->  {
->         copy_last_highmem_page();
-> -       /* Restore page key for data page (s390 only). */
-> -       page_key_write(handle->buffer);
-> -       page_key_free();
->         hibernate_restore_protect_page(handle->buffer);
->         /* Do that only if we have loaded the image entirely */
->         if (handle->cur > 1 && handle->cur > nr_meta_pages + nr_copy_pages) {
-> --
-> 2.17.1
->
+Ok, I went over this again and also looked at what the standard I/O
+subchannel driver does, and I think this is fine, as the lpm basically
+factors in the opm already. (Will need to keep this in mind for the
+following patches.)
+
+> 
+> >> +		break;
+> >> +	}
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >>  static struct css_device_id vfio_ccw_sch_ids[] = {
+> >>  	{ .match_flags = 0x1, .type = SUBCHANNEL_TYPE_IO, },
+> >>  	{ /* end of list */ },  
+> > (...)
+> >   
+> 
+
