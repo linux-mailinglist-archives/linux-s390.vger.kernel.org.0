@@ -2,104 +2,112 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 722D2191686
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 17:35:23 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 3B1E1191908
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 19:25:41 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727161AbgCXQeo (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Mar 2020 12:34:44 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:39881 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727697AbgCXQeo (ORCPT
+        id S1727672AbgCXSZa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Mar 2020 14:25:30 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39508 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728094AbgCXSZa (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 24 Mar 2020 12:34:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585067683;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=nBv8f1RRwkOGvG3E/mngEafi8ZBQtreikFX09brmDmA=;
-        b=iGtJWyW2G50fi5TzsTDlxYP0YpGrSik+UHjqG1dMArPlyIBnJqPG9Rfn5PudNcfYVJvVkD
-        hDPK2dkDAPWNIq3hs+4DDrgE5Go1DhMpVsKyPiu58IovsnVkjGIwF5wvggYpSLxos+F6iD
-        kHOYVfPA0Nup8J6PlaBIjkaO7/xXWck=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-J1MB_8hbPb-m9khWenfJXQ-1; Tue, 24 Mar 2020 12:34:39 -0400
-X-MC-Unique: J1MB_8hbPb-m9khWenfJXQ-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 70B49189D6C7;
-        Tue, 24 Mar 2020 16:34:38 +0000 (UTC)
-Received: from gondolin (ovpn-113-109.ams2.redhat.com [10.36.113.109])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id F2F1B6EF86;
-        Tue, 24 Mar 2020 16:34:36 +0000 (UTC)
-Date:   Tue, 24 Mar 2020 17:34:31 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH v2 7/9] vfio-ccw: Wire up the CRW irq and CRW region
-Message-ID: <20200324173431.6ad09436.cohuck@redhat.com>
-In-Reply-To: <75bb9119-8692-c18e-1e7b-c7598d8ef25a@linux.ibm.com>
-References: <20200206213825.11444-1-farman@linux.ibm.com>
-        <20200206213825.11444-8-farman@linux.ibm.com>
-        <20200214143400.175c9e5e.cohuck@redhat.com>
-        <75bb9119-8692-c18e-1e7b-c7598d8ef25a@linux.ibm.com>
-Organization: Red Hat GmbH
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+        Tue, 24 Mar 2020 14:25:30 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OI5nVB168017
+        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 14:25:29 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2yynky4mhc-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 14:25:24 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <jwi@linux.ibm.com>;
+        Tue, 24 Mar 2020 18:24:59 -0000
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 24 Mar 2020 18:24:56 -0000
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02OIOslg17039456
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 24 Mar 2020 18:24:54 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C4A0AA4064;
+        Tue, 24 Mar 2020 18:24:54 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8D285A405C;
+        Tue, 24 Mar 2020 18:24:54 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 24 Mar 2020 18:24:54 +0000 (GMT)
+From:   Julian Wiedmann <jwi@linux.ibm.com>
+To:     David Miller <davem@davemloft.net>
+Cc:     netdev <netdev@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        Julian Wiedmann <jwi@linux.ibm.com>
+Subject: [PATCH net-next 00/11] s390/qeth: updates 2020-03-24
+Date:   Tue, 24 Mar 2020 19:24:37 +0100
+X-Mailer: git-send-email 2.17.1
+X-TM-AS-GCONF: 00
+x-cbid: 20032418-0028-0000-0000-000003EABA12
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20032418-0029-0000-0000-000024B024E5
+Message-Id: <20200324182448.95362-1-jwi@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-24_05:2020-03-23,2020-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0
+ lowpriorityscore=0 clxscore=1015 priorityscore=1501 malwarescore=0
+ mlxscore=0 bulkscore=0 phishscore=0 adultscore=0 mlxlogscore=787
+ impostorscore=0 suspectscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003240090
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 14 Feb 2020 11:24:39 -0500
-Eric Farman <farman@linux.ibm.com> wrote:
+Hi Dave,
 
-> On 2/14/20 8:34 AM, Cornelia Huck wrote:
-> > On Thu,  6 Feb 2020 22:38:23 +0100
-> > Eric Farman <farman@linux.ibm.com> wrote:
+please apply the following patch series for qeth to netdev's net-next
+tree.
 
-> > (...)  
-> >> +static void vfio_ccw_alloc_crw(struct vfio_ccw_private *private,
-> >> +			       struct chp_link *link,
-> >> +			       unsigned int erc)
-> >> +{
-> >> +	struct vfio_ccw_crw *vc_crw;
-> >> +	struct crw *crw;
-> >> +
-> >> +	/*
-> >> +	 * If unable to allocate a CRW, just drop the event and
-> >> +	 * carry on.  The guest will either see a later one or
-> >> +	 * learn when it issues its own store subchannel.
-> >> +	 */
-> >> +	vc_crw = kzalloc(sizeof(*vc_crw), GFP_ATOMIC);
-> >> +	if (!vc_crw)
-> >> +		return;
-> >> +
-> >> +	/*
-> >> +	 * Build in the first CRW space, but don't chain anything
-> >> +	 * into the second one even though the space exists.
-> >> +	 */
-> >> +	crw = &vc_crw->crw[0];
-> >> +
-> >> +	/*
-> >> +	 * Presume every CRW we handle is reported by a channel-path.
-> >> +	 * Maybe not future-proof, but good for what we're doing now.  
-> > 
-> > You could pass in a source indication, maybe? Presumably, at least one
-> > of the callers further up the chain knows...  
-> 
-> The "chain" is the vfio_ccw_chp_event() function called off the
-> .chp_event callback, and then to this point.  So I don't think there's
-> much we can get back from our callchain, other than the CHP_xxxLINE
-> event that got us here.
+This adds
+1) NAPI poll support for the async-Completion Queue (with one qdio layer
+   patch acked by Heiko),
+2) ethtool support for per-queue TX IRQ coalescing,
+3) various cleanups.
 
-We might want to pass in CRW_RSC_CPATH, that would make it a bit more
-flexible. We can easily rearrange code internally later, though.
+Thanks,
+Julian
+
+Julian Wiedmann (11):
+  s390/qeth: simplify RX buffer tracking
+  s390/qeth: split out RX poll code
+  s390/qeth: remove redundant if-clause in RX poll code
+  s390/qdio: extend polling support to multiple queues
+  s390/qeth: simplify L3 dev_id logic
+  s390/qeth: clean up the mac_bits
+  s390/qeth: collect more TX statistics
+  s390/qeth: add TX IRQ coalescing support for IQD devices
+  s390/qeth: fine-tune MAC Address-related errnos
+  s390/qeth: keep track of fixed prio-queue configuration
+  s390/qeth: modernize two list helpers
+
+ arch/s390/include/asm/qdio.h      |  11 +-
+ drivers/s390/cio/qdio.h           |  11 +-
+ drivers/s390/cio/qdio_debug.c     |   4 +-
+ drivers/s390/cio/qdio_main.c      |  50 +++----
+ drivers/s390/cio/qdio_setup.c     |  16 +--
+ drivers/s390/cio/qdio_thinint.c   |  38 +++--
+ drivers/s390/net/qeth_core.h      |  28 ++--
+ drivers/s390/net/qeth_core_main.c | 224 ++++++++++++++++--------------
+ drivers/s390/net/qeth_core_sys.c  |   8 +-
+ drivers/s390/net/qeth_ethtool.c   |  76 ++++++++++
+ drivers/s390/net/qeth_l2_main.c   |  23 +--
+ drivers/s390/net/qeth_l3_main.c   |  30 ++--
+ 12 files changed, 299 insertions(+), 220 deletions(-)
+
+-- 
+2.17.1
 
