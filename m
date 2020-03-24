@@ -2,52 +2,50 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A0887190A45
-	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 11:09:35 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 4291C190BF7
+	for <lists+linux-s390@lfdr.de>; Tue, 24 Mar 2020 12:07:04 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726818AbgCXKJe (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 24 Mar 2020 06:09:34 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7732 "EHLO
+        id S1727112AbgCXLHC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 24 Mar 2020 07:07:02 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:5652 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727148AbgCXKJe (ORCPT
+        by vger.kernel.org with ESMTP id S1726524AbgCXLHC (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 24 Mar 2020 06:09:34 -0400
-Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OA4Dft102667
-        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 06:09:33 -0400
+        Tue, 24 Mar 2020 07:07:02 -0400
+Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02OB4AXj075241
+        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 07:07:01 -0400
 Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywfe899td-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywe7t5pn9-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 06:09:33 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 24 Mar 2020 07:07:00 -0400
 Received: from localhost
         by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 24 Mar 2020 10:09:29 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        Tue, 24 Mar 2020 11:06:57 -0000
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
         by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 24 Mar 2020 10:09:26 -0000
+        Tue, 24 Mar 2020 11:06:55 -0000
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02OA9QDS41746680
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02OB6trE58064986
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 24 Mar 2020 10:09:26 GMT
+        Tue, 24 Mar 2020 11:06:55 GMT
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 10371A4062;
-        Tue, 24 Mar 2020 10:09:26 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 26B39A405C;
+        Tue, 24 Mar 2020 11:06:55 +0000 (GMT)
 Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 70158A405F;
-        Tue, 24 Mar 2020 10:09:25 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 45FACA4054;
+        Tue, 24 Mar 2020 11:06:54 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.187.35])
         by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 24 Mar 2020 10:09:25 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH 01/10] s390x: smp: Test all CRs on initial
- reset
+        Tue, 24 Mar 2020 11:06:54 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH 10/10] s390x: Fix library constant
+ definitions
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, linux-s390@vger.kernel.org, david@redhat.com
 References: <20200324081251.28810-1-frankja@linux.ibm.com>
- <20200324081251.28810-2-frankja@linux.ibm.com>
- <fb384a50-6c38-b636-ecde-ad220aad950c@de.ibm.com>
- <c1f01ea5-219e-4680-72bd-56f68270bf9b@linux.ibm.com>
+ <20200324081251.28810-11-frankja@linux.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -92,26 +90,26 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Tue, 24 Mar 2020 11:09:25 +0100
+Date:   Tue, 24 Mar 2020 12:06:53 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <c1f01ea5-219e-4680-72bd-56f68270bf9b@linux.ibm.com>
+In-Reply-To: <20200324081251.28810-11-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20032410-0012-0000-0000-00000396C187
+x-cbid: 20032411-0012-0000-0000-00000396C93E
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20032410-0013-0000-0000-000021D3B51D
-Message-Id: <5be194c7-924d-df25-2c21-f5d3195236b3@de.ibm.com>
+x-cbparentid: 20032411-0013-0000-0000-000021D3BCFE
+Message-Id: <d7e69eff-b3b5-eb66-18bb-79d9417ba78c@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-24_02:2020-03-23,2020-03-24 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 impostorscore=0
- suspectscore=0 malwarescore=0 adultscore=0 mlxlogscore=999 clxscore=1015
- bulkscore=0 mlxscore=0 spamscore=0 lowpriorityscore=0 priorityscore=1501
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2003240050
+ definitions=2020-03-24_03:2020-03-23,2020-03-24 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
+ impostorscore=0 bulkscore=0 phishscore=0 spamscore=0 adultscore=0
+ mlxscore=0 lowpriorityscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 clxscore=1015 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-2003020000 definitions=main-2003240056
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
@@ -119,71 +117,35 @@ X-Mailing-List: linux-s390@vger.kernel.org
 
 
 
-On 24.03.20 11:08, Janosch Frank wrote:
-> On 3/24/20 10:52 AM, Christian Borntraeger wrote:
->>
->>
->> On 24.03.20 09:12, Janosch Frank wrote:
->>> All CRs are set to 0 and CRs 0 and 14 are set to pre-defined values,
->>> so we also need to test 1-13 and 15 for 0.
->>>
->>> And while we're at it, let's also set some values to cr 1, 7 and 13, so
->>> we can actually be sure that they will be zeroed.
->>>
->>> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->>> Reviewed-by: Cornelia Huck <cohuck@redhat.com>
->>> ---
->>>  s390x/smp.c | 16 +++++++++++++++-
->>>  1 file changed, 15 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/s390x/smp.c b/s390x/smp.c
->>> index fa40753524f321d4..8c9b98aabd9e8222 100644
->>> --- a/s390x/smp.c
->>> +++ b/s390x/smp.c
->>> @@ -182,16 +182,28 @@ static void test_emcall(void)
->>>  	report_prefix_pop();
->>>  }
->>>
->>> +/* Used to dirty registers of cpu #1 before it is reset */
->>> +static void test_func_initial(void)
->>> +{
->>> +	lctlg(1, 0x42000UL);
->>> +	lctlg(7, 0x43000UL);
->>> +	lctlg(13, 0x44000UL);
->>> +	set_flag(1);
->>> +}
->>> +
->>>  static void test_reset_initial(void)
->>>  {
->>>  	struct cpu_status *status = alloc_pages(0);
->>> +	uint64_t nullp[12] = {};
->>>  	struct psw psw;
->>>
->>>  	psw.mask = extract_psw_mask();
->>> -	psw.addr = (unsigned long)test_func;
->>> +	psw.addr = (unsigned long)test_func_initial;
->>>
->>>  	report_prefix_push("reset initial");
->>> +	set_flag(0);
->>>  	smp_cpu_start(1, psw);
->>> +	wait_for_flag();
->>>
->>>  	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
->>>  	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
->>> @@ -202,6 +214,8 @@ static void test_reset_initial(void)
->>>  	report(!status->fpc, "fpc");
->>>  	report(!status->cputm, "cpu timer");
->>>  	report(!status->todpr, "todpr");
->>> +	report(!memcmp(&status->crs[1], nullp, sizeof(status->crs[1]) * 12), "cr1-13 == 0");
->>> +	report(status->crs[15] == 0, "cr15 == 0");
->>>  	report_prefix_pop();
->>
->> Why not add a check for crs[0] == 0xe0 
->> and crs[14] = 0xc2000000
+On 24.03.20 09:12, Janosch Frank wrote:
+> Seems like I uppercased the whole region instead of only the ULs when
+> I added those definitions. Lets make the x lowercase again.
 > 
-> You mean the checks which are done a few lines below this?
-> This patch just actually dirties registers which should be set to 0 so
-> we can really be sure that they have been touched.
+> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
 
-Right. So feel free to add my RB. 
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> ---
+>  lib/s390x/asm/arch_def.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
+> index 15a4d49ca97c9964..1b3bb0c1e7e1b626 100644
+> --- a/lib/s390x/asm/arch_def.h
+> +++ b/lib/s390x/asm/arch_def.h
+> @@ -19,10 +19,10 @@ struct psw {
+>  #define PSW_MASK_DAT			0x0400000000000000UL
+>  #define PSW_MASK_PSTATE			0x0001000000000000UL
+>  
+> -#define CR0_EXTM_SCLP			0X0000000000000200UL
+> -#define CR0_EXTM_EXTC			0X0000000000002000UL
+> -#define CR0_EXTM_EMGC			0X0000000000004000UL
+> -#define CR0_EXTM_MASK			0X0000000000006200UL
+> +#define CR0_EXTM_SCLP			0x0000000000000200UL
+> +#define CR0_EXTM_EXTC			0x0000000000002000UL
+> +#define CR0_EXTM_EMGC			0x0000000000004000UL
+> +#define CR0_EXTM_MASK			0x0000000000006200UL
+>  
+>  struct lowcore {
+>  	uint8_t		pad_0x0000[0x0080 - 0x0000];	/* 0x0000 */
+> 
 
