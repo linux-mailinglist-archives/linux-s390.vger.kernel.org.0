@@ -2,133 +2,130 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D80B21946CC
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Mar 2020 19:51:49 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 02AA919470C
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Mar 2020 20:06:34 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728188AbgCZSvs (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Mar 2020 14:51:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48078 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727770AbgCZSvs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 26 Mar 2020 14:51:48 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02QIY78k065322;
-        Thu, 26 Mar 2020 14:51:47 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywbtkkj1h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 14:51:47 -0400
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02QIYTr3066700;
-        Thu, 26 Mar 2020 14:51:46 -0400
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2ywbtkkj10-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 14:51:46 -0400
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02QIp1ua023992;
-        Thu, 26 Mar 2020 18:51:45 GMT
-Received: from b01cxnp22033.gho.pok.ibm.com (b01cxnp22033.gho.pok.ibm.com [9.57.198.23])
-        by ppma03wdc.us.ibm.com with ESMTP id 2ywawabwhg-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Thu, 26 Mar 2020 18:51:45 +0000
-Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
-        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02QIpjGH51511744
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 26 Mar 2020 18:51:45 GMT
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1552D112061;
-        Thu, 26 Mar 2020 18:51:45 +0000 (GMT)
-Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5D31A112063;
-        Thu, 26 Mar 2020 18:51:44 +0000 (GMT)
-Received: from [9.160.3.123] (unknown [9.160.3.123])
-        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
-        Thu, 26 Mar 2020 18:51:44 +0000 (GMT)
-Subject: Re: [RFC PATCH v2 7/9] vfio-ccw: Wire up the CRW irq and CRW region
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20200206213825.11444-1-farman@linux.ibm.com>
- <20200206213825.11444-8-farman@linux.ibm.com>
- <20200214143400.175c9e5e.cohuck@redhat.com>
- <75bb9119-8692-c18e-1e7b-c7598d8ef25a@linux.ibm.com>
- <20200324173431.6ad09436.cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <49d9d798-a90b-3384-ea83-9c8e7e201203@linux.ibm.com>
-Date:   Thu, 26 Mar 2020 14:51:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1728607AbgCZTGb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Mar 2020 15:06:31 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:46273 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727345AbgCZTGb (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Mar 2020 15:06:31 -0400
+Received: by mail-oi1-f193.google.com with SMTP id q204so6503275oia.13;
+        Thu, 26 Mar 2020 12:06:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YILw0WnEbaGR/H+Uju7JRNfDS8c3EZXLZHqmGXa7a9k=;
+        b=bxm4Du0Ku+qTJOtOK7Fbfq9wbsoEugHiC1iDUwU0+vhsUasZMAlVEQUzsekw7OBtJl
+         nYCb1wExnB0qMBbUNI5P1aZmp0azlKLy8rLGK76eLPcv3zSPhVpqjLr2krZWhTXgIEvt
+         MYVLazVUCwjREVVF//JvkogdX8yRKvH1nMUlABfZWMFW6q/UgjEsEgT2/9PoiZ3E8EBd
+         c8f1+oYIgYjGCQTsEh3zHIixWMcxfmkmP6xcXG0tMue9L3YF9Z0peDIq6l7fgGfNZdeq
+         9cMF+ASlwsqjsrnAYHnnMG5u+qvZJJwKDPNuoGAj56gffYqh49qPfssxtupRpjxm/6ZZ
+         9oAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=YILw0WnEbaGR/H+Uju7JRNfDS8c3EZXLZHqmGXa7a9k=;
+        b=IGCML26v+KVaZFWU+SKIXkPk9vjZW2ZoJkBJJ+Lte5ndDQ90QzkCmHx/kgtwI61i9e
+         IUjvnsMvn8vkCxdsypMxLGzIaAa/HlocPBAJOwbxBXIH50hYpYktlmivfjwP3KWJ2IXS
+         10ZZB9QOYkfJv4e1pfA0fUTXF40YxURnIA8aVL6cfF6/o7QKA1QyqJ7pT89u62kWK8/U
+         qa1Gm0TzNZHMX/JrGjZrJv2dEt/f40mwZNfJsTcfy1D3c1J8EXmNKMeOH2TcjinADpUc
+         0NpGPRzJW3DShDJW5Zcn1x5xPO5asKoIy5UBIxsV99PUAQq20cZbU1eH8aVXjTX8xqwk
+         9gqQ==
+X-Gm-Message-State: ANhLgQ0CQaoNUatkldRiNI7cEqBi755mD3VQ6SGhAo7WT8nHusq940LA
+        OFCE4HULlWB6xyoNHD2cBMo=
+X-Google-Smtp-Source: ADFU+vu3geWzhd07vWAN5lzC7Ui7pnNBV1hZd+gVUKe22LG3DPBYFbJPjh8Khz6HE2S1xqKGCYezng==
+X-Received: by 2002:aca:170c:: with SMTP id j12mr1281904oii.50.1585249590751;
+        Thu, 26 Mar 2020 12:06:30 -0700 (PDT)
+Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
+        by smtp.gmail.com with ESMTPSA id j90sm818321otc.21.2020.03.26.12.06.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 26 Mar 2020 12:06:30 -0700 (PDT)
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
+        Ursula Braun <ubraun@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        clang-built-linux@googlegroups.com,
+        Nathan Chancellor <natechancellor@gmail.com>
+Subject: [PATCH -next] s390/ism: Remove PM support
+Date:   Thu, 26 Mar 2020 12:05:49 -0700
+Message-Id: <20200326190549.24565-1-natechancellor@gmail.com>
+X-Mailer: git-send-email 2.26.0
 MIME-Version: 1.0
-In-Reply-To: <20200324173431.6ad09436.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
- definitions=2020-03-26_10:2020-03-26,2020-03-26 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
- phishscore=0 impostorscore=0 priorityscore=1501 spamscore=0 bulkscore=0
- mlxlogscore=999 lowpriorityscore=0 clxscore=1015 adultscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003260135
+X-Patchwork-Bot: notify
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Clang warns:
 
+drivers/s390/net/ism_drv.c:570:12: warning: unused function
+'ism_suspend' [-Wunused-function]
+static int ism_suspend(struct device *dev)
+           ^
+drivers/s390/net/ism_drv.c:578:12: warning: unused function 'ism_resume'
+[-Wunused-function]
+static int ism_resume(struct device *dev)
+           ^
+2 warnings generated.
 
-On 3/24/20 12:34 PM, Cornelia Huck wrote:
-> On Fri, 14 Feb 2020 11:24:39 -0500
-> Eric Farman <farman@linux.ibm.com> wrote:
-> 
->> On 2/14/20 8:34 AM, Cornelia Huck wrote:
->>> On Thu,  6 Feb 2020 22:38:23 +0100
->>> Eric Farman <farman@linux.ibm.com> wrote:
-> 
->>> (...)  
->>>> +static void vfio_ccw_alloc_crw(struct vfio_ccw_private *private,
->>>> +			       struct chp_link *link,
->>>> +			       unsigned int erc)
->>>> +{
->>>> +	struct vfio_ccw_crw *vc_crw;
->>>> +	struct crw *crw;
->>>> +
->>>> +	/*
->>>> +	 * If unable to allocate a CRW, just drop the event and
->>>> +	 * carry on.  The guest will either see a later one or
->>>> +	 * learn when it issues its own store subchannel.
->>>> +	 */
->>>> +	vc_crw = kzalloc(sizeof(*vc_crw), GFP_ATOMIC);
->>>> +	if (!vc_crw)
->>>> +		return;
->>>> +
->>>> +	/*
->>>> +	 * Build in the first CRW space, but don't chain anything
->>>> +	 * into the second one even though the space exists.
->>>> +	 */
->>>> +	crw = &vc_crw->crw[0];
->>>> +
->>>> +	/*
->>>> +	 * Presume every CRW we handle is reported by a channel-path.
->>>> +	 * Maybe not future-proof, but good for what we're doing now.  
->>>
->>> You could pass in a source indication, maybe? Presumably, at least one
->>> of the callers further up the chain knows...  
->>
->> The "chain" is the vfio_ccw_chp_event() function called off the
->> .chp_event callback, and then to this point.  So I don't think there's
->> much we can get back from our callchain, other than the CHP_xxxLINE
->> event that got us here.
-> 
-> We might want to pass in CRW_RSC_CPATH, that would make it a bit more
-> flexible. We can easily rearrange code internally later, though.
-> 
+When CONFIG_PM is unset, SIMPLE_DEV_PM_OPS does not use the suspend or
+resume functions. Power management was recently ripped out of s390 so
+CONFIG_PM will never be set and these functions will always be unused.
 
-This is true...  I'll rearrange it so the routine takes the rsid as
-input instead of the link, as well as the rsc, so we don't have to do
-that fiddling down the road.
+Remove them so that there is no more warning.
+
+Link: https://github.com/ClangBuiltLinux/linux/950
+Fixes: 394216275c7d ("s390: remove broken hibernate / power management support")
+Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+---
+ drivers/s390/net/ism_drv.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
+
+diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
+index 4fc2056bd227..c75112ee7b97 100644
+--- a/drivers/s390/net/ism_drv.c
++++ b/drivers/s390/net/ism_drv.c
+@@ -567,31 +567,11 @@ static void ism_remove(struct pci_dev *pdev)
+ 	kfree(ism);
+ }
+ 
+-static int ism_suspend(struct device *dev)
+-{
+-	struct ism_dev *ism = dev_get_drvdata(dev);
+-
+-	ism_dev_exit(ism);
+-	return 0;
+-}
+-
+-static int ism_resume(struct device *dev)
+-{
+-	struct ism_dev *ism = dev_get_drvdata(dev);
+-
+-	return ism_dev_init(ism);
+-}
+-
+-static SIMPLE_DEV_PM_OPS(ism_pm_ops, ism_suspend, ism_resume);
+-
+ static struct pci_driver ism_driver = {
+ 	.name	  = DRV_NAME,
+ 	.id_table = ism_device_table,
+ 	.probe	  = ism_probe,
+ 	.remove	  = ism_remove,
+-	.driver	  = {
+-		.pm = &ism_pm_ops,
+-	},
+ };
+ 
+ static int __init ism_init(void)
+-- 
+2.26.0
+
