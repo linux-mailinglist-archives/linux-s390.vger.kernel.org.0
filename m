@@ -2,137 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 49BCB19471E
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Mar 2020 20:08:39 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id BE703194B2E
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Mar 2020 23:04:50 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728533AbgCZTI2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Mar 2020 15:08:28 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:37480 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726340AbgCZTI0 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Mar 2020 15:08:26 -0400
-Received: by mail-ot1-f67.google.com with SMTP id g23so7131924otq.4;
-        Thu, 26 Mar 2020 12:08:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Dl6TS6QBvWF3TrGsODa6YxrD+hVpbT53C2smrTPgLT4=;
-        b=HnfiJQjThJ5iKDAcy6e28H2bTWz3h+7ukb3iastcuVo6tsxFDsufGRswRjEd3/p4nP
-         h4kgQ3p+8D5rEY0iX23Unfqyk9+3cMD0mA+4t3vM1tewL7yK0X3EZK3uWNR1QxefKqzR
-         vmTnj89BtBQg70aZdXkIbtXiMJYNvXVwjmNPgI7kl3/vjCIbLsuKTZ+IvtAq3WnNPmbH
-         aXu5KiyDX3u3R9PyInk/GsKGqRc154RaCR09iyqc+BMb/0v8jRvQEJppjcFkflXmBYPW
-         NosMJNxZTKIHrYuJd2e68OCzTxmJxMeIQMCPayWVKvJfOhArgn8y2uFyRy9Jzxxq7h9L
-         d6hw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Dl6TS6QBvWF3TrGsODa6YxrD+hVpbT53C2smrTPgLT4=;
-        b=ZSEEdN+cMZPHeIgQ4rjYvF7f2HoN0Y4Z5v6xgKePF5/Wkx7d1wWftImSTMyRHfwfFG
-         CUoiH94vU97lvBxCbqEdRUgXCTbcRIjVJdeC4DU4erVVcalt9D+eAP6w8qH6ePm5b4hR
-         RmFAc6LvVdfCNwn+6cjvoGd5qZdKX0IBv8TO/s8lwknofBvX7hUFzl8JWkeyBpEI5T1x
-         hQSvN1e3MluGZQq7v24X/LeY7QauLcIrCbAtJQHe6YwNm4sflIzsA88BgH8hY9LoaUup
-         GSQpSrNeFeBJ+jeFVhhwFNzD06iwBCZK5Q21GNlxqHilMLBSgekB5TJVHur87zIOjJTO
-         +v0A==
-X-Gm-Message-State: ANhLgQ0AIOCoa1CPC/11HBJrE2RP9f6WD3dmq8k1eYoY7/brF2RBoVux
-        s0JlCDAuYSKJV7Vh8ufQ+k0=
-X-Google-Smtp-Source: ADFU+vtYZRmmt0In5RYpSvpVD083+w/cBX+H9dJu7UD4BodQKsSWRXJ0hd/9OtAdrf3Eq2lmTqUtHg==
-X-Received: by 2002:a4a:3bd7:: with SMTP id s206mr6363529oos.89.1585249705771;
-        Thu, 26 Mar 2020 12:08:25 -0700 (PDT)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id 76sm823838otg.68.2020.03.26.12.08.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 12:08:25 -0700 (PDT)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1726363AbgCZWEu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Mar 2020 18:04:50 -0400
+Received: from aserp2120.oracle.com ([141.146.126.78]:40104 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726270AbgCZWEt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Mar 2020 18:04:49 -0400
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QLn98F086088;
+        Thu, 26 Mar 2020 21:56:24 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=jJlpHWqDgAaQnn+x/AibIAVJw425RNnEJVeE/H96C6Q=;
+ b=DkZIPKkvMhi7MgJ7A6372ctDD6ur875QCwmr9LjM6f/gcN5OLsYztXi/9wp7FD338Eh1
+ BcpAaYJlJsPca1+YzPWnvyZLl0/l9jzlAO26D9M2lRz/YnxIOtavH2bdzDl78rbNS7QS
+ w/70j06rpqsxG+rvW1byAPFer6qmmn6ntz8ZtvxuNNNNHPQ6CcnDnqC0fhG48N9veZVg
+ BCfsiKmD0CdRGaJja5RXf7JXI4W1+6Wfb9/4o4noftsF2yrL4eKSp0J70hpbbeGCvHbP
+ j84RfZbN8C8lsTDgCFGpBO0ICKX/8T12IimZxxtb9mIqtc54TXgPLYw1Bv1mXgDOPyi2 vQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2ywavmjcja-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 21:56:24 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 02QLpI7M027652;
+        Thu, 26 Mar 2020 21:56:24 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2yxw4ufgb2-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 26 Mar 2020 21:56:23 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id 02QLuAlh008996;
+        Thu, 26 Mar 2020 21:56:10 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 26 Mar 2020 14:56:10 -0700
+Subject: Re: [PATCH 1/4] hugetlbfs: add arch_hugetlb_valid_size
+To:     Dave Hansen <dave.hansen@intel.com>, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
-        Ursula Braun <ubraun@linux.ibm.com>,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH -next v2] s390/ism: Remove PM support
-Date:   Thu, 26 Mar 2020 12:07:44 -0700
-Message-Id: <20200326190741.24687-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.26.0
-In-Reply-To: <20200326190549.24565-1-natechancellor@gmail.com>
-References: <20200326190549.24565-1-natechancellor@gmail.com>
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200318220634.32100-1-mike.kravetz@oracle.com>
+ <20200318220634.32100-2-mike.kravetz@oracle.com>
+ <831a0773-1ba6-4d72-44b9-7472123b8528@intel.com>
+ <5aceea6a-8dc0-a44b-80c6-94511b5c75ca@oracle.com>
+ <1c8b16c7-248e-b75f-96c6-eabc953c5066@intel.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <530e6e11-ad1a-55bc-e61e-9da6eb7fea21@oracle.com>
+Date:   Thu, 26 Mar 2020 14:56:07 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <1c8b16c7-248e-b75f-96c6-eabc953c5066@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 malwarescore=0 suspectscore=2
+ spamscore=0 mlxlogscore=999 adultscore=0 phishscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003260159
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9572 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 adultscore=0 malwarescore=0
+ priorityscore=1501 mlxscore=0 bulkscore=0 clxscore=1011 impostorscore=0
+ phishscore=0 suspectscore=2 mlxlogscore=999 spamscore=0 lowpriorityscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003260159
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Clang warns:
+On 3/18/20 4:36 PM, Dave Hansen wrote:
+> On 3/18/20 3:52 PM, Mike Kravetz wrote:
+>> Sounds good.  I'll incorporate those changes into a v2, unless someone
+>> else with has a different opinion.
+>>
+>> BTW, this patch should not really change the way the code works today.
+>> It is mostly a movement of code.  Unless I am missing something, the
+>> existing code will always allow setup of PMD_SIZE hugetlb pages.
+> 
+> Hah, I totally skipped over the old code in the diff.
+> 
+> It looks like we'll disable hugetblfs *entirely* if PSE isn't supported.
+>  I think this is actually wrong, but nobody ever noticed.  I think you'd
+> have to be running as a guest under a hypervisor that's lying about PSE
+> not being supported *and* care about 1GB pages.  Nobody does that.
 
-drivers/s390/net/ism_drv.c:570:12: warning: unused function
-'ism_suspend' [-Wunused-function]
-static int ism_suspend(struct device *dev)
-           ^
-drivers/s390/net/ism_drv.c:578:12: warning: unused function 'ism_resume'
-[-Wunused-function]
-static int ism_resume(struct device *dev)
-           ^
-2 warnings generated.
+Actually, !PSE will disable hugetlbfs a little later in the boot process.
+You are talking about hugepages_supported() correct?
 
-When CONFIG_PM is unset, SIMPLE_DEV_PM_OPS does not use the suspend or
-resume functions. Power management was recently ripped out of s390 so
-CONFIG_PM will never be set and these functions will always be unused.
+I think something really bad could happen in this situation (!PSE and
+X86_FEATURE_GBPAGES).  When parsing 'hugepages=' for gigantic pages we
+immediately allocate from bootmem.  This happens before later checks in
+hugetlb_init for hugepages_supported().  So, I think we would end up
+allocating GB pages from bootmem and not be able to use or free them. :(
 
-Remove them so that there is no more warning.
+Perhaps it would be best to check hugepages_supported() when parsing
+hugetlb command line options.  If not enabled, throw an error.  This
+will be much easier to do after moving all command line parsing to
+arch independent code.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/950
-Fixes: 394216275c7d ("s390: remove broken hibernate / power management support")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
-
-v1 -> v2:
-
-* Fix issue link in commit message...
-
- drivers/s390/net/ism_drv.c | 20 --------------------
- 1 file changed, 20 deletions(-)
-
-diff --git a/drivers/s390/net/ism_drv.c b/drivers/s390/net/ism_drv.c
-index 4fc2056bd227..c75112ee7b97 100644
---- a/drivers/s390/net/ism_drv.c
-+++ b/drivers/s390/net/ism_drv.c
-@@ -567,31 +567,11 @@ static void ism_remove(struct pci_dev *pdev)
- 	kfree(ism);
- }
- 
--static int ism_suspend(struct device *dev)
--{
--	struct ism_dev *ism = dev_get_drvdata(dev);
--
--	ism_dev_exit(ism);
--	return 0;
--}
--
--static int ism_resume(struct device *dev)
--{
--	struct ism_dev *ism = dev_get_drvdata(dev);
--
--	return ism_dev_init(ism);
--}
--
--static SIMPLE_DEV_PM_OPS(ism_pm_ops, ism_suspend, ism_resume);
--
- static struct pci_driver ism_driver = {
- 	.name	  = DRV_NAME,
- 	.id_table = ism_device_table,
- 	.probe	  = ism_probe,
- 	.remove	  = ism_remove,
--	.driver	  = {
--		.pm = &ism_pm_ops,
--	},
- };
- 
- static int __init ism_init(void)
+Is that a sufficient way to address this concern?  I think it is a good
+change in any case.
 -- 
-2.26.0
-
+Mike Kravetz
