@@ -2,108 +2,118 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 90FC21938D8
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Mar 2020 07:49:08 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 252F4193C6A
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Mar 2020 10:58:53 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726338AbgCZGtG (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Mar 2020 02:49:06 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:56695 "EHLO
+        id S1727796AbgCZJ6w (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Mar 2020 05:58:52 -0400
+Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:57797 "EHLO
         us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726175AbgCZGtF (ORCPT
+        by vger.kernel.org with ESMTP id S1727699AbgCZJ6w (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 26 Mar 2020 02:49:05 -0400
+        Thu, 26 Mar 2020 05:58:52 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585205344;
+        s=mimecast20190719; t=1585216730;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=daV7nts9VUWz145xdDcmvCz2hORC30Bg7fJYrEUh55M=;
-        b=S6saloZ6aPwHWih+muP+2BRqM7svp3/HjdfV5F7Vcld2zWSQM4kg1xBNkkWoGPC9q5BibU
-        UJxy7P/DCTtiEqb8RsISOIBKum/DVYBaB7xIj+Hbh7m8KXWW3CPIdjdsvsVxQIxvZeiWsT
-        BMOVJaLcf5GaxYSHwbdcdPq442DdbgA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-161-XR0YdQPqPgeUnvTBV3umqA-1; Thu, 26 Mar 2020 02:48:05 -0400
-X-MC-Unique: XR0YdQPqPgeUnvTBV3umqA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A9EC1107ACC4;
-        Thu, 26 Mar 2020 06:48:03 +0000 (UTC)
-Received: from gondolin (ovpn-112-191.ams2.redhat.com [10.36.112.191])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E4C859CA3;
-        Thu, 26 Mar 2020 06:48:01 +0000 (UTC)
-Date:   Thu, 26 Mar 2020 07:47:59 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-Subject: Re: [RFC PATCH v2 2/9] vfio-ccw: Register a chp_event callback for
- vfio-ccw
-Message-ID: <20200326074759.5808c945.cohuck@redhat.com>
-In-Reply-To: <302a0650-99b0-22ef-b95d-cecdeb0f9f04@linux.ibm.com>
-References: <20200206213825.11444-1-farman@linux.ibm.com>
-        <20200206213825.11444-3-farman@linux.ibm.com>
-        <20200214131147.0a98dd7d.cohuck@redhat.com>
-        <459a60d1-699d-2f16-bb59-23f11b817b81@linux.ibm.com>
-        <20200324165854.3d862d5b.cohuck@redhat.com>
-        <302a0650-99b0-22ef-b95d-cecdeb0f9f04@linux.ibm.com>
-Organization: Red Hat GmbH
+        bh=mu5k/muTMFikZ1Us7/EnXaPhY0MlU2ypQjlH90iIurc=;
+        b=Zs/upUzqPKCW7e6JWh5TjBtC5F9lRe0rW708sYOuwbdqmw3+FFwhEAKK4sATl54wo6BmdN
+        ji/oOG1UoCkbWxKC6FjyWuiwpeaqevhnA9z7Km4qPlmimsA+sXTGeyrq6Bjx26I+OySVXg
+        /ScUt0HeQ/chL6mC/wDmo73elpKdQLg=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-158-VZehuTV4OXqb5XVGDRICGw-1; Thu, 26 Mar 2020 05:58:49 -0400
+X-MC-Unique: VZehuTV4OXqb5XVGDRICGw-1
+Received: by mail-wr1-f69.google.com with SMTP id o18so2780302wrx.9
+        for <linux-s390@vger.kernel.org>; Thu, 26 Mar 2020 02:58:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=mu5k/muTMFikZ1Us7/EnXaPhY0MlU2ypQjlH90iIurc=;
+        b=ZCDN0mOcf6HMwWsx/GKuVRMfJ4rrpb9wJHla0IN9/yIPwFcx2T5EErk9LxGjVrO+Pi
+         jxs05Zr4Sx3I4sdd5GB6D+qSzkgSFDTLLdTRhplSBfcqiZ9Pf73etq91M41SjIt5eU6d
+         /L1KFcoMGdmoVpISPhxtSKTdwshVVYXyNupdth7zzB5YQrhpvsIxjXGvJj6Oh9EyxTmX
+         4hlNEqjL6aNFnI0GNa8aTud0tEFcf8Gxgijh3wE5013wtGsxwrm0DYRhO7ZL1TU6VxwT
+         R7WJ0buAol9BpjnSwiO0K0+tcpsW7kkXDVy8W6VCSdmTcVuXKxHPL5J2+1i2Mxe7+Ybh
+         hTDg==
+X-Gm-Message-State: ANhLgQ2FAfmxeipyaz9CNVc3vVBv78MVZBzMiyK+k1SrcwPyOARUhdyh
+        eC4YkcUCcuh4DXZcz43JK+3g0PqgMjOfh4qvblqQp/NlUiR/n8tKnWJpAwGKfha733jCJkg5s0z
+        AXAqon/aMXbk54DhFiPi2UA==
+X-Received: by 2002:adf:f0c5:: with SMTP id x5mr8476848wro.415.1585216727618;
+        Thu, 26 Mar 2020 02:58:47 -0700 (PDT)
+X-Google-Smtp-Source: ADFU+vtUuqzsVOQscsCsoJwZd9JlTbWvDJQ9qZyiEHXOIIM9um2wuL1QZxJ2xekHIC4yr7TeXRS0lw==
+X-Received: by 2002:adf:f0c5:: with SMTP id x5mr8476820wro.415.1585216727315;
+        Thu, 26 Mar 2020 02:58:47 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:e4f4:3c00:2b79:d6dc? ([2001:b07:6468:f312:e4f4:3c00:2b79:d6dc])
+        by smtp.gmail.com with ESMTPSA id k126sm2891486wme.4.2020.03.26.02.58.46
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 26 Mar 2020 02:58:46 -0700 (PDT)
+Subject: Re: [GIT PULL 0/2] KVM: s390: changes for 5.7 part 2
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>
+References: <20200324125030.323689-1-borntraeger@de.ibm.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <e6977ffb-e4e5-1f3d-3db2-55742bacaa1d@redhat.com>
+Date:   Thu, 26 Mar 2020 10:58:46 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200324125030.323689-1-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 25 Mar 2020 22:09:40 -0400
-Eric Farman <farman@linux.ibm.com> wrote:
-
-> On 3/24/20 11:58 AM, Cornelia Huck wrote:
-> > On Fri, 14 Feb 2020 11:35:21 -0500
-> > Eric Farman <farman@linux.ibm.com> wrote:
-> >   
-> >> On 2/14/20 7:11 AM, Cornelia Huck wrote:  
-> >>> On Thu,  6 Feb 2020 22:38:18 +0100
-> >>> Eric Farman <farman@linux.ibm.com> wrote:  
-
-> >>>> +	case CHP_ONLINE:
-> >>>> +		/* Path became available */
-> >>>> +		sch->lpm |= mask & sch->opm;    
-> >>>
-> >>> If I'm not mistaken, this patch introduces the first usage of sch->opm
-> >>> in the vfio-ccw code.     
-> >>
-> >> Correct.
-> >>  
-> >>> Are we missing something?    
-> >>
-> >> Maybe?  :)
-> >>  
-> >>> Or am I missing
-> >>> something? :)
-> >>>     
-> >>
-> >> Since it's only used in this code, for acting as a step between
-> >> vary/config off/on, maybe this only needs to be dealing with the lpm
-> >> field itself?  
-> > 
-> > Ok, I went over this again and also looked at what the standard I/O
-> > subchannel driver does, and I think this is fine, as the lpm basically
-> > factors in the opm already. (Will need to keep this in mind for the
-> > following patches.)  
+On 24/03/20 13:50, Christian Borntraeger wrote:
+> Paolo,
 > 
-> Just to make sure I don't misunderstand, when you say "I think this is
-> fine" ... Do you mean keeping the opm field within vfio-ccw, as this
-> patch does?  Or removing it, and only adjusting the lpm within vfio-ccw,
-> as I suggested in my response just above?
+> two more patches for 5.7.
+> 
+> The following changes since commit cc674ef252f4750bdcea1560ff491081bb960954:
+> 
+>   KVM: s390: introduce module parameter kvm.use_gisa (2020-02-27 19:47:13 +0100)
+> 
+> are available in the Git repository at:
+> 
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.7-2
+> 
+> for you to fetch changes up to f3dd18d444c757840920434e62809b6104081b06:
+> 
+>   KVM: s390: mark sie block as 512 byte aligned (2020-03-23 18:30:33 +0100)
+> 
+> ----------------------------------------------------------------
+> KVM: s390: cleanups for 5.7
+> 
+> - mark sie control block as 512 byte aligned
+> - use fallthrough;
+> 
+> ----------------------------------------------------------------
+> Christian Borntraeger (1):
+>       KVM: s390: mark sie block as 512 byte aligned
+> 
+> Joe Perches (1):
+>       KVM: s390: Use fallthrough;
+> 
+>  arch/s390/include/asm/kvm_host.h |  2 +-
+>  arch/s390/kvm/gaccess.c          | 23 +++++++++++++----------
+>  arch/s390/kvm/interrupt.c        |  2 +-
+>  arch/s390/kvm/kvm-s390.c         |  4 ++--
+>  arch/s390/mm/gmap.c              |  6 +++---
+>  5 files changed, 20 insertions(+), 17 deletions(-)
+> 
 
-I meant the code change done in this patch: We update the lpm whenever
-the opm is changed, and use the lpm. I'd like to keep the opm separate,
-just so that we are clear where each value comes from.
+Pulled, thanks.
+
+Paolo
 
