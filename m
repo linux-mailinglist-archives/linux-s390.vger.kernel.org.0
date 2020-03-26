@@ -2,48 +2,48 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 02AA919470C
-	for <lists+linux-s390@lfdr.de>; Thu, 26 Mar 2020 20:06:34 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 49BCB19471E
+	for <lists+linux-s390@lfdr.de>; Thu, 26 Mar 2020 20:08:39 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728607AbgCZTGb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 26 Mar 2020 15:06:31 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:46273 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727345AbgCZTGb (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Mar 2020 15:06:31 -0400
-Received: by mail-oi1-f193.google.com with SMTP id q204so6503275oia.13;
-        Thu, 26 Mar 2020 12:06:31 -0700 (PDT)
+        id S1728533AbgCZTI2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 26 Mar 2020 15:08:28 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37480 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726340AbgCZTI0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 26 Mar 2020 15:08:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id g23so7131924otq.4;
+        Thu, 26 Mar 2020 12:08:26 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YILw0WnEbaGR/H+Uju7JRNfDS8c3EZXLZHqmGXa7a9k=;
-        b=bxm4Du0Ku+qTJOtOK7Fbfq9wbsoEugHiC1iDUwU0+vhsUasZMAlVEQUzsekw7OBtJl
-         nYCb1wExnB0qMBbUNI5P1aZmp0azlKLy8rLGK76eLPcv3zSPhVpqjLr2krZWhTXgIEvt
-         MYVLazVUCwjREVVF//JvkogdX8yRKvH1nMUlABfZWMFW6q/UgjEsEgT2/9PoiZ3E8EBd
-         c8f1+oYIgYjGCQTsEh3zHIixWMcxfmkmP6xcXG0tMue9L3YF9Z0peDIq6l7fgGfNZdeq
-         9cMF+ASlwsqjsrnAYHnnMG5u+qvZJJwKDPNuoGAj56gffYqh49qPfssxtupRpjxm/6ZZ
-         9oAw==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=Dl6TS6QBvWF3TrGsODa6YxrD+hVpbT53C2smrTPgLT4=;
+        b=HnfiJQjThJ5iKDAcy6e28H2bTWz3h+7ukb3iastcuVo6tsxFDsufGRswRjEd3/p4nP
+         h4kgQ3p+8D5rEY0iX23Unfqyk9+3cMD0mA+4t3vM1tewL7yK0X3EZK3uWNR1QxefKqzR
+         vmTnj89BtBQg70aZdXkIbtXiMJYNvXVwjmNPgI7kl3/vjCIbLsuKTZ+IvtAq3WnNPmbH
+         aXu5KiyDX3u3R9PyInk/GsKGqRc154RaCR09iyqc+BMb/0v8jRvQEJppjcFkflXmBYPW
+         NosMJNxZTKIHrYuJd2e68OCzTxmJxMeIQMCPayWVKvJfOhArgn8y2uFyRy9Jzxxq7h9L
+         d6hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YILw0WnEbaGR/H+Uju7JRNfDS8c3EZXLZHqmGXa7a9k=;
-        b=IGCML26v+KVaZFWU+SKIXkPk9vjZW2ZoJkBJJ+Lte5ndDQ90QzkCmHx/kgtwI61i9e
-         IUjvnsMvn8vkCxdsypMxLGzIaAa/HlocPBAJOwbxBXIH50hYpYktlmivfjwP3KWJ2IXS
-         10ZZB9QOYkfJv4e1pfA0fUTXF40YxURnIA8aVL6cfF6/o7QKA1QyqJ7pT89u62kWK8/U
-         qa1Gm0TzNZHMX/JrGjZrJv2dEt/f40mwZNfJsTcfy1D3c1J8EXmNKMeOH2TcjinADpUc
-         0NpGPRzJW3DShDJW5Zcn1x5xPO5asKoIy5UBIxsV99PUAQq20cZbU1eH8aVXjTX8xqwk
-         9gqQ==
-X-Gm-Message-State: ANhLgQ0CQaoNUatkldRiNI7cEqBi755mD3VQ6SGhAo7WT8nHusq940LA
-        OFCE4HULlWB6xyoNHD2cBMo=
-X-Google-Smtp-Source: ADFU+vu3geWzhd07vWAN5lzC7Ui7pnNBV1hZd+gVUKe22LG3DPBYFbJPjh8Khz6HE2S1xqKGCYezng==
-X-Received: by 2002:aca:170c:: with SMTP id j12mr1281904oii.50.1585249590751;
-        Thu, 26 Mar 2020 12:06:30 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=Dl6TS6QBvWF3TrGsODa6YxrD+hVpbT53C2smrTPgLT4=;
+        b=ZSEEdN+cMZPHeIgQ4rjYvF7f2HoN0Y4Z5v6xgKePF5/Wkx7d1wWftImSTMyRHfwfFG
+         CUoiH94vU97lvBxCbqEdRUgXCTbcRIjVJdeC4DU4erVVcalt9D+eAP6w8qH6ePm5b4hR
+         RmFAc6LvVdfCNwn+6cjvoGd5qZdKX0IBv8TO/s8lwknofBvX7hUFzl8JWkeyBpEI5T1x
+         hQSvN1e3MluGZQq7v24X/LeY7QauLcIrCbAtJQHe6YwNm4sflIzsA88BgH8hY9LoaUup
+         GSQpSrNeFeBJ+jeFVhhwFNzD06iwBCZK5Q21GNlxqHilMLBSgekB5TJVHur87zIOjJTO
+         +v0A==
+X-Gm-Message-State: ANhLgQ0AIOCoa1CPC/11HBJrE2RP9f6WD3dmq8k1eYoY7/brF2RBoVux
+        s0JlCDAuYSKJV7Vh8ufQ+k0=
+X-Google-Smtp-Source: ADFU+vtYZRmmt0In5RYpSvpVD083+w/cBX+H9dJu7UD4BodQKsSWRXJ0hd/9OtAdrf3Eq2lmTqUtHg==
+X-Received: by 2002:a4a:3bd7:: with SMTP id s206mr6363529oos.89.1585249705771;
+        Thu, 26 Mar 2020 12:08:25 -0700 (PDT)
 Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id j90sm818321otc.21.2020.03.26.12.06.28
+        by smtp.gmail.com with ESMTPSA id 76sm823838otg.68.2020.03.26.12.08.23
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 26 Mar 2020 12:06:30 -0700 (PDT)
+        Thu, 26 Mar 2020 12:08:25 -0700 (PDT)
 From:   Nathan Chancellor <natechancellor@gmail.com>
 To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
@@ -53,10 +53,12 @@ Cc:     Julian Wiedmann <jwi@linux.ibm.com>,
         linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
         clang-built-linux@googlegroups.com,
         Nathan Chancellor <natechancellor@gmail.com>
-Subject: [PATCH -next] s390/ism: Remove PM support
-Date:   Thu, 26 Mar 2020 12:05:49 -0700
-Message-Id: <20200326190549.24565-1-natechancellor@gmail.com>
+Subject: [PATCH -next v2] s390/ism: Remove PM support
+Date:   Thu, 26 Mar 2020 12:07:44 -0700
+Message-Id: <20200326190741.24687-1-natechancellor@gmail.com>
 X-Mailer: git-send-email 2.26.0
+In-Reply-To: <20200326190549.24565-1-natechancellor@gmail.com>
+References: <20200326190549.24565-1-natechancellor@gmail.com>
 MIME-Version: 1.0
 X-Patchwork-Bot: notify
 Content-Transfer-Encoding: 8bit
@@ -83,10 +85,15 @@ CONFIG_PM will never be set and these functions will always be unused.
 
 Remove them so that there is no more warning.
 
-Link: https://github.com/ClangBuiltLinux/linux/950
+Link: https://github.com/ClangBuiltLinux/linux/issues/950
 Fixes: 394216275c7d ("s390: remove broken hibernate / power management support")
 Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 ---
+
+v1 -> v2:
+
+* Fix issue link in commit message...
+
  drivers/s390/net/ism_drv.c | 20 --------------------
  1 file changed, 20 deletions(-)
 
