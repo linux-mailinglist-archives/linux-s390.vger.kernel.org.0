@@ -2,141 +2,141 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D79F8195A9E
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2020 17:08:28 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 03763195B7B
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2020 17:50:36 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727706AbgC0QIZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 27 Mar 2020 12:08:25 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41063 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbgC0QIY (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 27 Mar 2020 12:08:24 -0400
-Received: by mail-pg1-f193.google.com with SMTP id b1so4774996pgm.8;
-        Fri, 27 Mar 2020 09:08:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v3WW2gICCRcfa0oGxmZ+LfSQn5AikLIQ+ZRnRYdwUfA=;
-        b=an6bUaMWa/gge8dt35mNz51d8Pj8Aa/qVvKR0POiYMe4zuNsTFMbWsDqtJpu8Vfgps
-         HodQ817xNYHI9SLLHcYrsshSCnFQVPdRz5miPel3a6dQh30+182sG4GpKzSYGg0Moaql
-         oICMZDkEloRd8GN1T9OAdis5YEzicvSdRi2cwTkeLqxIisdfp6u4WrF2upjoOm0b/Nqv
-         xJs9hkC3swEZG36oeWhAa8kBkb2p598PAhHmrKt9TC86LDUy19H7w13AsSWaFeOMFBw1
-         1kiJmtgBbfIhYEZfNNWHTKYdN5NFa73OW2vgKUh7ekKVHy/s1yLOWQQExWS6RBTI4i5f
-         lubA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v3WW2gICCRcfa0oGxmZ+LfSQn5AikLIQ+ZRnRYdwUfA=;
-        b=K61t+aL22V7z1zCxdy92iLEGfcUUfCcui1nXRjhlhBoF1i5bSiZeUHJHo9tj8E3hl7
-         LkfP1UHq6zAWyukKSnmDoWQTb2yZrra+7+orFlf/8phatZvSEc7pQjNcOeAdyBTCb1y6
-         IhuKSgp++nxg6di5pN8GCuKkAZhlw9fp7Td3Lqfr5w+nMRQdLyxPHMKR29SWvVUjhJ8u
-         KM5b+m29XY3GGJbeEYgD0GcJ292B3HsiMUi15O2xGS7FQMVnNnCv5TnoJeHcfiL/xGDE
-         AvNCTKvVXOnoWxUGyLgLhfXf1T5W5Vt6svfYf4q1S3rQ8N8kaoK9bCv7okpY4oL/5JOk
-         3qgw==
-X-Gm-Message-State: ANhLgQ3vw/FfWuBbGxGGxSE2ZiBjUx8kOAWKqaEKYZYl9EBGZhw3jGAy
-        sz3DwZrD1BEUqvJS4J1F57A=
-X-Google-Smtp-Source: ADFU+vs5xl4PN9llzz39JwJNhgmk9dgWBu5u30cb77PT2OtFyYrOeXBrJPUM82BlUm8kk65OLbcqNQ==
-X-Received: by 2002:aa7:947d:: with SMTP id t29mr14654589pfq.184.1585325301244;
-        Fri, 27 Mar 2020 09:08:21 -0700 (PDT)
-Received: from localhost ([49.207.55.57])
-        by smtp.gmail.com with ESMTPSA id v185sm4391917pfv.32.2020.03.27.09.08.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Fri, 27 Mar 2020 09:08:20 -0700 (PDT)
-Date:   Fri, 27 Mar 2020 21:38:18 +0530
-From:   afzal mohammed <afzal.mohd.ma@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, x86@kernel.org,
-        linux-sh@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-parisc@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-m68k@lists.linux-m68k.org,
-        linux-ia64@vger.kernel.org, linux-hexagon@vger.kernel.org,
-        linux-c6x-dev@linux-c6x.org, linux-omap@vger.kernel.org,
-        linux-alpha@vger.kernel.org
-Subject: [PATCH 0/6] Kill setup_irq()
-Message-ID: <cover.1585320721.git.afzal.mohd.ma@gmail.com>
-References: <20200321174303.GA7930@afzalpc>
+        id S1727185AbgC0QuY (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 27 Mar 2020 12:50:24 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:22972 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727242AbgC0QuW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 27 Mar 2020 12:50:22 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02RGXcZx044218
+        for <linux-s390@vger.kernel.org>; Fri, 27 Mar 2020 12:50:21 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 300jevhk3q-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Fri, 27 Mar 2020 12:50:21 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <oberpar@linux.ibm.com>;
+        Fri, 27 Mar 2020 16:50:18 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Fri, 27 Mar 2020 16:50:15 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02RGoEdp48693478
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 16:50:14 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 54017A4051;
+        Fri, 27 Mar 2020 16:50:14 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7F055A404D;
+        Fri, 27 Mar 2020 16:50:11 +0000 (GMT)
+Received: from [9.211.88.160] (unknown [9.211.88.160])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Mar 2020 16:50:11 +0000 (GMT)
+Subject: Re: [PATCH 1/2] s390/cio: avoid duplicated 'ADD' uevents
+To:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>
+References: <20200327124503.9794-1-cohuck@redhat.com>
+ <20200327124503.9794-2-cohuck@redhat.com>
+From:   Peter Oberparleiter <oberpar@linux.ibm.com>
+Date:   Fri, 27 Mar 2020 17:50:10 +0100
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200321174303.GA7930@afzalpc>
-User-Agent: Mutt/1.9.3 (2018-01-21)
+In-Reply-To: <20200327124503.9794-2-cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20032716-0028-0000-0000-000003ECF2AE
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20032716-0029-0000-0000-000024B26BA4
+Message-Id: <0301bea5-521f-21bc-f641-d0f256ddb385@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_05:2020-03-27,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ adultscore=0 phishscore=0 suspectscore=1 mlxlogscore=999 bulkscore=0
+ lowpriorityscore=0 priorityscore=1501 impostorscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270145
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Thomas,
+On 27.03.2020 13:45, Cornelia Huck wrote:
+> The common I/O layer delays the ADD uevent for subchannels and
+> delegates generating this uevent to the individual subchannel
+> drivers. The io_subchannel driver will do so when the associated
+> ccw_device has been registered -- but unconditionally, so more
+> ADD uevents will be generated if a subchannel has been unbound
+> from the io_subchannel driver and later rebound.
+> 
+> To fix this, only generate the ADD event if uevents were still
+> suppressed for the device.
+> 
+> Reported-by: Boris Fiuczynski <fiuczy@linux.ibm.com>
+> Fixes: fa1a8c23eb7d ("s390: cio: Delay uevents for subchannels")
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
 
-As compared to the situation mentioned earlier[1], now powerpc patch is
-also in -next, and the pending ARM patches has been picked up by ARM SoC
-maintainers today and is expected to show up in next -next. All other
-subsytem patches has been picked by relevant maintainers & are already
-in -next except alpha, c6x, hexagon, unicore32 & sh.
+Please also add Vineeth on cc of future patches against core CIO code.
 
-As it is the case, i am sending you patches for the above 5
-architecture's plus the core removal patch.
+This patch looks sane and makes handling of suppressed UDEV events
+consistent to what is already implemented for CHSC and EADM subchannel
+types.
 
-Status of 5 arch's:
--------------------
-alpha:		received ack from Matt Turner, build test success
-c6x:		did receive ack from Mark Salter in v1, the final
-		 version (v3) was with minor changes, hence removed his
-		 ack & cc'ed him, build test success
-hexagon:	build test success
-unicore32:	couldn't get toolchain from kernel.org, 0day test robot
-		 or Segher's buildall
-sh:		To compile the relevant changes sh64 compiler is
-		 required, couldn't get it from above mentioned 3
-		 sources.
+Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
 
-Note 1: sh toolchain is available, but that will not make the
- relevant changes compile as it has dependency of 64bit arch toolchain,
- did try a Kconfig hack to make it compile w/ 32bit sh toolchain, but it
- failed due to other reasons (unknown operands), so gave up on that.
-Note 2: hexagon final image creation fails even w/o my patch, but it
- has been ensured that w/ my changes relevant object files are getting
- built  w/o warnings.
+> ---
+>  drivers/s390/cio/device.c | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+> index 0c6245fc7706..983f9c9e08de 100644
+> --- a/drivers/s390/cio/device.c
+> +++ b/drivers/s390/cio/device.c
+> @@ -849,8 +849,10 @@ static void io_subchannel_register(struct ccw_device *cdev)
+>  	 * Now we know this subchannel will stay, we can throw
+>  	 * our delayed uevent.
+>  	 */
+> -	dev_set_uevent_suppress(&sch->dev, 0);
+> -	kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
+> +	if (dev_get_uevent_suppress(&sch->dev)) {
+> +		dev_set_uevent_suppress(&sch->dev, 0);
+> +		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
+> +	}
+>  	/* make it known to the system */
+>  	ret = ccw_device_add(cdev);
+>  	if (ret) {
+> @@ -1058,8 +1060,11 @@ static int io_subchannel_probe(struct subchannel *sch)
+>  		 * Throw the delayed uevent for the subchannel, register
+>  		 * the ccw_device and exit.
+>  		 */
+> -		dev_set_uevent_suppress(&sch->dev, 0);
+> -		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
+> +		if (dev_get_uevent_suppress(&sch->dev)) {
+> +			/* should always be the case for the console */
+> +			dev_set_uevent_suppress(&sch->dev, 0);
+> +			kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
+> +		}
+>  		cdev = sch_get_cdev(sch);
+>  		rc = ccw_device_add(cdev);
+>  		if (rc) {
+> 
 
-Regards
-afzal
-
-[1] https://lkml.kernel.org/r/20200321172626.GA6323@afzalpc
-
-afzal mohammed (6):
-  alpha: Replace setup_irq() by request_irq()
-  c6x: replace setup_irq() by request_irq()
-  hexagon: replace setup_irq() by request_irq()
-  sh: replace setup_irq() by request_irq()
-  unicore32: replace setup_irq() by request_irq()
-  genirq: Remove setup_irq() and remove_irq()
-
- arch/alpha/kernel/irq_alpha.c     | 29 ++++----------------
- arch/alpha/kernel/irq_i8259.c     |  8 ++----
- arch/alpha/kernel/irq_impl.h      |  7 +----
- arch/alpha/kernel/irq_pyxis.c     |  3 ++-
- arch/alpha/kernel/sys_alcor.c     |  3 ++-
- arch/alpha/kernel/sys_cabriolet.c |  3 ++-
- arch/alpha/kernel/sys_eb64p.c     |  3 ++-
- arch/alpha/kernel/sys_marvel.c    |  2 +-
- arch/alpha/kernel/sys_miata.c     |  6 +++--
- arch/alpha/kernel/sys_ruffian.c   |  3 ++-
- arch/alpha/kernel/sys_rx164.c     |  3 ++-
- arch/alpha/kernel/sys_sx164.c     |  3 ++-
- arch/alpha/kernel/sys_wildfire.c  |  7 ++---
- arch/alpha/kernel/time.c          |  6 ++---
- arch/c6x/platforms/timer64.c      | 11 +++-----
- arch/hexagon/kernel/smp.c         | 22 ++++++++--------
- arch/hexagon/kernel/time.c        | 11 +++-----
- arch/sh/boards/mach-cayman/irq.c  | 18 +++++--------
- arch/sh/drivers/dma/dma-pvr2.c    |  9 +++----
- arch/unicore32/kernel/time.c      | 11 +++-----
- include/linux/irq.h               |  2 --
- kernel/irq/manage.c               | 44 -------------------------------
- 22 files changed, 60 insertions(+), 154 deletions(-)
 
 -- 
-2.25.1
+Peter Oberparleiter
+Linux on Z Development - IBM Germany
 
