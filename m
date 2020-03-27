@@ -2,186 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 626711951A4
-	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2020 08:00:55 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 2DFC6195364
+	for <lists+linux-s390@lfdr.de>; Fri, 27 Mar 2020 09:56:11 +0100 (CET)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726002AbgC0HAy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 27 Mar 2020 03:00:54 -0400
-Received: from pegase1.c-s.fr ([93.17.236.30]:37711 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725857AbgC0HAy (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 27 Mar 2020 03:00:54 -0400
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 48pXnH05D3z9txq3;
-        Fri, 27 Mar 2020 08:00:51 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=UX15Jazq; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id RA_-yOiis4rA; Fri, 27 Mar 2020 08:00:50 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 48pXnG5XWyz9txq2;
-        Fri, 27 Mar 2020 08:00:50 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1585292450; bh=Ws1T27uMA0wfJZIl4CR6AQkUqBHuQiB6haJ0qz+xiIM=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=UX15Jazq692nKezahgcBWFZADQzoEn5TOJTlYr5XLS/57u6ncysBxqFZPWgQbrlBy
-         BLPR/FqnpU+HiqGEHw4aO+Mm3ZF1ZASdmP3rOi0gJGXiZXKXdy6KknGg8FIO+Or9JQ
-         qCqJd84lmJi/DNXsbkiMINQjf68WtsGi+npCBrzc=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 8BDF78B7BC;
-        Fri, 27 Mar 2020 08:00:51 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id oH2Pf5pBdxv5; Fri, 27 Mar 2020 08:00:51 +0100 (CET)
-Received: from pc16570vm.idsi0.si.c-s.fr (unknown [192.168.4.90])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 655658B756;
-        Fri, 27 Mar 2020 08:00:49 +0100 (CET)
-Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
- <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
- <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
- <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <ef28cb75-40b8-5ab5-83ba-84fd4384c7c5@c-s.fr>
-Date:   Fri, 27 Mar 2020 07:00:45 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        id S1726661AbgC0I4L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 27 Mar 2020 04:56:11 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47084 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725946AbgC0I4K (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 27 Mar 2020 04:56:10 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02R8Xb17016556;
+        Fri, 27 Mar 2020 04:56:09 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 301bvjbqjp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 04:56:09 -0400
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02R8u9GN133673;
+        Fri, 27 Mar 2020 04:56:09 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 301bvjbqje-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 04:56:09 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02R8orY5001080;
+        Fri, 27 Mar 2020 08:56:08 GMT
+Received: from b03cxnp07028.gho.boulder.ibm.com (b03cxnp07028.gho.boulder.ibm.com [9.17.130.15])
+        by ppma02dal.us.ibm.com with ESMTP id 2ywaw2w5tf-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Fri, 27 Mar 2020 08:56:08 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp07028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02R8u5vg51970342
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Fri, 27 Mar 2020 08:56:05 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4056C7805E;
+        Fri, 27 Mar 2020 08:56:05 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 90C277805F;
+        Fri, 27 Mar 2020 08:56:04 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.114.17.106])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Fri, 27 Mar 2020 08:56:04 +0000 (GMT)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>
+Subject: [PATCH] s390/gmap: return proper error code on ksm unsharing
+Date:   Fri, 27 Mar 2020 04:56:02 -0400
+Message-Id: <20200327085602.24535-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-In-Reply-To: <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-27_02:2020-03-26,2020-03-27 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
+ lowpriorityscore=0 impostorscore=0 priorityscore=1501 mlxlogscore=567
+ mlxscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1015
+ spamscore=0 malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003270073
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+If a signal is pending we might return -ENOMEM instead of -EINTR.
+We should propagate the proper error during KSM unsharing.
 
+Fixes: 3ac8e38015d4 ("s390/mm: disable KSM for storage key enabled pages")
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+---
+ arch/s390/mm/gmap.c | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-On 03/27/2020 06:46 AM, Anshuman Khandual wrote:
-> 
-> On 03/26/2020 08:53 PM, Christophe Leroy wrote:
->>
->>
->> Le 26/03/2020 à 03:23, Anshuman Khandual a écrit :
->>>
->>>
->>> On 03/24/2020 10:52 AM, Anshuman Khandual wrote:
->>>> This series adds more arch page table helper tests. The new tests here are
->>>> either related to core memory functions and advanced arch pgtable helpers.
->>>> This also creates a documentation file enlisting all expected semantics as
->>>> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
->>>>
->>>> This series has been tested on arm64 and x86 platforms.
->>>
->>> If folks can test these patches out on remaining ARCH_HAS_DEBUG_VM_PGTABLE
->>> enabled platforms i.e s390, arc, powerpc (32 and 64), that will be really
->>> appreciated. Thank you.
->>>
->>
->> On powerpc 8xx (PPC32), I get:
->>
->> [   53.338368] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
->> [   53.347403] ------------[ cut here ]------------
->> [   53.351832] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:647 debug_vm_pgtable+0x280/0x3f4
-> 
-> mm/debug_vm_pgtable.c:647 ?
-> 
-> With the following commits in place
-> 
-> 53a8338ce (HEAD) Documentation/mm: Add descriptions for arch page table helper
-> 5d4913fc1 mm/debug: Add tests validating arch advanced page table helpers
-> bcaf120a7 mm/debug: Add tests validating arch page table helpers for core features
-> d6ed5a4a5 x86/memory: Drop pud_mknotpresent()
-> 0739d1f8d mm/debug: Add tests validating architecture page table helpers
-> 16fbf79b0 (tag: v5.6-rc7) Linux 5.6-rc7
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index 27926a06df32..2bf63035a295 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -2552,15 +2552,16 @@ int gmap_mark_unmergeable(void)
+ {
+ 	struct mm_struct *mm = current->mm;
+ 	struct vm_area_struct *vma;
++	int ret  = 0;
+ 
+ 	for (vma = mm->mmap; vma; vma = vma->vm_next) {
+-		if (ksm_madvise(vma, vma->vm_start, vma->vm_end,
+-				MADV_UNMERGEABLE, &vma->vm_flags)) {
+-			return -ENOMEM;
+-		}
++		ret = ksm_madvise(vma, vma->vm_start, vma->vm_end,
++				MADV_UNMERGEABLE, &vma->vm_flags);
++		if (ret)
++			return ret;
+ 	}
+ 	mm->def_flags &= ~VM_MERGEABLE;
+-	return 0;
++	return ret;
+ }
+ EXPORT_SYMBOL_GPL(gmap_mark_unmergeable);
+ 
+-- 
+2.25.1
 
-I have:
-
-facaa5eb5909 (HEAD -> helpers0) mm/debug: Add tests validating arch 
-advanced page table helpers
-6389fed515fc mm/debug: Add tests validating arch page table helpers for 
-core features
-dc14ecc8b94e mm/debug: add tests validating architecture page table helpers
-c6624071c338 (origin/merge, merge) Automatic merge of branches 'master', 
-'next' and 'fixes' into merge
-58e05c5508e6 Automatic merge of branches 'master', 'next' and 'fixes' 
-into merge
-1b649e0bcae7 (origin/master, origin/HEAD) Merge 
-git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
-
-origin is https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
-
-I can't see your last patch in powerpc mailing list 
-(https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=166237)
-
-> 
-> mm/debug_vm_pgtable.c:647 is here.
-
-Line 647 is:
-
-	WARN_ON(!pte_same(pte, __swp_entry_to_pte(swp)));
-
-
-> 
-> #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
-> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
-> {
->          swp_entry_t swp;
->          pmd_t pmd;  -----------------------------> Line #647
-> 
->          pmd = pfn_pmd(pfn, prot);
->          swp = __pmd_to_swp_entry(pmd);
->          WARN_ON(!pmd_same(pmd, __swp_entry_to_pmd(swp)));
-> }
-> #else
-> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { }
-> #end
-> 
-> Did I miss something ?
-> 
-
-[...]
-
-> Could you please point me to the exact test which is failing ?
-> 
->> [   53.519778] Freeing unused kernel memory: 608K
->>
->>
-> So I assume that the system should have come till runtime just fine apart from
-> the above warning message because.
-> 
-
-Yes it boots fine otherwise.
-
-Christophe
