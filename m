@@ -2,132 +2,185 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0113A196A3A
-	for <lists+linux-s390@lfdr.de>; Sun, 29 Mar 2020 01:19:40 +0100 (CET)
+	by mail.lfdr.de (Postfix) with ESMTP id 74028196DE2
+	for <lists+linux-s390@lfdr.de>; Sun, 29 Mar 2020 16:22:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727722AbgC2ATj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 28 Mar 2020 20:19:39 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:35742 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726604AbgC2ATj (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 28 Mar 2020 20:19:39 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585441178;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=vaewZEk2eYYox9uyi7WlaKYkj/uEgqOwrp4YGqapC0o=;
-        b=WcNn9SNfjezooIP5MAhyf/waif40iq0ONlfoDqpEs9aPT4FYBiVR/R8hYNpgCOmXBWqi9b
-        rCe68x3RbGg3E6uW7lvT/c2Uuemof1CUdfPEirmMv7wFksc0G24a+Fsy+wbvbMGgJz+hBx
-        /ffV/ibuD1maGgJug6LPOmfg/Awndd8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-16-ivzlOkrCNy-K-x1Z03nVDw-1; Sat, 28 Mar 2020 20:19:34 -0400
-X-MC-Unique: ivzlOkrCNy-K-x1Z03nVDw-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A0BD918A8C80;
-        Sun, 29 Mar 2020 00:19:29 +0000 (UTC)
-Received: from localhost (ovpn-12-30.pek2.redhat.com [10.72.12.30])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5B78510013A1;
-        Sun, 29 Mar 2020 00:19:27 +0000 (UTC)
-Date:   Sun, 29 Mar 2020 08:19:24 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Hoan Tran <Hoan@os.amperecomputing.com>
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
+        id S1728215AbgC2OWL (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sun, 29 Mar 2020 10:22:11 -0400
+Received: from foss.arm.com ([217.140.110.172]:58914 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727488AbgC2OWL (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sun, 29 Mar 2020 10:22:11 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A5D9C31B;
+        Sun, 29 Mar 2020 07:22:10 -0700 (PDT)
+Received: from [10.163.1.70] (unknown [10.163.1.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 542D63F68F;
+        Sun, 29 Mar 2020 07:22:01 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+To:     Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Jonathan Corbet <corbet@lwn.net>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
         Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200329001924.GS3039@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+ <2bb4badc-2b7a-e15d-a99b-b1bd38c9d9bf@arm.com>
+ <a46d18ed-8911-1ec3-c32f-58b6e0d959d7@c-s.fr>
+ <9675882f-0ec5-5e46-551f-dd3aa38bf8d8@arm.com>
+ <ef28cb75-40b8-5ab5-83ba-84fd4384c7c5@c-s.fr>
+Message-ID: <bf4558b2-1fe9-f0cc-3e6f-34bdf3734056@arm.com>
+Date:   Sun, 29 Mar 2020 19:51:54 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <ef28cb75-40b8-5ab5-83ba-84fd4384c7c5@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 03/28/20 at 11:31am, Hoan Tran wrote:
-> In NUMA layout which nodes have memory ranges that span across other nodes,
-> the mm driver can detect the memory node id incorrectly.
-> 
-> For example, with layout below
-> Node 0 address: 0000 xxxx 0000 xxxx
-> Node 1 address: xxxx 1111 xxxx 1111
 
-Sorry, I read this example several times, but still don't get what it
-means. Can it be given with real hex number address as an exmaple? I
-mean just using the memory layout you have seen from some systems. The
-change looks interesting though.
+On 03/27/2020 12:30 PM, Christophe Leroy wrote:
+> 
+> 
+> On 03/27/2020 06:46 AM, Anshuman Khandual wrote:
+>>
+>> On 03/26/2020 08:53 PM, Christophe Leroy wrote:
+>>>
+>>>
+>>> Le 26/03/2020 à 03:23, Anshuman Khandual a écrit :
+>>>>
+>>>>
+>>>> On 03/24/2020 10:52 AM, Anshuman Khandual wrote:
+>>>>> This series adds more arch page table helper tests. The new tests here are
+>>>>> either related to core memory functions and advanced arch pgtable helpers.
+>>>>> This also creates a documentation file enlisting all expected semantics as
+>>>>> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
+>>>>>
+>>>>> This series has been tested on arm64 and x86 platforms.
+>>>>
+>>>> If folks can test these patches out on remaining ARCH_HAS_DEBUG_VM_PGTABLE
+>>>> enabled platforms i.e s390, arc, powerpc (32 and 64), that will be really
+>>>> appreciated. Thank you.
+>>>>
+>>>
+>>> On powerpc 8xx (PPC32), I get:
+>>>
+>>> [   53.338368] debug_vm_pgtable: debug_vm_pgtable: Validating architecture page table helpers
+>>> [   53.347403] ------------[ cut here ]------------
+>>> [   53.351832] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:647 debug_vm_pgtable+0x280/0x3f4
+>>
+>> mm/debug_vm_pgtable.c:647 ?
+>>
+>> With the following commits in place
+>>
+>> 53a8338ce (HEAD) Documentation/mm: Add descriptions for arch page table helper
+>> 5d4913fc1 mm/debug: Add tests validating arch advanced page table helpers
+>> bcaf120a7 mm/debug: Add tests validating arch page table helpers for core features
+>> d6ed5a4a5 x86/memory: Drop pud_mknotpresent()
+>> 0739d1f8d mm/debug: Add tests validating architecture page table helpers
+>> 16fbf79b0 (tag: v5.6-rc7) Linux 5.6-rc7
+> 
+> I have:
+> 
+> facaa5eb5909 (HEAD -> helpers0) mm/debug: Add tests validating arch advanced page table helpers
+> 6389fed515fc mm/debug: Add tests validating arch page table helpers for core features
+> dc14ecc8b94e mm/debug: add tests validating architecture page table helpers
+> c6624071c338 (origin/merge, merge) Automatic merge of branches 'master', 'next' and 'fixes' into merge
+> 58e05c5508e6 Automatic merge of branches 'master', 'next' and 'fixes' into merge
+> 1b649e0bcae7 (origin/master, origin/HEAD) Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net
+> 
+> origin is https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git
+> 
+> I can't see your last patch in powerpc mailing list (https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=166237)
+
+My bad, did not update the last patch with required lists (will fix).
 
 > 
-> Note:
->  - Memory from low to high
->  - 0/1: Node id
->  - x: Invalid memory of a node
+>>
+>> mm/debug_vm_pgtable.c:647 is here.
 > 
-> When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> config, mm only checks the memory validity but not the node id.
-> Because of that, Node 1 also detects the memory from node 0 as below
-> when it scans from the start address to the end address of node 1.
+> Line 647 is:
 > 
-> Node 0 address: 0000 xxxx xxxx xxxx
-> Node 1 address: xxxx 1111 1111 1111
-> 
-> This layout could occur on any architecture. Most of them enables
-> this config by default with CONFIG_NUMA. This patch, by default, enables
-> CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
-> 
-> v3:
->  * Revise the patch description
-> 
-> V2:
->  * Revise the patch description
-> 
-> Hoan Tran (5):
->   mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
->   powerpc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
->   x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
->   sparc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
->   s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> 
->  arch/powerpc/Kconfig | 9 ---------
->  arch/s390/Kconfig    | 8 --------
->  arch/sparc/Kconfig   | 9 ---------
->  arch/x86/Kconfig     | 9 ---------
->  mm/page_alloc.c      | 2 +-
->  5 files changed, 1 insertion(+), 36 deletions(-)
-> 
-> -- 
-> 1.8.3.1
-> 
-> 
+>     WARN_ON(!pte_same(pte, __swp_entry_to_pte(swp)));
 
+Both set of definitions suggest that the last three bits (if present)
+on the PTE will be discarded during PTE->SWP->PTE conversion which
+might be leading to this mismatch and subsequent failure.
+
+arch/powerpc/include/asm/nohash/32/pgtable.h
+arch/powerpc/include/asm/book3s/32/pgtable.h
+
+#define __pte_to_swp_entry(pte)         ((swp_entry_t) { pte_val(pte) >> 3 })
+#define __swp_entry_to_pte(x)           ((pte_t) { (x).val << 3 })
+
+Also there are some more architectures (microblaze, sh, etc) where these
+conversions are not always preserving. On powerpc64, it sets back _PAGE_PTE
+irrespective of whether the bit was originally set or not.
+
+Probably it is wrong to expect that PTE->SWP->PTE conversion will be always
+preserving. So wondering if it is worth changing this test to accommodate
+all such architectures or just drop it instead.
+
+> 
+> 
+>>
+>> #ifdef CONFIG_ARCH_ENABLE_THP_MIGRATION
+>> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot)
+>> {
+>>          swp_entry_t swp;
+>>          pmd_t pmd;  -----------------------------> Line #647
+>>
+>>          pmd = pfn_pmd(pfn, prot);
+>>          swp = __pmd_to_swp_entry(pmd);
+>>          WARN_ON(!pmd_same(pmd, __swp_entry_to_pmd(swp)));
+>> }
+>> #else
+>> static void __init pmd_swap_tests(unsigned long pfn, pgprot_t prot) { }
+>> #end
+>>
+>> Did I miss something ?
+>>
+> 
+> [...]
+> 
+>> Could you please point me to the exact test which is failing ?
+>>
+>>> [   53.519778] Freeing unused kernel memory: 608K
+>>>
+>>>
+>> So I assume that the system should have come till runtime just fine apart from
+>> the above warning message because.
+>>
+> 
+> Yes it boots fine otherwise.
+
+Cool, that is good to know.
+
+> 
+> Christophe
+> 
