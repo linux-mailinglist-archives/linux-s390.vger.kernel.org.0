@@ -2,40 +2,40 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 0469B1977D4
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 11:26:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F8F2197829
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 11:58:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728458AbgC3J0U (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Mar 2020 05:26:20 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:45535 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728383AbgC3J0U (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 30 Mar 2020 05:26:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585560379;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=P7KONnLRBt7Zi6IX/bJ2rtifHakTT+zqNud06VP531U=;
-        b=FS2HStEnePO2itkmuXpA2ZhsI0KDDw0tGRTylV/wFf8dGspZRJ+5UMnvjbbJyreKdVz3f6
-        JnVFdDgKYANcBuElgQMIXPctP9xDJ+lO0VWq6tYCZBw68Bkha4MIPGwUamud9hzxyb/Q2g
-        Jv02R8vmB7dkfaAr8Yn7b2d+Suvhi7Q=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-348-v6Tx4dfaPXm-1wc0_ZqlsA-1; Mon, 30 Mar 2020 05:26:14 -0400
-X-MC-Unique: v6Tx4dfaPXm-1wc0_ZqlsA-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E4A2518A552A;
-        Mon, 30 Mar 2020 09:26:10 +0000 (UTC)
-Received: from localhost (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A853510027AA;
-        Mon, 30 Mar 2020 09:26:09 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 17:26:06 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
+        id S1728640AbgC3J6r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Mar 2020 05:58:47 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:46383 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727522AbgC3J6r (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Mar 2020 05:58:47 -0400
+Received: by mail-wr1-f66.google.com with SMTP id j17so20737559wru.13;
+        Mon, 30 Mar 2020 02:58:46 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=RAW4dI5AqDOZg2OFBhTf/EVo0m3y8bG8p0ACgPsFWtE=;
+        b=OCp3chht8upmlHjiegUSpYA7Zm5wIKCsvsT4Tl9GUG9ZMi/4WDCkv0aTPhwRfkPi1o
+         n81N75mvN0d5J+FzmZG0lqbYJ8NVmmHR9GRM3ll8E7WmpvsInPiN1Ibw+uShxy+EJjvq
+         RKR9sBwe2tuK0O6oSMg300FhyuL1sSXxpZ4Tki6iQyE0dbXp5+sn6nt08wJZyugBXBFA
+         yP8Z2xLUZD/7oLdw1r2STra+7+YKLSFvP/4qG7yosXmfrPV2BNi8Ph6HzUkvuhkwQwto
+         Eb+WUGC7+SQWkzIcl+LxdFvg+BTtCmXoImPX5s92gUJTMClylazhmufGeNk5zZIINyRO
+         y8/w==
+X-Gm-Message-State: ANhLgQ3bzuQS6RZNLNUQir+N9k06RmVj3w2m4jw1LIkIs6uQ3iBZ/Bza
+        Bgwd8ozwrE7m/6MYOzT/cUQ=
+X-Google-Smtp-Source: ADFU+vs2ADx9iXcEtG7i4t0y2sXGzETHyH4fleW4u+faHVS+T4YFrF+aBgCdG9nD2ekBmdttmSU8rw==
+X-Received: by 2002:a5d:460f:: with SMTP id t15mr14129460wrq.413.1585562325855;
+        Mon, 30 Mar 2020 02:58:45 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id b199sm17339431wme.23.2020.03.30.02.58.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 02:58:44 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 11:58:43 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
 Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -43,7 +43,6 @@ Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
         Vlastimil Babka <vbabka@suse.cz>,
         Oscar Salvador <osalvador@suse.de>,
         Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
         Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
@@ -62,100 +61,80 @@ Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
         lho@amperecomputing.com, mmorana@amperecomputing.com
 Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
  default for NUMA
-Message-ID: <20200330092606.GC6352@MiWiFi-R3L-srv>
+Message-ID: <20200330095843.GF14243@dhcp22.suse.cz>
 References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
  <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330092127.GB30942@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330074246.GA14243@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200330092127.GB30942@linux.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 03/30/20 at 09:42am, Michal Hocko wrote:
-> On Sat 28-03-20 11:31:17, Hoan Tran wrote:
-> > In NUMA layout which nodes have memory ranges that span across other nodes,
-> > the mm driver can detect the memory node id incorrectly.
+On Mon 30-03-20 12:21:27, Mike Rapoport wrote:
+> On Mon, Mar 30, 2020 at 09:42:46AM +0200, Michal Hocko wrote:
+> > On Sat 28-03-20 11:31:17, Hoan Tran wrote:
+> > > In NUMA layout which nodes have memory ranges that span across other nodes,
+> > > the mm driver can detect the memory node id incorrectly.
+> > > 
+> > > For example, with layout below
+> > > Node 0 address: 0000 xxxx 0000 xxxx
+> > > Node 1 address: xxxx 1111 xxxx 1111
+> > > 
+> > > Note:
+> > >  - Memory from low to high
+> > >  - 0/1: Node id
+> > >  - x: Invalid memory of a node
+> > > 
+> > > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
+> > > config, mm only checks the memory validity but not the node id.
+> > > Because of that, Node 1 also detects the memory from node 0 as below
+> > > when it scans from the start address to the end address of node 1.
+> > > 
+> > > Node 0 address: 0000 xxxx xxxx xxxx
+> > > Node 1 address: xxxx 1111 1111 1111
+> > > 
+> > > This layout could occur on any architecture. Most of them enables
+> > > this config by default with CONFIG_NUMA. This patch, by default, enables
+> > > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
 > > 
-> > For example, with layout below
-> > Node 0 address: 0000 xxxx 0000 xxxx
-> > Node 1 address: xxxx 1111 xxxx 1111
+> > I am not opposed to this at all. It reduces the config space and that is
+> > a good thing on its own. The history has shown that meory layout might
+> > be really wild wrt NUMA. The config is only used for early_pfn_in_nid
+> > which is clearly an overkill.
 > > 
-> > Note:
-> >  - Memory from low to high
-> >  - 0/1: Node id
-> >  - x: Invalid memory of a node
-> > 
-> > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> > config, mm only checks the memory validity but not the node id.
-> > Because of that, Node 1 also detects the memory from node 0 as below
-> > when it scans from the start address to the end address of node 1.
-> > 
-> > Node 0 address: 0000 xxxx xxxx xxxx
-> > Node 1 address: xxxx 1111 1111 1111
-> > 
-> > This layout could occur on any architecture. Most of them enables
-> > this config by default with CONFIG_NUMA. This patch, by default, enables
-> > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
+> > Your description doesn't really explain why this is safe though. The
+> > history of this config is somehow messy, though. Mike has tried
+> > to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
+> > NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
+> > ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
+> > reasoning what so ever. This doesn't make it really easy see whether
+> > reasons for reintroduction are still there. Maybe there are some subtle
+> > dependencies. I do not see any TBH but that might be burried deep in an
+> > arch specific code.
 > 
-> I am not opposed to this at all. It reduces the config space and that is
-> a good thing on its own. The history has shown that meory layout might
-> be really wild wrt NUMA. The config is only used for early_pfn_in_nid
-> which is clearly an overkill.
-> 
-> Your description doesn't really explain why this is safe though. The
-> history of this config is somehow messy, though. Mike has tried
-> to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
-> NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
-> ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
-> reasoning what so ever. This doesn't make it really easy see whether
-> reasons for reintroduction are still there. Maybe there are some subtle
-> dependencies. I do not see any TBH but that might be burried deep in an
-> arch specific code.
+> Well, back then early_pfn_in_nid() was arch-dependant, today everyone
+> except ia64 rely on HAVE_MEMBLOCK_NODE_MAP.
 
-Since on all ARCHes NODES_SPAN_OTHER_NODES has dependency on NUMA,
-replacing it with CONFIG_NUMA seems no risk. Just for those ARCHes which
-don't have CONFIG_NODES_SPAN_OTHER_NODES before, it involves a tiny
-performance degradation. Besides, s390 has removed support of
-NODES_SPAN_OTHER_NODES already.
+What would it take to make ia64 use HAVE_MEMBLOCK_NODE_MAP? I would
+really love to see that thing go away. It is causing problems when
+people try to use memblock api.
 
-commit 701dc81e7412daaf3c5bf4bc55d35c8b1525112a
-Author: Heiko Carstens <heiko.carstens@de.ibm.com>
-Date:   Wed Feb 19 13:29:15 2020 +0100
+> So, if the memblock node map
+> is correct, that using CONFIG_NUMA instead of CONFIG_NODES_SPAN_OTHER_NODES
+> would only mean that early_pfn_in_nid() will cost several cycles more on
+> architectures that didn't select CONFIG_NODES_SPAN_OTHER_NODES (i.e. arm64
+> and sh).
 
-    s390/mm: remove fake numa support
+Do we have any idea on how much of an overhead that is? Because this is
+per each pfn so it can accumulate a lot! 
 
-> 
-> > v3:
-> >  * Revise the patch description
-> > 
-> > V2:
-> >  * Revise the patch description
-> > 
-> > Hoan Tran (5):
-> >   mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
-> >   powerpc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   sparc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> > 
-> >  arch/powerpc/Kconfig | 9 ---------
-> >  arch/s390/Kconfig    | 8 --------
-> >  arch/sparc/Kconfig   | 9 ---------
-> >  arch/x86/Kconfig     | 9 ---------
-> >  mm/page_alloc.c      | 2 +-
-> >  5 files changed, 1 insertion(+), 36 deletions(-)
-> > 
-> > -- 
-> > 1.8.3.1
-> > 
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
-> 
+> Agian, ia64 is an exception here.
 
+Thanks for the clarification!
+-- 
+Michal Hocko
+SUSE Labs
