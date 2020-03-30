@@ -2,95 +2,43 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id A92151975ED
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 09:44:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 293AA197655
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 10:19:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729474AbgC3Hoc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Mar 2020 03:44:32 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:40909 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728766AbgC3Hob (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Mar 2020 03:44:31 -0400
-Received: by mail-wm1-f68.google.com with SMTP id a81so20714147wmf.5;
-        Mon, 30 Mar 2020 00:44:28 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=+lQxT4rOXYS7igvmWe+aSLt8H9b/hooDSaFj9dpIoBo=;
-        b=sXB3Axt3bNhLZM4yzWIsP8VuxlH6kiWXUpjSZd93e6MR4/ML7UYW7UltVKYUH0rV93
-         Ev80J0qi5a9JpLUExrvqq0XFdw3GwLqk2T+quHuw55eio69i1xnbNpyF2bThds3+jNEb
-         V2U+nBHDuWacYhv5s88y8Ozcy49+oJ7w1Eky0yRA4GPdb/64PCT1D4oqPAic/4FD5e9G
-         WH1DzkV82oO+RLuzoLZIbfBIklx657PvJGkhEotRL1TIezZHCCTTUV3E+VmysclcefZk
-         2iSbjt27A+/KsuAr6ebt0YeZVI66NiG4cyoPNofKmHpQigs5gU9y/9eJoQiOwC7dVsh1
-         FhDA==
-X-Gm-Message-State: ANhLgQ2Ct3curkqzdWT/eevI4jDwwpVc1+sK4Schy/AqqRtb7EWn4Ke+
-        J3/9SwzFGjBAZRXMM7dorDQ=
-X-Google-Smtp-Source: ADFU+vv5zPfvR6n12LY62/oTKOim3ahnJoTy88I5ftZ61ckUgrrKlF39ljyabbjxRYuNzhw3oecv9w==
-X-Received: by 2002:a7b:cc06:: with SMTP id f6mr11831239wmh.65.1585554268222;
-        Mon, 30 Mar 2020 00:44:28 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id p16sm20037964wmi.40.2020.03.30.00.44.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 00:44:27 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 09:44:26 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200330074426.GB14243@dhcp22.suse.cz>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200329001924.GS3039@MiWiFi-R3L-srv>
+        id S1729630AbgC3IT3 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Mar 2020 04:19:29 -0400
+Received: from host201-96-61-217.static.arubacloud.com ([217.61.96.201]:34204
+        "EHLO mail.undorthemoure.gq" rhost-flags-OK-FAIL-OK-OK)
+        by vger.kernel.org with ESMTP id S1729576AbgC3IT3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 30 Mar 2020 04:19:29 -0400
+Received: by mail.undorthemoure.gq (Postfix, from userid 48)
+        id 04577910C9; Mon, 30 Mar 2020 00:10:25 -0400 (EDT)
+To:     linux-s390@vger.kernel.org
+Subject: Request for catalog and price list
+X-PHP-Originating-Script: 0:dageds.php
+From:   Julian Smith <juliansmith2014@mail.ru>
+Reply-To: juliansmith2014@outlook.com
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200329001924.GS3039@MiWiFi-R3L-srv>
+Content-Type:   text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Message-Id: <20200330041025.04577910C9@mail.undorthemoure.gq>
+Date:   Mon, 30 Mar 2020 00:10:24 -0400 (EDT)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun 29-03-20 08:19:24, Baoquan He wrote:
-> On 03/28/20 at 11:31am, Hoan Tran wrote:
-> > In NUMA layout which nodes have memory ranges that span across other nodes,
-> > the mm driver can detect the memory node id incorrectly.
-> > 
-> > For example, with layout below
-> > Node 0 address: 0000 xxxx 0000 xxxx
-> > Node 1 address: xxxx 1111 xxxx 1111
-> 
-> Sorry, I read this example several times, but still don't get what it
-> means. Can it be given with real hex number address as an exmaple? I
-> mean just using the memory layout you have seen from some systems. The
-> change looks interesting though.
+Hello friend,
 
-Does this make it more clear?
-           physical address range and its node associaion
-         [0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1 0 0 0 0 1 1 1 1]
--- 
-Michal Hocko
-SUSE Labs
+This is Julian Smith and i am purchasing manager from Sinara Group Co.,LTD in Russia.
+We are glad to know about your company from the web and we are interested in your products.
+Could you kindly send us your Latest catalog and price list for our trial order.
+
+Thanks and Best Regards,
+
+Ms. Julian Smith
+Purchasing Manager
+Sinara Group Co.,LTD
+
+
