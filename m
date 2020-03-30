@@ -2,156 +2,196 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 643B81980D4
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 18:20:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7DC6B1982B9
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 19:51:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727890AbgC3QUA (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Mar 2020 12:20:00 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([216.205.24.74]:59767 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727437AbgC3QT7 (ORCPT
+        id S1730248AbgC3RvQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Mar 2020 13:51:16 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37748 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730242AbgC3RvQ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 30 Mar 2020 12:19:59 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585585198;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=ut1ybJF7tqtFtC0+1JNFVZ7eZ2Op2z7VGJbLzc89p0Q=;
-        b=VCc4v2sDRwP+U4hkO8c+oQo03NtcWNnZvn3PL4Z1kJzwcuy2Q3PpfSq2L9n1CEt4iLJXAi
-        d5CYdTOndNz8Ys7A14vZ1eMyqve6mZCzpu8neMYtfis5agjNP40yjld0qFqgMnqYjV1vyd
-        OFCJyCwBrqmIiH6ixMC868XbzH2Zjig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-355-yQYsDkwQP0uHPkyyAC9u-g-1; Mon, 30 Mar 2020 12:19:56 -0400
-X-MC-Unique: yQYsDkwQP0uHPkyyAC9u-g-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E60391137849;
-        Mon, 30 Mar 2020 16:19:54 +0000 (UTC)
-Received: from [10.36.113.227] (ovpn-113-227.ams2.redhat.com [10.36.113.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B5BCD10027A4;
-        Mon, 30 Mar 2020 16:19:53 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v2] s390x: Add stsi 3.2.2 tests
-To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, cohuck@redhat.com,
-        borntraeger@de.ibm.com
-References: <20200330153359.2386-1-frankja@linux.ibm.com>
-From:   David Hildenbrand <david@redhat.com>
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: Red Hat GmbH
-Message-ID: <2ebc49ff-479a-351d-36f9-cb79fe4b9804@redhat.com>
-Date:   Mon, 30 Mar 2020 18:19:52 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Mon, 30 Mar 2020 13:51:16 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UHYC5S015768
+        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 13:51:15 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3021d4sgha-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 13:51:14 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Mon, 30 Mar 2020 18:50:59 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Mar 2020 18:50:53 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02UHp4g862914630
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 17:51:05 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DB44AA405C;
+        Mon, 30 Mar 2020 17:51:04 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 63487A4054;
+        Mon, 30 Mar 2020 17:51:02 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.206.230])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 30 Mar 2020 17:51:02 +0000 (GMT)
+Date:   Mon, 30 Mar 2020 20:51:00 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20200330153359.2386-1-frankja@linux.ibm.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200330074246.GA14243@dhcp22.suse.cz>
+X-TM-AS-GCONF: 00
+x-cbid: 20033017-0020-0000-0000-000003BE6645
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033017-0021-0000-0000-00002217033F
+Message-Id: <20200330175100.GD30942@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-30_07:2020-03-30,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
+ priorityscore=1501 lowpriorityscore=0 phishscore=0 mlxscore=0
+ malwarescore=0 suspectscore=1 bulkscore=0 impostorscore=0 spamscore=0
+ clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003300153
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 30.03.20 17:33, Janosch Frank wrote:
-> Subcode 3.2.2 is handled by KVM/QEMU and should therefore be tested
-> a bit more thorough.
+On Mon, Mar 30, 2020 at 09:42:46AM +0200, Michal Hocko wrote:
+> On Sat 28-03-20 11:31:17, Hoan Tran wrote:
+> > In NUMA layout which nodes have memory ranges that span across other nodes,
+> > the mm driver can detect the memory node id incorrectly.
+> > 
+> > For example, with layout below
+> > Node 0 address: 0000 xxxx 0000 xxxx
+> > Node 1 address: xxxx 1111 xxxx 1111
+> > 
+> > Note:
+> >  - Memory from low to high
+> >  - 0/1: Node id
+> >  - x: Invalid memory of a node
+> > 
+> > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
+> > config, mm only checks the memory validity but not the node id.
+> > Because of that, Node 1 also detects the memory from node 0 as below
+> > when it scans from the start address to the end address of node 1.
+> > 
+> > Node 0 address: 0000 xxxx xxxx xxxx
+> > Node 1 address: xxxx 1111 1111 1111
+> > 
+> > This layout could occur on any architecture. Most of them enables
+> > this config by default with CONFIG_NUMA. This patch, by default, enables
+> > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
 > 
-> In this test we set a custom name and uuid through the QEMU command
-> line. Both parameters will be passed to the guest on a stsi subcode
-> 3.2.2 call and will then be checked.
+> I am not opposed to this at all. It reduces the config space and that is
+> a good thing on its own. The history has shown that meory layout might
+> be really wild wrt NUMA. The config is only used for early_pfn_in_nid
+> which is clearly an overkill.
 > 
-> We also compare the configured cpu numbers against the smp reported
-> numbers and if the reserved + configured add up to the total number
-> reported.
-> 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  s390x/stsi.c        | 72 +++++++++++++++++++++++++++++++++++++++++++++
->  s390x/unittests.cfg |  1 +
->  2 files changed, 73 insertions(+)
-> 
-> diff --git a/s390x/stsi.c b/s390x/stsi.c
-> index e9206bca137d2edb..a291fd828347018a 100644
-> --- a/s390x/stsi.c
-> +++ b/s390x/stsi.c
-> @@ -14,7 +14,28 @@
->  #include <asm/page.h>
->  #include <asm/asm-offsets.h>
->  #include <asm/interrupt.h>
-> +#include <smp.h>
->  
-> +struct stsi_322 {
-> +    uint8_t reserved[31];
-> +    uint8_t count;
-> +    struct {
-> +        uint8_t reserved2[4];
-> +        uint16_t total_cpus;
-> +        uint16_t conf_cpus;
-> +        uint16_t standby_cpus;
-> +        uint16_t reserved_cpus;
-> +        uint8_t name[8];
-> +        uint32_t caf;
-> +        uint8_t cpi[16];
-> +        uint8_t reserved5[3];
-> +        uint8_t ext_name_encoding;
-> +        uint32_t reserved3;
-> +        uint8_t uuid[16];
-> +    } vm[8];
-> +    uint8_t reserved4[1504];
-> +    uint8_t ext_names[8][256];
+> Your description doesn't really explain why this is safe though. The
+> history of this config is somehow messy, though. Mike has tried
+> to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
+> NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
+> ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
+> reasoning what so ever. This doesn't make it really easy see whether
+> reasons for reintroduction are still there. Maybe there are some subtle
+> dependencies. I do not see any TBH but that might be burried deep in an
+> arch specific code.
 
-Just notices that all these spaces should be converted to tabs.
+I've looked at this a bit more and it seems that the check for
+early_pfn_in_nid() in memmap_init_zone() can be simply removed.
 
+The commits you've mentioned were way before the addition of
+HAVE_MEMBLOCK_NODE_MAP and the whole infrastructure that calculates zone
+sizes and boundaries based on the memblock node map.
+So, the memmap_init_zone() is called when zone boundaries are already
+within a node.
+
+I don't have access to machines with memory layout that required this check
+at the first place, so if anybody who does could test the change below on
+such machine it would be great.
+
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index 3c4eb750a199..6d3eb0901864 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -5908,10 +5908,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+                                pfn = next_pfn(pfn);
+                                continue;
+                        }
+-                       if (!early_pfn_in_nid(pfn, nid)) {
+-                               pfn++;
+-                               continue;
+-                       }
+                        if (overlap_memmap_init(zone, &pfn))
+                                continue;
+                        if (defer_init(nid, pfn, end_pfn))
+
+ 
+> > v3:
+> >  * Revise the patch description
+> > 
+> > V2:
+> >  * Revise the patch description
+> > 
+> > Hoan Tran (5):
+> >   mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
+> >   powerpc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> >   x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> >   sparc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> >   s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
+> > 
+> >  arch/powerpc/Kconfig | 9 ---------
+> >  arch/s390/Kconfig    | 8 --------
+> >  arch/sparc/Kconfig   | 9 ---------
+> >  arch/x86/Kconfig     | 9 ---------
+> >  mm/page_alloc.c      | 2 +-
+> >  5 files changed, 1 insertion(+), 36 deletions(-)
+> > 
+> > -- 
+> > 1.8.3.1
+> > 
+> 
+> -- 
+> Michal Hocko
+> SUSE Labs
 
 -- 
-Thanks,
-
-David / dhildenb
+Sincerely yours,
+Mike.
 
