@@ -2,47 +2,40 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7DC6B1982B9
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 19:51:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 8D749198348
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 20:23:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730248AbgC3RvQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Mar 2020 13:51:16 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:37748 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730242AbgC3RvQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 30 Mar 2020 13:51:16 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UHYC5S015768
-        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 13:51:15 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3021d4sgha-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 13:51:14 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Mon, 30 Mar 2020 18:50:59 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 30 Mar 2020 18:50:53 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02UHp4g862914630
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 30 Mar 2020 17:51:05 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DB44AA405C;
-        Mon, 30 Mar 2020 17:51:04 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63487A4054;
-        Mon, 30 Mar 2020 17:51:02 +0000 (GMT)
-Received: from linux.ibm.com (unknown [9.148.206.230])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Mon, 30 Mar 2020 17:51:02 +0000 (GMT)
-Date:   Mon, 30 Mar 2020 20:51:00 +0300
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     Michal Hocko <mhocko@kernel.org>
+        id S1727170AbgC3SXF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Mar 2020 14:23:05 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36380 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726769AbgC3SXF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Mar 2020 14:23:05 -0400
+Received: by mail-wr1-f67.google.com with SMTP id 31so22892272wrs.3;
+        Mon, 30 Mar 2020 11:23:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=0jhRFYVkza+qJU3Il8/iXGVhPGBzX8dkXPD9i1bwSag=;
+        b=HcIXr8Hrwmmw5Wi5wr+oQPp0f5r7SVEypa4eQqW5Mf4OTkKkR07I7N2dGa8lQXTAzm
+         G9MLDuJhlTsCe8pMxN93AQ6yXlYl9xHv5mIVNeFJWn/s++YRKXa8YJnVOgXr09kKFhUo
+         PcQq+zg/SoXMPB3rX4FXig7id4wbZT3B5EqdLzdsmlTBf1XOfOOJ97KCYkAdqzeKNb0h
+         hhFSVw124mRpzMYyCo9WykLEFe3Y18V2m8iBasSQtNFGtyyftMwA4+kGpWEo75fQ6yja
+         7wisH2SmVT2PJfx6ABwD+AsaKsjG2KsLk/6APKLBAjCVPGs4eQchcBwGIqwqCEBeiafe
+         nFjA==
+X-Gm-Message-State: ANhLgQ14Be72ZQxblAst7bNF/iqQ4sFcVt+rRAcfmlxBTWFnCZjY3qJ2
+        9y48WK3CcpVTZuwFyuh5IGU=
+X-Google-Smtp-Source: ADFU+vv5K/FBYjKeTVX0F/L19lDVfm50dWVM5MaRN4MeyMqOqGnWTdxnNM7cmfvlZTzDum9SAd0OPg==
+X-Received: by 2002:adf:d849:: with SMTP id k9mr15996160wrl.108.1585592583199;
+        Mon, 30 Mar 2020 11:23:03 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id f187sm474696wme.9.2020.03.30.11.23.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Mar 2020 11:23:02 -0700 (PDT)
+Date:   Mon, 30 Mar 2020 20:23:01 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
 Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
         Catalin Marinas <catalin.marinas@arm.com>,
         Will Deacon <will.deacon@arm.com>,
@@ -68,130 +61,74 @@ Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
         lho@amperecomputing.com, mmorana@amperecomputing.com
 Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
  default for NUMA
+Message-ID: <20200330182301.GM14243@dhcp22.suse.cz>
 References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
  <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330175100.GD30942@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200330074246.GA14243@dhcp22.suse.cz>
-X-TM-AS-GCONF: 00
-x-cbid: 20033017-0020-0000-0000-000003BE6645
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20033017-0021-0000-0000-00002217033F
-Message-Id: <20200330175100.GD30942@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-30_07:2020-03-30,2020-03-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- priorityscore=1501 lowpriorityscore=0 phishscore=0 mlxscore=0
- malwarescore=0 suspectscore=1 bulkscore=0 impostorscore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003300153
+In-Reply-To: <20200330175100.GD30942@linux.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Mar 30, 2020 at 09:42:46AM +0200, Michal Hocko wrote:
-> On Sat 28-03-20 11:31:17, Hoan Tran wrote:
-> > In NUMA layout which nodes have memory ranges that span across other nodes,
-> > the mm driver can detect the memory node id incorrectly.
+On Mon 30-03-20 20:51:00, Mike Rapoport wrote:
+> On Mon, Mar 30, 2020 at 09:42:46AM +0200, Michal Hocko wrote:
+> > On Sat 28-03-20 11:31:17, Hoan Tran wrote:
+> > > In NUMA layout which nodes have memory ranges that span across other nodes,
+> > > the mm driver can detect the memory node id incorrectly.
+> > > 
+> > > For example, with layout below
+> > > Node 0 address: 0000 xxxx 0000 xxxx
+> > > Node 1 address: xxxx 1111 xxxx 1111
+> > > 
+> > > Note:
+> > >  - Memory from low to high
+> > >  - 0/1: Node id
+> > >  - x: Invalid memory of a node
+> > > 
+> > > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
+> > > config, mm only checks the memory validity but not the node id.
+> > > Because of that, Node 1 also detects the memory from node 0 as below
+> > > when it scans from the start address to the end address of node 1.
+> > > 
+> > > Node 0 address: 0000 xxxx xxxx xxxx
+> > > Node 1 address: xxxx 1111 1111 1111
+> > > 
+> > > This layout could occur on any architecture. Most of them enables
+> > > this config by default with CONFIG_NUMA. This patch, by default, enables
+> > > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
 > > 
-> > For example, with layout below
-> > Node 0 address: 0000 xxxx 0000 xxxx
-> > Node 1 address: xxxx 1111 xxxx 1111
+> > I am not opposed to this at all. It reduces the config space and that is
+> > a good thing on its own. The history has shown that meory layout might
+> > be really wild wrt NUMA. The config is only used for early_pfn_in_nid
+> > which is clearly an overkill.
 > > 
-> > Note:
-> >  - Memory from low to high
-> >  - 0/1: Node id
-> >  - x: Invalid memory of a node
-> > 
-> > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> > config, mm only checks the memory validity but not the node id.
-> > Because of that, Node 1 also detects the memory from node 0 as below
-> > when it scans from the start address to the end address of node 1.
-> > 
-> > Node 0 address: 0000 xxxx xxxx xxxx
-> > Node 1 address: xxxx 1111 1111 1111
-> > 
-> > This layout could occur on any architecture. Most of them enables
-> > this config by default with CONFIG_NUMA. This patch, by default, enables
-> > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
+> > Your description doesn't really explain why this is safe though. The
+> > history of this config is somehow messy, though. Mike has tried
+> > to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
+> > NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
+> > ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
+> > reasoning what so ever. This doesn't make it really easy see whether
+> > reasons for reintroduction are still there. Maybe there are some subtle
+> > dependencies. I do not see any TBH but that might be burried deep in an
+> > arch specific code.
 > 
-> I am not opposed to this at all. It reduces the config space and that is
-> a good thing on its own. The history has shown that meory layout might
-> be really wild wrt NUMA. The config is only used for early_pfn_in_nid
-> which is clearly an overkill.
+> I've looked at this a bit more and it seems that the check for
+> early_pfn_in_nid() in memmap_init_zone() can be simply removed.
 > 
-> Your description doesn't really explain why this is safe though. The
-> history of this config is somehow messy, though. Mike has tried
-> to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
-> NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
-> ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
-> reasoning what so ever. This doesn't make it really easy see whether
-> reasons for reintroduction are still there. Maybe there are some subtle
-> dependencies. I do not see any TBH but that might be burried deep in an
-> arch specific code.
+> The commits you've mentioned were way before the addition of
+> HAVE_MEMBLOCK_NODE_MAP and the whole infrastructure that calculates zone
+> sizes and boundaries based on the memblock node map.
+> So, the memmap_init_zone() is called when zone boundaries are already
+> within a node.
 
-I've looked at this a bit more and it seems that the check for
-early_pfn_in_nid() in memmap_init_zone() can be simply removed.
-
-The commits you've mentioned were way before the addition of
-HAVE_MEMBLOCK_NODE_MAP and the whole infrastructure that calculates zone
-sizes and boundaries based on the memblock node map.
-So, the memmap_init_zone() is called when zone boundaries are already
-within a node.
-
-I don't have access to machines with memory layout that required this check
-at the first place, so if anybody who does could test the change below on
-such machine it would be great.
-
-
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index 3c4eb750a199..6d3eb0901864 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -5908,10 +5908,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
-                                pfn = next_pfn(pfn);
-                                continue;
-                        }
--                       if (!early_pfn_in_nid(pfn, nid)) {
--                               pfn++;
--                               continue;
--                       }
-                        if (overlap_memmap_init(zone, &pfn))
-                                continue;
-                        if (defer_init(nid, pfn, end_pfn))
-
- 
-> > v3:
-> >  * Revise the patch description
-> > 
-> > V2:
-> >  * Revise the patch description
-> > 
-> > Hoan Tran (5):
-> >   mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA
-> >   powerpc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   x86: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   sparc: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> >   s390: Kconfig: Remove CONFIG_NODES_SPAN_OTHER_NODES
-> > 
-> >  arch/powerpc/Kconfig | 9 ---------
-> >  arch/s390/Kconfig    | 8 --------
-> >  arch/sparc/Kconfig   | 9 ---------
-> >  arch/x86/Kconfig     | 9 ---------
-> >  mm/page_alloc.c      | 2 +-
-> >  5 files changed, 1 insertion(+), 36 deletions(-)
-> > 
-> > -- 
-> > 1.8.3.1
-> > 
-> 
-> -- 
-> Michal Hocko
-> SUSE Labs
-
+But zones from different nodes might overlap in the pfn range. And this
+check is there to skip over those overlapping areas. The only way to
+skip over this check I can see is to do a different pfn walk and go
+through memblock ranges which are guaranteed to belong to a single node.
 -- 
-Sincerely yours,
-Mike.
-
+Michal Hocko
+SUSE Labs
