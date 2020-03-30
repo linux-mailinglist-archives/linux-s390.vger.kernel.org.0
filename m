@@ -2,133 +2,85 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 98B5C197669
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 10:28:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 27C6E1976F4
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 10:49:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729602AbgC3I2V (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Mar 2020 04:28:21 -0400
-Received: from us-smtp-delivery-74.mimecast.com ([63.128.21.74]:25425 "EHLO
-        us-smtp-delivery-74.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729589AbgC3I2V (ORCPT
+        id S1729710AbgC3ItV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Mar 2020 04:49:21 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:15382 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728759AbgC3ItV (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 30 Mar 2020 04:28:21 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585556900;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=urh/QqSLIbmDRa1+bqKhLnHsVy5DBePTPVKLtVq9St4=;
-        b=EsRfzs1UbRRzzHvzCDBR89TFxK7WB3SI4kr0K9y0skyFMYSEis/3ocFbANRwy/GK87HzHt
-        8WWbyFPLLAsn/pb2x2F4+xUS24i4wAgBSqXgRo7D5DrtSjIzqTV1dApOdX2BEtOxBHvhF2
-        2tbDkBPQphbulHDcfX3UJrQnfFd2sPI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-472-SBmE0C2qM4iblPlKXUQf2w-1; Mon, 30 Mar 2020 04:28:18 -0400
-X-MC-Unique: SBmE0C2qM4iblPlKXUQf2w-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A90F18CA243;
-        Mon, 30 Mar 2020 08:28:14 +0000 (UTC)
-Received: from localhost (ovpn-12-53.pek2.redhat.com [10.72.12.53])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4451B100EBAF;
-        Mon, 30 Mar 2020 08:28:13 +0000 (UTC)
-Date:   Mon, 30 Mar 2020 16:28:09 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200330082809.GB6352@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330081659.GA6352@MiWiFi-R3L-srv>
+        Mon, 30 Mar 2020 04:49:21 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02U8XPOj151208;
+        Mon, 30 Mar 2020 04:49:19 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30206wwuxn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Mar 2020 04:49:19 -0400
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02U8XgN4152297;
+        Mon, 30 Mar 2020 04:49:19 -0400
+Received: from ppma02dal.us.ibm.com (a.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.10])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30206wwuxg-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Mar 2020 04:49:19 -0400
+Received: from pps.filterd (ppma02dal.us.ibm.com [127.0.0.1])
+        by ppma02dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02U8lbpo009087;
+        Mon, 30 Mar 2020 08:49:18 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02dal.us.ibm.com with ESMTP id 301x76k73n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Mar 2020 08:49:18 +0000
+Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02U8nHLH62652674
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 08:49:17 GMT
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4DB5F7805C;
+        Mon, 30 Mar 2020 08:49:17 +0000 (GMT)
+Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ADAE27805F;
+        Mon, 30 Mar 2020 08:49:16 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.114.17.106])
+        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Mon, 30 Mar 2020 08:49:16 +0000 (GMT)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>
+Cc:     KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Thomas Huth <thuth@redhat.com>
+Subject: [kvm-unit-tests 0/2] s390x/smp fix and enhancement
+Date:   Mon, 30 Mar 2020 04:49:09 -0400
+Message-Id: <20200330084911.34248-1-borntraeger@de.ibm.com>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330081659.GA6352@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 malwarescore=0
+ spamscore=0 lowpriorityscore=0 adultscore=0 mlxlogscore=828 suspectscore=0
+ bulkscore=0 phishscore=0 priorityscore=1501 mlxscore=0 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2003300076
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 03/30/20 at 04:16pm, Baoquan He wrote:
-> On 03/30/20 at 09:42am, Michal Hocko wrote:
-> > On Sat 28-03-20 11:31:17, Hoan Tran wrote:
-> > > In NUMA layout which nodes have memory ranges that span across other nodes,
-> > > the mm driver can detect the memory node id incorrectly.
-> > > 
-> > > For example, with layout below
-> > > Node 0 address: 0000 xxxx 0000 xxxx
-> > > Node 1 address: xxxx 1111 xxxx 1111
-> > > 
-> > > Note:
-> > >  - Memory from low to high
-> > >  - 0/1: Node id
-> > >  - x: Invalid memory of a node
-> > > 
-> > > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> > > config, mm only checks the memory validity but not the node id.
-> > > Because of that, Node 1 also detects the memory from node 0 as below
-> > > when it scans from the start address to the end address of node 1.
-> > > 
-> > > Node 0 address: 0000 xxxx xxxx xxxx
-> > > Node 1 address: xxxx 1111 1111 1111
-> > > 
-> > > This layout could occur on any architecture. Most of them enables
-> > > this config by default with CONFIG_NUMA. This patch, by default, enables
-> > > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
-> > 
-> > I am not opposed to this at all. It reduces the config space and that is
-> > a good thing on its own. The history has shown that meory layout might
-> > be really wild wrt NUMA. The config is only used for early_pfn_in_nid
-> > which is clearly an overkill.
-> > 
-> > Your description doesn't really explain why this is safe though. The
-> > history of this config is somehow messy, though. Mike has tried
-> > to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
-> > NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
-> > ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
-> > reasoning what so ever. This doesn't make it really easy see whether
-> > reasons for reintroduction are still there. Maybe there are some subtle
-> > dependencies. I do not see any TBH but that might be burried deep in an
-> > arch specific code.
-> 
-> Yeah, since early_pfnnid_cache was added, we do not need worry about the
-> performance. But when I read the mem init code on x86 again, I do see there
-> are codes to handle the node overlapping, e.g in numa_cleanup_meminfo(),
-> when store node id into memblock. But the thing is if we have
-> encountered the node overlapping, we just return ahead of time, leave
-> something uninitialized. I am wondering if the system with node
-> overlapping can still run heathily.
+Christian Borntraeger (2):
+  s390x/smp: fix detection of "running"
+  s390x/smp: add minimal test for sigp sense running status
 
-Ok, I didn't read code carefully. That is handling case where memblock
-with different node id overlap, it needs return. In the example
-Hoan gave, it has no problem, system can run well. Please ignore above
-comment.
+ lib/s390x/smp.c |  4 ++--
+ lib/s390x/smp.h |  2 +-
+ s390x/smp.c     | 11 +++++++++++
+ 3 files changed, 14 insertions(+), 3 deletions(-)
+
+-- 
+2.25.1
 
