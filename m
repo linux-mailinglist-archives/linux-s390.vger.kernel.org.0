@@ -2,57 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 76D81197A2E
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 13:01:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D1132197BB4
+	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 14:19:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729785AbgC3LBQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Mar 2020 07:01:16 -0400
-Received: from mail.11d01.mspz7.gob.ec ([190.152.145.91]:53644 "EHLO
-        mail.11d01.mspz7.gob.ec" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729715AbgC3LBP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Mar 2020 07:01:15 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTP id 9D5D82F6F5E1;
-        Mon, 30 Mar 2020 04:16:33 -0500 (-05)
-Received: from mail.11d01.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d01.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id jS3N6oHiX3hJ; Mon, 30 Mar 2020 04:16:33 -0500 (-05)
-Received: from localhost (localhost [127.0.0.1])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTP id D18C22F6F5DC;
-        Mon, 30 Mar 2020 04:16:32 -0500 (-05)
-DKIM-Filter: OpenDKIM Filter v2.9.2 mail.11d01.mspz7.gob.ec D18C22F6F5DC
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=11d01.mspz7.gob.ec;
-        s=50CBC7E4-8BED-11E9-AF6C-F1A741A224D3; t=1585559792;
-        bh=cLQbOHa1aY+/FyDjaDQOZOnnnlZDxMu+rBX/cg5yps8=;
-        h=Content-Type:MIME-Version:Content-Transfer-Encoding:Subject:To:
-         From:Date:Reply-To:Message-Id;
-        b=Yd2UegFssipD4ow3UX5rsxTDVfivs3Hpv9jsQZmqL2oSmzV+gmn2Wz84APqZHW00Q
-         zWEow3YV8uK4k8SGRV1a/s+xDuSIo1/5hPGAZf0KBnnCX8yFig6DVKyWH2F7vzCOa2
-         27IjL8Ko2QHqd0rtKtRDZeDez5VXijn3wqC3+l1A=
-X-Virus-Scanned: amavisd-new at 11d01.mspz7.gob.ec
-Received: from mail.11d01.mspz7.gob.ec ([127.0.0.1])
-        by localhost (mail.11d01.mspz7.gob.ec [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id LsAsK3Fukf2X; Mon, 30 Mar 2020 04:16:32 -0500 (-05)
-Received: from [10.121.152.251] (unknown [105.12.0.10])
-        by mail.11d01.mspz7.gob.ec (Postfix) with ESMTPSA id 5AF1E2F6F5A4;
-        Mon, 30 Mar 2020 04:16:21 -0500 (-05)
-Content-Type: text/plain; charset="iso-8859-1"
+        id S1729991AbgC3MTn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Mar 2020 08:19:43 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:16724 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729705AbgC3MTm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 30 Mar 2020 08:19:42 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02UCAgmM056840
+        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 08:19:42 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3022nm8edy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 08:19:41 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Mon, 30 Mar 2020 13:19:33 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 30 Mar 2020 13:19:30 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02UCJZix47186258
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 30 Mar 2020 12:19:35 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 68379A4053;
+        Mon, 30 Mar 2020 12:19:35 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 56824A4051;
+        Mon, 30 Mar 2020 12:19:35 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 30 Mar 2020 12:19:35 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 184ACE024B; Mon, 30 Mar 2020 14:19:35 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>
+Subject: [GIT PULL 0/1] KVM: s390: Fix for 5.7 merge window
+Date:   Mon, 30 Mar 2020 14:19:33 +0200
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-Content-Description: Mail message body
-Subject: spende von 2.000.000,00 Euro
-To:     Recipients <luis.sanchez@11d01.mspz7.gob.ec>
-From:   "Manuel Franco" <luis.sanchez@11d01.mspz7.gob.ec>
-Date:   Mon, 30 Mar 2020 11:47:35 +0200
-Reply-To: manuelfrancospende11@gmail.com
-Message-Id: <20200330091622.5AF1E2F6F5A4@mail.11d01.mspz7.gob.ec>
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20033012-0012-0000-0000-0000039AEAEF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033012-0013-0000-0000-000021D7F2C3
+Message-Id: <20200330121934.28143-1-borntraeger@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.645
+ definitions=2020-03-30_01:2020-03-27,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 malwarescore=0 mlxscore=0 spamscore=0 mlxlogscore=638
+ bulkscore=0 impostorscore=0 phishscore=0 priorityscore=1501 suspectscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003300115
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Ich bin Manuel Franco, ich spende Ihnen 2.000.000,00 Euro. Kontaktieren Sie=
- mich jetzt, damit wir fortfahren k=F6nnen.
+Paolo,
 
-I am Manuel Franco, I donate to you 2,000,000.00 euros. Contact me now so w=
-e can proceed.
+The following changes since commit f3dd18d444c757840920434e62809b6104081b06:
+
+  KVM: s390: mark sie block as 512 byte aligned (2020-03-23 18:30:33 +0100)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-next-5.7-3
+
+for you to fetch changes up to 7a2653612bb6f18fb236c5b0c4d28f7b459bf7c2:
+
+  s390/gmap: return proper error code on ksm unsharing (2020-03-27 06:42:53 -0400)
+
+----------------------------------------------------------------
+KVM: s390: Fix for error codes
+
+- return the proper error to userspace when a signal interrupts the
+  KSM unsharing operation
+
+----------------------------------------------------------------
+Christian Borntraeger (1):
+      s390/gmap: return proper error code on ksm unsharing
+
+ Documentation/virt/kvm/api.rst | 6 ++++++
+ arch/s390/mm/gmap.c            | 9 +++++----
+ 2 files changed, 11 insertions(+), 4 deletions(-)
+
