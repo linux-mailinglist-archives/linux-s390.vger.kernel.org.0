@@ -2,171 +2,136 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id BE621199897
-	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 16:31:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9BC49199B18
+	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 18:13:33 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730845AbgCaObw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 31 Mar 2020 10:31:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:22626 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730810AbgCaObv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 31 Mar 2020 10:31:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585665110;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=n/LKamt1qJgTlZJvR2+ShYsZiF+S+pFT12QrU9mBZ2E=;
-        b=YP6Ttt3NfNwZa8O1ooMsNsdr1TgfVh+aDN6ylFCORcS+QoToaB9ZxCH5cpSQfIwA0Zv8pw
-        Pya0N1BnzED1okp8sucnDkOZQLEUNU41LYYrZlC4e/b6aovRokVUBkImhjT17Q2MhMMQ0Y
-        nEZMlNPiD71ACl5uK+GMydEy6pGivrA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-467-RJe3syyjNmOJMo0W4nt5Qw-1; Tue, 31 Mar 2020 10:31:48 -0400
-X-MC-Unique: RJe3syyjNmOJMo0W4nt5Qw-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3C628107ACCC;
-        Tue, 31 Mar 2020 14:31:44 +0000 (UTC)
-Received: from localhost (ovpn-13-64.pek2.redhat.com [10.72.13.64])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3D08196F85;
-        Tue, 31 Mar 2020 14:31:43 +0000 (UTC)
-Date:   Tue, 31 Mar 2020 22:31:40 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        id S1731182AbgCaQNb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 31 Mar 2020 12:13:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:40458 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730286AbgCaQNa (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 31 Mar 2020 12:13:30 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VG4NrW088142
+        for <linux-s390@vger.kernel.org>; Tue, 31 Mar 2020 12:13:29 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 301yffwdr3-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 31 Mar 2020 12:13:29 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <bblock@linux.ibm.com>;
+        Tue, 31 Mar 2020 17:13:25 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 31 Mar 2020 17:13:22 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VGCJo630605624
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 16:12:19 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D4040A4060;
+        Tue, 31 Mar 2020 16:13:22 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C1C09A4054;
+        Tue, 31 Mar 2020 16:13:22 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.145.63.31])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 31 Mar 2020 16:13:22 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.92.3)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1jJJVx-001K14-VF; Tue, 31 Mar 2020 18:13:21 +0200
+Date:   Tue, 31 Mar 2020 18:13:21 +0200
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     George Spelvin <lkml@sdf.org>, Steffen Maier <maier@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200331143140.GA2402@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
- <20200330182301.GM14243@dhcp22.suse.cz>
- <20200331081423.GE30942@linux.ibm.com>
- <20200331085513.GE30449@dhcp22.suse.cz>
- <20200331140332.GA2129@MiWiFi-R3L-srv>
- <20200331142138.GL30449@dhcp22.suse.cz>
+        linux-s390@vger.kernel.org, linux-scsi@vger.kernel.org
+Subject: Re: [RFC PATCH v1 27/50] drivers/s390/scsi/zcsp_fc.c: Use
+ prandom_u32_max() for backoff
+References: <202003281643.02SGhHN7015213@sdf.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20200331142138.GL30449@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <202003281643.02SGhHN7015213@sdf.org>
+X-TM-AS-GCONF: 00
+x-cbid: 20033116-0028-0000-0000-000003EF75E8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033116-0029-0000-0000-000024B4F913
+Message-Id: <20200331161321.GB17507@t480-pf1aa2c2>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_05:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ suspectscore=0 impostorscore=0 mlxscore=0 phishscore=0 clxscore=1015
+ bulkscore=0 malwarescore=0 spamscore=0 mlxlogscore=999 adultscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003310141
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 03/31/20 at 04:21pm, Michal Hocko wrote:
-> On Tue 31-03-20 22:03:32, Baoquan He wrote:
-> > Hi Michal,
-> > 
-> > On 03/31/20 at 10:55am, Michal Hocko wrote:
-> > > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
-> > > > Maybe I mis-read the code, but I don't see how this could happen. In the
-> > > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
-> > > > calculate_node_totalpages() that ensures that node->node_zones are entirely
-> > > > within the node because this is checked in zone_spanned_pages_in_node().
-> > > 
-> > > zone_spanned_pages_in_node does chech the zone boundaries are within the
-> > > node boundaries. But that doesn't really tell anything about other
-> > > potential zones interleaving with the physical memory range.
-> > > zone->spanned_pages simply gives the physical range for the zone
-> > > including holes. Interleaving nodes are essentially a hole
-> > > (__absent_pages_in_range is going to skip those).
-> > > 
-> > > That means that when free_area_init_core simply goes over the whole
-> > > physical zone range including holes and that is why we need to check
-> > > both for physical and logical holes (aka other nodes).
-> > > 
-> > > The life would be so much easier if the whole thing would simply iterate
-> > > over memblocks...
-> > 
-> > The memblock iterating sounds a great idea. I tried with putting the
-> > memblock iterating in the upper layer, memmap_init(), which is used for
-> > boot mem only anyway. Do you think it's doable and OK? It yes, I can
-> > work out a formal patch to make this simpler as you said. The draft code
-> > is as below. Like this it uses the existing code and involves little change.
+On Fri, Nov 29, 2019 at 03:39:41PM -0500, George Spelvin wrote:
+> We don't need crypto-grade random numbers for randomized backoffs.
 > 
-> Doing this would be a step in the right direction! I haven't checked the
-> code very closely though. The below sounds way too simple to be truth I
-> am afraid. First for_each_mem_pfn_range is available only for
-> CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
-> saying that I really hate that being conditional). Also I haven't really
-> checked the deferred initialization path - I have a very vague
-> recollection that it has been converted to the memblock api but I have
-> happilly dropped all that memory.
+> (We could skip the if() if we wanted to rely on the undocumented fact
+> that prandom_u32_max(0) always returns 0.  That would be a net time
+> saving it port_scan_backoff == 0 is rare; if it's common, the if()
+> is false often enough to pay for itself. Not sure which applies here.)
+> 
+> Signed-off-by: George Spelvin <lkml@sdf.org>
+> Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: linux-s390@vger.kernel.org
+> ---
+>  drivers/s390/scsi/zfcp_fc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for your quick response and pointing out the rest suspect aspects,
-I will investigate what you mentioned, see if they impact.
+Hello George,
 
+it would be nice, if you could address the mails to the
+driver-maintainers (`scripts/get_maintainer.pl drivers/s390/scsi/zfcp_fc.c`
+will tell you that this is me and Steffen); I'd certainly have noticed
+it earlier then :-).
+
+> 
+> diff --git a/drivers/s390/scsi/zfcp_fc.c b/drivers/s390/scsi/zfcp_fc.c
+> index b018b61bd168e..d24cafe02708f 100644
+> --- a/drivers/s390/scsi/zfcp_fc.c
+> +++ b/drivers/s390/scsi/zfcp_fc.c
+> @@ -48,7 +48,7 @@ unsigned int zfcp_fc_port_scan_backoff(void)
+>  {
+>  	if (!port_scan_backoff)
+>  		return 0;
+> -	return get_random_int() % port_scan_backoff;
+> +	return prandom_u32_max(port_scan_backoff);
+
+I think the change is fine. You are right, we don't need a crypto nonce
+here.
+
+I think I'd let the zero-check stand as is, because the internal
+behaviour of prandom_u32_max() is, as you say, undocumented. This is not
+a performance critical code-path for us anyway.
+
+>  }
 >  
-> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > index 138a56c0f48f..558d421f294b 100644
-> > --- a/mm/page_alloc.c
-> > +++ b/mm/page_alloc.c
-> > @@ -6007,14 +6007,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
-> >  		 * function.  They do not exist on hotplugged memory.
-> >  		 */
-> >  		if (context == MEMMAP_EARLY) {
-> > -			if (!early_pfn_valid(pfn)) {
-> > -				pfn = next_pfn(pfn);
-> > -				continue;
-> > -			}
-> > -			if (!early_pfn_in_nid(pfn, nid)) {
-> > -				pfn++;
-> > -				continue;
-> > -			}
-> >  			if (overlap_memmap_init(zone, &pfn))
-> >  				continue;
-> >  			if (defer_init(nid, pfn, end_pfn))
-> > @@ -6130,9 +6122,17 @@ static void __meminit zone_init_free_lists(struct zone *zone)
-> >  }
-> >  
-> >  void __meminit __weak memmap_init(unsigned long size, int nid,
-> > -				  unsigned long zone, unsigned long start_pfn)
-> > +				  unsigned long zone, unsigned long range_start_pfn)
-> >  {
-> > -	memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> > +	unsigned long start_pfn, end_pfn;
-> > +	unsigned long range_end_pfn = range_start_pfn + size;
-> > +	int i;
-> > +	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> > +		start_pfn = clamp(start_pfn, range_start_pfn, range_end_pfn);
-> > +		end_pfn = clamp(end_pfn, range_start_pfn, range_end_pfn);
-> > +		if (end_pfn > start_pfn)
-> > +			memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> > +	}
-> >  }
-> >  
-> >  static int zone_batchsize(struct zone *zone)
-> 
+>  static void zfcp_fc_port_scan_time(struct zfcp_adapter *adapter)
 > -- 
-> Michal Hocko
-> SUSE Labs
+> 2.26.0
 > 
+
+Steffen, do you have any objections? Otherwise I can queue this up -
+minus the somewhat mangled subject - for when we send something next time.
+
+-- 
+Best Regards, Benjamin Block  / Linux on IBM Z Kernel Development / IBM Systems
+IBM Deutschland Research & Development GmbH    /    https://www.ibm.com/privacy
+Vorsitz. AufsR.: Gregor Pillen         /        Geschäftsführung: Dirk Wittkopp
+Sitz der Gesellschaft: Böblingen / Registergericht: AmtsG Stuttgart, HRB 243294
 
