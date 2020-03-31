@@ -2,122 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 266C21989C6
-	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 04:02:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4A394198C85
+	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 08:49:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729089AbgCaCCU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Mar 2020 22:02:20 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9292 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727698AbgCaCCT (ORCPT
+        id S1726397AbgCaGt2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 31 Mar 2020 02:49:28 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:26878 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726216AbgCaGt2 (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 30 Mar 2020 22:02:19 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02V1Wrc5018082
-        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 22:02:17 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 303v2s8scb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 22:02:17 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02V1omNH021012
-        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 22:02:17 -0400
-Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 303v2s8sbu-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 30 Mar 2020 22:02:17 -0400
-Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
-        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02V1pUSX028803;
-        Tue, 31 Mar 2020 02:02:16 GMT
-Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
-        by ppma02wdc.us.ibm.com with ESMTP id 301x76n890-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 31 Mar 2020 02:02:16 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02V22C6e20709680
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 02:02:12 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E3D326E053;
-        Tue, 31 Mar 2020 02:02:11 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0F4486E04E;
-        Tue, 31 Mar 2020 02:02:10 +0000 (GMT)
-Received: from [9.65.243.214] (unknown [9.65.243.214])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 31 Mar 2020 02:02:10 +0000 (GMT)
-Subject: Re: [PATCH 2/2] s390/cio: generate delayed uevent for vfio-ccw
- subchannels
-To:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org
-Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Boris Fiuczynski <fiuczy@linux.ibm.com>
-References: <20200327124503.9794-1-cohuck@redhat.com>
- <20200327124503.9794-3-cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <486c1d51-2736-cf2f-8b82-2203b45cd928@linux.ibm.com>
-Date:   Mon, 30 Mar 2020 22:02:10 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Tue, 31 Mar 2020 02:49:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585637367;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=/vr+P7AE3WRAzHQofs1wx/Zyi3JrkyQjOoO1yXG2SIk=;
+        b=gJC2YPXRX/iXR40Y/+q0QP5/vQeXT28cvxSkZAs9Hle1Y1Q0xuQ3pPTrYhosM4MNjZIfqf
+        K5P4s52GDv556HbElCubDKVgIqgOSielDz+o4tptbcZ7t67EFbGfU7lPs9egAlpTndKMJk
+        /WotdMpCgTKS45zwX+/Bx4+/M+UfS1s=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-465-EYXG8K8OP7Gw_3ldLJlmVw-1; Tue, 31 Mar 2020 02:49:25 -0400
+X-MC-Unique: EYXG8K8OP7Gw_3ldLJlmVw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4F991107ACC9;
+        Tue, 31 Mar 2020 06:49:24 +0000 (UTC)
+Received: from gondolin (ovpn-112-229.ams2.redhat.com [10.36.112.229])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 766DA19C6A;
+        Tue, 31 Mar 2020 06:49:20 +0000 (UTC)
+Date:   Tue, 31 Mar 2020 08:49:17 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     Janosch Frank <frankja@linux.vnet.ibm.com>,
+        KVM <kvm@vger.kernel.org>, David Hildenbrand <david@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Thomas Huth <thuth@redhat.com>
+Subject: Re: [kvm-unit-tests 1/2] s390x/smp: fix detection of "running"
+Message-ID: <20200331084917.4ab3f405.cohuck@redhat.com>
+In-Reply-To: <20200330084911.34248-2-borntraeger@de.ibm.com>
+References: <20200330084911.34248-1-borntraeger@de.ibm.com>
+        <20200330084911.34248-2-borntraeger@de.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200327124503.9794-3-cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-30_07:2020-03-30,2020-03-30 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
- malwarescore=0 mlxscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=965
- adultscore=0 suspectscore=0 spamscore=0 clxscore=1015 priorityscore=1501
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003310011
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, 30 Mar 2020 04:49:10 -0400
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
+> On s390x hosts with a single CPU, the smp test case hangs (loops).
+> The check is our restart has finished is wrong.
 
-On 3/27/20 8:45 AM, Cornelia Huck wrote:
-> The common I/O layer delays the ADD uevent for subchannels and
-> delegates generating this uevent to the individual subchannel
-> drivers. The vfio-ccw I/O subchannel driver, however, did not
-> do that, and will not generate an ADD uevent for subchannels
-> that had not been bound to a different driver (or none at all,
-> which also triggers the uevent).
+s/is/if/
+
+> Sigp sense running status checks if the CPU is currently backed by a
+> real CPU. This means that on single CPU hosts a sigp sense running
+> will never claim that a target is running. We need to check for not
+> being stopped instead.
 > 
-> Generate the ADD uevent at the end of the probe function if
-> uevents were still suppressed for the device.
-> 
-> Fixes: 63f1934d562d ("vfio: ccw: basic implementation for vfio_ccw driver")
-> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-
-This seems to line up with the other drivers.
-
-Reviewed-by: Eric Farman <farman@linux.ibm.com>
-
+> Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
 > ---
->  drivers/s390/cio/vfio_ccw_drv.c | 5 +++++
->  1 file changed, 5 insertions(+)
+>  lib/s390x/smp.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> index e401a3d0aa57..339a6bc0339b 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -167,6 +167,11 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
->  	if (ret)
->  		goto out_disable;
->  
-> +	if (dev_get_uevent_suppress(&sch->dev)) {
-> +		dev_set_uevent_suppress(&sch->dev, 0);
-> +		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
-> +	}
-> +
->  	VFIO_CCW_MSG_EVENT(4, "bound to subchannel %x.%x.%04x\n",
->  			   sch->schid.cssid, sch->schid.ssid,
->  			   sch->schid.sch_no);
-> 
+> diff --git a/lib/s390x/smp.c b/lib/s390x/smp.c
+> index 2555bf4..5ed8b7b 100644
+> --- a/lib/s390x/smp.c
+> +++ b/lib/s390x/smp.c
+> @@ -128,7 +128,7 @@ static int smp_cpu_restart_nolock(uint16_t addr, struct psw *psw)
+>  	 * The order has been accepted, but the actual restart may not
+>  	 * have been performed yet, so wait until the cpu is running.
+>  	 */
+> -	while (!smp_cpu_running(addr))
+> +	while (smp_cpu_stopped(addr))
+>  		mb();
+>  	cpu->active = true;
+>  	return 0;
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
