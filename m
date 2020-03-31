@@ -2,162 +2,273 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D2977199850
-	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 16:21:43 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 753CF199854
+	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 16:22:25 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730562AbgCaOVn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 31 Mar 2020 10:21:43 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:42021 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730464AbgCaOVn (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 31 Mar 2020 10:21:43 -0400
-Received: by mail-wr1-f66.google.com with SMTP id h15so26178253wrx.9;
-        Tue, 31 Mar 2020 07:21:41 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=wqixz+ZIYAqgoA7MPWIYOpEEYP0CoNu6CnseEEi5hws=;
-        b=DsyXcH88Wt1uKyk4WnK7FiML7pHV/KZ4GujNwSsaNHwTENzOypEnKTJ9lmRz/XAf99
-         ZGbpBwu2YT3wyTo7RHP+2PKl5KXnazntTxPfQ6Zi3xNEG5QnspNE47Y5BTwg0sJMrm1M
-         MCu0khtfPO/McBMkC/i/U4ob5AEy0xhiSsunc0lvklP3c/CRAwhPAIdRwGWwBMTd8mu3
-         6HhvyDcydT8QINPxcgLL2D74bkTa6fYI0/7ATd2b/xrwZX7Eb9O7wBomX/UW5Rd8uawI
-         prZ+Do/fmGAE1Fqt88KF2JNqlNCdbhpplTSEGn1mSHz1g6WmO4N7oaa4S08px5H4LlPc
-         OjJw==
-X-Gm-Message-State: ANhLgQ0rxTiZ6AwKAkRsFO7eLurP6Y31LxHmmVeODHHYQXXbtQ90glur
-        A86v8pne3zJ6joCOH8h5YHM=
-X-Google-Smtp-Source: ADFU+vuyE5SEZ+dPIFAcnIpCK+KoCMyMOpra8z4yVhIRJ2B/XSHZ5tSKeX1VNNnmQoYfW1esDx7ZTg==
-X-Received: by 2002:adf:eb0c:: with SMTP id s12mr20671936wrn.293.1585664500850;
-        Tue, 31 Mar 2020 07:21:40 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id v7sm24508561wrs.96.2020.03.31.07.21.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 31 Mar 2020 07:21:39 -0700 (PDT)
-Date:   Tue, 31 Mar 2020 16:21:38 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        id S1730935AbgCaOWZ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 31 Mar 2020 10:22:25 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:2260 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730464AbgCaOWY (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 31 Mar 2020 10:22:24 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VE3dIe034664
+        for <linux-s390@vger.kernel.org>; Tue, 31 Mar 2020 10:22:23 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3043g77yba-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 31 Mar 2020 10:22:23 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <bblock@linux.ibm.com>;
+        Tue, 31 Mar 2020 15:22:19 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 31 Mar 2020 15:22:18 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VEMIlL61603994
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 14:22:18 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E2A3552050;
+        Tue, 31 Mar 2020 14:22:17 +0000 (GMT)
+Received: from t480-pf1aa2c2 (unknown [9.145.63.31])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id CD97B5204E;
+        Tue, 31 Mar 2020 14:22:17 +0000 (GMT)
+Received: from bblock by t480-pf1aa2c2 with local (Exim 4.92.3)
+        (envelope-from <bblock@linux.ibm.com>)
+        id 1jJHmT-0013dt-05; Tue, 31 Mar 2020 16:22:17 +0200
+From:   Benjamin Block <bblock@linux.ibm.com>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        "Joe Perches" <joe@perches.com>
+Cc:     Benjamin Block <bblock@linux.ibm.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200331142138.GL30449@dhcp22.suse.cz>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
- <20200330182301.GM14243@dhcp22.suse.cz>
- <20200331081423.GE30942@linux.ibm.com>
- <20200331085513.GE30449@dhcp22.suse.cz>
- <20200331140332.GA2129@MiWiFi-R3L-srv>
+        linux-scsi@vger.kernel.org, linux-s390@vger.kernel.org,
+        Steffen Maier <maier@linux.ibm.com>,
+        Fedor Loshakov <loshakov@linux.ibm.com>
+Subject: [PATCH] zfcp: use fallthrough;
+Date:   Tue, 31 Mar 2020 16:21:48 +0200
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200331140332.GA2129@MiWiFi-R3L-srv>
+Organization: IBM Deutschland Research & Development GmbH, Vorsitz. AufsR. Gregor Pillen, Geschaeftsfuehrung Dirk Wittkopp, Sitz der Gesellschaft Boeblingen, Registergericht AmtsG Stuttgart, HRB 243294
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 20033114-0028-0000-0000-000003EF6810
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20033114-0029-0000-0000-000024B4EAE8
+Message-Id: <d14669a67a17392490d3184117941123765db1a4.1585663010.git.bblock@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-31_04:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ spamscore=0 malwarescore=0 mlxlogscore=999 impostorscore=0 clxscore=1015
+ phishscore=0 adultscore=0 lowpriorityscore=0 bulkscore=0 mlxscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003310129
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue 31-03-20 22:03:32, Baoquan He wrote:
-> Hi Michal,
-> 
-> On 03/31/20 at 10:55am, Michal Hocko wrote:
-> > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
-> > > Maybe I mis-read the code, but I don't see how this could happen. In the
-> > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
-> > > calculate_node_totalpages() that ensures that node->node_zones are entirely
-> > > within the node because this is checked in zone_spanned_pages_in_node().
-> > 
-> > zone_spanned_pages_in_node does chech the zone boundaries are within the
-> > node boundaries. But that doesn't really tell anything about other
-> > potential zones interleaving with the physical memory range.
-> > zone->spanned_pages simply gives the physical range for the zone
-> > including holes. Interleaving nodes are essentially a hole
-> > (__absent_pages_in_range is going to skip those).
-> > 
-> > That means that when free_area_init_core simply goes over the whole
-> > physical zone range including holes and that is why we need to check
-> > both for physical and logical holes (aka other nodes).
-> > 
-> > The life would be so much easier if the whole thing would simply iterate
-> > over memblocks...
-> 
-> The memblock iterating sounds a great idea. I tried with putting the
-> memblock iterating in the upper layer, memmap_init(), which is used for
-> boot mem only anyway. Do you think it's doable and OK? It yes, I can
-> work out a formal patch to make this simpler as you said. The draft code
-> is as below. Like this it uses the existing code and involves little change.
+From: Joe Perches <joe@perches.com>
 
-Doing this would be a step in the right direction! I haven't checked the
-code very closely though. The below sounds way too simple to be truth I
-am afraid. First for_each_mem_pfn_range is available only for
-CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
-saying that I really hate that being conditional). Also I haven't really
-checked the deferred initialization path - I have a very vague
-recollection that it has been converted to the memblock api but I have
-happilly dropped all that memory.
+Convert the various uses of fallthrough comments to fallthrough;
+
+Done via script
+Link: https://lore.kernel.org/lkml/b56602fcf79f849e733e7b521bb0e17895d390fa.1582230379.git.joe.com/
+
+Signed-off-by: Joe Perches <joe@perches.com>
+Reviewed-by: Fedor Loshakov <loshakov@linux.ibm.com>
+Reviewed-by: Steffen Maier <maier@linux.ibm.com>
+[bblock@linux.ibm.com: resolved merge conflict with recently upstream-sent patch "zfcp: expose fabric name as common fc_host sysfs attribute"]
+Signed-off-by: Benjamin Block <bblock@linux.ibm.com>
+---
+ drivers/s390/scsi/zfcp_erp.c | 10 +++++-----
+ drivers/s390/scsi/zfcp_fsf.c | 23 +++++++++++------------
+ 2 files changed, 16 insertions(+), 17 deletions(-)
+
+Hello James, Martin, Joe,
+
+please consider this patch for the next release that is convenient for
+you. It applies on James' "for-next" and "misc" branch; and Martin's
+"for-next" and "queue" branch - it goes on top of the series Steffen
+sent for 5.7.
+
+Heiko C. applied the other changes from this series to the other parts
+of the s390x architecture, so we would like to have them for zfcp as
+well.
+
+I ran them through our regression suite with error-recovery and I/O, all
+looks well for us.
+
+Also thanks for the work Joe.
+
+
+Comments are welcome :-).
+
+Best regards,
+ - Benjamin
+
+diff --git a/drivers/s390/scsi/zfcp_erp.c b/drivers/s390/scsi/zfcp_erp.c
+index 18a6751299f9..3d0bc000f500 100644
+--- a/drivers/s390/scsi/zfcp_erp.c
++++ b/drivers/s390/scsi/zfcp_erp.c
+@@ -178,12 +178,12 @@ static enum zfcp_erp_act_type zfcp_erp_required_act(enum zfcp_erp_act_type want,
+ 			return 0;
+ 		if (!(p_status & ZFCP_STATUS_COMMON_UNBLOCKED))
+ 			need = ZFCP_ERP_ACTION_REOPEN_PORT;
+-		/* fall through */
++		fallthrough;
+ 	case ZFCP_ERP_ACTION_REOPEN_PORT_FORCED:
+ 		p_status = atomic_read(&port->status);
+ 		if (!(p_status & ZFCP_STATUS_COMMON_OPEN))
+ 			need = ZFCP_ERP_ACTION_REOPEN_PORT;
+-		/* fall through */
++		fallthrough;
+ 	case ZFCP_ERP_ACTION_REOPEN_PORT:
+ 		p_status = atomic_read(&port->status);
+ 		if (p_status & ZFCP_STATUS_COMMON_ERP_INUSE)
+@@ -196,7 +196,7 @@ static enum zfcp_erp_act_type zfcp_erp_required_act(enum zfcp_erp_act_type want,
+ 			return need;
+ 		if (!(a_status & ZFCP_STATUS_COMMON_UNBLOCKED))
+ 			need = ZFCP_ERP_ACTION_REOPEN_ADAPTER;
+-		/* fall through */
++		fallthrough;
+ 	case ZFCP_ERP_ACTION_REOPEN_ADAPTER:
+ 		a_status = atomic_read(&adapter->status);
+ 		if (a_status & ZFCP_STATUS_COMMON_ERP_INUSE)
+@@ -1086,7 +1086,7 @@ static enum zfcp_erp_act_result zfcp_erp_lun_strategy(
+ 		if (atomic_read(&zfcp_sdev->status) & ZFCP_STATUS_COMMON_OPEN)
+ 			return zfcp_erp_lun_strategy_close(erp_action);
+ 		/* already closed */
+-		/* fall through */
++		fallthrough;
+ 	case ZFCP_ERP_STEP_LUN_CLOSING:
+ 		if (atomic_read(&zfcp_sdev->status) & ZFCP_STATUS_COMMON_OPEN)
+ 			return ZFCP_ERP_FAILED;
+@@ -1415,7 +1415,7 @@ static void zfcp_erp_action_cleanup(struct zfcp_erp_action *act,
+ 		if (act->step != ZFCP_ERP_STEP_UNINITIALIZED)
+ 			if (result == ZFCP_ERP_SUCCEEDED)
+ 				zfcp_erp_try_rport_unblock(port);
+-		/* fall through */
++		fallthrough;
+ 	case ZFCP_ERP_ACTION_REOPEN_PORT_FORCED:
+ 		put_device(&port->dev);
+ 		break;
+diff --git a/drivers/s390/scsi/zfcp_fsf.c b/drivers/s390/scsi/zfcp_fsf.c
+index 7c603e5b5b19..111fe3fc32d7 100644
+--- a/drivers/s390/scsi/zfcp_fsf.c
++++ b/drivers/s390/scsi/zfcp_fsf.c
+@@ -564,7 +564,7 @@ static int zfcp_fsf_exchange_config_evaluate(struct zfcp_fsf_req *req)
+ 	case FSF_TOPO_AL:
+ 		fc_host_port_type(shost) = FC_PORTTYPE_NLPORT;
+ 		fc_host_fabric_name(shost) = 0;
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		fc_host_fabric_name(shost) = 0;
+ 		dev_err(&adapter->ccw_device->dev,
+@@ -1032,7 +1032,7 @@ static void zfcp_fsf_abort_fcp_command_handler(struct zfcp_fsf_req *req)
+ 		switch (fsq->word[0]) {
+ 		case FSF_SQ_INVOKE_LINK_TEST_PROCEDURE:
+ 			zfcp_fc_test_link(zfcp_sdev->port);
+-			/* fall through */
++			fallthrough;
+ 		case FSF_SQ_ULP_DEPENDENT_ERP_REQUIRED:
+ 			req->status |= ZFCP_STATUS_FSFREQ_ERROR;
+ 			break;
+@@ -1127,7 +1127,7 @@ static void zfcp_fsf_send_ct_handler(struct zfcp_fsf_req *req)
+ 		break;
+ 	case FSF_PORT_HANDLE_NOT_VALID:
+ 		zfcp_erp_adapter_reopen(adapter, 0, "fsscth1");
+-		/* fall through */
++		fallthrough;
+ 	case FSF_GENERIC_COMMAND_REJECTED:
+ 	case FSF_PAYLOAD_SIZE_MISMATCH:
+ 	case FSF_REQUEST_SIZE_TOO_LARGE:
+@@ -1313,7 +1313,7 @@ static void zfcp_fsf_send_els_handler(struct zfcp_fsf_req *req)
+ 		break;
+ 	case FSF_SBAL_MISMATCH:
+ 		/* should never occur, avoided in zfcp_fsf_send_els */
+-		/* fall through */
++		fallthrough;
+ 	default:
+ 		req->status |= ZFCP_STATUS_FSFREQ_ERROR;
+ 		break;
+@@ -1736,7 +1736,7 @@ static void zfcp_fsf_open_port_handler(struct zfcp_fsf_req *req)
+ 		switch (header->fsf_status_qual.word[0]) {
+ 		case FSF_SQ_INVOKE_LINK_TEST_PROCEDURE:
+ 			/* no zfcp_fc_test_link() with failed open port */
+-			/* fall through */
++			fallthrough;
+ 		case FSF_SQ_ULP_DEPENDENT_ERP_REQUIRED:
+ 		case FSF_SQ_NO_RETRY_POSSIBLE:
+ 			req->status |= ZFCP_STATUS_FSFREQ_ERROR;
+@@ -1909,14 +1909,14 @@ static void zfcp_fsf_open_wka_port_handler(struct zfcp_fsf_req *req)
+ 	case FSF_MAXIMUM_NUMBER_OF_PORTS_EXCEEDED:
+ 		dev_warn(&req->adapter->ccw_device->dev,
+ 			 "Opening WKA port 0x%x failed\n", wka_port->d_id);
+-		/* fall through */
++		fallthrough;
+ 	case FSF_ADAPTER_STATUS_AVAILABLE:
+ 		req->status |= ZFCP_STATUS_FSFREQ_ERROR;
+ 		wka_port->status = ZFCP_FC_WKA_PORT_OFFLINE;
+ 		break;
+ 	case FSF_GOOD:
+ 		wka_port->handle = header->port_handle;
+-		/* fall through */
++		fallthrough;
+ 	case FSF_PORT_ALREADY_OPEN:
+ 		wka_port->status = ZFCP_FC_WKA_PORT_ONLINE;
+ 	}
+@@ -2059,7 +2059,6 @@ static void zfcp_fsf_close_physical_port_handler(struct zfcp_fsf_req *req)
+ 	case FSF_ADAPTER_STATUS_AVAILABLE:
+ 		switch (header->fsf_status_qual.word[0]) {
+ 		case FSF_SQ_INVOKE_LINK_TEST_PROCEDURE:
+-			/* fall through */
+ 		case FSF_SQ_ULP_DEPENDENT_ERP_REQUIRED:
+ 			req->status |= ZFCP_STATUS_FSFREQ_ERROR;
+ 			break;
+@@ -2144,7 +2143,7 @@ static void zfcp_fsf_open_lun_handler(struct zfcp_fsf_req *req)
  
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index 138a56c0f48f..558d421f294b 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -6007,14 +6007,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
->  		 * function.  They do not exist on hotplugged memory.
->  		 */
->  		if (context == MEMMAP_EARLY) {
-> -			if (!early_pfn_valid(pfn)) {
-> -				pfn = next_pfn(pfn);
-> -				continue;
-> -			}
-> -			if (!early_pfn_in_nid(pfn, nid)) {
-> -				pfn++;
-> -				continue;
-> -			}
->  			if (overlap_memmap_init(zone, &pfn))
->  				continue;
->  			if (defer_init(nid, pfn, end_pfn))
-> @@ -6130,9 +6122,17 @@ static void __meminit zone_init_free_lists(struct zone *zone)
->  }
->  
->  void __meminit __weak memmap_init(unsigned long size, int nid,
-> -				  unsigned long zone, unsigned long start_pfn)
-> +				  unsigned long zone, unsigned long range_start_pfn)
->  {
-> -	memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> +	unsigned long start_pfn, end_pfn;
-> +	unsigned long range_end_pfn = range_start_pfn + size;
-> +	int i;
-> +	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> +		start_pfn = clamp(start_pfn, range_start_pfn, range_end_pfn);
-> +		end_pfn = clamp(end_pfn, range_start_pfn, range_end_pfn);
-> +		if (end_pfn > start_pfn)
-> +			memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> +	}
->  }
->  
->  static int zone_batchsize(struct zone *zone)
-
+ 	case FSF_PORT_HANDLE_NOT_VALID:
+ 		zfcp_erp_adapter_reopen(adapter, 0, "fsouh_1");
+-		/* fall through */
++		fallthrough;
+ 	case FSF_LUN_ALREADY_OPEN:
+ 		break;
+ 	case FSF_PORT_BOXED:
+@@ -2175,7 +2174,7 @@ static void zfcp_fsf_open_lun_handler(struct zfcp_fsf_req *req)
+ 			 (unsigned long long)zfcp_scsi_dev_lun(sdev),
+ 			 (unsigned long long)zfcp_sdev->port->wwpn);
+ 		zfcp_erp_set_lun_status(sdev, ZFCP_STATUS_COMMON_ERP_FAILED);
+-		/* fall through */
++		fallthrough;
+ 	case FSF_INVALID_COMMAND_OPTION:
+ 		req->status |= ZFCP_STATUS_FSFREQ_ERROR;
+ 		break;
+@@ -2183,7 +2182,7 @@ static void zfcp_fsf_open_lun_handler(struct zfcp_fsf_req *req)
+ 		switch (header->fsf_status_qual.word[0]) {
+ 		case FSF_SQ_INVOKE_LINK_TEST_PROCEDURE:
+ 			zfcp_fc_test_link(zfcp_sdev->port);
+-			/* fall through */
++			fallthrough;
+ 		case FSF_SQ_ULP_DEPENDENT_ERP_REQUIRED:
+ 			req->status |= ZFCP_STATUS_FSFREQ_ERROR;
+ 			break;
+@@ -2277,7 +2276,7 @@ static void zfcp_fsf_close_lun_handler(struct zfcp_fsf_req *req)
+ 		switch (req->qtcb->header.fsf_status_qual.word[0]) {
+ 		case FSF_SQ_INVOKE_LINK_TEST_PROCEDURE:
+ 			zfcp_fc_test_link(zfcp_sdev->port);
+-			/* fall through */
++			fallthrough;
+ 		case FSF_SQ_ULP_DEPENDENT_ERP_REQUIRED:
+ 			req->status |= ZFCP_STATUS_FSFREQ_ERROR;
+ 			break;
 -- 
-Michal Hocko
-SUSE Labs
+2.25.1
+
