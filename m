@@ -2,133 +2,122 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 8D749198348
-	for <lists+linux-s390@lfdr.de>; Mon, 30 Mar 2020 20:23:05 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 266C21989C6
+	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 04:02:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727170AbgC3SXF (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 30 Mar 2020 14:23:05 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36380 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726769AbgC3SXF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 30 Mar 2020 14:23:05 -0400
-Received: by mail-wr1-f67.google.com with SMTP id 31so22892272wrs.3;
-        Mon, 30 Mar 2020 11:23:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=0jhRFYVkza+qJU3Il8/iXGVhPGBzX8dkXPD9i1bwSag=;
-        b=HcIXr8Hrwmmw5Wi5wr+oQPp0f5r7SVEypa4eQqW5Mf4OTkKkR07I7N2dGa8lQXTAzm
-         G9MLDuJhlTsCe8pMxN93AQ6yXlYl9xHv5mIVNeFJWn/s++YRKXa8YJnVOgXr09kKFhUo
-         PcQq+zg/SoXMPB3rX4FXig7id4wbZT3B5EqdLzdsmlTBf1XOfOOJ97KCYkAdqzeKNb0h
-         hhFSVw124mRpzMYyCo9WykLEFe3Y18V2m8iBasSQtNFGtyyftMwA4+kGpWEo75fQ6yja
-         7wisH2SmVT2PJfx6ABwD+AsaKsjG2KsLk/6APKLBAjCVPGs4eQchcBwGIqwqCEBeiafe
-         nFjA==
-X-Gm-Message-State: ANhLgQ14Be72ZQxblAst7bNF/iqQ4sFcVt+rRAcfmlxBTWFnCZjY3qJ2
-        9y48WK3CcpVTZuwFyuh5IGU=
-X-Google-Smtp-Source: ADFU+vv5K/FBYjKeTVX0F/L19lDVfm50dWVM5MaRN4MeyMqOqGnWTdxnNM7cmfvlZTzDum9SAd0OPg==
-X-Received: by 2002:adf:d849:: with SMTP id k9mr15996160wrl.108.1585592583199;
-        Mon, 30 Mar 2020 11:23:03 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id f187sm474696wme.9.2020.03.30.11.23.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 30 Mar 2020 11:23:02 -0700 (PDT)
-Date:   Mon, 30 Mar 2020 20:23:01 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        id S1729089AbgCaCCU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 30 Mar 2020 22:02:20 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9292 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727698AbgCaCCT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 30 Mar 2020 22:02:19 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02V1Wrc5018082
+        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 22:02:17 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 303v2s8scb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 22:02:17 -0400
+Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 02V1omNH021012
+        for <linux-s390@vger.kernel.org>; Mon, 30 Mar 2020 22:02:17 -0400
+Received: from ppma02wdc.us.ibm.com (aa.5b.37a9.ip4.static.sl-reverse.com [169.55.91.170])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 303v2s8sbu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 30 Mar 2020 22:02:17 -0400
+Received: from pps.filterd (ppma02wdc.us.ibm.com [127.0.0.1])
+        by ppma02wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 02V1pUSX028803;
+        Tue, 31 Mar 2020 02:02:16 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+        by ppma02wdc.us.ibm.com with ESMTP id 301x76n890-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 31 Mar 2020 02:02:16 +0000
+Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
+        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02V22C6e20709680
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 31 Mar 2020 02:02:12 GMT
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id E3D326E053;
+        Tue, 31 Mar 2020 02:02:11 +0000 (GMT)
+Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0F4486E04E;
+        Tue, 31 Mar 2020 02:02:10 +0000 (GMT)
+Received: from [9.65.243.214] (unknown [9.65.243.214])
+        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Tue, 31 Mar 2020 02:02:10 +0000 (GMT)
+Subject: Re: [PATCH 2/2] s390/cio: generate delayed uevent for vfio-ccw
+ subchannels
+To:     Cornelia Huck <cohuck@redhat.com>, linux-s390@vger.kernel.org
+Cc:     Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200330182301.GM14243@dhcp22.suse.cz>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>
+References: <20200327124503.9794-1-cohuck@redhat.com>
+ <20200327124503.9794-3-cohuck@redhat.com>
+From:   Eric Farman <farman@linux.ibm.com>
+Message-ID: <486c1d51-2736-cf2f-8b82-2203b45cd928@linux.ibm.com>
+Date:   Mon, 30 Mar 2020 22:02:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200330175100.GD30942@linux.ibm.com>
+In-Reply-To: <20200327124503.9794-3-cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-03-30_07:2020-03-30,2020-03-30 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ malwarescore=0 mlxscore=0 lowpriorityscore=0 phishscore=0 mlxlogscore=965
+ adultscore=0 suspectscore=0 spamscore=0 clxscore=1015 priorityscore=1501
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2003310011
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon 30-03-20 20:51:00, Mike Rapoport wrote:
-> On Mon, Mar 30, 2020 at 09:42:46AM +0200, Michal Hocko wrote:
-> > On Sat 28-03-20 11:31:17, Hoan Tran wrote:
-> > > In NUMA layout which nodes have memory ranges that span across other nodes,
-> > > the mm driver can detect the memory node id incorrectly.
-> > > 
-> > > For example, with layout below
-> > > Node 0 address: 0000 xxxx 0000 xxxx
-> > > Node 1 address: xxxx 1111 xxxx 1111
-> > > 
-> > > Note:
-> > >  - Memory from low to high
-> > >  - 0/1: Node id
-> > >  - x: Invalid memory of a node
-> > > 
-> > > When mm probes the memory map, without CONFIG_NODES_SPAN_OTHER_NODES
-> > > config, mm only checks the memory validity but not the node id.
-> > > Because of that, Node 1 also detects the memory from node 0 as below
-> > > when it scans from the start address to the end address of node 1.
-> > > 
-> > > Node 0 address: 0000 xxxx xxxx xxxx
-> > > Node 1 address: xxxx 1111 1111 1111
-> > > 
-> > > This layout could occur on any architecture. Most of them enables
-> > > this config by default with CONFIG_NUMA. This patch, by default, enables
-> > > CONFIG_NODES_SPAN_OTHER_NODES or uses early_pfn_in_nid() for NUMA.
-> > 
-> > I am not opposed to this at all. It reduces the config space and that is
-> > a good thing on its own. The history has shown that meory layout might
-> > be really wild wrt NUMA. The config is only used for early_pfn_in_nid
-> > which is clearly an overkill.
-> > 
-> > Your description doesn't really explain why this is safe though. The
-> > history of this config is somehow messy, though. Mike has tried
-> > to remove it a94b3ab7eab4 ("[PATCH] mm: remove arch independent
-> > NODES_SPAN_OTHER_NODES") just to be reintroduced by 7516795739bd
-> > ("[PATCH] Reintroduce NODES_SPAN_OTHER_NODES for powerpc") without any
-> > reasoning what so ever. This doesn't make it really easy see whether
-> > reasons for reintroduction are still there. Maybe there are some subtle
-> > dependencies. I do not see any TBH but that might be burried deep in an
-> > arch specific code.
-> 
-> I've looked at this a bit more and it seems that the check for
-> early_pfn_in_nid() in memmap_init_zone() can be simply removed.
-> 
-> The commits you've mentioned were way before the addition of
-> HAVE_MEMBLOCK_NODE_MAP and the whole infrastructure that calculates zone
-> sizes and boundaries based on the memblock node map.
-> So, the memmap_init_zone() is called when zone boundaries are already
-> within a node.
 
-But zones from different nodes might overlap in the pfn range. And this
-check is there to skip over those overlapping areas. The only way to
-skip over this check I can see is to do a different pfn walk and go
-through memblock ranges which are guaranteed to belong to a single node.
--- 
-Michal Hocko
-SUSE Labs
+
+On 3/27/20 8:45 AM, Cornelia Huck wrote:
+> The common I/O layer delays the ADD uevent for subchannels and
+> delegates generating this uevent to the individual subchannel
+> drivers. The vfio-ccw I/O subchannel driver, however, did not
+> do that, and will not generate an ADD uevent for subchannels
+> that had not been bound to a different driver (or none at all,
+> which also triggers the uevent).
+> 
+> Generate the ADD uevent at the end of the probe function if
+> uevents were still suppressed for the device.
+> 
+> Fixes: 63f1934d562d ("vfio: ccw: basic implementation for vfio_ccw driver")
+> Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+
+This seems to line up with the other drivers.
+
+Reviewed-by: Eric Farman <farman@linux.ibm.com>
+
+> ---
+>  drivers/s390/cio/vfio_ccw_drv.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
+> index e401a3d0aa57..339a6bc0339b 100644
+> --- a/drivers/s390/cio/vfio_ccw_drv.c
+> +++ b/drivers/s390/cio/vfio_ccw_drv.c
+> @@ -167,6 +167,11 @@ static int vfio_ccw_sch_probe(struct subchannel *sch)
+>  	if (ret)
+>  		goto out_disable;
+>  
+> +	if (dev_get_uevent_suppress(&sch->dev)) {
+> +		dev_set_uevent_suppress(&sch->dev, 0);
+> +		kobject_uevent(&sch->dev.kobj, KOBJ_ADD);
+> +	}
+> +
+>  	VFIO_CCW_MSG_EVENT(4, "bound to subchannel %x.%x.%04x\n",
+>  			   sch->schid.cssid, sch->schid.ssid,
+>  			   sch->schid.sch_no);
+> 
