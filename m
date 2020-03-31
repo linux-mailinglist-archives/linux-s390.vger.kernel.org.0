@@ -2,43 +2,42 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 7C42C198FFC
-	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 11:08:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id A9654199042
+	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 11:10:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbgCaJIB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 31 Mar 2020 05:08:01 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43920 "EHLO
+        id S1731595AbgCaJK1 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 31 Mar 2020 05:10:27 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:44568 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731290AbgCaJIA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 31 Mar 2020 05:08:00 -0400
+        with ESMTP id S1730673AbgCaJK1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 31 Mar 2020 05:10:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585645679;
+        s=mimecast20190719; t=1585645826;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=NSdAS61zVtIXs8uXBJOPignRHqmsSIed7uhuf1sC8rU=;
-        b=fDoXqmQQEgruF2zVOuJqm2fZ0r8O6lbbEX9Zn1/Yz3auWVN/r59F/Slu1tsZkX0bwzpE8p
-        DRujxptB9h4mWwiFWi9pky9HuRCSrpc4dCrXXlkY3f2oHHMaVAubFIMBj1wTAFSzpk2hdw
-        WMt/+9bKifv7wn6/8jbqNx7ulmBK+Xk=
+        bh=7ez9Q4sjZLqKXT5POYc/PEBcTi3bFRbCnmDVQuGhUaM=;
+        b=PxX33GNyO/BwQS0/asFzHMEUbkOwNm0cbhHqWVB6GZeFkm41XxMn0nqjMMHBQpYw/0iZlf
+        VWWMH8YgVJn8zKwgPXzeZUMp2mdeRMDf7noHf4PtfM91PblYYIDDZhiRa+z7j4OrfigBS/
+        ufuFhrx7DKa0IC5+nWeNKZDMOvUsldM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-wUBmcXtuOq-vxnR85lt59w-1; Tue, 31 Mar 2020 05:07:55 -0400
-X-MC-Unique: wUBmcXtuOq-vxnR85lt59w-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-406-tccnYqx9OjGyPtD43vnRRA-1; Tue, 31 Mar 2020 05:10:24 -0400
+X-MC-Unique: tccnYqx9OjGyPtD43vnRRA-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 673E9100DFC5;
-        Tue, 31 Mar 2020 09:07:54 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 30F4518CA243;
+        Tue, 31 Mar 2020 09:10:23 +0000 (UTC)
 Received: from [10.36.114.0] (ovpn-114-0.ams2.redhat.com [10.36.114.0])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8D79899DF8;
-        Tue, 31 Mar 2020 09:07:51 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH 04/10] s390x: smp: Test local interrupts
- after cpu reset
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 27A5D5C21B;
+        Tue, 31 Mar 2020 09:10:21 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH 08/10] s390x: smp: Wait for sigp completion
 To:     Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     thuth@redhat.com, linux-s390@vger.kernel.org
 References: <20200324081251.28810-1-frankja@linux.ibm.com>
- <20200324081251.28810-5-frankja@linux.ibm.com>
+ <20200324081251.28810-9-frankja@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -84,75 +83,74 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <b6f1d06b-aaa5-bdd5-5491-32c8338f9ead@redhat.com>
-Date:   Tue, 31 Mar 2020 11:07:50 +0200
+Message-ID: <91f0c373-f316-2898-4928-fea2e7283df7@redhat.com>
+Date:   Tue, 31 Mar 2020 11:10:21 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200324081251.28810-5-frankja@linux.ibm.com>
+In-Reply-To: <20200324081251.28810-9-frankja@linux.ibm.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 24.03.20 09:12, Janosch Frank wrote:
-> Local interrupts (external and emergency call) should be cleared after
-> any cpu reset.
+> Sigp orders are not necessarily finished when the processor finished
+> the sigp instruction. We need to poll if the order has been finished
+> before we continue.
 > 
-> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  s390x/smp.c | 22 ++++++++++++++++++++++
->  1 file changed, 22 insertions(+)
+> For (re)start and stop we already use sigp sense running and sigp
+
+Nope, hopefully no longer "sense running".
+
+> sense loops. But we still lack completion checks for stop and store
+> status, as well as the cpu resets.
 > 
-> diff --git a/s390x/smp.c b/s390x/smp.c
-> index 8a6cd1d8b17d76c6..a8e3dd7aac0c788c 100644
-> --- a/s390x/smp.c
-> +++ b/s390x/smp.c
-> @@ -243,6 +243,20 @@ static void test_reset_initial(void)
->  	report_prefix_pop();
->  }
+> Let's add them.
+> 
+
+
+[...]
+
+> @@ -75,6 +75,7 @@ static void test_stop_store_status(void)
+>  	lc->prefix_sa = 0;
+>  	lc->grs_sa[15] = 0;
+>  	smp_cpu_stop_store_status(1);
+> +	smp_cpu_wait_for_completion(1);
+>  	mb();
+>  	report(lc->prefix_sa == (uint32_t)(uintptr_t)cpu->lowcore, "prefix");
+>  	report(lc->grs_sa[15], "stack");
+> @@ -85,6 +86,7 @@ static void test_stop_store_status(void)
+>  	lc->prefix_sa = 0;
+>  	lc->grs_sa[15] = 0;
+>  	smp_cpu_stop_store_status(1);
+> +	smp_cpu_wait_for_completion(1);
+>  	mb();
+>  	report(lc->prefix_sa == (uint32_t)(uintptr_t)cpu->lowcore, "prefix");
+>  	report(lc->grs_sa[15], "stack");
+> @@ -215,6 +217,7 @@ static void test_reset_initial(void)
+>  	wait_for_flag();
 >  
-> +static void test_local_ints(void)
-> +{
-> +	unsigned long mask;
-> +
-> +	expect_ext_int();
-> +	/* Open masks for ecall and emcall */
-> +	ctl_set_bit(0, 13);
-> +	ctl_set_bit(0, 14);
-> +	mask = extract_psw_mask();
-> +	mask |= PSW_MASK_EXT;
-> +	load_psw_mask(mask);
-> +	set_flag(1);
-> +}
-> +
->  static void test_reset(void)
->  {
->  	struct psw psw;
-> @@ -251,10 +265,18 @@ static void test_reset(void)
->  	psw.addr = (unsigned long)test_func;
+>  	sigp_retry(1, SIGP_INITIAL_CPU_RESET, 0, NULL);
+> +	smp_cpu_wait_for_completion(1);
+>  	sigp(1, SIGP_STORE_STATUS_AT_ADDRESS, (uintptr_t)status, NULL);
 >  
->  	report_prefix_push("cpu reset");
-> +	sigp(1, SIGP_EMERGENCY_SIGNAL, 0, NULL);
-> +	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
+>  	report_prefix_push("clear");
+> @@ -264,6 +267,7 @@ static void test_reset(void)
 >  	smp_cpu_start(1, psw);
 >  
 >  	sigp_retry(1, SIGP_CPU_RESET, 0, NULL);
+> +	smp_cpu_wait_for_completion(1);
 >  	report(smp_cpu_stopped(1), "cpu stopped");
-> +
-> +	set_flag(0);
-> +	psw.addr = (unsigned long)test_local_ints;
-> +	smp_cpu_start(1, psw);
-> +	wait_for_flag();
-> +	report(true, "local interrupts cleared");
+>  
+>  	set_flag(0);
+> 
 
-
-How can you be sure they were actually cleared/delivered?
-
+Looks sane to me.
 
 -- 
 Thanks,
