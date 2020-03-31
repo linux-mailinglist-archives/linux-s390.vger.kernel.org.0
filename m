@@ -2,209 +2,227 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C133119923D
-	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 11:29:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3A82D199690
+	for <lists+linux-s390@lfdr.de>; Tue, 31 Mar 2020 14:31:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730031AbgCaJ3D (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 31 Mar 2020 05:29:03 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:63312 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729624AbgCaJ3C (ORCPT
+        id S1730642AbgCaMbO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 31 Mar 2020 08:31:14 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:31614 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730562AbgCaMbO (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 31 Mar 2020 05:29:02 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02V943bf001645
-        for <linux-s390@vger.kernel.org>; Tue, 31 Mar 2020 05:29:01 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 303ymjwtw8-1
+        Tue, 31 Mar 2020 08:31:14 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 02VCUU2T059271
+        for <linux-s390@vger.kernel.org>; Tue, 31 Mar 2020 08:31:12 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 3022juuvtv-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 31 Mar 2020 05:29:01 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 31 Mar 2020 08:31:12 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Tue, 31 Mar 2020 10:28:52 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Tue, 31 Mar 2020 13:30:55 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 31 Mar 2020 10:28:51 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02V9SvGH54198490
+        Tue, 31 Mar 2020 13:30:49 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 02VCV29E45285796
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 31 Mar 2020 09:28:57 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EA3AE5204E;
-        Tue, 31 Mar 2020 09:28:56 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.145.158.226])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id AA9D652051;
-        Tue, 31 Mar 2020 09:28:56 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH 04/10] s390x: smp: Test local interrupts
- after cpu reset
-To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Cc:     thuth@redhat.com, linux-s390@vger.kernel.org
-References: <20200324081251.28810-1-frankja@linux.ibm.com>
- <20200324081251.28810-5-frankja@linux.ibm.com>
- <b6f1d06b-aaa5-bdd5-5491-32c8338f9ead@redhat.com>
-From:   Janosch Frank <frankja@linux.ibm.com>
-Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
- 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
-Date:   Tue, 31 Mar 2020 11:28:56 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.2
+        Tue, 31 Mar 2020 12:31:02 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EFFED4C050;
+        Tue, 31 Mar 2020 12:31:01 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 11E484C04A;
+        Tue, 31 Mar 2020 12:31:01 +0000 (GMT)
+Received: from thinkpad (unknown [9.145.170.245])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 31 Mar 2020 12:31:01 +0000 (GMT)
+Date:   Tue, 31 Mar 2020 14:30:59 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>
+Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr,
+        Jonathan Corbet <corbet@lwn.net>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-riscv@lists.infradead.org, x86@kernel.org,
+        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
+In-Reply-To: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <b6f1d06b-aaa5-bdd5-5491-32c8338f9ead@redhat.com>
-Content-Type: multipart/signed; micalg=pgp-sha256;
- protocol="application/pgp-signature";
- boundary="GOc88mcdnMmgMHV8RM0WqiPTRCLmnZ4CU"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20033109-0012-0000-0000-0000039B8234
+x-cbid: 20033112-0020-0000-0000-000003BEEC78
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20033109-0013-0000-0000-000021D88DAE
-Message-Id: <126883fa-6c1e-a1e3-34f0-689cd2c0b7c4@linux.ibm.com>
+x-cbparentid: 20033112-0021-0000-0000-000022178CDF
+Message-Id: <20200331143059.29fca8fa@thinkpad>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-03-31_03:2020-03-30,2020-03-31 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 suspectscore=0
- adultscore=0 malwarescore=0 impostorscore=0 priorityscore=1501
- clxscore=1015 phishscore=0 mlxlogscore=999 mlxscore=0 lowpriorityscore=0
+ definitions=2020-03-31_04:2020-03-31,2020-03-31 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 adultscore=0
+ bulkscore=0 phishscore=0 malwarescore=0 priorityscore=1501 suspectscore=0
+ clxscore=1011 mlxlogscore=999 impostorscore=0 lowpriorityscore=0
  spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2003310077
+ engine=8.12.0-2003020000 definitions=main-2003310110
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---GOc88mcdnMmgMHV8RM0WqiPTRCLmnZ4CU
-Content-Type: multipart/mixed; boundary="K7gavZP7CHORnCAvuMbKaUQyf7V0Qis8D"
+On Tue, 24 Mar 2020 10:52:52 +0530
+Anshuman Khandual <anshuman.khandual@arm.com> wrote:
 
---K7gavZP7CHORnCAvuMbKaUQyf7V0Qis8D
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
+> This series adds more arch page table helper tests. The new tests here are
+> either related to core memory functions and advanced arch pgtable helpers.
+> This also creates a documentation file enlisting all expected semantics as
+> suggested by Mike Rapoport (https://lkml.org/lkml/2020/1/30/40).
+> 
+> This series has been tested on arm64 and x86 platforms. There is just one
+> expected failure on arm64 that will be fixed when we enable THP migration.
+> 
+> [   21.741634] WARNING: CPU: 0 PID: 1 at mm/debug_vm_pgtable.c:782
+> 
+> which corresponds to
+> 
+> WARN_ON(!pmd_present(pmd_mknotpresent(pmd_mkhuge(pmd))))
+> 
+> There are many TRANSPARENT_HUGEPAGE and ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD
+> ifdefs scattered across the test. But consolidating all the fallback stubs
+> is not very straight forward because ARCH_HAS_TRANSPARENT_HUGEPAGE_PUD is
+> not explicitly dependent on ARCH_HAS_TRANSPARENT_HUGEPAGE.
+> 
+> This series has been build tested on many platforms including the ones that
+> subscribe the test through ARCH_HAS_DEBUG_VM_PGTABLE.
+> 
 
-On 3/31/20 11:07 AM, David Hildenbrand wrote:
-> On 24.03.20 09:12, Janosch Frank wrote:
->> Local interrupts (external and emergency call) should be cleared after=
+Hi Anshuman,
 
->> any cpu reset.
->>
->> Signed-off-by: Janosch Frank <frankja@linux.ibm.com>
->> ---
->>  s390x/smp.c | 22 ++++++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->>
->> diff --git a/s390x/smp.c b/s390x/smp.c
->> index 8a6cd1d8b17d76c6..a8e3dd7aac0c788c 100644
->> --- a/s390x/smp.c
->> +++ b/s390x/smp.c
->> @@ -243,6 +243,20 @@ static void test_reset_initial(void)
->>  	report_prefix_pop();
->>  }
->> =20
->> +static void test_local_ints(void)
->> +{
->> +	unsigned long mask;
->> +
->> +	expect_ext_int();
->> +	/* Open masks for ecall and emcall */
->> +	ctl_set_bit(0, 13);
->> +	ctl_set_bit(0, 14);
->> +	mask =3D extract_psw_mask();
->> +	mask |=3D PSW_MASK_EXT;
->> +	load_psw_mask(mask);
->> +	set_flag(1);
->> +}
->> +
->>  static void test_reset(void)
->>  {
->>  	struct psw psw;
->> @@ -251,10 +265,18 @@ static void test_reset(void)
->>  	psw.addr =3D (unsigned long)test_func;
->> =20
->>  	report_prefix_push("cpu reset");
->> +	sigp(1, SIGP_EMERGENCY_SIGNAL, 0, NULL);
->> +	sigp(1, SIGP_EXTERNAL_CALL, 0, NULL);
->>  	smp_cpu_start(1, psw);
->> =20
->>  	sigp_retry(1, SIGP_CPU_RESET, 0, NULL);
->>  	report(smp_cpu_stopped(1), "cpu stopped");
->> +
->> +	set_flag(0);
->> +	psw.addr =3D (unsigned long)test_local_ints;
->> +	smp_cpu_start(1, psw);
->> +	wait_for_flag();
->> +	report(true, "local interrupts cleared");
->=20
->=20
-> How can you be sure they were actually cleared/delivered?
->=20
-Because cpu 1 would get a ext int it didn't expect and would do a
-report_abort() as pecified in lib/s390x/interrupt.c
+thanks for the update. There are a couple of issues on s390, some might
+also affect other archs.
 
+1) The pxd_huge_tests are using pxd_set/clear_huge, which defaults to
+returning 0 if !CONFIG_HAVE_ARCH_HUGE_VMAP. As result, the checks for
+!pxd_test/clear_huge in the pxd_huge_tests will always trigger the
+warning. This should affect all archs w/o CONFIG_HAVE_ARCH_HUGE_VMAP.
+Could be fixed like this:
 
+@@ -923,8 +923,10 @@ void __init debug_vm_pgtable(void)
+        pmd_leaf_tests(pmd_aligned, prot);
+        pud_leaf_tests(pud_aligned, prot);
+ 
+-       pmd_huge_tests(pmdp, pmd_aligned, prot);
+-       pud_huge_tests(pudp, pud_aligned, prot);
++       if (IS_ENABLED(CONFIG_HAVE_ARCH_HUGE_VMAP)) {
++               pmd_huge_tests(pmdp, pmd_aligned, prot);
++               pud_huge_tests(pudp, pud_aligned, prot);
++       }
+ 
+        pte_savedwrite_tests(pte_aligned, prot);
+        pmd_savedwrite_tests(pmd_aligned, prot);
 
---K7gavZP7CHORnCAvuMbKaUQyf7V0Qis8D--
+BTW, please add some comments to the various #ifdef/#else stuff, especially
+when the different parts are far away and/or nested.
 
---GOc88mcdnMmgMHV8RM0WqiPTRCLmnZ4CU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+2) The hugetlb_advanced_test will fail because it directly de-references
+huge *ptep pointers instead of using huge_ptep_get() for this. We have
+very different pagetable entry layout for pte and (large) pmd on s390,
+and unfortunately the whole hugetlbfs code is using pte_t instead of pmd_t
+like THP. For this reason, huge_ptep_get() was introduced, which will
+return a "converted" pte, because directly reading from a *ptep (pointing
+to a large pmd) will not return a proper pte. Only ARM has also an
+implementation of huge_ptep_get(), so they could be affected, depending
+on what exactly they need it for.
 
------BEGIN PGP SIGNATURE-----
+Could be fixed like this (the first de-reference is a bit special,
+because at that point *ptep does not really point to a large (pmd) entry
+yet, it is initially an invalid pte entry, which breaks our huge_ptep_get()
+conversion logic. I also added PMD_MASK alignment for RANDOM_ORVALUE,
+because we do have some special bits there in our large pmds. It seems
+to also work w/o that alignment, but it feels a bit wrong):
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6DDVgACgkQ41TmuOI4
-ufgPgRAAwkq/yYR5Yy2ZiCswYXsf3koxKhEEgGHduoOyT0kBcbBEnacoMUtxw92e
-Z6Dq9qRPiMAfLxBoTXB4/Lj3fMzpG6h9i/EHlHYFQgD8NE+cVhV22O1FkjxYCxvT
-J5jUkWvPZyfTNfXeSM77+99Yq2kegEsnTlSgM+ebyK6TafrdIATM+ijjp2ST5Sf2
-IIgS9t+bAtgEkOw09CwuemLhA5Z9W4ONMrR5v/XeCyQ+5G3GqzutFgUVYcnVVX0s
-V9aXDOrMuPadD3K92ik6qvmI1zUumCQYldkrJPKGuLvrKvyp6VBC7QCOvK4Gekv0
-mFfinXiRwDwdxaKGJ85lijnFlJFpNF5Ontnqom2B9wu2cxCRzGe2QmlZtGRbf8Jl
-1gTmfNw59wsHjFK0wmgiMP8fyLfvSQ+XxlFAtYngqWFD3sLOjf4rVCFkueZQCdAj
-PnEBfwd1adqq4cA1NNeNaqCu8FsNkOctOHFC+RDEna0TsZycroSdnagsQZAXS6ZA
-jo3LKodxlmuuPU+0KyLGYs+8RWCSEbvGhO5+biaH6oqeYzf+12nTNLGU2j0mWMzu
-/CboHjfd8EiJVRfTUsKtyMR6r9tZVwaXUUxjIuKsLZhxSJeR7Iw/ElkGkXdj68xQ
-XYAbjAifcA2ZrCH8jM3XSh6P7UAHuZCuIpGvrPmhM3pKFSE8uZ4=
-=SUPZ
------END PGP SIGNATURE-----
+@@ -731,26 +731,26 @@ static void __init hugetlb_advanced_test
+                                          unsigned long vaddr, pgprot_t prot)
+ {
+        struct page *page = pfn_to_page(pfn);
+-       pte_t pte = READ_ONCE(*ptep);
++       pte_t pte;
 
---GOc88mcdnMmgMHV8RM0WqiPTRCLmnZ4CU--
+-       pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
++       pte = pte_mkhuge(mk_pte_phys(RANDOM_ORVALUE & PMD_MASK, prot));
+        set_huge_pte_at(mm, vaddr, ptep, pte);
+        barrier();
+        WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
+        huge_pte_clear(mm, vaddr, ptep, PMD_SIZE);
+-       pte = READ_ONCE(*ptep);
++       pte = huge_ptep_get(ptep);
+        WARN_ON(!huge_pte_none(pte));
+ 
+        pte = mk_huge_pte(page, prot);
+        set_huge_pte_at(mm, vaddr, ptep, pte);
+        huge_ptep_set_wrprotect(mm, vaddr, ptep);
+-       pte = READ_ONCE(*ptep);
++       pte = huge_ptep_get(ptep);
+        WARN_ON(huge_pte_write(pte));
+ 
+        pte = mk_huge_pte(page, prot);
+        set_huge_pte_at(mm, vaddr, ptep, pte);
+        huge_ptep_get_and_clear(mm, vaddr, ptep);
+-       pte = READ_ONCE(*ptep);
++       pte = huge_ptep_get(ptep);
+        WARN_ON(!huge_pte_none(pte));
+ 
+        pte = mk_huge_pte(page, prot);
+@@ -759,7 +759,7 @@ static void __init hugetlb_advanced_test
+        pte = huge_pte_mkwrite(pte);
+        pte = huge_pte_mkdirty(pte);
+        huge_ptep_set_access_flags(vma, vaddr, ptep, pte, 1);
+-       pte = READ_ONCE(*ptep);
++       pte = huge_ptep_get(ptep);
+        WARN_ON(!(huge_pte_write(pte) && huge_pte_dirty(pte)));
+ }
+ #else
+
+3) The pmd_protnone_tests() has an issue, because it passes a pmd to
+pmd_protnone() which has not been marked as large. We check for large
+pmd in the s390 implementation of pmd_protnone(), and will fail if a
+pmd is not large. We had similar issues before, in other helpers, where
+I changed the logic on s390 to not require the pmd large check, but I'm
+not so sure in this case. Is there a valid use case for doing
+pmd_protnone() on "normal" pmds? Or could this be changed like this:
+
+@@ -537,7 +537,7 @@ static void __init pte_protnone_tests(un
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ static void __init pmd_protnone_tests(unsigned long pfn, pgprot_t prot)
+ {
+-       pmd_t pmd = pfn_pmd(pfn, prot);
++       pmd_t pmd = mk_huge_pmd(pfn_to_page(pfn), prot);
+
+        if (!IS_ENABLED(CONFIG_NUMA_BALANCING))
+                return;
+
+Regards,
+Gerald
 
