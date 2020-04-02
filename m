@@ -2,121 +2,108 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id AAFBA19B606
-	for <lists+linux-s390@lfdr.de>; Wed,  1 Apr 2020 20:55:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BCBE419BD38
+	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2020 10:01:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732147AbgDASz2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 1 Apr 2020 14:55:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:47808 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbgDASz1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 1 Apr 2020 14:55:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=g+zmGJ2+G9hNWUAMUsh52VSSKxFQTXVxsgcRUv3kCKw=; b=HSkwMdGjJTzeDKg6viAgg+vkYX
-        GwWikN3woD12qqHVvV7ZHlDBuSnIT1YTLhhPxnYeVhU4Yz0w22ayIAzSGGNCEEH3ESWk2Of0bsMU/
-        dG0H9jo2k7LKZZep+4GqrDqfz7gda+n57tRazqwm0NtWpHChHNHExKMuQaHVOKIjVTNZsLgekVjVB
-        ETytEzAil0LGP9C/6DiupNZY0kRjExHiViQlWPo3nNbK3R5aGeyag92MZI3KBpNK3UjeJxk/U9Ng8
-        RaPo+1ZWEAkLxis4FKl6f+lSrhmDY1a51cw8esCzD2Yt7ZzKeDLwwC0kkohK8jmUgrXJhRy6f60cJ
-        K5QabcFg==;
-Received: from [2601:1c0:6280:3f0:897c:6038:c71d:ecac]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jJiVz-0003u7-Lp; Wed, 01 Apr 2020 18:55:03 +0000
-Subject: Re: [PATCH v2 4/4] hugetlbfs: clean up command line processing
-To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
+        id S2387476AbgDBIBt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 2 Apr 2020 04:01:49 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52817 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387403AbgDBIBs (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Apr 2020 04:01:48 -0400
+Received: by mail-wm1-f66.google.com with SMTP id t8so2346786wmi.2;
+        Thu, 02 Apr 2020 01:01:47 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=UrBSIQuzAujdG2IKZQy1WDw2nZSqWHmIp0pyFUuT55I=;
+        b=LrggHGRMVSGYe3cA9hzSQ9/2bZIts+IiiLjba5rhCXl6Cm1YiC6zpadBohM4floUPE
+         6ZM98hVNKBNijEnd4t0Ldy0WAS2bw2VNrLTEEED6inMji83qPVWCzea0gkIgkLQwqYu6
+         cLzqu+XddQ89E3RZ+fdpak571z5N0joWyLooWiiI3Yjs8l0qP9L+C1tzYrfsxm6ZvVEO
+         TsvJ4jf9CU7BaywTGIsZCUZbT3DKzhhLYv10Y86Ua7mvoMDlJPy2D+o72zqC0u3e48kA
+         +bL+xjCYuAus2Qm4CJv6XFZCJTlbIORMhn97eWEc7qo1KvDqL6WUKtvSVMhFXwi38euk
+         Rzsg==
+X-Gm-Message-State: AGi0Pua694FIJ8XxF6lH1ijv65yZ6DDKtSSGumPvY0WBssKLv4ai6/wx
+        qnuCqoe1nzDJJHmTCz4udxs=
+X-Google-Smtp-Source: APiQypLKMYqb9qsRd12t2lZK0oNaHQe5op/Ct4om+69/3ikerP3v6RKRd1oyx6YEyyBTpuIaTaPA/w==
+X-Received: by 2002:a1c:4d16:: with SMTP id o22mr2320220wmh.56.1585814506667;
+        Thu, 02 Apr 2020 01:01:46 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id v21sm5906815wmh.26.2020.04.02.01.01.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 02 Apr 2020 01:01:45 -0700 (PDT)
+Date:   Thu, 2 Apr 2020 10:01:44 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Mike Rapoport <rppt@linux.ibm.com>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
         Benjamin Herrenschmidt <benh@kernel.crashing.org>,
         Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Mina Almasry <almasrymina@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20200401183819.20647-1-mike.kravetz@oracle.com>
- <20200401183819.20647-5-mike.kravetz@oracle.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <a80f530d-e803-3952-e714-705a8589f50a@infradead.org>
-Date:   Wed, 1 Apr 2020 11:55:01 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH RFC] mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP (was: Re:
+ [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
+Message-ID: <20200402080144.GK22681@dhcp22.suse.cz>
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330092127.GB30942@linux.ibm.com>
+ <20200330095843.GF14243@dhcp22.suse.cz>
+ <20200331215618.GG30942@linux.ibm.com>
+ <20200401054227.GC2129@MiWiFi-R3L-srv>
+ <20200401075155.GH30942@linux.ibm.com>
 MIME-Version: 1.0
-In-Reply-To: <20200401183819.20647-5-mike.kravetz@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200401075155.GH30942@linux.ibm.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 4/1/20 11:38 AM, Mike Kravetz wrote:
-> With all hugetlb page processing done in a single file clean up code.
-> - Make code match desired semantics
->   - Update documentation with semantics
-> - Make all warnings and errors messages start with 'HugeTLB:'.
-> - Consistently name command line parsing routines.
-> - Check for hugepages_supported() before processing parameters.
-> - Add comments to code
->   - Describe some of the subtle interactions
->   - Describe semantics of command line arguments
+On Wed 01-04-20 10:51:55, Mike Rapoport wrote:
+> Hi,
 > 
-> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> ---
-
-Hi Mike,
-One nit, please see below:
-
->  .../admin-guide/kernel-parameters.txt         | 35 ++++---
->  Documentation/admin-guide/mm/hugetlbpage.rst  | 44 +++++++++
->  mm/hugetlb.c                                  | 96 +++++++++++++++----
->  3 files changed, 142 insertions(+), 33 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 1bd5454b5e5f..de653cfe1726 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -832,12 +832,15 @@
->  			See also Documentation/networking/decnet.txt.
+> On Wed, Apr 01, 2020 at 01:42:27PM +0800, Baoquan He wrote:
+[...]
+> > From above information, we can remove HAVE_MEMBLOCK_NODE_MAP, and
+> > replace it with CONFIG_NUMA. That sounds more sensible to store nid into
+> > memblock when NUMA support is enabled.
 >  
->  	default_hugepagesz=
-> -			[same as hugepagesz=] The size of the default
-> -			HugeTLB page size. This is the size represented by
-> -			the legacy /proc/ hugepages APIs, used for SHM, and
-> -			default size when mounting hugetlbfs filesystems.
-> -			Defaults to the default architecture's huge page size
-> -			if not specified.
-> +			[HW] The size of the default HugeTLB page size. This
+> Replacing CONFIG_HAVE_MEMBLOCK_NODE_MAP with CONFIG_NUMA will work, but
+> this will not help cleaning up the whole node/zone initialization mess and
+> we'll be stuck with two implementations.
 
-			Drop one "size" above?
+Yeah, this is far from optimal.
 
-> +			is the size represented by the legacy /proc/ hugepages
-> +			APIs.  In addition, this is the default hugetlb size
-> +			used for shmget(), mmap() and mounting hugetlbfs
-> +			filesystems.  If not specified, defaults to the
-> +			architecture's default huge page size.  Huge page
-> +			sizes are architecture dependent.  See also
-> +			Documentation/admin-guide/mm/hugetlbpage.rst.
-> +			Format: size[KMG]
+> The overhead of enabling HAVE_MEMBLOCK_NODE_MAP is only for init time as
+> most architectures will anyway discard the entire memblock, so having it in
+> a UMA arch won't be a problem. The only exception is arm that uses
+> memblock for pfn_valid(), here we may also think about a solution to
+> compensate the addition of nid to the memblock structures. 
 
-
-
+Well, we can make memblock_region->nid defined only for CONFIG_NUMA.
+memblock_get_region_node would then unconditionally return 0 on UMA.
+Essentially the same way we do NUMA for other MM code. I only see few
+direct usage of region->nid.
 -- 
-~Randy
-
+Michal Hocko
+SUSE Labs
