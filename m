@@ -2,139 +2,237 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 5679C19D0D1
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Apr 2020 09:09:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 272D919D359
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Apr 2020 11:17:06 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388121AbgDCHJQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 Apr 2020 03:09:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47038 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730759AbgDCHJQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Apr 2020 03:09:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585897755;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=TUShErNk8cwU7hJf8BxmK0K5c6pEQ4hGGKwc5zmiaaw=;
-        b=H0qa3p45pEFu5dODv0kZ4FEEaztxIqONFBQwnlxq4QvXs20WggEOCRypwiRArckAb2mzOw
-        BueenI1alP3CSFcNU0G2OXwxtWMvQF8NqY0//4NkycZMIBnWCPf9OSE6A3BI7JZvNk73po
-        qqClTaYvuhZf5y5/01GRSehcTEh/10Y=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-63-Cvy3b_roPf66oPbJTVFQdA-1; Fri, 03 Apr 2020 03:09:13 -0400
-X-MC-Unique: Cvy3b_roPf66oPbJTVFQdA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2400818A6EC1;
-        Fri,  3 Apr 2020 07:09:09 +0000 (UTC)
-Received: from localhost (ovpn-12-42.pek2.redhat.com [10.72.12.42])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 115A11147D2;
-        Fri,  3 Apr 2020 07:09:07 +0000 (UTC)
-Date:   Fri, 3 Apr 2020 15:09:04 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Hoan Tran <hoan@os.amperecomputing.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        id S2390520AbgDCJQ6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Apr 2020 05:16:58 -0400
+Received: from condef-08.nifty.com ([202.248.20.73]:22434 "EHLO
+        condef-08.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727843AbgDCJQ6 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Apr 2020 05:16:58 -0400
+X-Greylist: delayed 525 seconds by postgrey-1.27 at vger.kernel.org; Fri, 03 Apr 2020 05:16:57 EDT
+Received: from conuserg-08.nifty.com ([10.126.8.71])by condef-08.nifty.com with ESMTP id 033932LC017153
+        for <linux-s390@vger.kernel.org>; Fri, 3 Apr 2020 18:03:03 +0900
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-08.nifty.com with ESMTP id 03392RjV003555;
+        Fri, 3 Apr 2020 18:02:28 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-08.nifty.com 03392RjV003555
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1585904548;
+        bh=XrGcOoytGchUAxm+l/tv3vqg2YEbLgd5bxsYRFtLiG8=;
+        h=From:To:Cc:Subject:Date:From;
+        b=vnz7MfC6d7R4hdqCOlm0vQp9C0iwbaUebYk95pwPJb6mGE6mv5DxFdSGlJr/Zj/qc
+         66sLQ3MiCgDt9BNmFOJ2xxFSX2XLxgP0q8Z8IUE7kglnEkuuvuBAkZih6yVylCQPOm
+         arVzNcZzl4KaJ4ffhB+KGy/AWP4O2GOsyv9IbOn8T/mVDu4CZ4MOLdGF4jUwPUv4SS
+         Q3lVFkjl4Bd2FKAe4fHD547G1Sj1gUoJEYcOr3VS3y0gc2Er8AMjD/X1FVEUFXTKHi
+         C84wm0a91AtJJfKnf9WwNInJ3WRVMD2O6Duuwa8C8TknBAO/JuVpxMQhc9Pll9fAm2
+         nkTbn3mNFrQug==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <masahiroy@kernel.org>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Jeremy Cline <jcline@redhat.com>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200403070904.GO2402@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
- <20200330182301.GM14243@dhcp22.suse.cz>
- <20200331081423.GE30942@linux.ibm.com>
- <20200331085513.GE30449@dhcp22.suse.cz>
- <20200331140332.GA2129@MiWiFi-R3L-srv>
- <20200331142138.GL30449@dhcp22.suse.cz>
- <20200331143140.GA2402@MiWiFi-R3L-srv>
- <cc717f09-2b18-b242-e438-3ec730c5dac0@os.amperecomputing.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cc717f09-2b18-b242-e438-3ec730c5dac0@os.amperecomputing.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Masahiro Yamada <masahiroy@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] kbuild: add dummy toolchains to enable all cc-option etc. in Kconfig
+Date:   Fri,  3 Apr 2020 18:02:24 +0900
+Message-Id: <20200403090224.24045-1-masahiroy@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 04/02/20 at 09:46pm, Hoan Tran wrote:
-> Hi All,
-> 
-> On 3/31/20 7:31 AM, Baoquan He wrote:
-> > On 03/31/20 at 04:21pm, Michal Hocko wrote:
-> > > On Tue 31-03-20 22:03:32, Baoquan He wrote:
-> > > > Hi Michal,
-> > > > 
-> > > > On 03/31/20 at 10:55am, Michal Hocko wrote:
-> > > > > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
-> > > > > > Maybe I mis-read the code, but I don't see how this could happen. In the
-> > > > > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
-> > > > > > calculate_node_totalpages() that ensures that node->node_zones are entirely
-> > > > > > within the node because this is checked in zone_spanned_pages_in_node().
-> > > > > 
-> > > > > zone_spanned_pages_in_node does chech the zone boundaries are within the
-> > > > > node boundaries. But that doesn't really tell anything about other
-> > > > > potential zones interleaving with the physical memory range.
-> > > > > zone->spanned_pages simply gives the physical range for the zone
-> > > > > including holes. Interleaving nodes are essentially a hole
-> > > > > (__absent_pages_in_range is going to skip those).
-> > > > > 
-> > > > > That means that when free_area_init_core simply goes over the whole
-> > > > > physical zone range including holes and that is why we need to check
-> > > > > both for physical and logical holes (aka other nodes).
-> > > > > 
-> > > > > The life would be so much easier if the whole thing would simply iterate
-> > > > > over memblocks...
-> > > > 
-> > > > The memblock iterating sounds a great idea. I tried with putting the
-> > > > memblock iterating in the upper layer, memmap_init(), which is used for
-> > > > boot mem only anyway. Do you think it's doable and OK? It yes, I can
-> > > > work out a formal patch to make this simpler as you said. The draft code
-> > > > is as below. Like this it uses the existing code and involves little change.
-> > > 
-> > > Doing this would be a step in the right direction! I haven't checked the
-> > > code very closely though. The below sounds way too simple to be truth I
-> > > am afraid. First for_each_mem_pfn_range is available only for
-> > > CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
-> > > saying that I really hate that being conditional). Also I haven't really
-> > > checked the deferred initialization path - I have a very vague
-> > > recollection that it has been converted to the memblock api but I have
-> > > happilly dropped all that memory.
-> > 
-> > Thanks for your quick response and pointing out the rest suspect aspects,
-> > I will investigate what you mentioned, see if they impact.
-> 
-> I would like to check if we still move on with my patch to remove
-> CONFIG_NODES_SPAN_OTHER_NODES and have another patch on top it?
+Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
+options your compiler does not support. This works well if you configure
+and build the kernel on the same host machine.
 
-I think we would like to replace CONFIG_NODES_SPAN_OTHER_NODES with
-CONFIG_NUMA, and just let UMA return 0 as node id, as Michal replied in
-another mail. Anyway, your patch 2~5 are still needed to sit on top of
-the change of this new plan.
+It is inconvenient if you prepare the .config that is carried to a
+different build environment (typically this happens when you package
+the kernel for distros) because using a different compiler potentially
+produces different CONFIG options than the real build environment.
+So, you probably want to make as many options visible as possible.
+In other words, you need to create a super-set of CONFIG options that
+cover any build environment. If some of the CONFIG options turned out
+to be unsupported on the build machine, they are automatically disabled
+by the nature of Kconfig.
+
+However, it is not feasible to get a full-featured compiler for every
+arch.
+
+This issue was discussed here:
+
+  https://lkml.org/lkml/2019/12/9/620
+
+Other than distros, savedefconfig is also a problem. Some arch subsytems
+periodically resync defconfig files. If you use a less-capable compiler
+for savedefconfig, options that do not meet 'depends on $(cc-option,...)'
+will be forcibly disabled. So, defconfig && savedefconfig may silently
+change the behavior.
+
+This commit adds a set of dummy toolchains that pretend to support any
+feature.
+
+Most of compiler features are tested by cc-option, which simply checks
+the exit code of $(CC). The dummy tools are just a shell script that
+exits with 0 in most cases. So, $(cc-option, ...) is evaluated as 'y'.
+
+There are more complicated checks such as:
+
+  scripts/gcc-x86_{32,64}-has-stack-protector.sh
+  scripts/gcc-plugin.sh
+  scripts/tools-support-relr.sh
+
+I tried my best to implement the dummy scripts to pass all checks.
+
+From the top directory of the source tree, you can do:
+
+   $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
+
+Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+---
+
+ scripts/dummy-tools/gcc     | 91 +++++++++++++++++++++++++++++++++++++
+ scripts/dummy-tools/ld      |  4 ++
+ scripts/dummy-tools/nm      |  4 ++
+ scripts/dummy-tools/objcopy |  4 ++
+ 4 files changed, 103 insertions(+)
+ create mode 100755 scripts/dummy-tools/gcc
+ create mode 100755 scripts/dummy-tools/ld
+ create mode 100755 scripts/dummy-tools/nm
+ create mode 100755 scripts/dummy-tools/objcopy
+
+diff --git a/scripts/dummy-tools/gcc b/scripts/dummy-tools/gcc
+new file mode 100755
+index 000000000000..33487e99d83e
+--- /dev/null
++++ b/scripts/dummy-tools/gcc
+@@ -0,0 +1,91 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-only
++#
++# Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
++# options your compiler does not support. This works well if you configure and
++# build the kernel on the same host machine.
++#
++# It is inconvenient if you prepare the .config that is carried to a different
++# build environment (typically this happens when you package the kernel for
++# distros) because using a different compiler potentially produces different
++# CONFIG options than the real build environment. So, you probably want to make
++# as many options visible as possible. In other words, you need to create a
++# super-set of CONFIG options that cover any build environment. If some of the
++# CONFIG options turned out to be unsupported on the build machine, they are
++# automatically disabled by the nature of Kconfig.
++#
++# However, it is not feasible to get a full-featured compiler for every arch.
++# Hence these dummy toolchains to make all compiler tests pass.
++#
++# Usage:
++#
++# From the top directory of the source tree, run
++#
++#   $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
++#
++# Most of compiler features are tested by cc-option, which simply checks the
++# exit code of $(CC). This script does nothing and just exits with 0 in most
++# cases. So, $(cc-option, ...) is evaluated as 'y'.
++#
++# This scripts caters to more checks; handle --version and pre-process __GNUC__
++# etc. to pretend to be GCC, and also do right things to satisfy some scripts.
++
++# Check if the first parameter appears in the rest. Succeeds if found.
++# This helper is useful if a particular option was passed to this script.
++# Typically used like this:
++#   arg_contain <word-you-are-searching-for> "$@"
++arg_contain ()
++{
++	search="$1"
++	shift
++
++	while [ $# -gt 0 ]
++	do
++		if [ "$search" = "$1" ]; then
++			return 0
++		fi
++		shift
++	done
++
++	return 1
++}
++
++# To set CONFIG_CC_IS_GCC=y
++if arg_contain --version "$@"; then
++	echo "gcc (scripts/dummy-tools/gcc)"
++	exit 0
++fi
++
++if arg_contain -E "$@"; then
++	# For scripts/gcc-version.sh; This emulates GCC 20.0.0
++	if arg_contain - "$@"; then
++		sed 's/^__GNUC__$/20/; s/^__GNUC_MINOR__$/0/; s/^__GNUC_PATCHLEVEL__$/0/'
++		exit 0
++	else
++		echo "no input files" >&2
++		exit 1
++	fi
++fi
++
++if arg_contain -S "$@"; then
++	# For scripts/gcc-x86-*-has-stack-protector.sh
++	if arg_contain -fstack-protector "$@"; then
++		echo "%gs"
++		exit 0
++	fi
++fi
++
++# For scripts/gcc-plugin.sh
++if arg_contain -print-file-name=plugin "$@"; then
++	plugin_dir=$(mktemp -d)
++
++	sed -n 's/.*#include "\(.*\)"/\1/p' $(dirname $0)/../gcc-plugins/gcc-common.h |
++	while read header
++	do
++		mkdir -p $plugin_dir/include/$(dirname $header)
++		touch $plugin_dir/include/$header
++	done
++
++	echo $plugin_dir
++	exit 0
++fi
+diff --git a/scripts/dummy-tools/ld b/scripts/dummy-tools/ld
+new file mode 100755
+index 000000000000..3bc56ae4cc15
+--- /dev/null
++++ b/scripts/dummy-tools/ld
+@@ -0,0 +1,4 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-only
++
++# Dummy script that always succeeds
+diff --git a/scripts/dummy-tools/nm b/scripts/dummy-tools/nm
+new file mode 100755
+index 000000000000..3bc56ae4cc15
+--- /dev/null
++++ b/scripts/dummy-tools/nm
+@@ -0,0 +1,4 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-only
++
++# Dummy script that always succeeds
+diff --git a/scripts/dummy-tools/objcopy b/scripts/dummy-tools/objcopy
+new file mode 100755
+index 000000000000..3bc56ae4cc15
+--- /dev/null
++++ b/scripts/dummy-tools/objcopy
+@@ -0,0 +1,4 @@
++#!/bin/sh
++# SPDX-License-Identifier: GPL-2.0-only
++
++# Dummy script that always succeeds
+-- 
+2.17.1
 
