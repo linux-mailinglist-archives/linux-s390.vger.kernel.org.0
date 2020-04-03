@@ -2,95 +2,217 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6F20919C915
-	for <lists+linux-s390@lfdr.de>; Thu,  2 Apr 2020 20:49:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D232A19CF84
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Apr 2020 06:46:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390047AbgDBSsm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 2 Apr 2020 14:48:42 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25968 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2390003AbgDBSsm (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 2 Apr 2020 14:48:42 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1585853321;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=v7Q48lYxslciByEQ33ox9gAR58LiX+bslgB2j4RAZZg=;
-        b=dWVbHWt6ayKgcbOZEkZezX+lHp4s6caforshFR5ByDp8VWBDDpUdvZj3nhoIAHMbDxk23m
-        AeJZ9wRfTyY+v4U7FlQcmGf0pXnYNvmjXlUZxTQXPzdtQQ0Znv24xWGaS1Z/4iSmXVZ1nI
-        9RYiNMgOAtGJePnJqvlBci0PxKh+h2w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-129-tcmxRi3mOCKRGGysVKZOQQ-1; Thu, 02 Apr 2020 14:48:38 -0400
-X-MC-Unique: tcmxRi3mOCKRGGysVKZOQQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6BDD7107ACC4;
-        Thu,  2 Apr 2020 18:48:36 +0000 (UTC)
-Received: from t480s.redhat.com (ovpn-114-29.ams2.redhat.com [10.36.114.29])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8801460BF3;
-        Thu,  2 Apr 2020 18:48:34 +0000 (UTC)
-From:   David Hildenbrand <david@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1728856AbgDCEqR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Apr 2020 00:46:17 -0400
+Received: from mail-mw2nam12on2119.outbound.protection.outlook.com ([40.107.244.119]:4544
+        "EHLO NAM12-MW2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbgDCEqR (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Fri, 3 Apr 2020 00:46:17 -0400
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jGpMKVIkwAdXntA2yf2j03qE+409aE5cQ+wmaNuD0yluA4BPkyk/8IBlDVDqowBm1VR9ASmABGKz5Z2pIT0PfNKJM8+FXaYn/LCigUCElTbDjmwFFfejJiO/NPjJI1B2U2fKJmZPRyEp1Mix8eMcrVBC4UMDOlPNhD6VhaGbeeI0IBSnKa5GpTO18nAFhiNKaW5SfuTRgirP64qoEj4wP2txQMY85qdbeASaQz43yWm3eeftndYeceOuhhIZfi8RLIuXHL+KJ6rNPSvUOkTIwd0wS8r36iljEw9r/5kxjRABFsOPZABuC/ExQbdETFNK3JOI3qghD3gvvCTcD0fjsQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lxoh9T0pU6vFadEAAtqvcqN0XObwhZl1NRyNPPOYH3A=;
+ b=m6N4psEmBdmldgviaoFFI4cqLtoEqjvnhqmfW35eVf78OF3U2ZijusByJ967Mjh0kKhyJz7AZUgPFAUh6T3Z8KI2kA3cXw97+F1bzKxrhCVnZCO6wO/A9NkRurgrBnlmRg0P7UVx2L/75qzgeC1R3SxLhB/b4imdNqvoxmCj6oupctXlJFIe8V7w6HgP3z96efce60rFIPB4xsKnA66I3Fj6NoVvUYB03ER9Z4tRWCr1IP2GfNTl1/q9tyWzpZW9fHZ5bSkflko2xB2N3xrft6In4bgd7Q+TkhM708eKAGchZnzk9+6qfrxU5RmysMS6I7ZI2EOLqXDP2NQtQ0NF0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=os.amperecomputing.com; dmarc=pass action=none
+ header.from=os.amperecomputing.com; dkim=pass
+ header.d=os.amperecomputing.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=os.amperecomputing.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=lxoh9T0pU6vFadEAAtqvcqN0XObwhZl1NRyNPPOYH3A=;
+ b=C/RN0huH0NuRbidJQBDNAXBPwsemozkVHAT7y5ar/8XuvXv/ZWRhB4P3Jr3Vv7m/jHrlw13NU8i5Np44vcLHutGQNF3S9Cce4gYxSisCiQU1HGGJ7ZILil1P/JqQtWtDkL8vgAnvCXb32ogzSsEtgZAHMLdfobHf+9Vph4tKyjM=
+Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=hoan@os.amperecomputing.com; 
+Received: from BYAPR01MB5494.prod.exchangelabs.com (2603:10b6:a03:127::30) by
+ BYAPR01MB4824.prod.exchangelabs.com (2603:10b6:a03:8d::30) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2856.20; Fri, 3 Apr 2020 04:46:12 +0000
+Received: from BYAPR01MB5494.prod.exchangelabs.com
+ ([fe80::a979:b2e2:fdaf:1ccb]) by BYAPR01MB5494.prod.exchangelabs.com
+ ([fe80::a979:b2e2:fdaf:1ccb%6]) with mapi id 15.20.2856.019; Fri, 3 Apr 2020
+ 04:46:11 +0000
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+To:     Baoquan He <bhe@redhat.com>, Michal Hocko <mhocko@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1 5/5] KVM: s390: vsie: gmap_table_walk() simplifications
-Date:   Thu,  2 Apr 2020 20:48:19 +0200
-Message-Id: <20200402184819.34215-6-david@redhat.com>
-In-Reply-To: <20200402184819.34215-1-david@redhat.com>
-References: <20200402184819.34215-1-david@redhat.com>
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330175100.GD30942@linux.ibm.com>
+ <20200330182301.GM14243@dhcp22.suse.cz>
+ <20200331081423.GE30942@linux.ibm.com>
+ <20200331085513.GE30449@dhcp22.suse.cz>
+ <20200331140332.GA2129@MiWiFi-R3L-srv>
+ <20200331142138.GL30449@dhcp22.suse.cz>
+ <20200331143140.GA2402@MiWiFi-R3L-srv>
+From:   Hoan Tran <hoan@os.amperecomputing.com>
+Message-ID: <cc717f09-2b18-b242-e438-3ec730c5dac0@os.amperecomputing.com>
+Date:   Thu, 2 Apr 2020 21:46:05 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:68.0)
+ Gecko/20100101 Thunderbird/68.6.0
+In-Reply-To: <20200331143140.GA2402@MiWiFi-R3L-srv>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: CY4PR16CA0025.namprd16.prod.outlook.com
+ (2603:10b6:910:60::12) To BYAPR01MB5494.prod.exchangelabs.com
+ (2603:10b6:a03:127::30)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-Content-Transfer-Encoding: quoted-printable
+X-MS-Exchange-MessageSentRepresentingType: 1
+Received: from [192.168.0.138] (67.161.31.237) by CY4PR16CA0025.namprd16.prod.outlook.com (2603:10b6:910:60::12) with Microsoft SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.15 via Frontend Transport; Fri, 3 Apr 2020 04:46:08 +0000
+X-Originating-IP: [67.161.31.237]
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 5e55dba4-000d-4ff6-cf18-08d7d789ee75
+X-MS-TrafficTypeDiagnostic: BYAPR01MB4824:|BYAPR01MB4824:
+X-MS-Exchange-Transport-Forked: True
+X-Microsoft-Antispam-PRVS: <BYAPR01MB4824FDBC763485A1E2912745F1C70@BYAPR01MB4824.prod.exchangelabs.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:9508;
+X-Forefront-PRVS: 0362BF9FDB
+X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BYAPR01MB5494.prod.exchangelabs.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(366004)(39840400004)(136003)(346002)(376002)(186003)(5660300002)(316002)(52116002)(8936002)(2906002)(110136005)(81166006)(8676002)(81156014)(16576012)(54906003)(7416002)(2616005)(4326008)(66946007)(478600001)(107886003)(66476007)(26005)(86362001)(31696002)(31686004)(956004)(6486002)(66556008)(53546011)(16526019)(6666004);DIR:OUT;SFP:1102;
+Received-SPF: None (protection.outlook.com: os.amperecomputing.com does not
+ designate permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: oEEGCR2eMA4AgJBrJgAaQ8d2GNHB0KvR0ABG2D4vTV5A7EXhFGK2ZdPQdbioTSkdot8lZ08XJoleqxUiIw4ziEBXMxUR3FkIoe3te74eNbDYU2v6WSiMFlmQffu3Nhh1cVeubr4csCFB1IAxnU9qxi4p8YFIktAKRmyGT2nwg2I2siCVr87pLOYCQU3Q0RxgrMzrgFc31LIlkNtSAIWEzekkgSC1swTS6GskRbmjaDPAD/QXIZ0FNeSJlqjVREQGDjHwmEZibJQ2D2Jcxc1fA2bBaj4l2ibglN8K4HAMB0WVawWZVZTcd8vIOair3CZe6e6xhvXr6lWtZrAebE8jBMViXv1f1ohW5BXcqJ/6X9mFudgGCqsd2UzzXoQyLbNbTnOdI8idKoXxGL4ecOrOiDn9sP07wXWUrBl0XCk0FgJ/dGhppP4kQat0nJkl4Wbk
+X-MS-Exchange-AntiSpam-MessageData: 7wnj+lh235edDCaZcVdSaJ5u2eDFJRFqdOznJbTFsgWrNxaS/8Bp85CCAlIWcr8ejUcMBHiCnk2GyX8gGmmLnuNo+sAIhCryV6woBok4IqTIkHwcEOoK2mQt6ZodYuRVY1A+AJs5Bj7wStEBiyV6fw==
+X-OriginatorOrg: os.amperecomputing.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e55dba4-000d-4ff6-cf18-08d7d789ee75
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 03 Apr 2020 04:46:11.5749
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: 3bc2b170-fd94-476d-b0ce-4229bdc904a7
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: Zn6HjBwQUB2JO7TQfcSTSyt5aJE/Cmm+gW8VBrrM5iImE4ffuoNqHfYnt0n53H5nNsj12Sng3VUthH8wQOJgpRSNbTx+KZE/mGtrpbbCpUg=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BYAPR01MB4824
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Let's use asce_type where applicable. Also, simplify our sanity check for
-valid table levels and convert it into a WARN_ON_ONCE(). Check if we even
-have a valid gmap shadow as the very first step.
+Hi All,
 
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- arch/s390/mm/gmap.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On 3/31/20 7:31 AM, Baoquan He wrote:
+> On 03/31/20 at 04:21pm, Michal Hocko wrote:
+>> On Tue 31-03-20 22:03:32, Baoquan He wrote:
+>>> Hi Michal,
+>>>
+>>> On 03/31/20 at 10:55am, Michal Hocko wrote:
+>>>> On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
+>>>>> Maybe I mis-read the code, but I don't see how this could happen. In the
+>>>>> HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
+>>>>> calculate_node_totalpages() that ensures that node->node_zones are entirely
+>>>>> within the node because this is checked in zone_spanned_pages_in_node().
+>>>>
+>>>> zone_spanned_pages_in_node does chech the zone boundaries are within the
+>>>> node boundaries. But that doesn't really tell anything about other
+>>>> potential zones interleaving with the physical memory range.
+>>>> zone->spanned_pages simply gives the physical range for the zone
+>>>> including holes. Interleaving nodes are essentially a hole
+>>>> (__absent_pages_in_range is going to skip those).
+>>>>
+>>>> That means that when free_area_init_core simply goes over the whole
+>>>> physical zone range including holes and that is why we need to check
+>>>> both for physical and logical holes (aka other nodes).
+>>>>
+>>>> The life would be so much easier if the whole thing would simply iterate
+>>>> over memblocks...
+>>>
+>>> The memblock iterating sounds a great idea. I tried with putting the
+>>> memblock iterating in the upper layer, memmap_init(), which is used for
+>>> boot mem only anyway. Do you think it's doable and OK? It yes, I can
+>>> work out a formal patch to make this simpler as you said. The draft code
+>>> is as below. Like this it uses the existing code and involves little change.
+>>
+>> Doing this would be a step in the right direction! I haven't checked the
+>> code very closely though. The below sounds way too simple to be truth I
+>> am afraid. First for_each_mem_pfn_range is available only for
+>> CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
+>> saying that I really hate that being conditional). Also I haven't really
+>> checked the deferred initialization path - I have a very vague
+>> recollection that it has been converted to the memblock api but I have
+>> happilly dropped all that memory.
+> 
+> Thanks for your quick response and pointing out the rest suspect aspects,
+> I will investigate what you mentioned, see if they impact.
 
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index fd32ab566f57..3c801dae7988 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -790,17 +790,18 @@ static inline unsigned long *gmap_table_walk(struct=
- gmap *gmap,
- 	const int asce_type =3D gmap->asce & _ASCE_TYPE_MASK;
- 	unsigned long *table;
-=20
--	if ((gmap->asce & _ASCE_TYPE_MASK) + 4 < (level * 4))
--		return NULL;
- 	if (gmap_is_shadow(gmap) && gmap->removed)
- 		return NULL;
-=20
-+	if (WARN_ON_ONCE(level > (asce_type >> 2) + 1))
-+		return NULL;
-+
- 	if (WARN_ON_ONCE(asce_type !=3D _ASCE_TYPE_REGION1) &&
- 			 gaddr & (-1UL << (31 + (asce_type >> 2) * 11)))
- 		return NULL;
-=20
- 	table =3D gmap->table;
--	switch (gmap->asce & _ASCE_TYPE_MASK) {
-+	switch (asce_type) {
- 	case _ASCE_TYPE_REGION1:
- 		table +=3D (gaddr & _REGION1_INDEX) >> _REGION1_SHIFT;
- 		if (level =3D=3D 4)
---=20
-2.25.1
+I would like to check if we still move on with my patch to remove 
+CONFIG_NODES_SPAN_OTHER_NODES and have another patch on top it?
 
+Thanks
+Hoan
+
+> 
+>>   
+>>> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+>>> index 138a56c0f48f..558d421f294b 100644
+>>> --- a/mm/page_alloc.c
+>>> +++ b/mm/page_alloc.c
+>>> @@ -6007,14 +6007,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+>>>   		 * function.  They do not exist on hotplugged memory.
+>>>   		 */
+>>>   		if (context == MEMMAP_EARLY) {
+>>> -			if (!early_pfn_valid(pfn)) {
+>>> -				pfn = next_pfn(pfn);
+>>> -				continue;
+>>> -			}
+>>> -			if (!early_pfn_in_nid(pfn, nid)) {
+>>> -				pfn++;
+>>> -				continue;
+>>> -			}
+>>>   			if (overlap_memmap_init(zone, &pfn))
+>>>   				continue;
+>>>   			if (defer_init(nid, pfn, end_pfn))
+>>> @@ -6130,9 +6122,17 @@ static void __meminit zone_init_free_lists(struct zone *zone)
+>>>   }
+>>>   
+>>>   void __meminit __weak memmap_init(unsigned long size, int nid,
+>>> -				  unsigned long zone, unsigned long start_pfn)
+>>> +				  unsigned long zone, unsigned long range_start_pfn)
+>>>   {
+>>> -	memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
+>>> +	unsigned long start_pfn, end_pfn;
+>>> +	unsigned long range_end_pfn = range_start_pfn + size;
+>>> +	int i;
+>>> +	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+>>> +		start_pfn = clamp(start_pfn, range_start_pfn, range_end_pfn);
+>>> +		end_pfn = clamp(end_pfn, range_start_pfn, range_end_pfn);
+>>> +		if (end_pfn > start_pfn)
+>>> +			memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
+>>> +	}
+>>>   }
+>>>   
+>>>   static int zone_batchsize(struct zone *zone)
+>>
+>> -- 
+>> Michal Hocko
+>> SUSE Labs
+>>
+> 
