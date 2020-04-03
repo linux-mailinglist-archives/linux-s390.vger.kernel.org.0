@@ -2,133 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 3AA1E19D441
-	for <lists+linux-s390@lfdr.de>; Fri,  3 Apr 2020 11:46:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D4D3419D528
+	for <lists+linux-s390@lfdr.de>; Fri,  3 Apr 2020 12:40:57 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389015AbgDCJq6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 3 Apr 2020 05:46:58 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:9712 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727912AbgDCJq6 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Apr 2020 05:46:58 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0339V5kQ111557
-        for <linux-s390@vger.kernel.org>; Fri, 3 Apr 2020 05:46:57 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 305emfstkh-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 03 Apr 2020 05:46:56 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <prudo@linux.ibm.com>;
-        Fri, 3 Apr 2020 10:46:35 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 3 Apr 2020 10:46:32 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 0339kpuS57933880
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 3 Apr 2020 09:46:51 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3CEAAAE051;
-        Fri,  3 Apr 2020 09:46:51 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DD1B7AE045;
-        Fri,  3 Apr 2020 09:46:50 +0000 (GMT)
-Received: from laptop2-ibm.local (unknown [9.145.155.48])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri,  3 Apr 2020 09:46:50 +0000 (GMT)
-Date:   Fri, 3 Apr 2020 11:46:49 +0200
-From:   Philipp Rudo <prudo@linux.ibm.com>
-To:     Masahiro Yamada <masahiroy@kernel.org>
-Cc:     linux-kbuild@vger.kernel.org, Jeremy Cline <jcline@redhat.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
-        Michal Kubecek <mkubecek@suse.cz>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] kbuild: add dummy toolchains to enable all cc-option
- etc. in Kconfig
-In-Reply-To: <20200403090224.24045-1-masahiroy@kernel.org>
-References: <20200403090224.24045-1-masahiroy@kernel.org>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1727895AbgDCKk5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 3 Apr 2020 06:40:57 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:28223 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727774AbgDCKk5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 3 Apr 2020 06:40:57 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1585910455;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=JaqVOeV6WYQw59j0NJVQ65MCQt+9qO9Y0ftJtqHK2uw=;
+        b=SqRqEJ3Z10gETxaBZMOzcCGZF83GkFGslibv9GJt0E5IMAL6OHZXu65jEE0AMEppNoeMNn
+        ugOF4FeSm6Ex0n95f4zmDrbIOdPu1UiMOXR2F0tdjismB68Gd9aZK3OkIzgBObjXGfoeCS
+        oLDm/122hG/U6qH7N+U6hO3Y7l5HVg8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-194-0oum-T7ENXKNgbJLiPYztQ-1; Fri, 03 Apr 2020 06:40:52 -0400
+X-MC-Unique: 0oum-T7ENXKNgbJLiPYztQ-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E6DC9100551A;
+        Fri,  3 Apr 2020 10:40:50 +0000 (UTC)
+Received: from gondolin (ovpn-113-80.ams2.redhat.com [10.36.113.80])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 88EAF10016E8;
+        Fri,  3 Apr 2020 10:40:34 +0000 (UTC)
+Date:   Fri, 3 Apr 2020 12:40:32 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>
+Subject: [RFD] uevent handling for subchannels
+Message-ID: <20200403124032.5e70603d.cohuck@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040309-0020-0000-0000-000003C0C410
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040309-0021-0000-0000-000022197373
-Message-Id: <20200403114649.1c1a149f@laptop2-ibm.local>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-03_05:2020-04-02,2020-04-03 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 suspectscore=0
- mlxlogscore=880 priorityscore=1501 lowpriorityscore=0 clxscore=1015
- phishscore=0 malwarescore=0 bulkscore=0 mlxscore=0 impostorscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004030078
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Masahiro,
+Hi,
 
-On Fri,  3 Apr 2020 18:02:24 +0900
-Masahiro Yamada <masahiroy@kernel.org> wrote:
+this is kind-of-a-followup to the uevent patches I sent in
+<20200327124503.9794-1-cohuck@redhat.com> last Friday.
 
-> Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
-> options your compiler does not support. This works well if you configure
-> and build the kernel on the same host machine.
-> 
-> It is inconvenient if you prepare the .config that is carried to a
-> different build environment (typically this happens when you package
-> the kernel for distros) because using a different compiler potentially
-> produces different CONFIG options than the real build environment.
-> So, you probably want to make as many options visible as possible.
-> In other words, you need to create a super-set of CONFIG options that
-> cover any build environment. If some of the CONFIG options turned out
-> to be unsupported on the build machine, they are automatically disabled
-> by the nature of Kconfig.
-> 
-> However, it is not feasible to get a full-featured compiler for every
-> arch.
-> 
-> This issue was discussed here:
-> 
->   https://lkml.org/lkml/2019/12/9/620
-> 
-> Other than distros, savedefconfig is also a problem. Some arch subsytems
-> periodically resync defconfig files. If you use a less-capable compiler
-> for savedefconfig, options that do not meet 'depends on $(cc-option,...)'
-> will be forcibly disabled. So, defconfig && savedefconfig may silently
-> change the behavior.
-> 
-> This commit adds a set of dummy toolchains that pretend to support any
-> feature.
-> 
-> Most of compiler features are tested by cc-option, which simply checks
-> the exit code of $(CC). The dummy tools are just a shell script that
-> exits with 0 in most cases. So, $(cc-option, ...) is evaluated as 'y'.
-> 
-> There are more complicated checks such as:
-> 
->   scripts/gcc-x86_{32,64}-has-stack-protector.sh
->   scripts/gcc-plugin.sh
->   scripts/tools-support-relr.sh
-> 
-> I tried my best to implement the dummy scripts to pass all checks.
-> 
-> From the top directory of the source tree, you can do:
-> 
->    $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
-> 
-> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+Currently, the common I/O layer will suppress uevents for subchannels
+that are being registered, delegating generating a delayed ADD uevent
+to the driver that actually binds to it and only generating the uevent
+itself if no driver gets bound. The initial version of that delaying
+was introduced in fa1a8c23eb7d ("s390: cio: Delay uevents for
+subchannels"); from what I remember, we were seeing quite bad storms of
+uevents on LPARs that had a lot of I/O subchannels with no device
+accessible through them.
 
-look good to me
+So while there's definitely a good reason for wanting to delay uevents,
+it is also introducing problems. One is udev rules for subchannels that
+are supposed to do something before a driver binds (e.g. setting
+driver_override to bind an I/O subchannel to vfio_ccw instead of
+io_subchannel) are not effective, as the ADD uevent will only be
+generated when the io_subchannel driver is already done with doing all
+setup. Another one is that only the ADD uevent is generated after
+uevent suppression is lifted; any other uevents that might have been
+generated are lost.
 
-Reviewed-by: Philipp Rudo <prudo@linux.ibm.com>
+So, what to do about this, especially in the light of vfio-ccw handling?
 
-Thanks a lot
-Philipp
+One idea I had is to call css_sch_is_valid() from
+css_register_subchannel(); this would exclude the largest class of
+non-operational subchannels already (those that don't have a valid
+device; I'm not quite sure if there's also something needed for EADM
+subchannels?) If we got rid of the uevent delaying, we would still get
+ADD/REMOVE events for subchannels where the device turns out to be
+non-accessible, but I believe (hope) that those are not too many in a
+sane system at least. As a bonus, we could also add additional values
+from the pmcw to the uevent; the device number, for example, could be
+helpful for vfio-ccw matching rules.
+
+A drawback is that we change the timing (not the sequence, AFAICS) of
+the uevents, which might break brittle setups.
+
+Thoughts?
 
