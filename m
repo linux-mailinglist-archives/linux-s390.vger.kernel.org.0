@@ -2,158 +2,153 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B880D19F9B3
-	for <lists+linux-s390@lfdr.de>; Mon,  6 Apr 2020 18:06:49 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5EEBC19FC75
+	for <lists+linux-s390@lfdr.de>; Mon,  6 Apr 2020 20:06:11 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbgDFQGt (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Apr 2020 12:06:49 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:11558 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728964AbgDFQGs (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Apr 2020 12:06:48 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036G4euP138771
-        for <linux-s390@vger.kernel.org>; Mon, 6 Apr 2020 12:06:48 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082hfthjw-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 06 Apr 2020 12:06:47 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 6 Apr 2020 17:06:20 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 6 Apr 2020 17:06:17 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 036G6fkA1179908
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Apr 2020 16:06:41 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C4595A4054;
-        Mon,  6 Apr 2020 16:06:41 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F7F3A405C;
-        Mon,  6 Apr 2020 16:06:41 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.23.63])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Apr 2020 16:06:41 +0000 (GMT)
-Subject: Re: [PATCH v2 0/5] KVM: s390: vsie: fixes and cleanups
-To:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vasily Gorbik <gor@linux.ibm.com>,
+        id S1726650AbgDFSGK (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 6 Apr 2020 14:06:10 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:56361 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726720AbgDFSGK (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Apr 2020 14:06:10 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586196368;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=zq2fOqfpnunCJPcnhnd4EahDTvQRSHEmjDBqkQFoh48=;
+        b=BFyOEScHpbMwsvffNWwXQ8xSpc0r/vw4lrlRclPvwDRBuc5lfz5/TmGm5iLb+FmWdx+orb
+        KOcaPcXNV9eNQND8VzIQyrk0ha6NT0N2Wtapt/tWzwWvk1RBGQOsGir9IotSW+vjCOesRd
+        qqQUq4ba7ZzWMsRJ1EP8PllIH0lKZjc=
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
+ [209.85.160.200]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-388-9IFO8revMOGTFSMvkfK3YQ-1; Mon, 06 Apr 2020 14:06:03 -0400
+X-MC-Unique: 9IFO8revMOGTFSMvkfK3YQ-1
+Received: by mail-qt1-f200.google.com with SMTP id n89so574295qte.15
+        for <linux-s390@vger.kernel.org>; Mon, 06 Apr 2020 11:06:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=zq2fOqfpnunCJPcnhnd4EahDTvQRSHEmjDBqkQFoh48=;
+        b=QP0McKWC4Wd9V5kwW5MJWzABUqD3/gd3C574QFhz5tyt/yrxqNLXsIoiaWwjEqO9Hs
+         ouAV1kkVn6HR0hkrHw5Yox5TeGd/8PUnldz1E9ABZChXzn0SW6/3BuHPNvPK/ztBflND
+         jY2GhQEivEdamcXMKi8D4pKeRWjbLGDSfjLnIG1Y/10hvWjw7BYfr+Bls09l1Ev7rJcy
+         j7naRWp6Agza5m0VxzeATLNcwAoT/z3UpMR7CK86Z/5Mgitflp00D782J1AFZ9a29w/I
+         vpVq3bJznYNbWabmBOFgKtMZYH5FIFcCbddczO1mJfklOo4CN8f/E46fXhtuJ/Bpvoph
+         XoZg==
+X-Gm-Message-State: AGi0PubRVZrfNEy0VLF4J5fgA/q9oV5vdaX5XptVxmjAU7yYFnpSUiSw
+        0RjRnFWi8kSZFE+UWywLsmWVWdREvrwwQjkx5vfKbh/4KMO1xJHk00j9K5xAZQkqT7giJRu2sEJ
+        B6u41AXahBJg6ppI95YUB2Q==
+X-Received: by 2002:ac8:2a68:: with SMTP id l37mr698227qtl.77.1586196361387;
+        Mon, 06 Apr 2020 11:06:01 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLEox3UX8MCeX0tOeCXIrNeXeiRB52F4QJf5RdYuk+NCD4GaAPnvAscpKxCIJDbeDpCWYGZow==
+X-Received: by 2002:ac8:2a68:: with SMTP id l37mr698198qtl.77.1586196361085;
+        Mon, 06 Apr 2020 11:06:01 -0700 (PDT)
+Received: from dev.jcline.org ([136.56.87.133])
+        by smtp.gmail.com with ESMTPSA id s26sm14862683qkm.114.2020.04.06.11.06.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 06 Apr 2020 11:06:00 -0700 (PDT)
+Date:   Mon, 6 Apr 2020 14:05:58 -0400
+From:   Jeremy Cline <jcline@redhat.com>
+To:     Masahiro Yamada <masahiroy@kernel.org>
+Cc:     linux-kbuild@vger.kernel.org,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-References: <20200403153050.20569-1-david@redhat.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 6 Apr 2020 18:06:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] kbuild: add dummy toolchains to enable all cc-option
+ etc. in Kconfig
+Message-ID: <20200406180558.GA22412@dev.jcline.org>
+References: <20200403090224.24045-1-masahiroy@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20200403153050.20569-1-david@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040616-0020-0000-0000-000003C2BC64
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040616-0021-0000-0000-0000221B765B
-Message-Id: <d2d2fe98-bfc5-a43e-a8a8-a3da7f765b56@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_08:2020-04-06,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
- mlxlogscore=895 spamscore=0 clxscore=1015 malwarescore=0 impostorscore=0
- lowpriorityscore=0 suspectscore=0 mlxscore=0 phishscore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004060128
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200403090224.24045-1-masahiroy@kernel.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Series applied. thanks. 
-I will schedule the first 3 for master, 4 and 5 for next.
+On Fri, Apr 03, 2020 at 06:02:24PM +0900, Masahiro Yamada wrote:
+> Staring v4.18, Kconfig evaluates compiler capabilities, and hides CONFIG
+> options your compiler does not support. This works well if you configure
+> and build the kernel on the same host machine.
+> 
+> It is inconvenient if you prepare the .config that is carried to a
+> different build environment (typically this happens when you package
+> the kernel for distros) because using a different compiler potentially
+> produces different CONFIG options than the real build environment.
+> So, you probably want to make as many options visible as possible.
+> In other words, you need to create a super-set of CONFIG options that
+> cover any build environment. If some of the CONFIG options turned out
+> to be unsupported on the build machine, they are automatically disabled
+> by the nature of Kconfig.
+> 
+> However, it is not feasible to get a full-featured compiler for every
+> arch.
+> 
+> This issue was discussed here:
+> 
+>   https://lkml.org/lkml/2019/12/9/620
+> 
+> Other than distros, savedefconfig is also a problem. Some arch subsytems
+> periodically resync defconfig files. If you use a less-capable compiler
+> for savedefconfig, options that do not meet 'depends on $(cc-option,...)'
+> will be forcibly disabled. So, defconfig && savedefconfig may silently
+> change the behavior.
+> 
+> This commit adds a set of dummy toolchains that pretend to support any
+> feature.
+> 
+> Most of compiler features are tested by cc-option, which simply checks
+> the exit code of $(CC). The dummy tools are just a shell script that
+> exits with 0 in most cases. So, $(cc-option, ...) is evaluated as 'y'.
+> 
+> There are more complicated checks such as:
+> 
+>   scripts/gcc-x86_{32,64}-has-stack-protector.sh
+>   scripts/gcc-plugin.sh
+>   scripts/tools-support-relr.sh
+> 
+> I tried my best to implement the dummy scripts to pass all checks.
+> 
+> From the top directory of the source tree, you can do:
+> 
+>    $ make CROSS_COMPILE=scripts/dummy-tools/ oldconfig
+> 
+> Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
+> ---
+> 
+>  scripts/dummy-tools/gcc     | 91 +++++++++++++++++++++++++++++++++++++
+>  scripts/dummy-tools/ld      |  4 ++
+>  scripts/dummy-tools/nm      |  4 ++
+>  scripts/dummy-tools/objcopy |  4 ++
+>  4 files changed, 103 insertions(+)
+>  create mode 100755 scripts/dummy-tools/gcc
+>  create mode 100755 scripts/dummy-tools/ld
+>  create mode 100755 scripts/dummy-tools/nm
+>  create mode 100755 scripts/dummy-tools/objcopy
+> 
 
+<snip>
 
-On 03.04.20 17:30, David Hildenbrand wrote:
-> Some vsie/gmap fixes and two cleanups/improvements.
-> 
-> Patch #1 fixes an issue reported by Janosch. It was never observed so far,
-> because KVM usually doesn't use a region 1 table for it's guest (unless
-> memory would be exceeding something like 16 EB, which isn't even supported
-> by the HW). Older QEMU+KVM or other hypervisors can trigger this.
-> 
-> Patch #2 fixes a code path that probably was never taken and will most
-> probably not be taken very often in the future - unless somebody really
-> messes up the page tables for a guest (or writes a test for it). At some
-> point, a test case for this would be nice.
-> 
-> Patch #3 fixes a rare possible race. Don't think this is stable material.
-> 
-> Gave it some testing with my limited access to somewhat-fast s390x
-> machines. Booted a Linux kernel, supplying all possible number of
-> page table hiearchies.
-> 
-> v1 -> v2:
-> - "KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks"
-> -- Fix WARN_ON_ONCE
-> - "gmap_table_walk() simplifications"
-> -- Also init "table" directly
-> 
-> David Hildenbrand (5):
->   KVM: s390: vsie: Fix region 1 ASCE sanity shadow address checks
->   KVM: s390: vsie: Fix delivery of addressing exceptions
->   KVM: s390: vsie: Fix possible race when shadowing region 3 tables
->   KVM: s390: vsie: Move conditional reschedule
->   KVM: s390: vsie: gmap_table_walk() simplifications
-> 
->  arch/s390/kvm/vsie.c |  4 ++--
->  arch/s390/mm/gmap.c  | 17 +++++++++++------
->  2 files changed, 13 insertions(+), 8 deletions(-)
-> 
+> diff --git a/scripts/dummy-tools/ld b/scripts/dummy-tools/ld
+> new file mode 100755
+> index 000000000000..3bc56ae4cc15
+> --- /dev/null
+> +++ b/scripts/dummy-tools/ld
+> @@ -0,0 +1,4 @@
+> +#!/bin/sh
+> +# SPDX-License-Identifier: GPL-2.0-only
+> +
+> +# Dummy script that always succeeds
+
+It looks like scripts/Kbuild.include expects "$(LD) --version" to return
+something. If it doesn't "ld-ifversion" stops working.
+
+Other than that it seems to work as advertised. Thanks!
+
+- Jeremy
 
