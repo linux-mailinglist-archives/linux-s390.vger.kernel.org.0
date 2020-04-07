@@ -2,80 +2,171 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id B299B1A0673
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 07:15:30 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 361121A074B
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 08:30:46 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbgDGFPX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Apr 2020 01:15:23 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:39545 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726964AbgDGFPP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 01:15:15 -0400
-Received: by mail-vs1-f65.google.com with SMTP id u9so1425443vsp.6
-        for <linux-s390@vger.kernel.org>; Mon, 06 Apr 2020 22:15:14 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to;
-        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
-        b=MfHDvIBIt69xqysjTBYVVNc0kV20i2uh+5pM5bA0kgqzaY38Y8DWEj01Pvo2lprKBQ
-         GeMPmsDw8mI8JPS3USlc7fo909SxPcbTvuuO8fmlDj3Epr1eVDtR360WKQPQyhZWRFR1
-         e2AVs/X8xmnpyFeBVbEpWkW/7xUX6BkoKcBNjhVPYru9i1s3MQXqsGzojyz2OPT8Gzuk
-         eAsRgBBtJfCcoxVL23nq2mmza5GNfLtG1Vewilonxc/7to20Va10m3hSWyxvaqvjeUuq
-         +R1bw/nay987q2JQWtF8qmoAYape5iyXc2fGu9oueeJmEOdg+02io2ZWkJnJglNvfVbH
-         fVHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
-        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
-        b=GGt9T6nAkVu8be3CBhVn3RsBCC9rJva1zzLt0WoIjJ4lwjJbKJQywXiuJHdoBDWsQY
-         W6Jw8W8SWmnUaCYCW37+8RpZcYkN3wM8pgv7jegH0WY+4iGOXdvVHu0TbyMXWsPgndR9
-         xYGFcpJWa7UpTllnxh27lGcDshjLeXuh6zrhkBaezyIBHLH2eQD+X/dG4smUQcS/HZvo
-         L2+OzSJuXMWf8cst/tYyT2U0vHfEYN6tI3WKkOF2k5TvZSKjjRG7RNxAbHC8HIOwn/zw
-         6sI1KI3UspU9ERWXFk4y0q6cxWQm5f6J1qDjDi7a2ZaxcVqmENL1oM+MBdkQeVHrCb54
-         qEmQ==
-X-Gm-Message-State: AGi0PuYm5HAhajEVeIRSLF3dw1Zf0Ooe7+jHtee+Fkvkgs7oTZwrWsnV
-        OyZl8j9xmrgF/nCPzRcs44djRqP+czE2ICUGOGE=
-X-Google-Smtp-Source: APiQypL+ArhsKP1HCJpJZSuqqOKzmqGe03VSBcvbyU5XLwMdkDIdNu0ELlIqojTyqMNnJA6AEodSyvd4rSFXD4DVz/E=
-X-Received: by 2002:a67:fa85:: with SMTP id f5mr495699vsq.65.1586236514277;
- Mon, 06 Apr 2020 22:15:14 -0700 (PDT)
+        id S1726591AbgDGGap (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Apr 2020 02:30:45 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:48262 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726448AbgDGGap (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 02:30:45 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586241044;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SpsaTZYGy7YBxzuHq9LC7fCPwlUeSBFi31qENFztN10=;
+        b=XR3agMcDw/9NZOcmWwlr7U82NInM+Jxe4Rf5TDN7JuGsHaBCD5NGwqNLZlX48+aAfpDrDg
+        hvcFRalpvDIV7/7GXLxGOZYtmClJzJZ0ns9RKTrHhjLbFkGkUt846q9zOc00a/yJ53xBwS
+        5mBiCNoG9QH+E5iVxb2K6+krh4dMHLQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-252-35UkpaakNWu57W11KthT9Q-1; Tue, 07 Apr 2020 02:30:41 -0400
+X-MC-Unique: 35UkpaakNWu57W11KthT9Q-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 446EFDB60;
+        Tue,  7 Apr 2020 06:30:40 +0000 (UTC)
+Received: from gondolin (ovpn-112-38.ams2.redhat.com [10.36.112.38])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CCCCD1001B3F;
+        Tue,  7 Apr 2020 06:30:38 +0000 (UTC)
+Date:   Tue, 7 Apr 2020 08:30:35 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org
+Subject: Re: [RFC PATCH v2 5/9] vfio-ccw: Introduce a new CRW region
+Message-ID: <20200407083035.09ca4dfc.cohuck@redhat.com>
+In-Reply-To: <db43381a-6769-07f1-7d4d-9c6c680bde4e@linux.ibm.com>
+References: <20200206213825.11444-1-farman@linux.ibm.com>
+        <20200206213825.11444-6-farman@linux.ibm.com>
+        <20200406154057.6016c4a7.cohuck@redhat.com>
+        <db43381a-6769-07f1-7d4d-9c6c680bde4e@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Received: by 2002:ab0:254a:0:0:0:0:0 with HTTP; Mon, 6 Apr 2020 22:15:12 -0700 (PDT)
-From:   SANDRA DEWI <sdewisandra@gmail.com>
-Date:   Tue, 7 Apr 2020 05:15:12 +0000
-Message-ID: <CALe9-EdG2aBp2yBY=t79ZuBObzzfY6nuVfAsra6+wc2BAYMhcg@mail.gmail.com>
-Subject: whether this is your correct email address or not
-To:     undisclosed-recipients:;
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Dear ,Pastor
+On Mon, 6 Apr 2020 17:43:42 -0400
+Eric Farman <farman@linux.ibm.com> wrote:
 
+> (Ah, didn't see this come in earlier.)
+> 
+> On 4/6/20 9:40 AM, Cornelia Huck wrote:
+> > On Thu,  6 Feb 2020 22:38:21 +0100
+> > Eric Farman <farman@linux.ibm.com> wrote:
+> >   
+> >> From: Farhan Ali <alifm@linux.ibm.com>
+> >>
+> >> This region provides a mechanism to pass Channel Report Word(s)
+> >> that affect vfio-ccw devices, and need to be passed to the guest
+> >> for its awareness and/or processing.
+> >>
+> >> The base driver (see crw_collect_info()) provides space for two
+> >> CRWs, as a subchannel event may have two CRWs chained together
+> >> (one for the ssid, one for the subcahnnel).  All other CRWs will
+> >> only occupy the first one.  Even though this support will also
+> >> only utilize the first one, we'll provide space for two also.
+> >>
+> >> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+> >> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> >> ---
+> >>
+> >> Notes:
+> >>     v1-v2:
+> >>      - Add new region info to Documentation/s390/vfio-ccw.rst [CH]
+> >>      - Add a block comment to struct ccw_crw_region [CH]
+> >>     
+> >>     v0->v1: [EF]
+> >>      - Clean up checkpatch (whitespace) errors
+> >>      - Add ret=-ENOMEM in error path for new region
+> >>      - Add io_mutex for region read (originally in last patch)
+> >>      - Change crw1/crw2 to crw0/crw1
+> >>      - Reorder cleanup of regions
+> >>
+> >>  Documentation/s390/vfio-ccw.rst     | 15 ++++++++
+> >>  drivers/s390/cio/vfio_ccw_chp.c     | 56 +++++++++++++++++++++++++++++
+> >>  drivers/s390/cio/vfio_ccw_drv.c     | 20 +++++++++++
+> >>  drivers/s390/cio/vfio_ccw_ops.c     |  4 +++
+> >>  drivers/s390/cio/vfio_ccw_private.h |  3 ++
+> >>  include/uapi/linux/vfio.h           |  1 +
+> >>  include/uapi/linux/vfio_ccw.h       |  9 +++++
+> >>  7 files changed, 108 insertions(+)
+> >>  
+> > 
+> > (...)
+> >   
+> >> diff --git a/drivers/s390/cio/vfio_ccw_chp.c b/drivers/s390/cio/vfio_ccw_chp.c
+> >> index 826d08379fe3..8fde94552149 100644
+> >> --- a/drivers/s390/cio/vfio_ccw_chp.c
+> >> +++ b/drivers/s390/cio/vfio_ccw_chp.c
+> >> @@ -73,3 +73,59 @@ int vfio_ccw_register_schib_dev_regions(struct vfio_ccw_private *private)
+> >>  					    VFIO_REGION_INFO_FLAG_READ,
+> >>  					    private->schib_region);
+> >>  }
+> >> +
+> >> +static ssize_t vfio_ccw_crw_region_read(struct vfio_ccw_private *private,
+> >> +					char __user *buf, size_t count,
+> >> +					loff_t *ppos)
+> >> +{
+> >> +	unsigned int i = VFIO_CCW_OFFSET_TO_INDEX(*ppos) - VFIO_CCW_NUM_REGIONS;
+> >> +	loff_t pos = *ppos & VFIO_CCW_OFFSET_MASK;
+> >> +	struct ccw_crw_region *region;
+> >> +	int ret;
+> >> +
+> >> +	if (pos + count > sizeof(*region))
+> >> +		return -EINVAL;
+> >> +
+> >> +	if (list_empty(&private->crw))
+> >> +		return 0;  
+> 
+> This is actually nonsense, because the list isn't introduced for a
+> couple of patches.
+> 
+> >> +
+> >> +	mutex_lock(&private->io_mutex);
+> >> +	region = private->region[i].data;
+> >> +
+> >> +	if (copy_to_user(buf, (void *)region + pos, count))
+> >> +		ret = -EFAULT;
+> >> +	else
+> >> +		ret = count;
+> >> +
+> >> +	mutex_unlock(&private->io_mutex);
+> >> +	return ret;
+> >> +}  
+> > 
+> > Would it make sense to clear out the crw after it has been read by
+> > userspace?  
+> 
+> Yes, I fixed this up in my in-progress v3 last week.  Sorry to waste
+> some time, I should have mentioned it when I changed my branch locally.
+> 
+> I changed the list_empty() check above to bail out if the region is
+> already zero, which I guess is why the userspace check looks for both.
+> But if we only look at the contents of the region, then checking both is
+> unnecessary.  Just do the copy and be done with it.
 
+Yes, that makes sense.
 
-I have a client who is an oil business man and he made a fixed deposit
-of $26 million USD in my bank, where I am the director of the branch,
-My client died with his entire family in Jordanian
+> 
+> > 
+> > In patch 7, you add a notification for a new crw via eventfd, but
+> > nothing is preventing userspace from reading this even if not
+> > triggered. I also don't see the region being updated there until a new
+> > crw is posted.
+> > 
+> > Or am I missing something?
+> >   
+> 
 
-50% of the fund will be for the church  for the work of God,the
-balance 50% we share it in the ratio of 50/50. Meaning 50% to you and
-50% for me
-
-intervention in the Syrian Civil War 2014 leaving behind no next of
-kin. I Propose to present you as next of kin to claim the funds, if
-interested reply me for full details and how we are to
-
-
-
-proceed to close this deal.
-
-
-
-
-Mrs. Sandra Dewi
-
-
-
-Email  mrsdewi@gmx.com
