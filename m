@@ -2,82 +2,92 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C8C431A0DA7
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 14:31:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D197E1A107D
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 17:45:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728556AbgDGMbp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Apr 2020 08:31:45 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49038 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728146AbgDGMbo (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 08:31:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586262703;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cf6HeBCxjUruxoGI91yxHPOxsiwFayWbRoQQU5L19fY=;
-        b=PW9JO+5hMY7u5XcsQRZxIdWHS5uO3EoS6oAllLzTcZzMHFj9KDWL1kebuzJuzLkuTzUiUC
-        wG+g6oB6ZcX0m3cLHrrcRK6OjkBsnCjNzJ5eOJCToumgPRwq/9OEUaEeYFCo0ntWOLCMCX
-        2qy1RabVAkLijgroPH+ccCpXpzw278I=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-374-ZoSAN-ttPNmMs0ox1X3k1w-1; Tue, 07 Apr 2020 08:31:42 -0400
-X-MC-Unique: ZoSAN-ttPNmMs0ox1X3k1w-1
-Received: by mail-wr1-f72.google.com with SMTP id u16so1696321wrp.14
-        for <linux-s390@vger.kernel.org>; Tue, 07 Apr 2020 05:31:42 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=cf6HeBCxjUruxoGI91yxHPOxsiwFayWbRoQQU5L19fY=;
-        b=CLDKwb72s/q+o0nKZuD+3ZV4zrp8cIplAj9VhgoUM2dZfAtPTWo3f0VQ9+b5sib0/y
-         B5QpesX5KzLC5O9a0NLxvgrKLNid+JOIXMilTE9ho/KC+vWyk6oqP2Y3aSE2IhC97FP3
-         aDUxd8//RQNZeZtv8nddrJ53DbCO4cIfSBY6ij5TgxjqmSWRh0Irx+XFeJc0veEEnmYP
-         a3bDmLF5z+DNsGZn1/NC79Jj3wkdUUmk/upJn9ovm1IWiLK72s5lSewb6EtFcLs6vGj9
-         DEk1EOcwwyVNmfZN2VXXf7BRMMAWvcVClYMoZ9dmbtBUA27yBVP2MNM+BkEUFCEw3IOI
-         iqpg==
-X-Gm-Message-State: AGi0PualrwShtHuE8QQZkrfTMEEE8tg1SWudzOsNPaLNx8O0UtnowVNz
-        sLuBYLMJ4/JwAIki5UHce1sfBYYEWGCLRQbRMSSHmR2lmMWf0GoKYscqNR7pgXifG1czNQzenCN
-        rGuf6rGAW0xivK6daVgfJZg==
-X-Received: by 2002:adf:f4cc:: with SMTP id h12mr2501447wrp.171.1586262701001;
-        Tue, 07 Apr 2020 05:31:41 -0700 (PDT)
-X-Google-Smtp-Source: APiQypLANV6ylf8gqaJS0lQU1t8GvWYfkTU8ZNu5aQ3z7vaNssQcTd5L1/eQrY2HblkUGGXPtLF3yQ==
-X-Received: by 2002:adf:f4cc:: with SMTP id h12mr2501423wrp.171.1586262700731;
-        Tue, 07 Apr 2020 05:31:40 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:bd61:914:5c2f:2580? ([2001:b07:6468:f312:bd61:914:5c2f:2580])
-        by smtp.gmail.com with ESMTPSA id t11sm30316985wru.69.2020.04.07.05.31.39
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 07 Apr 2020 05:31:40 -0700 (PDT)
-Subject: Re: [GIT PULL 0/3] KVM: s390: Fixes for vsie (nested hypervisors)
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>
-References: <20200407114240.156419-1-borntraeger@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <b9689a91-9df1-9e37-03b7-156691f1ccd4@redhat.com>
-Date:   Tue, 7 Apr 2020 14:31:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1726833AbgDGPpa (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Apr 2020 11:45:30 -0400
+Received: from condef-09.nifty.com ([202.248.20.74]:39707 "EHLO
+        condef-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726806AbgDGPp3 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 11:45:29 -0400
+Received: from conssluserg-06.nifty.com ([10.126.8.85])by condef-09.nifty.com with ESMTP id 037FeNjl008363
+        for <linux-s390@vger.kernel.org>; Wed, 8 Apr 2020 00:40:23 +0900
+Received: from mail-vs1-f42.google.com (mail-vs1-f42.google.com [209.85.217.42]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id 037FeBsd030256;
+        Wed, 8 Apr 2020 00:40:11 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com 037FeBsd030256
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1586274011;
+        bh=XWjmG9EhuXnHJLGvG7qDJWptwWxm9QG76mUZi49RDfQ=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OmOhA7FAZ+LP41dQDnZjEPtaWM8GH9eUtyp/1zMLhDI6BHGrG1mvtVli1vb6CK6to
+         AFd/0Kibr3MiIqyhdx7iRiqs0Wc8vWsURPrtd7Cy1RPG20AFO/PNJxFHm5uBGaQ0Jn
+         CVfJFzItnwQYAhIP3EWSFPRcc2+3K3oRDejai6reLV2nRPv5KcUYoVOGUoRcuuTcW9
+         kFwuSsgDchWHW5gON59lPr7o6P6+fDz03LvlEAR8B0FAISlZdhTzmqanB0Wdb1eEmU
+         N0EyftTIbbH+SVPSpBXo3TPCALyeBB0WWegAUsSnBfsinDG1u0OHNsf115F69TIdSe
+         WlYpYE+nzgNsQ==
+X-Nifty-SrcIP: [209.85.217.42]
+Received: by mail-vs1-f42.google.com with SMTP id s10so2451772vsi.9;
+        Tue, 07 Apr 2020 08:40:11 -0700 (PDT)
+X-Gm-Message-State: AGi0PuYWeXxOG14Sh/Ni6fLssa5b5Tv3cnbdz+b1aFr2R78B7LR/kotW
+        BUZzzXh108ozrKceiUtWK4LCILrEGcC//iW0K1w=
+X-Google-Smtp-Source: APiQypKKQfcetnSEY7d8Ni6kfJjTmtw1TOAqIWS1GFW0Ea7aW6xiARHqdFdzIcHMCeOSZ8pMfwTyotZF7dXLoLb/VTw=
+X-Received: by 2002:a67:33cb:: with SMTP id z194mr2415038vsz.155.1586274010321;
+ Tue, 07 Apr 2020 08:40:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200407114240.156419-1-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20200403090224.24045-1-masahiroy@kernel.org> <20200406180558.GA22412@dev.jcline.org>
+In-Reply-To: <20200406180558.GA22412@dev.jcline.org>
+From:   Masahiro Yamada <masahiroy@kernel.org>
+Date:   Wed, 8 Apr 2020 00:39:34 +0900
+X-Gmail-Original-Message-ID: <CAK7LNASn8z4SF9YeyidjYDmA+1MMV9VArem=Scui51LaB3Q1wg@mail.gmail.com>
+Message-ID: <CAK7LNASn8z4SF9YeyidjYDmA+1MMV9VArem=Scui51LaB3Q1wg@mail.gmail.com>
+Subject: Re: [PATCH] kbuild: add dummy toolchains to enable all cc-option etc.
+ in Kconfig
+To:     Jeremy Cline <jcline@redhat.com>
+Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        Philipp Rudo <prudo@linux.ibm.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 07/04/20 13:42, Christian Borntraeger wrote:
->   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.7-1
+On Tue, Apr 7, 2020 at 3:06 AM Jeremy Cline <jcline@redhat.com> wrote:
 
-Pulled, thanks!
+> > diff --git a/scripts/dummy-tools/ld b/scripts/dummy-tools/ld
+> > new file mode 100755
+> > index 000000000000..3bc56ae4cc15
+> > --- /dev/null
+> > +++ b/scripts/dummy-tools/ld
+> > @@ -0,0 +1,4 @@
+> > +#!/bin/sh
+> > +# SPDX-License-Identifier: GPL-2.0-only
+> > +
+> > +# Dummy script that always succeeds
+>
+> It looks like scripts/Kbuild.include expects "$(LD) --version" to return
+> something. If it doesn't "ld-ifversion" stops working.
 
-Paolo
 
+Actually, scripts/Kbuild.include is not used in the Kconfig stage.
+So, scripts/dummy-tools/ld does not need to handle --version or -v,
+but we may do that in the future.
+
+I will support it in v2.
+
+
+> Other than that it seems to work as advertised. Thanks!
+>
+> - Jeremy
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
