@@ -2,120 +2,82 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 92CD91A0D01
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 13:42:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C8C431A0DA7
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 14:31:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbgDGLmu (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Apr 2020 07:42:50 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:17908 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728179AbgDGLmu (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 07:42:50 -0400
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037BYRkd010637
-        for <linux-s390@vger.kernel.org>; Tue, 7 Apr 2020 07:42:49 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 306n257xe2-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 07 Apr 2020 07:42:48 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 7 Apr 2020 12:42:28 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 Apr 2020 12:42:26 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037Bgg3851380364
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 11:42:42 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A64B9A4051;
-        Tue,  7 Apr 2020 11:42:42 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9EF13A404D;
-        Tue,  7 Apr 2020 11:42:42 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue,  7 Apr 2020 11:42:42 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
-        id 62C18E08E5; Tue,  7 Apr 2020 13:42:42 +0200 (CEST)
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
+        id S1728556AbgDGMbp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Apr 2020 08:31:45 -0400
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49038 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728146AbgDGMbo (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 08:31:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586262703;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=cf6HeBCxjUruxoGI91yxHPOxsiwFayWbRoQQU5L19fY=;
+        b=PW9JO+5hMY7u5XcsQRZxIdWHS5uO3EoS6oAllLzTcZzMHFj9KDWL1kebuzJuzLkuTzUiUC
+        wG+g6oB6ZcX0m3cLHrrcRK6OjkBsnCjNzJ5eOJCToumgPRwq/9OEUaEeYFCo0ntWOLCMCX
+        2qy1RabVAkLijgroPH+ccCpXpzw278I=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-374-ZoSAN-ttPNmMs0ox1X3k1w-1; Tue, 07 Apr 2020 08:31:42 -0400
+X-MC-Unique: ZoSAN-ttPNmMs0ox1X3k1w-1
+Received: by mail-wr1-f72.google.com with SMTP id u16so1696321wrp.14
+        for <linux-s390@vger.kernel.org>; Tue, 07 Apr 2020 05:31:42 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=cf6HeBCxjUruxoGI91yxHPOxsiwFayWbRoQQU5L19fY=;
+        b=CLDKwb72s/q+o0nKZuD+3ZV4zrp8cIplAj9VhgoUM2dZfAtPTWo3f0VQ9+b5sib0/y
+         B5QpesX5KzLC5O9a0NLxvgrKLNid+JOIXMilTE9ho/KC+vWyk6oqP2Y3aSE2IhC97FP3
+         aDUxd8//RQNZeZtv8nddrJ53DbCO4cIfSBY6ij5TgxjqmSWRh0Irx+XFeJc0veEEnmYP
+         a3bDmLF5z+DNsGZn1/NC79Jj3wkdUUmk/upJn9ovm1IWiLK72s5lSewb6EtFcLs6vGj9
+         DEk1EOcwwyVNmfZN2VXXf7BRMMAWvcVClYMoZ9dmbtBUA27yBVP2MNM+BkEUFCEw3IOI
+         iqpg==
+X-Gm-Message-State: AGi0PualrwShtHuE8QQZkrfTMEEE8tg1SWudzOsNPaLNx8O0UtnowVNz
+        sLuBYLMJ4/JwAIki5UHce1sfBYYEWGCLRQbRMSSHmR2lmMWf0GoKYscqNR7pgXifG1czNQzenCN
+        rGuf6rGAW0xivK6daVgfJZg==
+X-Received: by 2002:adf:f4cc:: with SMTP id h12mr2501447wrp.171.1586262701001;
+        Tue, 07 Apr 2020 05:31:41 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLANV6ylf8gqaJS0lQU1t8GvWYfkTU8ZNu5aQ3z7vaNssQcTd5L1/eQrY2HblkUGGXPtLF3yQ==
+X-Received: by 2002:adf:f4cc:: with SMTP id h12mr2501423wrp.171.1586262700731;
+        Tue, 07 Apr 2020 05:31:40 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:bd61:914:5c2f:2580? ([2001:b07:6468:f312:bd61:914:5c2f:2580])
+        by smtp.gmail.com with ESMTPSA id t11sm30316985wru.69.2020.04.07.05.31.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 07 Apr 2020 05:31:40 -0700 (PDT)
+Subject: Re: [GIT PULL 0/3] KVM: s390: Fixes for vsie (nested hypervisors)
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
 Cc:     KVM <kvm@vger.kernel.org>,
         Janosch Frank <frankja@linux.vnet.ibm.com>,
         David Hildenbrand <david@redhat.com>,
         Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-Subject: [GIT PULL 3/3] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Tue,  7 Apr 2020 13:42:40 +0200
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200407114240.156419-1-borntraeger@de.ibm.com>
+        linux-s390 <linux-s390@vger.kernel.org>
 References: <20200407114240.156419-1-borntraeger@de.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20040711-0008-0000-0000-0000036C1F7A
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040711-0009-0000-0000-00004A8DB8D9
-Message-Id: <20200407114240.156419-4-borntraeger@de.ibm.com>
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <b9689a91-9df1-9e37-03b7-156691f1ccd4@redhat.com>
+Date:   Tue, 7 Apr 2020 14:31:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_03:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 mlxlogscore=999
- priorityscore=1501 malwarescore=0 bulkscore=0 impostorscore=0
- suspectscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0 spamscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070095
+In-Reply-To: <20200407114240.156419-1-borntraeger@de.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+On 07/04/20 13:42, Christian Borntraeger wrote:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.7-1
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+Pulled, thanks!
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
-
-Identified by manual code inspection. I don't think this classifies as
-stable material.
-
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
----
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index 7e9a6761f254..1a95d8809cc3 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1844,6 +1844,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
--- 
-2.25.1
+Paolo
 
