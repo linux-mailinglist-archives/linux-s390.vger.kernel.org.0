@@ -2,279 +2,176 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 69E241A10B5
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 17:54:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4E8E1A13C7
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 20:37:52 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727652AbgDGPy4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Apr 2020 11:54:56 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:1298 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727003AbgDGPyz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 11:54:55 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037FYqVH120661
-        for <linux-s390@vger.kernel.org>; Tue, 7 Apr 2020 11:54:54 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3082hydjxq-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 07 Apr 2020 11:54:53 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
-        Tue, 7 Apr 2020 16:54:39 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 Apr 2020 16:54:32 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037Fshw958654742
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 15:54:43 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 17FFE52059;
-        Tue,  7 Apr 2020 15:54:43 +0000 (GMT)
-Received: from thinkpad (unknown [9.145.186.71])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2847C52050;
-        Tue,  7 Apr 2020 15:54:42 +0000 (GMT)
-Date:   Tue, 7 Apr 2020 17:54:40 +0200
-From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     linux-mm@kvack.org, christophe.leroy@c-s.fr,
-        Jonathan Corbet <corbet@lwn.net>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-riscv@lists.infradead.org, x86@kernel.org,
-        linux-doc@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Subject: Re: [PATCH V2 0/3] mm/debug: Add more arch page table helper tests
-In-Reply-To: <e3e35885-6852-16aa-3889-e22750a0cc87@arm.com>
-References: <1585027375-9997-1-git-send-email-anshuman.khandual@arm.com>
- <20200331143059.29fca8fa@thinkpad>
- <e3e35885-6852-16aa-3889-e22750a0cc87@arm.com>
-X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040715-0012-0000-0000-000003A01446
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040715-0013-0000-0000-000021DD3634
-Message-Id: <20200407175440.41cc00a5@thinkpad>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_07:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 spamscore=0
- mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0 phishscore=0
- lowpriorityscore=0 clxscore=1015 suspectscore=0 mlxlogscore=999
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004070128
+        id S1726676AbgDGShw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Apr 2020 14:37:52 -0400
+Received: from 8bytes.org ([81.169.241.247]:57308 "EHLO theia.8bytes.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbgDGShv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 7 Apr 2020 14:37:51 -0400
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 49F26A5; Tue,  7 Apr 2020 20:37:48 +0200 (CEST)
+From:   Joerg Roedel <joro@8bytes.org>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: [RFC PATCH 00/34] iommu: Move iommu_group setup to IOMMU core code
+Date:   Tue,  7 Apr 2020 20:37:08 +0200
+Message-Id: <20200407183742.4344-1-joro@8bytes.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Sun, 5 Apr 2020 17:58:14 +0530
-Anshuman Khandual <anshuman.khandual@arm.com> wrote:
+Hi,
 
-[...]
-> > 
-> > Could be fixed like this (the first de-reference is a bit special,
-> > because at that point *ptep does not really point to a large (pmd) entry
-> > yet, it is initially an invalid pte entry, which breaks our huge_ptep_get()  
-> 
-> There seems to be an inconsistency on s390 platform. Even though it defines
-> a huge_ptep_get() override, it does not subscribe __HAVE_ARCH_HUGE_PTEP_GET
-> which should have forced it fallback on generic huge_ptep_get() but it does
-> not :) Then I realized that __HAVE_ARCH_HUGE_PTEP_GET only makes sense when
-> an arch uses <asm-generic/hugetlb.h>. s390 does not use that and hence gets
-> away with it's own huge_ptep_get() without __HAVE_ARCH_HUGE_PTEP_GET. Sounds
-> confusing ? But I might not have the entire context here.
+here is a patch-set to remove all calls of iommu_group_get_for_dev() from
+the IOMMU drivers and move the per-device group setup and default domain
+allocation into the IOMMU core code.
 
-Yes, that sounds very confusing. Also a bit ironic, since huge_ptep_get()
-was initially introduced because of s390, and now we don't select
-__HAVE_ARCH_HUGE_PTEP_GET...
+This eliminates some ugly back and forth between IOMMU core code and the
+IOMMU drivers, where the driver called iommu_group_get_for_dev() which itself
+called back into the driver.
 
-As you realized, I guess this is because we do not use generic hugetlb.h.
-And when __HAVE_ARCH_HUGE_PTEP_GET was introduced with commit 544db7597ad
-("hugetlb: introduce generic version of huge_ptep_get"), that was probably
-the reason why we did not get our share of __HAVE_ARCH_HUGE_PTEP_GET.
+The patch-set started as a "quick" Friday afternoon project to split the
+IOMMU group creation and the allocation of the default domain, so that the
+default domain is not allocated before all devices are added to the group.
+In the end it took 1.5 weeks to get this in a reasonable shape, but now the
+code (during bus probing) first adds all devices to their respective IOMMU
+group before it determines the default domain type and then allocates it for
+the group.
 
-Nothing really wrong with that, but yes, very confusing. Maybe we could
-also select it for s390, even though it wouldn't have any functional
-impact (so far), just for less confusion. Maybe also thinking about
-using the generic hugetlb.h, not sure if the original reasons for not
-doing so would still apply. Now I only need to find the time...
+It turned out that this required to remove the calls of
+iommu_group_get_for_dev() from the IOMMU drivers. While at it, the calls to
+iommu_device_link()/unlink() where also moved out of the drivers, which
+required a different interface than add_device()/remove_device(). The result
+is the new probe_device()/release_device() interface, where the driver just
+does its own setup and then returns the iommu_device which belongs to the
+device being probed.
 
-> 
-> > conversion logic. I also added PMD_MASK alignment for RANDOM_ORVALUE,
-> > because we do have some special bits there in our large pmds. It seems
-> > to also work w/o that alignment, but it feels a bit wrong):  
-> 
-> Sure, we can accommodate that.
-> 
-> > 
-> > @@ -731,26 +731,26 @@ static void __init hugetlb_advanced_test
-> >                                           unsigned long vaddr, pgprot_t prot)
-> >  {
-> >         struct page *page = pfn_to_page(pfn);
-> > -       pte_t pte = READ_ONCE(*ptep);
-> > +       pte_t pte;
-> > 
-> > -       pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
-> > +       pte = pte_mkhuge(mk_pte_phys(RANDOM_ORVALUE & PMD_MASK, prot));  
-> 
-> So that keeps the existing value in 'ptep' pointer at bay and instead
-> construct a PTE from scratch. I would rather have READ_ONCE(*ptep) at
-> least provide the seed that can be ORed with RANDOM_ORVALUE before
-> being masked with PMD_MASK. Do you see any problem ?
+There is certainly more room for cleanups, but I think this is a good start
+to simplify the code flow during IOMMU device probing.  It is also a more
+robust base for the pending patch-sets which implement per-group default
+domain types and the removal of the private domains from the Intel VT-d
+driver.
 
-Yes, unfortunately. The problem is that the resulting pte is not marked
-as present. The conversion pte -> (huge) pmd, which is done in
-set_huge_pte_at() for s390, will establish an empty pmd for non-present
-ptes, all the RANDOM_ORVALUE stuff is lost. And a subsequent
-huge_ptep_get() will not result in the same original pte value. If you
-want to preserve and check the RANDOM_ORVALUE, it has to be a present
-pte, hence the mk_pte(_phys).
+With regards to testing, I verified this code works on three IOMMUs:
 
-> 
-> Some thing like this instead.
-> 
-> pte_t pte = READ_ONCE(*ptep);
-> pte = pte_mkhuge(__pte((pte_val(pte) | RANDOM_ORVALUE) & PMD_MASK));
-> 
-> We cannot use mk_pte_phys() as it is defined only on some platforms
-> without any generic fallback for others.
+	- AMD-Vi
+	- Intel VT-d (but there might be breakages on some hardware, the
+	  patches to remove the private domain handling from the VT-d driver
+	  should be rebased to these patches)
+	- ARM-SMMU-v3 (as emulated by QEMU)
 
-Oh, didn't know that, sorry. What about using mk_pte() instead, at least
-it would result in a present pte:
+Most driver conversions to the probe_device()/release_device() interface
+were trivial, but there were also some hard nuts, which I am not sure still
+work. The more difficult drivers were:
 
-pte = pte_mkhuge(mk_pte(phys_to_page(RANDOM_ORVALUE & PMD_MASK), prot));
+	- ARM-SMMU-v2
+	- OMAP
+	- Renesas
+	- Mediatek IOMMU v1
+	- Exynos
 
-And if you also want to do some with the existing value, which seems
-to be an empty pte, then maybe just check if writing and reading that
-value with set_huge_pte_at() / huge_ptep_get() returns the same,
-i.e. initially w/o RANDOM_ORVALUE.
+It would be great if the changes could be tested (and possibly fixed) on
+those IOMMUs, as I can't do testing on them.
 
-So, in combination, like this (BTW, why is the barrier() needed, it
-is not used for the other set_huge_pte_at() calls later?):
+The patches are based on the current iommu/next branch, I will rebase them
+to v5.7-rc1 when it comes out. A branch with these patches applied can be
+found here:
 
-@@ -733,24 +733,28 @@ static void __init hugetlb_advanced_test
-        struct page *page = pfn_to_page(pfn);
-        pte_t pte = READ_ONCE(*ptep);
- 
--       pte = __pte(pte_val(pte) | RANDOM_ORVALUE);
-+       set_huge_pte_at(mm, vaddr, ptep, pte);
-+       WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
-+
-+       pte = pte_mkhuge(mk_pte(phys_to_page(RANDOM_ORVALUE & PMD_MASK), prot));
-        set_huge_pte_at(mm, vaddr, ptep, pte);
-        barrier();
-        WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
+	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device
 
-This would actually add a new test "write empty pte with
-set_huge_pte_at(), then verify with huge_ptep_get()", which happens
-to trigger a warning on s390 :-)
+Please review and test these changes and let me know what breaks.
 
-That (new) warning actually points to misbehavior on s390, we do not
-write a correct empty pmd in this case, but one that is empty and also
-marked as large. huge_ptep_get() will then not correctly recognize it
-as empty and do wrong conversion. It is also not consistent with
-huge_ptep_get_and_clear(), where we write the empty pmd w/o marking
-as large. Last but not least it would also break our pmd_protnone()
-logic (see below). Another nice finding on s390 :-)
+Thanks,
 
-I don't think this has any effect in practice (yet), but I will post a
-fix for that, just in case you will add / change this test.
+	Joerg
 
-> 
-> >         set_huge_pte_at(mm, vaddr, ptep, pte);
-> >         barrier();
-> >         WARN_ON(!pte_same(pte, huge_ptep_get(ptep)));
-> >         huge_pte_clear(mm, vaddr, ptep, PMD_SIZE);
-> > -       pte = READ_ONCE(*ptep);
-> > +       pte = huge_ptep_get(ptep);
-> >         WARN_ON(!huge_pte_none(pte));
-> >  
-> >         pte = mk_huge_pte(page, prot);
-> >         set_huge_pte_at(mm, vaddr, ptep, pte);
-> >         huge_ptep_set_wrprotect(mm, vaddr, ptep);
-> > -       pte = READ_ONCE(*ptep);
-> > +       pte = huge_ptep_get(ptep);
-> >         WARN_ON(huge_pte_write(pte));
-> >  
-> >         pte = mk_huge_pte(page, prot);
-> >         set_huge_pte_at(mm, vaddr, ptep, pte);
-> >         huge_ptep_get_and_clear(mm, vaddr, ptep);
-> > -       pte = READ_ONCE(*ptep);
-> > +       pte = huge_ptep_get(ptep);
-> >         WARN_ON(!huge_pte_none(pte));
-> >  
-> >         pte = mk_huge_pte(page, prot);
-> > @@ -759,7 +759,7 @@ static void __init hugetlb_advanced_test
-> >         pte = huge_pte_mkwrite(pte);
-> >         pte = huge_pte_mkdirty(pte);
-> >         huge_ptep_set_access_flags(vma, vaddr, ptep, pte, 1);
-> > -       pte = READ_ONCE(*ptep);
-> > +       pte = huge_ptep_get(ptep);
-> >         WARN_ON(!(huge_pte_write(pte) && huge_pte_dirty(pte)));
-> >  }
-> >  #else
-> > 
-> > 3) The pmd_protnone_tests() has an issue, because it passes a pmd to
-> > pmd_protnone() which has not been marked as large. We check for large
-> > pmd in the s390 implementation of pmd_protnone(), and will fail if a
-> > pmd is not large. We had similar issues before, in other helpers, where
-> > I changed the logic on s390 to not require the pmd large check, but I'm
-> > not so sure in this case. Is there a valid use case for doing
-> > pmd_protnone() on "normal" pmds? Or could this be changed like this:  
-> 
-> That is a valid question. IIUC, all existing callers for pmd_protnone()
-> ensure that it is indeed a huge PMD. But even assuming otherwise should
-> not the huge PMD requirement get checked in the caller itself rather than
-> in the arch helper which is just supposed to check the existence of the
-> dedicated PTE bit(s) for this purpose. Purely from a helper perspective
-> pmd_protnone() should not really care about being large even though it
-> might never get used without one.
-> 
-> Also all platforms (except s390) derive the pmd_protnone() from their
-> respective pte_protnone(). I wonder why should s390 be any different
-> unless it is absolutely necessary.
+Joerg Roedel (33):
+  iommu: Move default domain allocation to separate function
+  iommu/amd: Implement iommu_ops->def_domain_type call-back
+  iommu/vt-d: Wire up iommu_ops->def_domain_type
+  iommu/amd: Remove dma_mask check from check_device()
+  iommu/amd: Return -ENODEV in add_device when device is not handled by
+    IOMMU
+  iommu: Add probe_device() and remove_device() call-backs
+  iommu: Move default domain allocation to iommu_probe_device()
+  iommu: Keep a list of allocated groups in __iommu_probe_device()
+  iommu: Move new probe_device path to separate function
+  iommu: Split off default domain allocation from group assignment
+  iommu: Move iommu_group_create_direct_mappings() out of
+    iommu_group_add_device()
+  iommu: Export bus_iommu_probe() and make is safe for re-probing
+  iommu/amd: Remove dev_data->passthrough
+  iommu/amd: Convert to probe/release_device() call-backs
+  iommu/vt-d: Convert to probe/release_device() call-backs
+  iommu/arm-smmu: Store device instead of group in arm_smmu_s2cr
+  iommu/arm-smmu: Convert to probe/release_device() call-backs
+  iommu/pamu: Convert to probe/release_device() call-backs
+  iommu/s390: Convert to probe/release_device() call-backs
+  iommu/virtio: Convert to probe/release_device() call-backs
+  iommu/msm: Convert to probe/release_device() call-backs
+  iommu/mediatek: Convert to probe/release_device() call-backs
+  iommu/mediatek-v1 Convert to probe/release_device() call-backs
+  iommu/qcom: Convert to probe/release_device() call-backs
+  iommu/rockchip: Convert to probe/release_device() call-backs
+  iommu/tegra: Convert to probe/release_device() call-backs
+  iommu/renesas: Convert to probe/release_device() call-backs
+  iommu/omap: Remove orphan_dev tracking
+  iommu/omap: Convert to probe/release_device() call-backs
+  iommu/exynos: Create iommu_device in struct exynos_iommu_owner
+  iommu/exynos: Convert to probe/release_device() call-backs
+  iommu: Remove add_device()/remove_device() code-paths
+  iommu: Unexport iommu_group_get_for_dev()
 
-This is again because of our different page table entry layouts for
-pte/pmd and (large) pmd. The bits we check for pmd_protnone() are
-not valid for normal pmd/pte, and we would return undefined result for
-normal entries.
+Sai Praneeth Prakhya (1):
+  iommu: Add def_domain_type() callback in iommu_ops
 
-Of course, we could rely on nobody calling pmd_protnone() on normal
-pmds, but in this case we also use pmd_large() check in pmd_protnone()
-for indication if the pmd is present. W/o that, we would return
-true for empty pmds, that doesn't sound right. Not sure if we also
-want to rely on nobody calling pmd_protnone() on empty pmds.
+ drivers/iommu/amd_iommu.c       |  97 ++++----
+ drivers/iommu/amd_iommu_types.h |   1 -
+ drivers/iommu/arm-smmu-v3.c     |  42 +---
+ drivers/iommu/arm-smmu.c        |  44 ++--
+ drivers/iommu/exynos-iommu.c    | 113 ++++++---
+ drivers/iommu/fsl_pamu_domain.c |  22 +-
+ drivers/iommu/intel-iommu.c     |  68 +-----
+ drivers/iommu/iommu.c           | 391 +++++++++++++++++++++++++-------
+ drivers/iommu/ipmmu-vmsa.c      |  60 ++---
+ drivers/iommu/msm_iommu.c       |  34 +--
+ drivers/iommu/mtk_iommu.c       |  24 +-
+ drivers/iommu/mtk_iommu_v1.c    |  50 ++--
+ drivers/iommu/omap-iommu.c      |  99 ++------
+ drivers/iommu/qcom_iommu.c      |  24 +-
+ drivers/iommu/rockchip-iommu.c  |  26 +--
+ drivers/iommu/s390-iommu.c      |  22 +-
+ drivers/iommu/tegra-gart.c      |  24 +-
+ drivers/iommu/tegra-smmu.c      |  31 +--
+ drivers/iommu/virtio-iommu.c    |  41 +---
+ include/linux/iommu.h           |  21 +-
+ 20 files changed, 600 insertions(+), 634 deletions(-)
 
-Anyway, if in practice it is not correct to use pmd_protnone()
-on normal pmds, then I would suggest that your tests should also
-not do / test it. And I strongly assume that it is not correct, at
-least I cannot think of a valid case, and of course s390 would
-already be broken if there was such a case.
-
-Regards,
-Gerald
+-- 
+2.17.1
 
