@@ -2,137 +2,183 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DE8451A0AAA
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 12:01:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 587381A0C93
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 13:11:12 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbgDGKB5 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 7 Apr 2020 06:01:57 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:1770 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728189AbgDGKB4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 06:01:56 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 0379WpIL053728
-        for <linux-s390@vger.kernel.org>; Tue, 7 Apr 2020 06:01:56 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 3082nwjfs8-1
+        id S1728515AbgDGLLH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Apr 2020 07:11:07 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:56160 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728436AbgDGLKy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 07:10:54 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 037B4ZZg060458
+        for <linux-s390@vger.kernel.org>; Tue, 7 Apr 2020 07:10:52 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 308eu86adw-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 07 Apr 2020 06:01:56 -0400
+        for <linux-s390@vger.kernel.org>; Tue, 07 Apr 2020 07:10:52 -0400
 Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <sth@linux.ibm.com>;
-        Tue, 7 Apr 2020 11:01:42 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Tue, 7 Apr 2020 12:10:23 +0100
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 7 Apr 2020 11:01:39 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037A1n5M60686366
+        Tue, 7 Apr 2020 12:10:20 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 037B9frB50856328
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 7 Apr 2020 10:01:49 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D23864C040;
-        Tue,  7 Apr 2020 10:01:49 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7DC7A4C058;
-        Tue,  7 Apr 2020 10:01:49 +0000 (GMT)
-Received: from linux.fritz.box (unknown [9.145.70.233])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  7 Apr 2020 10:01:49 +0000 (GMT)
-Subject: Re: [PATCH 1/1] s390: Cleanup removed IOSCHED_DEADLINE
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com
-References: <20200406074118.86849-1-sth@linux.ibm.com>
- <20200406074118.86849-2-sth@linux.ibm.com>
- <0efad2a5-90f5-8ccf-169e-9715a64a4bb0@kernel.dk>
-From:   Stefan Haberland <sth@linux.ibm.com>
-Autocrypt: addr=sth@linux.ibm.com; keydata=
- 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
- cH4TNHyhiR0KAbxE8qKx3Jc=
-Date:   Tue, 7 Apr 2020 12:01:49 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 7 Apr 2020 11:09:41 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 404A1A4054;
+        Tue,  7 Apr 2020 11:10:46 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B3D8AA405B;
+        Tue,  7 Apr 2020 11:10:45 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.8.150])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  7 Apr 2020 11:10:45 +0000 (GMT)
+Date:   Tue, 7 Apr 2020 12:48:15 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Christian Borntraeger <borntraeger@de.ibm.com>
+Cc:     David Hildenbrand <david@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, stable@vger.kernel.org
+Subject: Re: [PATCH v2 1/5] KVM: s390: vsie: Fix region 1 ASCE sanity shadow
+ address checks
+In-Reply-To: <3431ccbb-25b2-66fc-5e07-3f449c03b087@de.ibm.com>
+References: <20200403153050.20569-1-david@redhat.com>
+        <20200403153050.20569-2-david@redhat.com>
+        <ee3f6c69-4401-066d-6f87-806667facf35@de.ibm.com>
+        <c5c9fdcd-37ce-029d-a412-8987a901a116@redhat.com>
+        <3431ccbb-25b2-66fc-5e07-3f449c03b087@de.ibm.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <0efad2a5-90f5-8ccf-169e-9715a64a4bb0@kernel.dk>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 X-TM-AS-GCONF: 00
-x-cbid: 20040710-0012-0000-0000-0000039FE77D
+x-cbid: 20040711-0020-0000-0000-000003C33E87
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040710-0013-0000-0000-000021DD0831
-Message-Id: <c7ac9c3c-3a1f-3ce3-acbd-422bc4206288@linux.ibm.com>
+x-cbparentid: 20040711-0021-0000-0000-0000221BFC1D
+Message-Id: <20200407124815.4577e98c@p-imbrenda>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_01:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 phishscore=0
- impostorscore=0 mlxscore=0 mlxlogscore=999 malwarescore=0
- lowpriorityscore=0 suspectscore=0 adultscore=0 clxscore=1015
- priorityscore=1501 spamscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004070081
+ definitions=2020-04-07_03:2020-04-07,2020-04-07 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 malwarescore=0
+ clxscore=1015 priorityscore=1501 impostorscore=0 spamscore=0
+ mlxlogscore=998 suspectscore=0 lowpriorityscore=0 adultscore=0 mlxscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004070091
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Am 06.04.20 um 17:32 schrieb Jens Axboe:
-> On 4/6/20 1:41 AM, Stefan Haberland wrote:
->> From: Krzysztof Kozlowski <krzk@kernel.org>
->>
->> CONFIG_IOSCHED_DEADLINE is gone since commit f382fb0bcef4 ("block:
->> remove legacy IO schedulers").
-> Isn't this a leftover thing from when dasd selected deadline
-> internally? I don't think we need this anymore, just kill the
-> select completely.
->
+On Tue, 7 Apr 2020 09:52:53 +0200
+Christian Borntraeger <borntraeger@de.ibm.com> wrote:
 
-Basically yes.
-We still have the recommendation to use deadline and there are some udev
-rules in place which select it.
-So I thought it might be a good idea to keep the line. But I am also
-fine to drop it completely if you prefer this.
+> On 07.04.20 09:49, David Hildenbrand wrote:
+> > On 07.04.20 09:33, Christian Borntraeger wrote:  
+> >>
+> >> On 03.04.20 17:30, David Hildenbrand wrote:  
+> >>> In case we have a region 1 ASCE, our shadow/g3 address can have
+> >>> any value. Unfortunately, (-1UL << 64) is undefined and triggers
+> >>> sometimes, rejecting valid shadow addresses when trying to walk
+> >>> our shadow table hierarchy.
+> >>>
+> >>> The result is that the prefix cannot get mapped and will loop
+> >>> basically forever trying to map it (-EAGAIN loop).
+> >>>
+> >>> After all, the broken check is only a sanity check, our table
+> >>> shadowing code in kvm_s390_shadow_tables() already checks these
+> >>> conditions, injecting proper translation exceptions. Turn it into
+> >>> a WARN_ON_ONCE().  
+> >>
+> >> After some testing I now triggered this warning:
+> >>
+> >> [  541.633114] ------------[ cut here ]------------
+> >> [  541.633128] WARNING: CPU: 38 PID: 2812 at
+> >> arch/s390/mm/gmap.c:799 gmap_shadow_pgt_lookup+0x98/0x1a0 [
+> >> 541.633129] Modules linked in: vhost_net vhost macvtap macvlan tap
+> >> kvm xt_CHECKSUM xt_MASQUERADE nf_nat_tftp nf_conntrack_tftp xt_CT
+> >> tun bridge stp llc xt_tcpudp ip6t_REJECT nf_reject_ipv6
+> >> ip6t_rpfilter ipt_REJECT nf_reject_ipv4 xt_conntrack ip6table_nat
+> >> ip6table_mangle ip6table_raw ip6table_security iptable_nat nf_nat
+> >> iptable_mangle iptable_raw iptable_security nf_conntrack
+> >> nf_defrag_ipv6 nf_defrag_ipv4 ip_set nfnetlink ip6table_filter
+> >> ip6_tables iptable_filter rpcrdma sunrpc rdma_ucm rdma_cm iw_cm
+> >> ib_cm configfs mlx5_ib s390_trng ghash_s390 prng aes_s390
+> >> ib_uverbs des_s390 ib_core libdes sha3_512_s390 genwqe_card
+> >> sha3_256_s390 vfio_ccw crc_itu_t vfio_mdev sha512_s390 mdev
+> >> vfio_iommu_type1 sha1_s390 vfio eadm_sch zcrypt_cex4 sch_fq_codel
+> >> ip_tables x_tables mlx5_core sha256_s390 sha_common pkey zcrypt
+> >> rng_core autofs4 [  541.633164] CPU: 38 PID: 2812 Comm: CPU 0/KVM
+> >> Not tainted 5.6.0+ #354 [  541.633166] Hardware name: IBM 3906 M04
+> >> 704 (LPAR) [  541.633167] Krnl PSW : 0704d00180000000
+> >> 00000014e05dc454 (gmap_shadow_pgt_lookup+0x9c/0x1a0) [
+> >> 541.633169]            R:0 T:1 IO:1 EX:1 Key:0 M:1 W:0 P:0 AS:3
+> >> CC:1 PM:0 RI:0 EA:3 [  541.633171] Krnl GPRS: 0000000000000000
+> >> 0000001f00000000 0000001f487b8000 ffffffff80000000 [  541.633172]
+> >>           ffffffffffffffff 000003e003defa18 000003e003defa1c
+> >> 000003e003defa18 [  541.633173]            fffffffffffff000
+> >> 000003e003defa18 000003e003defa28 0000001f70e06300 [  541.633174]
+> >>           0000001f43484000 00000000043ed200 000003e003def978
+> >> 000003e003def920 [  541.633203] Krnl Code: 00000014e05dc448:
+> >> b9800038		ngr	%r3,%r8 00000014e05dc44c:
+> >> a7840014		brc	8,00000014e05dc474
+> >> #00000014e05dc450: af000000		mc	0,0  
+> >>                          >00000014e05dc454: a728fff5
+> >>                          >	lhi	%r2,-11  
+> >>                           00000014e05dc458: a7180000
+> >> 	lhi	%r1,0 00000014e05dc45c: b2fa0070
+> >> niai	7,0 00000014e05dc460: 4010b04a
+> >> sth	%r1,74(%r11) 00000014e05dc464: b9140022
+> >> lgfr	%r2,%r2 [  541.633215] Call Trace:
+> >> [  541.633218]  [<00000014e05dc454>]
+> >> gmap_shadow_pgt_lookup+0x9c/0x1a0 [  541.633257]
+> >> [<000003ff804c57d6>] kvm_s390_shadow_fault+0x66/0x1e8 [kvm] [
+> >> 541.633265]  [<000003ff804c72dc>] vsie_run+0x43c/0x710 [kvm] [
+> >> 541.633273]  [<000003ff804c85ca>] kvm_s390_handle_vsie+0x632/0x750
+> >> [kvm] [  541.633281]  [<000003ff804c123c>]
+> >> kvm_s390_handle_b2+0x84/0x4e0 [kvm] [  541.633289]
+> >> [<000003ff804b46b2>] kvm_handle_sie_intercept+0x172/0xcb8 [kvm] [
+> >> 541.633297]  [<000003ff804b18a8>] __vcpu_run+0x658/0xc90 [kvm] [
+> >> 541.633305]  [<000003ff804b2920>]
+> >> kvm_arch_vcpu_ioctl_run+0x248/0x858 [kvm] [  541.633313]
+> >> [<000003ff8049d454>] kvm_vcpu_ioctl+0x284/0x7b0 [kvm] [
+> >> 541.633316]  [<00000014e087d5ae>] ksys_ioctl+0xae/0xe8 [
+> >> 541.633318]  [<00000014e087d652>] __s390x_sys_ioctl+0x2a/0x38 [
+> >> 541.633323]  [<00000014e0ff02a2>] system_call+0x2a6/0x2c8 [
+> >> 541.633323] Last Breaking-Event-Address: [  541.633334]
+> >> [<000003ff804983e0>] kvm_running_vcpu+0x3ea9ee997d8/0x3ea9ee99950
+> >> [kvm] [  541.633335] ---[ end trace f69b6021855ea189 ]---
+> >>
+> >>
+> >> Unfortunately no dump at that point in time.
+> >> I have other tests which are clearly fixed by this patch, so we
+> >> should propbably go forward anyway. Question is, is this just
+> >> another bug we need to fix or is the assumption that somebody else
+> >> checked all conditions so we can warn false?  
+> > 
+> > Yeah, I think it is via
+> > 
+> > kvm_s390_shadow_fault()->gmap_shadow_pgt_lookup()->gmap_table_walk()
+> > 
+> > where we just peek if there is already something shadowed. If not,
+> > we go via the full kvm_s390_shadow_tables() path.
+> > 
+> > So we could either do sanity checks in gmap_shadow_pgt_lookup(), or
+> > rather drop the WARN_ON_ONCE. I think the latter makes sense, now
+> > that we understood the problem.  
+> 
+> Ok, so I will drop the WARN_ON_ONCE and fixup the commit message.
+> 
 
-Regards,
-Stefan
+with those fixes, you can also add:
+
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
 
