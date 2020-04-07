@@ -2,129 +2,80 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6B5D21A00A3
-	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 00:11:39 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B299B1A0673
+	for <lists+linux-s390@lfdr.de>; Tue,  7 Apr 2020 07:15:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726112AbgDFWLi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 6 Apr 2020 18:11:38 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:34924 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726084AbgDFWLi (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 6 Apr 2020 18:11:38 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 036M4cZF001477;
-        Mon, 6 Apr 2020 18:11:37 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3082g43q7g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 18:11:37 -0400
-Received: from m0098414.ppops.net (m0098414.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 036M4iT6002339;
-        Mon, 6 Apr 2020 18:11:36 -0400
-Received: from ppma04dal.us.ibm.com (7a.29.35a9.ip4.static.sl-reverse.com [169.53.41.122])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 3082g43q78-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 18:11:36 -0400
-Received: from pps.filterd (ppma04dal.us.ibm.com [127.0.0.1])
-        by ppma04dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 036MBC94027972;
-        Mon, 6 Apr 2020 22:11:36 GMT
-Received: from b01cxnp22034.gho.pok.ibm.com (b01cxnp22034.gho.pok.ibm.com [9.57.198.24])
-        by ppma04dal.us.ibm.com with ESMTP id 306hv608eb-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 06 Apr 2020 22:11:36 +0000
-Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 036MBZmv52625758
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 6 Apr 2020 22:11:35 GMT
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 41D0B12458B;
-        Mon,  6 Apr 2020 22:11:35 +0000 (GMT)
-Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B8E0F12458A;
-        Mon,  6 Apr 2020 22:11:34 +0000 (GMT)
-Received: from [9.160.96.56] (unknown [9.160.96.56])
-        by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon,  6 Apr 2020 22:11:34 +0000 (GMT)
-Subject: Re: [RFC PATCH v2 7/9] vfio-ccw: Wire up the CRW irq and CRW region
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>, linux-s390@vger.kernel.org,
-        kvm@vger.kernel.org
-References: <20200206213825.11444-1-farman@linux.ibm.com>
- <20200206213825.11444-8-farman@linux.ibm.com>
- <20200406155255.3c8f06e5.cohuck@redhat.com>
-From:   Eric Farman <farman@linux.ibm.com>
-Message-ID: <66655d37-b9d1-593f-fd81-339b422bb372@linux.ibm.com>
-Date:   Mon, 6 Apr 2020 18:11:34 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S1727003AbgDGFPX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 7 Apr 2020 01:15:23 -0400
+Received: from mail-vs1-f65.google.com ([209.85.217.65]:39545 "EHLO
+        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726964AbgDGFPP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 7 Apr 2020 01:15:15 -0400
+Received: by mail-vs1-f65.google.com with SMTP id u9so1425443vsp.6
+        for <linux-s390@vger.kernel.org>; Mon, 06 Apr 2020 22:15:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=MfHDvIBIt69xqysjTBYVVNc0kV20i2uh+5pM5bA0kgqzaY38Y8DWEj01Pvo2lprKBQ
+         GeMPmsDw8mI8JPS3USlc7fo909SxPcbTvuuO8fmlDj3Epr1eVDtR360WKQPQyhZWRFR1
+         e2AVs/X8xmnpyFeBVbEpWkW/7xUX6BkoKcBNjhVPYru9i1s3MQXqsGzojyz2OPT8Gzuk
+         eAsRgBBtJfCcoxVL23nq2mmza5GNfLtG1Vewilonxc/7to20Va10m3hSWyxvaqvjeUuq
+         +R1bw/nay987q2JQWtF8qmoAYape5iyXc2fGu9oueeJmEOdg+02io2ZWkJnJglNvfVbH
+         fVHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to;
+        bh=38NlpNEbzNFWb7RFQtfvRASB+B576yw7dNc7pozf3pc=;
+        b=GGt9T6nAkVu8be3CBhVn3RsBCC9rJva1zzLt0WoIjJ4lwjJbKJQywXiuJHdoBDWsQY
+         W6Jw8W8SWmnUaCYCW37+8RpZcYkN3wM8pgv7jegH0WY+4iGOXdvVHu0TbyMXWsPgndR9
+         xYGFcpJWa7UpTllnxh27lGcDshjLeXuh6zrhkBaezyIBHLH2eQD+X/dG4smUQcS/HZvo
+         L2+OzSJuXMWf8cst/tYyT2U0vHfEYN6tI3WKkOF2k5TvZSKjjRG7RNxAbHC8HIOwn/zw
+         6sI1KI3UspU9ERWXFk4y0q6cxWQm5f6J1qDjDi7a2ZaxcVqmENL1oM+MBdkQeVHrCb54
+         qEmQ==
+X-Gm-Message-State: AGi0PuYm5HAhajEVeIRSLF3dw1Zf0Ooe7+jHtee+Fkvkgs7oTZwrWsnV
+        OyZl8j9xmrgF/nCPzRcs44djRqP+czE2ICUGOGE=
+X-Google-Smtp-Source: APiQypL+ArhsKP1HCJpJZSuqqOKzmqGe03VSBcvbyU5XLwMdkDIdNu0ELlIqojTyqMNnJA6AEodSyvd4rSFXD4DVz/E=
+X-Received: by 2002:a67:fa85:: with SMTP id f5mr495699vsq.65.1586236514277;
+ Mon, 06 Apr 2020 22:15:14 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200406155255.3c8f06e5.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-06_10:2020-04-06,2020-04-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0 clxscore=1015
- priorityscore=1501 impostorscore=0 mlxscore=0 spamscore=0
- lowpriorityscore=0 adultscore=0 malwarescore=0 suspectscore=0
- mlxlogscore=827 bulkscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004060162
+Received: by 2002:ab0:254a:0:0:0:0:0 with HTTP; Mon, 6 Apr 2020 22:15:12 -0700 (PDT)
+From:   SANDRA DEWI <sdewisandra@gmail.com>
+Date:   Tue, 7 Apr 2020 05:15:12 +0000
+Message-ID: <CALe9-EdG2aBp2yBY=t79ZuBObzzfY6nuVfAsra6+wc2BAYMhcg@mail.gmail.com>
+Subject: whether this is your correct email address or not
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Dear ,Pastor
 
 
-On 4/6/20 9:52 AM, Cornelia Huck wrote:
-> On Thu,  6 Feb 2020 22:38:23 +0100
-> Eric Farman <farman@linux.ibm.com> wrote:
-> 
->> From: Farhan Ali <alifm@linux.ibm.com>
->>
->> Use an IRQ to notify userspace that there is a CRW
->> pending in the region, related to path-availability
->> changes on the passthrough subchannel.
->>
->> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
->> Signed-off-by: Eric Farman <farman@linux.ibm.com>
->> ---
->>
->> Notes:
->>     v1->v2:
->>      - Remove extraneous 0x0 in crw.rsid assignment [CH]
->>      - Refactor the building/queueing of a crw into its own routine [EF]
->>     
->>     v0->v1: [EF]
->>      - Place the non-refactoring changes from the previous patch here
->>      - Clean up checkpatch (whitespace) errors
->>      - s/chp_crw/crw/
->>      - Move acquire/release of io_mutex in vfio_ccw_crw_region_read()
->>        into patch that introduces that region
->>      - Remove duplicate include from vfio_ccw_drv.c
->>      - Reorder include in vfio_ccw_private.h
->>
->>  drivers/s390/cio/vfio_ccw_chp.c     |  5 ++
->>  drivers/s390/cio/vfio_ccw_drv.c     | 73 +++++++++++++++++++++++++++++
->>  drivers/s390/cio/vfio_ccw_ops.c     |  4 ++
->>  drivers/s390/cio/vfio_ccw_private.h |  9 ++++
->>  include/uapi/linux/vfio.h           |  1 +
->>  5 files changed, 92 insertions(+)
-> 
-> [I may have gotten all muddled up from staring at this, but please bear
-> with me...]
-> 
-...snip...
-> 
-> Aren't we missing copying in a new queued crw after userspace had done
-> a read?
-> 
 
-Um, huh.  I'll doublecheck that after dinner, but it sure looks like
-you're right.
+I have a client who is an oil business man and he made a fixed deposit
+of $26 million USD in my bank, where I am the director of the branch,
+My client died with his entire family in Jordanian
 
-(Might not get back to you tomorrow, because I don't have much time
-until Wednesday.)
+50% of the fund will be for the church  for the work of God,the
+balance 50% we share it in the ratio of 50/50. Meaning 50% to you and
+50% for me
+
+intervention in the Syrian Civil War 2014 leaving behind no next of
+kin. I Propose to present you as next of kin to claim the funds, if
+interested reply me for full details and how we are to
+
+
+
+proceed to close this deal.
+
+
+
+
+Mrs. Sandra Dewi
+
+
+
+Email  mrsdewi@gmx.com
