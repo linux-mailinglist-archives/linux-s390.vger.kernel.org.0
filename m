@@ -2,172 +2,243 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 766041A2340
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Apr 2020 15:44:44 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D701C1A2401
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Apr 2020 16:23:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727126AbgDHNon (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Apr 2020 09:44:43 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:32106 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726754AbgDHNom (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Apr 2020 09:44:42 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 038DYupe118084
-        for <linux-s390@vger.kernel.org>; Wed, 8 Apr 2020 09:44:41 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30921053t8-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 08 Apr 2020 09:44:41 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 8 Apr 2020 14:44:25 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 8 Apr 2020 14:44:18 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 038DiUwG37421114
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 8 Apr 2020 13:44:30 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC36711C04A;
-        Wed,  8 Apr 2020 13:44:29 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A219611C04C;
-        Wed,  8 Apr 2020 13:44:28 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.145.153.96])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  8 Apr 2020 13:44:28 +0000 (GMT)
-Subject: Re: [PATCH 28/28] s390: use __vmalloc_node in stack_alloc
-To:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-29-hch@lst.de>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Wed, 8 Apr 2020 15:44:28 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1728693AbgDHOXJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Apr 2020 10:23:09 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:59404 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728664AbgDHOXI (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Apr 2020 10:23:08 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20200408142306euoutp02fa089e30a2d0f4c3dc2f8e862ebe487a~D3i7mu-Jg0817408174euoutp02i
+        for <linux-s390@vger.kernel.org>; Wed,  8 Apr 2020 14:23:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20200408142306euoutp02fa089e30a2d0f4c3dc2f8e862ebe487a~D3i7mu-Jg0817408174euoutp02i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1586355786;
+        bh=fPbQcPR1oF/v5hK09P8uzwfqplWO3pBhbWYE2b0EXHE=;
+        h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+        b=Q16PeABv1KJDXsi+C6wbSRMnvW0UWxgws6fTgiTAHn8bC8/JzqU+/Rnnt8dOjLYGB
+         XruNzZbDx3gU7i2vk7971pGcLF/MO7BdK5t/RGCxyjKDmiVVOaSMJSzpFsn/gyqoH+
+         kg3zpOvmQbH5I5lmEVI8kxn8Xs3BHwPbX/NWVT8A=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200408142306eucas1p2c1e75b5c003294b987b54204f8374a6e~D3i7Bz_u61843118431eucas1p2o;
+        Wed,  8 Apr 2020 14:23:06 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id B5.D7.60679.A4EDD8E5; Wed,  8
+        Apr 2020 15:23:06 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20200408142305eucas1p1425276324bb62d9d5ce10138dbc91efb~D3i6uRwxk0469604696eucas1p1_;
+        Wed,  8 Apr 2020 14:23:05 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20200408142305eusmtrp1312d5ec55fb881d4b3abc5bda7d3acb0~D3i6tN3IK1183911839eusmtrp1F;
+        Wed,  8 Apr 2020 14:23:05 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-51-5e8dde4a50e2
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 7C.B7.07950.94EDD8E5; Wed,  8
+        Apr 2020 15:23:05 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200408142304eusmtip13441c366871541f79223a15a5111bf46~D3i5Y6XIu1251612516eusmtip1B;
+        Wed,  8 Apr 2020 14:23:04 +0000 (GMT)
+Subject: Re: [RFC PATCH 31/34] iommu/exynos: Create iommu_device in struct
+ exynos_iommu_owner
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+Message-ID: <f59b0bb3-8c08-9cc9-bb1a-e69b7b226f60@samsung.com>
+Date:   Wed, 8 Apr 2020 16:23:05 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200408115926.1467567-29-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <449e7f16-e719-9617-ec92-63b82c0bc33f@samsung.com>
+Content-Transfer-Encoding: 8bit
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20040813-0012-0000-0000-000003A0B568
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20040813-0013-0000-0000-000021DDDAB0
-Message-Id: <6689b12a-4473-af2e-0fa0-69097eb2bb52@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-07_10:2020-04-07,2020-04-07 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 spamscore=0
- mlxscore=0 impostorscore=0 suspectscore=2 adultscore=0 malwarescore=0
- lowpriorityscore=0 phishscore=0 priorityscore=1501 mlxlogscore=999
- bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004080109
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SfUzMcRze934v9ysuv070WczLjRAisX0t8zZ//Lw1zJrZiqPfEpV2V8jZ
+        tO6GTtHpj3LlVF4KpbpU7pjcUYfbXZGdJKHacC6Z2rwu7vp56b/neT7P830+n+3LEFIjHcIk
+        pqTxihR5koz2Jxtavjnnr+vOjVt42kNjZ+8PEtfp6mlsb/pIYt2VfAKbPO9o/KvnA4VLmqJw
+        5rU2Cmv0ZSTOLqoR4/xH50T4dO8HAre2eqmuySHG7eZiGrerHyP8+fUvAueVqglc2HpHhLOH
+        9DTO0kTit6VfCWz51Efhb2YDicsdBhprupasDOH6LAYRV2moRJylx0pzJv1LMVdXEcYZr2bT
+        XJfrNs0ZHm7m6i4e5fI7yhGXq/5Ic40uA8HV2VXcoHHKpoDt/svi+aTEA7xiwfKd/ntavjdQ
+        qS2zDuVUW1Emejxdi/wYYBeD4161WIv8GSlbgaDzeQElkCEEDtctQiCDCJov9oj+Rn6eqv7j
+        Kkfg0ZpGBlJ2AIHr/gYfHs/ugP6yYcKHaTYCtP1a2hcIYr+QUNJcP/IswXaI4PKAUexzSdjl
+        YHrwZiRBsjMgZ7iT9uEJbCw4ezoowRMID8/2kT7sx64AtaNgxEOwU0FdX0QIOBg6+86LfAXA
+        vmNAk1f8Z+81UHbBRgt4PLhtN8QCngz2/BxSCKgRvHFWiQWSg6A9qxAJrijocn73phlvxRyo
+        Ni8Q5FVgc5aKfTKwAdDRHygsEQBnGgoIQZbAiWNSwR0Ketv1f7WWtidEHpLpR52mH3WOftQ5
+        +v+9JYi8ioL5dGVyAq9clMIfDFfKk5XpKQnhu/cnG5H3J9uHbUM3kfnnLitiGSQbK7l7OzdO
+        SskPKDOSrQgYQhYkWZ/llSTx8ozDvGL/DkV6Eq+0okkMKQuWRJa9j5WyCfI0fh/Pp/KKv1MR
+        4xeSiRpPSKPd3X41QfYrYyauHqtTBaQf2Xt8WlOEwmS/mcpMaA6bRs0cuButcn869qR/S15M
+        +fOtS3WFU2wW1aUHA/FtXWGGQUMU9Sx0W0PNwXG1G0PQK7fnS5prTWNt5bwXbRFPn3a7X/xI
+        nH1yrSdGpvLoMg5XRYYqYjQL52ImyHwkXEYq98gjwgiFUv4b+k7N28UDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA03Se0hTURwHcM7uwyktblPzJFE2gkJxuc3pscxSKG4FoRZJltpNL2o6J7uz
+        p5A5/9DlE8ty1pxiaGpYW1o+8LHKUjMVQ8Q0fAwMTBOL6CGu6Qz873fO9/s5cODHx4SvCXd+
+        YoqaVaUwySLSCe9beTvhfexzXrRPZZsX+jDzF0emokYS9XUs4KjocTGGmr9+IZF1eo5Aho4D
+        KKNukEBZukoc5ZQ9dUDFvQ95qGBmDkMDA7ZjUUe/AxpueUCiYc0QQEuTVgwVVmgwdH+gnYdy
+        fuhIlJklQ7MVvzDUtWgh0O8WPY6q+/UkyhqXH3anLV16Hl2vrwd017SZpJt1Ew60qcaTNtbm
+        kPT4SBtJ63vCaFPVTbp4tBrQeZoFkn4xosdoU98N+rtxR+jmSHGgSpmmZj0SlJz6oOicBEnF
+        kgAklvoGiCUy/6j9UrloX1BgHJuceJlV7Qu6IE7o/tNEpHbvuZrbYAYZYGiXFjjyIeULl/Mb
+        CC1w4gupRwC2PhnF7MF22FOSQdhnZ7g8oiXtpXkAawez1wJnKgbOV66sAZKSQO28veRC/cVh
+        1WgruRpg1CgPvqneatezAN6dKOWtBgIqCDa/m1rTOLUb5q6MrQFXKgoWaFqBvbMF9pRa8NXZ
+        kToENf331h/1g3qT3WLUTqhpLFuf3eCYpZxXCIS6DVy3geg2EN0GYgB4LXBh0zhFvIKTijlG
+        waWlxItjlQojsG1QU/fv5y+BduGUGVB8INok6GzLixYSzGXumsIMIB8TuQhOZNquBHHMteus
+        ShmjSktmOTOQ2z5XhLm7xipt+5iijpHIJf4oQOIv85f5IZGbIJvqOi+k4hk1m8Syqazqv+Px
+        Hd0zgF9EQZh179nQn955PiLGdMtyybTo0hDuMP7iveFE5oUsw9hQPespHwO3Syev5Nc/Oy0M
+        Xo4ypjPZhGwpgqmz7jeGHvpU3h7SHYN9+7nN62NwYHv8QQ3mc7wgPSS9ppLfdNSjvXfqVceZ
+        ZcZa1XLkZefFlUjngBlDSWz4yaQ7FWYRziUwEk9MxTH/APyyaD1XAwAA
+X-CMS-MailID: 20200408142305eucas1p1425276324bb62d9d5ce10138dbc91efb
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200407184501eucas1p25407bc96e4345df406cf6ba061ae6a82
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200407184501eucas1p25407bc96e4345df406cf6ba061ae6a82
+References: <20200407183742.4344-1-joro@8bytes.org>
+        <CGME20200407184501eucas1p25407bc96e4345df406cf6ba061ae6a82@eucas1p2.samsung.com>
+        <20200407183742.4344-32-joro@8bytes.org>
+        <449e7f16-e719-9617-ec92-63b82c0bc33f@samsung.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Hi again,
 
+On 08.04.2020 14:23, Marek Szyprowski wrote:
+> Hi Joerg,
+>
+> On 07.04.2020 20:37, Joerg Roedel wrote:
+>> From: Joerg Roedel <jroedel@suse.de>
+>>
+>> The 'struct exynos_iommu_owner' is an umbrella for multiple SYSMMU
+>> instances attached to one master. As such all these instances are
+>> handled the same, they are all configured with the same iommu_domain,
+>> for example.
+>>
+>> The IOMMU core code expects each device to have only one IOMMU
+>> attached, so create the IOMMU-device for the umbrella instead of each
+>> hardware SYSMMU.
+>>
+>> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+>> ---
+>>   drivers/iommu/exynos-iommu.c | 96 +++++++++++++++++++++++++++---------
+>>   1 file changed, 73 insertions(+), 23 deletions(-)
+>>
+>> diff --git a/drivers/iommu/exynos-iommu.c b/drivers/iommu/exynos-iommu.c
+>> index 186ff5cc975c..86ecccbf0438 100644
+>> --- a/drivers/iommu/exynos-iommu.c
+>> +++ b/drivers/iommu/exynos-iommu.c
+>> @@ -235,6 +235,8 @@ struct exynos_iommu_owner {
+>>       struct list_head controllers;    /* list of 
+>> sysmmu_drvdata.owner_node */
+>>       struct iommu_domain *domain;    /* domain this device is 
+>> attached */
+>>       struct mutex rpm_lock;        /* for runtime pm of all sysmmus */
+>> +
+>> +    struct iommu_device iommu;    /* IOMMU core handle */
+>>   };
+>>     /*
+>> @@ -274,8 +276,6 @@ struct sysmmu_drvdata {
+>>       struct list_head owner_node;    /* node for owner controllers 
+>> list */
+>>       phys_addr_t pgtable;        /* assigned page table structure */
+>>       unsigned int version;        /* our version */
+>> -
+>> -    struct iommu_device iommu;    /* IOMMU core handle */
+>>   };
+>>     static struct exynos_iommu_domain *to_exynos_domain(struct 
+>> iommu_domain *dom)
+>> @@ -625,18 +625,6 @@ static int exynos_sysmmu_probe(struct 
+>> platform_device *pdev)
+>>       data->sysmmu = dev;
+>>       spin_lock_init(&data->lock);
+>>   -    ret = iommu_device_sysfs_add(&data->iommu, &pdev->dev, NULL,
+>> -                     dev_name(data->sysmmu));
+>> -    if (ret)
+>> -        return ret;
+>> -
+>> -    iommu_device_set_ops(&data->iommu, &exynos_iommu_ops);
+>> -    iommu_device_set_fwnode(&data->iommu, &dev->of_node->fwnode);
+>
+> The iommu_device_set_fwnode() call is lost during this conversion, 
+> what breaks driver operation. Most of the above IOMMU fw calls you 
+> have moved to xlate function. I've checked briefly but it looks that 
+> there is a chicken-egg problem here. The owner structure is allocated 
+> and initialized from of_xlate(), which won't be called without linking 
+> the problem iommu structure with the fwnode first, what might be done 
+> only in sysmmu_probe(). I will check how to handle this in a different 
+> way.
 
-On 08.04.20 13:59, Christoph Hellwig wrote:
-> stack_alloc can use a slightly higher level vmalloc function.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  arch/s390/kernel/setup.c | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-> index 36445dd40fdb..0f0b140b5558 100644
-> --- a/arch/s390/kernel/setup.c
-> +++ b/arch/s390/kernel/setup.c
-> @@ -305,12 +305,9 @@ void *restart_stack __section(.data);
->  unsigned long stack_alloc(void)
->  {
->  #ifdef CONFIG_VMAP_STACK
-> -	return (unsigned long)
-> -		__vmalloc_node_range(THREAD_SIZE, THREAD_SIZE,
-> -				     VMALLOC_START, VMALLOC_END,
-> -				     THREADINFO_GFP,
-> -				     PAGE_KERNEL, 0, NUMA_NO_NODE,
-> -				     __builtin_return_address(0));
-> +	return (unsigned long)__vmalloc_node(THREAD_SIZE, THREAD_SIZE,
-> +			THREADINFO_GFP, NUMA_NO_NODE,
-> +			__builtin_return_address(0));
+I've played with this a bit and it looks that won't be easy to make it 
+working on ARM 32bit.
 
-Looks sane.
+I need a place to initialize properly all the structures for the given 
+master (IOMMU client device, the one which performs DMA operations).
 
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+I tried to move all the initialization from xlate() to device_probe(), 
+but such approach doesn't work.
 
+On ARM32bit exynos_iommu_device_probe() is called by the device core and 
+IOMMU framework very early, before the Exynos SYSMMU platform devices 
+(controllers) are probed yet. Even iommu class is not yet initialized 
+that time, so returning anything successful from it causes following 
+NULL ptr dereference:
 
->  #else
->  	return __get_free_pages(GFP_KERNEL, THREAD_SIZE_ORDER);
->  #endif
-> 
+Unable to handle kernel NULL pointer dereference at virtual address 0000004c
+...
+
+(__iommu_probe_device) from [<c055b334>] (iommu_probe_device+0x18/0x114)
+(iommu_probe_device) from [<c055b4ac>] (iommu_bus_notifier+0x7c/0x94)
+(iommu_bus_notifier) from [<c014e8ec>] (notifier_call_chain+0x44/0x84)
+(notifier_call_chain) from [<c014e9ec>] 
+(__blocking_notifier_call_chain+0x48/0x60)
+(__blocking_notifier_call_chain) from [<c014ea1c>] 
+(blocking_notifier_call_chain+0x18/0x20)
+(blocking_notifier_call_chain) from [<c05c8d1c>] (device_add+0x3e8/0x704)
+(device_add) from [<c07bafc4>] (of_platform_device_create_pdata+0x90/0xc4)
+(of_platform_device_create_pdata) from [<c07bb138>] 
+(of_platform_bus_create+0x134/0x48c)
+(of_platform_bus_create) from [<c07bb1a4>] 
+(of_platform_bus_create+0x1a0/0x48c)
+(of_platform_bus_create) from [<c07bb63c>] (of_platform_populate+0x84/0x114)
+(of_platform_populate) from [<c1125e9c>] 
+(of_platform_default_populate_init+0x90/0xac)
+(of_platform_default_populate_init) from [<c010326c>] 
+(do_one_initcall+0x80/0x42c)
+(do_one_initcall) from [<c1101074>] (kernel_init_freeable+0x15c/0x208)
+(kernel_init_freeable) from [<c0afdde0>] (kernel_init+0x8/0x118)
+(kernel_init) from [<c01010b4>] (ret_from_fork+0x14/0x20)
+
+I've tried returning ERR_PTR(-EPROBE_DEFER) from device_probe(), but I 
+doesn't work there. Some more changes in the framework are needed...
+
+ > ...
+
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
