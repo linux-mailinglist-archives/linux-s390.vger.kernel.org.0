@@ -2,90 +2,98 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 9C79F1A2483
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Apr 2020 17:01:07 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C11FC1A249B
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Apr 2020 17:07:41 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729261AbgDHPBD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Apr 2020 11:01:03 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50910 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727929AbgDHPBD (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Apr 2020 11:01:03 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description;
-        bh=7j15irdsaxGX8cfTWAC6matDqLKA3gIZxxOmemamMLM=; b=RPEB5PM73ynSvK416UNxfE6GIR
-        mZshayq2k05WAcYJu/+/rVKoK6NKG7B3MH4ANvlIlgjmk7SZQ9SVZvCi1iFzh152x1dc5HFwC6wiB
-        qZ7+wtgUYAJ/AL1+Nrnu40kKBJNxHFgPazhMH2Ric3UWgKjdkfBZZ4L5DzjO4UWC8nOiEfakNU3sL
-        xeYGj2y01wlVJ6IMOAIJN1BDOjqY06mtmnlOMMnimuv0Lk5fEUfE8xZSq6u7bkZB9iCd/RQJzE/kr
-        AiM4v2OB70pEwCX5052hN8D8H6d2m6wVwy7YCb7MRCFvqlow1x10n6P0OTVWoUlmG05Xu6u09f4Jd
-        +6y90bjw==;
-Received: from [2601:1c0:6280:3f0::19c2]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMCCM-0006Vd-CA; Wed, 08 Apr 2020 15:01:02 +0000
-Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
- zsmalloc
-To:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>
-Cc:     Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-11-hch@lst.de>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <c0c86feb-b3d8-78f2-127f-71d682ffc51f@infradead.org>
-Date:   Wed, 8 Apr 2020 08:01:00 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+        id S1729339AbgDHPHl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Apr 2020 11:07:41 -0400
+Received: from foss.arm.com ([217.140.110.172]:39738 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727847AbgDHPHl (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 8 Apr 2020 11:07:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 23D331063;
+        Wed,  8 Apr 2020 08:07:40 -0700 (PDT)
+Received: from [10.57.55.221] (unknown [10.57.55.221])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B6D903F68F;
+        Wed,  8 Apr 2020 08:07:35 -0700 (PDT)
+Subject: Re: [RFC PATCH 17/34] iommu/arm-smmu: Store device instead of group
+ in arm_smmu_s2cr
+To:     Joerg Roedel <joro@8bytes.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org,
+        Joerg Roedel <jroedel@suse.de>
+References: <20200407183742.4344-1-joro@8bytes.org>
+ <20200407183742.4344-18-joro@8bytes.org>
+ <98c10a41-d223-e375-9742-b6471c3dc33c@arm.com>
+ <20200408143707.GK3103@8bytes.org>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <f8b541c2-9271-fc48-dde6-166a2ed6679f@arm.com>
+Date:   Wed, 8 Apr 2020 16:07:33 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <20200408115926.1467567-11-hch@lst.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <20200408143707.GK3103@8bytes.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi,
+On 2020-04-08 3:37 pm, Joerg Roedel wrote:
+> Hi Robin,
+> 
+> thanks for looking into this.
+> 
+> On Wed, Apr 08, 2020 at 01:09:40PM +0100, Robin Murphy wrote:
+>> For a hot-pluggable bus where logical devices may share Stream IDs (like
+>> fsl-mc), this could happen:
+>>
+>>    create device A
+>>    iommu_probe_device(A)
+>>      iommu_device_group(A) -> alloc group X
+>>    create device B
+>>    iommu_probe_device(B)
+>>      iommu_device_group(A) -> lookup returns group X
+>>    ...
+>>    iommu_remove_device(A)
+>>    delete device A
+>>    create device C
+>>    iommu_probe_device(C)
+>>      iommu_device_group(C) -> use-after-free of A
+>>
+>> Preserving the logical behaviour here would probably look *something* like
+>> the mangled diff below, but I haven't thought it through 100%.
+> 
+> Yeah, I think you are right. How about just moving the loop which sets
+> s2crs[idx].group to arm_smmu_device_group()? In that case I can drop
+> this patch and leave the group pointer in place.
 
-On 4/8/20 4:59 AM, Christoph Hellwig wrote:
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 36949a9425b8..614cc786b519 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -702,7 +702,7 @@ config ZSMALLOC
->  
->  config ZSMALLOC_PGTABLE_MAPPING
->  	bool "Use page table mapping to access object in zsmalloc"
-> -	depends on ZSMALLOC
-> +	depends on ZSMALLOC=y
+Isn't that exactly what I suggested? :)
 
-It's a bool so this shouldn't matter... not needed.
+I don't recall for sure, but knowing me, that bit of group bookkeeping 
+is only where it currently is because it cheekily saves iterating the 
+IDs a second time. I don't think there's any technical reason.
 
->  	help
->  	  By default, zsmalloc uses a copy-based object mapping method to
->  	  access allocations that span two pages. However, if a particular
-
-
--- 
-~Randy
-
+Robin.
