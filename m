@@ -2,150 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 087791A1F20
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Apr 2020 12:48:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 69D7C1A207F
+	for <lists+linux-s390@lfdr.de>; Wed,  8 Apr 2020 13:59:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728343AbgDHKsQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Apr 2020 06:48:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:32252 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728279AbgDHKsP (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Apr 2020 06:48:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586342895;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=MZtYtcreRWdnZo6HGx0Gzr9jVhTfvPPlSZqe9ZZdt4Q=;
-        b=U1KWFPe3Uwr3m000Lv0aRgvZPrUzo3a2yfJ1MzsWMu1Q6YBP7kk2KpsYF0joMHUuXlvQ6Y
-        h0iqrK5WEXnchQo17HfHm33E1OhwNps4yc4TsRlmWetCYknxIu0yfxrTcul3gkGuGMRT7Q
-        O1CNgqWAJC3ENhp1DZWDRW9WUm5GQ2I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-481-nMvS2XNPMQ2eYTcYJXs3qA-1; Wed, 08 Apr 2020 06:48:11 -0400
-X-MC-Unique: nMvS2XNPMQ2eYTcYJXs3qA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 20813800D4E;
-        Wed,  8 Apr 2020 10:48:09 +0000 (UTC)
-Received: from gondolin (ovpn-113-103.ams2.redhat.com [10.36.113.103])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B306B5D9CD;
-        Wed,  8 Apr 2020 10:48:03 +0000 (UTC)
-Date:   Wed, 8 Apr 2020 12:48:01 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 01/15] s390/vfio-ap: store queue struct in hash table
- for quick access
-Message-ID: <20200408124801.2d61bc5b.cohuck@redhat.com>
-In-Reply-To: <20200407192015.19887-2-akrowiak@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-2-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1728151AbgDHL7x (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Apr 2020 07:59:53 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:45930 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbgDHL7w (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Apr 2020 07:59:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:In-Reply-To:References;
+        bh=D4AVwc5A5TrYE1qiofwcyRs9OblgHBTIRND69C8WOt0=; b=QxIpR9YcW4zlQv0D1PVx1O4w+e
+        6AoH6P9DiQVnTVyvjUFva7uacxcWbVMzi8tT0sThE3M71M9cEiBynkFmchCvGJciEPmeo3/uQvlYR
+        wtFUjR78EFF5ZyjMMkVUsanIFNIoeODac3xPuGtXF4l5LbiIBWKxhIDjLLLc1Q/GLriiDWQze3R+Q
+        HzQxNu0emx30OMndXqf/TY05OZsMHUiUKaWMhp5bxRFdmw1Sri71kup0Kj2ZHNawF6DygdV6PDlKu
+        t+Fxg7riz+HXeU7gVyNlLyFQTkfoS6xNo8kPMIJc0+vSNMB1EinNIuq4wvueXomTQU22Nkr4yCLgo
+        zR0nVTaA==;
+Received: from [2001:4bb8:180:5765:65b6:f11e:f109:b151] (helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jM9Mf-0001Xh-5a; Wed, 08 Apr 2020 11:59:29 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: decruft the vmalloc API
+Date:   Wed,  8 Apr 2020 13:58:58 +0200
+Message-Id: <20200408115926.1467567-1-hch@lst.de>
+X-Mailer: git-send-email 2.25.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  7 Apr 2020 15:20:01 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+Hi all,
 
-> Rather than looping over potentially 65535 objects, let's store the
-> structures for caching information about queue devices bound to the
-> vfio_ap device driver in a hash table keyed by APQN.
+Peter noticed that with some dumb luck you can toast the kernel address
+space with exported vmalloc symbols.
 
-This also looks like a nice code simplification.
+I used this as an opportunity to decruft the vmalloc.c API and make it
+much more systematic.  This also removes any chance to create vmalloc
+mappings outside the designated areas or using executable permissions
+from modules.  Besides that it removes more than 300 lines of code.
 
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c     | 28 +++------
->  drivers/s390/crypto/vfio_ap_ops.c     | 90 ++++++++++++++-------------
->  drivers/s390/crypto/vfio_ap_private.h | 10 ++-
->  3 files changed, 60 insertions(+), 68 deletions(-)
-> 
+A git tree is also available here:
 
-(...)
+    git://git.infradead.org/users/hch/misc.git sanitize-vmalloc-api
 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 5c0f53c6dde7..134860934fe7 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -26,45 +26,16 @@
->  
->  static int vfio_ap_mdev_reset_queues(struct mdev_device *mdev);
->  
-> -static int match_apqn(struct device *dev, const void *data)
-> -{
-> -	struct vfio_ap_queue *q = dev_get_drvdata(dev);
-> -
-> -	return (q->apqn == *(int *)(data)) ? 1 : 0;
-> -}
-> -
-> -/**
-> - * vfio_ap_get_queue: Retrieve a queue with a specific APQN from a list
-> - * @matrix_mdev: the associated mediated matrix
-> - * @apqn: The queue APQN
-> - *
-> - * Retrieve a queue with a specific APQN from the list of the
-> - * devices of the vfio_ap_drv.
-> - * Verify that the APID and the APQI are set in the matrix.
-> - *
-> - * Returns the pointer to the associated vfio_ap_queue
+Gitweb:
 
-Any reason you're killing this comment, instead of adapting it? The
-function is even no longer static...
-
-> - */
-> -static struct vfio_ap_queue *vfio_ap_get_queue(
-> -					struct ap_matrix_mdev *matrix_mdev,
-> -					int apqn)
-> +struct vfio_ap_queue *vfio_ap_get_queue(unsigned long apqn)
->  {
->  	struct vfio_ap_queue *q;
-> -	struct device *dev;
-> -
-> -	if (!test_bit_inv(AP_QID_CARD(apqn), matrix_mdev->matrix.apm))
-> -		return NULL;
-> -	if (!test_bit_inv(AP_QID_QUEUE(apqn), matrix_mdev->matrix.aqm))
-> -		return NULL;
-
-These were just optimizations and therefore can be dropped now?
-
-> -
-> -	dev = driver_find_device(&matrix_dev->vfio_ap_drv->driver, NULL,
-> -				 &apqn, match_apqn);
-> -	if (!dev)
-> -		return NULL;
-> -	q = dev_get_drvdata(dev);
-> -	q->matrix_mdev = matrix_mdev;
-> -	put_device(dev);
->  
-> -	return q;
-> +	hash_for_each_possible(matrix_dev->qtable, q, qnode, apqn) {
-> +		if (q && (apqn == q->apqn))
-> +			return q;
-> +	}
-
-Do we need any serialization here? Previously, the driver core made
-sure we could get a reference only if the device was still registered;
-not sure if we need any further guarantees now.
-
-> +
-> +	return NULL;
->  }
->  
->  /**
-
-(...)
-
+    http://git.infradead.org/users/hch/misc.git/shortlog/refs/heads/sanitize-vmalloc-api
