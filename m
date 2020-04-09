@@ -2,193 +2,195 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id D39FB1A365F
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 16:57:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E9A0F1A3692
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 17:06:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727867AbgDIO51 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Apr 2020 10:57:27 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:40773 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727835AbgDIO50 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 10:57:26 -0400
-Received: by mail-ot1-f65.google.com with SMTP id q2so7971664otk.7
-        for <linux-s390@vger.kernel.org>; Thu, 09 Apr 2020 07:57:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=MvCVAZWSVpElREbfXb1mt2g3VRvFUkKvrzFHvdRqvkg=;
-        b=ebEd4FdYNO+7wzGFzjBvQDg8mK2wrpjmDjuCBjAH9tAbCCg4zgABTbGAxKzQ49JMxn
-         kqTYGut6ohJDRAdHangRN4hffUJ4MvJUmXVqHcdUYuhWsOAAhFmddn4uDDLAgZuSwUyx
-         in2+ZqI2XFwOOnx/68F1aBghe4TTCvi2K8Jb4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=MvCVAZWSVpElREbfXb1mt2g3VRvFUkKvrzFHvdRqvkg=;
-        b=PtOiDlTtHZmtUbTZ51Pj+5MUgAeV6SNQHxIeuSZOT/6ymXg5sUL4Y+un2JodjG6wBP
-         9J0uVjthj+ypcXldJGwGeRzhrs+yPlNZ0Vz34BBx5fuupu1xnJiEZmGp4z0EwyJcVNSL
-         tRpoeMcj8MbDatZj9uL6uoI2ZeDPo9F5Tbpao971fgQ8vko4XInX/zzCkP1C7rOqj+dR
-         N9jBXqEyGzbCSpKTWN55NjKm3ugb/6OdSx9Tnn0gJb7b570Bki80gdRX5gB0SkZkzvES
-         0Wl01XBUedflx54ltDkJ309S5hcZvHDsIR7U26gvoyeKncU2z21+v5Q+EFg6ohqVK+v4
-         AeRQ==
-X-Gm-Message-State: AGi0PuaQMX9nbSBJy3fpSmfKww+I1nWHR/Kzy85ijEB6taSBq/T6If0U
-        TMtIghDNdRTaU9NRXz2TyTUYBfXDGYYeC5OIpy95DA==
-X-Google-Smtp-Source: APiQypIfaMneOW4AjWTG+JPErLig8zTku8dFSxJeBsmrgUZhaXvkSx7h0yWmBa2juZ12CNXUTDblTNSgeRCuieJep64=
-X-Received: by 2002:a9d:6e8f:: with SMTP id a15mr251186otr.188.1586444244321;
- Thu, 09 Apr 2020 07:57:24 -0700 (PDT)
+        id S1727327AbgDIPGQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Apr 2020 11:06:16 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55147 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727857AbgDIPGQ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 11:06:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586444776;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=W2Ev3/S1C/3a4puTtGn9OVdridbzmbjLhCuT5UsL+Ig=;
+        b=PuhKxnCSaobelSUpOflzo6qXmXjGDpFFzDOrf2ADTYt/MIpxi2+vdKWnJ0eIKsQq1kXal7
+        YXPuzqq6dX8KEPxLvf9qAiq+zPSoX8Q33p3YGiXsdIsgSLfvSyXdPj9HL7019JNPhlNi1/
+        feb4sV5JOGTC7VIV3U+RIm/HPT01Jes=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-296-VSi-y48XO9igghdtVzCRuw-1; Thu, 09 Apr 2020 11:06:12 -0400
+X-MC-Unique: VSi-y48XO9igghdtVzCRuw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 490928017F5;
+        Thu,  9 Apr 2020 15:06:10 +0000 (UTC)
+Received: from gondolin (ovpn-112-54.ams2.redhat.com [10.36.112.54])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0246C19757;
+        Thu,  9 Apr 2020 15:06:04 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 17:06:02 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 02/15] s390/vfio-ap: manage link between queue struct
+ and matrix mdev
+Message-ID: <20200409170602.4440be0f.cohuck@redhat.com>
+In-Reply-To: <20200407192015.19887-3-akrowiak@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-3-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-20-hch@lst.de>
- <20200408122504.GO3456981@phenom.ffwll.local> <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
- <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com> <CADnq5_MjTSm6j=_8huVQ854H6jXY5Rg36wc31QDfOpfjfscWxA@mail.gmail.com>
-In-Reply-To: <CADnq5_MjTSm6j=_8huVQ854H6jXY5Rg36wc31QDfOpfjfscWxA@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 9 Apr 2020 16:57:12 +0200
-Message-ID: <CAKMK7uESDf446FsdA2KC9sybSKxf5OdXvHZ-d4G3PAt-vvP8zg@mail.gmail.com>
-Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        linux-hyperv@vger.kernel.org, David Airlie <airlied@linux.ie>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Linux MM <linux-mm@kvack.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        "open list:GENERIC INCLUDE/A..." <linux-arch@vger.kernel.org>,
-        linux-s390@vger.kernel.org, Wei Liu <wei.liu@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        X86 ML <x86@kernel.org>, Christoph Hellwig <hch@lst.de>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>, bpf <bpf@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Minchan Kim <minchan@kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 4:19 PM Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> On Thu, Apr 9, 2020 at 5:41 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Thu, Apr 9, 2020 at 10:54 AM Benjamin Herrenschmidt
-> > <benh@kernel.crashing.org> wrote:
-> > >
-> > > On Wed, 2020-04-08 at 14:25 +0200, Daniel Vetter wrote:
-> > > > On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
-> > > > > If this code was broken for non-coherent caches a crude powerpc hack
-> > > > > isn't going to help anyone else.  Remove the hack as it is the last
-> > > > > user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
-> > > >
-> > > > Well Ben added this to make stuff work on ppc, ofc the home grown dma
-> > > > layer in drm from back then isn't going to work in other places. I guess
-> > > > should have at least an ack from him, in case anyone still cares about
-> > > > this on ppc. Adding Ben to cc.
-> > >
-> > > This was due to some drivers (radeon ?) trying to use vmalloc pages for
-> > > coherent DMA, which means on those 4xx powerpc's need to be non-cached.
-> > >
-> > > There were machines using that (440 based iirc), though I honestly
-> > > can't tell if anybody still uses any of it.
-> >
-> > agp subsystem still seems to happily do that (vmalloc memory for
-> > device access), never having been ported to dma apis (or well
-> > converted to iommu drivers, which they kinda are really). So I think
-> > this all still works exactly as back then, even with the kms radeon
-> > drivers. Question really is whether we have users left, and I have no
-> > clue about that either.
-> >
-> > Now if these boxes didn't ever have agp then I think we can get away
-> > with deleting this, since we've already deleted the legacy radeon
-> > driver. And that one used vmalloc for everything. The new kms one does
-> > use the dma-api if the gpu isn't connected through agp.
->
-> All radeons have a built in remapping table to handle non-AGP systems.
-> On the earlier radeons it wasn't quite as performant as AGP, but it
-> was always more reliable because AGP is AGP.  Maybe it's time to let
-> AGP go?
+On Tue,  7 Apr 2020 15:20:02 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-I'd be very much in favour of that, if we can just use the integrated
-gart and drop agp fast writes wobbliness on the floor. I think the
-only other modern driver using agp would be nouveau at that point.
--Daniel
+> A vfio_ap_queue structure is created for each queue device probed. To
+> ensure that the matrix mdev to which a queue's APQN is assigned is linked
+> to the queue structure as long as the queue device is bound to the vfio_ap
+> device driver, let's go ahead and manage these links when the queue device
+> is probed and removed as well as whenever an adapter or domain is assigned
+> to or unassigned from the matrix mdev.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c | 75 ++++++++++++++++++++++++++++---
+>  1 file changed, 70 insertions(+), 5 deletions(-)
 
->
-> Alex
->
-> > -Daniel
-> >
-> > > Cheers,
-> > > Ben.
-> > >
-> > > > -Daniel
-> > > >
-> > > > >
-> > > > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > > > ---
-> > > > >  drivers/gpu/drm/drm_scatter.c | 11 +----------
-> > > > >  1 file changed, 1 insertion(+), 10 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
-> > > > > index ca520028b2cb..f4e6184d1877 100644
-> > > > > --- a/drivers/gpu/drm/drm_scatter.c
-> > > > > +++ b/drivers/gpu/drm/drm_scatter.c
-> > > > > @@ -43,15 +43,6 @@
-> > > > >
-> > > > >  #define DEBUG_SCATTER 0
-> > > > >
-> > > > > -static inline void *drm_vmalloc_dma(unsigned long size)
-> > > > > -{
-> > > > > -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
-> > > > > -   return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
-> > > > > -#else
-> > > > > -   return vmalloc_32(size);
-> > > > > -#endif
-> > > > > -}
-> > > > > -
-> > > > >  static void drm_sg_cleanup(struct drm_sg_mem * entry)
-> > > > >  {
-> > > > >     struct page *page;
-> > > > > @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
-> > > > >             return -ENOMEM;
-> > > > >     }
-> > > > >
-> > > > > -   entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
-> > > > > +   entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
-> > > > >     if (!entry->virtual) {
-> > > > >             kfree(entry->busaddr);
-> > > > >             kfree(entry->pagelist);
-> > > > > --
-> > > > > 2.25.1
-> > > > >
-> > > >
-> > > >
-> > >
-> >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+(...)
 
+> @@ -536,6 +531,31 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
+>  	return 0;
+>  }
+>  
+> +/**
+> + * vfio_ap_mdev_qlinks_for_apid
 
+Hm... maybe the function name should express that there's some actual
+(un)linking going on?
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+vfio_ap_mdev_link_by_apid?
+
+Or make this vfio_ap_mdev_link_queues() and pass in an indicator whether
+the passed value is an apid or an aqid? Both function names look so
+very similar to be easily confused (at least to me).
+
+> + *
+> + * @matrix_mdev: a matrix mediated device
+> + * @apqi:	 the APID of one or more APQNs assigned to @matrix_mdev
+> + *
+> + * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
+> + * device driver with an APQN assigned to @matrix_mdev with the specified @apid.
+> + *
+> + * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
+> + */
+> +static void vfio_ap_mdev_qlinks_for_apid(struct ap_matrix_mdev *matrix_mdev,
+> +					 unsigned long apid)
+> +{
+> +	unsigned long apqi;
+> +	struct vfio_ap_queue *q;
+> +
+> +	for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
+> +			     matrix_mdev->matrix.aqm_max + 1) {
+> +		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+> +		if (q)
+> +			q->matrix_mdev = matrix_mdev;
+> +	}
+> +}
+> +
+>  /**
+>   * assign_adapter_store
+>   *
+
+(...)
+
+> @@ -682,6 +704,31 @@ vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev *matrix_mdev,
+>  	return 0;
+>  }
+>  
+> +/**
+> + * vfio_ap_mdev_qlinks_for_apqi
+
+See my comment above.
+
+> + *
+> + * @matrix_mdev: a matrix mediated device
+> + * @apqi:	 the APQI of one or more APQNs assigned to @matrix_mdev
+> + *
+> + * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
+> + * device driver with an APQN assigned to @matrix_mdev with the specified @apqi.
+> + *
+> + * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
+> + */
+> +static void vfio_ap_mdev_qlinks_for_apqi(struct ap_matrix_mdev *matrix_mdev,
+> +					 unsigned long apqi)
+> +{
+> +	unsigned long apid;
+> +	struct vfio_ap_queue *q;
+> +
+> +	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
+> +			     matrix_mdev->matrix.apm_max + 1) {
+> +		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
+> +		if (q)
+> +			q->matrix_mdev = matrix_mdev;
+> +	}
+> +}
+> +
+>  /**
+>   * assign_domain_store
+>   *
+
+(...)
+
+> @@ -1270,6 +1319,21 @@ void vfio_ap_mdev_unregister(void)
+>  	mdev_unregister_device(&matrix_dev->device);
+>  }
+>  
+> +static void vfio_ap_mdev_for_queue(struct vfio_ap_queue *q)
+
+vfio_ap_queue_link_mdev()? It is the other direction from the linking
+above.
+
+> +{
+> +	unsigned long apid = AP_QID_CARD(q->apqn);
+> +	unsigned long apqi = AP_QID_QUEUE(q->apqn);
+> +	struct ap_matrix_mdev *matrix_mdev;
+> +
+> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
+> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
+> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm)) {
+> +			q->matrix_mdev = matrix_mdev;
+> +			break;
+> +		}
+> +	}
+> +}
+> +
+>  int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+>  {
+>  	struct vfio_ap_queue *q;
+> @@ -1282,6 +1346,7 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
+>  	dev_set_drvdata(&queue->ap_dev.device, q);
+>  	q->apqn = queue->qid;
+>  	q->saved_isc = VFIO_AP_ISC_INVALID;
+> +	vfio_ap_mdev_for_queue(q);
+>  	hash_add(matrix_dev->qtable, &q->qnode, q->apqn);
+>  	mutex_unlock(&matrix_dev->lock);
+>  
+
+In general, looks sane.
+
