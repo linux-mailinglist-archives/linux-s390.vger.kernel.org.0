@@ -2,195 +2,126 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id E9A0F1A3692
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 17:06:17 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 052A01A3740
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 17:33:29 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbgDIPGQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Apr 2020 11:06:16 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:55147 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727857AbgDIPGQ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 11:06:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586444776;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=W2Ev3/S1C/3a4puTtGn9OVdridbzmbjLhCuT5UsL+Ig=;
-        b=PuhKxnCSaobelSUpOflzo6qXmXjGDpFFzDOrf2ADTYt/MIpxi2+vdKWnJ0eIKsQq1kXal7
-        YXPuzqq6dX8KEPxLvf9qAiq+zPSoX8Q33p3YGiXsdIsgSLfvSyXdPj9HL7019JNPhlNi1/
-        feb4sV5JOGTC7VIV3U+RIm/HPT01Jes=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-296-VSi-y48XO9igghdtVzCRuw-1; Thu, 09 Apr 2020 11:06:12 -0400
-X-MC-Unique: VSi-y48XO9igghdtVzCRuw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 490928017F5;
-        Thu,  9 Apr 2020 15:06:10 +0000 (UTC)
-Received: from gondolin (ovpn-112-54.ams2.redhat.com [10.36.112.54])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0246C19757;
-        Thu,  9 Apr 2020 15:06:04 +0000 (UTC)
-Date:   Thu, 9 Apr 2020 17:06:02 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 02/15] s390/vfio-ap: manage link between queue struct
- and matrix mdev
-Message-ID: <20200409170602.4440be0f.cohuck@redhat.com>
-In-Reply-To: <20200407192015.19887-3-akrowiak@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-3-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1728193AbgDIPd0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Apr 2020 11:33:26 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:33810 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727919AbgDIPd0 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 11:33:26 -0400
+Received: by mail-wr1-f65.google.com with SMTP id 65so12453075wrl.1;
+        Thu, 09 Apr 2020 08:33:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=eU8HVKPcEFasCzGb3YcmSlRzYlNKnx8U/U7SeGkKTM4=;
+        b=C+8DZyqPajHcUCsRWoTTPdTzp+9mYo3pWjlIfXH3GRnCf+cdk0McSbKJvwBTPTgbzN
+         gG7RNoybDzIk7efDPLlLMjf/MCfapIHuElEML9W5yyiSqIQIs3Gvp1HRevesRnmSvT8j
+         0cU0lHiPhDHBSWVA0/r4NsmWDahWp+bgiGxJrE2LrGEtKCd9zpRzbsPziWcvh6lf0s9B
+         cSHIDhSElFmJj76sRVqEZc4XSX40rLQE5T0sVzelazRG72Zp7IiS2azgaDcnrniQGzfe
+         t+ymP8afc2A+pu+APkeCwunUP/M4jzCEqVyArme0EBuqyor5/IzJ/H+H4Gi9ygugTJ8n
+         jzBw==
+X-Gm-Message-State: AGi0PuZK+e7JQOjWSdthtkNTSvEkXqFCAiQ0TqH1Ea4s8fmt5waXlbbF
+        xNT7LM6ZYrAL6mjjcpIuqII=
+X-Google-Smtp-Source: APiQypLhnJ0ArE660dAIRKPg+UfX8htjcJDtxqzlxSXIrBucMDxX/FoA+uq76nGwKcjVTj7PGoGnsA==
+X-Received: by 2002:a5d:5112:: with SMTP id s18mr15000370wrt.306.1586446403503;
+        Thu, 09 Apr 2020 08:33:23 -0700 (PDT)
+Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
+        by smtp.gmail.com with ESMTPSA id o67sm4335914wmo.5.2020.04.09.08.33.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 09 Apr 2020 08:33:22 -0700 (PDT)
+Date:   Thu, 9 Apr 2020 17:33:21 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH RFC] mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP (was: Re:
+ [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
+Message-ID: <20200409153321.GQ18386@dhcp22.suse.cz>
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330092127.GB30942@linux.ibm.com>
+ <20200330095843.GF14243@dhcp22.suse.cz>
+ <20200331215618.GG30942@linux.ibm.com>
+ <20200401054227.GC2129@MiWiFi-R3L-srv>
+ <20200401075155.GH30942@linux.ibm.com>
+ <20200402080144.GK22681@dhcp22.suse.cz>
+ <20200409144119.GE2129@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200409144119.GE2129@MiWiFi-R3L-srv>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  7 Apr 2020 15:20:02 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> A vfio_ap_queue structure is created for each queue device probed. To
-> ensure that the matrix mdev to which a queue's APQN is assigned is linked
-> to the queue structure as long as the queue device is bound to the vfio_ap
-> device driver, let's go ahead and manage these links when the queue device
-> is probed and removed as well as whenever an adapter or domain is assigned
-> to or unassigned from the matrix mdev.
+On Thu 09-04-20 22:41:19, Baoquan He wrote:
+> On 04/02/20 at 10:01am, Michal Hocko wrote:
+> > On Wed 01-04-20 10:51:55, Mike Rapoport wrote:
+> > > Hi,
+> > > 
+> > > On Wed, Apr 01, 2020 at 01:42:27PM +0800, Baoquan He wrote:
+> > [...]
+> > > > From above information, we can remove HAVE_MEMBLOCK_NODE_MAP, and
+> > > > replace it with CONFIG_NUMA. That sounds more sensible to store nid into
+> > > > memblock when NUMA support is enabled.
+> > >  
+> > > Replacing CONFIG_HAVE_MEMBLOCK_NODE_MAP with CONFIG_NUMA will work, but
+> > > this will not help cleaning up the whole node/zone initialization mess and
+> > > we'll be stuck with two implementations.
+> > 
+> > Yeah, this is far from optimal.
+> > 
+> > > The overhead of enabling HAVE_MEMBLOCK_NODE_MAP is only for init time as
+> > > most architectures will anyway discard the entire memblock, so having it in
+> > > a UMA arch won't be a problem. The only exception is arm that uses
+> > > memblock for pfn_valid(), here we may also think about a solution to
+> > > compensate the addition of nid to the memblock structures. 
+> > 
+> > Well, we can make memblock_region->nid defined only for CONFIG_NUMA.
+> > memblock_get_region_node would then unconditionally return 0 on UMA.
+> > Essentially the same way we do NUMA for other MM code. I only see few
+> > direct usage of region->nid.
 > 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c | 75 ++++++++++++++++++++++++++++---
->  1 file changed, 70 insertions(+), 5 deletions(-)
+> Checked code again, seems HAVE_MEMBLOCK_NODE_MAP is selected directly in
+> all ARCHes which support it. Means HAVE_MEMBLOCK_NODE_MAP is enabled by
+> default on those ARCHes, and has no dependency on CONFIG_NUMA at all.
+> E.g on x86, it just calls free_area_init_nodes() in generic code path,
+> while free_area_init_nodes() is defined in CONFIG_HAVE_MEMBLOCK_NODE_MAP
+> ifdeffery scope. So I tend to agree with Mike to remove
+> HAVE_MEMBLOCK_NODE_MAP firstly on all ARCHes. We can check if it's worth
+> only defining memblock_region->nid for CONFIG_NUMA case after
+> HAVE_MEMBLOCK_NODE_MAP is removed.
 
-(...)
+This can surely go in separate patches. What I meant to say is the
+region->nid is by definition 0 on !CONFIG_NUMA.
 
-> @@ -536,6 +531,31 @@ static int vfio_ap_mdev_verify_no_sharing(struct ap_matrix_mdev *matrix_mdev)
->  	return 0;
->  }
->  
-> +/**
-> + * vfio_ap_mdev_qlinks_for_apid
-
-Hm... maybe the function name should express that there's some actual
-(un)linking going on?
-
-vfio_ap_mdev_link_by_apid?
-
-Or make this vfio_ap_mdev_link_queues() and pass in an indicator whether
-the passed value is an apid or an aqid? Both function names look so
-very similar to be easily confused (at least to me).
-
-> + *
-> + * @matrix_mdev: a matrix mediated device
-> + * @apqi:	 the APID of one or more APQNs assigned to @matrix_mdev
-> + *
-> + * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
-> + * device driver with an APQN assigned to @matrix_mdev with the specified @apid.
-> + *
-> + * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
-> + */
-> +static void vfio_ap_mdev_qlinks_for_apid(struct ap_matrix_mdev *matrix_mdev,
-> +					 unsigned long apid)
-> +{
-> +	unsigned long apqi;
-> +	struct vfio_ap_queue *q;
-> +
-> +	for_each_set_bit_inv(apqi, matrix_mdev->matrix.aqm,
-> +			     matrix_mdev->matrix.aqm_max + 1) {
-> +		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
-> +		if (q)
-> +			q->matrix_mdev = matrix_mdev;
-> +	}
-> +}
-> +
->  /**
->   * assign_adapter_store
->   *
-
-(...)
-
-> @@ -682,6 +704,31 @@ vfio_ap_mdev_verify_queues_reserved_for_apqi(struct ap_matrix_mdev *matrix_mdev,
->  	return 0;
->  }
->  
-> +/**
-> + * vfio_ap_mdev_qlinks_for_apqi
-
-See my comment above.
-
-> + *
-> + * @matrix_mdev: a matrix mediated device
-> + * @apqi:	 the APQI of one or more APQNs assigned to @matrix_mdev
-> + *
-> + * Set the link to @matrix_mdev for each queue device bound to the vfio_ap
-> + * device driver with an APQN assigned to @matrix_mdev with the specified @apqi.
-> + *
-> + * Note: If @matrix_mdev is NULL, the link to @matrix_mdev will be severed.
-> + */
-> +static void vfio_ap_mdev_qlinks_for_apqi(struct ap_matrix_mdev *matrix_mdev,
-> +					 unsigned long apqi)
-> +{
-> +	unsigned long apid;
-> +	struct vfio_ap_queue *q;
-> +
-> +	for_each_set_bit_inv(apid, matrix_mdev->matrix.apm,
-> +			     matrix_mdev->matrix.apm_max + 1) {
-> +		q = vfio_ap_get_queue(AP_MKQID(apid, apqi));
-> +		if (q)
-> +			q->matrix_mdev = matrix_mdev;
-> +	}
-> +}
-> +
->  /**
->   * assign_domain_store
->   *
-
-(...)
-
-> @@ -1270,6 +1319,21 @@ void vfio_ap_mdev_unregister(void)
->  	mdev_unregister_device(&matrix_dev->device);
->  }
->  
-> +static void vfio_ap_mdev_for_queue(struct vfio_ap_queue *q)
-
-vfio_ap_queue_link_mdev()? It is the other direction from the linking
-above.
-
-> +{
-> +	unsigned long apid = AP_QID_CARD(q->apqn);
-> +	unsigned long apqi = AP_QID_QUEUE(q->apqn);
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
-> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm)) {
-> +			q->matrix_mdev = matrix_mdev;
-> +			break;
-> +		}
-> +	}
-> +}
-> +
->  int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
->  {
->  	struct vfio_ap_queue *q;
-> @@ -1282,6 +1346,7 @@ int vfio_ap_mdev_probe_queue(struct ap_queue *queue)
->  	dev_set_drvdata(&queue->ap_dev.device, q);
->  	q->apqn = queue->qid;
->  	q->saved_isc = VFIO_AP_ISC_INVALID;
-> +	vfio_ap_mdev_for_queue(q);
->  	hash_add(matrix_dev->qtable, &q->qnode, q->apqn);
->  	mutex_unlock(&matrix_dev->lock);
->  
-
-In general, looks sane.
-
+-- 
+Michal Hocko
+SUSE Labs
