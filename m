@@ -2,135 +2,200 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 83D831A37BA
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 18:08:32 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2CCC41A37FA
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 18:28:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728374AbgDIQIb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Apr 2020 12:08:31 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40526 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728247AbgDIQIa (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 12:08:30 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c20so4308922pfi.7;
-        Thu, 09 Apr 2020 09:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=Bv5T4MVa9umd8pCEPysPH2jSGjRAmk+aGGhx29rknXE=;
-        b=ovy0PS179BjEGMUbAV2YUjlkuVA7wmm5oMqdDajjp0TOKuVkoKJNQkBmal3FBh3iyk
-         6uQVZEQZEmdg0/J26gmqgI3Xbf+Y9SwaKDT64/0Z8CygXa+0ktwKWdiNPZDog7inLt6j
-         EkNOW+ZQR5kRoBjRRrAAWzyEACYmqWpUvYZJGZKKegZXwil+zgJHu093SKQthM1j8MLC
-         8Rf5ULsWMKhJYVAk3C2yHu3UnAeVJgnEj0auKCeACDctiuS3MWj/DOurMbx2MkaY2pLJ
-         LiDf/+F+qoyR8JD20gbatncLOb49n47pMUxVIU2+YzFasivC6WMkGvIWS3obeKnzK4ew
-         qc7g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to;
-        bh=Bv5T4MVa9umd8pCEPysPH2jSGjRAmk+aGGhx29rknXE=;
-        b=SQY7HGVwAknuUIvCYwx3fQA6qxUFcim9SAHAwNURKdchtDCsCUWwhjf2SLJlPoyVbC
-         adGacbScVSJ5G0QZZHlcShIYviH99SwiOmvdPnN+G/cgfgwtRyGOie5gd2so2yJq14tw
-         dzZ3VOFgqWslACuEdjhZcgWPG0YpxPQepLbTMjYjcWw0eLh+h8cg788n1hKv0RURtkD8
-         l8fM81RIjT9XCP5Uya2UnsvIfteCMxKN8zPDDqYzNcyrQ/tupGTvL9tMqXi/rt3TR5hE
-         4Ycrh4TXUyNdkdPfPwivW9yUnJ1p7GZK+9BENQGRLjIm+TxEeqKLnGM2F3/3sFenhJcO
-         5Mmg==
-X-Gm-Message-State: AGi0PuZkxMegRuG91CVEQ70EQ7DgTEFY6gl67oDyg3fUmiZgENY4CNh2
-        /pxGAFVSVcMFCcauJ88W0uI=
-X-Google-Smtp-Source: APiQypJFLGcG6dVXLdib9gF5oJvHoXpdIxKhy+0DVfXFFx+ZgGNqEvh6DF50PGrfKmNfspKnDLZDsQ==
-X-Received: by 2002:a62:7e0e:: with SMTP id z14mr269015pfc.27.1586448510359;
-        Thu, 09 Apr 2020 09:08:30 -0700 (PDT)
-Received: from google.com ([2601:647:4001:3000::50e3])
-        by smtp.gmail.com with ESMTPSA id k12sm5867045pgj.33.2020.04.09.09.08.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 Apr 2020 09:08:29 -0700 (PDT)
-Date:   Thu, 9 Apr 2020 09:08:26 -0700
-From:   Minchan Kim <minchan@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
+        id S1726884AbgDIQ17 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Apr 2020 12:27:59 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44308 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726621AbgDIQ16 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 12:27:58 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 039G5rd2108616
+        for <linux-s390@vger.kernel.org>; Thu, 9 Apr 2020 12:27:58 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30a60xj8bs-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Thu, 09 Apr 2020 12:27:58 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Thu, 9 Apr 2020 17:27:35 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Thu, 9 Apr 2020 17:27:28 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 039GRklf52756716
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 9 Apr 2020 16:27:47 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D5C3511C04C;
+        Thu,  9 Apr 2020 16:27:46 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AE74D11C050;
+        Thu,  9 Apr 2020 16:27:43 +0000 (GMT)
+Received: from linux.ibm.com (unknown [9.148.201.53])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Thu,  9 Apr 2020 16:27:43 +0000 (GMT)
+Date:   Thu, 9 Apr 2020 19:27:41 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Baoquan He <bhe@redhat.com>,
+        Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
         linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        sergey.senozhatsky@gmail.com
-Subject: Re: [PATCH 10/28] mm: only allow page table mappings for built-in
- zsmalloc
-Message-ID: <20200409160826.GC247701@google.com>
-References: <20200408115926.1467567-1-hch@lst.de>
- <20200408115926.1467567-11-hch@lst.de>
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
+ default for NUMA
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330175100.GD30942@linux.ibm.com>
+ <20200330182301.GM14243@dhcp22.suse.cz>
+ <20200331081423.GE30942@linux.ibm.com>
+ <20200331085513.GE30449@dhcp22.suse.cz>
+ <20200331140332.GA2129@MiWiFi-R3L-srv>
+ <20200331142138.GL30449@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200408115926.1467567-11-hch@lst.de>
+In-Reply-To: <20200331142138.GL30449@dhcp22.suse.cz>
+X-TM-AS-GCONF: 00
+x-cbid: 20040916-0008-0000-0000-0000036DAB16
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20040916-0009-0000-0000-00004A8F4DFB
+Message-Id: <20200409162741.GA9387@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-09_05:2020-04-07,2020-04-09 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 spamscore=0
+ mlxscore=0 clxscore=1015 bulkscore=0 suspectscore=0 impostorscore=0
+ mlxlogscore=999 lowpriorityscore=0 phishscore=0 priorityscore=1501
+ malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004090118
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, Apr 08, 2020 at 01:59:08PM +0200, Christoph Hellwig wrote:
-> This allows to unexport map_vm_area and unmap_kernel_range, which are
-> rather deep internal and should not be available to modules.
-
-Even though I don't know how many usecase we have using zsmalloc as
-module(I heard only once by dumb reason), it could affect existing
-users. Thus, please include concrete explanation in the patch to
-justify when the complain occurs.
-
+On Tue, Mar 31, 2020 at 04:21:38PM +0200, Michal Hocko wrote:
+> On Tue 31-03-20 22:03:32, Baoquan He wrote:
+> > Hi Michal,
+> > 
+> > On 03/31/20 at 10:55am, Michal Hocko wrote:
+> > > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
+> > > > Maybe I mis-read the code, but I don't see how this could happen. In the
+> > > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
+> > > > calculate_node_totalpages() that ensures that node->node_zones are entirely
+> > > > within the node because this is checked in zone_spanned_pages_in_node().
+> > > 
+> > > zone_spanned_pages_in_node does chech the zone boundaries are within the
+> > > node boundaries. But that doesn't really tell anything about other
+> > > potential zones interleaving with the physical memory range.
+> > > zone->spanned_pages simply gives the physical range for the zone
+> > > including holes. Interleaving nodes are essentially a hole
+> > > (__absent_pages_in_range is going to skip those).
+> > > 
+> > > That means that when free_area_init_core simply goes over the whole
+> > > physical zone range including holes and that is why we need to check
+> > > both for physical and logical holes (aka other nodes).
+> > > 
+> > > The life would be so much easier if the whole thing would simply iterate
+> > > over memblocks...
+> > 
+> > The memblock iterating sounds a great idea. I tried with putting the
+> > memblock iterating in the upper layer, memmap_init(), which is used for
+> > boot mem only anyway. Do you think it's doable and OK? It yes, I can
+> > work out a formal patch to make this simpler as you said. The draft code
+> > is as below. Like this it uses the existing code and involves little change.
 > 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  mm/Kconfig   | 2 +-
->  mm/vmalloc.c | 2 --
->  2 files changed, 1 insertion(+), 3 deletions(-)
+> Doing this would be a step in the right direction! I haven't checked the
+> code very closely though. The below sounds way too simple to be truth I
+> am afraid. First for_each_mem_pfn_range is available only for
+> CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
+> saying that I really hate that being conditional). Also I haven't really
+> checked the deferred initialization path - I have a very vague
+> recollection that it has been converted to the memblock api but I have
+> happilly dropped all that memory.
+
+The Baoquan's patch almost did it, at least for simple case of qemu with 2
+nodes. It's only missing the adjustment to the size passed to
+memmap_init_zone() as it may change because of clamping.
+
+I've drafted something that removes HAVE_MEMBLOCK_NODE_MAP and added this
+patch there [1]. For several memory configurations I could emulate with
+qemu it worked.
+I'm going to wait a bit to see of kbuild is happy and then I'll send the
+patches.
+
+Baoquan, I took liberty to add your SoB, hope you don't mind.
+
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=memblock/all-have-node-map 
+  
+> > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> > index 138a56c0f48f..558d421f294b 100644
+> > --- a/mm/page_alloc.c
+> > +++ b/mm/page_alloc.c
+> > @@ -6007,14 +6007,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
+> >  		 * function.  They do not exist on hotplugged memory.
+> >  		 */
+> >  		if (context == MEMMAP_EARLY) {
+> > -			if (!early_pfn_valid(pfn)) {
+> > -				pfn = next_pfn(pfn);
+> > -				continue;
+> > -			}
+> > -			if (!early_pfn_in_nid(pfn, nid)) {
+> > -				pfn++;
+> > -				continue;
+> > -			}
+> >  			if (overlap_memmap_init(zone, &pfn))
+> >  				continue;
+> >  			if (defer_init(nid, pfn, end_pfn))
+> > @@ -6130,9 +6122,17 @@ static void __meminit zone_init_free_lists(struct zone *zone)
+> >  }
+> >  
+> >  void __meminit __weak memmap_init(unsigned long size, int nid,
+> > -				  unsigned long zone, unsigned long start_pfn)
+> > +				  unsigned long zone, unsigned long range_start_pfn)
+> >  {
+> > -	memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
+> > +	unsigned long start_pfn, end_pfn;
+> > +	unsigned long range_end_pfn = range_start_pfn + size;
+> > +	int i;
+> > +	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
+> > +		start_pfn = clamp(start_pfn, range_start_pfn, range_end_pfn);
+> > +		end_pfn = clamp(end_pfn, range_start_pfn, range_end_pfn);
+> > +		if (end_pfn > start_pfn)
+> > +			memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
+> > +	}
+> >  }
+> >  
+> >  static int zone_batchsize(struct zone *zone)
 > 
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 36949a9425b8..614cc786b519 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -702,7 +702,7 @@ config ZSMALLOC
->  
->  config ZSMALLOC_PGTABLE_MAPPING
->  	bool "Use page table mapping to access object in zsmalloc"
-> -	depends on ZSMALLOC
-> +	depends on ZSMALLOC=y
->  	help
->  	  By default, zsmalloc uses a copy-based object mapping method to
->  	  access allocations that span two pages. However, if a particular
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index 3375f9508ef6..9183fc0d365a 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -2046,7 +2046,6 @@ void unmap_kernel_range(unsigned long addr, unsigned long size)
->  	vunmap_page_range(addr, end);
->  	flush_tlb_kernel_range(addr, end);
->  }
-> -EXPORT_SYMBOL_GPL(unmap_kernel_range);
->  
->  int map_vm_area(struct vm_struct *area, pgprot_t prot, struct page **pages)
->  {
-> @@ -2058,7 +2057,6 @@ int map_vm_area(struct vm_struct *area, pgprot_t prot, struct page **pages)
->  
->  	return err > 0 ? 0 : err;
->  }
-> -EXPORT_SYMBOL_GPL(map_vm_area);
->  
->  static inline void setup_vmalloc_vm_locked(struct vm_struct *vm,
->  	struct vmap_area *va, unsigned long flags, const void *caller)
 > -- 
-> 2.25.1
-> 
+> Michal Hocko
+> SUSE Labs
+
+-- 
+Sincerely yours,
+Mike.
+
