@@ -2,165 +2,114 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 1CBF41A31F7
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 11:41:34 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7F0C31A3317
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 13:21:17 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726663AbgDIJlc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Apr 2020 05:41:32 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45341 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726623AbgDIJlc (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 05:41:32 -0400
-Received: by mail-ot1-f66.google.com with SMTP id 60so6955183otl.12
-        for <linux-s390@vger.kernel.org>; Thu, 09 Apr 2020 02:41:32 -0700 (PDT)
+        id S1726594AbgDILVQ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Apr 2020 07:21:16 -0400
+Received: from esa1.hgst.iphmx.com ([68.232.141.245]:29495 "EHLO
+        esa1.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725972AbgDILVP (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 07:21:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1586431275; x=1617967275;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=+doEzqLUbKIHD7UCfctCd4P1pEHGNPoETj9BaeEAC9Y=;
+  b=SXZ6+UljTp/hlrVvZ9yGlClDpeDHVRT3HQBstfGI+he4iGvDQGv1vtZA
+   CVuLNAjpDkgRt6S1ba442Y4Fk9kro2geZ3wpihINeEszt7idjTvs+Pehq
+   Ql0pd8e8ARYynaF8eC1iWVvGs09ycHq21NB9vw0FvPx0h6NiFUgDSVClU
+   QIeI9LFzm/wu7wr7X9jpF798oVlxUsb7ipBFP6WG4KVNn0PFD8lNEWY/C
+   ZUFS+GqsisYBBZbWgxXfrbvvLDxtlbmIqHq4OXytbvEyltzUL2iwVUXMu
+   FhaZqmBhf8DOnRgQ4o8I7qFY0Z9mTveYyMq6Qz98NVScOKHyFNo5YsDIw
+   Q==;
+IronPort-SDR: 6pMLA9h9qpD3smZ2YniQqQ62dUbcAVl4c/YMufUB8QGXzfobpLwRV9kW9jVCVMeCZX5KMqESPR
+ x82MMmzrWZP28jdiYNB655B4D7Ev2KutIFCgZi5upQBhuioF7idePpsVQMmcw8LqDCeD+kbPLw
+ j0eqZjieoseAS6bJYfoQCFOyQj7Pj1itEevn377BIDCqMiakxJrQGTJZvO6vhWdCP2poByjVU/
+ JNKgofsiH1frdaayQ74CfHiOmIkOT8HwcXVC3roRD7l83QnsjRbIuvWet8w0X4Iu7QTKRn2xFW
+ txM=
+X-IronPort-AV: E=Sophos;i="5.72,362,1580745600"; 
+   d="scan'208";a="243522831"
+Received: from mail-co1nam11lp2173.outbound.protection.outlook.com (HELO NAM11-CO1-obe.outbound.protection.outlook.com) ([104.47.56.173])
+  by ob1.hgst.iphmx.com with ESMTP; 09 Apr 2020 19:21:15 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kdR9JEoTwKSxnYUBN3AotIr4oKuhfgV9FEeNqgXbmhjLAHdhseRZ1nleNmKSeNx2bfG4sU6CwIZcFyY+14o/5Y8+xjAUFVOjiuT2YTo1j9nZG6FQlm4YmZ08EsKokACLJ6yPx/bvYALN3AIK/eegXe2jh3YpXoPOXUENZ2d80YLBTWyVddu1Ayig4G2Rks2gPdzFSKQFoCXazVuzR9FJY4OCgAG0OVFZZ9GxKHBkEn0fr8M26K43cbry/iUniYTTgD8ZTsHBDZw9vqVsgnXpcGJsZkQx4ll1mNmwKsoPSde3ml/8ao2QhfSc+8PAAhCxBCtTg70qdQG5L7hdLvd3wA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3LX71rBEw66vNil6DBPidS2b2I4tcSAQKkVOc7rLb6c=;
+ b=KeDzWFrJesGquiAex5fGd7id5cn4niXlu/BBjv2kG8Pn5BveJtnMsnwNqLy+uoBI9F0Njd9ThV3eKkfY9biMkHPR1/1olLD4EoV3xzNb4OxP9FrHHbj+0Yr8899wadt+6HvaxWyYJDUDc7FraMXT+yU+37dIkf4QSVy8Sd5vXYyy8i6gNL9RIu+kIDinPD4FId21iLGDKexD31XSbF+6MXQ6vvoKpqACJxMYl3Ato1wZar3NzSfjm+UC5BI7nuCTDQENZyT2b0O6N5HAZ30mcy4lA6S0PdBDphwmZP46T4TydiOiTs6XgKLa+ryA16WA5mPHhQmUvhrIqUwGT+8dQA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=AAmPcakirZ+49aStGKItq0c+j+VEsXqfcBH/BMyGspk=;
-        b=WXfJC2xvujS1NMEJmo8auNqU+zz3KoHNnFI/ZwIoQGqsenIlj1/rLp7i8g0wrHhNMA
-         tB4UaPYqL8fo1FBLJD1QspR85zqLl/OHQQ2XW2wZhxbVmnvXaj4OEg2HGRtpK4xkfIA5
-         QryyOXVdb1eBXsQfmBlDoe7W6QRuDag4YOw+c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=AAmPcakirZ+49aStGKItq0c+j+VEsXqfcBH/BMyGspk=;
-        b=MSgtZdgu4ZVCtKtzRL5OzCifDorSrV//Wvt7f+8QVckNz47VoDacCTWjKSaUD7+iuS
-         ZBQ7e9Dtue8iCcyDU4BxSW6dLaCz2tyukCEuXdZf+db3XSl67g2XLOg1AMMzj3/OGQZc
-         9KTLh6HnUHXCdXtfQMQTv1KbKvqzikamlueRalcU+L1VEI9KKgys1hPepgZFFe5IyBQ7
-         2YJv+VapGzfMpS+xQXV2FT5u1/vIo/kBF6hIlVL7HmKVs12E3hX3Of8kY5JZOtveHd+m
-         Y2DYKnG2Tx0Cfx2e8szyj3QL1HKi7+Y44HKLloBN6GCHqWQA7tn++DPg1hFYmEVP52tx
-         pKoA==
-X-Gm-Message-State: AGi0PuZ0SRFgx8VoxgIRn/iwjG+36tIFCMttnuJVUSha7sYcpHpycl+8
-        Jt+QzXgODxM9Uhen6jKGOKGoP31hMFgkciI/GEbefA==
-X-Google-Smtp-Source: APiQypLHBVJAv55CZxyRjUHHZPFErxI7m2EAB+edMw28HekqHKAMU8pcbynFySqYUgFQY0OpR/l48dylQu4jTtXwGxw=
-X-Received: by 2002:a4a:4190:: with SMTP id x138mr9186341ooa.35.1586425291875;
- Thu, 09 Apr 2020 02:41:31 -0700 (PDT)
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=3LX71rBEw66vNil6DBPidS2b2I4tcSAQKkVOc7rLb6c=;
+ b=B0HdIofUqu0UmfqpCly1ucgSW4ppI/AcyNRlFpKf2GzG7+4gjtuLhAs7RtMmGgnb/eU1fGkSkLi7OpY+iMao+oWC5eQzXMKWK67ObES7FRiDuer9ugdjGs0nr2GahgkMMrdRKATEPgAXp0RjSwc7uPuqF+WJXYNx5guyfSOJmjE=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN4PR0401MB3581.namprd04.prod.outlook.com
+ (2603:10b6:803:46::24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2878.21; Thu, 9 Apr
+ 2020 11:21:14 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::9854:2bc6:1ad2:f655]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::9854:2bc6:1ad2:f655%4]) with mapi id 15.20.2878.018; Thu, 9 Apr 2020
+ 11:21:13 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Stefan Haberland <sth@linux.ibm.com>,
+        Jan Hoeppner <hoeppner@linux.ibm.com>,
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>
+Subject: Re: [PATCH 01/10] block: refactor blkpg_ioctl
+Thread-Topic: [PATCH 01/10] block: refactor blkpg_ioctl
+Thread-Index: AQHWDd5DPQ0fMg98V0eqFtmGzBHrLQ==
+Date:   Thu, 9 Apr 2020 11:21:13 +0000
+Message-ID: <SN4PR0401MB35984BB0C3BC58C396E7E8739BC10@SN4PR0401MB3598.namprd04.prod.outlook.com>
+References: <20200408194439.1580699-1-hch@lst.de>
+ <20200408194439.1580699-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Johannes.Thumshirn@wdc.com; 
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0a793590-be20-49cf-bd47-08d7dc781d1f
+x-ms-traffictypediagnostic: SN4PR0401MB3581:
+x-microsoft-antispam-prvs: <SN4PR0401MB358197F36C1C3951DDA4081E9BC10@SN4PR0401MB3581.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:2733;
+x-forefront-prvs: 0368E78B5B
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(396003)(346002)(136003)(376002)(39860400002)(366004)(33656002)(6506007)(9686003)(52536014)(186003)(7696005)(8936002)(478600001)(5660300002)(558084003)(53546011)(81156014)(81166007)(26005)(91956017)(316002)(2906002)(8676002)(76116006)(71200400001)(64756008)(66946007)(110136005)(55016002)(86362001)(54906003)(66476007)(4326008)(66446008)(66556008);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: +LzwAfZ8HKWzI82nIqhxIaW3NPVNkOGE14hpZgZGoFHFnKMvACqztHeJlUZTr3bFyltlJnzdSNl8OeAvoLX05mGVQQjt9uQKopCevAOJXKqlCDQTrlWajo8FyhLM+x/8ZKUWeGCHomc4/BRWgEVPIjT56hoO1QXYmwa94eQHm1wGLpK7LgUcnM227+/THi24gdqxEDM+8OgAOW4zYfeduouaSd0gZL+ZL3+rYXICNDmWKPGa7xhqVklqtxBWcAyvZcn16h5jtXp/OCFQBD3hmi9Reoz3eBRQh7/bW+90jehVAWTrUKO+T8axjEodCWfxfmVIvgr5b8etzB26o0TuTTaVBbFKVjxIOn27Yym+ww6pt6i4DcK62N6itnze/oAbiPOqYrU/AHtZO8NJ35n6ETsmsBHEz+rspKnDM1/mdgXqtREmN6FUP8AnxC3938pv
+x-ms-exchange-antispam-messagedata: 1+LcYIr7p2BrR5VbAHL1i8QkIkzQYNMpcLi7XPCPTgT3yo2NbTP/o4aORooTk8uEj8WsZOBG4I+aCCOsf2FizqL9d1fOcOQM8p4XBNc2MpveLGaVHUIkzsQTC5PWEgVcreHjLf/DSfg4GsrmjZtsvg==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-20-hch@lst.de>
- <20200408122504.GO3456981@phenom.ffwll.local> <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
-In-Reply-To: <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Thu, 9 Apr 2020 11:41:20 +0200
-Message-ID: <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com>
-Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
-To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, X86 ML <x86@kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-hyperv@vger.kernel.org,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
-        <linaro-mm-sig@lists.linaro.org>,
-        "open list:GENERIC INCLUDE/A..." <linux-arch@vger.kernel.org>,
-        Linux MM <linux-mm@kvack.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-s390@vger.kernel.org, bpf <bpf@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0a793590-be20-49cf-bd47-08d7dc781d1f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 09 Apr 2020 11:21:13.7780
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: cj27TVNnQSmatAxXqR0o0I5gPamuILLLj7cZ4Ur59cg9YEdO+7UlZ47/2Y1bzmOT9NgPtEe1VAR7Bp6FPE0fZN1EtJ55nhguCkjNe2ogmCw=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3581
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 9, 2020 at 10:54 AM Benjamin Herrenschmidt
-<benh@kernel.crashing.org> wrote:
->
-> On Wed, 2020-04-08 at 14:25 +0200, Daniel Vetter wrote:
-> > On Wed, Apr 08, 2020 at 01:59:17PM +0200, Christoph Hellwig wrote:
-> > > If this code was broken for non-coherent caches a crude powerpc hack
-> > > isn't going to help anyone else.  Remove the hack as it is the last
-> > > user of __vmalloc passing a page protection flag other than PAGE_KERNEL.
-> >
-> > Well Ben added this to make stuff work on ppc, ofc the home grown dma
-> > layer in drm from back then isn't going to work in other places. I guess
-> > should have at least an ack from him, in case anyone still cares about
-> > this on ppc. Adding Ben to cc.
->
-> This was due to some drivers (radeon ?) trying to use vmalloc pages for
-> coherent DMA, which means on those 4xx powerpc's need to be non-cached.
->
-> There were machines using that (440 based iirc), though I honestly
-> can't tell if anybody still uses any of it.
-
-agp subsystem still seems to happily do that (vmalloc memory for
-device access), never having been ported to dma apis (or well
-converted to iommu drivers, which they kinda are really). So I think
-this all still works exactly as back then, even with the kms radeon
-drivers. Question really is whether we have users left, and I have no
-clue about that either.
-
-Now if these boxes didn't ever have agp then I think we can get away
-with deleting this, since we've already deleted the legacy radeon
-driver. And that one used vmalloc for everything. The new kms one does
-use the dma-api if the gpu isn't connected through agp.
--Daniel
-
-> Cheers,
-> Ben.
->
-> > -Daniel
-> >
-> > >
-> > > Signed-off-by: Christoph Hellwig <hch@lst.de>
-> > > ---
-> > >  drivers/gpu/drm/drm_scatter.c | 11 +----------
-> > >  1 file changed, 1 insertion(+), 10 deletions(-)
-> > >
-> > > diff --git a/drivers/gpu/drm/drm_scatter.c b/drivers/gpu/drm/drm_scatter.c
-> > > index ca520028b2cb..f4e6184d1877 100644
-> > > --- a/drivers/gpu/drm/drm_scatter.c
-> > > +++ b/drivers/gpu/drm/drm_scatter.c
-> > > @@ -43,15 +43,6 @@
-> > >
-> > >  #define DEBUG_SCATTER 0
-> > >
-> > > -static inline void *drm_vmalloc_dma(unsigned long size)
-> > > -{
-> > > -#if defined(__powerpc__) && defined(CONFIG_NOT_COHERENT_CACHE)
-> > > -   return __vmalloc(size, GFP_KERNEL, pgprot_noncached_wc(PAGE_KERNEL));
-> > > -#else
-> > > -   return vmalloc_32(size);
-> > > -#endif
-> > > -}
-> > > -
-> > >  static void drm_sg_cleanup(struct drm_sg_mem * entry)
-> > >  {
-> > >     struct page *page;
-> > > @@ -126,7 +117,7 @@ int drm_legacy_sg_alloc(struct drm_device *dev, void *data,
-> > >             return -ENOMEM;
-> > >     }
-> > >
-> > > -   entry->virtual = drm_vmalloc_dma(pages << PAGE_SHIFT);
-> > > +   entry->virtual = vmalloc_32(pages << PAGE_SHIFT);
-> > >     if (!entry->virtual) {
-> > >             kfree(entry->busaddr);
-> > >             kfree(entry->pagelist);
-> > > --
-> > > 2.25.1
-> > >
-> >
-> >
->
-
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+On 08/04/2020 21:45, Christoph Hellwig wrote:=0A=
+> +	case BLKPG_DEL_PARTITION:=0A=
+> +		return bdev_resize_partition(bdev, p.pno, start, length);=0A=
+=0A=
+This needs to be BLKPG_RESIZE_PARTITION.=0A=
