@@ -2,127 +2,94 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 889DF1A2997
-	for <lists+linux-s390@lfdr.de>; Wed,  8 Apr 2020 21:45:08 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6AD791A2CF6
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 02:42:04 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730159AbgDHTpH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 8 Apr 2020 15:45:07 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40938 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730155AbgDHTpH (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Apr 2020 15:45:07 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=FEfhWvLPZ+iih2DaP3qYwNHreINUocGi+rjtpjpeO7c=; b=OXY2d9Y08lLZf/nY5hBJ1v0Tj8
-        qzf5arRByNejSLT74+LWTZ7yrLfpFJCdQ/BVi67porZqbPrhuDX+JIJ4HMtopLbSPDKP1Ks0OwW2g
-        3IR/jWagzml6yDf4jBC9h0Ccu55/8HIgEIS/KmbhYVPfBiBOoWOepWZFNCy2uiGZW9d38kd6k2b35
-        tPiPiKdTIb+FnqxL60+2DcYK9R8nJIw4++KK4mc4kzoJRguf7tL17/TkygKptxxD8z+0khcExMxLs
-        Sp3yHgR81vTXjI5/i9kZld90FvhAK89jejAhc9L/6Raa4SIgg/TrROvwreYPuBDXTsQdXwFhnZW8Z
-        wSro+NFw==;
-Received: from [2001:4bb8:180:5765:65b6:f11e:f109:b151] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jMGdG-00055y-4Q; Wed, 08 Apr 2020 19:45:06 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: [PATCH 10/10] block: fold bdev_unhash_inode into invalidate_partition
-Date:   Wed,  8 Apr 2020 21:44:39 +0200
-Message-Id: <20200408194439.1580699-11-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200408194439.1580699-1-hch@lst.de>
-References: <20200408194439.1580699-1-hch@lst.de>
+        id S1726575AbgDIAlx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 8 Apr 2020 20:41:53 -0400
+Received: from sonic308-37.consmr.mail.ne1.yahoo.com ([66.163.187.60]:41106
+        "EHLO sonic308-37.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726527AbgDIAlx (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 8 Apr 2020 20:41:53 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=aol.com; s=a2048; t=1586392912; bh=/6EYCRlfa2umBwyf6HMqnS88iYA4EIXadLKaqqSMGXc=; h=Date:From:To:Cc:Subject:References:In-Reply-To:From:Subject; b=Nw9PSYl5kPo55rK57kdK+1rouIyZmFH49XmlmNnt+EPGCmzv5/R562708lCkK9bcS1996WRvY6AWWRgP5phZau+eJxoQmqe+LtCwNJEbiYUjQhQT/OXacraRjiO5WRZ8qsSlVAMXGIKXGWVMix1s+I5tt6JSaqGsGWqa8zr1hJE6ZyAxPEoEYv5ZFlm/QM4zwfuDMMiG5yQiMafwtotoMJIbhnQ91EvX2WyiEWFjhDLOt5DLpnzrXKB58PBcZ/9RDKamP6jFx1FoPm8nUGivG9s/e+4lgHMoB8j5kGsRyJMdGA9c8cLBXg+peTceR8BZpBB9DLsp3YkeaGOsTusoSA==
+X-YMail-OSG: Kjs_hFQVM1mYR3Bbv__auOf2fhoaIk9dbexLkMUvZvDcgibPrEIH2uN_nb7TSk.
+ AjTVDttprz38pf2agkDENCO9OlpstM6AKa5fqJSzz9g9BDnD9cEKZ6Kcqg9CatwzLNYThMuSUeYX
+ 2yEgN2U8e5xgtZHtWmAFsIbznPJD_UPhljYJl2r_EoL5qqrqeJu9Nnd9Y.Ff.0cQ6SO_SlnVXMbj
+ JYEgiFEkwq6TWViREF0oZDh5a7V1WTHk_fQL7mKo.zfkeUUkf9r2PC3YbrlM36YDrBNE7Vu_H_23
+ 7SUm_oYUdCkn.imVzOSTsbg1UKej12C_c6DVKmb2bShJF7ckagBec7h.F7Pz2jADVU.RAf_SzeRw
+ jnXQU.OYwZs7DtYvRPtgjcVfmgAxeq8RUp0VPoOeRchdyRoGHKkYEH1l0ufQv3CAgRqC9S3zsOd9
+ fnhObZjDMfX58eXYxHjcxjHRReqFOhx5Hz6aq8FIq7jw8y8OEbWPMrjaCpR4FKEn_bozdR4qyDFm
+ 4sbsu66FrZifwa3kj9UeUr.wGSL5S042VmSyGfETFpHOTRvx51GHTkDHF4kqnnRQjnt9cOY_TXoy
+ 6ikjZzl8Rym8MnuDSY3t2UEnyXfrQM8zmKcZMaBXZA.1JruNMW__SZDUsuarZwJACQIZFjYaEYcB
+ 6Fx2cC_OXlNG7d102FBbLxbbWE51eCCn6.Ao3BUdftIqkSfQqE8AmEChvpnb3Hjczsgr87hSe_ZY
+ FNPGuabtMxRjTV5vOhJN9EVsFZjNMIpNdxApHaOp9BBa0mK8Hd4Y8_sLLzgFE_OX._p_ww8OgQCS
+ _PZw5TJANZTRxfmtlnIT9WY8nJxFEz0ZzkRbyJrD7lBRVCuL2qRMMrbnVCU.d3atpGGNT71.FMTl
+ XJp9kOjDwdiPhEHaNTf0wy9.286eHx9hDHZx13ycI4lCw.BNZVla9tTflJZSkBR622oDAvju0pYi
+ chnjA_f0d_Rs3Y.w_0UWDDtsiqrp7Nd.ENOvnjBk3WtBBjbeqzYHxInpU0ICw.akO5xUiF4HXGRD
+ NGu7bFyqgIPHiVSYVkpfC.PnR3fZmrfgYy1Ktc5D_y5Xh2Z7vFADl5LC6uRiCqJ9Y4yLuHo1ATrn
+ PxNppKa486Nn86yT5d.pKQ3q49VQAxNEB7EGZ_QmK0uyT9X6oF2qpuwBBPhXWKUMiK3EbPuATGVw
+ L.4MdTecfHCHslUWJtwrtw2v46CslPDJY3TtzPBEF3b6hKOBHSxZ.8CqTxF3S2_xcA64udxpFdja
+ 9c_vKNU82cTswpLxDeBimIz._J7Xaum1i6dZEwCbc.uspehQ3L04kL45bX0fhpi7dDoUJat5aE3S
+ p_Fl8AHbSq3P.bkBJGmoklW4vRdsCXSUz4v5SYoPxJ86d1eVDsQ0qrpylWpfgRvkXgRw467FBrzC
+ _ECRk3ijYTNyDsC7idxPty4i4XJSa9KM2uH5RWvaV.R8phY0hHU.lO54DG8mygB9TxdZscMBwbtP
+ JqFlYvAh9BGSO_QyxpGrs
+Received: from sonic.gate.mail.ne1.yahoo.com by sonic308.consmr.mail.ne1.yahoo.com with HTTP; Thu, 9 Apr 2020 00:41:52 +0000
+Received: by smtp412.mail.gq1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 07bc1f76d2033b5244ea2e327c66bf87;
+          Thu, 09 Apr 2020 00:39:51 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 08:39:35 +0800
+From:   Gao Xiang <hsiangkao@aol.com>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 17/28] mm: remove the prot argument from vm_map_ram
+Message-ID: <20200409003931.GA8418@hsiangkao-HP-ZHAN-66-Pro-G1>
+References: <20200408115926.1467567-1-hch@lst.de>
+ <20200408115926.1467567-18-hch@lst.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20200408115926.1467567-18-hch@lst.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Mailer: WebService/1.1.15620 hermes Apache-HttpAsyncClient/4.1.4 (Java/11.0.6)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-invalidate_partition and bdev_unhash_inode are always paired, and
-invalidate_partition already does an icache lookup for the block device
-inode.  Piggy back on that to remove the inode from the hash.
+On Wed, Apr 08, 2020 at 01:59:15PM +0200, Christoph Hellwig wrote:
+> This is always GFP_KERNEL - for long term mappings with other properties
+> vmap should be used.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  drivers/gpu/drm/i915/gem/selftests/mock_dmabuf.c   | 2 +-
+>  drivers/media/common/videobuf2/videobuf2-dma-sg.c  | 3 +--
+>  drivers/media/common/videobuf2/videobuf2-vmalloc.c | 3 +--
+>  fs/erofs/decompressor.c                            | 2 +-
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/genhd.c      |  8 ++++++--
- fs/block_dev.c     | 15 ---------------
- include/linux/fs.h |  1 -
- 3 files changed, 6 insertions(+), 18 deletions(-)
+For EROFS part,
 
-diff --git a/block/genhd.c b/block/genhd.c
-index 980a4609d4a5..c05d509877fa 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -888,6 +888,12 @@ static void invalidate_partition(struct gendisk *disk, int partno)
- 
- 	fsync_bdev(bdev);
- 	__invalidate_device(bdev, true);
-+
-+	/*
-+	 * Unhash the bdev inode for this device so that it gets evicted as soon
-+	 * as last inode reference is dropped.
-+	 */
-+	remove_inode_hash(bdev->bd_inode);
- 	bdput(bdev);
- }
- 
-@@ -909,13 +915,11 @@ void del_gendisk(struct gendisk *disk)
- 			     DISK_PITER_INCL_EMPTY | DISK_PITER_REVERSE);
- 	while ((part = disk_part_iter_next(&piter))) {
- 		invalidate_partition(disk, part->partno);
--		bdev_unhash_inode(part_devt(part));
- 		delete_partition(disk, part);
- 	}
- 	disk_part_iter_exit(&piter);
- 
- 	invalidate_partition(disk, 0);
--	bdev_unhash_inode(disk_devt(disk));
- 	set_capacity(disk, 0);
- 	disk->flags &= ~GENHD_FL_UP;
- 	up_write(&disk->lookup_sem);
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 9c8de54fa0c9..998820174d3e 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -883,21 +883,6 @@ static int bdev_set(struct inode *inode, void *data)
- 
- static LIST_HEAD(all_bdevs);
- 
--/*
-- * If there is a bdev inode for this device, unhash it so that it gets evicted
-- * as soon as last inode reference is dropped.
-- */
--void bdev_unhash_inode(dev_t dev)
--{
--	struct inode *inode;
--
--	inode = ilookup5(blockdev_superblock, hash(dev), bdev_test, &dev);
--	if (inode) {
--		remove_inode_hash(inode);
--		iput(inode);
--	}
--}
--
- struct block_device *bdget(dev_t dev)
- {
- 	struct block_device *bdev;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2b4e9f86b151..1a95e5158811 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2581,7 +2581,6 @@ extern struct kmem_cache *names_cachep;
- #ifdef CONFIG_BLOCK
- extern int register_blkdev(unsigned int, const char *);
- extern void unregister_blkdev(unsigned int, const char *);
--extern void bdev_unhash_inode(dev_t dev);
- extern struct block_device *bdget(dev_t);
- extern struct block_device *bdgrab(struct block_device *bdev);
- extern void bd_set_size(struct block_device *, loff_t size);
--- 
-2.25.1
+Acked-by: Gao Xiang <xiang@kernel.org>
+
+Thanks,
+Gao Xiang
 
