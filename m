@@ -2,78 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id C074A1A35DF
-	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 16:31:03 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D39911A3619
+	for <lists+linux-s390@lfdr.de>; Thu,  9 Apr 2020 16:41:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbgDIObC (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 9 Apr 2020 10:31:02 -0400
-Received: from 8bytes.org ([81.169.241.247]:58886 "EHLO theia.8bytes.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726977AbgDIObC (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 9 Apr 2020 10:31:02 -0400
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 40578391; Thu,  9 Apr 2020 16:31:01 +0200 (CEST)
-Date:   Thu, 9 Apr 2020 16:30:59 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH] iommu/exynos: Get rid of 'struct exynos_iommu_owner'
- exynos_iommu_owner
-Message-ID: <20200409143059.GP3103@8bytes.org>
-References: <20200407183742.4344-1-joro@8bytes.org>
- <CGME20200407184501eucas1p25407bc96e4345df406cf6ba061ae6a82@eucas1p2.samsung.com>
- <20200407183742.4344-32-joro@8bytes.org>
- <449e7f16-e719-9617-ec92-63b82c0bc33f@samsung.com>
- <f59b0bb3-8c08-9cc9-bb1a-e69b7b226f60@samsung.com>
- <20200409114620.GA16298@8bytes.org>
- <40af831b-d00c-0cf9-0a06-e60c048a9ab8@samsung.com>
+        id S1727611AbgDIOle (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 9 Apr 2020 10:41:34 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39117 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727700AbgDIOle (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 9 Apr 2020 10:41:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586443292;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=89GNIOSKjsOD8QJV6eCKtCzrS0MjyFeJYEzczikaUfM=;
+        b=WmixIhEAPyFwklTqe2cWyM/gqP7bbMkWxLW1zsOUbwnsQK0j7bVTPNIxHWzYUZYGleDfAY
+        Z9os8mmtSg8kd/sDxmSN7Qz19eYl/3zLcQR61fy9wI0AIr+OBQT+ZhRB8oPF1LLQlWaCbO
+        eq0g8yhX1cNKOMuXEuJwQ4HGioxH5/c=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-282-cRVUOBR5Nx2JHnnd5Bfdcg-1; Thu, 09 Apr 2020 10:41:26 -0400
+X-MC-Unique: cRVUOBR5Nx2JHnnd5Bfdcg-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4E8F08017F3;
+        Thu,  9 Apr 2020 14:41:23 +0000 (UTC)
+Received: from localhost (ovpn-12-133.pek2.redhat.com [10.72.12.133])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F81E391;
+        Thu,  9 Apr 2020 14:41:22 +0000 (UTC)
+Date:   Thu, 9 Apr 2020 22:41:19 +0800
+From:   Baoquan He <bhe@redhat.com>
+To:     Mike Rapoport <rppt@linux.ibm.com>,
+        Michal Hocko <mhocko@kernel.org>
+Cc:     Hoan Tran <Hoan@os.amperecomputing.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Oscar Salvador <osalvador@suse.de>,
+        Pavel Tatashin <pavel.tatashin@microsoft.com>,
+        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, x86@kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        lho@amperecomputing.com, mmorana@amperecomputing.com
+Subject: Re: [PATCH RFC] mm: remove CONFIG_HAVE_MEMBLOCK_NODE_MAP (was: Re:
+ [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by default for NUMA)
+Message-ID: <20200409144119.GE2129@MiWiFi-R3L-srv>
+References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
+ <20200330074246.GA14243@dhcp22.suse.cz>
+ <20200330092127.GB30942@linux.ibm.com>
+ <20200330095843.GF14243@dhcp22.suse.cz>
+ <20200331215618.GG30942@linux.ibm.com>
+ <20200401054227.GC2129@MiWiFi-R3L-srv>
+ <20200401075155.GH30942@linux.ibm.com>
+ <20200402080144.GK22681@dhcp22.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40af831b-d00c-0cf9-0a06-e60c048a9ab8@samsung.com>
+In-Reply-To: <20200402080144.GK22681@dhcp22.suse.cz>
 User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Marek,
+On 04/02/20 at 10:01am, Michal Hocko wrote:
+> On Wed 01-04-20 10:51:55, Mike Rapoport wrote:
+> > Hi,
+> > 
+> > On Wed, Apr 01, 2020 at 01:42:27PM +0800, Baoquan He wrote:
+> [...]
+> > > From above information, we can remove HAVE_MEMBLOCK_NODE_MAP, and
+> > > replace it with CONFIG_NUMA. That sounds more sensible to store nid into
+> > > memblock when NUMA support is enabled.
+> >  
+> > Replacing CONFIG_HAVE_MEMBLOCK_NODE_MAP with CONFIG_NUMA will work, but
+> > this will not help cleaning up the whole node/zone initialization mess and
+> > we'll be stuck with two implementations.
+> 
+> Yeah, this is far from optimal.
+> 
+> > The overhead of enabling HAVE_MEMBLOCK_NODE_MAP is only for init time as
+> > most architectures will anyway discard the entire memblock, so having it in
+> > a UMA arch won't be a problem. The only exception is arm that uses
+> > memblock for pfn_valid(), here we may also think about a solution to
+> > compensate the addition of nid to the memblock structures. 
+> 
+> Well, we can make memblock_region->nid defined only for CONFIG_NUMA.
+> memblock_get_region_node would then unconditionally return 0 on UMA.
+> Essentially the same way we do NUMA for other MM code. I only see few
+> direct usage of region->nid.
 
-On Thu, Apr 09, 2020 at 03:58:00PM +0200, Marek Szyprowski wrote:
-> The main problem after your conversion is the fact that ->probe_device() 
-> is called very early, before any other platform device (thus IOMMU 
-> controller) is is probed. It doesn't handle EPROBE_DEFER too.
+Checked code again, seems HAVE_MEMBLOCK_NODE_MAP is selected directly in
+all ARCHes which support it. Means HAVE_MEMBLOCK_NODE_MAP is enabled by
+default on those ARCHes, and has no dependency on CONFIG_NUMA at all.
+E.g on x86, it just calls free_area_init_nodes() in generic code path,
+while free_area_init_nodes() is defined in CONFIG_HAVE_MEMBLOCK_NODE_MAP
+ifdeffery scope. So I tend to agree with Mike to remove
+HAVE_MEMBLOCK_NODE_MAP firstly on all ARCHes. We can check if it's worth
+only defining memblock_region->nid for CONFIG_NUMA case after
+HAVE_MEMBLOCK_NODE_MAP is removed.
 
-I don't quite understand why probe_device() is called too early, as it
-is called at the same time add_device() was called before. But anyway,
-I have seen a similar problem on OMAP. If the SYSMMU for a master is not
-probed yet when probe_device() is called, it can just return -ENODEV and
-in your driver you just call but_iommu_probe() when a new SYSMMU got
-initialized to re-probe uninitialized masters on the bus. This patch-set
-contains a change to export bus_iommu_probe() for exactly that reason.
+config X86
+        def_bool y
+	...
+	select HAVE_MEMBLOCK_NODE_MAP
+	...
 
-What do you think?
-
-Regards,
-
-	Joerg
