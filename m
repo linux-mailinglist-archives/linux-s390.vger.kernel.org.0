@@ -2,196 +2,101 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id DD9851A42AA
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2020 08:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6940E1A4358
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2020 10:11:15 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725844AbgDJGuz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Apr 2020 02:50:55 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:41778 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725858AbgDJGuy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 Apr 2020 02:50:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586501454;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=g9JE7+kQcGRHuqYE15Qj2LdCxQJFZbqVW19T+MEzEiw=;
-        b=aRMalFkjjff5FDu2k5SAUV1f/tNS0FfPa1ubruWkSxtynIey+B+fWbGjKXSGrkjb3mKlFi
-        wvwYdudOPxnjS6SGE0R7jG2pjRtsKHMQXZNVZ6OB/mGp45MN/sNhltZrsNMKl6FpNwtSoI
-        6cfB/vMNUy9TL9jpBDIuRGtFTvxmiIM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-116-YFk-c_hfPIunR-iCRoa7nA-1; Fri, 10 Apr 2020 02:50:47 -0400
-X-MC-Unique: YFk-c_hfPIunR-iCRoa7nA-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id ACA40107B275;
-        Fri, 10 Apr 2020 06:50:43 +0000 (UTC)
-Received: from localhost (ovpn-13-236.pek2.redhat.com [10.72.13.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E95605DA7C;
-        Fri, 10 Apr 2020 06:50:41 +0000 (UTC)
-Date:   Fri, 10 Apr 2020 14:50:39 +0800
-From:   Baoquan He <bhe@redhat.com>
-To:     Mike Rapoport <rppt@linux.ibm.com>
-Cc:     Michal Hocko <mhocko@kernel.org>,
-        Hoan Tran <Hoan@os.amperecomputing.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Oscar Salvador <osalvador@suse.de>,
-        Pavel Tatashin <pavel.tatashin@microsoft.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, x86@kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        lho@amperecomputing.com, mmorana@amperecomputing.com
-Subject: Re: [PATCH v3 0/5] mm: Enable CONFIG_NODES_SPAN_OTHER_NODES by
- default for NUMA
-Message-ID: <20200410065039.GG2129@MiWiFi-R3L-srv>
-References: <1585420282-25630-1-git-send-email-Hoan@os.amperecomputing.com>
- <20200330074246.GA14243@dhcp22.suse.cz>
- <20200330175100.GD30942@linux.ibm.com>
- <20200330182301.GM14243@dhcp22.suse.cz>
- <20200331081423.GE30942@linux.ibm.com>
- <20200331085513.GE30449@dhcp22.suse.cz>
- <20200331140332.GA2129@MiWiFi-R3L-srv>
- <20200331142138.GL30449@dhcp22.suse.cz>
- <20200409162741.GA9387@linux.ibm.com>
+        id S1726203AbgDJILO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 Apr 2020 04:11:14 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35817 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725975AbgDJILN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 10 Apr 2020 04:11:13 -0400
+Received: by mail-ot1-f66.google.com with SMTP id v2so1213525oto.2
+        for <linux-s390@vger.kernel.org>; Fri, 10 Apr 2020 01:11:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hgf3DAUC4/KD19F9Gq5AGfjZOzS9LXWN/bbu/vFg+qA=;
+        b=dFrk5z2BtMEmisYXExkZBismSlsWb5Q4k/3n94YDOvTZuh2CzIpH/i8KoNWzlv4bXk
+         /+Bzn+RqlG2O4N1iciPqbf359lmAxRrY7woQmtsWzKRq9DFPU3AhxhJ6V+T7GDyl1tRC
+         5xNRsfm5urzQ2GX3QtuJdU9JR4uI52qA4fFG8=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hgf3DAUC4/KD19F9Gq5AGfjZOzS9LXWN/bbu/vFg+qA=;
+        b=UxdK2aHxwkOMj6ZApcG+Io29UHfSZU2wEjBUYxFS5rnI5se6ABLqPYDcEud1uTsIgX
+         zJx+9LL959rpAtrdYXD3MtJ4z6wddu362wEdsi+5IXMD1LHkoXRZR18HECif4snlyyMx
+         b+Bp5GP5HZ4FhWrCvzT7W+8pxT6ZOZVkem4mmASLfgT1X2kS6aUHF3yGOMaxKjJxzAqk
+         /enA76ei99r45OCk1yGYXQYZuZenGINpsupcYAy4pp1sBt2rbSPtT1GBe9dEoNmfrvV7
+         2PwdHerAzLe/EHir54UiFzEV6okii/8cdv9G9JRjho1YBa5Y/27/5U2KNMNoBrS6YL5O
+         msJA==
+X-Gm-Message-State: AGi0PuZe12gZfIea69wwC98PSkCYt4s0h6t/3eji+A/2Xjbnar6cEYuE
+        jdx9vA/LuFDsRbdSqJV9xkAF0hG3uxh6IV1NZc3y/g==
+X-Google-Smtp-Source: APiQypJumpZ6N8vscDAXJtrZPRakBWDA3qYtIErOA5tqj0XblmFZSMuMiwpkQHsTVZs7vae7PdjUGGhKyrX4Ng8eQNQ=
+X-Received: by 2002:a9d:6e8f:: with SMTP id a15mr3449972otr.188.1586506273249;
+ Fri, 10 Apr 2020 01:11:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200409162741.GA9387@linux.ibm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+References: <20200408115926.1467567-1-hch@lst.de> <20200408115926.1467567-20-hch@lst.de>
+ <20200408122504.GO3456981@phenom.ffwll.local> <eb48f7b6327e482ea9911b129210c0417ab48345.camel@kernel.crashing.org>
+ <CAKMK7uHtkLvdsWFGiAtkzVa5mpnDvXkn3CHZQ6bgJ_enbyAc8A@mail.gmail.com> <0f360b9cb72b80bae0d0db8150f65598c2776268.camel@kernel.crashing.org>
+In-Reply-To: <0f360b9cb72b80bae0d0db8150f65598c2776268.camel@kernel.crashing.org>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Fri, 10 Apr 2020 10:11:02 +0200
+Message-ID: <CAKMK7uHKyN+c5oTEYVursx4at9br7LSXRb8PMoNEAEBh0hfBLQ@mail.gmail.com>
+Subject: Re: [PATCH 19/28] gpu/drm: remove the powerpc hack in drm_legacy_sg_alloc
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, X86 ML <x86@kernel.org>,
+        David Airlie <airlied@linux.ie>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-hyperv@vger.kernel.org,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "moderated list:DMA BUFFER SHARING FRAMEWORK" 
+        <linaro-mm-sig@lists.linaro.org>,
+        "open list:GENERIC INCLUDE/A..." <linux-arch@vger.kernel.org>,
+        Linux MM <linux-mm@kvack.org>,
+        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
+        Roedel <joro@8bytes.org>," <iommu@lists.linux-foundation.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linux-s390@vger.kernel.org, bpf <bpf@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 04/09/20 at 07:27pm, Mike Rapoport wrote:
-> On Tue, Mar 31, 2020 at 04:21:38PM +0200, Michal Hocko wrote:
-> > On Tue 31-03-20 22:03:32, Baoquan He wrote:
-> > > Hi Michal,
-> > > 
-> > > On 03/31/20 at 10:55am, Michal Hocko wrote:
-> > > > On Tue 31-03-20 11:14:23, Mike Rapoport wrote:
-> > > > > Maybe I mis-read the code, but I don't see how this could happen. In the
-> > > > > HAVE_MEMBLOCK_NODE_MAP=y case, free_area_init_node() calls
-> > > > > calculate_node_totalpages() that ensures that node->node_zones are entirely
-> > > > > within the node because this is checked in zone_spanned_pages_in_node().
-> > > > 
-> > > > zone_spanned_pages_in_node does chech the zone boundaries are within the
-> > > > node boundaries. But that doesn't really tell anything about other
-> > > > potential zones interleaving with the physical memory range.
-> > > > zone->spanned_pages simply gives the physical range for the zone
-> > > > including holes. Interleaving nodes are essentially a hole
-> > > > (__absent_pages_in_range is going to skip those).
-> > > > 
-> > > > That means that when free_area_init_core simply goes over the whole
-> > > > physical zone range including holes and that is why we need to check
-> > > > both for physical and logical holes (aka other nodes).
-> > > > 
-> > > > The life would be so much easier if the whole thing would simply iterate
-> > > > over memblocks...
-> > > 
-> > > The memblock iterating sounds a great idea. I tried with putting the
-> > > memblock iterating in the upper layer, memmap_init(), which is used for
-> > > boot mem only anyway. Do you think it's doable and OK? It yes, I can
-> > > work out a formal patch to make this simpler as you said. The draft code
-> > > is as below. Like this it uses the existing code and involves little change.
-> > 
-> > Doing this would be a step in the right direction! I haven't checked the
-> > code very closely though. The below sounds way too simple to be truth I
-> > am afraid. First for_each_mem_pfn_range is available only for
-> > CONFIG_HAVE_MEMBLOCK_NODE_MAP (which is one of the reasons why I keep
-> > saying that I really hate that being conditional). Also I haven't really
-> > checked the deferred initialization path - I have a very vague
-> > recollection that it has been converted to the memblock api but I have
-> > happilly dropped all that memory.
-> 
-> The Baoquan's patch almost did it, at least for simple case of qemu with 2
-> nodes. It's only missing the adjustment to the size passed to
-> memmap_init_zone() as it may change because of clamping.
+On Fri, Apr 10, 2020 at 12:57 AM Benjamin Herrenschmidt
+<benh@kernel.crashing.org> wrote:
+>
+> On Thu, 2020-04-09 at 11:41 +0200, Daniel Vetter wrote:
+> > Now if these boxes didn't ever have agp then I think we can get away
+> > with deleting this, since we've already deleted the legacy radeon
+> > driver. And that one used vmalloc for everything. The new kms one does
+> > use the dma-api if the gpu isn't connected through agp
+>
+> Definitely no AGP there.
 
-Right, the size need be adjusted after start and end clamping.
+Ah in that case I think we can be sure that this code is dead.
 
-> 
-> I've drafted something that removes HAVE_MEMBLOCK_NODE_MAP and added this
-> patch there [1]. For several memory configurations I could emulate with
-> qemu it worked.
-> I'm going to wait a bit to see of kbuild is happy and then I'll send the
-> patches.
-> 
-> Baoquan, I took liberty to add your SoB, hope you don't mind.
-> 
-> [1] https://git.kernel.org/pub/scm/linux/kernel/git/rppt/linux.git/log/?h=memblock/all-have-node-map 
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-Of course not. Thanks for doing this, and look forward to seeing your
-formal patchset posting when it's ready.
-
->   
-> > > diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> > > index 138a56c0f48f..558d421f294b 100644
-> > > --- a/mm/page_alloc.c
-> > > +++ b/mm/page_alloc.c
-> > > @@ -6007,14 +6007,6 @@ void __meminit memmap_init_zone(unsigned long size, int nid, unsigned long zone,
-> > >  		 * function.  They do not exist on hotplugged memory.
-> > >  		 */
-> > >  		if (context == MEMMAP_EARLY) {
-> > > -			if (!early_pfn_valid(pfn)) {
-> > > -				pfn = next_pfn(pfn);
-> > > -				continue;
-> > > -			}
-> > > -			if (!early_pfn_in_nid(pfn, nid)) {
-> > > -				pfn++;
-> > > -				continue;
-> > > -			}
-> > >  			if (overlap_memmap_init(zone, &pfn))
-> > >  				continue;
-> > >  			if (defer_init(nid, pfn, end_pfn))
-> > > @@ -6130,9 +6122,17 @@ static void __meminit zone_init_free_lists(struct zone *zone)
-> > >  }
-> > >  
-> > >  void __meminit __weak memmap_init(unsigned long size, int nid,
-> > > -				  unsigned long zone, unsigned long start_pfn)
-> > > +				  unsigned long zone, unsigned long range_start_pfn)
-> > >  {
-> > > -	memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> > > +	unsigned long start_pfn, end_pfn;
-> > > +	unsigned long range_end_pfn = range_start_pfn + size;
-> > > +	int i;
-> > > +	for_each_mem_pfn_range(i, nid, &start_pfn, &end_pfn, NULL) {
-> > > +		start_pfn = clamp(start_pfn, range_start_pfn, range_end_pfn);
-> > > +		end_pfn = clamp(end_pfn, range_start_pfn, range_end_pfn);
-> > > +		if (end_pfn > start_pfn)
-> > > +			memmap_init_zone(size, nid, zone, start_pfn, MEMMAP_EARLY, NULL);
-> > > +	}
-> > >  }
-> > >  
-> > >  static int zone_batchsize(struct zone *zone)
-> > 
-> > -- 
-> > Michal Hocko
-> > SUSE Labs
-> 
-> -- 
-> Sincerely yours,
-> Mike.
-> 
-> 
-
+Cheers, Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
