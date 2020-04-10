@@ -2,128 +2,115 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 6295B1A454D
-	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2020 12:40:46 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D40271A4633
+	for <lists+linux-s390@lfdr.de>; Fri, 10 Apr 2020 14:20:23 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725975AbgDJKkp (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 10 Apr 2020 06:40:45 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:10916 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725912AbgDJKkp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 10 Apr 2020 06:40:45 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03AAcIei095030
-        for <linux-s390@vger.kernel.org>; Fri, 10 Apr 2020 06:40:44 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30920awn8a-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 10 Apr 2020 06:40:44 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <gor@linux.ibm.com>;
-        Fri, 10 Apr 2020 11:40:21 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 10 Apr 2020 11:40:18 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03AAecj261014046
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 10 Apr 2020 10:40:38 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9673AA405B;
-        Fri, 10 Apr 2020 10:40:38 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 444E4A4066;
-        Fri, 10 Apr 2020 10:40:38 +0000 (GMT)
-Received: from localhost (unknown [9.145.46.100])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Fri, 10 Apr 2020 10:40:38 +0000 (GMT)
-Date:   Fri, 10 Apr 2020 12:40:36 +0200
-From:   Vasily Gorbik <gor@linux.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+        id S1726659AbgDJMUV (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 10 Apr 2020 08:20:21 -0400
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:42060 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726652AbgDJMUV (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 10 Apr 2020 08:20:21 -0400
+Received: by mail-qk1-f193.google.com with SMTP id x66so1860988qkd.9
+        for <linux-s390@vger.kernel.org>; Fri, 10 Apr 2020 05:20:19 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=j0xq3XxrlNu4Qc4ztwGcIn5i4ud0A4XU61qD7ZOx5Ag=;
+        b=TqW0DwOwY4ZE4ujuXB+j46RD9fAxlH6saUZWhwloMR+92dlljvV53EXaZSVkYQRkKt
+         RXMfV9++lq3AGwz7gkpUfax15VQm/u2byD4ddmdfGRByv/J9bgLbyPODdRvITXymQ5z0
+         j9caCAIeja1c4XlXw2n43Us7FncnisZKjmQv4SwxgKd2vlqTGbSmoMy9V9UV88U2OYRJ
+         RXe0qhBOU/m3U2QVvlwNj+mFMnZ8ZYIfQ0VckcTsWfeJC4FANa3/k95pdYOQuobUKIyw
+         E9guFRZg4UF9wxfnmAEKgSpJSB4Oh5qJmDYnYAhs4FECpA1QBiX735CyjjLFRyjq51Q3
+         lQHA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=j0xq3XxrlNu4Qc4ztwGcIn5i4ud0A4XU61qD7ZOx5Ag=;
+        b=D1nTGXsG16vwhrskUYwduwSKZ9Z6fk/9VBN4yUGmuljhcEgafUTt3H7oamX+kncJnN
+         w5V1IhvobV0SfnXAVLDC9UjSkXrF1nBFHGGAEmY3Jlkp8l/AFP69yBy7mWCL7F7vxGnJ
+         2+5Q2hsr9MOINpX7Jejmg6jNm4fEB/Tdf9Cay1PylMRwassWthVZpXsVjgQgNAD7W8Kb
+         cibLLv0seVfbIrCmPI7s8O2v/PchP408NIr4iizzaEnRNKr9/rOOjsCbeVkWLTDw1LNv
+         r1WBsYgZi3yFs2QqQMtnR7TCo+bAvFT9OyTzV6FIeHnWGeqtLhcy7wWqsByTG+MM/zIs
+         V8pA==
+X-Gm-Message-State: AGi0PuZUEc4Koy+gIXCKRzAZlPPWVVj8WDn0ZxmmAUnYq8zmjZlcppFT
+        I+BG3dFBkzeqTdaN3vwZjpbaYQ==
+X-Google-Smtp-Source: APiQypJFXmrYehKyrmHS6x/fCnBdKOhdEzQUjMHenMUEYSOOd7PHRRzV9grmABzvA/R5mqzhwY+Bsg==
+X-Received: by 2002:a05:620a:782:: with SMTP id 2mr562538qka.444.1586521219343;
+        Fri, 10 Apr 2020 05:20:19 -0700 (PDT)
+Received: from [192.168.1.153] (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id u13sm1425748qku.92.2020.04.10.05.20.18
+        (version=TLS1_2 cipher=ECDHE-ECDSA-AES128-GCM-SHA256 bits=128/128);
+        Fri, 10 Apr 2020 05:20:18 -0700 (PDT)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.4 \(3608.80.23.2.2\))
+Subject: Re: s390 boot woe due to "block: fix busy device checking in
+ blk_drop_partitions"
+From:   Qian Cai <cai@lca.pw>
+In-Reply-To: <20200410054544.GA17923@lst.de>
+Date:   Fri, 10 Apr 2020 08:20:17 -0400
+Cc:     Jens Axboe <axboe@kernel.dk>,
         Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Subject: [GIT PULL] s390 patches for the 5.7 merge window #2
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-X-TM-AS-GCONF: 00
-x-cbid: 20041010-0008-0000-0000-0000036E1BB8
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041010-0009-0000-0000-00004A8FC112
-Message-Id: <your-ad-here.call-01586515236-ext-7662@work.hours>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-10_03:2020-04-09,2020-04-10 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
- priorityscore=1501 impostorscore=0 malwarescore=0 mlxlogscore=779
- lowpriorityscore=0 mlxscore=0 suspectscore=2 clxscore=1015 phishscore=0
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004100088
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <5CC1C981-47F1-4C4D-A4D7-B6411D716A2F@lca.pw>
+References: <AD16A450-794F-4EEA-A7BF-42452F18294A@lca.pw>
+ <20200410054544.GA17923@lst.de>
+To:     Christoph Hellwig <hch@lst.de>
+X-Mailer: Apple Mail (2.3608.80.23.2.2)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hello Linus,
 
-please pull the second round of s390 fixes and features for 5.7.
 
-Thank you,
-Vasily
+> On Apr 10, 2020, at 1:45 AM, Christoph Hellwig <hch@lst.de> wrote:
+>=20
+> Please try this patch:
 
-The following changes since commit ad0bf4eb91c2f9b93479b679e5472094ddb76da8:
+It works fine.
 
-  Merge tag 's390-5.7-1' of git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux (2020-04-04 09:45:50 -0700)
-
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/s390/linux tags/s390-5.7-2
-
-for you to fetch changes up to 2bc55eaeb88d30accfc1b6ac2708d4e4b81ca260:
-
-  s390/cio: generate delayed uevent for vfio-ccw subchannels (2020-04-06 14:02:28 +0200)
-
-----------------------------------------------------------------
-s390 updates for the 5.7 merge window #2
-
-- The rest of fallthrough; annotations conversion.
-
-- Couple of fixes for ADD uevents in the common I/O layer.
-
-- Minor refactoring of the queued direct I/O code.
-
-----------------------------------------------------------------
-Cornelia Huck (2):
-      s390/cio: avoid duplicated 'ADD' uevents
-      s390/cio: generate delayed uevent for vfio-ccw subchannels
-
-Joe Perches (1):
-      s390/mm: use fallthrough;
-
-Julian Wiedmann (6):
-      s390/qdio: cleanly split alloc and establish
-      zfcp: inline zfcp_qdio_setup_init_data()
-      s390/qdio: allow for non-contiguous SBAL array in init_data
-      s390/qdio: remove cdev from init_data
-      s390/qdio: inline shared_ind()
-      s390/qdio: clear DSCI early for polling drivers
-
- arch/s390/include/asm/qdio.h      | 16 +++++-----
- arch/s390/mm/fault.c              |  2 --
- drivers/s390/cio/device.c         | 13 +++++---
- drivers/s390/cio/qdio.h           |  1 -
- drivers/s390/cio/qdio_debug.c     | 16 +---------
- drivers/s390/cio/qdio_debug.h     |  3 +-
- drivers/s390/cio/qdio_main.c      | 63 +++++++++++++++++++++++++------------
- drivers/s390/cio/qdio_setup.c     | 10 +++---
- drivers/s390/cio/qdio_thinint.c   | 28 ++---------------
- drivers/s390/cio/vfio_ccw_drv.c   |  5 +++
- drivers/s390/net/qeth_core.h      |  5 +--
- drivers/s390/net/qeth_core_main.c | 65 ++++++++-------------------------------
- drivers/s390/scsi/zfcp_qdio.c     | 51 +++++++++++++-----------------
- 13 files changed, 110 insertions(+), 168 deletions(-)
+>=20
+> ---
+> =46rom f42fb98cc627f9b960fd5b9a3a229da5c5dcf54a Mon Sep 17 00:00:00 =
+2001
+> From: Christoph Hellwig <hch@lst.de>
+> Date: Fri, 10 Apr 2020 07:14:13 +0200
+> Subject: block: fix busy device checking in blk_drop_partitions again
+>=20
+> The previous fix had an off by one in the bd_openers checking, =
+counting
+> the callers blkdev_get.
+>=20
+> Fixes: d3ef5536274f ("block: fix busy device checking in =
+blk_drop_partitions")
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+> block/partitions/core.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/block/partitions/core.c b/block/partitions/core.c
+> index 1a0a829d8416..bc1ded1331b1 100644
+> --- a/block/partitions/core.c
+> +++ b/block/partitions/core.c
+> @@ -496,7 +496,7 @@ int blk_drop_partitions(struct gendisk *disk, =
+struct block_device *bdev)
+>=20
+> 	if (!disk_part_scan_enabled(disk))
+> 		return 0;
+> -	if (bdev->bd_part_count || bdev->bd_openers)
+> +	if (bdev->bd_part_count || bdev->bd_openers > 1)
+> 		return -EBUSY;
+> 	res =3D invalidate_partition(disk, 0);
+> 	if (res)
+> --=20
+> 2.25.1
+>=20
 
