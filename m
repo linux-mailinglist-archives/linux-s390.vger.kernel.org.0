@@ -1,102 +1,111 @@
 Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
-Received: from vger.kernel.org (unknown [209.132.180.67])
-	by mail.lfdr.de (Postfix) with ESMTP id 144DC1A615A
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2020 03:37:57 +0200 (CEST)
+Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
+	by mail.lfdr.de (Postfix) with ESMTP id 84F181A65CF
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2020 13:49:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726990AbgDMBhz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sun, 12 Apr 2020 21:37:55 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.18]:60430 "EHLO
+        id S1729199AbgDMLt6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 Apr 2020 07:49:58 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43770 "EHLO
         lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726989AbgDMBhz (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Sun, 12 Apr 2020 21:37:55 -0400
-Received: from condef-02.nifty.com (condef-02.nifty.com [202.248.20.67])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 9EC6BC0A3BE0
-        for <linux-s390@vger.kernel.org>; Sun, 12 Apr 2020 18:37:55 -0700 (PDT)
-Received: from conuserg-10.nifty.com ([10.126.8.73])by condef-02.nifty.com with ESMTP id 03D1VfNO005254
-        for <linux-s390@vger.kernel.org>; Mon, 13 Apr 2020 10:31:41 +0900
-Received: from oscar.flets-west.jp (softbank060142179096.bbtec.net [60.142.179.96]) (authenticated)
-        by conuserg-10.nifty.com with ESMTP id 03D1VGPU011829;
-        Mon, 13 Apr 2020 10:31:19 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-10.nifty.com 03D1VGPU011829
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1586741480;
-        bh=e/AZEK440pcz6YJKP4Zb91ImUjAD3JIb/ifBlkwowP8=;
-        h=From:To:Cc:Subject:Date:From;
-        b=avtOUtVKvpGmoxMTC4HmCQC9aEymyl7Nc06cgsDEHdKvRhU0TkcCFNzB5ruX3h+hH
-         JyJGhmeh4kIQhrHBCDvkMg3b0Q19LwMQjzTKd0koRGvPbNcVLqDGq6gVQ7BoH/v1Jf
-         tbSofveBUGJmwOqH6w6VoM7g2oXPSDaA/PNN+OJd+WP3lLSsbfJgulu29YmsaY5NEQ
-         YxLrnIBTFi3O8wa3j4A/fwTmaBXDci0dRA5FRaBzU7N9b0TOaSOt8XdR4xwqyV+VdO
-         U4QSYHj27wu5VJjL25J8URIJitef0H1q+jPQIt+KmT2cyvT8hakrxltW6Ae3P8/l+2
-         rsk3xiN3AuZfw==
-X-Nifty-SrcIP: [60.142.179.96]
-From:   Masahiro Yamada <masahiroy@kernel.org>
-To:     Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org
-Cc:     Masahiro Yamada <masahiroy@kernel.org>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Nayna Jain <nayna@linux.ibm.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] s390: ptrace: hard-code "s390x" instead of UTS_MACHINE
-Date:   Mon, 13 Apr 2020 10:31:13 +0900
-Message-Id: <20200413013113.8529-1-masahiroy@kernel.org>
-X-Mailer: git-send-email 2.25.1
+        with ESMTP id S1729158AbgDMLtu (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Mon, 13 Apr 2020 07:49:50 -0400
+X-Greylist: delayed 500 seconds by postgrey-1.27 at vger.kernel.org; Mon, 13 Apr 2020 07:49:50 EDT
+Received: from mail-il1-x12e.google.com (mail-il1-x12e.google.com [IPv6:2607:f8b0:4864:20::12e])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3B2AAC0085B6
+        for <linux-s390@vger.kernel.org>; Mon, 13 Apr 2020 04:41:30 -0700 (PDT)
+Received: by mail-il1-x12e.google.com with SMTP id t10so992306ilg.9
+        for <linux-s390@vger.kernel.org>; Mon, 13 Apr 2020 04:41:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
+        b=prjS9vX1/lBHBQnmn8S5eSRPyVAkL53RoKQzE5AAHbxvNYI4a2v2cjTji7kXTppOEc
+         z/YC5TVvRJiGk2ecDbuxQbDezIHvoL12TwU8A8MoLDqkPTvq0EUKN12xVXuoac5P5vPG
+         CDxQUahEZp79myUg0SW4XqnobzWbEdaMDOCEcwJOYEkU2vBAFQtTx1QiAdzIaX9heUrh
+         wXqF9HmIVWbzu+LjtyhWb9YxG3jDJu9H0/2YRuWHtIWQg0GYyRRf+7+N2+T4/5hNzYkA
+         0Td5bmAVNGOZBhXtNLv8DRN8PKs1LisEF6odwJbW1cWSeUhqmMnZAT2UKZl4iJ1E/PV6
+         qofQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=qlKWExEze9qCqlwbpw1q4+d2Zjr4ETGVa64TcX+dTlk=;
+        b=rhFs1SwRt+VtC+10PmSyrzP34II8Ax0NJ7c2hMbpvC1DhcGgF9RhEHeywCCkrO55Sp
+         xjlL/pKc+jbaxKjIDrbNxCinn2pnFneOHmIHe+P0wc0LbY2Dal6lkK/hGXo8SQvhV37j
+         EaHgBcmhHJ+BrJ3wKtJvQiqHM3FMdwSdFyqFHQOSO5ZyzyyN+ZO3CA/Z0K91s6vYwJrI
+         5YgBbxnEpBmxaPPpRUgHDLXKMgJp+OS6Vtjy4KiSBOpFJgARRWSwuEDl7ZEknMIKsdaa
+         zxDTkGKh9vJR0jmG9F00d05SGpd4xwc5xiwb+z10Cu4xC62xq9kAMZ1vb7q18Hc6ohj6
+         wgbg==
+X-Gm-Message-State: AGi0Pub0o9TIvs/QtjMNpm/Zzjz3+auwQk87ndCz3yN2OYV4SRBI1/56
+        kl0ej9hsa1hpISXUJ3zPoEspwFpH2pXRwqRWWQ==
+X-Google-Smtp-Source: APiQypL8TqJIeu3sv8q1i+SGhGHI+g2m6cjavfj0dEc+5JPmC3aVP4wfZgyktqWXbHy6/UF7VoKUuS2YyJ3E1gwa7Hs=
+X-Received: by 2002:a92:cccb:: with SMTP id u11mr9656514ilq.8.1586778089638;
+ Mon, 13 Apr 2020 04:41:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: by 2002:a02:5e49:0:0:0:0:0 with HTTP; Mon, 13 Apr 2020 04:41:28
+ -0700 (PDT)
+Reply-To: mgbenin903@gmail.com
+From:   Barrister Robert Richter UN-Attorney at Law Court-Benin 
+        <info.zennitbankplcnigerian@gmail.com>
+Date:   Mon, 13 Apr 2020 13:41:28 +0200
+Message-ID: <CABHzvrngm=rA5Ct9h+JGdbyDfHJmnfntceDPoyJToo8PZn+YZg@mail.gmail.com>
+Subject: I have already sent you first payment US$5000.00 this morning through
+ MONEY Gram service.it is available to pick up in address now.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-s390 uses the UTS_MACHINE defined arch/s390/Makefile as follows:
+ATTN DEAR BENEFICIARY.
 
-  UTS_MACHINE     := s390x
+GOOD NEWS.
 
-We do not need to pass the fixed string from the command line.
-Hard-code user_regset_view::name, like many other architectures do.
+I have already sent you first payment US$5000.00 this morning through
+MONEY Gram service.it is available to pick up in address now.
 
-Signed-off-by: Masahiro Yamada <masahiroy@kernel.org>
----
+So we advise you to Contact This Money Gram office to pick up your
+transfer $US5000.00 today.
 
- arch/s390/kernel/Makefile | 5 -----
- arch/s390/kernel/ptrace.c | 2 +-
- 2 files changed, 1 insertion(+), 6 deletions(-)
 
-diff --git a/arch/s390/kernel/Makefile b/arch/s390/kernel/Makefile
-index 75f26d775027..a8f136943deb 100644
---- a/arch/s390/kernel/Makefile
-+++ b/arch/s390/kernel/Makefile
-@@ -33,11 +33,6 @@ CFLAGS_stacktrace.o	+= -fno-optimize-sibling-calls
- CFLAGS_dumpstack.o	+= -fno-optimize-sibling-calls
- CFLAGS_unwind_bc.o	+= -fno-optimize-sibling-calls
- 
--#
--# Pass UTS_MACHINE for user_regset definition
--#
--CFLAGS_ptrace.o		+= -DUTS_MACHINE='"$(UTS_MACHINE)"'
--
- obj-y	:= traps.o time.o process.o base.o early.o setup.o idle.o vtime.o
- obj-y	+= processor.o sys_s390.o ptrace.o signal.o cpcmd.o ebcdic.o nmi.o
- obj-y	+= debug.o irq.o ipl.o dis.o diag.o vdso.o
-diff --git a/arch/s390/kernel/ptrace.c b/arch/s390/kernel/ptrace.c
-index 58faa12542a1..994a8b86edae 100644
---- a/arch/s390/kernel/ptrace.c
-+++ b/arch/s390/kernel/ptrace.c
-@@ -1416,7 +1416,7 @@ static const struct user_regset s390_regsets[] = {
- };
- 
- static const struct user_regset_view user_s390_view = {
--	.name = UTS_MACHINE,
-+	.name = "s390x",
- 	.e_machine = EM_S390,
- 	.regsets = s390_regsets,
- 	.n = ARRAY_SIZE(s390_regsets)
--- 
-2.25.1
+Note that your compensation payment funds is total amount $US2.800,000
+Million Dollars.We have instructed the Money Gram Agent,Mr. James
+Gadner to keep sending the transfer to you daily, but the maximum
+amount you will be receiving everyday is US$5000.00. Contact Agent now
+to pick up your first payment $US5000.00 immediately.
 
+Contact Person, Mr. James Gadner, Dir. Money Gram Benin.
+Email: mgbenin903@gmail.com
+Telephone Numbers: +229 62819378/ +229 98477762
+
+HERE IS YOUR PAYMENT DETAILS FOR THE FIRST =C2=A3US5000.00 SENT TODAY.
+
+Track View Website link:
+https://secure.moneygram.com/track
+Sender=E2=80=99s First name: David
+Sender=E2=80=99s Last Name: Joiner
+Money Transfer Control Number (MTCN) (REFERENCE)# 26046856
+
+Contact the Mmoney Gram Urgent and reconfirm your address to the
+office before, they will allow you to pick up the transfer today.
+
+HERE IS WHAT REQUIRED OF YOU.
+
+YOUR FULL NAME---------
+ADDRESS--------------
+COUNTRY-----------------------------
+TELEPHONE NUMBERS-----------------
+
+Note, I paid the transfer fee for you, but only you are required to
+send to the office is $75 only,Been Your Payment File activation fee,
+Send once you contact the office,before you can able to pick up your
+transfer today.
+
+Let me know once you pick up first payment today.
+
+Barrister Robert Richter UN-Attorney at Law Court-Benin
