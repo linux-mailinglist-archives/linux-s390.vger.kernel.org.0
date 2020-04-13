@@ -2,128 +2,117 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DA7EB1A6EB1
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2020 23:53:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 701C11A6EE9
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 00:10:54 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389287AbgDMVxD (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 13 Apr 2020 17:53:03 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:22007 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389295AbgDMVwp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Mon, 13 Apr 2020 17:52:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586814764;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wxqewLP4iDn0WQn56N4JoZnVO/VnkSCHun6WFS8TA58=;
-        b=ZtXlUR+jTPnPN3iCA/WKmMCiPRo/hAbmohSMyJGHGYT5o6A8cEKHi7627TDTDbNJ1TeeIo
-        p8bBsVkbQlAOOZyLatf6AQfHgPPE8r3rc+shdpzSFQy3NMuUjhIpz78Cva0U8Z66l77Jjy
-        UVK9pTbtiTQkMRsi9aA4mLn8axE6Yp8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-238-R_QYnAHVPD67nMQL-Amo0w-1; Mon, 13 Apr 2020 17:52:38 -0400
-X-MC-Unique: R_QYnAHVPD67nMQL-Amo0w-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F1B928018AA;
-        Mon, 13 Apr 2020 21:52:32 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-115-28.rdu2.redhat.com [10.10.115.28])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id AB5E15C1B2;
-        Mon, 13 Apr 2020 21:52:24 +0000 (UTC)
-Subject: Re: [PATCH 2/2] crypto: Remove unnecessary memzero_explicit()
-To:     Joe Perches <joe@perches.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>
-Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413211550.8307-3-longman@redhat.com>
- <efd6ceb1f182aa7364e9706422768a1c1335aee4.camel@perches.com>
-From:   Waiman Long <longman@redhat.com>
-Organization: Red Hat
-Message-ID: <7e13a94b-2e92-850f-33f7-0f42cfcd9009@redhat.com>
-Date:   Mon, 13 Apr 2020 17:52:24 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
-MIME-Version: 1.0
-In-Reply-To: <efd6ceb1f182aa7364e9706422768a1c1335aee4.camel@perches.com>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+        id S2389458AbgDMWKx (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 Apr 2020 18:10:53 -0400
+Received: from mga06.intel.com ([134.134.136.31]:28746 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727871AbgDMWKv (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 13 Apr 2020 18:10:51 -0400
+IronPort-SDR: UjJnjSWF//cJkwdYQChy7N95T/itK2TTMoDnuKjFyWRCpF+FVOjybsxBTFtuL47UvUnyoYZAUN
+ C/n7wCi1gn1w==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga104.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Apr 2020 15:10:51 -0700
+IronPort-SDR: JDDj75TY0RQWmARuE0Xi/GlC0/H86xFO5b0ySd1j8fwE8sDPolTRHc1UN0cL/FNVTr9odVA0lc
+ CPOqlLX5jQDA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,380,1580803200"; 
+   d="scan'208";a="268335512"
+Received: from orsmsx104.amr.corp.intel.com ([10.22.225.131])
+  by orsmga008.jf.intel.com with ESMTP; 13 Apr 2020 15:10:51 -0700
+Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
+ ORSMSX104.amr.corp.intel.com ([169.254.4.76]) with mapi id 14.03.0439.000;
+ Mon, 13 Apr 2020 15:10:51 -0700
+From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
+To:     "heiko@sntech.de" <heiko@sntech.de>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "robdclark@gmail.com" <robdclark@gmail.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>,
+        "agross@kernel.org" <agross@kernel.org>
+CC:     "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "jroedel@suse.de" <jroedel@suse.de>
+Subject: Re: [RFC PATCH 11/34] iommu: Split off default domain allocation
+ from group assignment
+Thread-Topic: [RFC PATCH 11/34] iommu: Split off default domain allocation
+ from group assignment
+Thread-Index: AQHWDQv5OT53tBkslE6hk6FAwlK+4qh4HAeA
+Date:   Mon, 13 Apr 2020 22:10:50 +0000
+Message-ID: <6a801ff9e6471bda7c6f510dfa2ba7e7c35cb559.camel@intel.com>
+References: <20200407183742.4344-1-joro@8bytes.org>
+         <20200407183742.4344-12-joro@8bytes.org>
+In-Reply-To: <20200407183742.4344-12-joro@8bytes.org>
+Accept-Language: en-US
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.255.0.111]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <32CCA6BEC8F53949916D97ED0C44AA2D@intel.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 4/13/20 5:31 PM, Joe Perches wrote:
-> On Mon, 2020-04-13 at 17:15 -0400, Waiman Long wrote:
->> Since kfree_sensitive() will do an implicit memzero_explicit(), there
->> is no need to call memzero_explicit() before it. Eliminate those
->> memzero_explicit() and simplify the call sites.
-> 2 bits of trivia:
->
->> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
-> []
->> @@ -391,10 +388,7 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher *tfm, const u8 *key,
->>  		dev_dbg(ce->dev, "ERROR: Invalid keylen %u\n", keylen);
->>  		return -EINVAL;
->>  	}
->> -	if (op->key) {
->> -		memzero_explicit(op->key, op->keylen);
->> -		kfree(op->key);
->> -	}
->> +	kfree_sensitive(op->key);
->>  	op->keylen = keylen;
->>  	op->key = kmemdup(key, keylen, GFP_KERNEL | GFP_DMA);
->>  	if (!op->key)
-> It might be a defect to set op->keylen before the kmemdup succeeds.
-It could be. I can move it down after the op->key check.
->> @@ -416,10 +410,7 @@ int sun8i_ce_des3_setkey(struct crypto_skcipher *tfm, const u8 *key,
->>  	if (err)
->>  		return err;
->>  
->> -	if (op->key) {
->> -		memzero_explicit(op->key, op->keylen);
->> -		kfree(op->key);
->> -	}
->> +	free_sensitive(op->key, op->keylen);
-> Why not kfree_sensitive(op->key) ?
-
-Oh, it is a bug. I will send out v2 to fix that.
-
-Thanks for spotting it.
-
-Cheers,
-Longman
-
-
->
->
-
+SGkgSm9lcmcsDQoNCk9uIFR1ZSwgMjAyMC0wNC0wNyBhdCAyMDozNyArMDIwMCwgSm9lcmcgUm9l
+ZGVsIHdyb3RlOg0KPiBGcm9tOiBKb2VyZyBSb2VkZWwgPGpyb2VkZWxAc3VzZS5kZT4NCj4gDQo+
+IFdoZW4gYSBidXMgaXMgaW5pdGlhbGl6ZWQgd2l0aCBpb21tdS1vcHMsIGFsbCBkZXZpY2VzIG9u
+IHRoZSBidXMgYXJlDQo+IHNjYW5uZWQgYW5kIGlvbW11LWdyb3VwcyBhcmUgYWxsb2NhdGVkIGZv
+ciB0aGVtLCBhbmQgZWFjaCBncm91cHMgd2lsbA0KPiBhbHNvIGdldCBhIGRlZmF1bHQgZG9tYWlu
+IGFsbG9jYXRlZC4NCj4gDQo+IFVudGlsIG5vdyB0aGlzIGhhcHBlbmVkIGFzIHNvb24gYXMgdGhl
+IGdyb3VwIHdhcyBjcmVhdGVkIGFuZCB0aGUgZmlyc3QNCj4gZGV2aWNlIGFkZGVkIHRvIGl0LiBX
+aGVuIG90aGVyIGRldmljZXMgd2l0aCBkaWZmZXJlbnQgZGVmYXVsdCBkb21haW4NCj4gcmVxdWly
+ZW1lbnRzIHdlcmUgYWRkZWQgdG8gdGhlIGdyb3VwIGxhdGVyIG9uLCB0aGUgZGVmYXVsdCBkb21h
+aW4gd2FzDQo+IHJlLWFsbG9jYXRlZCwgaWYgcG9zc2libGUuDQo+IA0KPiBUaGlzIHJlc3VsdGVk
+IGluIHNvbWUgYmFjayBhbmQgZm9ydGggYW5kIHVubmVjZXNzYXJ5IGFsbG9jYXRpb25zLCBzbw0K
+PiBjaGFuZ2UgdGhlIGZsb3cgdG8gZGVmZXIgZGVmYXVsdCBkb21haW4gYWxsb2NhdGlvbiB1bnRp
+bCBhbGwgZGV2aWNlcw0KPiBoYXZlIGJlZW4gYWRkZWQgdG8gdGhlaXIgcmVzcGVjdGl2ZSBJT01N
+VSBncm91cHMuDQo+IA0KPiBUaGUgZGVmYXVsdCBkb21haW5zIGFyZSBhbGxvY2F0ZWQgZm9yIG5l
+d2x5IGFsbG9jYXRlZCBncm91cHMgYWZ0ZXINCj4gZWFjaCBkZXZpY2Ugb24gdGhlIGJ1cyBpcyBo
+YW5kbGVkIGFuZCB3YXMgcHJvYmVkIGJ5IHRoZSBJT01NVSBkcml2ZXIuDQo+IA0KPiBTaWduZWQt
+b2ZmLWJ5OiBKb2VyZyBSb2VkZWwgPGpyb2VkZWxAc3VzZS5kZT4NCj4gLS0tDQpbc25pcF0NCg0K
+DQpJIGhhZCB0byBhZGQgdGhlIGZvbGxvd2luZyBmb3IgaW5pdGlhbCBWTUQgc3VwcG9ydC4gVGhl
+IG5ldyBQQ0llIGRvbWFpbg0KYWRkZWQgb24gVk1EIGVuZHBvaW50IHByb2JlIGRpZG4ndCBoYXZl
+IHRoZSBkZXZfaW9tbXUgbWVtYmVyIHNldCBvbiB0aGUNClZNRCBzdWJkZXZpY2VzLCB3aGljaCBJ
+J20gZ3Vlc3NpbmcgaXMgZHVlIHRvIHByb2JlX2lvbW11X2dyb3VwIGFscmVhZHkNCmhhdmluZyBi
+ZWVuIHJ1biBvbiB0aGUgVk1EIGVuZHBvaW50J3MgZ3JvdXAgcHJpb3IgdG8gdGhvc2Ugc3ViZGV2
+aWNlcw0KYmVpbmcgYWRkZWQuDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2lvbW11L2lvbW11LmMg
+Yi9kcml2ZXJzL2lvbW11L2lvbW11LmMNCmluZGV4IDhhNWUxYWMzMjhkZC4uYWMxZTRmYjliZjQ4
+IDEwMDY0NA0KLS0tIGEvZHJpdmVycy9pb21tdS9pb21tdS5jDQorKysgYi9kcml2ZXJzL2lvbW11
+L2lvbW11LmMNCkBAIC0xNTc3LDYgKzE1NzcsOSBAQCBzdGF0aWMgaW50IGlvbW11X2J1c19ub3Rp
+ZmllcihzdHJ1Y3Qgbm90aWZpZXJfYmxvY2sgKm5iLA0KICAgICAgICBpZiAoYWN0aW9uID09IEJV
+U19OT1RJRllfQUREX0RFVklDRSkgew0KICAgICAgICAgICAgICAgIGludCByZXQ7DQogDQorICAg
+ICAgICAgICAgICAgaWYgKCFkZXZfaW9tbXVfZ2V0KGRldikpDQorICAgICAgICAgICAgICAgICAg
+ICAgICByZXR1cm4gLUVOT01FTTsNCisNCiAgICAgICAgICAgICAgICByZXQgPSBpb21tdV9wcm9i
+ZV9kZXZpY2UoZGV2KTsNCiAgICAgICAgICAgICAgICByZXR1cm4gKHJldCkgPyBOT1RJRllfRE9O
+RSA6IE5PVElGWV9PSzsNCiAgICAgICAgfSBlbHNlIGlmIChhY3Rpb24gPT0gQlVTX05PVElGWV9S
+RU1PVkVEX0RFVklDRSkgew0K
