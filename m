@@ -2,45 +2,279 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id C90B31A6744
-	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2020 15:41:51 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C96131A6779
+	for <lists+linux-s390@lfdr.de>; Mon, 13 Apr 2020 16:04:09 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbgDMNlv (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 13 Apr 2020 09:41:51 -0400
-Received: from verein.lst.de ([213.95.11.211]:34828 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730085AbgDMNlu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 13 Apr 2020 09:41:50 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id 9C1ED68BEB; Mon, 13 Apr 2020 15:41:47 +0200 (CEST)
-Date:   Mon, 13 Apr 2020 15:41:47 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
-Cc:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>
-Subject: Re: [PATCH 03/10] block: cleanup hd_struct freeing
-Message-ID: <20200413134147.GA16386@lst.de>
-References: <20200408194439.1580699-1-hch@lst.de> <20200408194439.1580699-4-hch@lst.de> <SN4PR0401MB3598FDA8DB67BE8337A4C16B9BC10@SN4PR0401MB3598.namprd04.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN4PR0401MB3598FDA8DB67BE8337A4C16B9BC10@SN4PR0401MB3598.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+        id S1730268AbgDMOEB (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 13 Apr 2020 10:04:01 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:58605 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730248AbgDMOEA (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 13 Apr 2020 10:04:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586786637;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc; bh=DMxjnALOO+13jpd4EXyv1/+VreDyJBNjIrO01oQGGFU=;
+        b=LllGleyit1IfVZMQ5DZY2OMkI+OxhklPPVCjm0deGUj2wOvNS5HY5jrzJBM3e5jF2mOy77
+        vciUMD9DbzgWgDxB+CTvTMvl2Kl/SDAuQT3t9ZUOlCmboXHOLMqrSrwYjyYl2jizwM8eys
+        YHjWE/NMhbfTmktYWoCnnvuKY6Pk9+w=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-361-kFdAhPuzNkOQxqZivSqjtA-1; Mon, 13 Apr 2020 10:03:56 -0400
+X-MC-Unique: kFdAhPuzNkOQxqZivSqjtA-1
+Received: by mail-wr1-f72.google.com with SMTP id o12so3677124wra.14
+        for <linux-s390@vger.kernel.org>; Mon, 13 Apr 2020 07:03:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=DMxjnALOO+13jpd4EXyv1/+VreDyJBNjIrO01oQGGFU=;
+        b=DKNwNF+HHYJ3pZ5dtE5sl3E+GvTSFuwkr+YY81YvtBPDM2erOdCN3ekl8j+5VyJvAo
+         3aFA5BHuk8K8W+cVd1eQY3rTgGE68qL6l30/dkJDsQXrN3uxcZL3XTnTjYcFGyiyHu4n
+         /XNIrG9XMQ563ho6oxNypckEbIrRjRy5GkF4/9AqK2hceTe3k1+Hv8B5+8rBbb0IAbx4
+         rCVNx3CtJFsJG7vYWuNvRX7aymwdrVrP0bBvFHMRKpYYkOpiNwoqr7bSHZp7ByA7ppcz
+         QMuypvMl/p2muKn/+lrXFhYHz3P75jR4247r5qqwGchqY7dAXPnB45c13mJdAS2LVH+z
+         2sTg==
+X-Gm-Message-State: AGi0PuaMT7XJ0adv3MjVNLf60D4GqFObNZmJOLZKWfcZHy0XF0JyW3cZ
+        Ery9g3VeI5/1ZIvOaQbTvg8YYLhcqJ06U60VL/+QRQDhfCCX2oWIYe5Mu5Z/z0Gy7K/8VKeCaXU
+        eoJpsT428ry0cAxs9TDvjfQ==
+X-Received: by 2002:adf:fc4c:: with SMTP id e12mr18660284wrs.265.1586786634645;
+        Mon, 13 Apr 2020 07:03:54 -0700 (PDT)
+X-Google-Smtp-Source: APiQypLRZJuELUsSHD7peAwU3uRWTiihVpgUEtD1l8rr9Jo5lHrC+5Swh69bNDnIpYlTippwc8wt9Q==
+X-Received: by 2002:adf:fc4c:: with SMTP id e12mr18660255wrs.265.1586786634361;
+        Mon, 13 Apr 2020 07:03:54 -0700 (PDT)
+Received: from emanuele-MacBookPro.redhat.com ([194.230.155.239])
+        by smtp.gmail.com with ESMTPSA id j10sm11726263wmi.18.2020.04.13.07.03.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 13 Apr 2020 07:03:53 -0700 (PDT)
+From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
+To:     kvm@vger.kernel.org
+Cc:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry.kdev@gmail.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Emanuele Giuseppe Esposito <eesposit@redhat.com>,
+        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
+        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH] kvm_host: unify VM_STAT and VCPU_STAT definitions in a single place
+Date:   Mon, 13 Apr 2020 16:03:32 +0200
+Message-Id: <20200413140332.22896-1-eesposit@redhat.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 11:30:19AM +0000, Johannes Thumshirn wrote:
-> On 08/04/2020 21:45, Christoph Hellwig wrote:
-> > -	struct hd_struct *part = container_of(to_rcu_work(work), struct hd_struct,
-> > -					rcu_work);
-> > +	struct hd_struct *part =
-> > +		container_of(to_rcu_work(work), struct hd_struct, rcu_work);
-> 
-> That looks like an unneeded white space only change
+The macros VM_STAT and VCPU_STAT are redundantly implemented in multiple
+files, each used by a different architecure to initialize the debugfs
+entries for statistics. Since they all have the same purpose, they can be
+unified in a single common definition in include/linux/kvm_host.h
 
-It was intentional as I was touching the code right next to it anyway..
+Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
+---
+ arch/arm64/kvm/guest.c    | 23 +++++++--------
+ arch/mips/kvm/mips.c      | 61 +++++++++++++++++++--------------------
+ arch/powerpc/kvm/book3s.c |  3 --
+ arch/powerpc/kvm/booke.c  |  3 --
+ arch/s390/kvm/kvm-s390.c  |  3 --
+ arch/x86/kvm/x86.c        |  3 --
+ include/linux/kvm_host.h  |  3 ++
+ 7 files changed, 43 insertions(+), 56 deletions(-)
+
+diff --git a/arch/arm64/kvm/guest.c b/arch/arm64/kvm/guest.c
+index 23ebe51410f0..3e3aee8b37c0 100644
+--- a/arch/arm64/kvm/guest.c
++++ b/arch/arm64/kvm/guest.c
+@@ -29,20 +29,17 @@
+ 
+ #include "trace.h"
+ 
+-#define VM_STAT(x) { #x, offsetof(struct kvm, stat.x), KVM_STAT_VM }
+-#define VCPU_STAT(x) { #x, offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU }
+-
+ struct kvm_stats_debugfs_item debugfs_entries[] = {
+-	VCPU_STAT(halt_successful_poll),
+-	VCPU_STAT(halt_attempted_poll),
+-	VCPU_STAT(halt_poll_invalid),
+-	VCPU_STAT(halt_wakeup),
+-	VCPU_STAT(hvc_exit_stat),
+-	VCPU_STAT(wfe_exit_stat),
+-	VCPU_STAT(wfi_exit_stat),
+-	VCPU_STAT(mmio_exit_user),
+-	VCPU_STAT(mmio_exit_kernel),
+-	VCPU_STAT(exits),
++	{ "halt_successful_poll", VCPU_STAT(halt_successful_poll) },
++	{ "halt_attempted_poll", VCPU_STAT(halt_attempted_poll) },
++	{ "halt_poll_invalid", VCPU_STAT(halt_poll_invalid) },
++	{ "halt_wakeup", VCPU_STAT(halt_wakeup) },
++	{ "hvc_exit_stat", VCPU_STAT(hvc_exit_stat) },
++	{ "wfe_exit_stat", VCPU_STAT(wfe_exit_stat) },
++	{ "wfi_exit_stat", VCPU_STAT(wfi_exit_stat) },
++	{ "mmio_exit_user", VCPU_STAT(mmio_exit_user) },
++	{ "mmio_exit_kernel", VCPU_STAT(mmio_exit_kernel) },
++	{ "exits", VCPU_STAT(exits) },
+ 	{ NULL }
+ };
+ 
+diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+index 8f05dd0a0f4e..f14b93d02f02 100644
+--- a/arch/mips/kvm/mips.c
++++ b/arch/mips/kvm/mips.c
+@@ -39,40 +39,39 @@
+ #define VECTORSPACING 0x100	/* for EI/VI mode */
+ #endif
+ 
+-#define VCPU_STAT(x) offsetof(struct kvm_vcpu, stat.x)
+ struct kvm_stats_debugfs_item debugfs_entries[] = {
+-	{ "wait",	  VCPU_STAT(wait_exits),	 KVM_STAT_VCPU },
+-	{ "cache",	  VCPU_STAT(cache_exits),	 KVM_STAT_VCPU },
+-	{ "signal",	  VCPU_STAT(signal_exits),	 KVM_STAT_VCPU },
+-	{ "interrupt",	  VCPU_STAT(int_exits),		 KVM_STAT_VCPU },
+-	{ "cop_unusable", VCPU_STAT(cop_unusable_exits), KVM_STAT_VCPU },
+-	{ "tlbmod",	  VCPU_STAT(tlbmod_exits),	 KVM_STAT_VCPU },
+-	{ "tlbmiss_ld",	  VCPU_STAT(tlbmiss_ld_exits),	 KVM_STAT_VCPU },
+-	{ "tlbmiss_st",	  VCPU_STAT(tlbmiss_st_exits),	 KVM_STAT_VCPU },
+-	{ "addrerr_st",	  VCPU_STAT(addrerr_st_exits),	 KVM_STAT_VCPU },
+-	{ "addrerr_ld",	  VCPU_STAT(addrerr_ld_exits),	 KVM_STAT_VCPU },
+-	{ "syscall",	  VCPU_STAT(syscall_exits),	 KVM_STAT_VCPU },
+-	{ "resvd_inst",	  VCPU_STAT(resvd_inst_exits),	 KVM_STAT_VCPU },
+-	{ "break_inst",	  VCPU_STAT(break_inst_exits),	 KVM_STAT_VCPU },
+-	{ "trap_inst",	  VCPU_STAT(trap_inst_exits),	 KVM_STAT_VCPU },
+-	{ "msa_fpe",	  VCPU_STAT(msa_fpe_exits),	 KVM_STAT_VCPU },
+-	{ "fpe",	  VCPU_STAT(fpe_exits),		 KVM_STAT_VCPU },
+-	{ "msa_disabled", VCPU_STAT(msa_disabled_exits), KVM_STAT_VCPU },
+-	{ "flush_dcache", VCPU_STAT(flush_dcache_exits), KVM_STAT_VCPU },
++	{ "wait",	  VCPU_STAT(wait_exits) },
++	{ "cache",	  VCPU_STAT(cache_exits) },
++	{ "signal",	  VCPU_STAT(signal_exits) },
++	{ "interrupt",	  VCPU_STAT(int_exits) },
++	{ "cop_unusable", VCPU_STAT(cop_unusable_exits) },
++	{ "tlbmod",	  VCPU_STAT(tlbmod_exits) },
++	{ "tlbmiss_ld",	  VCPU_STAT(tlbmiss_ld_exits) },
++	{ "tlbmiss_st",	  VCPU_STAT(tlbmiss_st_exits) },
++	{ "addrerr_st",	  VCPU_STAT(addrerr_st_exits) },
++	{ "addrerr_ld",	  VCPU_STAT(addrerr_ld_exits) },
++	{ "syscall",	  VCPU_STAT(syscall_exits) },
++	{ "resvd_inst",	  VCPU_STAT(resvd_inst_exits) },
++	{ "break_inst",	  VCPU_STAT(break_inst_exits) },
++	{ "trap_inst",	  VCPU_STAT(trap_inst_exits) },
++	{ "msa_fpe",	  VCPU_STAT(msa_fpe_exits) },
++	{ "fpe",	  VCPU_STAT(fpe_exits) },
++	{ "msa_disabled", VCPU_STAT(msa_disabled_exits) },
++	{ "flush_dcache", VCPU_STAT(flush_dcache_exits) },
+ #ifdef CONFIG_KVM_MIPS_VZ
+-	{ "vz_gpsi",	  VCPU_STAT(vz_gpsi_exits),	 KVM_STAT_VCPU },
+-	{ "vz_gsfc",	  VCPU_STAT(vz_gsfc_exits),	 KVM_STAT_VCPU },
+-	{ "vz_hc",	  VCPU_STAT(vz_hc_exits),	 KVM_STAT_VCPU },
+-	{ "vz_grr",	  VCPU_STAT(vz_grr_exits),	 KVM_STAT_VCPU },
+-	{ "vz_gva",	  VCPU_STAT(vz_gva_exits),	 KVM_STAT_VCPU },
+-	{ "vz_ghfc",	  VCPU_STAT(vz_ghfc_exits),	 KVM_STAT_VCPU },
+-	{ "vz_gpa",	  VCPU_STAT(vz_gpa_exits),	 KVM_STAT_VCPU },
+-	{ "vz_resvd",	  VCPU_STAT(vz_resvd_exits),	 KVM_STAT_VCPU },
++	{ "vz_gpsi",	  VCPU_STAT(vz_gpsi_exits) },
++	{ "vz_gsfc",	  VCPU_STAT(vz_gsfc_exits) },
++	{ "vz_hc",	  VCPU_STAT(vz_hc_exits) },
++	{ "vz_grr",	  VCPU_STAT(vz_grr_exits) },
++	{ "vz_gva",	  VCPU_STAT(vz_gva_exits) },
++	{ "vz_ghfc",	  VCPU_STAT(vz_ghfc_exits) },
++	{ "vz_gpa",	  VCPU_STAT(vz_gpa_exits) },
++	{ "vz_resvd",	  VCPU_STAT(vz_resvd_exits) },
+ #endif
+-	{ "halt_successful_poll", VCPU_STAT(halt_successful_poll), KVM_STAT_VCPU },
+-	{ "halt_attempted_poll", VCPU_STAT(halt_attempted_poll), KVM_STAT_VCPU },
+-	{ "halt_poll_invalid", VCPU_STAT(halt_poll_invalid), KVM_STAT_VCPU },
+-	{ "halt_wakeup",  VCPU_STAT(halt_wakeup),	 KVM_STAT_VCPU },
++	{ "halt_successful_poll", VCPU_STAT(halt_successful_poll) },
++	{ "halt_attempted_poll", VCPU_STAT(halt_attempted_poll) },
++	{ "halt_poll_invalid", VCPU_STAT(halt_poll_invalid) },
++	{ "halt_wakeup",  VCPU_STAT(halt_wakeup) },
+ 	{NULL}
+ };
+ 
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index 5690a1f9b976..55cb728ba06e 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -36,9 +36,6 @@
+ #include "book3s.h"
+ #include "trace.h"
+ 
+-#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
+-#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
+-
+ /* #define EXIT_DEBUG */
+ 
+ struct kvm_stats_debugfs_item debugfs_entries[] = {
+diff --git a/arch/powerpc/kvm/booke.c b/arch/powerpc/kvm/booke.c
+index 6c18ea88fd25..fb8fa7060804 100644
+--- a/arch/powerpc/kvm/booke.c
++++ b/arch/powerpc/kvm/booke.c
+@@ -35,9 +35,6 @@
+ 
+ unsigned long kvmppc_booke_handlers;
+ 
+-#define VM_STAT(x) offsetof(struct kvm, stat.x), KVM_STAT_VM
+-#define VCPU_STAT(x) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU
+-
+ struct kvm_stats_debugfs_item debugfs_entries[] = {
+ 	{ "mmio",       VCPU_STAT(mmio_exits) },
+ 	{ "sig",        VCPU_STAT(signal_exits) },
+diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+index 19a81024fe16..1a7bf8759750 100644
+--- a/arch/s390/kvm/kvm-s390.c
++++ b/arch/s390/kvm/kvm-s390.c
+@@ -57,9 +57,6 @@
+ #define VCPU_IRQS_MAX_BUF (sizeof(struct kvm_s390_irq) * \
+ 			   (KVM_MAX_VCPUS + LOCAL_IRQS))
+ 
+-#define VCPU_STAT(x) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU
+-#define VM_STAT(x) offsetof(struct kvm, stat.x), KVM_STAT_VM
+-
+ struct kvm_stats_debugfs_item debugfs_entries[] = {
+ 	{ "userspace_handled", VCPU_STAT(exit_userspace) },
+ 	{ "exit_null", VCPU_STAT(exit_null) },
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index b8124b562dea..fb035d304004 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -97,9 +97,6 @@ static u64 __read_mostly efer_reserved_bits = ~((u64)EFER_SCE);
+ 
+ static u64 __read_mostly cr4_reserved_bits = CR4_RESERVED_BITS;
+ 
+-#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
+-#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
+-
+ #define KVM_X2APIC_API_VALID_FLAGS (KVM_X2APIC_API_USE_32BIT_IDS | \
+                                     KVM_X2APIC_API_DISABLE_BROADCAST_QUIRK)
+ 
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 6d58beb65454..e02d38c7fff1 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -1130,6 +1130,9 @@ struct kvm_stats_debugfs_item {
+ #define KVM_DBGFS_GET_MODE(dbgfs_item)                                         \
+ 	((dbgfs_item)->mode ? (dbgfs_item)->mode : 0644)
+ 
++#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
++#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
++
+ extern struct kvm_stats_debugfs_item debugfs_entries[];
+ extern struct dentry *kvm_debugfs_dir;
+ 
+-- 
+2.17.1
+
