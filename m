@@ -2,100 +2,97 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F174C1A81C3
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 17:14:24 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 672DF1A82B9
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 17:29:07 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437530AbgDNPOS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Apr 2020 11:14:18 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:54473 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437681AbgDNPNt (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 11:13:49 -0400
-Received: by mail-wm1-f65.google.com with SMTP id h2so13341992wmb.4;
-        Tue, 14 Apr 2020 08:13:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=HmBLSR0xc1v+9c640X8yq/gCGBtmZiJRhg2yrai8Uso=;
-        b=D14QHr9SaRvNqJrN7V4ylJqJZJppU9twbzkK/fNI+KX4UE4L+iib2DfQxpN0Kyf9k0
-         0jWxU8/32Xv3x3XlfJ86tDihFLVOxvOlzEi+ZMdwJLITS8dFK0BX1BnSFMbIukqCz67j
-         Ry1D6UKhhWu8p54BC/8irvBUyM3rgmP6+q/b2UJkE1sNp9+K1kUVaK3Hqvzd2UaPuxIZ
-         anSMQsSW2BVe26VRK/LLL2FrqobB6z1ttZtlJECb+JJs28wjdhWhRht82hzPbhtmGZQY
-         R0TVcuvCAw7BpJsD+qr74o0Ega4Th5Rzz6uz0/Q9BGJM7Sc2yzOzFgFMlpPGsGilpct1
-         7zIg==
-X-Gm-Message-State: AGi0PuZzw+k35gwrD6pHLwZlJLjT1GDlWp2uALnwrcBTshm1PN1umiRv
-        3/JHGYY/h+9WzdYhOwjiHQA=
-X-Google-Smtp-Source: APiQypKJS2zs752mK3EmkKLPxDY+LMikzE4AHuLMlZzMU6rlOFHrjCq5D1gZZCfYEUzJLxq6M+CEVA==
-X-Received: by 2002:a7b:c190:: with SMTP id y16mr393464wmi.50.1586877227391;
-        Tue, 14 Apr 2020 08:13:47 -0700 (PDT)
-Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
-        by smtp.gmail.com with ESMTPSA id t67sm20386094wmg.40.2020.04.14.08.13.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 08:13:46 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 16:13:44 +0100
-From:   Wei Liu <wei.liu@kernel.org>
-To:     Christoph Hellwig <hch@lst.de>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Laura Abbott <labbott@redhat.com>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-arch@vger.kernel.org, linux-mm@kvack.org,
-        iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
-        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Michael Kelley <mikelley@microsoft.com>,
-        Gao Xiang <xiang@kernel.org>
-Subject: Re: [PATCH 21/29] mm: remove the pgprot argument to __vmalloc
-Message-ID: <20200414151344.zgt2pnq7cjq2bgv6@debian>
-References: <20200414131348.444715-1-hch@lst.de>
- <20200414131348.444715-22-hch@lst.de>
+        id S2440397AbgDNP2B (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Apr 2020 11:28:01 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:47510 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729746AbgDNP14 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 14 Apr 2020 11:27:56 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 3409CC061A0C;
+        Tue, 14 Apr 2020 08:27:56 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 3493E2A4; Tue, 14 Apr 2020 17:27:54 +0200 (CEST)
+Date:   Tue, 14 Apr 2020 17:27:52 +0200
+From:   "joro@8bytes.org" <joro@8bytes.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "heiko@sntech.de" <heiko@sntech.de>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "robdclark@gmail.com" <robdclark@gmail.com>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "jroedel@suse.de" <jroedel@suse.de>
+Subject: Re: [RFC PATCH 11/34] iommu: Split off default domain allocation
+ from group assignment
+Message-ID: <20200414152752.GC14731@8bytes.org>
+References: <20200407183742.4344-1-joro@8bytes.org>
+ <20200407183742.4344-12-joro@8bytes.org>
+ <6a801ff9e6471bda7c6f510dfa2ba7e7c35cb559.camel@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20200414131348.444715-22-hch@lst.de>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <6a801ff9e6471bda7c6f510dfa2ba7e7c35cb559.camel@intel.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Apr 14, 2020 at 03:13:40PM +0200, Christoph Hellwig wrote:
-> The pgprot argument to __vmalloc is always PROT_KERNEL now, so remove
-> it.
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Michael Kelley <mikelley@microsoft.com> [hyperv]
-> Acked-by: Gao Xiang <xiang@kernel.org> [erofs]
-> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-> ---
->  arch/x86/hyperv/hv_init.c              |  3 +--
-[...]
-> 
-> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
-> index 5a4b363ba67b..a3d689dfc745 100644
-> --- a/arch/x86/hyperv/hv_init.c
-> +++ b/arch/x86/hyperv/hv_init.c
-> @@ -95,8 +95,7 @@ static int hv_cpu_init(unsigned int cpu)
->  	 * not be stopped in the case of CPU offlining and the VM will hang.
->  	 */
->  	if (!*hvp) {
-> -		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO,
-> -				 PAGE_KERNEL);
-> +		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
->  	}
+Hi Jonathan,
 
-Acked-by: Wei Liu <wei.liu@kernel.org>
+On Mon, Apr 13, 2020 at 10:10:50PM +0000, Derrick, Jonathan wrote:
+> I had to add the following for initial VMD support. The new PCIe domain
+> added on VMD endpoint probe didn't have the dev_iommu member set on the
+> VMD subdevices, which I'm guessing is due to probe_iommu_group already
+> having been run on the VMD endpoint's group prior to those subdevices
+> being added.
+> 
+> diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
+> index 8a5e1ac328dd..ac1e4fb9bf48 100644
+> --- a/drivers/iommu/iommu.c
+> +++ b/drivers/iommu/iommu.c
+> @@ -1577,6 +1577,9 @@ static int iommu_bus_notifier(struct notifier_block *nb,
+>         if (action == BUS_NOTIFY_ADD_DEVICE) {
+>                 int ret;
+>  
+> +               if (!dev_iommu_get(dev))
+> +                       return -ENOMEM;
+> +
+>                 ret = iommu_probe_device(dev);
+>                 return (ret) ? NOTIFY_DONE : NOTIFY_OK;
+>         } else if (action == BUS_NOTIFY_REMOVED_DEVICE) {
+
+Right, thanks for catching this. The hotplug path does not allocate the
+dev->iommu structure yet. I'll have to figure out if the above patch
+adds it at the right place, but I'll fix it in the next version.
+
+Thanks again,
+
+	Joerg
