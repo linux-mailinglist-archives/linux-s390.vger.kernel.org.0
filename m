@@ -2,136 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 302501A7B8B
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 14:59:10 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 02DE31A7BE5
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 15:09:39 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2502459AbgDNM7I (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Apr 2020 08:59:08 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35073 "EHLO
+        id S2502606AbgDNNJb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Apr 2020 09:09:31 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:48695 "EHLO
         us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2502440AbgDNM7H (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 08:59:07 -0400
+        with ESMTP id S2502603AbgDNNJH (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 09:09:07 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586869145;
+        s=mimecast20190719; t=1586869745;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=0fdJexKCJPjvfrLIsyDcvHn2Ex4ChlT7CSP78FqF/p0=;
-        b=VnNj778cGKUlivICZIfMFaM8HVcvPy1DHC7xDzuPpnMRdUSsdcsZnQy/ViiTBwvNrpTXLP
-        AkctvHSIZXm3mh+lMv+vPWSDyemCjyh8dXiRqn8SQsUYEj0LondzPmov3usGpnI3t6gZUV
-        dd8FHLsKw043yc3WnaTYkQoehyXZ3zM=
+        bh=hBYiVbPBfUS+AcwD+sXBpDKSbw0tQLOGN9sYzZKYAmI=;
+        b=BTAN21WocSEZDEQm2BhK4woJchErWB0xzslg0PRL+jaW73JuBBrb4U+r4OkMNKBbmzZ4UU
+        SCbUG2wUypFUui+uF2bDpjjfzTzcGjJONpKqua7ehfBP327KAv9KBAk5zaFQIpt7gAzXFP
+        mOe73lGOE/I3IOT6gqpXRWTm7whysyw=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-310-vOXVWCNXO6iub9T6nt5_og-1; Tue, 14 Apr 2020 08:59:02 -0400
-X-MC-Unique: vOXVWCNXO6iub9T6nt5_og-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+ us-mta-106-PA7uLtZsM327ACx1G3T_7g-1; Tue, 14 Apr 2020 09:07:49 -0400
+X-MC-Unique: PA7uLtZsM327ACx1G3T_7g-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1FD1E13F8;
-        Tue, 14 Apr 2020 12:59:00 +0000 (UTC)
-Received: from gondolin (ovpn-113-32.ams2.redhat.com [10.36.113.32])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD8425C1B2;
-        Tue, 14 Apr 2020 12:58:54 +0000 (UTC)
-Date:   Tue, 14 Apr 2020 14:58:51 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-Message-ID: <20200414145851.562867ae.cohuck@redhat.com>
-In-Reply-To: <20200407192015.19887-4-akrowiak@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-4-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 96CEA8048E4;
+        Tue, 14 Apr 2020 13:07:05 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-113-129.rdu2.redhat.com [10.10.113.129])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5AB5418A8E;
+        Tue, 14 Apr 2020 13:06:57 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
+References: <20200413211550.8307-2-longman@redhat.com> <20200413211550.8307-1-longman@redhat.com>
+To:     Waiman Long <longman@redhat.com>, herbert@gondor.apana.org.au
+cc:     Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
+        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, linux-crypto@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
+        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <3807473.1586869616.1@warthog.procyon.org.uk>
+Date:   Tue, 14 Apr 2020 14:06:56 +0100
+Message-ID: <3807474.1586869616@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  7 Apr 2020 15:20:03 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+Waiman Long <longman@redhat.com> wrote:
 
-> Introduces a new driver callback to prevent a root user from unbinding
-> an AP queue from its device driver if the queue is in use. The intent of
-> this callback is to provide a driver with the means to prevent a root user
-> from inadvertently taking a queue away from a guest and giving it to the
-> host while the guest is still using it. The callback will
-> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
-> attributes would result in one or more AP queues being removed from its
-> driver. If the callback responds in the affirmative for any driver
-> queried, the change to the apmask or aqmask will be rejected with a device
-> in use error.
+> As said by Linus:
 > 
-> For this patch, only non-default drivers will be queried. Currently,
-> there is only one non-default driver, the vfio_ap device driver. The
-> vfio_ap device driver manages AP queues passed through to one or more
-> guests and we don't want to unexpectedly take AP resources away from
-> guests which are most likely independently administered.
+>   A symmetric naming is only helpful if it implies symmetries in use.
+>   Otherwise it's actively misleading.
 > 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
->  drivers/s390/crypto/ap_bus.h |   4 +
->  2 files changed, 142 insertions(+), 6 deletions(-)
+>   In "kzalloc()", the z is meaningful and an important part of what the
+>   caller wants.
+> 
+>   In "kzfree()", the z is actively detrimental, because maybe in the
+>   future we really _might_ want to use that "memfill(0xdeadbeef)" or
+>   something. The "zero" part of the interface isn't even _relevant_.
+> 
+> The main reason that kzfree() exists is to clear sensitive information
+> that should not be leaked to other future users of the same memory
+> objects.
+> 
+> Rename kzfree() to kfree_sensitive() to follow the example of the
+> recently added kvfree_sensitive() and make the intention of the API
+> more explicit. In addition, memzero_explicit() is used to clear the
+> memory to make sure that it won't get optimized away by the compiler.
+> 
+> The renaming is done by using the command sequence:
+> 
+>   git grep -w --name-only kzfree |\
+>   xargs sed -i 's/\bkzfree\b/kfree_sensitive/'
+> 
+> followed by some editing of the kfree_sensitive() kerneldoc and the
+> use of memzero_explicit() instead of memset().
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Waiman Long <longman@redhat.com>
 
-(...)
+Since this changes a lot of crypto stuff, does it make sense for it to go via
+the crypto tree?
 
-> @@ -1196,12 +1202,75 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
->  	return rc;
->  }
->  
-> +int __verify_card_reservations(struct device_driver *drv, void *data)
-> +{
-> +	int rc = 0;
-> +	struct ap_driver *ap_drv = to_ap_drv(drv);
-> +	unsigned long *newapm = (unsigned long *)data;
-> +
-> +	/*
-> +	 * If the reserved bits do not identify cards reserved for use by the
-> +	 * non-default driver, there is no need to verify the driver is using
-> +	 * the queues.
-
-I had to read that one several times... what about
-
-"No need to verify whether the driver is using the queues if it is the
-default driver."
-
-?
-
-> +	 */
-> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
-> +		return 0;
-> +
-> +	/* The non-default driver's module must be loaded */
-> +	if (!try_module_get(drv->owner))
-> +		return 0;
-
-Is that really needed? I would have thought that the driver core's
-klist usage would make sure that the callback would not be invoked for
-drivers that are not registered anymore. Or am I missing a window?
-
-> +
-> +	if (ap_drv->in_use)
-> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
-
-Can we log the offending apm somewhere, preferably with additional info
-that allows the admin to figure out why an error was returned?
-
-> +			rc = -EADDRINUSE;
-> +
-> +	module_put(drv->owner);
-> +
-> +	return rc;
-> +}
-
-(Same comments for the other changes further along in this patch.)
+Acked-by: David Howells <dhowells@redhat.com>
 
