@@ -2,79 +2,100 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 998FF1A7D37
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 15:22:14 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F174C1A81C3
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 17:14:24 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbgDNNUk (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Apr 2020 09:20:40 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:55888 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731120AbgDNNUd (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 09:20:33 -0400
-X-Greylist: delayed 277 seconds by postgrey-1.37 at lindbergh.monkeyblade.net; Tue, 14 Apr 2020 06:20:32 PDT
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id ED76DC061A0C;
-        Tue, 14 Apr 2020 06:20:32 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 340BE45B; Tue, 14 Apr 2020 15:20:31 +0200 (CEST)
-Date:   Tue, 14 Apr 2020 15:20:29 +0200
-From:   Joerg Roedel <joro@8bytes.org>
-To:     Marek Szyprowski <m.szyprowski@samsung.com>
-Cc:     Will Deacon <will@kernel.org>, Robin Murphy <robin.murphy@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Andy Gross <agross@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Clark <robdclark@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-mediatek@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        virtualization@lists.linux-foundation.org,
-        Joerg Roedel <jroedel@suse.de>
-Subject: Re: [PATCH] iommu/exynos: Get rid of 'struct exynos_iommu_owner'
- exynos_iommu_owner
-Message-ID: <20200414132029.GB14731@8bytes.org>
-References: <20200407183742.4344-1-joro@8bytes.org>
- <CGME20200407184501eucas1p25407bc96e4345df406cf6ba061ae6a82@eucas1p2.samsung.com>
- <20200407183742.4344-32-joro@8bytes.org>
- <449e7f16-e719-9617-ec92-63b82c0bc33f@samsung.com>
- <f59b0bb3-8c08-9cc9-bb1a-e69b7b226f60@samsung.com>
- <20200409114620.GA16298@8bytes.org>
- <40af831b-d00c-0cf9-0a06-e60c048a9ab8@samsung.com>
+        id S2437530AbgDNPOS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Apr 2020 11:14:18 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:54473 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2437681AbgDNPNt (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 11:13:49 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h2so13341992wmb.4;
+        Tue, 14 Apr 2020 08:13:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HmBLSR0xc1v+9c640X8yq/gCGBtmZiJRhg2yrai8Uso=;
+        b=D14QHr9SaRvNqJrN7V4ylJqJZJppU9twbzkK/fNI+KX4UE4L+iib2DfQxpN0Kyf9k0
+         0jWxU8/32Xv3x3XlfJ86tDihFLVOxvOlzEi+ZMdwJLITS8dFK0BX1BnSFMbIukqCz67j
+         Ry1D6UKhhWu8p54BC/8irvBUyM3rgmP6+q/b2UJkE1sNp9+K1kUVaK3Hqvzd2UaPuxIZ
+         anSMQsSW2BVe26VRK/LLL2FrqobB6z1ttZtlJECb+JJs28wjdhWhRht82hzPbhtmGZQY
+         R0TVcuvCAw7BpJsD+qr74o0Ega4Th5Rzz6uz0/Q9BGJM7Sc2yzOzFgFMlpPGsGilpct1
+         7zIg==
+X-Gm-Message-State: AGi0PuZzw+k35gwrD6pHLwZlJLjT1GDlWp2uALnwrcBTshm1PN1umiRv
+        3/JHGYY/h+9WzdYhOwjiHQA=
+X-Google-Smtp-Source: APiQypKJS2zs752mK3EmkKLPxDY+LMikzE4AHuLMlZzMU6rlOFHrjCq5D1gZZCfYEUzJLxq6M+CEVA==
+X-Received: by 2002:a7b:c190:: with SMTP id y16mr393464wmi.50.1586877227391;
+        Tue, 14 Apr 2020 08:13:47 -0700 (PDT)
+Received: from debian (44.142.6.51.dyn.plus.net. [51.6.142.44])
+        by smtp.gmail.com with ESMTPSA id t67sm20386094wmg.40.2020.04.14.08.13.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 14 Apr 2020 08:13:46 -0700 (PDT)
+Date:   Tue, 14 Apr 2020 16:13:44 +0100
+From:   Wei Liu <wei.liu@kernel.org>
+To:     Christoph Hellwig <hch@lst.de>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Wei Liu <wei.liu@kernel.org>, x86@kernel.org,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Laura Abbott <labbott@redhat.com>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Nitin Gupta <ngupta@vflare.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linuxppc-dev@lists.ozlabs.org, linux-hyperv@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org,
+        linux-arm-kernel@lists.infradead.org, linux-s390@vger.kernel.org,
+        bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Michael Kelley <mikelley@microsoft.com>,
+        Gao Xiang <xiang@kernel.org>
+Subject: Re: [PATCH 21/29] mm: remove the pgprot argument to __vmalloc
+Message-ID: <20200414151344.zgt2pnq7cjq2bgv6@debian>
+References: <20200414131348.444715-1-hch@lst.de>
+ <20200414131348.444715-22-hch@lst.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <40af831b-d00c-0cf9-0a06-e60c048a9ab8@samsung.com>
+In-Reply-To: <20200414131348.444715-22-hch@lst.de>
+User-Agent: NeoMutt/20180716
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 09, 2020 at 03:58:00PM +0200, Marek Szyprowski wrote:
-> I've checked and it works fine on top of 
-> ff68eb23308e6538ec7864c83d39540f423bbe90. However I'm not a fan of 
-> removing this 'owner' structure. It gave a nice abstraction for the all 
-> SYSMMU controllers for the given device (although most devices in the 
-> system have only one SYSMMU). Why this structure is a problem for your 
-> rework?
+On Tue, Apr 14, 2020 at 03:13:40PM +0200, Christoph Hellwig wrote:
+> The pgprot argument to __vmalloc is always PROT_KERNEL now, so remove
+> it.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com> [hyperv]
+> Acked-by: Gao Xiang <xiang@kernel.org> [erofs]
+> Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> ---
+>  arch/x86/hyperv/hv_init.c              |  3 +--
+[...]
+> 
+> diff --git a/arch/x86/hyperv/hv_init.c b/arch/x86/hyperv/hv_init.c
+> index 5a4b363ba67b..a3d689dfc745 100644
+> --- a/arch/x86/hyperv/hv_init.c
+> +++ b/arch/x86/hyperv/hv_init.c
+> @@ -95,8 +95,7 @@ static int hv_cpu_init(unsigned int cpu)
+>  	 * not be stopped in the case of CPU offlining and the VM will hang.
+>  	 */
+>  	if (!*hvp) {
+> -		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO,
+> -				 PAGE_KERNEL);
+> +		*hvp = __vmalloc(PAGE_SIZE, GFP_KERNEL | __GFP_ZERO);
+>  	}
 
-Okay, the structure itself is not a problem, I just thought it is not
-really necessary. But to keep things simple I've taken another approach
-for v2 of this series: Just use the first SYSMMU of the controllers list
-to link the device and the IOMMU. When the owner structure exists there
-is always one entry in this list, so that should work fine.
-
-Regards,
-
-	Joerg
-
+Acked-by: Wei Liu <wei.liu@kernel.org>
