@@ -2,118 +2,102 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id F14511A76DC
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 11:01:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 43F501A77A3
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 11:48:42 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2437317AbgDNJBj (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Apr 2020 05:01:39 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38554 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2437280AbgDNJBh (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 05:01:37 -0400
-Received: by mail-wm1-f65.google.com with SMTP id g12so5210235wmh.3;
-        Tue, 14 Apr 2020 02:01:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ZSEHFc2eh+N6K60wyVHbBWfK0AmjMN90oe2OMNtMMJ0=;
-        b=VZcdmcPfe6bokelP+VcFo/KKk2US9O6S8tRgNtF/gLstaIJygVoMVr8X5z7aVnpfwx
-         jGWGcCIyIgFX1qffbo5S4TmA9T/iLJ2Q0bT9GNRqVXaIfaO26J4K3BvaIU8/N/famYYr
-         /Vzb3JOQMfu9RVXx6Bpfb/EFXzrUyx0L6hYIh3nTQjuAUmNc5PFB2moXYPWzc5+1uoKL
-         VmqQFll+et195bcMN/B5vHfEjmD6kX7vTy47aaOOymqcG0eLYjjDaN7bgl0HghLX6r2H
-         x5fja3K7pItACo6LAcf8KM9Q8pUzmB7j4w5YTazUVAxnL3Ecgxz4soRhBQlJPpMXAquC
-         JSTQ==
-X-Gm-Message-State: AGi0PuaRcU49yxnL2rzL+ZED8gAyGbXieOsW7r3oPqKXnqp2UpcU96/U
-        XwPSodKQc3rqeZ01ta/hip0=
-X-Google-Smtp-Source: APiQypIjMMKQ1krTcIb7iRe2Mn/fScrYHKTluZiYEwYRZsrwjhiGsUjKHrgwCKNk20IxGSD17N1euw==
-X-Received: by 2002:a1c:a913:: with SMTP id s19mr23660673wme.134.1586854891811;
-        Tue, 14 Apr 2020 02:01:31 -0700 (PDT)
-Received: from localhost (ip-37-188-180-223.eurotel.cz. [37.188.180.223])
-        by smtp.gmail.com with ESMTPSA id n6sm18637096wrs.81.2020.04.14.02.01.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 02:01:30 -0700 (PDT)
-Date:   Tue, 14 Apr 2020 11:01:29 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
-Message-ID: <20200414090129.GE4629@dhcp22.suse.cz>
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413211550.8307-2-longman@redhat.com>
+        id S2437782AbgDNJsX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Apr 2020 05:48:23 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54679 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2437779AbgDNJsW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 05:48:22 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586857701;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=RCUnMVTMhiXmQTIRtH4ig9vejIyMaafXsJBXVyt/T0o=;
+        b=Qx9SLKZnYhNTbLa8p/DYIAU0u2He3JEZV5OKgGMkD4j2ar8VvcMvI9spYac/1V3on30r2I
+        gbJce48bO5HPmbEmghmwYgdkOH95MFmGVN4ZtiTnORz2dRt/vYrruVIsTRvK9PJofjgjuB
+        2vmruUNOZBfI96c2As4BSe9rWipu3HM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-295-qE1gTkkzPsijc6xmZp2iOg-1; Tue, 14 Apr 2020 05:48:17 -0400
+X-MC-Unique: qE1gTkkzPsijc6xmZp2iOg-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AF2DE800D53;
+        Tue, 14 Apr 2020 09:48:13 +0000 (UTC)
+Received: from [10.72.13.119] (ovpn-13-119.pek2.redhat.com [10.72.13.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7602F1001920;
+        Tue, 14 Apr 2020 09:48:05 +0000 (UTC)
+Subject: Re: [PATCH] vhost: do not enable VHOST_MENU by default
+To:     Christian Borntraeger <borntraeger@de.ibm.com>, mst@redhat.com
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, geert@linux-m68k.org,
+        Thomas Bogendoerfer <tsbogend@alpha.franken.de>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+References: <20200414024438.19103-1-jasowang@redhat.com>
+ <375181ee-08ec-77a6-2dfc-f3c9c26705a1@de.ibm.com>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <802e6da9-4827-a9a4-b409-f08a5de4e750@redhat.com>
+Date:   Tue, 14 Apr 2020 17:48:04 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
+In-Reply-To: <375181ee-08ec-77a6-2dfc-f3c9c26705a1@de.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon 13-04-20 17:15:49, Waiman Long wrote:
-> As said by Linus:
-> 
->   A symmetric naming is only helpful if it implies symmetries in use.
->   Otherwise it's actively misleading.
-> 
->   In "kzalloc()", the z is meaningful and an important part of what the
->   caller wants.
-> 
->   In "kzfree()", the z is actively detrimental, because maybe in the
->   future we really _might_ want to use that "memfill(0xdeadbeef)" or
->   something. The "zero" part of the interface isn't even _relevant_.
-> 
-> The main reason that kzfree() exists is to clear sensitive information
-> that should not be leaked to other future users of the same memory
-> objects.
-> 
-> Rename kzfree() to kfree_sensitive() to follow the example of the
-> recently added kvfree_sensitive() and make the intention of the API
-> more explicit. In addition, memzero_explicit() is used to clear the
-> memory to make sure that it won't get optimized away by the compiler.
-> 
-> The renaming is done by using the command sequence:
-> 
->   git grep -w --name-only kzfree |\
->   xargs sed -i 's/\bkzfree\b/kfree_sensitive/'
-> 
-> followed by some editing of the kfree_sensitive() kerneldoc and the
-> use of memzero_explicit() instead of memset().
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
 
-Makes sense. I haven't checked all the conversions and will rely on the
-script doing the right thing. The core MM part is correct.
+On 2020/4/14 =E4=B8=8B=E5=8D=883:26, Christian Borntraeger wrote:
+> On 14.04.20 04:44, Jason Wang wrote:
+>> We try to keep the defconfig untouched after decoupling CONFIG_VHOST
+>> out of CONFIG_VIRTUALIZATION in commit 20c384f1ea1a
+>> ("vhost: refine vhost and vringh kconfig") by enabling VHOST_MENU by
+>> default. Then the defconfigs can keep enabling CONFIG_VHOST_NET
+>> without the caring of CONFIG_VHOST.
+>>
+>> But this will leave a "CONFIG_VHOST_MENU=3Dy" in all defconfigs and ev=
+en
+>> for the ones that doesn't want vhost. So it actually shifts the
+>> burdens to the maintainers of all other to add "CONFIG_VHOST_MENU is
+>> not set". So this patch tries to enable CONFIG_VHOST explicitly in
+>> defconfigs that enables CONFIG_VHOST_NET and CONFIG_VHOST_VSOCK.
+>>
+>> Cc: Thomas Bogendoerfer<tsbogend@alpha.franken.de>
+>> Cc: Benjamin Herrenschmidt<benh@kernel.crashing.org>
+>> Cc: Paul Mackerras<paulus@samba.org>
+>> Cc: Michael Ellerman<mpe@ellerman.id.au>
+>> Cc: Heiko Carstens<heiko.carstens@de.ibm.com>
+>> Cc: Vasily Gorbik<gor@linux.ibm.com>
+>> Cc: Christian Borntraeger<borntraeger@de.ibm.com>
+> Fine with me.
+> s390 part
+>
+> Acked-by: Christian Borntraeger<borntraeger@de.ibm.com>
+>
+>   That was my first approach to get things fixed before I reported
+> this to you.
 
-Acked-by: Michal Hocko <mhocko@suse.com>
--- 
-Michal Hocko
-SUSE Labs
+
+Exactly.
+
+Thanks
+
+>
+
