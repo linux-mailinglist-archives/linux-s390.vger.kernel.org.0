@@ -2,120 +2,192 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5B9DC1A83E5
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 17:57:25 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 7A1301A8410
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 18:03:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbgDNP5L (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Apr 2020 11:57:11 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:24154 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732396AbgDNP5J (ORCPT
+        id S1732801AbgDNQDR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Apr 2020 12:03:17 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53826 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1732799AbgDNQDO (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 14 Apr 2020 11:57:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586879828;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+YYLNoHPS0R9msE++qaePEk7EKWnckmMQYzoCYqpJRk=;
-        b=L5VaZIUX94Up2eOkbcGXD9ia6HQsLwWIG5x2EBP15ZVOAg0FYzA7/4JiAQ/Fn0e9zucPzj
-        cijSY8Y2Y28v1AhrGRN49yO+erNIXQ/Z7xWUPdqMb98nGB9Iy07jDACxr9zzYzhaFqH2qr
-        tzp5EynSZH27B3q5RamSSbSuYG38mL8=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-P_CNqgW3PKGFkLz0i5MsZw-1; Tue, 14 Apr 2020 11:57:06 -0400
-X-MC-Unique: P_CNqgW3PKGFkLz0i5MsZw-1
-Received: by mail-wm1-f70.google.com with SMTP id c129so3975831wme.8
-        for <linux-s390@vger.kernel.org>; Tue, 14 Apr 2020 08:57:06 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=+YYLNoHPS0R9msE++qaePEk7EKWnckmMQYzoCYqpJRk=;
-        b=ZhRxjg3K4oRstZVYpIeZV3aK4FvJwhN1ldNTTcA3wgUar298scsssmMQtS1373l3/O
-         wxmH8qmzdTtO75zZqiYug+/0cX7m8Ah9LXtZeFStZRY5bhHjZyBeBGl0Xb2irWjxT5jY
-         2owNJnoTyLd1BcbR+09bY9AjXoNRC2YvGU2dOiTlvrAJCKoy0nnLB6w2Cfxo1qgjq4GH
-         8sYlxol7SOoOLmLBi6nNGcEB6+4+f/n/P5uqsc+d4IHWsoo0QKUAczjMSJOSBESzAXvk
-         nS7fGAHYAWkSJO0qgpOmyxJUl766lt9753r8NGXPyecbpgabJVeIvDgPPcUQwkLNasrs
-         6cOw==
-X-Gm-Message-State: AGi0PuYgti9vVq57fYLJmdSk73JOjVVyfqHmVUSJd6MMW74a/egajZUR
-        0Whasx3oruB2Cd0yqaEv27u13za/1EULuk6BRBJdljDRVX/wyU9pA2dRVagIlE7u2F8sTRJWoFu
-        oIAluWoSc3L8QBoHNw+qQWQ==
-X-Received: by 2002:a1c:5502:: with SMTP id j2mr502952wmb.93.1586879825159;
-        Tue, 14 Apr 2020 08:57:05 -0700 (PDT)
-X-Google-Smtp-Source: APiQypK43hPUptF5L9yvQziVzJGJV/VyMhS23tlGH7dzBh06iijjr98+S1d6K1K1pTXXFtXi18cgZQ==
-X-Received: by 2002:a1c:5502:: with SMTP id j2mr502914wmb.93.1586879824909;
-        Tue, 14 Apr 2020 08:57:04 -0700 (PDT)
-Received: from localhost.localdomain ([194.230.155.210])
-        by smtp.gmail.com with ESMTPSA id j10sm16390309wmi.18.2020.04.14.08.57.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 14 Apr 2020 08:57:04 -0700 (PDT)
-Subject: Re: [PATCH] kvm_host: unify VM_STAT and VCPU_STAT definitions in a
- single place
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?Q?Philippe_Mathieu-Daud=c3=a9?= <f4bug@amsat.org>,
-        kvm@vger.kernel.org
-Cc:     Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org
-References: <20200413140332.22896-1-eesposit@redhat.com>
- <03a481a8-bcf2-8755-d113-71ef393508bf@amsat.org>
- <bf870876-9f9a-7ba8-d941-a3883e519eed@redhat.com>
-From:   Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Message-ID: <a5e9246e-2bf3-204e-b79b-0ed4c40fcc5d@redhat.com>
-Date:   Tue, 14 Apr 2020 17:57:02 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Tue, 14 Apr 2020 12:03:14 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EFbHek141719
+        for <linux-s390@vger.kernel.org>; Tue, 14 Apr 2020 12:03:13 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30cvwvrhbm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 14 Apr 2020 12:03:13 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Tue, 14 Apr 2020 17:02:33 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 14 Apr 2020 17:02:30 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EG33Nu43647070
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 14 Apr 2020 16:03:03 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 791F7A4059;
+        Tue, 14 Apr 2020 16:03:03 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id C0AB9A404D;
+        Tue, 14 Apr 2020 16:03:02 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.12.13])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 14 Apr 2020 16:03:02 +0000 (GMT)
+Date:   Tue, 14 Apr 2020 18:03:00 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        jack@suse.cz, kirill@shutemov.name, borntraeger@de.ibm.com,
+        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+In-Reply-To: <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+        <20200306132537.783769-3-imbrenda@linux.ibm.com>
+        <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <bf870876-9f9a-7ba8-d941-a3883e519eed@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20041416-0016-0000-0000-0000030474C9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041416-0017-0000-0000-000033686D4D
+Message-Id: <20200414180300.52640444@p-imbrenda>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-14_07:2020-04-14,2020-04-14 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
+ mlxscore=0 clxscore=1015 mlxlogscore=344 priorityscore=1501 malwarescore=0
+ adultscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004140124
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Mon, 13 Apr 2020 13:22:24 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-
-On 4/14/20 10:18 AM, Paolo Bonzini wrote:
-> On 13/04/20 23:34, Philippe Mathieu-Daudé wrote:
->>> +#define VM_STAT(x, ...) offsetof(struct kvm, stat.x), KVM_STAT_VM, ## __VA_ARGS__
->>> +#define VCPU_STAT(x, ...) offsetof(struct kvm_vcpu, stat.x), KVM_STAT_VCPU, ## __VA_ARGS__
->> I find this macro expanding into multiple fields odd... Maybe a matter
->> of taste. Sugggestion, have the macro define the full structure, as in
->> the arm64 arch:
->>
->> #define VM_STAT(n, x, ...) { n, offsetof(struct kvm, stat.x),
->> KVM_STAT_VM, ## __VA_ARGS__ }
->>
->> Ditto for VCPU_STAT().
->>
-Hi Philippe and Paolo,
+> On 3/6/20 5:25 AM, Claudio Imbrenda wrote:
+> > On s390x the function is not supposed to fail, so it is ok to use a
+> > WARN_ON on failure. If we ever need some more finegrained handling
+> > we can tackle this when we know the details.  
 > 
-> Yes, that's a good idea.  Emanuele, can you switch it to this format?
+> Could you explain a bit why the function can't fail?
 
-Sure, I just submitted the v2 version.
+the concept of "making accessible" is only to make sure that accessing
+the page will not trigger faults or I/O or DMA errors. in general it
+does not mean freely accessing the content of the page in cleartext. 
 
-Thanks,
+on s390x, protected guest pages can be shared. the guest has to
+actively share its pages, and in that case those pages are both part of
+the protected VM and freely accessible by the host.
 
-Emanuele
+pages that are not shared cannot be accessed by the host.
+
+in our case "making the page accessible" means:
+ - if the page was shared, make sure it stays shared
+ - if the page was not shared, first encrypt it and then make it
+   accessible to the host (both operations performed securely and
+   atomically by the hardware)
+
+then the page can be swapped out, or used for direct I/O (obviously if
+you do I/O on a page that was not shared, you cannot expect good
+things to happen, since you basically corrupt the memory of the guest).
+
+on s390x performing I/O directly on protected pages results in (in
+practice) unrecoverable I/O errors, so we want to avoid it at all costs.
+
+accessing protected pages from the CPU triggers an exception that can
+be handled (and we do handle it, in fact)
+
+now imagine a buggy or malicious qemu process crashing the whole machine
+just because it did I/O to/from a protected page. we clearly don't want
+that.
+
+> If the guest has secret data in the page, then it *can* and does fail.
+
+no, that's the whole point of this mechanism. in fact, most of the
+guest pages will be "secret data", only the few pages used for guest I/O
+bounce buffers will be shared with the host
+
+> It won't fail, though, if the host and guest agree on whether the page
+> is protected.
+> 
+> Right?
+> 
+> > @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page
+> > *page, bool keep_write) inc_zone_page_state(page,
+> > NR_ZONE_WRITE_PENDING); }
+> >  	unlock_page_memcg(page);
+> > +	access_ret = arch_make_page_accessible(page);
+> > +	/*
+> > +	 * If writeback has been triggered on a page that cannot
+> > be made
+> > +	 * accessible, it is too late to recover here.
+> > +	 */
+> > +	VM_BUG_ON_PAGE(access_ret != 0, page);
+> > +
+> >  	return ret;
+> >  
+> >  }  
+> 
+> This seems like a really odd place to do this.  Writeback is specific
+> to block I/O.  I would have thought there were other kinds of devices
+> that matter, not just block devices.
+
+well, yes and no. for writeback (block I/O and swap) this is the right
+place. at this point we know that the page is present and nobody else
+has started doing I/O yet, and I/O will happen soon-ish. so we make the
+page accessible. there is no turning back here, unlike pinning. we
+are not allowed to fail, we can't 
+
+regarding the other kinds of devices: yes, they will use pinning, which
+is covered by the rest of the patch. the semantics of get page and pin
+page (if the documentation has not changed meanwhile) is that the
+traditional get_page is used for when the page is needed but not its
+content, and pin_page is used when the content of the page is accessed.
+since the only issue here is accessing the content of the page, we
+don't need to make it accessible for get_page, but only for pin_page.
+
+get_page and pin_page are allowed to fail, so in this case we return an
+error code, so other architectures can potentially abort the pinning if
+needed. on s390x we will never fail, for the same reasons written
+above.
+
+> Also, this patch seems odd that it only does the
+> arch_make_page_accessible() half.  Where's the other half where the
+> page is made inaccessible?
+
+that is very arch-specific. for s390x, you can look at this patch and
+the ones immediately before/after: 214d9bbcd3a67230b932f6ce
+
+> I assume it's OK to "leak" things like this, it's just not clear to me
+> _why_ it's OK.
+
+nothing is being leaked :)
+
+
+
+I hope I clarified a little how this works on s390x :)
+feel free to poke me again if some things are still unclear
+
+
+best regards,
+
+
+Claudio Imbrenda
 
