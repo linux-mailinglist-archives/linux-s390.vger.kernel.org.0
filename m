@@ -2,192 +2,158 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7A1301A8410
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 18:03:21 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C89E71A84B2
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 18:25:44 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732801AbgDNQDR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Apr 2020 12:03:17 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53826 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732799AbgDNQDO (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 14 Apr 2020 12:03:14 -0400
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03EFbHek141719
-        for <linux-s390@vger.kernel.org>; Tue, 14 Apr 2020 12:03:13 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30cvwvrhbm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 14 Apr 2020 12:03:13 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Tue, 14 Apr 2020 17:02:33 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 14 Apr 2020 17:02:30 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03EG33Nu43647070
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 14 Apr 2020 16:03:03 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 791F7A4059;
-        Tue, 14 Apr 2020 16:03:03 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0AB9A404D;
-        Tue, 14 Apr 2020 16:03:02 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.12.13])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 14 Apr 2020 16:03:02 +0000 (GMT)
-Date:   Tue, 14 Apr 2020 18:03:00 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
-        jack@suse.cz, kirill@shutemov.name, borntraeger@de.ibm.com,
-        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
-        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-In-Reply-To: <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
-        <20200306132537.783769-3-imbrenda@linux.ibm.com>
-        <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S2391512AbgDNQZn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Apr 2020 12:25:43 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:42277 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2391470AbgDNQZF (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 12:25:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1586881501;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=yW8t58m2bp1NhazlqC7/k8J+nPWsrZBYDWUsjTyk2qQ=;
+        b=NsgcQPq0gDRRzr+WCv6O+IejAhACeGf91UcZUch7xVIEkk4F0++6WsAKwkQ+6nkMoq/jD7
+        lzSV3f1EuKP3Hxnp2JivHQcF6Vr/Z22M++foNVb8RdxR7eWsyL6QJbeO4NazIgQ9svAhXl
+        7AFa78Hn9YCF68TMh9hKXOVlm2kXUcc=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-87-m_CJjLwlPvyXxruKyZ4cKA-1; Tue, 14 Apr 2020 12:24:56 -0400
+X-MC-Unique: m_CJjLwlPvyXxruKyZ4cKA-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 12123107ACC4;
+        Tue, 14 Apr 2020 16:24:50 +0000 (UTC)
+Received: from llong.remote.csb (ovpn-118-173.rdu2.redhat.com [10.10.118.173])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E02D118DEE;
+        Tue, 14 Apr 2020 16:24:36 +0000 (UTC)
+Subject: Re: [PATCH v2 2/2] crypto: Remove unnecessary memzero_explicit()
+To:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Howells <dhowells@redhat.com>,
+        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Joe Perches <joe@perches.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        David Rientjes <rientjes@google.com>
+Cc:     linux-mm@kvack.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-crypto@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
+        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
+        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
+        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
+        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
+        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
+        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
+        linux-integrity@vger.kernel.org
+References: <20200413211550.8307-1-longman@redhat.com>
+ <20200413222846.24240-1-longman@redhat.com>
+ <eca85e0b-0af3-c43a-31e4-bd5c3f519798@c-s.fr>
+From:   Waiman Long <longman@redhat.com>
+Organization: Red Hat
+Message-ID: <e194a51f-a5e5-a557-c008-b08cac558572@redhat.com>
+Date:   Tue, 14 Apr 2020 12:24:36 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20041416-0016-0000-0000-0000030474C9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041416-0017-0000-0000-000033686D4D
-Message-Id: <20200414180300.52640444@p-imbrenda>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-14_07:2020-04-14,2020-04-14 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 spamscore=0
- mlxscore=0 clxscore=1015 mlxlogscore=344 priorityscore=1501 malwarescore=0
- adultscore=0 lowpriorityscore=0 bulkscore=0 impostorscore=0 phishscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004140124
+In-Reply-To: <eca85e0b-0af3-c43a-31e4-bd5c3f519798@c-s.fr>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, 13 Apr 2020 13:22:24 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
+On 4/14/20 2:08 AM, Christophe Leroy wrote:
+>
+>
+> Le 14/04/2020 =C3=A0 00:28, Waiman Long a =C3=A9crit=C2=A0:
+>> Since kfree_sensitive() will do an implicit memzero_explicit(), there
+>> is no need to call memzero_explicit() before it. Eliminate those
+>> memzero_explicit() and simplify the call sites. For better correctness=
+,
+>> the setting of keylen is also moved down after the key pointer check.
+>>
+>> Signed-off-by: Waiman Long <longman@redhat.com>
+>> ---
+>> =C2=A0 .../allwinner/sun8i-ce/sun8i-ce-cipher.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 19 +++++-------------
+>> =C2=A0 .../allwinner/sun8i-ss/sun8i-ss-cipher.c=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 | 20 +++++--------------
+>> =C2=A0 drivers/crypto/amlogic/amlogic-gxl-cipher.c=C2=A0=C2=A0 | 12 ++=
++--------
+>> =C2=A0 drivers/crypto/inside-secure/safexcel_hash.c=C2=A0 |=C2=A0 3 +-=
+-
+>> =C2=A0 4 files changed, 14 insertions(+), 40 deletions(-)
+>>
+>> diff --git a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> index aa4e8fdc2b32..8358fac98719 100644
+>> --- a/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> +++ b/drivers/crypto/allwinner/sun8i-ce/sun8i-ce-cipher.c
+>> @@ -366,10 +366,7 @@ void sun8i_ce_cipher_exit(struct crypto_tfm *tfm)
+>> =C2=A0 {
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 struct sun8i_cipher_tfm_ctx *op =3D cry=
+pto_tfm_ctx(tfm);
+>> =C2=A0 -=C2=A0=C2=A0=C2=A0 if (op->key) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memzero_explicit(op->key, =
+op->keylen);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(op->key);
+>> -=C2=A0=C2=A0=C2=A0 }
+>> +=C2=A0=C2=A0=C2=A0 kfree_sensitive(op->key);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 crypto_free_sync_skcipher(op->fallback_=
+tfm);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 pm_runtime_put_sync_suspend(op->ce->dev=
+);
+>> =C2=A0 }
+>> @@ -391,14 +388,11 @@ int sun8i_ce_aes_setkey(struct crypto_skcipher
+>> *tfm, const u8 *key,
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dev_dbg(ce->dev=
+, "ERROR: Invalid keylen %u\n", keylen);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -EINVAL;
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 }
+>> -=C2=A0=C2=A0=C2=A0 if (op->key) {
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 memzero_explicit(op->key, =
+op->keylen);
+>> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 kfree(op->key);
+>> -=C2=A0=C2=A0=C2=A0 }
+>> -=C2=A0=C2=A0=C2=A0 op->keylen =3D keylen;
+>> +=C2=A0=C2=A0=C2=A0 kfree_sensitive(op->key);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 op->key =3D kmemdup(key, keylen, GFP_KE=
+RNEL | GFP_DMA);
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!op->key)
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 return -ENOMEM;
+>> +=C2=A0=C2=A0=C2=A0 op->keylen =3D keylen;
+>
+> Does it matter at all to ensure op->keylen is not set when of->key is
+> NULL ? I'm not sure.
+>
+> But if it does, then op->keylen should be set to 0 when freeing op->key=
+.=20
 
-> On 3/6/20 5:25 AM, Claudio Imbrenda wrote:
-> > On s390x the function is not supposed to fail, so it is ok to use a
-> > WARN_ON on failure. If we ever need some more finegrained handling
-> > we can tackle this when we know the details.  
-> 
-> Could you explain a bit why the function can't fail?
+My thinking is that if memory allocation fails, we just don't touch
+anything and return an error code. I will not explicitly set keylen to 0
+in this case unless it is specified in the API documentation.
 
-the concept of "making accessible" is only to make sure that accessing
-the page will not trigger faults or I/O or DMA errors. in general it
-does not mean freely accessing the content of the page in cleartext. 
-
-on s390x, protected guest pages can be shared. the guest has to
-actively share its pages, and in that case those pages are both part of
-the protected VM and freely accessible by the host.
-
-pages that are not shared cannot be accessed by the host.
-
-in our case "making the page accessible" means:
- - if the page was shared, make sure it stays shared
- - if the page was not shared, first encrypt it and then make it
-   accessible to the host (both operations performed securely and
-   atomically by the hardware)
-
-then the page can be swapped out, or used for direct I/O (obviously if
-you do I/O on a page that was not shared, you cannot expect good
-things to happen, since you basically corrupt the memory of the guest).
-
-on s390x performing I/O directly on protected pages results in (in
-practice) unrecoverable I/O errors, so we want to avoid it at all costs.
-
-accessing protected pages from the CPU triggers an exception that can
-be handled (and we do handle it, in fact)
-
-now imagine a buggy or malicious qemu process crashing the whole machine
-just because it did I/O to/from a protected page. we clearly don't want
-that.
-
-> If the guest has secret data in the page, then it *can* and does fail.
-
-no, that's the whole point of this mechanism. in fact, most of the
-guest pages will be "secret data", only the few pages used for guest I/O
-bounce buffers will be shared with the host
-
-> It won't fail, though, if the host and guest agree on whether the page
-> is protected.
-> 
-> Right?
-> 
-> > @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page
-> > *page, bool keep_write) inc_zone_page_state(page,
-> > NR_ZONE_WRITE_PENDING); }
-> >  	unlock_page_memcg(page);
-> > +	access_ret = arch_make_page_accessible(page);
-> > +	/*
-> > +	 * If writeback has been triggered on a page that cannot
-> > be made
-> > +	 * accessible, it is too late to recover here.
-> > +	 */
-> > +	VM_BUG_ON_PAGE(access_ret != 0, page);
-> > +
-> >  	return ret;
-> >  
-> >  }  
-> 
-> This seems like a really odd place to do this.  Writeback is specific
-> to block I/O.  I would have thought there were other kinds of devices
-> that matter, not just block devices.
-
-well, yes and no. for writeback (block I/O and swap) this is the right
-place. at this point we know that the page is present and nobody else
-has started doing I/O yet, and I/O will happen soon-ish. so we make the
-page accessible. there is no turning back here, unlike pinning. we
-are not allowed to fail, we can't 
-
-regarding the other kinds of devices: yes, they will use pinning, which
-is covered by the rest of the patch. the semantics of get page and pin
-page (if the documentation has not changed meanwhile) is that the
-traditional get_page is used for when the page is needed but not its
-content, and pin_page is used when the content of the page is accessed.
-since the only issue here is accessing the content of the page, we
-don't need to make it accessible for get_page, but only for pin_page.
-
-get_page and pin_page are allowed to fail, so in this case we return an
-error code, so other architectures can potentially abort the pinning if
-needed. on s390x we will never fail, for the same reasons written
-above.
-
-> Also, this patch seems odd that it only does the
-> arch_make_page_accessible() half.  Where's the other half where the
-> page is made inaccessible?
-
-that is very arch-specific. for s390x, you can look at this patch and
-the ones immediately before/after: 214d9bbcd3a67230b932f6ce
-
-> I assume it's OK to "leak" things like this, it's just not clear to me
-> _why_ it's OK.
-
-nothing is being leaked :)
-
-
-
-I hope I clarified a little how this works on s390x :)
-feel free to poke me again if some things are still unclear
-
-
-best regards,
-
-
-Claudio Imbrenda
+Cheers,
+Longman
 
