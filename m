@@ -2,129 +2,111 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id E03C31A74C3
-	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 09:29:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AB4441A7582
+	for <lists+linux-s390@lfdr.de>; Tue, 14 Apr 2020 10:09:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390793AbgDNH3i (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 14 Apr 2020 03:29:38 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:59838 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390797AbgDNH3g (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 03:29:36 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=h6L8qe8CLhfRfBQB93wPXOSvNk4Jso8JkIvEH7OeOJs=; b=JR5Z7k7BDo/0cXHAGhEDbGKqc/
-        IhQovb976xAy+Eqhz7DO4wKv41nZeZOAbeXWtyCdJhlGs1MS+d+1fn9S+db5BUNvch9DDjSzjSG7n
-        I3P1iLKQfcIN5LoU4SI2DqaEz2ip87oUjdi+JsCIx7wNaOGObaaaeapo6ej6rCXCiLcS8pxMKcxwj
-        fEtTKzKVKQVuNzLGcK7ud/+3zNiBwIzr/ZF3oAZ3Uc0gCN4h0A+l35OXUcq9KBIgiBdBRztxzTrS0
-        1dJVQW6I3NEKzFeuP8HS33g8mdZehvmf4yPvCSpU/2LId7TFg0N3iosG3OnvwcQk/e1QMsfBqX7Rr
-        R1rkIQ2g==;
-Received: from [2001:4bb8:180:384b:4c21:af7:dd95:e552] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jOG0l-0005cK-4C; Tue, 14 Apr 2020 07:29:35 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Stefan Haberland <sth@linux.ibm.com>,
+        id S2407002AbgDNIJi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 14 Apr 2020 04:09:38 -0400
+Received: from esa4.hgst.iphmx.com ([216.71.154.42]:64233 "EHLO
+        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2406997AbgDNIJ1 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 14 Apr 2020 04:09:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1586851766; x=1618387766;
+  h=from:to:cc:subject:date:message-id:references:
+   content-transfer-encoding:mime-version;
+  bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+  b=eHTD2NRStZ+brLnwGF5+ui0nlrBjDvDIiOSbZf69XReUQp2s5R2/0aZK
+   wxqa5Mld+hC8J0dp7QZZBQ84k/LPwlDMhoED38R0Hs17++OInpJ/OfLlW
+   81ckkE47BLNZQzKNi4zHnuHDkyo5HgMb9IzskBsWTS5CPDF5d/9ilqfRp
+   8+qIM+w3Kw50GRlm7Ro/jMga71g180HwnKb4cH7pbgLr1OUA9aMUkT833
+   4dBMHodXn8sSQqRFawDSbarC4fuqrtovdpr9/gABvOjHBbH5xoVWVszED
+   uQ303yruBCDwjCIG+3/UQ0hDGK/m4lNC7sAiEZpy4t1os11CLCzhEHO9G
+   Q==;
+IronPort-SDR: v7J4FENc6Nv3RNwwhBJIpUS6bHxUJFuqNvFwoxA9Cjtr7w98d9qImh+TstokF80hw5bqMWTBv7
+ 0s4SsgfoCtyvEM6ne5plNZS+5rnu1Affcwnsruy00hpqQrgfHM2SSsVaIAG/lHM8bDbMVgSuYT
+ 9FpA4wP+SedflP6RSGLRfaCf3KV3QHfChM6SKoaakb7HRHk+dK/glkMNVnNSmpO2G1yQm9HKAu
+ e4fzHA952AFDVsFKRbIZPtiYnppUz5nhPCEdE1sNF4ksKU7DQrHpzYdxemexbYVmudkpfziuJn
+ 2Gg=
+X-IronPort-AV: E=Sophos;i="5.72,382,1580745600"; 
+   d="scan'208";a="135285831"
+Received: from mail-dm6nam11lp2170.outbound.protection.outlook.com (HELO NAM11-DM6-obe.outbound.protection.outlook.com) ([104.47.57.170])
+  by ob1.hgst.iphmx.com with ESMTP; 14 Apr 2020 16:09:22 +0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RYt1HpqTqIQ08z9VachJ/m8PEvHKzZVQ4CNfWWlaertsygvi0uSSpJqtA/Cdkx/Las5HHVoC9/p+xdpRhITdHZWb1pjPwHdTiCrSFQgixsY8ZMD6zwU1wcBTUvDnQucvRFScwFSP2dl1kuXp0McTgcArLskahHLWDfeXL7XG01OCrLaAbrsV78JHeJalXMmqnOU/OPt2J0UVie4A9mKno0+YKhmS5U/V5jti6WMZNfNu9ASHOLmkZ18U2FGac5ZtKPb3xZNyAVr7l/90XJh3eVve2Qt/Fxlosccam7102MmWlxXi8GvNsCFfNQuPJ/QA5YEyJ3OgM3CGqIzbBlbq9g==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=Fpvj6GatHjep0G0T/B3jVWyqXxtoFtg8w/hygkz77R/wnmqhk5U+GcYyb4qi6848ZC0EzVjVHUPkqZDfFpDALkUvPksF/wqilcYFSGvhKUFSa7rDwpOLYJmKere9pPuS7RcIli2J/5leq4hl2Paz7SJpMfOWz8BA/wEsB0ar8WhRiRS/s9oWwx3v5Is2SHojPfeDqGziSgGdPW1GhVpr/wRIjUix/w9Q3Srs0qa+IYMUqE0QrkfqotUaG+h56zbvbajMoMdB5Hwmg+T6ihPlimRSwfiWAqtAGWBp+3jTknlTXwYUTCaZtFHChxIbjUHErt3M+53gVthjfNfwB0idPw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=wdc.com; dmarc=pass action=none header.from=wdc.com; dkim=pass
+ header.d=wdc.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=sharedspace.onmicrosoft.com; s=selector2-sharedspace-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=G8FZ0D3PP/OudJ5uuxCAz/C/vBHo8wESZoPwxTWqVEI=;
+ b=s0/ZJFi+Z3oW9/ppwMqPO38r54fEgnWgN0PM6j/PjgeEQGLYjRYjdmoK5KNbGoVzg+ZCBRPMGWlK+PVCRBdFnE8f7DtLQMUzw9C1RZWWrNd+xbBoW73sFxH0giv/RlwkiWSVtf8drlrATIAJlIDXKp8FCx4j/CeXhI2XzBBUmoc=
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ (2603:10b6:803:47::21) by SN4PR0401MB3567.namprd04.prod.outlook.com
+ (2603:10b6:803:4b::27) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2900.26; Tue, 14 Apr
+ 2020 08:09:22 +0000
+Received: from SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::9854:2bc6:1ad2:f655]) by SN4PR0401MB3598.namprd04.prod.outlook.com
+ ([fe80::9854:2bc6:1ad2:f655%4]) with mapi id 15.20.2900.028; Tue, 14 Apr 2020
+ 08:09:22 +0000
+From:   Johannes Thumshirn <Johannes.Thumshirn@wdc.com>
+To:     Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>
+CC:     Stefan Haberland <sth@linux.ibm.com>,
         Jan Hoeppner <hoeppner@linux.ibm.com>,
-        linux-block@vger.kernel.org, linux-s390@vger.kernel.org,
-        Johannes Thumshirn <johannes.thumshirn@wdc.com>
-Subject: [PATCH 10/10] block: fold bdev_unhash_inode into invalidate_partition
-Date:   Tue, 14 Apr 2020 09:29:02 +0200
-Message-Id: <20200414072902.324936-11-hch@lst.de>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <20200414072902.324936-1-hch@lst.de>
+        "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>
+Subject: Re: [PATCH 01/10] block: refactor blkpg_ioctl
+Thread-Topic: [PATCH 01/10] block: refactor blkpg_ioctl
+Thread-Index: AQHWEi5qZgCeXVhxYEGmuCSbijZSPg==
+Date:   Tue, 14 Apr 2020 08:09:21 +0000
+Message-ID: <SN4PR0401MB35983F7EFF5246068A3CECAB9BDA0@SN4PR0401MB3598.namprd04.prod.outlook.com>
 References: <20200414072902.324936-1-hch@lst.de>
+ <20200414072902.324936-2-hch@lst.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Johannes.Thumshirn@wdc.com; 
+x-originating-ip: [129.253.240.72]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: decfeeb9-22ad-41bb-83bb-08d7e04b239c
+x-ms-traffictypediagnostic: SN4PR0401MB3567:
+x-microsoft-antispam-prvs: <SN4PR0401MB35677F37379AA8847EEA65F59BDA0@SN4PR0401MB3567.namprd04.prod.outlook.com>
+wdcipoutbound: EOP-TRUE
+x-ms-oob-tlc-oobclassifiers: OLM:1728;
+x-forefront-prvs: 0373D94D15
+x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SN4PR0401MB3598.namprd04.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10019020)(4636009)(136003)(346002)(39850400004)(376002)(396003)(366004)(26005)(55016002)(5660300002)(9686003)(66476007)(8676002)(8936002)(81156014)(52536014)(4326008)(6506007)(7696005)(66446008)(71200400001)(4270600006)(66556008)(66946007)(76116006)(91956017)(33656002)(64756008)(110136005)(478600001)(54906003)(316002)(19618925003)(86362001)(186003)(2906002)(558084003);DIR:OUT;SFP:1102;
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: K3ovq4vM2zM/R0rqCQOZCqv9AwE4eYWVhWQp6BPy4StG/n61fafw/AyfacnX599Wo9N8DkBeT+YZPqG1cyP32eXv7068zc+8plPE4YgSjAJd0dB/xV02RR6bc4LfY4b3n0EdRnAQl5e7D+eEczLwt3Uj0KyDuz3ob6PhOcxQNnVDJbhWDJJaelcr9GRjZsDitAEZrJi48CM7p0jNStAHfLBB9y+L5ZVy25jRni7RoekeIY6Eyi528JKDhIyVxowiWrjytZh2EMjilYHboTwVVLN8eFjsEPqepQHj9WGcZX9hhI+CisPO8Mi3bYQg8dLyAHWpB5qkIbbKVIci0sgRYmpQp4g+oaLd8bTnsUWwwfEjDDFYEHwvFtgsvJwqTiO/fsSlQ14JYUUjB+O9vElimmLOzyzljsn+x73dzECPmp4JzGbG79JZEeqiSH88M+RF
+x-ms-exchange-antispam-messagedata: 2UPeeMQ5/+4N32Vb2uaqrlHRZ3B1LrKi3gzCIoCDw2esKeLA2gxPuSh5UlNY0TVEdz86NQWrVa98YYbvRlXpk84TsB63IaehltDYveFRXfwrMMTOX5hybiUuNIi9HCiCs0St7Hf2M398kc7ibrzFDw==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-OriginatorOrg: wdc.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: decfeeb9-22ad-41bb-83bb-08d7e04b239c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 14 Apr 2020 08:09:21.9694
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: sPaaaEka6Sz0ogjIEI7+w0/DqyN1OY55mk4tjmWqD5AV7jXHZBexgCLVjdTmw5HuThwzzVGEZxFsejow9xU/PayvdPA52xCpjkWAfr+siI8=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN4PR0401MB3567
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-invalidate_partition and bdev_unhash_inode are always paired, and
-invalidate_partition already does an icache lookup for the block device
-inode.  Piggy back on that to remove the inode from the hash.
-
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>
----
- block/genhd.c      |  8 ++++++--
- fs/block_dev.c     | 15 ---------------
- include/linux/fs.h |  1 -
- 3 files changed, 6 insertions(+), 18 deletions(-)
-
-diff --git a/block/genhd.c b/block/genhd.c
-index 980a4609d4a5..c05d509877fa 100644
---- a/block/genhd.c
-+++ b/block/genhd.c
-@@ -888,6 +888,12 @@ static void invalidate_partition(struct gendisk *disk, int partno)
- 
- 	fsync_bdev(bdev);
- 	__invalidate_device(bdev, true);
-+
-+	/*
-+	 * Unhash the bdev inode for this device so that it gets evicted as soon
-+	 * as last inode reference is dropped.
-+	 */
-+	remove_inode_hash(bdev->bd_inode);
- 	bdput(bdev);
- }
- 
-@@ -909,13 +915,11 @@ void del_gendisk(struct gendisk *disk)
- 			     DISK_PITER_INCL_EMPTY | DISK_PITER_REVERSE);
- 	while ((part = disk_part_iter_next(&piter))) {
- 		invalidate_partition(disk, part->partno);
--		bdev_unhash_inode(part_devt(part));
- 		delete_partition(disk, part);
- 	}
- 	disk_part_iter_exit(&piter);
- 
- 	invalidate_partition(disk, 0);
--	bdev_unhash_inode(disk_devt(disk));
- 	set_capacity(disk, 0);
- 	disk->flags &= ~GENHD_FL_UP;
- 	up_write(&disk->lookup_sem);
-diff --git a/fs/block_dev.c b/fs/block_dev.c
-index 9c8de54fa0c9..998820174d3e 100644
---- a/fs/block_dev.c
-+++ b/fs/block_dev.c
-@@ -883,21 +883,6 @@ static int bdev_set(struct inode *inode, void *data)
- 
- static LIST_HEAD(all_bdevs);
- 
--/*
-- * If there is a bdev inode for this device, unhash it so that it gets evicted
-- * as soon as last inode reference is dropped.
-- */
--void bdev_unhash_inode(dev_t dev)
--{
--	struct inode *inode;
--
--	inode = ilookup5(blockdev_superblock, hash(dev), bdev_test, &dev);
--	if (inode) {
--		remove_inode_hash(inode);
--		iput(inode);
--	}
--}
--
- struct block_device *bdget(dev_t dev)
- {
- 	struct block_device *bdev;
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index 2b4e9f86b151..1a95e5158811 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2581,7 +2581,6 @@ extern struct kmem_cache *names_cachep;
- #ifdef CONFIG_BLOCK
- extern int register_blkdev(unsigned int, const char *);
- extern void unregister_blkdev(unsigned int, const char *);
--extern void bdev_unhash_inode(dev_t dev);
- extern struct block_device *bdget(dev_t);
- extern struct block_device *bdgrab(struct block_device *bdev);
- extern void bd_set_size(struct block_device *, loff_t size);
--- 
-2.25.1
-
+Looks good,=0A=
+Reviewed-by: Johannes Thumshirn <johannes.thumshirn@wdc.com>=0A=
