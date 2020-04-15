@@ -2,169 +2,135 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id DC42F1AAF28
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 19:12:56 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 5952B1AB106
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 21:10:35 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2410697AbgDORK0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Apr 2020 13:10:26 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42318 "EHLO
+        id S2441550AbgDOTIc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Apr 2020 15:08:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41926 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2410692AbgDORK0 (ORCPT
+        by vger.kernel.org with ESMTP id S371249AbgDOTEI (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 Apr 2020 13:10:26 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FH5xa7132493;
-        Wed, 15 Apr 2020 13:10:23 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30dnmsmntr-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 13:10:23 -0400
-Received: from m0098413.ppops.net (m0098413.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03FH65f9133091;
-        Wed, 15 Apr 2020 13:10:23 -0400
-Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30dnmsmntc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 13:10:23 -0400
-Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
-        by ppma05wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03FH5wIj007778;
-        Wed, 15 Apr 2020 17:10:22 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma05wdc.us.ibm.com with ESMTP id 30b5h73d6j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 15 Apr 2020 17:10:22 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03FHAJFm44695848
+        Wed, 15 Apr 2020 15:04:08 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FJ3I0s039179
+        for <linux-s390@vger.kernel.org>; Wed, 15 Apr 2020 15:04:07 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30dnmrg7ek-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 15 Apr 2020 15:04:07 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <farman@linux.ibm.com>;
+        Wed, 15 Apr 2020 20:03:30 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 Apr 2020 20:03:27 +0100
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03FJ41bo57802806
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 17:10:19 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8FBF7BE053;
-        Wed, 15 Apr 2020 17:10:19 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72E99BE051;
-        Wed, 15 Apr 2020 17:10:18 +0000 (GMT)
-Received: from cpe-172-100-172-46.stny.res.rr.com (unknown [9.85.131.104])
-        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Apr 2020 17:10:18 +0000 (GMT)
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
- resource in use
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-4-akrowiak@linux.ibm.com>
- <20200414140838.54f777b8.cohuck@redhat.com>
-Message-ID: <0f193571-1ff6-08f3-d02d-b4f40d2930c8@linux.ibm.com>
-Date:   Wed, 15 Apr 2020 13:10:18 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
-MIME-Version: 1.0
-In-Reply-To: <20200414140838.54f777b8.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        Wed, 15 Apr 2020 19:04:01 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC6854C058;
+        Wed, 15 Apr 2020 19:04:00 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DA8B34C04A;
+        Wed, 15 Apr 2020 19:04:00 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed, 15 Apr 2020 19:04:00 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 4958)
+        id 737F1E027F; Wed, 15 Apr 2020 21:03:55 +0200 (CEST)
+From:   Eric Farman <farman@linux.ibm.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org
+Cc:     Christian Borntraeger <borntraeger@de.ibm.com>,
+        Janosch Frank <frankja@linux.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Michael Mueller <mimu@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Thomas Huth <thuth@redhat.com>,
+        Eric Farman <farman@linux.ibm.com>
+Subject: [PATCH] KVM: s390: Fix PV check in deliverable_irqs()
+Date:   Wed, 15 Apr 2020 21:03:53 +0200
+X-Mailer: git-send-email 2.17.1
 X-TM-AS-GCONF: 00
+x-cbid: 20041519-4275-0000-0000-000003C0792E
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041519-4276-0000-0000-000038D5F14C
+Message-Id: <20200415190353.63625-1-farman@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-15_06:2020-04-14,2020-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 mlxscore=0
- adultscore=0 priorityscore=1501 mlxlogscore=999 bulkscore=0 clxscore=1015
- spamscore=0 lowpriorityscore=0 malwarescore=0 phishscore=0 suspectscore=3
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004150120
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 clxscore=1015
+ phishscore=0 adultscore=0 suspectscore=0 mlxlogscore=999 spamscore=0
+ mlxscore=0 lowpriorityscore=0 priorityscore=1501 impostorscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150136
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+The diag 0x44 handler, which handles a directed yield, goes into a
+a codepath that does a kvm_for_each_vcpu() and ultimately
+deliverable_irqs().  The new check for kvm_s390_pv_cpu_is_protected()
+contains an assertion that the vcpu->mutex is held, which isn't going
+to be the case in this scenario.
 
+The result is a plethora of these messages if the lock debugging
+is enabled, and thus an implication that we have a problem.
 
-On 4/14/20 8:08 AM, Cornelia Huck wrote:
-> On Tue,  7 Apr 2020 15:20:03 -0400
-> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->
->> Introduces a new driver callback to prevent a root user from unbinding
->> an AP queue from its device driver if the queue is in use. The intent of
->> this callback is to provide a driver with the means to prevent a root user
->> from inadvertently taking a queue away from a guest and giving it to the
->> host while the guest is still using it. The callback will
->> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
->> attributes would result in one or more AP queues being removed from its
->> driver. If the callback responds in the affirmative for any driver
->> queried, the change to the apmask or aqmask will be rejected with a device
->> in use error.
->>
->> For this patch, only non-default drivers will be queried. Currently,
->> there is only one non-default driver, the vfio_ap device driver. The
->> vfio_ap device driver manages AP queues passed through to one or more
->> guests and we don't want to unexpectedly take AP resources away from
->> guests which are most likely independently administered.
->>
->> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->> ---
->>   drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
->>   drivers/s390/crypto/ap_bus.h |   4 +
->>   2 files changed, 142 insertions(+), 6 deletions(-)
->>
->> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
->> index 5256e3ce84e5..af15c095e76a 100644
->> --- a/drivers/s390/crypto/ap_bus.c
->> +++ b/drivers/s390/crypto/ap_bus.c
->> @@ -35,6 +35,7 @@
->>   #include <linux/mod_devicetable.h>
->>   #include <linux/debugfs.h>
->>   #include <linux/ctype.h>
->> +#include <linux/module.h>
->>   
->>   #include "ap_bus.h"
->>   #include "ap_debug.h"
->> @@ -995,9 +996,11 @@ int ap_parse_mask_str(const char *str,
->>   	newmap = kmalloc(size, GFP_KERNEL);
->>   	if (!newmap)
->>   		return -ENOMEM;
->> -	if (mutex_lock_interruptible(lock)) {
->> -		kfree(newmap);
->> -		return -ERESTARTSYS;
->> +	if (lock) {
->> +		if (mutex_lock_interruptible(lock)) {
->> +			kfree(newmap);
->> +			return -ERESTARTSYS;
->> +		}
-> This whole function is a bit odd. It seems all masks we want to
-> manipulate are always guarded by the ap_perms_mutex, and the need for
-> allowing lock == NULL comes from wanting to call this function with the
-> ap_perms_mutex already held.
->
-> That would argue for a locked/unlocked version of this function... but
-> looking at it, why do we lock the way we do? The one thing this
-> function (prior to this patch) does outside of the holding of the mutex
-> is the allocation and freeing of newmap. But with this patch, we do the
-> allocation and freeing of newmap while holding the mutex. Something
-> seems a bit weird here.
+  WARNING: CPU: 9 PID: 16167 at arch/s390/kvm/kvm-s390.h:239 deliverable_irqs+0x1c6/0x1d0 [kvm]
+  ...snip...
+  Call Trace:
+   [<000003ff80429bf2>] deliverable_irqs+0x1ca/0x1d0 [kvm]
+  ([<000003ff80429b34>] deliverable_irqs+0x10c/0x1d0 [kvm])
+   [<000003ff8042ba82>] kvm_s390_vcpu_has_irq+0x2a/0xa8 [kvm]
+   [<000003ff804101e2>] kvm_arch_dy_runnable+0x22/0x38 [kvm]
+   [<000003ff80410284>] kvm_vcpu_on_spin+0x8c/0x1d0 [kvm]
+   [<000003ff80436888>] kvm_s390_handle_diag+0x3b0/0x768 [kvm]
+   [<000003ff80425af4>] kvm_handle_sie_intercept+0x1cc/0xcd0 [kvm]
+   [<000003ff80422bb0>] __vcpu_run+0x7b8/0xfd0 [kvm]
+   [<000003ff80423de6>] kvm_arch_vcpu_ioctl_run+0xee/0x3e0 [kvm]
+   [<000003ff8040ccd8>] kvm_vcpu_ioctl+0x2c8/0x8d0 [kvm]
+   [<00000001504ced06>] ksys_ioctl+0xae/0xe8
+   [<00000001504cedaa>] __s390x_sys_ioctl+0x2a/0x38
+   [<0000000150cb9034>] system_call+0xd8/0x2d8
+  2 locks held by CPU 2/KVM/16167:
+   #0: 00000001951980c0 (&vcpu->mutex){+.+.}, at: kvm_vcpu_ioctl+0x90/0x8d0 [kvm]
+   #1: 000000019599c0f0 (&kvm->srcu){....}, at: __vcpu_run+0x4bc/0xfd0 [kvm]
+  Last Breaking-Event-Address:
+   [<000003ff80429b34>] deliverable_irqs+0x10c/0x1d0 [kvm]
+  irq event stamp: 11967
+  hardirqs last  enabled at (11975): [<00000001502992f2>] console_unlock+0x4ca/0x650
+  hardirqs last disabled at (11982): [<0000000150298ee8>] console_unlock+0xc0/0x650
+  softirqs last  enabled at (7940): [<0000000150cba6ca>] __do_softirq+0x422/0x4d8
+  softirqs last disabled at (7929): [<00000001501cd688>] do_softirq_own_stack+0x70/0x80
 
-Note that the ap_parse_mask function copies the newmap
-to the bitmap passed in as a parameter to the function.
-Prior to the introduction of this patch, the calling functions - i.e.,
-apmask_store(), aqmask_store() and ap_perms_init() - passed
-in the actual bitmap (i.e., ap_perms.apm or ap_perms aqm),
-so the ap_perms were changed directly by this function.
+Considering what's being done here, let's fix this by removing the
+mutex assertion rather than acquiring the mutex for every other vcpu.
 
-With this patch, the apmask_store() and aqmask_store()
-functions now pass in a copy of those bitmaps. This is so
-we can verify that any APQNs being removed are not
-in use by the vfio_ap device driver before committing the
-change to ap_perms. Consequently, it is now necessary
-to take the lock for the until the changes are committed.
+Fixes: 201ae986ead7 ("KVM: s390: protvirt: Implement interrupt injection")
+Signed-off-by: Eric Farman <farman@linux.ibm.com>
+---
+ arch/s390/kvm/interrupt.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Having explained that, you make a valid argument that
-this calls for a locked/unlocked version of this function, so
-I will modify this patch to that effect.
-
->
->>   	}
->>   
->>   	if (*str == '+' || *str == '-') {
+diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+index 8191106bf7b9..bfb481134994 100644
+--- a/arch/s390/kvm/interrupt.c
++++ b/arch/s390/kvm/interrupt.c
+@@ -393,7 +393,7 @@ static unsigned long deliverable_irqs(struct kvm_vcpu *vcpu)
+ 	if (psw_mchk_disabled(vcpu))
+ 		active_mask &= ~IRQ_PEND_MCHK_MASK;
+ 	/* PV guest cpus can have a single interruption injected at a time. */
+-	if (kvm_s390_pv_cpu_is_protected(vcpu) &&
++	if (kvm_s390_pv_cpu_get_handle(vcpu) &&
+ 	    vcpu->arch.sie_block->iictl != IICTL_CODE_NONE)
+ 		active_mask &= ~(IRQ_PEND_EXT_II_MASK |
+ 				 IRQ_PEND_IO_MASK |
+-- 
+2.17.1
 
