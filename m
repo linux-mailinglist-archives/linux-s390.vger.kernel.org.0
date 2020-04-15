@@ -2,146 +2,210 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 47E7D1A984C
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 11:19:12 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C54E41A98CE
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 11:27:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408387AbgDOJS7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Apr 2020 05:18:59 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31750 "EHLO
+        id S2895502AbgDOJ0y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Apr 2020 05:26:54 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:51234 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2895272AbgDOJSz (ORCPT
+        by vger.kernel.org with ESMTP id S2895501AbgDOJ0x (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 Apr 2020 05:18:55 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03F94dNj065598
-        for <linux-s390@vger.kernel.org>; Wed, 15 Apr 2020 05:18:53 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnn3exfu-1
+        Wed, 15 Apr 2020 05:26:53 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03F939cR100219
+        for <linux-s390@vger.kernel.org>; Wed, 15 Apr 2020 05:26:52 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnn57a7s-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 15 Apr 2020 05:18:53 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 15 Apr 2020 05:26:52 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <sth@linux.ibm.com>;
-        Wed, 15 Apr 2020 10:18:23 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
+        Wed, 15 Apr 2020 10:26:09 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 15 Apr 2020 10:18:20 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03F9IkxA46530632
+        Wed, 15 Apr 2020 10:26:05 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03F9QiTZ20185188
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 15 Apr 2020 09:18:46 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78C8811C066;
-        Wed, 15 Apr 2020 09:18:46 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2377E11C052;
-        Wed, 15 Apr 2020 09:18:46 +0000 (GMT)
-Received: from linux.fritz.box (unknown [9.145.153.254])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 15 Apr 2020 09:18:46 +0000 (GMT)
-Subject: Re: [PATCH 1/1] s390: Cleanup removed IOSCHED_DEADLINE
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     linux-block@vger.kernel.org, hoeppner@linux.ibm.com,
-        linux-s390@vger.kernel.org, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com
-References: <20200406074118.86849-1-sth@linux.ibm.com>
- <20200406074118.86849-2-sth@linux.ibm.com>
- <0efad2a5-90f5-8ccf-169e-9715a64a4bb0@kernel.dk>
- <c7ac9c3c-3a1f-3ce3-acbd-422bc4206288@linux.ibm.com>
- <4a51ce19-7827-5ee6-8b06-5b814bdf503a@kernel.dk>
-From:   Stefan Haberland <sth@linux.ibm.com>
-Autocrypt: addr=sth@linux.ibm.com; keydata=
- mQINBFtGVggBEADI1Lne1npTa+b5x5EJ7ka0siRMargCCo5dcOaCBBG3wT24IyyG6chdV7Yr
- vkeHDm/6OjMi+w8Vbx2ts0KhYWMj9SHX2E58AsyBedeCkedOKuhkNh0HNSv8WMCEi24uoYK9
- 3VW0bQ3KYAB5wYQ/bONn05qSJ18Ev2Mqs1IOJdukJAM6dcJoUX2NigSiumGBB1SgJLHjbAFB
- lR0OUeFD1QOFF9vljOnTXhMeiDwRpJtKRN2z2FmqBKJl4hinBARd6JvHPZ+2OveTfyzj3acH
- LDfLETVMiBB0/iJGzFLrM7EcNdo2Cz9RhcPFDYJO9u5Oa9RcYlcBDngBi6q4dLwncABiM9hl
- 0uiNfemxpEhIIEMh3GRfTDknAwQNRL+PWTE3K15YQ4O5Kk7ybwxrEjm0bKAso8GAXGTF5D7V
- NuoA/KYChCChG4Nr6mq7nqhO/Ooyn7KmchtdKlcs/OP8eidv3dfNHPAcesmzhc2YFf/+vxzH
- DJaAxiLmo+4jImghF3GUwGCK28Gm1yqDM/Zk9pTDV8iGrcz4L4U6XPjLJH6AHKdRViTEUPCC
- ZkuDh8sLwV7m1HWNTIatubYBokQqpcjxa1YIBF3vdn407vgv8AeKncVsWKFdUYCsbOKoJsiP
- 21N1jo7OF7dzGOHeSecd/8NYbkSoNg9nfn4ro/v0ZqwMATVg7QARAQABtC1TdGVmYW4gSGFi
- ZXJsYW5kIDxzdGVmYW4uaGFiZXJsYW5kQGdtYWlsLmNvbT6JAj0EEwEIACcFAltGVggCGyMF
- CQlmAYAFCwkIBwIGFQgJCgsCBBYCAwECHgECF4AACgkQ9KmDAON4ldE6dhAAn+1T+31d8H+t
- yRJT+RiMatuvfxBm1aTEzV7GgLSfXJD9udecihxNgfEfT2gJI2HiDMCFeoetl4553D92zIB/
- Rnup0C3RH9mP+QDDdy35qGOgCtIVSBz9bFp/F8hm6Ab+DCnCJ8DpVzcB0YoAfDfwdEmh7Q8R
- 317H2IAhlRP44kIJmzZ4WP6pzGSqlmy05wCepDgLiGF5Bc4YnDOoRlv2rGmKO6JET4Nbs4PR
- a5xiNE7AOnsu4bGRN2Rkj0kiwmkYEQLuPoDwr+ookbYRqCVHvkpv+yoyi87yY2xcfbpHasV0
- gFzy/AefjEe5PRfvAhyXeYS3O2PCWuxcKBqHQhHzJz9Kss/k8EGTwj5kxRVgaD6b9yh8dVfH
- hRjkzFCXtrm6zDn1OQnkvIYy04o7UYiYNdzXEBVTsB/JN7kFR/vH5vTR0nU7mEy39uq7Eazs
- SdiyXlA+3lvr6H+P3Kl5ef1wdlT+MZ9Ff/xeJl8p0uB/WsypmdZ5yiEHn7eFSuVsQDadGkh5
- aGchTuBteeHW7xiKQ1JdG+NSxHNnDgf5fB6yXZZPql9JYdcsRI5sQonlvfgRrjcNZ5GsG3Hl
- QHyzKELnDQJjazq7dwGn01WnJon4dcjIqoPm5gC8DKGKf32rWTTDZmEh3y7c4ZomDWPJ7q2l
- 7rqS61Rjq5lmFSrR2LEmXCO5Ag0EW0ZWCAEQAOzd3SIx13tiseVIk+UtI6gsXEamyMbvfIk7
- aJ7UiVlDm/iqp8yU+TWxbNJWF+zvxzFCpmwsgmyy0FCXFEEtAseSNGJUHu9O9xsB1PKSM1+s
- UoL5vl42ldHOMpRnH31PObcq1J9PxBR8toDVnIGZLSFi0m+IgIYCCdpzLVlTN7BtvFWLJ42Y
- kq1KcQE8+OJYSbTP1rMk/GBYX3PBPw4y2efQeqkep3Bvx1DuauOl/PGPKi4xRpycIBYJSDRh
- zoDejB2mMWnm9FVwYKyRBef/PaOYc0FrZ/KlAZk15OaSc9ay14KMTDM2G+lUjBHojtuxt6LH
- zohXw2vqHIJ1zTCBzDY6R7Cssbasu73NoPYwPYUROkJcf/bhepSYa4lCWLWi/+z3UOS+VfhD
- p+b/JlfubyIcumkS+tVx5HMZC+0I4gRqeG/BxhCq7HANn6sRttyRvPUg+z0dRxlDm9evQbhu
- uIt8u6actq6gxGpa89I6gSscx1ojbY5H6+36FOGXN/FygY3EQ6cJ/Tz4hwOB85zA+Do27UnT
- tmqh6N6HlDLH0rFqDStGkU5p4bknHdvFOuiWaafomvSUBt7V3wMS5ST1UpogtLaK4jdEy0hx
- 3mn6O084g01w6Y/rdWFVSWDh9oaQNmR7aeB8JDOklOPJCe0bBKFK0ZMF1Kz9AzFj/RFzWfB5
- ABEBAAGJAiUEGAEIAA8FAltGVggCGwwFCQlmAYAACgkQ9KmDAON4ldGPmA/+L3V5wkmWZJjD
- ZJIvio/wHMoqObEG6MxsFvGEoSDJBBGQ5oTiysACFM2vkOaOhj2Izh2L+dbuKJIT0Qus0hUJ
- uEjGgIAXn7hYNeM1MMqSA81NEoCeUhNHeZudf5WSoglG3rUnxIXrnxfDkn8Vd36cinGejyrI
- qJoydRMpX48I3wJcyvZ8+xgM/LLlvXEH4BpuJL+vQkefJrn0R2vxTnHcj5TE1tKNwhI7/343
- PNzhgHGYynjCbF4u9qpSqcJl/exFnRXaTH6POIbHXIRe8n4TfdXsOcbI3j/GUF0cXinkfxdt
- BWH5rC3Ng+EN3jkDo8N9qF7uEqN9rRaekqsO0jYMQJlfZeJSQH9KHD+wgZly9j6DmnGexbdB
- aJdzCtbIR+oJy0HjfwvIQrgp1pj0yvXeDsUHykATsORx0ZitlGUuU6tlAnbH346nNSDoklLI
- lEDvODTgpkhWDczM69MGKrFYgDcIqXZFWzea6Xq+cuGtGO5xV/4K+efWQovlIdv4mE4j2E2G
- yXj14Nuyh4wqdX9/yspSZCH1TCbXD9WEB5nQCQNAKzIB7YaTQBjFi1HFzGOGYteZGC37DJ6a
- xEMRG8/iNZSU4dSL+XsaTnUk5wzzSnz0QVOEOqRY5tkS3zpo9OUGevyR3R6bRqH3EaA5H1cS
- cH4TNHyhiR0KAbxE8qKx3Jc=
-Date:   Wed, 15 Apr 2020 11:18:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        Wed, 15 Apr 2020 09:26:44 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5C9CD42049;
+        Wed, 15 Apr 2020 09:26:44 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id A2FD742042;
+        Wed, 15 Apr 2020 09:26:43 +0000 (GMT)
+Received: from p-imbrenda (unknown [9.145.12.13])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Apr 2020 09:26:43 +0000 (GMT)
+Date:   Wed, 15 Apr 2020 11:26:39 +0200
+From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
+        jack@suse.cz, kirill@shutemov.name, borntraeger@de.ibm.com,
+        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
+        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
+        Will Deacon <will@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+In-Reply-To: <93dc9885-adb4-8b9d-a62a-e40301053551@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+        <20200306132537.783769-3-imbrenda@linux.ibm.com>
+        <11dc928d-60b4-f04f-1ebf-f4cffb337a6c@intel.com>
+        <20200414180300.52640444@p-imbrenda>
+        <93dc9885-adb4-8b9d-a62a-e40301053551@intel.com>
+Organization: IBM
+X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <4a51ce19-7827-5ee6-8b06-5b814bdf503a@kernel.dk>
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Content-Language: en-US
 X-TM-AS-GCONF: 00
-x-cbid: 20041509-0008-0000-0000-00000371081B
+x-cbid: 20041509-0020-0000-0000-000003C82C68
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041509-0009-0000-0000-00004A92BB54
-Message-Id: <57392f59-725d-654e-81dd-532c19b7702f@linux.ibm.com>
+x-cbparentid: 20041509-0021-0000-0000-000022210D3B
+Message-Id: <20200415112639.525e25bc@p-imbrenda>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 bulkscore=0
- priorityscore=1501 mlxlogscore=999 adultscore=0 clxscore=1015
- malwarescore=0 mlxscore=0 phishscore=0 impostorscore=0 lowpriorityscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 adultscore=0 bulkscore=0 clxscore=1015 spamscore=0
+ mlxlogscore=999 impostorscore=0 mlxscore=0 lowpriorityscore=0 phishscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2003020000 definitions=main-2004150070
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Am 07.04.20 um 21:24 schrieb Jens Axboe:
-> On 4/7/20 3:01 AM, Stefan Haberland wrote:
->> Am 06.04.20 um 17:32 schrieb Jens Axboe:
->>> On 4/6/20 1:41 AM, Stefan Haberland wrote:
->>>> From: Krzysztof Kozlowski <krzk@kernel.org>
->>>>
->>>> CONFIG_IOSCHED_DEADLINE is gone since commit f382fb0bcef4 ("block:
->>>> remove legacy IO schedulers").
->>> Isn't this a leftover thing from when dasd selected deadline
->>> internally? I don't think we need this anymore, just kill the
->>> select completely.
->>>
->> Basically yes.
->> We still have the recommendation to use deadline and there are some udev
->> rules in place which select it.
->> So I thought it might be a good idea to keep the line. But I am also
->> fine to drop it completely if you prefer this.
-> I don't feel super strongly about it, but at the same time I don't
-> think there's a reason for it. Besides, I think everyone has deadline
-> enabled. So I guess we should just kill it.
->
+On Tue, 14 Apr 2020 11:50:16 -0700
+Dave Hansen <dave.hansen@intel.com> wrote:
 
-OK, thanks for your opinion. I will remove the line and come up with a
-different patch.
+> On 4/14/20 9:03 AM, Claudio Imbrenda wrote:
+> > On Mon, 13 Apr 2020 13:22:24 -0700
+> > Dave Hansen <dave.hansen@intel.com> wrote:
+> >   
+> >> On 3/6/20 5:25 AM, Claudio Imbrenda wrote:  
+> >>> On s390x the function is not supposed to fail, so it is ok to use
+> >>> a WARN_ON on failure. If we ever need some more finegrained
+> >>> handling we can tackle this when we know the details.    
+> >>
+> >> Could you explain a bit why the function can't fail?  
+> > 
+> > the concept of "making accessible" is only to make sure that
+> > accessing the page will not trigger faults or I/O or DMA errors. in
+> > general it does not mean freely accessing the content of the page
+> > in cleartext. 
+> > 
+> > on s390x, protected guest pages can be shared. the guest has to
+> > actively share its pages, and in that case those pages are both
+> > part of the protected VM and freely accessible by the host.  
+> 
+> Oh, that's interesting.
+> 
+> It sounds like there are three separate concepts:
+> 1. Protection
+> 2. Sharing
+> 3. Accessibility
+> 
+> Protected pages may be shared and the request of the guest.
+> Shared pages' plaintext can be accessed by the host.  For unshared
+> pages, the host can only see ciphertext.
+> 
+> I wonder if Documentation/virt/kvm/s390-pv.rst can be beefed up with
+> some of this information.  It seems a bit sparse on this topic.
 
+that is definitely something that can be fixed.
+
+I will improve the documentation and make sure it properly explains
+all the details of how protected VMs work on s390x.
+
+> As it stands, if I were modifying generic code, I don't think I'd have
+> even a chance of getting an arch_make_page_accessible() in the right
+> spot.
+> 
+> > in our case "making the page accessible" means:  
+> ...
+> >  - if the page was not shared, first encrypt it and then make it
+> >    accessible to the host (both operations performed securely and
+> >    atomically by the hardware)  
+> 
+> What happens to the guest's view of the page when this happens?  Does
+> it keep seeing plaintext?
+> 
+> > then the page can be swapped out, or used for direct I/O (obviously
+> > if you do I/O on a page that was not shared, you cannot expect good
+> > things to happen, since you basically corrupt the memory of the
+> > guest).  
+> 
+> So why even allow access to the encrypted contents if the host can't
+> do anything useful with it?  Is there some reason for going to the
+> trouble of encrypting it and exposing it to the host?
+
+you should not overwrite it, but you can/should write it out verbatim,
+e.g. for swap
+
+> > on s390x performing I/O directly on protected pages results in (in
+> > practice) unrecoverable I/O errors, so we want to avoid it at all
+> > costs.  
+> 
+> This is understandable, but we usually steer I/O operations in places
+> like the DMA API, not in the core VM.
+> 
+> We *have* the concept of pages to which I/O can't be done.  There are
+> plenty of crippled devices where we have to bounce data into a low
+> buffer before it can go where we really want it to.  I think the AMD
+> SEV patches do this, for instance.
+> 
+> > accessing protected pages from the CPU triggers an exception that
+> > can be handled (and we do handle it, in fact)
+> > 
+> > now imagine a buggy or malicious qemu process crashing the whole
+> > machine just because it did I/O to/from a protected page. we
+> > clearly don't want that.  
+> 
+> Is DMA disallowed to *all* protected pages?  Even pages which the
+> guest has explicitly shared with the host?
+> 
+> 
+> >>> @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page
+> >>> *page, bool keep_write) inc_zone_page_state(page,
+> >>> NR_ZONE_WRITE_PENDING); }
+> >>>  	unlock_page_memcg(page);
+> >>> +	access_ret = arch_make_page_accessible(page);
+> >>> +	/*
+> >>> +	 * If writeback has been triggered on a page that cannot
+> >>> be made
+> >>> +	 * accessible, it is too late to recover here.
+> >>> +	 */
+> >>> +	VM_BUG_ON_PAGE(access_ret != 0, page);
+> >>> +
+> >>>  	return ret;
+> >>>  
+> >>>  }    
+> >>
+> >> This seems like a really odd place to do this.  Writeback is
+> >> specific to block I/O.  I would have thought there were other
+> >> kinds of devices that matter, not just block devices.  
+> > 
+> > well, yes and no. for writeback (block I/O and swap) this is the
+> > right place. at this point we know that the page is present and
+> > nobody else has started doing I/O yet, and I/O will happen
+> > soon-ish. so we make the page accessible. there is no turning back
+> > here, unlike pinning. we are not allowed to fail, we can't   
+> 
+> This description sounds really incomplete to me.
+> 
+> Not all swap involved device I/O.  For instance, zswap doesn't involve
+> any devices.  Would zswap need this hook?
+
+please feel free to write to me privately if you have any further
+questions or doubts :)
+
+
+best regards,
+
+Claudio Imbrenda
 
