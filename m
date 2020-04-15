@@ -2,93 +2,76 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7882C1A9DEA
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 13:50:57 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 3CC711AA0A9
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 14:32:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2409427AbgDOLsJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Apr 2020 07:48:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43790 "EHLO mail.kernel.org"
+        id S369446AbgDOM35 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Apr 2020 08:29:57 -0400
+Received: from mx2.suse.de ([195.135.220.15]:52318 "EHLO mx2.suse.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2409419AbgDOLsG (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:48:06 -0400
-Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2475C2137B;
-        Wed, 15 Apr 2020 11:48:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586951286;
-        bh=QfbcyYDaBWmJRjjiORon6lz8/Yn4d3ZYAl2wpL+C0Is=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lXeCK76ZSBgxTknjGz1yGf2GW5zizX0q5R9fbZo1HtTqrTRn5/VpeYiI/9BdFhM+P
-         1pLV+tUG4yaydIvkS+mDPFOxaYKxE3Z5mm50IhTKhFGR7MDFVLukeY06rzEf0hFPCa
-         CDHLn2rOAMbK77rqcIlQSKvyTCSgepzHlggkOaK8=
-From:   Sasha Levin <sashal@kernel.org>
-To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     David Hildenbrand <david@redhat.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 4.9 14/21] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
-Date:   Wed, 15 Apr 2020 07:47:41 -0400
-Message-Id: <20200415114748.15713-14-sashal@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20200415114748.15713-1-sashal@kernel.org>
-References: <20200415114748.15713-1-sashal@kernel.org>
+        id S369427AbgDOM3p (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 Apr 2020 08:29:45 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 7F854AC11;
+        Wed, 15 Apr 2020 12:29:42 +0000 (UTC)
+Date:   Wed, 15 Apr 2020 14:29:40 +0200
+From:   Joerg Roedel <jroedel@suse.de>
+To:     Lu Baolu <baolu.lu@linux.intel.com>
+Cc:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>,
+        iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+Subject: Re: [PATCH v2 13/33] iommu: Export bus_iommu_probe() and make is
+ safe for re-probing
+Message-ID: <20200415122940.GB21899@suse.de>
+References: <20200414131542.25608-1-joro@8bytes.org>
+ <20200414131542.25608-14-joro@8bytes.org>
+ <1853992c-47a6-3724-812c-a52558c13732@linux.intel.com>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1853992c-47a6-3724-812c-a52558c13732@linux.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: David Hildenbrand <david@redhat.com>
+Hi Baolu,
 
-[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
+On Wed, Apr 15, 2020 at 02:10:03PM +0800, Lu Baolu wrote:
+> On 2020/4/14 21:15, Joerg Roedel wrote:
+> > > +	/* Device is probed already if in a group */
+> > +	if (iommu_group_get(dev) != NULL)
+> 
+> Same as
+> 	if (iommu_group_get(dev))
+> ?
+> 
+> By the way, do we need to put the group if device has already been
+> probed?
 
-We have to properly retry again by returning -EINVAL immediately in case
-somebody else instantiated the table concurrently. We missed to add the
-goto in this function only. The code now matches the other, similar
-shadowing functions.
+Right, fixed both, thank you.
 
-We are overwriting an existing region 2 table entry. All allocated pages
-are added to the crst_list to be freed later, so they are not lost
-forever. However, when unshadowing the region 2 table, we wouldn't trigger
-unshadowing of the original shadowed region 3 table that we replaced. It
-would get unshadowed when the original region 3 table is modified. As it's
-not connected to the page table hierarchy anymore, it's not going to get
-used anymore. However, for a limited time, this page table will stick
-around, so it's in some sense a temporary memory leak.
 
-Identified by manual code inspection. I don't think this classifies as
-stable material.
+Regards,
 
-Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
-Signed-off-by: David Hildenbrand <david@redhat.com>
-Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
-Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/s390/mm/gmap.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
-index b6c85b760305d..099db32ed104a 100644
---- a/arch/s390/mm/gmap.c
-+++ b/arch/s390/mm/gmap.c
-@@ -1680,6 +1680,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
- 		goto out_free;
- 	} else if (*table & _REGION_ENTRY_ORIGIN) {
- 		rc = -EAGAIN;		/* Race with shadow */
-+		goto out_free;
- 	}
- 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
- 	/* mark as invalid as long as the parent table is not protected */
--- 
-2.20.1
-
+	Joerg
