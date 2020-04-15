@@ -2,131 +2,163 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4AEED1A9228
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 07:01:18 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AA08F1A92E9
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 08:08:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393206AbgDOFBN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Apr 2020 01:01:13 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:35204 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2393190AbgDOFBM (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Apr 2020 01:01:12 -0400
-Received: from mail-qv1-xf44.google.com (mail-qv1-xf44.google.com [IPv6:2607:f8b0:4864:20::f44])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 6D486C03C1A7
-        for <linux-s390@vger.kernel.org>; Tue, 14 Apr 2020 22:01:09 -0700 (PDT)
-Received: by mail-qv1-xf44.google.com with SMTP id c12so1105229qvj.5
-        for <linux-s390@vger.kernel.org>; Tue, 14 Apr 2020 22:01:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=ef3HLI/XX5ogd42JRuoGnEbb/Ln3ZxgvuLj5jaeUWkI=;
-        b=Tcxzc6xC3iVTZShTUf3CIv3N8B5ZyCbru12fLV5+tpVooL5/Bo3MM2R4w1+y/qKNnw
-         9lu0zJBRs+VK1Bc14YzwiZC+K/efs95VT8GzxaoJoz3t2WhfDZxWX+BgsMNU20r8wRPv
-         WS98QN/V8NZIzymtO0juNqdA9Tg6/2OTyjU7Zm1KL9ejebzf7wo1d0uOEsRrlg17M8fg
-         qYmffi6H6MwGLJe4epZjwPPvjWIdIXS0xtejpuhYYUqQSrz2GfoywvJh6tC6sCJVyKe7
-         xzOQhWdIv/o82YQJCk9DtMPUw2B8iLWuNwugd4l1OepDEbLixuOHRPHRALsrInJO+Rsn
-         o1og==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ef3HLI/XX5ogd42JRuoGnEbb/Ln3ZxgvuLj5jaeUWkI=;
-        b=Ro79sDvFonVWymlViMSuPfPXiRFiIvmN2dhzVLE50uwE8px4coJ7jjV2dURrGxfsDD
-         78vQAE2iA0kYo3bvDAAKgtvIh4WU/qgW7o91igyBTempfezjWDaDWDYld6qqIVQTRmEE
-         z0ELK9OqNmJA/L/PcT4EYi1Vms7yg2nTGq4MdWzS4/K/5MpccZhblzx6hkYQYEaFfmuS
-         L/XsLagZFh5dTwAitJg2aOyvn9G1YnFebfCOJgWXRfh0E7LZKCVsZkLEL677/j4Ssxld
-         E1UdFDZfBTDEVEvY2LDHKdMb0qy8gNwYAajihus7s9kUfULL4MWtGBANoGom/eu4DAh+
-         dMIw==
-X-Gm-Message-State: AGi0Pua0uWv9e+pV6CG2Dkvi36hQya6Sal/D8gv6wwgJ1XjDy/TghuB5
-        X1e5iY8DJqltwFgNrMn628t8zg==
-X-Google-Smtp-Source: APiQypJRjg+PyUSZjrIkjpxdMfgyPb9bMEWnffTFRMxoE1aQMUITXzNurR0P/0BN6q0H0W5xTyhSBA==
-X-Received: by 2002:a0c:e88d:: with SMTP id b13mr3243342qvo.245.1586926868219;
-        Tue, 14 Apr 2020 22:01:08 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:480::e623])
-        by smtp.gmail.com with ESMTPSA id 10sm6168833qtp.4.2020.04.14.22.01.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 14 Apr 2020 22:01:07 -0700 (PDT)
-Date:   Wed, 15 Apr 2020 01:01:06 -0400
-From:   Johannes Weiner <hannes@cmpxchg.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        David Howells <dhowells@redhat.com>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Joe Perches <joe@perches.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        David Rientjes <rientjes@google.com>, linux-mm@kvack.org,
-        keyrings@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linuxppc-dev@lists.ozlabs.org,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        intel-wired-lan@lists.osuosl.org, linux-ppp@vger.kernel.org,
-        wireguard@lists.zx2c4.com, linux-wireless@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-scsi@vger.kernel.org,
-        target-devel@vger.kernel.org, linux-btrfs@vger.kernel.org,
-        linux-cifs@vger.kernel.org, samba-technical@lists.samba.org,
-        linux-fscrypt@vger.kernel.org, ecryptfs@vger.kernel.org,
-        kasan-dev@googlegroups.com, linux-bluetooth@vger.kernel.org,
-        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
-        linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-        cocci@systeme.lip6.fr, linux-security-module@vger.kernel.org,
-        linux-integrity@vger.kernel.org
-Subject: Re: [PATCH 1/2] mm, treewide: Rename kzfree() to kfree_sensitive()
-Message-ID: <20200415050106.GA154671@cmpxchg.org>
-References: <20200413211550.8307-1-longman@redhat.com>
- <20200413211550.8307-2-longman@redhat.com>
+        id S2441103AbgDOGIi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Apr 2020 02:08:38 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26030 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2393478AbgDOGIf (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 Apr 2020 02:08:35 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03F63CPb071999
+        for <linux-s390@vger.kernel.org>; Wed, 15 Apr 2020 02:08:30 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnn7sv83-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 15 Apr 2020 02:08:30 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <freude@linux.ibm.com>;
+        Wed, 15 Apr 2020 07:08:24 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 15 Apr 2020 07:08:20 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03F68NQY40042614
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 06:08:23 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7D80E4203F;
+        Wed, 15 Apr 2020 06:08:23 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B2D1442045;
+        Wed, 15 Apr 2020 06:08:22 +0000 (GMT)
+Received: from funtu.home (unknown [9.171.86.5])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Apr 2020 06:08:22 +0000 (GMT)
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+To:     Cornelia Huck <cohuck@redhat.com>,
+        Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-4-akrowiak@linux.ibm.com>
+ <20200414145851.562867ae.cohuck@redhat.com>
+From:   Harald Freudenberger <freude@linux.ibm.com>
+Date:   Wed, 15 Apr 2020 08:08:24 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.4.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20200413211550.8307-2-longman@redhat.com>
+In-Reply-To: <20200414145851.562867ae.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 20041506-0028-0000-0000-000003F881AF
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20041506-0029-0000-0000-000024BE329B
+Message-Id: <82675d5c-4901-cbd8-9287-79133aa3ee68@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_01:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 spamscore=0
+ phishscore=0 mlxlogscore=999 impostorscore=0 malwarescore=0 adultscore=0
+ priorityscore=1501 lowpriorityscore=0 mlxscore=0 clxscore=1011
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150046
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Apr 13, 2020 at 05:15:49PM -0400, Waiman Long wrote:
-> As said by Linus:
-> 
->   A symmetric naming is only helpful if it implies symmetries in use.
->   Otherwise it's actively misleading.
+On 14.04.20 14:58, Cornelia Huck wrote:
+> On Tue,  7 Apr 2020 15:20:03 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> Introduces a new driver callback to prevent a root user from unbinding
+>> an AP queue from its device driver if the queue is in use. The intent of
+>> this callback is to provide a driver with the means to prevent a root user
+>> from inadvertently taking a queue away from a guest and giving it to the
+>> host while the guest is still using it. The callback will
+>> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+>> attributes would result in one or more AP queues being removed from its
+>> driver. If the callback responds in the affirmative for any driver
+>> queried, the change to the apmask or aqmask will be rejected with a device
+>> in use error.
+>>
+>> For this patch, only non-default drivers will be queried. Currently,
+>> there is only one non-default driver, the vfio_ap device driver. The
+>> vfio_ap device driver manages AP queues passed through to one or more
+>> guests and we don't want to unexpectedly take AP resources away from
+>> guests which are most likely independently administered.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>  drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
+>>  drivers/s390/crypto/ap_bus.h |   4 +
+>>  2 files changed, 142 insertions(+), 6 deletions(-)
+> (...)
+>
+>> @@ -1196,12 +1202,75 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
+>>  	return rc;
+>>  }
+>>  
+>> +int __verify_card_reservations(struct device_driver *drv, void *data)
+>> +{
+>> +	int rc = 0;
+>> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+>> +	unsigned long *newapm = (unsigned long *)data;
+>> +
+>> +	/*
+>> +	 * If the reserved bits do not identify cards reserved for use by the
+>> +	 * non-default driver, there is no need to verify the driver is using
+>> +	 * the queues.
+> I had to read that one several times... what about
+>
+> "No need to verify whether the driver is using the queues if it is the
+> default driver."
+>
+> ?
+>
+>> +	 */
+>> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+>> +		return 0;
+>> +
+>> +	/* The non-default driver's module must be loaded */
+>> +	if (!try_module_get(drv->owner))
+>> +		return 0;
+> Is that really needed? I would have thought that the driver core's
+> klist usage would make sure that the callback would not be invoked for
+> drivers that are not registered anymore. Or am I missing a window?
+The try_module_get() and module_put() is a result of review feedback from
+my side. The ap bus core is static in the kernel whereas the
+vfio dd is a kernel module. So there may be a race condition between
+calling the callback function and removal of the vfio dd module.
+There is similar code in zcrypt_api which does the same for the zcrypt
+device drivers before using some variables or functions from the modules.
+Help me, it this is outdated code and there is no need to adjust the
+module reference counter any more, then I would be happy to remove
+this code :-)
+>
+>> +
+>> +	if (ap_drv->in_use)
+>> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+> Can we log the offending apm somewhere, preferably with additional info
+> that allows the admin to figure out why an error was returned?
+>
+>> +			rc = -EADDRINUSE;
+>> +
+>> +	module_put(drv->owner);
+>> +
+>> +	return rc;
+>> +}
+> (Same comments for the other changes further along in this patch.)
+>
 
-As the btrfs example proves - people can be tempted by this false
-symmetry to pair kzalloc with kzfree, which isn't what we wanted.
-
->   In "kzalloc()", the z is meaningful and an important part of what the
->   caller wants.
-> 
->   In "kzfree()", the z is actively detrimental, because maybe in the
->   future we really _might_ want to use that "memfill(0xdeadbeef)" or
->   something. The "zero" part of the interface isn't even _relevant_.
-> 
-> The main reason that kzfree() exists is to clear sensitive information
-> that should not be leaked to other future users of the same memory
-> objects.
-> 
-> Rename kzfree() to kfree_sensitive() to follow the example of the
-> recently added kvfree_sensitive() and make the intention of the API
-> more explicit. In addition, memzero_explicit() is used to clear the
-> memory to make sure that it won't get optimized away by the compiler.
-> 
-> The renaming is done by using the command sequence:
-> 
->   git grep -w --name-only kzfree |\
->   xargs sed -i 's/\bkzfree\b/kfree_sensitive/'
-> 
-> followed by some editing of the kfree_sensitive() kerneldoc and the
-> use of memzero_explicit() instead of memset().
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Waiman Long <longman@redhat.com>
-
-Looks good to me. Thanks for fixing this very old mistake.
-
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
