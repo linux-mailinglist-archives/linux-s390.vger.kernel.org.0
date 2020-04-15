@@ -2,37 +2,36 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 0DD771A9D08
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 13:43:11 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 624611AA1C4
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 14:47:18 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2897481AbgDOLmh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Apr 2020 07:42:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33840 "EHLO mail.kernel.org"
+        id S2408983AbgDOLnP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Apr 2020 07:43:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2897472AbgDOLmf (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 15 Apr 2020 07:42:35 -0400
+        id S2408976AbgDOLnN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 Apr 2020 07:43:13 -0400
 Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 96885214D8;
-        Wed, 15 Apr 2020 11:42:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2095C20737;
+        Wed, 15 Apr 2020 11:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1586950955;
-        bh=M8E/aNrFYn1/9bNSs0TvZi9Xc8SxJ8APXi7e1rp2YN0=;
+        s=default; t=1586950992;
+        bh=5nkV7eDi5Bx2nfm80C2yfyXLGRKXoar9TVzuNHHDrnU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TqlTPf008TCQRVQXsanrxiyI+DhqnqmKTBgR15dLzYFqNr3gD0MH55digbU5XiKzZ
-         1CA1fv24EISlFcZbegWUzKj1upAO4l/wAzmv+YChafSDvgi/oemqF8o2qeiZGvuwWj
-         tuMvGrDChHA2xvZuKpwi2bQ/Vo+lhTvhIgysw8fI=
+        b=lokefeVE7wXw+lKBczhZG6eQcFzMCZlDYbtY0MwintUQBFXPZk9Zhidtm1AG3HItA
+         nwbSnuXVgFmK/AX2Cj1cuz1wzfQbOw2x1q7SwpMR5lDA8NppMbm+Y3yJysn6Gjjo8e
+         8WXBdOCxGAouAfEhrDll4CS7qzxZfylaKlNygTJs=
 From:   Sasha Levin <sashal@kernel.org>
 To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc:     Torsten Duwe <duwe@suse.de>,
-        Harald Freudenberger <freude@linux.ibm.com>,
+Cc:     Alexander Gordeev <agordeev@linux.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>, linux-crypto@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: [PATCH AUTOSEL 5.5 007/106] s390/crypto: explicitly memzero stack key material in aes_s390.c
-Date:   Wed, 15 Apr 2020 07:40:47 -0400
-Message-Id: <20200415114226.13103-7-sashal@kernel.org>
+        Sasha Levin <sashal@kernel.org>, linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.5 039/106] s390/cpuinfo: fix wrong output when CPU0 is offline
+Date:   Wed, 15 Apr 2020 07:41:19 -0400
+Message-Id: <20200415114226.13103-39-sashal@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20200415114226.13103-1-sashal@kernel.org>
 References: <20200415114226.13103-1-sashal@kernel.org>
@@ -45,42 +44,45 @@ Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Torsten Duwe <duwe@suse.de>
+From: Alexander Gordeev <agordeev@linux.ibm.com>
 
-[ Upstream commit 4a559cd15dbc79958fa9b18ad4e8afe4a0bf4744 ]
+[ Upstream commit 872f27103874a73783aeff2aac2b41a489f67d7c ]
 
-aes_s390.c has several functions which allocate space for key material on
-the stack and leave the used keys there. It is considered good practice
-to clean these locations before the function returns.
+/proc/cpuinfo should not print information about CPU 0 when it is offline.
 
-Link: https://lkml.kernel.org/r/20200221165511.GB6928@lst.de
-Signed-off-by: Torsten Duwe <duwe@suse.de>
-Signed-off-by: Harald Freudenberger <freude@linux.ibm.com>
+Fixes: 281eaa8cb67c ("s390/cpuinfo: simplify locking and skip offline cpus early")
+Signed-off-by: Alexander Gordeev <agordeev@linux.ibm.com>
+Reviewed-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+[heiko.carstens@de.ibm.com: shortened commit message]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
 Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/s390/crypto/aes_s390.c | 3 +++
- 1 file changed, 3 insertions(+)
+ arch/s390/kernel/processor.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/arch/s390/crypto/aes_s390.c b/arch/s390/crypto/aes_s390.c
-index ead0b2c9881d1..14d006b424eb1 100644
---- a/arch/s390/crypto/aes_s390.c
-+++ b/arch/s390/crypto/aes_s390.c
-@@ -354,6 +354,7 @@ static int cbc_aes_crypt(struct skcipher_request *req, unsigned long modifier)
- 		memcpy(walk.iv, param.iv, AES_BLOCK_SIZE);
- 		ret = skcipher_walk_done(&walk, nbytes - n);
- 	}
-+	memzero_explicit(&param, sizeof(param));
- 	return ret;
- }
+diff --git a/arch/s390/kernel/processor.c b/arch/s390/kernel/processor.c
+index 6ebc2117c66c7..91b9b3f73de6e 100644
+--- a/arch/s390/kernel/processor.c
++++ b/arch/s390/kernel/processor.c
+@@ -165,8 +165,9 @@ static void show_cpu_mhz(struct seq_file *m, unsigned long n)
+ static int show_cpuinfo(struct seq_file *m, void *v)
+ {
+ 	unsigned long n = (unsigned long) v - 1;
++	unsigned long first = cpumask_first(cpu_online_mask);
  
-@@ -489,6 +490,8 @@ static int xts_aes_crypt(struct skcipher_request *req, unsigned long modifier)
- 			 walk.dst.virt.addr, walk.src.virt.addr, n);
- 		ret = skcipher_walk_done(&walk, nbytes - n);
- 	}
-+	memzero_explicit(&pcc_param, sizeof(pcc_param));
-+	memzero_explicit(&xts_param, sizeof(xts_param));
- 	return ret;
+-	if (!n)
++	if (n == first)
+ 		show_cpu_summary(m, v);
+ 	if (!machine_has_cpu_mhz)
+ 		return 0;
+@@ -179,6 +180,8 @@ static inline void *c_update(loff_t *pos)
+ {
+ 	if (*pos)
+ 		*pos = cpumask_next(*pos - 1, cpu_online_mask);
++	else
++		*pos = cpumask_first(cpu_online_mask);
+ 	return *pos < nr_cpu_ids ? (void *)*pos + 1 : NULL;
  }
  
 -- 
