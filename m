@@ -2,95 +2,170 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id EF1801AADDB
-	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 18:32:23 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id F2D211AAF26
+	for <lists+linux-s390@lfdr.de>; Wed, 15 Apr 2020 19:12:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1415641AbgDOQVX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 15 Apr 2020 12:21:23 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:52875 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1415628AbgDOQVU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 15 Apr 2020 12:21:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1586967679;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Sd5eA/N/NI5n7N98BdtAvkb6ngdNDSTXR+h4Z3gbW68=;
-        b=YqTW1P0IX0qpvyGRB3LfG9zr8LX3emUM/hRlcLqP2n0JiUGaoW4h1bXcV6QRXR8CYRs03z
-        5rHVtr2SQEMcvo87AFLA8K7YnLMHQwoHD7X8ySRNIrOKaRuoEXl0XXFRJtuVk+5Emls5e8
-        rKEWMMxoQbAeVsgwl5kOTG8NIibAxho=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45-wrQvUDtbM8mVEqqfRLVCsg-1; Wed, 15 Apr 2020 12:21:15 -0400
-X-MC-Unique: wrQvUDtbM8mVEqqfRLVCsg-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 90C09107B267;
-        Wed, 15 Apr 2020 16:21:12 +0000 (UTC)
-Received: from gondolin (ovpn-113-55.ams2.redhat.com [10.36.113.55])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 017ACA63D6;
-        Wed, 15 Apr 2020 16:21:02 +0000 (UTC)
-Date:   Wed, 15 Apr 2020 18:20:37 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Emanuele Giuseppe Esposito <eesposit@redhat.com>
-Cc:     kvm@vger.kernel.org,
-        Philippe =?UTF-8?B?TWF0aGlldS1EYXVkw6k=?= <f4bug@amsat.org>,
-        Marc Zyngier <maz@kernel.org>,
-        James Morse <james.morse@arm.com>,
-        Julien Thierry <julien.thierry.kdev@gmail.com>,
-        Suzuki K Poulose <suzuki.poulose@arm.com>,
-        Paul Mackerras <paulus@ozlabs.org>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linux-s390@vger.kernel.org
-Subject: Re: [PATCH v2] kvm_host: unify VM_STAT and VCPU_STAT definitions in
- a single place
-Message-ID: <20200415182037.521a92b2.cohuck@redhat.com>
-In-Reply-To: <20200414155625.20559-1-eesposit@redhat.com>
-References: <20200414155625.20559-1-eesposit@redhat.com>
-Organization: Red Hat GmbH
+        id S2410683AbgDORKX (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 15 Apr 2020 13:10:23 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53974 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2406230AbgDORKW (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 15 Apr 2020 13:10:22 -0400
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03FH31Nu070056;
+        Wed, 15 Apr 2020 13:10:17 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnmutvcb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 13:10:17 -0400
+Received: from m0127361.ppops.net (m0127361.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03FH36iB070295;
+        Wed, 15 Apr 2020 13:10:16 -0400
+Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30dnmutvby-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 13:10:16 -0400
+Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
+        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03FH7uBv019345;
+        Wed, 15 Apr 2020 17:10:15 GMT
+Received: from b03cxnp07029.gho.boulder.ibm.com (b03cxnp07029.gho.boulder.ibm.com [9.17.130.16])
+        by ppma04wdc.us.ibm.com with ESMTP id 30b5h6ueq3-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 15 Apr 2020 17:10:15 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+        by b03cxnp07029.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03FHACnI61473156
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 15 Apr 2020 17:10:12 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4C225BE05F;
+        Wed, 15 Apr 2020 17:10:12 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2C7DCBE051;
+        Wed, 15 Apr 2020 17:10:11 +0000 (GMT)
+Received: from cpe-172-100-172-46.stny.res.rr.com (unknown [9.85.131.104])
+        by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+        Wed, 15 Apr 2020 17:10:10 +0000 (GMT)
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-4-akrowiak@linux.ibm.com>
+ <20200414145851.562867ae.cohuck@redhat.com>
+Message-ID: <35d8c3cb-78bb-8f84-41d8-c6e59d201ba0@linux.ibm.com>
+Date:   Wed, 15 Apr 2020 13:10:10 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200414145851.562867ae.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-15_06:2020-04-14,2020-04-15 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ clxscore=1015 impostorscore=0 suspectscore=3 bulkscore=0 malwarescore=0
+ phishscore=0 lowpriorityscore=0 mlxlogscore=999 spamscore=0 mlxscore=0
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004150124
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, 14 Apr 2020 17:56:25 +0200
-Emanuele Giuseppe Esposito <eesposit@redhat.com> wrote:
 
-> The macros VM_STAT and VCPU_STAT are redundantly implemented in multiple
-> files, each used by a different architecure to initialize the debugfs
-> entries for statistics. Since they all have the same purpose, they can be
-> unified in a single common definition in include/linux/kvm_host.h
-> 
-> Signed-off-by: Emanuele Giuseppe Esposito <eesposit@redhat.com>
-> ---
->  arch/arm64/kvm/guest.c    |  23 ++---
->  arch/mips/kvm/mips.c      |  61 ++++++------
->  arch/powerpc/kvm/book3s.c |  61 ++++++------
->  arch/powerpc/kvm/booke.c  |  41 ++++----
->  arch/s390/kvm/kvm-s390.c  | 203 +++++++++++++++++++-------------------
->  arch/x86/kvm/x86.c        |  80 +++++++--------
->  include/linux/kvm_host.h  |   5 +
->  7 files changed, 231 insertions(+), 243 deletions(-)
 
-Adds a bit of churn, but the end result does look nicer. Looks sane,
-but did not review in detail.
+On 4/14/20 8:58 AM, Cornelia Huck wrote:
+> On Tue,  7 Apr 2020 15:20:03 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> Introduces a new driver callback to prevent a root user from unbinding
+>> an AP queue from its device driver if the queue is in use. The intent of
+>> this callback is to provide a driver with the means to prevent a root user
+>> from inadvertently taking a queue away from a guest and giving it to the
+>> host while the guest is still using it. The callback will
+>> be invoked whenever a change to the AP bus's sysfs apmask or aqmask
+>> attributes would result in one or more AP queues being removed from its
+>> driver. If the callback responds in the affirmative for any driver
+>> queried, the change to the apmask or aqmask will be rejected with a device
+>> in use error.
+>>
+>> For this patch, only non-default drivers will be queried. Currently,
+>> there is only one non-default driver, the vfio_ap device driver. The
+>> vfio_ap device driver manages AP queues passed through to one or more
+>> guests and we don't want to unexpectedly take AP resources away from
+>> guests which are most likely independently administered.
+>>
+>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+>> ---
+>>   drivers/s390/crypto/ap_bus.c | 144 +++++++++++++++++++++++++++++++++--
+>>   drivers/s390/crypto/ap_bus.h |   4 +
+>>   2 files changed, 142 insertions(+), 6 deletions(-)
+> (...)
+>
+>> @@ -1196,12 +1202,75 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
+>>   	return rc;
+>>   }
+>>   
+>> +int __verify_card_reservations(struct device_driver *drv, void *data)
+>> +{
+>> +	int rc = 0;
+>> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+>> +	unsigned long *newapm = (unsigned long *)data;
+>> +
+>> +	/*
+>> +	 * If the reserved bits do not identify cards reserved for use by the
+>> +	 * non-default driver, there is no need to verify the driver is using
+>> +	 * the queues.
+> I had to read that one several times... what about
+> "No need to verify whether the driver is using the queues if it is the
+> default driver."
+>
+> ?
 
-Acked-by: Cornelia Huck <cohuck@redhat.com>
+Sure, that's better.
+
+>
+>> +	 */
+>> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+>> +		return 0;
+>> +
+>> +	/* The non-default driver's module must be loaded */
+>> +	if (!try_module_get(drv->owner))
+>> +		return 0;
+> Is that really needed? I would have thought that the driver core's
+> klist usage would make sure that the callback would not be invoked for
+> drivers that are not registered anymore. Or am I missing a window?
+>
+>> +
+>> +	if (ap_drv->in_use)
+>> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+> Can we log the offending apm somewhere, preferably with additional info
+> that allows the admin to figure out why an error was returned?
+
+One of the things on my TODO list is to add logging to the vfio_ap
+module which will track all significant activity within the device
+driver. I plan to do that with a patch or set of patches specifically
+put together for that purpose. Having said that, the best place to
+log this would be in the in_use callback in the vfio_ap device driver
+(see next patch) where the APQNs that are in use can be identified.
+For now, I will log a message to the dmesg log indicating which
+APQNs are in use by the matrix mdev.
+
+>
+>> +			rc = -EADDRINUSE;
+>> +
+>> +	module_put(drv->owner);
+>> +
+>> +	return rc;
+>> +}
+> (Same comments for the other changes further along in this patch.)
+>
 
