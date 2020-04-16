@@ -2,120 +2,167 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 14CB61AC581
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 16:21:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D61D41AC63B
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 16:37:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393943AbgDPOUy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 10:20:54 -0400
-Received: from mga18.intel.com ([134.134.136.126]:28772 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2391699AbgDPOUu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:20:50 -0400
-IronPort-SDR: Yl/9Vwme6a2z4ZfinLTkn45Gx9ADKvcdn30GCYpXZR+4WdnDc64ageH4whe/UrYPbyxLvUZtST
- WoTSG/cJLAzA==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:20:49 -0700
-IronPort-SDR: 4aXlHZMbhNG1je7pcHHUeeCakUi0Jtdz4mAIIAD/SttvwL4xTsvtfe3yBUnis54lyriFtIAJpN
- Rn8JSuP7HYrw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
-   d="scan'208";a="257231281"
-Received: from cchyder-mobl1.amr.corp.intel.com (HELO [10.254.70.41]) ([10.254.70.41])
-  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 07:20:48 -0700
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
-        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
-        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
-        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
-        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
- <20200306132537.783769-3-imbrenda@linux.ibm.com>
- <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
- <20200415221754.GM2483@worktop.programming.kicks-ass.net>
- <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
- <20200416141547.29be5ea0@p-imbrenda>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
-Date:   Thu, 16 Apr 2020 07:20:48 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.1
+        id S1731824AbgDPOgT (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 10:36:19 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:41976 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728386AbgDPOgN (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:36:13 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GEY9Ow119503;
+        Thu, 16 Apr 2020 10:35:51 -0400
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30er1uat0n-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 10:35:51 -0400
+Received: from m0098417.ppops.net (m0098417.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03GEYInN120080;
+        Thu, 16 Apr 2020 10:35:51 -0400
+Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30er1uat09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 10:35:51 -0400
+Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
+        by ppma03wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03GEZ9R6014158;
+        Thu, 16 Apr 2020 14:35:50 GMT
+Received: from b01cxnp23034.gho.pok.ibm.com (b01cxnp23034.gho.pok.ibm.com [9.57.198.29])
+        by ppma03wdc.us.ibm.com with ESMTP id 30b5h6tv09-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 16 Apr 2020 14:35:50 +0000
+Received: from b01ledav004.gho.pok.ibm.com (b01ledav004.gho.pok.ibm.com [9.57.199.109])
+        by b01cxnp23034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03GEZniB44827120
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 16 Apr 2020 14:35:49 GMT
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 506E6112061;
+        Thu, 16 Apr 2020 14:35:48 +0000 (GMT)
+Received: from b01ledav004.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id DBF8A112062;
+        Thu, 16 Apr 2020 14:35:47 +0000 (GMT)
+Received: from cpe-172-100-172-46.stny.res.rr.com (unknown [9.85.128.208])
+        by b01ledav004.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu, 16 Apr 2020 14:35:47 +0000 (GMT)
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+To:     Cornelia Huck <cohuck@redhat.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+ <20200407192015.19887-4-akrowiak@linux.ibm.com>
+ <20200414140838.54f777b8.cohuck@redhat.com>
+ <0f193571-1ff6-08f3-d02d-b4f40d2930c8@linux.ibm.com>
+ <20200416120544.053b38d8.cohuck@redhat.com>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Message-ID: <78116a88-7571-1ac9-40e1-6c1081c81467@linux.ibm.com>
+Date:   Thu, 16 Apr 2020 10:35:48 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-In-Reply-To: <20200416141547.29be5ea0@p-imbrenda>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20200416120544.053b38d8.cohuck@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-16_05:2020-04-14,2020-04-16 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 phishscore=0
+ suspectscore=11 spamscore=0 mlxlogscore=999 impostorscore=0 adultscore=0
+ bulkscore=0 priorityscore=1501 lowpriorityscore=0 mlxscore=0 clxscore=1015
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004160101
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 4/16/20 5:15 AM, Claudio Imbrenda wrote:
->> I assumed that this was all anonymous-only so it's always dirty before
->> writeback starts.
-> it could also be mmapped
 
-Let's say you have a mmap()'d ramfs file.  Another process calls which
-doesn't have it mapped calls sys_write() and writes to the file.
 
-This means that host host has to write to the physical page and must do
-arch_make_page_accessible() in the sys_write() path somewhere.
+On 4/16/20 6:05 AM, Cornelia Huck wrote:
+> On Wed, 15 Apr 2020 13:10:18 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>
+>> On 4/14/20 8:08 AM, Cornelia Huck wrote:
+>>> On Tue,  7 Apr 2020 15:20:03 -0400
+>>> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+>>>> @@ -995,9 +996,11 @@ int ap_parse_mask_str(const char *str,
+>>>>    	newmap = kmalloc(size, GFP_KERNEL);
+>>>>    	if (!newmap)
+>>>>    		return -ENOMEM;
+>>>> -	if (mutex_lock_interruptible(lock)) {
+>>>> -		kfree(newmap);
+>>>> -		return -ERESTARTSYS;
+>>>> +	if (lock) {
+>>>> +		if (mutex_lock_interruptible(lock)) {
+>>>> +			kfree(newmap);
+>>>> +			return -ERESTARTSYS;
+>>>> +		}
+>>> This whole function is a bit odd. It seems all masks we want to
+>>> manipulate are always guarded by the ap_perms_mutex, and the need for
+>>> allowing lock == NULL comes from wanting to call this function with the
+>>> ap_perms_mutex already held.
+>>>
+>>> That would argue for a locked/unlocked version of this function... but
+>>> looking at it, why do we lock the way we do? The one thing this
+>>> function (prior to this patch) does outside of the holding of the mutex
+>>> is the allocation and freeing of newmap. But with this patch, we do the
+>>> allocation and freeing of newmap while holding the mutex. Something
+>>> seems a bit weird here.
+>> Note that the ap_parse_mask function copies the newmap
+>> to the bitmap passed in as a parameter to the function.
+>> Prior to the introduction of this patch, the calling functions - i.e.,
+>> apmask_store(), aqmask_store() and ap_perms_init() - passed
+>> in the actual bitmap (i.e., ap_perms.apm or ap_perms aqm),
+>> so the ap_perms were changed directly by this function.
+>>
+>> With this patch, the apmask_store() and aqmask_store()
+>> functions now pass in a copy of those bitmaps. This is so
+>> we can verify that any APQNs being removed are not
+>> in use by the vfio_ap device driver before committing the
+>> change to ap_perms. Consequently, it is now necessary
+>> to take the lock for the until the changes are committed.
+> Yes, but every caller actually takes the mutex before calling this
+> function already :)
 
-There is a get_user_pages() in that path, but it's on the _source_
-buffer, not the ramfs page because the ramfs page is not mapped.
-There's also no __test_set_page_writeback() because you can't write back
-ramfs.
+That is not a true statement, the ap_perms_init() function
+does not take the mutex prior to calling this function. Keep in
+mind, the ap_parse_mask function is not static and is exported,
+I was precluded from removing the lock parameter from the function
+definition.
 
-Where is the arch_make_page_accessible() in this case on the ramfs page?
+>
+>> Having explained that, you make a valid argument that
+>> this calls for a locked/unlocked version of this function, so
+>> I will modify this patch to that effect.
+> Ok.
+>
+> The other thing I found weird is that the function does
+> alloc newmap -> grab mutex -> do manipulation -> release mutex -> free newmap
+> while the new callers do
+> (mutex already held) -> alloc newmap
+>
+> so why grab/release the mutex the way the function does now? IOW, why
+> not have an unlocked __ap_parse_mask_string() and do
+
+In my last comment above, I agreed to create an unlocked version
+of this function. Your example below is similar to what I
+implemented after responding to your comment yesterday.
+
+>
+> int ap_parse_mask_string(...)
+> {
+> 	int rc;
+>
+> 	if (mutex_lock_interruptible(&ap_perms_mutex))
+> 		return -ERESTARTSYS;
+> 	rc = __ap_parse_mask_string(...);
+>          mutex_unlock(&ap_perms_mutex);
+> 	return rc;
+> }
+
