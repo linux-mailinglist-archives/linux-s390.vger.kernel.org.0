@@ -2,99 +2,227 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id D5E9D1ABF06
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 13:24:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 270851AC022
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 13:49:28 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2633039AbgDPLXP (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 07:23:15 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41990 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2632877AbgDPLTU (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Apr 2020 07:19:20 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587035937;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=/can4Mo5wcD8VxSmCD4glckN/kBnBrb4gDabEOaSwyw=;
-        b=G8yIPjMrFZV9CMDLpeP8V+LaXIWtesxJG/ccdXDz05aNoctWUYDOEJNFMBKPPifNmSI1TX
-        jIYu6z8IBlILif8D5Yg5z/x73Fyt+NqBoYNPJ+OoadlaY1CgeSvaIHnEdNPkpsqrPiTpcz
-        DnokMyey03g5f7ObDLmJC1kQfeTzebY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-140-i6e1aPlgPd6TuQe7djFNRw-1; Thu, 16 Apr 2020 07:18:55 -0400
-X-MC-Unique: i6e1aPlgPd6TuQe7djFNRw-1
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7FD0F149C3;
-        Thu, 16 Apr 2020 11:18:53 +0000 (UTC)
-Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 3D7FD5D9E2;
-        Thu, 16 Apr 2020 11:18:48 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 13:18:45 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 04/15] s390/vfio-ap: implement in-use callback for
- vfio_ap driver
-Message-ID: <20200416131845.3ef6b3b5.cohuck@redhat.com>
-In-Reply-To: <20200407192015.19887-5-akrowiak@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-5-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S2506666AbgDPLtR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 07:49:17 -0400
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:33176 "EHLO
+        mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2506575AbgDPLs5 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Apr 2020 07:48:57 -0400
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20200416114849euoutp017b89933e1c2279a8535b23248df36905~GSmgLsXbi2574225742euoutp01g
+        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2020 11:48:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20200416114849euoutp017b89933e1c2279a8535b23248df36905~GSmgLsXbi2574225742euoutp01g
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1587037729;
+        bh=LtJiapRZh1Ea64p7LdbSiBgjXuP3s8Uvyni6NX+lMbI=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=SfpxavV1P9cZ5c5nOEaxfLj3RP0aNc+JtZ78ozQRM6iQ8N5LhcGpunGHkJbVpbOcc
+         cFP0TuQ0jDXD8WXLRECz/pQT8/mqxu4vrqfMMQebCW6zADsKklQwPTFV21OF0agVdu
+         VlGyEqiRvBW+JFL5Zv2Nk0X68sk/DgU6ksOXm9QQ=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20200416114848eucas1p22ab13090a3fe7b4992627149d2e5ac90~GSmfuxvu60903309033eucas1p28;
+        Thu, 16 Apr 2020 11:48:48 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id 8B.5A.60679.026489E5; Thu, 16
+        Apr 2020 12:48:48 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20200416114848eucas1p26436783dd625463955ec0d8fc9bb6e09~GSmfQuTS71105311053eucas1p2p;
+        Thu, 16 Apr 2020 11:48:48 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20200416114848eusmtrp2def4490817dd88b069636a889ccc2aa7~GSmfPshja1089610896eusmtrp2L;
+        Thu, 16 Apr 2020 11:48:48 +0000 (GMT)
+X-AuditID: cbfec7f4-0cbff7000001ed07-0c-5e9846205236
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 41.C0.07950.026489E5; Thu, 16
+        Apr 2020 12:48:48 +0100 (BST)
+Received: from [106.210.88.143] (unknown [106.210.88.143]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20200416114847eusmtip140b27105c59b66ea3210be2b8bb787db~GSmd8phLs0505005050eusmtip1R;
+        Thu, 16 Apr 2020 11:48:46 +0000 (GMT)
+Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core
+ code
+To:     Joerg Roedel <joro@8bytes.org>, Will Deacon <will@kernel.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Lu Baolu <baolu.lu@linux.intel.com>,
+        Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Clark <robdclark@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jean-Philippe Brucker <jean-philippe@linaro.org>
+Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
+        linux-samsung-soc@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-s390@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        virtualization@lists.linux-foundation.org
+From:   Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <551c48b8-3268-6034-2dc6-cec3dbbec250@samsung.com>
+Date:   Thu, 16 Apr 2020 13:48:46 +0200
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+        Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20200414131542.25608-1-joro@8bytes.org>
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+Content-Language: en-US
+X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTYRjG+XaOZ2fW5HMVvlp0GRQVZhcTPjKyoOIQVHYhKrBa7WiSW7Kj
+        lhVkbV1cV5NwTVtm0bSbpmkqlmiY1NKtVhahZLnuzsTZxS4ut5Plf8/7fL+H93nhYynFJSaM
+        TdSm8DqtKknJBNIV9/rs08YvNm2YYdVHkeaOnzQpyypniK22iyZZRdkUqep8zxDv608BJL82
+        mmRccQQQg7mAJpm5JVJyouMTRez2AZVV2yQlzuo8hjj1jxDpafdS5OR5PUVM9jsSktlrZsh+
+        QyR5d/47Req6XQGkr9pCE2uThSGG1qj5oZyrziLhrlquIq7udT3DVZnbpFxZ4VSu9HImw7W2
+        1DCc5f4KruziXi77uRVxx/RdDHerxUJxntKxsfL1gXPVfFJiGq+bPm9T4NbvPZV0cueEnQXv
+        8iQZyBNmRDIW8GwoNJymjSiQVeBCBDUP8xhx6EVwz2hifJQCexAUH9s9mHjpLJGIkBWB3tT3
+        F/qM4LZH4dMjcCw4zvZTPmgk/kZDfkO5f6BwpQS+Nr1BPorBM8HoNvrTcjwPbG3H/ZrGE8HV
+        kTEQYNlROA5yWlaLSDDcP+OifbYMR8GzU+t8NoXHwS13HiXqEHjhOucvB9jFgje3SiK2XggV
+        XYeQqEfAx8abUlGPAW/VYECP4FXzNak4HEXg3G/6m4iG1uYfjG8zhadAcfV00V4Amcfdfhtw
+        EDx3B4slguBURQ4l2nI4fFAh0pPA3Hj939o6x2PqJFKah1xmHnKOecg55v978xF9GYXwqYIm
+        gRdmafkdEYJKI6RqEyK2bNeUooHfa+tv7K1E1b821yPMIuVw+aYY0wZFgCpNSNfUI2Ap5Uh5
+        UNSAJVer0nfxuu0bdalJvFCPRrO0MkQeWfAhToETVCn8Np5P5nWDrxJWFpaBlqEDb7qLDPPV
+        0omlZ7Jr5qwrXrL8rSdtSvcq57C1i8rVX9vu2qJXdkesyYlL7my3hYZXLt1bNM7xpD94TU/z
+        B2tFfGs6p1k9rTDu6Z5IY/yNlAvxk5MTr8Rc/1hQtm+3Vx1+4rfkiPSbUMJs+xK+0Y3Xygwy
+        +4MLsQ3h2gZ3jGOHR0kLW1Uzp1I6QfUHpZO/gLkDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SXUhTYRzGeXfOjmfS4ji/XiX8mHhR0HSb09c+LLuQI0gYQyFLa+lJK7fZ
+        ziYZUSu9mKPyq0ynrBJLLS/MVdMpyiRKMTORLEOx3MrCHKG7KIxscwa7+/E8v+eFF/4kJujn
+        RpJnVFpGo1KUColAfPzvq/ndMRlNBYnrE2HojWMdR5a6ZwQaH3bhqK6rAUP9P74RaGNxmYvu
+        De9F+sdvuajK1Iaj6paeAFTjWMbQ5KSH6oYnAtC0rZVA05VTAK1+2sBQ7f1KDDVNDnFQtdtE
+        oGtVUrR0/xeG7D+dXPTbZsZRx4SZQFVzsoMRtNNu5tDd5m5A2xdHCLrfNB9AWzp30b2Pqgl6
+        bmaQoM1jR2hL+xW64UMHoG9UugjaOmPG6LXeqGx+nmifRq3TMjElala7X3hMjCQicSoSSZJS
+        RWJpSv4eiUyYkLaviCk9U85oEtJOikp+rfbhZT9iL7QttXL0YC3SCHgkpJLgwnQPxwgCSQH1
+        AMCvyxaur9gBxxr1WxwM/8wYCZ+0AmBnswPzFsHUYWh/+AR4ixBqHYftHwY2LYzq48DVhheb
+        loAyAPj3e6yXCUoMjSvep3gkn0qD4/M3Nxmn4qHToff4JBlK5cOqqZ0+JQiONTtxb8yjZPB9
+        /VFvjFHJ0Gz5jPk4GlpXWrc4HH503uXUAoHJb23ym5j8Jia/yT2APwIhjI5VFitZiYhVKFmd
+        qlhUqFb2As/ZPH/5+2kfMLrkI4AigXAb/+SBpgIBV1HOVihHACQxYQh/u8wT8YsUFRcZjfqE
+        RlfKsCNA5vlaHRYZWqj2HKFKe0IsE6egVHGKNEWajIThfANlPy6gihVa5hzDlDGa/zsOyYvU
+        g5brVrTDVfGV/qI7dDuvKH8+fiEqYiDXFpr9OrvJmvVe3uEuD7rTUnJpNi19tswuz0nN2bC8
+        G1L2R0d/mijkz6VLqbOLo39yTxska6EPVjtiDVfjglhbTafz1uVTe89nxv18OEoMLqMG13pW
+        zeucRNSu6eJdzOh0yzPr3X1hjUKcLVGId2EaVvEPnvogHEwDAAA=
+X-CMS-MailID: 20200416114848eucas1p26436783dd625463955ec0d8fc9bb6e09
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20200414131600eucas1p16f1ff6aedb780eb795a770dc08e5dec5
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20200414131600eucas1p16f1ff6aedb780eb795a770dc08e5dec5
+References: <CGME20200414131600eucas1p16f1ff6aedb780eb795a770dc08e5dec5@eucas1p1.samsung.com>
+        <20200414131542.25608-1-joro@8bytes.org>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  7 Apr 2020 15:20:04 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+Hi Joerg,
 
-> Let's implement the callback to indicate when an APQN
-> is in use by the vfio_ap device driver. The callback is
-> invoked whenever a change to the apmask or aqmask would
-> result in one or more queue devices being removed from the driver. The
-> vfio_ap device driver will indicate a resource is in use
-> if the APQN of any of the queue devices to be removed are assigned to
-> any of the matrix mdevs under the driver's control.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_drv.c     |  1 +
->  drivers/s390/crypto/vfio_ap_ops.c     | 47 +++++++++++++++++----------
->  drivers/s390/crypto/vfio_ap_private.h |  2 ++
->  3 files changed, 33 insertions(+), 17 deletions(-)
+On 14.04.2020 15:15, Joerg Roedel wrote:
+> here is the second version of this patch-set. The first version with
+> some more introductory text can be found here:
+>
+> 	https://lore.kernel.org/lkml/20200407183742.4344-1-joro@8bytes.org/
+>
+> Changes v1->v2:
+>
+> 	* Rebased to v5.7-rc1
+>
+> 	* Re-wrote the arm-smmu changes as suggested by Robin Murphy
+>
+> 	* Re-worked the Exynos patches to hopefully not break the
+> 	  driver anymore
 
-> @@ -1369,3 +1371,14 @@ void vfio_ap_mdev_remove_queue(struct ap_queue *queue)
->  	kfree(q);
->  	mutex_unlock(&matrix_dev->lock);
->  }
-> +
-> +bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long *aqm)
-> +{
-> +	bool in_use;
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	in_use = vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm) ? true : false;
+Thanks for this rework. This version is much better. Works fine on 
+various Exynos-based boards (ARM and ARM64).
 
-Maybe
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
 
-in_use = !!vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);
+Acked-by: Marek Szyprowski <m.szyprowski@samsung.com> (for Exynos and 
+core changes)
 
-?
-
-> +	mutex_unlock(&matrix_dev->lock);
-> +
-> +	return in_use;
-> +}
+> 	* Fixed a missing mutex_unlock() reported by Marek Szyprowski,
+> 	  thanks for that.
+>
+> There is also a git-branch available with these patches applied:
+>
+> 	https://git.kernel.org/pub/scm/linux/kernel/git/joro/linux.git/log/?h=iommu-probe-device-v2
+>
+> Please review.
+>
+> Thanks,
+>
+> 	Joerg
+>
+> Joerg Roedel (32):
+>    iommu: Move default domain allocation to separate function
+>    iommu/amd: Implement iommu_ops->def_domain_type call-back
+>    iommu/vt-d: Wire up iommu_ops->def_domain_type
+>    iommu/amd: Remove dma_mask check from check_device()
+>    iommu/amd: Return -ENODEV in add_device when device is not handled by
+>      IOMMU
+>    iommu: Add probe_device() and remove_device() call-backs
+>    iommu: Move default domain allocation to iommu_probe_device()
+>    iommu: Keep a list of allocated groups in __iommu_probe_device()
+>    iommu: Move new probe_device path to separate function
+>    iommu: Split off default domain allocation from group assignment
+>    iommu: Move iommu_group_create_direct_mappings() out of
+>      iommu_group_add_device()
+>    iommu: Export bus_iommu_probe() and make is safe for re-probing
+>    iommu/amd: Remove dev_data->passthrough
+>    iommu/amd: Convert to probe/release_device() call-backs
+>    iommu/vt-d: Convert to probe/release_device() call-backs
+>    iommu/arm-smmu: Convert to probe/release_device() call-backs
+>    iommu/pamu: Convert to probe/release_device() call-backs
+>    iommu/s390: Convert to probe/release_device() call-backs
+>    iommu/virtio: Convert to probe/release_device() call-backs
+>    iommu/msm: Convert to probe/release_device() call-backs
+>    iommu/mediatek: Convert to probe/release_device() call-backs
+>    iommu/mediatek-v1 Convert to probe/release_device() call-backs
+>    iommu/qcom: Convert to probe/release_device() call-backs
+>    iommu/rockchip: Convert to probe/release_device() call-backs
+>    iommu/tegra: Convert to probe/release_device() call-backs
+>    iommu/renesas: Convert to probe/release_device() call-backs
+>    iommu/omap: Remove orphan_dev tracking
+>    iommu/omap: Convert to probe/release_device() call-backs
+>    iommu/exynos: Use first SYSMMU in controllers list for IOMMU core
+>    iommu/exynos: Convert to probe/release_device() call-backs
+>    iommu: Remove add_device()/remove_device() code-paths
+>    iommu: Unexport iommu_group_get_for_dev()
+>
+> Sai Praneeth Prakhya (1):
+>    iommu: Add def_domain_type() callback in iommu_ops
+>
+>   drivers/iommu/amd_iommu.c       |  97 ++++----
+>   drivers/iommu/amd_iommu_types.h |   1 -
+>   drivers/iommu/arm-smmu-v3.c     |  38 +--
+>   drivers/iommu/arm-smmu.c        |  39 ++--
+>   drivers/iommu/exynos-iommu.c    |  24 +-
+>   drivers/iommu/fsl_pamu_domain.c |  22 +-
+>   drivers/iommu/intel-iommu.c     |  68 +-----
+>   drivers/iommu/iommu.c           | 393 +++++++++++++++++++++++++-------
+>   drivers/iommu/ipmmu-vmsa.c      |  60 ++---
+>   drivers/iommu/msm_iommu.c       |  34 +--
+>   drivers/iommu/mtk_iommu.c       |  24 +-
+>   drivers/iommu/mtk_iommu_v1.c    |  50 ++--
+>   drivers/iommu/omap-iommu.c      |  99 ++------
+>   drivers/iommu/qcom_iommu.c      |  24 +-
+>   drivers/iommu/rockchip-iommu.c  |  26 +--
+>   drivers/iommu/s390-iommu.c      |  22 +-
+>   drivers/iommu/tegra-gart.c      |  24 +-
+>   drivers/iommu/tegra-smmu.c      |  31 +--
+>   drivers/iommu/virtio-iommu.c    |  41 +---
+>   include/linux/iommu.h           |  21 +-
+>   20 files changed, 533 insertions(+), 605 deletions(-)
+>
+Best regards
+-- 
+Marek Szyprowski, PhD
+Samsung R&D Institute Poland
 
