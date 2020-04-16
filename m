@@ -2,219 +2,176 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 37CD81AC030
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 13:51:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 181901AC08C
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 14:00:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2504790AbgDPLvS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 07:51:18 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42100 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2506679AbgDPLvQ (ORCPT
+        id S2634659AbgDPL6g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 07:58:36 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58656 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2634641AbgDPL6d (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:51:16 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03GBXSnD091594
-        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2020 07:51:14 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30emqnv2xg-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2020 07:51:14 -0400
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <imbrenda@linux.ibm.com>;
-        Thu, 16 Apr 2020 12:50:29 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 16 Apr 2020 12:50:23 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03GBp4on61276366
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 16 Apr 2020 11:51:04 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D3D8A5204E;
-        Thu, 16 Apr 2020 11:51:04 +0000 (GMT)
-Received: from p-imbrenda (unknown [9.145.0.99])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 121C25204F;
-        Thu, 16 Apr 2020 11:51:04 +0000 (GMT)
-Date:   Thu, 16 Apr 2020 13:51:01 +0200
-From:   Claudio Imbrenda <imbrenda@linux.ibm.com>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     linux-next@vger.kernel.org, akpm@linux-foundation.org,
-        jack@suse.cz, kirill@shutemov.name,
-        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, borntraeger@de.ibm.com,
-        david@redhat.com, aarcange@redhat.com, linux-mm@kvack.org,
-        frankja@linux.ibm.com, sfr@canb.auug.org.au, jhubbard@nvidia.com,
-        linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org,
-        Will Deacon <will@kernel.org>,
-        "Williams, Dan J" <dan.j.williams@intel.com>
-Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
- pages
-In-Reply-To: <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
-References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
-        <20200306132537.783769-3-imbrenda@linux.ibm.com>
-        <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
-Organization: IBM
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Thu, 16 Apr 2020 07:58:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587038308;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=bGw1yxQ4kUkJge/B/iukxWMb8QJpj2UIRy259IkujXU=;
+        b=fk8Whx/uzyMr+01Yl+KFbSXO5kt3NP3gG7n0v38LlQ0Jz65RvwNLqGdBoJlcL5guwzXPCl
+        yJKXXggJAblmV8Z+K8T7z5NC7XLwJJ8UGYf/r1vYBjVfgqgmwxsaz5r7gjg4RMrNiHq4qY
+        /zsu/Ccut/pxYJjNkW1Mrorlss97kto=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-153-O1gRkXczPaKdX84Ai9Wx9Q-1; Thu, 16 Apr 2020 07:58:25 -0400
+X-MC-Unique: O1gRkXczPaKdX84Ai9Wx9Q-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CE6B800D5C;
+        Thu, 16 Apr 2020 11:58:23 +0000 (UTC)
+Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F7D59DD6D;
+        Thu, 16 Apr 2020 11:58:17 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 13:58:15 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Tony Krowiak <akrowiak@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
+        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 05/15] s390/vfio-ap: introduce shadow CRYCB
+Message-ID: <20200416135815.0ec6e0b3.cohuck@redhat.com>
+In-Reply-To: <20200407192015.19887-6-akrowiak@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-6-akrowiak@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 20041611-0020-0000-0000-000003C8DB3B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041611-0021-0000-0000-00002221C1C7
-Message-Id: <20200416135101.0a15dd2e@p-imbrenda>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-16_03:2020-04-14,2020-04-16 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 phishscore=0 priorityscore=1501 spamscore=0 mlxscore=0
- adultscore=0 lowpriorityscore=0 clxscore=1015 suspectscore=0
- malwarescore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004160078
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 15 Apr 2020 14:52:31 -0700
-Dave Hansen <dave.hansen@intel.com> wrote:
+On Tue,  7 Apr 2020 15:20:05 -0400
+Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-> On 3/6/20 5:25 AM, Claudio Imbrenda wrote:
-> > +	/*
-> > +	 * We need to make the page accessible if and only if we
-> > are going
-> > +	 * to access its content (the FOLL_PIN case).  Please see
-> > +	 * Documentation/core-api/pin_user_pages.rst for details.
-> > +	 */
-> > +	if (flags & FOLL_PIN) {
-> > +		ret = arch_make_page_accessible(page);
-> > +		if (ret) {
-> > +			unpin_user_page(page);
-> > +			page = ERR_PTR(ret);
-> > +			goto out;
-> > +		}
-> > +	}  
+> Let's introduce a shadow copy of the KVM guest's CRYCB and maintain it for
+> the lifespan of the guest. The shadow CRYCB will be used to provide the
+> AP configuration for a KVM guest.
+
+'shadow CRYCB' seems to be a bit of a misnomer, as the real CRYCB has a
+different format (for starters, it also contains key wrapping stuff).
+It seems to be more of a 'shadow matrix'.
+
 > 
-> Thanks, Claudio, for a really thorough refresher on this in private
-> mail.
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>  drivers/s390/crypto/vfio_ap_ops.c     | 31 +++++++++++++++++++++------
+>  drivers/s390/crypto/vfio_ap_private.h |  1 +
+>  2 files changed, 25 insertions(+), 7 deletions(-)
 > 
-> But, I think this mechanism probably hooks into the wrong place.  I
-> don't doubt that it *functions* on s390, but I think these calls are
-> misplaced.  I think the end result is that no other architecture will
-> have a chance to use the same hooks.  They're far too s390-specific
-> even for a concept that's not limited to s390.
-> 
-> get_user_pages(FOLL_PIN) does *not* mean "the kernel will access this
-> page's contents".  The kmap() family is really what we use for that.
+> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
+> index 8ece0d52ff4c..b8b678032ab7 100644
+> --- a/drivers/s390/crypto/vfio_ap_ops.c
+> +++ b/drivers/s390/crypto/vfio_ap_ops.c
+> @@ -280,14 +280,32 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
+>  	return 0;
+>  }
+>  
+> +static void vfio_ap_matrix_clear(struct ap_matrix *matrix)
 
-it means that _something_ _might_ access the content of the
-physical page. be it kernel or device, and the device can access the
-page through DMA or through other means (and yes on s390 many devices
-read and write directly from/to memory without using DMA... it's
-complicated)
+vfio_ap_matrix_clear_masks()?
 
-also, not all architectures use kmap (e.g. s390 doesn't)
+> +{
+> +	bitmap_clear(matrix->apm, 0, AP_DEVICES);
+> +	bitmap_clear(matrix->aqm, 0, AP_DOMAINS);
+> +	bitmap_clear(matrix->adm, 0, AP_DOMAINS);
+> +}
+> +
+>  static void vfio_ap_matrix_init(struct ap_config_info *info,
+>  				struct ap_matrix *matrix)
+>  {
+> +	vfio_ap_matrix_clear(matrix);
+>  	matrix->apm_max = info->apxa ? info->Na : 63;
+>  	matrix->aqm_max = info->apxa ? info->Nd : 15;
+>  	matrix->adm_max = info->apxa ? info->Nd : 15;
+>  }
+>  
+> +static bool vfio_ap_mdev_commit_crycb(struct ap_matrix_mdev *matrix_mdev)
 
-> kmap()s are often *preceded* by get_user_pages(), which is probably
-> why this works for you, though.
-> 
-> Yes, the docs do say that FOLL_PIN is for accessing the pages.  But,
-> there's a crucial thing that it leaves out: *WHO* will be accessing
+vfio_ap_mdev_commit_masks()?
 
-exactly
+And it does not seem to return anything? (Maybe it should, to be
+consumed below?)
 
-> the pages.  For Direct IO, for instance, the CPU isn't touching the
-> page at all.  It's always a device.  Also, crucially, the page
+> +{
+> +	if (matrix_mdev->kvm && matrix_mdev->kvm->arch.crypto.crycbd) {
+> +		kvm_arch_crypto_set_masks(matrix_mdev->kvm,
+> +					  matrix_mdev->shadow_crycb.apm,
+> +					  matrix_mdev->shadow_crycb.aqm,
+> +					  matrix_mdev->shadow_crycb.adm);
+> +	}
+> +}
+> +
+>  static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>  {
+>  	struct ap_matrix_mdev *matrix_mdev;
+> @@ -303,6 +321,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
+>  
+>  	matrix_mdev->mdev = mdev;
+>  	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
+> +	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->shadow_crycb);
+>  	mdev_set_drvdata(mdev, matrix_mdev);
+>  	matrix_mdev->pqap_hook.hook = handle_pqap;
+>  	matrix_mdev->pqap_hook.owner = THIS_MODULE;
+> @@ -1126,13 +1145,9 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
+>  	if (ret)
+>  		return NOTIFY_DONE;
+>  
+> -	/* If there is no CRYCB pointer, then we can't copy the masks */
+> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
+> -		return NOTIFY_DONE;
+> -
+> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
+> -				  matrix_mdev->matrix.aqm,
+> -				  matrix_mdev->matrix.adm);
+> +	memcpy(&matrix_mdev->shadow_crycb, &matrix_mdev->matrix,
+> +	       sizeof(matrix_mdev->shadow_crycb));
+> +	vfio_ap_mdev_commit_crycb(matrix_mdev);
 
-exactly. and that is the one case we need to protect ourselves from.
+You are changing the return code for !crycb; maybe that's where a good
+return code for vfio_ap_mdev_commit_crycb() would come in handy :)
 
-letting a device touch directly a protected page causes an
-unrecoverable error state in the device, potentially bringing down the
-whole system. and this would be triggerable by userspace.
+>  
+>  	return NOTIFY_OK;
+>  }
+> @@ -1247,6 +1262,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
+>  		kvm_put_kvm(matrix_mdev->kvm);
+>  		matrix_mdev->kvm = NULL;
+>  	}
+> +
+> +	vfio_ap_matrix_clear(&matrix_mdev->shadow_crycb);
+>  	mutex_unlock(&matrix_dev->lock);
+>  
+>  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
+> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
+> index 4b6e144bab17..87cc270c3212 100644
+> --- a/drivers/s390/crypto/vfio_ap_private.h
+> +++ b/drivers/s390/crypto/vfio_ap_private.h
+> @@ -83,6 +83,7 @@ struct ap_matrix {
+>  struct ap_matrix_mdev {
+>  	struct list_head node;
+>  	struct ap_matrix matrix;
+> +	struct ap_matrix shadow_crycb;
 
-> contents are *not* accessible from the CPU's perspective after a gup.
+I think shadow_matrix would be a better name.
 
-depends on the architecture, I think
-
->  They're not accessible until a kmap().  They're also not even
-> accessible for *devices* after a gup.  There's a _separate_ mapping
-
-also depends on the architecture
-
-> process that's requires to make them accessible to the CPU.
-> 
-> > --- a/mm/page-writeback.c
-> > +++ b/mm/page-writeback.c
-> > @@ -2764,7 +2764,7 @@ int test_clear_page_writeback(struct page
-> > *page) int __test_set_page_writeback(struct page *page, bool
-> > keep_write) {
-> >  	struct address_space *mapping = page_mapping(page);
-> > -	int ret;
-> > +	int ret, access_ret;
-> >  
-> >  	lock_page_memcg(page);
-> >  	if (mapping && mapping_use_writeback_tags(mapping)) {
-> > @@ -2807,6 +2807,13 @@ int __test_set_page_writeback(struct page
-> > *page, bool keep_write) inc_zone_page_state(page,
-> > NR_ZONE_WRITE_PENDING); }
-> >  	unlock_page_memcg(page);
-> > +	access_ret = arch_make_page_accessible(page);
-> > +	/*
-> > +	 * If writeback has been triggered on a page that cannot
-> > be made
-> > +	 * accessible, it is too late to recover here.
-> > +	 */
-> > +	VM_BUG_ON_PAGE(access_ret != 0, page);
-> > +
-> >  	return ret;
-> >  
-> >  }  
-> 
-> I think this one really shows the cracks in the approach.  Pages being
-> swapped *don't* have get_user_pages() done on them since we've already
-> got the physical page at the time writeback and aren't looking at
-> PTEs.
-
-correct. that's why we are doing it when setting the writeback bit. 
- 
-> They're read by I/O devices sending them out to storage, but also by
-> the CPU if you're doing something like zswap.  But, again, critically,
-> accessing page contents won't be done until kmap().
-
-is kmap called for direct I/O too? 
- 
-> I suspect you saw crashes underneath __swap_writepage()->submit_bio()
-> and looked a few lines up to the set_page_writeback() and decided to
-> hook in there.  I think a better spot, again, is to hook into kmap()
-> which is called in the block layer.
-
-making a page accessible is a potentially long operation (e.g. on s390
-requires the hardware to encrypt the page and do some other expensive
-operations), while kmap is a nop.
-
-> Why do I care?
-> 
-> I was looking at AMD's SEV (Secure Encrypted Virtualization) code
-> which is in the kernel which shares some implementation details with
-> the not-in-the-tree Intel MKTME.  SEV currently has a concept of
-> guest pages being encrypted and being gibberish to the host, plus a
-> handshake to share guest-selected pages.  Some of the side-effects of
-> exposing the gibberish to the host aren't great (I think it can break
-> cache coherency if a stray write occurs) and it would be nice to get
-> better behavior.
-> 
-> But, to get better behavior, the host kernel might need to remove
-> pages from its direct map, making them inaccessible.  I was hoping to
-> reuse arch_make_page_accessible() for obvious reasons.  But,
-
-we are talking about physical pages being inaccessible, not mappings.
-you can have the page correctly mapped and still inaccessible.
-
-> get_user_pages() is not the right spot to map pages because they
-> might not *ever* be accessed by the CPU, only devices.
-> 
-> Anyway, I know it's late feedback, but I'd hate to have core code like
-> this that has no hope of ever getting reused.
+>  	struct notifier_block group_notifier;
+>  	struct notifier_block iommu_notifier;
+>  	struct kvm *kvm;
 
