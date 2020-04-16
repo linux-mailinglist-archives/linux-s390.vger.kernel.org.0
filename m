@@ -2,227 +2,265 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF2181AC22D
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 15:19:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2BB521AC555
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 16:17:45 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2895038AbgDPNRc (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 09:17:32 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:57975 "EHLO
+        id S2393827AbgDPOQ7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 10:16:59 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42435 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2895028AbgDPNQ7 (ORCPT
+        by vger.kernel.org with ESMTP id S2393854AbgDPOQy (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Apr 2020 09:16:59 -0400
+        Thu, 16 Apr 2020 10:16:54 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587043003;
+        s=mimecast20190719; t=1587046612;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=walCYN4WkDNtTgYLVIJ9g+ufVPDd3WAeg5aHW/gs+FQ=;
-        b=jJ87Z/5LcS75H/I38TWzsGTZ5PwZmgCabAq/eHWi0wXdgBu3rH7+jF4qF5QJoPy0nwKnxI
-        0APtEVPNOwd0IQXGOsiH4kVv94hVSFymUDzG8kSRl0qWc1B41yzsDyyTvX1N8vvowk7+vj
-        cgZP9jdk/n44sfVhZtV80iTY1TByQzI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-26-AUkX1xh4N-G2HhfxHPoJ2Q-1; Thu, 16 Apr 2020 09:16:40 -0400
-X-MC-Unique: AUkX1xh4N-G2HhfxHPoJ2Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 72B4980256B;
-        Thu, 16 Apr 2020 13:16:38 +0000 (UTC)
-Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 7945C10372C0;
-        Thu, 16 Apr 2020 13:16:37 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 08:16:35 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com
-Subject: Re: [PATCH 4/7] s390/module: Use s390_kernel_write() for relocations
-Message-ID: <20200416131635.scbpuued6l4xb6qq@treble>
-References: <cover.1586881704.git.jpoimboe@redhat.com>
- <e7f2ad87cf83dcdaa7b69b4e37c11fa355bdfe78.1586881704.git.jpoimboe@redhat.com>
- <alpine.LSU.2.21.2004161047410.10475@pobox.suse.cz>
- <20200416120651.wqmoaa35jft4prox@treble>
+        bh=7hnF0DDKrlu0/wsAOrUaDsyzDUw85QJZaEcoKNO3lxk=;
+        b=WJ/6fzyYouS4nwTlX8byFUS3Y5Z15GHbagckY28OkjwpyHE0vnPCfwEKNFVF8CN8vdeKke
+        R+K3wUTqjqDc5SUtCjofnIVcjtp2k+N4OBmGLQeH9AaJ77IIcYXE9iW1Dkp7jgmbB9YtoH
+        lIOclknvBcRkU532YIZXg3fzSd2O8tI=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-487-9H5KMQiGPQOg-sqxXr4ohA-1; Thu, 16 Apr 2020 10:16:50 -0400
+X-MC-Unique: 9H5KMQiGPQOg-sqxXr4ohA-1
+Received: by mail-wr1-f70.google.com with SMTP id i10so1296209wrq.8
+        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2020 07:16:50 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7hnF0DDKrlu0/wsAOrUaDsyzDUw85QJZaEcoKNO3lxk=;
+        b=fWoeGnG80Eo1XF2Rp0BRWKKf7O1PSiUqMbxpvPJt74Yd30tQt3LtbqCOrvIqmhF/RL
+         UncT01w3PFdd4h6vSCU6sUfMiOkjfgH5WC/r7Ujo9Vny2RjawZMx5sFkcdadsMSTdBw+
+         s7Po5fFYdlQW4ZNp4IbqNs6j8JNu0qO3P5HXZE2MmBGO3e+5tpxvh44KvnSUAZza6JCj
+         tyDVEPys0KYGjjW9twvh8KBSD7A0IT0Ild3Oa1x0Fg4Kqhc4QE/Ay6FbA61UF8L6xHnP
+         esPveWsXBlxUhU46cIVkPi4uBzb7P7wDraQhXPncSNmQUYLHB2ueIawB7DXbritgwmxs
+         y2cQ==
+X-Gm-Message-State: AGi0PubJQSjJKYJC+rPpIm0ODkE+D/E+dZ6oo7j5vAeSPGF9x1AcxtJf
+        ulOMjubZhx+LUGrQHvKv2fj9mM3pGXrX0fYhCQkyjWTob4gUlJU4Q5WND2WEK8hd+/TZHE59PT+
+        d4xu0TBAv0Hy1yPYArG8d2w==
+X-Received: by 2002:a5d:6584:: with SMTP id q4mr24139519wru.403.1587046609064;
+        Thu, 16 Apr 2020 07:16:49 -0700 (PDT)
+X-Google-Smtp-Source: APiQypJaroci/qQpvf8qcrl+CF8Sz/BzOeyBmpL55iYWlGov5mFc7JlBFtlz5rT24UUwp7LeJ9OTfQ==
+X-Received: by 2002:a5d:6584:: with SMTP id q4mr24139399wru.403.1587046607973;
+        Thu, 16 Apr 2020 07:16:47 -0700 (PDT)
+Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
+        by smtp.gmail.com with ESMTPSA id d133sm4118344wmc.27.2020.04.16.07.16.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Apr 2020 07:16:47 -0700 (PDT)
+Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
+        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, vkuznets@redhat.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
+        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
+        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
+        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
+        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Message-ID: <db7b02c0-2b7b-7c93-9dd0-b0303ea5da5e@redhat.com>
+Date:   Thu, 16 Apr 2020 16:16:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.5.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200416120651.wqmoaa35jft4prox@treble>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+In-Reply-To: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 16, 2020 at 07:06:51AM -0500, Josh Poimboeuf wrote:
-> On Thu, Apr 16, 2020 at 10:56:02AM +0200, Miroslav Benes wrote:
-> > > +	bool early = me->state == MODULE_STATE_UNFORMED;
-> > > +
-> > > +	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-> > > +				    early ? memcpy : s390_kernel_write);
-> > 
-> > The compiler warns about
-> > 
-> > arch/s390/kernel/module.c: In function 'apply_relocate_add':
-> > arch/s390/kernel/module.c:453:24: warning: pointer type mismatch in conditional expression
-> >          early ? memcpy : s390_kernel_write);
+On 16/04/20 07:10, Tianjia Zhang wrote:
+> In earlier versions of kvm, 'kvm_run' is an independent structure
+> and is not included in the vcpu structure. At present, 'kvm_run'
+> is already included in the vcpu structure, so the parameter
+> 'kvm_run' is redundant.
 > 
-> Thanks, I'll get all that cleaned up.
+> This patch simplify the function definition, removes the extra
+> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
+> if necessary.
 > 
-> I could have sworn I got a SUCCESS message from the kbuild bot.  Does it
-> ignore warnings nowadays?
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+> 
+> v2 change:
+>   remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
+> 
+>  arch/mips/kvm/mips.c       |  3 ++-
+>  arch/powerpc/kvm/powerpc.c |  3 ++-
+>  arch/s390/kvm/kvm-s390.c   |  3 ++-
+>  arch/x86/kvm/x86.c         | 11 ++++++-----
+>  include/linux/kvm_host.h   |  2 +-
+>  virt/kvm/arm/arm.c         |  6 +++---
+>  virt/kvm/kvm_main.c        |  2 +-
+>  7 files changed, 17 insertions(+), 13 deletions(-)
+> 
+> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+> index 8f05dd0a0f4e..ec24adf4857e 100644
+> --- a/arch/mips/kvm/mips.c
+> +++ b/arch/mips/kvm/mips.c
+> @@ -439,8 +439,9 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>  	return -ENOIOCTLCMD;
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int r = -EINTR;
+>  
+>  	vcpu_load(vcpu);
+> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+> index e15166b0a16d..7e24691e138a 100644
+> --- a/arch/powerpc/kvm/powerpc.c
+> +++ b/arch/powerpc/kvm/powerpc.c
+> @@ -1764,8 +1764,9 @@ int kvm_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu, struct kvm_one_reg *reg)
+>  	return r;
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int r;
+>  
+>  	vcpu_load(vcpu);
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 19a81024fe16..443af3ead739 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -4333,8 +4333,9 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		store_regs_fmt2(vcpu, kvm_run);
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	int rc;
+>  
+>  	if (kvm_run->immediate_exit)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 3bf2ecafd027..a0338e86c90f 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8707,8 +8707,9 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+>  	trace_kvm_fpu(0);
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	int r;
+>  
+>  	vcpu_load(vcpu);
+> @@ -8726,18 +8727,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		r = -EAGAIN;
+>  		if (signal_pending(current)) {
+>  			r = -EINTR;
+> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
+> +			kvm_run->exit_reason = KVM_EXIT_INTR;
+>  			++vcpu->stat.signal_exits;
+>  		}
+>  		goto out;
+>  	}
+>  
+> -	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+>  		r = -EINVAL;
+>  		goto out;
+>  	}
+>  
+> -	if (vcpu->run->kvm_dirty_regs) {
+> +	if (kvm_run->kvm_dirty_regs) {
+>  		r = sync_regs(vcpu);
+>  		if (r != 0)
+>  			goto out;
+> @@ -8767,7 +8768,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  
+>  out:
+>  	kvm_put_guest_fpu(vcpu);
+> -	if (vcpu->run->kvm_valid_regs)
+> +	if (kvm_run->kvm_valid_regs)
+>  		store_regs(vcpu);
+>  	post_kvm_run_save(vcpu);
+>  	kvm_sigset_deactivate(vcpu);
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 6d58beb65454..1e17ef719595 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -866,7 +866,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+>  				    struct kvm_mp_state *mp_state);
+>  int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>  					struct kvm_guest_debug *dbg);
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run);
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
+>  
+>  int kvm_arch_init(void *opaque);
+>  void kvm_arch_exit(void);
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index 48d0ec44ad77..f5390ac2165b 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -639,7 +639,6 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+>  /**
+>   * kvm_arch_vcpu_ioctl_run - the main VCPU run function to execute guest code
+>   * @vcpu:	The VCPU pointer
+> - * @run:	The kvm_run structure pointer used for userspace state exchange
+>   *
+>   * This function is called through the VCPU_RUN ioctl called from user space. It
+>   * will execute VM code in a loop until the time slice for the process is used
+> @@ -647,8 +646,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+>   * return with return value 0 and with the kvm_run structure filled in with the
+>   * required data for the requested emulation.
+>   */
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int ret;
+>  
+>  	if (unlikely(!kvm_vcpu_initialized(vcpu)))
+> @@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  		return ret;
+>  
+>  	if (run->exit_reason == KVM_EXIT_MMIO) {
+> -		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
+> +		ret = kvm_handle_mmio_return(vcpu, run);
+>  		if (ret)
+>  			return ret;
+>  	}
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 74bdb7bf3295..e18faea89146 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -3135,7 +3135,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
+>  				synchronize_rcu();
+>  			put_pid(oldpid);
+>  		}
+> -		r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
+> +		r = kvm_arch_vcpu_ioctl_run(vcpu);
+>  		trace_kvm_userspace_exit(vcpu->run->exit_reason, r);
+>  		break;
+>  	}
+> 
 
-Here's a fix on top of the original patch.
+Queued, thanks.
 
-I changed s390_kernel_write() to return "void *" to match memcpy()
-(probably a separate patch).
-
-I also grabbed the text_mutex for the !early case in
-apply_relocate_add() -- will do something similar for x86.
-
-Will try to test this on a 390 box.
-
-
-diff --git a/arch/s390/include/asm/uaccess.h b/arch/s390/include/asm/uaccess.h
-index a470f1fa9f2a..324438889fe1 100644
---- a/arch/s390/include/asm/uaccess.h
-+++ b/arch/s390/include/asm/uaccess.h
-@@ -276,6 +276,6 @@ static inline unsigned long __must_check clear_user(void __user *to, unsigned lo
- }
- 
- int copy_to_user_real(void __user *dest, void *src, unsigned long count);
--void s390_kernel_write(void *dst, const void *src, size_t size);
-+void *s390_kernel_write(void *dst, const void *src, size_t size);
- 
- #endif /* __S390_UACCESS_H */
-diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
-index e85e378f876e..2b30ed0ce14f 100644
---- a/arch/s390/kernel/module.c
-+++ b/arch/s390/kernel/module.c
-@@ -19,6 +19,7 @@
- #include <linux/kasan.h>
- #include <linux/moduleloader.h>
- #include <linux/bug.h>
-+#include <linux/memory.h>
- #include <asm/alternative.h>
- #include <asm/nospec-branch.h>
- #include <asm/facility.h>
-@@ -175,10 +176,11 @@ int module_frob_arch_sections(Elf_Ehdr *hdr, Elf_Shdr *sechdrs,
- 
- static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
- 			   int sign, int bits, int shift,
--			   void (*write)(void *dest, const void *src, size_t len))
-+			   void *(*write)(void *dest, const void *src, size_t len))
- {
- 	unsigned long umax;
- 	long min, max;
-+	void *dest = (void *)loc;
- 
- 	if (val & ((1UL << shift) - 1))
- 		return -ENOEXEC;
-@@ -196,28 +198,28 @@ static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
- 	}
- 
- 	if (bits == 8) {
--		write(loc, &val, 1);
-+		write(dest, &val, 1);
- 	} else if (bits == 12) {
- 		unsigned short tmp = (val & 0xfff) |
- 			(*(unsigned short *) loc & 0xf000);
--		write(loc, &tmp, 2);
-+		write(dest, &tmp, 2);
- 	} else if (bits == 16) {
--		write(loc, &val, 2);
-+		write(dest, &val, 2);
- 	} else if (bits == 20) {
- 		unsigned int tmp = (val & 0xfff) << 16 |
- 			(val & 0xff000) >> 4 | (*(unsigned int *) loc & 0xf00000ff);
--		write(loc, &tmp, 4);
-+		write(dest, &tmp, 4);
- 	} else if (bits == 32) {
--		write(loc, &val, 4);
-+		write(dest, &val, 4);
- 	} else if (bits == 64) {
--		write(loc, &val, 8);
-+		write(dest, &val, 8);
- 	}
- 	return 0;
- }
- 
- static int apply_rela(Elf_Rela *rela, Elf_Addr base, Elf_Sym *symtab,
- 		      const char *strtab, struct module *me,
--		      void (*write)(void *dest, const void *src, size_t len))
-+		      void *(*write)(void *dest, const void *src, size_t len))
- {
- 	struct mod_arch_syminfo *info;
- 	Elf_Addr loc, val;
-@@ -419,7 +421,7 @@ static int apply_rela(Elf_Rela *rela, Elf_Addr base, Elf_Sym *symtab,
- static int __apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 		       unsigned int symindex, unsigned int relsec,
- 		       struct module *me,
--		       void (*write)(void *dest, const void *src, size_t len))
-+		       void *(*write)(void *dest, const void *src, size_t len))
- {
- 	Elf_Addr base;
- 	Elf_Sym *symtab;
-@@ -435,7 +437,7 @@ static int __apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 	n = sechdrs[relsec].sh_size / sizeof(Elf_Rela);
- 
- 	for (i = 0; i < n; i++, rela++) {
--		rc = apply_rela(rela, base, symtab, strtab, me);
-+		rc = apply_rela(rela, base, symtab, strtab, me, write);
- 		if (rc)
- 			return rc;
- 	}
-@@ -449,8 +451,16 @@ int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
- 	int ret;
- 	bool early = me->state == MODULE_STATE_UNFORMED;
- 
--	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
--				    early ? memcpy : s390_kernel_write);
-+	if (!early)
-+		mutex_lock(&text_mutex);
-+
-+	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
-+				   early ? memcpy : s390_kernel_write);
-+
-+	if (!early)
-+		mutex_unlock(&text_mutex);
-+
-+	return ret;
- }
- 
- int module_finalize(const Elf_Ehdr *hdr,
-diff --git a/arch/s390/mm/maccess.c b/arch/s390/mm/maccess.c
-index de7ca4b6718f..22a0be655f27 100644
---- a/arch/s390/mm/maccess.c
-+++ b/arch/s390/mm/maccess.c
-@@ -55,19 +55,22 @@ static notrace long s390_kernel_write_odd(void *dst, const void *src, size_t siz
-  */
- static DEFINE_SPINLOCK(s390_kernel_write_lock);
- 
--void notrace s390_kernel_write(void *dst, const void *src, size_t size)
-+notrace void *s390_kernel_write(void *dst, const void *src, size_t size)
- {
-+	void *tmp = dst;
- 	unsigned long flags;
- 	long copied;
- 
- 	spin_lock_irqsave(&s390_kernel_write_lock, flags);
- 	while (size) {
--		copied = s390_kernel_write_odd(dst, src, size);
--		dst += copied;
-+		copied = s390_kernel_write_odd(tmp, src, size);
-+		tmp += copied;
- 		src += copied;
- 		size -= copied;
- 	}
- 	spin_unlock_irqrestore(&s390_kernel_write_lock, flags);
-+
-+	return dst;
- }
- 
- static int __no_sanitize_address __memcpy_real(void *dest, void *src, size_t count)
+Paolo
 
