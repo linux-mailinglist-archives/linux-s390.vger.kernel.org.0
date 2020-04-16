@@ -2,176 +2,75 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 181901AC08C
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 14:00:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id D53DD1AC0B9
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 14:07:40 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2634659AbgDPL6g (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 07:58:36 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:58656 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2634641AbgDPL6d (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Apr 2020 07:58:33 -0400
+        id S2635007AbgDPMHi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 08:07:38 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:43566 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2635000AbgDPMHc (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Apr 2020 08:07:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587038308;
+        s=mimecast20190719; t=1587038851;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bGw1yxQ4kUkJge/B/iukxWMb8QJpj2UIRy259IkujXU=;
-        b=fk8Whx/uzyMr+01Yl+KFbSXO5kt3NP3gG7n0v38LlQ0Jz65RvwNLqGdBoJlcL5guwzXPCl
-        yJKXXggJAblmV8Z+K8T7z5NC7XLwJJ8UGYf/r1vYBjVfgqgmwxsaz5r7gjg4RMrNiHq4qY
-        /zsu/Ccut/pxYJjNkW1Mrorlss97kto=
+        bh=wG2AA9p6i8I/UNxVkyDuMtpOTXAlIGJZQiEkiZEXjVk=;
+        b=At1JGyb9cwzYLxa10RU1Cp6Re6ehn5h0W202IS2P3MZ0qg9mZUGRxWBEwYua1rPYJf1oTj
+        BEcrKT1i8f+MZ7EiamJUpfXiSGAWysV3LFmXnAxdukdrQymCmjvhW4sIZ6gtQKcDsA7D2J
+        H0w79cGIUbHo/ffNsWM39xaXa+lvT2c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-153-O1gRkXczPaKdX84Ai9Wx9Q-1; Thu, 16 Apr 2020 07:58:25 -0400
-X-MC-Unique: O1gRkXczPaKdX84Ai9Wx9Q-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-372-45ApSQlFNbygU006p2L1RQ-1; Thu, 16 Apr 2020 08:07:27 -0400
+X-MC-Unique: 45ApSQlFNbygU006p2L1RQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4CE6B800D5C;
-        Thu, 16 Apr 2020 11:58:23 +0000 (UTC)
-Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 0F7D59DD6D;
-        Thu, 16 Apr 2020 11:58:17 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 13:58:15 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tony Krowiak <akrowiak@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pmorel@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-Subject: Re: [PATCH v7 05/15] s390/vfio-ap: introduce shadow CRYCB
-Message-ID: <20200416135815.0ec6e0b3.cohuck@redhat.com>
-In-Reply-To: <20200407192015.19887-6-akrowiak@linux.ibm.com>
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
-        <20200407192015.19887-6-akrowiak@linux.ibm.com>
-Organization: Red Hat GmbH
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24BC68017F6;
+        Thu, 16 Apr 2020 12:06:56 +0000 (UTC)
+Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D00B25C290;
+        Thu, 16 Apr 2020 12:06:54 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 07:06:51 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH 4/7] s390/module: Use s390_kernel_write() for relocations
+Message-ID: <20200416120651.wqmoaa35jft4prox@treble>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
+ <e7f2ad87cf83dcdaa7b69b4e37c11fa355bdfe78.1586881704.git.jpoimboe@redhat.com>
+ <alpine.LSU.2.21.2004161047410.10475@pobox.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.LSU.2.21.2004161047410.10475@pobox.suse.cz>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue,  7 Apr 2020 15:20:05 -0400
-Tony Krowiak <akrowiak@linux.ibm.com> wrote:
-
-> Let's introduce a shadow copy of the KVM guest's CRYCB and maintain it for
-> the lifespan of the guest. The shadow CRYCB will be used to provide the
-> AP configuration for a KVM guest.
-
-'shadow CRYCB' seems to be a bit of a misnomer, as the real CRYCB has a
-different format (for starters, it also contains key wrapping stuff).
-It seems to be more of a 'shadow matrix'.
-
+On Thu, Apr 16, 2020 at 10:56:02AM +0200, Miroslav Benes wrote:
+> > +	bool early = me->state == MODULE_STATE_UNFORMED;
+> > +
+> > +	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> > +				    early ? memcpy : s390_kernel_write);
 > 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->  drivers/s390/crypto/vfio_ap_ops.c     | 31 +++++++++++++++++++++------
->  drivers/s390/crypto/vfio_ap_private.h |  1 +
->  2 files changed, 25 insertions(+), 7 deletions(-)
+> The compiler warns about
 > 
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 8ece0d52ff4c..b8b678032ab7 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -280,14 +280,32 @@ static int handle_pqap(struct kvm_vcpu *vcpu)
->  	return 0;
->  }
->  
-> +static void vfio_ap_matrix_clear(struct ap_matrix *matrix)
+> arch/s390/kernel/module.c: In function 'apply_relocate_add':
+> arch/s390/kernel/module.c:453:24: warning: pointer type mismatch in conditional expression
+>          early ? memcpy : s390_kernel_write);
 
-vfio_ap_matrix_clear_masks()?
+Thanks, I'll get all that cleaned up.
 
-> +{
-> +	bitmap_clear(matrix->apm, 0, AP_DEVICES);
-> +	bitmap_clear(matrix->aqm, 0, AP_DOMAINS);
-> +	bitmap_clear(matrix->adm, 0, AP_DOMAINS);
-> +}
-> +
->  static void vfio_ap_matrix_init(struct ap_config_info *info,
->  				struct ap_matrix *matrix)
->  {
-> +	vfio_ap_matrix_clear(matrix);
->  	matrix->apm_max = info->apxa ? info->Na : 63;
->  	matrix->aqm_max = info->apxa ? info->Nd : 15;
->  	matrix->adm_max = info->apxa ? info->Nd : 15;
->  }
->  
-> +static bool vfio_ap_mdev_commit_crycb(struct ap_matrix_mdev *matrix_mdev)
+I could have sworn I got a SUCCESS message from the kbuild bot.  Does it
+ignore warnings nowadays?
 
-vfio_ap_mdev_commit_masks()?
-
-And it does not seem to return anything? (Maybe it should, to be
-consumed below?)
-
-> +{
-> +	if (matrix_mdev->kvm && matrix_mdev->kvm->arch.crypto.crycbd) {
-> +		kvm_arch_crypto_set_masks(matrix_mdev->kvm,
-> +					  matrix_mdev->shadow_crycb.apm,
-> +					  matrix_mdev->shadow_crycb.aqm,
-> +					  matrix_mdev->shadow_crycb.adm);
-> +	}
-> +}
-> +
->  static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
->  {
->  	struct ap_matrix_mdev *matrix_mdev;
-> @@ -303,6 +321,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
->  
->  	matrix_mdev->mdev = mdev;
->  	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->matrix);
-> +	vfio_ap_matrix_init(&matrix_dev->info, &matrix_mdev->shadow_crycb);
->  	mdev_set_drvdata(mdev, matrix_mdev);
->  	matrix_mdev->pqap_hook.hook = handle_pqap;
->  	matrix_mdev->pqap_hook.owner = THIS_MODULE;
-> @@ -1126,13 +1145,9 @@ static int vfio_ap_mdev_group_notifier(struct notifier_block *nb,
->  	if (ret)
->  		return NOTIFY_DONE;
->  
-> -	/* If there is no CRYCB pointer, then we can't copy the masks */
-> -	if (!matrix_mdev->kvm->arch.crypto.crycbd)
-> -		return NOTIFY_DONE;
-> -
-> -	kvm_arch_crypto_set_masks(matrix_mdev->kvm, matrix_mdev->matrix.apm,
-> -				  matrix_mdev->matrix.aqm,
-> -				  matrix_mdev->matrix.adm);
-> +	memcpy(&matrix_mdev->shadow_crycb, &matrix_mdev->matrix,
-> +	       sizeof(matrix_mdev->shadow_crycb));
-> +	vfio_ap_mdev_commit_crycb(matrix_mdev);
-
-You are changing the return code for !crycb; maybe that's where a good
-return code for vfio_ap_mdev_commit_crycb() would come in handy :)
-
->  
->  	return NOTIFY_OK;
->  }
-> @@ -1247,6 +1262,8 @@ static void vfio_ap_mdev_release(struct mdev_device *mdev)
->  		kvm_put_kvm(matrix_mdev->kvm);
->  		matrix_mdev->kvm = NULL;
->  	}
-> +
-> +	vfio_ap_matrix_clear(&matrix_mdev->shadow_crycb);
->  	mutex_unlock(&matrix_dev->lock);
->  
->  	vfio_unregister_notifier(mdev_dev(mdev), VFIO_IOMMU_NOTIFY,
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index 4b6e144bab17..87cc270c3212 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.h
-> @@ -83,6 +83,7 @@ struct ap_matrix {
->  struct ap_matrix_mdev {
->  	struct list_head node;
->  	struct ap_matrix matrix;
-> +	struct ap_matrix shadow_crycb;
-
-I think shadow_matrix would be a better name.
-
->  	struct notifier_block group_notifier;
->  	struct notifier_block iommu_notifier;
->  	struct kvm *kvm;
+-- 
+Josh
 
