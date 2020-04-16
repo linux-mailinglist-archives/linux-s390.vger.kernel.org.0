@@ -2,265 +2,120 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2BB521AC555
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 16:17:45 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 14CB61AC581
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 16:21:27 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2393827AbgDPOQ7 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 10:16:59 -0400
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:42435 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2393854AbgDPOQy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Apr 2020 10:16:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587046612;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=7hnF0DDKrlu0/wsAOrUaDsyzDUw85QJZaEcoKNO3lxk=;
-        b=WJ/6fzyYouS4nwTlX8byFUS3Y5Z15GHbagckY28OkjwpyHE0vnPCfwEKNFVF8CN8vdeKke
-        R+K3wUTqjqDc5SUtCjofnIVcjtp2k+N4OBmGLQeH9AaJ77IIcYXE9iW1Dkp7jgmbB9YtoH
-        lIOclknvBcRkU532YIZXg3fzSd2O8tI=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-487-9H5KMQiGPQOg-sqxXr4ohA-1; Thu, 16 Apr 2020 10:16:50 -0400
-X-MC-Unique: 9H5KMQiGPQOg-sqxXr4ohA-1
-Received: by mail-wr1-f70.google.com with SMTP id i10so1296209wrq.8
-        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2020 07:16:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7hnF0DDKrlu0/wsAOrUaDsyzDUw85QJZaEcoKNO3lxk=;
-        b=fWoeGnG80Eo1XF2Rp0BRWKKf7O1PSiUqMbxpvPJt74Yd30tQt3LtbqCOrvIqmhF/RL
-         UncT01w3PFdd4h6vSCU6sUfMiOkjfgH5WC/r7Ujo9Vny2RjawZMx5sFkcdadsMSTdBw+
-         s7Po5fFYdlQW4ZNp4IbqNs6j8JNu0qO3P5HXZE2MmBGO3e+5tpxvh44KvnSUAZza6JCj
-         tyDVEPys0KYGjjW9twvh8KBSD7A0IT0Ild3Oa1x0Fg4Kqhc4QE/Ay6FbA61UF8L6xHnP
-         esPveWsXBlxUhU46cIVkPi4uBzb7P7wDraQhXPncSNmQUYLHB2ueIawB7DXbritgwmxs
-         y2cQ==
-X-Gm-Message-State: AGi0PubJQSjJKYJC+rPpIm0ODkE+D/E+dZ6oo7j5vAeSPGF9x1AcxtJf
-        ulOMjubZhx+LUGrQHvKv2fj9mM3pGXrX0fYhCQkyjWTob4gUlJU4Q5WND2WEK8hd+/TZHE59PT+
-        d4xu0TBAv0Hy1yPYArG8d2w==
-X-Received: by 2002:a5d:6584:: with SMTP id q4mr24139519wru.403.1587046609064;
-        Thu, 16 Apr 2020 07:16:49 -0700 (PDT)
-X-Google-Smtp-Source: APiQypJaroci/qQpvf8qcrl+CF8Sz/BzOeyBmpL55iYWlGov5mFc7JlBFtlz5rT24UUwp7LeJ9OTfQ==
-X-Received: by 2002:a5d:6584:: with SMTP id q4mr24139399wru.403.1587046607973;
-        Thu, 16 Apr 2020 07:16:47 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:399d:3ef7:647c:b12d? ([2001:b07:6468:f312:399d:3ef7:647c:b12d])
-        by smtp.gmail.com with ESMTPSA id d133sm4118344wmc.27.2020.04.16.07.16.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 16 Apr 2020 07:16:47 -0700 (PDT)
-Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <db7b02c0-2b7b-7c93-9dd0-b0303ea5da5e@redhat.com>
-Date:   Thu, 16 Apr 2020 16:16:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.5.0
+        id S2393943AbgDPOUy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 10:20:54 -0400
+Received: from mga18.intel.com ([134.134.136.126]:28772 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2391699AbgDPOUu (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Apr 2020 10:20:50 -0400
+IronPort-SDR: Yl/9Vwme6a2z4ZfinLTkn45Gx9ADKvcdn30GCYpXZR+4WdnDc64ageH4whe/UrYPbyxLvUZtST
+ WoTSG/cJLAzA==
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga106.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 07:20:49 -0700
+IronPort-SDR: 4aXlHZMbhNG1je7pcHHUeeCakUi0Jtdz4mAIIAD/SttvwL4xTsvtfe3yBUnis54lyriFtIAJpN
+ Rn8JSuP7HYrw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.72,391,1580803200"; 
+   d="scan'208";a="257231281"
+Received: from cchyder-mobl1.amr.corp.intel.com (HELO [10.254.70.41]) ([10.254.70.41])
+  by orsmga006.jf.intel.com with ESMTP; 16 Apr 2020 07:20:48 -0700
+Subject: Re: [PATCH v4 2/2] mm/gup/writeback: add callbacks for inaccessible
+ pages
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>, linux-next@vger.kernel.org,
+        akpm@linux-foundation.org, jack@suse.cz, kirill@shutemov.name,
+        "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        borntraeger@de.ibm.com, david@redhat.com, aarcange@redhat.com,
+        linux-mm@kvack.org, frankja@linux.ibm.com, sfr@canb.auug.org.au,
+        jhubbard@nvidia.com, linux-kernel@vger.kernel.org,
+        linux-s390@vger.kernel.org, Will Deacon <will@kernel.org>,
+        "Williams, Dan J" <dan.j.williams@intel.com>
+References: <20200306132537.783769-1-imbrenda@linux.ibm.com>
+ <20200306132537.783769-3-imbrenda@linux.ibm.com>
+ <3ae46945-0c7b-03cd-700a-a6fe8003c6ab@intel.com>
+ <20200415221754.GM2483@worktop.programming.kicks-ass.net>
+ <a7c2eb84-94c2-a608-4b04-a740fa9a389d@intel.com>
+ <20200416141547.29be5ea0@p-imbrenda>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <de56aa8e-9035-4b68-33cb-15682d073e26@intel.com>
+Date:   Thu, 16 Apr 2020 07:20:48 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.1
 MIME-Version: 1.0
-In-Reply-To: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20200416141547.29be5ea0@p-imbrenda>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 16/04/20 07:10, Tianjia Zhang wrote:
-> In earlier versions of kvm, 'kvm_run' is an independent structure
-> and is not included in the vcpu structure. At present, 'kvm_run'
-> is already included in the vcpu structure, so the parameter
-> 'kvm_run' is redundant.
-> 
-> This patch simplify the function definition, removes the extra
-> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
-> if necessary.
-> 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> ---
-> 
-> v2 change:
->   remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
-> 
->  arch/mips/kvm/mips.c       |  3 ++-
->  arch/powerpc/kvm/powerpc.c |  3 ++-
->  arch/s390/kvm/kvm-s390.c   |  3 ++-
->  arch/x86/kvm/x86.c         | 11 ++++++-----
->  include/linux/kvm_host.h   |  2 +-
->  virt/kvm/arm/arm.c         |  6 +++---
->  virt/kvm/kvm_main.c        |  2 +-
->  7 files changed, 17 insertions(+), 13 deletions(-)
-> 
-> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
-> index 8f05dd0a0f4e..ec24adf4857e 100644
-> --- a/arch/mips/kvm/mips.c
-> +++ b/arch/mips/kvm/mips.c
-> @@ -439,8 +439,9 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
->  	return -ENOIOCTLCMD;
->  }
->  
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *run = vcpu->run;
->  	int r = -EINTR;
->  
->  	vcpu_load(vcpu);
-> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
-> index e15166b0a16d..7e24691e138a 100644
-> --- a/arch/powerpc/kvm/powerpc.c
-> +++ b/arch/powerpc/kvm/powerpc.c
-> @@ -1764,8 +1764,9 @@ int kvm_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu, struct kvm_one_reg *reg)
->  	return r;
->  }
->  
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *run = vcpu->run;
->  	int r;
->  
->  	vcpu_load(vcpu);
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 19a81024fe16..443af3ead739 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4333,8 +4333,9 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  		store_regs_fmt2(vcpu, kvm_run);
->  }
->  
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
->  	int rc;
->  
->  	if (kvm_run->immediate_exit)
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index 3bf2ecafd027..a0338e86c90f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -8707,8 +8707,9 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
->  	trace_kvm_fpu(0);
->  }
->  
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
->  	int r;
->  
->  	vcpu_load(vcpu);
-> @@ -8726,18 +8727,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  		r = -EAGAIN;
->  		if (signal_pending(current)) {
->  			r = -EINTR;
-> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
-> +			kvm_run->exit_reason = KVM_EXIT_INTR;
->  			++vcpu->stat.signal_exits;
->  		}
->  		goto out;
->  	}
->  
-> -	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
-> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
->  		r = -EINVAL;
->  		goto out;
->  	}
->  
-> -	if (vcpu->run->kvm_dirty_regs) {
-> +	if (kvm_run->kvm_dirty_regs) {
->  		r = sync_regs(vcpu);
->  		if (r != 0)
->  			goto out;
-> @@ -8767,7 +8768,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  
->  out:
->  	kvm_put_guest_fpu(vcpu);
-> -	if (vcpu->run->kvm_valid_regs)
-> +	if (kvm_run->kvm_valid_regs)
->  		store_regs(vcpu);
->  	post_kvm_run_save(vcpu);
->  	kvm_sigset_deactivate(vcpu);
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 6d58beb65454..1e17ef719595 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -866,7 +866,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
->  				    struct kvm_mp_state *mp_state);
->  int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
->  					struct kvm_guest_debug *dbg);
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run);
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
->  
->  int kvm_arch_init(void *opaque);
->  void kvm_arch_exit(void);
-> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
-> index 48d0ec44ad77..f5390ac2165b 100644
-> --- a/virt/kvm/arm/arm.c
-> +++ b/virt/kvm/arm/arm.c
-> @@ -639,7 +639,6 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
->  /**
->   * kvm_arch_vcpu_ioctl_run - the main VCPU run function to execute guest code
->   * @vcpu:	The VCPU pointer
-> - * @run:	The kvm_run structure pointer used for userspace state exchange
->   *
->   * This function is called through the VCPU_RUN ioctl called from user space. It
->   * will execute VM code in a loop until the time slice for the process is used
-> @@ -647,8 +646,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
->   * return with return value 0 and with the kvm_run structure filled in with the
->   * required data for the requested emulation.
->   */
-> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
-> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *run = vcpu->run;
->  	int ret;
->  
->  	if (unlikely(!kvm_vcpu_initialized(vcpu)))
-> @@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
->  		return ret;
->  
->  	if (run->exit_reason == KVM_EXIT_MMIO) {
-> -		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
-> +		ret = kvm_handle_mmio_return(vcpu, run);
->  		if (ret)
->  			return ret;
->  	}
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 74bdb7bf3295..e18faea89146 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -3135,7 +3135,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
->  				synchronize_rcu();
->  			put_pid(oldpid);
->  		}
-> -		r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
-> +		r = kvm_arch_vcpu_ioctl_run(vcpu);
->  		trace_kvm_userspace_exit(vcpu->run->exit_reason, r);
->  		break;
->  	}
-> 
+On 4/16/20 5:15 AM, Claudio Imbrenda wrote:
+>> I assumed that this was all anonymous-only so it's always dirty before
+>> writeback starts.
+> it could also be mmapped
 
-Queued, thanks.
+Let's say you have a mmap()'d ramfs file.  Another process calls which
+doesn't have it mapped calls sys_write() and writes to the file.
 
-Paolo
+This means that host host has to write to the physical page and must do
+arch_make_page_accessible() in the sys_write() path somewhere.
 
+There is a get_user_pages() in that path, but it's on the _source_
+buffer, not the ramfs page because the ramfs page is not mapped.
+There's also no __test_set_page_writeback() because you can't write back
+ramfs.
+
+Where is the arch_make_page_accessible() in this case on the ramfs page?
