@@ -2,146 +2,269 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 32C001AB838
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 08:40:27 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id AD7721AB943
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 09:03:59 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2408422AbgDPGjM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 02:39:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29585 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2408416AbgDPGjK (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Apr 2020 02:39:10 -0400
+        id S2438160AbgDPHD6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 03:03:58 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:25436 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2438189AbgDPHD4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Apr 2020 03:03:56 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587019148;
+        s=mimecast20190719; t=1587020634;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=RTmAQ268tugfVTRXJKw1CU2xHVuS6n2tvRxMg9gDw58=;
-        b=X0NCYgga2ilwj/wBPXUFCFlBA65n5EdcZfTRBjcJaQZXfACPZM13Rw3P9hIiHL4HeL6z65
-        II6Dq/83M9Rr347hoChfr3KphyRMVXdB6MXFQhPpc5zWUQjta6h05eVmlXiShiaKzA4f4v
-        E5pCeJMziJmRqSsLEKFzEcE/+vHAA9I=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-399-30UXiYtANCScSqAVZLBLNA-1; Thu, 16 Apr 2020 02:39:04 -0400
-X-MC-Unique: 30UXiYtANCScSqAVZLBLNA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0A15B1005510;
-        Thu, 16 Apr 2020 06:39:03 +0000 (UTC)
-Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 40B722718D;
-        Thu, 16 Apr 2020 06:38:58 +0000 (UTC)
-Date:   Thu, 16 Apr 2020 08:38:55 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Eric Farman <farman@linux.ibm.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, Janosch Frank <frankja@linux.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Michael Mueller <mimu@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Thomas Huth <thuth@redhat.com>
-Subject: Re: [PATCH] KVM: s390: Fix PV check in deliverable_irqs()
-Message-ID: <20200416083855.22892f3b.cohuck@redhat.com>
-In-Reply-To: <e8720727-ceee-e668-2a52-54b2b5039087@de.ibm.com>
-References: <20200415190353.63625-1-farman@linux.ibm.com>
-        <e8720727-ceee-e668-2a52-54b2b5039087@de.ibm.com>
-Organization: Red Hat GmbH
+        bh=u8Fe4HRBZIpxRs2mIcqmv3RiTnssjCSY9lhZeXvdF9I=;
+        b=Y6W1E0B+Tb2OwSZEYOtbu9su6T+sc+Yc4JFuzDMZE1i3AYcGTbdmxLR+wtkTHg36fximfx
+        L8Ytx2cMi0lX+vsVcrQhZkS+VYH63wZXLbedrc2pei2YuiIoiQvslReXtCDTqTZJIxrgXa
+        za0tI/4GT7AYyBCCvpEeuY3jmijbF+Q=
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
+ [209.85.221.69]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-161-WYaZPQvNOSS-iQb0NKB8Ig-1; Thu, 16 Apr 2020 03:03:52 -0400
+X-MC-Unique: WYaZPQvNOSS-iQb0NKB8Ig-1
+Received: by mail-wr1-f69.google.com with SMTP id f2so1243441wrm.9
+        for <linux-s390@vger.kernel.org>; Thu, 16 Apr 2020 00:03:52 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=u8Fe4HRBZIpxRs2mIcqmv3RiTnssjCSY9lhZeXvdF9I=;
+        b=MkAsQKaLVLT3fy0gHddDwmsS00iWM1nop7P3fte7tfR3PJU6aplLL8JJ2/WEDQbkYz
+         odwsROKznQ3y1jwjrN+dRGqNZmp4vCJiM/SPf1sgPVT9pqXo5Z4hY/Q0HRwdCULnH+SW
+         fAhnbNC9DE4hWKwCQ2jQ4FIaJjucUyhdGPq1LVfM1vvqNITTI2chVchdDq/j8KecJieF
+         L+t39bmuVFGJyO2ItcK3Dnr7P0xWyCPSzavv3ImonDbqG8DKwnZT/yew3FFnPu5Mxhkx
+         JrdD8iKVPe6UA3NjaOFC3UHcyDqu62ht3Pj1DZBhN9puxPk6GDMBBHt5R+z2tJyuMAlc
+         6ZQA==
+X-Gm-Message-State: AGi0PuaVue3+0wxRVjTNUxmTqmMi7EU1gzVgHwJF5GWdSvmhm5AlYz4u
+        ovec9GSLb//qwnuIcoa8SZoEcxGLOaftnYQTZIJcua7jI5dRifHqezVrW2QiDalUNKL49kamg0W
+        jrixxHvTO9c5qYGP3C/fBsw==
+X-Received: by 2002:a5d:4005:: with SMTP id n5mr7830130wrp.242.1587020631088;
+        Thu, 16 Apr 2020 00:03:51 -0700 (PDT)
+X-Google-Smtp-Source: APiQypKzVfRYkQQjXNmPRmmEuweWR0AsvTUy66VIOLHRJ9IcCVXdD+fbCSvkQnkvtw8EzDw2iMvttg==
+X-Received: by 2002:a5d:4005:: with SMTP id n5mr7830094wrp.242.1587020630785;
+        Thu, 16 Apr 2020 00:03:50 -0700 (PDT)
+Received: from vitty.brq.redhat.com (g-server-2.ign.cz. [91.219.240.2])
+        by smtp.gmail.com with ESMTPSA id o16sm26785055wrs.44.2020.04.16.00.03.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 16 Apr 2020 00:03:49 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
+        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        tianjia.zhang@linux.alibaba.com, pbonzini@redhat.com,
+        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
+        benh@kernel.crashing.org, borntraeger@de.ibm.com,
+        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        sean.j.christopherson@intel.com, wanpengli@tencent.com,
+        jmattson@google.com, joro@8bytes.org, tglx@linutronix.de,
+        mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com,
+        maz@kernel.org, james.morse@arm.com, julien.thierry.kdev@gmail.com,
+        suzuki.poulose@arm.com, christoffer.dall@arm.com,
+        peterx@redhat.com, thuth@redhat.com
+Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
+In-Reply-To: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
+Date:   Thu, 16 Apr 2020 09:03:47 +0200
+Message-ID: <878sivx67g.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 16 Apr 2020 08:17:21 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
 
-> On 15.04.20 21:03, Eric Farman wrote:
-> > The diag 0x44 handler, which handles a directed yield, goes into a
-> > a codepath that does a kvm_for_each_vcpu() and ultimately
-> > deliverable_irqs().  The new check for kvm_s390_pv_cpu_is_protected()
-> > contains an assertion that the vcpu->mutex is held, which isn't going
-> > to be the case in this scenario.
-> > 
-> > The result is a plethora of these messages if the lock debugging
-> > is enabled, and thus an implication that we have a problem.
-> > 
-> >   WARNING: CPU: 9 PID: 16167 at arch/s390/kvm/kvm-s390.h:239 deliverable_irqs+0x1c6/0x1d0 [kvm]
-> >   ...snip...
-> >   Call Trace:
-> >    [<000003ff80429bf2>] deliverable_irqs+0x1ca/0x1d0 [kvm]
-> >   ([<000003ff80429b34>] deliverable_irqs+0x10c/0x1d0 [kvm])
-> >    [<000003ff8042ba82>] kvm_s390_vcpu_has_irq+0x2a/0xa8 [kvm]
-> >    [<000003ff804101e2>] kvm_arch_dy_runnable+0x22/0x38 [kvm]
-> >    [<000003ff80410284>] kvm_vcpu_on_spin+0x8c/0x1d0 [kvm]
-> >    [<000003ff80436888>] kvm_s390_handle_diag+0x3b0/0x768 [kvm]
-> >    [<000003ff80425af4>] kvm_handle_sie_intercept+0x1cc/0xcd0 [kvm]
-> >    [<000003ff80422bb0>] __vcpu_run+0x7b8/0xfd0 [kvm]
-> >    [<000003ff80423de6>] kvm_arch_vcpu_ioctl_run+0xee/0x3e0 [kvm]
-> >    [<000003ff8040ccd8>] kvm_vcpu_ioctl+0x2c8/0x8d0 [kvm]
-> >    [<00000001504ced06>] ksys_ioctl+0xae/0xe8
-> >    [<00000001504cedaa>] __s390x_sys_ioctl+0x2a/0x38
-> >    [<0000000150cb9034>] system_call+0xd8/0x2d8
-> >   2 locks held by CPU 2/KVM/16167:
-> >    #0: 00000001951980c0 (&vcpu->mutex){+.+.}, at: kvm_vcpu_ioctl+0x90/0x8d0 [kvm]
-> >    #1: 000000019599c0f0 (&kvm->srcu){....}, at: __vcpu_run+0x4bc/0xfd0 [kvm]
-> >   Last Breaking-Event-Address:
-> >    [<000003ff80429b34>] deliverable_irqs+0x10c/0x1d0 [kvm]
-> >   irq event stamp: 11967
-> >   hardirqs last  enabled at (11975): [<00000001502992f2>] console_unlock+0x4ca/0x650
-> >   hardirqs last disabled at (11982): [<0000000150298ee8>] console_unlock+0xc0/0x650
-> >   softirqs last  enabled at (7940): [<0000000150cba6ca>] __do_softirq+0x422/0x4d8
-> >   softirqs last disabled at (7929): [<00000001501cd688>] do_softirq_own_stack+0x70/0x80
-> > 
-> > Considering what's being done here, let's fix this by removing the
-> > mutex assertion rather than acquiring the mutex for every other vcpu.
-> > 
-> > Fixes: 201ae986ead7 ("KVM: s390: protvirt: Implement interrupt injection")  
-> 
-> Yes, when adding that check I missed that path. We do have other places that use
-> kvm_s390_pv_cpu_get_handle instead of kvm_s390_pv_cpu_is_protected when we know
-> that this place has cases without the mutex being hold. And yes kvm_vcpu_on_spin
-> is such a place. 
-> 
-> The alternative would be to copy kvm_s390_vcpu_has_irq into a newly create
-> s390 version of kvm_arch_dy_runnable with a private copy of kvm_s390_vcpu_has_irq.
-> I think your patch is preferrable as it avoids code duplication with just tiny 
-> difference. After all it is just a sanity check.
+> In earlier versions of kvm, 'kvm_run' is an independent structure
+> and is not included in the vcpu structure. At present, 'kvm_run'
+> is already included in the vcpu structure, so the parameter
+> 'kvm_run' is redundant.
+>
+> This patch simplify the function definition, removes the extra
+> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
+> if necessary.
+>
+> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> ---
+>
+> v2 change:
+>   remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
+>
+>  arch/mips/kvm/mips.c       |  3 ++-
+>  arch/powerpc/kvm/powerpc.c |  3 ++-
+>  arch/s390/kvm/kvm-s390.c   |  3 ++-
+>  arch/x86/kvm/x86.c         | 11 ++++++-----
+>  include/linux/kvm_host.h   |  2 +-
+>  virt/kvm/arm/arm.c         |  6 +++---
+>  virt/kvm/kvm_main.c        |  2 +-
+>  7 files changed, 17 insertions(+), 13 deletions(-)
+>
+> diff --git a/arch/mips/kvm/mips.c b/arch/mips/kvm/mips.c
+> index 8f05dd0a0f4e..ec24adf4857e 100644
+> --- a/arch/mips/kvm/mips.c
+> +++ b/arch/mips/kvm/mips.c
+> @@ -439,8 +439,9 @@ int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>  	return -ENOIOCTLCMD;
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int r = -EINTR;
+>  
+>  	vcpu_load(vcpu);
+> diff --git a/arch/powerpc/kvm/powerpc.c b/arch/powerpc/kvm/powerpc.c
+> index e15166b0a16d..7e24691e138a 100644
+> --- a/arch/powerpc/kvm/powerpc.c
+> +++ b/arch/powerpc/kvm/powerpc.c
+> @@ -1764,8 +1764,9 @@ int kvm_vcpu_ioctl_set_one_reg(struct kvm_vcpu *vcpu, struct kvm_one_reg *reg)
+>  	return r;
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int r;
+>  
+>  	vcpu_load(vcpu);
+> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
+> index 19a81024fe16..443af3ead739 100644
+> --- a/arch/s390/kvm/kvm-s390.c
+> +++ b/arch/s390/kvm/kvm-s390.c
+> @@ -4333,8 +4333,9 @@ static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		store_regs_fmt2(vcpu, kvm_run);
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	int rc;
+>  
+>  	if (kvm_run->immediate_exit)
+> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+> index 3bf2ecafd027..a0338e86c90f 100644
+> --- a/arch/x86/kvm/x86.c
+> +++ b/arch/x86/kvm/x86.c
+> @@ -8707,8 +8707,9 @@ static void kvm_put_guest_fpu(struct kvm_vcpu *vcpu)
+>  	trace_kvm_fpu(0);
+>  }
+>  
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *kvm_run = vcpu->run;
+>  	int r;
+>  
+>  	vcpu_load(vcpu);
+> @@ -8726,18 +8727,18 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  		r = -EAGAIN;
+>  		if (signal_pending(current)) {
+>  			r = -EINTR;
+> -			vcpu->run->exit_reason = KVM_EXIT_INTR;
+> +			kvm_run->exit_reason = KVM_EXIT_INTR;
+>  			++vcpu->stat.signal_exits;
+>  		}
+>  		goto out;
+>  	}
+>  
+> -	if (vcpu->run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+> +	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_X86_VALID_FIELDS) {
+>  		r = -EINVAL;
+>  		goto out;
+>  	}
+>  
+> -	if (vcpu->run->kvm_dirty_regs) {
+> +	if (kvm_run->kvm_dirty_regs) {
+>  		r = sync_regs(vcpu);
+>  		if (r != 0)
+>  			goto out;
+> @@ -8767,7 +8768,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
+>  
+>  out:
+>  	kvm_put_guest_fpu(vcpu);
+> -	if (vcpu->run->kvm_valid_regs)
+> +	if (kvm_run->kvm_valid_regs)
+>  		store_regs(vcpu);
+>  	post_kvm_run_save(vcpu);
+>  	kvm_sigset_deactivate(vcpu);
+> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> index 6d58beb65454..1e17ef719595 100644
+> --- a/include/linux/kvm_host.h
+> +++ b/include/linux/kvm_host.h
+> @@ -866,7 +866,7 @@ int kvm_arch_vcpu_ioctl_set_mpstate(struct kvm_vcpu *vcpu,
+>  				    struct kvm_mp_state *mp_state);
+>  int kvm_arch_vcpu_ioctl_set_guest_debug(struct kvm_vcpu *vcpu,
+>  					struct kvm_guest_debug *dbg);
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run);
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu);
+>  
+>  int kvm_arch_init(void *opaque);
+>  void kvm_arch_exit(void);
+> diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+> index 48d0ec44ad77..f5390ac2165b 100644
+> --- a/virt/kvm/arm/arm.c
+> +++ b/virt/kvm/arm/arm.c
+> @@ -639,7 +639,6 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+>  /**
+>   * kvm_arch_vcpu_ioctl_run - the main VCPU run function to execute guest code
+>   * @vcpu:	The VCPU pointer
+> - * @run:	The kvm_run structure pointer used for userspace state exchange
+>   *
+>   * This function is called through the VCPU_RUN ioctl called from user space. It
+>   * will execute VM code in a loop until the time slice for the process is used
+> @@ -647,8 +646,9 @@ static void check_vcpu_requests(struct kvm_vcpu *vcpu)
+>   * return with return value 0 and with the kvm_run structure filled in with the
+>   * required data for the requested emulation.
+>   */
+> -int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+> +int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
+>  {
+> +	struct kvm_run *run = vcpu->run;
+>  	int ret;
+>  
+>  	if (unlikely(!kvm_vcpu_initialized(vcpu)))
+> @@ -659,7 +659,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu, struct kvm_run *run)
+>  		return ret;
+>  
+>  	if (run->exit_reason == KVM_EXIT_MMIO) {
+> -		ret = kvm_handle_mmio_return(vcpu, vcpu->run);
+> +		ret = kvm_handle_mmio_return(vcpu, run);
 
-I agree, calling kvm_s390_pv_cpu_get_handle() in that code path without
-the mutex is fine, and I don't think we would benefit a lot from
-keeping the check in the general case and using a special case for the
-directed yield check.
+I don't know much about ARM but this also seems redundant,
+kvm_handle_mmio_return() is also able to extruct 'struct kvm_run' from'
+'struct kvm_vcpu'. This likely deserves it's own patch though.
 
-> 
-> Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+>  		if (ret)
+>  			return ret;
+>  	}
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index 74bdb7bf3295..e18faea89146 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -3135,7 +3135,7 @@ static long kvm_vcpu_ioctl(struct file *filp,
+>  				synchronize_rcu();
+>  			put_pid(oldpid);
+>  		}
+> -		r = kvm_arch_vcpu_ioctl_run(vcpu, vcpu->run);
+> +		r = kvm_arch_vcpu_ioctl_run(vcpu);
+>  		trace_kvm_userspace_exit(vcpu->run->exit_reason, r);
+>  		break;
+>  	}
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Looked at non-x86 arches just briefly but there seems to be no
+controversy here, so
 
-> 
-> > Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> > ---
-> >  arch/s390/kvm/interrupt.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-> > index 8191106bf7b9..bfb481134994 100644
-> > --- a/arch/s390/kvm/interrupt.c
-> > +++ b/arch/s390/kvm/interrupt.c
-> > @@ -393,7 +393,7 @@ static unsigned long deliverable_irqs(struct kvm_vcpu *vcpu)
-> >  	if (psw_mchk_disabled(vcpu))
-> >  		active_mask &= ~IRQ_PEND_MCHK_MASK;
-> >  	/* PV guest cpus can have a single interruption injected at a time. */
-> > -	if (kvm_s390_pv_cpu_is_protected(vcpu) &&
-> > +	if (kvm_s390_pv_cpu_get_handle(vcpu) &&
-> >  	    vcpu->arch.sie_block->iictl != IICTL_CODE_NONE)
-> >  		active_mask &= ~(IRQ_PEND_EXT_II_MASK |
-> >  				 IRQ_PEND_IO_MASK |
-> >   
-> 
+Reviewed-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+
+-- 
+Vitaly
 
