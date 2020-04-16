@@ -2,108 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 352B11ABC3E
-	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 11:11:28 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 16D291ABCDA
+	for <lists+linux-s390@lfdr.de>; Thu, 16 Apr 2020 11:36:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2503460AbgDPJJM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 05:09:12 -0400
-Received: from out30-44.freemail.mail.aliyun.com ([115.124.30.44]:48118 "EHLO
-        out30-44.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2503327AbgDPJJA (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Apr 2020 05:09:00 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R101e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0TvhGIdK_1587028131;
-Received: from 30.27.118.45(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0TvhGIdK_1587028131)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 16 Apr 2020 17:08:53 +0800
-Subject: Re: [PATCH v2] KVM: Optimize kvm_arch_vcpu_ioctl_run function
-To:     Cornelia Huck <cohuck@redhat.com>
-Cc:     Marc Zyngier <maz@kernel.org>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, pbonzini@redhat.com,
-        tsbogend@alpha.franken.de, paulus@ozlabs.org, mpe@ellerman.id.au,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com
-References: <20200416051057.26526-1-tianjia.zhang@linux.alibaba.com>
- <878sivx67g.fsf@vitty.brq.redhat.com>
- <1000159f971a6fa3b5bd9e5871ce4d82@kernel.org>
- <8b92fb5b-5138-0695-fb90-6c36b8dfad00@linux.alibaba.com>
- <20200416105019.51191d79.cohuck@redhat.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <668a12b9-eda5-2d42-95f9-8d5e2990a465@linux.alibaba.com>
-Date:   Thu, 16 Apr 2020 17:08:51 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        id S2503663AbgDPJeU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 05:34:20 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31521 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2503634AbgDPJeL (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 16 Apr 2020 05:34:11 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587029648;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=c0IPo0Ds7AJ1DPz8eMpn9oh2qqiK1Lq47iTdtzhbLqA=;
+        b=Gniz1jrTBTi4yHD3V8vzE50KqILdfDjeF1VFsF7JwkL3QKruWMDUjwVymyKj9GGu4Dl+PU
+        1MLA8G5QliAFBkERmwtevLStt2cRDGQ+FIgi14H4ZBb1YVVbF0lNL9DcSuzdB/8ZyxsEwp
+        wynhBA3Ds3/CTjTUNZYkf5DVxK2P3hI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-379-tprWSifANDOm2c09AFcakQ-1; Thu, 16 Apr 2020 05:34:06 -0400
+X-MC-Unique: tprWSifANDOm2c09AFcakQ-1
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 22FDF107B769;
+        Thu, 16 Apr 2020 09:34:04 +0000 (UTC)
+Received: from gondolin (ovpn-112-234.ams2.redhat.com [10.36.112.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B1BBD5DA2C;
+        Thu, 16 Apr 2020 09:33:58 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 11:33:56 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Harald Freudenberger <freude@linux.ibm.com>
+Cc:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        borntraeger@de.ibm.com, mjrosato@linux.ibm.com,
+        pmorel@linux.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com,
+        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
+Subject: Re: [PATCH v7 03/15] s390/zcrypt: driver callback to indicate
+ resource in use
+Message-ID: <20200416113356.28fcef8c.cohuck@redhat.com>
+In-Reply-To: <82675d5c-4901-cbd8-9287-79133aa3ee68@linux.ibm.com>
+References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
+        <20200407192015.19887-4-akrowiak@linux.ibm.com>
+        <20200414145851.562867ae.cohuck@redhat.com>
+        <82675d5c-4901-cbd8-9287-79133aa3ee68@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <20200416105019.51191d79.cohuck@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+On Wed, 15 Apr 2020 08:08:24 +0200
+Harald Freudenberger <freude@linux.ibm.com> wrote:
 
+> On 14.04.20 14:58, Cornelia Huck wrote:
+> > On Tue,  7 Apr 2020 15:20:03 -0400
+> > Tony Krowiak <akrowiak@linux.ibm.com> wrote:
 
-On 2020/4/16 16:50, Cornelia Huck wrote:
-> On Thu, 16 Apr 2020 16:45:33 +0800
-> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
-> 
->> On 2020/4/16 16:28, Marc Zyngier wrote:
->>> On 2020-04-16 08:03, Vitaly Kuznetsov wrote:
->>>> Tianjia Zhang <tianjia.zhang@linux.alibaba.com> writes:
->>>>   
->>>>> In earlier versions of kvm, 'kvm_run' is an independent structure
->>>>> and is not included in the vcpu structure. At present, 'kvm_run'
->>>>> is already included in the vcpu structure, so the parameter
->>>>> 'kvm_run' is redundant.
->>>>>
->>>>> This patch simplify the function definition, removes the extra
->>>>> 'kvm_run' parameter, and extract it from the 'kvm_vcpu' structure
->>>>> if necessary.
->>>>>
->>>>> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->>>>> ---
->>>>>
->>>>> v2 change:
->>>>>    remove 'kvm_run' parameter and extract it from 'kvm_vcpu'
->>>>>
->>>>>   arch/mips/kvm/mips.c       |  3 ++-
->>>>>   arch/powerpc/kvm/powerpc.c |  3 ++-
->>>>>   arch/s390/kvm/kvm-s390.c   |  3 ++-
->>>>>   arch/x86/kvm/x86.c         | 11 ++++++-----
->>>>>   include/linux/kvm_host.h   |  2 +-
->>>>>   virt/kvm/arm/arm.c         |  6 +++---
->>>>>   virt/kvm/kvm_main.c        |  2 +-
->>>>>   7 files changed, 17 insertions(+), 13 deletions(-)
-> 
->>> Overall, there is a large set of cleanups to be done when both the vcpu
->>> and the run
->>> structures are passed as parameters at the same time. Just grepping the
->>> tree for
->>> kvm_run is pretty instructive.
->>>
->>>           M.
->>
->> Sorry, it's my mistake, I only compiled the x86 platform, I will submit
->> patch again.
-> 
-> I think it's completely fine (and even preferable) to do cleanups like
-> that on top.
-> 
-> [FWIW, I compiled s390 here.]
-> 
+> >> +	/* The non-default driver's module must be loaded */
+> >> +	if (!try_module_get(drv->owner))
+> >> +		return 0;  
+> > Is that really needed? I would have thought that the driver core's
+> > klist usage would make sure that the callback would not be invoked for
+> > drivers that are not registered anymore. Or am I missing a window?  
+> The try_module_get() and module_put() is a result of review feedback from
+> my side. The ap bus core is static in the kernel whereas the
+> vfio dd is a kernel module. So there may be a race condition between
+> calling the callback function and removal of the vfio dd module.
+> There is similar code in zcrypt_api which does the same for the zcrypt
+> device drivers before using some variables or functions from the modules.
+> Help me, it this is outdated code and there is no need to adjust the
+> module reference counter any more, then I would be happy to remove
+> this code :-)
 
-Very good, I will do a comprehensive cleanup of this type of code.
+I think the driver core already should keep us safe. A built-in bus
+calling a driver in a module is a very common pattern, and I think
+->owner was introduced exactly for that case.
 
-Thanks,
-Tianjia
+Unless I'm really missing something obvious?
+
