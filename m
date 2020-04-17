@@ -2,109 +2,131 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id BF28D1AD407
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Apr 2020 03:15:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id ED9A31AD430
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Apr 2020 03:37:36 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726393AbgDQBOd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 16 Apr 2020 21:14:33 -0400
-Received: from mga11.intel.com ([192.55.52.93]:14369 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725858AbgDQBOd (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 16 Apr 2020 21:14:33 -0400
-IronPort-SDR: XEFS9tfV/JgTyQfFuv4VlpD3+O4YSs4ZNqM+JaADKNRSKkqpXpayf2suA2yHs6TuSnVwC9Vis9
- twYjrEzzzKWQ==
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 16 Apr 2020 18:14:32 -0700
-IronPort-SDR: sZlVw/7cjCHq0F1EFVv0TW8FklMi9s4vHlLYLRHCGjn12jklAHdg6QlmB19PsSs7PeDXqv0gk5
- UINIzZVqpibg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.72,393,1580803200"; 
-   d="scan'208";a="272262073"
-Received: from orsmsx103.amr.corp.intel.com ([10.22.225.130])
-  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2020 18:14:32 -0700
-Received: from orsmsx101.amr.corp.intel.com ([169.254.8.204]) by
- ORSMSX103.amr.corp.intel.com ([169.254.5.143]) with mapi id 14.03.0439.000;
- Thu, 16 Apr 2020 18:14:32 -0700
-From:   "Derrick, Jonathan" <jonathan.derrick@intel.com>
-To:     "joro@8bytes.org" <joro@8bytes.org>,
-        "drake@endlessm.com" <drake@endlessm.com>
-CC:     "heiko@sntech.de" <heiko@sntech.de>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "robdclark@gmail.com" <robdclark@gmail.com>,
-        "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core
- code
-Thread-Topic: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core
- code
-Thread-Index: AQHWEmDrg4k1XREwpUada/q2n6OD7qh8+KGAgAADDAA=
-Date:   Fri, 17 Apr 2020 01:14:30 +0000
-Message-ID: <aafed865c0254934986528b3ce9c4d34ff2fccad.camel@intel.com>
-References: <20200414131542.25608-1-joro@8bytes.org>
-         <20200417010335.31739-1-drake@endlessm.com>
-In-Reply-To: <20200417010335.31739-1-drake@endlessm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.255.0.232]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <B8851D46B4E5F2468CD8AA858DAC2199@intel.com>
-Content-Transfer-Encoding: base64
+        id S1728773AbgDQBh0 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 16 Apr 2020 21:37:26 -0400
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31476 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728461AbgDQBhZ (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Thu, 16 Apr 2020 21:37:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587087444;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=RH8c9mlh1Nn23MD937ZQ+ys6TCD7ufyPWJobVezo3i4=;
+        b=hdkV2HFaMWOq4lKoPOn95e/kzyK4k18eP8LikSiLV7YQXPMLkI9Rvf+GeDnnWK85uJ0zAT
+        qQ2KXCxQuinV2ghI+GSY09KH+Uuwd12NU9sHrdU8VhYRvdz4o1u8LCdVvUYx3yzDspo7/I
+        thoRY3tC+iLCao5p7moSK+Af0agMIv8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-183-pCZE9mC2NWCH7FJKXvCtGg-1; Thu, 16 Apr 2020 21:37:20 -0400
+X-MC-Unique: pCZE9mC2NWCH7FJKXvCtGg-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 561ED13F9;
+        Fri, 17 Apr 2020 01:37:19 +0000 (UTC)
+Received: from treble (ovpn-116-146.rdu2.redhat.com [10.10.116.146])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 403D07E7EF;
+        Fri, 17 Apr 2020 01:37:17 +0000 (UTC)
+Date:   Thu, 16 Apr 2020 20:37:15 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Miroslav Benes <mbenes@suse.cz>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH 4/7] s390/module: Use s390_kernel_write() for relocations
+Message-ID: <20200417013715.kj6g4byvdy5uzgev@treble>
+References: <cover.1586881704.git.jpoimboe@redhat.com>
+ <e7f2ad87cf83dcdaa7b69b4e37c11fa355bdfe78.1586881704.git.jpoimboe@redhat.com>
+ <alpine.LSU.2.21.2004161047410.10475@pobox.suse.cz>
+ <20200416120651.wqmoaa35jft4prox@treble>
+ <20200416131635.scbpuued6l4xb6qq@treble>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20200416131635.scbpuued6l4xb6qq@treble>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-SGkgRGFuaWVsLA0KDQpPbiBGcmksIDIwMjAtMDQtMTcgYXQgMDk6MDMgKzA4MDAsIERhbmllbCBE
-cmFrZSB3cm90ZToNCj4gSGkgSm9lcmcsDQo+IA0KPiA+IEhpLA0KPiA+IA0KPiA+IGhlcmUgaXMg
-dGhlIHNlY29uZCB2ZXJzaW9uIG9mIHRoaXMgcGF0Y2gtc2V0LiBUaGUgZmlyc3QgdmVyc2lvbiB3
-aXRoDQo+ID4gc29tZSBtb3JlIGludHJvZHVjdG9yeSB0ZXh0IGNhbiBiZSBmb3VuZCBoZXJlOg0K
-PiA+IA0KPiA+IAlodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMjAwNDA3MTgzNzQyLjQz
-NDQtMS1qb3JvQDhieXRlcy5vcmcvDQo+IA0KPiBUaGFua3MgZm9yIHRoZSBjb250aW51ZWQgaW1w
-cm92ZW1lbnRzIGluIHRoaXMgYXJlYSENCj4gDQo+IEkgbWF5IGhhdmUgc3BvdHRlZCBhIHByb2Js
-ZW0gd2l0aCBzZXR1cHMgbGlrZSBWTUQuDQo+IA0KPiBUaGUgY29yZSBQQ0kgYnVzIGlzIHNldCB1
-cCBkdXJpbmcgZWFybHkgYm9vdC4NCj4gVGhlbiwgZm9yIHRoZSBQQ0kgYnVzLCB3ZSByZWFjaCBp
-b21tdV9idXNfaW5pdCgpIC0+IGJ1c19pb21tdV9wcm9iZSgpLg0KPiBJbiB0aGVyZSwgd2UgY2Fs
-bCBwcm9iZV9pb21tdV9ncm91cCgpIC0+IGRldl9pb21tdV9nZXQoKSBmb3IgZWFjaCBQQ0kNCj4g
-ZGV2aWNlLCB3aGljaCBhbGxvY2F0ZXMgZGV2LT5pb21tdSBpbiBlYWNoIGNhc2UuIFNvIGZhciBz
-byBnb29kLg0KPiANCj4gVGhlIHByb2JsZW0gaXMgdGhhdCB0aGlzIGlzIHRoZSBsYXN0IHRpbWUg
-dGhhdCB3ZSdsbCBjYWxsIGRldl9pb21tdV9nZXQoKS4NCj4gSWYgYW55IFBDSSBidXMgZGV2aWNl
-cyBnZXQgYWRkZWQgYWZ0ZXIgdGhpcyBwb2ludCwgdGhleSBkbyBub3QgZ2V0IHBhc3NlZA0KPiB0
-byBkZXZfaW9tbXVfZ2V0KCkuDQo+IA0KPiBTbyB3aGVuIHRoZSB2bWQgbW9kdWxlIGdldHMgbG9h
-ZGVkIGxhdGVyLCBhbmQgY3JlYXRlcyBtb3JlIFBDSSBkZXZpY2VzLA0KPiB3ZSBlbmQgdXAgaW4g
-aW9tbXVfYnVzX25vdGlmaWVyKCkgLT4gaW9tbXVfcHJvYmVfZGV2aWNlKCkNCj4gLT4gX19pb21t
-dV9wcm9iZV9kZXZpY2UoKSB3aGljaCBkb2VzOg0KPiANCj4gCWRldi0+aW9tbXUtPmlvbW11X2Rl
-diA9IGlvbW11X2RldjsNCj4gDQo+IGRldi0+aW9tbXUtPiBpcyBhIE5VTEwgZGVyZWZlcmVuY2Ug
-YmVjYXVzZSBkZXZfaW9tbXVfZ2V0KCkgd2FzIG5ldmVyDQo+IGNhbGxlZCBmb3IgdGhpcyBuZXcg
-ZGV2aWNlLg0KPiANCj4gRGFuaWVsDQo+IA0KDQpJIHNob3VsZCBoYXZlIENDZWQgeW91IG9uIHRo
-aXMsIGJ1dCBpdCBzaG91bGQgdGVtcG9yYXJpbHkgcmVzb2x2ZSB0aGF0DQppc3N1ZToNCmh0dHBz
-Oi8vbGlzdHMubGludXhmb3VuZGF0aW9uLm9yZy9waXBlcm1haWwvaW9tbXUvMjAyMC1BcHJpbC8w
-NDMyNTMuaHRtbA0KDQo=
+On Thu, Apr 16, 2020 at 08:16:35AM -0500, Josh Poimboeuf wrote:
+> On Thu, Apr 16, 2020 at 07:06:51AM -0500, Josh Poimboeuf wrote:
+> > On Thu, Apr 16, 2020 at 10:56:02AM +0200, Miroslav Benes wrote:
+> > > > +	bool early = me->state == MODULE_STATE_UNFORMED;
+> > > > +
+> > > > +	return __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> > > > +				    early ? memcpy : s390_kernel_write);
+> > > 
+> > > The compiler warns about
+> > > 
+> > > arch/s390/kernel/module.c: In function 'apply_relocate_add':
+> > > arch/s390/kernel/module.c:453:24: warning: pointer type mismatch in conditional expression
+> > >          early ? memcpy : s390_kernel_write);
+> > 
+> > Thanks, I'll get all that cleaned up.
+> > 
+> > I could have sworn I got a SUCCESS message from the kbuild bot.  Does it
+> > ignore warnings nowadays?
+> 
+> Here's a fix on top of the original patch.
+> 
+> I changed s390_kernel_write() to return "void *" to match memcpy()
+> (probably a separate patch).
+> 
+> I also grabbed the text_mutex for the !early case in
+> apply_relocate_add() -- will do something similar for x86.
+> 
+> Will try to test this on a 390 box.
+
+...and that borked the box pretty nicely.  Oops, big endian!  Need
+something like this on top.
+
+Sorry about not testing the patch in the first place, it looked trivial
+and somehow I was thinking Peter writes exclusively bug-free code.
+
+diff --git a/arch/s390/kernel/module.c b/arch/s390/kernel/module.c
+index ee0904a23e24..513e640430ae 100644
+--- a/arch/s390/kernel/module.c
++++ b/arch/s390/kernel/module.c
+@@ -198,21 +198,25 @@ static int apply_rela_bits(Elf_Addr loc, Elf_Addr val,
+ 	}
+ 
+ 	if (bits == 8) {
+-		write(dest, &val, 1);
++		unsigned char tmp = val;
++		write(dest, &tmp, 1);
+ 	} else if (bits == 12) {
+ 		unsigned short tmp = (val & 0xfff) |
+ 			(*(unsigned short *) loc & 0xf000);
+ 		write(dest, &tmp, 2);
+ 	} else if (bits == 16) {
+-		write(dest, &val, 2);
++		unsigned short tmp = val;
++		write(dest, &tmp, 2);
+ 	} else if (bits == 20) {
+ 		unsigned int tmp = (val & 0xfff) << 16 |
+ 			(val & 0xff000) >> 4 | (*(unsigned int *) loc & 0xf00000ff);
+ 		write(dest, &tmp, 4);
+ 	} else if (bits == 32) {
+-		write(dest, &val, 4);
++		unsigned int tmp = val;
++		write(dest, &tmp, 4);
+ 	} else if (bits == 64) {
+-		write(dest, &val, 8);
++		unsigned long tmp = val;
++		write(dest, &tmp, 8);
+ 	}
+ 	return 0;
+ }
+
+-- 
+Josh
+
