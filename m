@@ -2,158 +2,103 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 41A8A1ADC19
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Apr 2020 13:24:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B81411ADD6F
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Apr 2020 14:39:21 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbgDQLXN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 17 Apr 2020 07:23:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:8596 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730237AbgDQLXL (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 17 Apr 2020 07:23:11 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03HB5Osx039116
-        for <linux-s390@vger.kernel.org>; Fri, 17 Apr 2020 07:23:10 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30fay90vev-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Fri, 17 Apr 2020 07:23:10 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Fri, 17 Apr 2020 12:23:03 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Fri, 17 Apr 2020 12:23:01 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03HBN4Ej49348674
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Fri, 17 Apr 2020 11:23:04 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3BD7042045;
-        Fri, 17 Apr 2020 11:23:04 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A244D42042;
-        Fri, 17 Apr 2020 11:23:03 +0000 (GMT)
-Received: from oc3016276355.ibm.com (unknown [9.145.1.50])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Fri, 17 Apr 2020 11:23:03 +0000 (GMT)
-Subject: Re: [PATCH v7 04/15] s390/vfio-ap: implement in-use callback for
- vfio_ap driver
-To:     Tony Krowiak <akrowiak@linux.ibm.com>,
-        Cornelia Huck <cohuck@redhat.com>
-Cc:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org, freude@linux.ibm.com, borntraeger@de.ibm.com,
-        mjrosato@linux.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com,
-        jjherne@linux.ibm.com, fiuczy@linux.ibm.com
-References: <20200407192015.19887-1-akrowiak@linux.ibm.com>
- <20200407192015.19887-5-akrowiak@linux.ibm.com>
- <20200416131845.3ef6b3b5.cohuck@redhat.com>
- <5cf7d611-e30c-226d-0d3d-d37170f117f4@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Fri, 17 Apr 2020 13:23:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1729526AbgDQMiU (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 17 Apr 2020 08:38:20 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:27740 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727877AbgDQMiT (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 17 Apr 2020 08:38:19 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587127098;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SZpUdommMIQ7wSju1Ntwx13tpJCK6xVSPmOSlBrgwKM=;
+        b=g0F5mKxW8It65m5ztqCeMRB9c3ZQQGQXtrEQx2MnZSgm6ZcjmSmNECovQ+fSN/Gnm8COZa
+        AzrHw/ZGUfEdMxTDqa21eg/YbmqaVTbEGJlPHERwvlLOIHomFfwmZVOE+bTAvR6twRWPXa
+        U/dr7PejoTGhPkdzL/RIPbNhAs+7qvw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-3-3TdE0_llNOWhZ6HP2VQ1BQ-1; Fri, 17 Apr 2020 08:38:16 -0400
+X-MC-Unique: 3TdE0_llNOWhZ6HP2VQ1BQ-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D1088017F3;
+        Fri, 17 Apr 2020 12:38:15 +0000 (UTC)
+Received: from gondolin (ovpn-112-200.ams2.redhat.com [10.36.112.200])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id CE5309A274;
+        Fri, 17 Apr 2020 12:38:13 +0000 (UTC)
+Date:   Fri, 17 Apr 2020 14:38:11 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Vineeth Vijayan <vneethv@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, Eric Farman <farman@linux.ibm.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Boris Fiuczynski <fiuczy@linux.ibm.com>
+Subject: Re: [RFD] uevent handling for subchannels
+Message-ID: <20200417143811.7e6ecb2c.cohuck@redhat.com>
+In-Reply-To: <20200403124032.5e70603d.cohuck@redhat.com>
+References: <20200403124032.5e70603d.cohuck@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-In-Reply-To: <5cf7d611-e30c-226d-0d3d-d37170f117f4@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 20041711-0028-0000-0000-000003F9DD10
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20041711-0029-0000-0000-000024BF967F
-Message-Id: <458e4bfe-6736-42b5-a510-21a4594df0e1@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-17_03:2020-04-17,2020-04-17 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999
- impostorscore=0 mlxscore=0 adultscore=0 bulkscore=0 spamscore=0
- clxscore=1011 suspectscore=0 malwarescore=0 phishscore=0
- lowpriorityscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-2003020000 definitions=main-2004170083
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
+Friendly ping.
 
+On Fri, 3 Apr 2020 12:40:32 +0200
+Cornelia Huck <cohuck@redhat.com> wrote:
 
-On 2020-04-16 16:45, Tony Krowiak wrote:
+> Hi,
 > 
+> this is kind-of-a-followup to the uevent patches I sent in
+> <20200327124503.9794-1-cohuck@redhat.com> last Friday.
 > 
-> On 4/16/20 7:18 AM, Cornelia Huck wrote:
->> On Tue,  7 Apr 2020 15:20:04 -0400
->> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
->>
->>> Let's implement the callback to indicate when an APQN
->>> is in use by the vfio_ap device driver. The callback is
->>> invoked whenever a change to the apmask or aqmask would
->>> result in one or more queue devices being removed from the driver. The
->>> vfio_ap device driver will indicate a resource is in use
->>> if the APQN of any of the queue devices to be removed are assigned to
->>> any of the matrix mdevs under the driver's control.
->>>
->>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>> ---
->>>   drivers/s390/crypto/vfio_ap_drv.c     |  1 +
->>>   drivers/s390/crypto/vfio_ap_ops.c     | 47 +++++++++++++++++----------
->>>   drivers/s390/crypto/vfio_ap_private.h |  2 ++
->>>   3 files changed, 33 insertions(+), 17 deletions(-)
->>> @@ -1369,3 +1371,14 @@ void vfio_ap_mdev_remove_queue(struct ap_queue 
->>> *queue)
->>>       kfree(q);
->>>       mutex_unlock(&matrix_dev->lock);
->>>   }
->>> +
->>> +bool vfio_ap_mdev_resource_in_use(unsigned long *apm, unsigned long 
->>> *aqm)
->>> +{
->>> +    bool in_use;
->>> +
->>> +    mutex_lock(&matrix_dev->lock);
->>> +    in_use = vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm) ? true : 
->>> false;
->> Maybe
->>
->> in_use = !!vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);
->>
->> ?
+> Currently, the common I/O layer will suppress uevents for subchannels
+> that are being registered, delegating generating a delayed ADD uevent
+> to the driver that actually binds to it and only generating the uevent
+> itself if no driver gets bound. The initial version of that delaying
+> was introduced in fa1a8c23eb7d ("s390: cio: Delay uevents for
+> subchannels"); from what I remember, we were seeing quite bad storms of
+> uevents on LPARs that had a lot of I/O subchannels with no device
+> accessible through them.
 > 
-> To be honest, I find the !! expression very confusing. Every time I see 
-> it, I have
-> to spend time thinking about what the result of !! is going to be. I think
-> the statement should be left as-is because it more clearly expresses
-> the intent.
-
-
-
-In other places you use
-"
-         ret = vfio_ap_mdev_verify_no_sharing(matrix_mdev);
-         if (ret)
-                 goto share_err;
-"
-then why use a boolean here?
-
-If you want to return a boolean and you do not want to use !! you can do:
-
-  ...
-   ret = vfio_ap_mdev_verify_no_sharing(NULL, apm, aqm);
-...
-   return (ret) ? false : true;
-
+> So while there's definitely a good reason for wanting to delay uevents,
+> it is also introducing problems. One is udev rules for subchannels that
+> are supposed to do something before a driver binds (e.g. setting
+> driver_override to bind an I/O subchannel to vfio_ccw instead of
+> io_subchannel) are not effective, as the ADD uevent will only be
+> generated when the io_subchannel driver is already done with doing all
+> setup. Another one is that only the ADD uevent is generated after
+> uevent suppression is lifted; any other uevents that might have been
+> generated are lost.
 > 
->>
->>> +    mutex_unlock(&matrix_dev->lock);
->>> +
->>> +    return in_use;
->>> +}
+> So, what to do about this, especially in the light of vfio-ccw handling?
 > 
-
--- 
-Pierre Morel
-IBM Lab Boeblingen
+> One idea I had is to call css_sch_is_valid() from
+> css_register_subchannel(); this would exclude the largest class of
+> non-operational subchannels already (those that don't have a valid
+> device; I'm not quite sure if there's also something needed for EADM
+> subchannels?) If we got rid of the uevent delaying, we would still get
+> ADD/REMOVE events for subchannels where the device turns out to be
+> non-accessible, but I believe (hope) that those are not too many in a
+> sane system at least. As a bonus, we could also add additional values
+> from the pmcw to the uevent; the device number, for example, could be
+> helpful for vfio-ccw matching rules.
+> 
+> A drawback is that we change the timing (not the sequence, AFAICS) of
+> the uevents, which might break brittle setups.
+> 
+> Thoughts?
+> 
 
