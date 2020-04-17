@@ -2,172 +2,78 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 578C81ADB0F
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Apr 2020 12:29:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 764F41ADBF7
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Apr 2020 13:13:05 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729120AbgDQK3S (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 17 Apr 2020 06:29:18 -0400
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:47044 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728830AbgDQK3S (ORCPT
+        id S1730234AbgDQLMl (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 17 Apr 2020 07:12:41 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:32972 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729846AbgDQLMl (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 17 Apr 2020 06:29:18 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587119356;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zK2YsvHjFIO0HB3Koh2wx+03KhpSw6aghm7b3C0ordc=;
-        b=F0d3zP2GongRuDYeb5n5Q1NHn2MdgbHe+eHhXUi+ACtjbhtUHjewAehZcHqPwughf7P3SZ
-        +EzpVy9s8K/0MAEY6TsL/NECjPrRrhrsuM+iTMJp7eb8U+5B+qSJb7I4Su6W8X4umvkyA8
-        OiMxRVe+AEo+u5Hzx23vdnsLDwiLGu0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-266-C93oK_54Py-p34FY_Y2ESA-1; Fri, 17 Apr 2020 06:29:13 -0400
-X-MC-Unique: C93oK_54Py-p34FY_Y2ESA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id E634E800D53;
-        Fri, 17 Apr 2020 10:29:11 +0000 (UTC)
-Received: from gondolin (ovpn-112-200.ams2.redhat.com [10.36.112.200])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 76698289A3;
-        Fri, 17 Apr 2020 10:29:10 +0000 (UTC)
-Date:   Fri, 17 Apr 2020 12:29:07 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>
-Subject: Re: [PATCH v3 2/8] vfio-ccw: Register a chp_event callback for
- vfio-ccw
-Message-ID: <20200417122907.034c8508.cohuck@redhat.com>
-In-Reply-To: <20200417023001.65006-3-farman@linux.ibm.com>
-References: <20200417023001.65006-1-farman@linux.ibm.com>
-        <20200417023001.65006-3-farman@linux.ibm.com>
-Organization: Red Hat GmbH
+        Fri, 17 Apr 2020 07:12:41 -0400
+Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 05544C061A0C;
+        Fri, 17 Apr 2020 04:12:41 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description;
+        bh=8sFIV+/8fWUY1Zbo7nie6mENpkyN/bnZv7/UFlj2FCU=; b=YYrgq/hvPgReVdxVWoGhcDq5OH
+        bTtip9uQNfhfbbmBEukbzi+TjuaHGEoFqG47UgzsbLv240p6s/vtR8k6s1thPihwHGajzkKlVVXpb
+        nTTfBMJZn8WTuTDH4+oh/r6SS4ofu22zRjXRhVOqlSJKl6Mz6q3qvnI+JsCN1nx3obijkON7+ZOYG
+        5B53aEmaqbpH41A0CRp9eYifRtoWPLrLG/9sLsiac6odvXQ9wBPqGH5QZSR6Ui9lTNY5WmIpcj0Oc
+        RVS1FKCoO8b2LZuXy4Lj1EXODCGwav1Un8/U+rzwjHrv5kedEqM/tsdpghQBno3bTfzS/+mjkfCm7
+        Z6SzouSw==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1jPOvB-0006uy-Fk; Fri, 17 Apr 2020 11:12:33 +0000
+Date:   Fri, 17 Apr 2020 04:12:33 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Geert Uytterhoeven <geert@linux-m68k.org>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH v3 00/11] Make PageWriteback use the PageLocked
+ optimisation
+Message-ID: <20200417111233.GL5820@bombadil.infradead.org>
+References: <20200416220130.13343-1-willy@infradead.org>
+ <CAMuHMdWxhVoPCZ5+=Pf1LFpdE9vPv9GGTqTYMQP9oFz7eCxDaQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdWxhVoPCZ5+=Pf1LFpdE9vPv9GGTqTYMQP9oFz7eCxDaQ@mail.gmail.com>
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 17 Apr 2020 04:29:55 +0200
-Eric Farman <farman@linux.ibm.com> wrote:
-
-> From: Farhan Ali <alifm@linux.ibm.com>
+On Fri, Apr 17, 2020 at 09:28:14AM +0200, Geert Uytterhoeven wrote:
+> On Fri, Apr 17, 2020 at 12:01 AM Matthew Wilcox <willy@infradead.org> wrote:
+> > v3:
+> >  - Added implementations of clear_bit_unlock_is_negative_byte()
+> >    to architectures which need it
 > 
-> Register the chp_event callback to receive channel path related
-> events for the subchannels managed by vfio-ccw.
+> I have two questions here?
+>   1. Why not implement arch_clear_bit_unlock_is_negative_byte()
+>      instead, so the kasan check in asm-generic is used everywhere?
+
+That would be a larger change.  As I understand it (and I may misunderstand
+it), I would need to rename all the clear_bit(), __clear_bit(), change_bit(),
+... functions to have an 'arch_' prefix and then include instrumented-lock.h
+
+>   2. Why not add the default implementation to
+>      include/asm-generic/bitops/instrumented-lock.h, in case an arch_*()
+>      variant is not provided yet?
 > 
-> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
-> Signed-off-by: Eric Farman <farman@linux.ibm.com>
-> ---
-> 
-> Notes:
->     v2->v3:
->      - Add a call to cio_cancel_halt_clear() for CHP_VARY_OFF [CH]
->     
->     v1->v2:
->      - Move s390dbf before cio_update_schib() call [CH]
->     
->     v0->v1: [EF]
->      - Add s390dbf trace
-> 
->  drivers/s390/cio/vfio_ccw_drv.c | 45 +++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/drivers/s390/cio/vfio_ccw_drv.c b/drivers/s390/cio/vfio_ccw_drv.c
-> index 8715c1c2f1e1..e48967c475e7 100644
-> --- a/drivers/s390/cio/vfio_ccw_drv.c
-> +++ b/drivers/s390/cio/vfio_ccw_drv.c
-> @@ -19,6 +19,7 @@
->  
->  #include <asm/isc.h>
->  
-> +#include "chp.h"
->  #include "ioasm.h"
->  #include "css.h"
->  #include "vfio_ccw_private.h"
-> @@ -262,6 +263,49 @@ static int vfio_ccw_sch_event(struct subchannel *sch, int process)
->  	return rc;
->  }
->  
-> +static int vfio_ccw_chp_event(struct subchannel *sch,
-> +			      struct chp_link *link, int event)
-> +{
-> +	struct vfio_ccw_private *private = dev_get_drvdata(&sch->dev);
-> +	int mask = chp_ssd_get_mask(&sch->ssd_info, link);
-> +	int retry = 255;
-> +
-> +	if (!private || !mask)
-> +		return 0;
-> +
-> +	VFIO_CCW_MSG_EVENT(2, "%pUl (%x.%x.%04x): mask=0x%x event=%d\n",
-> +			   mdev_uuid(private->mdev), sch->schid.cssid,
-> +			   sch->schid.ssid, sch->schid.sch_no,
-> +			   mask, event);
-> +
-> +	if (cio_update_schib(sch))
-> +		return -ENODEV;
-> +
-> +	switch (event) {
-> +	case CHP_VARY_OFF:
-> +		/* Path logically turned off */
-> +		sch->opm &= ~mask;
-> +		sch->lpm &= ~mask;
-> +		cio_cancel_halt_clear(sch, &retry);
-> +		break;
-> +	case CHP_OFFLINE:
-> +		/* Path is gone */
-> +		cio_cancel_halt_clear(sch, &retry);
+> Note that you did 1 for s390.
 
-Looking at this again: While calling the same function for both
-CHP_VARY_OFF and CHP_OFFLINE is the right thing to do,
-cio_cancel_halt_clear() is probably not that function. I don't think we
-want to terminate an I/O that does not use the affected path.
-
-Looking at what the normal I/O subchannel driver does, it first checks
-for the lpum and does not do anything if the affected path does not
-show up there. Following down the git history rabbit hole, that basic
-check (surviving several reworks) precedes the first git import, so
-there's unfortunately no patch description explaining that. Looking at
-the PoP, I cannot find a whole lot of details... I think some of the
-path-handling stuff is explained in non-public documentation, and
-whoever wrote the original code (probably me) relied on the information
-there.
-
-tl;dr: We probably should check the lpum here as well.
-
-> +		break;
-> +	case CHP_VARY_ON:
-> +		/* Path logically turned on */
-> +		sch->opm |= mask;
-> +		sch->lpm |= mask;
-> +		break;
-> +	case CHP_ONLINE:
-> +		/* Path became available */
-> +		sch->lpm |= mask & sch->opm;
-> +		break;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static struct css_device_id vfio_ccw_sch_ids[] = {
->  	{ .match_flags = 0x1, .type = SUBCHANNEL_TYPE_IO, },
->  	{ /* end of list */ },
-> @@ -279,6 +323,7 @@ static struct css_driver vfio_ccw_sch_driver = {
->  	.remove = vfio_ccw_sch_remove,
->  	.shutdown = vfio_ccw_sch_shutdown,
->  	.sch_event = vfio_ccw_sch_event,
-> +	.chp_event = vfio_ccw_chp_event,
->  };
->  
->  static int __init vfio_ccw_debug_init(void)
-
+Well, s390 already uses instrumented-lock.h so I followed along with
+what they're doing.  I don't think instrumented-lock.h is used at all on
+these other architectures, but the whole bitops header files are such a
+mess that I could easily have built a completely wrong mental model of
+what's going on.
