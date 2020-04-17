@@ -2,90 +2,95 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9CF521AD760
-	for <lists+linux-s390@lfdr.de>; Fri, 17 Apr 2020 09:27:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 068711AD763
+	for <lists+linux-s390@lfdr.de>; Fri, 17 Apr 2020 09:28:30 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728971AbgDQH1b (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Fri, 17 Apr 2020 03:27:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38386 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728419AbgDQH1a (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Fri, 17 Apr 2020 03:27:30 -0400
-Received: from coco.lan (ip5f5ad4d8.dynamic.kabel-deutschland.de [95.90.212.216])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0043E214D8;
-        Fri, 17 Apr 2020 07:27:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587108450;
-        bh=sZPdquSmWObvcVprXcu9wp/fXhiv+7HVz8zcOSI5lYk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=nXAWKkYp/UkrVCH9PRC4m6yPfP0o7CM8ohKlA6NsAB3F3Ps/gOE/TtfzWkqVdxfia
-         tkGophg2WGSXLhDMrovmtlNK5kg7w1LmpyfQBw6pFFNcDLyskbYysMPm0BvPAAsE4e
-         BeSypltYjjRE1QUpIQWjCk+meDIsEymN7Q/cpumA=
-Date:   Fri, 17 Apr 2020 09:27:25 +0200
-From:   Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: linux-next: Tree for Apr 17
-Message-ID: <20200417092725.4876a832@coco.lan>
-In-Reply-To: <aeedbf33-2dc1-0577-301d-535f49ba287e@de.ibm.com>
-References: <20200417145017.3932443d@canb.auug.org.au>
-        <aeedbf33-2dc1-0577-301d-535f49ba287e@de.ibm.com>
-X-Mailer: Claws Mail 3.17.5 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        id S1728980AbgDQH23 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Fri, 17 Apr 2020 03:28:29 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:45351 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728419AbgDQH20 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Fri, 17 Apr 2020 03:28:26 -0400
+Received: by mail-ot1-f67.google.com with SMTP id i22so670688otp.12;
+        Fri, 17 Apr 2020 00:28:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CAlxRW45me+SFTqp2fMa5KvZpf6cMRTo76EH5fkTTvc=;
+        b=T8RvlSE0CoW2/ucpNcN3ufjhCCk8wpFi1WceqsbknanNI27mF3UL7sRQ90y9nHLckb
+         GxLtxG/MLWc/7D7FNcVO03/bWn0CRD3wU6g8RBrTVhg2a0kTgkTmqEdOyxWOESZh22T0
+         uGZVyokJR//7/YQYTxnO/hOcjmc+eAvEsOR0pCSoq7Igm6GZvb4zHvDTK4UwnZXB8EeN
+         KAdfmyquu3O45M5wLUfmBq97XXXKqomORgN/UnSY9TUdox4PxPwMJwjHy7mtqu6dRtQv
+         drKIipc35fCwiNQHOPWN61zZpPw33QAoQQX9ERcF3n4pm4jA7l9WP9a2C0mTmWk3hB37
+         +9sg==
+X-Gm-Message-State: AGi0Pua6aUY2Xvm3S2T8ksi7QEXjSlhKvPNzo2NomZxo9a5jVdgPZEMz
+        n/Ly0BfrV2zBFhVNQ+yjQyf4lpDr9fuL6tUlIgo1wQ==
+X-Google-Smtp-Source: APiQypK7KuRAoPktsLMQh2Me8mfNzHEYpwL9p+AMo7Mc+i20vMVMtApNzN65ngvXei2FszcvDlo15xrOTNLy+/p43Ec=
+X-Received: by 2002:a9d:7590:: with SMTP id s16mr1548442otk.250.1587108505576;
+ Fri, 17 Apr 2020 00:28:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20200416220130.13343-1-willy@infradead.org>
+In-Reply-To: <20200416220130.13343-1-willy@infradead.org>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Fri, 17 Apr 2020 09:28:14 +0200
+Message-ID: <CAMuHMdWxhVoPCZ5+=Pf1LFpdE9vPv9GGTqTYMQP9oFz7eCxDaQ@mail.gmail.com>
+Subject: Re: [PATCH v3 00/11] Make PageWriteback use the PageLocked optimisation
+To:     Matthew Wilcox <willy@infradead.org>
+Cc:     Linux MM <linux-mm@kvack.org>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>,
+        "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        alpha <linux-alpha@vger.kernel.org>,
+        linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Em Fri, 17 Apr 2020 09:19:58 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> escreveu:
+Hi Matthew,
 
-> On 17.04.20 06:50, Stephen Rothwell wrote:
-> > Hi all,
-> > 
-> > Changes since 20200416:
-> > 
-> > My fixes tree contains:
-> > 
-> >   6b038bdcd3d1 sh: mm: Fix build error
-> > 
-> > The qcom tree still had its build failure for which I reverted a commit.
-> > 
-> > The sound-asoc tree still has its failures so I used the version from
-> > next-20200414.
-> > 
-> > The crypto tree gained a build failure for which I reverted 5 commits.
-> > 
-> > Non-merge commits (relative to Linus' tree): 2255
-> >  3007 files changed, 64848 insertions(+), 29193 deletions(-)
-> >   
-> 
-> 
-> This fails for s390 already in kconfig
-> 
-> $ make defconfig
-> *** Default configuration is based on 'defconfig'
-> drivers/pci/Kconfig:16:error: recursive dependency detected!
-> drivers/pci/Kconfig:16:	symbol PCI is selected by CEC_SECO
-> drivers/media/cec/platform/Kconfig:100:	symbol CEC_SECO depends on MEDIA_CEC_SUPPORT
-> drivers/media/cec/Kconfig:27:	symbol MEDIA_CEC_SUPPORT default is visible depending on MEDIA_SUPPORT_FILTER
-> drivers/media/Kconfig:25:	symbol MEDIA_SUPPORT_FILTER depends on MEDIA_SUPPORT
-> drivers/media/Kconfig:12:	symbol MEDIA_SUPPORT depends on HAS_IOMEM
-> arch/s390/Kconfig:722:	symbol HAS_IOMEM default value contains PCI
-> For a resolution refer to Documentation/kbuild/kconfig-language.rst
-> subsection "Kconfig recursive dependency limitations"
+On Fri, Apr 17, 2020 at 12:01 AM Matthew Wilcox <willy@infradead.org> wrote:
+> From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+> PageWaiters is used by PageWriteback and PageLocked (and no other page
+> flags), so it makes sense to use the same codepaths that have already been
+> optimised for PageLocked, even if there's probably no real performance
+> benefit to be had.
+>
+> Unfortunately, clear_bit_unlock_is_negative_byte() isn't present on every
+> architecture, and the default implementation is only available in filemap.c
+> while I want to use it in page-writeback.c.  Rather than move the default
+> implementation to a header file, I've done optimised implementations for
+> alpha and ia64.  I can't figure out optimised implementations for m68k,
+> mips, riscv and s390, so I've just replicated the effect of the generic
+> implementation in them.  I leave it to the experts to fix that (... or
+> convert over to using asm-generic/bitops/lock.h ...)
+>
+> v3:
+>  - Added implementations of clear_bit_unlock_is_negative_byte()
+>    to architectures which need it
 
-Just pushed a patch addressing the reported Kconfig issues on media.
+I have two questions here?
+  1. Why not implement arch_clear_bit_unlock_is_negative_byte()
+     instead, so the kasan check in asm-generic is used everywhere?
+  2. Why not add the default implementation to
+     include/asm-generic/bitops/instrumented-lock.h, in case an arch_*()
+     variant is not provided yet?
 
-Sorry for the Kconfig noise. We did a major rework at media Kconfig, with
-has a very complex dependency chain. 
+Note that you did 1 for s390.
+Thanks!
 
-Thanks,
-Mauro
+Gr{oetje,eeting}s,
+
+                        Geert
+
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
