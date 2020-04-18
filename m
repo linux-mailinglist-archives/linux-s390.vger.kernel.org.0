@@ -2,79 +2,93 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 28C131AEC93
-	for <lists+linux-s390@lfdr.de>; Sat, 18 Apr 2020 14:45:00 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id BC9051AED7A
+	for <lists+linux-s390@lfdr.de>; Sat, 18 Apr 2020 15:52:22 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725887AbgDRMo4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 18 Apr 2020 08:44:56 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43338 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725804AbgDRMo4 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 18 Apr 2020 08:44:56 -0400
-Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E43C061A0C;
-        Sat, 18 Apr 2020 05:44:55 -0700 (PDT)
-Received: by theia.8bytes.org (Postfix, from userid 1000)
-        id 7275A48C; Sat, 18 Apr 2020 14:44:54 +0200 (CEST)
-Date:   Sat, 18 Apr 2020 14:44:53 +0200
-From:   "joro@8bytes.org" <joro@8bytes.org>
-To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
-Cc:     "drake@endlessm.com" <drake@endlessm.com>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "kgene@kernel.org" <kgene@kernel.org>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "virtualization@lists.linux-foundation.org" 
-        <virtualization@lists.linux-foundation.org>,
-        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
-        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
-        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
-        "robin.murphy@arm.com" <robin.murphy@arm.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        "linux-mediatek@lists.infradead.org" 
-        <linux-mediatek@lists.infradead.org>,
-        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dwmw2@infradead.org" <dwmw2@infradead.org>,
-        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
-        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
-        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
-        "will@kernel.org" <will@kernel.org>,
-        "krzk@kernel.org" <krzk@kernel.org>,
-        "linux-samsung-soc@vger.kernel.org" 
-        <linux-samsung-soc@vger.kernel.org>,
-        "robdclark@gmail.com" <robdclark@gmail.com>,
-        "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>,
-        "agross@kernel.org" <agross@kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
-Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
-Message-ID: <20200418124452.GE6113@8bytes.org>
-References: <20200414131542.25608-1-joro@8bytes.org>
- <20200417010335.31739-1-drake@endlessm.com>
- <aafed865c0254934986528b3ce9c4d34ff2fccad.camel@intel.com>
+        id S1726581AbgDRNwH (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 18 Apr 2020 09:52:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:55650 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726654AbgDRNs5 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 18 Apr 2020 09:48:57 -0400
+Received: from sasha-vm.mshome.net (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5581421D7E;
+        Sat, 18 Apr 2020 13:48:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587217737;
+        bh=1pQapq9m3603xrXiSN4BF3wGZPcBk5uTiJAJZ3h1E+A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=TAwvHTQdJZG7qxmET/gQk+u6Ndlxn69kGa1ZtdgHZLBIp3GMSgL0S5gH5A/qepm9C
+         QLWB9LCR3NgVp/821f6rME4JRgTtz/6Kl3gYYlJcKwKdFFjbGZIteFpFZcb3hKua7I
+         O60QpjerqWHZ7XEV4T6NIU0Pe8el9mo1mXYH54vo=
+From:   Sasha Levin <sashal@kernel.org>
+To:     linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc:     David Hildenbrand <david@redhat.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Sasha Levin <sashal@kernel.org>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org
+Subject: [PATCH AUTOSEL 5.6 33/73] KVM: s390: vsie: Fix possible race when shadowing region 3 tables
+Date:   Sat, 18 Apr 2020 09:47:35 -0400
+Message-Id: <20200418134815.6519-33-sashal@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20200418134815.6519-1-sashal@kernel.org>
+References: <20200418134815.6519-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <aafed865c0254934986528b3ce9c4d34ff2fccad.camel@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-stable: review
+X-Patchwork-Hint: Ignore
+Content-Transfer-Encoding: 8bit
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Hi Jonathan, Hi Daniel,
+From: David Hildenbrand <david@redhat.com>
 
-On Fri, Apr 17, 2020 at 01:14:30AM +0000, Derrick, Jonathan wrote:
-> Hi Daniel> I should have CCed you on this, but it should temporarily resolve that
-> issue:
-> https://lists.linuxfoundation.org/pipermail/iommu/2020-April/043253.html
+[ Upstream commit 1493e0f944f3c319d11e067c185c904d01c17ae5 ]
 
-Yes, this is an issue in the hotplug handling path which I already fixed
-in my branch. With next post of this series it should work.
+We have to properly retry again by returning -EINVAL immediately in case
+somebody else instantiated the table concurrently. We missed to add the
+goto in this function only. The code now matches the other, similar
+shadowing functions.
 
-Regards,
+We are overwriting an existing region 2 table entry. All allocated pages
+are added to the crst_list to be freed later, so they are not lost
+forever. However, when unshadowing the region 2 table, we wouldn't trigger
+unshadowing of the original shadowed region 3 table that we replaced. It
+would get unshadowed when the original region 3 table is modified. As it's
+not connected to the page table hierarchy anymore, it's not going to get
+used anymore. However, for a limited time, this page table will stick
+around, so it's in some sense a temporary memory leak.
 
-	Joerg
+Identified by manual code inspection. I don't think this classifies as
+stable material.
+
+Fixes: 998f637cc4b9 ("s390/mm: avoid races on region/segment/page table shadowing")
+Signed-off-by: David Hildenbrand <david@redhat.com>
+Link: https://lore.kernel.org/r/20200403153050.20569-4-david@redhat.com
+Reviewed-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+Reviewed-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/s390/mm/gmap.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/s390/mm/gmap.c b/arch/s390/mm/gmap.c
+index edcdca97e85ee..06d602c5ec7b7 100644
+--- a/arch/s390/mm/gmap.c
++++ b/arch/s390/mm/gmap.c
+@@ -1840,6 +1840,7 @@ int gmap_shadow_r3t(struct gmap *sg, unsigned long saddr, unsigned long r3t,
+ 		goto out_free;
+ 	} else if (*table & _REGION_ENTRY_ORIGIN) {
+ 		rc = -EAGAIN;		/* Race with shadow */
++		goto out_free;
+ 	}
+ 	crst_table_init(s_r3t, _REGION3_ENTRY_EMPTY);
+ 	/* mark as invalid as long as the parent table is not protected */
+-- 
+2.20.1
+
