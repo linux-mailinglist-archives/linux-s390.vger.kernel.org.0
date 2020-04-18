@@ -2,65 +2,79 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 4BC951AEA9B
-	for <lists+linux-s390@lfdr.de>; Sat, 18 Apr 2020 09:53:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28C131AEC93
+	for <lists+linux-s390@lfdr.de>; Sat, 18 Apr 2020 14:45:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725892AbgDRHxN (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Sat, 18 Apr 2020 03:53:13 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:35880 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725862AbgDRHxN (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Sat, 18 Apr 2020 03:53:13 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 68869CE304963797192C;
-        Sat, 18 Apr 2020 15:53:10 +0800 (CST)
-Received: from huawei.com (10.175.124.28) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.487.0; Sat, 18 Apr 2020
- 15:53:00 +0800
-From:   Jason Yan <yanaijie@huawei.com>
-To:     <borntraeger@de.ibm.com>, <frankja@linux.ibm.com>,
-        <david@redhat.com>, <cohuck@redhat.com>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <Ulrich.Weigand@de.ibm.com>, <kvm@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     Jason Yan <yanaijie@huawei.com>, Hulk Robot <hulkci@huawei.com>
-Subject: [PATCH] KVM: s390: remove unneeded semicolon in gisa_vcpu_kicker()
-Date:   Sat, 18 Apr 2020 16:19:26 +0800
-Message-ID: <20200418081926.41666-1-yanaijie@huawei.com>
-X-Mailer: git-send-email 2.21.1
+        id S1725887AbgDRMo4 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Sat, 18 Apr 2020 08:44:56 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:43338 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725804AbgDRMo4 (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Sat, 18 Apr 2020 08:44:56 -0400
+Received: from theia.8bytes.org (8bytes.org [IPv6:2a01:238:4383:600:38bc:a715:4b6d:a889])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id E1E43C061A0C;
+        Sat, 18 Apr 2020 05:44:55 -0700 (PDT)
+Received: by theia.8bytes.org (Postfix, from userid 1000)
+        id 7275A48C; Sat, 18 Apr 2020 14:44:54 +0200 (CEST)
+Date:   Sat, 18 Apr 2020 14:44:53 +0200
+From:   "joro@8bytes.org" <joro@8bytes.org>
+To:     "Derrick, Jonathan" <jonathan.derrick@intel.com>
+Cc:     "drake@endlessm.com" <drake@endlessm.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "kgene@kernel.org" <kgene@kernel.org>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "virtualization@lists.linux-foundation.org" 
+        <virtualization@lists.linux-foundation.org>,
+        "matthias.bgg@gmail.com" <matthias.bgg@gmail.com>,
+        "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>,
+        "baolu.lu@linux.intel.com" <baolu.lu@linux.intel.com>,
+        "robin.murphy@arm.com" <robin.murphy@arm.com>,
+        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
+        "linux-mediatek@lists.infradead.org" 
+        <linux-mediatek@lists.infradead.org>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dwmw2@infradead.org" <dwmw2@infradead.org>,
+        "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>,
+        "m.szyprowski@samsung.com" <m.szyprowski@samsung.com>,
+        "jean-philippe@linaro.org" <jean-philippe@linaro.org>,
+        "will@kernel.org" <will@kernel.org>,
+        "krzk@kernel.org" <krzk@kernel.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        "robdclark@gmail.com" <robdclark@gmail.com>,
+        "gerald.schaefer@de.ibm.com" <gerald.schaefer@de.ibm.com>,
+        "linux-rockchip@lists.infradead.org" 
+        <linux-rockchip@lists.infradead.org>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
+Subject: Re: [PATCH v2 00/33] iommu: Move iommu_group setup to IOMMU core code
+Message-ID: <20200418124452.GE6113@8bytes.org>
+References: <20200414131542.25608-1-joro@8bytes.org>
+ <20200417010335.31739-1-drake@endlessm.com>
+ <aafed865c0254934986528b3ce9c4d34ff2fccad.camel@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.124.28]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <aafed865c0254934986528b3ce9c4d34ff2fccad.camel@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Fix the following coccicheck warning:
+Hi Jonathan, Hi Daniel,
 
-arch/s390/kvm/interrupt.c:3085:2-3: Unneeded semicolon
+On Fri, Apr 17, 2020 at 01:14:30AM +0000, Derrick, Jonathan wrote:
+> Hi Daniel> I should have CCed you on this, but it should temporarily resolve that
+> issue:
+> https://lists.linuxfoundation.org/pipermail/iommu/2020-April/043253.html
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Jason Yan <yanaijie@huawei.com>
----
- arch/s390/kvm/interrupt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Yes, this is an issue in the hotplug handling path which I already fixed
+in my branch. With next post of this series it should work.
 
-diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
-index 8191106bf7b9..559177123d0f 100644
---- a/arch/s390/kvm/interrupt.c
-+++ b/arch/s390/kvm/interrupt.c
-@@ -3082,7 +3082,7 @@ static enum hrtimer_restart gisa_vcpu_kicker(struct hrtimer *timer)
- 		__airqs_kick_single_vcpu(kvm, pending_mask);
- 		hrtimer_forward_now(timer, ns_to_ktime(gi->expires));
- 		return HRTIMER_RESTART;
--	};
-+	}
- 
- 	return HRTIMER_NORESTART;
- }
--- 
-2.21.1
+Regards,
 
+	Joerg
