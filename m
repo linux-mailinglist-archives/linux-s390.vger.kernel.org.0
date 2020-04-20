@@ -2,56 +2,49 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 62AC01B02FC
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2020 09:30:59 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E94041B0300
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2020 09:31:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726020AbgDTHa6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Apr 2020 03:30:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17128 "EHLO
+        id S1726020AbgDTHbb (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Apr 2020 03:31:31 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:64824 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725886AbgDTHa6 (ORCPT
+        by vger.kernel.org with ESMTP id S1725959AbgDTHba (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:30:58 -0400
+        Mon, 20 Apr 2020 03:31:30 -0400
 Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K79w3r069254
-        for <linux-s390@vger.kernel.org>; Mon, 20 Apr 2020 03:30:57 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30gj22754c-1
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03K7291m029055
+        for <linux-s390@vger.kernel.org>; Mon, 20 Apr 2020 03:31:30 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gj2275s3-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Mon, 20 Apr 2020 03:30:57 -0400
+        for <linux-s390@vger.kernel.org>; Mon, 20 Apr 2020 03:31:30 -0400
 Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Mon, 20 Apr 2020 08:30:49 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
         Mon, 20 Apr 2020 08:30:46 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 20 Apr 2020 08:30:44 +0100
 Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03K7Upom37290104
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03K7VOaH26477000
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 20 Apr 2020 07:30:51 GMT
+        Mon, 20 Apr 2020 07:31:24 GMT
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 110784204D;
-        Mon, 20 Apr 2020 07:30:51 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9B12B42041;
+        Mon, 20 Apr 2020 07:31:24 +0000 (GMT)
 Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7C06342054;
-        Mon, 20 Apr 2020 07:30:50 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 292744203F;
+        Mon, 20 Apr 2020 07:31:24 +0000 (GMT)
 Received: from oc7455500831.ibm.com (unknown [9.145.158.104])
         by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 20 Apr 2020 07:30:50 +0000 (GMT)
-Subject: Re: linux-next: Tree for Apr 20
-To:     Hadar Gat <Hadar.Gat@arm.com>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Gilad Ben-Yossef <gilad@benyossef.com>,
-        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
-References: <20200420142610.390e5922@canb.auug.org.au>
- <2d87a4f9-9d87-e929-9b03-31f92dad5ca6@de.ibm.com>
- <DB6PR0802MB2533E416D358177D5CA53564E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+        Mon, 20 Apr 2020 07:31:24 +0000 (GMT)
+Subject: Re: [PATCH v1 1/1] MAINTAINERS: add a reviewer for KVM/s390
+To:     Claudio Imbrenda <imbrenda@linux.ibm.com>, frankja@linux.ibm.com
+Cc:     pbonzini@redhat.com, cohuck@redhat.com, david@redhat.com,
+        kvm@vger.kernel.org, linux-s390@vger.kernel.org
+References: <20200417152936.772256-1-imbrenda@linux.ibm.com>
 From:   Christian Borntraeger <borntraeger@de.ibm.com>
 Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  xsFNBE6cPPgBEAC2VpALY0UJjGmgAmavkL/iAdqul2/F9ONz42K6NrwmT+SI9CylKHIX+fdf
@@ -96,19 +89,19 @@ Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
  jaqYefx7yQ7FJXXETd2uVURiDeNEFhVZWb5CiBJM5c6qQMhmkS4VyT7/+raaEGgkEKEgHOWf
  ZDP8BHfXtszHqI3Fo1F4IKFo/AP8GOFFxMRgbvlAs8z/+rEEaQYjxYJqj08raw6P4LFBqozr
  nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Mon, 20 Apr 2020 09:30:50 +0200
+Date:   Mon, 20 Apr 2020 09:31:23 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <DB6PR0802MB2533E416D358177D5CA53564E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+In-Reply-To: <20200417152936.772256-1-imbrenda@linux.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 X-TM-AS-GCONF: 00
-x-cbid: 20042007-0028-0000-0000-000003FB7DAF
+x-cbid: 20042007-4275-0000-0000-000003C31F6D
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042007-0029-0000-0000-000024C13C81
-Message-Id: <9b70262a-10b5-beb5-e058-3a0a2fa0fb8f@de.ibm.com>
+x-cbparentid: 20042007-4276-0000-0000-000038D8A033
+Message-Id: <39a2fef9-5f63-92b4-68fc-b7a1726cba4d@de.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-20_02:2020-04-17,2020-04-20 signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxlogscore=999 clxscore=1015
@@ -122,57 +115,25 @@ List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 
-On 20.04.20 09:23, Hadar Gat wrote:
+On 17.04.20 17:29, Claudio Imbrenda wrote:
+> Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 > 
->> On 20.04.20 06:26, Stephen Rothwell wrote:
->>> Hi all,
->>>
->>> Changes since 20200417:
->>>
->>> My fixes tree is empty again.
->>>
->>> The qcom tree still had its build failure for which I reverted a commit.
->>>
->>> The crypto tree still has its build failure for which I reverted 5 commits.
->>>
->>> The drm-misc tree gained a build failure for which I disabled a
->>> COMPILE_TEST setting.
->>>
->>> The sound-asoc tree still has its build failures so I used the version
->>> from next-20200414.
->>>
->>> The ipmi tree gained a build failure for which I applied a patch.
->>>
->>> Non-merge commits (relative to Linus' tree): 2732
->>>  3544 files changed, 76515 insertions(+), 37271 deletions(-)
->>
->> s390 defconfig still does not compile. While the media kconfig problem is
->> gone I now have
->>
->>   CC [M]  drivers/char/hw_random/cctrng.o
->> drivers/char/hw_random/cctrng.c: In function ‘cc_trng_compwork_handler’:
->> drivers/char/hw_random/cctrng.c:334:49: error: ‘fips_enabled’ undeclared
->> (first use in this function); did you mean ‘vdso_enabled’?
->>   334 |  if (CC_REG_FLD_GET(RNG_ISR, CRNGT_ERR, isr) && fips_enabled) {
->>       |                                                 ^~~~~~~~~~~~
->>       |                                                 vdso_enabled
->> drivers/char/hw_random/cctrng.c:334:49: note: each undeclared identifier is
->> reported only once for each function it appears in
->> drivers/char/hw_random/cctrng.c:335:3: error: implicit declaration of
->> function ‘fips_fail_notify’ [-Werror=implicit-function-declaration]
->>   335 |   fips_fail_notify();
->>       |   ^~~~~~~~~~~~~~~~
->> cc1: some warnings being treated as errors
->>
->> Can we maybe make this driver depend on ARM?
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6851ef7cf1bd..48e0147f9dd8 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9326,6 +9326,7 @@ M:	Christian Borntraeger <borntraeger@de.ibm.com>
+>  M:	Janosch Frank <frankja@linux.ibm.com>
+>  R:	David Hildenbrand <david@redhat.com>
+>  R:	Cornelia Huck <cohuck@redhat.com>
+> +R:	Claudio Imbrenda <imbrenda@linux.ibm.com>
+>  L:	kvm@vger.kernel.org
+>  S:	Supported
+>  W:	http://www.ibm.com/developerworks/linux/linux390/
 > 
-> Hi,
-> This compilation issue is already fixed.
-> It was pushed few days ago and is waiting to be applied.
-> https://lore.kernel.org/linux-crypto/096db769-a508-b0fa-f018-2c4c807061cb@infradead.org/
 
-Herbert,
-
-can these things be applied in a timely fashion? This DOES break several automated test 
-cases that usually run on linux-next.
+Thanks applied.
 
