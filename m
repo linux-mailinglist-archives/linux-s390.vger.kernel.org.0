@@ -2,329 +2,176 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCF341B02B9
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2020 09:18:20 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id C71AA1B02D5
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2020 09:23:37 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726117AbgDTHSO (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Apr 2020 03:18:14 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:44673 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725815AbgDTHSN (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 Apr 2020 03:18:13 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R171e4;CH=green;DM=||false|;DS=||;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=tianjia.zhang@linux.alibaba.com;NM=1;PH=DS;RN=36;SR=0;TI=SMTPD_---0Tw1zGpr_1587367076;
-Received: from 30.27.118.66(mailfrom:tianjia.zhang@linux.alibaba.com fp:SMTPD_---0Tw1zGpr_1587367076)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Mon, 20 Apr 2020 15:17:58 +0800
-Subject: Re: [PATCH 1/7] KVM: s390: clean up redundant 'kvm_run' parameters
+        id S1726039AbgDTHXh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Apr 2020 03:23:37 -0400
+Received: from mail-eopbgr70087.outbound.protection.outlook.com ([40.107.7.87]:32294
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725865AbgDTHXg (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Mon, 20 Apr 2020 03:23:36 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y/WqE41KH6c5B8k1HoutE/LizxHg2HQ2Iasn6qFbnfY=;
+ b=w+HDDY0VD5uy9ZFtLRhVnskYnZExyG0wHumm+Vdy/GzwIQI8fBmR/teygUBcfEPAYhjOOLvLZV6QdO/wYPkQRH0tdU/FitYT+ByuffkZ9ZeTsWEssWvpPZpfdMZTaEXjPMZ4jTt6wQIeQ5arW1ZRTl5jm2mSUr6dKl4HcCRdabE=
+Received: from DB8PR06CA0013.eurprd06.prod.outlook.com (2603:10a6:10:100::26)
+ by HE1PR0801MB1802.eurprd08.prod.outlook.com (2603:10a6:3:88::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.29; Mon, 20 Apr
+ 2020 07:23:31 +0000
+Received: from DB5EUR03FT048.eop-EUR03.prod.protection.outlook.com
+ (2603:10a6:10:100:cafe::10) by DB8PR06CA0013.outlook.office365.com
+ (2603:10a6:10:100::26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.25 via Frontend
+ Transport; Mon, 20 Apr 2020 07:23:31 +0000
+Authentication-Results: spf=pass (sender IP is 63.35.35.123)
+ smtp.mailfrom=arm.com; vger.kernel.org; dkim=pass (signature was verified)
+ header.d=armh.onmicrosoft.com;vger.kernel.org; dmarc=bestguesspass
+ action=none header.from=arm.com;
+Received-SPF: Pass (protection.outlook.com: domain of arm.com designates
+ 63.35.35.123 as permitted sender) receiver=protection.outlook.com;
+ client-ip=63.35.35.123; helo=64aa7808-outbound-1.mta.getcheckrecipient.com;
+Received: from 64aa7808-outbound-1.mta.getcheckrecipient.com (63.35.35.123) by
+ DB5EUR03FT048.mail.protection.outlook.com (10.152.21.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2900.18 via Frontend Transport; Mon, 20 Apr 2020 07:23:31 +0000
+Received: ("Tessian outbound ecb846ece464:v53"); Mon, 20 Apr 2020 07:23:31 +0000
+X-CR-MTA-TID: 64aa7808
+Received: from 820c5e14a562.1
+        by 64aa7808-outbound-1.mta.getcheckrecipient.com id 0273C539-8494-4BEF-8A80-54DF31A4208C.1;
+        Mon, 20 Apr 2020 07:23:26 +0000
+Received: from EUR03-VE1-obe.outbound.protection.outlook.com
+    by 64aa7808-outbound-1.mta.getcheckrecipient.com with ESMTPS id 820c5e14a562.1
+    (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384);
+    Mon, 20 Apr 2020 07:23:26 +0000
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=U0w8ebpFudRBTaMSr7f/zr3yUKPDvCGUqNziqBYcfabhWQN+hDwqGmdKOZ6Yq1Gn8s5MPSQR8K8ryWhHI1Pp9UcNq3OTbTHvfR5yvaELPSTRLwYj5d/5H8lrKbJvfTNIfR4LDYGOb3RguIQ3CO2EkGDv2EpWrhkQK11a8KcxL/DoW4SP+fKOJ4jKzIf0G+gvmHffaZlrO4cj754WhNMV5z5o23lvO1m+5wJRUjkxox8xUYu9oeKEDUA/jHslTtmMcTsHb/3WpRube5Fwb46nUPM8QIF0BqjdKJC9CVxqiEgtml1CYHB9onBg+6Zl+7Q22/1ZR5Z1GDETlr4TfVmVYg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y/WqE41KH6c5B8k1HoutE/LizxHg2HQ2Iasn6qFbnfY=;
+ b=CqiXjxegg51znzHJ0/eOaxO28Ul/ehH7litLoajTM7u1P8QhuC34VDjy6xBcHMWGug9JLjHDP5VbdxL/X4xa7D9vVlyoQKU3a4tW4hGrdOdC/NjBCa+2oHzgj4iUinlY9RQ7k3TGIjjWRkRlF3+dT+HnNV2pT7qM/NCy9OA1HGoWgVC6b/ICA7mjkg1T6Rp6SS3QH44WJmrr+4EQM18mbwYtovag5B0wlL9ZZ/JyeZk8qQ8QP1Q7CiITps/HvX/t0D75b2N8neSvP/PumkL4+yBVg0y/az1dkdI2Qp/gZTJAdpEj1j+TvLuVbN/kAUXLbeesOslvinwT6Cpx0WP3iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=arm.com; dmarc=pass action=none header.from=arm.com; dkim=pass
+ header.d=arm.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
+ s=selector2-armh-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Y/WqE41KH6c5B8k1HoutE/LizxHg2HQ2Iasn6qFbnfY=;
+ b=w+HDDY0VD5uy9ZFtLRhVnskYnZExyG0wHumm+Vdy/GzwIQI8fBmR/teygUBcfEPAYhjOOLvLZV6QdO/wYPkQRH0tdU/FitYT+ByuffkZ9ZeTsWEssWvpPZpfdMZTaEXjPMZ4jTt6wQIeQ5arW1ZRTl5jm2mSUr6dKl4HcCRdabE=
+Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com (2603:10a6:4:a0::12)
+ by DB6PR0802MB2341.eurprd08.prod.outlook.com (2603:10a6:4:89::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2921.27; Mon, 20 Apr
+ 2020 07:23:19 +0000
+Received: from DB6PR0802MB2533.eurprd08.prod.outlook.com
+ ([fe80::b959:1879:c050:3117]) by DB6PR0802MB2533.eurprd08.prod.outlook.com
+ ([fe80::b959:1879:c050:3117%8]) with mapi id 15.20.2921.027; Mon, 20 Apr 2020
+ 07:23:18 +0000
+From:   Hadar Gat <Hadar.Gat@arm.com>
 To:     Christian Borntraeger <borntraeger@de.ibm.com>,
-        pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, cohuck@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com
-Cc:     kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20200419075106.16248-1-tianjia.zhang@linux.alibaba.com>
- <20200419075106.16248-2-tianjia.zhang@linux.alibaba.com>
- <7a783487-2f9b-08a6-0ff6-f57bb90495a1@de.ibm.com>
-From:   Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Message-ID: <e182050c-c5eb-8c83-df6e-2b46c1f15ca3@linux.alibaba.com>
-Date:   Mon, 20 Apr 2020 15:17:56 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.7.0
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+CC:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Gilad Ben-Yossef <gilad@benyossef.com>,
+        Ofir Drang <Ofir.Drang@arm.com>, nd <nd@arm.com>
+Subject: RE: linux-next: Tree for Apr 20
+Thread-Topic: linux-next: Tree for Apr 20
+Thread-Index: AQHWFuNS9+RR8x68TUSSGfeRxMWUdaiBmeQA
+Date:   Mon, 20 Apr 2020 07:23:18 +0000
+Message-ID: <DB6PR0802MB2533E416D358177D5CA53564E9D40@DB6PR0802MB2533.eurprd08.prod.outlook.com>
+References: <20200420142610.390e5922@canb.auug.org.au>
+ <2d87a4f9-9d87-e929-9b03-31f92dad5ca6@de.ibm.com>
+In-Reply-To: <2d87a4f9-9d87-e929-9b03-31f92dad5ca6@de.ibm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ts-tracking-id: 3d413c7a-6486-4827-93bc-e4746ee82d4d.1
+x-checkrecipientchecked: true
+Authentication-Results-Original: spf=none (sender IP is )
+ smtp.mailfrom=Hadar.Gat@arm.com; 
+x-originating-ip: [84.109.179.203]
+x-ms-publictraffictype: Email
+X-MS-Office365-Filtering-HT: Tenant
+X-MS-Office365-Filtering-Correlation-Id: 3e7133ee-0ef8-441d-4729-08d7e4fbbab3
+x-ms-traffictypediagnostic: DB6PR0802MB2341:|DB6PR0802MB2341:|HE1PR0801MB1802:
+x-ms-exchange-transport-forked: True
+X-Microsoft-Antispam-PRVS: <HE1PR0801MB1802CD7BC079C8BD6AFF97ACE9D40@HE1PR0801MB1802.eurprd08.prod.outlook.com>
+x-checkrecipientrouted: true
+nodisclaimer: true
+x-ms-oob-tlc-oobclassifiers: OLM:3173;OLM:3173;
+x-forefront-prvs: 03793408BA
+X-Forefront-Antispam-Report-Untrusted: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:DB6PR0802MB2533.eurprd08.prod.outlook.com;PTR:;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(136003)(366004)(39860400002)(376002)(346002)(396003)(316002)(33656002)(2906002)(478600001)(81156014)(8676002)(8936002)(110136005)(5660300002)(6506007)(186003)(53546011)(86362001)(9686003)(66946007)(26005)(54906003)(71200400001)(4326008)(66446008)(64756008)(66556008)(66476007)(76116006)(966005)(55016002)(52536014)(7696005);DIR:OUT;SFP:1101;
+received-spf: None (protection.outlook.com: arm.com does not designate
+ permitted sender hosts)
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Untrusted: BCL:0;
+X-Microsoft-Antispam-Message-Info-Original: DR8So4v4QSnPK7y5FEY3fFwUd/Wck7BciXqtJBx5MrNjeP5dO3xbIW9UrFBUXazNOaBBiFoNHRTrpKt1hJ1KY5oY87CMPbYrvTemzPhCWrcgBH/P45kYaP0O1UTALZqvOc16ZH9Bwv4uktqNwVuk6bMjh0EGo2h8QtWWhVURlGHz+61E0tbGBtN9dw4JjTx/nfhsvNgBkjBq8YLjEezgjiGvJ0qp1saUynjX+lv+HrzBc5qowqNmQcQAKMQ3KIePOpK3dq1sUu+KtNt8X/idmobFskt2yZRFK8+hHawtkhdx2NVaTne+R0g7yhVxXIs82uI4SaCaUrtF4iAXmDUBbC63Yz2Zco6+kwjetMcR17/AkMLo/AX+bwqD+0qGYAAy7TMPUDC31KKETsd7/vpr+BTVaqyHCMXcHGPvleWiw9OwZUsaHvAV0ViPQJkXUKeYfZXGeuKvzvwLjBX+6VjTc+es5bzu3PatKXy3nuV4onnSsNdsp0TmbIvndNelUogYDy1sfMCjEjGJWNcVgNg4lg==
+x-ms-exchange-antispam-messagedata: kHce+jB7a47oXxtwhzCkHGB5E7jVkLVbx6yTRqqg8npfoGyd9RnDNP/ckfgEUpJkgCcahYWVf6Jey+igQ2PxJiNYI7jxkVqiu3O+sv1MUobiXCGIjACuJSvRKSMSqsoobUgYa4GyIX6LndTguHb6dg==
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <7a783487-2f9b-08a6-0ff6-f57bb90495a1@de.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0802MB2341
+Original-Authentication-Results: spf=none (sender IP is )
+ smtp.mailfrom=Hadar.Gat@arm.com; 
+X-EOPAttributedMessage: 0
+X-MS-Exchange-Transport-CrossTenantHeadersStripped: DB5EUR03FT048.eop-EUR03.prod.protection.outlook.com
+X-Forefront-Antispam-Report: CIP:63.35.35.123;CTRY:IE;LANG:en;SCL:1;SRV:;IPV:CAL;SFV:NSPM;H:64aa7808-outbound-1.mta.getcheckrecipient.com;PTR:ec2-63-35-35-123.eu-west-1.compute.amazonaws.com;CAT:NONE;SFTY:;SFS:(10009020)(4636009)(39860400002)(376002)(396003)(346002)(136003)(46966005)(966005)(5660300002)(9686003)(33656002)(82740400003)(186003)(4326008)(450100002)(2906002)(7696005)(26005)(6506007)(53546011)(81156014)(316002)(55016002)(336012)(70206006)(8676002)(86362001)(70586007)(110136005)(81166007)(52536014)(356005)(8936002)(47076004)(478600001)(54906003);DIR:OUT;SFP:1101;
+X-MS-Office365-Filtering-Correlation-Id-Prvs: 14e7ff30-3499-4308-4857-08d7e4fbb323
+X-Forefront-PRVS: 03793408BA
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: npfvFyeBMjDRDPMs3Zrg60FnPQrCsP/mgEfC6593qlyP3qm7zbMapmZqQxAvAe0iRvcT62qHVIDxNe1ofOY2VGb5cZdeINl3mphs08A/CUcA+asNHfTbDvLEShdn3BJHnXtyv3YO4YR62UlHCwL+PhyiqvwK6r3G7EyqqBIOCZYtbNrhxcozPuMuRTvT4Qzq1PUHyd0U0k89MmhU2JBygQUrrviYEUQQNqwAcsQly74OrGIVsxN2YhZwPKVUEDWxl9nR++v+C7P7VMH3NEQ4kJ6xx569XMtsS0XKrAYumwcwoOq2S6g1i+2qzR/tdPzFmfCbW3PEY4DYxW0ycDKh6QZr0oufWrewh64R9rvkKcB0hQqX1rm9J0UjSpqGdx1IKCYx/hZHxr1NeYAMxKq3/WzNDc+yPrMudVLJNnQHFMdMFzM38uwMFWWxSIEk21R9zeQPf8glUpDtc4dd7PUlsH3agnLF16I174TMLxMTjyu0JC6A6/+SzGbJmTUj6EjVMYxNraaRaluif7H1+3CN2GNl9H+UTQKb9wKw5wxLcZNCQmo9eRyit5VO0Rbw9T8L52UT5p0C1Kie33YdJyu+Hg==
+X-OriginatorOrg: arm.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 20 Apr 2020 07:23:31.6350
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3e7133ee-0ef8-441d-4729-08d7e4fbbab3
+X-MS-Exchange-CrossTenant-Id: f34e5979-57d9-4aaa-ad4d-b122a662184d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=f34e5979-57d9-4aaa-ad4d-b122a662184d;Ip=[63.35.35.123];Helo=[64aa7808-outbound-1.mta.getcheckrecipient.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1PR0801MB1802
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-
-
-On 2020/4/20 15:07, Christian Borntraeger wrote:
-> 
-> 
-> On 19.04.20 09:51, Tianjia Zhang wrote:
->> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
->> structure. Earlier than historical reasons, many kvm-related function
->> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
->> This patch does a unified cleanup of these remaining redundant parameters.
->>
->> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
->> ---
->>   arch/s390/kvm/kvm-s390.c | 127 +++++++++++++++++++++------------------
->>   1 file changed, 67 insertions(+), 60 deletions(-)
->>
->> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
->> index 443af3ead739..cf420d013ba3 100644
->> --- a/arch/s390/kvm/kvm-s390.c
->> +++ b/arch/s390/kvm/kvm-s390.c
->> @@ -4173,24 +4173,25 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->>   	return rc;
->>   }
->>   
->> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->>   {
->> +	struct kvm_run *run = vcpu->run;
-> 
-> Please use kvm_run as variable name. This makes all of the changes below go away.
-> 
-
-It's OK, I will fix it in v2 patch.
-
-Thanks,
-Tianjia
-
-> 
->>   	struct runtime_instr_cb *riccb;
->>   	struct gs_cb *gscb;
->>   
->> -	riccb = (struct runtime_instr_cb *) &kvm_run->s.regs.riccb;
->> -	gscb = (struct gs_cb *) &kvm_run->s.regs.gscb;
->> -	vcpu->arch.sie_block->gpsw.mask = kvm_run->psw_mask;
->> -	vcpu->arch.sie_block->gpsw.addr = kvm_run->psw_addr;
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_ARCH0) {
->> -		vcpu->arch.sie_block->todpr = kvm_run->s.regs.todpr;
->> -		vcpu->arch.sie_block->pp = kvm_run->s.regs.pp;
->> -		vcpu->arch.sie_block->gbea = kvm_run->s.regs.gbea;
->> -	}
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_PFAULT) {
->> -		vcpu->arch.pfault_token = kvm_run->s.regs.pft;
->> -		vcpu->arch.pfault_select = kvm_run->s.regs.pfs;
->> -		vcpu->arch.pfault_compare = kvm_run->s.regs.pfc;
->> +	riccb = (struct runtime_instr_cb *) &run->s.regs.riccb;
->> +	gscb = (struct gs_cb *) &run->s.regs.gscb;
->> +	vcpu->arch.sie_block->gpsw.mask = run->psw_mask;
->> +	vcpu->arch.sie_block->gpsw.addr = run->psw_addr;
->> +	if (run->kvm_dirty_regs & KVM_SYNC_ARCH0) {
->> +		vcpu->arch.sie_block->todpr = run->s.regs.todpr;
->> +		vcpu->arch.sie_block->pp = run->s.regs.pp;
->> +		vcpu->arch.sie_block->gbea = run->s.regs.gbea;
->> +	}
->> +	if (run->kvm_dirty_regs & KVM_SYNC_PFAULT) {
->> +		vcpu->arch.pfault_token = run->s.regs.pft;
->> +		vcpu->arch.pfault_select = run->s.regs.pfs;
->> +		vcpu->arch.pfault_compare = run->s.regs.pfc;
->>   		if (vcpu->arch.pfault_token == KVM_S390_PFAULT_TOKEN_INVALID)
->>   			kvm_clear_async_pf_completion_queue(vcpu);
->>   	}
->> @@ -4198,7 +4199,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   	 * If userspace sets the riccb (e.g. after migration) to a valid state,
->>   	 * we should enable RI here instead of doing the lazy enablement.
->>   	 */
->> -	if ((kvm_run->kvm_dirty_regs & KVM_SYNC_RICCB) &&
->> +	if ((run->kvm_dirty_regs & KVM_SYNC_RICCB) &&
->>   	    test_kvm_facility(vcpu->kvm, 64) &&
->>   	    riccb->v &&
->>   	    !(vcpu->arch.sie_block->ecb3 & ECB3_RI)) {
->> @@ -4209,7 +4210,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   	 * If userspace sets the gscb (e.g. after migration) to non-zero,
->>   	 * we should enable GS here instead of doing the lazy enablement.
->>   	 */
->> -	if ((kvm_run->kvm_dirty_regs & KVM_SYNC_GSCB) &&
->> +	if ((run->kvm_dirty_regs & KVM_SYNC_GSCB) &&
->>   	    test_kvm_facility(vcpu->kvm, 133) &&
->>   	    gscb->gssm &&
->>   	    !vcpu->arch.gs_enabled) {
->> @@ -4218,10 +4219,10 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   		vcpu->arch.sie_block->ecd |= ECD_HOSTREGMGMT;
->>   		vcpu->arch.gs_enabled = 1;
->>   	}
->> -	if ((kvm_run->kvm_dirty_regs & KVM_SYNC_BPBC) &&
->> +	if ((run->kvm_dirty_regs & KVM_SYNC_BPBC) &&
->>   	    test_kvm_facility(vcpu->kvm, 82)) {
->>   		vcpu->arch.sie_block->fpf &= ~FPF_BPBC;
->> -		vcpu->arch.sie_block->fpf |= kvm_run->s.regs.bpbc ? FPF_BPBC : 0;
->> +		vcpu->arch.sie_block->fpf |= run->s.regs.bpbc ? FPF_BPBC : 0;
->>   	}
->>   	if (MACHINE_HAS_GS) {
->>   		preempt_disable();
->> @@ -4232,45 +4233,47 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   		}
->>   		if (vcpu->arch.gs_enabled) {
->>   			current->thread.gs_cb = (struct gs_cb *)
->> -						&vcpu->run->s.regs.gscb;
->> +						&run->s.regs.gscb;
->>   			restore_gs_cb(current->thread.gs_cb);
->>   		}
->>   		preempt_enable();
->>   	}
->> -	/* SIE will load etoken directly from SDNX and therefore kvm_run */
->> +	/* SIE will load etoken directly from SDNX and therefore run */
->>   }
->>   
->> -static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->> +static void sync_regs(struct kvm_vcpu *vcpu)
->>   {
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_PREFIX)
->> -		kvm_s390_set_prefix(vcpu, kvm_run->s.regs.prefix);
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_CRS) {
->> -		memcpy(&vcpu->arch.sie_block->gcr, &kvm_run->s.regs.crs, 128);
->> +	struct kvm_run *run = vcpu->run;
->> +
->> +	if (run->kvm_dirty_regs & KVM_SYNC_PREFIX)
->> +		kvm_s390_set_prefix(vcpu, run->s.regs.prefix);
->> +	if (run->kvm_dirty_regs & KVM_SYNC_CRS) {
->> +		memcpy(&vcpu->arch.sie_block->gcr, &run->s.regs.crs, 128);
->>   		/* some control register changes require a tlb flush */
->>   		kvm_make_request(KVM_REQ_TLB_FLUSH, vcpu);
->>   	}
->> -	if (kvm_run->kvm_dirty_regs & KVM_SYNC_ARCH0) {
->> -		kvm_s390_set_cpu_timer(vcpu, kvm_run->s.regs.cputm);
->> -		vcpu->arch.sie_block->ckc = kvm_run->s.regs.ckc;
->> +	if (run->kvm_dirty_regs & KVM_SYNC_ARCH0) {
->> +		kvm_s390_set_cpu_timer(vcpu, run->s.regs.cputm);
->> +		vcpu->arch.sie_block->ckc = run->s.regs.ckc;
->>   	}
->>   	save_access_regs(vcpu->arch.host_acrs);
->> -	restore_access_regs(vcpu->run->s.regs.acrs);
->> +	restore_access_regs(run->s.regs.acrs);
->>   	/* save host (userspace) fprs/vrs */
->>   	save_fpu_regs();
->>   	vcpu->arch.host_fpregs.fpc = current->thread.fpu.fpc;
->>   	vcpu->arch.host_fpregs.regs = current->thread.fpu.regs;
->>   	if (MACHINE_HAS_VX)
->> -		current->thread.fpu.regs = vcpu->run->s.regs.vrs;
->> +		current->thread.fpu.regs = run->s.regs.vrs;
->>   	else
->> -		current->thread.fpu.regs = vcpu->run->s.regs.fprs;
->> -	current->thread.fpu.fpc = vcpu->run->s.regs.fpc;
->> +		current->thread.fpu.regs = run->s.regs.fprs;
->> +	current->thread.fpu.fpc = run->s.regs.fpc;
->>   	if (test_fp_ctl(current->thread.fpu.fpc))
->>   		/* User space provided an invalid FPC, let's clear it */
->>   		current->thread.fpu.fpc = 0;
->>   
->>   	/* Sync fmt2 only data */
->>   	if (likely(!kvm_s390_pv_cpu_is_protected(vcpu))) {
->> -		sync_regs_fmt2(vcpu, kvm_run);
->> +		sync_regs_fmt2(vcpu);
->>   	} else {
->>   		/*
->>   		 * In several places we have to modify our internal view to
->> @@ -4282,19 +4285,21 @@ static void sync_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   		 * do only accept the condition code from userspace.
->>   		 */
->>   		vcpu->arch.sie_block->gpsw.mask &= ~PSW_MASK_CC;
->> -		vcpu->arch.sie_block->gpsw.mask |= kvm_run->psw_mask &
->> +		vcpu->arch.sie_block->gpsw.mask |= run->psw_mask &
->>   						   PSW_MASK_CC;
->>   	}
->>   
->> -	kvm_run->kvm_dirty_regs = 0;
->> +	run->kvm_dirty_regs = 0;
->>   }
->>   
->> -static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->> +static void store_regs_fmt2(struct kvm_vcpu *vcpu)
->>   {
->> -	kvm_run->s.regs.todpr = vcpu->arch.sie_block->todpr;
->> -	kvm_run->s.regs.pp = vcpu->arch.sie_block->pp;
->> -	kvm_run->s.regs.gbea = vcpu->arch.sie_block->gbea;
->> -	kvm_run->s.regs.bpbc = (vcpu->arch.sie_block->fpf & FPF_BPBC) == FPF_BPBC;
->> +	struct kvm_run *run = vcpu->run;
->> +
->> +	run->s.regs.todpr = vcpu->arch.sie_block->todpr;
->> +	run->s.regs.pp = vcpu->arch.sie_block->pp;
->> +	run->s.regs.gbea = vcpu->arch.sie_block->gbea;
->> +	run->s.regs.bpbc = (vcpu->arch.sie_block->fpf & FPF_BPBC) == FPF_BPBC;
->>   	if (MACHINE_HAS_GS) {
->>   		__ctl_set_bit(2, 4);
->>   		if (vcpu->arch.gs_enabled)
->> @@ -4310,39 +4315,41 @@ static void store_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->>   	/* SIE will save etoken directly into SDNX and therefore kvm_run */
->>   }
->>   
->> -static void store_regs(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->> +static void store_regs(struct kvm_vcpu *vcpu)
->>   {
->> -	kvm_run->psw_mask = vcpu->arch.sie_block->gpsw.mask;
->> -	kvm_run->psw_addr = vcpu->arch.sie_block->gpsw.addr;
->> -	kvm_run->s.regs.prefix = kvm_s390_get_prefix(vcpu);
->> -	memcpy(&kvm_run->s.regs.crs, &vcpu->arch.sie_block->gcr, 128);
->> -	kvm_run->s.regs.cputm = kvm_s390_get_cpu_timer(vcpu);
->> -	kvm_run->s.regs.ckc = vcpu->arch.sie_block->ckc;
->> -	kvm_run->s.regs.pft = vcpu->arch.pfault_token;
->> -	kvm_run->s.regs.pfs = vcpu->arch.pfault_select;
->> -	kvm_run->s.regs.pfc = vcpu->arch.pfault_compare;
->> -	save_access_regs(vcpu->run->s.regs.acrs);
->> +	struct kvm_run *run = vcpu->run;
->> +
->> +	run->psw_mask = vcpu->arch.sie_block->gpsw.mask;
->> +	run->psw_addr = vcpu->arch.sie_block->gpsw.addr;
->> +	run->s.regs.prefix = kvm_s390_get_prefix(vcpu);
->> +	memcpy(&run->s.regs.crs, &vcpu->arch.sie_block->gcr, 128);
->> +	run->s.regs.cputm = kvm_s390_get_cpu_timer(vcpu);
->> +	run->s.regs.ckc = vcpu->arch.sie_block->ckc;
->> +	run->s.regs.pft = vcpu->arch.pfault_token;
->> +	run->s.regs.pfs = vcpu->arch.pfault_select;
->> +	run->s.regs.pfc = vcpu->arch.pfault_compare;
->> +	save_access_regs(run->s.regs.acrs);
->>   	restore_access_regs(vcpu->arch.host_acrs);
->>   	/* Save guest register state */
->>   	save_fpu_regs();
->> -	vcpu->run->s.regs.fpc = current->thread.fpu.fpc;
->> +	run->s.regs.fpc = current->thread.fpu.fpc;
->>   	/* Restore will be done lazily at return */
->>   	current->thread.fpu.fpc = vcpu->arch.host_fpregs.fpc;
->>   	current->thread.fpu.regs = vcpu->arch.host_fpregs.regs;
->>   	if (likely(!kvm_s390_pv_cpu_is_protected(vcpu)))
->> -		store_regs_fmt2(vcpu, kvm_run);
->> +		store_regs_fmt2(vcpu);
->>   }
->>   
->>   int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>   {
->> -	struct kvm_run *kvm_run = vcpu->run;
->> +	struct kvm_run *run = vcpu->run;
->>   	int rc;
->>   
->> -	if (kvm_run->immediate_exit)
->> +	if (run->immediate_exit)
->>   		return -EINTR;
->>   
->> -	if (kvm_run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
->> -	    kvm_run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
->> +	if (run->kvm_valid_regs & ~KVM_SYNC_S390_VALID_FIELDS ||
->> +	    run->kvm_dirty_regs & ~KVM_SYNC_S390_VALID_FIELDS)
->>   		return -EINVAL;
->>   
->>   	vcpu_load(vcpu);
->> @@ -4368,14 +4375,14 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>   		goto out;
->>   	}
->>   
->> -	sync_regs(vcpu, kvm_run);
->> +	sync_regs(vcpu);
->>   	enable_cpu_timer_accounting(vcpu);
->>   
->>   	might_fault();
->>   	rc = __vcpu_run(vcpu);
->>   
->>   	if (signal_pending(current) && !rc) {
->> -		kvm_run->exit_reason = KVM_EXIT_INTR;
->> +		run->exit_reason = KVM_EXIT_INTR;
->>   		rc = -EINTR;
->>   	}
->>   
->> @@ -4390,7 +4397,7 @@ int kvm_arch_vcpu_ioctl_run(struct kvm_vcpu *vcpu)
->>   	}
->>   
->>   	disable_cpu_timer_accounting(vcpu);
->> -	store_regs(vcpu, kvm_run);
->> +	store_regs(vcpu);
->>   
->>   	kvm_sigset_deactivate(vcpu);
->>   
->>
+DQo+IE9uIDIwLjA0LjIwIDA2OjI2LCBTdGVwaGVuIFJvdGh3ZWxsIHdyb3RlOg0KPiA+IEhpIGFs
+bCwNCj4gPg0KPiA+IENoYW5nZXMgc2luY2UgMjAyMDA0MTc6DQo+ID4NCj4gPiBNeSBmaXhlcyB0
+cmVlIGlzIGVtcHR5IGFnYWluLg0KPiA+DQo+ID4gVGhlIHFjb20gdHJlZSBzdGlsbCBoYWQgaXRz
+IGJ1aWxkIGZhaWx1cmUgZm9yIHdoaWNoIEkgcmV2ZXJ0ZWQgYSBjb21taXQuDQo+ID4NCj4gPiBU
+aGUgY3J5cHRvIHRyZWUgc3RpbGwgaGFzIGl0cyBidWlsZCBmYWlsdXJlIGZvciB3aGljaCBJIHJl
+dmVydGVkIDUgY29tbWl0cy4NCj4gPg0KPiA+IFRoZSBkcm0tbWlzYyB0cmVlIGdhaW5lZCBhIGJ1
+aWxkIGZhaWx1cmUgZm9yIHdoaWNoIEkgZGlzYWJsZWQgYQ0KPiA+IENPTVBJTEVfVEVTVCBzZXR0
+aW5nLg0KPiA+DQo+ID4gVGhlIHNvdW5kLWFzb2MgdHJlZSBzdGlsbCBoYXMgaXRzIGJ1aWxkIGZh
+aWx1cmVzIHNvIEkgdXNlZCB0aGUgdmVyc2lvbg0KPiA+IGZyb20gbmV4dC0yMDIwMDQxNC4NCj4g
+Pg0KPiA+IFRoZSBpcG1pIHRyZWUgZ2FpbmVkIGEgYnVpbGQgZmFpbHVyZSBmb3Igd2hpY2ggSSBh
+cHBsaWVkIGEgcGF0Y2guDQo+ID4NCj4gPiBOb24tbWVyZ2UgY29tbWl0cyAocmVsYXRpdmUgdG8g
+TGludXMnIHRyZWUpOiAyNzMyDQo+ID4gIDM1NDQgZmlsZXMgY2hhbmdlZCwgNzY1MTUgaW5zZXJ0
+aW9ucygrKSwgMzcyNzEgZGVsZXRpb25zKC0pDQo+IA0KPiBzMzkwIGRlZmNvbmZpZyBzdGlsbCBk
+b2VzIG5vdCBjb21waWxlLiBXaGlsZSB0aGUgbWVkaWEga2NvbmZpZyBwcm9ibGVtIGlzDQo+IGdv
+bmUgSSBub3cgaGF2ZQ0KPiANCj4gICBDQyBbTV0gIGRyaXZlcnMvY2hhci9od19yYW5kb20vY2N0
+cm5nLm8NCj4gZHJpdmVycy9jaGFyL2h3X3JhbmRvbS9jY3RybmcuYzogSW4gZnVuY3Rpb24g4oCY
+Y2NfdHJuZ19jb21wd29ya19oYW5kbGVy4oCZOg0KPiBkcml2ZXJzL2NoYXIvaHdfcmFuZG9tL2Nj
+dHJuZy5jOjMzNDo0OTogZXJyb3I6IOKAmGZpcHNfZW5hYmxlZOKAmSB1bmRlY2xhcmVkDQo+IChm
+aXJzdCB1c2UgaW4gdGhpcyBmdW5jdGlvbik7IGRpZCB5b3UgbWVhbiDigJh2ZHNvX2VuYWJsZWTi
+gJk/DQo+ICAgMzM0IHwgIGlmIChDQ19SRUdfRkxEX0dFVChSTkdfSVNSLCBDUk5HVF9FUlIsIGlz
+cikgJiYgZmlwc19lbmFibGVkKSB7DQo+ICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+DQo+ICAgICAgIHwgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdmRzb19lbmFibGVkDQo+IGRy
+aXZlcnMvY2hhci9od19yYW5kb20vY2N0cm5nLmM6MzM0OjQ5OiBub3RlOiBlYWNoIHVuZGVjbGFy
+ZWQgaWRlbnRpZmllciBpcw0KPiByZXBvcnRlZCBvbmx5IG9uY2UgZm9yIGVhY2ggZnVuY3Rpb24g
+aXQgYXBwZWFycyBpbg0KPiBkcml2ZXJzL2NoYXIvaHdfcmFuZG9tL2NjdHJuZy5jOjMzNTozOiBl
+cnJvcjogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YNCj4gZnVuY3Rpb24g4oCYZmlwc19mYWlsX25v
+dGlmeeKAmSBbLVdlcnJvcj1pbXBsaWNpdC1mdW5jdGlvbi1kZWNsYXJhdGlvbl0NCj4gICAzMzUg
+fCAgIGZpcHNfZmFpbF9ub3RpZnkoKTsNCj4gICAgICAgfCAgIF5+fn5+fn5+fn5+fn5+fn4NCj4g
+Y2MxOiBzb21lIHdhcm5pbmdzIGJlaW5nIHRyZWF0ZWQgYXMgZXJyb3JzDQo+IA0KPiBDYW4gd2Ug
+bWF5YmUgbWFrZSB0aGlzIGRyaXZlciBkZXBlbmQgb24gQVJNPw0KDQpIaSwNClRoaXMgY29tcGls
+YXRpb24gaXNzdWUgaXMgYWxyZWFkeSBmaXhlZC4NCkl0IHdhcyBwdXNoZWQgZmV3IGRheXMgYWdv
+IGFuZCBpcyB3YWl0aW5nIHRvIGJlIGFwcGxpZWQuDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9s
+aW51eC1jcnlwdG8vMDk2ZGI3NjktYTUwOC1iMGZhLWYwMTgtMmM0YzgwNzA2MWNiQGluZnJhZGVh
+ZC5vcmcvDQpUaGFua3MsDQpIYWRhcg0KDQo=
