@@ -2,87 +2,90 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 588491B014B
-	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2020 08:05:33 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 28DDB1B01C1
+	for <lists+linux-s390@lfdr.de>; Mon, 20 Apr 2020 08:46:49 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725872AbgDTGFd (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Mon, 20 Apr 2020 02:05:33 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:40292 "EHLO
+        id S1726183AbgDTGqm (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Mon, 20 Apr 2020 02:46:42 -0400
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55268 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725815AbgDTGFc (ORCPT
+        by vger.kernel.org with ESMTP id S1726164AbgDTGqm (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Mon, 20 Apr 2020 02:05:32 -0400
+        Mon, 20 Apr 2020 02:46:42 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587362731;
+        s=mimecast20190719; t=1587365200;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=jj2BQLu1NtQ9kzbeMgwxqS5hQo3Bx6Yhxp+ajWBSfOQ=;
-        b=NdJ0gkvHHwduDL5K49xFeP50R2jY/ZWJPDgbYfvApH7oyzyhcqaOvwRM8Bw5YPcgn/T/zh
-        kfXHiH5zQIfYNYTrOzSuMjStGAW5GPpx9JpGOF4Dh6ENn5zMVElC+z32/Ttgmzi6BdMiUW
-        IFf+lKnTvwTEGktYQXk1dQnzpodv0Qs=
+        bh=PqAUHVEd5BL+T3/HZ4FhSqFdvpe7bgdtT6IdzYjkTFs=;
+        b=h4LPcsbS9VfsiItWm0wh4t6fJl8jkBVzjQ1ox0Di3SUk4LIEvvdkIjbhyv/rxb10hJdp+z
+        i234R8NygQbBMRSz8QYw4mPb9dVok7G724DjtDJ4994qq/J5bgZLGQ1ANG+3EVkzQGDROT
+        rLpJhUPTQ65+33Y+h7wJdP9LJ+v0LB8=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-165-7u75-hjRMvCCSm_2jWJIuQ-1; Mon, 20 Apr 2020 02:05:27 -0400
-X-MC-Unique: 7u75-hjRMvCCSm_2jWJIuQ-1
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-488-kt8YJlrTME67F-8XzRn3OA-1; Mon, 20 Apr 2020 02:46:34 -0400
+X-MC-Unique: kt8YJlrTME67F-8XzRn3OA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24DC18010FB;
-        Mon, 20 Apr 2020 06:05:26 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 69A21149C3;
+        Mon, 20 Apr 2020 06:46:32 +0000 (UTC)
 Received: from gondolin (ovpn-112-224.ams2.redhat.com [10.36.112.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5FFAB60C80;
-        Mon, 20 Apr 2020 06:05:21 +0000 (UTC)
-Date:   Mon, 20 Apr 2020 08:05:18 +0200
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 846F1129F84;
+        Mon, 20 Apr 2020 06:46:27 +0000 (UTC)
+Date:   Mon, 20 Apr 2020 08:46:24 +0200
 From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Claudio Imbrenda <imbrenda@linux.ibm.com>, frankja@linux.ibm.com,
-        pbonzini@redhat.com, david@redhat.com, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org
-Subject: Re: [PATCH v1 1/1] MAINTAINERS: add a reviewer for KVM/s390
-Message-ID: <20200420080518.7e190ab4.cohuck@redhat.com>
-In-Reply-To: <5e0efa79-940e-6a43-fc71-532210e2d2e3@de.ibm.com>
-References: <20200417152936.772256-1-imbrenda@linux.ibm.com>
-        <5e0efa79-940e-6a43-fc71-532210e2d2e3@de.ibm.com>
+To:     Jason Yan <yanaijie@huawei.com>
+Cc:     <borntraeger@de.ibm.com>, <frankja@linux.ibm.com>,
+        <david@redhat.com>, <heiko.carstens@de.ibm.com>,
+        <gor@linux.ibm.com>, <Ulrich.Weigand@de.ibm.com>,
+        <kvm@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Hulk Robot <hulkci@huawei.com>
+Subject: Re: [PATCH] KVM: s390: remove unneeded semicolon in
+ gisa_vcpu_kicker()
+Message-ID: <20200420084624.1d8a1c13.cohuck@redhat.com>
+In-Reply-To: <20200418081926.41666-1-yanaijie@huawei.com>
+References: <20200418081926.41666-1-yanaijie@huawei.com>
 Organization: Red Hat GmbH
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 17 Apr 2020 17:39:44 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
+On Sat, 18 Apr 2020 16:19:26 +0800
+Jason Yan <yanaijie@huawei.com> wrote:
 
-> On 17.04.20 17:29, Claudio Imbrenda wrote:
-> > Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-> > ---
-> >  MAINTAINERS | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 6851ef7cf1bd..48e0147f9dd8 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -9326,6 +9326,7 @@ M:	Christian Borntraeger <borntraeger@de.ibm.com>
-> >  M:	Janosch Frank <frankja@linux.ibm.com>
-> >  R:	David Hildenbrand <david@redhat.com>
-> >  R:	Cornelia Huck <cohuck@redhat.com>
-> > +R:	Claudio Imbrenda <imbrenda@linux.ibm.com>
-> >  L:	kvm@vger.kernel.org
-> >  S:	Supported
-> >  W:	http://www.ibm.com/developerworks/linux/linux390/
-> >   
+> Fix the following coccicheck warning:
 > 
-> You cant have enough of the "R:"s 
-> Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
+> arch/s390/kvm/interrupt.c:3085:2-3: Unneeded semicolon
 > 
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Jason Yan <yanaijie@huawei.com>
 
-Agreed :)
+Fixes: 9f30f6216378 ("KVM: s390: add gib_alert_irq_handler()")
 
-Acked-by: Cornelia Huck <cohuck@redhat.com>
+> ---
+>  arch/s390/kvm/interrupt.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390/kvm/interrupt.c b/arch/s390/kvm/interrupt.c
+> index 8191106bf7b9..559177123d0f 100644
+> --- a/arch/s390/kvm/interrupt.c
+> +++ b/arch/s390/kvm/interrupt.c
+> @@ -3082,7 +3082,7 @@ static enum hrtimer_restart gisa_vcpu_kicker(struct hrtimer *timer)
+>  		__airqs_kick_single_vcpu(kvm, pending_mask);
+>  		hrtimer_forward_now(timer, ns_to_ktime(gi->expires));
+>  		return HRTIMER_RESTART;
+> -	};
+> +	}
+>  
+>  	return HRTIMER_NORESTART;
+>  }
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
