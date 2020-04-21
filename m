@@ -2,45 +2,45 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 637D51B2C44
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 18:16:19 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 6E5771B2C60
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 18:19:13 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729139AbgDUQPi (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Apr 2020 12:15:38 -0400
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:33874 "EHLO
+        id S1729218AbgDUQQR (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Apr 2020 12:16:17 -0400
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:22295 "EHLO
         us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729151AbgDUQPh (ORCPT
+        by vger.kernel.org with ESMTP id S1726157AbgDUQQQ (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 Apr 2020 12:15:37 -0400
+        Tue, 21 Apr 2020 12:16:16 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587485735;
+        s=mimecast20190719; t=1587485774;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=Sg00kG1n/Wd2kx/GuxhAIsuQpZ3mjM2dqP9h1su7w9w=;
-        b=dNtJbj/eTkBLx2Mvf0ko95M+aDfcrLUfXQxTx7UzBovpIsntcVuMWEwndL6rsv3A/+nizg
-        l1tDT6wGoK22xF7bWaHnDvW79oyg2YlemcwRvjez1D/atAGbHYea/gaTZWBgZKKUVzQBHD
-        knwF0tRMZz03Blg47v5DvwR+Lv0InBw=
+        bh=qdpVj7/sqLwKqxiFveqkA0IVu1ZzLXadZw1QFch4DVI=;
+        b=GHBKeWK3FKYv/Ss9GbaDyBjVb/nPHa8oLjqxfu6gn2tdWeHywPgB9iOSWwsory9SqJufzD
+        CqNlZ1s88ZAZV50dfQE6spnU4uebABxyfLkUBpcI03JC2IjACSVx6/liZ2y5Xnnqw1alEd
+        MtlXSQ5MkNqQa+NZ6fjdVrjEg9d2J40=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-448-q0vUAsSkMUqByhnUadJjGw-1; Tue, 21 Apr 2020 12:15:29 -0400
-X-MC-Unique: q0vUAsSkMUqByhnUadJjGw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-411-WYcnnzJINBqENEI0HumWvw-1; Tue, 21 Apr 2020 12:16:09 -0400
+X-MC-Unique: WYcnnzJINBqENEI0HumWvw-1
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3ECFA100727F;
-        Tue, 21 Apr 2020 16:15:28 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B12B513F8;
+        Tue, 21 Apr 2020 16:16:08 +0000 (UTC)
 Received: from [10.36.113.245] (ovpn-113-245.ams2.redhat.com [10.36.113.245])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id CB06D19C70;
-        Tue, 21 Apr 2020 16:15:26 +0000 (UTC)
-Subject: Re: [kvm-unit-tests PATCH v5 03/10] s390x: cr0: adding AFP-register
- control bit
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 445B648;
+        Tue, 21 Apr 2020 16:16:07 +0000 (UTC)
+Subject: Re: [kvm-unit-tests PATCH v5 02/10] s390x: Use PSW bits definitions
+ in cstart
 To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
         thuth@redhat.com, cohuck@redhat.com
 References: <1582200043-21760-1-git-send-email-pmorel@linux.ibm.com>
- <1582200043-21760-4-git-send-email-pmorel@linux.ibm.com>
+ <1582200043-21760-3-git-send-email-pmorel@linux.ibm.com>
 From:   David Hildenbrand <david@redhat.com>
 Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  mQINBFXLn5EBEAC+zYvAFJxCBY9Tr1xZgcESmxVNI/0ffzE/ZQOiHJl6mGkmA1R7/uUpiCjJ
@@ -86,71 +86,111 @@ Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
  njnuI31KBiLUks+paRkHQlFcgS2N3gkRBzH7xSZ+t7Re3jvXdXEzKBbQ+dC3lpJB0wPnyMcX
  FOTT3aZT7IgePkt5iC/BKBk3hqKteTnJFeVIT7EC+a6YUFg=
 Organization: Red Hat GmbH
-Message-ID: <a4ce1829-027e-d632-be2b-9f6b59d9b96d@redhat.com>
-Date:   Tue, 21 Apr 2020 18:15:26 +0200
+Message-ID: <f8cb512c-8146-3777-13a8-5c06017334cf@redhat.com>
+Date:   Tue, 21 Apr 2020 18:16:06 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.6.0
 MIME-Version: 1.0
-In-Reply-To: <1582200043-21760-4-git-send-email-pmorel@linux.ibm.com>
+In-Reply-To: <1582200043-21760-3-git-send-email-pmorel@linux.ibm.com>
 Content-Type: text/plain; charset=windows-1252
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 On 20.02.20 13:00, Pierre Morel wrote:
-> While adding the definition for the AFP-Register control bit, move all
-> existing definitions for CR0 out of the C zone to the assmbler zone to
-> keep the definitions concerning CR0 together.
+> This patch defines the PSW bits EA/BA used to initialize the PSW masks
+> for exceptions.
+> 
+> Since some PSW mask definitions exist already in arch_def.h we add these
+> definitions there.
+> We move all PSW definitions together and protect assembler code against
+> C syntax.
 > 
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 > ---
->  lib/s390x/asm/arch_def.h | 11 ++++++-----
->  s390x/cstart64.S         |  2 +-
->  2 files changed, 7 insertions(+), 6 deletions(-)
+>  lib/s390x/asm/arch_def.h | 15 +++++++++++----
+>  s390x/cstart64.S         | 15 ++++++++-------
+>  2 files changed, 19 insertions(+), 11 deletions(-)
 > 
 > diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index 69a8256..863c2bf 100644
+> index 15a4d49..69a8256 100644
 > --- a/lib/s390x/asm/arch_def.h
 > +++ b/lib/s390x/asm/arch_def.h
-> @@ -18,6 +18,12 @@
+> @@ -10,15 +10,21 @@
+>  #ifndef _ASM_S390X_ARCH_DEF_H_
+>  #define _ASM_S390X_ARCH_DEF_H_
 >  
->  #define PSW_EXCEPTION_MASK (PSW_MASK_EA|PSW_MASK_BA)
->  
-> +#define CR0_EXTM_SCLP			0X0000000000000200UL
-> +#define CR0_EXTM_EXTC			0X0000000000002000UL
-> +#define CR0_EXTM_EMGC			0X0000000000004000UL
-> +#define CR0_EXTM_MASK			0X0000000000006200UL
-> +#define CR0_AFP_REG_CRTL		0x0000000000040000UL
+> +#define PSW_MASK_EXT			0x0100000000000000UL
+> +#define PSW_MASK_DAT			0x0400000000000000UL
+> +#define PSW_MASK_PSTATE			0x0001000000000000UL
+> +#define PSW_MASK_BA			0x0000000080000000UL
+> +#define PSW_MASK_EA			0x0000000100000000UL
 > +
->  #ifndef __ASSEMBLER__
->  
+> +#define PSW_EXCEPTION_MASK (PSW_MASK_EA|PSW_MASK_BA)
+> +
+> +#ifndef __ASSEMBLER__
+> +
 >  struct psw {
-> @@ -25,11 +31,6 @@ struct psw {
+>  	uint64_t	mask;
 >  	uint64_t	addr;
 >  };
 >  
-> -#define CR0_EXTM_SCLP			0X0000000000000200UL
-> -#define CR0_EXTM_EXTC			0X0000000000002000UL
-> -#define CR0_EXTM_EMGC			0X0000000000004000UL
-> -#define CR0_EXTM_MASK			0X0000000000006200UL
+> -#define PSW_MASK_EXT			0x0100000000000000UL
+> -#define PSW_MASK_DAT			0x0400000000000000UL
+> -#define PSW_MASK_PSTATE			0x0001000000000000UL
 > -
->  struct lowcore {
->  	uint8_t		pad_0x0000[0x0080 - 0x0000];	/* 0x0000 */
->  	uint32_t	ext_int_param;			/* 0x0080 */
+>  #define CR0_EXTM_SCLP			0X0000000000000200UL
+>  #define CR0_EXTM_EXTC			0X0000000000002000UL
+>  #define CR0_EXTM_EMGC			0X0000000000004000UL
+> @@ -297,4 +303,5 @@ static inline uint32_t get_prefix(void)
+>  	return current_prefix;
+>  }
+>  
+> +#endif /* not __ASSEMBLER__ */
+>  #endif
 > diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-> index 2885a36..3b59bd1 100644
+> index 45da523..2885a36 100644
 > --- a/s390x/cstart64.S
 > +++ b/s390x/cstart64.S
-> @@ -230,4 +230,4 @@ svc_int_psw:
->  	.quad	PSW_EXCEPTION_MASK, svc_int
+> @@ -12,6 +12,7 @@
+>   */
+>  #include <asm/asm-offsets.h>
+>  #include <asm/sigp.h>
+> +#include <asm/arch_def.h>
+>  
+>  .section .init
+>  
+> @@ -214,19 +215,19 @@ svc_int:
+>  
+>  	.align	8
+>  reset_psw:
+> -	.quad	0x0008000180000000
+> +	.quad	PSW_EXCEPTION_MASK
+>  initial_psw:
+> -	.quad	0x0000000180000000, clear_bss_start
+> +	.quad	PSW_EXCEPTION_MASK, clear_bss_start
+>  pgm_int_psw:
+> -	.quad	0x0000000180000000, pgm_int
+> +	.quad	PSW_EXCEPTION_MASK, pgm_int
+>  ext_int_psw:
+> -	.quad	0x0000000180000000, ext_int
+> +	.quad	PSW_EXCEPTION_MASK, ext_int
+>  mcck_int_psw:
+> -	.quad	0x0000000180000000, mcck_int
+> +	.quad	PSW_EXCEPTION_MASK, mcck_int
+>  io_int_psw:
+> -	.quad	0x0000000180000000, io_int
+> +	.quad	PSW_EXCEPTION_MASK, io_int
+>  svc_int_psw:
+> -	.quad	0x0000000180000000, svc_int
+> +	.quad	PSW_EXCEPTION_MASK, svc_int
 >  initial_cr0:
 >  	/* enable AFP-register control, so FP regs (+BFP instr) can be used */
-> -	.quad	0x0000000000040000
-> +	.quad	CR0_AFP_REG_CRTL
+>  	.quad	0x0000000000040000
 > 
 
 Reviewed-by: David Hildenbrand <david@redhat.com>
