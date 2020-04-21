@@ -2,82 +2,129 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9F7A31B2B40
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 17:35:55 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E5AF61B2C0E
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 18:13:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725960AbgDUPfz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Apr 2020 11:35:55 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30725 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725870AbgDUPfy (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Apr 2020 11:35:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587483353;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=PGNerKQ1UQx6WT1P5HU0VQqoOoFnJq56uynZHi+cqPw=;
-        b=Hs5NZBMv479H8HkPYcMiUjLEMwp1O9tO1TnLtNHGtNfVl4E09bTYTec66KAofE7UsbjO2f
-        q2hvheS9pKepVXvBWGshMpBiwwHTZgXGT7FNHFS14SzXna5XpjW0FrzK+dy8sD5fjrKBuX
-        qvIODd+RCVFaBvQQpZYGf1jz7DbrHaw=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-335-XULLsK9UOUaHAmQxCyg8NQ-1; Tue, 21 Apr 2020 11:35:50 -0400
-X-MC-Unique: XULLsK9UOUaHAmQxCyg8NQ-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3AED1005510;
-        Tue, 21 Apr 2020 15:35:48 +0000 (UTC)
-Received: from gondolin (ovpn-112-226.ams2.redhat.com [10.36.112.226])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5290A5C1B2;
-        Tue, 21 Apr 2020 15:35:47 +0000 (UTC)
-Date:   Tue, 21 Apr 2020 17:35:44 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Eric Farman <farman@linux.ibm.com>
-Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Jason Herne <jjherne@linux.ibm.com>,
-        Jared Rossi <jrossi@linux.ibm.com>
-Subject: Re: [PATCH v3 0/8] s390x/vfio-ccw: Channel Path Handling [KVM]
-Message-ID: <20200421173544.36b48657.cohuck@redhat.com>
-In-Reply-To: <20200417023001.65006-1-farman@linux.ibm.com>
-References: <20200417023001.65006-1-farman@linux.ibm.com>
-Organization: Red Hat GmbH
+        id S1725930AbgDUQNn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Apr 2020 12:13:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:26922 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725987AbgDUQNm (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 21 Apr 2020 12:13:42 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LFaSml076204
+        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 12:13:37 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 30j2xt2fny-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 12:13:37 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 21 Apr 2020 17:13:00 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 Apr 2020 17:12:57 +0100
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LGDU7k59506844
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 16:13:31 GMT
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D74D7A405B;
+        Tue, 21 Apr 2020 16:13:30 +0000 (GMT)
+Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8C0D2A4054;
+        Tue, 21 Apr 2020 16:13:30 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.93.219])
+        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Apr 2020 16:13:30 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v5 00/10] s390x: Testing the Channel
+ Subsystem I/O
+From:   Pierre Morel <pmorel@linux.ibm.com>
+To:     kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, frankja@linux.ibm.com,
+        david@redhat.com, thuth@redhat.com, cohuck@redhat.com
+References: <1582200043-21760-1-git-send-email-pmorel@linux.ibm.com>
+Date:   Tue, 21 Apr 2020 18:13:30 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <1582200043-21760-1-git-send-email-pmorel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-TM-AS-GCONF: 00
+x-cbid: 20042116-0008-0000-0000-00000374D5D1
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042116-0009-0000-0000-00004A969C3E
+Message-Id: <028ece05-1429-7761-cf4e-6fabc34e6aa0@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_06:2020-04-20,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ impostorscore=0 spamscore=0 malwarescore=0 mlxlogscore=953 bulkscore=0
+ clxscore=1015 suspectscore=1 mlxscore=0 phishscore=0 adultscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210121
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Fri, 17 Apr 2020 04:29:53 +0200
-Eric Farman <farman@linux.ibm.com> wrote:
 
-> Here is a new pass at the channel-path handling code for vfio-ccw.
-> Changes from previous versions are recorded in git notes for each patch.
-> 
-> I dropped the "Remove inline get_schid()" patch from this version.
-> When I made the change suggested in v2, it seemed rather frivolous and
-> better to just drop it for the time being.
-> 
-> I suspect that patches 5 and 7 would be better squashed together, but I
-> have not done that here.  For future versions, I guess.
 
-The result also might get a bit large.
+On 2020-02-20 13:00, Pierre Morel wrote:
+
+...snip...
 
 > 
-> With this, and the corresponding QEMU series (to be posted momentarily),
-> applied I am able to configure off/on a CHPID (for example, by issuing
-> "chchp -c 0/1 xx" on the host), and the guest is able to see both the
-> events and reflect the updated path masks in its structures.
+> 
+> Pierre Morel (10):
+>    s390x: saving regs for interrupts
+>    s390x: Use PSW bits definitions in cstart
+>    s390x: cr0: adding AFP-register control bit
+>    s390x: export the clock get_clock_ms() utility
 
-Basically, this looks good to me (modulo my comments).
+Please can you consider applying these 4 patches only.
+I will send some changes I made for the patches on css tests.
 
-One thing though that keeps coming up: do we need any kind of
-serialization? Can there be any confusion from concurrent reads from
-userspace, or are we sure that we always provide consistent data?
+I did not change the interrupt registration but since it is introduced 
+for the css test patches I resend it with them.
+
+Thanks,
+Pierre
+
+ >    s390x: interrupt registration
+
+>    s390x: Library resources for CSS tests
+>    s390x: css: stsch, enumeration test
+>    s390x: css: msch, enable test
+>    s390x: css: ssch/tsch with sense and interrupt
+>    s390x: css: ping pong
+> 
+>   lib/s390x/asm/arch_def.h |  19 ++-
+>   lib/s390x/asm/time.h     |  36 +++++
+>   lib/s390x/css.h          | 277 +++++++++++++++++++++++++++++++
+>   lib/s390x/css_dump.c     | 157 ++++++++++++++++++
+>   lib/s390x/css_lib.c      |  55 +++++++
+>   lib/s390x/interrupt.c    |  22 ++-
+>   lib/s390x/interrupt.h    |   7 +
+>   s390x/Makefile           |   3 +
+>   s390x/css.c              | 341 +++++++++++++++++++++++++++++++++++++++
+>   s390x/cstart64.S         |  40 +++--
+>   s390x/intercept.c        |  11 +-
+>   s390x/unittests.cfg      |   4 +
+>   12 files changed, 946 insertions(+), 26 deletions(-)
+>   create mode 100644 lib/s390x/asm/time.h
+>   create mode 100644 lib/s390x/css.h
+>   create mode 100644 lib/s390x/css_dump.c
+>   create mode 100644 lib/s390x/css_lib.c
+>   create mode 100644 lib/s390x/interrupt.h
+>   create mode 100644 s390x/css.c
+> 
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
 
