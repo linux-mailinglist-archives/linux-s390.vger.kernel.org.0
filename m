@@ -2,49 +2,82 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id CCAD51B2A9C
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 17:03:58 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 9F7A31B2B40
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 17:35:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbgDUPD6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Apr 2020 11:03:58 -0400
-Received: from verein.lst.de ([213.95.11.211]:47161 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728316AbgDUPD6 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 Apr 2020 11:03:58 -0400
-Received: by verein.lst.de (Postfix, from userid 2407)
-        id C972768C4E; Tue, 21 Apr 2020 17:03:54 +0200 (CEST)
-Date:   Tue, 21 Apr 2020 17:03:54 +0200
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: stop using ioctl_by_bdev in the s390 DASD driver
-Message-ID: <20200421150354.GA10191@lst.de>
-References: <20200421061226.33731-1-hch@lst.de> <b4f38eb4-ab32-6713-fb8a-0c8e81efc645@linux.ibm.com>
+        id S1725960AbgDUPfz (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Apr 2020 11:35:55 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:30725 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725870AbgDUPfy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Apr 2020 11:35:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587483353;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=PGNerKQ1UQx6WT1P5HU0VQqoOoFnJq56uynZHi+cqPw=;
+        b=Hs5NZBMv479H8HkPYcMiUjLEMwp1O9tO1TnLtNHGtNfVl4E09bTYTec66KAofE7UsbjO2f
+        q2hvheS9pKepVXvBWGshMpBiwwHTZgXGT7FNHFS14SzXna5XpjW0FrzK+dy8sD5fjrKBuX
+        qvIODd+RCVFaBvQQpZYGf1jz7DbrHaw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-335-XULLsK9UOUaHAmQxCyg8NQ-1; Tue, 21 Apr 2020 11:35:50 -0400
+X-MC-Unique: XULLsK9UOUaHAmQxCyg8NQ-1
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C3AED1005510;
+        Tue, 21 Apr 2020 15:35:48 +0000 (UTC)
+Received: from gondolin (ovpn-112-226.ams2.redhat.com [10.36.112.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5290A5C1B2;
+        Tue, 21 Apr 2020 15:35:47 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 17:35:44 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>
+Subject: Re: [PATCH v3 0/8] s390x/vfio-ccw: Channel Path Handling [KVM]
+Message-ID: <20200421173544.36b48657.cohuck@redhat.com>
+In-Reply-To: <20200417023001.65006-1-farman@linux.ibm.com>
+References: <20200417023001.65006-1-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b4f38eb4-ab32-6713-fb8a-0c8e81efc645@linux.ibm.com>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Tue, Apr 21, 2020 at 04:17:53PM +0200, Stefan Haberland wrote:
-> I can imagine some ways to get rid of this ioctl_by_bdev. Maybe having a
-> udev
-> rule to add a partition from userspace or having the driver add the implicit
-> partition at the end. Or maybe something else.
-> 
-> If it is OK I will have a look at this and discuss this issue with my
-> colleagues and come up with a different approach.
+On Fri, 17 Apr 2020 04:29:53 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
 
-Sure, we can wait a few days.  Note that I don't want to break existing
-userspace, which kinda speaks against a udev solution.
+> Here is a new pass at the channel-path handling code for vfio-ccw.
+> Changes from previous versions are recorded in git notes for each patch.
+> 
+> I dropped the "Remove inline get_schid()" patch from this version.
+> When I made the change suggested in v2, it seemed rather frivolous and
+> better to just drop it for the time being.
+> 
+> I suspect that patches 5 and 7 would be better squashed together, but I
+> have not done that here.  For future versions, I guess.
+
+The result also might get a bit large.
+
+> 
+> With this, and the corresponding QEMU series (to be posted momentarily),
+> applied I am able to configure off/on a CHPID (for example, by issuing
+> "chchp -c 0/1 xx" on the host), and the guest is able to see both the
+> events and reflect the updated path masks in its structures.
+
+Basically, this looks good to me (modulo my comments).
+
+One thing though that keeps coming up: do we need any kind of
+serialization? Can there be any confusion from concurrent reads from
+userspace, or are we sure that we always provide consistent data?
+
