@@ -2,83 +2,163 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 5A7641B2810
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 15:36:53 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 0D5841B28EA
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 16:02:19 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728909AbgDUNgw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Apr 2020 09:36:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:57715 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726018AbgDUNgv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Apr 2020 09:36:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587476210;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wCsZ3VGNPNsrXjnUXsD0UNS2OD+KJF3obERZuUYiksw=;
-        b=aQLSkrfLlh06gmlGcYDCiH5r7jA0vGadKlTlC3SjpLnma3Ml4A8tGxJuqG3CoCTvxwh1FL
-        Ir343USQI8686iJXZ2m/+Gd3KWya0xm4bxJtf7BFrV3wySZE8/Gl8dcnGlwki7Oo45bqkp
-        ibWjoDgOd74Sc29/oEyI+YjVLREJSE4=
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com
- [209.85.128.69]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-397-4Vo1RSvqP06ylF4QfzisIg-1; Tue, 21 Apr 2020 09:36:49 -0400
-X-MC-Unique: 4Vo1RSvqP06ylF4QfzisIg-1
-Received: by mail-wm1-f69.google.com with SMTP id f81so1389094wmf.2
-        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 06:36:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wCsZ3VGNPNsrXjnUXsD0UNS2OD+KJF3obERZuUYiksw=;
-        b=pE1yDFC1mSw7evA3Cm1dMiNDlTWv4It8vDAwMkZkMmA04dlJ/zZl01zkv4WsRxXUsw
-         AHYqrFRlyV/98ohIWPYl08sXp9RqqfrdGnBbjtB44JqpxuQoQt7kqwf0JSsjHNWBHhli
-         8gFUqFkdGGyKx90hBzdvLF3FNydE/Bs6JxlKR2rg6jH2k8IJTMNahljaTo9TxSSsk3+k
-         XWxMc1k4AddqY+KFwXXbYWEEUB4U3twVkD4JEuZbJzaLqcL/bpJSaGypeBEsIgnYsHyE
-         Z0+LYekTq8VXWMk4LFk58WxJUXzThyKKexpOeV3EqE0SE40/rw4dWP360cmoY/c6Axao
-         1hCw==
-X-Gm-Message-State: AGi0PuZxD2v6D2TPn0R0JkeIapAsctCULR348lgtjn9j+DMq+EtOsF6Q
-        pXRejWpuUZDsPL++LrV5QeFNL6XRvpDUf7DUaYKGKoLY84AryNDQM5z47ILXcYKvRhP1XmHYFel
-        tF0cRmOqUa7uLKhIKLBsUbQ==
-X-Received: by 2002:adf:fe87:: with SMTP id l7mr25844137wrr.360.1587476207975;
-        Tue, 21 Apr 2020 06:36:47 -0700 (PDT)
-X-Google-Smtp-Source: APiQypKlJhAt+4JVl6zumdVZp9Pr5ZIy7Ugt0KD1kpUHwKm7tmzB+uo/O5wVy1Oz0VXjIEvE1GjbyQ==
-X-Received: by 2002:adf:fe87:: with SMTP id l7mr25844113wrr.360.1587476207729;
-        Tue, 21 Apr 2020 06:36:47 -0700 (PDT)
-Received: from ?IPv6:2001:b07:6468:f312:f43b:97b2:4c89:7446? ([2001:b07:6468:f312:f43b:97b2:4c89:7446])
-        by smtp.gmail.com with ESMTPSA id h3sm3705930wrm.73.2020.04.21.06.36.46
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 21 Apr 2020 06:36:47 -0700 (PDT)
-Subject: Re: [GIT PULL 0/2] KVM: s390: Fix for 5.7 and maintainer update
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     KVM <kvm@vger.kernel.org>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>
-References: <20200421063447.6814-1-borntraeger@de.ibm.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Message-ID: <173f3395-1289-2c38-1afa-f6180e802c84@redhat.com>
-Date:   Tue, 21 Apr 2020 15:36:46 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.6.0
+        id S1728847AbgDUOCS (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Apr 2020 10:02:18 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50076 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728802AbgDUOCR (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 21 Apr 2020 10:02:17 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03LDYw4m082709
+        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 10:02:17 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gmuynwfe-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 10:02:16 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Tue, 21 Apr 2020 15:01:30 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 Apr 2020 15:01:21 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03LE24dv53608476
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 14:02:04 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0AFD5A4057;
+        Tue, 21 Apr 2020 14:02:04 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2FEB3A405B;
+        Tue, 21 Apr 2020 14:02:03 +0000 (GMT)
+Received: from thinkpad (unknown [9.145.65.41])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 21 Apr 2020 14:02:03 +0000 (GMT)
+Date:   Tue, 21 Apr 2020 16:02:01 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>
+Subject: Re: [PATCH v3 0/4] Clean up hugetlb boot command line processing
+In-Reply-To: <20200417185049.275845-1-mike.kravetz@oracle.com>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20200421063447.6814-1-borntraeger@de.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 20042114-4275-0000-0000-000003C3FB90
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042114-4276-0000-0000-000038D9805D
+Message-Id: <20200421160201.0ddb9763@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_05:2020-04-20,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 clxscore=1015
+ priorityscore=1501 impostorscore=0 adultscore=0 malwarescore=0
+ suspectscore=0 phishscore=0 spamscore=0 bulkscore=0 mlxlogscore=999
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210108
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On 21/04/20 08:34, Christian Borntraeger wrote:
->   git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.7-2
+On Fri, 17 Apr 2020 11:50:45 -0700
+Mike Kravetz <mike.kravetz@oracle.com> wrote:
 
-Pulled, thanks.
+> v3 -
+>    Used weak attribute method of defining arch_hugetlb_valid_size.
+>      This eliminates changes to arch specific hugetlb.h files (Peter)
+>    Updated documentation (Peter, Randy)
+>    Fixed handling of implicitly specified gigantic page preallocation
+>      in existing code and removed documentation of such.  There is now
+>      no difference between handling of gigantic and non-gigantic pages.
+>      (Peter, Nitesh).
+>      This requires the most review as there is a small change to
+>      undocumented behavior.  See patch 4 commit message for details.
+>    Added Acks and Reviews (Mina, Peter)
+> 
+> v2 -
+>    Fix build errors with patch 1 (Will)
+>    Change arch_hugetlb_valid_size arg to unsigned long and remove
+>      irrelevant 'extern' keyword (Christophe)
+>    Documentation and other misc changes (Randy, Christophe, Mina)
+>    Do not process command line options if !hugepages_supported()
+>      (Dave, but it sounds like we may want to additional changes to
+>       hugepages_supported() for x86?  If that is needed I would prefer
+>       a separate patch.)
+> 
+> Longpeng(Mike) reported a weird message from hugetlb command line processing
+> and proposed a solution [1].  While the proposed patch does address the
+> specific issue, there are other related issues in command line processing.
+> As hugetlbfs evolved, updates to command line processing have been made to
+> meet immediate needs and not necessarily in a coordinated manner.  The result
+> is that some processing is done in arch specific code, some is done in arch
+> independent code and coordination is problematic.  Semantics can vary between
+> architectures.
+> 
+> The patch series does the following:
+> - Define arch specific arch_hugetlb_valid_size routine used to validate
+>   passed huge page sizes.
+> - Move hugepagesz= command line parsing out of arch specific code and into
+>   an arch independent routine.
+> - Clean up command line processing to follow desired semantics and
+>   document those semantics.
+> 
+> [1] https://lore.kernel.org/linux-mm/20200305033014.1152-1-longpeng2@huawei.com
+> 
+> Mike Kravetz (4):
+>   hugetlbfs: add arch_hugetlb_valid_size
+>   hugetlbfs: move hugepagesz= parsing to arch independent code
+>   hugetlbfs: remove hugetlb_add_hstate() warning for existing hstate
+>   hugetlbfs: clean up command line processing
+> 
+>  .../admin-guide/kernel-parameters.txt         |  40 ++--
+>  Documentation/admin-guide/mm/hugetlbpage.rst  |  35 ++++
+>  arch/arm64/mm/hugetlbpage.c                   |  30 +--
+>  arch/powerpc/mm/hugetlbpage.c                 |  30 +--
+>  arch/riscv/mm/hugetlbpage.c                   |  24 +--
+>  arch/s390/mm/hugetlbpage.c                    |  24 +--
+>  arch/sparc/mm/init_64.c                       |  43 +---
+>  arch/x86/mm/hugetlbpage.c                     |  23 +--
+>  include/linux/hugetlb.h                       |   2 +-
+>  mm/hugetlb.c                                  | 190 +++++++++++++++---
+>  10 files changed, 271 insertions(+), 170 deletions(-)
+> 
 
-Paolo
+Looks good and works fine for s390, thanks for cleaning up!
+
+Acked-by: Gerald Schaefer <gerald.schaefer@de.ibm.com> # s390
 
