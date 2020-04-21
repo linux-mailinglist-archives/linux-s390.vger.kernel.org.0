@@ -2,94 +2,109 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id AFA111B1EAD
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 08:12:48 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 241BD1B1EDD
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 08:35:10 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726980AbgDUGMn (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Apr 2020 02:12:43 -0400
-Received: from lindbergh.monkeyblade.net ([23.128.96.19]:56530 "EHLO
-        lindbergh.monkeyblade.net" rhost-flags-OK-FAIL-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726628AbgDUGMm (ORCPT
+        id S1726591AbgDUGfJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Apr 2020 02:35:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3306 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726573AbgDUGfI (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 Apr 2020 02:12:42 -0400
-Received: from bombadil.infradead.org (bombadil.infradead.org [IPv6:2607:7c80:54:e::133])
-        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id 844C3C061A0F;
-        Mon, 20 Apr 2020 23:12:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description;
-        bh=Fs0wPMYxvGmO2IT3Wvj2CTBXvnvcNivwuYu4FRE1SCI=; b=bcdEPkBfhKOPABDQ5Dsha37HM3
-        eiUij9xN/DG0iEUE2o4+ymVZLXy4WTHEZ93i2poYzXi35OEw0UaBNRCm3UsBgg7WNR3KoPmruhr/f
-        Tt1f1l2KDEI5rtmjNRHaRnSEi8NEoX+foGuKXs/UKBrK4hLSFO5WKIx+MuLWRFDoBZl9/tom0LjvL
-        cMc+fqi77vKCxaNuCR0ezJ69UZ4M47yK9VJWZ+NadNl/qN521hJSN1uCz91OFkf2D96u10vgrxuDg
-        afXttZeFQSKeSpoFZG8emNnEtWtBBpYYGRPESwFvXeXzwCtxh0SUBj/5wVxPD7Kij8oDkhJIYT/m9
-        Ni0TgIVQ==;
-Received: from [2001:4bb8:191:e12c:292e:7dec:cf13:becd] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1jQm9B-0000MF-HQ; Tue, 21 Apr 2020 06:12:41 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Stefan Haberland <sth@linux.ibm.com>,
-        Jan Hoeppner <hoeppner@linux.ibm.com>,
-        Jens Axboe <axboe@kernel.dk>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     linux-s390@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] partitions/ibm: stop using ioctl_by_bdev
-Date:   Tue, 21 Apr 2020 08:12:26 +0200
-Message-Id: <20200421061226.33731-4-hch@lst.de>
-X-Mailer: git-send-email 2.26.1
-In-Reply-To: <20200421061226.33731-1-hch@lst.de>
-References: <20200421061226.33731-1-hch@lst.de>
+        Tue, 21 Apr 2020 02:35:08 -0400
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03L6WHw3141278
+        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 02:35:07 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggr2570b-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 02:35:07 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
+        Tue, 21 Apr 2020 07:34:14 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 21 Apr 2020 07:33:59 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03L6YnZI13042120
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 21 Apr 2020 06:34:49 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 148CEA404D;
+        Tue, 21 Apr 2020 06:34:49 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 03703A4040;
+        Tue, 21 Apr 2020 06:34:49 +0000 (GMT)
+Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 21 Apr 2020 06:34:48 +0000 (GMT)
+Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
+        id 86A11E04AA; Tue, 21 Apr 2020 08:34:48 +0200 (CEST)
+From:   Christian Borntraeger <borntraeger@de.ibm.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     KVM <kvm@vger.kernel.org>,
+        Janosch Frank <frankja@linux.vnet.ibm.com>,
+        David Hildenbrand <david@redhat.com>,
+        Cornelia Huck <cohuck@redhat.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Claudio Imbrenda <imbrenda@linux.ibm.com>
+Subject: [GIT PULL 0/2] KVM: s390: Fix for 5.7 and maintainer update
+Date:   Tue, 21 Apr 2020 08:34:45 +0200
+X-Mailer: git-send-email 2.25.2
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+X-TM-AS-GCONF: 00
+x-cbid: 20042106-0020-0000-0000-000003CBB5B3
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042106-0021-0000-0000-00002224ABE0
+Message-Id: <20200421063447.6814-1-borntraeger@de.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-21_01:2020-04-20,2020-04-21 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=645
+ spamscore=0 impostorscore=0 malwarescore=0 suspectscore=0 mlxscore=0
+ clxscore=1015 lowpriorityscore=0 bulkscore=0 phishscore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004210052
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Just call the getgeo and biodasdinfo methods directly.
+Paolo,
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
----
- block/partitions/ibm.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
+two things for kvm/master. One fix for the protected virtualization
+feature where we have a too strong assert and Adding Claudio as a
+reviewer.
 
-diff --git a/block/partitions/ibm.c b/block/partitions/ibm.c
-index 073faa6a69b8..21dc6da20ff2 100644
---- a/block/partitions/ibm.c
-+++ b/block/partitions/ibm.c
-@@ -289,6 +289,7 @@ static int find_cms1_partitions(struct parsed_partitions *state,
- int ibm_partition(struct parsed_partitions *state)
- {
- 	struct block_device *bdev = state->bdev;
-+	struct gendisk *disk = bdev->bd_disk;
- 	int blocksize, res;
- 	loff_t i_size, offset, size;
- 	dasd_information2_t *info;
-@@ -308,15 +309,16 @@ int ibm_partition(struct parsed_partitions *state)
- 	info = kmalloc(sizeof(dasd_information2_t), GFP_KERNEL);
- 	if (info == NULL)
- 		goto out_exit;
--	geo = kmalloc(sizeof(struct hd_geometry), GFP_KERNEL);
-+	geo = kzalloc(sizeof(struct hd_geometry), GFP_KERNEL);
- 	if (geo == NULL)
- 		goto out_nogeo;
- 	label = kmalloc(sizeof(union label_t), GFP_KERNEL);
- 	if (label == NULL)
- 		goto out_nolab;
--	if (ioctl_by_bdev(bdev, HDIO_GETGEO, (unsigned long)geo) != 0)
-+	geo->start = get_start_sect(bdev);
-+	if (!disk->fops->getgeo || disk->fops->getgeo(bdev, geo))
- 		goto out_freeall;
--	if (ioctl_by_bdev(bdev, BIODASDINFO2, (unsigned long)info) != 0) {
-+	if (!disk->fops->biodasdinfo || disk->fops->biodasdinfo(disk, info)) {
- 		kfree(info);
- 		info = NULL;
- 	}
--- 
-2.26.1
+The following changes since commit ae83d0b416db002fe95601e7f97f64b59514d936:
+
+  Linux 5.7-rc2 (2020-04-19 14:35:30 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvms390/linux.git  tags/kvm-s390-master-5.7-2
+
+for you to fetch changes up to 2a173ec993baa6a97e7b0fb89240200a88d90746:
+
+  MAINTAINERS: add a reviewer for KVM/s390 (2020-04-20 11:24:00 +0200)
+
+----------------------------------------------------------------
+KVM: s390: Fix for 5.7 and maintainer update
+
+- Silence false positive lockdep warning
+- add Claudio as reviewer
+
+----------------------------------------------------------------
+Claudio Imbrenda (1):
+      MAINTAINERS: add a reviewer for KVM/s390
+
+Eric Farman (1):
+      KVM: s390: Fix PV check in deliverable_irqs()
+
+ MAINTAINERS               | 1 +
+ arch/s390/kvm/interrupt.c | 2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
 
