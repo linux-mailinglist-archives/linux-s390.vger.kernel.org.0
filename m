@@ -2,138 +2,166 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 2F5131B1F51
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 08:58:47 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 4746D1B2299
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 11:24:55 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726052AbgDUG6q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Apr 2020 02:58:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57114 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725940AbgDUG6q (ORCPT <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 Apr 2020 02:58:46 -0400
-Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1728123AbgDUJYy (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Apr 2020 05:24:54 -0400
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39475 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726874AbgDUJYy (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Tue, 21 Apr 2020 05:24:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1587461092;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=qO6ssvqEBM5SQj4OVLjUUnzTm6CbFu0uFAR4ov6Q/74=;
+        b=hGaMFS16xvGSH8UcPSitXp2K2WsQiTP/vbjteHmpAmvTvjV+C3zIQypxPwgeFZN02qmFOM
+        C4D8g2RfmsT8s01FdwGUz7JZKir02RGZxXZL+lamW3RbyfbLHS6ID3pbZojO7vOKD15cYk
+        SHgjTV/S/o3uTEgF4hFEPR6gJeSjfyI=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-YXjLnV3jO9m0jbJBQ0bi8g-1; Tue, 21 Apr 2020 05:24:37 -0400
+X-MC-Unique: YXjLnV3jO9m0jbJBQ0bi8g-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B1A8C206A5;
-        Tue, 21 Apr 2020 06:58:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1587452325;
-        bh=zSEWmKynQKWmz0IUSm5ihu6tEO3dWhXZaB1lMRy7jqQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=u/UKJNZHEKIupjB7ZBsUtiiYe7I6nCSpdDQbmHIZGClUxVmUlZIUfiPEZIzRHYUn6
-         g6qnj51G9uRyRFpu8kN44be1pro4HTNJ141yDBBMvK2ulYFktfLaQWDGM/4efuHYdD
-         p/+dw+DK48euKA47LcgpoqVY6ox6mMphLQl6q9NI=
-Date:   Tue, 21 Apr 2020 07:58:37 +0100
-From:   Will Deacon <will@kernel.org>
-To:     Mike Kravetz <mike.kravetz@oracle.com>
-Cc:     Anders Roxell <anders.roxell@linaro.org>, Qian Cai <cai@lca.pw>,
-        Linux-MM <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-doc@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S.Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 0/4] Clean up hugetlb boot command line processing
-Message-ID: <20200421065836.GA14448@willie-the-truck>
-References: <20200417185049.275845-1-mike.kravetz@oracle.com>
- <5E312000-05D8-4C5D-A7C0-DDDE1842CB0E@lca.pw>
- <4c36c6ce-3774-78fa-abc4-b7346bf24348@oracle.com>
- <CADYN=9+=tCDmddTYGY44onvrzbg7yrbacMDSxd4hhD+=b=Yeiw@mail.gmail.com>
- <86333853-0648-393f-db96-d581ee114d2b@oracle.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DFAFA107ACC9;
+        Tue, 21 Apr 2020 09:24:35 +0000 (UTC)
+Received: from gondolin (ovpn-112-226.ams2.redhat.com [10.36.112.226])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 78ACA60C87;
+        Tue, 21 Apr 2020 09:24:34 +0000 (UTC)
+Date:   Tue, 21 Apr 2020 11:24:31 +0200
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Eric Farman <farman@linux.ibm.com>
+Cc:     linux-s390@vger.kernel.org, kvm@vger.kernel.org,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jason Herne <jjherne@linux.ibm.com>,
+        Jared Rossi <jrossi@linux.ibm.com>
+Subject: Re: [PATCH v3 4/8] vfio-ccw: Introduce a new schib region
+Message-ID: <20200421112431.01440c58.cohuck@redhat.com>
+In-Reply-To: <20200417023001.65006-5-farman@linux.ibm.com>
+References: <20200417023001.65006-1-farman@linux.ibm.com>
+        <20200417023001.65006-5-farman@linux.ibm.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <86333853-0648-393f-db96-d581ee114d2b@oracle.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Mon, Apr 20, 2020 at 02:40:05PM -0700, Mike Kravetz wrote:
-> On 4/20/20 1:29 PM, Anders Roxell wrote:
-> > On Mon, 20 Apr 2020 at 20:23, Mike Kravetz <mike.kravetz@oracle.com> wrote:
-> >> On 4/20/20 8:34 AM, Qian Cai wrote:
-> >>>
-> >>> Reverted this series fixed many undefined behaviors on arm64 with the config,
-> >> While rearranging the code (patch 3 in series), I made the incorrect
-> >> assumption that CONT_XXX_SIZE == (1UL << CONT_XXX_SHIFT).  However,
-> >> this is not the case.  Does the following patch fix these issues?
-> >>
-> >> From b75cb4a0852e208bee8c4eb347dc076fcaa88859 Mon Sep 17 00:00:00 2001
-> >> From: Mike Kravetz <mike.kravetz@oracle.com>
-> >> Date: Mon, 20 Apr 2020 10:41:18 -0700
-> >> Subject: [PATCH] arm64/hugetlb: fix hugetlb initialization
-> >>
-> >> When calling hugetlb_add_hstate() to initialize a new hugetlb size,
-> >> be sure to use correct huge pages size order.
-> >>
-> >> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
-> >> ---
-> >>  arch/arm64/mm/hugetlbpage.c | 8 ++++----
-> >>  1 file changed, 4 insertions(+), 4 deletions(-)
-> >>
-> >> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
-> >> index 9ca840527296..a02411a1f19a 100644
-> >> --- a/arch/arm64/mm/hugetlbpage.c
-> >> +++ b/arch/arm64/mm/hugetlbpage.c
-> >> @@ -453,11 +453,11 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
-> >>  static int __init hugetlbpage_init(void)
-> >>  {
-> >>  #ifdef CONFIG_ARM64_4K_PAGES
-> >> -       hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
-> >> +       hugetlb_add_hstate(ilog2(PUD_SIZE) - PAGE_SHIFT);
-> >>  #endif
-> >> -       hugetlb_add_hstate(CONT_PMD_SHIFT - PAGE_SHIFT);
-> >> -       hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
-> >> -       hugetlb_add_hstate(CONT_PTE_SHIFT - PAGE_SHIFT);
-> >> +       hugetlb_add_hstate(ilog2(CONT_PMD_SIZE) - PAGE_SHIFT);
-> >> +       hugetlb_add_hstate(ilog2(PMD_SIZE) - PAGE_SHIFT);
-> >> +       hugetlb_add_hstate(ilog2(CONT_PTE_SIZE) - PAGE_SHIFT);
-> >>
-> >>         return 0;
-> >>  }
-> > 
-> > I build this for an arm64 kernel and ran it in qemu and it worked.
+On Fri, 17 Apr 2020 04:29:57 +0200
+Eric Farman <farman@linux.ibm.com> wrote:
+
+> From: Farhan Ali <alifm@linux.ibm.com>
 > 
-> Thanks for testing Anders!
+> The schib region can be used by userspace to get the subchannel-
+> information block (SCHIB) for the passthrough subchannel.
+> This can be useful to get information such as channel path
+> information via the SCHIB.PMCW fields.
 > 
-> Will, here is an updated version of the patch based on your suggestion.
-> I added the () for emphasis but that may just be noise for some.  Also,
-> the naming differences and values for CONT_PTE may make some people
-> look twice.  Not sure if being consistent here helps?
+> Signed-off-by: Farhan Ali <alifm@linux.ibm.com>
+> Signed-off-by: Eric Farman <farman@linux.ibm.com>
+> ---
+> 
+> Notes:
+>     v2->v3:
+>      - Updated Copyright year and Authors [CH]
+>      - Mention that schib region triggers a STSCH [CH]
+>     
+>     v1->v2:
+>      - Add new region info to Documentation/s390/vfio-ccw.rst [CH]
+>      - Add a block comment to struct ccw_schib_region [CH]
+>     
+>     v0->v1: [EF]
+>      - Clean up checkpatch (#include, whitespace) errors
+>      - Remove unnecessary includes from vfio_ccw_chp.c
+>      - Add ret=-ENOMEM in error path for new region
+>      - Add call to vfio_ccw_unregister_dev_regions() during error exit
+>        path of vfio_ccw_mdev_open()
+>      - New info on the module prologue
+>      - Reorder cleanup of regions
+> 
+>  Documentation/s390/vfio-ccw.rst     | 19 +++++++-
+>  drivers/s390/cio/Makefile           |  2 +-
+>  drivers/s390/cio/vfio_ccw_chp.c     | 76 +++++++++++++++++++++++++++++
+>  drivers/s390/cio/vfio_ccw_drv.c     | 20 ++++++++
+>  drivers/s390/cio/vfio_ccw_ops.c     | 14 +++++-
+>  drivers/s390/cio/vfio_ccw_private.h |  3 ++
+>  include/uapi/linux/vfio.h           |  1 +
+>  include/uapi/linux/vfio_ccw.h       | 10 ++++
+>  8 files changed, 141 insertions(+), 4 deletions(-)
+>  create mode 100644 drivers/s390/cio/vfio_ccw_chp.c
+> 
 
-Cheers, thanks for this. I think being consistent is worthwhile, as it's
-the definitions themselves that are weird and we can conceivably clean
-that up as a separate patch.
+(...)
 
-So,
+> +static ssize_t vfio_ccw_schib_region_read(struct vfio_ccw_private *private,
+> +					  char __user *buf, size_t count,
+> +					  loff_t *ppos)
+> +{
+> +	unsigned int i = VFIO_CCW_OFFSET_TO_INDEX(*ppos) - VFIO_CCW_NUM_REGIONS;
+> +	loff_t pos = *ppos & VFIO_CCW_OFFSET_MASK;
+> +	struct ccw_schib_region *region;
+> +	int ret;
+> +
+> +	if (pos + count > sizeof(*region))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&private->io_mutex);
+> +	region = private->region[i].data;
+> +
+> +	if (cio_update_schib(private->sch)) {
+> +		ret = -ENODEV;
+> +		goto out;
+> +	}
+> +
+> +	memcpy(region, &private->sch->schib, sizeof(*region));
+> +
+> +	if (copy_to_user(buf, (void *)region + pos, count)) {
+> +		ret = -EFAULT;
+> +		goto out;
+> +	}
+> +
+> +	ret = count;
+> +
+> +out:
+> +	mutex_unlock(&private->io_mutex);
+> +	return ret;
+> +}
+> +
+> +static ssize_t vfio_ccw_schib_region_write(struct vfio_ccw_private *private,
+> +					   const char __user *buf, size_t count,
+> +					   loff_t *ppos)
+> +{
+> +	return -EINVAL;
+> +}
 
-Acked-by: Will Deacon <will@kernel.org>
+I'm wondering if we should make this callback optional (not in this patch).
 
-Looks like Andrew already picked it up (thanks!)
+> +
+> +
+> +static void vfio_ccw_schib_region_release(struct vfio_ccw_private *private,
+> +					  struct vfio_ccw_region *region)
+> +{
+> +
+> +}
 
-Thanks,
+Same here.
 
-Will
+> +
+> +const struct vfio_ccw_regops vfio_ccw_schib_region_ops = {
+> +	.read = vfio_ccw_schib_region_read,
+> +	.write = vfio_ccw_schib_region_write,
+> +	.release = vfio_ccw_schib_region_release,
+> +};
+
+(...)
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
