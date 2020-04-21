@@ -2,105 +2,138 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 72C971B1EDA
-	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 08:35:02 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 2F5131B1F51
+	for <lists+linux-s390@lfdr.de>; Tue, 21 Apr 2020 08:58:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726511AbgDUGe6 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Tue, 21 Apr 2020 02:34:58 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:31308 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726364AbgDUGe5 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Tue, 21 Apr 2020 02:34:57 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03L6XUx6073619
-        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 02:34:57 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxpmj6u-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Tue, 21 Apr 2020 02:34:57 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-s390@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Tue, 21 Apr 2020 07:34:09 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 21 Apr 2020 07:34:06 +0100
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03L6Yn7a57671688
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 21 Apr 2020 06:34:49 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D414011C058;
-        Tue, 21 Apr 2020 06:34:49 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C0FFC11C054;
-        Tue, 21 Apr 2020 06:34:49 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Tue, 21 Apr 2020 06:34:49 +0000 (GMT)
-Received: by tuxmaker.boeblingen.de.ibm.com (Postfix, from userid 25651)
-        id 82F5CE04AA; Tue, 21 Apr 2020 08:34:49 +0200 (CEST)
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     KVM <kvm@vger.kernel.org>,
-        Janosch Frank <frankja@linux.vnet.ibm.com>,
-        David Hildenbrand <david@redhat.com>,
-        Cornelia Huck <cohuck@redhat.com>,
-        linux-s390 <linux-s390@vger.kernel.org>,
+        id S1726052AbgDUG6q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Tue, 21 Apr 2020 02:58:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57114 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725940AbgDUG6q (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Tue, 21 Apr 2020 02:58:46 -0400
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B1A8C206A5;
+        Tue, 21 Apr 2020 06:58:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1587452325;
+        bh=zSEWmKynQKWmz0IUSm5ihu6tEO3dWhXZaB1lMRy7jqQ=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=u/UKJNZHEKIupjB7ZBsUtiiYe7I6nCSpdDQbmHIZGClUxVmUlZIUfiPEZIzRHYUn6
+         g6qnj51G9uRyRFpu8kN44be1pro4HTNJ141yDBBMvK2ulYFktfLaQWDGM/4efuHYdD
+         p/+dw+DK48euKA47LcgpoqVY6ox6mMphLQl6q9NI=
+Date:   Tue, 21 Apr 2020 07:58:37 +0100
+From:   Will Deacon <will@kernel.org>
+To:     Mike Kravetz <mike.kravetz@oracle.com>
+Cc:     Anders Roxell <anders.roxell@linaro.org>, Qian Cai <cai@lca.pw>,
+        Linux-MM <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-doc@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
         Christian Borntraeger <borntraeger@de.ibm.com>,
-        Claudio Imbrenda <imbrenda@linux.ibm.com>,
-        Janosch Frank <frankja@linux.ibm.com>
-Subject: [GIT PULL 2/2] MAINTAINERS: add a reviewer for KVM/s390
-Date:   Tue, 21 Apr 2020 08:34:47 +0200
-X-Mailer: git-send-email 2.25.2
-In-Reply-To: <20200421063447.6814-1-borntraeger@de.ibm.com>
-References: <20200421063447.6814-1-borntraeger@de.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 20042106-0016-0000-0000-000003086BFA
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042106-0017-0000-0000-0000336C8138
-Message-Id: <20200421063447.6814-3-borntraeger@de.ibm.com>
-Content-Transfer-Encoding: 8bit
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 0/4] Clean up hugetlb boot command line processing
+Message-ID: <20200421065836.GA14448@willie-the-truck>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+ <5E312000-05D8-4C5D-A7C0-DDDE1842CB0E@lca.pw>
+ <4c36c6ce-3774-78fa-abc4-b7346bf24348@oracle.com>
+ <CADYN=9+=tCDmddTYGY44onvrzbg7yrbacMDSxd4hhD+=b=Yeiw@mail.gmail.com>
+ <86333853-0648-393f-db96-d581ee114d2b@oracle.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-21_02:2020-04-20,2020-04-21 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
- suspectscore=0 lowpriorityscore=0 mlxlogscore=982 bulkscore=0
- priorityscore=1501 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
- phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004210055
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <86333853-0648-393f-db96-d581ee114d2b@oracle.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-From: Claudio Imbrenda <imbrenda@linux.ibm.com>
+On Mon, Apr 20, 2020 at 02:40:05PM -0700, Mike Kravetz wrote:
+> On 4/20/20 1:29 PM, Anders Roxell wrote:
+> > On Mon, 20 Apr 2020 at 20:23, Mike Kravetz <mike.kravetz@oracle.com> wrote:
+> >> On 4/20/20 8:34 AM, Qian Cai wrote:
+> >>>
+> >>> Reverted this series fixed many undefined behaviors on arm64 with the config,
+> >> While rearranging the code (patch 3 in series), I made the incorrect
+> >> assumption that CONT_XXX_SIZE == (1UL << CONT_XXX_SHIFT).  However,
+> >> this is not the case.  Does the following patch fix these issues?
+> >>
+> >> From b75cb4a0852e208bee8c4eb347dc076fcaa88859 Mon Sep 17 00:00:00 2001
+> >> From: Mike Kravetz <mike.kravetz@oracle.com>
+> >> Date: Mon, 20 Apr 2020 10:41:18 -0700
+> >> Subject: [PATCH] arm64/hugetlb: fix hugetlb initialization
+> >>
+> >> When calling hugetlb_add_hstate() to initialize a new hugetlb size,
+> >> be sure to use correct huge pages size order.
+> >>
+> >> Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+> >> ---
+> >>  arch/arm64/mm/hugetlbpage.c | 8 ++++----
+> >>  1 file changed, 4 insertions(+), 4 deletions(-)
+> >>
+> >> diff --git a/arch/arm64/mm/hugetlbpage.c b/arch/arm64/mm/hugetlbpage.c
+> >> index 9ca840527296..a02411a1f19a 100644
+> >> --- a/arch/arm64/mm/hugetlbpage.c
+> >> +++ b/arch/arm64/mm/hugetlbpage.c
+> >> @@ -453,11 +453,11 @@ void huge_ptep_clear_flush(struct vm_area_struct *vma,
+> >>  static int __init hugetlbpage_init(void)
+> >>  {
+> >>  #ifdef CONFIG_ARM64_4K_PAGES
+> >> -       hugetlb_add_hstate(PUD_SHIFT - PAGE_SHIFT);
+> >> +       hugetlb_add_hstate(ilog2(PUD_SIZE) - PAGE_SHIFT);
+> >>  #endif
+> >> -       hugetlb_add_hstate(CONT_PMD_SHIFT - PAGE_SHIFT);
+> >> -       hugetlb_add_hstate(PMD_SHIFT - PAGE_SHIFT);
+> >> -       hugetlb_add_hstate(CONT_PTE_SHIFT - PAGE_SHIFT);
+> >> +       hugetlb_add_hstate(ilog2(CONT_PMD_SIZE) - PAGE_SHIFT);
+> >> +       hugetlb_add_hstate(ilog2(PMD_SIZE) - PAGE_SHIFT);
+> >> +       hugetlb_add_hstate(ilog2(CONT_PTE_SIZE) - PAGE_SHIFT);
+> >>
+> >>         return 0;
+> >>  }
+> > 
+> > I build this for an arm64 kernel and ran it in qemu and it worked.
+> 
+> Thanks for testing Anders!
+> 
+> Will, here is an updated version of the patch based on your suggestion.
+> I added the () for emphasis but that may just be noise for some.  Also,
+> the naming differences and values for CONT_PTE may make some people
+> look twice.  Not sure if being consistent here helps?
 
-Signed-off-by: Claudio Imbrenda <imbrenda@linux.ibm.com>
-Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-Acked-by: Cornelia Huck <cohuck@redhat.com>
-Acked-by: Janosch Frank <frankja@linux.ibm.com>
-Link: https://lore.kernel.org/r/20200417152936.772256-1-imbrenda@linux.ibm.com
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Cheers, thanks for this. I think being consistent is worthwhile, as it's
+the definitions themselves that are weird and we can conceivably clean
+that up as a separate patch.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index b816a453b10e..de7eb50c8c81 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9329,6 +9329,7 @@ M:	Christian Borntraeger <borntraeger@de.ibm.com>
- M:	Janosch Frank <frankja@linux.ibm.com>
- R:	David Hildenbrand <david@redhat.com>
- R:	Cornelia Huck <cohuck@redhat.com>
-+R:	Claudio Imbrenda <imbrenda@linux.ibm.com>
- L:	kvm@vger.kernel.org
- S:	Supported
- W:	http://www.ibm.com/developerworks/linux/linux390/
--- 
-2.25.2
+So,
 
+Acked-by: Will Deacon <will@kernel.org>
+
+Looks like Andrew already picked it up (thanks!)
+
+Thanks,
+
+Will
