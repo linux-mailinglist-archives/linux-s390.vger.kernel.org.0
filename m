@@ -2,126 +2,164 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 7489C1B496D
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 18:04:35 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B3CF81B4B22
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 18:58:00 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726718AbgDVQE2 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 Apr 2020 12:04:28 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:37088 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726154AbgDVQE1 (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 Apr 2020 12:04:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587571465;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=amvTuf5wEMJvqdESpaeyMURJivlfDh/jRY31BzCdBPU=;
-        b=EtHWvqtxOTLXR8bJT99Zq8deSk6Z7h1+texHGF9Tb0JYbiRViqz4/PtUcrz4OtqR6cLqRB
-        gD9v7wYqYQRoxmlh1r8O+jXW6wykkIh6fMLLwFOrwOTDbuhGdOTxEH++cLRr87DzltkNTt
-        zzOSMH/WkiUMkDx9AAGkGbvQCsCIoOc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-177-5-QqutxDOl-cVj9GG-2gZA-1; Wed, 22 Apr 2020 12:04:23 -0400
-X-MC-Unique: 5-QqutxDOl-cVj9GG-2gZA-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 6898E107ACC9;
-        Wed, 22 Apr 2020 16:04:19 +0000 (UTC)
-Received: from gondolin (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DE51B19C70;
-        Wed, 22 Apr 2020 16:04:05 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 18:04:03 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Christian Borntraeger <borntraeger@de.ibm.com>
-Cc:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>,
-        pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        frankja@linux.ibm.com, david@redhat.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, sean.j.christopherson@intel.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org, tglx@linutronix.de, mingo@redhat.com,
-        bp@alien8.de, x86@kernel.org, hpa@zytor.com, maz@kernel.org,
-        james.morse@arm.com, julien.thierry.kdev@gmail.com,
-        suzuki.poulose@arm.com, christoffer.dall@arm.com,
-        peterx@redhat.com, thuth@redhat.com, kvm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, kvmarm@lists.cs.columbia.edu,
-        linux-mips@vger.kernel.org, kvm-ppc@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run'
- parameters
-Message-ID: <20200422180403.03f60b0c.cohuck@redhat.com>
-In-Reply-To: <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
-        <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
-        <20200422154543.2efba3dd.cohuck@redhat.com>
-        <dc5e0fa3-558b-d606-bda9-ed281cf9e9ae@de.ibm.com>
-Organization: Red Hat GmbH
+        id S1726740AbgDVQ5r (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 Apr 2020 12:57:47 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:41474 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726057AbgDVQ5r (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Wed, 22 Apr 2020 12:57:47 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MGmbre004744;
+        Wed, 22 Apr 2020 16:56:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2020-01-29;
+ bh=LFL7+e4rirW/BkUxDvX7Q/JJpL0GDaD2BXrkYZ/Jcqw=;
+ b=MYqyVkvMM2l3bcO0sT1OP4Def5zhIfw/QdGlifi1bpsPSISeIps2HlN6swempAZOHxXU
+ Xuwr7UsHf04EjB4t+Bx9Iryi2BwAf30Z4vB0a0cmU9iZJLT2BhOnDAlxqqp8uH5BLXmm
+ yLz0SYoMr3BnkdKC1onkAb1OOYCfyVsD6yoveKI8U5apJsHviWgi1LC2od6TwBZfhW1s
+ 8mVD64RprsPOCCsEabcXnkybmZn0gbNZlHNE3QhzDHsievUxgYz9ZV/pJVdke7G4VMta
+ Pr6NAwDyxeSmgA9PCwLd2+I+VrpMva1Va6GkzI8Go+hHrYfD6lzFVPuAQgtNlWxdAUD9 1w== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 30grpgrh3f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 16:56:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03MGmInv111640;
+        Wed, 22 Apr 2020 16:56:24 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 30gb1jxhcr-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 16:56:24 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03MGu7au024097;
+        Wed, 22 Apr 2020 16:56:07 GMT
+Received: from [192.168.2.157] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 22 Apr 2020 09:56:07 -0700
+Subject: Re: [PATCH v3 3/4] hugetlbfs: remove hugetlb_add_hstate() warning for
+ existing hstate
+To:     "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
+        linux-doc@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        "David S.Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Longpeng <longpeng2@huawei.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Mina Almasry <almasrymina@google.com>,
+        Peter Xu <peterx@redhat.com>,
+        Nitesh Narayan Lal <nitesh@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <20200417185049.275845-1-mike.kravetz@oracle.com>
+ <20200417185049.275845-4-mike.kravetz@oracle.com>
+ <87blnj4x9p.fsf@linux.ibm.com>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <d39a33da-6095-c616-6bff-6af8795922d1@oracle.com>
+Date:   Wed, 22 Apr 2020 09:56:03 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <87blnj4x9p.fsf@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 phishscore=0 suspectscore=0 spamscore=0
+ mlxlogscore=999 mlxscore=0 malwarescore=0 bulkscore=0 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220126
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9599 signatures=668686
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 mlxlogscore=999 mlxscore=0
+ lowpriorityscore=0 adultscore=0 suspectscore=0 bulkscore=0 clxscore=1011
+ malwarescore=0 phishscore=0 spamscore=0 priorityscore=1501 impostorscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
+ definitions=main-2004220126
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 22 Apr 2020 17:58:04 +0200
-Christian Borntraeger <borntraeger@de.ibm.com> wrote:
-
-> On 22.04.20 15:45, Cornelia Huck wrote:
-> > On Wed, 22 Apr 2020 20:58:04 +0800
-> > Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
-> >   
-> >> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> >> structure. Earlier than historical reasons, many kvm-related function  
-> > 
-> > s/Earlier than/For/ ?
-> >   
-> >> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
-> >> This patch does a unified cleanup of these remaining redundant parameters.
-> >>
-> >> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-> >> ---
-> >>  arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
-> >>  1 file changed, 22 insertions(+), 15 deletions(-)
-> >>
-> >> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> >> index e335a7e5ead7..d7bb2e7a07ff 100644
-> >> --- a/arch/s390/kvm/kvm-s390.c
-> >> +++ b/arch/s390/kvm/kvm-s390.c
-> >> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
-> >>  	return rc;
-> >>  }
-> >>  
-> >> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
-> >>  {
-> >> +	struct kvm_run *kvm_run = vcpu->run;
-> >>  	struct runtime_instr_cb *riccb;
-> >>  	struct gs_cb *gscb;
-> >>  
-> >> @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> >>  		}
-> >>  		if (vcpu->arch.gs_enabled) {
-> >>  			current->thread.gs_cb = (struct gs_cb *)
-> >> -						&vcpu->run->s.regs.gscb;
-> >> +						&kvm_run->s.regs.gscb;  
-> > 
-> > Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
-> > it. (It seems they amount to at least as much as the changes advertised
-> > in the patch description.)
-> > 
-> > Other opinions?  
+On 4/22/20 3:42 AM, Aneesh Kumar K.V wrote:
+> Mike Kravetz <mike.kravetz@oracle.com> writes:
 > 
-> Agreed. It feels kind of random. Maybe just do the first line (move kvm_run from the
-> function parameter list into the variable declaration)? Not sure if this is better.
+>> The routine hugetlb_add_hstate prints a warning if the hstate already
+>> exists.  This was originally done as part of kernel command line
+>> parsing.  If 'hugepagesz=' was specified more than once, the warning
+>> 	pr_warn("hugepagesz= specified twice, ignoring\n");
+>> would be printed.
+>>
+>> Some architectures want to enable all huge page sizes.  They would
+>> call hugetlb_add_hstate for all supported sizes.  However, this was
+>> done after command line processing and as a result hstates could have
+>> already been created for some sizes.  To make sure no warning were
+>> printed, there would often be code like:
+>> 	if (!size_to_hstate(size)
+>> 		hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT)
+>>
+>> The only time we want to print the warning is as the result of command
+>> line processing.
+> 
+> Does this patch break hugepages=x command line? I haven't tested this
+> yet. But one of the details w.r.t. skipping that hugetlb_add_hstate is
+> to make sure we can configure the max_huge_pages. 
 > 
 
-There's more in this patch that I cut... but I think just moving
-kvm_run from the parameter list would be much less disruptive.
+Are you asking about hugepages=x being the only option on the command line?
+If so, then the behavior is not changed.  This will result in x pages of
+default huge page size being allocated.  Where default huge page size is of
+course architecture dependent.  On an x86 VM,
 
+[    0.040474] Kernel command line: BOOT_IMAGE=/vmlinuz-5.6.0-mm1+ root=/dev/mapper/fedora_new--host-root ro rd.lvm.lv=fedora_new-host/root rd.lvm.lv=fedora_new-host/swap console=tty0 console=ttyS0,115200 audit=0 transparent_hugepage=always hugepages=128
+[    0.332618] HugeTLB registered 1.00 GiB page size, pre-allocated 0 pages
+[    0.333245] HugeTLB registered 2.00 MiB page size, pre-allocated 128 pages
+
+BTW - Here are the command line options I tested on x86 with this series.
+
+No errors or warnings
+---------------------
+hugepages=128
+hugepagesz=2M hugepages=128
+default_hugepagesz=2M hugepages=128
+hugepages=128 default_hugepagesz=2M
+hugepagesz=1G hugepages=2
+hugepages=2 default_hugepagesz=1G
+default_hugepagesz=1G hugepages=2
+hugepages=128 hugepagesz=1G hugepages=2
+hugepagesz=1G hugepages=2 hugepagesz=2M hugepages=128
+default_hugepagesz=2M hugepages=128 hugepagesz=1G hugepages=2
+hugepages=128 default_hugepagesz=2M hugepagesz=1G hugepages=2
+hugepages=2 default_hugepagesz=1G hugepagesz=2M hugepages=128
+default_hugepagesz=1G hugepages=2 hugepagesz=2M hugepages=128
+default_hugepagesz=2M hugepagesz=2M hugepages=128
+default_hugepagesz=2M hugepagesz=1G hugepages=2 hugepagesz=2M hugepages=128
+
+Error or warning
+----------------
+hugepages=128 hugepagesz=2M hugepages=256
+hugepagesz=2M hugepages=128 hugepagesz=2M hugepages=256
+default_hugepagesz=2M hugepages=128 hugepagesz=2M hugepages=256
+hugepages=128 hugepages=256
+hugepagesz=2M hugepages=128 hugepages=2 default_hugepagesz=1G
+
+-- 
+Mike Kravetz
