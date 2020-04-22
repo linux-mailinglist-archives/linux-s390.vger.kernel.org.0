@@ -2,115 +2,125 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id B3BEA1B4685
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 15:46:22 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id E0A741B477F
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 16:40:48 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725839AbgDVNqM (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 Apr 2020 09:46:12 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:29141 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726917AbgDVNqJ (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 22 Apr 2020 09:46:09 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587563168;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=fbzJ2c3Jbmfs6TXG5rybp4esqbXtRerCZxsEpCUlwvY=;
-        b=cTZ2fVNd3eY7j7XPo6jrhe+g5brhNAWuSN+sTn5IzIV6wIBAsUTqPTh0//f8kg8tz+VxDg
-        oQCS3q6nDkL14bf56Pedx358L5l0y06Fqd/siZBVcNukzeekQAcV+PcMo4Ryooh+5eVtrD
-        cFrmCke5JUZFd+gcmDPNkCX3oru5MYA=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-169-lh4Pzp_SOlKmSyI6QDWB7Q-1; Wed, 22 Apr 2020 09:46:04 -0400
-X-MC-Unique: lh4Pzp_SOlKmSyI6QDWB7Q-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4D47C800FC7;
-        Wed, 22 Apr 2020 13:46:00 +0000 (UTC)
-Received: from gondolin (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C266B5D706;
-        Wed, 22 Apr 2020 13:45:46 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 15:45:43 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
-Cc:     pbonzini@redhat.com, tsbogend@alpha.franken.de, paulus@ozlabs.org,
-        mpe@ellerman.id.au, benh@kernel.crashing.org,
-        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        sean.j.christopherson@intel.com, vkuznets@redhat.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org,
-        tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org,
-        hpa@zytor.com, maz@kernel.org, james.morse@arm.com,
-        julien.thierry.kdev@gmail.com, suzuki.poulose@arm.com,
-        christoffer.dall@arm.com, peterx@redhat.com, thuth@redhat.com,
-        kvm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        kvmarm@lists.cs.columbia.edu, linux-mips@vger.kernel.org,
-        kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 1/7] KVM: s390: clean up redundant 'kvm_run'
- parameters
-Message-ID: <20200422154543.2efba3dd.cohuck@redhat.com>
-In-Reply-To: <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
-References: <20200422125810.34847-1-tianjia.zhang@linux.alibaba.com>
-        <20200422125810.34847-2-tianjia.zhang@linux.alibaba.com>
-Organization: Red Hat GmbH
+        id S1726138AbgDVOkr (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 Apr 2020 10:40:47 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:47959 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725934AbgDVOkr (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 Apr 2020 10:40:47 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MEXPIE083761
+        for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2020 10:40:46 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxra491-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2020 10:40:45 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <gerald.schaefer@de.ibm.com>;
+        Wed, 22 Apr 2020 15:39:49 +0100
+Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 Apr 2020 15:39:46 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03MEedH659375906
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 14:40:39 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 574CF11C058;
+        Wed, 22 Apr 2020 14:40:39 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 0847111C05E;
+        Wed, 22 Apr 2020 14:40:39 +0000 (GMT)
+Received: from thinkpad (unknown [9.145.91.245])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Apr 2020 14:40:38 +0000 (GMT)
+Date:   Wed, 22 Apr 2020 16:40:37 +0200
+From:   Gerald Schaefer <gerald.schaefer@de.ibm.com>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+In-Reply-To: <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+References: <cover.1587131959.git.jpoimboe@redhat.com>
+        <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-TM-AS-GCONF: 00
+x-cbid: 20042214-0020-0000-0000-000003CC96C8
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042214-0021-0000-0000-000022259353
+Message-Id: <20200422164037.7edd21ea@thinkpad>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-22_06:2020-04-22,2020-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220116
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Wed, 22 Apr 2020 20:58:04 +0800
-Tianjia Zhang <tianjia.zhang@linux.alibaba.com> wrote:
+On Fri, 17 Apr 2020 09:04:31 -0500
+Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 
-> In the current kvm version, 'kvm_run' has been included in the 'kvm_vcpu'
-> structure. Earlier than historical reasons, many kvm-related function
-
-s/Earlier than/For/ ?
-
-> parameters retain the 'kvm_run' and 'kvm_vcpu' parameters at the same time.
-> This patch does a unified cleanup of these remaining redundant parameters.
+> From: Peter Zijlstra <peterz@infradead.org>
 > 
-> Signed-off-by: Tianjia Zhang <tianjia.zhang@linux.alibaba.com>
+> Because of late module patching, a livepatch module needs to be able to
+> apply some of its relocations well after it has been loaded.  Instead of
+> playing games with module_{dis,en}able_ro(), use existing text poking
+> mechanisms to apply relocations after module loading.
+> 
+> So far only x86, s390 and Power have HAVE_LIVEPATCH but only the first
+> two also have STRICT_MODULE_RWX.
+> 
+> This will allow removal of the last module_disable_ro() usage in
+> livepatch.  The ultimate goal is to completely disallow making
+> executable mappings writable.
+> 
+> Also, for the late patching case, use text_mutex, which is supposed to
+> be held for all runtime text patching operations.
+> 
+> [ jpoimboe: Split up patches.  Use mod state to determine whether
+> 	    memcpy() can be used.  Add text_mutex.  Make it build. ]
+> 
+> Cc: linux-s390@vger.kernel.org
+> Cc: heiko.carstens@de.ibm.com
+> Suggested-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
 > ---
->  arch/s390/kvm/kvm-s390.c | 37 ++++++++++++++++++++++---------------
->  1 file changed, 22 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index e335a7e5ead7..d7bb2e7a07ff 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -4176,8 +4176,9 @@ static int __vcpu_run(struct kvm_vcpu *vcpu)
->  	return rc;
->  }
->  
-> -static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
-> +static void sync_regs_fmt2(struct kvm_vcpu *vcpu)
->  {
-> +	struct kvm_run *kvm_run = vcpu->run;
->  	struct runtime_instr_cb *riccb;
->  	struct gs_cb *gscb;
->  
-> @@ -4235,7 +4236,7 @@ static void sync_regs_fmt2(struct kvm_vcpu *vcpu, struct kvm_run *kvm_run)
->  		}
->  		if (vcpu->arch.gs_enabled) {
->  			current->thread.gs_cb = (struct gs_cb *)
-> -						&vcpu->run->s.regs.gscb;
-> +						&kvm_run->s.regs.gscb;
+>  arch/s390/kernel/module.c | 125 ++++++++++++++++++++++++--------------
+>  1 file changed, 79 insertions(+), 46 deletions(-)
 
-Not sure if these changes (vcpu->run-> => kvm_run->) are really worth
-it. (It seems they amount to at least as much as the changes advertised
-in the patch description.)
+Sorry, just noticed this. Heiko will return next month, and I'm not
+really familiar with s390 livepatching. Adding Vasily, he might
+have some more insight.
 
-Other opinions?
+So, I might be completely wrong here, but using s390_kernel_write()
+for writing to anything other than 1:1 mapped kernel, should go
+horribly wrong, as that runs w/o DAT. It would allow to bypass
+DAT write protection, which I assume is why you want to use it,
+but it should not work on module text section, as that would be
+in vmalloc space and not 1:1 mapped kernel memory.
 
->  			restore_gs_cb(current->thread.gs_cb);
->  		}
->  		preempt_enable();
+Not quite sure how to test / trigger this, did this really work for
+you on s390?
+
+Regards,
+Gerald
 
