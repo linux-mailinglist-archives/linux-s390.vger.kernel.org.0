@@ -2,51 +2,51 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 45DE61B390B
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 09:35:38 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 62AFF1B392F
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 09:40:02 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725929AbgDVHfh (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 Apr 2020 03:35:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59684 "EHLO
+        id S1726412AbgDVHjw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 Apr 2020 03:39:52 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:64228 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725786AbgDVHfg (ORCPT
+        by vger.kernel.org with ESMTP id S1726359AbgDVHjL (ORCPT
         <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 Apr 2020 03:35:36 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03M7XLfI004483
-        for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2020 03:35:35 -0400
+        Wed, 22 Apr 2020 03:39:11 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03M7WRp8095399
+        for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2020 03:39:10 -0400
 Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30gc2y0vp4-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30gg28p4eu-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2020 03:35:35 -0400
+        for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2020 03:39:09 -0400
 Received: from localhost
         by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-s390@vger.kernel.org> from <frankja@linux.ibm.com>;
-        Wed, 22 Apr 2020 08:34:48 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        Wed, 22 Apr 2020 08:38:22 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
         by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 22 Apr 2020 08:34:45 +0100
+        Wed, 22 Apr 2020 08:38:20 +0100
 Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03M7ZT2U57475104
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03M7d4os63438882
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 07:35:29 GMT
+        Wed, 22 Apr 2020 07:39:04 GMT
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D46A4A4055;
-        Wed, 22 Apr 2020 07:35:28 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 22F54A404D;
+        Wed, 22 Apr 2020 07:39:04 +0000 (GMT)
 Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 78AD4A4065;
-        Wed, 22 Apr 2020 07:35:28 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C6937A4040;
+        Wed, 22 Apr 2020 07:39:03 +0000 (GMT)
 Received: from localhost.localdomain (unknown [9.145.53.90])
         by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Apr 2020 07:35:28 +0000 (GMT)
-Subject: Re: [kvm-unit-tests PATCH v5 02/10] s390x: Use PSW bits definitions
- in cstart
+        Wed, 22 Apr 2020 07:39:03 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v5 03/10] s390x: cr0: adding AFP-register
+ control bit
 To:     Pierre Morel <pmorel@linux.ibm.com>, kvm@vger.kernel.org
 Cc:     linux-s390@vger.kernel.org, david@redhat.com, thuth@redhat.com,
         cohuck@redhat.com
 References: <1582200043-21760-1-git-send-email-pmorel@linux.ibm.com>
- <1582200043-21760-3-git-send-email-pmorel@linux.ibm.com>
+ <1582200043-21760-4-git-send-email-pmorel@linux.ibm.com>
 From:   Janosch Frank <frankja@linux.ibm.com>
 Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  mQINBFubpD4BEADX0uhkRhkj2AVn7kI4IuPY3A8xKat0ihuPDXbynUC77mNox7yvK3X5QBO6
@@ -90,173 +90,124 @@ Autocrypt: addr=frankja@linux.ibm.com; prefer-encrypt=mutual; keydata=
  DchCqFm5adiSP5+OT4NjkKUeGpBe/aRyQSle/RropTgCi85pje/juYEn2P9UAgkfBJrOHvQ9
  Z+2Sva8FRd61NJLkCJ4LFumRn9wQlX2icFbi8UDV3do0hXJRRYTWCxrHscMhkrFWLhYiPF4i
  phX7UNdOWBQ90qpHyAxHmDazdo27gEjfvsgYMdveKknEOTEb5phwxWgg7BcIDoJf9UMC
-Date:   Wed, 22 Apr 2020 09:35:27 +0200
+Date:   Wed, 22 Apr 2020 09:39:03 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.2
 MIME-Version: 1.0
-In-Reply-To: <1582200043-21760-3-git-send-email-pmorel@linux.ibm.com>
+In-Reply-To: <1582200043-21760-4-git-send-email-pmorel@linux.ibm.com>
 Content-Type: multipart/signed; micalg=pgp-sha256;
  protocol="application/pgp-signature";
- boundary="wr1b1unh9tYkGTawBfVC3YX3iv2NVBeGV"
+ boundary="GyifXTZlsyM8ZIgho0Vn086lt06WUgA3h"
 X-TM-AS-GCONF: 00
-x-cbid: 20042207-4275-0000-0000-000003C46C86
+x-cbid: 20042207-4275-0000-0000-000003C46D08
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 20042207-4276-0000-0000-000038D9F306
-Message-Id: <aae40a5a-63a6-e802-53bb-9683d03ad57d@linux.ibm.com>
+x-cbparentid: 20042207-4276-0000-0000-000038D9F38A
+Message-Id: <a40f5061-e261-a6dd-ea6a-a8bec703175f@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
  definitions=2020-04-22_02:2020-04-21,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 priorityscore=1501
- impostorscore=0 phishscore=0 spamscore=0 malwarescore=0 mlxlogscore=999
- lowpriorityscore=0 suspectscore=0 bulkscore=0 clxscore=1015 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2003020000
- definitions=main-2004220062
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 malwarescore=0
+ suspectscore=0 spamscore=0 priorityscore=1501 clxscore=1015 adultscore=0
+ lowpriorityscore=0 bulkscore=0 mlxlogscore=999 impostorscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220057
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---wr1b1unh9tYkGTawBfVC3YX3iv2NVBeGV
-Content-Type: multipart/mixed; boundary="wJeMg9qX91ouO8XFKRiSqYHBRhQH46whj"
+--GyifXTZlsyM8ZIgho0Vn086lt06WUgA3h
+Content-Type: multipart/mixed; boundary="EOWPvNTSl0Qrmj66m9JdSexUHJqGIhPYD"
 
---wJeMg9qX91ouO8XFKRiSqYHBRhQH46whj
+--EOWPvNTSl0Qrmj66m9JdSexUHJqGIhPYD
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: quoted-printable
 
 On 2/20/20 1:00 PM, Pierre Morel wrote:
-> This patch defines the PSW bits EA/BA used to initialize the PSW masks
-> for exceptions.
->=20
-> Since some PSW mask definitions exist already in arch_def.h we add thes=
-e
-> definitions there.
-> We move all PSW definitions together and protect assembler code against=
+> While adding the definition for the AFP-Register control bit, move all
+> existing definitions for CR0 out of the C zone to the assmbler zone to
+> keep the definitions concerning CR0 together.
 
-> C syntax.
+How about:
+s390x: Move control register bit definitions and add AFP to them
 
-Please fix the issue mentioned below and run *all* tests against your
-new code to verify you didn't introduce regressions.
-
-The rest looks good to me.
+Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
 
 >=20
 > Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
 > ---
->  lib/s390x/asm/arch_def.h | 15 +++++++++++----
->  s390x/cstart64.S         | 15 ++++++++-------
->  2 files changed, 19 insertions(+), 11 deletions(-)
+>  lib/s390x/asm/arch_def.h | 11 ++++++-----
+>  s390x/cstart64.S         |  2 +-
+>  2 files changed, 7 insertions(+), 6 deletions(-)
 >=20
 > diff --git a/lib/s390x/asm/arch_def.h b/lib/s390x/asm/arch_def.h
-> index 15a4d49..69a8256 100644
+> index 69a8256..863c2bf 100644
 > --- a/lib/s390x/asm/arch_def.h
 > +++ b/lib/s390x/asm/arch_def.h
-> @@ -10,15 +10,21 @@
->  #ifndef _ASM_S390X_ARCH_DEF_H_
->  #define _ASM_S390X_ARCH_DEF_H_
+> @@ -18,6 +18,12 @@
 > =20
-> +#define PSW_MASK_EXT			0x0100000000000000UL
-> +#define PSW_MASK_DAT			0x0400000000000000UL
-> +#define PSW_MASK_PSTATE			0x0001000000000000UL
-> +#define PSW_MASK_BA			0x0000000080000000UL
-> +#define PSW_MASK_EA			0x0000000100000000UL
+>  #define PSW_EXCEPTION_MASK (PSW_MASK_EA|PSW_MASK_BA)
+> =20
+> +#define CR0_EXTM_SCLP			0X0000000000000200UL
+> +#define CR0_EXTM_EXTC			0X0000000000002000UL
+> +#define CR0_EXTM_EMGC			0X0000000000004000UL
+> +#define CR0_EXTM_MASK			0X0000000000006200UL
+> +#define CR0_AFP_REG_CRTL		0x0000000000040000UL
 > +
-> +#define PSW_EXCEPTION_MASK (PSW_MASK_EA|PSW_MASK_BA)
-
-Could you add a space before and after the | ?
-
-> +
-> +#ifndef __ASSEMBLER__
-> +
+>  #ifndef __ASSEMBLER__
+> =20
 >  struct psw {
->  	uint64_t	mask;
+> @@ -25,11 +31,6 @@ struct psw {
 >  	uint64_t	addr;
 >  };
 > =20
-> -#define PSW_MASK_EXT			0x0100000000000000UL
-> -#define PSW_MASK_DAT			0x0400000000000000UL
-> -#define PSW_MASK_PSTATE			0x0001000000000000UL
+> -#define CR0_EXTM_SCLP			0X0000000000000200UL
+> -#define CR0_EXTM_EXTC			0X0000000000002000UL
+> -#define CR0_EXTM_EMGC			0X0000000000004000UL
+> -#define CR0_EXTM_MASK			0X0000000000006200UL
 > -
->  #define CR0_EXTM_SCLP			0X0000000000000200UL
->  #define CR0_EXTM_EXTC			0X0000000000002000UL
->  #define CR0_EXTM_EMGC			0X0000000000004000UL
-> @@ -297,4 +303,5 @@ static inline uint32_t get_prefix(void)
->  	return current_prefix;
->  }
-> =20
-> +#endif /* not __ASSEMBLER__ */
->  #endif
+>  struct lowcore {
+>  	uint8_t		pad_0x0000[0x0080 - 0x0000];	/* 0x0000 */
+>  	uint32_t	ext_int_param;			/* 0x0080 */
 > diff --git a/s390x/cstart64.S b/s390x/cstart64.S
-> index 45da523..2885a36 100644
+> index 2885a36..3b59bd1 100644
 > --- a/s390x/cstart64.S
 > +++ b/s390x/cstart64.S
-> @@ -12,6 +12,7 @@
->   */
->  #include <asm/asm-offsets.h>
->  #include <asm/sigp.h>
-> +#include <asm/arch_def.h>
-> =20
->  .section .init
-> =20
-> @@ -214,19 +215,19 @@ svc_int:
-> =20
->  	.align	8
->  reset_psw:
-> -	.quad	0x0008000180000000
-> +	.quad	PSW_EXCEPTION_MASK
-
-That won't work, this is a short PSW and you're removing the short
-indication here. Notice the 0008 at the front.
-
->  initial_psw:
-> -	.quad	0x0000000180000000, clear_bss_start
-> +	.quad	PSW_EXCEPTION_MASK, clear_bss_start
->  pgm_int_psw:
-> -	.quad	0x0000000180000000, pgm_int
-> +	.quad	PSW_EXCEPTION_MASK, pgm_int
->  ext_int_psw:
-> -	.quad	0x0000000180000000, ext_int
-> +	.quad	PSW_EXCEPTION_MASK, ext_int
->  mcck_int_psw:
-> -	.quad	0x0000000180000000, mcck_int
-> +	.quad	PSW_EXCEPTION_MASK, mcck_int
->  io_int_psw:
-> -	.quad	0x0000000180000000, io_int
-> +	.quad	PSW_EXCEPTION_MASK, io_int
->  svc_int_psw:
-> -	.quad	0x0000000180000000, svc_int
-> +	.quad	PSW_EXCEPTION_MASK, svc_int
+> @@ -230,4 +230,4 @@ svc_int_psw:
+>  	.quad	PSW_EXCEPTION_MASK, svc_int
 >  initial_cr0:
 >  	/* enable AFP-register control, so FP regs (+BFP instr) can be used *=
 /
->  	.quad	0x0000000000040000
+> -	.quad	0x0000000000040000
+> +	.quad	CR0_AFP_REG_CRTL
 >=20
 
 
 
---wJeMg9qX91ouO8XFKRiSqYHBRhQH46whj--
+--EOWPvNTSl0Qrmj66m9JdSexUHJqGIhPYD--
 
---wr1b1unh9tYkGTawBfVC3YX3iv2NVBeGV
+--GyifXTZlsyM8ZIgho0Vn086lt06WUgA3h
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6f88AACgkQ41TmuOI4
-ufhgmw//dfVHl30+2+dqnfVvNWWFohwErw313kmwGAx8TkQon9G0oI6mgk2c5X2l
-FmAQXUUxPcL67YatmPQhK1l2npyKLon3/zF+vz9i4wIq3tMApfuVIRETclt15uB5
-Gpj8IiuyND1r4rISn66kMEsDORAnxNnrz6ONAXWdGg9agEtetkmeh8vzORzBj3+c
-2RzD75kUc//GtejD3ZIqq7ZRZ6GGDJUR2gqzXZEhnFl35i9RgcjJMP7oUopnkTdQ
-13iZBms4QUPpZgR2gimjP8MYrtTCGPUCz9aJ97J5DE03t8PdCgCwsqzPbgmH5q6j
-pkdVzet53P9EWfSzFIg7r7cMrVWHi2PLuntkej7fnlfhIq37LBnLeZLLKVOCo7Mu
-lJC+dsxYVG0hzjqBchIGQiHd/UJoDhoh2NVwb2dcXmukd1sUPMYru6vCof/QlKV6
-g43kPxpNaHXPnF4w13arET3osh04afYdVfMeWsuSq3tGVsZk636zTAy+dG5S5y0B
-SUvcnXQmLHIVsZV4+qPgltZEhYVAIA9+XcdF6HFNaLs988pYEIixQ7K29Bgk3Ni4
-RtSGWPDvVSDYGzRQpkCifq9fC+a8u5UEcn391wuREUDebWxk1p24YcBPoCKFEWJn
-Lx70275it8LNdQn0So2deQAMGt6j93+W6YEZX/TkJZ4UCPqw9K0=
-=Wx9o
+iQIzBAEBCAAdFiEEwGNS88vfc9+v45Yq41TmuOI4ufgFAl6f9JcACgkQ41TmuOI4
+ufil/w//dbqGIM2HaV4WaUalhvxm/YfYG2jKvebHmD68d6wGgTEDx2mIkNR1jPlx
+Rzz36pOnADQIXizEqwWNVbdK4gI2r+DlnPY88sJckv6JiiOqsZyPKyYc36asIArV
+HKzHRYWIZBLC52VC2f1EopSXob7z/JlHFa6V4K+MCDdOBlWsMZIH1jgt0jVMLFU+
+aWQMNZBeIZWZ2GsylmRxrZkIVLv3Z3Kx38hgpq/QIECTPn2zmT5spKbjPcZP2RVw
+VNYI5T1gq7a/NTDIAVtr8+05LOGJ7jvhORMT6Z6MRG3XgyWNCBTV/WTppNsDX/ur
+fWd7dn/ZnaOvQxPtfAOBh/sDtCxh9NvXnmip6238EecLcvFjGxKkJblQpYcSGoM4
+aMVG3M6HWeQxAPTaZuRIKK442+kPtfl1u8ZWIe8jLc0BUn3cbFSWn0yzBYTzCaVG
+3c50r7Szmz2RfjzxwEa0X4VcCCuvCXfSwvZX3qTWh8HrC2odS2C3gaGWTOm3Aax3
+CRwQA3RTaGtKaMyoOCWRy7IosyQjXtbEOcUXJCqpESTLLV2/ls2CM8u0D1hhmfwD
+2bPZzU4Z1iCtTdoPWnrsg/iUGmbLbcmR6Okip22WdUPHpm8kxYkWd8f+2eSY1z7Z
+o+s0jTFv9ZbHr7KL/qF3MEOhqgtIy3rQmxHpPgWtuhGL8zAASVk=
+=8jsV
 -----END PGP SIGNATURE-----
 
---wr1b1unh9tYkGTawBfVC3YX3iv2NVBeGV--
+--GyifXTZlsyM8ZIgho0Vn086lt06WUgA3h--
 
