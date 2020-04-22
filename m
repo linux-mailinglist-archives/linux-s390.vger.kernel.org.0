@@ -2,73 +2,116 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 9624C1B3993
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 10:05:52 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 076251B3AA1
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 10:59:47 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725907AbgDVIFw (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 Apr 2020 04:05:52 -0400
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59068 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725786AbgDVIFv (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>); Wed, 22 Apr 2020 04:05:51 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587542751;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=L4MyHijEyJpWGM/c98uFFlOcGKHeKKrBeaPb73JuPQs=;
-        b=WYT6fE1Cv0Fy53jXNqKRtI2h1fnx+sNn2eQ0UZac30+LGHnPTdtGS/DRMqZswZ4lIcjzx3
-        mTVmw0I1HkLdckErDIeP6M5PwjgqIIwSwouwUxTZzhnf5QlhqhbW0Pws4pyVMvXY5Q1rjx
-        iIqyC/OVQ8Elo6n6Q7BgO6PMnmdEN2w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-10-zUa0EviTMAKDoXoFBXtj8A-1; Wed, 22 Apr 2020 04:05:47 -0400
-X-MC-Unique: zUa0EviTMAKDoXoFBXtj8A-1
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3438D107ACC4;
-        Wed, 22 Apr 2020 08:05:46 +0000 (UTC)
-Received: from gondolin (ovpn-112-195.ams2.redhat.com [10.36.112.195])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 17F73B3A76;
-        Wed, 22 Apr 2020 08:05:41 +0000 (UTC)
-Date:   Wed, 22 Apr 2020 10:05:39 +0200
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Pierre Morel <pmorel@linux.ibm.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        frankja@linux.ibm.com, david@redhat.com, thuth@redhat.com
-Subject: Re: [kvm-unit-tests PATCH v5 05/10] s390x: export the clock
- get_clock_ms() utility
-Message-ID: <20200422100539.5a4f3a2f.cohuck@redhat.com>
-In-Reply-To: <1582200043-21760-6-git-send-email-pmorel@linux.ibm.com>
+        id S1725934AbgDVI7q (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 Apr 2020 04:59:46 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:21434 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725968AbgDVI7q (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 Apr 2020 04:59:46 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03M8XaU4053017
+        for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2020 04:59:45 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 30ggxqy3cr-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-s390@vger.kernel.org>; Wed, 22 Apr 2020 04:59:45 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-s390@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Wed, 22 Apr 2020 09:58:49 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 22 Apr 2020 09:58:46 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03M8xcnQ38207628
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 22 Apr 2020 08:59:38 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 84852A404D;
+        Wed, 22 Apr 2020 08:59:38 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3A64FA405B;
+        Wed, 22 Apr 2020 08:59:38 +0000 (GMT)
+Received: from oc3016276355.ibm.com (unknown [9.145.55.142])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 22 Apr 2020 08:59:38 +0000 (GMT)
+Subject: Re: [kvm-unit-tests PATCH v5 02/10] s390x: Use PSW bits definitions
+ in cstart
+To:     David Hildenbrand <david@redhat.com>,
+        Janosch Frank <frankja@linux.ibm.com>, kvm@vger.kernel.org
+Cc:     linux-s390@vger.kernel.org, thuth@redhat.com, cohuck@redhat.com
 References: <1582200043-21760-1-git-send-email-pmorel@linux.ibm.com>
-        <1582200043-21760-6-git-send-email-pmorel@linux.ibm.com>
-Organization: Red Hat GmbH
+ <1582200043-21760-3-git-send-email-pmorel@linux.ibm.com>
+ <aae40a5a-63a6-e802-53bb-9683d03ad57d@linux.ibm.com>
+ <d4e66e9b-ed68-e7ef-4b9d-8af879e44813@redhat.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Wed, 22 Apr 2020 10:59:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.6.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <d4e66e9b-ed68-e7ef-4b9d-8af879e44813@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-TM-AS-GCONF: 00
+x-cbid: 20042208-0020-0000-0000-000003CC6973
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 20042208-0021-0000-0000-000022256477
+Message-Id: <e1050532-72ee-210c-822a-f1eb91c6d388@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
+ definitions=2020-04-22_03:2020-04-21,2020-04-22 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 impostorscore=0
+ suspectscore=0 lowpriorityscore=0 mlxlogscore=999 bulkscore=0
+ priorityscore=1501 spamscore=0 malwarescore=0 adultscore=0 mlxscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2003020000 definitions=main-2004220069
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, 20 Feb 2020 13:00:38 +0100
-Pierre Morel <pmorel@linux.ibm.com> wrote:
 
-> Let's move get_clock_ms() to lib/s390/asm/time.h, so it can be used in
-> multiple places.
+
+On 2020-04-22 09:44, David Hildenbrand wrote:
 > 
-> Signed-off-by: Pierre Morel <pmorel@linux.ibm.com>
-> Reviewed-by: David Hildenbrand <david@redhat.com>
-> Reviewed-by: Thomas Huth <thuth@redhat.com>
-> Reviewed-by: Janosch Frank <frankja@linux.ibm.com>
-> ---
->  lib/s390x/asm/time.h | 26 ++++++++++++++++++++++++++
->  s390x/intercept.c    | 11 +----------
->  2 files changed, 27 insertions(+), 10 deletions(-)
->  create mode 100644 lib/s390x/asm/time.h
+>>> diff --git a/s390x/cstart64.S b/s390x/cstart64.S
+>>> index 45da523..2885a36 100644
+>>> --- a/s390x/cstart64.S
+>>> +++ b/s390x/cstart64.S
+>>> @@ -12,6 +12,7 @@
+>>>    */
+>>>   #include <asm/asm-offsets.h>
+>>>   #include <asm/sigp.h>
+>>> +#include <asm/arch_def.h>
+>>>   
+>>>   .section .init
+>>>   
+>>> @@ -214,19 +215,19 @@ svc_int:
+>>>   
+>>>   	.align	8
+>>>   reset_psw:
+>>> -	.quad	0x0008000180000000
+>>> +	.quad	PSW_EXCEPTION_MASK
+>>
+>> That won't work, this is a short PSW and you're removing the short
+>> indication here. Notice the 0008 at the front.
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+hum... :(
+
+> 
+> Good catch! Guess it would have bailed out when testing.
+> 
+> 
+
+Yes it does. Sorry.
+
+
+-- 
+Pierre Morel
+IBM Lab Boeblingen
 
