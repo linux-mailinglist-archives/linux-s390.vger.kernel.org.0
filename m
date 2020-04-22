@@ -2,131 +2,67 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id 779D51B4031
-	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 12:44:29 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id B4FFC1B4516
+	for <lists+linux-s390@lfdr.de>; Wed, 22 Apr 2020 14:28:31 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731821AbgDVKoJ (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Wed, 22 Apr 2020 06:44:09 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36152 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1731500AbgDVKoF (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Wed, 22 Apr 2020 06:44:05 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id 03MAYWdd060141;
-        Wed, 22 Apr 2020 06:43:02 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30jh8xp4ea-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 06:43:02 -0400
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id 03MAdcXn070893;
-        Wed, 22 Apr 2020 06:43:01 -0400
-Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 30jh8xp4dj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 06:43:01 -0400
-Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
-        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id 03MAeZbo005876;
-        Wed, 22 Apr 2020 10:42:59 GMT
-Received: from b03cxnp08025.gho.boulder.ibm.com (b03cxnp08025.gho.boulder.ibm.com [9.17.130.17])
-        by ppma01dal.us.ibm.com with ESMTP id 30fs670rje-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 22 Apr 2020 10:42:59 +0000
-Received: from b03ledav001.gho.boulder.ibm.com (b03ledav001.gho.boulder.ibm.com [9.17.130.232])
-        by b03cxnp08025.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 03MAgumL56820100
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 22 Apr 2020 10:42:56 GMT
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 99EC96E050;
-        Wed, 22 Apr 2020 10:42:56 +0000 (GMT)
-Received: from b03ledav001.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DCFE26E04C;
-        Wed, 22 Apr 2020 10:42:31 +0000 (GMT)
-Received: from skywalker.linux.ibm.com (unknown [9.79.185.239])
-        by b03ledav001.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Wed, 22 Apr 2020 10:42:30 +0000 (GMT)
-X-Mailer: emacs 27.0.91 (via feedmail 11-beta-1 I)
-From:   "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>
-To:     Mike Kravetz <mike.kravetz@oracle.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-doc@vger.kernel.org
-Cc:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        "David S . Miller" <davem@davemloft.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Longpeng <longpeng2@huawei.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Mina Almasry <almasrymina@google.com>,
-        Peter Xu <peterx@redhat.com>,
-        Nitesh Narayan Lal <nitesh@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Kravetz <mike.kravetz@oracle.com>
-Subject: Re: [PATCH v3 3/4] hugetlbfs: remove hugetlb_add_hstate() warning
- for existing hstate
-In-Reply-To: <20200417185049.275845-4-mike.kravetz@oracle.com>
-References: <20200417185049.275845-1-mike.kravetz@oracle.com>
- <20200417185049.275845-4-mike.kravetz@oracle.com>
-Date:   Wed, 22 Apr 2020 16:12:26 +0530
-Message-ID: <87blnj4x9p.fsf@linux.ibm.com>
+        id S1726310AbgDVM22 (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Wed, 22 Apr 2020 08:28:28 -0400
+Received: from mx2.suse.de ([195.135.220.15]:40608 "EHLO mx2.suse.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725968AbgDVM22 (ORCPT <rfc822;linux-s390@vger.kernel.org>);
+        Wed, 22 Apr 2020 08:28:28 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx2.suse.de (Postfix) with ESMTP id 6DC6AAEBF;
+        Wed, 22 Apr 2020 12:28:26 +0000 (UTC)
+Date:   Wed, 22 Apr 2020 14:28:26 +0200 (CEST)
+From:   Miroslav Benes <mbenes@suse.cz>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
+        heiko.carstens@de.ibm.com
+Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
+ relocations
+In-Reply-To: <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+Message-ID: <alpine.LSU.2.21.2004221411140.28581@pobox.suse.cz>
+References: <cover.1587131959.git.jpoimboe@redhat.com> <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.138,18.0.676
- definitions=2020-04-22_03:2020-04-22,2020-04-22 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 phishscore=0
- lowpriorityscore=0 suspectscore=0 bulkscore=0 mlxlogscore=935 spamscore=0
- mlxscore=0 priorityscore=1501 impostorscore=0 malwarescore=0 clxscore=1011
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2003020000 definitions=main-2004220083
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-Mike Kravetz <mike.kravetz@oracle.com> writes:
+> +int apply_relocate_add(Elf_Shdr *sechdrs, const char *strtab,
+> +		       unsigned int symindex, unsigned int relsec,
+> +		       struct module *me)
+> +{
+> +	int ret;
+> +	bool early = me->state == MODULE_STATE_UNFORMED;
+> +	void *(*write)(void *, const void *, size_t) = memcpy;
+> +
+> +	if (!early) {
+> +		write = s390_kernel_write;
+> +		mutex_lock(&text_mutex);
+> +	}
+> +
+> +	ret = __apply_relocate_add(sechdrs, strtab, symindex, relsec, me,
+> +				   write);
+> +
+> +	if (!early)
+> +		mutex_unlock(&text_mutex);
+> +
+> +	return ret;
+> +}
 
-> The routine hugetlb_add_hstate prints a warning if the hstate already
-> exists.  This was originally done as part of kernel command line
-> parsing.  If 'hugepagesz=' was specified more than once, the warning
-> 	pr_warn("hugepagesz= specified twice, ignoring\n");
-> would be printed.
->
-> Some architectures want to enable all huge page sizes.  They would
-> call hugetlb_add_hstate for all supported sizes.  However, this was
-> done after command line processing and as a result hstates could have
-> already been created for some sizes.  To make sure no warning were
-> printed, there would often be code like:
-> 	if (!size_to_hstate(size)
-> 		hugetlb_add_hstate(ilog2(size) - PAGE_SHIFT)
->
-> The only time we want to print the warning is as the result of command
-> line processing.
+It means that you can take text_mutex the second time here because it 
+is still taken in klp_init_object_loaded(). It is removed later in the 
+series though. The same applies for x86 patch.
 
-Does this patch break hugepages=x command line? I haven't tested this
-yet. But one of the details w.r.t. skipping that hugetlb_add_hstate is
-to make sure we can configure the max_huge_pages. 
+Also, s390_kernel_write() grabs s390_kernel_write_lock spinlock before 
+writing anything, so maybe text_mutex is not really needed as long as 
+s390_kernel_write is called everywhere for text patching.
 
-
->So, remove the warning from hugetlb_add_hstate and
-> add it to the single arch independent routine processing "hugepagesz=".
-> After this, calls to size_to_hstate() in arch specific code can be
-> removed and hugetlb_add_hstate can be called without worrying about
-> warning messages.
->
-
--aneesh
+Miroslav
