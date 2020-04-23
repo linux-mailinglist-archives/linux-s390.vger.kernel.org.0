@@ -2,117 +2,91 @@ Return-Path: <linux-s390-owner@vger.kernel.org>
 X-Original-To: lists+linux-s390@lfdr.de
 Delivered-To: lists+linux-s390@lfdr.de
 Received: from vger.kernel.org (vger.kernel.org [23.128.96.18])
-	by mail.lfdr.de (Postfix) with ESMTP id A42441B630D
-	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 20:10:54 +0200 (CEST)
+	by mail.lfdr.de (Postfix) with ESMTP id 785101B638E
+	for <lists+linux-s390@lfdr.de>; Thu, 23 Apr 2020 20:27:43 +0200 (CEST)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730221AbgDWSKq (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
-        Thu, 23 Apr 2020 14:10:46 -0400
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39563 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730163AbgDWSKp (ORCPT
-        <rfc822;linux-s390@vger.kernel.org>);
-        Thu, 23 Apr 2020 14:10:45 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1587665443;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=2yRJCnoX8qkbcjYUfFVSZLzSknvTSyY8JodZRku30p4=;
-        b=RbfKs3x+WcKKB0YCs35svS+DUS5SCUhlcgW4ckk9KmyGBuNzEmJWCVY8uWcJC5Z9fR+MDi
-        GUBUJ+41r40HkT51/PkDiRUhGNgXck1EEz5gBHik4N7ILMbLMZklEhcRJ//rGgASl/Ea83
-        OD0h0SUHxlWDZqKj9LJN5OnliCkUkUU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-455-ssTxrkrmM5-MnUXBiq4--A-1; Thu, 23 Apr 2020 14:10:38 -0400
-X-MC-Unique: ssTxrkrmM5-MnUXBiq4--A-1
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1A8B78005BA;
-        Thu, 23 Apr 2020 18:10:37 +0000 (UTC)
-Received: from treble (ovpn-118-207.rdu2.redhat.com [10.10.118.207])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id CEEF25C1BE;
-        Thu, 23 Apr 2020 18:10:32 +0000 (UTC)
-Date:   Thu, 23 Apr 2020 13:10:30 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Miroslav Benes <mbenes@suse.cz>
-Cc:     Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jessica Yu <jeyu@kernel.org>, linux-s390@vger.kernel.org,
-        heiko.carstens@de.ibm.com, Vasily Gorbik <gor@linux.ibm.com>,
-        Joe Lawrence <joe.lawrence@redhat.com>
-Subject: Re: [PATCH v2 6/9] s390/module: Use s390_kernel_write() for late
- relocations
-Message-ID: <20200423181030.b5mircvgc7zmqacr@treble>
-References: <cover.1587131959.git.jpoimboe@redhat.com>
- <18266eb2c2c9a2ce0033426837d89dcb363a85d3.1587131959.git.jpoimboe@redhat.com>
- <20200422164037.7edd21ea@thinkpad>
- <20200422172126.743908f5@thinkpad>
- <20200422194605.n77t2wtx5fomxpyd@treble>
- <20200423141834.234ed0bc@thinkpad>
- <alpine.LSU.2.21.2004231513250.6520@pobox.suse.cz>
- <20200423141228.sjvnxwdqlzoyqdwg@treble>
+        id S1730392AbgDWS1Y (ORCPT <rfc822;lists+linux-s390@lfdr.de>);
+        Thu, 23 Apr 2020 14:27:24 -0400
+Received: from lindbergh.monkeyblade.net ([23.128.96.19]:52906 "EHLO
+        lindbergh.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730375AbgDWS1P (ORCPT
+        <rfc822;linux-s390@vger.kernel.org>); Thu, 23 Apr 2020 14:27:15 -0400
+Received: from mail-io1-xd41.google.com (mail-io1-xd41.google.com [IPv6:2607:f8b0:4864:20::d41])
+        by lindbergh.monkeyblade.net (Postfix) with ESMTPS id D6667C09B042
+        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
+Received: by mail-io1-xd41.google.com with SMTP id u11so7547843iow.4
+        for <linux-s390@vger.kernel.org>; Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:reply-to:from:date:message-id:subject:to
+         :content-transfer-encoding;
+        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
+        b=G0MearUWJO2XoX5WFWCbOSBM0KnomNOcLxBMKb36E56Tk8IIyFbWO7z4INTed1WkRU
+         qeMi1eRR7YsA+BDT6DQvUAii78YnzCjvNMVBKy4slcZy3/gJbFRS56rTYb2i1ZQ8vqn/
+         EOaplCA4N/rSu1DPvHSaWXp+qBo2gCjTbf/vDHta9DawS0nUkV5FYws7CV/zXlK/VYiG
+         COL+ehFclZxGMjmnJCFdgQT7XS8eBs73XeZW6OQ9vAUq0KfaGK/YZHActLVD5NzSJiie
+         gXxsbNT9IQMnd4wAzDKDPSrX8AkY/tvkHFQgBX+60qxPigWKusZrEf/ce5VP7zRF3LJ+
+         eYhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:reply-to:from:date:message-id
+         :subject:to:content-transfer-encoding;
+        bh=DHzQtr3OkXyFWXbvXEU307GvVJtF7cl8Gt7nfdQPyE8=;
+        b=peZi7fO15F0FadoLvNCI4EosR4Ukp8+RRPo3towra3nj6PXlivcLKdZQUF0v+f+S5e
+         T5kRtFzu5PGhY8fs8XoodKtFdORxces62Ny7VmQgRfWvp4NfwgMbm+KHWw0dVY8WrxJL
+         zeHo9xdwVvlt+BkOqrWwTIvdBo50m9a4JD6UefwxtvmQVwabozghkuph7eOAbyi9ZZcb
+         i2Gri4Ntgqc1ldDUgwJx23mc2Gc2X1I4zLhmq0NXcmPHNfGmeu49l1gBtTGXk3y50yxr
+         txE2ZBYY3lMlzKJSR226Gy4Ftuck/tPcsoWeyH93bFumJy3Wsw8zCc9pinEHvsoyesKr
+         4E4A==
+X-Gm-Message-State: AGi0PubNMNtqFxPnbhn3HfnpYHNKXre/azraXN7kGYXPRZQ7ZoHZPD5M
+        WxthQt00s1lcFpcAn/NT0k7erSQmFZ2AkNJTPQ==
+X-Google-Smtp-Source: APiQypKOhu0Ivyzu1MQANRLgnSM6D7f6PDwmOyOGFsy7UwOOUt5tM1gVxevJ7CcMC29eb2aYcjzRxadXayX+T6slpNc=
+X-Received: by 2002:a05:6602:d:: with SMTP id b13mr5025673ioa.176.1587666433220;
+ Thu, 23 Apr 2020 11:27:13 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20200423141228.sjvnxwdqlzoyqdwg@treble>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+Received: by 2002:a02:c845:0:0:0:0:0 with HTTP; Thu, 23 Apr 2020 11:27:12
+ -0700 (PDT)
+Reply-To: boa.benin107@yahoo.com
+From:   "Mrs. Angella Michelle" <info.zennitbankplcnigerian@gmail.com>
+Date:   Thu, 23 Apr 2020 20:27:12 +0200
+Message-ID: <CABHzvrnzZLe4Z0E4acOdcsDJTPa3wvp-Oz12f_M4TQ03PAGZkw@mail.gmail.com>
+Subject: Contact Eco bank-Benin to receive your payment funds transfer amount
+ of $12.800.000,00 Million USD,approved this morning by IMF.
+To:     undisclosed-recipients:;
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-s390-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-s390.vger.kernel.org>
 X-Mailing-List: linux-s390@vger.kernel.org
 
-On Thu, Apr 23, 2020 at 09:12:28AM -0500, Josh Poimboeuf wrote:
-> > > this is strange. While I would have expected an exception similar to
-> > > this, it really should have happened on the "sturg" instruction which
-> > > does the DAT-off store in s390_kernel_write(), and certainly not with
-> > > an ID of 0004 (protection). However, in your case, it happens on a
-> > > normal store instruction, with 0004 indicating a protection exception.
-> > > 
-> > > This is more like what I would expect e.g. in the case where you do
-> > > _not_ use the s390_kernel_write() function for RO module text patching,
-> > > but rather normal memory access. So I am pretty sure that this is not
-> > > related to the s390_kernel_write(), but some other issue, maybe some
-> > > place left where you still use normal memory access?
-> > 
-> > The call trace above also suggests that it is not a late relocation, no? 
-> > The path is from KLP module init function through klp_enable_patch. It should 
-> > mean that the to-be-patched object is loaded (it must be a module thanks 
-> > to a check klp_init_object_loaded(), vmlinux relocations were processed 
-> > earlier in apply_relocations()).
-> > 
-> > However, the KLP module state here must be COMING, so s390_kernel_write() 
-> > should be used. What are we missing?
-> 
-> I'm also scratching my head.  It _should_ be using s390_kernel_write()
-> based on the module state, but I don't see that on the stack trace.
-> 
-> This trace (and Gerald's comment) seem to imply it's using
-> __builtin_memcpy(), which might expected for UNFORMED state.
-> 
-> Weird...
-
-Mystery solved:
-
-  $ CROSS_COMPILE=s390x-linux-gnu- scripts/faddr2line vmlinux apply_rela+0x16a/0x520
-  apply_rela+0x16a/0x520:
-  apply_rela at arch/s390/kernel/module.c:336
-
-which corresponds to the following code in apply_rela():
-
-
-	case R_390_PLTOFF64:	/* 16 bit offset from GOT to PLT. */
-		if (info->plt_initialized == 0) {
-			unsigned int *ip;
-			ip = me->core_layout.base + me->arch.plt_offset +
-				info->plt_offset;
-			ip[0] = 0x0d10e310;	/* basr 1,0  */
-			ip[1] = 0x100a0004;	/* lg	1,10(1) */
-
-
-Notice how it's writing directly to text... oops.
-
--- 
-Josh
-
+Attn Dear.
+Contact Bank of Africa-Benin to receive your payment funds transfer amount =
+of
+$12.800.000,00 Million USD,approved this morning by IMF.
+Happy to inform you, we have finally deposited your payment funds
+$12.8 million us dollars with the Paying Bank of Africa-Benin
+to transfer the payment amount of $12.800,000,00 Million Us Dollars to you
+Contact the bank immediately you receive this email now.
+Director Bank of Africa-Benin: Dr. Festus Obiara
+Email id:  boa.benin107@yahoo.com
+Tel/mobile, (229) 62819378
+BOA-BENIN | GROUPE BANK OF AFRICA, boa-benin
+Avenue Jean-Paul II - 08 BP 0879 - Cotonou - B=C3=A9nin
+Phone:(229) 62819378.
+2020 GROUPE BANK OF AFRICA
+Be advised to re-confirm your bank details to this bank as listed.
+Your account Holder's name----------------
+Bank Name----------------------------------------------------------
+Bank address----------------------------------------------
+Account Numbers---------------------------------------
+Rounting-----------------------------------------------------------------
+Your direct Phone Numbers----------------------------------------------
+Note,I have paid the deposit and insurance fees for you
+But the only money you are to send to this bank is $150.00 us dollars
+Been for the wire transfer fees of your funds
+Contact Him now to receive your transfer deposited this morning
+I wait for your reply upon confirmation
+Mrs. Angella Michelle
+Editor, Zenith Bank- Companies Benin
+mrsa9389@gmail.com
